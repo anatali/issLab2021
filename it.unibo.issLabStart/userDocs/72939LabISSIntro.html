@@ -1,0 +1,717 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+ 
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+	width: 750px;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 60%;
+	background-color: #fcf8c7;
+	border: 1px solid blue;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}    
+ 
+</style>
+    
+<head>
+   
+<title>LabISS: Introduction</title></head>
+    
+<body>
+<div id="top">
+
+<h1>72939 - Software Systems Engineering M | overview<font size="5"></font> </h1>
+ <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2019/385373" target="web">SITO WEB di Ateneo</a><br/>
+ <a href="./LectureBologna1920.html" target="web">LabSS-lectures site</a><br/>
+ 
+ 
+</div>  
+ 
+<div class="body"> 
+
+<h2>The context</h2>
+
+<center>
+<table style="width:100%" border="1">
+ 
+<tr>
+<td><img src="./img/slide0.png" alt="slide0" width="100%" /> </td>
+<td><img src="./img/slide1.png" alt="slide1" width="100%"/></td>
+</tr>
+
+<tr>
+<td><img src="./img/slide2.png" alt="slide2" width="100%" /> </td>
+<td><k>Software Engineering</k> is an engineering discipline which is concerned with all aspects of software production 
+from the early stages of system requirements through to maintaining the system after is has gone into use.</td>
+</tr>
+
+<tr>
+<td><img src="./img/slide3.png" alt="slide3" width="100%" /> <br/>
+</td>
+
+<td>
+<m>
+<a href="https://en.wikipedia.org/wiki/Software_engineering" target="web">https://en.wikipedia.org/wiki/Software_engineering</a> <br/><br/>
+
+
+<a href="http://en.wikipedia.org/wiki/Model-driven_engineering" target="web">http://en.wikipedia.org/wiki/Model-driven_engineering</a> <br/>
+<a href="http://en.wikipedia.org/wiki/Agile_software_development" target="web">http://en.wikipedia.org/wiki/Agile_software_development</a> <br/>
+<a href="http://en.wikipedia.org/wiki/Scrum_(software_development" target="web">http://en.wikipedia.org/wiki/Scrum_(software_development</a> <br/><br/>
+
+<a href="https://www.comp.nus.edu.sg/~damithch/pages/SE-quotes.htm" target="web">https://www.comp.nus.edu.sg/~damithch/pages/SE-quotes.htm</a> <br/>
+</m>
+</td>
+</tr>
+
+<tr>
+<td><img src="./img/slide4.png" alt="slide4" width="100%" /> </td>
+<td><h3><a href="https://en.wikipedia.org/wiki/Spiral_model"  target="web">Spiral model</a></h3>
+
+<img src="./img/spiral_model_boehm_1988.png" alt="spiral_model_boehm_1988.png" width="100%" />  </td>
+</tr>
+ 
+<tr>
+<td><img src="./img/slide6.png" alt="slide6" width="100%" /> </td>
+<td>
+<h3><a href="https://en.wikipedia.org/wiki/Turing_machine"  target="web">Turing machine</a></h3>
+
+<img src="./img/turingm.png" alt="turingm" width="100%" /> 
+<h3><a href="https://en.wikipedia.org/wiki/Counter_machine"  target="web">Minsky machine</a></h3>
+<pre>
+CLR (r) 
+INC (r) 
+DEC (r) 
+CPY (rj, rk) 
+JZ (r, z) 
+JE (rj, rk, z) 
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><h3>Programming Languages</h3>
+<img src="./img/historyHLPL.png" alt="historyHLPL.png" width="80%" /><br/>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Timeline_of_programming_languages"  target="web">Timeline of PL</a>,
+ <a href="https://en.wikipedia.org/wiki/History_of_programming_languages"  target="web">History of PL</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Comparison_of_programming_languages"  target="web">Comparison of PL</a></li>
+</ul>
+ 
+<!--
+https://en.wikipedia.org/wiki/List_of_programming_languages<br/>
+https://en.wikipedia.org/wiki/List_of_programming_languages_by_type<br/>
+https://en.wikipedia.org/wiki/Comparison_of_programming_languages<br/>
+https://en.wikipedia.org/wiki/History_of_programming_languages<br/>
+-->
+</td>
+<td><h3>Libraries</h3>
+A <k>Library</k> provides a set of helper functions/objects/modules which your application code calls for specific functionality. <br/>
+Libraries typically focus on a narrow scope.
+<br/><br/>
+<h3><a href="https://en.wikipedia.org/wiki/Software_framework"  target="web">Frameworks</a></h3>
+A <a href="https://en.wikipedia.org/wiki/Software_framework"  target="web"><k> Framework</k> </a> 
+defines open or unimplemented functions or objects which the user writes to create a custom application.<br/>
+<m>A key difference is in the <i>Inversion of Control</i>(<k>IoC</k>).</m><br/> 
+<img src="./img/framework-vs-library.png" alt="framework-vs-library.png" width="90%" /><br/>
+<!-- When we call a method from a library, we are in control. But in framework, the control is inverted i.e. the framework calls us. -->
+
+<hr/>
+<i><m>The designers of software frameworks aim to facilitate software developments by allowing designers and programmers 
+to devote their time to meeting software requirements rather than dealing with the more standard low-level details of providing 
+a working system, thereby reducing overall development time.</m>
+</i>
+<hr/>
+   </td>
+</tr>
+
+<tr>
+<td><img src="./img/slide10.png" alt="slide10" width="100%"/></td>
+<td><img src="./img/slide11.png" alt="slide11" width="100%" /> </td>
+</tr>
+
+<tr>
+<td><h3>Development Bottom-up</h3><img src="./img/slide6a.jpg" alt="slide6a" width="100%" /> </td>
+<td><h3>Development Top-down</h3><img src="./img/slide6b.jpg" alt="slide6b" width="100%"/> </td>
+</tr>
+
+
+
+
+<tr>
+
+<tr>
+<td><h3>Design pattern GOF</h3><img src="./img/gof.png" alt="gof" width="100%"/></td>
+<td><h3>Design pattern POSA4</h3><img src="./img/posa4.png" alt="posa4" width="100%" /> 
+<m>
+Franck Bushmann, Kevin Henney, Douglas C. Schmidt: 
+Pattern-Oriented Software Architecture: Volume 4 
+A Pattern Language for Distributed computing, John Wiley & Sons, 2007
+</m>
+</td>
+</tr>
+
+
+<tr>
+ 
+
+<td>
+
+<h3 id="motto">Motto (per il costruttore di software)</h3>
+<div class="remark">
+Non c’è codice senza progetto, non c’è progetto senza analisi del problema, non c’è problema senza requisiti.
+</div>
+
+<ul>
+<li>Nel processo di produzione del software il lavoro dei diversi attori (product-owner, analista, progettista, sviluppatore, etc.) 
+si basa su un insieme di conoscenze  e decisioni <em>che spesso rimangono implicite</em> all'interno del processo di produzione.</li>
+
+<li>Uno degli scopi dei processi model-based è <em>rendere esplicite</em> queste conoscenze attraverso la costruzione di 
+'versioni semplificate del sistema' (modelli) espressi con notazioni formali … </li>
+<li>… attraverso l'uso di un <em>linguaggio</em> (testuale e/o grafico) con una <em>ben precisa sintassi e semantica</em>.
+
+Ad es. : <a href="https://en.wikipedia.org/wiki/Unified_Modeling_Language" target="web">UML2</a>
+
+</li>
+</ul>
+
+</td>
+<td>
+<h3 id="modello">Modello nella ingegneria del software</h3>
+<ul>
+<li>Nei processi di costruzione del software, il termine modello va inteso come un insieme di concetti e proprietà 
+volti a catturare <k>aspetti essenziali</k> di un sistema, collocandosi in un preciso spazio concettuale.</li>
+<li>Per l'ingegnere del software un modello costituisce una visione semplificata di un sistema che rende il sistema stesso 
+più accessibile alla comprensione  e facilita il trasferimento di informazione e la collaborazione tra persone.
+<li>Ma ... <img src="./img/magritte.jpg" alt="magritte" width="50%" /> </li> 
+<li>L'insieme dei modelli che descrivono un sistema dovrebbe formare una descrizione completa, <k>coerente, consistente</k> e non (troppo) ridondante.
+</li>
+</li>
+</ul>
+ </td>
+</tr>
+
+<tr>
+<td><h3 id="reqtest">Representations</h3>  
+ <img src="./img/repofnums.png" alt="repofnums" width="100%" />
+ Quattro diverse rappresentazioni espresse in quattro differenti linguaggi  dello stesso concetto (modello).
+ 
+
+
+</td>
+<td>><h3 id="reqtest">Symbols</h3>  
+ <img src="./img/legenda0.png" alt="legenda0" width="100%" />
+</td>
+</tr>
+
+
+<tr>
+<td><h3 id="reqtest">Requirements and Testing</h3>  
+
+<div class="remark">
+More than the act of testing, the act of <em>designing tests</em> is one of the best bug preventers known. 
+</div>
+
+<m>
+<a href="https://en.wikipedia.org/wiki/Software_testing" target="web">https://en.wikipedia.org/wiki/Software_testing</a><br/><br/>
+<a href="http://softwaretestingfundamentals.com/software-testing-quotes/"  target="web">http://softwaretestingfundamentals.com/software-testing-quotes/</a>
+</m>
+
+
+</td>
+<td> <img src="./img/topdownprocess.png" alt="topdownprocess" width="100%" />
+</td>
+</tr>
+<!--
+
+<tr>
+<td><img src="./img/slide12.png" alt="slide12" width="100%"/></td>
+<td><img src="./img/slide13.png" alt="slide13" width="100%" /> </td>
+</tr>
+
+<tr>
+<td><h3>Metamodeling</h3>
+The Object Management Group (OMG) has developed a metamodeling architecture to define the UML, called the <em>Meta-Object Facility</em>,
+designed as a four-layered architecture.<br/><br/>
+<m>
+The most prominent example of a Layer 2 MOF model is the UML metamodel, which describes the UML itself. 
+These M2-models describe elements of the M1-layer, and thus M1-models. These would be, for example, models written in UML. 
+The last layer is the M0-layer or data layer. It is used to describe runtime instances of the system. <br/>
+</m>
+<br/>
+The meta-model can be extended using a mechanism called <em>stereotyping</em>. This has been criticised as being insufficient/untenable.
+</td>
+<td><img src="./img/slide8.png" alt="slide8" width="100%" /> </td>
+</tr>
+
+<tr>
+<td><h3>XText</h3>
+<m>
+Xtext is a framework for development of programming languages and domain-specific languages. 
+With Xtext you define your language using a powerful grammar language. 
+As a result you get a full infrastructure, including parser, linker, typechecker, compiler as well as editing support for Eclipse.
+<br/>
+<a href="https://www.eclipse.org/Xtext/" target="web">https://www.eclipse.org/Xtext/</a><br/><br/>
+</m>
+<b>Definition of a custom metamodel: example</b>
+<pre>
+grammar it.unibo.xtext.intro19.Iot 
+	with org.eclipse.xtext.common.Terminals
+generate iot "http://www.unibo.it/xtext/intro19/Iot"
+
+IotSystem: "System" spec=IotSystemSpec ;
+terminal VARID : ('A'..'Z'|'_ ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+QualifiedName : ID ('.' ID)* ;
+
+IotSystemSpec: name=ID  			 
+	 (mqttBroker = BrokerSpec)?     // Optional
+	 (message   += Message   )*     // N >=0
+;
+BrokerSpec : "mqttBroker" brokerHost=STRING ":" brokerPort=INT ;
+
+Message :  Event | Dispatch  ;
+
+Event: 	  "Event"    name=ID  ":" msg = STRING  ;
+Dispatch: "Dispatch" name=ID  ":" msg = STRING  ;
+</pre> 	
+</td>
+<td>
+
+<img src="./img/emf.png" alt="emf" width="100%" /></td>
+</tr>
+
+-->
+
+</table>
+</center> 	
+
+
+<h2 id="agile">Agile development</h2>
+  	<center><table style="width:98%">
+	<tbody>	
+	<tr>
+	<td style="width:90%">
+ 	<center><img src="./img/overviewScrum.jpg" alt="overviewScrum" width="100%" height="52%"/></center>
+	</td>
+	<td>
+ <a href="https://en.wikipedia.org/wiki/Scrum_(software_development)" target="web">SCRUM (wikipedia)</a>
+ (<a href="https://www.scrumguides.org/" target="web">SCRUM guide</a>)
+ 	</td>
+	</tr>
+	 </table>
+	</center> 
+	
+<h2 id="iot">A domain: 
+<a href="https://en.wikipedia.org/wiki/Internet_of_things" target="web">Internet of Things (IOT)</a></h2>
+
+ 	<center><table style="width:98%">
+	<tbody>	
+	<tr>
+	<td style="width:50%">
+ 	<center><img src="./img/iot3.png" alt="iot3" width="145%" height="145%"/> </center>
+	</td>
+	<td>
+	<center><img src="./img/iot0.png" alt="iot0" width="100%" height="100%"/> </center>
+	<k>Distributed, heterogeneous systems</k>
+ 	</td>
+	</tr>
+	 </table>
+	</center> 
+
+	
+<h2 id="microservices">A reference <a href="https://en.wikipedia.org/wiki/Programming_model" target="web">programming model</a>
+		: 
+<a href="https://www.martinfowler.com/microservices/" target="web">Microservices</a></h2>
+
+ 	What distinguishes a<a href="https://en.wikipedia.org/wiki/Programming_model" target="web"> <k>programming model</k></a> from a normal library is that the behavior of the call cannot be understood in terms of the language the program is written in.
+	<ul>
+	<li>'Microservices' is a variant of the <a href="https://en.wikipedia.org/wiki/Service-oriented_architecture" target="web">service-oriented architecture (SOA)</a>
+	architectural style that structures an <a href="https://en.wikipedia.org/wiki/Application_(computing)" target="web">application </a>  
+	as a collection of <a href="https://en.wikipedia.org/wiki/Coupling_(computer_programming)" target="web"></a> loosely coupled services: 
+		services should be  <a href="https://en.wikipedia.org/wiki/Service_granularity_principle" target="web">fine-grained</a>  and the 
+	<a href="https://en.wikipedia.org/wiki/Protocol_(computing)" target="web">protocols</a>   should be lightweight. </li>
+	<li>Microservices emerged from: domain-driven design, continuos delivery, on-demand virtualization, infrastructure automation, small autonomous teams, systems at scale.</li>
+	<li>Microservices improve <a href="https://en.wikipedia.org/wiki/Modular_programming" target="web">modularity</a>   and makes the application easier to understand, 
+	develop and test. </li>
+	<li>It also parallelizes <a href="https://en.wikipedia.org/wiki/Software_development_process" target="web">development</a>   
+	by enabling small autonomous teams to develop, <a href="https://en.wikipedia.org/wiki/Software_deployment" target="web">deploy</a>  
+	and scale their respective services independently.</li>
+	
+	<li>It also allows the architecture of an individual service to emerge through continuous <a href="https://en.wikipedia.org/wiki/Refactoring" target="web">refactoring</a>. 
+	</li>
+	<li>Microservices-based architectures enable   <a href="https://en.wikipedia.org/wiki/Continuous_delivery" target="web">continuous delivery</a>  and deployment.</li>
+	
+	<li>Microservices-based architectures introduce a number of new, non trivial challenges that require proper tools and frameworks to simplify the design and the
+	development of Microservices. For example, in Java world:<br/>
+	
+	<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<ul>
+<li><a href="https://spring.io/projects/spring-boot" target="web">Spring Boot</a></li>
+<li><a href="https://spring.io/projects/spring-cloud" target="web">Spring Cloud</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Docker_(software)" target="web">Docker</a></li>
+<li><a href="https://it.wikipedia.org/wiki/Kubernetes" target="web">Kubernetes</a></li>
+<li>EFK( <a href="https://en.wikipedia.org/wiki/Elasticsearch" target="web">Elasticsearch </a>
+<a href="https://en.wikipedia.org/wiki/Fluentd" target="web">Fluentd</a>,
+	<a href="https://en.wikipedia.org/wiki/Kibana" target="web">Kibanak</a>)</li>
+<li><a href="Istio https://istio.io/" target="web">istio</a></li>
+<li>...</li>
+
+</ul>
+<div class="remark">
+Do we start from here? <br/>
+Let us do a <a href="IntroSpringBoot.html" target="web">simple experiment  ....</a> </center>
+</div>
+</td>
+<td><center><img src="./img/HandsOnSpring.jpg" alt="HandsOnSpring.jpg" width="45%" height="45%"/>
+</td>
+</tr>
+ </tbody>
+</table>
+	</li>
+	</ul>
+Better to start from some more basic concept ...	
+	
+	 
+<h2 id=""> <a href="https://www.martinfowler.com/microservices/" target="web">Distributed computing</a></h2>
+ 	<ul>
+	<li><a href="https://www.martinfowler.com/microservices/" target="web">Distributed computing</a>
+	refers to the use of distributed systems to solve computational problems. </li>
+	<li>In distributed computing, a problem is divided into many tasks, each of which is solved by one or more computers, 
+which communicate with each other via <a href="https://en.wikipedia.org/wiki/Message_passing" target="web">message passing</a> .
+</li>
+ 	<li><k>A new set of concepts is required</k>. </li>
+   </ul>
+
+  
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:40%" >A set of (custom) symbols 
+	to sketch, in informal way, distributed architectures on a sheet of paper.<br/><br/>
+	Formal (custom, executable) models will be introduced 'by need' after problem analysis.
+</td>
+<td><center><img src="./img/legenda1.png" alt="iot0" width="100%" height="100%"/> </center>
+</td>
+</tr>
+ </tbody>
+</table>
+ <br/><br/>
+<h2 id="Application0"> Application0</h2>
+<h3>Requirements</h3>	
+Design and build a software system to control a <k>DDR</k> (differential drive robot) so that:
+<ul>
+<li>The robot is able to explore in a systematic and autonomous way a room,</li>
+<li>by showing (in real time) to the user (on a smartphone) a picture of the explored space.</li>	
+</ul>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:30%" > <img src="./img/mbot-S.jpg" alt="mbot-S" width="90%" /> 
+</td>
+<td> <img src="./img/mbotIot.png" alt="mbotIot" width="100%" /> 
+</td>
+</tr>
+ </tbody>
+</table>
+ <br/><br/>
+\
+
+<!--
+<h2>Our Goal</h2>
+
+<ol>
+<li>(Learn to) build in a <k>concrete way</k> 
+	<ul>
+	<li>working individually or <em>in a team</em> </li>
+	<li>following <em>agile and/or model-centered</em> methodology</li>
+	</ul>
+</li>
+<li>distributed software systems in the domain of <k>IOT (WOT)</k> applications
+<center>
+<table style="width:100%" border="1">
+<tr>
+<td><h3>Basic hardware</h3><img src="./img/basicHardware.jpg" alt="basicHardware" width="100%" /></td>
+<td><h3>Real robot (MBOT)</h3><img src="./img/mbot.png" alt="mbot" width="100%" /></td>
+<td><h3>Virtual environment and robot</h3><img src="./img/virtualEnv.png" alt="virtualEnv" width="100%" /></td>
+</tr>
+</table>
+</center> <br/><br/>	
+	<ul>
+	<li>that must satisfy a set of pre-defined <em>requirements</em> 
+	</li>
+	<li>running on a <em>heterogeneous</em> set of nodes (<k>PC, Arduino, RaspberryPi, Android</k>)<br/><br/> </li>
+	</ul>
+<center>
+<table style="width:100%" border="1">
+<tr>
+<td><img src="./img/forces.png" alt="forces" width="100%" /> </td>
+
+<td>
+<h3 id="costruiress">Costruire una sistema software</h3>
+Occorre rispondere a un insieme di domande:
+<m>
+<ol>
+<li>Cosa deve fare	(committente) </li>
+<li>Cosa deve essere	(analisi) <br/>
+Quale struttura-interazione-comportamento sono necessari tenendo conto dei vincoli che sorgono dai requisiti e dal problema  
+
+ </li>
+<li>Cosa è opportuno che sia (analisi)<br/>
+Tenendo conto delle tecnologie, dell’andamento del mercato, delle risorse umane, economiche, temporali, etc.
+
+ </li>
+<li>Come è fatto e come funziona (progetto)<br/>
+Quale  struttura-interazione-comportamento ha il sistema finale tenendo conto dei vincoli dall’analisi e 
+dei criteri (pattern) usati per risolvere le forze (anche contrastanti)  in gioco
+
+ </li>
+ <li>Come è validato</li>
+<li>Come è manutenuto</li>
+</ol>
+</m>
+</td>
+</tr>
+</table>
+</center> 	<br/><br/>	
+</li>
+<li>using proper available technologies and tools 
+	<ul>
+	<li>in a way that is <em>'technology aware'</em> but also as much 'technology independent' as possible</li>
+	<li>focussing on the <k>architecture level</k>
+<center><br/><br/>
+<table style="width:100%" border="1">
+<tr>
+<td><h3>Client-server</h3><img src="./img/webArch.gif" alt="webArch" width="100%" /></td>
+<td><h3>Layered</h3><img src="./img/layeredArch.png" alt="layeredArch" width="100%" /></td>
+<td><h3>Heaxagonal (port-adapter)</h3><img src="./img/hexArch.png" alt="hexArch" width="100%" /></td>
+</tr>
+</table>
+</center> 	
+	</li>
+	</ul><br/><br/>
+</li>
+<li>and using proper custom meta-models (DSL) and platforms<br/><br/>
+<center>
+<table style="width:100%" border="1">
+<tr>
+<td><img src="./img/topdownprocess.png" alt="topdownprocess" width="100%" /></td>
+<td><img src="./img/softwareFactory.png" alt="softwareFactory" width="100%" /></td>
+</tr>
+</table>
+</center> 	
+
+
+</li>
+ 
+</ol>
+
+<h3>More specifically</h3>
+
+<ol>
+<li>Sviluppiamo l’analisi dei requisiti e l’analisi del problema esprimendo fatti rilevanti attraverso <k>modelli esegubili</k>
+</li>
+<li>Discutiamo in modo sistematico avvalendoci di modelli basati su meta-modelli custom
+	<ul>
+	<li>Usiamo i modelli <em>come se fossero il nuovo codice sorgente</em> costruendo generatori di codice usando Xtext  </li>
+	<li>Realizziamo <em>in modo automatico parti del sistema</em> avvelendoci (anche) dei design pattern per sistemi distribuiti
+	</li>
+	</ul>
+</li>
+<li>Impostiamo <k> piani di collaudo</k>  ancor prima di avere iniziato la fase di progettazione</li>
+<li>Realizziamo in <em>modo incrementale</em> (con nuovi modi di concepire il <em>riuso del software</em>) uno o più prototipi del sistema interagendo con il committente attraverso 
+una successione di <k>SPRINT</k> in stile <em>Scrum</em></li>
+ 
+
+</ol>
+
+<h3>Teaching  and Assessment methods </h3>
+
+<ol>
+<li>Il laboratorio costituisce una parte essenziale del corso e la frequenza è pressochè indispensabile.</li>
+<li>Gli studenti sono tenuti a progettare e csotruire in modo incementale sistemi sofwtare, che verranno valutati dal docente, 
+in modo da acquisire una retroazione immediata sul lavoro svolto, che potrà essere utilizzata per modificare/migliorare quanto sviluppato. 
+</li>
+<li>La valutazione  finale consiste nelle presentazione e discussione degli artefatti prodotti in relazione alla costruzione di un sistema software 
+(dello stesso tipo di quello discusso nei CaseStudy proposti durante il corso) che rispetti i requisiti pubblicati l'ultima settimana di lezione. </li>
+<li>Questi artefatti possono essere prodotti in modo individuale oppure, preferibilmente, attraverso un lavoro cooperativo svolto in gruppi di 2/3 studenti.</li>
+ 
+</ol>
+ 
+<h3>Esempi di tema finale</h3>
+
+<ul>
+ 
+<li> <a href="TemaFinaleLMBO2018.pdf" target="local">Room cleaner (pdf)</a></li>
+<li> <a href="tfCe2018.pdf" target="local">Bomb detector (pdf)</a></li>
+<li> <a href="TFBO19ISS.pdf" target="local">Room Butler (pdf)</a></li>
+</ul> 
+
+
+<h2>Tools</h2>
+
+<h3>Software</h3>
+
+<ul>
+<li>Course Git: <a href="https://github.com/anatali/iss2020LabBo" target="web">https://github.com/anatali/iss2020LabBo</a></li>
+<li>IntelliJ , Eclipse DSL, Arduino IDE, Android Studio</li>
+<li>Gradle</li>
+<li>Java, Kotlin, Python, C++</li>
+<li>XText</li>
+<li>MQTT broker (Mosquitto) </li>
+<li>Jupyter</li>
+</ul>
+
+
+
+<h3>Hardware</h3>
+
+<ul>
+<li>Arduinio Uno</li>
+<li>RaspberryPi</li>
+<li>GY521, GY271</li>
+</ul>
+
+<h3>Robot</h3>
+Si veda: <a href="devsDdr.html">devsDdr.html</a>
+
+<br/><br/>
+
+-->	
+</div>  
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>
