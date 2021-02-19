@@ -264,9 +264,89 @@ function myFunction() {
 <h1>Using the WEnv</h1> 
 <a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/master/LectureBologna2021.html" target="isslm">LabISS-lectures site</a></font> 
 
-<h2>INTRODUCTION</h2>
+<h2>HANDS ON</h2>
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:30%" >
+<h3>Create a project using Gradle</h3>	
+<pre>
+mkdir it.unibo.wenvusage
+gradle init (select 2, 3, 1, 2, 1, -, -)
+</pre> 
+</td>
+<td>
+ <center><img src="./img/startUpWithGradle.png" alt="startUpWithGradle" width="70%" ></center>
+</td>
+</tr>
+
+
+<tr>
+<td style="width:30%" >
+<h3>Use the generated code</h3>	
+<pre>
+gradlew build 
+gradlew run 
+-------------------------------------------------------
+> Task :app:run
+Hello World!
+
+BUILD SUCCESSFUL in 2s
+2 actionable tasks: 1 executed, 1 up-to-date
+</pre> 
+</td>
+<td>
+ <center><img src="./img/startUpUsage.png" alt="startUpUsage" width="70%" ></center>
+</td>
+</tr>
+
+<tr>
+<td style="width:30%" >
+
+<h3>Create the userDocs folder</h3>
+<h3>Modify <a href="../app/build.gradle.kts" target="code">app/build.gradle.kts</a></h3>	
+<h3>Formally define the Test (in JUnit)</h3>
+<pre>
+gradlew build -x test
+
+gradlew test jacocoTestReport
+
+gradlew run
+</pre>
+ 
+</td>
+<td>
+ <center><img src="./img/modifiedByUser.png" alt="modifiedByUser" width="70%" ></center>
+</td>
+</tr>
+
+
+
+
+ </tbody>
+</table>
+
   
  
+
+ <!--
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+
  
 <!--
 
