@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>ISS0_2021</title></head>
+    
+<body>
+<div id="top">
+<h1>Lab ISS 2021 | iss0 <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduction </h2>
+ 
+Tenendo conto che:
+<k>there is no code without a project, no project without problem analysis and no problem without requirements</k>
+si riporta qui un possibile primo deliverable per il progetto <ks>iss0_2021</ks>.
+ 
+ 
+<h2>Requirements</h2>
+
+ 
+<div class="remark">
+Design and build a software system that makes a robot able to walk along the boundary of a rectangular, empty room.
+</div>
+
+ 
+
+<h2>Requirement analysis</h2>
+ 
+La interazione con il committente ha chiarito che egli associa ai sostantivi il seguente significato:
+<ul>
+<li><ks>room</ks>: una stanza convenzionale, come si trova in tutti gli edifici</li>
+<li><ks>boundary</ks>: perimetro della stanza, fisicamente delimitata da pareti solide (<ks>walls</ks>)</li>
+<li><ks>robot</ks>: un dispositivo capace di muoversi ricevendo comandi via rete, secondo quanto riportato in
+<a href="VirtualRobot2021.html#commands" target="web">VirtualRobot2021.html</a>.
+ </li>
+</ul>
+
+Per quanto riguarda le azioni (verbi):
+<ul>
+<li><ks>walk</ks>: il robot deve muoversi in avanti, rasente le pareti della room.</li>
+</ul>
+
+<h4>Verifica dei risultati attesi (Test plans)</h4> 
+
+ <table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%" >
+Come utente mi aspetto che, al termine della esecuzione della applicazione, il robot abbia affettuato (una volta sola)
+il percorso riportato in figura:
+<div class="remark">
+L'obiettivo è che la verifica del percorso sia effettuata dal software stesso, senza bisogno dell'intervento
+di un utente umano per controllare.
+</div>
+</td>
+<td><center><img src="./img/TestPlan0.png" alt="TestPlan0" width="60%" ></center>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h2>Problem analysis</h2>
+
+<h3>Aspetti rilevanti</h3>
+
+<ol>
+<li>
+Si tratta di realizzare un <k>sistema distribuito</k> formato da due macro-componenti:
+	<ul>
+	<li>il robot (virtuale) fornito dal committente</li>
+	<li>la nostra applicazione (<ks>boundaryWalk</ks>) che invia comandi al robot in modo da soddisfare i requisiti</li>
+	</ul>
+</li>
+<li>Il robot può essere comandato via rete in due modi diversi, come descritto in 
+<a href="VirtualRobot2021.html #commands" target="web">VirtualRobot2021.html: commands</a>:
+	<ul>
+	<li>inviando messaggi alla porta <tt>8090</tt> con protocollo HTTP POST </li>
+	<li>inviando messaggi alla porta <tt>8091</tt> usando una websocket</li>
+	</ul>
+</li>
+<li>
+Poichè esistono numerose librerie in molti linguaggi di programmazione che permettono l'invio di tali comandi,
+non si individua <ks>alcun abstraction-gap</ks> significativo.
+</li>
+
+<li>
+Un primo prototipo della applicazione dovrebbe poter essere realizzato in una giornata lavorativa (al più).
+</li>
+</ol>
+
+
+<h3>Architettura logica</h3>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:40%" >
+ <center><img src="./img/iss0_logicArch0.png" alt="iss0_logicArch0" width="70%" ></center>
+</td>
+<td>The exact nature of the <ks>boundaryWalk</ks> component will be defined by the designer.
+
+<br/><br/>
+Per quanto riguarda l'interazione possiamo dire l'uso del protocollo HTTP sembra del tutto adeguato. <br/>
+Tuttavia l'uso della websocket potrrebbe rivelarsi più flessibile (in quanto permette di ricevere anche
+informazioni emesee da WEnv) e più efficiente (in quanto riduce la gerarchia di protocolli).
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h3>Problemi aperti</h3>
+L'obiettivo di definire un <tt>TestPlan automatizzabile</tt> introduce di fatto un <k>nuovo requisito</k>: rendere l'applicazione osservabile, o meglio
+renderne verificabili gli effetti, da parte di una macchina. In particolare non basta indurre il robot a muoversi; occorre anche: <br/><br/>
+
+<ol>
+<li>sapere dove il robot si trova dopo ogni comando, per poter verificare il percorso. (<ks>IPOTESI-PLAN 1</ks>)</li>
+<li>oppure occorre 'inferire conoscenza' dai comandi inviati e dalle risposte ottenute.
+</ol>
+
+Ad sempio (<ks>IPOTESI-PLAN 2</ks>), prefigurando che la soluzione del problema consiste nel segunte algortimo:
+<pre>
+per 4 volte: 
+invio al robot comandi <kc>moveForward</kc> fino a che il robot colpisce il muro di fronte 
+e poi invio un comando di rotazione <kc>turnLeft</kc>
+</pre>
+si potrebbe controllare che il robot è ritornato alla cella HOME (ma ciò sembra ricondurci al caso precedente).
+<br/><br/>
+Oppure (<ks>IPOTESI-PLAN 3</ks>) si potrebbe inviare il  comando  <a href="VirtualRobot2021.html #cril" target="web">cril</a>:
+		<pre>{"robotmove":"moveForward", "time":<k>DURATION</k>} </pre>
+fissando <k>DURATION</k> in modo che il robot percorra una distanza pari alla sua lunghezza. 
+<br/>
+In questo modo si potrebbe misurare la lunghezza di ogni lato in <k>'unità-robot'</k> e verificare al termine dalla applicazione che 
+la lunghezza del perimetro espresso in 'unità-robot' sia uguale al percorso effettuato con 4 comandi <kc>moveForward</kc> 
+e 4 comandi di rotazione <kc>turnLeft</kc>.
+
+<h2>Test plans</h2> 
+L'obiettivo è crivere un programma in <ks>JUnit</ks> che definicse in modo 'formale' il TestPlan, in modo da poterlo
+eseguire al termine dello sviluppo della applicazione, per verificarne gli effetti.
+ <br/><br/>
+ Ma come fare a impostare questo programma di testing se non si è nemmeno iniziata la progettazione della soluzione?
+
+</li>
+ 
+</ol>
+ 
+</div>
+
+ <!--
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+<div >
+<hr/>
+By Antonio Natali 
+<img src="./img/teacher.gif" alt="teacher" width="8%" height="8%"> antonio.natali@unibo.it  
+</div> 
+</body>
+</html>
