@@ -1,6 +1,7 @@
 /*
 MoveVirtualRobot.java
 ===============================================================
+Moves the virtual robot by using an HTTP client
 ===============================================================
 */
 package it.unibo.wenvusage;
@@ -70,7 +71,7 @@ public class MoveVirtualRobot {
 	public boolean moveLeft(int duration)     { return sendCmd("turnLeft", duration);     }
 	public boolean moveRight(int duration)    { return sendCmd("turnRight", duration);    }
 	public boolean moveStop(int duration)     { return sendCmd("alarm", duration);        }
-	/*
+/*
 MAIN
  */
 	public static void main(String[] args)   {
