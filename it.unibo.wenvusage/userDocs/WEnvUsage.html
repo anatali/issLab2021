@@ -262,28 +262,33 @@ function myFunction() {
 <div class="body"> 
 
 <h1>Using the WEnv</h1> 
-<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/master/LectureBologna2021.html" target="isslm">LabISS-lectures site</a></font> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">LabISS-lectures site</a></font> 
+<h2>Introduction</h2>
+<ol>
+<li>Create a project starting from Gradle</li>
+<li>Run the application built by Gradle as it is</li>
+<li>Look (and run) the Test built by Gradle </li>
+<li>Register the project in GIT<hr/></li>
+<li>Write our application and change the file <ks>app/build.gradle.kts</ks> </li>
+<li>Write (and run) a Test unit for our application</li>
+</ol>
 
-<h2>HANDS ON</h2>
+<h2>Start (create a project)</h2>
 
 
 <table style="width:98%">
 <tbody>	
 <tr>
 <td style="width:30%" >
-<h3>Create a project using Gradle</h3>	
+<h3 id="create">Create a project using Gradle</h3>	
+	
 <pre>
-mkdir iss2021
-cd 	  iss2021
+mkdir	iss2021
+cd	iss2021
 	
 mkdir it.unibo.wenvusage
 cd it.unibo.wenvusage
-
-git init
-git status
-git remote add origin https://github.com/anatali
-git remote -v
-
+<hr/>
 gradle init (select 2, 3, 1, 2, 1, -, -)
 </pre> 
 </td>
@@ -294,75 +299,353 @@ gradle init (select 2, 3, 1, 2, 1, -, -)
 
 
 <tr>
-<td style="width:30%" >
-<h3>Use the generated code</h3>	
+<td style="width:35%" >
+<h3 id="use">Run the generated code</h3>	
+See <a href="../app/src/main/java/it/unibo/wenvusage/App.java" target="code"><ks>app/src/main/java/it/unibo/wenvusage/App.java</ks></a>
 <pre>
-gradlew build 
-gradlew run 
--------------------------------------------------------
+gradlew build -x test		<kc>//excludes testing</kc>	
+gradlew run
+</pre> 
+</td>
+<td>
+<h4>Output</h4>
+<pre>
 > Task :app:run
 Hello World!
 
 BUILD SUCCESSFUL in 2s
 2 actionable tasks: 1 executed, 1 up-to-date
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><h3>Open the project in <ks>IntelliJ</ks></h3>
+Look at the generated file 
+<a href="../app/build.gradle.kts" target="code"><ks>app/build.gradle.kts</ks></a>
+<pre><m>
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    application
+}
+repositories {
+    // Use JCenter for resolving dependencies.
+    jcenter()
+}
+dependencies {
+    // Use JUnit test framework.
+    testImplementation("junit:junit:4.13")
+    // This dependency is used by the application.
+    implementation("com.google.guava:guava:29.0-jre")
+}
+application {
+    // Define the main class for the application.
+    mainClass.set("it.unibo.wenvusage.App")
+}
+</m></pre>
+
+</td>
+<td>
+<center><img src="./img/startUpUsage.png" alt="startUpUsage" width="80%" ></center>
+
+Note the directories <ks>main</ks> and <ks>test</ks>.
+</td>
+</tr>
+
+<tr>
+<td style="width:35%" >
+<h3 id="use">Run the generated test</h3>	
+<pre>
+gradlew build  	<kc>//does also the testing</kc>
+gradlew test	<kc>//does only the tests</kc>
 </pre> 
 </td>
 <td>
- <center><img src="./img/startUpUsage.png" alt="startUpUsage" width="70%" ></center>
+The execution of the tests produces the report 
+<a href="../app/build/reports/tests/test/index.html" target="code"><kc>app/build/reports/tests/test/index.html</kc></a>
+  
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h2>Use GIT</h2>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:35%"><h3 id="register">Lerning GIT</h3>
+See: <a href="https://www.youtube.com/watch?v=HVsySz-h9r4"  target="web">GIT Command Line Basic (video)</a>
+
+<pre><m>0:00  - Introduction
+1:31  - Distributed vs Central Version Control
+3:17  - Installing Git
+3:39  - First Time Setup
+6:36  - Getting Started (Local repository)
+10:41 - Git File Control
+14:55 - Getting Started (Remote repository)
+20:37 - Branching
+20:50 - Common Workflow
+23:03 - Push Branch on remote
+27:38 - Faster Example
+29:41 - Conclusion
+</m></pre>
+</td>
+<td>From  <a href="https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html"  target="code">Basic Git commands</a>:
+<pre>
+git config --global user.name "xyz"
+git config --global user.email xyz@studio.unibo.it
+
+git config -l 
+
+git help CMD  
+git CMD --help
+</pre>
 </td>
 </tr>
 
 <tr>
-<td style="width:30%" >
-<h3>Modify the project</h3>
+<td style="width:35%"><h3 id="register">Register the project in GIT</h3>
+
+<pre>
+git init	<kc>//creates the directory <ks>.git</ks>	</kc>
+<m>Initialized empty Git repository in C:/iss2021/it.unibo.wenvusage/.git/</m>
+
+git status
+<m>On branch master
+No commits yet
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .gitattributes
+        .gitignore
+        .idea/
+        app/
+        gradle/
+        gradlew
+        gradlew.bat
+        settings.gradle.kts
+nothing added to commit but untracked files present (use "git add" to track)</m>
+</pre>
+
+<h3 id="saveremote">Create a remote repo</h3>
+<pre>
+<kc>//create your GIT (xyz) on <a href="https://github.com/">github.com</a></kc>
+git remote add origin <m>https://github.com/userxyz/reponame</m>  
+<!-- git remote add origin https://github.com/anatali/iss2021LabOld -->
+git remote -v
+<m>origin  https://github.com/xyz (fetch)
+origin  https://github.com/xyz (push)
+</m>
+<kc>//remove entries about remote repository from <a href="../../.git/config" target="code"><ks>.git/config</ks></a> file.</kc>
+git remote rm origin </pre>
+<!-- git remote set-url origin https://github.com/anatali/iss2021LabOld/it.unibo.wenvusage 
+git remote set-url origin https://github.com/userxyz/newreponame		<kc>//to update</kc> -->
+
+
+</td>
+<td>
+<h3 id="commit">Local commit</h3>
+Look at the file (generated by Gradle) <a href="../.gitignore" target="code"><ks>.gitignore</ks></a>
+<pre>
+git add -A
+git commit -m "initial"
+
+git log
+<m>commit 8d38456a18476a03940c74918c02c12d9bda3b1c (HEAD -> master, origin/master)
+Author: ...
+Date:   ...</m>
+
+git status
+<m>On branch master
+nothing to commit, working tree clean</m>
+</pre>
+
+<h3 id="saveremote">Save on the remote repo</h3>
+<pre>
+git push origin master
+</pre>
+
+<h4>Multiple Git remotes</h4>
+<div class="remark">
+<m>When collaborating on a project with a group of people, you may find using <k>multiple Git remotes</k> very handy.</m>
+</div>
+<m>
+The '<ks>fatal: refusing to merge unrelated histories</ks>' Git error occurs when two unrelated projects are merged.
+For example, you have created a new repository, added a few commits to it, and now you are trying to pull 
+from a remote repository that already has some commits of its own. 
+Git will throw the error, since it has no idea how the two projects are related.
+<br/>
+To solve this problem:
+<pre>
+git pull origin master --allow-unrelated-histories
+</pre>
+</m>
+
+<pre>
+git branch -m main master
+git fetch origin
+git branch -u origin/master master
+</pre>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+<h2>Open a new branch</h2>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:35%" >
+
+<pre>
+git branch moverobot
+git branch
+<m>* master
+  moverobot</m>
+  
+git checkout moverobot
+<m>Switched to branch 'moverobot'</m>
+
+git branch
+<m>  master
+* moverobot</m>
+</pre>
+
 <ol>
-<li>Open the project in <ks>IntelliJ</ks></li>
-<li>Create the folder <ks>userDocs</ks></li>
-<li>Modify <a href="../app/build.gradle.kts" target="code">app/build.gradle.kts</a></li>
+<li>Modify <a href="../app/build.gradle.kts" target="code"><ks>app/build.gradle.kts</ks></a>
+<m>
+	<ul>
+	<li>Use the <a href="https://www.jacoco.org/jacoco/trunk/doc/mission.html" target="code">JaCoCo</a>  plugin</li>
+	<li>Add dependencies for HTTP-client and JSON</li>
+	<li>Change the main class</li>
+	</ul>
+</m>	
+</li>
+<li>
+Write the Java class that defines the application:<br/>
+ <a href="../app/src/main/java/it/unibo/wenvusage/MoveVirtualRobot.java" target="code">
+<ks>app/src/main/java/it/unibo/wenvusage/MoveVirtualRobot.java</ks></a>
+</li>
+
+<li><k>Delete</k> App and AppTest
+<pre>
+git status
+<m>
+<ks>On branch moverobot</ks>
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+        modified:   app/build.gradle.kts
+        deleted:    app/src/main/java/it/unibo/wenvusage/App.java
+        deleted:    app/src/test/java/it/unibo/wenvusage/AppTest.java
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        app/src/main/java/it/unibo/wenvusage/MoveVirtualRobot.java
+no changes added to commit (use "git add" and/or "git commit -a")
+</m>
+</pre>
+
+
+</li>
+
 </li>
 </ol>
 </td>
-<td><center><img src="./img/modifiedByUser.png" alt="modifiedByUser" width="70%" ></center>
+
+<td>
+<center><img src="./img/modifiedByUser.png" alt="modifiedByUser" width="80%" ></center>
+<h4>Execute</h4>
+<pre>
+gradlew build		<kc>//or Click of the G icons</kc> 
+gradlew run		<kc>//the virtual robot makes some move</kc> 
+</pre>
+
+<h3>Commit the branch</h3>
+<pre>
+git add -A
+git commit -m "move the robot"
+</pre>
+
+<h4>Push branch to remote</h4>
+<pre>
+git push -u origin moverobot
+
+git branch -a
+<m>  master
+* moverobot
+  remotes/origin/master
+  remotes/origin/moverobot</m>
+</pre>
 </td>
+
 </tr>
 
+
+ 
 <tr>
-<td>
-<h3>Write the application code</h3>
-Write the Java class that defines the application:
- <a href="../app/src/main/java/it/unibo/wenvusage/MoveVirtualRobot.java" target="code">
-app/src/main/java/it/unibo/wenvusage/MoveVirtualRobot.java</a>
+<td style="width:35%" >
+<h3>Merge the branch</h3>
 <pre>
-gradlew run 	<kc>//does also the build</kc>
-</pre>
+git checkout master
+	git pull origin master	<kc>//to check changes</kc>
+	git branch --merged		<kc>//to check that there is no merge</kc>
+git merge moverobot	 <kc>//do the merge</kc>
+
+git push origin master	<kc>//update remote</kc>
+
+git branch --merged<m>
+	* master
+	  moverobot</m>
+	  
+git branch -a<m>
+	* master
+	  moverobot
+	  remotes/origin/master
+	  remotes/origin/moverobot  </m>
+
+</pre> 
 </td>
 <td>
+<h3>Delete the branch</h3>
 <pre>
-<h4>Output</h4>
-<pre>
-<m>
-> Task :app:run
-turnLeft sendCmd
-MoveVirtualRobot | checkCollision_simple jsonStr= {"endmove":true,"move":"turnLeft"}
-MoveVirtualRobot | checkCollision_simple collision=false
-MoveVirtualRobot | moveLeft  failed= false
-turnRight sendCmd
-MoveVirtualRobot | checkCollision_simple jsonStr= {"endmove":true,"move":"turnRight"}
-MoveVirtualRobot | checkCollision_simple collision=false
-MoveVirtualRobot | moveRight failed= false
 
-BUILD SUCCESSFUL in 5s
-2 actionable tasks: 1 executed, 1 up-to-date
-</m>
+<pre>
+git branch -d moverobot	<kc>//delete the local branch</kc>
+<m>Deleted branch moverobot (was 25420e0).</m>
+
+git branch -a	<kc>//the branch is still on remote</kc>
+<m>
+* master
+  remotes/origin/master
+  remotes/origin/moverobot</m>
+  
+git push origin --delete  moverobot	<kc>//delete the branch on remote</kc>
+<m>To https://github.com/anatali/iss2021Demo
+ - [deleted]         moverobot</m>
+
+git branch -a	<kc>//currently no branch</kc>
+ <m>* master
+  remotes/origin/master</m>
 </pre>
 </td>
 </tr>
+ 
+</tr>
+ </tbody>
+</table>
+
+<h2>Test</h2>
+
+<table style="width:98%">
+<tbody>	
 
 <tr> 
-<td><h3>Write the testing code</h3>
+<td><h3>Write and run our testing code</h3>
 Write the Java class that defines the tests (using JUnit):
 <a href="../app/src/test/java/it/unibo/wenvusage/TestMoveVirtualRobot.java" target="code">
-app/src/test/java/it/unibo/wenvusage/TestMoveVirtualRobot.java</a>
+<ks>app/src/test/java/it/unibo/wenvusage/TestMoveVirtualRobot.java</ks></a>
 <pre>
 gradlew build 			<kc>//does also the testing</kc>
 gradlew build -x test		<kc>//excludes testing</kc>
@@ -372,8 +655,10 @@ gradlew test			<kc>//does the testing</kc>
 </pre>
 
 </td>
-<td>The execution of the tests does produces the report 
-<a href="../app/build/reports/tests/test/index.html" target="code">app/build/reports/tests/test/index.html</a>
+<td>
+<h4>Test reports</h4>
+The execution of the tests does produces the report 
+<a href="../app/build/reports/tests/test/index.html" target="code"><kc>app/build/reports/tests/test/index.html</kc></a>
 
 <br/><br/>
 If we execute:
@@ -382,9 +667,9 @@ gradlew test jacocoTestReport
 </pre>
 the  file 
 <a href="../app/build/jacoco/test.exec" target="code">app/build/jacoco/test.exec</a>
-generated by  <ks>Jacoco</ks>, is transformed in another report 
-<a href="../app/build/reports/jacoco/test/html/index.html" target="code">app/build/reports/jacoco/test/html/index.html</a>
-that shows the  coverage of code performed by the tests.
+generated by  <a href="https://www.jacoco.org/jacoco/trunk/doc/mission.html" target="code">JaCoCo</a>, is transformed in another report <br/>
+<a href="../app/build/reports/jacoco/test/html/index.html" target="code"><kc>app/build/reports/jacoco/test/html/index.html</kc></a>
+<br/>that shows the  coverage of code performed by the tests.
 </td>
 </tr>
  
@@ -396,7 +681,7 @@ that shows the  coverage of code performed by the tests.
 </table>
 
   
- 
+<br/><br/> 
 
  <!--
 
