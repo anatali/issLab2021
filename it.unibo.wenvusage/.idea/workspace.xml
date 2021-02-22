@@ -23,28 +23,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f4161043-4e3b-4426-99e2-bdd4670238f1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/issLab2021.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.gitattributes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/kotlin/it/unibo/boundaryWalk/App.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/test/java/it/unibo/boundaryWalk/TestWalker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/test/kotlin/it/unibo/boundaryWalk/AppTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userDocs/WEnvUsage.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/WEnvUsage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/TestPlan0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/bussola.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/clientObj.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/iss0_logicArch0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/msgTypes.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/robotActor.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/robotActorFsm.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/robotActorTry.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/teacher.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/wenvscene.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/userDocs/img/wenvscene1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +45,23 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="it.unibo.wenvusage" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -77,7 +84,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Progetti/marfoglia/health-adapter-disi" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -157,6 +164,10 @@
       <screen x="0" y="0" width="1280" height="690" />
     </state>
     <state x="320" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1280.690@0.0.1280.690" timestamp="1613558667442" />
+    <state x="515" y="193" key="FileChooserDialogImpl" timestamp="1614011002447">
+      <screen x="0" y="0" width="1536" height="920" />
+    </state>
+    <state x="515" y="193" key="FileChooserDialogImpl/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1614011002447" />
     <state width="876" height="144" key="GridCell.Tab.0.bottom" timestamp="1613558045149">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
