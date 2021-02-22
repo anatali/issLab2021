@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f4161043-4e3b-4426-99e2-bdd4670238f1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/issLab2021.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/kotlin/it/unibo/boundaryWalk/App.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/test/java/it/unibo/boundaryWalk/TestWalker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/test/kotlin/it/unibo/boundaryWalk/AppTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/settings.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userDocs/WEnvUsage.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/WEnvUsage.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.3\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1obWVbADIo0k4vP3sGCdhvcavHK" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="show.unlinked.gradle.project.popup" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="it.unibo.wenvusage" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.TestClientUsingPostJava">
+    <configuration name="MoveVirtualRobot" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="it.unibo.wenvusage.MoveVirtualRobot" />
+      <module name="it.unibo.wenvusage.app.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.unibo.wenvusage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestClientUsingPostJava" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;it.unibo.wenvusage.TestClientUsingPostJava&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.TestClientUsingPostJava" />
+        <item itemvalue="Application.MoveVirtualRobot" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f4161043-4e3b-4426-99e2-bdd4670238f1" name="Default Changelist" comment="" />
+      <created>1613555794896</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1613555794896</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="320" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1613558667442">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state x="320" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1280.690@0.0.1280.690" timestamp="1613558667442" />
+    <state width="876" height="144" key="GridCell.Tab.0.bottom" timestamp="1613558045149">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="876" height="144" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1613558045149" />
+    <state width="876" height="144" key="GridCell.Tab.0.center" timestamp="1613558045149">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="876" height="144" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1613558045149" />
+    <state width="876" height="144" key="GridCell.Tab.0.left" timestamp="1613558045149">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="876" height="144" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1613558045149" />
+    <state width="876" height="144" key="GridCell.Tab.0.right" timestamp="1613558045149">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="876" height="144" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1613558045149" />
+  </component>
+</project>
