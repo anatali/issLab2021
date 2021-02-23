@@ -255,28 +255,34 @@ function myFunction() {
 </script>
 <head>
    
-<title>VR2021</title></head>
+<title>WEnv2021</title></head>
     
 <body>
 
 <div class="body"> 
 
-<h1>Virtual robot 2021</h1> 
-<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">ISS-lectures site</a></font> 
+<h1>Interacting with a virtual robot</h1> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/LectureBologna1819.html" target="isslm">LabISS-lectures site</a></font> 
 
 <h2>INTRODUCTION</h2>
 Our company (<tt>Unibo</tt>) has developed  a virtual environment (named <em>WEnv</em>) that includes a virtual robot.
 <br/> 
 The virtual environment  has been mainly built by <i>Pierfrancesco Soffritti</i> using the
 <a href=" https://threejs.org/">three.js</a> JavaScript library (see
-<a href="https://github.com/PierfrancescoSoffritti/ConfigurableThreejsApp">ConfigurableThreejsApp</a> ).
-
-
+<a href="https://github.com/PierfrancescoSoffritti/ConfigurableThreejsApp">ConfigurableThreejsApp</a> ) .
+<h3>Starting</h3>
+The reference project for this introduction is <tt>it.unibo.robots19</tt>.
+<ol>
+<li>Install <bc>Node.js</bc></tt>
+<li>Open a terminal on <bc>it.unibo.robots19\node\WEnv\server</bc> and execute <pre>npm install</tt></pre></li>
+<li>In the directory <bc>it.unibo.robots19\node\WEnv\WebGLScene</bc>  execute <pre>npm install</tt></pre></li>
+<li>In the directory  <bc>it.unibo.robots19\node\WEnv\server\src</bc>  execute <pre>node main 8999</tt></pre></li>
+<li>Open a browser on <pre>localhost:8090</pre></li>
+</ol>
  
-<h3>THE SCENE</h3>  
+<h3>SCENE</h3>  
 The scene of the <tt>WEnv</tt> is built from a description can be easily defined by an application designer.
-An example (related to the scene on the right of the figure below) can be found in <a href="sceneConfig.js" target="code">sceneConfig.js</a>.
-<br/><br/>
+
 <center><table style="width:95%">
 <tbody>	
 
@@ -287,51 +293,98 @@ An example (related to the scene on the right of the figure below) can be found 
 </tbody>	
 </table></center>
 	
-<h3>THE VIRTUAL ROBOT</h3>  
-The virtual robot is equipped with two impact sensors, one put in front and one in the rear of the robot.
-<br/>
-The robot can perform simple moves, each lasting a finite time (specified by the user) as explained in the nexet section.
+  
+The scene description is stroed in a configuration file (named <bc>sceneConfig.js</bc>) stored in the
+directory <tt>WebGLScene</tt>. For example the description of the scene on the right of the figure above is:
+<pre>
+const config = {
+    floor: {
+        size: { x: 25, y: 20 }
+    },
+    player: {
+        //position: { x: 0.5, y: 0.5 },		//CENTER
+        position: { x: 0.3, y: 0.2 },		//INIT
+        //position: { x: 0.8, y: 0.85 },	//END
+        speed: 0.2
+    },
+    sonars: [
+        {
+            name: "sonar2",
+            position: { x: 0.94, y: 0.88},
+            senseAxis: { x: true, y: false }
+        }
+     ],
+    movingObstacles: [
+/*      {
+            name: "movingobstacle",
+            position: { x: .64, y: .42 },
+            directionAxis: { x: true, y: true },
+            speed: 0.2,
+            range: 28
+        },
+*/
+    ],
+   staticObstacles: [ 
+        {
+            name: "obs1",
+            centerPosition: { x: 0.3, y: 0.38 }, 
+            size: { x: 0.05, y: 0.045}
+        },
+        {
+        name: "wallUp",
+			centerPosition: { x: 0.48, y: 0.98},
+			size: { x: 0.8, y: 0.01}
+        },
+        {
+            name: "wallDown",
+            centerPosition: { x: 0.45, y: 0.01},
+            size: { x: 0.85, y: 0.01}
+        },
+        {
+            name: "wallRight",
+            centerPosition: { x: 0.05, y: 0.45},
+            size: { x: 0.01, y: 0.75}
+        },
+        {
+            name: "wallLeft",
+            centerPosition: { x: 0.9, y: 0.5},
+            size: { x: 0.01, y: 0.65}
+        }
+    ]
+}
 
-<h2 id="interaction">INTERACTION</h2> 
+export default config;
+</pre>
+
+<h3>INTERACTION</h3> 
 <!--
 OLD PART BASED ON THE WORK of  Soffritti
 -----------------------------------------------------	
 The virtual robot accepts commands sent on a <tt>TCP</tt> connection on port <tt>8999</tt>.
 -->
-<h3 id="commands">Robot as receiver of commands</h3>
 The virtual robot uses the Node library <a href="https://github.com/websockets/ws" target="web">https://github.com/einaros/ws</a> 
-to accept:<br/><br/>
-<ul>
-<li>commands sent as HTTP POST messages on port <tt>8090</tt></li>
-<li>commands sent on a websocket at port <tt>8091</tt></li>
-</ul>
+to accept commands sent on a websocket at port <tt>8091</tt>. 
 
-
-<h4 id="cril">The cril (concrete-robot interaction language)</h4>
-The commands are expressed as <a href="https://www.json.org/json-en.html" target="web">JSON</a> strings:
 <pre>
- {"robotmove":"<ks>MOVE</ks>", "time":<ks>T</ks>} 	with <ks>MOVE</ks>=<kc>turnLeft | turnRight | moveForward | moveBackward | alarm</kc>, <ks>T</ks>=naturalNum
+ {"robotmove":"<ks>MOVE</ks>", "time":<ks>T</ks>} 	with <ks>MOVE</ks> = <kc>turnLeft | turnRight | moveForward | moveBackward | alarm</kc>, <ks>T</ks> = naturalNum
 </pre>
 
-The set of strings written in this form constitute the <ks>concrete-robot interaction language</ks> (<k>cril</k>)
- <br/><br/>
-Each command is redirected (using <a href="https://github.com/socketio/socket.io" target="web">socket.io</a>) 
+These commands are redirected (using <a href="https://github.com/socketio/socket.io" target="web">socket.io</a>) 
 to the <tt>WebGLScene</tt>.
-
-<h4 id="response">Each command sends a response</h4>
-
-After the execution of a command, the robot sends to the caller (both using POST and the websocket) an answer expressed in 
-<a href="https://www.json.org/json-en.html" target="web">JSON</a>:
+<!--  , once translated in the language described in the file  <a href="../node/WEnv/README.md" target="web">README.md</a>:
 
 <pre>
-{"endmove":"<ks>RESULT</ks>", "move":<ks>MOVE</ks>}   with <ks>RESULT</ks> = <kc>true | false</kc>
-</pre>
+<kc>moveForward :</kc>   `{ "type": "moveForward", "arg": 300 }`
+<kc>moveBackward :</kc>  `{ "type": "moveBackward", "arg": 300 }`
+ 
+<kc>turnRight : </kc>     `{ "type": "turnRight", "arg": 300 }`
+<kc>turnLeft : </kc>      `{ "type": "turnLeft", "arg": 300 }` 
 
-A <tt>RESULT</tt> <k>false</k> means that the move has aborted (e.g. because the robot has hit an obstacle).
+<kc>alarm (stop) : </kc>  `{ "type": "alarm" }`
 
-<h3>Robot as sender of information</h3>
-
-Moreover, the <tt>WEnv</tt> <em>sends to the  clients</em> connected to the ws port <tt>8091</tt>:
+</pre>-->
+<br/><br/>
+Moreover, the virtual environment <em>sends</em> to the  clients connected to the ws port <tt>8091</tt>:
 <ul>
 <li>Data emitted by the sonars included in the scene when they detect some object (the moving robot) </li>
 <li>Data emitted by the impact sensors put in front and in the rear of the robot, 
@@ -342,53 +395,15 @@ when they detect an obstacle (fixed or mobile). For example:
 </pre> </li>
 </ul>
 
-<h2 id="deploy">DEPLOYOMENT (on docker)</h2> 
-<pre>
-docker-compose -f  virtualrobotandcontrol.yaml up
-</pre>
-With  <ks>virtualrobotandcontrol.yaml</ks> defined as follows (take care of indent):
-<pre>
-version: '3'
-services:
-  wenv:
-    image: docker.io/natbodocker/virtualrobotdisi:1.0
-    ports:
-      - 8090:8090
-      - 8091:8091
-  vrobotcontrol:
-    image: docker.io/natbodocker/virtualrobotcontrol:1.0
-    ports:
-      - 3000:3000
-    depends_on:
-      - wenv
-</pre>
- 
- 
- 
-<!--
 
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
- 
 
-</td>
-<td>
-</td>
-</tr>
- </tbody>
-</table>
+
 
 <h2>USING THE VIRTUAL ROBOT</h2>
 
-Examples of clients are reported in project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>
--->
+Examples of clients will be reported in project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>
 
-<!-- file:///C:/Didattica2018Work/iss2021Lab/it.unibo.virtualrobotclient/userDocs/VirtualrobotClient.html -->
-
- 
-
+<br/><br/>
 </div>  
 <div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
 By AN Unibo-DISI    

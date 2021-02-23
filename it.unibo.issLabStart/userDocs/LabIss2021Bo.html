@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 70%;
+	background-color: #fcf8c7; 
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}    
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+  -->
+</style>
+
+<style>
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: lightyellow;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: relative;
+  z-index: 1;
+  bottom: 145%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: relative;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+</style>
+
+<script>
+// When the user clicks on <div>, open the popup
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+<head>
+   
+<title>LabIss20201</title>
+</head>
+    
+<body>
+
+ 
+<title>LabIss2021</title></head><body>
+    
+<h1>Ingegneria dei Sistemi Software 2021</h1>
+
+<h2>Introduction</h2>
+ <center>
+ <table style="width:98%">
+ 
+	<tr>
+	<td style="width:60%"> 
+	 <a href="./LectureBologna2021.html" target="lab">LectureBologna20-21</a> 
+	</td>
+	<td style="width:35%">Project <bc>issLabStart</bc><br/>
+ 	</td>
+<td><tt></tt></td>
+	</tr>
+	
+	 	<tr>
+	<td style="width:60%">	 <h3>Startup</h3>
+ 	</td>
+	<td style="width:35%"> 
+	</td>
+<td><tt></tt></td>
+	</tr>	
+	
+	<tr>
+	<td  >	 
+	Si parte da un  insieme  di requisiti descritti in un testo in linguaggio naturale<br/>
+	<m><a href="./TFBO19ISS.pdf" target="lab">Final task ISS-2019</a>, &nbsp; &nbsp; &nbsp; 
+	<a href="./TFBO20ISS.pdf" target="lab">Final task ISS-2020</a></m>	
+	</td>
+	<td>Project <bc>issLabStart</bc><br/>
+	</td>
+<td><tt></tt></td>
+	</tr>
+	
+ 	<tr>
+	<td> Si analizzano i requisiti e si cerca di impostare un piano di lavoro <br/>	  
+	 <a href="./template2021.html" target="lab">template2021.html</a>,  <a href="./templateToFill" target="lab">templateToFill</a>
+	 
+	</td>
+	<td>Project <bc>issLabStart</bc><br/>
+	</td>
+<td><tt></tt></td>
+	</tr>		
+
+ 	<tr>
+	<td >
+ La conosenza e l'uso di linguaggi e strumenti (esistenti) è necessaria ma mai sufficiente (e talvolta può essere un limite).  
+ &nbsp; &nbsp; &nbsp;  <a href="./Introduction.pdf" target="lab">Introduction.pdf</a> 
+ 	</td>
+	<td> Project <bc>issLabStart</bc> 
+	</td>
+	
+<td><tt></tt></td>
+	</tr>
+
+ 
+ 
+ 	<tr>
+	<td><h4>Mondi reali e mondi virtuali</h4>
+	Le applicazioni IOT consentono di affrontare diversi tipi di problemi e la progettazione
+	di sistemi software relativi sia a mondi reali (sistemi embedded) sia a mondi reali  
+	 <a href="./devsDDR.html" target="lab">Building a physical DDR</a> 	 
+	che virtuali: <a href="VR2021.pdf" target="lab">VR2021.pdf</a> 
+	<a href="../../it.unibo.virtualRobot2020/userDocs/LabVirtualRobot.html" target="lab">LabVirtualRobot.html</a> 
+	
+	</td>
+	<td>Project <bc>issLabStart</bc> &nbsp; &nbsp; &nbsp;  <bc>it.unibo.virtualRobot2020</bc> <br/>
+	</td>
+<td></td>
+	</tr>	
+  
+	
+</table>
+</center> 	
+
+
+</table>
+</center> 	
+
+    
+  
+   
+ 
+ 
+<br/><br/>
+    
+</body>
+</html>
+  
+
+
+    
+
+<div style="background-color:rgba(86, 56, 453, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+    
+ </div>  
+   
+ 
+</body></html>

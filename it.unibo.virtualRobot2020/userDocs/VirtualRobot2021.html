@@ -262,7 +262,7 @@ function myFunction() {
 <div class="body"> 
 
 <h1>Virtual robot 2021</h1> 
-<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">ISS-lectures site</a></font> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/LectureBologna1819.html" target="isslm">LabISS-lectures site</a></font> 
 
 <h2>INTRODUCTION</h2>
 Our company (<tt>Unibo</tt>) has developed  a virtual environment (named <em>WEnv</em>) that includes a virtual robot.
@@ -327,7 +327,7 @@ After the execution of a command, the robot sends to the caller (both using POST
 {"endmove":"<ks>RESULT</ks>", "move":<ks>MOVE</ks>}   with <ks>RESULT</ks> = <kc>true | false</kc>
 </pre>
 
-A <tt>RESULT</tt> <k>false</k> means that the move has aborted (e.g. because the robot has hit an obstacle).
+A <tt>RESULT false</tt> means that the move has aborted (e.g. because the robot has hit an obstacle)
 
 <h3>Robot as sender of information</h3>
 
@@ -342,43 +342,9 @@ when they detect an obstacle (fixed or mobile). For example:
 </pre> </li>
 </ul>
 
-<h2 id="deploy">DEPLOYOMENT (on docker)</h2> 
-<pre>
-docker-compose -f  virtualrobotandcontrol.yaml up
-</pre>
-With  <ks>virtualrobotandcontrol.yaml</ks> defined as follows (take care of indent):
-<pre>
-version: '3'
-services:
-  wenv:
-    image: docker.io/natbodocker/virtualrobotdisi:1.0
-    ports:
-      - 8090:8090
-      - 8091:8091
-  vrobotcontrol:
-    image: docker.io/natbodocker/virtualrobotcontrol:1.0
-    ports:
-      - 3000:3000
-    depends_on:
-      - wenv
-</pre>
- 
- 
+
  
 <!--
-
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
- 
-
-</td>
-<td>
-</td>
-</tr>
- </tbody>
-</table>
 
 <h2>USING THE VIRTUAL ROBOT</h2>
 
