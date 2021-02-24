@@ -23,23 +23,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4416c9a6-4ab8-416b-baa2-4a5e6f5bc2f4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/AnnotationReader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ApplISSInfoUsage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ISSInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ISSInfoUsage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/MainISSInfoUsage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/InitSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/UniboAnnotationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.wenvusage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.wenvusage/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.wenvusage/userDocs/WEnvUsage.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.wenvusage/userDocs/WEnvUsage.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -63,6 +63,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
   <component name="ProjectId" id="1opZqltVzp3OsrfNX78XZbBQO9U" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -75,6 +78,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -88,7 +92,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ClientWebsockJavax">
+  <component name="RunManager" selected="Application.ApplISSActor">
     <configuration name="ApplISSActor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="it.unibo.annotatedExample.ApplISSActor" />
       <module name="it.unibo.boundaryWalk.app.main" />
@@ -191,6 +195,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -200,32 +205,25 @@
       <screen x="0" y="0" width="1280" height="690" />
     </state>
     <state x="417" y="214" width="573" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1280.690@0.0.1280.690" timestamp="1613992854583" />
-    <state width="1238" height="220" key="GridCell.Tab.0.bottom" timestamp="1614167021729">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1384" height="191" key="GridCell.Tab.0.bottom" timestamp="1614190336066">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1238" height="220" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
-    <state width="1238" height="220" key="GridCell.Tab.0.center" timestamp="1614167021729">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1384" height="191" key="GridCell.Tab.0.bottom/0.0.1536.920/3840.0.1280.984@0.0.1536.920" timestamp="1614190336066" />
+    <state width="1384" height="191" key="GridCell.Tab.0.center" timestamp="1614190336066">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1238" height="220" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
-    <state width="1238" height="220" key="GridCell.Tab.0.left" timestamp="1614167021729">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1384" height="191" key="GridCell.Tab.0.center/0.0.1536.920/3840.0.1280.984@0.0.1536.920" timestamp="1614190336066" />
+    <state width="1384" height="191" key="GridCell.Tab.0.left" timestamp="1614190336066">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1238" height="220" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
-    <state width="1238" height="220" key="GridCell.Tab.0.right" timestamp="1614167021729">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1384" height="191" key="GridCell.Tab.0.left/0.0.1536.920/3840.0.1280.984@0.0.1536.920" timestamp="1614190336066" />
+    <state width="1384" height="191" key="GridCell.Tab.0.right" timestamp="1614190336066">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1238" height="220" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ISSInfo.java</url>
-          <line>4</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <state width="1384" height="191" key="GridCell.Tab.0.right/0.0.1536.920/3840.0.1280.984@0.0.1536.920" timestamp="1614190336066" />
   </component>
 </project>

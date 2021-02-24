@@ -23,18 +23,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f4161043-4e3b-4426-99e2-bdd4670238f1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/aboutAnnotations/AnnotationReader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/aboutAnnotations/ApplISSInfoUsage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/aboutAnnotations/ISSInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/aboutAnnotations/ISSInfoUsage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/aboutAnnotations/MainISSInfoUsage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/InitSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/UniboAnnotationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userDocs/WEnvUsage.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/WEnvUsage.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +46,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>

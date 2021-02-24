@@ -7,8 +7,7 @@ import java.lang.annotation.*;
 @Inherited
 public  @interface ISSActorSpec {
      //String sendMsg( );
+     String actorName() default "unknown";   //annotations and interfaces can't have constructors
+
 }
 
-/*
-TODO: a unibo class takes into account ISSActor annotations to implement the concept of Actor
- */
