@@ -23,27 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4416c9a6-4ab8-416b-baa2-4a5e6f5bc2f4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/issLab2021.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/boundaryWalk/App.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/test/java/it/unibo/boundaryWalk/TestWalker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/test/kotlin/it/unibo/boundaryWalk/AppTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/AnnotationReader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ApplISSInfoUsage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ISSInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ISSInfoUsage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/MainISSInfoUsage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/annotatedExample/ISSActorSpec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/it/unibo/boundaryWalk/ClientWebsockJavax.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.wenvusage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.wenvusage/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.wenvusage/userDocs/WEnvUsage.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.wenvusage/userDocs/WEnvUsage.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,16 +83,57 @@
       <recent name="it.unibo.boundaryWalk" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="it.unibo.annotatedExample" />
+      <recent name="aboutAnnotations" />
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.TestWalker">
+  <component name="RunManager" selected="Application.ClientWebsockJavax">
+    <configuration name="ApplISSActor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="it.unibo.annotatedExample.ApplISSActor" />
+      <module name="it.unibo.boundaryWalk.app.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.unibo.annotatedExample.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ClientWebsockJavax" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="it.unibo.boundaryWalk.ClientWebsockJavax" />
       <module name="it.unibo.boundaryWalk.app.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="it.unibo.boundaryWalk.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ISSInfoUsage" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="aboutAnnotations.ISSInfoUsage" />
+      <module name="it.unibo.boundaryWalk.app.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="aboutAnnotations.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainISSInfoUsage" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="aboutAnnotations.MainISSInfoUsage" />
+      <module name="it.unibo.boundaryWalk.app.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="aboutAnnotations.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -131,6 +162,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ApplISSActor" />
+        <item itemvalue="Application.MainISSInfoUsage" />
+        <item itemvalue="Application.ISSInfoUsage" />
         <item itemvalue="Gradle.TestWalker" />
         <item itemvalue="Application.ClientWebsockJavax" />
       </list>
@@ -166,21 +200,32 @@
       <screen x="0" y="0" width="1280" height="690" />
     </state>
     <state x="417" y="214" width="573" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1280.690@0.0.1280.690" timestamp="1613992854583" />
-    <state width="1238" height="232" key="GridCell.Tab.0.bottom" timestamp="1613994395564">
+    <state width="1238" height="220" key="GridCell.Tab.0.bottom" timestamp="1614167021729">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1238" height="232" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1613994395564" />
-    <state width="1238" height="232" key="GridCell.Tab.0.center" timestamp="1613994395563">
+    <state width="1238" height="220" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
+    <state width="1238" height="220" key="GridCell.Tab.0.center" timestamp="1614167021729">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1238" height="232" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1613994395563" />
-    <state width="1238" height="232" key="GridCell.Tab.0.left" timestamp="1613994395563">
+    <state width="1238" height="220" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
+    <state width="1238" height="220" key="GridCell.Tab.0.left" timestamp="1614167021729">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1238" height="232" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1613994395563" />
-    <state width="1238" height="232" key="GridCell.Tab.0.right" timestamp="1613994395563">
+    <state width="1238" height="220" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
+    <state width="1238" height="220" key="GridCell.Tab.0.right" timestamp="1614167021729">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1238" height="232" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1613994395563" />
+    <state width="1238" height="220" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1614167021729" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/it/unibo/aboutAnnotations/ISSInfo.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

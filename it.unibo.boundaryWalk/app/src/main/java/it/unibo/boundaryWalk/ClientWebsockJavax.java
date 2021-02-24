@@ -1,15 +1,49 @@
 /**
 ClientWebsockJavax.java
 ===============================================================
-Solve the boundaryWalk problem
+Solve the boundaryWalk problem using javax
 ===============================================================
 */
 package it.unibo.boundaryWalk;
 import org.json.JSONObject;
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 
+/*
+
+See https://www.baeldung.com/java-websockets
+https://abhishek-gupta.gitbook.io/java-websocket-api-handbook/configuration
+in https://abhishek-gupta.gitbook.io/java-websocket-api-handbook/
+WebSocket specification JSR-356
+JSR 356 support is also provided by other containers/frameworks such as Spring, Jetty etc.
+https://docs.oracle.com/javaee/7/api/javax/websocket/WebSocketContainer.html
+IMPORTANT:
+https://abhishek-gupta.gitbook.io/java-websocket-api-handbook/lifecycle_and_concurrency_semantics
+
+There are two ways of configuring endpoints: annotation-based and extension-based.
+As the annotation model leads to cleaner code as compared to the programmatic model,
+the annotation has become the conventional choice of coding.
+
+The WebSocket specification supports two on-wire data formats – text and binary.
+The API supports both these formats, adds capabilities to work with Java objects
+and health check messages (ping-pong) as defined in the specification:
+
+
+@ClientEndpoint(
+    configurator = ChatClientEndpointConfigurator.class, //discussed later
+    decoders = JSONToChatObjectDecoder.class,
+    encoders = ChatObjectToJSONEncoder.class,
+    subprotocols = {"chat"}
+)
+This instance is automatically injected (at runtime) as a parameter of the @OnOpen method
+
+public class ChatClient {
+ //business logic...
+}
+ */
 @ClientEndpoint     //javax.websocket annotation
 public class ClientWebsockJavax {
 
@@ -28,10 +62,14 @@ public class ClientWebsockJavax {
     private String journey         = "";        //for TESTING
 
     public ClientWebsockJavax(String addr) {
-        System.out.println("ClientWebsockJavax |  CREATING ...");
+        System.out.println("ClientWebsockJavax |  CREATING ... " + addr);
         try {
+            //WebSocketContainer helps connect to existing WebSocket server endpoints
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI("ws://"+addr));
+            //the next one can be used in situations where it is known that the given string is a legal URI
+            //container.connectToServer(this, URI.create("ws://"+addr));
+
         } catch (URISyntaxException ex) {
             System.err.println("ClientWebsockJavax | URISyntaxException exception: " + ex.getMessage());
         } catch (Exception e) {
@@ -43,10 +81,17 @@ public class ClientWebsockJavax {
     }
 
     //Callback hook for Connection open events.
+    //This method level annotation can be used to decorate a Java method that wishes
+    //to be called when a new web socket session is open.
     @OnOpen
-    public void onOpen(Session userSession) {
-        System.out.println("ClientWebsockJavax | opening websocket");
+    public void onOpen(Session userSession) { //, @PathParam("username") String username, EndpointConfig epConfig
+         //ClientEndpointConfig clientConfig = (ClientEndpointConfig) epConfig;
+        Principal userPrincipal = userSession.getUserPrincipal();
+        if( userPrincipal != null )  { //there is an authenticated user
+            System.out.println("ClientWebsockJavax | onOpen user=" + userPrincipal.getName());
+        }
         this.userSession = userSession;
+
     }
 
     //Callback hook for Connection close events.
@@ -62,6 +107,11 @@ public class ClientWebsockJavax {
         if (this.sockObserver != null) {
             this.sockObserver.handleMessage(message);
         }
+    }
+
+    @OnError
+    public void disconnected(Session session, Throwable error){
+        System.out.println("ClientWebsockJavax | disconnected  " + error.getMessage());
     }
 
     //register message handler
@@ -127,6 +177,7 @@ public class ClientWebsockJavax {
         });
     }
     public String doBoundaryWalk() throws Exception {
+        System.out.println("ClientWebsockJavax | doBoundaryWalk " );
         addObserver();
         //Start the journey
         stepNum = 1;
@@ -145,8 +196,19 @@ MAIN
             String result = new ClientWebsockJavax("localhost:8091").doBoundaryWalk();
             System.out.println("ClientWebsockJavax | result=" + result);
          } catch( Exception ex ) {
-            System.err.println("ClientWebsockJavax | InterruptedException exception: " + ex.getMessage());
+            System.err.println("ClientWebsockJavax | main exception: " + ex.getMessage());
         }
     }
 
 }
+
+/*
+When your WebsocketClientEndpoint's constructor is called,
+it will try to open a connection to the websocket server which is located at endPointURI
+and by writing @clientEndPoint annotation you are extending the EndPoint class.
+So all the annotations like @OnOpen, @OnMessage, OnClose will be called
+depending on the signal received from the server.
+So when the connection is opened automatically the function which annotated
+with @OnOpen will be called.
+See https://docs.oracle.com/javaee/7/api/javax/websocket/OnOpen.html
+ */
