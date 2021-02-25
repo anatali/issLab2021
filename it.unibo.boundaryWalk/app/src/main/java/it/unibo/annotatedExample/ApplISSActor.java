@@ -1,18 +1,20 @@
+/**
+ ApplISSActor.java
+ =========================================================================
+ An annotated class that exploits annotations (instead of inheritance)
+ to introduce built-in behavior in declarative way
+ =========================================================================
+ */
 package it.unibo.annotatedExample;
 
-import it.unibo.aboutAnnotations.ApplISSInfoUsage;
-import it.unibo.aboutAnnotations.ISSInfo;
-import it.unibo.aboutAnnotations.ISSInfoUsage;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 
 @ISSActorSpec( actorName = "actor0" )
 public class ApplISSActor extends ISSActor{
 
-    @InitSpec
-    public void myshow(){
-        System.out.println( myname + "  | myname= " + myname);
+    //@InitSpec
+    public void show(){
+        //super.show();
+        System.out.println( myname + " ApplISSActor | myname= " + myname);
     }
 
     public static void main(String args[]) throws Exception {

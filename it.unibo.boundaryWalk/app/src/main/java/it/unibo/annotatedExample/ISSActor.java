@@ -1,22 +1,25 @@
+/*
+ISSActor.java
+ */
 package it.unibo.annotatedExample;
 
-/*
-A unibo class takes into account ISSActor annotations to implement the concept of Actor
- */
+
 
 //@ISSActorSpec( actorName = "actordefault" )
-public class ISSActor {
+public abstract class ISSActor {
     protected String myname = "unknown";
 
     @ISSActorSpec
     public ISSActor( ){
         myname = UniboAnnotationUtil.getActorName( this.getClass() );
-        UniboAnnotationUtil.initializeObject(myname);
+        UniboAnnotationUtil.initializeObject( this );   //calls a method of the user class
         System.out.println("ISSActor | create " + myname);
     }
-
+/*
     @InitSpec
     public void show(){
-        System.out.println( myname + "  | myname= " + myname);
-    }
+        System.out.println( myname + " ISSActor show | myname= " + myname);
+    }*/
+
+    public abstract void show();
 }
