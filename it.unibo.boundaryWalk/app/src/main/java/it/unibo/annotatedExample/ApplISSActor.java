@@ -7,12 +7,16 @@ import it.unibo.aboutAnnotations.ISSInfoUsage;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-//@ISSActorSpec
+@ISSActorSpec( actorName = "actor0" )
 public class ApplISSActor extends ISSActor{
 
-    public static void main(String args[]) throws Exception {
-        new ApplISSActor() ;
+    @InitSpec
+    public void myshow(){
+        System.out.println( myname + "  | myname= " + myname);
+    }
 
+    public static void main(String args[]) throws Exception {
+        new ApplISSActor( ); //.show(); ;
     }
 
 }
