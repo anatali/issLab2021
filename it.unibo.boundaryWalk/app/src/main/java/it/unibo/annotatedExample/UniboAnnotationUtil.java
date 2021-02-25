@@ -1,7 +1,4 @@
 package it.unibo.annotatedExample;
-
-import it.unibo.aboutAnnotations.ISSInfo;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -24,12 +21,14 @@ public class UniboAnnotationUtil {
 
 
     public static void initializeObject(Object object)   {
+        //println("initializeObject object=" + object);
         Class<?> clazz = object.getClass();
         for (Method method : clazz.getDeclaredMethods()) {
+            //System.out.println("initializeObject method=" + method);
             if (method.isAnnotationPresent(InitSpec.class)) {
                 method.setAccessible(true);
                 try{
-                    System.out.println("initializeObject invoke");
+                    //System.out.println("initializeObject invoke " + method);
                     method.invoke(object);
                 }catch( Exception e ){
                     e.printStackTrace();

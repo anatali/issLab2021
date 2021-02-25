@@ -50,3 +50,13 @@ public class TestMoveVirtualRobot {
     }
 
 }
+/*
+See
+http://sqa.fyicenter.com/FAQ/JUnit/What_Is_JUnit_.html
+http://sqa.fyicenter.com/FAQ/JUnit/Can_You_Write_a_JUnit_Test_Case_Class_in_10_Minu.html
+http://sqa.fyicenter.com/FAQ/JUnit/Can_You_Explain_a_Sample_JUnit_Test_Case_Class_.html
+No main required
+public static void main(String[] args) {
+  junit.textui.TestRunner.run(DirListerTest.class);
+}
+ */

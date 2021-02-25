@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+
+<style>
+/* Popup container - can be anything you want */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 260px;
+  background-color: #F3F781;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+</style>
+
+<script>
+// When the user clicks on <div>, open the popup
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+<head>
+   
+<title>Annotations</title></head>
+    
+<body>
+
+<div class="body"> 
+<h1>Lab ISS | About annotations</h1> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" 
+target="isslm">LabISS-lectures site</a></font> 
+
+
+<h2>Java Annotations</h2> 
+ 
+  
+
+<hr/>
+<ul>
+<li><kc>Annotation</kc>: (noun)  a note added by way of comment or explanation often furnishing summaries of relevant decisions.</li>
+<li><kc>Stereotype</kc>: (noun) something conforming to a fixed or general <k>pattern</k>; especially : 
+a standardized <ks>mental picture</ks> that is held in common by members of a group and that represents 
+an oversimplified opinion, prejudiced attitude, or uncritical judgment.</li>
+</ul>
+<hr/>
+
+<a href="https://en.wikipedia.org/wiki/Java_annotation"  target="web"><bc>Java Annotations</bc></a> (introduced in Java release 5 - <tt>Tiger</tt>) 
+are a means to define metadata (<bc>"data about data"</bc>) where the language does not have explicit support for such metadata.
+However, Java annotations   as <i>are not really metadata</i>; rather, they are data about 
+classes, methods, instance and static variables etc.
+<br/><br/>
+Before <tt>Tiger</tt>, the nedd metadata was mainly solved by using
+<a href="Marker interface pattern"  target="web"><i>Marker Interfaces</i></a> that are interfaces that may not contain any methods, 
+but defined to denote a particular concept or entity within an application.
+For example, the the <tt>java.io.Serializable interface</tt> is a marker interface in that it does not require any methods to be implemented 
+but indicates that a class is capable of being serialized via the <tt>Java Serialization</tt> mechanism.
+
+<br/><br/>
+<a href="https://en.wikipedia.org/wiki/Java_annotation"  target="web"><bc>Java Annotations</bc></a> provide three basic facilities
+(see also <a href="https://www.javastaff.com/2009/06/23/java-annotations-cosa-sono-come-utilizzarle-come-crearle/"  target="web">
+<ks>Java Annotation: cosa sono, come utilizzarle, come crearle</ks></a>):
+<ul>
+<li>The provision of <em>additional semantics</em> for various class elements. 
+This additional semantic information can help developers to understand the intent behind some feature or implementation detail.</li>
+<li>The execution of <em>additional compile time checks</em> that ensure various constraints are met.</li>
+<li>The support of <em>additional code analysis</em> by annotation-aware tools.</li>
+</ul>
+We can create our own annotations by defining a new annotation type. 
+This is done using a new piece of language syntax, the <k>@interface</k> key word. 
+<br/><br/>
+Note that, if the code relating to an annotation changes, then the associated annotation may also need modification. 
+ <br/>  You can’t subclass annotations.<br/>  
+
+<!--
+<h2>Spring annotations</h2>
+During initial release of Spring, a <a href="https://www.baeldung.com/spring-bean" target="web">bean</a> was declared in an <tt>XML</tt> file. 
+For a large project, this quickly becomes a massive task. 
+<br/><br/>
+From Spring 2.5 Spring guys provide <bc>annotation-based 
+<a href="https://en.wikipedia.org/wiki/Dependency_injection" target="web">dependency injection</bc></a>  and Java-based configuration. 
+<br/><br/>
+
+Moreover, <i>annotation-based dependency injection</i> was introduced, which <bc>automatically scans</bc> and register classes as 
+Spring bean which is annotated using <tt>@Component</tt> annotation.  
+<br/><br/>
+
+ 
+ 
+The use of annotations provide us tremendous capabilities in how we configure the behaviors of the Spring Boot Framework. 
+The problem is that they introduce radical extensions (with respect to Java) to the conceptual space available to the software designer.
+<br/><br/>
+
+<pre>
+@Override                   utile nel caso in cui il metodo di cui vogliamo fare l’override sia sbagliato
+@Deprecated                 informazione letta anche dagli IDE
+@SuppressWarnings           quando desideriamo scrivere codice “unsafe”
+JPA (Java Persistence API) 	definisce molte Annotation che permettono di evitare lunghi file di configurazione.
+Sptring >= 2.5				annotation-based dependency injection and Java-based configuration.
+
+Spring annotations introduce radical extensions (with respect to Java) to the conceptual space available to the software designer.
+
+
+@Target						Meta-Annotation che permette di definire a quale parte del codice può essere collegata una annotation
+							ElementType.PACKAGE  ElementType.TYPE ElementType.FIELD ElementType.METHOD 
+							ElementType.PARAMETER ElementType.CONSTRUCTOR ElementType.LOCAL_VARIABLE
+
+@Retention					Meta-Annotation che specifica la politica di mantenimento in memoria con cui
+                            compilatore e JVM devono gestire le annotation
+RetentionPolicy.SOURCE		Annotation presente solo a livello	di sorgente
+RetentionPolicy.CLASS		Annotation presente anche nel .class ma non visibile tramite le reflection
+RetentionPolicy.RUNTIME		Annotation presente anche nel .class e visibile tramite reflection
+
+@Documented					serve per includere l’Annotation nel javadoc
+@Inherited					il tipo di annotazione viene  ereditato dalle sottoclassi
+
+
+Annotazioni possono essere lette da file sorgenti, file class (bytecode) e runtime tramite reflection.
+
+//1) Definizione di una annotation custom
+@Target(value = { ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Source {
+	String autore() default "PincoPallino"; 
+	double versione() default 0;
+}
+
+public @interface GroupTODO {
+	public enum Severity {CRITICAL,IMPORTANT,TRIVIAL} ;
+	Severity severity( ) default Severity.IMPORTANT;
+	String item( );
+	String assignedTo( );
+}
+
+Ogni tipo estende automaticamente l’interfaccia <kc>java.lang.annotation.Annotation</kc>
+NON si possono avere relazioni di estensione
+(extends) fra tipi di annotation
+ I tipi di ritorno dei metodi devono essere: tipi primitivi, String, Class, enum, tipi di annotation o array dei tipi elencati
+ Una annotation NON può avere una throws clause
+ NON sono permessi self-reference (AnnotationA non può
+contenere un membro di tipo AnnotationA) né circularreference (AnnotationA non può contenere un membro di tipo
+AnnotationB e questo di AnnotationA)
+
+//2) Uso della annotation custom
+@Source(autore = "AN", versione = 1.1)
+public class TestClass {
+	private int a; 
+	public int getA() { return a; } 
+	public void setA(int a) { this.a = a; }
+}
+
+@GroupTODO (
+	severity = GroupTODO.Severity.CRITICAL;
+	item = “Figure out the amount of interest per month”;
+	assignedTo = “Brett McLaughlin”;
+)
+public void calculateInterest(float amount , float rate) {
+	//TODO
+}
+
+3) Recupero informazioni da annotazione
+public class AnnotationReader {
+	public static void main(String args[]) throws Exception {
+		readAnnotation(TestClass.class);
+	}
+ 
+	static void readAnnotation(AnnotatedElement element) {
+		try {
+			Annotation[] classAnnotations = element.getAnnotations();
+			for (Annotation annotation : classAnnotations) {
+				if (annotation instanceof Source) {
+					Source source = (Source) annotation;
+					System.out.println("Autore:" + source.autore());
+					System.out.println("Versione:" + source.versione());
+				}
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+	}
+}
+</pre>
+-->
+
+<br/><br/>
+</div>  
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>

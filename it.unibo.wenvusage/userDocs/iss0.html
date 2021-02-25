@@ -405,7 +405,17 @@ al protocollo di comunicazione, che potrebbe essere selezionato in una <k>fase d
 </li>
 
 <li><h4>Testing, ma non solo </h4>
+Sul problema del testing si trova moltissimo materiale in rete. Riportiamo qui alcuni riferimenti utili sul 'piano pragmatico':
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Software_testing" target="web"><ks>Software testing</ks>(wikipedia)</a></li>
+<li><a href="https://softwaretestingfundamentals.com/software-testing-quotes/" target="web"><ks>software-testing-quotes</ks> </a></li>
+<li><a href="http://sqa.fyicenter.com/FAQ/Automated-Testing-Plan/" target="web"><ks>Automated-Testing-Plan</ks> </a></li>
+<li><a href="http://sqa.fyicenter.com/FAQ/JUnit/What_Is_JUnit_.html" target="web"><ks>What_Is_JUnit</ks></a></li>
+</ul>
 
+In questa fase però il nostro obittivo  <k>non è quello di eseguire dei test</k>, ma quello di concepire il modo migliore per
+definire i test in modo che possano individuare in modo automatico le falle del software (rispetto ai requisiti).
+<br/><br/>  
 L'obiettivo di definire un <tt>TestPlan automatizzabile</tt> introduce di fatto un <k>nuovo requisito</k>: 
 rendere l'applicazione osservabile, o meglio renderne verificabili gli effetti, da parte di una macchina. 
 <br/>
@@ -413,14 +423,16 @@ In particolare, non basta indurre il robot a muoversi;
 in assenza di telecamere e/o di appositi sensori ambientali, un modo per procedere è quello di <ks><i>inferire conoscenza</i></ks> 
 dai comandi  inviati e dalle risposte ottenute da WENV e <ks>rappresentare in modo esplicito</ks> tale conoscenza.
 <br/><br/>
-Potremmo dire che occorre creare all'interno della applicazione, una sorta di <k><i>'mappa mentale'</i></k> capace di fornire un modello delle azioni del robot,
+Potremmo dire che occorre creare all'interno della applicazione, una sorta di <k><i>'mappa mentale'</i></k> capace di fornire un 
+<ks>modello delle azioni</ks> del robot,
 sul quale un programma di testing possa 'ragionare' per effettuare le verifiche. 
 <br/>
 Ovviamente un approccio di questo tipo non assicura che la mappa corrisponda
 alla situazione reale, ma ciò corrisponde di fatto a quanto accade anche a tutti gli esseri senzienti nel mondo biologico, che 
 operano sulla base di informazioni ottenute per via sensoriale; in questo caso i 'sensori' sarebbero le risposte di WEnv alle mosse.
 
-<br/><br/>Più in particolare, date le informazioni su come usare il robot, possiamo prefigurare che la soluzione del problema consista nel seguente algoritmo:
+<br/><br/>Più in particolare, date le informazioni su come usare il robot, possiamo prefigurare che la soluzione del problema 
+consista nel seguente algoritmo (si noti che ci focalizziamo ancora sul <k>'cosa'</k> fare piuttosto che sul 'come farlo'):
 <pre>
 il robot parte dalla posizione HOME, rivolto verso sud (DOWN) 
 per 4 volte: 
