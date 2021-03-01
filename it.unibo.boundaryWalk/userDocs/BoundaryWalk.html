@@ -1,0 +1,634 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>BoundaryWalk</title></head>
+    
+<body>
+<div id="top">
+<h1>Lab ISS | iss0 <font size="5"></font> </h1>
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">ISS-lectures site</a></font> 
+
+</div>  
+
+<div class="body"> 
+<h2>Introduction </h2>
+ 
+This document is related to the project <a href="../../it.unibo.boundaryWalk" target="code">it.unibo.boundaryWalk</a>.
+
+</div> 
+<h2>Requirements</h2>
+
+ 
+<div class="remark">
+Design and build a software system that leads a robot to walk along the boundary of a empty, rectangular room.
+</div>
+
+ 
+
+<h2>Requirement analysis</h2>
+ 
+Our <b>interaction with the custom</b> ha clarified that the customer intends:
+<ul>
+<li>for <ks>room</ks>: a conventional (rectangular) room of an house;</li>
+<li>for <ks>boundary</ks>: the perimeter of the room, that is physically delimited by solid <ks>walls</ks>;</li>
+<li>for <ks>robot</ks>: a device able to execute move commands sent over the network, as described in the document
+<a href="VirtualRobot2021.html#commands" target="web"><em>VirtualRobot2021.html</em></a> provided by the customer; 
+<li>for <ks>walk</ks>: the  robot moves forward, close to the room walls. </li>
+</li>
+
+The customer does not impose any requirement on the programming language used to develop the application.
+
+</ul>
+ 
+
+<h3>The main user story (validated by the customer)</h3>
+
+ <table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:70%" >
+ 
+As user, I put the robot (south oriented ) in its HOME; afterwards, I activate the <ks>boundaryWalk</ks> application
+that moves the robot along the room bounbdary. 
+<br/>
+The  application cannot be interrupted by any user-command.
+<br/><br/>
+When the application terminates,  the itinerary done by the robot must be that shown in the figure and
+a proper <em>TestPlan</em> should properly check this outcome.
+</td>
+<td><center><img src="./img/TestPlan0.png" alt="TestPlan0" width="90%" ></center>
+</td>
+</tr>
+ </tbody>
+</table>
+
+
+<h2>Problem analysis</h2>
+
+We highlight that:
+<ol>
+<li>In the <a href="VirtualRobot2021.html#commands" target="web">VirtualRobot2021.html: commands</a> the customer states
+that the robot can receive move commands in two different ways:
+	<ul>
+	<li>by sending messages to the port <tt>8090</tt> using  <ks>HTTP POST</ks> </li>
+	<li>by sending messages to the port <tt>8091</tt> using a <ks>websocket</ks> </li>
+	</ul>
+</li>
+ 
+<li> With respect to the technological level, there are many libraries in many programming languages that support the
+required protcols. <br/>
+However, the problem does introduce an <k>abstraction gap at the conceptual level</k>,
+since <kc>the required logical interaction</kc> is always a <em>request-response</em>, <b>regardless of the technology</b> used to implement
+the interaction with the robot.
+
+</li>
+ 
+</ol>
+
+
+<h3>Logical architecture</h3>
+ 
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%">
+We nust design and build a <k>distributed system</k> with two software macro-components:
+	<ol>
+	<li>the <a href="VirtualRobot2021.html" target="web"><em>VirtualRobot</em></a>, given by the customer</li>
+	<li>our <em>boundaryWalk</em> application that interacts with the robot with a <i>request-response</i> pattern</li>
+	</ol>
+A first scheme of the logical architecture  of the systems can be defined as shown in the figure
+(for the meaning of the symbols, see the <a href="./img/legenda.png" target="web">legenda</a>)
+
+</td>
+<td>  <center><img src="./img/logicArch0.png" alt="logicArch0" width="100%" ></center>
+</td>
+</tr>
+</tbody>
+</table>
+
+<br/><br/>
+We observe that:
+<ul>
+<li>The specification of the exact 'nature' of our <em>boundaryWalk</em> software is left to the designer. 
+However, we can say here that is it <b>not a database, or a function or an object</b>.  
+<li>To make our <em>boundaryWalk</em> software <k>as much as possibile independent</k> from the undelying communication protocols,
+the designer could make reference to proper <a href="https://it.wikipedia.org/wiki/Design_pattern" target="web"><em>design pattern</em></a>, 
+e.g.
+<a href="https://it.wikipedia.org/wiki/Adapter_pattern" target="web"><ks>Adapter</ks></a>, 
+<a href="https://it.wikipedia.org/wiki/Bridge_pattern" target="web"><ks>Bridge</ks></a>,
+<a href="https://it.wikipedia.org/wiki/Fa%C3%A7ade_pattern" target="web"><ks>Facade</ks></a>.
+ </li>
+<li>
+It is quite easy to define <k>what the robot has to do</k>  the meet the requirements:
+<pre>
+let us define <kc>emum direction {UP,DOWN,LEFT,RIGHT}</kc>
+the robot start in the HOME position, direction=DOWN
+for 4 times: 
+	1) send to the robot the request to execute the command <kc>moveForward</kc> 
+	and continue to do it, until the answer of the request becomes 'false'
+	2) send to the robot the request to execute the <kc>turnLeft</kc>
+</pre>
+</li>
+
+</ul>
+
+<h2>TestPlans</h2>
+To check that the application fulfills the requirements, we could keep track of the moves done by the robot.
+For example:
+
+<pre>
+...
+let us define <kc>String moves="";</kc>
+for 4 times: 
+	1) send to the robot the request to execute the command <kc>moveForward</kc>;
+	if the answer is 'true' <ks>append the symbol "w"</ks> to <kc>moves</kc> and continue to do 1); 
+	2) when the answer of the request becomes 'false',
+	send to the robot the request to execute the command <kc>turnLeft</kc> and <ks>append the symbol "l"</ks> to <kc>moves</kc>
+</pre>
+
+In this way, when the application terminates, the string <kc>moves</kc> should have the typical structure of a 
+<a href="https://en.wikipedia.org/wiki/Regular_expression" target="web"><em>regular expression</em></a>,
+that can be easily checked with a TestUnit software:
+<pre><kc>moves</kc>: <ks>"w*lw*lw*lw*l"</ks>     <kc><ks>*</ks> : repetion N times(N>=0) </pre>
+
+</li> 
+ 
+<h2>Project</h2>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%">
+<h3>Nature of the application component</h3>
+The <em>boundaryWalk</em> application is a <k>conventional Java program</k>, represented in the figure as an object with an internal thread.
+<br/>
+</td>
+<td>  
+<center><img src="./img/projectArch0.png" alt="projectArch0" width="60%" ></center>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%">
+<h3>A layered architecture: the basic communication layer</h3>
+<div class="remark">
+To make the 'business code' as much independent as possibile from the technological details of the interaction with the virtual robot 
+(and with any other type of robot in the future), let us structure the code according to a conventional <em>layered architecture</em>,
+which is the simplest form of software architectural pattern, where the components are organized in <i>horizontal layers</i>.
+</div>
+
+For each protocol we will introduce a proper support that implements the interface<br/>
+<a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations.java</em></a> 
+<pre>
+public interface IssOperations {
+    void forward( String msg ) ;
+    void request( String msg );
+    void reply( String msg );
+    String requestSynch( String msg );
+}
+</pre>
+These operations are introduced with reference to message-passing rather than to procedure-call.
+Thus, <em>forward</em> means just 'fire and forget', while
+ <em>request</em> assumes that the called entity will execute a <em>reply</em> related to that request.
+<br/><br/>
+<em>requestSynch</em> is introduced to facilitate the transition from procedure-call tomessage-passing.
+</td>
+<td>  
+<h3>The communication layers</h3>
+<center><img src="./img/issCommsLayers.png" alt="issCommsLayers" width="90%" ></center>
+<br/>
+The implementation of the <a href="../app/src/main/java/it/unibo/interaction/IssHttpSupport.java" target="web"><em>IssHttpSupport.java</em></a>
+is quite conventional, since the work is mainly done by the library <ks>org.apache.http</ks>.
+<br/><br/>
+The implementation of the <a href="../app/src/main/java/it/unibo/interaction/IssWsSupport.java" target="web"><em>IssWsSupport.java</em></a>
+is based on the library <ks>javax.websocket</ks> and requires a new 'style of programming' (that we will discuss later).
+
+
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<h3>IssCommsFactory</h3>
+The <a href="../app/src/main/java/it/unibo/interaction/IssCommsFactory.java" target="web"><em>IssCommsFactory.java</em></a> provides a 
+ <a href="https://en.wikipedia.org/wiki/Factory_method_pattern" target="web">factory method</a>
+to <ks>create</ks> the proper communicartion support by using a <k>user-defined Java annotation</k> related to the object given in input.
+
+<center><img src="./img/IssCommsFactory.png" alt="IssCommsFactory" width="90%" ></center>
+The class
+<a href="../app/src/main/java/it/unibo/interaction/IssAnnotationUtil.java" target="web"><em>IssAnnotationUtil.java</em></a>
+provides utility methods to access the information specified in an annotation.
+
+
+<h4>The annotation</h4>
+Our user-defined annotation
+<a href="../app/src/main/java/it/unibo/interaction/IssProtocolSpec.java" target="web"><em>IssProtocolSpec.java</em></a>
+allows us to configure the protocol by simply prefixing an application class with the annotation <ks>@IssProtocolSpec</ks>.
+<br/><br/>
+Note that we do introduce also the possibility to specify the protocol configuration by using a file.
+In order to augment flexibility, the file-based configuration overcomes the configuration specified at code level.
+</td>
+<td>
+<h3>Example: using HTTP</h3>
+<pre>
+<kc>@IssProtocolSpec(
+        <k>protocol</k> = IssProtocolSpec.issProtocol.HTTP,
+        <k>url</k>      = "http://localHost:8090/api/move"
+)</kc>
+public class UsageIssHttp {
+    private IssOperations support;
+
+    public UsageIssHttp(){
+        support = <k>IssCommsFactory.create( this  );</k> <kc>//create the support</kc>
+    }
+	...
+}
+</pre>
+The full code is in <a href="../app/src/main/java/it/unibo/interaction/UsageIssHttp.java" target="web"><em>UsageIssHttp.java</em></a>.
+
+<h4>Example: using WS</h4>
+An example related to the usage of websockets can be found in 
+<a href="../app/src/main/java/it/unibo/interaction/UsageIssWs.java" target="web"><em>UsageIssWs.java</em></a>.
+We will discuss it later.
+
+</td>
+
+
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<h3>A layered architecture: from cril to aril</h3>
+<div class="remark">
+Since we intend to make our 'business code' technology-independent also with respect to the robot, our project does introduce a layer
+that makes the robot a 'logical entity' able to 'talk' with clients in a custom high-level language, designed with reference to
+the application needs. In the following we we name such a lanaguge as <k>aril</k> (<i>abstract robot interaction language</i>).
+</div>
+
+The class <a href="../app/src/main/java/it/unibo/interaction/IssVirtualRobotSupport.java" target="web"><em>IssVirtualRobotSupport.java</em></a> 
+
+is introduced as a component able to translate <k>aril</k> commands into  <k>cril</k> commands, thus working as an 
+<a href="https://en.wikipedia.org/wiki/Adapter_pattern"  target="web">adapter</a>.
+<br/><br/>
+
+
+
+<center><img src="./img/UseRobotAril.png" alt="UseRobotAril" width="60%" ></center>
+
+<br/>
+</td>
+<td>  
+<h3>Example</h3>
+The annotated class 
+<a href="../app/src/main/java/it/unibo/interaction/UseRobotAril.java" target="web"><em>UseRobotAril.java</em></a> 
+provides examples of code that sends aril commands to the robot by using high-level operations such as <ks>requestSynch</ks>
+/ <ks>request</ks> / <ks>forward</ks>. For example:
+
+<pre>
+    public String doBoundary( int stepNum, String journey){
+        if (stepNum > 4)  return journey;
+        String answer = robotSupport.requestSynch( "w" );
+        while( answer.equals("true") ){
+            journey = journey + "w";
+            answer = robotSupport.requestSynch( "w" );
+        }
+        <kc>//collision</kc>
+        robotSupport.requestSynch("l");
+        return doBoundary(stepNum + 1, journey + "l");
+    }
+</pre>
+
+The configuration of the application is embedded in a proper <ks>Factory method</ks>:
+<pre>
+    public static UseRobotAril create(){
+        UseRobotAril obj          = new UseRobotAril();   <kc>//appl-object</kc>
+        IssOperations commSupport = IssCommsFactory.create( obj  );
+        <k>obj.robotSupport</k>          = new IssVirtualRobotSupport( obj, commSupport ); 
+        <ks>//In the future we could use different robots and thus different robotSupport</ks>
+        return obj;  <kc>//return the created appl-object</kc>
+    }
+</pre>
+<br/>
+Th class
+<a href="../app/src/test/java/it/unibo/boundaryWalk/TestBoundary.java" target="web"><em>TestBoundary.java</em></a> 
+includes a test that checks the journey pattern retunred by the operation <tt>doBoundary</tt>.
+</td>
+</tr>
+
+
+
+<tr>
+<td style="width:50%">
+<h3>Application-level messages</h3>
+<div class="remark">
+Since we intend to develop distributed applications that involve different kinds of devices (and not only robots)
+or even applications related to domains different than IOT, we introduce a more general representation of messages.
+</div>
+
+The class <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg.java</em></a> 
+implements our idea of messages at application-level.
+<br/>
+The external representation is a String written in Prolog syntax as a Prolog-Term with 5 arguments:
+<pre>
+msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+</pre>
+Now the aril language is used to write the payoload of the message, i.e. the argument <ks>CONTENT</ks>.
+<br/><br/>
+We distinguish among different application-message types:
+<pre>
+enum class AppMsgType{ event, dispatch, request, reply, invitation }
+</pre>
+
+</td>
+<td>  
+From the point of view of an application designer, we say that:
+ <ul>
+<li><bc>Dispatch</bc>: a message '<i>fire and forget</i>': the sender does not expect any answer.</li>
+<li><bc>Request</bc>: the sender expects an answer sent using a <bc>Reply</bc>.</li>
+<li><bc>Invitation</bc>: the sender expects an <tt>ack</tt>.</li>
+<li><bc>Event</bc>: the sender '<i>emits information</i>' without specifying any receiver (<tt>RECEIVER=none</tt>). </li>
+</ul>
+
+The class <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="code">AppMsg.java</a> provides two functions <m><ks>AppMsg.create(...)</ks></m> 
+that can be used as <a href="https://en.wikipedia.org/wiki/Factory_method_pattern" target="web">Factory methods</a>.
+
+<h4>Example</h4>
+<a href="../app/src/main/java/it/unibo/interaction/IssRobot.java" target="web"><em>IssRobot.java</em></a> 
+</td>
+</tr>
+
+<!--
+
+<tr>
+<td style="width:50%">
+
+The code of the program is structured according to a conventional <em>layered architecture</em>,
+which is the simplest form of software architectural pattern, where the components are organized in <i>horizontal layers</i>.
+<br/>
+We introduce the following layers:<br/><br/>
+<ol>
+<li><k>Application layer</k>:  this layer is representad by the class <a href="../app/src/main/java/it/unibo/interaction/UsageRobot.java" target="web"><em>UsageRobot.java</em></a>
+that is annotated with information about the protocol to be used.
+<br/>
+The application-specific annotation is defined in the interface: 
+<a href="../app/src/main/java/it/unibo/interaction/IssProtocolSpec.java" target="web"><em>IssProtocolSpec.java</em></a>
+<br/><br/>
+</li>
+<li><k>RobotSupport layer</k>: this layer provides a support that helps the design and the implementation of robot-based applications. It
+is representad by the class <a href="../app/src/main/java/it/unibo/interaction/IssRobotSupport.java" target="web"><em>IssRobotSupport.java</em></a>
+that provides operations to interact with the robot using a <ks>aril</ks> (abstract robot interaction language):
+
+<br/><br/>
+
+</li>
+<li><k>Communication layer</k>: this layer provides a support for using the protocols required by the application.
+It is represented bt the class <a href="../app/src/main/java/it/unibo/interaction/IssCommunications.java" target="web"><em>IssCommunications.java</em></a>
+that 
+<br/><br/>
+</li>
+<li></lii>
+<li></lii>
+<li></lii>
+</ol>
+
+</td>
+<td>  
+
+
+<h3>Zooming into the application component</h3>
+<center><img src="./img/projectArch0Zoom.png" alt="projectArch0Zoom" width="100%" ></center>
+</td>
+</tr>
+-->
+
+
+
+</tbody>
+</table>
+
+
+
+
+ 
+
+ 
+ 
+</div>
+
+ <!--
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+<div >
+<hr/>
+By Antonio Natali 
+<img src="./img/teacher.gif" alt="teacher" width="5%" height="5%"> antonio.natali@unibo.it  
+</div> 
+</body>
+</html>
