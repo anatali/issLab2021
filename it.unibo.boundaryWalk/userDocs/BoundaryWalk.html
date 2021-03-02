@@ -193,7 +193,7 @@ div.imagedesc{
     
 <body>
 <div id="top">
-<h1>Lab ISS | iss0 <font size="5"></font> </h1>
+<h1>Lab ISS | the project boundaryWalk <font size="5"></font> </h1>
 <a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">ISS-lectures site</a></font> 
 
 </div>  
@@ -264,11 +264,12 @@ that the robot can receive move commands in two different ways:
 </li>
  
 <li> With respect to the technological level, there are many libraries in many programming languages that support the
-required protcols. <br/>
+required protcols. 
+<div class="remark">
 However, the problem does introduce an <k>abstraction gap at the conceptual level</k>,
 since <kc>the required logical interaction</kc> is always a <em>request-response</em>, <b>regardless of the technology</b> used to implement
 the interaction with the robot.
-
+</div>
 </li>
  
 </ol>
@@ -283,8 +284,8 @@ the interaction with the robot.
 <td style="width:60%">
 We nust design and build a <k>distributed system</k> with two software macro-components:
 	<ol>
-	<li>the <a href="VirtualRobot2021.html" target="web"><em>VirtualRobot</em></a>, given by the customer</li>
-	<li>our <em>boundaryWalk</em> application that interacts with the robot with a <i>request-response</i> pattern</li>
+	<li>the <a href="VirtualRobot2021.html" target="web"><ks>VirtualRobot</ks></a>, given by the customer</li>
+	<li>our <ks>boundaryWalk</ks> application that interacts with the robot with a <i>request-response</i> pattern</li>
 	</ol>
 A first scheme of the logical architecture  of the systems can be defined as shown in the figure
 (for the meaning of the symbols, see the <a href="./img/legenda.png" target="web">legenda</a>)
@@ -343,7 +344,7 @@ that can be easily checked with a TestUnit software:
 
 </li> 
  
-<h2>Project</h2>
+<h1>Project</h1>
 <table style="width:98%">
 <tbody>	
 <tr>
@@ -405,23 +406,53 @@ The <a href="../app/src/main/java/it/unibo/interaction/IssCommsFactory.java" tar
 to <ks>create</ks> the proper communicartion support by using a <k>user-defined Java annotation</k> related to the object given in input.
 
 <center><img src="./img/IssCommsFactory.png" alt="IssCommsFactory" width="90%" ></center>
+
+</td>
+<td>
+<h4>Using Java annotations</h4>
 The class
 <a href="../app/src/main/java/it/unibo/interaction/IssAnnotationUtil.java" target="web"><em>IssAnnotationUtil.java</em></a>
 provides utility methods to access the information specified in an annotation.
 
+</td>
+</tr>
+</tbody>
+</table>
 
-<h4>The annotation</h4>
+<h2>Configure using <a href="aboutAnnotations">Java annotations</a></h2>
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%">
+
+
+ 
 Our user-defined annotation
 <a href="../app/src/main/java/it/unibo/interaction/IssProtocolSpec.java" target="web"><em>IssProtocolSpec.java</em></a>
 allows us to configure the protocol by simply prefixing an application class with the annotation <ks>@IssProtocolSpec</ks>.
-<br/><br/>
-Note that we do introduce also the possibility to specify the protocol configuration by using a file.
-In order to augment flexibility, the file-based configuration overcomes the configuration specified at code level.
+<pre>
+<k>@Target(value = { ElementType.CONSTRUCTOR, 
+                  ElementType.METHOD, 
+                  ElementType.TYPE   })
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited</k>
+public <k>@interface</k> <ks>IssProtocolSpec</ks> {
+    enum issProtocol {UDP,TCP,HTTP,MQTT,COAP,WS} ;
+    issProtocol protocol() default issProtocol.TCP;
+    String url() default "unknown";
+    String configFile() default "IssProtocolConfig.txt";
+}
+</pre>
+Note that we do introduce also the possibility to specify the protocol configuration by using a file.<br/>
+The file-based configuration overcomes the configuration specified at code level,
+in order to augment flexibility at application level.
 </td>
 <td>
 <h3>Example: using HTTP</h3>
 <pre>
-<kc>@IssProtocolSpec(
+<ks>@IssProtocolSpec</ks><kc>(
         <k>protocol</k> = IssProtocolSpec.issProtocol.HTTP,
         <k>url</k>      = "http://localHost:8090/api/move"
 )</kc>
@@ -436,87 +467,134 @@ public class UsageIssHttp {
 </pre>
 The full code is in <a href="../app/src/main/java/it/unibo/interaction/UsageIssHttp.java" target="web"><em>UsageIssHttp.java</em></a>.
 
-<h4>Example: using WS</h4>
+<h3>Example: using WS</h3>
 An example related to the usage of websockets can be found in 
 <a href="../app/src/main/java/it/unibo/interaction/UsageIssWs.java" target="web"><em>UsageIssWs.java</em></a>.
+<br/>
 We will discuss it later.
 
 </td>
-
-
 </tr>
 
+ 
+</tbody>
+</table>
+
+<h2>The application component</h2>
+<div class="remark">
+Since we intend to make our 'business code' technology-independent also with respect to the robot, we introduce <ks>a layer
+that makes the robot a 'logical entity'</ks> able to 'talk' with clients in a <ks>custom high-level language</ks>, designed with reference to
+the application needs. <br/>
+In the following we we name such a lanaguge as <k>aril</k> (<i>abstract robot interaction language</i>).
+</div>
+
+<h3>The abstract robot interaction language (aril)</h3>
+The language that we will use to talk with out 'logical robot' is defined by the  following grammar rule:
+
+<pre>
+ARIL ::= w | s | l | r | h
+</pre>
+Morover, if we assume here that the 'logical robot' can be included in a circle of diamater of length <ks>DR</ks>,
+the meaning of the aril commands can be set as follows:
+<pre>
+<ks>w</ks> : means 'go forward',  so to cover a length equals to <ks>DR</ks>
+<ks>s</ks> : means 'go backward', so to cover a length equals to <ks>DR</ks>
+<ks>h</ks> : means 'stop moving'
+<ks>l</ks> : means 'turn left of 90'
+<ks>r</ks> : means 'turn right of 90'
+</pre>
+
+
+<!-- <h2>Towards a layered architecture </h2> -->
+<h3>From cril to aril</h3>
+<table style="width:98%">
+<tbody>	
 
 <tr>
 <td style="width:50%">
-<h3>A layered architecture: from cril to aril</h3>
-<div class="remark">
-Since we intend to make our 'business code' technology-independent also with respect to the robot, our project does introduce a layer
-that makes the robot a 'logical entity' able to 'talk' with clients in a custom high-level language, designed with reference to
-the application needs. In the following we we name such a lanaguge as <k>aril</k> (<i>abstract robot interaction language</i>).
-</div>
+
+
 
 The class <a href="../app/src/main/java/it/unibo/interaction/IssVirtualRobotSupport.java" target="web"><em>IssVirtualRobotSupport.java</em></a> 
 
 is introduced as a component able to translate <k>aril</k> commands into  <k>cril</k> commands, thus working as an 
 <a href="https://en.wikipedia.org/wiki/Adapter_pattern"  target="web">adapter</a>.
 <br/><br/>
-
-
-
 <center><img src="./img/UseRobotAril.png" alt="UseRobotAril" width="60%" ></center>
-
 <br/>
+The annotated class 
+<a href="../app/src/main/java/it/unibo/interaction/UseRobotAril.java" target="web"><em>UseRobotAril</em></a> 
+provides examples of code that sends aril commands to the robot by using high-level operations such as <ks>requestSynch</ks>
+/ <ks>request</ks> / <ks>forward</ks>.  
+<br/><br/>
+The configuration of the application is embedded in a proper <ks>Factory method</ks>:
+<pre>
+public static UseRobotAril create(){
+  UseRobotAril obj          = new UseRobotAril();  <kc>//appl-object</kc>
+  IssOperations commSupport = IssCommsFactory.create( obj  );
+  <k>obj.robotSupport</k>          = new IssVirtualRobotSupport( obj, commSupport ); 
+  <ks>//In the future, we will different robots and thus different robotSupport</ks>
+  return obj;  <kc>//return the created appl-object</kc>
+}
+</pre>
+
 </td>
 <td>  
 <h3>Example</h3>
-The annotated class 
-<a href="../app/src/main/java/it/unibo/interaction/UseRobotAril.java" target="web"><em>UseRobotAril.java</em></a> 
-provides examples of code that sends aril commands to the robot by using high-level operations such as <ks>requestSynch</ks>
-/ <ks>request</ks> / <ks>forward</ks>. For example:
-
 <pre>
-    public String doBoundary( int stepNum, String journey){
-        if (stepNum > 4)  return journey;
-        String answer = robotSupport.requestSynch( "w" );
-        while( answer.equals("true") ){
-            journey = journey + "w";
-            answer = robotSupport.requestSynch( "w" );
-        }
-        <kc>//collision</kc>
-        robotSupport.requestSynch("l");
-        return doBoundary(stepNum + 1, journey + "l");
-    }
+public String doBoundary( int stepNum, String journey){
+	if (stepNum > 4)  return journey;
+	String answer = <ks>robotSupport.requestSynch("w")</ks>;
+	while( answer.equals("true") ){
+		journey = journey + "w";
+		answer = <ks>robotSupport.requestSynch("w")</ks>;
+	}
+	<kc>//collision</kc>
+	<ks>robotSupport.requestSynch("l")</ks>;
+	return doBoundary(stepNum + 1, journey + "l");
+}
 </pre>
 
-The configuration of the application is embedded in a proper <ks>Factory method</ks>:
-<pre>
-    public static UseRobotAril create(){
-        UseRobotAril obj          = new UseRobotAril();   <kc>//appl-object</kc>
-        IssOperations commSupport = IssCommsFactory.create( obj  );
-        <k>obj.robotSupport</k>          = new IssVirtualRobotSupport( obj, commSupport ); 
-        <ks>//In the future we could use different robots and thus different robotSupport</ks>
-        return obj;  <kc>//return the created appl-object</kc>
-    }
-</pre>
+
 <br/>
 Th class
 <a href="../app/src/test/java/it/unibo/boundaryWalk/TestBoundary.java" target="web"><em>TestBoundary.java</em></a> 
-includes a test that checks the journey pattern retunred by the operation <tt>doBoundary</tt>.
+includes a test that checks the journey pattern returned by the operation <tt>doBoundary</tt>.
 </td>
 </tr>
 
+</tbody>
+</table>
 
-
-<tr>
-<td style="width:50%">
-<h3>Application-level messages</h3>
+<h2>Application-level messages</h2>
 <div class="remark">
 Since we intend to develop distributed applications that involve different kinds of devices (and not only robots)
 or even applications related to domains different than IOT, we introduce a more general representation of messages.
 </div>
 
-The class <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg.java</em></a> 
+<table style="width:98%">
+<tbody>	
+ <tr>
+<td style="width:50%">
+From the point of view of an application designer, we do introduce the following terminology:
+ <ul>
+<li><bc>Dispatch</bc>: a message '<i>fire and forget</i>': the sender does not expect any answer.</li>
+<li><bc>Request</bc>: the sender expects an answer sent using a <bc>Reply</bc>.</li>
+<li><bc>Invitation</bc>: the sender expects an <tt>ack</tt>.</li>
+<li><bc>Event</bc>: the sender '<i>emits information</i>' without specifying any receiver. <!--(<tt>RECEIVER=none</tt>)--> </li>
+</ul>
+</td>
+<td>
+<center><img src="./img/issMsgSymbols.png" alt="issMsgSymbols" width="40%" ></center>
+ 
+</td>
+</tr>
+<tr>
+<td style="width:50%">
+<h3>The class <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg</em></a> </h3>
+
+
+The class <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg</em></a> 
 implements our idea of messages at application-level.
 <br/>
 The external representation is a String written in Prolog syntax as a Prolog-Term with 5 arguments:
@@ -525,25 +603,19 @@ msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 </pre>
 Now the aril language is used to write the payoload of the message, i.e. the argument <ks>CONTENT</ks>.
 <br/><br/>
-We distinguish among different application-message types:
+The different application-message types are defined as follows:
 <pre>
 enum class AppMsgType{ event, dispatch, request, reply, invitation }
 </pre>
 
 </td>
 <td>  
-From the point of view of an application designer, we say that:
- <ul>
-<li><bc>Dispatch</bc>: a message '<i>fire and forget</i>': the sender does not expect any answer.</li>
-<li><bc>Request</bc>: the sender expects an answer sent using a <bc>Reply</bc>.</li>
-<li><bc>Invitation</bc>: the sender expects an <tt>ack</tt>.</li>
-<li><bc>Event</bc>: the sender '<i>emits information</i>' without specifying any receiver (<tt>RECEIVER=none</tt>). </li>
-</ul>
+
 
 The class <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="code">AppMsg.java</a> provides two functions <m><ks>AppMsg.create(...)</ks></m> 
 that can be used as <a href="https://en.wikipedia.org/wiki/Factory_method_pattern" target="web">Factory methods</a>.
 
-<h4>Example</h4>
+<h4>Example (todo)</h4>
 <a href="../app/src/main/java/it/unibo/interaction/IssRobot.java" target="web"><em>IssRobot.java</em></a> 
 </td>
 </tr>
@@ -594,8 +666,8 @@ that
 
 
 
-</tbody>
-</table>
+	</tbody>
+	</table>
 
 
 
