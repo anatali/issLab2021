@@ -12,47 +12,46 @@
 package it.unibo.interaction;
 
 
-/** //Interaction based on websocket */
+import it.unibo.robotUtils.MsgRobotUtil;
+
+/** //Interaction based on websocket
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.WS,
         url="localHost:8091"
 )
+ */
 
-
-/* //Interaction based on HTTP
+/* //Interaction based on HTTP */
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.HTTP,
         url      = "http://localHost:8090/api/move"
 )
-*/
-
 @RobotMoveTimeSpec( ltime = 300, wtime=200 )
-public class UseRobotAril {
+public class UseRobotApp {
 
-    private IssOperations robotSupport;
+    private IssAppOperations robotSupport;
 
     //Factory method
-    public static UseRobotAril create(){
-        UseRobotAril obj          = new UseRobotAril();  //appl-object
-        IssOperations commSupport = IssCommsFactory.create( obj  );
-        obj.robotSupport          = new IssArilRobotSupport( obj, commSupport ); //'inject'
+    public static UseRobotApp create(){
+        UseRobotApp obj                  = new UseRobotApp();  //appl-object
+        IssOperations commSupport        = IssCommsFactory.create( obj  );
+        IssOperations arilRobotSupport   = new IssArilRobotSupport( obj, commSupport ); //'inject'
+        IssAppOperations rs              = new IssAppRobotSupport( obj, arilRobotSupport );
+        obj.robotSupport                 = rs;
         //In the future we could use different robots and thus different robotSupport,
         return obj;  //return the created appl-object
     }
 
     public void doJob() throws Exception{
-        System.out.println("UsageRobot | doJob START"  );
-        robotSupport.forward( "r" );
-        Thread.sleep(1000);        //required ONLY if we use websockets
-        String answer = robotSupport.requestSynch( "r" );
-        System.out.println("UsageRobot | doJob answer to r= " + answer);
-        Thread.sleep(1000);      //required ONLY if we use websockets
-        robotSupport.request( "l" );    //the answer is sent but we do not wait
-        Thread.sleep(1000);      //required ONLY if we use websockets
+        System.out.println("UsageRobot | doJob START "  + robotSupport );
+        robotSupport.forward( MsgRobotUtil.left );
+        Thread.sleep(1000);
+        robotSupport.forward( MsgRobotUtil.right );
+        Thread.sleep(1000);
     }
 
 
-
+/*
     public String doBoundary( int stepNum, String journey){
         //int stepNum = 1;
         if (stepNum > 4) {
@@ -67,8 +66,10 @@ public class UseRobotAril {
         robotSupport.requestSynch("l");
         return doBoundary(stepNum + 1, journey + "l");
     }
+
+ */
     public static void main(String args[]) throws Exception{
-        UseRobotAril appl = UseRobotAril.create();
+        UseRobotApp appl = UseRobotApp.create();
         appl.doJob();
         //String journey = appl.doBoundary(1,"");
         //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);

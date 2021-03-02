@@ -10,11 +10,11 @@ package it.unibo.interaction;
 import java.util.HashMap;
 
 //@RobotMoveTimeSpec  //could be useful?
-public class IssVirtualRobotSupport implements IssOperations{
+public class IssArilRobotSupport implements IssOperations{
     private IssOperations support;
     private static HashMap<String, Integer> timemap = new HashMap<String, Integer>( );
 
-    public IssVirtualRobotSupport(Object supportedObj, IssOperations support){
+    public IssArilRobotSupport(Object supportedObj, IssOperations support){
         this.support   = support;
         IssAnnotationUtil.getMoveTimes( supportedObj, timemap );
     }

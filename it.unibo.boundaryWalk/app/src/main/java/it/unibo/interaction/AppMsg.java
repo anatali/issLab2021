@@ -37,5 +37,9 @@ public class AppMsg {
     public boolean isRequest(){  return MSGTYPE.equals( AppMsgType.request.toString() );  }
     public boolean isReply(){ return MSGTYPE.equals( AppMsgType.reply.toString() );       }
 
+    public String getMsgType(){ return MSGTYPE; }
+    public String getMsgid(){ return MSGID; }
+    public String getSender(){ return SENDER; }
+    public String getReceiver(){ return RECEIVER; }
     public String getContent(){ return CONTENT; }
 }//AppMsg

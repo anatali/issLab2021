@@ -3,7 +3,7 @@ import it.unibo.robotUtils.MsgRobotUtil;
 
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.HTTP,
-        url="http://localHost:8090/api/move"
+        url      = "http://localHost:8090/api/move"
 )
 public class UsageIssHttp {
     private IssOperations support;
