@@ -17,5 +17,5 @@ public interface IssAppOperations {
     void forward( AppMsg msg ) ;
     void request( AppMsg msg );
     void reply( AppMsg msg );
-    //String requestSynch( AppMsg msg );
+    String requestSynch( AppMsg msg );
 }

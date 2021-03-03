@@ -1,5 +1,5 @@
 /**
- IssRobotSupport.java
+ IssArilRobotSupport.java
  ===============================================================
  Implements interaction with the virtual robot using the aril
  and the given communication support.
@@ -7,6 +7,7 @@
  ===============================================================
  */
 package it.unibo.interaction;
+
 import java.util.HashMap;
 
 //@RobotMoveTimeSpec  //could be useful?
@@ -18,10 +19,21 @@ public class IssArilRobotSupport implements IssOperations{
         this.support   = support;
         IssAnnotationUtil.getMoveTimes( supportedObj, timemap );
     }
+    public IssArilRobotSupport( String robotConfigFile, IssOperations support){
+        this.support   = support;
+        if( ! IssAnnotationUtil.checkRobotConfigFile(robotConfigFile, timemap) ){
+            timemap.put("h", MsgRobotUtil.htime );
+            timemap.put("l", MsgRobotUtil.ltime );
+            timemap.put("r", MsgRobotUtil.rtime );
+            timemap.put("w", MsgRobotUtil.wtime );
+            timemap.put("s", MsgRobotUtil.stime );
+        };
+    }
 
     //The movetime is takan form the timemap, that is configured via annotations
     protected String translate(String arilMove){
-        switch( arilMove ){ //translate into critl move
+        //System.out.println( "        IssArilRobotSupport | translate:" + arilMove );
+        switch( arilMove.trim() ){ //translate into critl move
             case "h" : return "{\"robotmove\":\"alarm\", \"time\": "+ timemap.get("h")+"}";
             case "w" : return "{\"robotmove\":\"moveForward\", \"time\": "+ timemap.get("w")+"}";
             case "s" : return "{\"robotmove\":\"moveBackward\", \"time\": "+ timemap.get("s")+"}";
@@ -48,6 +60,6 @@ public class IssArilRobotSupport implements IssOperations{
 
     @Override
     public void reply(String msg) {
-        //System.out.println( "         IssVirtualRobotSupport | WARNING: reply NOT IMPLEMENTED"  );
+        //System.out.println( "         IssArilRobotSupport | WARNING: reply NOT IMPLEMENTED"  );
     }
 }

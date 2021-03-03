@@ -44,7 +44,7 @@ RELATED TO PROTOCOLS
         for (Annotation annot : annotations) {
             if (annot instanceof IssProtocolSpec) {
                 IssProtocolSpec info = (IssProtocolSpec) annot;
-                protocolInfo    = checkProtocolConfigFile(info);
+                protocolInfo    = checkProtocolConfigFile(info.configFile());
                 if( protocolInfo == null ) {
                     protocolInfo = new ProtocolInfo( info.protocol(), info.url() );
                 }
@@ -54,21 +54,20 @@ RELATED TO PROTOCOLS
         return  protocolInfo;
     }
 
-    protected static ProtocolInfo checkProtocolConfigFile(IssProtocolSpec info) {
+    //Used also by UniboRobotApplicationStarter
+    protected static ProtocolInfo checkProtocolConfigFile( String configFileName ) {
         try {
-            String configFileName = info.configFile(); //default=IssProtocolConfig.txt
-            //spec( protocol("HTTP"), url( "http://localHost:8090/api/move" ) ).
-            //System.out.println("IssAnnotationUtil | checkProtocolConfigFile configFileName=" + configFileName);
+            System.out.println("IssAnnotationUtil | checkProtocolConfigFile configFileName=" + configFileName);
             FileInputStream fis = new FileInputStream(configFileName);
             Scanner sc = new Scanner(fis);
             String line = sc.nextLine();
             System.out.println("IssAnnotationUtil | line=" + line);
             String[] items = line.split(",");
 
-            String protocol = getProtocolConfigInfo("protocol", items[0]);
+            String protocol = IssAnnotationUtil.getProtocolConfigInfo("protocol", items[0]);
             System.out.println("IssAnnotationUtil | protocol=" + protocol);
 
-            String url = getProtocolConfigInfo("url", items[1]);
+            String url = IssAnnotationUtil.getProtocolConfigInfo("url", items[1]);
             System.out.println("IssAnnotationUtil | url=" + url);
 
             ProtocolInfo protinfo = new ProtocolInfo(protocol, url);
@@ -78,7 +77,6 @@ RELATED TO PROTOCOLS
             return null;
         }
     }
-
 
     //Quite bad: we will replace with Prolog parser
     protected static String getProtocolConfigInfo(String functor, String line){
@@ -111,7 +109,7 @@ RELATED TO ROBOT MOVES
             if (annotation instanceof RobotMoveTimeSpec) {
                 //Priority to the con
                 RobotMoveTimeSpec info = (RobotMoveTimeSpec) annotation;
-                if( ! checkRobotConfigFile(info, mvtimeMap) ) {
+                if( ! checkRobotConfigFile(info.configFile(), mvtimeMap) ) {
                     mvtimeMap.put("w", info.wtime());
                     mvtimeMap.put("s", info.stime());
                     mvtimeMap.put("l", info.ltime());
@@ -123,10 +121,10 @@ RELATED TO ROBOT MOVES
         }
     }
 
+    //Used also by IssArilRobotSupport
     protected static boolean checkRobotConfigFile(
-            RobotMoveTimeSpec info, HashMap<String, Integer> mvtimeMap){
+                String configFileName, HashMap<String, Integer> mvtimeMap ){
         try{
-            String configFileName = info.configFile(); //default=IssRobotConfig.txt
             //spec( htime( 100 ),  ltime( 300 ), rtime( 300 ),  wtime( 600 ), wstime( 600 ) ).
             //System.out.println("IssAnnotationUtil | checkRobotConfigFile configFileName=" + configFileName);
             FileInputStream fis = new FileInputStream(configFileName);
@@ -145,6 +143,7 @@ RELATED TO ROBOT MOVES
             System.out.println("IssAnnotationUtil | checkRobotConfigFile WARNING:" + e.getMessage());
             return false;
         }
+
     }
 
     protected static Integer getRobotConfigInfo(String functor, String line){

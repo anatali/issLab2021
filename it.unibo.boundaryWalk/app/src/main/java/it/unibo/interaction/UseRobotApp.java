@@ -1,18 +1,15 @@
 /**
- UseRobotAril .java
+ UseRobotApp .java
  ===============================================================
  Use the (virtual) robot by exploiting Java annotation on the class
  to configure the protocol (HTTP or WS) and the move times.
 
- HOWEVER, the configuration can also be set (WITH PRIORITY over the class)
-    by the file IssProtocolConfig.txt for the protocol
- by the file IssRobotConfig.txt       for the move times
+ The interaction with the robot is based on high-level operations
+ (forward, request) with payload of type AppMsg.
  ===============================================================
  */
 package it.unibo.interaction;
 
-
-import it.unibo.robotUtils.MsgRobotUtil;
 
 /** //Interaction based on websocket
 @IssProtocolSpec(
@@ -26,7 +23,7 @@ import it.unibo.robotUtils.MsgRobotUtil;
         protocol = IssProtocolSpec.issProtocol.HTTP,
         url      = "http://localHost:8090/api/move"
 )
-@RobotMoveTimeSpec( ltime = 300, wtime=200 )
+@RobotMoveTimeSpec( ltime = 300, wtime=400 )
 public class UseRobotApp {
 
     private IssAppOperations robotSupport;
@@ -43,11 +40,14 @@ public class UseRobotApp {
     }
 
     public void doJob() throws Exception{
-        System.out.println("UsageRobot | doJob START "  + robotSupport );
+        System.out.println("UsageRobot | doJob START "    );
         robotSupport.forward( MsgRobotUtil.left );
         Thread.sleep(1000);
         robotSupport.forward( MsgRobotUtil.right );
         Thread.sleep(1000);
+        robotSupport.requestSynch( MsgRobotUtil.ahead );
+        robotSupport.requestSynch( MsgRobotUtil.back );
+        //Thread.sleep(1000);
     }
 
 

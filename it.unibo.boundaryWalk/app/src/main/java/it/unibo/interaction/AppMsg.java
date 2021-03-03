@@ -21,15 +21,17 @@ public class AppMsg {
     }
     //Factory method
     public static AppMsg create(String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT){
+        //System.out.println("AppMsg create/5 " + CONTENT);
         return new AppMsg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, ""+n++);
     }
 
     public static AppMsg create(String m){
+        //System.out.println("AppMsg create m= " + m);
         //m= msg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, SEQNUM )
-        String[] mSplit   = m.split("()");
-        String   mBody[]  = mSplit[1].split(",");
-        String   mNum     = mBody[5].replace(")","");
-        return new AppMsg( mBody[0],  mBody[1],  mBody[2],  mBody[3],  mBody[4], mNum);
+        String[] mSplit   = m.split("msg");
+        String   mBody[]  = mSplit[1].replace("(","").split(",");
+        String   content  = mBody[4].replace(")","");
+        return AppMsg.create( mBody[0],  mBody[1],  mBody[2], mBody[3], content );
     }
 
     public boolean isEvent(){    return MSGTYPE.equals( AppMsgType.event.toString() );    }
@@ -42,4 +44,15 @@ public class AppMsg {
     public String getSender(){ return SENDER; }
     public String getReceiver(){ return RECEIVER; }
     public String getContent(){ return CONTENT; }
+
+    public String toString(){
+        return "msg(MSGID,MSGTYPE,SENDER,RECEIVER,CONTENT,SEQNUM)"
+                .replace("MSGID", MSGID)
+                .replace("MSGTYPE", MSGTYPE)
+                .replace("SENDER", SENDER)
+                .replace("RECEIVER", RECEIVER)
+                .replace("CONTENT", CONTENT)
+                .replace("SEQNUM", SEQNUM);
+
+    }
 }//AppMsg

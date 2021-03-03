@@ -1,5 +1,4 @@
 package it.unibo.interaction;
-import it.unibo.robotUtils.MsgRobotUtil;
 
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.WS,

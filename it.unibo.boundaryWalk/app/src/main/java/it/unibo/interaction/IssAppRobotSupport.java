@@ -1,5 +1,5 @@
 /**
- IssRobot.java
+ IssAppRobotSupport.java
  ===============================================================
  Abstract robot as object with AppMsg
  Later: robotActor
@@ -16,19 +16,23 @@ public class IssAppRobotSupport implements IssAppOperations {  //
         this.support   = support;
         IssAnnotationUtil.getMoveTimes( supportedObj, timemap );
     }
+    public IssAppRobotSupport( IssOperations support ){
+        this.support   = support;
 
+    }
     @Override
     public void forward( AppMsg  msg ){
-        System.out.println("IssRobot | forward msg=" + msg);
+        //System.out.println("        IssAppRobotSupport | forward " + msg);
         String move = msg.getContent();    //payload should be aril
-         System.out.println("IssRobot | forward move=" + move + " to " + msg.getReceiver());
-         support.forward( move );
+        //System.out.println("        IssAppRobotSupport | forward move=" + move + " to " + msg.getReceiver());
+        support.forward( move );
     }
 
     @Override
     public void request( AppMsg msg ) {
+        //System.out.println("        IssAppRobotSupport | request " + msg);
         String move = msg.getContent();    //payload should be aril
-        System.out.println("IssRobot | request move=" + move + " to " + msg.getReceiver());
+        //System.out.println("        IssAppRobotSupport | request move=" + move + " to " + msg.getReceiver());
         support.request( move );
 
     }
@@ -36,11 +40,14 @@ public class IssAppRobotSupport implements IssAppOperations {  //
     @Override
     public void reply( AppMsg msg ) {
         String move = msg.getContent();    //payload should be aril
-        System.out.println("IssRobot | reply move=" + move + " to " + msg.getReceiver());
+        System.out.println("IssAppRobotSupport | reply move=" + move + " to " + msg.getReceiver());
         support.reply( move );
     }
 
-    //@Override
-    //public AppMsg requestSynch( AppMsg move ) {    }
+    @Override
+    public String requestSynch( AppMsg msg ) {
+        //System.out.println("        IssAppRobotSupport | requestSynch " + msg);
+        return support.requestSynch( msg.getContent() );
+    }
 
 }

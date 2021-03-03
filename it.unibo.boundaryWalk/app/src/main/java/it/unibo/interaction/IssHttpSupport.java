@@ -36,7 +36,7 @@ public class IssHttpSupport implements IssOperations{
 
     @Override
     public void request( String msg) {
-        //System.out.println( "        IssHttpSupport | request:" + msg  );
+        System.out.println( "        IssHttpSupport | request:" + msg  );
         performrequest(msg);    //the answer is lost
     }
 
@@ -47,7 +47,7 @@ public class IssHttpSupport implements IssOperations{
 
     @Override
     public String requestSynch( String msg) {
-        //System.out.println( "IssHttpSupport | requestSynch:" + msg  );
+        //System.out.println( "        IssHttpSupport | requestSynch:" + msg  );
         return performrequest(msg);    //the answer is lost
     }
 
