@@ -4,7 +4,7 @@
  User-defined annotation related to communication protocols
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.annotations;
 import java.lang.annotation.*;
 
 @Target(value = { ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.TYPE   })

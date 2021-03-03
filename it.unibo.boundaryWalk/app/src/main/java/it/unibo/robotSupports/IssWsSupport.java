@@ -4,8 +4,9 @@
         See below
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.robotSupports;
 
+import it.unibo.interaction.IssOperations;
 import org.json.JSONObject;
 import javax.websocket.*;
 import java.net.URI;
@@ -56,7 +57,7 @@ class AnswerAvailable{
  ===============================================================
  */
 @ClientEndpoint     //javax.websocket annotation
-public class IssWsSupport implements IssOperations{
+public class IssWsSupport implements IssOperations {
     private  String URL            = "unknown";
     private Session userSession    = null;
     private AnswerAvailable answerSupport;

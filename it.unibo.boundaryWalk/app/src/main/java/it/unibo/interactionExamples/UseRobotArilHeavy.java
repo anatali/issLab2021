@@ -9,32 +9,38 @@
  by the file IssRobotConfig.txt       for the move times
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.interactionExamples;
 
 
-/** //Interaction based on websocket */
+import it.unibo.annotations.IssProtocolSpec;
+import it.unibo.annotations.RobotMoveTimeSpec;
+import it.unibo.interaction.IssOperations;
+import it.unibo.robotSupports.IssArilRobotSupport;
+import it.unibo.robotSupports.IssCommsSupportFactory;
+
+/** //Interaction based on websocket
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.WS,
         url="localHost:8091"
 )
+ */
 
-
-/* //Interaction based on HTTP
+/* //Interaction based on HTTP */
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.HTTP,
         url      = "http://localHost:8090/api/move"
 )
-*/
+
 
 @RobotMoveTimeSpec( ltime = 300, wtime=200 )
-public class UseRobotAril {
+public class UseRobotArilHeavy {
 
     private IssOperations robotSupport;
 
     //Factory method
-    public static UseRobotAril create(){
-        UseRobotAril obj          = new UseRobotAril();  //appl-object
-        IssOperations commSupport = IssCommsFactory.create( obj  );
+    public static UseRobotArilHeavy create(){
+        UseRobotArilHeavy obj          = new UseRobotArilHeavy();  //appl-object
+        IssOperations commSupport = IssCommsSupportFactory.create( obj  );
         obj.robotSupport          = new IssArilRobotSupport( obj, commSupport ); //'inject'
         //In the future we could use different robots and thus different robotSupport,
         return obj;  //return the created appl-object
@@ -68,7 +74,7 @@ public class UseRobotAril {
         return doBoundary(stepNum + 1, journey + "l");
     }
     public static void main(String args[]) throws Exception{
-        UseRobotAril appl = UseRobotAril.create();
+        UseRobotArilHeavy appl = UseRobotArilHeavy.create();
         appl.doJob();
         //String journey = appl.doBoundary(1,"");
         //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);

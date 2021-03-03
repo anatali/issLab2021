@@ -1,22 +1,21 @@
 /**
  UseRobotUnibo .java
  ===============================================================
- This class is annotated as a UniboRobotApplication.
- Its instances are 'injected' with the proper support
- for the interaction with a logical robot, by calling
- UniboRobotApplicationStarter.run( UseRobotUnibo.class )
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.robotAppls;
 
-@UniboRobotApplication
+import it.unibo.annotations.UniboRobotSpec;
+import it.unibo.interaction.IssAppOperations;
+import it.unibo.interaction.MsgRobotUtil;
+
+@UniboRobotSpec
 public class UseRobotUnibo {
      private IssAppOperations robotSupport;
 
      public UseRobotUnibo(IssAppOperations support){  //Injected by UniboRobotApplicationStarter
          //System.out.println("UseRobotUnibo | constructor support=" + support  );
          this.robotSupport = support;
-         //doBoundary(1, "");
      }
 
      protected void doJob(){
@@ -47,7 +46,7 @@ public class UseRobotUnibo {
 
      public static void main(String args[])  {
          //UniboRobotApplicationStarter.run( UseRobotUnibo.class );
-         Object appl = UniboRobotApplicationStarter.createInstance(UseRobotUnibo.class);
+         Object appl = RobotApplicationStarter.createInstance(UseRobotUnibo.class);
          if( appl != null )  ((UseRobotUnibo)appl).doBoundary(1,"");
      }
 }

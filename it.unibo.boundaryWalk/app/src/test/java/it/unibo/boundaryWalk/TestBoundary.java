@@ -1,6 +1,6 @@
 package it.unibo.boundaryWalk;
 
-import it.unibo.interaction.UseRobotAril;
+import it.unibo.interactionExamples.UseRobotArilHeavy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +12,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestBoundary {
-    private UseRobotAril appl;
+    private UseRobotArilHeavy appl;
 
     @Before
     public void systemSetUp() {
         System.out.println("TestBoundary | setUp: robot should be at HOME-DOWN ");
-        appl = UseRobotAril.create();
+        appl = UseRobotArilHeavy.create();
     }
     @After
     public void  terminate() {

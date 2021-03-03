@@ -6,20 +6,29 @@
  or according to a protocol-configuration file
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.robotSupports;
+import it.unibo.annotations.IssAnnotationUtil;
+import it.unibo.interaction.IssOperations;
+import it.unibo.annotations.ProtocolInfo;
 
-public class IssCommsFactory {
+public class IssCommsSupportFactory {
     //Factory Method
-    public static IssOperations create( Object obj ){
+    public static IssOperations create(Object obj ){
         ProtocolInfo protocolInfo = IssAnnotationUtil.getProtocol(  obj );
-        System.out.println("        IssCommsFactory | create protocolInfo=" + protocolInfo.protocol + " " + protocolInfo.url );
-        switch( protocolInfo.protocol ){
-            case HTTP  : {  return new IssHttpSupport( protocolInfo.url );  }
-            case WS    : {  return new IssWsSupport( protocolInfo.url );    }
-            default: return new IssHttpSupport( protocolInfo.url ); //TODO Exception?
+        String protocol     = protocolInfo.getProtocol().toString();
+        String url          = protocolInfo.getUrl();
+        return create(protocol,url);
+        /*
+        System.out.println("        IssCommsSupportFactory | protocolInfo=" + protocol + " " + url );
+        switch( protocol ){
+            case "HTTP"  : {  return new IssHttpSupport(  url );  }
+            case "WS"    : {  return new IssWsSupport(  url );    }
+            default: return new IssHttpSupport( url ); //TODO Exception?
         }
-    }
 
+         */
+    }
+    //Factory Method
     public static IssOperations create(  String protocol, String url ){
          System.out.println("        IssCommsFactory | create protocol=" + protocol  );
         switch( protocol ){

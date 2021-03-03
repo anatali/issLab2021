@@ -1,7 +1,7 @@
 package it.unibo.boundaryWalk;
 
-import it.unibo.interaction.UniboRobotApplicationStarter;
-import it.unibo.interaction.UseRobotUnibo;
+import it.unibo.robotAppls.RobotApplicationStarter;
+import it.unibo.robotAppls.UseRobotUnibo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class TestRobotUnibo {
     public void systemSetUp() {
         System.out.println("TestBoundary | setUp: robot should be at HOME-DOWN ");
         System.out.println("WARNING The configuration files should be under DIRECTORY" + System.getProperty("user.dir"));
-        Object obj = UniboRobotApplicationStarter.createInstance(UseRobotUnibo.class);
+        Object obj = RobotApplicationStarter.createInstance(UseRobotUnibo.class);
         appl = (UseRobotUnibo) obj;
 
     }

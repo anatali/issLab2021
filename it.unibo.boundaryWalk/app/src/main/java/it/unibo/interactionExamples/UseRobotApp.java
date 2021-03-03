@@ -8,8 +8,17 @@
  (forward, request) with payload of type AppMsg.
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.interactionExamples;
 
+
+import it.unibo.annotations.IssProtocolSpec;
+import it.unibo.annotations.RobotMoveTimeSpec;
+import it.unibo.interaction.IssAppOperations;
+import it.unibo.interaction.IssOperations;
+import it.unibo.interaction.MsgRobotUtil;
+import it.unibo.robotSupports.IssAppRobotSupport;
+import it.unibo.robotSupports.IssArilRobotSupport;
+import it.unibo.robotSupports.IssCommsSupportFactory;
 
 /** //Interaction based on websocket
 @IssProtocolSpec(
@@ -31,7 +40,7 @@ public class UseRobotApp {
     //Factory method
     public static UseRobotApp create(){
         UseRobotApp obj                  = new UseRobotApp();  //appl-object
-        IssOperations commSupport        = IssCommsFactory.create( obj  );
+        IssOperations commSupport        = IssCommsSupportFactory.create( obj  );
         IssOperations arilRobotSupport   = new IssArilRobotSupport( obj, commSupport ); //'inject'
         IssAppOperations rs              = new IssAppRobotSupport( obj, arilRobotSupport );
         obj.robotSupport                 = rs;

@@ -1,4 +1,9 @@
-package it.unibo.interaction;
+package it.unibo.interactionExamples;
+
+import it.unibo.annotations.IssProtocolSpec;
+import it.unibo.interaction.IssOperations;
+import it.unibo.interaction.MsgRobotUtil;
+import it.unibo.robotSupports.IssCommsSupportFactory;
 
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.WS,
@@ -10,7 +15,7 @@ public class UsageIssWs {
     //Factory method
     public static UsageIssWs create(){
         UsageIssWs obj        = new UsageIssWs();
-        IssOperations support = new IssCommsFactory().create( obj  );
+        IssOperations support = new IssCommsSupportFactory().create( obj  );
         obj.setCommSupport(support);
         return obj;
     }

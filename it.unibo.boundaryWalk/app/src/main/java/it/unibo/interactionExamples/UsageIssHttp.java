@@ -1,4 +1,9 @@
-package it.unibo.interaction;
+package it.unibo.interactionExamples;
+
+import it.unibo.annotations.IssProtocolSpec;
+import it.unibo.interaction.IssOperations;
+import it.unibo.interaction.MsgRobotUtil;
+import it.unibo.robotSupports.IssCommsSupportFactory;
 
 @IssProtocolSpec(
         protocol = IssProtocolSpec.issProtocol.HTTP,
@@ -8,7 +13,7 @@ public class UsageIssHttp {
     private IssOperations support;
 
     public UsageIssHttp(){
-        support = IssCommsFactory.create( this  );
+        support = IssCommsSupportFactory.create( this  );
     }
 
      public void testuseSupport(){

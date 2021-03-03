@@ -5,7 +5,12 @@
  Later: robotActor
  ===============================================================
  */
-package it.unibo.interaction;
+package it.unibo.robotSupports;
+import it.unibo.interaction.AppMsg;
+import it.unibo.annotations.IssAnnotationUtil;
+import it.unibo.interaction.IssAppOperations;
+import it.unibo.interaction.IssOperations;
+
 import java.util.HashMap;
 
 public class IssAppRobotSupport implements IssAppOperations {  //
@@ -21,7 +26,7 @@ public class IssAppRobotSupport implements IssAppOperations {  //
 
     }
     @Override
-    public void forward( AppMsg  msg ){
+    public void forward( AppMsg msg ){
         //System.out.println("        IssAppRobotSupport | forward " + msg);
         String move = msg.getContent();    //payload should be aril
         //System.out.println("        IssAppRobotSupport | forward move=" + move + " to " + msg.getReceiver());

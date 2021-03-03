@@ -1,4 +1,4 @@
-package it.unibo.interaction;
+package it.unibo.annotations;
 
 import java.io.FileInputStream;
 import java.lang.annotation.Annotation;
@@ -6,30 +6,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-class ProtocolInfo{
-    IssProtocolSpec.issProtocol protocol;
-    String url;
-    public ProtocolInfo(IssProtocolSpec.issProtocol protocol, String url){
-        this.protocol = protocol;
-        this.url      = url;
-    }
-
-    public ProtocolInfo(String protocolName, String url){
-        //System.out.println("ProtocolInfo | protocolName =" + protocolName);
-        switch( protocolName ){
-            case "HTTP" : protocol=IssProtocolSpec.issProtocol.HTTP; break;
-            case "WS"   : protocol=IssProtocolSpec.issProtocol.WS;   break;
-            case "UDP"  : protocol=IssProtocolSpec.issProtocol.UDP;  break;
-            case "TCP"  : protocol=IssProtocolSpec.issProtocol.TCP;  break;
-            case "MQTT" : protocol=IssProtocolSpec.issProtocol.MQTT; break;
-            case "COAP" : protocol=IssProtocolSpec.issProtocol.COAP; break;
-            default     : protocol=null;
-        }
-        if( protocolName.equals("HTTP") ) this.protocol=IssProtocolSpec.issProtocol.HTTP;
-        this.url = url;
-    }
-}
 
 public class IssAnnotationUtil {
 /*
@@ -55,7 +31,7 @@ RELATED TO PROTOCOLS
     }
 
     //Used also by UniboRobotApplicationStarter
-    protected static ProtocolInfo checkProtocolConfigFile( String configFileName ) {
+    public static ProtocolInfo checkProtocolConfigFile( String configFileName ) {
         try {
             System.out.println("IssAnnotationUtil | checkProtocolConfigFile configFileName=" + configFileName);
             FileInputStream fis = new FileInputStream(configFileName);
@@ -79,7 +55,7 @@ RELATED TO PROTOCOLS
     }
 
     //Quite bad: we will replace with Prolog parser
-    protected static String getProtocolConfigInfo(String functor, String line){
+    public static String getProtocolConfigInfo(String functor, String line){
         Pattern pattern = Pattern.compile(functor);
         Matcher matcher = pattern.matcher(line);
         String content = null;
@@ -122,8 +98,8 @@ RELATED TO ROBOT MOVES
     }
 
     //Used also by IssArilRobotSupport
-    protected static boolean checkRobotConfigFile(
-                String configFileName, HashMap<String, Integer> mvtimeMap ){
+    public static boolean checkRobotConfigFile(
+            String configFileName, HashMap<String, Integer> mvtimeMap){
         try{
             //spec( htime( 100 ),  ltime( 300 ), rtime( 300 ),  wtime( 600 ), wstime( 600 ) ).
             //System.out.println("IssAnnotationUtil | checkRobotConfigFile configFileName=" + configFileName);

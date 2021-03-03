@@ -6,12 +6,13 @@
  Adapts the application to the cril
  ===============================================================
  */
-package it.unibo.interaction;
-
+package it.unibo.robotSupports;
+import it.unibo.annotations.IssAnnotationUtil;
+import it.unibo.interaction.IssOperations;
+import it.unibo.interaction.MsgRobotUtil;
 import java.util.HashMap;
 
-//@RobotMoveTimeSpec  //could be useful?
-public class IssArilRobotSupport implements IssOperations{
+public class IssArilRobotSupport implements IssOperations {
     private IssOperations support;
     private static HashMap<String, Integer> timemap = new HashMap<String, Integer>( );
 
