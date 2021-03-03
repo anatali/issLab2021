@@ -1,8 +1,5 @@
 package it.unibo.interaction;
 
-import it.unibo.interaction.AppMsg;
-
-
 public class MsgRobotUtil {
     //movetimes (used by IssAnnotationUtil.fillMap)
     public static final int wtime    = 400;
@@ -26,10 +23,19 @@ public class MsgRobotUtil {
     public static final String sMsg  = "s";
     public static final String hMsg  = "h";
 
-    //AppMsg
     //msg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, SEQNUM )
-    public static final AppMsg ahead = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,w)");
-    public static final AppMsg left  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,l)");
-    public static final AppMsg right = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,r)");
-    public static final AppMsg back  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,s)");
+    //AppMsg with cril payload
+    public static final AppMsg forwardApp   = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ forwardMsg + ")");
+    public static final AppMsg backwardApp   = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ backwardMsg + ")");
+    public static final AppMsg turnLeftApp  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ turnLeftMsg + ")");
+    public static final AppMsg turnRightApp = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+turnRightMsg+")");
+    public static final AppMsg haltMsgApp   = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ haltMsg +")");
+
+    //AppMsg with aril payload
+    public static final AppMsg ahead = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv," + wMsg +" )");
+    public static final AppMsg left  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ lMsg +")");
+    public static final AppMsg right = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ rMsg +")");
+    public static final AppMsg back  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ sMsg +")");
+    public static final AppMsg halt  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ hMsg +")");
+
 }

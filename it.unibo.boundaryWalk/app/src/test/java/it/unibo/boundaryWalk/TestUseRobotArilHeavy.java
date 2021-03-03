@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class TestBoundary {
+public class TestUseRobotArilHeavy {
     private UseRobotArilHeavy appl;
 
     @Before

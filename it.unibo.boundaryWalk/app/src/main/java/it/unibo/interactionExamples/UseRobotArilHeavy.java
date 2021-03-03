@@ -15,6 +15,7 @@ package it.unibo.interactionExamples;
 import it.unibo.annotations.IssProtocolSpec;
 import it.unibo.annotations.RobotMoveTimeSpec;
 import it.unibo.interaction.IssOperations;
+import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.robotSupports.IssArilRobotSupport;
 import it.unibo.robotSupports.IssCommsSupportFactory;
 
@@ -48,12 +49,12 @@ public class UseRobotArilHeavy {
 
     public void doJob() throws Exception{
         System.out.println("UsageRobot | doJob START"  );
-        robotSupport.forward( "r" );
+        robotSupport.forward( MsgRobotUtil.rMsg );
         Thread.sleep(1000);        //required ONLY if we use websockets
-        String answer = robotSupport.requestSynch( "r" );
+        String answer = robotSupport.requestSynch(MsgRobotUtil.rMsg );
         System.out.println("UsageRobot | doJob answer to r= " + answer);
         Thread.sleep(1000);      //required ONLY if we use websockets
-        robotSupport.request( "l" );    //the answer is sent but we do not wait
+        robotSupport.request( MsgRobotUtil.lMsg );    //the answer is sent but we do not wait
         Thread.sleep(1000);      //required ONLY if we use websockets
     }
 
@@ -64,13 +65,13 @@ public class UseRobotArilHeavy {
         if (stepNum > 4) {
              return journey;
         }
-        String answer = robotSupport.requestSynch( "w" );
+        String answer = robotSupport.requestSynch( MsgRobotUtil.wMsg );
         while( answer.equals("true") ){
             journey = journey + "w";
-            answer = robotSupport.requestSynch( "w" );
+            answer = robotSupport.requestSynch( MsgRobotUtil.wMsg );
         }
         //collision
-        robotSupport.requestSynch("l");
+        robotSupport.requestSynch( MsgRobotUtil.lMsg );
         return doBoundary(stepNum + 1, journey + "l");
     }
     public static void main(String args[]) throws Exception{
