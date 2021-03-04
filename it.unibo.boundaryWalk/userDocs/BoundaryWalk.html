@@ -409,7 +409,7 @@ to <ks>create</ks> the proper communicartion support by using a <k>user-defined 
 
 </td>
 <td>
-<h4>Using Java annotations</h4>
+<h4>Using <a href="aboutAnnotations.html" target="code">Java annotations</a></h4>
 The class
 <a href="../app/src/main/java/it/unibo/annotations/IssAnnotationUtil.java" target="web"><em>IssAnnotationUtil.java</em></a>
 provides utility methods to access the information specified in an annotation.
@@ -419,7 +419,9 @@ provides utility methods to access the information specified in an annotation.
 </tbody>
 </table>
 
-<h2>Configuration based on <a href="aboutAnnotations">Java annotations</a></h2>
+<h2>Configuration based on 
+<a href="aboutAnnotations.html" target="code">Java annotations</a> <!--
+<a href="https://docs.oracle.com/javase/tutorial/java/annotations/index.html" target="code">Java annotations</a>--></h2>
 
 
 <table style="width:98%">
@@ -600,15 +602,21 @@ Java utility class <ks>java.util.regex.</ks>.
 </table>
 
 <h2>Layers and languages</h2>
-The introduction of the <a href="../app/src/main/java/it/unibo/robotSupports/IssArilRobotSupport.java" target="web"><em>IssArilRobotSupport</em></a> 
-does introduce a new  software layer that gives to the application designers the opportuninty to work with a more 'high-level' concept of robot.
+The <a href="../app/src/main/java/it/unibo/robotSupports/IssArilRobotSupport.java" target="web"><em>IssArilRobotSupport</em></a>:
 <br/><br/>
-This new layer does not change the operation-set required to interact with a robot, that is always defined by the
-<a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations.java</em></a>.
-<br/><br/>
-However, a quite radical change is required as regards the arguments of the operations, that are of type <em>String</em>, but that require a different
-content for each layer.
-<br/><br/>
+<ul>
+<li>does introduce a new  software layer that gives to the application designers the opportuninty to work with 
+a more 'high-level' concept of robot;
+</li>
+<li>this new layer does not change the operation-set required to interact with a robot, that is always defined by the
+<a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations.java</em></a>;
+</li>
+<li>however, a quite radical change is required as regards the arguments of the operations, that are of type <em>String</em>, 
+but that require a different content for each layer.
+</li>
+</ul>
+
+<h3>Levels of messages</h3>
 To facilitate the work of the application designer, we introduce the class 
 <a href="../app/src/main/java/it/unibo/interaction/MsgRobotUtil.java" target="web"><em>MsgRobotUtil</em></a>  that gives the correct confiuration
 content of the payload required for each layer (at the moment the <i>cril</i> layer and the </l>aril</i> layer, but we will introduce another layer in the next section).
@@ -628,8 +636,9 @@ A sketch of the strings definied in this file is:
 
 <h3>Towards message-based interaction</h3>
 <div class="remark">
-Since we intend to develop distributed applications and to gradually perform a transition from component-interaction based on procedure-calls to
-component-interaction based on messages,  let us introduce here a more general representation of messages.
+Since we intend to develop distributed applications and to <ks>gradually perform a transition</ks> from component-interaction 
+based on <k>procedure-calls</k> to the usage of <k>distributed</k> components that interact
+using <k> messages</k>,  let us introduce here a more general representation of messages.
 
 <!-- that involve different kinds of devices (and not only robots) or even applications related to domains different than IOT,-->
 </div>
@@ -638,7 +647,7 @@ component-interaction based on messages,  let us introduce here a more general r
 <tbody>	
  <tr>
 <td style="width:50%">
-From the point of view of the application designer, we do introduce the following terminology:
+From the point of view of the application designer, we do introduce the following terminology:<br/><br/>
  <ul>
 <li><bc>Dispatch</bc>: a message '<i>fire and forget</i>': the sender does not expect any answer.</li>
 <li><bc>Request</bc>: the sender expects an answer sent using a <bc>Reply</bc>.</li>
@@ -682,16 +691,24 @@ enum class AppMsgType{ event, dispatch, request, reply, invitation }
 </td>
 <td>  
 
-<h4>Extending <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg</em></a> </h4>
+<h4>Extending <a href="../app/src/main/java/it/unibo/interaction/MsgRobotUtil.java" target="web"><em>MsgRobotUtil</em></a> </h4>
 <pre>
  <kc>//cril</kc>
  	...
  <kc>//aril</kc>
    ...
+ <kc>//AppMsg with cril payload</kc>
+    public static final AppMsg forwardApp   = 
+		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ forwardMsg + ")");
+    public static final AppMsg backwardApp   = 
+		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ backwardMsg + ")"); 
+   ...	
  <kc>//AppMsg with aril payload</kc> 
-public static final AppMsg ahead=AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+wMsg+")");
-public static final AppMsg left =AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+lMsg+")");
-...
+    public static final AppMsg ahead = 
+		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+wMsg+")");
+	public static final AppMsg left = 
+		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+lMsg+")");
+  ...
  </pre>
 
 <h4>Example</h4>
@@ -745,20 +762,112 @@ that
 -->
 
 
- <h1>Unibo robots</h1>
+<h1>Layers, languages, configuration and semantics</h1>
+
+We want to exploit <a href="aboutAnnotations.html" target="code">Java annotations</a> to simplify the configuration phase
+of our robot-based applications.
+<br/>
+Our idea is to introduce custom annotations to 'mark' our different kinds of robots; more specifically:<br/><br/>
+<ul>
+<li>
+<a href="../app/src/main/java/it/unibo/annotations/VirtualRobotSpec.java" target="web"><ks>@VirtualRobotSpec</ks></a>
+: for application classes that intend to work with the basic Virtual robot
+that understands the <k>cril</k> command language;</li>
+<li><a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="web"><ks>@ArilRobotSpec</ks></a>
+: for application classes that intend to work with a robot
+that understands the <k>aril</k> command language;</li>
+<li><a href="../app/src/main/java/it/unibo/annotations/UniboRobotSpec.java" target="web"><ks>@UniboRobotSpec</ks></a>
+: for application classes that intend to work with a robot able to receive <k>cril/aril</k> commands embedded in a 
+<a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg</em></a>.</li>
+
+</ul>
 
 <table style="width:98%">
 <tbody>	
 <tr>
 <td style="width:50%" >
- 
+<h4>UseRobotVirtual</h4>
+<a href="../app/src/main/java/it/unibo/robotAppls/UseRobotVirtual.java" target="web"><em>UseRobotVirtual</em></a>
+ <pre>
+<ks>@VirtualRobotSpec</ks>
+public class UseRobotVirtual {
+private IssOperations robotSupport;
+     public UseRobotAril(IssOperations support){  
+         this.robotSupport = support;
+     }
 
+    <kc>//robotSupport.forward( <ks>MsgRobotUtil.turnRightMsg</ks> );</kc>
+} 
+ </pre>
+
+<h4>UseRobotAril</h4>
+<a href="../app/src/main/java/it/unibo/robotAppls/UseRobotAril.java" target="web"><em>UseRobotAril</em></a>
+ <pre>
+<ks>@ArilRobotSpec</ks>
+public class UseRobotAril {
+private IssOperations robotSupport;
+     public UseRobotAril(IssOperations support){  
+         this.robotSupport = support;
+     }
+
+    <kc>//robotSupport.forward( <ks>MsgRobotUtil.rMsg</ks> );</kc>
+}
+ </pre>
 </td>
 <td>
+<h4>UseRobotUnibo</h4>
+We could also eliminate the constructor, by introducing an annotation 
+<a href="../app/src/main/java/it/unibo/annotations/InjectSupportSpec.java" target="web"><ks>@InjectSupportSpec</ks></a>
+
+for an 'depenedency-injector' method
+
+<pre>
+<ks>@UniboRobotSpec</ks>
+public class UseRobotUnibo {
+     private IssAppOperations robotSupport;
+	 
+     <ks>@InjectSupportSpec</ks>
+     private void setSupport(IssAppOperations support){
+        this.robotSupport = support;
+     }
+
+     protected void doBasicMoves(){
+         robotSupport.forward( <ks>MsgRobotUtil.left</ks> );
+         robotSupport.forward( <ks>MsgRobotUtil.right</ks> );
+         robotSupport.requestSynch( <ks>MsgRobotUtil.ahead</ks> );
+         robotSupport.requestSynch( <ks>MsgRobotUtil.back</ks> );
+     }
+	 
+     public static void main(String args[])  {
+         Object appl = RobotApplicationStarter.createInstance(UseRobotUnibo.class);
+         if( appl != null )  ((UseRobotUnibo)appl).doBasicMoves();
+     }
+</pre>
+
 </td>
 </tr>
  </tbody>
 </table>
+
+Our implementation can be found in
+<a href="../app/src/main/java/it/unibo/robotAppls/RobotApplicationStarter.java" target="web"><em>RobotApplicationStarter</em></a>
+
+
+<h2>TODO</h2>
+Note that if we use <ks>@VirtualRobotSpec</ks> and we  we write
+<pre>
+robotSupport.forward( <ks>MsgRobotUtil.rMsg</ks> )
+</pre>
+the system will rise a run-time error.
+<br/><br/>
+We want ti change our code, so to assure that the application designer will use the correct robot-command language 
+for a chosed robot.type.
+
+ 
+
+<br/>
+
+
  
 </div>
 

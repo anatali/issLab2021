@@ -5,6 +5,7 @@
  */
 package it.unibo.robotAppls;
 
+import it.unibo.annotations.InjectSupportSpec;
 import it.unibo.annotations.UniboRobotSpec;
 import it.unibo.interaction.IssAppOperations;
 import it.unibo.interaction.MsgRobotUtil;
@@ -12,14 +13,25 @@ import it.unibo.interaction.MsgRobotUtil;
 @UniboRobotSpec
 public class UseRobotUnibo {
      private IssAppOperations robotSupport;
-
+/*
      public UseRobotUnibo(IssAppOperations support){  //Injected by UniboRobotApplicationStarter
          //System.out.println("UseRobotUnibo | constructor support=" + support  );
          this.robotSupport = support;
      }
 
-     protected void doJob(){
-         System.out.println("UseRobotUnibo | doJob "  );
+
+    public UseRobotUnibo( ){  //Injected by UniboRobotApplicationStarter
+        //System.out.println("UseRobotUnibo | constructor support=" + support  );
+        //this.robotSupport = support;
+    }
+ */
+    @InjectSupportSpec
+    private void setSupport(IssAppOperations support){
+        System.out.println(  " UseRobotUnibo setSupport | support= " + support );
+        this.robotSupport = support;
+    }
+
+     protected void doBasicMoves(){
          robotSupport.forward( MsgRobotUtil.left );
          //Thread.sleep(1000);
          robotSupport.forward( MsgRobotUtil.right );
@@ -45,8 +57,8 @@ public class UseRobotUnibo {
 
 
      public static void main(String args[])  {
-         //UniboRobotApplicationStarter.run( UseRobotUnibo.class );
          Object appl = RobotApplicationStarter.createInstance(UseRobotUnibo.class);
-         if( appl != null )  ((UseRobotUnibo)appl).doBoundary(1,"");
+         if( appl != null )  ((UseRobotUnibo)appl).doBasicMoves( );
+         //if( appl != null )  ((UseRobotUnibo)appl).doBoundary(1,"");
      }
 }

@@ -22,6 +22,8 @@ public class UseRobotVirtual {
         robotSupport.forward( MsgRobotUtil.turnLeftMsg );
         Thread.sleep(1000);        //required ONLY if we use websockets
         robotSupport.forward( MsgRobotUtil.turnRightMsg );
+        //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
+
         Thread.sleep(1000);      //required ONLY if we use websockets
         String answer_w = robotSupport.requestSynch( MsgRobotUtil.forwardMsg );
         System.out.println("UseRobotVirtual | doBasicMoves answer_w=" + answer_w  );

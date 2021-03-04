@@ -278,7 +278,8 @@ an oversimplified opinion, prejudiced attitude, or uncritical judgment.</li>
 </ul>
 <hr/>
 
-<a href="https://en.wikipedia.org/wiki/Java_annotation"  target="web"><bc>Java Annotations</bc></a> (introduced in Java release 5 - <tt>Tiger</tt>) 
+<a href="https://en.wikipedia.org/wiki/Java_annotation"  target="web"><bc>Java Annotations</bc></a> 
+(introduced in Java release 5 - <tt>Tiger</tt>) 
 are a means to define metadata (<bc>"data about data"</bc>) where the language does not have explicit support for such metadata.
 However, Java annotations   as <i>are not really metadata</i>; rather, they are data about 
 classes, methods, instance and static variables etc.
@@ -291,8 +292,13 @@ but indicates that a class is capable of being serialized via the <tt>Java Seria
 
 <br/><br/>
 <a href="https://en.wikipedia.org/wiki/Java_annotation"  target="web"><bc>Java Annotations</bc></a> provide three basic facilities
-(see also <a href="https://www.javastaff.com/2009/06/23/java-annotations-cosa-sono-come-utilizzarle-come-crearle/"  target="web">
-<ks>Java Annotation: cosa sono, come utilizzarle, come crearle</ks></a>):
+(see also 
+<a href="https://docs.oracle.com/javase/tutorial/java/annotations/index.html"  target="web">Java annotations (Oracle tutorial)</a>,
+<a href="https://howtodoinjava.com/java/annotations/complete-java-annotations-tutorial/"  target="web">Java annotations tutorial</a>,
+<a href="https://www.javastaff.com/2009/06/23/java-annotations-cosa-sono-come-utilizzarle-come-crearle/"  target="web">
+Java Annotation: cosa sono, come utilizzarle, come crearle</a> 
+
+):
 <ul>
 <li>The provision of <em>additional semantics</em> for various class elements. 
 This additional semantic information can help developers to understand the intent behind some feature or implementation detail.</li>
@@ -301,10 +307,76 @@ This additional semantic information can help developers to understand the inten
 </ul>
 We can create our own annotations by defining a new annotation type. 
 This is done using a new piece of language syntax, the <k>@interface</k> key word. 
-<br/><br/>
+<br/> 
 Note that, if the code relating to an annotation changes, then the associated annotation may also need modification. 
  <br/>  You can’t subclass annotations.<br/>  
 
+<div class="remark">
+Annotations, a form of metadata, provide data about a program that is not part of the program itself.  
+Annotations have no direct effect on the operation of the code they annotate. <br/><br/>
+Annotations do not directly affect program semantics, but they do affect the way programs are treated by tools and libraries, 
+which can in turn affect the semantics of the running program. 
+</div>
+
+ The use of annotation has blended so well with the Java language that we rarely notice its use even if we do not invoke them explicitly.
+In fact, annotation is everywhere; the Java library is full of them (e.g. <tt>@Deprecated, @SuppressWarning, @SafeVarargs, ...</tt>).
+<br/><br/>
+
+<!--
+As explained in <a href="https://en.wikipedia.org/wiki/Java_annotation"  target="web">Java annotation (Wikipedia)</a>
+<a href="https://docs.oracle.com/javase/tutorial/java/annotations/index.html"  target="web">Java annotations</a>
+are not method calls and will not, by themselves, do anything.
+Rather, Java programmers can write their own code that uses reflections to process the annotation.
+<br/><br/>
+-->
+<h3>Annotation processing</h3>
+Annotations can be <ks>processed both at compile time</ks> 
+(see <a href="http://hannesdorfmann.com/annotation-processing/annotationprocessing101/" target="web">Annotation Processing</a>)
+<ks>and at runtime</ks>. 
+To process them at runtime requires using the reflection API, which will have a performance impact if it's not done smartly.
+<br/><br/>
+Instead of instantiating your classes yourself, you ask a <em>container</em> (e.g.
+<a href="https://howtodoinjava.com/spring-5-tutorial/" target="web">Spring</a> ) for an instance of your class.
+<!-- IMPORTANT https://howtodoinjava.com/ -->
+The container has logic to examine the class for any RuntimeAnnotations and look for controller object
+marked with the <tt>@Controller</tt> annotation.
+<!-- The container will then dynamically create a proxy of your class that calls the correct Widgetize method first 
+and then calls the target method.
+<br/><br/>
+The container will then return that proxy to the original requester. 
+The requester will still thing he got the class (or interface) that he asked for and be completely unaware 
+of the proxying behavior added by the container.-->
+
+<h3>Type annotations</h3>
+Before the Java SE 8 release, annotations could only be applied to declarations. 
+As of the Java SE 8 release, annotations can also be applied to any type use.
+<br/>
+Type annotations 
+(see <a href="https://docs.oracle.com/javase/tutorial/java/annotations/type_annotations.html" target="web">
+Type Annotations and Pluggable Type Systems</a>) 
+were created to support improved analysis of Java programs way of 
+ensuring stronger type checking (e.g. <tt>@NonNull</tt>).
+
+<h3>Effective Use</h3>
+Perhaps the greatest advantage of annotation is its support in a design paradigm based upon explicit configuration. 
+<br/><br/>
+ 
+There are frameworks, such as <ks>MVC</ks> (model-view-controller) and <ks>ORM</ks> (Object Relational Mapping), 
+which extensively use annotation to simplify different aspect sof configuration. <br/> 
+<!-- 
+Similarly, a simple <ks>@Entity</ks> designates a class to a relational database table. <br/>-->
+This simplification has an immense impact on the development process. 
+Literally, pages of configuration are reduced to a few words.  
+<!--
+The benefit not only comes from the predefined annotation in the framework but also from its extensibility. 
+Any improper use of annotation is quickly caught by the compiler rather than relying on the developer's 
+uncanny skills of hunting bugs. 
+Bug hunting is not very enjoyable, especially when there are a lot of configuration files. 
+So, annotation champions the idea of convention over configuration in its true sense.
+ -->
+
+ <br/><br/>
+ <!-- https://stackoverflow.com/questions/4829711/java-annotations-and-apt-fundamentals -->
 <!--
 <h2>Spring annotations</h2>
 During initial release of Spring, a <a href="https://www.baeldung.com/spring-bean" target="web">bean</a> was declared in an <tt>XML</tt> file. 

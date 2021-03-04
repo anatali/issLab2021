@@ -1,7 +1,10 @@
 package it.unibo.annotations;
 
+import it.unibo.annotatedExample.InitSpec;
+import it.unibo.interaction.IssAppOperations;
 import java.io.FileInputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -135,5 +138,26 @@ RELATED TO ROBOT MOVES
         }
         return Integer.parseInt( content );
     }
+
+
+/*
+METHODS
+ */
+public static void injectRobotSupport(Object object, IssAppOperations rs)   {
+    //println("injectRobotSupport object=" + object);
+    Class<?> clazz = object.getClass();
+    for (Method method : clazz.getDeclaredMethods()) {
+        System.out.println("injectRobotSupport method=" + method);
+        if (method.isAnnotationPresent(InjectSupportSpec.class)) {
+            method.setAccessible(true);
+            try{
+                //System.out.println("injectRobotSupport invoke " + method);
+                method.invoke(object,rs);   //the first argument is this
+            }catch( Exception e ){
+                e.printStackTrace();
+            }
+        }
+    }
+}
 
 }
