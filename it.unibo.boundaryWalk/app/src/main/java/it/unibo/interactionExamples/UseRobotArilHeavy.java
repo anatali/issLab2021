@@ -32,15 +32,14 @@ import it.unibo.robotSupports.IssCommsSupportFactory;
         url      = "http://localHost:8090/api/move"
 )
 
-
-@RobotMoveTimeSpec( ltime = 300, wtime=200 )
+@RobotMoveTimeSpec( ltime = 200, wtime=400 )
 public class UseRobotArilHeavy {
 
     private IssOperations robotSupport;
 
     //Factory method
     public static UseRobotArilHeavy create(){
-        UseRobotArilHeavy obj          = new UseRobotArilHeavy();  //appl-object
+        UseRobotArilHeavy obj     = new UseRobotArilHeavy();  //appl-object
         IssOperations commSupport = IssCommsSupportFactory.create( obj  );
         obj.robotSupport          = new IssArilRobotSupport( obj, commSupport ); //'inject'
         //In the future we could use different robots and thus different robotSupport,
@@ -58,10 +57,7 @@ public class UseRobotArilHeavy {
         Thread.sleep(1000);      //required ONLY if we use websockets
     }
 
-
-
     public String doBoundary( int stepNum, String journey){
-        //int stepNum = 1;
         if (stepNum > 4) {
              return journey;
         }
@@ -74,10 +70,11 @@ public class UseRobotArilHeavy {
         robotSupport.requestSynch( MsgRobotUtil.lMsg );
         return doBoundary(stepNum + 1, journey + "l");
     }
+
     public static void main(String args[]) throws Exception{
         UseRobotArilHeavy appl = UseRobotArilHeavy.create();
-        appl.doJob();
-        //String journey = appl.doBoundary(1,"");
-        //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);
+        //appl.doJob();
+        String journey = appl.doBoundary(1,"");
+        System.out.println("UsageRobot | doBoundary BYE journey=" + journey);
     }
 }

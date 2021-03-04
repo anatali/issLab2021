@@ -15,7 +15,7 @@ public class IssCommsSupportFactory {
     //Factory Method
     public static IssOperations create(Object obj ){
         ProtocolInfo protocolInfo = IssAnnotationUtil.getProtocol(  obj );
-        String protocol     = protocolInfo.getProtocol().toString();
+        String protocol     = protocolInfo.getProtocol();
         String url          = protocolInfo.getUrl();
         return create(protocol,url);
         /*

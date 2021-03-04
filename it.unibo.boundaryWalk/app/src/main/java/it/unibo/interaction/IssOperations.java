@@ -14,7 +14,7 @@
 package it.unibo.interaction;
 
 public interface IssOperations {
-    void forward( String msg ) ;
+    void forward( String msg ) ;  //String cril, aril, AppMsg
     void request( String msg );
     void reply( String msg );
     String requestSynch( String msg );

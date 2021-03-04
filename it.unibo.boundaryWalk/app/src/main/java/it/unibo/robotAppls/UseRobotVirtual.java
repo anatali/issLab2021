@@ -48,6 +48,10 @@ public class UseRobotVirtual {
 
     public static void main(String args[]) throws Exception{
         Object appl = RobotApplicationStarter.createInstance(UseRobotVirtual.class);
+        /*
+        Metodo di costruzione classico
+
+         */
         if( appl != null )  ((UseRobotVirtual)appl).doBasicMoves( );
         //String journey = appl.doBoundary(1,"");
         //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);

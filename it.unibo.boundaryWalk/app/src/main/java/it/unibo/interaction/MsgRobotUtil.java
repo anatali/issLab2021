@@ -34,6 +34,7 @@ public class MsgRobotUtil {
     */
 
     //AppMsg with aril payload
+    // msg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, SEQNUM )
     public static final AppMsg ahead = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv," + wMsg +" )");
     public static final AppMsg left  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ lMsg +")");
     public static final AppMsg right = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ rMsg +")");

@@ -36,7 +36,7 @@ public class TestUseRobotArilHeavy {
      }
 
     protected boolean checkJourney(String result){
-        Pattern pattern = Pattern.compile("w*l");
+        Pattern pattern = Pattern.compile("w+l");  //
         Matcher matcher = pattern.matcher(result);
         int n = 0;
         while(matcher.find()) {
