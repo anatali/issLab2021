@@ -697,12 +697,6 @@ enum class AppMsgType{ event, dispatch, request, reply, invitation }
  	...
  <kc>//aril</kc>
    ...
- <kc>//AppMsg with cril payload</kc>
-    public static final AppMsg forwardApp   = 
-		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ forwardMsg + ")");
-    public static final AppMsg backwardApp   = 
-		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ backwardMsg + ")"); 
-   ...	
  <kc>//AppMsg with aril payload</kc> 
     public static final AppMsg ahead = 
 		AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+wMsg+")");
@@ -866,7 +860,7 @@ for a chosed robot.type.
 
  -->
 
-<br/><br/>
+<br/><br/>	
 
 
  
