@@ -51,5 +51,6 @@ public class UseRobotVirtual {
         if( appl != null )  ((UseRobotVirtual)appl).doBasicMoves( );
         //String journey = appl.doBoundary(1,"");
         //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);
+
     }
 }

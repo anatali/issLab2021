@@ -10,21 +10,10 @@ import it.unibo.annotations.UniboRobotSpec;
 import it.unibo.interaction.IssAppOperations;
 import it.unibo.interaction.MsgRobotUtil;
 
-@UniboRobotSpec
+@UniboRobotSpec //see IssProtocolConfig.txt
 public class UseRobotUnibo {
      private IssAppOperations robotSupport;
-/*
-     public UseRobotUnibo(IssAppOperations support){  //Injected by UniboRobotApplicationStarter
-         //System.out.println("UseRobotUnibo | constructor support=" + support  );
-         this.robotSupport = support;
-     }
 
-
-    public UseRobotUnibo( ){  //Injected by UniboRobotApplicationStarter
-        //System.out.println("UseRobotUnibo | constructor support=" + support  );
-        //this.robotSupport = support;
-    }
- */
     @InjectSupportSpec
     private void setSupport(IssAppOperations support){
         System.out.println(  " UseRobotUnibo setSupport | support= " + support );

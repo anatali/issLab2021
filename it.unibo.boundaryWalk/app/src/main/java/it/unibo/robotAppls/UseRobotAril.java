@@ -43,10 +43,15 @@ public class UseRobotAril {
         return doBoundary(stepNum + 1, journey + "l");
     }
 
+    public String doBoundaryLogic(  ){
+        return BoundaryLogic.doBoundary(1,"",robotSupport);
+    }
 
      public static void main(String args[])  {
          Object appl = RobotApplicationStarter.createInstance(UseRobotAril.class);
          if( appl != null )  ((UseRobotAril)appl).doBasicMoves( );
          //if( appl != null )  ((UseRobotAril)appl).doBoundary(1,"");
+         //if( appl != null )  ((UseRobotAril)appl).doBoundaryLogic( );
+
      }
 }

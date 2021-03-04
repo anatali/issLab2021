@@ -24,12 +24,14 @@ public class MsgRobotUtil {
     public static final String hMsg  = "h";
 
     //msg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, SEQNUM )
-    //AppMsg with cril payload
+    //AppMsg with cril payload //TODO
+    /*
     public static final AppMsg forwardApp   = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ forwardMsg + ")");
-    public static final AppMsg backwardApp   = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ backwardMsg + ")");
-    public static final AppMsg turnLeftApp  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ turnLeftMsg + ")");
+    public static final AppMsg backwardApp  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ backwardMsg + ")");
+    public static final AppMsg turnLeftApp  = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ turnLeftMsg + "))");
     public static final AppMsg turnRightApp = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+turnRightMsg+")");
     public static final AppMsg haltMsgApp   = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv,"+ haltMsg +")");
+    */
 
     //AppMsg with aril payload
     public static final AppMsg ahead = AppMsg.create( "msg(robotcmd,dispatch,appl,wenv," + wMsg +" )");

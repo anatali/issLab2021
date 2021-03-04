@@ -25,7 +25,7 @@ public class AppMsg {
         return new AppMsg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, ""+n++);
     }
 
-    public static AppMsg create(String m){
+    public static AppMsg create(String m){  //WARNING: CONTENT must be in Prolog syntax
         //System.out.println("AppMsg create m= " + m);
         //m= msg( MSGID,  MSGTYPE,  SENDER,  RECEIVER,  CONTENT, SEQNUM )
         String[] mSplit   = m.split("msg");
