@@ -12,41 +12,8 @@ import javax.websocket.*;
 import java.net.URI;
 import java.security.Principal;
 
-/**
- AnswerAvailable
- ===============================================================
- Utility class to capture information about the reply to a request
- sent by the server over the ws connection.
- The put operation is called by onMessage and works only if
- the object has been engaged (by a requestSynch operation)
- ===============================================================
- */
-class AnswerAvailable{
-    private String  answer  = null;
-    private boolean engaged = false;
-    public void engage(){
-        engaged = true;
-    }
-    public synchronized void put(String info, String move) {
-        if( engaged ){
-            answer = info;
-            notify();
-        }else{
-            System.out.println("        AnswerAvailable | put not engaged for info=" + info + " move=" + move);
-        }
-    }
-    public synchronized String get( ) {
-        while (answer == null){
-            try { wait(); }
-            catch (InterruptedException e) { }
-            finally { }
-        }
-        String myAnswer = answer;
-        answer           = null;
-        engaged          = false;
-        return myAnswer;
-    }
-}
+
+
 
 /**
  IssWsSupport.java
@@ -62,9 +29,9 @@ public class IssWsSupport implements IssOperations {
     private Session userSession    = null;
     private AnswerAvailable answerSupport;
 
-    public IssWsSupport( String url){
-        URL = url;
+    public IssWsSupport( String url ){
         try {
+            URL = url;
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI("ws://"+url));
             answerSupport = new AnswerAvailable();
@@ -123,16 +90,15 @@ public class IssWsSupport implements IssOperations {
     }
     
 //------------------------------ IssOperations ----------------------------------
-    /*
-    Fire and forget
-     */
-    @Override
+     @Override
     public void forward(String msg)  {
         try {
             //this.userSession.getAsyncRemote().sendText(message);
-            this.userSession.getBasicRemote().sendText(msg); //synch: blocks until the message has been transmitted
-            //The WEnv receiver sends always an answer. Thus, it does not handle message N+1 before the end of msg N
-            //Do we transform the forward in a request or assume that the user put an adeguate interval between messages?
+            userSession.getBasicRemote().sendText(msg); //synch: blocks until the message has been transmitted
+            //The WEnv receiver sends always an answer.
+            //Thus, it does not handle message N+1 before the end of msg N
+            //Do we transform the forward in a request or
+            //do we assume that the user put an adequate interval between messages?
             System.out.println("        IssWsSupport | forward " + msg);
         }catch( Exception e){
             System.out.println("        IssWsSupport | forward ERROR " + e.getMessage());
@@ -167,6 +133,6 @@ public class IssWsSupport implements IssOperations {
 
     @Override
     public void reply(String msg) {
-        //System.out.println( "         IssWsSupport | WARNING: reply NOT IMPLEMENTED"  );
+        //System.out.println( "         IssWsSupport | WARNING: reply NOT IMPLEMENTED HERE"  );
     }
 }

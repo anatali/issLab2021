@@ -1,5 +1,5 @@
 /**
- UseRobotUnibo .java
+ UseRobotMsgApp .java
  ===============================================================
  ===============================================================
  */
@@ -11,12 +11,12 @@ import it.unibo.interaction.IssAppOperations;
 import it.unibo.interaction.MsgRobotUtil;
 
 @UniboRobotSpec //see IssProtocolConfig.txt
-public class UseRobotUnibo {
+public class UseRobotMsgApp {
      private IssAppOperations robotSupport;
 
     @InjectSupportSpec
     private void setSupport(IssAppOperations support){
-        System.out.println(  " UseRobotUnibo setSupport | support= " + support );
+        System.out.println(  " UseRobotMsgApp setSupport | support= " + support );
         this.robotSupport = support;
     }
 
@@ -46,8 +46,8 @@ public class UseRobotUnibo {
 
 
      public static void main(String args[])  {
-         Object appl = RobotApplicationStarter.createInstance(UseRobotUnibo.class);
-         if( appl != null )  ((UseRobotUnibo)appl).doBasicMoves( );
-         //if( appl != null )  ((UseRobotUnibo)appl).doBoundary(1,"");
+         Object appl = RobotApplicationStarter.createInstance(UseRobotMsgApp.class);
+         if( appl != null )  ((UseRobotMsgApp)appl).doBasicMoves( );
+         //if( appl != null )  ((UseRobotMsgApp)appl).doBoundary(1,"");
      }
 }

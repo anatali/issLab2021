@@ -1,0 +1,453 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+<script language="javascript" type="text/javascript">
+const socket = new WebSocket('ws://localhost:8091');
+socket.onopen = function () { console.log("socket connected on 8091") };
+
+$(document).ready(function(){ 
+	$( "#lsocket" ).click(function() {  
+		if (socket.bufferedAmount == 0) socket.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );  });
+});
+$(function () {
+	$( "#rsocket" ).click(function() {  
+		if (socket.bufferedAmount == 0) socket.send( "{\"robotmove\":\"turnRight\", \"time\": 300}" );  });
+});
+</script>
+    
+<head>
+   
+<title>websocketInteraction</title></head>
+    
+<body>
+<div id="top">
+<h1>Lab ISS | websocketInteraction <font size="5"></font> </h1>
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/main/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">ISS-lectures site</a></font> 
+
+</div>  
+
+<div class="body"> 
+<h2>Introduction </h2>
+<!-- 
+This document is related to the project <a href="../../it.unibo.boundaryWalk" target="code">it.unibo.boundaryWalk</a>.
+
+ 
+
+
+<h1>FEEDABCKS (after SPRINT retrospective)</h1>
+-->
+
+The work done during the project <a href="../../it.unibo.boundaryWalk" target="code">it.unibo.boundaryWalk</a> 
+has introduced a new approach to problem analysis, 
+since our logical architecture can be better conceived in terms of high-level logical interaction
+rather that in terms of low-level protocols. For example:
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+
+<center><img src="./img/logicArch1.png" alt="logicArch1" width="100%" ></center>
+ 
+</td>
+<td>
+Our boundaryWalk application should
+<ul>
+<li>send a <em>request</em> to WEnv for the execution of a robot-move command</li>
+<li>handle the <em>reply</em> sent by WEnv to the robot-move command request</li>
+<li>handle the information possibly sent by WEnv to boundaryWalk as a <em>dispatch</em> carrying the distance detected by the sonar</li>
+</ul>
+
+</td>
+</tr>
+
+<tr>
+<td>
+Now, the components of a system interact by means of 
+a set of different kinds of high-level messages, represented as follows:
+<center><img src="./img/issMsgSymbols.png" alt="issMsgSymbols" width="50%" ></center>
+
+</td>
+<td>
+<h3>Message passing</h3> 
+The view implies that there is no reference to actions involving
+<a href="https://en.wikipedia.org/wiki/Remote_procedure_call#:~:text=In%20distributed%20computing,%20a%20remote%20procedure%20call%20(RPC),explicitly%20coding%20the%20details%20for%20the%20remote%20interaction" 
+target="web">Remote Procedure Calls</a>  (also known as  
+<a href="https://en.wikipedia.org/wiki/Distributed_object_communication" target="web">Remote Method Invocation</a> in oop)
+, but there is the idea of asynchronous 
+<a href="https://en.wikipedia.org/wiki/Message_passing"target="web">message passing</a>. 
+
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h2>From procedure-call to message-passing</h2>
+From the network we frequently find the following definitions:<br/><br/>
+
+<ul>
+<li><ks>Synchronous communication</ks>: any type of communication that expects an instantaneous 
+or near-real-time response, such as in-person conversation, phone calls, video calls, and messaging apps, like Slack.
+<br/> 
+<ks>Synchronous messaging</ks> is analogous to a synchronous function call; 
+just as the function caller waits until the function completes, the sending process waits until the receiving process completes. 
+This can make synchronous communication unworkable for some applications. 
+For example, large, distributed systems may not perform well enough to be usable.
+ <br/><br/>
+</li>
+<li><ks>Asynchronous communication</ks>:  any type of communication that doesn’t happen in real time and allows the 
+recipient or recipients of information to respond on their own time. 
+Email, video recording tools, and internal wikis are all forms of asynchronous communication.
+<br/> 
+<ks>Asynchronous message passing</ks>: the receiving object can be down or busy when the requesting object sends the message. 
+Asynchronous messaging requires additional capabilities for storing and retransmitting data for systems that may not run concurrently, 
+and are generally handled by an intermediary level of software (often called 
+<a href="https://en.wikipedia.org/wiki/Middleware" target="web">middleware</a>); 
+a common type being 
+<a href="https://en.wikipedia.org/wiki/Message-oriented_middleware" target="web">Message-oriented middleware (MOM)</a>.
+ 
+</li>
+</ul>
+ 
+<br/> 
+This new way of thinking can be better understood if we examine in depth the interaction base on 
+
+<a href="https://en.wikipedia.org/wiki/WebSocket" target="web">websockets</a>.
+
+<hr/><m>
+The WebSocket protocol enables interaction between a web browser (or other client application) 
+and a web server with lower overhead than half-duplex alternatives such as HTTP polling, 
+facilitating real-time data transfer from and to the server.
+This is made possible by providing a standardized way for the server to send content to the client without 
+being first requested by the client, and allowing messages to be passed back and forth while keeping the connection open. 
+The communications are usually done over TCP port number 443 (or 80 in the case of unsecured connections), 
+which is beneficial for environments that block non-web Internet connections using a firewall. 
+
+
+</m><hr/>
+
+<!--
+<kc>//JavaScript client example</kc>
+const socket = new WebSocket('ws://localhost:8091');
+socket.onopen = function () {
+  setInterval(function() {
+    if (socket.bufferedAmount == 0)
+      socket.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );
+  }, 1000);
+};-->
+
+<h3>Using in JavaScript</h3>
+This HTML document includes the following code:
+<pre>
+&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
+
+<b>&lt;script language="javascript" type="text/javascript"></b>
+const <k>socket</k>  = new WebSocket('ws://localhost:8091');
+<k>socket</k>.onopen = function () { 
+	<kc>//to see, open Developer Tools in the browser</kc>
+	console.log("socket connected on 8091") 
+};
+
+$(document).ready(function(){ 
+ $( "#<kc>lsocket</kc>" ).click(function() {  
+  <k>socket</k>.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );});
+})
+
+$(function () {
+ $( "#<kc>rsocket</kc>" ).click(function() {  
+  if (socket.bufferedAmount == 0) 
+	<k>socket</k>.send( "{\"robotmove\":\"turnRight\", \"time\": 300}" );});
+});
+<b>&lt;/script></b>
+
+&ltbutton id="<kc>lsocket</kc>" >turnLeft&lt/button>   ...
+</pre>
+
+In this way, we can move the robot by clicking on these buttons:
+
+ <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
+ 
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>IssWsSupport</h3>
+Our support to websocket-interaction exploits the 
+
+<a href="https://docs.oracle.com/javaee/7/api/javax/websocket/package-summary.html" target="web"><em>javax.websocket</em></a>
+library (sse also <a href="https://www.baeldung.com/java-websockets" target="web"><em>A Guide to the Java API for WebSocket</em></a>)
+that implements 
+<a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web"><em>JSR 356, Java API for WebSocket</em></a>.
+<br/><br/>
+Two different programming models are supported:
+<ul>
+<li><ks>Interface-driven</ks>. Developers can implement the Endpoint interface and the methods that interact with the lifecycle events.</li>
+<li><ks>Annotation-driven</ks>. Using annotated POJOs, developers can interact with the WebSocket lifecycle events.</li>
+</ul>
+As the annotation model leads to cleaner code as compared to the programmatic model, 
+the <k>annotation has become the conventional choice of coding</k>.
+WebSocket endpoint lifecycle events are handled by the following annotations:
+<pre>
+<ks>@ClientEndpoint</ks>  <kc>//The class is treated as a WebSocket client</kc>   
+public class IssWsSupport implements <k>IssOperations</k> {
+ ...
+ <ks>@OnOpen</ks> <kc><m>//invoked by the container when a new WebSocket connection is initiated</m></kc>
+ public void onOpen(Session userSession){ ... }
+	
+ <ks>@OnMessage</ks> <kc><m>//receives the information from the container when a message is sent to the endpoint</m></kc>
+ public void onMessage(String message){ ... }
+
+ <ks>@OnError</ks> <kc><m>//invoked when there is a problem with the communication</m></kc>
+ public void disconnected(Session session,Throwable error){...}
+	
+ <ks>@OnClose</ks> <kc><m>//called by the container when the WebSocket connection closes</m></kc>
+ public void onClose(Session userSession,CloseReason reason){...}
+}
+</pre>
+The full code is in: 
+<a href="../app/src/main/java/it/unibo/robotSupports/IssWsSupport.java" target="web"><em>IssWsSupport</em></a>
+and <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web"><em>AnswerAvailable</em></a>
+
+</td>
+<td>
+The support constructor connects with the server with <k>ws://</k> using the given url (e.g. <tt>localhost:8091</tt>)
+<h3>New problems to be faced</h3>
+<ul>
+<li><ks>forward(String msg)</ks>: calls
+<pre>
+userSession.getBasicRemote().sendText(msg);
+</pre>
+
+</li>
+<li></li>
+<li></li>
+</ul>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<!--
+From <a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web"><em>JSR 356, Java API for WebSocket</em></a>
+we read: <hr/>
+An endpoint that should initiate a WebSocket connection can be a POJO annotated with the @ClientEndpoint annotation. 
+<m>The main difference between @ClientEndpoint and a ServerEndpoint is that the ClientEndpoint 
+does not accept a path value element, because it is not listening to incoming requests.</m>
+<hr/>
+--> 
+</div>
+
+ <!--
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+<div >
+<hr/>
+By AN  Unibo-DISI  
+</div> 
+</body>
+</html>

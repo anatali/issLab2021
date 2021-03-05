@@ -25,7 +25,7 @@ public class TestRobotVirtual {
     }
     @After
     public void  terminate() {
-        System.out.println("%%%  TestRobotUnibo |  terminates ");
+        System.out.println("%%%  TestRobotMsgApp |  terminates ");
     }
 
     @Test
