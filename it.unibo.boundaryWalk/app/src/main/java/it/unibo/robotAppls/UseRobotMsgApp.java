@@ -6,11 +6,11 @@
 package it.unibo.robotAppls;
 
 import it.unibo.annotations.InjectSupportSpec;
-import it.unibo.annotations.UniboRobotSpec;
+import it.unibo.annotations.AppRobotSpec;
 import it.unibo.interaction.IssAppOperations;
 import it.unibo.interaction.MsgRobotUtil;
 
-@UniboRobotSpec //see IssProtocolConfig.txt
+@AppRobotSpec //see IssProtocolConfig.txt
 public class UseRobotMsgApp {
      private IssAppOperations robotSupport;
 

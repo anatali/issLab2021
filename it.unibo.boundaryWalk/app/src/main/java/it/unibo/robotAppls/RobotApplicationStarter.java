@@ -18,7 +18,7 @@ public class RobotApplicationStarter {
             Annotation[] annotations = clazz.getAnnotations();
             //System.out.println("RobotApplicationStarter | annotations " + annotations.length);
             for (Annotation annot : annotations) {
-                if (annot instanceof UniboRobotSpec) {
+                if (annot instanceof AppRobotSpec) {
                     ProtocolInfo p = IssAnnotationUtil.checkProtocolConfigFile(protcolConfigFName);
                     IssOperations commSupport = IssCommsSupportFactory.create(p.getProtocol(), p.getUrl());
                     System.out.println("RobotApplicationStarter | createInstance commSupport=" + commSupport);

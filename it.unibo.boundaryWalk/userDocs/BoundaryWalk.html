@@ -344,7 +344,7 @@ that can be easily checked with a TestUnit software:
 
 </li> 
  
-<h1>Project</h1>
+<h1 id="project">Project</h1>
 <table style="width:98%">
 <tbody>	
 <tr>
@@ -419,8 +419,8 @@ provides utility methods to access the information specified in an annotation.
 </tbody>
 </table>
 
-<h2>Configuration based on 
-<a href="aboutAnnotations.html" target="code">Java annotations</a> <!--
+<h2 id="annots">Configuration based on Java annotations (see 
+<a href="aboutAnnotations.html" target="code">Lab ISS | About annotations</a>) <!--
 <a href="https://docs.oracle.com/javase/tutorial/java/annotations/index.html" target="code">Java annotations</a>--></h2>
 
 
@@ -488,7 +488,7 @@ We will discuss it later.
 </tbody>
 </table>
 
-<h2>The application component (from cril to aril)</h2>
+<h2 id="aril">The application component (from cril to aril)</h2>
 <div class="remark">
 Since we intend to make our 'business code' technology-independent also with respect to the robot, we introduce <ks>a layer
 that makes the robot a 'logical entity'</ks> able to 'talk' with clients in a <ks>custom high-level language</ks>, designed with reference to
@@ -601,7 +601,7 @@ Java utility class <ks>java.util.regex.</ks>.
 </tbody>
 </table>
 
-<h2>Layers and languages</h2>
+<h2 >Layers and languages</h2>
 The <a href="../app/src/main/java/it/unibo/robotSupports/IssArilRobotSupport.java" target="web"><em>IssArilRobotSupport</em></a>:
 <br/><br/>
 <ul>
@@ -634,7 +634,7 @@ A sketch of the strings definied in this file is:
 
 
 
-<h3>Towards message-based interaction</h3>
+<h2 id="AppMsg">Towards message-based interaction</h2>
 <div class="remark">
 Since we intend to develop distributed applications and to <ks>gradually perform a transition</ks> from component-interaction 
 based on <k>procedure-calls</k> to the usage of <k>distributed</k> components that interact
@@ -758,7 +758,7 @@ that
 -->
 
 
-<h1>Layers, languages, configuration and semantics</h1>
+<h1 id="annotforsematics">Lab ISS | Layers, languages, configuration and semantics</h1>
 
 We want to exploit <a href="aboutAnnotations.html" target="code">Java annotations</a> to simplify the configuration phase
 of our robot-based applications.
@@ -772,7 +772,7 @@ that understands the <k>cril</k> command language;</li>
 <li><a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="web"><ks>@ArilRobotSpec</ks></a>
 : for application classes that intend to work with a robot
 that understands the <k>aril</k> command language;</li>
-<li><a href="../app/src/main/java/it/unibo/annotations/UniboRobotSpec.java" target="web"><ks>@UniboRobotSpec</ks></a>
+<li><a href="../app/src/main/java/it/unibo/annotations/AppRobotSpec.java" target="web"><ks>@AppRobotSpec</ks></a>
 : for application classes that intend to work with a robot able to receive <k>cril/aril</k> commands embedded in a 
 <a href="../app/src/main/java/it/unibo/interaction/AppMsg.java" target="web"><em>AppMsg</em></a>.</li>
 
@@ -819,7 +819,7 @@ We could also eliminate the constructor, by introducing an annotation
 for an 'depenedency-injector' method
 
 <pre>
-<ks>@UniboRobotSpec</ks>
+<ks>@AppRobotSpec</ks>
 public class UseRobotMsgApp {
      private IssAppOperations robotSupport;
 	 
@@ -925,7 +925,8 @@ a common type being
  
 <br/><br/>
 This new way of thinking can be better understood if we examine in depth the interaction base on 
-<a href="https://en.wikipedia.org/wiki/WebSocket" target="web">websockets</a>.
+<a href="https://en.wikipedia.org/wiki/WebSocket" target="web">websockets</a>: see 
+<a href="websocketInteraction.html" target="web"><em>Lab ISS | websocketInteraction</em></a>
 
 <br/><br/>
 
