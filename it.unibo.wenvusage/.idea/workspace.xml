@@ -23,22 +23,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="706464b9-acf5-4cf7-ba38-9ddcc655e41b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ApplISSActor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/ISSActor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/InitSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/InitSpec.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/UniboAnnotationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.boundaryWalk/app/src/main/java/it/unibo/annotatedExample/UniboAnnotationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/it/unibo/wenvusage/TestMoveVirtualRobot.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/it/unibo/wenvusage/TestMoveVirtualRobot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userDocs/WEnvUsage.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/WEnvUsage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userDocs/iss0.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/iss0.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -75,6 +68,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
   <component name="ProjectId" id="1obWVbADIo0k4vP3sGCdhvcavHK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -87,7 +83,10 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Progetti/marfoglia/health-adapter-disi" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
@@ -138,7 +137,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f4161043-4e3b-4426-99e2-bdd4670238f1" name="Default Changelist" comment="" />
+      <changelist id="706464b9-acf5-4cf7-ba38-9ddcc655e41b" name="Default Changelist" comment="" />
       <created>1613555794896</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -186,5 +185,9 @@
       <screen x="0" y="0" width="1280" height="690" />
     </state>
     <state width="1208" height="151" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1614249168157" />
+    <state x="500" y="70" key="SettingsEditor" timestamp="1614965590595">
+      <screen x="0" y="0" width="1536" height="920" />
+    </state>
+    <state x="500" y="70" key="SettingsEditor/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1614965590595" />
   </component>
 </project>
