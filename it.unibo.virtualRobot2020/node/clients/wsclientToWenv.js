@@ -8,8 +8,8 @@ const WebSocketClient = require('websocket').client;
 
 var client = new WebSocketClient();
 
-    function doMove(move) {
-        const moveJson = '{"robotmove":"'+ move +'"}'
+    function doMove(move, time) {
+        const moveJson = '{"robotmove":"'+ move +'"+'"time:"'+time++"}'
         console.log("doMove moveJson:" + moveJson);
         //const moveJsonStr = JSON.stringify( moveJson )
         //console.log("doMove moveJsonStr:" + moveJsonStr);
@@ -18,12 +18,12 @@ var client = new WebSocketClient();
     }
 
 function doJob(){
-      const moveTodo = "{\"robotmove\":\"turnLeft\"}"
-      console.log("doJob moveTodo:" + moveTodo);
+     // const moveTodo = "{\"robotmove\":\"turnLeft\"}"
+      //console.log("doJob moveTodo:" + moveTodo);
      //doMove("{\"robotmove\":\"turnLeft\"}");
-     doMove( "moveForward" )
+     doMove( "moveForward", 600 )
      setTimeout( () => {
-        doMove( "moveBackward" );
+        doMove( "moveBackward", 600 );
         console.log("now workign as an observer  ... " );
      }, 800 )
 }
@@ -59,10 +59,7 @@ var conn8091
 
 });
 
-
-
-
-client.connect('ws://localhost:8091', ''); //'echo-protocol'
+client.connect('ws://localhost:8091', '');  
 
 
 

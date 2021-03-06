@@ -253,6 +253,40 @@ function myFunction() {
   popup.classList.toggle("show");
 }
 </script>
+<script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+<script language="javascript" type="text/javascript">
+
+
+	
+const socket = new WebSocket('ws://localhost:8091/');
+socket.onopen = function () { console.log("socket connected on 8091") };
+
+    function doMove(move, time) {
+        const moveJson = '{"robotmove":"'+ move + '", "time":'+time+'}'
+        //console.log("doMove moveJson:" + moveJson);
+        if (socket) { socket.send(moveJson) }
+    }
+	
+$(document).ready(function(){ 
+	$( "#lsocket" ).click(function() {  
+		if (socket.bufferedAmount == 0) socket.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );  });
+});
+
+$(function () {
+	$( "#rsocket" ).click(function() { 
+		if (socket.bufferedAmount == 0)  doMove("turnRight", 300);    })  
+ 
+	$( "#wsocket" ).click(function() {  
+		if (socket.bufferedAmount == 0) doMove("moveForward", 600);      })
+ 
+	$( "#ssocket" ).click(function() {  
+		if (socket.bufferedAmount == 0) doMove("moveBackward", 600);  })
+		
+	$( "#hsocket" ).click(function() {  
+		if (socket.bufferedAmount == 0) doMove("alarm", 100);         })
+ 
+});
+</script>
 <head>
    
 <title>VR2021</title></head>
@@ -342,9 +376,123 @@ when they detect an obstacle (fixed or mobile). For example:
 </pre> </li>
 </ul>
 
+<h2 id="inside">Inside WEnv</h2>
 
  
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>Activate</h3>
+<ol>
+<li>The WEnv can be activated by using a <tt>docker-compose</tt> file:
+<pre>
+docker-compose -f <a href="virtualRobotOnly.yaml" target="code">virtualRobotOnly.yaml</a> up 
+</pre>
+<m>
+This command loads a Docker image from <tt>docker.io/natbodocker/virtualrobotdisi:1.0</tt>
+and activates the Web
+<a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a> that:
+	<ol>
+	<li>initializes (<tt>initSocketIOWebGLScene</tt>) the handling of messages on the main server socket, 
+	devoted to the interaction with WebGLScene;</li>
+	<li>initializes (<tt>initWs</tt>) another server websocket on port <tt>8091</tt>, devoted to the interaction with
+	clients that intend send commands to the virtual robot and recieve information from the WEnv (e.g. sonar data);</li>
+	<li>listen on port <tt>8090</tt> and shows the messages on the green console of the figure.</li>
+	</ol>
+</m>
+</li>
+
+<li>
+The WEnv can be accessed by opening a page in a browser:
+<pre>
+ http://localhost:8090/	
+</pre>
+<m>
+If we open the '<ks>Developer Tools</ks>' of the browser, we will see messages sent on the <tt>console.log</tt> by the javascript code 
+(embedded in the file <a href="../node/WEnv/WebGLScene/IndexOk.html" target="code">IndexOk.html</a>) that
+manages the scene and keyboard commands <tt>w,a,s,d,h</tt>
+</m>
+</li>
+
+<li>
+Now we can interact with the VirtualRobot by writing a websocket client in our preferred implementation language.
+For example: 
+<ul>
+<li>A client written in Node.js: <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a><li>
+<li>A client written in Java: <a href="../node/clients/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a>
+(to run, see project it.unibo.virtualrobotclient)<li>
+</ul>
+
+
+
+</li>
+ 
+<li>
+Now, we can click on one the button below, so to move the robot:<br/>
+
+ <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button> &nbsp;&nbsp; 
+ <button id="hsocket" >halt</button> &nbsp;&nbsp;  <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
+<br/>
+<m>
+The commands in sent over the websocket on port <tt>8091</tt> and fron here 
+re-sent to the WebGLScene by using the main server websocket.<br/>
+The information emitted by a sonar (if any) is sent from the <tt>WebGLScene</tt> on the main server websocket 
+and from here (calling a local operation <tt>updateObservers</tt>) to all the clients connected to the websocket on port <tt>8091</tt>.
+</m>
+
+</li>
+</td>
+<td> <center><img src="./img/vrExplain.png" alt="vrExplain" width="100%" ></center>
+</td>
+</tr>
+ </tbody>
+</table>
+ 
+
+ <pre>
+Open another page on: 
+ http://localhost:8090/ 
+(MIRROR: does not accept console-commands)
+</pre>
+
+
+
+
+<h3>Using in JavaScript</h3>
+This HTML document includes the following code:
+<pre>
+&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
+
+<b>&lt;script language="javascript" type="text/javascript"></b>
+const <k>socket</k>  = new WebSocket('ws://localhost:8091');
+<k>socket</k>.onopen = function () { 
+	<kc>//to see, open Developer Tools in the browser</kc>
+	console.log("socket connected on 8091") 
+};
+
+$(document).ready(function(){ 
+ $( "#<kc>lsocket</kc>" ).click(function() {  
+  <k>socket</k>.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );});
+})
+
+$(function () {
+ $( "#<kc>rsocket</kc>" ).click(function() {  
+  if (socket.bufferedAmount == 0) 
+	<k>socket</k>.send( "{\"robotmove\":\"turnRight\", \"time\": 300}" );});
+	...
+});
+<b>&lt;/script></b>
+
+&ltbutton id="<kc>lsocket</kc>" >turnLeft&lt/button>   ...
+</pre>
+
 <!--
+In this way, we can move the robot by clicking on these buttons:
+
+ <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
+
 
 <h2>USING THE VIRTUAL ROBOT</h2>
 
@@ -353,7 +501,21 @@ Examples of clients are reported in project <a href="../../it.unibo.virtualrobot
 
 <!-- file:///C:/Didattica2018Work/iss2021Lab/it.unibo.virtualrobotclient/userDocs/VirtualrobotClient.html -->
 
+  <!--
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
  
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
 
 </div>  
 <div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
