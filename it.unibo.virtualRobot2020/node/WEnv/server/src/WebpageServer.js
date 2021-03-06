@@ -163,8 +163,8 @@ function initSocketIOWebGLScene() {
 }//initSocketIOWebGLScene
 
 function startServer() {
-    initWs()
     initSocketIOWebGLScene()
+    initWs()
     hhtpSrv.listen(serverPort)
 }
 //MAIN
