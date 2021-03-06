@@ -190,7 +190,7 @@ div.imagedesc{
 
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
 <script language="javascript" type="text/javascript">
-const socket = new WebSocket('ws://localhost:8091');
+const socket = new WebSocket('ws://localhost:8091/');
 socket.onopen = function () { console.log("socket connected on 8091") };
 
 $(document).ready(function(){ 
@@ -297,22 +297,8 @@ a common type being
 </li>
 </ul>
  
-<br/> 
-This new way of thinking can be better understood if we examine in depth the interaction base on 
+ 
 
-<a href="https://en.wikipedia.org/wiki/WebSocket" target="web">websockets</a>.
-
-<hr/><m>
-The WebSocket protocol enables interaction between a web browser (or other client application) 
-and a web server with lower overhead than half-duplex alternatives such as HTTP polling, 
-facilitating real-time data transfer from and to the server.
-This is made possible by providing a standardized way for the server to send content to the client without 
-being first requested by the client, and allowing messages to be passed back and forth while keeping the connection open. 
-The communications are usually done over TCP port number 443 (or 80 in the case of unsecured connections), 
-which is beneficial for environments that block non-web Internet connections using a firewall. 
-
-
-</m><hr/>
 
 <!--
 <kc>//JavaScript client example</kc>
@@ -323,6 +309,44 @@ socket.onopen = function () {
       socket.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );
   }, 1000);
 };-->
+
+<h2>WebSockets</h2>
+The new way of thinking in terms of message-passing, can be better understood if we examine in depth 
+the interaction based on <a href="https://en.wikipedia.org/wiki/WebSocket" target="web">websockets</a>.
+
+<hr/><m>
+The WebSocket protocol enables interaction between a web browser (or other client application) 
+and a web server with lower overhead than half-duplex alternatives such as HTTP polling, 
+facilitating real-time data transfer from and to the server.
+This is made possible by providing a standardized way for the server to send content to the client without 
+being first requested by the client, and allowing messages to be passed back and forth while keeping the connection open. 
+The communications are usually done over TCP port number 443 (or 80 in the case of unsecured connections), 
+which is beneficial for environments that block non-web Internet connections using a firewall. 
+</m><hr/>
+
+
+For a rapid introduction to WebSockets, read the file: <a href="WebSocket.pdf" target="web">WebSocket.pdf</a>.
+<br/>
+<h3>The WebSockets in the WEnv</h3>
+For a description of the role of WebSockets in the WEnv, read the file: <a href="" target="web">...</a>.
+<br/> 	
+<center><img src="./img/vrExplain.png" alt="vrExplain" width="70%" ></center>
+<pre>
+docker-compose -f virtualRobotOnly.yaml up 
+	calls initSocketIOWebGLScene that uses socketIO
+
+Open a page in a browser on: http://localhost:8090/	(MASTER)	
+Open another page on: http://localhost:8090/        (MIRROR: does not accept console-commands)
+
+
+
+
+</pre>
+Now, click on the button below:<br/>
+ <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
+<br/>
+The commands are sent to the WebGLScene by using a websocket and the socket.io library.
+
 
 <h3>Using in JavaScript</h3>
 This HTML document includes the following code:
@@ -355,6 +379,7 @@ In this way, we can move the robot by clicking on these buttons:
 
  <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
  
+
 <br/><br/>
 <table style="width:98%">
 <tbody>	

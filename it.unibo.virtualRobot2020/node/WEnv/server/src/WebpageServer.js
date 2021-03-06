@@ -7,8 +7,8 @@ WebpageServer.js
 
 const app       = require('express')()
 const express   = require('express')
-const http      = require('http').Server(app)
-const socketIO  = require('socket.io')(http)        //interaction with WebGLScene
+const hhtpSrv   = require('http').Server(app)
+const socketIO  = require('socket.io')(hhtpSrv)     //interaction with WebGLScene
 const WebSocket = require('ws');                    //interaction with external clients
 
 const sockets       = {}    //interaction with WebGLScene
@@ -20,8 +20,8 @@ var alreadyConnected = false
 
 //let webpageReady = false
 //const moveTime   = 800
-const serverPort = 8090
-var target       = "notarget"   //the current virtual object that collides
+const serverPort   = 8090
+var target         = "notarget"   //the current virtual object that collides
 
     app.use(express.static('./../../WebGLScene'))
 
@@ -98,7 +98,7 @@ Interact with clients over ws (controls that send commands or observers) Jan 202
 -------------------------------------------------------------------------------------
 */
 function initWs(){
-const wsServer  = new WebSocket.Server( { port: 8091 } );   //{ server: app.listen(8091) }
+const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) } {server:hhtpSrv, autoAcceptConnections: false}
 
 wsServer.on('connection', (ws) => {
   wssocketIndex++
@@ -165,7 +165,7 @@ function initSocketIOWebGLScene() {
 function startServer() {
     initWs()
     initSocketIOWebGLScene()
-    http.listen(serverPort)
+    hhtpSrv.listen(serverPort)
 }
 //MAIN
 startServer()
