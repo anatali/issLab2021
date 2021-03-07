@@ -19,17 +19,26 @@ public class UseRobotVirtual {
     }
 
     public void doBasicMoves() throws Exception{
+        Thread.sleep(2000);
         robotSupport.forward( MsgRobotUtil.turnLeftMsg );
-        Thread.sleep(1000);        //required ONLY if we use websockets
+        //Thread.sleep(1000);        //required ONLY if we use websockets
         robotSupport.forward( MsgRobotUtil.turnRightMsg );
         //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
-
-        Thread.sleep(1000);      //required ONLY if we use websockets
+        Thread.sleep(1000);
+ /*
+        //Thread.sleep(1000);      //required ONLY if we use websockets
         String answer_w = robotSupport.requestSynch( MsgRobotUtil.forwardMsg );
         System.out.println("UseRobotVirtual | doBasicMoves answer_w=" + answer_w  );
+
+
+        robotSupport.forward( MsgRobotUtil.turnRightMsg );
+        //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
+        Thread.sleep(1000);
+
         String answer_s  = robotSupport.requestSynch( MsgRobotUtil.backwardMsg);
         System.out.println("UseRobotVirtual | doBasicMoves answer_s=" + answer_s  );
         //Thread.sleep(1000);      //required ONLY if we use websockets
+ */
     }
 
     public String doBoundary( int stepNum, String journey){

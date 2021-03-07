@@ -1,1 +1,1 @@
-spec( htime( 100 ),  ltime( 300 ), rtime( 300 ),  wtime( 400 ), stime( 400 ) ).
+spec( htime( 100 ),  ltime( 300 ), rtime( 300 ),  wtime( 800 ), stime( 800 ) ).

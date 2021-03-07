@@ -331,73 +331,19 @@ which is beneficial for environments that block non-web Internet connections usi
 
 For a rapid introduction to WebSockets, read the file: <a href="WebSocket.pdf" target="web">WebSocket.pdf</a>.
 <br/>
-<h3>The WebSockets in the WEnv</h3>
+ 
 For a description of the role of WebSockets in the WEnv, read: 
 <a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html#inside" target="web">Inside WEnv</a>.
-<br/> 	
+   
 
-<pre>
-docker-compose -f virtualRobotOnly.yaml up 
-	calls initSocketIOWebGLScene that uses socketIO
-
-Open a page in a browser on: http://localhost:8090/	(MASTER)	
-Open another page on: http://localhost:8090/        (MIRROR: does not accept console-commands)
-
-
-
-
-</pre>
-Now, click on the button below:<br/>
- <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
-<br/>
-The commands are sent to the WebGLScene by using a websocket and the socket.io library.
-
-
-<h3>Using in JavaScript</h3>
-This HTML document includes the following code:
-<pre>
-&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
-
-<b>&lt;script language="javascript" type="text/javascript"></b>
-const <k>socket</k>  = new WebSocket('ws://localhost:8091');
-<k>socket</k>.onopen = function () { 
-	<kc>//to see, open Developer Tools in the browser</kc>
-	console.log("socket connected on 8091") 
-};
-
-$(document).ready(function(){ 
- $( "#<kc>lsocket</kc>" ).click(function() {  
-  <k>socket</k>.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );});
-})
-
-$(function () {
- $( "#<kc>rsocket</kc>" ).click(function() {  
-  if (socket.bufferedAmount == 0) 
-	<k>socket</k>.send( "{\"robotmove\":\"turnRight\", \"time\": 300}" );});
-});
-<b>&lt;/script></b>
-
-&ltbutton id="<kc>lsocket</kc>" >turnLeft&lt/button>   ...
-</pre>
-
-In this way, we can move the robot by clicking on these buttons:
-
- <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
- 
-
-<br/><br/>
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
-<h3>IssWsSupport</h3>
+<h3 id="IssWsSupport">The IssWsSupport</h3>
 Our support to websocket-interaction exploits the 
 
 <a href="https://docs.oracle.com/javaee/7/api/javax/websocket/package-summary.html" target="web"><em>javax.websocket</em></a>
 library (sse also <a href="https://www.baeldung.com/java-websockets" target="web"><em>A Guide to the Java API for WebSocket</em></a>)
 that implements 
 <a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web"><em>JSR 356, Java API for WebSocket</em></a>.
-<br/><br/>
+<br/>
 Two different programming models are supported:
 <ul>
 <li><ks>Interface-driven</ks>. Developers can implement the Endpoint interface and the methods that interact with the lifecycle events.</li>
@@ -405,11 +351,20 @@ Two different programming models are supported:
 </ul>
 As the annotation model leads to cleaner code as compared to the programmatic model, 
 the <k>annotation has become the conventional choice of coding</k>.
-WebSocket endpoint lifecycle events are handled by the following annotations:
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+
+
+WebSocket endpoint lifecycle events are handled by annotations:
 <pre>
 <ks>@ClientEndpoint</ks>  <kc>//The class is treated as a WebSocket client</kc>   
 public class IssWsSupport implements <k>IssOperations</k> {
  ...
+ public IssWsSupport( String url ){ ... } 
+  
  <ks>@OnOpen</ks> <kc><m>//invoked by the container when a new WebSocket connection is initiated</m></kc>
  public void onOpen(Session userSession){ ... }
 	
@@ -423,29 +378,110 @@ public class IssWsSupport implements <k>IssOperations</k> {
  public void onClose(Session userSession,CloseReason reason){...}
 }
 </pre>
+<h4>The constructor</h4>
+The support constructor connects with the WEnv server with <k>ws://</k> using the given url (e.g. <tt>localhost:8091</tt>)
+<pre><m>public IssWsSupport( String url ){
+ WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+ <ks>container.connectToServer</ks>(this, new URI("ws://"+url));
+ answerSupport = new <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web">AnswerAvailable</a>();
+}
+</m></pre>
+The <tt>answerSupport</tt> (instance of <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web">AnswerAvailable</a>)
+is an object introduced to handle the dispatches sent by WEnv over the websoket.
+
+<hr/>
 The full code is in: 
 <a href="../app/src/main/java/it/unibo/robotSupports/IssWsSupport.java" target="web"><em>IssWsSupport</em></a>
 and <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web"><em>AnswerAvailable</em></a>
 
 </td>
 <td>
-The support constructor connects with the server with <k>ws://</k> using the given url (e.g. <tt>localhost:8091</tt>)
-<h3>New problems to be faced</h3>
-<ul>
-<li><ks>forward(String msg)</ks>: calls
-<pre>
-userSession.getBasicRemote().sendText(msg);
-</pre>
+ 
+<h4>The connection</h4>
+When the connection is set, the <tt>userSession</tt> is saved. It wiil be used to send information over the websocket.
+<pre><m>@OnOpen
+ public void onOpen(Session userSession) {
+	this.<ks>userSession</ks> = userSession;
+ }
+</m></pre>
 
-</li>
-<li></li>
-<li></li>
-</ul>
+<h4>forward / request </h4><div class="remark">
+Here we have to remember that these operations RETURN IMMEDIATELY THE CONTROL the caller, without waiting the answer 
+sent by WENV.
+</div>
+Uses <ks>userSession</ks> to dispatch a message over the websocket:
+<pre><m>@Override
+ public void forward(String msg) {  //<kc>request does the same</kc>
+  <ks>userSession</ks>.getBasicRemote().<k>sendText</k>(msg); <kc>//<k>synch</k>: blocks until the message has been transmitted</kc>
+ } 
+</m></pre>
+ 
+<h4>requestSynch </h4> 
+<div class="remark">
+Here we have to cover a mismatch with respect to the programming model provided by the library. <br/>
+In fact, the library is event-driven and the information sent by WEnv is 'injected' into our application code
+by a call to the method annotatd with <k>@OnMessage</k>. 
+</div>
+<pre>@Override
+ public String requestSynch(String msg) {
+  request(msg);     
+  <ks>//Now, we must WAIT for the answer</ks>
+  <k>answerSupport.engage()</k>; <kc>//We engage the answerSupport object</kc>
+  return answerSupport.get(); <kc>//We consume the answer, by waiting for it</kc>
+ }
+</pre> 
+The operation <k>engage</k> of 
+<a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web"><em>AnswerAvailable</em></a>
+avoids wrong notifications of the availability of an answer.<br/>
+<m>
+Suppose for example that the client sends a w lasting a quite long time and a l while w is still running.
+Since h ends before w, a endmove answer for h is sent before the answer related to w.
+</m>
+<!--
+
+ when 
+new information is inserted (via the operation <ks>put</ks>) in the <tt>answerSupport</tt> object 
+by the method annotatd with <k>@OnMessage</k>.
+-->
+
 </td>
 </tr>
  </tbody>
 </table>
 
+<h3>The OnMessage operation</h3> 
+The operation annotated with <k>@OnMessage</k> is called by the javax library when information is sent by WEnv 
+(to all the clients currently connected) on the websocker-8091.
+<br/>
+This information consists in a <ks>dispatch</ks> with the following possible JSON contents:
+<ul>
+<li><tt>{"endmove":"...","move":"..."}</tt></li>
+<li><tt>{"collision":"...","move":"..."}</tt></li>
+<li><tt>{"sonarName":"...","distance":...,"axis":"..."}</tt></li>
+</ul>
+  
+
+<pre>
+ @OnMessage
+ public void onMessage(String message)   {
+  try {
+   
+   JSONObject jsonObj = new JSONObject(message) ;
+   if (jsonObj.get("endmove") != null) { <kc>//HANDLE A MOVE-ANSWER</kc>
+       boolean endmove = jsonObj.getBoolean("endmove");
+       String  move    = jsonObj.getString("move");
+       <k>answerSupport.put</k>(""+endmove, move);
+   } else if (jsonObj.get("collision") != null) {  <kc>//HANDLE A COLLISION INFO</kc>
+       boolean collision = jsonObj.getBoolean("collision");
+   } else if (jsonObj.get("sonarName") != null) { <kc>//HANDLE SONAR DATA</kc>
+       String sonarName = jsonObj.getString( "sonarName");
+       String distance  = jsonObj.getString("distance");
+       System.out.println("        IssWsSupport | onMessage sonarName=" + 
+				sonarName + " distance=" + distance);
+   }
+  } catch (Exception e) {}
+ }
+</pre>
 <!--
 From <a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web"><em>JSR 356, Java API for WebSocket</em></a>
 we read: <hr/>

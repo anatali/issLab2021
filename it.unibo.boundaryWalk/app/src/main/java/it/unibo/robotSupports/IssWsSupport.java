@@ -1,7 +1,7 @@
 /**
  IssWsSupport.java
  ===============================================================
-        See below
+     See also AnswerAvailable
  ===============================================================
  */
 package it.unibo.robotSupports;
@@ -11,9 +11,6 @@ import org.json.JSONObject;
 import javax.websocket.*;
 import java.net.URI;
 import java.security.Principal;
-
-
-
 
 /**
  IssWsSupport.java
@@ -93,15 +90,15 @@ public class IssWsSupport implements IssOperations {
      @Override
     public void forward(String msg)  {
         try {
-            //this.userSession.getAsyncRemote().sendText(message);
+             //this.userSession.getAsyncRemote().sendText(message);
             userSession.getBasicRemote().sendText(msg); //synch: blocks until the message has been transmitted
             //The WEnv receiver sends always an answer.
             //Thus, it does not handle message N+1 before the end of msg N
             //Do we transform the forward in a request or
             //do we assume that the user put an adequate interval between messages?
-            System.out.println("        IssWsSupport | forward " + msg);
+            System.out.println("        IssWsSupport | DONE forward " + msg);
         }catch( Exception e){
-            System.out.println("        IssWsSupport | forward ERROR " + e.getMessage());
+            System.out.println("        IssWsSupport | ERROR forward  " + e.getMessage());
         }
     }
 
@@ -121,7 +118,7 @@ public class IssWsSupport implements IssOperations {
         try{
             //System.out.println("        IssWsSupport | requestSynch " + msg);
             //this.userSession.getAsyncRemote().sendText(message);
-            this.userSession.getBasicRemote().sendText(msg);    //synch: blocks until the message has been transmitted
+            request(msg);
             //WAIT for the answer (reply) received by onMessage
             answerSupport.engage();
             return answerSupport.get(); //wait for the answer
