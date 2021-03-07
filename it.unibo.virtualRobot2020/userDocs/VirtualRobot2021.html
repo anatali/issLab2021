@@ -255,16 +255,17 @@ function myFunction() {
 </script>
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
 <script language="javascript" type="text/javascript">
-
-
-	
 const socket = new WebSocket('ws://localhost:8091/');
-socket.onopen = function () { console.log("socket connected on 8091") };
+  socket.onopen = function () { console.log("socket connected on 8091") };
+
+  socket.onmessage = function(evt) { console.log(evt.data); };
+
+
 
     function doMove(move, time) {
         const moveJson = '{"robotmove":"'+ move + '", "time":'+time+'}'
         //console.log("doMove moveJson:" + moveJson);
-        if (socket) { socket.send(moveJson) }
+        if (socket && socket.bufferedAmount == 0) { socket.send(moveJson) }
     }
 	
 $(document).ready(function(){ 
@@ -273,17 +274,13 @@ $(document).ready(function(){
 });
 
 $(function () {
-	$( "#rsocket" ).click(function() { 
-		if (socket.bufferedAmount == 0)  doMove("turnRight", 300);    })  
+	$( "#rsocket" ).click(function() {  doMove("turnRight", 300);    })  
  
-	$( "#wsocket" ).click(function() {  
-		if (socket.bufferedAmount == 0) doMove("moveForward", 600);      })
+	$( "#wsocket" ).click(function() {  doMove("moveForward", 600);      })
  
-	$( "#ssocket" ).click(function() {  
-		if (socket.bufferedAmount == 0) doMove("moveBackward", 600);  })
+	$( "#ssocket" ).click(function() { doMove("moveBackward", 600);  })
 		
-	$( "#hsocket" ).click(function() {  
-		if (socket.bufferedAmount == 0) doMove("alarm", 100);         })
+	$( "#hsocket" ).click(function() { doMove("alarm", 100);         })
  
 });
 </script>
@@ -410,6 +407,7 @@ The WEnv can be accessed by opening a page in a browser:
  http://localhost:8090/	
 </pre>
 <m>
+The WEnv will show a <ks>MASTER</ks> scene in which keyboard commands are enabled.<br/>
 If we open the '<ks>Developer Tools</ks>' of the browser, we will see messages sent on the <tt>console.log</tt> by the javascript code 
 (embedded in the file <a href="../node/WEnv/WebGLScene/IndexOk.html" target="code">IndexOk.html</a>) that
 manages the scene and keyboard commands <tt>w,a,s,d,h</tt>
@@ -420,74 +418,89 @@ manages the scene and keyboard commands <tt>w,a,s,d,h</tt>
 Now we can interact with the VirtualRobot by writing a websocket client in our preferred implementation language.
 For example: 
 <ul>
-<li>A client written in Node.js: <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a><li>
-<li>A client written in Java: <a href="../node/clients/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a>
-(to run, see project it.unibo.virtualrobotclient)<li>
+<li>A client written in Node.js: <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a></li>
+<li>Other clients written in Java and in Kotlin 
+<!-- : <a href="../node/clients/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a> -->
+can be found in the project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>.</li>
 </ul>
-
-
-
 </li>
  
-<li>
-Now, we can click on one the button below, so to move the robot:<br/>
-
- <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button> &nbsp;&nbsp; 
- <button id="hsocket" >halt</button> &nbsp;&nbsp;  <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
-<br/>
-<m>
-The commands in sent over the websocket on port <tt>8091</tt> and fron here 
-re-sent to the WebGLScene by using the main server websocket.<br/>
-The information emitted by a sonar (if any) is sent from the <tt>WebGLScene</tt> on the main server websocket 
-and from here (calling a local operation <tt>updateObservers</tt>) to all the clients connected to the websocket on port <tt>8091</tt>.
-</m>
-
-</li>
+ 
 </td>
 <td> <center><img src="./img/vrExplain.png" alt="vrExplain" width="100%" ></center>
+<br/><br/>
+If we open another page in a local or remote browser,
+the WEnv will show a <ks>MIRROR</ks> scene in which keyboard commands are disabled.
+<br/><br/>
+However, the effects of all the commands sent to the WEnv over the websocket-8091 will be shown
+in the <ks>MIRROR</ks>.
+ 
 </td>
 </tr>
  </tbody>
 </table>
  
 
- <pre>
-Open another page on: 
- http://localhost:8090/ 
-(MIRROR: does not accept console-commands)
-</pre>
 
 
 
-
-<h3>Using in JavaScript</h3>
-This HTML document includes the following code:
-<pre>
-&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
+<h3>Using JavaScript</h3>
+The JavaScript code written in <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
+can be inserted also in a HTML page. 
+<br/>
+For example, this HTML document includes the following code:
+<pre><m>&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
 
 <b>&lt;script language="javascript" type="text/javascript"></b>
+<kc>//Open the websocket on 8091</kc> 
 const <k>socket</k>  = new WebSocket('ws://localhost:8091');
-<k>socket</k>.onopen = function () { 
-	<kc>//to see, open Developer Tools in the browser</kc>
-	console.log("socket connected on 8091") 
-};
+<k>socket</k>.onopen = function () { console.log("socket connected on 8091")  };
+<k>socket</k>.onmessage = function(evt) { console.log(evt.data); };
+<kc>//To see the output, open <ks>Developer Tools</ks> in the browser</kc>
 
+ <kc>//Utility to send robot-move cril commands</kc> 
+ function doMove(move, time) {
+   const moveJson = '{"robotmove":"'+ move + '", "time":'+time+'}'
+   if (socket && socket.bufferedAmount == 0) { socket.send(moveJson) }
+ }
+ 
+<kc>//A $ sign 'means' jQuery</kc> 
 $(document).ready(function(){ 
- $( "#<kc>lsocket</kc>" ).click(function() {  
+ $( "#<ks>lsocket</ks>" ).click(function() {  
   <k>socket</k>.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );});
 })
 
+<kc>//Or also: </kc>
 $(function () {
- $( "#<kc>rsocket</kc>" ).click(function() {  
-  if (socket.bufferedAmount == 0) 
-	<k>socket</k>.send( "{\"robotmove\":\"turnRight\", \"time\": 300}" );});
-	...
+	$( "#<ks>rsocket</ks>" ).click(function() { doMove("moveRight", 300);   }) 
+	$( "#<ks>wsocket</ks>" ).click(function() { doMove("moveForward", 600); }) 
+	$( "#<ks>ssocket</ks>" ).click(function() { doMove("moveBackward", 600);})		
+	$( "#<ks>hsocket</ks>" ).click(function() { doMove("alarm", 100);       })
 });
 <b>&lt;/script></b>
 
-&ltbutton id="<kc>lsocket</kc>" >turnLeft&lt/button>   ...
-</pre>
+....
+&ltbutton id="<ks>lsocket</ks>">turnLeft&lt/button>  &nbsp; &ltbutton id="<ks>rsocket</ks>">turnRight&lt/button>   ...
+</m></pre>
 
+Now, we can click on one the button below, so to move the robot:<br/>
+
+ <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button> &nbsp;&nbsp; 
+ <button id="hsocket" >halt</button> &nbsp;&nbsp;  <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
+<hr/>
+<m>
+The commands in sent over the websocket on port <tt>8091</tt> and from here 
+re-sent to the WebGLScene by using the main server websocket.<br/>
+The information emitted by a sonar (if any) is sent from the <tt>WebGLScene</tt> on the main server websocket 
+and from here (calling a local operation <tt>updateObservers</tt>) to all the clients connected to the websocket on port <tt>8091</tt>.
+<br/>
+For a HTML page that shows the move-answer and the sonar-data, see
+<a href="../../it.unibo.virtualrobotclient/app/src/main/html/WEnv-WebSocket.html" target="code">WEnv-WebSocket.html</a>
+in project <a href="../../it.unibo.virtualrobotclient/app/src/main/html/" target="code">it.unibo.virtualrobotclient</a>.
+</m>
+<hr/>
+
+<br/><br/>
 <!--
 In this way, we can move the robot by clicking on these buttons:
 
