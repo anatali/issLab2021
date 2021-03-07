@@ -20,7 +20,7 @@ websocket = new WebSocket(wsUri);
  function setWebSocket() {
   websocket.onopen    = function(evt) { console.log(evt); show("CONNECTED " + evt.target.url) };
   websocket.onclose   = function(evt) { show("DISCONNECTED"); };
-  websocket.onmessage = function(evt) { show('<span style = "color: blue;">RESPONSE: ' + evt.data+'</span>'); };
+  websocket.onmessage = function(evt) { show('<span style = "color: blue;">RECEIVED: ' + evt.data+'</span>'); };
   websocket.onerror   = function(evt) { show('<span style = "color: red;">ERROR:</span> ' + evt.data); };
  }
 

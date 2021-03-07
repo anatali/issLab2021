@@ -374,16 +374,39 @@ when they detect an obstacle (fixed or mobile). For example:
 </ul>
 
 <h2 id="inside">Inside WEnv</h2>
+The <a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a>
+exploits two different kinds of websockets:
+<ul>
+<li>the <a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library.
+<div class="remark">
+<a href="https://www.npmjs.com/package/socket.io", target="web"><k>socket.io</k></a>  is not a WebSocket implementation.<br/> 
+<m>
+Although socket.io indeed uses WebSocket as a transport when possible, it adds some metadata to each packet: 
+the packet type, the namespace and the ack id when a message acknowledgement is needed. 
+<br/>
+That is why a WebSocket client will not be able to successfully connect to a Socket.IO server, 
+and a Socket.IO client will not be able to connect to a WebSocket server.</m>
+</div>
+</li>
+<li>the <a href="https://www.npmjs.com/package/ws", target="web">ws</a> library.
+<div class="remark">
+This module does not work in the browser.<br/> 
+<m>Browser clients must use the native <a href="https://www.npmjs.com/package/websocket", target="web">WebSocket</a> object. </m>
+</div>
+</li>
+</ul>
 
- 
+
+<h3>Activate and use</h3> 
 
 <table style="width:98%">
 <tbody>	
 <tr>
 <td style="width:50%" >
-<h3>Activate</h3>
+
 <ol>
-<li>The WEnv can be activated by using a <tt>docker-compose</tt> file:
+<li><h4>Activate</h4>
+The WEnv can be activated by using a <tt>docker-compose</tt> file:
 <pre>
 docker-compose -f <a href="virtualRobotOnly.yaml" target="code">virtualRobotOnly.yaml</a> up 
 </pre>
@@ -401,7 +424,7 @@ and activates the Web
 </m>
 </li>
 
-<li>
+<li><h4>Access using a browser</h4>
 The WEnv can be accessed by opening a page in a browser:
 <pre>
  http://localhost:8090/	
@@ -414,7 +437,7 @@ manages the scene and keyboard commands <tt>w,a,s,d,h</tt>
 </m>
 </li>
 
-<li>
+<li><h4>Access using a program</h4>
 Now we can interact with the VirtualRobot by writing a websocket client in our preferred implementation language.
 For example: 
 <ul>
@@ -444,12 +467,19 @@ in the <ks>MIRROR</ks>.
 
 
 
-<h3>Using JavaScript</h3>
+<h3>Move the robot from a web page</h3>
 The JavaScript code written in <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
 can be inserted also in a HTML page. 
 <br/>
-For example, this HTML document includes the following code:
-<pre><m>&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
+
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ For example, this HTML document includes the following code:
+<pre>&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
 
 <b>&lt;script language="javascript" type="text/javascript"></b>
 <kc>//Open the websocket on 8091</kc> 
@@ -481,24 +511,101 @@ $(function () {
 
 ....
 &ltbutton id="<ks>lsocket</ks>">turnLeft&lt/button>  &nbsp; &ltbutton id="<ks>rsocket</ks>">turnRight&lt/button>   ...
-</m></pre>
+</pre>
 
-Now, we can click on one the button below, so to move the robot:<br/>
+</td>
+<td>Now, we can click on one the button below, so to move the robot:<br/>
 
- <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button> &nbsp;&nbsp; 
- <button id="hsocket" >halt</button> &nbsp;&nbsp;  <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button>
-<hr/>
-<m>
-The commands in sent over the websocket on port <tt>8091</tt> and from here 
-re-sent to the WebGLScene by using the main server websocket.<br/>
-The information emitted by a sonar (if any) is sent from the <tt>WebGLScene</tt> on the main server websocket 
-and from here (calling a local operation <tt>updateObservers</tt>) to all the clients connected to the websocket on port <tt>8091</tt>.
-<br/>
-For a HTML page that shows the move-answer and the sonar-data, see
+ <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button> 
+ &nbsp;&nbsp;  <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button> 
+ &nbsp;&nbsp;  	<button id="hsocket" >halt</button>  
+
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h3 id="">Move the robot using websocket-8091</h3>
+The commands sent over the <ks>websocket-8091</ks> is handled by a 'businnes logic' embedded in the same operation used to handle a HTTP-POST:<br/>
+
+<pre>
+function doMove(moveTodo, <ks>duration</ks>, res){	<kc>//res is null when called by <ks>ws.on('message', msg => {...}</kc>
+  execMoveOnAllConnectedScenes(moveTodo, duration) <kc>//updates the WebGLScene by using the main server websocket</kc>
+  setTimeout(function() { <kc>//<k>wait</k> for the duration before sending the answer (collision or not)</kc>
+        const nocollision  = ( target == 'notarget' )
+        const answer       = { 'endmove' : nocollision , 'move' : moveTodo }   
+        const answerJson   = JSON.stringify(answer)
+        target             = "notarget"; 	//reset target
+        if( res != null ){
+    		res.writeHead(200, { 'Content-Type': 'text/json' });
+    		res.statusCode=200    		
+            res.write( answerJson  ); <kc>//give info about no collision to the POST sender</kc>
+            res.end();
+        }
+        <kc>//IN ANY CASE: update all the controls / observers</kc>
+        <k>updateObservers(answerJson)</k>  <kc>//send answerJson on <ks>websocket-8091</ks></kc>
+  }, <ks>duration</ks>);
+}
+</pre>
+
+<h3>Handling information about a collision or sonar</h3>
+
+The interaction bewteen and the WEnvGLscene is based on the 
+<a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library.
+<br/><br/>
+
+
+When the WEnvGLscene detects a collision between the virtualrobot and and obstacle (fixed or mobile), it uses a <tt>EventBus</tt> 
+user-defined utility to 'emit' a <ks>collision</ks> event over the  main server websocket. This event 
+is handled by a proper operation of this socket, that
+redirects the information to all the clients connected to port <tt>8091</tt>:
+<pre>
+ socket.on( <ks>'collision'</ks>,(obj) => { 
+   target = obj;
+   const info     = { 'collision' : true, 'move': 'unknown'}
+   <k>updateObservers( JSON.stringify(info) )</k> <kc>//send info on <ks>websocket-8091</ks></kc>
+ } )
+</pre>
+
+The same happens when the WEnvGLscene detects a sonar activation; the event is now called  <ks>sonarActivated</ks>.
+
+ 
+<h3 id="answerMeaning">Important experiment: give the proper meaning to answers</h3>
+For a HTML page that shows the information sent by the WEnv over <ks>websocket-8091</ks> 
+(move-answers and collision / sonar data):<br/><br/>
+<ol>
+<li>launch
 <a href="../../it.unibo.virtualrobotclient/app/src/main/html/WEnv-WebSocket.html" target="code">WEnv-WebSocket.html</a>
-in project <a href="../../it.unibo.virtualrobotclient/app/src/main/html/" target="code">it.unibo.virtualrobotclient</a>.
-</m>
-<hr/>
+in project <a href="../../it.unibo.virtualrobotclient/app/src/main/html/" target="code">it.unibo.virtualrobotclient</a>.<br/>
+The move-time for <tt>moveForward/moveBackward</tt> is set to <tt>800</tt>, while the move-time for <tt>halt</tt> is set to 100.
+</li>
+<li>put the robot somewhere in the WEnv space</li>
+<li>click on the button <tt>moveForward</tt> and immediatle after the button <tt>halt</tt></li>
+</ol>
+Since , you will see the output:
+
+<pre>
+RECEIVED: {"endmove":true,"move":"alarm"}
+RECEIVED: {"endmove":true,"move":"moveForward"}
+</pre>
+This means that the client receives always information
+
+<br/><br/>
+Now:
+
+<ol>
+<li>put the robot near to the south wall, in direction of the wall</li>
+<li>click on the button <tt>moveForward</tt> and immediatle after the button <tt>halt</tt></li>
+</ol>
+you will see the output:
+<pre>
+RECEIVED: {"sonarName":"sonar2","distance":19,"axis":"x"}
+RECEIVED: {"collision":true,"move":"unknown"}
+RECEIVED: {"endmove":false,"move":"alarm"}
+RECEIVED: {"sonarName":"sonar2","distance":19,"axis":"x"}
+RECEIVED: {"sonarName":"sonar2","distance":19,"axis":"x"}
+RECEIVED: {"endmove":true,"move":"moveForward"}
+</pre>
 
 <br/><br/>
 <!--
