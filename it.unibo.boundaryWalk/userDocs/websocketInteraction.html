@@ -405,17 +405,24 @@ When the connection is set, the <tt>userSession</tt> is saved. It wiil be used t
  }
 </m></pre>
 
-<h4>forward / request </h4><div class="remark">
-Here we have to remember that these operations RETURN IMMEDIATELY THE CONTROL the caller, without waiting the answer 
-sent by WENV.
-</div>
+<h4>forward / request </h4>
+
 Uses <ks>userSession</ks> to dispatch a message over the websocket:
 <pre><m>@Override
  public void forward(String msg) {  //<kc>request does the same</kc>
   <ks>userSession</ks>.getBasicRemote().<k>sendText</k>(msg); <kc>//<k>synch</k>: blocks until the message has been transmitted</kc>
  } 
 </m></pre>
- 
+<div class="remark">
+Here we have to remember that these operations RETURN IMMEDIATELY THE CONTROL the caller, without waiting the answer 
+sent by WENV.
+<pre>
+  robotSupport.forward( MsgRobotUtil.turnLeftMsg ); 
+  //Thread.sleep(1000);        //required if we use websockets
+  robotSupport.forward( MsgRobotUtil.turnRightMsg );	//it is not executes
+</pre>		
+</div>
+
 <h4>requestSynch </h4> 
 <div class="remark">
 Here we have to cover a mismatch with respect to the programming model provided by the library. <br/>
