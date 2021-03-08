@@ -16,12 +16,10 @@ public class AnswerAvailable{
         engaged = true;
     }
     public synchronized void put(String info, String move) {
-        if( engaged ){
+        //if( engaged ){
             answer = info;
             notify();
-        }else{
-            System.out.println("        AnswerAvailable | put not engaged for info=" + info + " move=" + move);
-        }
+       // }else{  System.out.println("        AnswerAvailable | put not engaged for info=" + info + " move=" + move);  }
     }
     public synchronized String get( ) {
         while (answer == null){

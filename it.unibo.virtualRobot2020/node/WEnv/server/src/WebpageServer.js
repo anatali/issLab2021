@@ -64,8 +64,8 @@ function doMove(moveTodo, duration, res){
 	console.log('$$$ WebpageServer doMove |  moveTodo=' + moveTodo + " duration=" + duration);
 	execMoveOnAllConnectedScenes(moveTodo, duration)
 	setTimeout(function() { //wait for the duration before sending the answer (collision or not)
-        if( moveHalted ) moveResult ="halted"
-        else moveResult = (target == 'notarget')
+        if( moveHalted ) moveResult = "halted"
+        else moveResult = (target == 'notarget').toString()
         var answer       = { 'endmove' : moveResult , 'move' : moveTodo }  //JSON obj
         const answerJson = JSON.stringify(answer)
         console.log('WebpageServer | doMove  answer= ' + answerJson  );

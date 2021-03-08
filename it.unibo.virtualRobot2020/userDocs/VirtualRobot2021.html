@@ -293,7 +293,7 @@ $(function () {
 <div class="body"> 
 
 <h1>Virtual robot 2021</h1> 
-<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/LectureBologna1819.html" target="isslm">LabISS-lectures site</a></font> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/issLab2021/blob/master/it.unibo.issLabStart/userDocs/LectureBologna2021.html" target="isslm">LabISS-lectures site</a></font> 
 
 <h2>INTRODUCTION</h2>
 Our company (<tt>Unibo</tt>) has developed  a virtual environment (named <em>WEnv</em>) that includes a virtual robot.
@@ -362,10 +362,10 @@ A <tt>RESULT false</tt> means that the move has aborted (e.g. because the robot 
 <div class="remark">
 In the version 2.0, the possible values related to the <k>endmove</k> key are:
 <ul>
-<li><ks>true</ks>: the robot has terminated the move (different from <tt>alarm</tt>) with success</li>
-<li><ks>false</ks>: the robot has hit an obstacle</li>
-<li><ks>halted</ks>: the robot has received an halt (alarm) while executing a move</li>
-<li><ks>notallowed</ks>: the robot cannot execute the move (different from <tt>alarm</tt>), since it is still executinf a previous move</li>
+<li><ks>"true"</ks>: the robot has terminated the move (different from <tt>alarm</tt>) with success</li>
+<li><ks>"false"</ks>: the robot has hit an obstacle</li>
+<li><ks>"halted"</ks>: the robot has received an halt (alarm) while executing a move</li>
+<li><ks>"notallowed"</ks>: the robot cannot execute the move (different from <tt>alarm</tt>), since it is still executinf a previous move</li>
 </ul>
 </div>
 <h3>Robot as sender of information</h3>
@@ -408,11 +408,14 @@ this socket is used to manage asynchronous commands to move the robot sent by re
 remote clients information about the state of the WEnv.
 <div class="remark">
 The <a href="https://www.npmjs.com/package/ws", target="web"><k>ws</k></a> module does not work in the browser.<br/> 
-<m>Browser clients must use the native <a href="https://www.npmjs.com/package/websocket", target="web">WebSocket</a> object. </m>
+<m>Browser clients must use the native <a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a> object. </m>
 </div>
 </li>
 </ul>
 
+<h3>Building and deploy</h3> 
+The activity required to build and deploy the WEnv are reported in  
+<a href="BuildDeployWEnv.html" target="web">LabIss2021 | Build and deploy the WEnv</a>.
 
 <h3>Activate and use</h3> 
 
@@ -425,10 +428,10 @@ The <a href="https://www.npmjs.com/package/ws", target="web"><k>ws</k></a> modul
 <li><h4>Activate</h4>
 The WEnv can be activated by using a <tt>docker-compose</tt> file:
 <pre>
-docker-compose -f <a href="virtualRobotOnly.yaml" target="code">virtualRobotOnly.yaml</a> up 
+docker-compose -f <a href="virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a> up 
 </pre>
 <m>
-This command loads a Docker image from <tt>docker.io/natbodocker/virtualrobotdisi:1.0</tt>
+This command loads a Docker image from <tt>docker.io/natbodocker/virtualrobotdisi:2.0</tt>
 and activates the Web
 <a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a> that:
 	<ol>
@@ -595,7 +598,9 @@ by a 'businnes logic' embedded in the same operation used to handle a HTTP-POST:
 <tbody>	
 <tr>
 <td style="width:60%" >
- 
+ <h4>Robot-move 'business logic'</h4>
+The following code specifies the implementation of a robot-move
+
 <pre>
 function doMove(moveTodo, <ks>duration</ks>,res){ <kc>//res is null when called by <ks>cmdSocket-8091</ks></kc>
   execMoveOnAllConnectedScenes(moveTodo, duration) <kc>//updates WebGLScene using <ks>mainSocket</ks></kc>
@@ -616,43 +621,105 @@ function doMove(moveTodo, <ks>duration</ks>,res){ <kc>//res is null when called 
           res.end();
         }
         <kc>//IN ANY CASE: update all the controllers/observers</kc>
-        <k>updateObservers(answerJson)</k>  <kc>//send answerJson on <ks>cmdSocket-8091</ks></kc>
+        <k>updateObservers</k>(answerJson)   <kc>//send answerJson on <ks>cmdSocket-8091</ks></kc>
   }, <ks>duration</ks>);
 }
 </pre>
-</td>
-<td>
-Note that:
-<ul>
-<li><k>setTimeout(</k> releases the control. The (callback) function given as argument will be called by
-the Node run-time support when the given time (<ks>duration</ks>) expires.</li>
-<li>The variables <br/>
-<ks>target, moveStillRunning, moveHalted</ks> <br/>
-<k>represent a state</k> that can be changed by asynchronous 
-messages received on the <ks>mainSocket</ks>. 
-<m><div class="remark">
-The structure of the code should be refactored to better express the behavior as a <k>Finite State Machine</k>
-whose transitions are triggered by messages.
-</div></m>
-</li>
-<li>the Node run-time is <k>single-threaded</k>.</li>
-</ul>
 
 </td>
+
+<td>
+<ul>
+<li><h3>Node Event Loop</h3> 
+Node runs JavaScript code in the 
+<a href="https://nodejs.org/en/docs/guides/dont-block-the-event-loop/" target="web">Event Loop</a>
+that executes the callbacks registered for events, 
+and is also responsible for fulfilling non-blocking asynchronous requests like network I/O.
+In other words: 
+<div class="remark">The Node run-time is <k>single-threaded</k> and tailored to manage  
+<a href="https://en.wikipedia.org/wiki/I/O_bound" target="web">io-bound</a> processing. 
+It always executes <ks>ONE OPERATION AT THE TIME</ks>. Moreover, a blocking operation blocks the entire system.
+</div></li>
+
+<li><h3>No 'Thread.sleep' operation</h3> 
+<k>setTimeout(...)</k> releases the control.<br/>
+<m> The (callback) function given as argument will be called by
+the Node run-time support when the given time (<ks>duration</ks>) expires.</m></li>
+<li><h3>FSM</h3> 
+The variables <br/>
+<ks>target, moveStillRunning, moveHalted</ks> <br/>
+<k>represent a state</k> that can be changed by messages received on the <ks>mainSocket</ks>. 
+ 
+<div class="remark">
+The structure of the code should be refactored to better express the behavior as a <k>Finite State Machine</k>
+whose transitions are triggered by messages.
+</div>
+</li>
+
+</ul>
+</td>
+ 
 </tr>
- </tbody>
+
+<tr>
+<td><h4>Implement HTTP-POST</h4>
+The following code specifies the callback called by the EventLoop 
+when it processes a message sent by a HTTP client to move the robot.
+<pre>
+ app.post("/api/move", function(req, res,next)  {
+   var data = ""
+   req.on('data', function (chunk) { data += chunk; }); <kc>//accumulate data sent by POST</kc>
+   req.on('end', function () {	//elaborate data received
+   <kc>//{ robotmove: move, time:duration } - robotmove: turnLeft | turnRight | ...</kc>
+   var jsonData = JSON.parse(data)
+   var moveTodo = jsonData.robotmove
+   var duration = jsonData.time
+   <k>doMove(moveTodo, duration, res)</k> <kc>//send the answer after duration</kc>
+  });
+ }); 
+</pre>
+</td>
+<td>
+<h4>Handle cmd-message received on <ks>cmdSocket-8091 (ws)</ks></h4>
+The following code specifies the callback called by the EventLoop 
+when it processes a message sent by a client over <ks>cmdSocket-8091 (ws)</ks> to move the robot.
+
+<pre>
+  ws.on('message', msg => <k>{</k> <kc>//start callback</kc>
+ 	var moveTodo = JSON.parse(msg).robotmove
+	var duration = JSON.parse(msg).time
+	if( <ks>moveStillRunning</ks> && moveTodo != "alarm"){
+	    const answer  = { 'endmove' : <k>"notallowed"</k> , 'move' : moveTodo }
+	    <k>updateObservers</k>( JSON.stringify(answer) )
+	    return
+	}
+	if( moveTodo == "alarm" ){
+	    <k>execMoveOnAllConnectedScenes</k>(moveTodo, duration)
+	    </s>moveHalted</ks> = true
+	    return
+	}
+	 <ks>moveStillRunning </ks> =true
+	 <k>doMove(moveTodo, duration)</k>
+  <k>}</k> <kc>//end callback</kc>
+  );
+</pre>
+</td>
+</tr>
+
+</tbody>
 </table>
 
 
-<h3>Handling information about a collision or sonar</h3>
+<h3>Handling information about a collision or sonar-data</h3>
 
 <!-- The interaction bewteen and the WebGLScene is based on the 
 <a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library. <br/><br/> -->
 
 
 When the <ks>WebvGLScene</ks> detects a collision between the virtualrobot and and obstacle (fixed or mobile), it uses a <tt>EventBus</tt> 
-user-defined utility to 'emit' a <ks>collision</ks> event over the  main server websocket. This event 
-is handled by a proper operation of this socket, that redirects the information to all the clients connected to port <ks>cmdSocket-8091</ks>:
+user-defined utility to 'emit' a <ks>collision</ks> event over the  <ks>mainSocket</ks> (
+<a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a>). This event 
+is handled by a proper callback, that redirects the information to all the clients connected to port <ks>cmdSocket-8091</ks>:
 <pre>
  socket.on( <ks>'collision'</ks>,(obj) => { 
    target = obj;
@@ -663,6 +730,17 @@ is handled by a proper operation of this socket, that redirects the information 
 
 The same happens when the <ks>WebvGLScene</ks> detects a sonar activation; the event is now called  <ks>sonarActivated</ks>.
 
+
+
+<h2>Logical interaction</h2>
+After our analysis of the WEnv implementation, we can introduce the following abstract view of interactions with a client:<br/>
+<center><img src="./img/logicInteraction.png" alt="logicInteraction" width="60%" ></center>
+A robot-move command can be sent in form of a logical request; at implementation level the client could perfomr an 
+HTTP-POST on port 8090 or send a message on the <ks>cmdSocket-8091</ks>.
+<br/><br/>
+Examples of clients are reported in project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>
+(see  also <a href="../../it.unibo.virtualrobotclient/userDocs/VirtualrobotClient.html" target="code">VirtualrobotClient.html</a>).
+ 
 <!-- 
 <h3 id="answerMeaning">Important experiment: give the proper meaning to answers</h3>
 For a HTML page that shows the information sent by the WEnv over <ks>cmdSocket-8091</ks>
@@ -710,7 +788,7 @@ In this way, we can move the robot by clicking on these buttons:
 
 <h2>USING THE VIRTUAL ROBOT</h2>
 
-Examples of clients are reported in project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>
+Examples of clients 
 -->
 
 <!-- file:///C:/Didattica2018Work/iss2021Lab/it.unibo.virtualrobotclient/userDocs/VirtualrobotClient.html -->

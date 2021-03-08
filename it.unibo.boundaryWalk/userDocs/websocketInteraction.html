@@ -380,12 +380,12 @@ public class IssWsSupport implements <k>IssOperations</k> {
 </pre>
 <h4>The constructor</h4>
 The support constructor connects with the WEnv server with <k>ws://</k> using the given url (e.g. <tt>localhost:8091</tt>)
-<pre><m>public IssWsSupport( String url ){
+<pre>public IssWsSupport( String url ){
  WebSocketContainer container = ContainerProvider.getWebSocketContainer();
  <ks>container.connectToServer</ks>(this, new URI("ws://"+url));
  answerSupport = new <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web">AnswerAvailable</a>();
 }
-</m></pre>
+</pre>
 The <tt>answerSupport</tt> (instance of <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web">AnswerAvailable</a>)
 is an object introduced to handle the dispatches sent by WEnv over the websoket.
 
@@ -398,28 +398,28 @@ and <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" t
 <td>
  
 <h4>The connection</h4>
-When the connection is set, the <tt>userSession</tt> is saved. It wiil be used to send information over the websocket.
-<pre><m>@OnOpen
+When the connection is set, the <ks>userSession</ks> is saved. It wiil be used to send information over the websocket.
+<pre>@OnOpen
  public void onOpen(Session userSession) {
 	this.<ks>userSession</ks> = userSession;
  }
-</m></pre>
+</pre>
 
 <h4>forward / request </h4>
 
 Uses <ks>userSession</ks> to dispatch a message over the websocket:
-<pre><m>@Override
+<pre>@Override
  public void forward(String msg) {  //<kc>request does the same</kc>
   <ks>userSession</ks>.getBasicRemote().<k>sendText</k>(msg); <kc>//<k>synch</k>: blocks until the message has been transmitted</kc>
  } 
-</m></pre>
+</pre>
 <div class="remark">
 Here we have to remember that these operations RETURN IMMEDIATELY THE CONTROL the caller, without waiting the answer 
 sent by WENV.
 <pre>
   robotSupport.forward( MsgRobotUtil.turnLeftMsg ); 
-  //Thread.sleep(1000);        //required if we use websockets
-  robotSupport.forward( MsgRobotUtil.turnRightMsg );	//it is not executes
+  Thread.sleep(500);  <kc>//required if we use websockets</kc>
+  robotSupport.forward( MsgRobotUtil.turnRightMsg );	 
 </pre>		
 </div>
 

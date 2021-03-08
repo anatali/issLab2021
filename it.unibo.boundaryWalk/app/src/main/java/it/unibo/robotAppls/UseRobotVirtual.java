@@ -19,26 +19,23 @@ public class UseRobotVirtual {
     }
 
     public void doBasicMoves() throws Exception{
-        Thread.sleep(2000);
+        //Thread.sleep(1000);
         robotSupport.forward( MsgRobotUtil.turnLeftMsg );
-        //Thread.sleep(1000);        //required ONLY if we use websockets
+        Thread.sleep(400);        //required ONLY if we use websockets
         robotSupport.forward( MsgRobotUtil.turnRightMsg );
         //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
-        Thread.sleep(1000);
- /*
-        //Thread.sleep(1000);      //required ONLY if we use websockets
-        String answer_w = robotSupport.requestSynch( MsgRobotUtil.forwardMsg );
-        System.out.println("UseRobotVirtual | doBasicMoves answer_w=" + answer_w  );
+        Thread.sleep(400);
+        String answerForward = robotSupport.requestSynch( MsgRobotUtil.forwardMsg );
+        System.out.println("UseRobotVirtual | doBasicMoves answerForward=" + answerForward  );
 
-
-        robotSupport.forward( MsgRobotUtil.turnRightMsg );
+        //robotSupport.forward( MsgRobotUtil.turnRightMsg );
         //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
-        Thread.sleep(1000);
-
-        String answer_s  = robotSupport.requestSynch( MsgRobotUtil.backwardMsg);
-        System.out.println("UseRobotVirtual | doBasicMoves answer_s=" + answer_s  );
+        //Thread.sleep(400);
+        Thread.sleep(800);
+        String answerBackward  = robotSupport.requestSynch( MsgRobotUtil.backwardMsg);
+        System.out.println("UseRobotVirtual | doBasicMoves answerBackward=" + answerBackward );
         //Thread.sleep(1000);      //required ONLY if we use websockets
- */
+
     }
 
     public String doBoundary( int stepNum, String journey){
@@ -57,13 +54,11 @@ public class UseRobotVirtual {
 
     public static void main(String args[]) throws Exception{
         Object appl = RobotApplicationStarter.createInstance(UseRobotVirtual.class);
-        /*
-        Metodo di costruzione classico
-
-         */
         if( appl != null )  ((UseRobotVirtual)appl).doBasicMoves( );
-        //String journey = appl.doBoundary(1,"");
-        //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);
+        if( appl != null ) {
+            //String journey = appl.doBoundary(1,"");
+            //System.out.println("UsageRobot | doBoundary BYE journey=" + journey);
+        }
 
     }
 }
