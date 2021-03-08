@@ -1,6 +1,6 @@
 /*
-ClientUsingPost.java
 ===============================================================
+ClientUsingPost.java
 ===============================================================
 */
 package it.unibo.wenv;
@@ -47,24 +47,7 @@ public class ClientUsingPost {
 			return true;
 		}
 	}
-/*
-	protected boolean checkCollision_javax(CloseableHttpResponse response) throws Exception {
-		//response.getEntity().getContent() is an InputStream
-		boolean collision = false;
-		javax.json.stream.JsonParser parser = Json.createParser(
-				new InputStreamReader((response.getEntity().getContent())));
-		//{"endmove":true,"move":"turnLeft"}
-		parser.next();    //START_OBJECT
-		//System.out.println( "ClientUsingPost checkCollision | response START_OBJECT= "   );
-		parser.next();
-		//System.out.println( "ClientUsingPost checkCollision | 1= " + parser.getString() ); //collision
-		parser.next();
-		//System.out.println( "ClientUsingPost checkCollision |  2= " + parser.getValue() );  //false
-		collision = parser.getValue().toString().equals("true");
-		System.out.println( "ClientUsingPost checkCollision | collision= " + collision );
-		return collision;
-	}
-*/
+
 	protected boolean checkCollision(CloseableHttpResponse response) throws Exception {
 		try{
 			//response.getEntity().getContent() is an InputStream
@@ -115,6 +98,23 @@ public class ClientUsingPost {
 		}
 
 	}
+	protected void doMoves() {
+		try {
+			boolean collision = false;
+			collision = moveLeft(200);
+			System.out.println("ClientUsingPost | moveLeft collision=" + collision);
+			collision = moveRight(200);
+			System.out.println("ClientUsingPost | moveRight collision=" + collision);
+			collision = moveForward(800);
+			System.out.println("ClientUsingPost | moveForward collision=" + collision);
+			collision = moveStop(100);
+			System.out.println("ClientUsingPost | moveStop collision=" + collision);
+ 			collision = moveBackward(800);
+			System.out.println("ClientUsingPost | moveForward moveBackward=" + collision);
+		}catch (Exception e) {
+			System.out.println( "ERROR " + e.getMessage());
+		}
+	}
 
 /*
 	protected void doForwardBackward() {
@@ -155,34 +155,10 @@ MAIN
 	public static void main(String[] args)   {
 		//new ClientUsingPost().doMoveLeft();
 		//new ClientUsingPost().doForwardBackward();
-		finalNumOfSteps = new ClientUsingPost().boundary();
-		System.out.println("boundary finalNumOfSteps="+finalNumOfSteps);
+		new ClientUsingPost().doMoves();
+		//finalNumOfSteps = new ClientUsingPost().boundary();
+		//System.out.println("boundary finalNumOfSteps="+finalNumOfSteps);
 	}
 	
  }
 
-//json-simple is also JDK 1.2 compatible,
-//which means you can use it on a legacy project which is not yet in Java 5
-
-/*
-	//TODO: explain this case
-	protected boolean checkCollisionNotWorking(CloseableHttpResponse response) throws Exception {
-		try{
-			String jsonStr = EntityUtils.toString( response.getEntity() );
-			System.out.println( "ClientUsingPost | sendCmd jsonStr= " + jsonStr );
-			org.json.simple.parser.JSONParser simpleparser = new JSONParser();
-			org.json.simple.JSONObject jsonObj = (JSONObject) simpleparser.parse( jsonStr );
-
-			//class java.lang.String cannot be cast to class org.json.simple.JSONObject
-			//(java.lang.String is in module java.base of loader 'bootstrap';
-			//org.json.simple.JSONObject is in unnamed module of loader 'app')
-
-boolean collision = jsonObj.get("collision").equals("true");
-			System.out.println( "ClientUsingPost | collision= " +  collision );
-					return collision;
-					}catch(Exception e){
-					System.out.println("ClientUsingPost | checkCollision ERROR:" + e.getMessage());
-					throw(e);
-					}
-					}
- */

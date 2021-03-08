@@ -1,8 +1,10 @@
 /*
-wsclientToWenv
+===============================================================
+wsclientToWenv.js
     performs forward - backward
     and then works as an observer
         rings a bell if there is a collision
+===============================================================
 */
 const WebSocketClient = require('websocket').client;
 
@@ -19,7 +21,7 @@ function doJob(){
      setTimeout( () => {
         doMove( "moveBackward", 600 );
         console.log("now workign as an observer  ... " ); 
-		}, 800 )
+	 }, 800 )
 }
 
 client.on('connectFailed', function(error) {

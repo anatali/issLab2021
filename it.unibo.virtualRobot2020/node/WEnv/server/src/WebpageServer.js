@@ -15,15 +15,15 @@ const sockets       = {}    //interaction with WebGLScene
 const wssockets     = {}    //interaction with clients
 let socketIndex     = -1
 let wssocketIndex   = -1
+const serverPort    = 8090
 
+//STATE variables used by cmd handling on wssockets (see initWs)
 var alreadyConnected = false
+var moveStillRunning = false
+var moveHalted       = false
+var target           = "notarget"   //the current virtual object that collides
 
-//let webpageReady = false
-//const moveTime   = 800
-const serverPort   = 8090
-var target         = "notarget"   //the current virtual object that collides
-
-    app.use(express.static('./../../WebGLScene'))
+app.use(express.static('./../../WebGLScene'))
 
 /*
 -----------------------------------------------------------------------------
@@ -54,20 +54,24 @@ Defines how to handle POST from browser and from external controls
 			var jsonData = JSON.parse(data)
      		var moveTodo = jsonData.robotmove
      		var duration = jsonData.time
-			doMove(moveTodo, duration, res)
+			doMove(moveTodo, duration, res) //send the answer after duration
   	   });
 	}); //app.post
 
 //Execute a robotmove command and sends info about collision
+//Possible moveResult : true | false | halted | notallowed
 function doMove(moveTodo, duration, res){
 	console.log('$$$ WebpageServer doMove |  moveTodo=' + moveTodo + " duration=" + duration);
 	execMoveOnAllConnectedScenes(moveTodo, duration)
 	setTimeout(function() { //wait for the duration before sending the answer (collision or not)
-        const nocollision  = target == 'notarget'
-        const answer     = { 'endmove' : nocollision , 'move' : moveTodo }  //JSON obj
+        if( moveHalted ) moveResult ="halted"
+        else moveResult = (target == 'notarget')
+        var answer       = { 'endmove' : moveResult , 'move' : moveTodo }  //JSON obj
         const answerJson = JSON.stringify(answer)
         console.log('WebpageServer | doMove  answer= ' + answerJson  );
         target           = "notarget"; 	//reset target
+        moveStillRunning = false;       //able to accept other moves
+        moveHalted       = false;       //able to halt next move
         if( res != null ){
     		res.writeHead(200, { 'Content-Type': 'text/json' });
     		res.statusCode=200
@@ -98,7 +102,7 @@ Interact with clients over ws (controls that send commands or observers) Jan 202
 -------------------------------------------------------------------------------------
 */
 function initWs(){
-const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) } {server:hhtpSrv, autoAcceptConnections: false}
+const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) }
 
 wsServer.on('connection', (ws) => {
   wssocketIndex++
@@ -111,7 +115,18 @@ wsServer.on('connection', (ws) => {
 	console.log( msg )
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
-	doMove(moveTodo, duration)
+	if( moveStillRunning && moveTodo != "alarm"){
+	    const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
+	    updateObservers( JSON.stringify(answer) )
+	    return
+	}
+	if( moveTodo == "alarm" ){
+	    execMoveOnAllConnectedScenes(moveTodo, duration)
+	    moveHalted = true
+	    return
+	}
+	 moveStillRunning=true
+	 doMove(moveTodo, duration)
   });
 
   ws.onerror = (error) => {

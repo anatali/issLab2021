@@ -359,7 +359,15 @@ After the execution of a command, the robot sends to the caller (both using POST
 </pre>
 
 A <tt>RESULT false</tt> means that the move has aborted (e.g. because the robot has hit an obstacle)
-
+<div class="remark">
+In the version 2.0, the possible values related to the <k>endmove</k> key are:
+<ul>
+<li><ks>true</ks>: the robot has terminated the move (different from <tt>alarm</tt>) with success</li>
+<li><ks>false</ks>: the robot has hit an obstacle</li>
+<li><ks>halted</ks>: the robot has received an halt (alarm) while executing a move</li>
+<li><ks>notallowed</ks>: the robot cannot execute the move (different from <tt>alarm</tt>), since it is still executinf a previous move</li>
+</ul>
+</div>
 <h3>Robot as sender of information</h3>
 
 Moreover, the <tt>WEnv</tt> <em>sends to the  clients</em> connected to the ws port <tt>8091</tt>:
@@ -374,10 +382,17 @@ when they detect an obstacle (fixed or mobile). For example:
 </ul>
 
 <h2 id="inside">Inside WEnv</h2>
+The WEnv implementation is based on two main components: 
+the <a href="../node/WEnv/server/src/WebpageServer.js" target="code"><ks>WebpageServer.js</ks></a> written with the 
+<a href="https://expressjs.com/it/" target="web">Node express</a> framework
+and a <ks>WebGLScene</ks> that manages the WEnv scene.
+<br/><br/>
 The <a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a>
 exploits two different kinds of websockets:
 <ul>
-<li>the <a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library.
+<li>a <ks>mainSocket</ks> based on the <a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library: 
+this socket is used to manage the interaction between the 
+<a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a> and the <ks>WebGLScene</ks>.
 <div class="remark">
 <a href="https://www.npmjs.com/package/socket.io", target="web"><k>socket.io</k></a>  is not a WebSocket implementation.<br/> 
 <m>
@@ -388,9 +403,11 @@ That is why a WebSocket client will not be able to successfully connect to a Soc
 and a Socket.IO client will not be able to connect to a WebSocket server.</m>
 </div>
 </li>
-<li>the <a href="https://www.npmjs.com/package/ws", target="web">ws</a> library.
+<li>a <ks>cmdSocket-8091</ks> based on the <a href="https://www.npmjs.com/package/ws", target="web">ws</a> library:
+this socket is used to manage asynchronous commands to move the robot sent by remote clients and to send to
+remote clients information about the state of the WEnv.
 <div class="remark">
-This module does not work in the browser.<br/> 
+The <a href="https://www.npmjs.com/package/ws", target="web"><k>ws</k></a> module does not work in the browser.<br/> 
 <m>Browser clients must use the native <a href="https://www.npmjs.com/package/websocket", target="web">WebSocket</a> object. </m>
 </div>
 </li>
@@ -415,9 +432,9 @@ This command loads a Docker image from <tt>docker.io/natbodocker/virtualrobotdis
 and activates the Web
 <a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a> that:
 	<ol>
-	<li>initializes (<tt>initSocketIOWebGLScene</tt>) the handling of messages on the main server socket, 
+	<li>initializes (<tt>initSocketIOWebGLScene</tt>) the handling of messages on the <ks>mainSocket</ks>, 
 	devoted to the interaction with WebGLScene;</li>
-	<li>initializes (<tt>initWs</tt>) another server websocket on port <tt>8091</tt>, devoted to the interaction with
+	<li>initializes (<tt>initWs</tt>) the <ks>cmdSocket-8091</ks>, devoted to the interaction with
 	clients that intend send commands to the virtual robot and recieve information from the WEnv (e.g. sonar data);</li>
 	<li>listen on port <tt>8090</tt> and shows the messages on the green console of the figure.</li>
 	</ol>
@@ -438,14 +455,35 @@ manages the scene and keyboard commands <tt>w,a,s,d,h</tt>
 </li>
 
 <li><h4>Access using a program</h4>
-Now we can interact with the VirtualRobot by writing a websocket client in our preferred implementation language.
-For example: 
+Now we can interact with the VirtualRobot by writing proper clients in our preferred implementation language, 
+as we can find in the project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>.
+<br/>
+For example, we could write a HTTP client in Java, as done it
+<a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/ClientUsingPost.java" target="code">ClientUsingPost.java</a>
+<div class="remark">
+If we use HTTP-POST interaction, then it is impossible to 'interrupt' (with a 'alarm' command) a working movement
+</div>
+
+<br/>
+ 
+Otherwise, we could exploit (as shown in the figure) the interaction based on <ks>cmdSocket-8091</ks> with 
+a client written in Node.js: <!-- <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a> -->
+
+<a href="../../it.unibo.virtualrobotclient/app/src/main/js/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
+<div class="remark">
+If we use websocket interaction, then it is possible to 'interrupt'  a working movement; the coding at the server-site
+becomes <k>more demanding</k>, since there is the possibility to execute any move before the termination of a previous one. 
+<br/>This motivates our interest on <ks>Finite State Machines</ks>.
+</div>
+
+<!--
 <ul>
-<li>A client written in Node.js: <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a></li>
-<li>Other clients written in Java and in Kotlin 
-<!-- : <a href="../node/clients/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a> -->
+<li>an example of a client written in Node.js: <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a></li>
+<li>other clients written in Java and in Kotlin 
+  : <a href="../node/clients/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a>  
 can be found in the project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>.</li>
 </ul>
+-->
 </li>
  
  
@@ -455,7 +493,7 @@ can be found in the project <a href="../../it.unibo.virtualrobotclient" target="
 If we open another page in a local or remote browser,
 the WEnv will show a <ks>MIRROR</ks> scene in which keyboard commands are disabled.
 <br/><br/>
-However, the effects of all the commands sent to the WEnv over the websocket-8091 will be shown
+However, the effects of all the commands sent to the WEnv over the <ks>cmdSocket-8091</ks> will be shown
 in the <ks>MIRROR</ks>.
  
 </td>
@@ -468,23 +506,26 @@ in the <ks>MIRROR</ks>.
 
 
 <h3>Move the robot from a web page</h3>
-The JavaScript code written in <a href="../node/clients/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
+The JavaScript code written in 
+<a href="../../it.unibo.virtualrobotclient/app/src/main/js/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
 can be inserted also in a HTML page. 
-<br/>
+<br/><br/>
 
 
 
 <table style="width:98%">
 <tbody>	
 <tr>
-<td style="width:50%" >
+<td style="width:40%" >
  For example, this HTML document includes the following code:
-<pre>&lt;script src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">&lt;/script>
+<pre>&lt;script 
+src="https://cdn.jsdelivr.net/webjars/org.webjars/<ks>jquery/2.1.0/jquery.js</ks>">
+&lt;/script>
 
 <b>&lt;script language="javascript" type="text/javascript"></b>
-<kc>//Open the websocket on 8091</kc> 
-const <k>socket</k>  = new WebSocket('ws://localhost:8091');
-<k>socket</k>.onopen = function () { console.log("socket connected on 8091")  };
+<kc>//Open the websocket on 8091</kc>
+const <k>socket</k>     = new WebSocket('ws://localhost:8091');
+<k>socket</k>.onopen    = function () { console.log("connected on 8091") };
 <k>socket</k>.onmessage = function(evt) { console.log(evt.data); };
 <kc>//To see the output, open <ks>Developer Tools</ks> in the browser</kc>
 
@@ -493,24 +534,21 @@ const <k>socket</k>  = new WebSocket('ws://localhost:8091');
    const moveJson = '{"robotmove":"'+ move + '", "time":'+time+'}'
    if (socket && socket.bufferedAmount == 0) { socket.send(moveJson) }
  }
- 
 <kc>//A $ sign 'means' jQuery</kc> 
 $(document).ready(function(){ 
  $( "#<ks>lsocket</ks>" ).click(function() {  
   <k>socket</k>.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );});
 })
-
 <kc>//Or also: </kc>
 $(function () {
-	$( "#<ks>rsocket</ks>" ).click(function() { doMove("moveRight", 300);   }) 
-	$( "#<ks>wsocket</ks>" ).click(function() { doMove("moveForward", 600); }) 
-	$( "#<ks>ssocket</ks>" ).click(function() { doMove("moveBackward", 600);})		
-	$( "#<ks>hsocket</ks>" ).click(function() { doMove("alarm", 100);       })
+  $( "#<ks>rsocket</ks>" ).click(function() { doMove("moveRight", 300);   })
+  $( "#<ks>wsocket</ks>" ).click(function() { doMove("moveForward", 600); })
+  $( "#<ks>ssocket</ks>" ).click(function() { doMove("moveBackward", 600);})
+  $( "#<ks>hsocket</ks>" ).click(function() { doMove("alarm", 100);       })
 });
 <b>&lt;/script></b>
-
 ....
-&ltbutton id="<ks>lsocket</ks>">turnLeft&lt/button>  &nbsp; &ltbutton id="<ks>rsocket</ks>">turnRight&lt/button>   ...
+&ltbutton id="<ks>lsocket</ks>">turnLeft&lt/button> ...
 </pre>
 
 </td>
@@ -519,59 +557,115 @@ $(function () {
  <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button> 
  &nbsp;&nbsp;  <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button> 
  &nbsp;&nbsp;  	<button id="hsocket" >halt</button>  
+<br/><br/>
+<div class="remark">
+Since we use websocket interaction, then it is possible to 'interrupt'  a working movement, and 'overlap' one move
+over another. Problems could be related to the answers sent to the observers.
+</div>
+<m>
+<h3>Examples of <k>not adequate</k> answers (version 1.0)</h3>
+Examples of this kind can be observed by using the docker image <tt>docker.io/natbodocker/virtualrobotdisi:<ks>1.0</ks></tt>.
+<br/>For example:
+If we click <tt>moveForward</tt> and <tt>halt</tt> in rapid sequence, the answers are:
+<pre>
+RECEIVED: {"endmove":true,"move":"alarm"}
+RECEIVED: {"endmove":true,"move":"moveForward"}
+</pre>
+The move is interrupted, but the answers are not adequate.<br/>
+For another 'exepriment' put the robot near to the south wall, in direction of the wall and repeat <tt>moveForward</tt> - <tt>halt</tt>.
+
+<h3>Examples of adequate answers (version 2.0)</h3>
+Examples of more reasonable behavior are implemented in the docker image <tt>docker.io/natbodocker/virtualrobotdisi:<ks>2.0</ks></tt>.
+Now the answers are (<tt>alarm</tt> does not send answer):
+<pre>
+RECEIVED: {"endmove":"halted","move":"moveForward"}
+</pre>
+</m>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h3 id="">Move the robot using <ks>cmdSocket-8091</ks></h3>
+The commands sent over the <ks>cmdSocket-8091</ks> is handled within 
+the <a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a>
+by a 'businnes logic' embedded in the same operation used to handle a HTTP-POST:<br/>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%" >
+ 
+<pre>
+function doMove(moveTodo, <ks>duration</ks>,res){ <kc>//res is null when called by <ks>cmdSocket-8091</ks></kc>
+  execMoveOnAllConnectedScenes(moveTodo, duration) <kc>//updates WebGLScene using <ks>mainSocket</ks></kc>
+  <k>setTimeout(</k>function() { <kc>//<k>wait</k> for the duration before sending the answer (collision or not)</kc>
+        if( moveHalted ) moveResult ="halted"
+        else moveResult = (target == 'notarget')
+        var answer       = {'endmove' : moveResult,'move':moveTodo} <kc>//JSON obj</kc>
+        const answerJson = JSON.stringify(answer)
+
+        target           = "notarget"; 	<kc>//reset target</kc>
+        moveStillRunning = false;       <kc>//to accept other moves</kc>
+        moveHalted       = false;       <kc>//to allow halting next move</kc>
+		
+        if( res != null ){ <kc>//prepare the answer for HTTP-POST</kc>
+          res.writeHead(200, { 'Content-Type': 'text/json' });
+          res.statusCode=200    		
+          res.write( answerJson  ); <kc>//give info about no collision to the POST sender</kc>
+          res.end();
+        }
+        <kc>//IN ANY CASE: update all the controllers/observers</kc>
+        <k>updateObservers(answerJson)</k>  <kc>//send answerJson on <ks>cmdSocket-8091</ks></kc>
+  }, <ks>duration</ks>);
+}
+</pre>
+</td>
+<td>
+Note that:
+<ul>
+<li><k>setTimeout(</k> releases the control. The (callback) function given as argument will be called by
+the Node run-time support when the given time (<ks>duration</ks>) expires.</li>
+<li>The variables <br/>
+<ks>target, moveStillRunning, moveHalted</ks> <br/>
+<k>represent a state</k> that can be changed by asynchronous 
+messages received on the <ks>mainSocket</ks>. 
+<m><div class="remark">
+The structure of the code should be refactored to better express the behavior as a <k>Finite State Machine</k>
+whose transitions are triggered by messages.
+</div></m>
+</li>
+<li>the Node run-time is <k>single-threaded</k>.</li>
+</ul>
 
 </td>
 </tr>
  </tbody>
 </table>
 
-<h3 id="">Move the robot using websocket-8091</h3>
-The commands sent over the <ks>websocket-8091</ks> is handled by a 'businnes logic' embedded in the same operation used to handle a HTTP-POST:<br/>
-
-<pre>
-function doMove(moveTodo, <ks>duration</ks>, res){	<kc>//res is null when called by <ks>ws.on('message', msg => {...}</kc>
-  execMoveOnAllConnectedScenes(moveTodo, duration) <kc>//updates the WebGLScene by using the main server websocket</kc>
-  setTimeout(function() { <kc>//<k>wait</k> for the duration before sending the answer (collision or not)</kc>
-        const nocollision  = ( target == 'notarget' )
-        const answer       = { 'endmove' : nocollision , 'move' : moveTodo }   
-        const answerJson   = JSON.stringify(answer)
-        target             = "notarget"; 	//reset target
-        if( res != null ){
-    		res.writeHead(200, { 'Content-Type': 'text/json' });
-    		res.statusCode=200    		
-            res.write( answerJson  ); <kc>//give info about no collision to the POST sender</kc>
-            res.end();
-        }
-        <kc>//IN ANY CASE: update all the controls / observers</kc>
-        <k>updateObservers(answerJson)</k>  <kc>//send answerJson on <ks>websocket-8091</ks></kc>
-  }, <ks>duration</ks>);
-}
-</pre>
 
 <h3>Handling information about a collision or sonar</h3>
 
-The interaction bewteen and the WEnvGLscene is based on the 
-<a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library.
-<br/><br/>
+<!-- The interaction bewteen and the WebGLScene is based on the 
+<a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library. <br/><br/> -->
 
 
-When the WEnvGLscene detects a collision between the virtualrobot and and obstacle (fixed or mobile), it uses a <tt>EventBus</tt> 
+When the <ks>WebvGLScene</ks> detects a collision between the virtualrobot and and obstacle (fixed or mobile), it uses a <tt>EventBus</tt> 
 user-defined utility to 'emit' a <ks>collision</ks> event over the  main server websocket. This event 
-is handled by a proper operation of this socket, that
-redirects the information to all the clients connected to port <tt>8091</tt>:
+is handled by a proper operation of this socket, that redirects the information to all the clients connected to port <ks>cmdSocket-8091</ks>:
 <pre>
  socket.on( <ks>'collision'</ks>,(obj) => { 
    target = obj;
    const info     = { 'collision' : true, 'move': 'unknown'}
-   <k>updateObservers( JSON.stringify(info) )</k> <kc>//send info on <ks>websocket-8091</ks></kc>
+   <k>updateObservers( JSON.stringify(info) )</k> <kc>//send info on <ks>cmdSocket-8091</ks></kc>
  } )
 </pre>
 
-The same happens when the WEnvGLscene detects a sonar activation; the event is now called  <ks>sonarActivated</ks>.
+The same happens when the <ks>WebvGLScene</ks> detects a sonar activation; the event is now called  <ks>sonarActivated</ks>.
 
- 
+<!-- 
 <h3 id="answerMeaning">Important experiment: give the proper meaning to answers</h3>
-For a HTML page that shows the information sent by the WEnv over <ks>websocket-8091</ks> 
+For a HTML page that shows the information sent by the WEnv over <ks>cmdSocket-8091</ks>
 (move-answers and collision / sonar data):<br/><br/>
 <ol>
 <li>launch
@@ -606,7 +700,7 @@ RECEIVED: {"sonarName":"sonar2","distance":19,"axis":"x"}
 RECEIVED: {"sonarName":"sonar2","distance":19,"axis":"x"}
 RECEIVED: {"endmove":true,"move":"moveForward"}
 </pre>
-
+-->
 <br/><br/>
 <!--
 In this way, we can move the robot by clicking on these buttons:
