@@ -25,12 +25,12 @@ public class UseRobotVirtual {
         robotSupport.forward( MsgRobotUtil.turnRightMsg );
         //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
         Thread.sleep(400);
+        robotSupport.forward( MsgRobotUtil.forwardMsg );
+        Thread.sleep(800);
+        robotSupport.forward( MsgRobotUtil.backwardMsg );
+        Thread.sleep(800);
         String answerForward = robotSupport.requestSynch( MsgRobotUtil.forwardMsg );
         System.out.println("UseRobotVirtual | doBasicMoves answerForward=" + answerForward  );
-
-        //robotSupport.forward( MsgRobotUtil.turnRightMsg );
-        //robotSupport.forward( MsgRobotUtil.rMsg );   //WRONG payload
-        //Thread.sleep(400);
         Thread.sleep(800);
         String answerBackward  = robotSupport.requestSynch( MsgRobotUtil.backwardMsg);
         System.out.println("UseRobotVirtual | doBasicMoves answerBackward=" + answerBackward );

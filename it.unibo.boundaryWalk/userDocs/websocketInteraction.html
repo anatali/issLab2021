@@ -427,22 +427,22 @@ sent by WENV.
 <div class="remark">
 Here we have to cover a mismatch with respect to the programming model provided by the library. <br/>
 In fact, the library is event-driven and the information sent by WEnv is 'injected' into our application code
-by a call to the method annotatd with <k>@OnMessage</k>. 
+by a call to the method annotated with <k>@OnMessage</k>. 
 </div>
 <pre>@Override
  public String requestSynch(String msg) {
-  request(msg);     
+  request(msg);     <!-- <k>answerSupport.engage()</k>; <kc>//We engage the answerSupport object</kc> -->
   <ks>//Now, we must WAIT for the answer</ks>
-  <k>answerSupport.engage()</k>; <kc>//We engage the answerSupport object</kc>
   return answerSupport.get(); <kc>//We consume the answer, by waiting for it</kc>
  }
 </pre> 
+<!-- OVERCOME BY VERSION 2.0 ov virtualrobot 
 The operation <k>engage</k> of 
 <a href="../app/src/main/java/it/unibo/robotSupports/AnswerAvailable.java" target="web"><em>AnswerAvailable</em></a>
 avoids wrong notifications of the availability of an answer.<br/>
 <m>
 Suppose for example that the client sends a w lasting a quite long time and a l while w is still running.
-Since h ends before w, a endmove answer for h is sent before the answer related to w.
+Since h ends before w, a endmove answer for h is sent before the answer related to w.-->
 </m>
 <!--
 
@@ -458,28 +458,30 @@ by the method annotatd with <k>@OnMessage</k>.
 
 <h3>The OnMessage operation</h3> 
 The operation annotated with <k>@OnMessage</k> is called by the javax library when information is sent by WEnv 
-(to all the clients currently connected) on the websocker-8091.
+(to all the clients currently connected) on the <ks>cmdSocket-8091</ks>.
 <br/>
 This information consists in a <ks>dispatch</ks> with the following possible JSON contents:
 <ul>
-<li><tt>{"endmove":"...","move":"..."}</tt></li>
-<li><tt>{"collision":"...","move":"..."}</tt></li>
+<li><tt>{"endmove":"RES","move":"..."}</tt> with <tt>RES</tt>= <ks>true | false | halted | notallowed</ks></li>
+<li><tt>{"collision":true,"move":"..."}</tt>   </li>
 <li><tt>{"sonarName":"...","distance":...,"axis":"..."}</tt></li>
 </ul>
   
-
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
 <pre>
  @OnMessage
  public void onMessage(String message)   {
-  try {
-   
+  try {  
    JSONObject jsonObj = new JSONObject(message) ;
    if (jsonObj.get("endmove") != null) { <kc>//HANDLE A MOVE-ANSWER</kc>
-       boolean endmove = jsonObj.getBoolean("endmove");
+       boolean endmove = jsonObj.getString("endmove");
        String  move    = jsonObj.getString("move");
-       <k>answerSupport.put</k>(""+endmove, move);
+       if(! endmove.equals("notallowed")) <k>answerSupport.put</k>(endmove, move);
    } else if (jsonObj.get("collision") != null) {  <kc>//HANDLE A COLLISION INFO</kc>
-       boolean collision = jsonObj.getBoolean("collision");
+       <kc>//...</kc>
    } else if (jsonObj.get("sonarName") != null) { <kc>//HANDLE SONAR DATA</kc>
        String sonarName = jsonObj.getString( "sonarName");
        String distance  = jsonObj.getString("distance");
@@ -488,7 +490,44 @@ This information consists in a <ks>dispatch</ks> with the following possible JSO
    }
   } catch (Exception e) {}
  }
+</pre> 
+
+</td>
+<td>
+<pre>
+public class AnswerAvailable{
+ private String  answer  = null;
+ public synchronized void <ks>put</ks>(String info, String move) {
+    answer = info;
+    <k>notify();</k>
+ }
+ public synchronized String <ks>get</ks>( ) {
+   while (answer == null){
+     try { <k>wait();</k> }
+        catch (InterruptedException e) { }
+        finally { }
+     }
+     String myAnswer = answer;
+     answer           = null;
+     return myAnswer;
+  }
+}
 </pre>
+</td>
+</tr>
+ </tbody>
+</table>
+<br/> 
+In this Java code, it is evident that the <ks>onMessage</ks> operation is called by a thread different from the main-thread.
+In fact, the <a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)#:~:text=In%20concurrent%20programming%20(also%20known,certain%20condition%20to%20become%20false."></a>
+monitor</a> implemented by <tt>AnswerAvailable</tt> allows us to synchronize the operations of these two threads by usingin shared memory.
+
+<div class="remark">
+Now a paradigm shift is upon us, that can be summarized in the
+motto: <k>do not communicate by sharing memory; instead, share memory by communicating</k>.
+ 
+</div>
+
 <!--
 From <a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web"><em>JSR 356, Java API for WebSocket</em></a>
 we read: <hr/>

@@ -267,93 +267,7 @@ function myFunction() {
 <div class="body"> 
 <h2>Introduction</h2>
  
-<h2>The components</h2>
-
-<div class="remark">
-<kc>Login in DockerHub (get the password from a private file)</kc>
-<pre>
-type docker_password.txt | docker login --username natbodocker --password-stdin
-</pre>
-</div>
-<h3>The <a href="../../it.unibo.virtualRobot2020" target="web"> Virtual robot</a> project</h3>
-
-<pre>
-gradle build                            <kc>Create the distribution</kc>
-docker build -t virtualrobotdisi:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualRobot2020/Dockerfile" target="web">Dockerfile</a></kc>
-
-<kc>Tag the image</kc>
-docker tag virtualrobotdisi:1.0 natbodocker/virtualrobotdisi:1.0
-
-docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:1.0 /bin/sh	<kc>local test</kc>
-
-
-<kc>Register the image on <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></kc>
-docker push natbodocker/virtualrobotdisi:1.0
-</pre>
-
-<h3>The <a href="../../it.unibo.virtualrobotclient" target="web">virtualrobotclient</a> project</h3>
-
-<pre>
-gradlew build                            <kc>Create the distribution</kc>
-docker build -t usingvirtualrobot:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualrobotclient/Dockerfile" target="web">Dockerfile</a></kc>
-
-
-<kc>Tag the image</kc>
-docker tag usingvirtualrobot:1.0 natbodocker/usingvirtualrobot:1.0
-
-<kc>Register the image on <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></kc>
-docker push natbodocker/usingvirtualrobot:1.0
-</pre>
-
-
-
-
-<h3>The <a href="../../it.unibo.virtualrobotcontrol" target="web">virtualrobotcontrol</a> project</h3>
-<pre>
-docker build -t virtualrobotcontrol:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualrobotcontrol/Dockerfile" target="web">Dockerfile</a></kc>
-
-docker run -ti -p 3000:3000 --rm  virtualrobotcontrol:1.0 /bin/sh	<kc>local test</kc>
-
-
-<kc>Tag the image</kc>
-docker tag virtualrobotcontrol:1.0 natbodocker/virtualrobotcontrol:1.0
-
-<kc>Register the image on <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></kc>
-docker push natbodocker/virtualrobotcontrol:1.0
-</pre>
-
 <!--
-<h3>The <a href="../../it.unibo.virtualrobotcontrol/docker-compose.yaml" target="web">docker-compose.yaml</a> </h3>
-<div class="remark">The <a href="../../it.unibo.virtualrobotcontrol/docker-compose.yaml" target="web">docker-compose.yaml</a> defines one servicee:
-<ul>
-<li><k>vrobotcontrol</k>;</li>
-</ul>
-</div>
-<pre>
-</pre>
--->
-
-
-<h3>The <a href="../docker-compose.yaml" target="web">docker-compose.yaml</a> </h3>
-<div class="remark">The <a href="../docker-compose.yaml" target="web">docker-compose.yaml</a> defines two services:
-<ul>
-<li><k>wenv</k>: </li>
-<li><k>vrobotclient</k>;</li>
-</ul>
-</div>
-<pre>
-<h4>Run all</h4>
-docker-compose up -d	                    <kc>vrobotclient is not able to connect (we should retry ...) </kc>
-docker-compose run --rm vrobotclient		<kc>starts also wenv if there is dependency</kc>
-
-<h4>Run single services</h4>
-docker-compose run -d --service-ports wenv   <kc>starts wenv </kc>
-docker-compose run --rm vrobotclient		 <kc>attempts to re-create wenv if there is dependency</kc>
-docker-compose run --rm vrobotclient		 <kc>does not connect if there is NO dependency</kc>
-
-docker run --rm docker.io/natbodocker/usingvirtualrobot:1.0		<kc>does not connect</kc>
-</pre>
-
 <table style="width:98%">
 <tbody>	
 <tr>
@@ -366,7 +280,7 @@ docker run --rm docker.io/natbodocker/usingvirtualrobot:1.0		<kc>does not connec
 </tr>
  </tbody>
 </table>
- 
+ -->
 
 <br/><br/>
 </div>
