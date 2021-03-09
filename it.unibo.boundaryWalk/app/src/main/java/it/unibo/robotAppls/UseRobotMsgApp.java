@@ -21,13 +21,21 @@ public class UseRobotMsgApp {
     }
 
      protected void doBasicMoves(){
-         robotSupport.forward( MsgRobotUtil.left );
-         //Thread.sleep(1000);
-         robotSupport.forward( MsgRobotUtil.right );
-         //Thread.sleep(1000);
-         robotSupport.requestSynch( MsgRobotUtil.ahead );
-         robotSupport.requestSynch( MsgRobotUtil.back );
-         //Thread.sleep(1000);
+        try {
+            robotSupport.forward(MsgRobotUtil.left);
+            //Thread.sleep(1000);
+            robotSupport.forward(MsgRobotUtil.right);
+            //Thread.sleep(1000);
+            robotSupport.forward(MsgRobotUtil.ahead);   //time=800msec
+            //Thread.sleep(400);  //no sense with HTTP
+            robotSupport.forward(MsgRobotUtil.halt);
+            robotSupport.requestSynch(MsgRobotUtil.ahead);
+            //Thread.sleep(1000);
+            robotSupport.requestSynch(MsgRobotUtil.back);
+            //Thread.sleep(1000);
+        }catch(Exception e){
+
+        }
      }
 
     public String doBoundary( int stepNum, String journey){
