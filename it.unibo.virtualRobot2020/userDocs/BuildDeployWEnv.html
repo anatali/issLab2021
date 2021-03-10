@@ -266,6 +266,16 @@ function myFunction() {
 
 <div class="body"> 
  
+ <h2>Building</h2>
+<ol>
+<li>Install <bc>Node.js</bc></tt>
+<li>Open a terminal on <bc>it.unibo.virtualRobot2020\node\WEnv\server</bc> and execute <pre>npm install</tt></pre></li>
+<li>In the directory <bc>it.unibo.virtualRobot2020\node\WEnv\WebGLScene</bc>  execute <pre>npm install</tt></pre></li>
+<li>In the directory  <bc>it.unibo.virtualRobot2020\node\WEnv\server\src</bc>  execute <pre>node WebpageServer.js</tt></pre></li>  
+<li>Open a browser on <pre>localhost:8090</pre></li>
+</ol>
+
+Look at <a href="../../it.unibo.virtualRobot2020/Dockerfile" target="code">Dockerfile</a>.
  
 <h2>The components</h2>
 
@@ -275,7 +285,7 @@ function myFunction() {
 type docker_password.txt | docker login --username natbodocker --password-stdin
 </pre>
 </div>
-<h3>The <a href="../../it.unibo.virtualRobot2020" target="web"> Virtual robot</a> project</h3>
+<h3>The <a href="../../it.unibo.virtualRobot2020" target="code"> Virtual robot</a> project</h3>
 
 <pre>
 gradle build                            <kc>Create the distribution</kc>
@@ -291,7 +301,7 @@ docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:1.0 /bin/sh	<kc>
 docker push natbodocker/virtualrobotdisi:1.0
 </pre>
 
-<h3>The <a href="../../it.unibo.virtualrobotclient" target="web">virtualrobotclient</a> project</h3>
+<h3>The <a href="../../it.unibo.virtualrobotclient" target="code">virtualrobotclient</a> project</h3>
 
 <pre>
 gradlew build                            <kc>Create the distribution</kc>
@@ -308,7 +318,7 @@ docker push natbodocker/usingvirtualrobot:1.0
 
 
 
-<h3>The <a href="../../it.unibo.virtualrobotcontrol" target="web">virtualrobotcontrol</a> project</h3>
+<h3>The <a href="../../it.unibo.virtualrobotcontrol" target="code">virtualrobotcontrol</a> project</h3>
 <pre>
 docker build -t virtualrobotcontrol:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualrobotcontrol/Dockerfile" target="web">Dockerfile</a></kc>
 
@@ -335,7 +345,7 @@ docker push natbodocker/virtualrobotcontrol:1.0
 
 
 <h3>The <a href="../docker-compose.yaml" target="web">docker-compose.yaml</a> </h3>
-<div class="remark">The <a href="../docker-compose.yaml" target="web">docker-compose.yaml</a> defines two services:
+<div class="remark">The <a href="../docker-compose.yaml" target="code">docker-compose.yaml</a> defines two services:
 <ul>
 <li><k>wenv</k>: </li>
 <li><k>vrobotclient</k>;</li>
