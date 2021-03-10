@@ -24,20 +24,21 @@ function doJob(){
 	 }, 800 )
 }
 
-client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-});
 
 var conn8091 = null
+
+    client.on('connectFailed', function(error) {
+        console.log('Connect Error: ' + error.toString());
+    });
 
     client.on('connect', function(connection) {
         console.log('WebSocket Client Connected')
         conn8091 = connection
         doJob()
 
+
         connection.on('error', function(error) {
             console.log("Connection Error: " + error.toString());
-
         });
         connection.on('close', function() {
             console.log('Connection Closed');

@@ -1,15 +1,20 @@
 /*
 axiosClientToWenv.js
 ===============================================================
-walks along the boundary bysing callbacks, no global state
+walks along the boundary by using callbacks, no global state
 ===============================================================
 */
-const axios = require('axios')
-const URL   = 'http://localhost:8090/api/move' ;
-
+const axios    = require('axios')
+const URL      = 'http://localhost:8090/api/move' ;
+var numOfSteps = 0
 
 function ahead(numOfSteps){
      domove("moveForward", numOfSteps, goon, ko)
+}
+
+function handleCollision(){
+    if( numOfSteps++ < 4 )  domove("turnLeft", numOfSteps, goon, ko)
+    else  domove("turnLeft", numOfSteps, terminate, terminate)  //just to return to initial state
 }
 
 function goon(numOfSteps){
@@ -30,23 +35,21 @@ function terminate(){
 function domove(move, numOfSteps, callbackOk, callbackCollision)  {
     axios({
             url: URL,
-            data: { robotmove: move, time: 600 },
+            data: { robotmove: move, time: 400 },
             method: 'POST',
             timeout: 900,
             headers: { 'Content-Type': 'application/json' }
     }).then(response => {   //continues when the action has been done
-        console.log("axiosClientToWenv domove | response.data: " )
-        var answer = response.data
+        //console.log("axiosClientToWenv domove | response.data: " )
+        var answer    = response.data   //JSON obj { endmove: 'true', move: 'moveForward' }
         console.log(  answer )
-        collision =  ! answer.endmove
-        console.log(  "collision=" + collision )
-        if( collision ) callbackCollision(numOfSteps); else callbackOk(numOfSteps)
+        if( answer.endmove == 'true' ) callbackOk(numOfSteps)
+        else callbackCollision(numOfSteps)
   })
   .catch(error => {
-    console.error(error)
+    console.log(error)
   })
 }
-
 
 //main
 ahead(1)
