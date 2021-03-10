@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>evaluationCriteria</title></head>
+    
+<body>
+<div id="top">
+<h1>Lab ISS | evaluationCriteria of pre-coding documents <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduction</h2>
+We report here the main criteria to be used for the (auto)evaluation of the deliverables related to the pre-coding phases 
+(requirement analysis, problem analysis and project).
+
+<h3>About content (<i>there is no <k>code</k> without a <k>project</k>, no project without <k>problem analysis</k> and no problem without <k>requirements</k></i>)</h3>
+The most important aspects of the document are:
+ <ol>
+<li>Quality of the <k>logical architecture</k>: the logical architecture (i.e. the result of requirement and problem analysis) is well described, well motivated and should be 'shared'
+by a wide set of different (working separately) analysts. </li>
+<li>Quality of the <k>test plans</k>: the test plans are closely related to the requirements; they   
+<i>clarify without ambiguity</i> what a testing tool must find 'true' after the execution of the application.</li>
+<li>Quality of the  <k>project architecture</k>: the logical architecture is well described, well related to
+the logical architecture and well motivated,
+by highlighting the choices (and their reason) made by the designer. </li>
+</ol>
+
+
+<h3>About substance</h3>
+<ol>
+<li><k>Level of significance</k>: the document is able to deliver useful information about the product and the process.<br/>
+The document should make a <ks>human reader</ks> (e.g. a <ks>project manager</ks>) able to:
+<ul>
+<li>understand what the customer 'really' needs</li>
+<li>understand the main problems related to the product to be built</li>
+<li>eveluate the effort (in time, resources, etc.) required to meet the requirements</li>
+<li>organize the requirements into a ordered list of relevance and/or  difficulty </li>
+</ul>
+
+The document should make <ks>software developers</ks> able to:
+<ul>
+<li>acquire in a 'formal way' relevant aspects about the product, so to avoid the ambiguites of natural languages</li>
+<li>fully understand the TestPlans, so to write in a short time a set of (acceptance) tests, before starting the coding </li>
+<li>start the implementation of (a prototype) of the system, by <ks>implementing what is described in the project section</ks>  
+</ul>
+
+ </li>
+</ol>
+
+<h3>About form</h3>
+We must evaluate also:
+ <ol>
+<li>The degree of <k>logical consistence</k>: the document does include no logical contradiction among its parts</li>
+<li>The degree of <k>coherence</k>: the document presents a good integration of diverse elements, relationships, or values</li>
+<li>The degree of <k>synthesis</k>: the document does not include useless verbosity</li>
+<li>The degree of <k>relevance</k>: the document does not include useless parts</li>
+<li>The degree of <k>precision</k>: the document attempts to express relevant aspects in a formal way, rather than
+using natural language</li>
+<li>The degree of <k>dissemination</k>: the document is written in English</li>
+</ol>
+
+<h3>About evaluation</h3>
+The result of the evaluation should be expressed with reference to a scale ranging from <ks>A</ks> to <ks>F</ks>.
+Note that:
+<ol>
+<li>An empty document (like <a href="./templateToFill.html" target="lab">templateToFill.html</a>) sent with correct name
+(<tt>cognome_nome_xxx.pdf</tt>), and including correct author-data (with the photo) is qualified as <ks>F</ks>. 
+Otherwise it cannot be classified.</li>
+<li>A document qualified with <ks>A</ks> presents no relevant part to be significatively improved </li>
+<li>A document qualified as <ks>B</ks> or <ks>C</ks> presents some part (not crtical) that can be improved</li>
+<li>A document qualified from <ks>D</ks> to <ks>F</ks> presents some relevant part that should be improved</li>
+</ol>
+After a (auto)evalutation of a document classified from <ks>B</ks> to <ks>F</ks> , it is important to 
+higthligth the parts that require some improvement.
+  
+<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+<hr/>
+By Antonio Natali 
+<img src="./img/teacher.gif" alt="teacher" width="5%" height="5%"> antonio.natali@unibo.it  
+</div> 
+</div> 
+</body>
+</html>
