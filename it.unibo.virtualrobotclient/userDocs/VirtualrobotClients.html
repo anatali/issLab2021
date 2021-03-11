@@ -282,58 +282,68 @@ Each of the following programs (prog.js) can be executed by writing:
 <tbody>	
 
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
+<a href="https://www.npmjs.com/package/axios" target="web">axios</a>  library for Node.js. </m>
+
+
+</td>
+<td>
 <div class="remark">
 <k>Key point</k>: <i>functional style based on recursive callback functions</i>
 </div>
-</td>
-<td>
-The client  <i>walks along the boundary</i> of the room.
-<br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
-<a href="https://www.npmjs.com/package/axios" target="web">axios</a>  library for Node.js. 
-
 
 </td>
 </tr>
 
 
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/httpClientToWenv.js" target="code">httpClientToWenv.js</a>
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/httpClientToWenv.js" target="code">httpClientToWenv.js</a>
+
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
+<a href="https://www.npmjs.com/package/axios" target="web">axios</a>  library for Node.js. 
+</m>
+
+</td>
+<td>
 <div class="remark">
-<k>Key point</k>: <i>use of state variables and an <tt>elabMoveResponse</tt> operation</i>
+<k>Key point</k>: <i>use of state variables and an (user-defined) <ks>elabMoveResponse</ks> operation</i>
 </div>
 </td>
-<td>
-The client  <i>walks along the boundary</i> of the room.
-<br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
-<a href="https://www.npmjs.com/package/axios" target="web">axios</a>  library for Node.js. 
-</td>
 </tr>
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/js/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
-
-</td>
-<td> 
-The client first <i>moves forward and backward</i>. Afterwards, it works as an <em>observer</em> that:
+<hr/>
+<m>The client first <i>moves forward and backward</i>. Afterwards, it works as an <em>observer</em> that:
 <ul>
 <li>show information emitted by some sonar</li>
 <li>rings a bell if the virtual robot collides with some virtual obstacle </li>
 </ul>
 The client interacts with the WEnv via <em>web-scokets</em>, by using the  
 <a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
-<hr/>
-Key point: 
+</m>
+</td>
+<td> 
+<div class="remark">
+<k>Key point</k>: <i>Example of Node/Javascript programming</i><br/>
+<m>sequence of asynchronous commands sent with <ks>setTimeout</ks> and input messages handled
+by a callback related to <ks>connection.on('message', function(msg){ ... })</ks> 
+</m>
+</div>
 </td>
 </tr>
 
-</tbody>	
-</table></center>
-<!--
+
+
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/js/clientToWenvWebsocket.js" target="code">clientToWenvWebsocket.js</a>
 
 </td>
@@ -354,7 +364,7 @@ Key point:
 
 
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/boundaryReactiveWebsocket.js" target="code">boundaryReactiveWebsocket.js</a></td>
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/boundaryReactiveWebsocket.js" target="code">boundaryReactiveWebsocket.js</a></td>
 <td>
 The client  <i>walks along the boundary</i> of the room in a event-driven way
 <br/><br/>
@@ -368,8 +378,10 @@ by abstracting from the technical details about (websocket) connections.
   <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket" target="web">WebSocket</a> 
 </td>
 </tr>
+
+
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/boundaryReactiveWs.js" target="code">boundaryReactiveWs.js</a></td>
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/boundaryReactiveWs.js" target="code">boundaryReactiveWs.js</a></td>
 <td>
 The client  <i>walks along the boundary</i> of the room in a event-driven way
 <br/><br/>
@@ -387,13 +399,13 @@ by abstracting from the technical details about (websocket) connections.
  
 </tbody>	
 </table></center>
-
+<!--
 <h3>Clients written in Java </h3>
 <center><table style="width:95%">
 <tbody>	
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/ClientUsingPost.java" target="code">ClientUsingPost.java</a>
 </td>
 <td>The client <i>walks along the boundary</i> of the room. 
@@ -440,7 +452,7 @@ The client interacts with the WEnv via <em>web-scokets</em>, by using the
 
  
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/WEnvHTTPSupport.kt" target="code">
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/WEnvHTTPSupport.kt" target="code">
 WEnvHTTPSupport.kt</a>
 <br/><br/><m>
 <a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/UseWEnvHTTPSupport.kt" target="code">
@@ -474,7 +486,7 @@ Using the
 </tr>
 
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/virtualrobotclient/ClientWebsockJavax.kt" target="code">
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/virtualrobotclient/ClientWebsockJavax.kt" target="code">
 ClientWebsockJavax.kt</a>
 <br/> 
 <m>It is the Kotlin version of 
@@ -488,7 +500,7 @@ The client interacts with the WEnv via <em>web-scokets</em>, by using the
 </tr>
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/WEnvConnSupportNoChannel.kt" target="code">
 WEnvConnSupportNoChannel.kt</a>
 </td>
@@ -509,7 +521,7 @@ Using the
 </tr>
 
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/WEnvConnSupport.kt" target="code">
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/WEnvConnSupport.kt" target="code">
 WEnvConnSupport.kt</a>
 <br/><br/><m>
 <a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/UseWEnvConnSupport.kt" target="code">
@@ -548,7 +560,7 @@ Using the
 <tbody>	
 
 <tr>
-<td style="width:45%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTry.kt" target="code">
+<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTry.kt" target="code">
 robotActorTry.kt</a>
 
 <br/><br/>
@@ -575,7 +587,7 @@ WEnvConnSupportNoChannel.kt</a>.
 Its behavior can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>
 where each <bc>state</bc> is mapped into a <bc>function</bc> whose body specifies the <bc>actions</bc> to be executed in that state
 :<br/><br/>
-<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="45%"  ></center>
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="50%"  ></center>
 
 </td>
 </tr>
@@ -618,7 +630,7 @@ msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 We distinguish among different application-message types:
 <pre>enum class AppMsgType{ event, dispatch, request, reply, invitation }</pre>
 
-<center><img src="./img/msgTypes.png" alt="msgTypes" width="45%"  ></center>
+<center><img src="./img/msgTypes.png" alt="msgTypes" width="50%"  ></center>
 
 
 </td>
@@ -633,7 +645,7 @@ We distinguish among different application-message types:
 <tbody>	
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/fsm/WalkerHttpCaller.kt" target="code">WalkerHttpCaller.kt</a> 
 </td>
 <td>
@@ -658,7 +670,7 @@ If the robot starts at its HOME cell <tt>(0,0)</tt>, the result could be the map
 </tr>
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/fsm/walker.kt" target="code">walker.kt</a> 
 </td>
 
@@ -680,7 +692,7 @@ each step will cover a distance equal to the length of the robot.
 
 
 <tr>
-<td style="width:45%">
+<td style="width:50%">
 <a href="../../it.unibo.virtualrobotclient/app/src/main/kotlin/it/unibo/fsm/stepper.kt" target="code">stepper.kt</a> 
 </td>
 <td>
@@ -697,7 +709,7 @@ each step will cover a distance equal to the length of the robot.
 <table style="width:98%">
 <tbody>	
 <tr>
-<td style="width:45%" >
+<td style="width:50%" >
  
 
 </td>
