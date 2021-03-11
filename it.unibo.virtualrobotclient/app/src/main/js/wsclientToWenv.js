@@ -7,8 +7,6 @@ wsclientToWenv.js
 ===============================================================
 */
 const WebSocketClient  = require('websocket').client;
-const walkLogic        = require('./wsclientBoundaryLogic');
-const moveRobot        = require('./wsclientBoundaryLogic').cmdRobot;
 
 var client      = new WebSocketClient();
 var conn8091    = null
@@ -26,7 +24,7 @@ function doJob(){
         doMove( "moveBackward", 800 );
         console.log("now working as an observer  ... " );
         //otherwise ...
-        conn8091.close()
+        //conn8091.close()
 	 }, 800 )
 }
 
@@ -39,8 +37,7 @@ function elabMoveResponse( crilJsonMsg  ){
         }
         if(crilJsonMsg.endmove){
             //crilMsg: {"endmove":"...","move":"..."}
-            if( jobCounter++ < 1) doJob()
-            //walkLogic.walkBoundary(crilJsonMsg, conn8091) //code that works also within a HTML page
+            //if( jobCounter++ < 1) doJob()
         }
 }
 
@@ -51,7 +48,7 @@ function elabMoveResponse( crilJsonMsg  ){
     client.on('connect', function(connection) {
         console.log('WebSocket Client Connected')
         conn8091 = connection
-        moveRobot( "moveForward", 400, connection )
+        doJob()
 
         connection.on('error', function(error) {
             console.log("Connection Error: " + error.toString());

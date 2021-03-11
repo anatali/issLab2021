@@ -274,8 +274,8 @@ Examples of clients are reported in project <a href="../../it.unibo.virtualrobot
 
 <h3>Clients written in Node.js </h3>
 
-Each of the following programs (prog.js) can be executed by writing:  
-<pre>node prog</pre>
+Each of the following programs (<ks>prog.js</ks>) can be executed by writing:  
+<pre>node <ks>prog</ks></pre>
 <hr/>
 
 <center><table style="width:95%">
@@ -344,19 +344,19 @@ by a callback related to <ks>connection.on('message', function(msg){ ... })</ks>
 
 <tr>
 <td style="width:50%">
-<a href="../../it.unibo.virtualrobotclient/app/src/main/js/clientToWenvWebsocket.js" target="code">clientToWenvWebsocket.js</a>
-
+<a href="../../it.unibo.virtualrobotclient/app/src/main/js/wsclientBoundaryToWenv.js" target="code">wsclientBoundaryToWenv.js</a>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>The client interacts with the WEnv via <em>web-scokets</em>, by using the  
+<a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
 </td>
 <td> 
-The client first <i>moves forward and backward</i>. Afterwards, it works as an <em>observer</em> that:
-<ul>
-<li>show information emitted by some sonar</li>
-<li>rings a bell if the virtual robot collides with some virtual obstacle </li>
-</ul>
-The client interacts with the WEnv via <em>web-scokets</em>, by using the  
-<a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
-<hr/>
-Key point: 
+ <div class="remark">
+<k>Key point</k>: <i>Example of Node/Javascript programming</i><br/>
+<m>sequence of asynchronous commands sent with <ks>setTimeout</ks> and input messages handled
+by a callback related to <ks>connection.on('message', function(msg){ ... })</ks> 
+</m>
+</div>
 </td>
 </tr>
 

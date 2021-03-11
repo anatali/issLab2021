@@ -20,9 +20,6 @@ var connection = null
         if (connection) { connection.send( moveStr ) }
     }
 
-
-
-
 function elabMsg( msg   ){
 console.log("clientToWenvWebsocket  | elabMsg msg:"  )
 console.log( msg)
@@ -88,12 +85,6 @@ function doJob(connection){
     client.on('connectFailed', function(error) {
          console.log('Connect Error: ' + error.toString());
     });
-
-
-
-
-
-
 
 client.connect('ws://localhost:8091', ''); //'echo-protocol'
 
