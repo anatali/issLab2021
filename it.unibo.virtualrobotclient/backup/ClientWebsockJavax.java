@@ -8,7 +8,6 @@ package it.unibo.wenv;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;

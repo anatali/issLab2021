@@ -53,36 +53,19 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-//JSON
-
-    // https://mvnrepository.com/artifact/org.json/json
-    implementation("org.json:json:20201115" )
-
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    //implementation("com.fasterxml.jackson.core:jackson-core:2.12.1")
-
-    // https://mvnrepository.com/artifact/javax.json/javax.json-api
-    //implementation("javax.json:javax.json-api:1.1.4")
-    //javax.json-api only contains the API (interfaces) and no implementation ==>
-
-    // https://mvnrepository.com/artifact/org.glassfish/javax.json
-    //implementation("org.glassfish:javax.json:1.1.4" )
-
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    //implementation("com.google.code.gson:gson:2.8.6")
-
-    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
-    implementation("com.googlecode.json-simple:json-simple:1.1.1")
-
 //HTTP
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
+//JSON
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation("org.json:json:20201115" )
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation("com.googlecode.json-simple:json-simple:1.1.1")
 //SOCKET.IO
     implementation("com.github.nkzawa:socket.io-client:0.6.0")
 // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
     implementation("javax.websocket:javax.websocket-api:1.1")   //javax.websocket api is only the specification
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9")
-    //implementation ("io.socket:socket.io-client:2.0.0")
 }
 
 /*

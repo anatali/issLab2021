@@ -401,49 +401,60 @@ by abstracting from the technical details about (websocket) connections.
  -->
 </tbody>	
 </table></center>
-<!--
+
 <h3>Clients written in Java </h3>
 <center><table style="width:95%">
 <tbody>	
 
 <tr>
 <td style="width:50%">
-<a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/ClientUsingPost.java" target="code">ClientUsingPost.java</a>
-</td>
-<td>The client <i>walks along the boundary</i> of the room. 
-<br/><br/>
+<a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPost.java" target="code">ClientBoundaryUsingPost.java</a>
+<hr/>
+<m>
+The client <i>walks along the boundary</i> of the room. 
+<br/> 
 It exploits the library 
 <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
 <a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">HttpClient - Tutorial</a>)
 to implement <em> HTTP</em>  requests.
-<br/><br/>
+<br/> 
 The handling of <em>JSON</em> answers is done using  the library 
 <a href="https://javaee.github.io/javaee-spec/javadocs/javax/json/stream/JsonParser.html" target="web">javax.json.stream.JsonParser</a>
-or the library  
-
-
+or the library 
 <a href="https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple" target="web">org.json.simple.parser</a>
 (see also <a href="https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm" target="web">JSON.simple - Quick Guide</a>)  
 <a href="https://mvnrepository.com/artifact/org.json/json/20201115" target="web">org.json</a> 
 (see also <a href="https://www.baeldung.com/java-org-json" target="web">Introduction to JSON-Java</a>)
 
-
-
+</m>
+</td>
+<td>
+ <div class="remark">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i> </i>
+</div>
 </td>
 </tr>
 
 <tr>
-<td><a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a></td>
-<td>The client  <i>walks along the boundary</i> of the room.
+<td><a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/ClientBoundaryUsingWebsock.java" target="code">ClientBoundaryUsingWebsock.java</a>
+<hr/>
+The client  <i>walks along the boundary</i> of the room.
+
 <br/><br/>
 The client interacts with the WEnv via <em>web-scokets</em>, by using the  
-<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library . <br/> 
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library .
+</td>
+<td> <div class="remark">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i> </i>
+</div>
 </td>
 </tr>
  
 </tbody>	
 </table></center>
 
+
+<!--
 <h3>Clients written in Kotlin </h3>
 <center><table style="width:95%">
 <tbody>	
