@@ -1,7 +1,7 @@
 /*
 ===============================================================
 wsclientBoundaryLogic.js
-used also in a webpage
+used also in a webpage (see wsclientToWenv.html)
 ===============================================================
 */
 var  numOfSteps = 1
@@ -17,16 +17,6 @@ var isInPage    = ( typeof location  !=  'undefined' )
 function walkBoundary( crilJsonMsg, connection ){
     console.log("wsclientBoundaryLogic | walkBoundary numOfSteps=" + numOfSteps + " p=" + moves)
     console.log( crilJsonMsg  )
-    /*
-        if(crilJsonMsg.collision){
-            console.log("Received: collision=" + crilJsonMsg.collision)
-            return "collision"
-        }
-        if(crilJsonMsg.sonarName){
-            console.log('\u0007');  //RING THE BELL
-            console.log("sonar=" + crilJsonMsg.sonarName + " distance=" + crilJsonMsg.distance)
-            return "sonar: " + crilJsonMsg.distance
-        }*/
     //handle endmove => do boundary walk
     console.log( crilJsonMsg.move  )
     if( crilJsonMsg.move == "turnLeft"){

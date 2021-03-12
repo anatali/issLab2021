@@ -1,7 +1,7 @@
 /*
 ===============================================================
 wsclientBoundaryToWenv.js
-    moves along the room boundary
+    moves along the room boundary using websocket
 ===============================================================
 */
 const WebSocketClient  = require('websocket').client;

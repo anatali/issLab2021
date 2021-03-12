@@ -270,7 +270,7 @@ function myFunction() {
 
 <h2>USING THE VIRTUAL ROBOT</h2>
 
-Examples of clients are reported in project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>
+Examples of clients are reported in project <a href="../" target="code">it.unibo.virtualrobotclient</a>
 
 <h3>Clients written in Node.js </h3>
 
@@ -282,7 +282,7 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 <tbody>	
 
 <tr>
-<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
+<td style="width:50%"><a href="../app/src/main/js/http/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
 <hr/>
 <m>The client  <i>walks along the boundary</i> of the room.
 <br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
@@ -292,7 +292,7 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 </td>
 <td>
 <div class="remark">
-<k>Key point</k>: <i>functional style based on recursive callback functions</i>
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i>functional style based on recursive callback functions</i>
 </div>
 
 </td>
@@ -300,7 +300,7 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 
 
 <tr>
-<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/httpClientToWenv.js" target="code">httpClientToWenv.js</a>
+<td style="width:50%"><a href="../app/src/main/js/http/httpClientToWenv.js" target="code">httpClientToWenv.js</a>
 
 <hr/>
 <m>The client  <i>walks along the boundary</i> of the room.
@@ -311,14 +311,15 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 </td>
 <td>
 <div class="remark">
-<k>Key point</k>: <i>use of state variables and an (user-defined) <ks>elabMoveResponse</ks> operation</i>
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and 
+<i>use of state variables and an (user-defined) <ks>elabMoveResponse</ks> operation that embeds the business logic</i>
 </div>
 </td>
 </tr>
 
 <tr>
 <td style="width:50%">
-<a href="../../it.unibo.virtualrobotclient/app/src/main/js/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
+<a href="../app/src/main/js/wsclient/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
 <hr/>
 <m>The client first <i>moves forward and backward</i>. Afterwards, it works as an <em>observer</em> that:
 <ul>
@@ -331,7 +332,7 @@ The client interacts with the WEnv via <em>web-scokets</em>, by using the
 </td>
 <td> 
 <div class="remark">
-<k>Key point</k>: <i>Example of Node/Javascript programming</i><br/>
+<k>Key point</k>: <tt>Asynchronous interaction.</tt> <i>Example of Node/Javascript programming</i><br/>
 <m>sequence of asynchronous commands sent with <ks>setTimeout</ks> and input messages handled
 by a callback related to <ks>connection.on('message', function(msg){ ... })</ks> 
 </m>
@@ -344,27 +345,28 @@ by a callback related to <ks>connection.on('message', function(msg){ ... })</ks>
 
 <tr>
 <td style="width:50%">
-<a href="../../it.unibo.virtualrobotclient/app/src/main/js/wsclientBoundaryToWenv.js" target="code">wsclientBoundaryToWenv.js</a>
+<a href="../app/src/main/js/wsclient/wsclientBoundaryToWenv.js" target="code">wsclientBoundaryToWenv.js</a>
 <hr/>
-<m>The client  <i>walks along the boundary</i> of the room.
-<br/>The client interacts with the WEnv via <em>web-scokets</em>, by using the  
+<m>The client  <i>walks along the boundary</i> of the room. Afterwards, it closes the connection with <tt>WEnv</tt>.
+<br/>The client interacts with the <tt>WEnv</tt> via <em>web-scokets</em>, by using the  
 <a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
 </td>
 <td> 
  <div class="remark">
-<k>Key point</k>: <i>Modular Node program that separates the business logic from the socket level </i><br/>
-<m>The business logic is defined in the operation  <ks>walkBoundary</ks> of the module <ks>wsclientBoundaryLogic</ks>
-that is used in the 
+<k>Key point</k>: <tt>Asynchronous interaction.</tt> 
+<i>Modular Node program that separates the business logic from the low-level ws-socket interaction.</i><br/>
+<m>The business logic is defined in the operation  <ks>walkBoundary</ks> of the module 
+<a href="../app/src/main/js/wsclient/wsclientBoundaryLogic.js" target="code"><ks>wsclientBoundaryLogic.js</ks></a>.<br/>
+This module is used also in the <tt>HTML</tt> page 
+<a href="../app/src/main/js/wsclient/wsclientToWenv.html" target="webcode"><ks>wsclientToWenv.html</ks></a>
 </m>
 </div>
 </td>
 </tr>
 
-
-
-
+<!--
 <tr>
-<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/boundaryReactiveWebsocket.js" target="code">boundaryReactiveWebsocket.js</a></td>
+<td style="width:50%"><a href="../app/src/main/js/boundaryReactiveWebsocket.js" target="code">boundaryReactiveWebsocket.js</a></td>
 <td>
 The client  <i>walks along the boundary</i> of the room in a event-driven way
 <br/><br/>
@@ -396,7 +398,7 @@ by abstracting from the technical details about (websocket) connections.
   <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket" target="web">WebSocket</a> 
 </td>
 </tr>
- 
+ -->
 </tbody>	
 </table></center>
 <!--
