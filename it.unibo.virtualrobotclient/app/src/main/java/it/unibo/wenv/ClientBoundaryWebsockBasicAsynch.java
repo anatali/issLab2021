@@ -10,21 +10,23 @@ and handle the information sent by WEnv over the cmdSocket-8091
 */
 package it.unibo.wenv;
 import it.unibo.annotations.IssProtocolSpec;
+import it.unibo.interaction.IssObserver;
 import it.unibo.interaction.IssOperations;
-import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.IssCommsSupportFactory;
-import org.json.JSONObject;
 
 @IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )
 public class ClientBoundaryWebsockBasicAsynch {
     private IssOperations support;
-
+    private IssObserver   controller;
     //Factory method
-    public static ClientBoundaryWebsockBasicAsynch create(){
+
+    public static ClientBoundaryWebsockBasicAsynch createAndRun(){
         ClientBoundaryWebsockBasicAsynch obj = new ClientBoundaryWebsockBasicAsynch();
         IssOperations support                = new IssCommsSupportFactory().create( obj  );
         obj.setCommSupport(support);
-        support.registerObserver( new RobotObserver() );    //!!!!
+        //support.registerObserver( new RobotObserver() );    //!!!!
+        obj.controller = new RobotControllerBoundary(support);
+        support.registerObserver( obj.controller );
         return obj;
     }
 
@@ -32,38 +34,14 @@ public class ClientBoundaryWebsockBasicAsynch {
         this.support = support;
     }
 
-    protected void doRobotAsynchMove(String jsonMoveStr) {
-        //"{\"robotmove\":\"...\", \"time\": ...}";
-        JSONObject jsonObj = new JSONObject(jsonMoveStr);
-        int time = Integer.parseInt( jsonObj.get("time").toString() );
-        support.forward( jsonMoveStr );
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-        //We not not know the answer
-    }
-
-    public String boundary( ) {
-        return doBoundary(1,"",support);
-    }
-
-    private String doBoundary(int stepNum, String journey, IssOperations rs) {
-        if (stepNum > 4) {
-            return journey;
-        }
-        String answer = rs.requestSynch( MsgRobotUtil.forwardMsg );
-        while( answer.equals("true") ){
-            journey = journey + "w";
-            answer = rs.requestSynch( MsgRobotUtil.forwardMsg );
-        }
-        //collision
-        rs.requestSynch(MsgRobotUtil.turnLeftMsg);
-        return doBoundary(stepNum + 1, journey + "l", rs);
-    }
-
-
     public static void main(String args[]){
-        ClientBoundaryWebsockBasicAsynch appl = ClientBoundaryWebsockBasicAsynch.create();
-        //String trip = appl.boundary();
-        //System.out.println("trip="+trip);
-        appl.doRobotAsynchMove( MsgRobotUtil.forwardMsg );
+        ClientBoundaryWebsockBasicAsynch appl = ClientBoundaryWebsockBasicAsynch.createAndRun();
+        try {
+            RobotControllerBoundary ctrl = (RobotControllerBoundary) appl.controller;
+            ctrl.start();
+            Thread.sleep(30000);
+        } catch ( Exception e) {
+            e.printStackTrace();
+        }
     }
 }

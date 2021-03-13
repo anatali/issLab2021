@@ -1,3 +1,9 @@
+/*
+===============================================================
+RobotSupport.java
+Utility class
+===============================================================
+*/
 package it.unibo.supports;
 
 import it.unibo.interaction.IssOperations;

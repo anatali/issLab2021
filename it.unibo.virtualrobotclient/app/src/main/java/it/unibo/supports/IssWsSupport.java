@@ -69,22 +69,25 @@ public class IssWsSupport implements IssOperations {
              //{"collision":"true ","move":"..."} or {"sonarName":"sonar2","distance":19,"axis":"x"}
             System.out.println("        IssWsSupport | onMessage:" + message);
             JSONObject jsonObj = new JSONObject(message) ;
-            if (jsonObj.get("endmove") != null) {
+            if ( jsonObj.has("endmove")  ) {
                 //HANDLE THE ANSWER
                 String endmove = jsonObj.getString("endmove");
                 String  move   = jsonObj.getString("move");
                 if( ! endmove.equals("notallowed") )  answerSupport.put(endmove, move);
                 //System.out.println("        IssWsSupport | onMessage endmove=" + endmove);
-            } else if (jsonObj.get("collision") != null) {
+            } else if ( jsonObj.has("collision")  ) {
                 boolean collision = jsonObj.getBoolean("collision");
                 //System.out.println("        IssWsSupport | onMessage collision=" + collision );
-            } else if (jsonObj.get("sonarName") != null) {
+            } else if (jsonObj.has("sonarName") ) {
                 String sonarName = jsonObj.getString( "sonarName");
-                String distance  = jsonObj.getString("distance");
+                String distance  = jsonObj.get("distance").toString();
                 System.out.println("        IssWsSupport | onMessage sonarName=" + sonarName + " distance=" + distance);
             }
             updateObservers( jsonObj );
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("        IssWsSupport | onMessage ERROR " + e.getMessage());
+
+        }
     }
 
     @OnError
@@ -93,7 +96,11 @@ public class IssWsSupport implements IssOperations {
     }
 
     protected void updateObservers(JSONObject jsonOnj ){
-        observers.forEach( v -> v.handleInfo(jsonOnj) );
+        //System.out.println("IssWsSupport | updateObservers " + observers.size() );
+        observers.forEach( v -> {
+            //System.out.println("IssWsSupport | updates " + v );
+            v.handleInfo(jsonOnj);
+        } );
     }
     
 //------------------------------ IssOperations ----------------------------------

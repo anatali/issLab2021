@@ -312,7 +312,7 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 <td>
 <div class="remark">
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and 
-<i>use of state variables and an (user-defined) <ks>elabMoveResponse</ks> operation that embeds the business logic</i>
+<i>use of state variables and an (user-defined) <ks>doBoundary</ks> operation that embeds the business logic</i>
 </div>
 </td>
 </tr>
@@ -430,22 +430,72 @@ or the library
 </td>
 <td>
  <div class="remark">
-<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i> </i>
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
+that implements the business logic in a functional style based on recursive functions. 
 </div>
 </td>
 </tr>
 
 <tr>
-<td><a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/ClientBoundaryUsingWebsock.java" target="code">ClientBoundaryUsingWebsock.java</a>
+<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicSynch.java" target="code">ClientBoundaryWebsockBasicSynch.java</a><br/>
 <hr/>
-The client  <i>walks along the boundary</i> of the room.
-
-<br/><br/>
-The client interacts with the WEnv via <em>web-scokets</em>, by using the  
-<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library .
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>
+It exploits the  
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
+by means of the
+<a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
+configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a> 
+</m>
 </td>
 <td> <div class="remark">
-<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i> </i>
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
+managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
+<pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt>. The business logic is defined by a <ks>doBoundary</ks> operation.<br/>
+</div>
+</td>
+</tr>
+
+<tr>
+<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicAsynch.java" target="code">ClientBoundaryWebsockBasicAsynch.java</a><br/>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>
+It exploits the  
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
+by means of the
+<a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
+configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a> 
+
+</m>
+</td>
+<td> <div class="remark">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
+managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
+<pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
+<k>Key point</k>: <tt>Asynchronous REQUEST-RESPONSE</tt>. The business logic is defined by a <ks>doRobotAsynchMove</ks> operation.<br/>
+ 
+
+</div>
+</td>
+</tr>
+
+
+<tr>
+<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingWebsock.java" target="code">ClientBoundaryUsingWebsock.java</a>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>
+The client interacts with the WEnv via <em>web-scokets</em>, by using the  
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library.
+</m>
+</td>
+<td> <div class="remark">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
+that implements the business logic within
+a class <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport.java</a>.
+<i> </i>
 </div>
 </td>
 </tr>

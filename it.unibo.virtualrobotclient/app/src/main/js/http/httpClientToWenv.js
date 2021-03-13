@@ -9,7 +9,7 @@ const URL      = 'http://localhost:8090/api/move' ;
 var numOfSteps = 1
 var moves      = "w"
 
-function elabMoveResponse( crilMsg  ){
+function doBoundary( crilMsg  ){
     //console.log("axiosClientToWenv | elabMoveResponse numOfSteps=" + numOfSteps)
     console.log( crilMsg )
     if( crilMsg.move=="turnLeft"){
@@ -21,8 +21,8 @@ function elabMoveResponse( crilMsg  ){
             console.log("Buoundary explored moves=" + moves  )
         }
        return
-    } //answer to moveForward
-
+    }
+    //answer to moveForward
     if( crilMsg.endmove == 'true' ){
         moves = moves + "w"
         doHttpPost("moveForward")
@@ -49,7 +49,7 @@ function doHttpPost( move )  {
             timeout: 900,
             headers: { 'Content-Type': 'application/json' }
     }).then(response => {   //continues when the action has been done
-        elabMoveResponse(response.data)
+        doBoundary(response.data)
     })
     .catch(error => {
     console.log(error)

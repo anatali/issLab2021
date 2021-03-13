@@ -9,8 +9,8 @@ public class MsgRobotUtil {
     public static final int htime    = 100;
 
     //cril
-    public static final String forwardMsg   = "{\"robotmove\":\"moveForward\", \"time\": 600}";
-    public static final String backwardMsg  = "{\"robotmove\":\"moveBackward\", \"time\": 600}";
+    public static final String forwardMsg   = "{\"robotmove\":\"moveForward\", \"time\": 400}";
+    public static final String backwardMsg  = "{\"robotmove\":\"moveBackward\", \"time\": 400}";
     public static final String turnLeftMsg  = "{\"robotmove\":\"turnLeft\", \"time\": 300}";
     public static final String turnRightMsg = "{\"robotmove\":\"turnRight\", \"time\": 300}";
     public static final String haltMsg      = "{\"robotmove\":\"alarm\", \"time\": 100}";
