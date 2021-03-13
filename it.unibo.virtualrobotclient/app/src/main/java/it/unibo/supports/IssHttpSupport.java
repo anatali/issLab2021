@@ -8,7 +8,6 @@
  */
 package it.unibo.supports;
 
-import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssObserver;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;

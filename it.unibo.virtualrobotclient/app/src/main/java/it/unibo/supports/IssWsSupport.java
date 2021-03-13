@@ -6,9 +6,7 @@
  */
 package it.unibo.supports;
 
-import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssObserver;
-import it.unibo.interaction.IssOperations;
 import org.json.JSONObject;
 
 import javax.websocket.*;

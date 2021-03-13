@@ -6,7 +6,7 @@ implements the business logic by handling messages received on the cmdsocket-809
 ===============================================================
 */
 package it.unibo.wenv;
-import it.unibo.interaction.IssCommSupport;
+import it.unibo.supports.IssCommSupport;
 import it.unibo.interaction.IssObserver;
 import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.RobotSupport;

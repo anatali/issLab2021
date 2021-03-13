@@ -11,7 +11,6 @@ package it.unibo.supports;
 import it.unibo.annotations.*;
 import it.unibo.interaction.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class IssArilRobotSupport implements IssCommSupport {

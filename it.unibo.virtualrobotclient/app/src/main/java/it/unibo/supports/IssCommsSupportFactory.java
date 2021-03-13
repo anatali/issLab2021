@@ -8,10 +8,7 @@
  */
 package it.unibo.supports;
 import it.unibo.annotations.IssAnnotationUtil;
-import it.unibo.annotations.IssProtocolSpec;
 import it.unibo.annotations.ProtocolInfo;
-import it.unibo.interaction.IssCommSupport;
-import it.unibo.interaction.IssOperations;
 
 public class IssCommsSupportFactory {
     //Factory Method

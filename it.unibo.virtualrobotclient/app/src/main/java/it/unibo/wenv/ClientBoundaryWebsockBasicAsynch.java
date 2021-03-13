@@ -10,7 +10,7 @@ and handle the information sent by WEnv over the cmdSocket-8091
 */
 package it.unibo.wenv;
 import it.unibo.annotations.IssProtocolSpec;
-import it.unibo.interaction.IssCommSupport;
+import it.unibo.supports.IssCommSupport;
 import it.unibo.interaction.IssObserver;
 import it.unibo.supports.IssCommsSupportFactory;
 

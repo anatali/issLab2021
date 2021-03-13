@@ -6,7 +6,6 @@ Utility class
 */
 package it.unibo.supports;
 
-import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssOperations;
 import it.unibo.interaction.MsgRobotUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;

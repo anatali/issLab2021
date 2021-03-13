@@ -467,6 +467,25 @@ and injected by the user-defined constructor.
 </tr>
 
 <tr>
+<td>
+<pre>
+public interface <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a>  <k>extends <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="code">IssOperations</a></k> {
+    void registerObserver( IssObserver obs );
+    void removeObserver( IssObserver obs );
+    void close();
+}
+</pre>
+</td>
+<td>
+<pre>
+public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a> {
+    <kc>//Factory Method</kc>
+    public static IssCommSupport create(Object obj ){ ... }
+</pre>
+</td>
+</tr>
+
+<tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicAsynch.java" target="code">ClientBoundaryWebsockBasicAsynch.java</a><br/>
 <hr/>
 <m>The client  <i>walks along the boundary</i> of the room.
@@ -476,7 +495,6 @@ It exploits the
 by means of the
 <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
 configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a> 
-
 </m>
 </td>
 <td> <div class="remark">
