@@ -6,6 +6,7 @@ Utility class
 */
 package it.unibo.supports;
 
+import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssOperations;
 import it.unibo.interaction.MsgRobotUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,7 +21,19 @@ import org.json.JSONObject;
 import java.net.URI;
 
 public class RobotSupport {
+    private IssCommSupport rs;
 
+    public RobotSupport(IssCommSupport rs){
+        this.rs = rs;
+    }
+
+    public void request(String jsonMoveStr ) {
+        doRobotAsynchMove(jsonMoveStr,rs);
+    }
+
+    public void close(){
+        rs.close();
+    }
     public static String doBoundary(int stepNum, String journey, IssOperations rs) {
         if (stepNum > 4) {
             return journey;
@@ -33,6 +46,17 @@ public class RobotSupport {
         //collision
         rs.requestSynch(MsgRobotUtil.lMsg);
         return doBoundary(stepNum + 1, journey + "l", rs);
+    }
+
+    //Utility
+    public static void doRobotAsynchMove(String jsonMoveStr, IssOperations rs) {
+        System.out.println(jsonMoveStr);
+        //"{\"robotmove\":\"...\", \"time\": ...}";
+        JSONObject jsonObj = new JSONObject(jsonMoveStr);
+        int time = Integer.parseInt( jsonObj.get("time").toString() );
+        rs.forward( jsonMoveStr );
+        try { Thread.sleep(time+100); } catch (InterruptedException e) { e.printStackTrace(); }
+        //The answer is handled by the controllers
     }
 
     public static boolean sendHttpCmd(String URL, String move, int time)  {

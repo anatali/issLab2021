@@ -8,8 +8,8 @@
  */
 package it.unibo.supports;
 
+import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssObserver;
-import it.unibo.interaction.IssOperations;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -18,17 +18,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-
 import java.net.URI;
 
-public class IssHttpSupport implements IssOperations {
+public class IssHttpSupport implements IssCommSupport {
     private CloseableHttpClient httpclient;
     private  String URL  = "unknown";
 
     public IssHttpSupport(String url ){
         httpclient = HttpClients.createDefault();
         URL        = url;
-        System.out.println( "        IssHttpSupport | created IssHttpSupport url=" + url  );
+        System.out.println("        IssHttpSupport | created IssHttpSupport url=" + url  );
+        //System.out.println("        IssHttpSupport |  n_Threads=" + Thread.activeCount());
     }
 
     @Override
@@ -62,7 +62,14 @@ public class IssHttpSupport implements IssOperations {
     public void removeObserver( IssObserver obs ){
         //TODO
     }
-
+    @Override
+    public void close(){
+        try {
+            httpclient.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
  //===================================================================
 
     protected String performrequest( String msg )  {

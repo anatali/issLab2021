@@ -1,6 +1,13 @@
 /*
 ===============================================================
 ClientBoundaryUsingPost.java
+USES IssProtoclConfig.txt and IssRobotConfig.txt
+
+Synchronous REQUEST-RESPONSE used in a doBoundary operation
+that implements the business logic in a functional style
+based on recursive functions.
+
+The computation works in 1 thread
 ===============================================================
 */
 package it.unibo.wenv;
@@ -33,13 +40,11 @@ public class ClientBoundaryUsingPost {
 MAIN
  */
 	public static void main(String[] args)   {
+		System.out.println("ClientBoundaryUsingPost | main start n_Threads=" + Thread.activeCount());
 		Object appl = RobotApplicationStarter.createInstance(ClientBoundaryUsingPost.class);
-
-		if( appl != null ) {
-			String trip = ((ClientBoundaryUsingPost)appl).doBoundary(1,"");
-			System.out.println("trip="+trip);
-		}
-
+		System.out.println("ClientBoundaryUsingPost | appl  n_Threads=" + Thread.activeCount());
+		String trip = ((ClientBoundaryUsingPost)appl).doBoundary(1,"");
+		System.out.println("trip="+trip);
 	}
 	
  }

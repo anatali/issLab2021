@@ -430,8 +430,14 @@ or the library
 </td>
 <td>
  <div class="remark">
+ <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
+<pre>@ArilRobotSpec   <kc>//configFiles: IssProtoclConfig.txt - IssRobotConfig.txt</kc></pre></m>
+
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
 that implements the business logic in a functional style based on recursive functions. 
+<hr/>
+<m>Requires just 1 Thread.</m>
 </div>
 </td>
 </tr>
@@ -450,9 +456,12 @@ configuration file <a href="../WebsocketBasicConfig.txt" target="code">Websocket
 </td>
 <td> <div class="remark">
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
-managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
+created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a> 
+and injected by the user-defined constructor.
 <pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt>. The business logic is defined by a <ks>doBoundary</ks> operation.<br/>
+<hr/>
+<m>Requires 4 Thread.</m>
 </div>
 </td>
 </tr>
@@ -472,20 +481,21 @@ configuration file <a href="../WebsocketBasicConfig.txt" target="code">Websocket
 </td>
 <td> <div class="remark">
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
-managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
+created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a> 
+and injected by the user-defined constructor.
 <pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
-<k>Key point</k>: <tt>Asynchronous REQUEST-RESPONSE</tt>. The business logic is defined by a 
-<a href="../app/src/main/java/it/unibo/wenv/RobotObserver.java" target="code">RobotObserver</a>
 
-
-<ks>doRobotAsynchMove</ks> operation.<br/>
- 
-
+<k>Key point</k>: <tt>Asynchronous REQUEST</tt>. The business logic is defined by a 
+<a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code">RobotControllerBoundary</a> working
+as an <ks>observer</ks> of the <tt>cmdsocket-8091</tt>.
+<m>The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
+<a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>,
+properly wrapped in a  high-level <ks>request</ks> operation. 
 </div>
 </td>
 </tr>
 
-
+<!--
 <tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingWebsock.java" target="code">ClientBoundaryUsingWebsock.java</a>
 <hr/>
@@ -503,7 +513,7 @@ a class <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" targe
 </div>
 </td>
 </tr>
- 
+ -->
 </tbody>	
 </table></center>
 

@@ -10,36 +10,39 @@ and handle the information sent by WEnv over the cmdSocket-8091
 */
 package it.unibo.wenv;
 import it.unibo.annotations.IssProtocolSpec;
+import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssObserver;
-import it.unibo.interaction.IssOperations;
 import it.unibo.supports.IssCommsSupportFactory;
 
 @IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )
 public class ClientBoundaryWebsockBasicAsynch {
-    private IssOperations support;
-    private IssObserver   controller;
-    //Factory method
+    private IssCommSupport support; //The IssCommSupport is required in order to add observers and close it
+    private IssObserver    controller;
 
+    //Factory method
     public static ClientBoundaryWebsockBasicAsynch createAndRun(){
         ClientBoundaryWebsockBasicAsynch obj = new ClientBoundaryWebsockBasicAsynch();
-        IssOperations support                = new IssCommsSupportFactory().create( obj  );
+        IssCommSupport support                = new IssCommsSupportFactory().create( obj  );
         obj.setCommSupport(support);
-        //support.registerObserver( new RobotObserver() );    //!!!!
         obj.controller = new RobotControllerBoundary(support);
         support.registerObserver( obj.controller );
+        //support.registerObserver( new RobotObserver() );    //ANOTHER OBSERVER
         return obj;
     }
 
-    protected void setCommSupport(IssOperations support){
+    protected void setCommSupport(IssCommSupport support){
         this.support = support;
     }
 
     public static void main(String args[]){
-        ClientBoundaryWebsockBasicAsynch appl = ClientBoundaryWebsockBasicAsynch.createAndRun();
         try {
+            System.out.println("ClientBoundaryWebsockBasicAsynch | main start n_Threads=" + Thread.activeCount());
+            ClientBoundaryWebsockBasicAsynch appl = ClientBoundaryWebsockBasicAsynch.createAndRun();
             RobotControllerBoundary ctrl = (RobotControllerBoundary) appl.controller;
-            ctrl.start();
-            Thread.sleep(30000);
+            System.out.println("ClientBoundaryWebsockBasicSynch | appl n_Threads=" + Thread.activeCount());
+            String trip = ctrl.doBoundary();       //wait until completion
+            System.out.println("ClientBoundaryWebsockBasicAsynch | trip=" + trip  );
+            System.out.println("ClientBoundaryWebsockBasicAsynch | main end n_Threads=" + Thread.activeCount());
         } catch ( Exception e) {
             e.printStackTrace();
         }

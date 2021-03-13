@@ -6,11 +6,13 @@
  */
 package it.unibo.supports;
 
+import it.unibo.interaction.IssCommSupport;
 import it.unibo.interaction.IssObserver;
 import it.unibo.interaction.IssOperations;
 import org.json.JSONObject;
 
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Vector;
@@ -24,7 +26,7 @@ import java.util.Vector;
  ===============================================================
  */
 @ClientEndpoint     //javax.websocket annotation
-public class IssWsSupport implements IssOperations {
+public class IssWsSupport implements IssCommSupport {
     private  String URL            = "unknown";
     private Session userSession    = null;
     private AnswerAvailable answerSupport;
@@ -153,5 +155,14 @@ public class IssWsSupport implements IssOperations {
     @Override
     public void removeObserver( IssObserver obs ){
         observers.remove( obs );
+    }
+
+    @Override
+    public void close(){
+        try {
+            userSession.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

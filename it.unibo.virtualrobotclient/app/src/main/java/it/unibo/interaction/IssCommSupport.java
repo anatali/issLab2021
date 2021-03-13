@@ -13,9 +13,8 @@
  */
 package it.unibo.interaction;
 
-public interface IssOperations {
-    void forward( String msg ) ;  //String related to cril, aril, AppMsg
-    void request( String msg );
-    void reply( String msg );
-    String requestSynch( String msg );
+public interface IssCommSupport extends IssOperations{
+    void registerObserver( IssObserver obs );
+    void removeObserver( IssObserver obs );
+    void close();
 }
