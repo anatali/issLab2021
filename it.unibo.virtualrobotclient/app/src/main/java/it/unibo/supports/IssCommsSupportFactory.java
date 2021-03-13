@@ -12,7 +12,7 @@ import it.unibo.annotations.ProtocolInfo;
 
 public class IssCommsSupportFactory {
     //Factory Method
-    public static IssCommSupport create(Object obj ){
+    public static IssCommSupport create(Object obj ){   //obj must be properly annotated
         ProtocolInfo protocolInfo = IssAnnotationUtil.getProtocol(  obj );
         String protocol     = protocolInfo.getProtocol();
         String url          = protocolInfo.getUrl();

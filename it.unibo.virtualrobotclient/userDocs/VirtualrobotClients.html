@@ -451,7 +451,14 @@ It exploits the
 <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
 by means of the
 <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
-configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a> 
+configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a>.<br/>
+
+The <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a> exploits the
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library
+that works in a 'event-driven' way: the information sent over the websocket 
+is 'injected' into the application by a call to the method annotated with <k>@OnMessage</k>.
+
+
 </m>
 </td>
 <td> <div class="remark">
@@ -459,28 +466,81 @@ configuration file <a href="../WebsocketBasicConfig.txt" target="code">Websocket
 created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a> 
 and injected by the user-defined constructor.
 <pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
-<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt>. The business logic is defined by a <ks>doBoundary</ks> operation.<br/>
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> built by the <ks>requestSynch</ks> operation of the 
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>.<br/>
+<m>The business logic can be defined into the <ks>doBoundary</ks> operation already introduced in the
+<a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPost.java" target="code">ClientBoundaryUsingPost.java</a>.</m>
 <hr/>
-<m>Requires 4 Thread.</m>
+<m>Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
 </div>
 </td>
 </tr>
 
 <tr>
+
 <td>
+<div class="remark">
+The usage of a websocket library <ks>breaks</ks> the unique flow of control of the application into several threads.<br/>
+If we want to exploit the asynchronicity of the interaction, the reference design pattern
+is the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer pattern</k></a>.
+</div>
+To facilitate the work of the application designer, we will introduce new resources, including the idea of a <i>support
+for (high-level) communications that provides operation to add/remove observers</i> implementing a proper interface.
+
+<h3>The <a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><ks>IssObserver</ks></a> interface</h3>
+At the moment the interface defines a method <tt>handleInfo</tt> that accepts two type of arguments
 <pre>
-public interface <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a>  <k>extends <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="code">IssOperations</a></k> {
+public interface IssObserver {
+    public void handleInfo(String info);
+    public void handleInfo(JSONObject info);
+}
+</pre>
+
+Our <k>observable supports</k> must implement an interface that includes also our high-level communication operations:
+<h3>The <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a> interface</h3>
+<pre>
+public interface <ks>IssCommSupport</ks> <k>extends <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="code"><ks>IssOperations</ks></a></k> {
     void registerObserver( IssObserver obs );
     void removeObserver( IssObserver obs );
     void close();
 }
 </pre>
+
 </td>
 <td>
+<h3>The (new) <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code"><ks>IssWsSupport</ks></a></h3>
+The new version of the <ks>IssWsSupport</ks> must implement alle the operations specified by the interface and by the annotations:
+<pre>
+<k>@ClientEndpoint</k>     <kc>//javax.websocket annotation</kc>
+public class IssWsSupport <k>implements</k> <ks>IssCommSupport</ks> {
+
+   <kc>//Callback for <ks>websockets events</ks></kc>
+   ...
+   <kc>//Implementation of <ks>IssOperations</ks></kc>   
+   ...
+   <kc>//Implementation of <ks>IssCommSupport-specific</ks> operations</kc>   
+}	
+</pre>
+
+<h3>The (new) <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a></h3>
+Since we aim at using the new concept of observable supports for communication, our <tt>IssCommsSupportFactory</tt> must now
+provide factory methods that return an object of type
+ <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a>:
 <pre>
 public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a> {
     <kc>//Factory Method</kc>
-    public static IssCommSupport create(Object obj ){ ... }
+   public static <ks>IssCommSupport</ks> create(Object obj ){ <kc>//obj must be properly annotated</kc>
+		... 
+   }
+	
+   public static <ks>IssCommSupport</ks> create(  String protocol, String url ){
+     switch( protocol ){
+       case "HTTP"  : {  return new IssHttpSupport(  url );  }
+       case "WS"    : {  return new IssWsSupport( url );    }
+       default: return new IssHttpSupport(  url ); <kc>//TODO Exception</kc>		
+     }
+   }
+	
 </pre>
 </td>
 </tr>

@@ -132,7 +132,7 @@ public class IssWsSupport implements IssCommSupport {
             //this.userSession.getAsyncRemote().sendText(message);
             request(msg);
             //WAIT for the answer (reply) received by onMessage
-            //answerSupport.engage();   //OVERCOME: see version 2.0 of virtualrobot
+            //answerSupport.engage();   //OVERCOMED: see version 2.0 of virtualrobot
             return answerSupport.get(); //wait for the answer
         }catch( Exception e){
             System.out.println("        IssWsSupport | request ERROR " + e.getMessage());
@@ -145,6 +145,7 @@ public class IssWsSupport implements IssCommSupport {
         //System.out.println( "         IssWsSupport | WARNING: reply NOT IMPLEMENTED HERE"  );
     }
 
+//------------------------------ IssCommSupport ----------------------------------
     @Override
     public void registerObserver( IssObserver obs ){
         observers.add( obs );
@@ -157,8 +158,7 @@ public class IssWsSupport implements IssCommSupport {
 
     @Override
     public void close(){
-        try {
-            userSession.close();
+        try { userSession.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
