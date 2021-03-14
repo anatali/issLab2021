@@ -38,14 +38,14 @@ RELATED TO PROTOCOLS
             FileInputStream fis = new FileInputStream(configFileName);
             Scanner sc = new Scanner(fis);
             String line = sc.nextLine();
-            System.out.println("IssAnnotationUtil | line=" + line);
+            //System.out.println("IssAnnotationUtil | line=" + line);
             String[] items = line.split(",");
 
             String protocol = IssAnnotationUtil.getProtocolConfigInfo("protocol", items[0]);
             System.out.println("IssAnnotationUtil | protocol=" + protocol);
 
             String url = IssAnnotationUtil.getProtocolConfigInfo("url", items[1]);
-            System.out.println("IssAnnotationUtil | url=" + url);
+            //System.out.println("IssAnnotationUtil | url=" + url);
 
             ProtocolInfo protinfo = new ProtocolInfo(protocol, url);
             return protinfo;

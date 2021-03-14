@@ -10,17 +10,13 @@ import it.unibo.supports.RobotSupport;
 import org.json.JSONObject;
 
 public class RobotObserver implements IssObserver {
-
     @Override
     public void handleInfo(String infoJson) {
         handleInfo( new JSONObject(infoJson) );
-
     }
-
     @Override
     public void handleInfo(JSONObject infoJson) {
         if( infoJson.has("endmove") ) handleEndMove(infoJson);
-
     }
 
     protected void handleEndMove( JSONObject move ){

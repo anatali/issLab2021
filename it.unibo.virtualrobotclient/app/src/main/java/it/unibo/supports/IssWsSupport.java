@@ -47,7 +47,7 @@ public class IssWsSupport implements IssCommSupport {
     public void onOpen(Session userSession) { //, @PathParam("username") String username, EndpointConfig epConfig
         //ClientEndpointConfig clientConfig = (ClientEndpointConfig) epConfig;
         Principal userPrincipal = userSession.getUserPrincipal();
-        System.out.println("        IssWsSupport | onOpen userPrincipal=" + userPrincipal );
+        //System.out.println("        IssWsSupport | onOpen userPrincipal=" + userPrincipal );
         if( userPrincipal != null )  { //there is an authenticated user
             System.out.println("        IssWsSupport | onOpen user=" + userPrincipal.getName());
         }

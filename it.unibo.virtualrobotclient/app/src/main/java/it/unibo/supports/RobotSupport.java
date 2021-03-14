@@ -1,25 +1,20 @@
 /*
 ===============================================================
 RobotSupport.java
-Utility class
+Utility class that should be used by a robot controller
+(e.g. RobotControllerBoundary)
+
+This resource implements asynch IssOperations so to avoid move not allowed
 ===============================================================
 */
 package it.unibo.supports;
 
+import it.unibo.interaction.IssObserver;
 import it.unibo.interaction.IssOperations;
 import it.unibo.interaction.MsgRobotUtil;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.net.URI;
-
-public class RobotSupport {
+public class RobotSupport implements IssCommSupport{
     private IssCommSupport rs;
 
     public RobotSupport(IssCommSupport rs){
@@ -27,12 +22,32 @@ public class RobotSupport {
     }
 
     public void request(String jsonMoveStr ) {
-        doRobotAsynchMove(jsonMoveStr,rs);
+        //if( rs instanceof  IssWsSupport )   doRobotMoveDelay(jsonMoveStr,rs);
+        //else if( rs instanceof  IssHttpSupport ) rs.request(jsonMoveStr);
+        forward( jsonMoveStr );
+    }
+    public void forward(String jsonMoveStr ) {
+        if( rs instanceof  IssWsSupport ) doRobotMoveAndDelay(jsonMoveStr,rs);
+        else if( rs instanceof  IssHttpSupport ) rs.request(jsonMoveStr);
+    }
+    public void reply( String msg ){
+        rs.forward( msg );
+    }
+    public String requestSynch( String msg ){
+        return rs.requestSynch( msg );  //if( rs instanceof  IssWsSupport ) wait the answer
     }
 
-    public void close(){
-        rs.close();
+    //Utility === requestSynch? NO!
+    //Since a controller must have the possibility of capture other 'events'
+    public static void doRobotMoveAndDelay(String jsonMoveStr, IssOperations rs) {
+        System.out.println(jsonMoveStr);
+        //"{\"robotmove\":\"...\", \"time\": ...}";
+        JSONObject jsonObj = new JSONObject(jsonMoveStr);
+        int time = Integer.parseInt( jsonObj.get("time").toString() );
+        rs.forward( jsonMoveStr );  //The answer is handled by the controllers
+        try { Thread.sleep(time+100); } catch (InterruptedException e) { e.printStackTrace(); }
     }
+
     public static String doBoundarySynch(int stepNum, String journey, IssOperations rs) {
         if (stepNum > 4) {
             return journey;
@@ -47,61 +62,15 @@ public class RobotSupport {
         return doBoundarySynch(stepNum + 1, journey + "l", rs);
     }
 
-    //Utility
-    public static void doRobotAsynchMove(String jsonMoveStr, IssOperations rs) {
-        System.out.println(jsonMoveStr);
-        //"{\"robotmove\":\"...\", \"time\": ...}";
-        JSONObject jsonObj = new JSONObject(jsonMoveStr);
-        int time = Integer.parseInt( jsonObj.get("time").toString() );
-        rs.forward( jsonMoveStr );
-        try { Thread.sleep(time+100); } catch (InterruptedException e) { e.printStackTrace(); }
-        //The answer is handled by the controllers
+//---------------------------------------------------------------
+    public void registerObserver( IssObserver obs ){
+        rs.registerObserver( obs );
     }
-
-    public static boolean requestSynch(String URL, String move, int time)  {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try {
-            System.out.println( move + " sendCmd "  );
-            //String json         = "{\"robotmove\":\"" + move + "\"}";
-            String json         = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
-            StringEntity entity = new StringEntity(json);
-            HttpUriRequest httppost = RequestBuilder.post()
-                    .setUri(new URI(URL))
-                    .setHeader("Content-Type", "application/json")
-                    .setHeader("Accept", "application/json")
-                    .setEntity(entity)
-                    .build();
-            CloseableHttpResponse response = httpclient.execute(httppost);
-            //System.out.println( "ClientUsingPost | sendCmd response= " + response );
-            boolean collision = checkCollision(response);
-            //boolean collision = checkCollision_javax(response);
-            return collision;
-        } catch(Exception e){
-            System.out.println("ERROR:" + e.getMessage());
-            return true;
-        }
+    public void removeObserver( IssObserver obs ){
+        rs.removeObserver( obs );
     }
-
-    protected static boolean checkCollision(CloseableHttpResponse response) throws Exception {
-        try{
-            //response.getEntity().getContent() is an InputStream
-            String jsonStr = EntityUtils.toString( response.getEntity() );
-            System.out.println( "ClientUsingPost | checkCollision_simple jsonStr= " +  jsonStr );
-            //jsonStr = {"endmove":true,"move":"moveForward"}
-            //org.json.simple.parser.JSONParser simpleparser = new JSONParser();
-            //org.json.simple.JSONObject jsonObj              = (JSONObject) simpleparser.parse( jsonStr );
-            JSONObject jsonObj = new JSONObject(jsonStr) ;
-            boolean collision = false;
-            if( jsonObj.get("endmove") != null ) {
-                collision = ! jsonObj.get("endmove").toString().equals("true");
-                System.out.println("ClientUsingPost | checkCollision_simple collision=" + collision);
-            }
-            return collision;
-        }catch(Exception e){
-            System.out.println("ClientUsingPost | checkCollision_simple ERROR:" + e.getMessage());
-            throw(e);
-        }
+    public void close(){
+        rs.close();
     }
-
 
 }

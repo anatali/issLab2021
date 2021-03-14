@@ -22,8 +22,8 @@ public class ClientBoundaryWebsockBasicAsynch {
     //Factory method
     public static ClientBoundaryWebsockBasicAsynch createAndRun(){
         ClientBoundaryWebsockBasicAsynch obj = new ClientBoundaryWebsockBasicAsynch();
-        IssCommSupport support                = new IssCommsSupportFactory().create( obj  );
-        obj.setCommSupport(support);
+        IssCommSupport support               = new IssCommsSupportFactory().create( obj  );
+        obj.setCommSupport(support);    //inject
         obj.controller = new RobotControllerBoundary(support);
         support.registerObserver( obj.controller );
         //support.registerObserver( new RobotObserver() );    //ANOTHER OBSERVER

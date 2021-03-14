@@ -21,7 +21,7 @@ private RobotSupport rs ;
     public RobotControllerBoundary(IssCommSupport support){
         rs = new RobotSupport(support);
      }
-
+    //used by the main program
     public synchronized String doBoundary(){
         rs.request( MsgRobotUtil.forwardMsg  );
         while( ! boundaryWalkDone ) {
@@ -53,9 +53,13 @@ private RobotSupport rs ;
         if (stepNum <= 4) {
             if( move.equals("turnLeft") ){
                 journey = journey + "l";
-                if (stepNum == 4) { boundaryWalkDone=true; notify(); return; }
+                if (stepNum == 4) {
+                    boundaryWalkDone=true;
+                    notify(); //to resume the main
+                    return;
+                }
                 stepNum++;
-                rs.request(  MsgRobotUtil.forwardMsg );
+                rs.request( MsgRobotUtil.forwardMsg );
                 return;
             }
             if( move.equals("moveForward") && answer.equals("true") ){
