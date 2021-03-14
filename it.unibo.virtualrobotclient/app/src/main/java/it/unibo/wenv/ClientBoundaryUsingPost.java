@@ -2,6 +2,7 @@
 ===============================================================
 ClientBoundaryUsingPost.java
 USES IssProtoclConfig.txt and IssRobotConfig.txt
+USES the aril robot move language
 
 Synchronous REQUEST-RESPONSE used in a doBoundary operation
 that implements the business logic in a functional style

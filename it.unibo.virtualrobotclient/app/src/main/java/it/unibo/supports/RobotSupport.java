@@ -33,7 +33,7 @@ public class RobotSupport {
     public void close(){
         rs.close();
     }
-    public static String doBoundary(int stepNum, String journey, IssOperations rs) {
+    public static String doBoundarySynch(int stepNum, String journey, IssOperations rs) {
         if (stepNum > 4) {
             return journey;
         }
@@ -44,7 +44,7 @@ public class RobotSupport {
         }
         //collision
         rs.requestSynch(MsgRobotUtil.lMsg);
-        return doBoundary(stepNum + 1, journey + "l", rs);
+        return doBoundarySynch(stepNum + 1, journey + "l", rs);
     }
 
     //Utility
@@ -58,7 +58,7 @@ public class RobotSupport {
         //The answer is handled by the controllers
     }
 
-    public static boolean sendHttpCmd(String URL, String move, int time)  {
+    public static boolean requestSynch(String URL, String move, int time)  {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
             System.out.println( move + " sendCmd "  );

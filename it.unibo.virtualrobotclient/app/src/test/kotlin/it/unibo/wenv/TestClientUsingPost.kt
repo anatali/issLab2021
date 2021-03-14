@@ -6,12 +6,12 @@ import org.junit.Before
 import org.junit.Test
 
 class TestClientUsingPost {
-    private lateinit var appl: ClientUsingPost
+    private lateinit var appl: ClientNaiveUsingPost
     @Before
     fun systemSetUp() {
         println("TestClientUsingPost | setUp: robot should be at HOME-DOWN ")
         //TODO: put the robot at home or design each test properly
-        appl = ClientUsingPost()
+        appl = ClientNaiveUsingPost()
     }
 
     @After
@@ -58,8 +58,8 @@ class TestClientUsingPost {
     @Test
     fun anothertestBoundary() {
         println("TestClientUsingPost | testBoundary ")
-        var numOfSteps = ClientUsingPost.main(arrayOf<String>())
-        Assert.assertTrue(ClientUsingPost.finalNumOfSteps == 4)
+        var numOfSteps = ClientNaiveUsingPost.main(arrayOf<String>())
+        Assert.assertTrue(ClientNaiveUsingPost.finalNumOfSteps == 4)
     }
 
 }

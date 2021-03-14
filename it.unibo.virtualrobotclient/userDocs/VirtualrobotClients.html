@@ -401,9 +401,144 @@ by abstracting from the technical details about (websocket) connections.
 </tbody>	
 </table></center>
 
-<h2>Clients written in Java </h2>
+<h2>Clients written from scratch in Java </h2>
 <center><table style="width:95%">
 <tbody>	
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientNaiveUsingPost.java" target="code">ClientNaiveUsingPost.java</a>
+<hr/>
+
+The client <i>executes the basic robot-moves by sending commands wriiten in <tt>cril</tt>.</i>
+<br/> <br/> 
+<m>The application exploits the library 
+<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
+<a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">HttpClient - Tutorial</a>)
+to implement <em> HTTP</em>  requests.
+
+</m>
+</td>
+<td>
+ <div class="remark">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> <br/>
+<i>The communication code is completely written by the application designer</i>. 
+<m>
+<br/> 
+The handling of <em>JSON</em> answers is done using  the library 
+<a href="https://javaee.github.io/javaee-spec/javadocs/javax/json/stream/JsonParser.html" target="web">javax.json.stream.JsonParser</a>
+or the library 
+<a href="https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple" target="web">org.json.simple.parser</a>
+(see also <a href="https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm" target="web">JSON.simple - Quick Guide</a>)  
+<a href="https://mvnrepository.com/artifact/org.json/json/20201115" target="web">org.json</a> 
+(see also <a href="https://www.baeldung.com/java-org-json" target="web">Introduction to JSON-Java</a>)
+
+<hr/>
+Requires just 1 Thread.</m>
+</div>
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientNaiveUsingWs.java" target="code">ClientNaiveUsingWs.java</a>
+<hr/>
+
+The client <i>executes the basic robot-moves by sending commands wriiten in <tt>cril</tt>.</i>
+<br/> <br/> 
+<m>The application exploits the library 
+<a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web">javax.websocket</a>
+(see aloso 
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">I WebSocket : Comunicazione Asincrona Full-Duplex per il Web</a>)
+that works in a 'event-driven' way: the information sent over the websocket 
+is 'injected' into the application by a call to the method annotated with <k>@OnMessage</k>.
+
+</m>
+</td>
+<td>
+ <div class="remark">
+<m>Class annotated with <a href="https://docs.oracle.com/javaee/7/api/javax/websocket/ClientEndpoint.html" target="code">@ClientEndpoint</a>.
+</m><br/>
+<k>Key point</k>: <tt>Asynchronous REQUEST </tt> <br/>
+<i>The communication code is completely written by the application designer, which must take care to execute allowable moves only.</i><br/>
+<m>The operation <ks>doBasicMoves</ks> is able to corretly execute only the first move, while <ks>doBasicMovesDelayed()</ks>
+does execute all the moves, since it inserts a proper delay after each move.
+<br/> 
+ 
+<hr/>
+Requires 4 Thread, because of the library
+<a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web">javax.websocket</a>.</m>
+</div>
+</td>
+</tr>
+
+
+ </tbody>
+</table>
+</center>
+
+
+<h2>Clients written in Java using basic communication supports</h2>
+
+As already discussed in <a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html#project" target="lab">LabIss2021 | BoundaryWalk</a>,
+the application designer should not be involved into the technological details related to low-level communications.
+<br/>
+Thus, in this section, we will develop examples of clients that exploit the supports written by our system designers 
+(<a href="../app/src/main/java/it/unibo/supports/IssHttpSupport.java" target="web"><em>IssHttpSupport.java</em></a> and
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="web"><em>IssWsSupport.java</em></a>) that
+implements the interface <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations</em></a>.
+
+<center><img src="./img/issCommsLayers.png" alt="issCommsLayers" width="40%" ></center>
+
+<br/><br/>
+The careful reader will note that our supports now implement the interface that extends our previous
+<a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations</em></a>.
+In this section, we will continue to use the <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web">IssOperations</a> 
+interface only; the reason of the extension is given in the
+<a href="#IssCommSupport">next section</a>.
+<br/><br/>
+<center><table style="width:95%">
+<tbody>	
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPostBasic.java" target="code">ClientBoundaryUsingPostBasic.java</a>
+<hr/>
+<m>
+The client <i>walks along the boundary</i> of the room. 
+<br/> 
+It exploits the library 
+<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
+<a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">HttpClient - Tutorial</a>)
+to implement <em> HTTP</em>  requests.
+<br/> 
+The handling of <em>JSON</em> answers is done using  the library 
+<a href="https://javaee.github.io/javaee-spec/javadocs/javax/json/stream/JsonParser.html" target="web">javax.json.stream.JsonParser</a>
+or the library 
+<a href="https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple" target="web">org.json.simple.parser</a>
+(see also <a href="https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm" target="web">JSON.simple - Quick Guide</a>)  
+<a href="https://mvnrepository.com/artifact/org.json/json/20201115" target="web">org.json</a> 
+(see also <a href="https://www.baeldung.com/java-org-json" target="web">Introduction to JSON-Java</a>)
+
+</m>
+</td>
+<td>
+ <div class="remark">
+ <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>.
+The communication support is created by the user-defined constructor using the
+ <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>.
+<pre>@IssProtocolSpec(configFile ="<a href="../HttpBasicConfig.txt" target="code">HttpBasicConfig.txt</a>")</pre></m>
+
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
+that implements the business logic in a functional style based on recursive functions. 
+<hr/>
+<m>Requires just 1 Thread.</m>
+</div>
+</td>
+</tr>
+
 
 <tr>
 <td style="width:50%">
@@ -413,8 +548,7 @@ by abstracting from the technical details about (websocket) connections.
 The client <i>walks along the boundary</i> of the room. 
 <br/> 
 It exploits the library 
-<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
-<a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">HttpClient - Tutorial</a>)
+<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a>
 to implement <em> HTTP</em>  requests.
 <br/> 
 The handling of <em>JSON</em> answers is done using  the library 
@@ -461,10 +595,10 @@ is 'injected' into the application by a call to the method annotated with <k>@On
 </m>
 </td>
 <td> <div class="remark">
-<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
-created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a> 
-and injected by the user-defined constructor.
-<pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>.
+The communication support is created by the user-defined constructor using the
+ <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>.
+<pre>@IssProtocolSpec( configFile ="<a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a>" )</pre></m>
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> built by the <ks>requestSynch</ks> operation of the 
 <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>.<br/>
 <m>The business logic can be defined into the <ks>doBoundary</ks> operation already introduced in the
@@ -475,19 +609,29 @@ and injected by the user-defined constructor.
 </td>
 </tr>
 
-<tr>
 
-<td>
+ </tbody>
+</table>
+</center>
+
+<h2 id="IssCommSupport">Clients written in Java using more appropriate supports</h2>
 <div class="remark">
 The usage of a websocket library <ks>breaks</ks> the unique flow of control of the application into several threads.<br/>
-If we want to exploit the asynchronicity of the interaction, the reference design pattern
+In order to exploit in a structured way the asynchronicity of the interaction, the reference design pattern
 is the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer pattern</k></a>.
 </div>
 To facilitate the work of the application designer, we will introduce new resources, including the idea of a <i>support
-for (high-level) communications that provides operation to add/remove observers</i> implementing a proper interface.
+for (high-level) communications that provides operation to add/remove observers</i>, by implementing a proper interface.
+<br/><br/>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td>
+
 
 <h3>The <a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><ks>IssObserver</ks></a> interface</h3>
-At the moment the interface defines a method <tt>handleInfo</tt> that accepts two type of arguments
+At the moment, this interface defines a method <tt>handleInfo</tt> that accepts two types of arguments
 <pre>
 public interface IssObserver {
     public void handleInfo(String info);
@@ -495,7 +639,7 @@ public interface IssObserver {
 }
 </pre>
 
-Our <k>observable supports</k> must implement an interface that includes also our high-level communication operations:
+Our <k>observable supports</k> must implement an interface that adds new operations to our high-level communication interface:
 <h3>The <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a> interface</h3>
 <pre>
 public interface <ks>IssCommSupport</ks> <k>extends <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="code"><ks>IssOperations</ks></a></k> {
@@ -508,7 +652,7 @@ public interface <ks>IssCommSupport</ks> <k>extends <a href="../app/src/main/jav
 </td>
 <td>
 <h3>The (new) <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code"><ks>IssWsSupport</ks></a></h3>
-The new version of the <ks>IssWsSupport</ks> must implement alle the operations specified by the interface and by the annotations:
+The new version of the <ks>IssWsSupport</ks> must implement all the operations specified by the interface and by the annotations:
 <pre>
 <k>@ClientEndpoint</k>     <kc>//javax.websocket annotation</kc>
 public class IssWsSupport <k>implements</k> <ks>IssCommSupport</ks> {
@@ -527,19 +671,20 @@ provide factory methods that return an object of type
  <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a>:
 <pre>
 public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a> {
-    <kc>//Factory Method</kc>
-   public static <ks>IssCommSupport</ks> create(Object obj ){ <kc>//obj must be properly annotated</kc>
-		... 
-   }
+ <kc>//Factory Method</kc>
+ public static <ks>IssCommSupport</ks> create(Object obj ){ 
+  <kc>//obj must be properly annotated</kc>
+		...
+ }
 	
-   public static <ks>IssCommSupport</ks> create(  String protocol, String url ){
-     switch( protocol ){
-       case "HTTP"  : {  return new IssHttpSupport(  url );  }
-       case "WS"    : {  return new IssWsSupport( url );    }
-       default: return new IssHttpSupport(  url ); <kc>//TODO Exception</kc>		
-     }
-   }
-	
+ public static <ks>IssCommSupport</ks> create(
+                       String protocol,String url){
+  switch( protocol ){
+   case "HTTP"  : {  return new IssHttpSupport(  url );}
+   case "WS"    : {  return new IssWsSupport( url );   }
+   default: return new IssHttpSupport(url); <m><kc>//TODO Exception</kc></m>
+  }
+ }
 </pre>
 </td>
 </tr>
@@ -568,7 +713,10 @@ as an <ks>observer</ks> of the <tt>cmdsocket-8091</tt>.<br/>
 <m>The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
 <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>,
 properly wrapped in a  high-level <ks>request</ks> operation. 
+<hr/>
+Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
 </div>
+
 </td>
 </tr>
 

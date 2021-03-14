@@ -85,10 +85,10 @@ public class IssHttpSupport implements IssCommSupport {
             CloseableHttpResponse response = httpclient.execute(httppost);
             //System.out.println( "IssHttpSupport | response:" + response  );
             String jsonStr = EntityUtils.toString( response.getEntity() );
-            JSONObject jsonObj = new JSONObject(jsonStr) ;
-            if( jsonObj.get("endmove") != null ) {
-                endmove = jsonObj.getBoolean("endmove");
-                //System.out.println("IssHttpSupport | response=" + endmove);
+            JSONObject jsonEndmove = new JSONObject(jsonStr) ;
+            //System.out.println("IssHttpSupport | jsonEndmove=" + jsonEndmove);
+            if( jsonEndmove.get("endmove") != null ) {
+                endmove = jsonEndmove.getBoolean("endmove");
             }
         } catch(Exception e){
             System.out.println("        IssHttpSupport | ERROR:" + e.getMessage());

@@ -19,7 +19,7 @@ public class ClientBoundaryUsingWebsock {
 BUSINESS LOGIC
  */
 protected String doBoundary( ) {
-    return RobotSupport.doBoundary( 1, "", rs);
+    return RobotSupport.doBoundarySynch( 1, "", rs);
 }
 
  /*
