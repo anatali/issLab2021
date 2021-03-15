@@ -6,14 +6,16 @@ implements the business logic by handling messages received on the cmdsocket-809
 ===============================================================
 */
 package it.unibo.wenv;
-import it.unibo.supports.IssCommSupport;
+
 import it.unibo.interaction.IssObserver;
 import it.unibo.interaction.MsgRobotUtil;
+import it.unibo.supports.IssCommSupport;
+import mapRoomKotlin.mapUtil;
 import org.json.JSONObject;
 
-public class RobotControllerBoundary implements IssObserver {
+public class RobotControllerMapper implements IssObserver {
 private int stepNum              = 1;
-private String journey           = "";
+//private String journey           = "";
 private boolean boundaryWalkDone = false ;
 private IssCommSupport rs ;
 private boolean usearil  = false;
@@ -21,9 +23,10 @@ private int moveInterval = 1000;
 
     //public enum robotLang {cril, aril}    //todo
 
-    public RobotControllerBoundary(IssCommSupport support, boolean usearil){
+    public RobotControllerMapper(IssCommSupport support, boolean usearil){
         rs = support;
         this.usearil = usearil;
+        mapUtil.showMap();
     }
 
     //used by the main program
@@ -37,12 +40,12 @@ private int moveInterval = 1000;
                 wait();
                 //System.out.println("RobotControllerBoundary | RESUMES - final journey=" + journey);
                 rs.close();
-                return journey;
+                return mapUtil.getMapAndClean();//journey;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        return journey;
+        return mapUtil.getMapAndClean();//journey;
     }
 
     @Override
@@ -91,7 +94,9 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
     protected synchronized void boundary( String move, boolean obstacle ){
          if (stepNum <= 4) {
             if( move.equals("turnLeft") ){
-                journey = journey + "l";
+                //journey = journey + "l";
+                mapUtil.doMove("l");
+                mapUtil.showMap();
                 if (stepNum == 4) {
                     boundaryWalkDone=true;
                     notify(); //to resume the main
@@ -107,12 +112,14 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
                 rs.request( usearil ? MsgRobotUtil.lMsg : MsgRobotUtil.turnLeftMsg   );
             }
             if( ! obstacle ){
-                journey = journey + "w";
+                //journey = journey + "w";
+                mapUtil.doMove("w");
                 rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg );
             }
+            //mapUtil.showMap();
             delay(moveInterval ); //to reduce the robot move rate
         }else{ //stepNum > 4
-            System.out.println("RobotControllerBoundary | boundary journey:" + journey);
+            System.out.println("RobotControllerBoundary | boundary ENDS"  );
         }
     }
 

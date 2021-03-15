@@ -508,7 +508,7 @@ interface only; the reason of the extension is given in the
 <a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPostBasic.java" target="code">ClientBoundaryUsingPostBasic.java</a>
 <hr/>
 <m>
-The client <i>walks along the boundary</i> of the room. 
+The client <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>. 
 <br/> 
 It exploits the library 
 <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
@@ -546,7 +546,7 @@ that implements the business logic in a functional style based on recursive func
 <a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPost.java" target="code">ClientBoundaryUsingPost.java</a>
 <hr/>
 <m>
-The client <i>walks along the boundary</i> of the room. 
+The client <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>. 
 <br/> 
 It exploits the library 
 <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a>
@@ -579,7 +579,7 @@ that implements the business logic in a functional style based on recursive func
 <tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicSynch.java" target="code">ClientBoundaryWebsockBasicSynch.java</a><br/>
 <hr/>
-<m>The client  <i>walks along the boundary</i> of the room.
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>.
 <br/>
 It exploits the  
 <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
@@ -670,7 +670,8 @@ public interface <ks>IssCommSupport</ks> <k>extends <a href="../app/src/main/jav
 </td>
 <td>
 <h4>The (new) <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code"><ks>IssWsSupport</ks></a></h4>
-The new version of the <ks>IssWsSupport</ks> must implement all the operations specified by the interface and by the annotations:
+The new version of the <ks>IssWsSupport</ks> must implement all the operations specified by the 
+<a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a> interface and by the annotations:
 <pre>
 <k>@ClientEndpoint</k>     <kc>//javax.websocket annotation</kc>
 public class IssWsSupport <k>implements</k> <ks>IssCommSupport</ks> {
@@ -709,20 +710,23 @@ public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFact
 </tbody>	
 </table></center>
 
-<h3>Using the <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a></h3>
+<h3>Embedding the business logic within a support-observer</h3>
 <center><table style="width:95%">
 <tbody>	
 
 <tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicAsynch.java" target="code">ClientBoundaryWebsockBasicAsynch.java</a><br/>
 <hr/>
-<m>The client  <i>walks along the boundary</i> of the room.
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>.
 <br/>
-It exploits the  
+It does not use any more the <tt>requestSynch</tt> operation of the  
 <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
-by means of the
+createsd by the
 <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
 configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a> 
+<br/><br/>
+The business logic returns a string that represents the robot path expressed as a sequence of moves. For example:
+<pre>wwwlwwwlwwwlwwwl</pre>
 </m>
 </td>
 <td> <div class="remark">
@@ -731,11 +735,18 @@ created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFact
 and injected by the user-defined constructor.
 <pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
 
-<k>Key point</k>: <tt>Asynchronous REQUEST</tt>. The business logic is defined by a 
-<a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code">RobotControllerBoundary</a> working
-as an <ks>observer</ks> of the <tt>cmdsocket-8091</tt>.<br/>
-
-<m> <!-- The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
+<k>Key point</k>: <tt>Asynchronous REQUEST and observed REPLY</tt>. <br/>
+The business logic is defined by a 
+<a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code"><ks>RobotControllerBoundary</ks></a> working
+as an <em>observer</em> of the <tt>cmdsocket-8091</tt> and initialized to use the  <ks>cril</ks> command-move language.
+<br/>
+<m>The <tt>handleInfo</tt> operation works as an handler of the messages sent by WEnv over the <tt>cmdsocket-8091</tt> to notify:
+<ul>
+<li>the answer to a robot-command move <tt>{"endmove":"RESULT", "move":MOVE}</tt></li>
+<li>the information emitted by a sonar <tt>{ "sonarName": "sonarName", "distance": 1, "axis": "x" }</tt></li>
+<li>a collision between the robot and an obstacle <tt>{ "collision" : "false", "move": "moveForward"}</tt></li>
+</ul>
+ <!-- The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
 <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>,
 properly wrapped in a  high-level <ks>request</ks> operation. -->
 <hr/>
@@ -749,7 +760,9 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 <tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockArilAsynch.java" target="code">ClientBoundaryWebsockArilAsynch.java</a><br/>
 <hr/>
-<m>The client  <i>walks along the boundary</i> of the room.
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>aril</ks>.<br/><br/>
+The business logic returns a string that represents the robot path expressed as a sequence of moves. For example:
+<pre>wwwlwwwlwwwlwwwl</pre>
 <br/>
 </m>
 </td>
@@ -757,7 +770,57 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
 </m>
 <br/>
-<k>Key point</k>: <tt>Proactive and Reactive</tt>. The business logic is defined by a 
+<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt>. <br/>
+The business logic is defined by the observer
+<a href="../app/src/main/java/it/unibo/wenv/RobotControllerMapper.java" target="code"><ks>RobotControllerMapper</ks></a>
+initialized to use the  <ks>aril</ks> command-move language. This controller builds a map of the room
+
+ <table style="width:100%" border="1">
+<tr>
+<td style="width:33%">
+<center><img src="./img/gridRoom.png" alt="gridRoom" width="100%"></center>
+</td>
+<td style="width:33%">
+<m>
+The room could be represented by a proper data structure, e.g. a matrix <tt>nr * nc</tt>
+whose representation could be:
+<pre>
+|r, 0, 0, 0, 0, 0, 
+|0, 0, 0, 0, 0, 0, 
+|0, 0, 0, 0, 0, 0, 
+|0, 0, 0, 0, 0, 0, 
+|0, 0, 0, 0, 0, 0,
+</pre>
+</m>
+</td>
+<td>
+<m>
+After the execution of our robot-control software, we could check that (the representation of) the map of the explored space is:
+
+<pre>
+|1, 1, 1, 1, 1, 1, 
+|1, 0, 0, 0, 0, 1, 
+|1, 0, 0, 0, 0, 1, 
+|1, 0, 0, 0, 0, 1, 
+|1, 1, 1, 1, 1, 1, 
+</pre>
+Let us call this representation as <bc>refTestMap</bc>
+</m>
+</td>
+</tr>
+</table>
+
+
+
+In our representation we suppose that:
+
+<ol>
+<li><bc>r</bc> means: cell occupied by the robot</li>
+<li><bc>0</bc> means: cell not explored</li>
+<li><bc>1</bc> means: cell explored</li>
+<li><bc>X</bc> means: cell occupied by an obstacle</li>
+</ol>
+
  <hr/>
  <m>
 Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
@@ -788,6 +851,34 @@ a class <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" targe
 </tbody>	
 </table></center>
 
+<h3>A <ks>mapUtil</ks></h3>
+A proper support for the room-map can be given by the following utility:
+<table style="width:100%" border="1">
+<tr>
+<td style="width:40%">
+<a href="../src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>  <br/> 
+<br/><br/>
+<m>
+For a demo, see 
+<a href="../src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" target="code">MainMapUsage.kt</a> 
+</m>
+</td>
+<td>
+<ol>
+<li>creates a room map as a singleton;</li>
+<li>provides the operation <bc>doMove(move: String )</bc> that updates the map according to the given robot move
+(<tt>w | s | r | l | h </tt>)
+</li>
+<li>provides the operation <bc>getMapAndClean( ): String</bc> that returns a String-representation of the current map and
+resets the map to the empty map;
+</li>
+<li>provides the operation <bc>showMap( )</bc> that prints on the standard output the String-representation of the current map.
+</li>
+</ol>
+ 
+</td>
+</tr>
+</table>   
 
 <!--
 <h3>Clients written in Kotlin </h3>

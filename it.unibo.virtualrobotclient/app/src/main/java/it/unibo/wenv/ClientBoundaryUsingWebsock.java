@@ -7,7 +7,6 @@ import it.unibo.annotations.*;
 import it.unibo.interaction.IssOperations;
 import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.RobotApplicationStarter;
-import it.unibo.supports.RobotSupport;
 
 @ArilRobotSpec
 public class ClientBoundaryUsingWebsock {

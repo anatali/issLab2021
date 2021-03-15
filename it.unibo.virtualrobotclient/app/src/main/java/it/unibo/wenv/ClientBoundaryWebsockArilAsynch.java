@@ -16,13 +16,14 @@ import it.unibo.supports.RobotApplicationStarter;
 
 @ArilRobotSpec
 public class ClientBoundaryWebsockArilAsynch {
-    //private RobotControllerArilBoundary    controller;
-    private RobotControllerBoundary    controller;
+    //private RobotControllerBoundary    controller;
+    private RobotControllerMapper    controller;
 
     //Constructor
     public ClientBoundaryWebsockArilAsynch(IssOperations rs){
         IssCommSupport rsComm = (IssCommSupport)rs;
-        controller = new RobotControllerBoundary(rsComm, true);
+        //controller = new RobotControllerBoundary(rsComm, true);
+        controller = new RobotControllerMapper(rsComm, true);
         rsComm.registerObserver( controller );
         System.out.println("ClientBoundaryWebsockBasicAsynch | CREATED with rsComm=" + rsComm);
     }
@@ -38,7 +39,8 @@ public class ClientBoundaryWebsockArilAsynch {
             Object appl = RobotApplicationStarter.createInstance(ClientBoundaryWebsockArilAsynch.class);
             System.out.println("ClientBoundaryWebsockBasicSynch  | appl n_Threads=" + Thread.activeCount());
             String trip = ((ClientBoundaryWebsockArilAsynch)appl).doBoundary();
-            System.out.println("ClientBoundaryWebsockBasicAsynch | trip=" + trip  );
+            System.out.println("ClientBoundaryWebsockBasicAsynch | trip="   );
+            System.out.println( trip  );
             System.out.println("ClientBoundaryWebsockBasicAsynch | main end n_Threads=" + Thread.activeCount());
         } catch ( Exception e) {
             e.printStackTrace();

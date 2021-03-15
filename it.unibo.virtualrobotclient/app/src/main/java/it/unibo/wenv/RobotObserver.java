@@ -6,7 +6,6 @@ handles messages received on the cmdsocket-8091
 */
 package it.unibo.wenv;
 import it.unibo.interaction.IssObserver;
-import it.unibo.supports.RobotSupport;
 import org.json.JSONObject;
 
 public class RobotObserver implements IssObserver {

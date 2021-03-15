@@ -18,16 +18,23 @@ public class IssArilRobotSupport implements IssCommSupport {
     public IssArilRobotSupport(Object supportedObj, IssCommSupport support){
         this.support   = support;
         IssAnnotationUtil.getMoveTimes( supportedObj, timemap );
+        timemap.forEach(  ( k,v ) -> System.out.println(""+k+":"+v));
     }
     public IssArilRobotSupport( String robotConfigFile, IssCommSupport support){
+        //System.out.println("IssArilRobotSupport | robotConfigFile="+robotConfigFile );
         this.support   = support;
-        if( ! IssAnnotationUtil.checkRobotConfigFile(robotConfigFile, timemap) ){
+        if( IssAnnotationUtil.checkRobotConfigFile(robotConfigFile, timemap) ){
+            timemap.forEach(  ( k,v ) -> System.out.println("move config "+k+":"+v));
+        }
+        else {
             timemap.put("h", MsgRobotUtil.htime );
             timemap.put("l", MsgRobotUtil.ltime );
             timemap.put("r", MsgRobotUtil.rtime );
             timemap.put("w", MsgRobotUtil.wtime );
             timemap.put("s", MsgRobotUtil.stime );
+            timemap.forEach(  ( k,v ) -> System.out.println("move default "+k+":"+v));
         };
+
     }
 
     //The movetime is takan form the timemap, that is configured via annotations
