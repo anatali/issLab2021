@@ -37,7 +37,7 @@ private int moveInterval = 1000;
                 wait();
                 //System.out.println("RobotControllerBoundary | RESUMES - final journey=" + journey);
                 rs.close();
-                return journey;
+                //return journey;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

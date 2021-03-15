@@ -760,59 +760,22 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 <tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockArilAsynch.java" target="code">ClientBoundaryWebsockArilAsynch.java</a><br/>
 <hr/>
-<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>aril</ks>.<br/><br/>
-The business logic returns a string that represents the robot path expressed as a sequence of moves. For example:
-<pre>wwwlwwwlwwwlwwwl</pre>
-<br/>
-</m>
-</td>
-<td> <div class="remark">
-<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
-</m>
-<br/>
-<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt>. <br/>
-The business logic is defined by the observer
-<a href="../app/src/main/java/it/unibo/wenv/RobotControllerMapper.java" target="code"><ks>RobotControllerMapper</ks></a>
-initialized to use the  <ks>aril</ks> command-move language. This controller builds a map of the room
-
- <table style="width:100%" border="1">
-<tr>
-<td style="width:33%">
-<center><img src="./img/gridRoom.png" alt="gridRoom" width="100%"></center>
-</td>
-<td style="width:33%">
-<m>
-The room could be represented by a proper data structure, e.g. a matrix <tt>nr * nc</tt>
-whose representation could be:
-<pre>
-|r, 0, 0, 0, 0, 0, 
-|0, 0, 0, 0, 0, 0, 
-|0, 0, 0, 0, 0, 0, 
-|0, 0, 0, 0, 0, 0, 
-|0, 0, 0, 0, 0, 0,
-</pre>
-</m>
-</td>
-<td>
-<m>
-After the execution of our robot-control software, we could check that (the representation of) the map of the explored space is:
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>aril</ks>.</m>
+<br/><br/>
+The business logic is able to build two different types of robot-moves history:
+<ul>
+<li>a string that represents the robot path expressed as a sequence of moves. For example:
+<pre>wwwlwwwlwwwlwwwl</pre>  </li>
+<li>the places that the robot has explored, represented within a map of the room. For example
 
 <pre>
-|1, 1, 1, 1, 1, 1, 
-|1, 0, 0, 0, 0, 1, 
-|1, 0, 0, 0, 0, 1, 
-|1, 0, 0, 0, 0, 1, 
-|1, 1, 1, 1, 1, 1, 
+|r, 1, 1, 1, 1, 
+|1, 0, 0, 0, 1, 
+|1, 0, 0, 0, 1, 
+|1, 1, 1, 1, 1, 
 </pre>
-Let us call this representation as <bc>refTestMap</bc>
-</m>
-</td>
-</tr>
-</table>
-
-
-
-In our representation we suppose that:
+<m>
+ In this representation, we suppose that:
 
 <ol>
 <li><bc>r</bc> means: cell occupied by the robot</li>
@@ -820,34 +783,53 @@ In our representation we suppose that:
 <li><bc>1</bc> means: cell explored</li>
 <li><bc>X</bc> means: cell occupied by an obstacle</li>
 </ol>
-
- <hr/>
- <m>
-Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
-</div>
-
-</td>
-</tr>
-
-<!--
-<tr>
-<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingWebsock.java" target="code">ClientBoundaryUsingWebsock.java</a>
-<hr/>
-<m>The client  <i>walks along the boundary</i> of the room.
-<br/>
-The client interacts with the WEnv via <em>web-scokets</em>, by using the  
-<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library.
+</li>
+</ul>
 </m>
+<br/>
+<m>
 </td>
 <td> <div class="remark">
-<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
-that implements the business logic within
-a class <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport.java</a>.
-<i> </i>
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt>. <br/>
+The business logic is defined in an object of class 
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
+that is called by the observer
+<a href="../app/src/main/java/it/unibo/wenv/RobotControllerMapper.java" target="code"><ks>RobotControllerMapper</ks></a>
+initialized to use the <ks>aril</ks> command-move language.  
+<br/><br/>
+In this way, we have further removed the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
+from any detail related to the interaction with WEnv.
+
+<hr/>
+ <table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+
+We can easily build a map of the room, by exploting the fact that a <ks>aril</ks> forward/backward move 
+covers a length equals to the length <tt>DR</tt> of the robot.
+<br/><br/>
+Thus, we imagine to subdivide the room into a grid of <tt>nr * nc</tt> squares of side <tt>DR</tt>.
+
+</td>
+<td style="width:50%">
+ 
+ <center><img src="./img/gridRoom.png" alt="gridRoom" width="80%"></center>
+</td>
+
+</tr>
+</table>
+<m>
+ <hr/>
+Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. 
+</m>
 </div>
+
 </td>
 </tr>
- -->
+ 
 </tbody>	
 </table></center>
 
@@ -855,18 +837,18 @@ a class <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" targe
 A proper support for the room-map can be given by the following utility:
 <table style="width:100%" border="1">
 <tr>
-<td style="width:40%">
-<a href="../src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>  <br/> 
+<td style="width:30%">
+<a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>  <br/> 
 <br/><br/>
 <m>
 For a demo, see 
-<a href="../src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" target="code">MainMapUsage.kt</a> 
+<a href="../app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" target="code">MainMapUsage.kt</a> 
 </m>
 </td>
 <td>
 <ol>
 <li>creates a room map as a singleton;</li>
-<li>provides the operation <bc>doMove(move: String )</bc> that updates the map according to the given robot move
+<li>provides the operation <bc>doMove(move: String )</bc> that updates the map according to the given <ks>aril</ks> robot move
 (<tt>w | s | r | l | h </tt>)
 </li>
 <li>provides the operation <bc>getMapAndClean( ): String</bc> that returns a String-representation of the current map and

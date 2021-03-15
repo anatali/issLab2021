@@ -1,6 +1,6 @@
 /*
 ===============================================================
-RobotControllerBoundary.java
+RobotControllerMapper.java
 implements the business logic by handling messages received on the cmdsocket-8091
 
 ===============================================================
@@ -8,44 +8,20 @@ implements the business logic by handling messages received on the cmdsocket-809
 package it.unibo.wenv;
 
 import it.unibo.interaction.IssObserver;
-import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.IssCommSupport;
-import mapRoomKotlin.mapUtil;
 import org.json.JSONObject;
 
 public class RobotControllerMapper implements IssObserver {
-private int stepNum              = 1;
-//private String journey           = "";
-private boolean boundaryWalkDone = false ;
-private IssCommSupport rs ;
-private boolean usearil  = false;
-private int moveInterval = 1000;
-
+private RobotBoundaryLogic robotBehaviorLogic  ;
     //public enum robotLang {cril, aril}    //todo
 
-    public RobotControllerMapper(IssCommSupport support, boolean usearil){
-        rs = support;
-        this.usearil = usearil;
-        mapUtil.showMap();
-    }
+    public RobotControllerMapper(IssCommSupport support, boolean usearil, boolean doMap){
+        robotBehaviorLogic = new RobotBoundaryLogic(support, usearil, doMap);
+     }
 
-    //used by the main program
-    public synchronized String doBoundary(){
-        System.out.println("RobotControllerBoundary | doBoundary rs=" + rs + " usearil=" + usearil);
-        rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg  );
-        /*The reply to the request is sent by WEnv after the wtime defined in issRobotConfig.txt */
-        delay(moveInterval ); //to reduce the robot move rate
-        while( ! boundaryWalkDone ) {
-            try {
-                wait();
-                //System.out.println("RobotControllerBoundary | RESUMES - final journey=" + journey);
-                rs.close();
-                return mapUtil.getMapAndClean();//journey;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        return mapUtil.getMapAndClean();//journey;
+    //entry for the main program
+    public String doBoundary(){
+        return robotBehaviorLogic.doBoundaryStart();
     }
 
     @Override
@@ -83,48 +59,11 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
         String move   = (String) endmove.get("move");
         //System.out.println("RobotControllerBoundary | handleEndMove:" + move + " answer=" + answer);
         switch( answer ){
-            case "true"       : boundary( move, false );break;
-            case "false"      : boundary( move, true  );break;
+            case "true"       : robotBehaviorLogic.boundary( move, false );break;
+            case "false"      : robotBehaviorLogic.boundary( move, true  );break;
             case "halted"     : System.out.println("RobotControllerBoundary | handleEndMove to do halt" );break;
             case "notallowed" : System.out.println("RobotControllerBoundary | handleEndMove to do notallowed" );break;
             default           : System.out.println("RobotControllerBoundary | handleEndMove IMPOSSIBLE answer for move=" + move);
         }
     }
-//Business logic in RobotControllerBoundary
-    protected synchronized void boundary( String move, boolean obstacle ){
-         if (stepNum <= 4) {
-            if( move.equals("turnLeft") ){
-                //journey = journey + "l";
-                mapUtil.doMove("l");
-                mapUtil.showMap();
-                if (stepNum == 4) {
-                    boundaryWalkDone=true;
-                    notify(); //to resume the main
-                    return;
-                }
-                stepNum++;
-                rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg );
-                delay(moveInterval ); //to reduce the robot move rate
-                return;
-            }
-            //the move is moveForward
-            if( obstacle ){
-                rs.request( usearil ? MsgRobotUtil.lMsg : MsgRobotUtil.turnLeftMsg   );
-            }
-            if( ! obstacle ){
-                //journey = journey + "w";
-                mapUtil.doMove("w");
-                rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg );
-            }
-            //mapUtil.showMap();
-            delay(moveInterval ); //to reduce the robot move rate
-        }else{ //stepNum > 4
-            System.out.println("RobotControllerBoundary | boundary ENDS"  );
-        }
-    }
-
-    protected void delay( int dt ){
-        try { Thread.sleep(dt); } catch (InterruptedException e) { e.printStackTrace(); }
-    }
-
 }
