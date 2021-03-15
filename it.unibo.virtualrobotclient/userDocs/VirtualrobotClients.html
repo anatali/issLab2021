@@ -615,7 +615,7 @@ The communication support is created by the user-defined constructor using the
 </table>
 </center>
 
-<h2 id="IssCommSupport">Clients written in Java using more appropriate supports</h2>
+<h2 id="IssCommSupport">Clients written in Java using observable supports</h2>
 <div class="remark">
 The usage of a websocket library <ks>breaks</ks> the unique flow of control of the application into several threads.<br/>
 In order to exploit in a structured way the asynchronicity of the interaction, the reference design pattern
@@ -623,12 +623,14 @@ is the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k
 </div>
 To facilitate the work of the application designer, we will introduce new resources, including the idea of a <i>support
 for (high-level) communications that provides operation to add/remove observers</i>, by implementing a proper interface.
+<!--
 <br/>From now on, the layer underlying our robot-based application could be the 
 <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>, that will hide
-any detail related to low-level communications.
+any detail related to low-level communications. -->
 
-<center><img src="./img/robotSupport.png" alt="robotSupport" width="40%" ></center>
+<center><img src="./img/issCommsLayers.png" alt="issCommsLayers" width="40%" ></center>
 
+<!--
 <h3>The <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a> layer</h3>
 In our (current) design, the <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>:
 <ul>
@@ -637,6 +639,7 @@ In our (current) design, the <a href="../app/src/main/java/it/unibo/supports/Rob
 in asynchronous way, by using a local operation <ks>doRobotMoveAndDelay</ks> in order to avoid the  <ks>notallowed</ks> answer</li>
 <li></li>
 </ul>
+-->
 <br/><br/>
 <center><table style="width:95%">
 <tbody>	
