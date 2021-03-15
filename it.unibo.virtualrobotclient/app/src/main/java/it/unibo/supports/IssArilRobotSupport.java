@@ -7,10 +7,8 @@
  ===============================================================
  */
 package it.unibo.supports;
-
 import it.unibo.annotations.*;
 import it.unibo.interaction.*;
-
 import java.util.HashMap;
 
 public class IssArilRobotSupport implements IssCommSupport {
@@ -34,7 +32,7 @@ public class IssArilRobotSupport implements IssCommSupport {
 
     //The movetime is takan form the timemap, that is configured via annotations
     protected String translate(String arilMove){
-        //System.out.println( "        IssArilRobotSupport | translate:" + arilMove );
+        //System.out.println( "        IssArilRobotSupport | translate:" + arilMove + " support=" + support);
         switch( arilMove.trim() ){ //translate into critl move
             case "h" : return "{\"robotmove\":\"alarm\", \"time\": "+ timemap.get("h")+"}";
             case "w" : return "{\"robotmove\":\"moveForward\", \"time\": "+ timemap.get("w")+"}";
@@ -65,14 +63,17 @@ public class IssArilRobotSupport implements IssCommSupport {
         //System.out.println( "         IssArilRobotSupport | WARNING: reply NOT IMPLEMENTED"  );
     }
 
+//------------------------------ IssCommSupport ----------------------------------
     @Override
     public void registerObserver( IssObserver obs ){
-       //TODO
+        support.registerObserver( obs );
     }
+
     @Override
     public void removeObserver( IssObserver obs ){
-        //TODO
+        support.removeObserver( obs );
     }
+
     @Override
     public void close(){
         try {

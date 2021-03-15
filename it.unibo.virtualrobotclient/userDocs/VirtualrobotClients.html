@@ -623,6 +623,20 @@ is the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k
 </div>
 To facilitate the work of the application designer, we will introduce new resources, including the idea of a <i>support
 for (high-level) communications that provides operation to add/remove observers</i>, by implementing a proper interface.
+<br/>From now on, the layer underlying our robot-based application could be the 
+<a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>, that will hide
+any detail related to low-level communications.
+
+<center><img src="./img/robotSupport.png" alt="robotSupport" width="40%" ></center>
+
+<h3>The <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a> layer</h3>
+In our (current) design, the <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>:
+<ul>
+<li>provides a new layer, composed of 1 communication support;</li>
+<li>implements the <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations</em></a>
+in asynchronous way, by using a local operation <ks>doRobotMoveAndDelay</ks> in order to avoid the  <ks>notallowed</ks> answer</li>
+<li></li>
+</ul>
 <br/><br/>
 <center><table style="width:95%">
 <tbody>	
@@ -631,7 +645,7 @@ for (high-level) communications that provides operation to add/remove observers<
 <td>
 
 
-<h3>The <a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><ks>IssObserver</ks></a> interface</h3>
+<h4>The <a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><ks>IssObserver</ks></a> interface</h4>
 At the moment, this interface defines a method <tt>handleInfo</tt> that accepts two types of arguments
 <pre>
 public interface IssObserver {
@@ -652,7 +666,7 @@ public interface <ks>IssCommSupport</ks> <k>extends <a href="../app/src/main/jav
 
 </td>
 <td>
-<h3>The (new) <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code"><ks>IssWsSupport</ks></a></h3>
+<h4>The (new) <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code"><ks>IssWsSupport</ks></a></h4>
 The new version of the <ks>IssWsSupport</ks> must implement all the operations specified by the interface and by the annotations:
 <pre>
 <k>@ClientEndpoint</k>     <kc>//javax.websocket annotation</kc>
@@ -666,7 +680,7 @@ public class IssWsSupport <k>implements</k> <ks>IssCommSupport</ks> {
 }	
 </pre>
 
-<h3>The (new) <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a></h3>
+<h4>The (new) <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a></h4>
 Since we aim at using the new concept of observable supports for communication, our <tt>IssCommsSupportFactory</tt> must now
 provide factory methods that return an object of type
  <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a>:
@@ -689,6 +703,12 @@ public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFact
 </pre>
 </td>
 </tr>
+</tbody>	
+</table></center>
+
+<h3>Using the <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a></h3>
+<center><table style="width:95%">
+<tbody>	
 
 <tr>
 <td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicAsynch.java" target="code">ClientBoundaryWebsockBasicAsynch.java</a><br/>
@@ -711,10 +731,32 @@ and injected by the user-defined constructor.
 <k>Key point</k>: <tt>Asynchronous REQUEST</tt>. The business logic is defined by a 
 <a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code">RobotControllerBoundary</a> working
 as an <ks>observer</ks> of the <tt>cmdsocket-8091</tt>.<br/>
-<m>The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
+
+<m> <!-- The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
 <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>,
-properly wrapped in a  high-level <ks>request</ks> operation. 
+properly wrapped in a  high-level <ks>request</ks> operation. -->
 <hr/>
+Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
+</div>
+
+</td>
+</tr>
+
+
+<tr>
+<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockArilAsynch.java" target="code">ClientBoundaryWebsockArilAsynch.java</a><br/>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>
+</m>
+</td>
+<td> <div class="remark">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>Proactive and Reactive</tt>. The business logic is defined by a 
+ <hr/>
+ <m>
 Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
 </div>
 

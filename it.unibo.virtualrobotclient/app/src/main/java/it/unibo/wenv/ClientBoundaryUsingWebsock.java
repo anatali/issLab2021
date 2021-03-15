@@ -5,6 +5,7 @@
 package it.unibo.wenv;
 import it.unibo.annotations.*;
 import it.unibo.interaction.IssOperations;
+import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.RobotApplicationStarter;
 import it.unibo.supports.RobotSupport;
 
@@ -19,9 +20,23 @@ public class ClientBoundaryUsingWebsock {
 BUSINESS LOGIC
  */
 protected String doBoundary( ) {
-    return RobotSupport.doBoundarySynch( 1, "", rs);
+    return  doBoundarySynch( 1, "", rs);
 }
 
+
+    public static String doBoundarySynch(int stepNum, String journey, IssOperations rs) {
+        if (stepNum > 4) {
+            return journey;
+        }
+        String answer = rs.requestSynch( MsgRobotUtil.wMsg );
+        while( answer.equals("true") ){
+            journey = journey + "w";
+            answer = rs.requestSynch( MsgRobotUtil.wMsg );
+        }
+        //collision
+        rs.requestSynch(MsgRobotUtil.lMsg);
+        return doBoundarySynch(stepNum + 1, journey + "l", rs);
+    }
  /*
 MAIN
  */

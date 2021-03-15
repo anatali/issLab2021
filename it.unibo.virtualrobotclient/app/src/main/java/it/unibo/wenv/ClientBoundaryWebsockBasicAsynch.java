@@ -24,7 +24,7 @@ public class ClientBoundaryWebsockBasicAsynch {
         ClientBoundaryWebsockBasicAsynch obj = new ClientBoundaryWebsockBasicAsynch();
         IssCommSupport support               = new IssCommsSupportFactory().create( obj  );
         obj.setCommSupport(support);    //inject
-        obj.controller = new RobotControllerBoundary(support);
+        obj.controller = new RobotControllerBoundary(support, false);
         support.registerObserver( obj.controller );
         //support.registerObserver( new RobotObserver() );    //ANOTHER OBSERVER
         return obj;
@@ -33,6 +33,8 @@ public class ClientBoundaryWebsockBasicAsynch {
     protected void setCommSupport(IssCommSupport support){
         this.support = support;
     }
+
+
 
     public static void main(String args[]){
         try {

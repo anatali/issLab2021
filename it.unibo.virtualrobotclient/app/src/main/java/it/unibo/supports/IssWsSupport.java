@@ -24,12 +24,10 @@ import java.util.Vector;
  ===============================================================
  */
 @ClientEndpoint     //javax.websocket annotation
-public class IssWsSupport implements IssCommSupport {
+public class IssWsSupport extends IssObservableCommSupport implements IssCommSupport {
     private  String URL            = "unknown";
     private Session userSession    = null;
     private AnswerAvailable answerSupport;
-
-    private Vector<IssObserver> observers = new Vector<IssObserver>();
 
     public IssWsSupport( String url ){
         try {
@@ -67,7 +65,7 @@ public class IssWsSupport implements IssCommSupport {
     public void onMessage(String message)   {
         try {
              //{"collision":"true ","move":"..."} or {"sonarName":"sonar2","distance":19,"axis":"x"}
-            System.out.println("        IssWsSupport | onMessage:" + message);
+            //System.out.println("        IssWsSupport | onMessage:" + message);
             JSONObject jsonObj = new JSONObject(message) ;
             if ( jsonObj.has("endmove")  ) {
                 //HANDLE THE ANSWER
@@ -79,9 +77,9 @@ public class IssWsSupport implements IssCommSupport {
                 boolean collision = jsonObj.getBoolean("collision");
                 //System.out.println("        IssWsSupport | onMessage collision=" + collision );
             } else if (jsonObj.has("sonarName") ) {
-                String sonarName = jsonObj.getString( "sonarName");
-                String distance  = jsonObj.get("distance").toString();
-                System.out.println("        IssWsSupport | onMessage sonarName=" + sonarName + " distance=" + distance);
+                //String sonarName = jsonObj.getString( "sonarName");
+                //String distance  = jsonObj.get("distance").toString();
+                //System.out.println("        IssWsSupport | onMessage sonarName=" + sonarName + " distance=" + distance);
             }
             updateObservers( jsonObj );
         } catch (Exception e) {
@@ -95,18 +93,12 @@ public class IssWsSupport implements IssCommSupport {
         System.out.println("IssWsSupport | disconnected  " + error.getMessage());
     }
 
-    protected void updateObservers(JSONObject jsonOnj ){
-        //System.out.println("IssWsSupport | updateObservers " + observers.size() );
-        observers.forEach( v -> {
-            //System.out.println("IssWsSupport | updates " + v );
-            v.handleInfo(jsonOnj);
-        } );
-    }
     
 //------------------------------ IssOperations ----------------------------------
      @Override
     public void forward(String msg)  {
         try {
+            //System.out.println("        IssWsSupport | forward:" + msg);
              //this.userSession.getAsyncRemote().sendText(message);
             userSession.getBasicRemote().sendText(msg); //synch: blocks until the message has been transmitted
             //System.out.println("        IssWsSupport | DONE forward " + msg);
@@ -146,15 +138,6 @@ public class IssWsSupport implements IssCommSupport {
     }
 
 //------------------------------ IssCommSupport ----------------------------------
-    @Override
-    public void registerObserver( IssObserver obs ){
-        observers.add( obs );
-    }
-
-    @Override
-    public void removeObserver( IssObserver obs ){
-        observers.remove( obs );
-    }
 
     @Override
     public void close(){
