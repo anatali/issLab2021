@@ -10,6 +10,7 @@ that is 'message-driven'
 */
 package it.unibo.wenv;
 import it.unibo.annotations.ArilRobotSpec;
+import it.unibo.consolegui.ConsoleGui;
 import it.unibo.interaction.IssOperations;
 import it.unibo.supports.IssCommSupport;
 import it.unibo.supports.RobotApplicationStarter;
@@ -24,6 +25,7 @@ public class ClientBoundaryWebsockArilAsynch {
         controller = new RobotInputController(rsComm, true, true );
         rsComm.registerObserver( controller );
         System.out.println("ClientBoundaryWebsockBasicAsynch | CREATED with rsComm=" + rsComm);
+        //new ConsoleGui(  controller );  //TODO
     }
 
     public String doBoundary(){
@@ -36,9 +38,9 @@ public class ClientBoundaryWebsockArilAsynch {
             System.out.println("ClientBoundaryWebsockBasicAsynch | main start n_Threads=" + Thread.activeCount());
             Object appl = RobotApplicationStarter.createInstance(ClientBoundaryWebsockArilAsynch.class);
             System.out.println("ClientBoundaryWebsockBasicSynch  | appl n_Threads=" + Thread.activeCount());
-            String trip = ((ClientBoundaryWebsockArilAsynch)appl).doBoundary();
-            System.out.println("ClientBoundaryWebsockBasicAsynch | trip="   );
-            System.out.println( trip  );
+            //String trip = ((ClientBoundaryWebsockArilAsynch)appl).doBoundary();
+            //System.out.println("ClientBoundaryWebsockBasicAsynch | trip="   );
+            //System.out.println( trip  );
             System.out.println("ClientBoundaryWebsockBasicAsynch | main end n_Threads=" + Thread.activeCount());
         } catch ( Exception e) {
             e.printStackTrace();

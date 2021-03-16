@@ -8,14 +8,18 @@ implements the business logic by handling messages received on the cmdsocket-809
 package it.unibo.wenv;
 
 import it.unibo.interaction.IssObserver;
+import it.unibo.supports.IssArilRobotSupport;
 import it.unibo.supports.IssCommSupport;
+import it.unibo.supports.IssWsSupport;
 import org.json.JSONObject;
 
 public class RobotInputController implements IssObserver {
 private RobotBoundaryLogic robotBehaviorLogic  ;
+private IssCommSupport commSupport;  //IssArilRobotSupport
     //public enum robotLang {cril, aril}    //todo
 
     public RobotInputController(IssCommSupport support, boolean usearil, boolean doMap){
+        commSupport = support;
         robotBehaviorLogic = new RobotBoundaryLogic(support, usearil, doMap);
      }
 
@@ -30,6 +34,7 @@ private RobotBoundaryLogic robotBehaviorLogic  ;
     }
 
     /*
+    ENTRY
 Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
 - the answer to a robot-command move {"endmove":"RESULT", "move":MOVE}
 - the information emitted by a sonar { "sonarName": "sonarName", "distance": 1, "axis": "x" }
@@ -37,9 +42,11 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
      */
     @Override
     public void handleInfo(JSONObject infoJson) {
+        System.out.println("RobotControllerBoundary | handleInfo:" + infoJson  );
         if( infoJson.has("endmove") )        handleEndMove(infoJson);
         else if( infoJson.has("sonarName") ) handleSonar(infoJson);
         else if( infoJson.has("collision") ) handleCollision(infoJson);
+        else if( infoJson.has("robotcmd") )  handleRobotCmd(infoJson);
     }
 
     protected void handleSonar( JSONObject sonarinfo ){
@@ -65,5 +72,20 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
             case "notallowed" : System.out.println("RobotControllerBoundary | handleEndMove to do notallowed" );break;
             default           : System.out.println("RobotControllerBoundary | handleEndMove IMPOSSIBLE answer for move=" + move);
         }
+    }
+
+    protected void handleRobotCmd( JSONObject rootCmd ){
+        System.out.println("RobotControllerBoundary | handleInfo:" + rootCmd + " " + commSupport  );
+        String cmd = (String)  rootCmd.get("robotcmd");
+        if(  commSupport instanceof IssArilRobotSupport) {
+            System.out.println("RobotControllerBoundary | handleRobotCmd=" + cmd  );
+            commSupport.forward(cmd);
+        }
+        if(  commSupport instanceof IssWsSupport)  {
+            String cmdJsonStr = "{\"robotmove\":\""+ cmd + "\", \"time\": 400}";
+            System.out.println("RobotControllerBoundary | handleRobotCmd=" + cmdJsonStr   );
+            commSupport.forward(cmdJsonStr);
+        }
+
     }
 }
