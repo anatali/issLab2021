@@ -11,11 +11,11 @@ import it.unibo.interaction.IssObserver;
 import it.unibo.supports.IssCommSupport;
 import org.json.JSONObject;
 
-public class RobotControllerMapper implements IssObserver {
+public class RobotInputController implements IssObserver {
 private RobotBoundaryLogic robotBehaviorLogic  ;
     //public enum robotLang {cril, aril}    //todo
 
-    public RobotControllerMapper(IssCommSupport support, boolean usearil, boolean doMap){
+    public RobotInputController(IssCommSupport support, boolean usearil, boolean doMap){
         robotBehaviorLogic = new RobotBoundaryLogic(support, usearil, doMap);
      }
 

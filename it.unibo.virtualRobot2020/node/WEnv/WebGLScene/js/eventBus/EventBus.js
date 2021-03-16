@@ -1,3 +1,5 @@
+//Used by sceneSubjects/Sonars.js
+//subscribe called by socketIO.js
 function EventBus() {
     const eventCallbacksPairs = [] 
     

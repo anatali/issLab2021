@@ -16,14 +16,12 @@ import it.unibo.supports.RobotApplicationStarter;
 
 @ArilRobotSpec
 public class ClientBoundaryWebsockArilAsynch {
-    //private RobotControllerBoundary    controller;
-    private RobotControllerMapper    controller;
+    private RobotInputController controller;
 
     //Constructor
     public ClientBoundaryWebsockArilAsynch(IssOperations rs){
         IssCommSupport rsComm = (IssCommSupport)rs;
-        //controller = new RobotControllerBoundary(rsComm, true);
-        controller = new RobotControllerMapper(rsComm, true, true );
+        controller = new RobotInputController(rsComm, true, true );
         rsComm.registerObserver( controller );
         System.out.println("ClientBoundaryWebsockBasicAsynch | CREATED with rsComm=" + rsComm);
     }

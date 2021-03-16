@@ -710,7 +710,7 @@ public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFact
 </tbody>	
 </table></center>
 
-<h3>Embedding the business logic within a support-observer</h3>
+<h3>Embedding the business logic within an observer</h3>
 <center><table style="width:95%">
 <tbody>	
 
@@ -739,13 +739,21 @@ and injected by the user-defined constructor.
 The business logic is defined by a 
 <a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code"><ks>RobotControllerBoundary</ks></a> working
 as an <em>observer</em> of the <tt>cmdsocket-8091</tt> and initialized to use the  <ks>cril</ks> command-move language.
+
+<h4>Zoomimg into the application </h3>
+<hr/>
+<center><img src="./img/RobotBoundaryZooming.png" alt="RobotBoundaryZooming" width="85%" ></center>
 <br/>
-<m>The <tt>handleInfo</tt> operation works as an handler of the messages sent by WEnv over the <tt>cmdsocket-8091</tt> to notify:
+<m>
+The <tt>handleInfo</tt> operation 
+of <a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code">RobotControllerBoundary</a>
+works as an handler of the dispatches sent by WEnv over the <tt>cmdsocket-8091</tt> to notify:
 <ul>
 <li>the answer to a robot-command move <tt>{"endmove":"RESULT", "move":MOVE}</tt></li>
 <li>the information emitted by a sonar <tt>{ "sonarName": "sonarName", "distance": 1, "axis": "x" }</tt></li>
 <li>a collision between the robot and an obstacle <tt>{ "collision" : "false", "move": "moveForward"}</tt></li>
 </ul>
+
  <!-- The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
 <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>,
 properly wrapped in a  high-level <ks>request</ks> operation. -->
@@ -755,12 +763,17 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 
 </td>
 </tr>
+</tbody>	
+</table></center>
 
+<h3>Isolating the business logic (that builds a map)</h3>
+<center><table style="width:95%">
+<tbody>	
 
 <tr>
-<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockArilAsynch.java" target="code">ClientBoundaryWebsockArilAsynch.java</a><br/>
+<td style="width:45%"><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockArilAsynch.java" target="code">ClientBoundaryWebsockArilAsynch.java</a><br/>
 <hr/>
-<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>aril</ks>.</m>
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>aril</ks>. 
 <br/><br/>
 The business logic is able to build two different types of robot-moves history:
 <ul>
@@ -774,7 +787,7 @@ The business logic is able to build two different types of robot-moves history:
 |1, 0, 0, 0, 1, 
 |1, 1, 1, 1, 1, 
 </pre>
-<m>
+
  In this representation, we suppose that:
 
 <ol>
@@ -785,9 +798,6 @@ The business logic is able to build two different types of robot-moves history:
 </ol>
 </li>
 </ul>
-</m>
-<br/>
-<m>
 </td>
 <td> <div class="remark">
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
@@ -797,30 +807,14 @@ The business logic is able to build two different types of robot-moves history:
 The business logic is defined in an object of class 
 <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
 that is called by the observer
-<a href="../app/src/main/java/it/unibo/wenv/RobotControllerMapper.java" target="code"><ks>RobotControllerMapper</ks></a>
+<a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code"><ks>RobotInputController</ks></a>
 initialized to use the <ks>aril</ks> command-move language.  
-<br/><br/>
+<br/>
 In this way, we have further removed the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
 from any detail related to the interaction with WEnv.
 
-<hr/>
- <table style="width:100%" border="1">
-<tr>
-<td style="width:50%">
-
-We can easily build a map of the room, by exploting the fact that a <ks>aril</ks> forward/backward move 
-covers a length equals to the length <tt>DR</tt> of the robot.
-<br/><br/>
-Thus, we imagine to subdivide the room into a grid of <tt>nr * nc</tt> squares of side <tt>DR</tt>.
-
-</td>
-<td style="width:50%">
- 
- <center><img src="./img/gridRoom.png" alt="gridRoom" width="80%"></center>
-</td>
-
-</tr>
-</table>
+<h4>Zoomimg into the application </h3><hr/>
+ <center><img src="./img/RobotBoundaryArilZooming.png" alt="RobotBoundaryArilZooming" width="100%"></center>
 <m>
  <hr/>
 Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. 
@@ -835,9 +829,28 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 
 <h3>A <a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code"><ks>mapUtil</ks></a></h3>
 
+
 <table style="width:100%" border="1">
 <tr>
-<td style="width:40%">
+<td style="width:50%">
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<m>
+We can easily build a map of the room, by exploting the fact that a <ks>aril</ks> forward/backward move 
+covers a length equals to the length <tt>DR</tt> of the robot.
+<br/><br/>
+Thus, we imagine to subdivide the room into a grid of <tt>nr * nc</tt> squares of side <tt>DR</tt>.
+</m>
+</td>
+<td style="width:50%">
+ 
+ <center><img src="./img/gridRoom.png" alt="gridRoom" width="80%"></center>
+</td>
+
+</tr>
+</table>
+
 A support for the room-map is given by the following utility:<br/><br/>
 <a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>   
 <br/><br/>

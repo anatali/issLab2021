@@ -598,33 +598,36 @@ by a 'businnes logic' embedded in the same operation used to handle a HTTP-POST:
 <table style="width:98%">
 <tbody>	
 <tr>
-<td style="width:60%" >
+<td style="width:50%" >
  <h4>Robot-move 'business logic'</h4>
 The following code specifies the implementation of a robot-move
 
-<pre>
-function doMove(moveTodo, <ks>duration</ks>,res){ <kc>//res is null when called by <ks>cmdSocket-8091</ks></kc>
-  execMoveOnAllConnectedScenes(moveTodo, duration) <kc>//updates WebGLScene using <ks>mainSocket</ks></kc>
-  <k>setTimeout(</k>function() { <kc>//<k>wait</k> for the duration before sending the answer (collision or not)</kc>
+<pre> 
+function doMove(moveTodo,<ks>duration</ks>,res){ <m><kc>//res=null when called by <ks>cmdSocket-8091</ks></kc></m>
+   <kc>//updates WebGLScene using <ks>mainSocket</ks></kc>
+  <ks>execMoveOnAllConnectedScenes(moveTodo, duration)</ks> 
+  <k>setTimeout(</k>function() { 
+	<kc>//<k>wait</k> for the duration before sending the answer (collision or not)</kc>
         if( moveHalted ) moveResult ="halted"
-        else moveResult = (target == 'notarget')
-        var answer       = {'endmove' : moveResult,'move':moveTodo} <kc>//JSON obj</kc>
+        else moveResult = (<b>target</b> == 'notarget')
+        var answer       = 
+		 <ks>{'endmove' : moveResult,'move':moveTodo}</ks> <kc>//JSON obj</kc>
         const answerJson = JSON.stringify(answer)
 
         target           = "notarget"; 	<kc>//reset target</kc>
-        moveStillRunning = false;       <kc>//to accept other moves</kc>
-        moveHalted       = false;       <kc>//to allow halting next move</kc>
-		
+        <b>moveStillRunning</b> = false;       <kc>//to accept other moves</kc>
+        <b>moveHalted</b>       = false;       <kc>//to allow halting next move</kc>
+
         if( res != null ){ <kc>//prepare the answer for HTTP-POST</kc>
           res.writeHead(200, { 'Content-Type': 'text/json' });
-          res.statusCode=200    		
-          res.write( answerJson  ); <kc>//give info about no collision to the POST sender</kc>
+          res.statusCode=200
+          res.write( answerJson  ); <kc>//give info to the POST sender</kc>
           res.end();
         }
         <kc>//IN ANY CASE: update all the controllers/observers</kc>
         <k>updateObservers</k>(answerJson)   <kc>//send answerJson on <ks>cmdSocket-8091</ks></kc>
   }, <ks>duration</ks>);
-}
+} 
 </pre>
 
 </td>
@@ -647,8 +650,7 @@ It always executes <ks>ONE OPERATION AT THE TIME</ks>. Moreover, a blocking oper
 <m> The (callback) function given as argument will be called by
 the Node run-time support when the given time (<ks>duration</ks>) expires.</m></li>
 <li><h3>FSM</h3> 
-The variables <br/>
-<ks>target, moveStillRunning, moveHalted</ks> <br/>
+The variables <b>target, moveStillRunning, moveHalted</b> <br/>
 <k>represent a state</k> that can be changed by messages received on the <ks>mainSocket</ks>. 
  
 <div class="remark">
@@ -666,18 +668,19 @@ whose transitions are triggered by messages.
 <td><h4>Implement HTTP-POST</h4>
 The following code specifies the callback called by the EventLoop 
 when it processes a message sent by a HTTP client to move the robot.
-<pre>
+<pre> 
  app.post("/api/move", function(req, res,next)  {
    var data = ""
-   req.on('data', function (chunk) { data += chunk; }); <kc>//accumulate data sent by POST</kc>
-   req.on('end', function () {	//elaborate data received
+   req.on('data', function (chunk) { 
+			data += chunk; });<m> <kc>//accumulate data sent by POST</kc></m>
+   req.on('end', function () {	<kc>//elaborate data received</kc>
    <kc>//{ robotmove: move, time:duration } - robotmove: turnLeft | turnRight | ...</kc>
    var jsonData = JSON.parse(data)
    var moveTodo = jsonData.robotmove
    var duration = jsonData.time
    <k>doMove(moveTodo, duration, res)</k> <kc>//send the answer after duration</kc>
   });
- }); 
+ });  
 </pre>
 </td>
 <td>
@@ -689,17 +692,17 @@ when it processes a message sent by a client over <ks>cmdSocket-8091 (ws)</ks> t
   ws.on('message', msg => <k>{</k> <kc>//start callback</kc>
  	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
-	if( <ks>moveStillRunning</ks> && moveTodo != "alarm"){
-	    const answer  = { 'endmove' : <k>"notallowed"</k> , 'move' : moveTodo }
+	if( <b>moveStillRunning</b> && moveTodo != "alarm"){
+	    const answer = {'endmove':<k>"notallowed"</k>,'move':moveTodo}
 	    <k>updateObservers</k>( JSON.stringify(answer) )
 	    return
 	}
 	if( moveTodo == "alarm" ){
 	    <k>execMoveOnAllConnectedScenes</k>(moveTodo, duration)
-	    </s>moveHalted</ks> = true
+	    <b>moveHalted</b> = true
 	    return
 	}
-	 <ks>moveStillRunning </ks> =true
+	 <b>moveStillRunning</b>=true
 	 <k>doMove(moveTodo, duration)</k>
   <k>}</k> <kc>//end callback</kc>
   );
@@ -717,12 +720,15 @@ when it processes a message sent by a client over <ks>cmdSocket-8091 (ws)</ks> t
 <a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a> library. <br/><br/> -->
 
 
-When the <ks>WebvGLScene</ks> detects a collision between the virtualrobot and and obstacle (fixed or mobile), it uses a <tt>EventBus</tt> 
-user-defined utility to 'emit' a <ks>collision</ks> event over the  <ks>mainSocket</ks> (
+When the <ks>WebvGLScene</ks> detects a collision between the virtualrobot and and obstacle (fixed or mobile), it uses a 
+user-defined utility (<a href="../node/WEnv/WebGLScene/js/eventBus/eventBus.js" target="code"><ks>eventBus.js</ks></a>) 
+to 'emit' a <k>collision</k> event over the  <ks>mainSocket</ks> (
 <a href="https://www.npmjs.com/package/socket.io", target="web">socket.io</a>). This event 
-is handled by a proper callback, that redirects the information to all the clients connected to port <ks>cmdSocket-8091</ks>:
+is handled by a proper handler (see <tt>initSocketIOWebGLScene</tt> in 
+<a href="../node/WEnv/server/src/WebpageServer.js" target="code">WebpageServer.js</a>), 
+that redirects the information to all the clients connected to port <ks>cmdSocket-8091</ks>:
 <pre>
- socket.on( <ks>'collision'</ks>,(obj) => { 
+ socket.on( <k>'collision'</k>,(obj) => { 
    target = obj;
    const info     = { 'collision' : true, 'move': 'unknown'}
    <k>updateObservers( JSON.stringify(info) )</k> <kc>//send info on <ks>cmdSocket-8091</ks></kc>
@@ -731,17 +737,23 @@ is handled by a proper callback, that redirects the information to all the clien
 
 The same happens when the <ks>WebvGLScene</ks> detects a sonar activation; the event is now called  <ks>sonarActivated</ks>.
 
-
-
 <h2>Logical interaction</h2>
 After our analysis of the WEnv implementation, we can introduce the following abstract view of interactions with a client:<br/>
 <center><img src="./img/logicInteraction.png" alt="logicInteraction" width="60%" ></center>
-A robot-move command can be sent in form of a logical request; at implementation level the client could perfomr an 
+A robot-move command can be sent in form of a <i>logical request</i>; at implementation level the client could perform an 
 HTTP-POST on port 8090 or send a message on the <ks>cmdSocket-8091</ks>.
-<br/><br/>
+<br/> 
 Examples of clients are reported in project <a href="../../it.unibo.virtualrobotclient" target="code">it.unibo.virtualrobotclient</a>
-(see  also <a href="../../it.unibo.virtualrobotclient/userDocs/VirtualrobotClients.html" target="code">LabIss2021 | Using the virtual robot</a>).
- 
+(see  <a href="../../it.unibo.virtualrobotclient/userDocs/VirtualrobotClients.html" target="code">LabIss2021 | Using the virtual robot</a>).
+ <br/><br/>
+The WEnv works also as a source of information towards the connected clients, by sending a dispatch over the <ks>cmdSocket-8091</ks>
+with the following possible payloads:
+<ul>
+<li>information about the result of a robot-command request (e.g. <tt>{"endmove":"RESULT", "move":MOVE}</tt>) </li>
+<li>information emitted by a sonar (e.g. <tt>{ "sonarName": "sonarName", "distance": 1, "axis": "x" }</tt>)</li>
+<li>information about the collision of the robot with an obstacle (e.g. <tt>{ "collision" : "false", "move": "moveForward"}</tt>)</li>
+</ul>
+
 <!-- 
 <h3 id="answerMeaning">Important experiment: give the proper meaning to answers</h3>
 For a HTML page that shows the information sent by the WEnv over <ks>cmdSocket-8091</ks>
