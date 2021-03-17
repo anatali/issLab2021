@@ -8,9 +8,7 @@ implements the business logic by handling messages received on the cmdsocket-809
 package it.unibo.wenv;
 
 import it.unibo.interaction.IssObserver;
-import it.unibo.supports.IssArilRobotSupport;
 import it.unibo.supports.IssCommSupport;
-import it.unibo.supports.IssWsSupport;
 import org.json.JSONObject;
 
 public class RobotInputController implements IssObserver {
@@ -19,7 +17,7 @@ private IssCommSupport     commSupport;  //IssArilRobotSupport
 
     //public enum robotLang {cril, aril}    //todo
 
-    public RobotInputController(IssCommSupport support, boolean usearil, boolean doMap){
+        public RobotInputController(IssCommSupport support, boolean usearil, boolean doMap){
         commSupport = support;
         robotBehaviorLogic = new RobotBoundaryLogic(support, usearil, doMap);
      }

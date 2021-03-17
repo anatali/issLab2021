@@ -735,10 +735,10 @@ created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFact
 and injected by the user-defined constructor.
 <pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
 
-<k>Key point</k>: <tt>Asynchronous REQUEST and observed REPLY</tt>. <br/>
-The business logic is defined by a 
+<k>Key point</k>: <tt>Asynchronous REQUEST and observed REPLY</tt>. <br/> <br/>
+<m>The business logic is defined by a 
 <a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code"><ks>RobotControllerBoundary</ks></a> working
-as an <em>observer</em> of the <tt>cmdsocket-8091</tt> and initialized to use the  <ks>cril</ks> command-move language.
+as an <em>observer</em> of the <tt>cmdsocket-8091</tt> and initialized to use the  <ks>cril</ks> command-move language.</m>
 
 <h4>Zoomimg into the application </h3>
 <hr/>
@@ -803,15 +803,25 @@ The business logic is able to build two different types of robot-moves history:
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
 </m>
 <br/>
-<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt>. <br/>
-The business logic is defined in an object of class 
+<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt> and  <a href="https://stackify.com/solid-design-principles/" target="web"><k>Single Responsibility Principle</k></a>.
+<br/><br/><m>
+<ul>
+<li>The business logic is defined in an object of class 
 <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
 that is called by the observer
 <a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code"><ks>RobotInputController</ks></a>
-initialized to use the <ks>aril</ks> command-move language.  
-<br/>
-In this way, we have further removed the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
-from any detail related to the interaction with WEnv.
+initialized to use the <ks>aril</ks> command-move language. </li>
+ 
+<li>
+In this way, we have further removed any detail related to the interaction with WEnv
+from the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>. 
+</li>
+<li>
+Moreover, the details related to the construction of the robot-moves history are embedded in
+the class <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code"><ks>RobotMovesInfo</ks></a>.</a>.
+</li>
+</ul>
+</div>
 
 <h4>Zoomimg into the application </h3><hr/>
  <center><img src="./img/RobotBoundaryArilZooming.png" alt="RobotBoundaryArilZooming" width="100%"></center>
@@ -829,6 +839,7 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 
 <h3>A <a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code"><ks>mapUtil</ks></a></h3>
 
+ 
 
 <table style="width:100%" border="1">
 <tr>
@@ -836,30 +847,29 @@ Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/support
 <table style="width:100%" border="1">
 <tr>
 <td style="width:50%">
-<m>
-We can easily build a map of the room, by exploting the fact that a <ks>aril</ks> forward/backward move 
+ <!--<center><img src="./img/gridSpaceFree.png" alt="gridSpaceFree" width="80%"></center>A free space.-->
+<m>We can  build a map of the space, by exploting the fact that a <ks>aril</ks> forward/backward move 
 covers a length equals to the length <tt>DR</tt> of the robot.
-<br/><br/>
-Thus, we imagine to subdivide the room into a grid of <tt>nr * nc</tt> squares of side <tt>DR</tt>.
+<br/> <br/> 
+Thus, we
+Thus, we imagine to subdivide the available space into a grid of <tt>nr * nc</tt> squares of side <tt>DR</tt>.
 </m>
 </td>
 <td style="width:50%">
- 
- <center><img src="./img/gridRoom.png" alt="gridRoom" width="80%"></center>
+  <center><img src="./img/gridSpaceObstacles.png" alt="gridSpaceObstacles" width="80%"></center>
+  A  space with obstacles.
 </td>
 
 </tr>
 </table>
 
-A support for the room-map is given by the following utility:<br/><br/>
-<a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>   
-<br/><br/>
  
-A demo is available in: 
-<a href="../app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" target="code">MainMapUsage.kt</a> 
-</m>
 </td>
 <td>
+A support for the room-map is given by the following utility:
+<a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a> : 
+<br/>
+
 <ol>
 <li>creates a room map as a singleton;</li>
 <li>provides the operation <bc>doMove(move: String )</bc> that updates the map according to the given <ks>aril</ks> robot move
@@ -871,10 +881,22 @@ resets the map to the empty map;
 <li>provides the operation <bc>showMap( )</bc> that prints on the standard output the String-representation of the current map.
 </li>
 </ol>
- 
+ <br/>
+ A demo is available in: 
+<a href="../app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" target="code">MainMapUsage.kt</a> 
+
 </td>
 </tr>
 </table>   
+
+<br/><br/>
+
+<h2>Some new case-study</h2>
+
+<ol>
+<li>The <a href="../../it.unibo.issLabStart/userDocs/resumableBoundaryWalker.html" target="code">resumableBoundaryWalker</a>  </li>
+<li>The  <a href="../../it.unibo.issLabStart/userDocs/cautiousExplorer.html" target="code">cautiousExplorer</a> </li>
+</ol>
 
 <!--
 <h3>Clients written in Kotlin </h3>

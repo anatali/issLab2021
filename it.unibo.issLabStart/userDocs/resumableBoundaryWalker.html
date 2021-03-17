@@ -189,53 +189,113 @@ div.imagedesc{
     
 <head>
    
-<title>CautiousExplorer</title></head>
+<title>resumableBoundaryWalker</title></head>
     
 <body>
 <div id="top">
-<h1>Lab ISS | the project cautiousExplorer<font size="5"></font> </h1>
+<h1>Lab ISS | the project resumableBoundaryWalker<font size="5"></font> </h1>
 </div>  
 
 <div class="body"> 
 <h2>Introduction</h2>
-This case-study starts to deal with the design and development of proactive/reactive software systems that use aynchronous exchange of information.
+This case-study starts to deal with the design and development of proactive/reactive software systems which work under user-control.
  
 <h2>Requirements</h2>
 
  
 <div class="remark">
-Design and build a software system that allow the robot described in 
-<a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a>
- to exibit the following behaviour:
-<ul>
-<li>the robot lives in a closed environment, delimited by walls that includes one or more devices (e.g. sonar) able to detect its presence;</li>
-<li>the robot has a <ks>den</ks> for refuge, located near a wall;</li>
-<li>the robot works as an <i>explorer of the environment</i>. Starting from its <ks>den</ks>,  the robot moves
-(either randomly or - preferably - in a more organized way) with the aim to find the fixed obstacles around the <ks>den</ks>. 
-The presence of mobile obstacles is (at the moment) excluded;</li>
-<li>since the robot is <i>'cautious'</i>,  it  returns immediately to the <ks>den</ks> as soon as it finds an obstacle.
-Optionally, it should also return to the <ks>den</ks> when a sonar detects its presence;
-</li>
-<li>the robot should remember the position of the obstacles found, by creating a sort of 'mental map' of the environment.</li>
-</ul>
+ 
+Design and build a software system (named from now on 'the application') that leads the robot described in 
+<a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a> 
+to walk along the boundary of a empty, rectangular room under user control. 
+<br/>
+More specifically, the <ks>user story</ks> can be summarized as follows:
+<br/>
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:65%" >
+the robot is initially located at the <ks>HOME</ks> position, as shown in the picture on the rigth
+</td>
+<td><center><img src="./img/emptyGridWithHome.png" alt="emptyGridWithHome" width="35%"></center>
+</td>
+</tr>
+
+<tr>
+<td style="width:65%" >
+ the application presents to the user a <ks>consoleGui</ks> similar to that shown in the picture on the rigth
+</td>
+<td><center><img src="./img/stopResumeConsole.png" alt="stopResumeConsole" width="35%"></center>
+</td>
+</tr>
+
+
+
+<tr>
+<td style="width:65%" >
+when the user hits the button <k>RESUME</k> the robot <ks>starts or continue to walk</ks> along the boundary, while
+updating a <ks>robot-moves history</ks>;
+</td>
+<td> 
+</td>
+</tr>
+
+<tr>
+<td style="width:65%" >
+when the user hits the button <k>STOP</k> the robot stop its journey, waiting for another <k>RESUME</k> ;
+</td>
+<td> 
+</td>
+</tr>
+
+<tr>
+<td style="width:65%" >
+when the robot reachs its <ks>HOME</ks> again, the application <i>shows the robot-moves history</i> on the standard output device.
+</td>
+<td> 
+</td>
+</tr>
+
+
+ </tbody>
+</table>
+
+ 
 </div>
 
  <h3>Delivery</h3>
-The customer requires to receive the completion of the analysis (of the requirments and of the problem)  by <k>Friday 12 March</k>. 
-Hopefully, he/she expects to receive also (in the same document) some detail about the project.<br/>
-The name of the file (in pdf) should be:
+The customer <ks>hopes to receive</ks> a working prototype (written in Java ) of the application by <k>Monady 22 March</k>. 
+The name of this file (in pdf) should be:
 <pre>
-cognome_nome_ce.pdf
+cognome_nome_resumablebw.pdf
 </pre>
 
 <h2>Requirement analysis</h2>
- 
+... <tt>TODO</tt> 
 
 </div>
 
 <h2>Problem analysis</h2>
- 
+... <tt>TODO</tt> <br/><br/>
 
+The following resources could be usefully exploited to reduce the development time of a first prototype of the application:
+
+<ol>
+<li>The  <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a>  
+(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui" target="code">it.unibo.virtualrobotclient</a>) </li>
+
+<li>The  <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>  
+(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv" target="code">it.unibo.virtualrobotclient</a>) </li>
+
+
+<li>The  <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">RobotInputController.java</a>  
+(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv" target="code">it.unibo.virtualrobotclient</a>) </li>
+</ol>
+
+... <tt>TODO</tt> <br/><br/>
+
+The expected time required for the development of the application is (no more than) 6 hours.
 <h2>Test plans</h2> 
 
 
@@ -247,7 +307,9 @@ cognome_nome_ce.pdf
  
 
 <h2>Deployment</h2> 
-
+The deployment consists in the commit of the application on a project named <ks>iss2021_resumablebw</ks> of the MY GIT repository ( <k>RRR</k> ).
+<br/><br/>
+The final commit commit has done after <k>XXX</k> hours of work.
  
 <h2>Maintenance</h2> 
  
