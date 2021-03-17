@@ -15,9 +15,10 @@ import org.json.JSONObject;
 
 public class RobotInputController implements IssObserver {
 private RobotBoundaryLogic robotBehaviorLogic  ;
-private IssCommSupport     commSupport;  //IssArilRobotSupport
+private IssCommSupport commSupport;  //IssArilRobotSupport
     //public enum robotLang {cril, aril}    //todo
-
+private boolean robotStarted = false;
+private boolean robotHalted  = true;
 
     public RobotInputController(IssCommSupport support, boolean usearil, boolean doMap){
         commSupport = support;
@@ -28,6 +29,8 @@ private IssCommSupport     commSupport;  //IssArilRobotSupport
     public String doBoundary(){
         return robotBehaviorLogic.doBoundaryInit();
     }
+
+
 
     @Override
     public void handleInfo(String infoJson) {
@@ -47,6 +50,7 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
         if( infoJson.has("endmove") )        handleEndMove(infoJson);
         else if( infoJson.has("sonarName") ) handleSonar(infoJson);
         else if( infoJson.has("collision") ) handleCollision(infoJson);
+        else if( infoJson.has("robotcmd") )  handleRobotCmd(infoJson);
     }
 
     protected void handleSonar( JSONObject sonarinfo ){
@@ -65,7 +69,9 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
         String move   = (String) endmove.get("move");   //moveForward, ...
         System.out.println("RobotInputController | handleEndMove:" + move + " answer=" + answer);
         switch( answer ){
-            case "true"       :  robotBehaviorLogic.boundaryStep( move, false );
+            case "true"       :  if( move.equals("moveForward") && robotHalted ){
+                                     robotBehaviorLogic.updateMovesRep("w");
+                                  } else robotBehaviorLogic.boundaryStep( move, false );
                                   break;
             case "false"      : robotBehaviorLogic.boundaryStep( move, true  );break;
             case "halted"     : System.out.println("RobotInputController | handleEndMove to do halt" );break;
@@ -74,4 +80,22 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
         }
     }
 
+    protected void handleRobotCmd( JSONObject rootCmd ){
+        String cmd = (String)  rootCmd.get("robotcmd");
+        //WARNING: System.out.println does introduce delay: set robotHalted=true as soon as possible
+        //synchronized?
+        //System.out.println("RobotInputController | handleRobotCmd:" + cmd + " " + commSupport  );
+        if( cmd.equals( "STOP" ) ){
+            robotHalted = true;   //halt the robot, not the move
+            //System.out.println("RobotInputController | handleRobotCmd robotHalted"    );
+            //robotBehaviorLogic.showRobotMovesRepresentation();
+        }
+        else if( cmd.equals( "RESUME" ) ){
+            if( robotHalted ) {
+                robotHalted = false;
+                robotBehaviorLogic.doBoundaryGoon(   );   //activate the robot
+            }else
+                System.out.println("RobotInputController | handleRobotCmd robot already running"    );
+        }
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ConsoleGui implements  Observer{	//Observer deprecated in 11 WHY?
-private String[] buttonLabels  = new String[]  { "START", "STOP" };//{"w", "s", "l", "r", "START", "STOP"};
+private String[] buttonLabels  = new String[]  { "STOP", "RESUME" }; //{"w", "s", "l", "r", ...};
 //private WEnvConnSupportNoChannel wenvConn ;
 private IssObserver controller ;
 
@@ -30,9 +30,9 @@ private IssObserver controller ;
 
 	public void update( Observable o , Object arg ) {	//Observable deprecated WHY?
 		String move = arg.toString();
-		System.out.println("GUI input move=" + move);
-		String robotCmd = (move == "STOP") ? "{\"robotcmd\":\"h\" }" : "{\"robotcmd\":\"w\" }";
-		System.out.println("GUI input robotCmd=" + robotCmd );
+		//System.out.println("GUI input move=" + move);
+		String robotCmd = (move == "STOP") ? "{\"robotcmd\":\"STOP\" }" : "{\"robotcmd\":\"RESUME\" }";
+		//System.out.println("GUI input robotCmd=" + robotCmd );
 		try {
 			//wenvConn.sendMessage( move );
 			controller.handleInfo( robotCmd );

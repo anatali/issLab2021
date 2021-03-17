@@ -5,9 +5,10 @@ implements the business logic
 
 ===============================================================
 */
-package it.unibo.wenv;
+package it.unibo.robotAppl;
 import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.IssCommSupport;
+import it.unibo.wenv.RobotMovesInfo;
 import mapRoomKotlin.mapUtil;
 
 public class RobotBoundaryLogic {
@@ -16,7 +17,8 @@ public class RobotBoundaryLogic {
 private int stepNum              = 1;
 private boolean boundaryWalkDone = false ;
 private boolean usearil          = false;
-private int moveInterval         = 1000;
+private int moveInterval         = 500;
+
 private RobotMovesInfo robotInfo;
     //public enum robotLang {cril, aril}    //todo
 
@@ -24,6 +26,12 @@ private RobotMovesInfo robotInfo;
         rs           = support;
         this.usearil = usearil;
         robotInfo    = new RobotMovesInfo(doMap);
+     }
+
+    public void reset(){
+        stepNum          = 1;
+        boundaryWalkDone = false;
+        robotInfo.getMovesRepresentationAndClean();
         robotInfo.showRobotMovesRepresentation();
     }
 
@@ -32,51 +40,32 @@ private RobotMovesInfo robotInfo;
         delay(moveInterval ); //to reduce the robot move rate
     }
 
-    public synchronized String doBoundaryInit(){
-        System.out.println("RobotBoundaryLogic | doBoundary rs=" + rs + " usearil=" + usearil);
-        rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg  );
-        //The reply to the request is sent by WEnv after the wtime defined in issRobotConfig.txt  
-        //delay(moveInterval ); //to reduce the robot move rate
-        System.out.println( mapUtil.getMapRep() );
-        while( ! boundaryWalkDone ) {
-            try {
-                wait();
-                //System.out.println("RobotBoundaryLogic | RESUMES " );
-                rs.close();
-             } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        return robotInfo.getMovesRepresentationAndClean();
-    }
-
     public void updateMovesRep (String move ){
         robotInfo.updateRobotMovesRepresentation(move);
     }
 
  //Business logic in RobotBoundaryLogic
-    protected synchronized void boundaryStep( String move, boolean obstacle ){
+    public synchronized void boundaryStep( String move, boolean obstacle, boolean robotHalted ){
          if (stepNum <= 4) {
             if( move.equals("turnLeft") ){
                 updateMovesRep("l");
-                //showRobotMovesRepresentation();
+                //robotInfo.showRobotMovesRepresentation();
                 if (stepNum == 4) {
-                    boundaryWalkDone=true;
-                    notify(); //to resume the main
+                    reset();
                     return;
                 }
                 stepNum++;
-                doBoundaryGoon();
+                if( ! robotHalted )  doBoundaryGoon();
                 return;
             }
             //the move is moveForward
-            if( obstacle ){
+
+            if( obstacle && ! robotHalted){
                 rs.request( usearil ? MsgRobotUtil.lMsg : MsgRobotUtil.turnLeftMsg   );
                 delay(moveInterval ); //to reduce the robot move rate
-            }
-            if( ! obstacle ){
+            }else if( ! obstacle ){
                 updateMovesRep("w");
-                doBoundaryGoon();
+                if( ! robotHalted ) doBoundaryGoon();
             }
             robotInfo.showRobotMovesRepresentation();
         }else{ //stepNum > 4

@@ -14,9 +14,11 @@ public class RobotBoundaryLogic {
     private IssCommSupport rs ;
 
 private int stepNum              = 1;
+//private String journey           = "";
 private boolean boundaryWalkDone = false ;
 private boolean usearil          = false;
 private int moveInterval         = 1000;
+//private boolean  doMap           = false;
 private RobotMovesInfo robotInfo;
     //public enum robotLang {cril, aril}    //todo
 
@@ -24,6 +26,7 @@ private RobotMovesInfo robotInfo;
         rs           = support;
         this.usearil = usearil;
         robotInfo    = new RobotMovesInfo(doMap);
+        //this.doMap   = doMap;
         robotInfo.showRobotMovesRepresentation();
     }
 
@@ -34,7 +37,7 @@ private RobotMovesInfo robotInfo;
 
     public synchronized String doBoundaryInit(){
         System.out.println("RobotBoundaryLogic | doBoundary rs=" + rs + " usearil=" + usearil);
-        rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg  );
+        //rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg  );
         //The reply to the request is sent by WEnv after the wtime defined in issRobotConfig.txt  
         //delay(moveInterval ); //to reduce the robot move rate
         System.out.println( mapUtil.getMapRep() );
@@ -49,6 +52,30 @@ private RobotMovesInfo robotInfo;
         }
         return robotInfo.getMovesRepresentationAndClean();
     }
+/*
+    protected String getMovesRepresentationAndClean(  ){
+        if( doMap ) return mapUtil.getMapAndClean();
+        else {
+            String answer = journey;
+            journey       = "";
+            return answer;
+        }
+    }
+
+    public String getMovesRepresentation(  ){
+        if( doMap ) return mapUtil.getMapRep();
+        else return journey;
+    }
+
+    public void updateRobotMovesRepresentation(String move ){
+        if( doMap )  mapUtil.doMove( move );
+        else journey = journey + move;
+    }
+    public void showRobotMovesRepresentation(  ){
+        if( doMap ) mapUtil.showMap();
+        else System.out.println( "journey=" + journey );
+    }
+*/
 
     public void updateMovesRep (String move ){
         robotInfo.updateRobotMovesRepresentation(move);
@@ -63,6 +90,7 @@ private RobotMovesInfo robotInfo;
                 if (stepNum == 4) {
                     boundaryWalkDone=true;
                     notify(); //to resume the main
+                    robotInfo.getMovesRepresentationAndClean();
                     return;
                 }
                 stepNum++;

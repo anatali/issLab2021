@@ -10,6 +10,10 @@ object mapUtil{
 		return outS
 	}
 
+    @JvmStatic fun getMapRep() : String{
+        return map.toString()
+    }
+
     @JvmStatic fun setObstacle(){
 		map.put( state.x,  state.y, Box(true, false, false))
 	}
