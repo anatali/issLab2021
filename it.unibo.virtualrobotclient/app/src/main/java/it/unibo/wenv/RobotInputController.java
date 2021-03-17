@@ -16,8 +16,8 @@ import org.json.JSONObject;
 public class RobotInputController implements IssObserver {
 private RobotBoundaryLogic robotBehaviorLogic  ;
 private IssCommSupport     commSupport;  //IssArilRobotSupport
-    //public enum robotLang {cril, aril}    //todo
 
+    //public enum robotLang {cril, aril}    //todo
 
     public RobotInputController(IssCommSupport support, boolean usearil, boolean doMap){
         commSupport = support;
