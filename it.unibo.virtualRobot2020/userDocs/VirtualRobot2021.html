@@ -643,7 +643,10 @@ In other words:
 <div class="remark">The Node run-time is <k>single-threaded</k> and tailored to manage  
 <a href="https://en.wikipedia.org/wiki/I/O_bound" target="web">io-bound</a> processing. 
 It always executes <ks>ONE OPERATION AT THE TIME</ks>. Moreover, a blocking operation blocks the entire system.
-</div></li>
+</div>
+<center><img src="./img/eventLoop.png" alt="eventLoop" width="80%" ></center>
+ 
+</li>
 
 <li><h3>No 'Thread.sleep' operation</h3> 
 <k>setTimeout(...)</k> releases the control.<br/>

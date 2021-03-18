@@ -335,6 +335,52 @@ For a rapid introduction to WebSockets, read the file: <a href="WebSocket.pdf" t
 For a description of the role of WebSockets in the WEnv, read: 
 <a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html#inside" target="web">Inside WEnv</a>.
    
+<h3 id="WsNodeSupport">The support in Node</h3> 
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+
+
+
+Node runs JavaScript code in the 
+<a href="https://nodejs.org/en/docs/guides/dont-block-the-event-loop/" target="web">Event Loop</a>
+that executes the callbacks registered for events, 
+and is also responsible for fulfilling non-blocking asynchronous requests like network I/O.
+ <br/> <br/>
+<center><img src="./img/eventLoop.png" alt="eventLoop" width="80%" ></center>
+
+</td>
+<td><m>
+<div class="remark">The Node run-time is <k>single-threaded</k> and tailored to manage  
+<a href="https://en.wikipedia.org/wiki/I/O_bound" target="web">io-bound</a> processing. 
+At application level, it executes <ks>ONE OPERATION AT THE TIME</ks>. 
+Thus, a blocking operation blocks the entire system.
+</div></m>
+The following code shows the structure of the application code involved by the use
+of the library.
+
+<pre>
+const WebSocketClient  = require('websocket').client;
+var client             = new WebSocketClient();
+
+ client.on(<k>'connectFailed'</k>, function(error) { ... });
+
+ client.on(<k>'connect'</k>, function(connection) {
+	...
+        connection.on(<k>'error'</k>, function(error) {...});
+        connection.on(<k>'close'</k>, function() {...});
+        connection.on(<k>'message'</k>, function(msg){ ... })
+  });
+</pre>
+
+</td>
+</tr>
+ </tbody>
+</table>
+
+
 
 <h3 id="IssWsSupport">The IssWsSupport</h3>
 Our support to websocket-interaction exploits the 
@@ -523,11 +569,11 @@ In fact, the <a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)#:~
 monitor</a> implemented by <tt>AnswerAvailable</tt> allows us to synchronize the operations of these two threads by usingin shared memory.
 
 <div class="remark">
-Now a paradigm shift is upon us, that can be summarized in the
-motto: <k>do not communicate by sharing memory; instead, share memory by communicating</k>.
+Now a paradigm shift is upon us, that can be summarized in the motto: <br/>
+<k>do not communicate by sharing memory; instead, share memory by communicating</k>.
+</div>
 <hr/> 
 Moreover, we have to understand how it is possible to write applications without introducing a (blocking) <ks>receive</ks> operation.
-</div>
 
 <!--
 From <a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web"><em>JSR 356, Java API for WebSocket</em></a>
