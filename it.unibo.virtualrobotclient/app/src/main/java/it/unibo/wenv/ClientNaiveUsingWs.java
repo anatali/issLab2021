@@ -123,7 +123,7 @@ MAIN
         try{
             System.out.println("ClientNaiveUsingWs | main start n_Threads=" + Thread.activeCount());
             ClientNaiveUsingWs appl = new ClientNaiveUsingWs("localhost:8091");
-            appl.doBasicMoves();
+            //appl.doBasicMoves();
             appl.doBasicMovesDelayed();
             // give time to receive messages from websocket
             //Thread.sleep(2000);
