@@ -5,15 +5,11 @@
  ===============================================================
  */
 package it.unibo.supports;
-
-import it.unibo.interaction.IssObserver;
 import org.json.JSONObject;
-
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
-import java.util.Vector;
 
 /**
  IssWsSupport.java

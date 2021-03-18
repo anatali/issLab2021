@@ -34,8 +34,6 @@ public class ClientBoundaryWebsockBasicAsynch {
         this.support = support;
     }
 
-
-
     public static void main(String args[]){
         try {
             System.out.println("ClientBoundaryWebsockBasicAsynch | main start n_Threads=" + Thread.activeCount());

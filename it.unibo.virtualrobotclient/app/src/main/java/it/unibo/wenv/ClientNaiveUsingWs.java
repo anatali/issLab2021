@@ -1,5 +1,9 @@
 /**
  * ClientNaiveUsingWs
+ ===============================================================
+ * Technology-dependent application
+ * TODO. eliminate the communication details from this level
+ ===============================================================
  */
 
 package it.unibo.wenv;
@@ -11,11 +15,8 @@ import org.json.JSONObject;
 
 @ClientEndpoint
 public class ClientNaiveUsingWs {
+    private Session userSession    = null;
 
-    Session userSession    = null;
-    private MessageHandler messageHandler;
-    //private JSONParser simpleparser ;
- 
     public ClientNaiveUsingWs(String addr) {
             System.out.println("ClientNaiveUsingWs |  CREATING ...");
             init(addr);
@@ -23,7 +24,6 @@ public class ClientNaiveUsingWs {
 
     protected void init(String addr){
         try {
-            //simpleparser = new JSONParser();
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI("ws://"+addr));
         } catch (URISyntaxException ex) {
@@ -34,7 +34,6 @@ public class ClientNaiveUsingWs {
             e.printStackTrace();
         }
     }
-
 
     @OnOpen
     public void onOpen(Session userSession) {
@@ -71,8 +70,6 @@ public class ClientNaiveUsingWs {
         }
 
     }
-
-
 
 /*
 BUSINESS LOGIC
@@ -132,7 +129,6 @@ MAIN
             System.err.println("ClientNaiveUsingWs | InterruptedException exception: " + ex.getMessage());
         }
     }
-
 }
 
 /*

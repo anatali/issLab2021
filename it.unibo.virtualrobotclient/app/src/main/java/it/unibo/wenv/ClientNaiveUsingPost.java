@@ -1,6 +1,8 @@
 /*
 ClientUsingPost.java
 ===============================================================
+Technology-dependent application
+TODO. eliminate the communication details from this level
 ===============================================================
 */
 package it.unibo.wenv;
@@ -28,7 +30,7 @@ public class ClientNaiveUsingPost {
 		//System.out.println( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd );
 		return crilCmd;
 	}
-	public String moveForward(int duration)  { return crilCmd("moveForward", duration) ;  }
+	public String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }
 	public String moveBackward(int duration) { return crilCmd("moveBackward", duration); }
 	public String turnLeft(int duration)     { return crilCmd("turnLeft", duration);     }
 	public String turnRight(int duration)    { return crilCmd("turnRight", duration);    }

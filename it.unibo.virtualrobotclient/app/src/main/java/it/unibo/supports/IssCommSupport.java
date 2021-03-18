@@ -5,7 +5,6 @@
  ==========================================================================
  */
 package it.unibo.supports;
-
 import it.unibo.interaction.IssObserver;
 import it.unibo.interaction.IssOperations;
 

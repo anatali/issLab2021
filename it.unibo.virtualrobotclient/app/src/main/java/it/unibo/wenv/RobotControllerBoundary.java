@@ -51,7 +51,7 @@ private int moveInterval = 1000;
     }
 
     /*
-Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
+Handler of the messages sent by WENv over the cmdsocket-8091 to notify:
 - the answer to a robot-command move {"endmove":"RESULT", "move":MOVE}
 - the information emitted by a sonar { "sonarName": "sonarName", "distance": 1, "axis": "x" }
 - a collision between the robot and an obstacle { "collision" : "false", "move": "moveForward"}
@@ -67,7 +67,6 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
         String sonarname = (String)  sonarinfo.get("sonarName");
         int distance     = (Integer) sonarinfo.get("distance");
         System.out.println("RobotControllerBoundary | handleSonar:" + sonarname + " distance=" + distance);
-
     }
     protected void handleCollision( JSONObject collisioninfo ){
         //we should handle a collision  when there are moving obstacles
