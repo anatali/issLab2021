@@ -267,12 +267,143 @@ function myFunction() {
 <div class="body"> 
 <h2>Introduction</h2>
 
+The goal of this section is to present a sequence of software systems that require the asynchronous interaction 
+(see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/sistemi/interazioneSistemi.html" target="book">
+Interazione</a>) between an application (client) and the
+<a href="../../issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a>.
+
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+The attention is focussed on the three main dimensions (
+see  <a href="../../it.unibo.issLabStart/NatMolBook/content/book/sistemi/dimensioniSistemi.html" target="book">
+Dimensioni principali di un sistema software</a>) of a software system
+(see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/introduzione/dimSistemistica.html" target="book">
+La dimensione sistemistica</a>)
+<br/><br/>
+ <m>The references cited in the oneline-book are reported in 
+<a href="../../it.unibo.issLabStart/NatMolBook/content/biblio/bibliografia.html" target="book">
+bibliografia.html</a>.</m>
+<br/><br/>
+The (nowadays fundamental) dimension of 
+<a href="https://www.sciencedirect.com/topics/computer-science/software-security" target="web"><k>software security</k></a>
+is a hot topic that requires it owns in-depth analysis . At the moment, we will consider this topic
+as 'spread' allong each of three dimensions above.
 
 
-These examples of clients are reported in the project <a href="../" target="code">it.unibo.virtualrobotclient</a>
+
+</td>
+<td><center><img src="./img/dimensions.png" alt="dimensions" width="80%" ></center>
+</td>
+</tr>
+ </tbody>
+</table>
+
+
+
+
+<div class="remark">
+Our goal is to start from the logical architecture defined after the analysis phase
+ and perform a project activity 
+ (see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/modelBased/fasi/progettazione.html" target="book">Progettazione</a>)
+  that incrementally leads
+ (see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/pattern/projectByPattern.html" target="book">Progetti a crescita incrementale</a>)
+  
+   to the definition of  a concrete architecture of the system.
+</div>
+
+
+<hr/>
+
+The sequence of examples is organized as follows:
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:33%" >
+<m>
+<h3>Applications structured in 'naive' way</h3>
+<ol>
+<li><ks>Synchronous REQUEST-RESPONSE | </ks> <br/> 
+<k>application as a 'flat' program</k>: <br/>
+<em><a href="#rrjs1">axiosclientToWenv.js</a></em>, &nbsp; <em><a href="#rrjs2">httpClientToWenv.js</a></em>&nbsp; <br/>
+<em><a href="#rrjava1">ClientNaiveUsingPost.java</a></em>
+ <br/> <br/>
+</li>
+<li><ks>Asynchronous interaction | </ks><br/>  
+<k>application structured by the support </k>: <br/>
+<em><a href="#asynchjs1">wsclientToWenv.js</a></em>&nbsp; <br/>
+<em><a href="#asynchjava1">ClientNaiveUsingWs.java</a></em>
+ <br/> <br/>
+</li>
+<li><ks>Asynchronous interaction | </ks><br/>  
+<k>a module for the business logic </k>: <br/>
+<em><a href="#asynchjs2">wsclientBoundaryToWenv.js</a></em> 
+</li>
+
+
+</ol> 
+</m>
+</td>
+
+<td style="width:33%" >
+<m>
+<h3>Java <tt>boundaryWalker</tt> with basic communication supports</h3>
+<ol> 
+ 
+<li><ks>Synchronous REQUEST-RESPONSE |</ks> <br/> 
+<k>structured by support & business as recursive function</k>: <br/>
+<em><a href="#rrjava2">ClientBoundaryUsingPostBasic.java</a></em> (cril) , &nbsp; 
+<em><a href="#rrjava3">ClientBoundaryUsingPost.java</a></em> (aril)
+<br/><br/>
+</li>
+<li><ks>Synchronous interaction upon websockets | </ks><br/>  
+<k>structured by support & business as recursive function</k>: <br/>
+<em><a href="#rrjava4">ClientBoundaryWebsockBasicSynch.java</a></em> (cril)
+</li>
+
+</ol>
+</m>
+<br/><br/><br/> 
+</td>
+
+<td>
+<m>
+<h3>Java <tt>boundaryWalker</tt> with observable supports</h3>
+<ol> 
+<li><ks>Asynchronous REQUEST and observed REPLY | </ks><br/>  
+<k>business logic in an observer component </k>: <br/>
+<em><a href="#asynchbwjava1">ClientBoundaryWebsockBasicAsynch.java</a></em> (cril)
+<br/><br/>
+
+</li>
+<li><ks>Proactive and Reactive behaviour | </ks><br/>  
+<k>structured according the
+<a href="https://stackify.com/solid-design-principles/" target="web">Single Responsibility Principle</a></k><br/>
+<em><a href="#asynchbwjava2">ClientBoundaryWebsockArilAsynch.java</a></em> (aril)
+
+</li>
+
+</ol>
+<br/><br/><br/><br/>
+</m>
+</td>
+
+</tr>
+ </tbody>
+</table>
+
+
+
+
+
+
+ 
+
 
 <h2>Clients written in Node.js </h2>
-
+These examples of clients are reported in the project <a href="../" target="code">it.unibo.virtualrobotclient</a>.<br/>
 Each of the following programs (<ks>prog.js</ks>) can be executed by writing:  
 <pre>node <ks>prog</ks></pre>
 <hr/>
@@ -281,7 +412,8 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 <tbody>	
 
 <tr>
-<td style="width:50%"><a href="../app/src/main/js/http/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
+<td style="width:50%">
+<a href="../app/src/main/js/http/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
 <hr/>
 <m>The client  <i>walks along the boundary</i> of the room.
 <br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
@@ -290,7 +422,7 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 
 </td>
 <td>
-<div class="remark">
+<div class="remark" id="rrjs1">
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i>functional style based on recursive callback functions</i>
 </div>
 
@@ -309,7 +441,7 @@ Each of the following programs (<ks>prog.js</ks>) can be executed by writing:
 
 </td>
 <td>
-<div class="remark">
+<div class="remark" id="rrjs2">
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and 
 <i>use of state variables and an (user-defined) <ks>doBoundary</ks> operation that embeds the business logic</i>
 </div>
@@ -330,7 +462,7 @@ The client interacts with the WEnv via <em>web-scokets</em>, by using the
 </m>
 </td>
 <td> 
-<div class="remark">
+<div class="remark" id="asynchjs1">
 <k>Key point</k>: <tt>Asynchronous interaction.</tt> <i>Example of Node/Javascript programming</i><br/>
 <m>sequence of asynchronous commands sent with <ks>setTimeout</ks> and input messages handled
 by a callback related to <ks>connection.on('message', function(msg){ ... })</ks> 
@@ -351,7 +483,7 @@ by a callback related to <ks>connection.on('message', function(msg){ ... })</ks>
 <a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
 </td>
 <td> 
- <div class="remark">
+ <div class="remark" id="asynchjs2">
 <k>Key point</k>: <tt>Asynchronous interaction.</tt> 
 <i>Modular Node program that separates the business logic from the low-level ws-socket interaction.</i><br/>
 <m>The business logic is defined in the operation  <ks>walkBoundary</ks> of the module 
@@ -362,42 +494,7 @@ This module is used also in the <tt>HTML</tt> page
 </div>
 </td>
 </tr>
-
-<!--
-<tr>
-<td style="width:50%"><a href="../app/src/main/js/boundaryReactiveWebsocket.js" target="code">boundaryReactiveWebsocket.js</a></td>
-<td>
-The client  <i>walks along the boundary</i> of the room in a event-driven way
-<br/><br/>
-The client interacts with the WEnv via <em>web-scokets</em>, by using the  
-<a href="https://www.npmjs.com/package/websocket" target="web">websocket</a>  library for Node.js. 
-<br/> <br/> 
-The <em>business logic</em> for a robot that walks along a boundary in a event-driven way is defined in
-<a href="../../it.unibo.virtualrobotclient/app/src/main/js/tripBoundaryBusinessLogic.js" target="code">tripBoundaryBusinessLogic.js</a>,
-by abstracting from the technical details about (websocket) connections.
-
-  <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket" target="web">WebSocket</a> 
-</td>
-</tr>
-
-
-<tr>
-<td style="width:50%"><a href="../../it.unibo.virtualrobotclient/app/src/main/js/boundaryReactiveWs.js" target="code">boundaryReactiveWs.js</a></td>
-<td>
-The client  <i>walks along the boundary</i> of the room in a event-driven way
-<br/><br/>
-The client interacts with the WEnv via <em>web-scokets</em>, by using the  
-<a href="https://github.com/websockets/ws" target="web">https://github.com/einaros/ws</a> library for Node.js 
-(see also <a href="https://www.npmjs.com/package/ws" target="web">ws: a Node.js WebSocket library</a>)
- <br/> <br/> 
-The <em>business logic</em> for a robot that walks along a boundary in a event-driven way is defined in
-<a href="../../it.unibo.virtualrobotclient/app/src/main/js/tripBoundaryBusinessLogic.js" target="code">tripBoundaryBusinessLogic.js</a>,
-by abstracting from the technical details about (websocket) connections.
  
-  <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket" target="web">WebSocket</a> 
-</td>
-</tr>
- -->
 </tbody>	
 </table></center>
 
@@ -420,7 +517,7 @@ to implement <em> HTTP</em>  requests.
 </m>
 </td>
 <td>
- <div class="remark">
+ <div class="remark" id="rrjava1">
 <k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> <br/>
 <i>The communication code is completely written by the application designer</i>. 
 <m>
@@ -457,7 +554,7 @@ is 'injected' into the application by a call to the method annotated with <k>@On
 </m>
 </td>
 <td>
- <div class="remark">
+ <div class="remark" id="asynchjava1">
 <m>Class annotated with <a href="https://docs.oracle.com/javaee/7/api/javax/websocket/ClientEndpoint.html" target="code">@ClientEndpoint</a>.
 </m><br/>
 <k>Key point</k>: <tt>Asynchronous REQUEST </tt> <br/>
@@ -526,7 +623,7 @@ or the library
 </m>
 </td>
 <td>
- <div class="remark">
+ <div class="remark" id="rrjava2">
  <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>.
 The communication support is created by the user-defined constructor using the
  <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>.
@@ -563,7 +660,7 @@ or the library
 </m>
 </td>
 <td>
- <div class="remark">
+ <div class="remark"  id="rrjava3">
  <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
 managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
 <pre>@ArilRobotSpec   <kc>//configFiles: IssProtoclConfig.txt - IssRobotConfig.txt</kc></pre></m>
@@ -595,7 +692,7 @@ is 'injected' into the application by a call to the method annotated with <k>@On
 
 </m>
 </td>
-<td> <div class="remark">
+<td> <div class="remark" id="rrjava4">
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>.
 The communication support is created by the user-defined constructor using the
  <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>.
@@ -616,7 +713,7 @@ The communication support is created by the user-defined constructor using the
 </center>
 
 <h2 id="IssCommSupport">Clients written in Java using observable supports</h2>
-<div class="remark">
+<div class="remark" >
 The usage of a websocket library <ks>breaks</ks> the unique flow of control of the application into several threads.<br/>
 In order to exploit in a structured way the asynchronicity of the interaction, the reference design pattern
 is the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer pattern</k></a>.
@@ -729,7 +826,7 @@ The business logic returns a string that represents the robot path expressed as 
 <pre>wwwlwwwlwwwlwwwl</pre>
 </m>
 </td>
-<td> <div class="remark">
+<td> <div class="remark" id="asynchbwjava1">
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
 created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a> 
 and injected by the user-defined constructor.
@@ -799,11 +896,12 @@ The business logic is able to build two different types of robot-moves history:
 </li>
 </ul>
 </td>
-<td> <div class="remark">
+<td> <div class="remark" id="asynchbwjava2">
 <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
 </m>
 <br/>
-<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt> and  <a href="https://stackify.com/solid-design-principles/" target="web"><k>Single Responsibility Principle</k></a>.
+<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt> and  
+<a href="https://stackify.com/solid-design-principles/" target="web"><k>Single Responsibility Principle</k></a>.
 <br/><br/><m>
 <ul>
 <li>The business logic is defined in an object of class 
