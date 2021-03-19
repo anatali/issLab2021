@@ -10,7 +10,7 @@ Using the javax.websocket library:
   shows the messages sent on the websocket by the WENv
 ===============================================================
  */
-package it.unibo.interaction
+package it.unibo.interactionKotlin
 import org.glassfish.tyrus.client.ClientManager
 import org.json.JSONObject
 import java.io.IOException

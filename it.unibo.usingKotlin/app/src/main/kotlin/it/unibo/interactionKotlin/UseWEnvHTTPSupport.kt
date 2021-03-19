@@ -5,6 +5,8 @@ WEnvHTTPSupport.java
 */
 package it.unibo.interaction
 
+import it.unibo.interactionKotlin.WEnvHTTPSupport
+
 //import mapRoomKotlin.mapUtil
 
 val support = WEnvHTTPSupport("localhost:8090")

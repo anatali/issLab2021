@@ -13,7 +13,7 @@ Using the javax.websocket library:
 
 ===============================================================
  */
-package it.unibo.interaction
+package it.unibo.interactionKotlin
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel

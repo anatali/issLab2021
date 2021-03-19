@@ -7,7 +7,7 @@
  */
 package it.unibo.fsm
 
-import it.unibo.interaction.WEnvHTTPSupport
+import it.unibo.interactionKotlin.WEnvHTTPSupport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 lateinit var walkerhttp : WalkerHttpCaller
 
 class WalkerHttpCaller (name: String, scope: CoroutineScope, val hh : WEnvHTTPSupport,
-					   discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages ){
+                        discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages ){
 	override fun getInitialState() : String{
 		return "init"
 	}
@@ -61,7 +61,7 @@ class WalkerHttpCaller (name: String, scope: CoroutineScope, val hh : WEnvHTTPSu
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun main() = runBlocking{
-	val hh     = WEnvHTTPSupport( "localhost:8090"  ) //blocking
+	val hh     = WEnvHTTPSupport("localhost:8090") //blocking
 	walkerhttp = WalkerHttpCaller("walker", this, hh )
 	walkerhttp.waitTermination()
  	println("WalkerHttpCaller main ends")

@@ -4,11 +4,9 @@ robotActorAppMsgUsage.kt
 
 ===============================================================
 */
-package it.unibo.interaction.clientsFsmNaive
+package it.unibo.interactionKotlin.clientsFsmNaive
 
-import it.unibo.fsm.AppMsg
 import it.unibo.fsm.AppMsg.Companion.buildDispatch
-import it.unibo.fsm.AppMsgType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.delay

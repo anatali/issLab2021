@@ -10,7 +10,7 @@ The business logic is embedded in the callback given to the activateReceiver met
 package it.unibo.interaction
 
 
-import it.unibo.interaction.WEnvConnSupport
+import it.unibo.interactionKotlin.WEnvConnSupport
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
@@ -94,7 +94,7 @@ fun main( ) = runBlocking {
     println("==============================================")
     println("PLEASE, ACTIVATE WENV ")
     println("==============================================")
-    val hh = WEnvConnSupport( this, "localhost:8091" )
+    val hh = WEnvConnSupport(this, "localhost:8091")
     //hh.initConn("localhost:8091")       //blocking
     // hh.activateReceiver( showWEnvEvents )
     // hh.activateReceiver( ::handleWEnvEvent )

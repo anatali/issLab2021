@@ -6,7 +6,7 @@
  */
 package it.unibo.fsm
 
-import it.unibo.interaction.WEnvConnSupport
+import it.unibo.interactionKotlin.WEnvConnSupport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -18,8 +18,8 @@ val ndnt ="   "
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 class Stepper (name: String, scope: CoroutineScope, val hh : WEnvConnSupport,
-			   usemqtt:Boolean=false, val owner: Fsm?=null,
-			   discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages, usemqtt){
+               usemqtt:Boolean=false, val owner: Fsm?=null,
+               discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages, usemqtt){
 
 lateinit var timer : Fsm
 lateinit var robot : Fsm
@@ -135,7 +135,7 @@ suspend fun handleWEnvEvents( jsonMsg : String ) { //called by startReceiver in 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun main() = runBlocking{
-	val hh      = WEnvConnSupport( this, "localhost:8091", "400" ) //blocking
+	val hh      = WEnvConnSupport(this, "localhost:8091", "400") //blocking
 	val stepper = Stepper("stepper", this, hh )
 	hh.startReceiver( ::handleWEnvEvents  )
 

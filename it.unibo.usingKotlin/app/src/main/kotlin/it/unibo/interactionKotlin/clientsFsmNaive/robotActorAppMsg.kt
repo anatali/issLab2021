@@ -6,10 +6,10 @@ The component provides a forward operation to send
 Uses WEnvConnSupport (time=2500)
 ===============================================================
 */
-package it.unibo.interaction.clientsFsmNaive
+package it.unibo.interactionKotlin.clientsFsmNaive
 
 import it.unibo.fsm.AppMsg
-import it.unibo.interaction.WEnvConnSupport
+import it.unibo.interactionKotlin.WEnvConnSupport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.SendChannel
@@ -17,7 +17,6 @@ import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mapRoomKotlin.mapUtil
-import org.json.JSONObject
 
 val moveDurationTime = "3000"
 class robotActorAppMsg(

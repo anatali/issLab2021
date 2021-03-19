@@ -5,7 +5,7 @@ Provides
 See /it.unibo.kotlinIntro/userDocs/FirstActorRobot.html
 ===============================================================
 */
-package it.unibo.interaction.clientsFsmNaive
+package it.unibo.interactionKotlin.clientsFsmNaive
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.delay

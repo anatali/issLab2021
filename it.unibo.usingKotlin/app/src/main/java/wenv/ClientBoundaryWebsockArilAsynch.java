@@ -8,9 +8,9 @@ The business logic is defined in RobotControllerArilBoundary
 that is 'message-driven'
 ===============================================================
 */
-package it.unibo.wenv;
+package wenv;
+
 import it.unibo.annotations.ArilRobotSpec;
-import it.unibo.consolegui.ConsoleGui;
 import it.unibo.interaction.IssOperations;
 import it.unibo.supports.IssCommSupport;
 import it.unibo.supports.RobotApplicationStarter;

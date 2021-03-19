@@ -6,19 +6,15 @@ See /it.unibo.kotlinIntro/userDocs/FirstActorRobot.html
 ===============================================================
 */
 
-package it.unibo.interaction.clientsFsmNaive
+package it.unibo.interactionKotlin.clientsFsmNaive
 
 
 //import kotlinx.coroutines.runBlocking
-import it.unibo.interaction.WEnvConnSupportNoChannel
+import it.unibo.interactionKotlin.WEnvConnSupportNoChannel
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.channels.Channel
-import org.json.JSONObject
 
 val showEvents  = { v : String ->  println("showWEnvEvents: $v ")  }//showWEnvEvents
 
@@ -27,7 +23,7 @@ val showEvents  = { v : String ->  println("showWEnvEvents: $v ")  }//showWEnvEv
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 val robotActorTry  : SendChannel<String>	= CoroutineScope( Dispatchers.Default ).actor {
     var state    = "working"
-    val hh       = WEnvConnSupportNoChannel( "localhost:8091", "300" )
+    val hh       = WEnvConnSupportNoChannel("localhost:8091", "300")
     fun doInit() = { println("robotActorTry |  INIT" ) }
     fun doEnd()  = { state = "robotActorTry | end"  }
     fun doSensor(msg : String){ println("robotActorTry | doSensor should handle: $msg") }

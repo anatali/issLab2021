@@ -12,7 +12,7 @@ each step will cover a distance equal to the length of the robot.
  */
 package it.unibo.fsm
 
-import it.unibo.interaction.WEnvConnSupport
+import it.unibo.interactionKotlin.WEnvConnSupport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -23,7 +23,7 @@ lateinit var walker : Walker
 //lateinit var hh : WEnvConnSupport
 
 class Walker (name: String, scope: CoroutineScope, val hh : WEnvConnSupport,
-			  discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages ){
+              discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages ){
 	override fun getInitialState() : String{
 		return "init"
 	}
@@ -124,7 +124,7 @@ suspend fun mapWEnvEventToDispatch( jsonMsg : String ) { //called by startReceiv
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun main() = runBlocking{
-	val hh = WEnvConnSupport( this, "localhost:8091", "400" ) //blocking
+	val hh = WEnvConnSupport(this, "localhost:8091", "400") //blocking
 	walker = Walker("walker", this, hh )
 	hh.startReceiver( ::mapWEnvEventToDispatch  )
 
