@@ -29,7 +29,7 @@ public abstract class IssObservableCommSupport implements IssCommSupport {
         //System.out.println("IssObservableCommSupport | updateObservers " + observers.size() );
         observers.forEach( v -> {
             //System.out.println("IssObservableCommSupport | updates " + v );
-            v.handleInfo(jsonOnj);
+            v.handleInfo(jsonOnj);  //The observer should be a process ...
         } );
     }
 

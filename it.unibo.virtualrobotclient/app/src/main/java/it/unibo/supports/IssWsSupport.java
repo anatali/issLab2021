@@ -77,7 +77,8 @@ public class IssWsSupport extends IssObservableCommSupport implements IssCommSup
                 //String distance  = jsonObj.get("distance").toString();
                 //System.out.println("        IssWsSupport | onMessage sonarName=" + sonarName + " distance=" + distance);
             }
-            updateObservers( jsonObj );
+            updateObservers( jsonObj );  //Requires time to update all ...
+            //Why we must wait for the execution of all the observers?
         } catch (Exception e) {
             System.out.println("        IssWsSupport | onMessage ERROR " + e.getMessage());
 

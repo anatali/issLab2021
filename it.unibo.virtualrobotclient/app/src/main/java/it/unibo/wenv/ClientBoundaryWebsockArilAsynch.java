@@ -18,18 +18,21 @@ import it.unibo.supports.RobotApplicationStarter;
 @ArilRobotSpec
 public class ClientBoundaryWebsockArilAsynch {
     private RobotInputController controller;
-
+    private ActorRobotObserver actorObs = new ActorRobotObserver();
     //Constructor
     public ClientBoundaryWebsockArilAsynch(IssOperations rs){
         IssCommSupport rsComm = (IssCommSupport)rs;
         controller = new RobotInputController(rsComm, true, true );
         rsComm.registerObserver( controller );
+        rsComm.registerObserver( actorObs );
         System.out.println("ClientBoundaryWebsockBasicAsynch | CREATED with rsComm=" + rsComm);
     }
 
     public String doBoundary(){
         System.out.println("ClientBoundaryWebsockBasicAsynch | doBoundary " + controller  );
-        return controller.doBoundary();
+        String result = controller.doBoundary();
+        actorObs.close();
+        return result;
     }
 
     public static void main(String args[]){

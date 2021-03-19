@@ -1,0 +1,593 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 150%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+
+<style>
+/* Popup container - can be anything you want */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 260px;
+  background-color: #F3F781;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+</style>
+
+<script>
+// When the user clicks on <div>, open the popup
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+    
+<head>
+   
+<title>VRKotlinClients</title></head>
+    
+<body>
+<div id="top">
+<h1>LabIss2021 |  Using Kotlin - Virtualrobot clients<font size="5"></font> </h1>
+</div>  
+
+
+<div class="body"> 
+<h2>Introduction</h2>
+
+<pre>
+cd <ks>it.unibo.usingKotlin</ks>
+gradle init <kc>//2 4 1 2</kc>
+</pre>
+
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+
+
+<h3>Clients written in Kotlin </h3>
+<center><table style="width:95%">
+<tbody>	
+
+ 
+
+
+
+ 
+<tr>
+<td style="width:40%"><a href="../app/src/main/kotlin/it/unibo/interaction/WEnvHTTPSupport.kt" target="code">
+WEnvHTTPSupport.kt</a>
+<br/><br/><m>
+<a href="../app/src/main/kotlin/it/unibo/interaction/UseWEnvHTTPSupport.kt" target="code">
+UseWEnvHTTPSupport</a>:
+<ul>
+<li>Uses the support to move a virtual robot along the room boundary.</li>
+<li>The business logic is embedded in the operation <tt>boundary</tt> </li>
+</ul>
+</m>
+</td>
+<td> 
+ <div class="remark" id="asynchbwjava2">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>...</tt>  
+</div>
+<pre>
+<ks>cril</ks>  = concrete-robot interaction language		<k>{ 'robotmove': 'MOVE', 'time': TIME }</k>	
+</pre>
+Using the  
+<a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">org.apache.http</a>  library:
+<ul>
+    <li>sets a <tt>HTTP</tt> connection with the <tt>WENv</tt> working at the given <tt>hostAddr</tt> </li>
+    <li>provides methods (<tt>moveForward</tt>, <tt>turnLeft</tt>, etc. ) to send commands written in <ks>cril</ks> language</li>
+	<li>handles the answer to the command and updates a map of the room:
+	<m><pre>|r, 1, 1, 1, 
+|1, 0, 0, 1, 
+|1, 0, 0, 1, 
+|1, 1, 1, 1, </pre></m>
+	
+	</li> 
+</ul>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%"><a href="../app/src/main/kotlin/it/unibo/virtualrobotclient/ClientWebsockJavax.kt" target="code">
+ClientWebsockJavax.kt</a>
+<br/> 
+<m>It is the Kotlin version of 
+<a href="../app/src/main/java/it/unibo/myactors/ClientWebsockJavax.java" target="code">ClientWebsockJavax.java</a>
+</m></td>
+<td>
+ <div class="remark" id="asynchbwjava2">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>...</tt>  
+</div>
+
+The client  <i>walks along the boundary</i> of the room.
+<br/><br/>
+The client interacts with the WEnv via <em>web-scokets</em>, by using the  
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library . <br/> 
+</td>
+</tr>
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/kotlin/it/unibo/interaction/WEnvConnSupportNoChannel.kt" target="code">
+WEnvConnSupportNoChannel.kt</a>
+</td>
+<td> 
+ <div class="remark" id="asynchbwjava2">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>...</tt>  
+</div>
+
+<pre>
+<ks>cril</ks>  = concrete-robot interaction language		<k>{ 'robotmove': 'MOVE', 'time': TIME }</k>	
+<ks>aril</ks>  = highlevel robot interaction language		<k>w | s | l | r | h</k>
+</pre>
+Using the  
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library:
+<ul>
+    <li>sets a connection with the <tt>WENv</tt> working at the given <tt>hostAddr</tt>, using websocket </li>
+    <li>provides a method (<tt>sendMessage</tt>) to send commands written in <ks>aril</ks>  to a robot that understands the <ks>cril</ks> language</li>
+	<li>shows the messages sent on the websocket by the <tt>WENv</tt> </li> 
+</ul>
+
+</td>
+</tr>
+
+<tr>
+<td style="width:50%"><a href="../app/src/main/kotlin/it/unibo/interaction/WEnvConnSupport.kt" target="code">
+WEnvConnSupport.kt</a>
+<br/><br/><m>
+<a href="../app/src/main/kotlin/it/unibo/interaction/UseWEnvConnSupport.kt" target="code">UseWEnvConnSupport.kt</a>:
+<ul>
+<li>Uses the support to move a virtual robot along the room boundary.</li>
+<li>The business logic is embedded in the callback given to the <tt>activateReceiver</tt> method</li>
+</ul>
+</m>
+
+</td>
+<td>
+ <div class="remark" id="asynchbwjava2">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>...</tt>  
+</div>
+
+<pre>
+<ks>cril</ks>  = concrete-robot interaction language		<k>{ 'robotmove': 'MOVE', 'time': TIME }</k>
+<ks>aril</ks>  = highlevel robot interaction language		<k>w | s | l | r | h</k>
+</pre>
+Using the  
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library :
+
+<ul>
+ <li>sets a connection with the <tt>WENv</tt> working at the given <tt>hostAddr</tt>, using websocket</li>
+ <li>provides a method (<tt>sendMessage</tt>) to send commands written in <ks>aril</ks>  to a robot that understands the <ks>cril</ks> language</li>
+ <li>redirects the messages sent on the websocket by the <tt>WENv</tt> to an internal <em>Kotlin channel</em></li>
+ <li>provides methods (<tt>activateReceiver, startReceiver</tt>) that calls a given callback 
+    for each message received on the <em>Kotlin channel</em></li>
+</ul>
+</td>
+</tr>
+
+
+</tbody>	
+</table></center>
+
+<h3>Clients as myactors </h3>
+
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:50%"><a href="../app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTry.kt" target="code">
+robotActorTry.kt</a>
+
+<br/><br/>
+
+<m>
+<a href="../app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTryUsage.kt" target="code">
+robotActorTryUsage.kt</a>
+<ul>
+<li>Uses the FSM 
+to move a virtual robot forward and backward
+<li>The business logic is expressed by commands sent to the FSM </li>
+</ul>
+</m>
+<center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%"  ></center>
+
+<k>TODO</k>: rifare figura senza msgs da WEnv a robotActorTry
+</td>
+<td>
+<a href="../app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTry.kt" target="code">
+robotActorTry.kt</a> sends commands to <tt>WEnv</tt> by using as <em>virtualRobotSupport</em> the compoment
+<a href="../app/src/main/kotlin/it/unibo/interaction/WEnvConnSupportNoChannel.kt" target="code">
+WEnvConnSupportNoChannel.kt</a>.
+<br/><br/>
+Its behavior can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>
+where each <bc>state</bc> is mapped into a <bc>function</bc> whose body specifies the <bc>actions</bc> to be executed in that state
+:<br/><br/>
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="50%"  ></center>
+
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="../app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorAppMsg.kt" target="code">
+robotActorAppMsg.kt</a>
+
+<br/><br/>
+
+<m>
+<a href="../app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorAppMsgUsage.kt" target="code">
+robotActorAppMsgUsage	.kt</a>
+<ul>
+<li>Uses the FSM 
+to move a virtual robot forward and backward
+<li>The business logic is expressed by commands sent to the FSM </li>
+</ul>
+</m>
+<center><img src="./img/robotActor.png" alt="robotActor" width="100%"  ></center>
+<k>TODO</k>: rifare figura senza msgs da WEnv a robotActor
+</td>
+
+<td>
+<a href="../app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorAppMsg.kt" target="code">
+robotActorAppMsg.kt</a>  sends commands to <tt>WEnv</tt> by using as <em>virtualRobotSupport</em> the component
+<a href="../app/src/main/kotlin/it/unibo/interaction/WEnvConnSupport.kt" target="code">
+WEnvConnSupport.kt</a>
+<br/><br/>
+The class 
+<a href="../app/src/main/kotlin/it/unibo/fsm/AppMsg.kt" target="code">
+AppMsg.kt</a> implements our idea of messages at application-level.
+
+The external representation is a String written in Prolog (JSON-compatible) syntax as a Prolog-Term with 5 arguments:
+<pre>
+msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+</pre>
+
+We distinguish among different application-message types:
+<pre>enum class AppMsgType{ event, dispatch, request, reply, invitation }</pre>
+
+<center><img src="./img/msgTypes.png" alt="msgTypes" width="50%"  ></center>
+
+
+</td>
+</tr>
+
+</tbody>	
+</table></center>
+
+<h3>Clients as FSM </h3>
+
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/kotlin/it/unibo/fsm/WalkerHttpCaller.kt" target="code">WalkerHttpCaller.kt</a> 
+</td>
+<td>
+<h4>Request-response</h4>
+The behavior of the <a href="../app/src/main/kotlin/it/unibo/fsm/WalkerHttpCaller.kt" target="code">WalkerHttpCaller.kt</a> is
+structured as a <i>Finite State MAchine</i> (<em>FSM</em>) that moves the virtual robot ahead (by using the
+<a href="../app/src/main/kotlin/it/unibo/interaction/WEnvHTTPSupport.kt" target="code"> WEnvHTTPSupport.kt</a>) 
+until an obstacle (a wall) is found.<br/>
+If the robot starts at its HOME cell <tt>(0,0)</tt>, the result could be the map created by the 
+<a href="../app/src/main/kotlin/it/unibo/interaction/WEnvHTTPSupport.kt" target="code"> WEnvHTTPSupport.kt</a>:
+<m>
+<pre>
+|1, 
+|1, 
+|1, 
+|r, 
+|X, 
+ direction=DOWN
+</pre>
+</m>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/kotlin/it/unibo/fsm/walker.kt" target="code">walker.kt</a> 
+</td>
+
+<td>
+<h4>Event-based</h4>
+The behavior of the <a href="../app/src/main/kotlin/it/unibo/fsm/walker.kt" target="code">walker.kt</a> is
+structured as a <i>Finite State MAchine</i> (<em>FSM</em>) that moves the virtual robot ahead (by using the
+<a href="../app/src/main/kotlin/it/unibo/interaction/WEnvConnSupport.kt" target="code"> WEnvConnSupport.kt</a>) 
+until an obstacle (a wall) is found.<br/>
+The result of the computation could be the number of steps done. A room map can be built by the application.
+<br/><br/>
+The events raised from WEnv ( <tt>endmove, collision, sonarName</tt> ) are mapped into dispatches sent to walker.
+<br/><br/>
+We could set the step time so that (e.g. 400)
+each step will cover a distance equal to the length of the robot.
+
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/kotlin/it/unibo/fsm/stepper.kt" target="code">stepper.kt</a> 
+</td>
+<td>
+
+</td>
+</tr>
+
+</tbody>	
+</table></center>
+
+-->
+
+<!--
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+ 
+
+<br/><br/>
+</div>
+ 
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+</body>
+</html>
