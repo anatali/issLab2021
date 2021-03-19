@@ -9,18 +9,18 @@ Using the javax.websocket library:
  provides a method (sendMessage) to send commands written in aril to a robot able to understand the the cril language
  *** redirects the messages sent on the websocket by the WENv to a Kotlin channel
  provides methods (activateReceiver, startReceiver) that calls a given callback
-    for each message received on the Kotlin channel
+ for each message received on the Kotlin channel
 
 ===============================================================
  */
 package it.unibo.interactionKotlin
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.glassfish.tyrus.client.ClientManager
 import org.json.JSONObject
-//import org.json.simple.parser.ParseException
 import java.io.IOException
 import java.net.URI
 import java.net.URISyntaxException
@@ -37,10 +37,7 @@ public class WEnvConnSupport(
     val socketEventChannel: Channel<String> = Channel(10) //our channel buffer is 10 events
     //TODO define socketEventChannel related to application messages and not to simple String
 
-    interface MessageHandler {
-        //@Throws(ParseException::class)
-        fun handleMessage(message: String)
-    }
+
     init{
         initConn( hostAddr )
     }
@@ -49,7 +46,6 @@ public class WEnvConnSupport(
         try {
             //val container = ContainerProvider.getWebSocketContainer()
             //container.connectToServer(this, URI("ws://$addr"))
-
             val endpointURI = URI( "ws://$addr/" )
             println("WEnvConnSupport | initClientConn $endpointURI")
             val client = ClientManager.createClient()
@@ -63,56 +59,25 @@ public class WEnvConnSupport(
         }
     }
 
-    /**
-     * Callback hook for Connection open events.
-     *
-     * @param userSession the userSession which is opened.
-     */
+
     @OnOpen
     fun onOpen(userSession: Session?) {
         println("WEnvConnSupport | opening websocket")
              this.userSession = userSession
     }
 
-    /**
-     * Callback hook for Connection close events.
-     *
-     * @param userSession the userSession which is getting closed.
-     * @param reason the reason for connection close
-     */
     @OnClose
     fun onClose(userSession: Session?, reason: CloseReason?) {
         println("WEnvConnSupport | closing websocket")
         this.userSession = null
     }
 
-    /**
-     * Callback hook for Message Events. This method will be invoked when a client send a message.
-     *
-     * @param message The text message
-     */
     @OnMessage
-    //@Throws(ParseException::class)
     fun onMessage(message: String) {
         //println("WEnvConnSupport | websocket receives: $message ")
         sendToChannel( message )
     }
 
-    /**
-     * register message handler
-     *
-     * @param msgHandler
-     */
-    fun addMessageHandler(msgHandler: MessageHandler?) {
-        messageHandler = msgHandler
-    }
-
-    /**
-     * Send a message.
-     *
-     * @param message   w | s ...
-     */
-    @Throws(Exception::class)
     fun sendMessage(message: String) : Boolean{
         //println("WEnvConnSupport | sendMessage $message")
         //userSession!!.getAsyncRemote().sendText(translate(message));
@@ -197,4 +162,25 @@ From socket to channel
         println("WEnvConnSupport | stopReceiver ")
         socketEventChannel.send("terminate")
     }
+}
+
+//Just to test ...
+fun main( ) = runBlocking {
+    println("==============================================")
+    println("WEnvConnSupport | main start n_Threads=" + Thread.activeCount());
+    println("==============================================")
+    val hh = WEnvConnSupport(this, "localhost:8091")
+    //hh.initConn("localhost:8091")       //blocking
+    // hh.activateReceiver( showWEnvEvents )
+    // hh.activateReceiver( ::handleWEnvEvent )
+    //doSomeMove( hh )
+
+    //walker = Walker( hh )  //boundary
+
+    //hh.activateReceiver( ::handlerToWalk  )
+    hh.sendMessage("w")
+
+    println("WEnvConnSupport | main end n_Threads=" + Thread.activeCount());
+    delay(5000)    //to show data sent by WEnv
+    println("BYE")
 }

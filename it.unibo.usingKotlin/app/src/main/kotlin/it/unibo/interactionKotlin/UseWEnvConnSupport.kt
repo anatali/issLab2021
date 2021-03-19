@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 interface IWalker {
-    @Throws(Exception::class)
+
     fun nextStep(collision: Boolean)
 }
 
