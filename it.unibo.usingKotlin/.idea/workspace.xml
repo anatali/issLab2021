@@ -23,29 +23,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="969144ba-3472-4b76-9134-ccf95d4a77c0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/testWebFlux/WebSocketsClient0.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/HelloNaive.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/HelloRunBlocking.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091Observer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel/WebSocketObserver.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel/WsToChannel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091ObserverUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/wenv/ActorRobotObserver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/interactionKotlin/UseWEnvConnSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/interactionKotlin/UseWEnvConnSupport.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/temp/WssTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/temp/WssTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/temp/koltinActorExample.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/temp/koltinActorExample.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/tests/WebSocketTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/tests/WebSocketTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/tests/WebSocketUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/tests/WebSocketKtorUsage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091Observer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091Observer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel/WebSocketObserver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel/WebSocketObserver.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/userDocs/UsingKotlin.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/UsingKotlin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/Box.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/Direction.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/kotlin/mapRoomKotlin/testMap.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +78,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -115,14 +100,14 @@
       <recent name="" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin\app\src\main\kotlin\it\unibo\demo" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin\app\src\main\kotlin\it\unibo\wsAndChannel" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin\app\src\main\kotlin\it\unibo\temp" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin\app\src\main\kotlin\it\unibo\tests" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin" />
-      <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin\app\src\main\java\it\unibo\supports" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.WsToChannelKt">
+  <component name="RunManager" selected="Application.WebSocket8091ObserverKt">
     <configuration name="HelloNaiveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <module name="it.unibo.usingKotlin.app.main" />
       <option name="VM_PARAMETERS" />
@@ -190,11 +175,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.WsToChannelKt" />
         <item itemvalue="Application.WebSocket8091ObserverKt" />
-        <item itemvalue="Application.HelloRunBlockingKt" />
-        <item itemvalue="Application.HelloNaiveKt" />
-        <item itemvalue="Application.KoltinActorExampleKt" />
       </list>
     </recent_temporary>
   </component>
@@ -225,6 +206,10 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="362" y="102" key="#Plugins" timestamp="1616260008990">
+      <screen x="0" y="0" width="1536" height="920" />
+    </state>
+    <state x="362" y="102" key="#Plugins/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616260008990" />
     <state x="397" y="182" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1616234393719">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
@@ -247,26 +232,26 @@
       <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state x="511" y="244" width="603" height="442" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616174183450" />
-    <state width="1125" height="205" key="GridCell.Tab.0.bottom" timestamp="1616238964162">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1493" height="235" key="GridCell.Tab.0.bottom" timestamp="1616263488545">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1125" height="205" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
-    <state width="1493" height="265" key="GridCell.Tab.0.bottom/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616176830229" />
-    <state width="1125" height="205" key="GridCell.Tab.0.center" timestamp="1616238964162">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1493" height="235" key="GridCell.Tab.0.bottom/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
+    <state width="1493" height="235" key="GridCell.Tab.0.center" timestamp="1616263488545">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1125" height="205" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
-    <state width="1493" height="265" key="GridCell.Tab.0.center/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616176830229" />
-    <state width="1125" height="205" key="GridCell.Tab.0.left" timestamp="1616238964162">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1493" height="235" key="GridCell.Tab.0.center/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
+    <state width="1493" height="235" key="GridCell.Tab.0.left" timestamp="1616263488545">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1125" height="205" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
-    <state width="1493" height="265" key="GridCell.Tab.0.left/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616176830229" />
-    <state width="1125" height="205" key="GridCell.Tab.0.right" timestamp="1616238964162">
-      <screen x="0" y="0" width="1280" height="690" />
+    <state width="1493" height="235" key="GridCell.Tab.0.left/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
+    <state width="1493" height="235" key="GridCell.Tab.0.right" timestamp="1616263488545">
+      <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state width="1125" height="205" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
-    <state width="1493" height="265" key="GridCell.Tab.0.right/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616176830229" />
+    <state width="1493" height="235" key="GridCell.Tab.0.right/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
     <state x="383" y="107" width="698" height="712" key="find.popup" timestamp="1616175571400">
       <screen x="0" y="0" width="1536" height="920" />
     </state>

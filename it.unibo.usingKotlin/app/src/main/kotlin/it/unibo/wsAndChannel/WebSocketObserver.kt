@@ -1,7 +1,4 @@
 package it.unibo.wsAndChannel
-import it.unibo.demo.WebSocket8091Observer
-import it.unibo.temp.SocketUpdate
-import it.unibo.temp.socketEventChannel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import okhttp3.*
