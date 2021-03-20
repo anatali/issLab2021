@@ -36,6 +36,9 @@ fun CoroutineScope.counterActor() = actor<CounterMsg> {
 }
 
 fun main() = runBlocking<Unit> {
+    println("==============================================")
+    println("kotlinActorExample | main START n_Threads=" + Thread.activeCount());
+    println("==============================================")
     val counter = counterActor() // create the actor
     withContext(Dispatchers.Default) {
         massiveRun {
@@ -47,4 +50,7 @@ fun main() = runBlocking<Unit> {
     counter.send(GetCounter(response))
     println("Counter = ${response.await()}")
     counter.close() // shutdown the actor
+    println("==============================================")
+    println("kotlinActorExample | main END n_Threads=" + Thread.activeCount());
+    println("==============================================")
 }

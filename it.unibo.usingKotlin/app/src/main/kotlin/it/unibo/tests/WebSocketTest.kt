@@ -14,7 +14,7 @@ import org.json.JSONObject
 @ExperimentalCoroutinesApi
 class WebSocketTest : WebSocketListener() {
 
-    val socketEventChannel: Channel<SocketUpdate> = Channel(10)
+    //val socketEventChannel: Channel<SocketUpdate> = Channel(10)
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         println("WebSocketTest | onOpen $response")
@@ -27,21 +27,21 @@ class WebSocketTest : WebSocketListener() {
     override fun onMessage(webSocket: WebSocket, text: String) {
         println("WebSocketTest | onMessage $text")
         GlobalScope.launch {
-            socketEventChannel.send(SocketUpdate(text))
+            //socketEventChannel.send(SocketUpdate(text))
         }
     }
 
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
         GlobalScope.launch {
-            socketEventChannel.send(SocketUpdate(exception = SocketAbortedException()))
+            //socketEventChannel.send(SocketUpdate(exception = SocketAbortedException()))
         }
         //webSocket.close(NORMAL_CLOSURE_STATUS, null)
-        socketEventChannel.close()
+        //socketEventChannel.close()
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         GlobalScope.launch {
-            socketEventChannel.send(SocketUpdate(exception = t))
+            //socketEventChannel.send(SocketUpdate(exception = t))
         }
     }
 }
@@ -79,18 +79,20 @@ fun main() {
 
     val okHttpClient = OkHttpClient()
     val body = translate("w").toRequestBody(JSON);
+
     val request0      = Request.Builder()
             .url("ws://localhost:8091" )
             .build()
+    /*
     val request      = Request.Builder()
             .url("http://localhost:8090/api/move" )
             .post( body )
             .build()
-
+*/
     okHttpClient.newWebSocket(request0, WebSocketTest() )
 
-    val response  = okHttpClient.newCall( request).execute()
-    println("WEnvConnSupport | response" + response );
+    //val response  = okHttpClient.newCall( request).execute()
+    //println("WEnvConnSupport | response" + response );
 
     println("==============================================")
     println("WEnvConnSupport | main END n_Threads=" + Thread.activeCount());

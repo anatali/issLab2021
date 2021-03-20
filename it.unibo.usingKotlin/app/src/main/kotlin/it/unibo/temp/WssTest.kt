@@ -10,18 +10,23 @@ import okhttp3.OkHttpClient //A non-blocking interface to a web socket
 import okhttp3.Request
 import okhttp3.WebSocket
 
-//Si potrebbe usare ancora avax.websocket ?
+//Si potrebbe usare ancora javax.websocket ?
 
 fun main() = runBlocking {
     try {
-        println("WssTest | START ")
+        println("==============================================")
+        println("WssTest | main start n_Threads=" + Thread.activeCount());
+        println("==============================================")
         val sys = WssTest()
         sys.connect( this )
         sys.receiver(this)
         delay(1000)
-        sys.sender(this)
+        //sys.sender(this)
         delay(1000)
-        println("WssTest | END ")
+        println("==============================================")
+        println("WssTest | main END n_Threads=" + Thread.activeCount());
+        println("==============================================")
+
     } catch (ex: Exception) {
         println("WssTest | exception: " + ex.message)
     }
@@ -45,6 +50,7 @@ public class WssTest() {
         }
     }//receiver
 
+/*
     suspend fun sender(scope : CoroutineScope  ) {
         val turnLeft  = "{\"robotmove\":\"turnLeft\", \"time\": 400}"
         val turnRight = "{\"robotmove\":\"turnRight\", \"time\": 400}"
@@ -55,19 +61,22 @@ public class WssTest() {
 
         }
     }//sender
-
+*/
     fun connect( scope : CoroutineScope ) {
+
         val client = OkHttpClient.Builder()
                 .readTimeout(3, TimeUnit.SECONDS)
-                //.sslSocketFactory() - ? нужно ли его указывать дополнительно
+                //.sslSocketFactory()
                 .build()
+
         val request = Request.Builder()
                 //.url("wss://echo.websocket.org") //see https://www.websocket.org/echo.html
                 .url("ws://localhost:8091")
                 .build()
         println("WssTest | doJob ${request}"  )
         val wsListener = WebSocketViaChannel( scope )
-        webSocket8091  = client.newWebSocket(request, wsListener)  // this provide to make 'Open ws connection'
+        webSocket8091  = client.newWebSocket(request, wsListener)
+        // this provide to make 'Open ws connection'
 
     }
 

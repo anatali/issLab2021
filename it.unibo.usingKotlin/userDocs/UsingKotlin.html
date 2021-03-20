@@ -285,8 +285,6 @@ gradle init <kc>//2 4 1 2</kc>
 
  
 
-
-
  
 <tr>
 <td style="width:40%"><a href="../app/src/main/kotlin/it/unibo/interactionKotlin/WEnvHTTPSupport.kt" target="code">
@@ -566,7 +564,51 @@ each step will cover a distance equal to the length of the robot.
 </tbody>	
 </table></center>
 
--->
+
+<h2>Controller in kotlin</h2>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<a href="../app/src/main/java/it/unibo/demo/WebSocket8091Observer.java" target="code">WebSocket8091Observer.java</a>  
+
+</td>
+<td>
+ <div class="remark" id="asynchbwjava2">
+<m></m>
+<k>Key point</k>: <tt>...</tt>  
+</div>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%" >
+<a href="../app/src/main/java/it/unibo/wsAndChannel/WebSocketObserver.java" target="code">WebSocketObserver.java</a>  
+<br/>
+<a href="../app/src/main/java/it/unibo/wsAndChannel/WsToChannel.java" target="code">WsToChannel.java</a>  
+</td>
+<td>
+ <div class="remark" id="asynchbwjava2">
+<m></m>
+<k>Key point</k>: <tt>...</tt>  
+</div>
+From <a href="https://proandroiddev.com/kotlin-channel-and-websocket-complete-example-and-why-not-flow-82090432880c" target="web">
+Kotlin Channel and WebSocket Complete Example (Also Why Not Flow)</a> 
+<pre>
+//Channel is a hot producer vs Flow is cold. If there is no consumer Flow doesn’t produce .
+//Google and JetBrains promotes Flow over Channel.
+</pre>
+
+From <a href="https://www.zupzup.org/kotlin-websockets-example/index.html" target="web">
+WebSockets with Kotlin and Webflux</a>
+The Spring 5 way of handling WebSockets is very terse and intuitive
+
+</td>
+</tr>
+
+
+ </tbody>
+</table>
 
 <!--
 <table style="width:98%">

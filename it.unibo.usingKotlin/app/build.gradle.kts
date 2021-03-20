@@ -49,8 +49,8 @@ dependencies {
 //OkHttp library for websockets with Kotlin
     implementation( "com.squareup.okhttp3:okhttp:4.9.0" )
 //Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.
-    implementation("io.ktor:ktor:1.5.1")
-    implementation("io.ktor:ktor-client-cio:1.5.1" )
+    //implementation("io.ktor:ktor:1.5.1")
+    //implementation("io.ktor:ktor-client-cio:1.5.1" )
 
 //HTTP
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
@@ -62,13 +62,17 @@ dependencies {
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
 //SOCKET.IO
     //implementation("com.github.nkzawa:socket.io-client:0.6.0")
-// https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
+    // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
     implementation("javax.websocket:javax.websocket-api:1.1")   //javax.websocket api is only the specification
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9")
 
     //implementation( "org.java-websocket:Java-WebSocket:1.5.1" )
     //implementation( "com.squareup.moshi:moshi:1.9.2" )
     //kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
+
+//Webflux SpringBoot
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
+    implementation("org.springframework.boot:spring-boot-starter-webflux:2.4.4")
 }
 
 application {

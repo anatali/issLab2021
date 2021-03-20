@@ -8,8 +8,6 @@ The business logic is embedded in the callback given to the activateReceiver met
 */
 
 package it.unibo.interaction
-
-
 import it.unibo.interactionKotlin.WEnvConnSupport
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
