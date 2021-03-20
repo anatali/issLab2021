@@ -23,14 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="969144ba-3472-4b76-9134-ccf95d4a77c0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091ObserverUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocketKotlinSupport.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocketUtilUsage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091Observer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo/WebSocket8091Observer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel/WebSocketObserver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/wsAndChannel/WebSocketObserver.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userDocs/UsingKotlin.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/UsingKotlin.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,10 +74,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/demo" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="it.unibo.demo" />
+    </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="it.unibo.tests" />
       <recent name="it.unibo.interactionKotlin" />
@@ -107,20 +106,7 @@
       <recent name="C:\Didattica2021\issLab2021\it.unibo.usingKotlin" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.WebSocket8091ObserverKt">
-    <configuration name="HelloNaiveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <module name="it.unibo.usingKotlin.app.main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" value="it.unibo.temp.HelloNaiveKt" />
-      <option name="WORKING_DIRECTORY" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.WebSocketUtilUsageKt">
     <configuration name="HelloRunBlockingKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <module name="it.unibo.usingKotlin.app.main" />
       <option name="VM_PARAMETERS" />
@@ -160,6 +146,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="WebSocketUtilUsageKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="it.unibo.usingKotlin.app.main" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="it.unibo.demo.WebSocketUtilUsageKt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="WsToChannelKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <module name="it.unibo.usingKotlin.app.main" />
       <option name="VM_PARAMETERS" />
@@ -175,6 +174,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.WebSocketUtilUsageKt" />
         <item itemvalue="Application.WebSocket8091ObserverKt" />
       </list>
     </recent_temporary>
@@ -232,25 +232,29 @@
       <screen x="0" y="0" width="1536" height="920" />
     </state>
     <state x="511" y="244" width="603" height="442" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616174183450" />
-    <state width="1493" height="235" key="GridCell.Tab.0.bottom" timestamp="1616263488545">
-      <screen x="0" y="0" width="1536" height="920" />
+    <state x="302" y="180" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1616272276992">
+      <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1125" height="205" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
+    <state x="302" y="180" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1280.690@0.0.1280.690" timestamp="1616272276992" />
+    <state width="1238" height="210" key="GridCell.Tab.0.bottom" timestamp="1616274312334">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="1238" height="210" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1616274312334" />
     <state width="1493" height="235" key="GridCell.Tab.0.bottom/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
-    <state width="1493" height="235" key="GridCell.Tab.0.center" timestamp="1616263488545">
-      <screen x="0" y="0" width="1536" height="920" />
+    <state width="1238" height="210" key="GridCell.Tab.0.center" timestamp="1616274312332">
+      <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1125" height="205" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
+    <state width="1238" height="210" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1616274312332" />
     <state width="1493" height="235" key="GridCell.Tab.0.center/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
-    <state width="1493" height="235" key="GridCell.Tab.0.left" timestamp="1616263488545">
-      <screen x="0" y="0" width="1536" height="920" />
+    <state width="1238" height="210" key="GridCell.Tab.0.left" timestamp="1616274312332">
+      <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1125" height="205" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
+    <state width="1238" height="210" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1616274312332" />
     <state width="1493" height="235" key="GridCell.Tab.0.left/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
-    <state width="1493" height="235" key="GridCell.Tab.0.right" timestamp="1616263488545">
-      <screen x="0" y="0" width="1536" height="920" />
+    <state width="1238" height="210" key="GridCell.Tab.0.right" timestamp="1616274312333">
+      <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1125" height="205" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1616238964162" />
+    <state width="1238" height="210" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1616274312333" />
     <state width="1493" height="235" key="GridCell.Tab.0.right/0.0.1536.920/3840.0.1280.943@0.0.1536.920" timestamp="1616263488545" />
     <state x="383" y="107" width="698" height="712" key="find.popup" timestamp="1616175571400">
       <screen x="0" y="0" width="1536" height="920" />
