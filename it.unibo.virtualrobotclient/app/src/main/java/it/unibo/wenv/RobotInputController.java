@@ -63,7 +63,7 @@ Hhandler of the messages sent by WENv over the cmdsocket-8091 to notify:
         String move   = (String) endmove.get("move");   //moveForward, ...
         System.out.println("RobotInputController | handleEndMove:" + move + " answer=" + answer);
         switch( answer ){
-            case "true"       :  robotBehaviorLogic.boundaryStep( move, false );
+            case "true"       : robotBehaviorLogic.boundaryStep( move, false );
                                   break;
             case "false"      : robotBehaviorLogic.boundaryStep( move, true  );break;
             case "halted"     : System.out.println("RobotInputController | handleEndMove to do halt" );break;
