@@ -277,6 +277,27 @@ cognome_nome_resumablebw.pdf
 </div>
 
 <h2>Problem analysis</h2>
+
+<center><img src="./img/RobotBoundaryZooming.png" alt="RobotBoundaryZooming" width="85%" ></center>
+<div class="remark" >
+
+<k>Key points</k>: <tt>Asynchronous REQUEST and observed REPLY</tt>. 
+
+<ol>
+<li> We start from an architecture based on the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer pattern</k></a>,
+with a controller that works as an observer of the communication support and takes care of handling information about obstacles
+<li>The system controller must now handle commands sent from the user console</li>
+<li>The system controller should work as an observer of the user console</li>
+<li>The user-command stop must stop the journey, not the current move</li>
+<li>The boundary-walk logic must consider the fact that the journey could be stopped before doing the next journey action</li>
+<li></li>
+</ol>
+
+
+
+<br/> <br/>
+
+</div>
 ... <tt>TODO</tt> <br/><br/>
 
 The following resources could be usefully exploited to reduce the development time of a first prototype of the application:
@@ -301,7 +322,19 @@ The expected time required for the development of the application is (no more th
 
 <h2>Project</h2> 
  
-</div>
+ <ol>
+ <li><a href="../../app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a>
+ connected to the  <a href="../..//app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">RobotApplInputController.java</a>  </li>
+
+<li> <a href="../../app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">RobotApplInputController.java</a>
+an object tjat calls the 
+<a href="../../app/src/main/java/it/unibo/resumablebw/RobotResumableBoundaryLogic.java" target="code">RobotResumableBoundaryLogic.java</a>
+ </li>
+
+<li><a href="../../app/src/main/java/it/unibo/resumablebw/RobotResumableBoundaryLogic.java" target="code">RobotResumableBoundaryLogic.java</a></li>
+
+<li></li>
+</ol>
 
 <h2>Testing</h2> 
  
