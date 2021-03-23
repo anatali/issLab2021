@@ -31,7 +31,7 @@ public class ClientBoundaryWebsockArilAsynch {
     public String doBoundary(){
         System.out.println("ClientBoundaryWebsockBasicAsynch | doBoundary " + controller  );
         String result = controller.doBoundary();
-        actorObs.close();
+        //actorObs.close();
         return result;
     }
 

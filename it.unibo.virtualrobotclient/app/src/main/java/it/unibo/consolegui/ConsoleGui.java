@@ -22,8 +22,8 @@ private IssObserver controller ;
 		concreteButton.addObserver( this );
 		this.controller = controller;
  	}
-
-	public void update( Observable o , Object arg ) {	//Observable deprecated WHY?
+	@Override
+		public void update( Observable o , Object arg ) {	//Observable deprecated WHY?
 		String move = arg.toString();
 		//System.out.println("GUI input move=" + move);
 		String robotCmd = (move == "STOP") ? "{\"robotcmd\":\"STOP\" }" : "{\"robotcmd\":\"RESUME\" }";

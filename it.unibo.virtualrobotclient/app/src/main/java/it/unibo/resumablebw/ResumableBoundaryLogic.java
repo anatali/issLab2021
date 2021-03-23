@@ -43,7 +43,7 @@ private RobotMovesInfo robotInfo;
     }
 
  //Business logic in RobotBoundaryLogic
-    public synchronized void boundaryStep( String move, boolean obstacle, boolean robotHalted ){
+    public synchronized void boundaryStep( String move, boolean obstacle, boolean journeyHalted ){
          if (stepNum <= 4) {
             if( move.equals("turnLeft") ){
                 updateMovesRep("l");
@@ -54,16 +54,16 @@ private RobotMovesInfo robotInfo;
                     return;
                 }
                 stepNum++;
-                if( ! robotHalted )  doBoundaryGoon();
+                if( ! journeyHalted )  doBoundaryGoon();
                 return;
             }
             //the move is moveForward
-            if( obstacle && ! robotHalted){
+            if( obstacle && ! journeyHalted){
                 rs.request( usearil ? MsgRobotUtil.lMsg : MsgRobotUtil.turnLeftMsg   );
                 delay(moveInterval ); //to reduce the robot move rate
             }else if( ! obstacle ){
                 updateMovesRep("w");
-                if( ! robotHalted ) doBoundaryGoon();
+                if( ! journeyHalted ) doBoundaryGoon();
             }
             robotInfo.showRobotMovesRepresentation();
         }else{ //stepNum > 4

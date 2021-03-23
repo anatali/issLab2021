@@ -14,7 +14,6 @@ public class RobotApplInputController implements IssObserver {
 private ResumableBoundaryLogic robotBehaviorLogic  ;
 private IssCommSupport commSupport;
 
-private boolean robotStarted = false;
 private boolean robotHalted  = true;
 
     public RobotApplInputController(IssCommSupport support, boolean usearil, boolean doMap){
