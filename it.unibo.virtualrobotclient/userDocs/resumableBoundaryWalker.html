@@ -273,115 +273,248 @@ cognome_nome_resumablebw.pdf
 
 <h2>Requirement analysis</h2>
 ... <tt>TODO</tt> 
-<h3>Test plans</h3> 
-We should simulate a user command and check the effects of STOP/RESUME
-</div>
+ 
 
 <h2>Problem analysis</h2>
 
- 
+ <k>Key points</k>: <br/> <br/><!-- <tt>Asynchronous REQUEST and observed REPLY</tt>.  -->
+ <ol>
+ <li>The system must provide both <em>proactive</em> (the bondary walk) and <em>reactive</em> 
+ behavior (the need to react to <tt>STOP/RESUME</tt>  user commands).
+ <br/><br/>
+  </li>
+  
+  <li>The <em>proactive</em> behaviour of the system has been <em>already analyzed and designed</em> in a 
+    previous project <a href="../../it.unibo.virtualrobotclient/userDocs/VirtualrobotClients.html#asynchbwjava2" target="code">
+  <tt>ClientBoundaryWebsockArilAsynch</tt></a>.
+  <br/><br/></li>
+  
+  <li>The addition of a <em>reactive</em> part involves the possibility to <tt>stop/resume</tt> the previous boundary-walk algorithm,
+  that will become no more an algorithm.<br/><br/></li>
+  
+<li>The user-command <ks>STOP</ks> should interrupt the journey, not the current robot-move. <br/><br/></li>
+<li>The user-command <ks>RESUME</ks> should execute the robot-move that resumes a previously halted journey.</li>
+</ol>
 
+
+<!--
 <table style="width:98%">
 <tbody>	
 <tr>
 <td style="width:50%" >
-<k>Key points</k>: <br/> <br/><!-- <tt>Asynchronous REQUEST and observed REPLY</tt>.  -->
+<k>Key points</k>: <br/> <br/>  <tt>Asynchronous REQUEST and observed REPLY</tt>.  
  <ol>
  <li>The system must provide both <em>proactive</em> (the bondary walk) and <em>reactive</em> 
  behavior (the need to react to STP/RESUME  user commands).
  <br/><br/>
   </li>
- <li>Following the 
-<a href="https://stackify.com/solid-design-principles/" target="web"><k>Single Responsibility Principle</k></a>,
-the application component could be composed of: 
-	<ul>
-	<li>the user console (ConsoleGui), that is an object that runs in its own thread</li>
-	<li>a controller that works as an <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer</k></a>
-of the WEnv and of the ConsoleGui	</li>
-<li>the boundary-walk logic, that is activated by the controller in an 'event-driven' way.
-Before sending to the robot the next-move action, the boundary-walk logic must consider the fact that the journey could 
-have been stopped
-</li>
-	</ul>
-	
- </li>
   
-<li>The user-command STOP interrupts the journey, not the current robot-move. <br/><br/></li>
-<li>The user-command RESUME simply executes the next-move of the boundary-walk logic, if the robot was previously halted</li>
+  <li>The <em>proactive</em> behaviour of the system has been <em>already analyzed and designed</em> in a 
+    previous project <a href="../../it.unibo.virtualrobotclient/userDocs/VirtualrobotClients.html#asynchbwjava2" target="code">
+  <tt>ClientBoundaryWebsockArilAsynch</tt></a>.
+  <br/><br/></li>
+  
+  <li>The addition of a <em>reactive</em> part involves the possibility to <tt>stop/resume</tt> the previous boundary-walk algorithm,
+  that will become no more an algorithm.<br/><br/></li>
+  
+<li>The user-command <ks>STOP</ks> should interrupt the journey, not the current robot-move. <br/><br/></li>
+<li>The user-command <ks>RESUME</ks> should execute the robot-move that resumes a previously halted journey</li>
 </ol>
 
 </td>
-<td><center><img src="./img/ResumableRobotBoundary.png" alt="ResumableRobotBoundary" width="100%" ></center>
+<td>The previous boundary-walk algorithm is in
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
+that provides the following operations:<br/><br/>
+<ul>
+<li><tt>doBoundaryInit</tt>: called at the system start-up</li>
+<li><tt>boundaryStep</tt>: called when the controller handles a <tt>endmove</tt> message</li>
+<li><tt>doBoundaryGoon</tt>: an internal operation that calls a single-step robot move </li>
+</ul>
+These operations are called by the <a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">
+RobotInputController</a> that handles the <tt>endmove</tt> messages sent by the WEnv on the wsconnection
+as answers to the execution of a robot-move done by the 
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>
+itself.
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+
+<h3>Available resources</h3>	
+ 
+Since we already have working code, the following classes could be usefully exploited to reduce the development time of a first 
+prototype of the application:
+
+the  <a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">
+RobotInputController.java</a>, &nbsp;&nbsp;
+the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>,&nbsp;&nbsp;
+the <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>.
+ <br/> 
+<!--
+<ol>
+<li> : it  is a <a href="https://www.baeldung.com/java-pojo-class" target="web"><ks>POJO</ks></a>
+that implements the
+<a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><tt>IssObserver</tt></a> interface
+and is called by the underlying ws-based communication support.
+This controller handles the <tt>endmove</tt> messages sent by the WEnv on the wsconnection and calls the
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>
+that performs the boundary walk without interruptions.
+ </li>
+ 
+ <li>The <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
+ that provides the following operations:
+<ul>
+<li><tt>doBoundaryInit</tt>: called at the system start-up</li>
+<li><tt>boundaryStep</tt>: called when the controller handles a <tt>endmove</tt> message</li>
+<li><tt>doBoundaryGoon</tt>: an internal operation that calls a single-step robot move </li>
+</ul>
+
+<li>The  <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>:
+it provides an utility to represent the robot journey as a string or as a map.
+</li>
+
+</ol>
+-->
+
+These classes define components that are already connected into a working application:<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ Following the 
+<a href="https://stackify.com/solid-design-principles/" target="web"><k>Single Responsibility Principle</k></a>,
+the application component is composed of: <br/><br/>
+	<ul>
+	 
+	<li>the controller 
+	<a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">RobotInputController</a>:
+	it  is a <a href="https://www.baeldung.com/java-pojo-class" target="web"><ks>POJO</ks></a>
+that implements the
+<a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><tt>IssObserver</tt></a> interface
+and works as an <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer</k></a> of the
+underlying ws-based communication support.
+<br/><m>
+Thus, it is called by the underlying support, and handles the <tt>endmove</tt> messages sent by the WEnv on the 
+wsconnection by executing the proper operation of the
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>
+that performs the boundary walk <em>without interruptions</em>.</m>
+<br/><br/>
+</li>
+<li>the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>,
+that provides the following operations:<br/><br/>
+<ul>
+<li><tt>doBoundaryInit</tt>: <m>called at the system start-up</m></li>
+<li><tt>boundaryStep</tt>: <m>called when the controller handles a <tt>endmove</tt> message</m></li>
+<li><tt>doBoundaryGoon</tt>: <m>an internal operation that calls a single-step robot move</m> </li>
+</ul>
+<m>
+These operations are called by the <a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">
+RobotInputController</a> that handles the <tt>endmove</tt> messages sent by the WEnv on the wsconnection
+as answers to the execution of a robot-move done by the 
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>
+itself.</m>
+<br/><br/>
+</li>
+
+<li>The  <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code"><tt>RobotMovesInfo</tt></a> 
+that provides an utility to represent the robot journey as a string or as a map.
+</li>	
+</ul>
+	
+
+</td>
+<td><center><img src="./img/RobotBoundaryArilZooming.png" alt="RobotBoundaryArilZooming" width="100%" ></center>
+<br/><br/>
+Moreover, our 'company' has already defined:<br/><br/>
+
+<li>The  <a href="../app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a> class:
+it provides a GUI with the buttons <tt>STOP</tt> and <tt>RESUME</tt> and already accepts a controller that implements the
+<a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><tt>IssObserver</tt></a> interface
+
+
+</td>
+</tr>
+ </tbody>
+</table>
+ 
+ 
+</li>
+
+ 
+
+ 
+<h2>Test plans</h2> 
+ 
+We should simulate a user command and check the effects of the user commnds <tt>STOP/RESUME</tt>.
+
+
+<h2>Project</h2> 
+ 
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:40%" >
+<k>Key points</k>: <br/> <br/><!-- <tt>Asynchronous REQUEST and observed REPLY</tt>.  -->
+<ol>
+ <li><a href="../app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a>
+ connected to the  <a href="../..//app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">
+ RobotApplInputController.java</a>  
+ <br/><br/>
+ </li>
+
+<li> <a href="../app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">RobotApplInputController.java</a>
+an object that handles the JSON messages 
+<pre><m>{"robotcmd":"STOP"}    {"robotcmd":"RESUME"}  </m></pre>
+
+calls the 
+<a href="../app/src/main/java/it/unibo/resumablebw/ResumableBoundaryLogic.java" target="code">ResumableBoundaryLogic.java</a>
+ <br/><br/> </li>
+
+<li><a href="../app/src/main/java/it/unibo/resumablebw/ResumableBoundaryLogic.java" target="code">ResumableBoundaryLogic.java</a>
+that consider the fact that the journey could have been stopped.
+ <br/><br/></li>
+
+ 
+</ol>
+  
+
+</td>
+<td><center><img src="./img/ResumableRobotBoundary.png" alt="ResumableRobotBoundary" width="100%" ></center> 
 </td>
 </tr>
  </tbody>
 </table>
  <br/><br/>
  
-The following resources could be usefully exploited to reduce the development time of a first prototype of the application:
- <br/><br/>
-<ol>
-<li>The  <a href="../app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a> :
-it provides the GUI with the buttons <tt>STOP</tt> and <tt>RESUME</tt> and already accepts a controller that implements the
-<a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><ks>IssObserver</ks></a> interface
-<!--
-(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui" target="code">it.unibo.virtualrobotclient</a>) 
--->
-</li>
-
-<li>The  <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>:
-it provides an utility to represent the robot journey as a string or as a map.
-  
  
-
-<li>The  <a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">
-RobotInputController.java</a> : it  is a <a href="https://www.baeldung.com/java-pojo-class" target="web"><ks>POJO</ks></a>
-that handles the <tt>endmove</tt> messages sent by the WEnv on the wsconnection and calls the
-<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
-that performs the boundary walk without interruptions.
- 
- </ol>
-
- 
-
- 
-<h2>Test plans</h2> 
-
-
-<h2>Project</h2> 
- 
- <ol>
- <li><a href="../app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a>
- connected to the  <a href="../..//app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">RobotApplInputController.java</a>  </li>
-
-<li> <a href="../app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">RobotApplInputController.java</a>
-an object that handles the JSON messages 
-<pre>
-{"robotcmd":"STOP"}    {"robotcmd":"RESUME"}  
-</pre>
-
-calls the 
-<a href="../../app/src/main/java/it/unibo/resumablebw/RobotResumableBoundaryLogic.java" target="code">RobotResumableBoundaryLogic.java</a>
- </li>
-
-<li><a href="../app/src/main/java/it/unibo/resumablebw/RobotResumableBoundaryLogic.java" target="code">RobotResumableBoundaryLogic.java</a>
-that consider the fact that the journey could have been stopped
-</li>
-
- 
-</ol>
-
 <h2>Testing</h2> 
  
 
 <h2>Deployment</h2> 
+The final commit commit has done after 2 hours of work.
   
 <h2>Maintenance</h2> 
  
- 
+<h2>SPRINT review</h2>  
+<ol>
+<li>The application logic is actually spread between the 
+<a href="../app/src/main/java/it/unibo/resumablebw/RobotApplInputController.java" target="code">RobotApplInputController.java</a>
+ and the <a href="../app/src/main/java/it/unibo/resumablebw/ResumableBoundaryLogic.java" target="code">ResumableBoundaryLogic.java</a>.
+ <br/>
+ Is it possible to design the proactive/reactive application logic without any reference to the controller?</li>
+<li>Is it possible to introduce observers that do not run in the thread of the communication support?  </li>
+<li> ... </li>
+</ol>
 
+<h2>SPRINT restrospective</h2>  
+<tt>... TODO</tt>
   <!--
-
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
 <table style="width:98%">
 <tbody>	
 <tr>

@@ -24,7 +24,7 @@ public class ClientBoundaryWebsockArilAsynch {
         IssCommSupport rsComm = (IssCommSupport)rs;
         controller = new RobotInputController(rsComm, true, true );
         rsComm.registerObserver( controller );
-        rsComm.registerObserver( actorObs );
+        //rsComm.registerObserver( actorObs );
         System.out.println("ClientBoundaryWebsockBasicAsynch | CREATED with rsComm=" + rsComm);
     }
 

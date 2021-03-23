@@ -1,6 +1,6 @@
 /*
 ===============================================================
-RobotResumableBoundaryLogic.java
+ResumableBoundaryLogic.java
 implements the business logic  
 
 ===============================================================
@@ -10,7 +10,7 @@ import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports.IssCommSupport;
 
 
-public class RobotResumableBoundaryLogic {
+public class ResumableBoundaryLogic {
 private IssCommSupport rs ;
 private int stepNum              = 1;
 private boolean boundaryWalkDone = false ;
@@ -18,7 +18,7 @@ private boolean usearil          = false;
 private int moveInterval         = 1000;
 private RobotMovesInfo robotInfo;
 
-    public RobotResumableBoundaryLogic(IssCommSupport support, boolean usearil, boolean doMap){
+    public ResumableBoundaryLogic(IssCommSupport support, boolean usearil, boolean doMap){
         rs           = support;
         this.usearil = usearil;
         robotInfo    = new RobotMovesInfo(doMap);

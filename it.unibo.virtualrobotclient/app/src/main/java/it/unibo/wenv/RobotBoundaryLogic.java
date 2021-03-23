@@ -27,7 +27,7 @@ private RobotMovesInfo robotInfo;
         robotInfo.showRobotMovesRepresentation();
     }
 
-    public void doBoundaryGoon(){
+    protected void doBoundaryGoon(){
         rs.request( usearil ? MsgRobotUtil.wMsg : MsgRobotUtil.forwardMsg  );
         delay(moveInterval ); //to reduce the robot move rate
     }
@@ -55,7 +55,7 @@ private RobotMovesInfo robotInfo;
     }
 
  //Business logic in RobotBoundaryLogic
-    protected synchronized void boundaryStep( String move, boolean obstacle ){
+    public synchronized void boundaryStep( String move, boolean obstacle ){
          if (stepNum <= 4) {
             if( move.equals("turnLeft") ){
                 updateMovesRep("l");
