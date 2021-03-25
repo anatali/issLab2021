@@ -18,6 +18,7 @@ plugins{
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
+    flatDir{ dirs("../../unibolibs")   }   //Our libraries
 }
 
 version="1.0"
@@ -60,12 +61,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115" )
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
-    implementation("com.googlecode.json-simple:json-simple:1.1.1")
+    //implementation("com.googlecode.json-simple:json-simple:1.1.1")
 //SOCKET.IO
-    implementation("com.github.nkzawa:socket.io-client:0.6.0")
+    //implementation("com.github.nkzawa:socket.io-client:0.6.0")
 // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
     implementation("javax.websocket:javax.websocket-api:1.1")   //javax.websocket api is only the specification
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9")
+//UNIBO
+    implementation( "uniboIssSupport:IssWsHttpJavaSupport" )
 }
 
 /*
