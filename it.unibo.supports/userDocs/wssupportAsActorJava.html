@@ -298,17 +298,7 @@ the program that condfigures and starts the producer-consumer system
 <tbody>	
 <tr>
 <td style="width:50%" >
-<a href="../app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" target="code"><ks>IssCommActorSupport.kt</ks></a>:<br/>
- 
-<pre>
-package it.unibo.interaction
-import it.unibo.supports2021.ActorBasicJava
-interface <k>IssCommActorSupport</k> : IssOperations {
-    fun registerActor( obs: ActorBasicJava)
-    fun removeActor( obs: ActorBasicJava)
-    fun close()
-}
-</pre>
+
  
 <a href="../app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" target="code"><ks>IssWsHttpJavaSupport.java</ks></a>:<br/>
 a class that extends the <a href="https://square.github.io/okhttp/3.x/okhttp/okhttp3/WebSocketListener.html" target="web">
@@ -316,8 +306,23 @@ WebSocketListener</a> of the library <a href="https://square.github.io/okhttp/" 
 This class is able to send / receive messages via <tt>http/ws</tt> and is able to
 send information to  <a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><tt>ActorBasicJava.java</tt></a>
 actors registered as abservers.  
+<pre>
+public class <k>IssWsHttpJavaSupport</k> extends WebSocketListener
+    implements IssActorObservable, IssCommSupport, IssOperations {
 
-<br/><br/>
+</pre>
+
+<a href="../app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" target="code"><ks>IssCommActorSupport.kt</ks></a>:<br/>
+ 
+<pre>
+package it.unibo.interaction
+import it.unibo.supports2021.ActorBasicJava
+interface <k>IssCommActorSupport</k>  {
+    fun isOpen() : Boolean
+    fun close()
+}
+</pre>
+
  <a href="../app/src/main/java/it/unibo/supports2021/usage/MainIssWsHttpJavaSupportUsage.java" target="code">
  <ks>MainIssWsHttpJavaSupportUsage.java</ks></a>:<br/>
 shows a demo of the usage of the  <tt>IssWsHttpJavaSupport.java</tt>.
@@ -332,7 +337,7 @@ shows a demo of the usage of the  <tt>IssWsHttpJavaSupport.java</tt>.
 
 <tr>
 <td style="width:50%" >
-<h3>Example: the boundaryWalker</h3> 
+<h3>Example: the boundaryWalker (project <i>it.unibo.virtualrobotclient</i>)</h3> 
  
 <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/MainRobotActorJava.java" target="code">
 MainRobotActorJava.java</a>:<br/>
