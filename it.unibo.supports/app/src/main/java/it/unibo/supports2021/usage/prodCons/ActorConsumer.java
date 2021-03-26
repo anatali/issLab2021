@@ -8,6 +8,7 @@ public class ActorConsumer extends ActorBasicJava {
     public ActorConsumer(String name){
         super(name);
     }
+
     @Override
     protected void handleInput(String info) {
         System.out.println( myname + " | " + info + " --- " + aboutThreads() );

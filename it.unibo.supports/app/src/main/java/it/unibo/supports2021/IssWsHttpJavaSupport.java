@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Vector;
 
 public class IssWsHttpJavaSupport extends WebSocketListener
-                                        implements IssActorObservable, IssCommSupport, IssOperations {
+        implements IssActorObservable, IssCommSupport, IssOperations {
     private boolean connectForWs               = true;
     private Vector<IJavaActor> actorobservers  = new Vector<IJavaActor>();
     private WebSocket myWs;

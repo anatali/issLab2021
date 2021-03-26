@@ -297,50 +297,6 @@ cognome_nome_resumablebw.pdf
 </ol>
 
 
-<!--
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
-<k>Key points</k>: <br/> <br/>  <tt>Asynchronous REQUEST and observed REPLY</tt>.  
- <ol>
- <li>The system must provide both <em>proactive</em> (the bondary walk) and <em>reactive</em> 
- behavior (the need to react to STP/RESUME  user commands).
- <br/><br/>
-  </li>
-  
-  <li>The <em>proactive</em> behaviour of the system has been <em>already analyzed and designed</em> in a 
-    previous project <a href="../../it.unibo.virtualrobotclient/userDocs/VirtualrobotClients.html#asynchbwjava2" target="code">
-  <tt>ClientBoundaryWebsockArilAsynch</tt></a>.
-  <br/><br/></li>
-  
-  <li>The addition of a <em>reactive</em> part involves the possibility to <tt>stop/resume</tt> the previous boundary-walk algorithm,
-  that will become no more an algorithm.<br/><br/></li>
-  
-<li>The user-command <ks>STOP</ks> should interrupt the journey, not the current robot-move. <br/><br/></li>
-<li>The user-command <ks>RESUME</ks> should execute the robot-move that resumes a previously halted journey</li>
-</ol>
-
-</td>
-<td>The previous boundary-walk algorithm is in
-<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
-that provides the following operations:<br/><br/>
-<ul>
-<li><tt>doBoundaryInit</tt>: called at the system start-up</li>
-<li><tt>boundaryStep</tt>: called when the controller handles a <tt>endmove</tt> message</li>
-<li><tt>doBoundaryGoon</tt>: an internal operation that calls a single-step robot move </li>
-</ul>
-These operations are called by the <a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">
-RobotInputController</a> that handles the <tt>endmove</tt> messages sent by the WEnv on the wsconnection
-as answers to the execution of a robot-move done by the 
-<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>
-itself.
-</td>
-</tr>
- </tbody>
-</table>
--->
-
 <h3>Available resources</h3>	
  
 Since we already have working code, the following classes could be usefully exploited to reduce the development time of a first 
@@ -351,31 +307,7 @@ RobotInputController.java</a>, &nbsp;&nbsp;
 the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>,&nbsp;&nbsp;
 the <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>.
  <br/> 
-<!--
-<ol>
-<li> : it  is a <a href="https://www.baeldung.com/java-pojo-class" target="web"><ks>POJO</ks></a>
-that implements the
-<a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><tt>IssObserver</tt></a> interface
-and is called by the underlying ws-based communication support.
-This controller handles the <tt>endmove</tt> messages sent by the WEnv on the wsconnection and calls the
-<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><tt>RobotBoundaryLogic</tt></a>
-that performs the boundary walk without interruptions.
- </li>
- 
- <li>The <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
- that provides the following operations:
-<ul>
-<li><tt>doBoundaryInit</tt>: called at the system start-up</li>
-<li><tt>boundaryStep</tt>: called when the controller handles a <tt>endmove</tt> message</li>
-<li><tt>doBoundaryGoon</tt>: an internal operation that calls a single-step robot move </li>
-</ul>
 
-<li>The  <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>:
-it provides an utility to represent the robot journey as a string or as a map.
-</li>
-
-</ol>
--->
 
 These classes define components that are already connected into a working application:<br/><br/>
 <table style="width:98%">

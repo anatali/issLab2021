@@ -11,7 +11,7 @@ public class ActorBasicJavaUsage {
         NaiveActorObserver[] observers = new NaiveActorObserver[5];
 
         for( int i = 0; i<5; i++){
-            observers[i] = new NaiveActorObserver("a"+i);
+            observers[i] = new NaiveActorObserver("a"+i, i);
             support.registerActor( observers[i] );
          }
 
