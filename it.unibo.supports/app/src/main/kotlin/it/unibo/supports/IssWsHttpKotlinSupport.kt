@@ -65,7 +65,7 @@ class IssWsHttpKotlinSupport
     }
 //===============================================================================
     fun updateObservers( msg: String){
-        //println("IssWsHttpKotlinSupport | updateObservers " + observers.size() );
+        println("IssWsHttpKotlinSupport | updateObservers " + actorobservers.size );
         //observers.forEach{ it.handleInfo(msg) } //loose control
         actorobservers.forEach{ it.send(msg) }
         //scope.launch { socketMsgChannel.send( msg ) }

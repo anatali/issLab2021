@@ -1,5 +1,9 @@
 package it.unibo.supports
+import it.unibo.interaction.IJavaActor
 import it.unibo.interaction.MsgRobotUtil
+import it.unibo.supports2021.ActorBasicJava
+import it.unibo.supports2021.usage.NaiveActorObserver
+import it.unibo.supports2021.usage.RobotActorController
 import kotlinx.coroutines.*
 
 @ExperimentalCoroutinesApi
@@ -27,28 +31,53 @@ object WebSocketKotlinSupportUsage {
 
     }
 
+    val testObservers : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ) {
+        println("WebSocketKotlinSupportUsage | testObservers 1 ")
+        while (!support.isOpen()) {  //busy form of waiting
+            println("WebSocketKotlinSupportUsage | testObservers support opening ... ")
+            ActorBasicJava.delay(100)
+        }
+        println("WebSocketKotlinSupportUsage | testObservers 2 ")
+
+        val observers = arrayOfNulls<NaiveActorObserver>(5)
+        for (i in 0..4) {
+            observers[i] = NaiveActorObserver("a$i", i)
+            support.registerActor(observers[i]!!)
+        }
+        println("WebSocketKotlinSupportUsage | testObservers 3 ")
+        support.forward(MsgRobotUtil.turnLeftMsg)
+
+        println("WebSocketKotlinSupportUsage | testObservers 4")
+        for (i in 0..4) {
+            support.removeActor(observers[i]!!)
+            observers[i]!!.terminate()
+        }
+
+    }
+
 }
 
 @ExperimentalCoroutinesApi
 fun main() = runBlocking {
     println("==============================================")
-    println("WebSocketUtilUsage | main start n_Threads=" + Thread.activeCount());
+    println("WebSocketUtilUsage | main start ${ActorBasicJava.aboutThreads()}"  );
     println("==============================================")
     val support = IssWsHttpKotlinSupport.createForWs(this, "localhost:8091" )
     //val ws      =
     //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
-    support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
+    //support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
+    support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
 
     println("==============================================")
-    println("TestSupportJar | main BEFORE END n_Threads=" + Thread.activeCount());
+    println("TestSupportJar | main BEFORE END ${ActorBasicJava.aboutThreads()}" );
     println("==============================================")
 
     //give time to see messages ...
-    delay(5000)  //CREATE new threads  !!!
-    support.disconnect()
+    delay(10000)  //CREATE new threads  !!!
+    support.close()
 
     println("==============================================")
-    println("WebSocketUtilUsage | main END n_Threads=" + Thread.activeCount());
+    println("WebSocketUtilUsage | main ${ActorBasicJava.aboutThreads()}");
     println("==============================================")
 
 }
