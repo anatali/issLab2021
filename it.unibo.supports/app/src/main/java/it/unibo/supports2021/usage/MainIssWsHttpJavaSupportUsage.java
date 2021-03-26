@@ -9,10 +9,10 @@ public class MainIssWsHttpJavaSupportUsage {
         System.out.println("WebSocketJavaSupportUsage | BEGIN " + ActorBasicJava.aboutThreads() );
         IJavaActor controller = new RobotActorController("rctrl");
 
-        controller.send("testHttp");
+        //controller.send("testHttp");
         //controller.send("testWs");
 
-        //controller.send("testObservers");
+        controller.send("testObservers");
         System.out.println("WebSocketJavaSupportUsage | END " + ActorBasicJava.aboutThreads() );
 
     }

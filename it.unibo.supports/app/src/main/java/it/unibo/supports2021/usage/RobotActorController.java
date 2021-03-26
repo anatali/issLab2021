@@ -29,7 +29,7 @@ public class RobotActorController extends ActorBasicJava {
     public void testWs(){
         IssWsHttpJavaSupport support = IssWsHttpJavaSupport.createForWs("localhost:8091" );
 
-        IJavaActor obs = new NaiveActorObserver("obs");
+        IJavaActor obs = new NaiveActorObserver("obs",0);
         support.registerActor(obs);
 
         //String answer = support.requestSynch( MsgRobotUtil.turnRightMsg );

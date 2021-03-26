@@ -1,8 +1,7 @@
 package it.unibo.robotWithActorJava;
 
-
-import it.unibo.interaction.IssCommActorSupport;
 import it.unibo.supports2021.ActorBasicJava;
+import it.unibo.supports2021.IssWsHttpJavaSupport;
 import org.json.JSONObject;
 
 public class BoundaryWalkerActor extends ActorBasicJava {
@@ -13,12 +12,12 @@ public class BoundaryWalkerActor extends ActorBasicJava {
     final String haltMsg      = "{\"robotmove\":\"alarm\", \"time\": 100}";
 
     private enum State {start, walking, obstacle, end };
-    private IssCommActorSupport support;
+    private IssWsHttpJavaSupport support;
     private State curState       =  State.start ;
     private int stepNum          = 1;
     private RobotMovesInfo moves = new RobotMovesInfo(true);
 
-    public BoundaryWalkerActor(String name, IssCommActorSupport support) {
+    public BoundaryWalkerActor(String name, IssWsHttpJavaSupport support) {
         super(name);
         this.support = support;
     }
