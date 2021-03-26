@@ -8,15 +8,19 @@ registered as abservers
  */
 package it.unibo.supports2021;
 
-import it.unibo.interaction.IssCommActorSupport;
+import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IssActorObservable;
+import it.unibo.interaction.IssCommSupport;
+import it.unibo.interaction.IssOperations;
 import okhttp3.*;
 import okhttp3.internal.http.RealResponseBody;
 import org.jetbrains.annotations.NotNull;
 import java.util.Vector;
 
-public class IssWsHttpJavaSupport extends WebSocketListener implements IssCommActorSupport {
-    private boolean connectForWs                    = true;
-    private Vector<ActorBasicJava> actorobservers  = new Vector<ActorBasicJava>();
+public class IssWsHttpJavaSupport extends WebSocketListener
+                                        implements IssActorObservable, IssCommSupport, IssOperations {
+    private boolean connectForWs               = true;
+    private Vector<IJavaActor> actorobservers  = new Vector<IJavaActor>();
     private WebSocket myWs;
     private OkHttpClient okHttpClient  = new OkHttpClient();
     final MediaType JSON_MediaType     = MediaType.get("application/json; charset=utf-8");
@@ -39,11 +43,11 @@ public class IssWsHttpJavaSupport extends WebSocketListener implements IssCommAc
     //----------------------------------------------------------------------
 
     @Override
-    public void registerActor(@NotNull ActorBasicJava actorObs) {
+    public void registerActor(@NotNull IJavaActor actorObs) {
         actorobservers.add(actorObs);
     }
     @Override
-    public void removeActor(@NotNull ActorBasicJava actorObs) {
+    public void removeActor(@NotNull IJavaActor actorObs) {
         actorobservers.remove(actorObs);
     }
     @Override
@@ -59,7 +63,7 @@ public class IssWsHttpJavaSupport extends WebSocketListener implements IssCommAc
     }
 
     //----------------------------------------------------------------------
-    @Override
+
     public void forward(@NotNull String msgJson) {
         if(connectForWs) myWs.send(msgJson);
         else System.out.println("SORRY: not connected for ws");
@@ -96,7 +100,7 @@ public class IssWsHttpJavaSupport extends WebSocketListener implements IssCommAc
     }
     @Override
     public void onMessage(WebSocket webSocket, String msg  ) {
-        System.out.println("IssWsHttpJavaSupport | onMessage " + msg );
+        //System.out.println("IssWsHttpJavaSupport | onMessage " + msg );
         updateObservers( msg );
     }
 

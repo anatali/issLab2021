@@ -1,5 +1,5 @@
 /**
- * WebSocketKotlinSupport
+ * IssWsHttpKotlinSupport
  * @author AN - DISI - Unibo
 ===============================================================
 A kotlin object that provides utility operations to
@@ -12,44 +12,50 @@ Observer of the socket, it is observable in its turn
 ===============================================================
  */
 package it.unibo.supports
-import it.unibo.interaction.IssCommActorSupport
-import it.unibo.interaction.IssObserver
-import it.unibo.supports2021.ActorBasicJava
+import it.unibo.interaction.IJavaActor
+import it.unibo.interaction.IssActorObservable
+import it.unibo.interaction.IssCommSupport
+import it.unibo.interaction.IssOperations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.internal.http.RealResponseBody
-import org.json.JSONObject
 import java.util.*
 
 @ExperimentalCoroutinesApi
-class WebSocketKotlinSupport(val scope: CoroutineScope) : WebSocketListener(), IssCommActorSupport {
+class IssWsHttpKotlinSupport
+    private constructor(val scope: CoroutineScope, val addr:String, val wsconn:Boolean)
+     : WebSocketListener(), IssActorObservable, IssCommSupport, IssOperations {
     lateinit var myWs: WebSocket
-    lateinit var workTodo: (CoroutineScope, WebSocketKotlinSupport) -> Unit
-    //lateinit var connetctedWs : WebSocket
+    lateinit var workTodo: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit
 
     val  JSON_MediaType = "application/json; charset=utf-8".toMediaType()
     val okHttpClient    = OkHttpClient()
-    //val observers       = Vector<IssObserver>()
-    val actorobservers  = Vector<ActorBasicJava>()
-    private var opened          = false
+    val actorobservers         = Vector<IJavaActor>()
+    private var opened         = false
+    private var connectForWs   = true
 
     //val socketMsgChannel: Channel<String> = Channel(10) //our channel buffer is 10 events
-
     //fun getInputChannel() : Channel<String> { return socketMsgChannel }
+
+    companion object {
+        fun createForHttp(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
+            return IssWsHttpKotlinSupport(scope, addr, false)
+        }
+        fun createForWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
+            return IssWsHttpKotlinSupport(scope, addr, true)
+        }
+    }
 //===============================================================================
     //After open => execute workTodo that has been set by connect
     override fun onOpen(webSocket: WebSocket, response: Response ) {
-        println("WebSocketKotlinSupport | onOpen $response")
+        println("IssWsHttpKotlinSupport | onOpen $response")
         opened = true
         workTodo( scope, this )
     }
     override fun onMessage(webSocket: WebSocket, text: String) {
-        //wwprintln("WebSocketKotlinSupport | onMessage $text")
+        //wwprintln("IssWsHttpKotlinSupport | onMessage $text")
         updateObservers( text )
     }
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -59,60 +65,49 @@ class WebSocketKotlinSupport(val scope: CoroutineScope) : WebSocketListener(), I
     }
 //===============================================================================
     fun updateObservers( msg: String){
-        //println("WebSocketKotlinSupport | updateObservers " + observers.size() );
+        //println("IssWsHttpKotlinSupport | updateObservers " + observers.size() );
         //observers.forEach{ it.handleInfo(msg) } //loose control
         actorobservers.forEach{ it.send(msg) }
         //scope.launch { socketMsgChannel.send( msg ) }
     }
     //override fun registerObserver(obs: IssObserver) { observers.add(obs) }
     //override fun removeObserver(obs: IssObserver)   { observers.remove(obs) }
-    override fun registerActor(obs: ActorBasicJava) { actorobservers.add(obs) }
-    override fun removeActor(obs: ActorBasicJava)   { actorobservers.remove(obs); }
+    override fun registerActor(obs: IJavaActor) { actorobservers.add(obs) }
+    override fun removeActor(obs: IJavaActor)   { actorobservers.remove(obs); }
     override fun isOpen() : Boolean {  return opened   }
     override fun close(){  disconnect( )  }
-//===============================================================================
-    override fun forward( msg: String)  {
-        sendWs(msg)
-    }
-    override fun request( msg: String)  {
-        sendWs(msg)
-    }
-    override fun requestSynch( msg: String) : String {
-        return "todo"
-    }
-    override fun reply( msg: String)  {
 
-    }
 //===============================================================================
-    fun connect( wsAddr : String , callback : (CoroutineScope, WebSocketKotlinSupport)->Unit ) : WebSocket {
+    fun wsconnect( //wsAddr : String ,
+                 callback : (CoroutineScope, IssWsHttpKotlinSupport)->Unit ) : WebSocket {
         workTodo = callback
         val request0 = Request.Builder()
-            .url("ws://$wsAddr")
+            .url("ws://$addr")
             .build()
         myWs = okHttpClient.newWebSocket(request0, this)
         return myWs
     }
 
-    fun disconnect( ){ //WebSocketKotlinSupport.disconnect( myWs )
+    fun disconnect( ){ //IssWsHttpKotlinSupport.disconnect( myWs )
         //see https://square.github.io/okhttp/4.x/okhttp/okhttp3/-web-socket/close/
-        println("WebSocketKotlinSupport | disconnecting from $myWs")
+        println("IssWsHttpKotlinSupport | disconnecting from $myWs")
         var gracefulShutdown = myWs.close(1000, "appl_terminated")
-        println("WebSocketKotlinSupport | gracefulShutdown = $gracefulShutdown")
+        println("IssWsHttpKotlinSupport | gracefulShutdown = $gracefulShutdown")
     }
 //-----------------------------------------------------------------
 
     fun sendHttp(msgJson : String, httpaddr : String) : String {
         //val client = OkHttpClient()
         val body    = msgJson.toRequestBody(JSON_MediaType)
-        //println("WebSocketKotlinSupport | sendHttp msgJson=$msgJson ")
+        //println("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson ")
         val request = Request.Builder()
             .url( "http://$httpaddr" )
             .post(body)
             .build()
         val response = okHttpClient.newCall(request).execute()
-        //println("WebSocketKotlinSupport | post response=$response ")
+        //println("IssWsHttpKotlinSupport | post response=$response ")
         val answer  =  response.body!!.string()
-        //println("WebSocketKotlinSupport | post answer=$answer ")
+        //println("IssWsHttpKotlinSupport | post answer=$answer ")
         return answer
     }
 
@@ -120,7 +115,23 @@ class WebSocketKotlinSupport(val scope: CoroutineScope) : WebSocketListener(), I
           //println("sendWs $msgJson")
         myWs.send(msgJson);
     }
+//========================================================================
+    override fun forward(msgJson: String) {
+        if (connectForWs) myWs.send(msgJson) else println("SORRY: not connected for ws")
+    }
 
-}//WebSocketKotlinSupport
+    override fun request(msgJson: String) {
+        if (connectForWs) myWs.send(msgJson) else println("SORRY: not connected for ws")
+    }
+
+    override fun reply(msgJson: String) {
+        if (connectForWs) myWs.send(msgJson) else println("SORRY: not connected for ws")
+    }
+
+    override fun requestSynch(msg: String): String {
+        TODO("Not yet implemented")
+    }
+
+}//IssWsHttpKotlinSupport
 
 

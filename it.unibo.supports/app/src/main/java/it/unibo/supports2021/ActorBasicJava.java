@@ -1,13 +1,13 @@
 package it.unibo.supports2021;
 
 import it.unibo.interaction.IJavaActor;
-import it.unibo.interaction.IssObservable;
+import it.unibo.interaction.IssCommActorSupport;
 import org.jetbrains.annotations.NotNull;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public abstract class ActorBasicJava extends Thread implements IJavaActor, IssObservable {
+public abstract class ActorBasicJava extends Thread implements IJavaActor {
     private boolean goon = true;
     private Vector<IJavaActor> actorobservers      = new Vector<IJavaActor>();
     private BlockingQueue<String> bqueue           = new LinkedBlockingQueue<String>(10);
@@ -20,10 +20,12 @@ public abstract class ActorBasicJava extends Thread implements IJavaActor, IssOb
     }
 
     //------------------------------------------------
-    //Utility to communicate with another, known actor
+    //Utility ops to communicate with another, known actor
     protected void forward(@NotNull String msg, @NotNull ActorBasicJava dest) {
         dest.send(msg);
     }
+    protected void request(@NotNull String msg, @NotNull ActorBasicJava dest) { dest.send(msg); }
+    protected void reply(@NotNull String msg, @NotNull ActorBasicJava dest) { dest.send(msg);   }
 
     @Override
     public String myname(){

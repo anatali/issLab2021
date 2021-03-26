@@ -208,23 +208,27 @@ div.imagedesc{
 <a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><ks>ActorBasicJava.java</ks></a> :<br/>
 an abstract class that implements the concept of a message-driven entity that handles messages in FIFO order,
 by delegating the work to the abstract method <ks>handleInput</ks>.
+<pre>public abstract class <k>ActorBasicJava</k> extends Thread 
+   implements IJavaActor {...}
+</pre>
 
-
-
-<br/><br/>
+ 
 <a href="../app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" target="code"><ks>IJavaActor.kt</ks></a> : <br/>
 defines the operations that each <tt>ActorBasicJava</tt> component must provide.
 <pre>
 package it.unibo.interaction
-interface IJavaActor : IssObservable {
+interface <k>IJavaActor</k> : : IssActorObservable {
     fun myname() : String
     fun send(msg: String )
 }</pre>
-<a href="../app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" target="code"><ks>IssObservable.kt</ks></a> :<br/>
+
+
+
+<a href="../app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" target="code"><ks>IssActorObservable.kt</ks></a> :<br/>
 each <tt>ActorBasicJava</tt> component must be observable by other <tt>ActorBasicJava</tt> components
 <pre>
 package it.unibo.interaction
-interface IssObservable {
+interface <k>IssActorObservable</k> {
     fun registerActor(obs: IJavaActor)
     fun removeActor(obs: IJavaActor)
 }</pre>
@@ -237,7 +241,26 @@ interface IssObservable {
 <center><img src="./img/ActorBasicJava.png" alt="ActorBasicJava" width="60%" ></center> 
 <br/>
 <center>Actor symbol: <img src="./img/ActorSymbol.png" alt="ActorSymbol" width="10%" ></center> 
- 
+ <br/><br/>
+<ol>
+<li>Now, in our analysis and design phase, we can talk of two main types of components: <ks>objects</ks> (POJO) and <ks>actors</ks>.
+ <br/><br/></li>
+<li>An <a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><tt>ActorBasicJava</tt></a>
+has the capability to interact with other actors (known by reference) by using the following local operations:
+<pre><m>protected void <k>forward</k>(String msg, ActorBasicJava dest) { dest.send(msg); }
+protected void <k>request</k>(String msg, ActorBasicJava dest) { dest.send(msg); }
+protected void <k>reply</k>(String msg, ActorBasicJava dest) { dest.send(msg);   }</m>
+</pre>
+
+
+<!--
+<a href="../app/src/main/java/it/unibo/interaction/IssActorOperations.java" target="code"><ks>IssActorOperations</ks></a> set:-->
+ <br/><br/>
+ </li>
+<li>An <a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><tt>ActorBasicJava</tt></a>
+can be considered a sort of 'local-<a href="https://microservices.io/" target="web"><tt>microservice</tt></a>'
+ <br/><br/></li>
+</ol> 
 
 </td>
 </tr>
@@ -280,7 +303,7 @@ the program that condfigures and starts the producer-consumer system
 <pre>
 package it.unibo.interaction
 import it.unibo.supports2021.ActorBasicJava
-interface IssCommActorSupport : IssOperations {
+interface <k>IssCommActorSupport</k> : IssOperations {
     fun registerActor( obs: ActorBasicJava)
     fun removeActor( obs: ActorBasicJava)
     fun close()
@@ -335,8 +358,15 @@ the <tt>boundaryWalker</tt> application logic designed and implemented as a Meal
 
 
 </td>
-<td>
-<center><img src="./img/bwMealy.png" alt="bwMealy" width="80%" ></center> 
+<td><h4>UML-like model sketch (not correct-not complete, but useful)</h4>
+<center><img src="./img/bwMealy.png" alt="bwMealy" width="30%" ></center> 
+
+<h4>UML-like model after coding (<ks>fsm</ks> in 
+<a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/BoundaryWalkerActor.java" target="code">
+BoundaryWalkerActor</a>)</h4>
+<center><img src="./img/bwMealyReviewed.png" alt="bwMealyReviewed" width="90%" ></center> 
+.png
+
 </td>
 </tr>
 

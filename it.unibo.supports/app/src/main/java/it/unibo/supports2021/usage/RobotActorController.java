@@ -1,5 +1,6 @@
 package it.unibo.supports2021.usage;
 
+import it.unibo.interaction.IJavaActor;
 import it.unibo.interaction.MsgRobotUtil;
 import it.unibo.supports2021.ActorBasicJava;
 import it.unibo.supports2021.IssWsHttpJavaSupport;
@@ -27,7 +28,8 @@ public class RobotActorController extends ActorBasicJava {
     }
     public void testWs(){
         IssWsHttpJavaSupport support = IssWsHttpJavaSupport.createForWs("localhost:8091" );
-
+        IJavaActor obs = new NaiveActorObserver("obs");
+        support.registerActor(obs);
         //String answer = support.requestSynch( MsgRobotUtil.turnRightMsg );
         //System.out.println("RobotActorController | testWs answer=" + answer);
 

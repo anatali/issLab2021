@@ -24,7 +24,7 @@ public class ActorProducer extends ActorBasicJava {
             System.out.println( myname + " | produces " + info + " --- " + aboutThreads() );
             updateObservers(info);
             consumer.send(info);
-            ActorBasicJava.delay(i*100);
+            //ActorBasicJava.delay(i*200);
         }
         consumer.send("end");
         updateObservers("end");

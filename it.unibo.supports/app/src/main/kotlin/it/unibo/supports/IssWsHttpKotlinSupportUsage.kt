@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 object WebSocketKotlinSupportUsage {
 
     //ENTRY after connection
-    val workToDo : (CoroutineScope, WebSocketKotlinSupport) -> Unit =  fun(scope, support ){
+    val workToDo : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ){
         println("WebSocketUtilUsage | workToDo ... ")
 
         scope.launch {
@@ -34,9 +34,10 @@ fun main() = runBlocking {
     println("==============================================")
     println("WebSocketUtilUsage | main start n_Threads=" + Thread.activeCount());
     println("==============================================")
-    val support = WebSocketKotlinSupport(this )
+    val support = IssWsHttpKotlinSupport.createForWs(this, "localhost:8091" )
     //val ws      =
-    support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
+    //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
+    support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
 
     println("==============================================")
     println("TestSupportJar | main BEFORE END n_Threads=" + Thread.activeCount());
