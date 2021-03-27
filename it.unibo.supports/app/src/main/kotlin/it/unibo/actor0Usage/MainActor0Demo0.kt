@@ -7,19 +7,19 @@ import it.unibo.supports2021.ActorBasicJava
 import kotlinx.coroutines.*
 
 class MainActor0Demo0 {
-    suspend fun prodCons(scope : CoroutineScope){
-    val numOfConsumers = 10
+    suspend fun prodCons(){
+    val numOfConsumers = 20
     val consumers      = arrayOfNulls<ActorKotlinConsumer>(numOfConsumers)
 
 
     //CREATE AND START THE CONSUMERS
         for( i in 0..consumers.size-1){
-            consumers[i] = ActorKotlinConsumer("cons$i", scope)
+            consumers[i] = ActorKotlinConsumer("cons$i")
             MsgUtil.sendMsg("start", "start", consumers[i]!!)
         }
 
     //CREATE THE PRODUCER connected to the first consumer
-        val prod = ActorKotlinProducer("prod", consumers[0]!!, scope)
+        val prod = ActorKotlinProducer("prod", consumers[0]!!)
 
     //REGISTER SOME CONSUMER AS PRODUCER OBSERVER
         for( i in 1..consumers.size-1){ //consumers[i] added as an observer
@@ -50,7 +50,7 @@ class MainActor0Demo0 {
         runBlocking {
             val appl = MainActor0Demo0()
             //appl.prodCons(this)
-            appl.prodCons(GlobalScope)
+            appl.prodCons( )
         }
 
         val endTime = sysUtil.getDuration(startTime)

@@ -66,10 +66,11 @@ object sysUtil{
 	}
 
 //-----------------------------------------
+	@JvmStatic
 	fun getCurrentTime():Long {
 		return System.currentTimeMillis()
 	}
-
+	@JvmStatic
 	fun getDuration(start: Long) : Long{
 		val duration = (System.currentTimeMillis() - start)
 		//println("DURATION = $duration start=$start")

@@ -5,7 +5,7 @@ import it.unibo.supports2021.ActorBasicJava;
 
 public class MainIssWsHttpJavaSupportUsage {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) {
         System.out.println("WebSocketJavaSupportUsage | BEGIN " + ActorBasicJava.aboutThreads() );
         IJavaActor controller = new RobotActorController("rctrl");
 

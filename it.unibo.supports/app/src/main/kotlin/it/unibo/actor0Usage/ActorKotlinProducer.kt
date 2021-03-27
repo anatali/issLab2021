@@ -4,26 +4,31 @@ import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin,
-                          scope: CoroutineScope) : ActorBasicKotlin(name,scope,true,true) {
+class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin ) :
+        ActorBasicKotlin(name, true,true) {
 
-    override suspend fun actorBody(msg: ApplMessage) {
+    override fun actorBody(msg: ApplMessage) {
         aboutThreads()
         showMsg("$msg")
         if( msg.msgId == "start") doProduce()
         if( msg.msgId == "end") doEnd()
     }
 
-    suspend fun doProduce(){
-        dest.forward("info", "item", dest)
-        val msg = MsgUtil.buildEvent(name,"production","info-item")
-        updateObservers(msg)
+    fun doProduce(){
+        scope.launch {
+            dest.forward("info", "item", dest)
+            val msg = MsgUtil.buildEvent(name, "production", "info-item")
+            updateObservers(msg)
+        }
     }
 
-    suspend fun doEnd(){
-        dest.forward("end", "ok", dest)
-        terminate()
+    fun doEnd(){
+        scope.launch {
+            dest.forward("end", "ok", dest)
+            terminate()
+        }
     }
 
 

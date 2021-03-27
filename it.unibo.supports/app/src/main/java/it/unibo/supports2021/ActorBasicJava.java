@@ -27,16 +27,13 @@ public abstract class ActorBasicJava extends Thread implements IJavaActor {
     protected void request(@NotNull String msg, @NotNull ActorBasicJava dest) { dest.send(msg); }
     protected void reply(@NotNull String msg, @NotNull ActorBasicJava dest) { dest.send(msg);   }
 
+    protected abstract void handleInput(String info);
+
     @Override
     public String myname(){
         return myname;
     }
-/*
-    @Override
-    public void activate(){
-        send("system_start_msg");   //automsg
-        start();
-    }*/
+
     @Override
     public synchronized void send( String msg ){
         try {
@@ -72,7 +69,7 @@ public abstract class ActorBasicJava extends Thread implements IJavaActor {
     }
 
 
-    protected abstract void handleInput(String info);
+
 
 //---------------------------------------------------------------------------
     @Override
