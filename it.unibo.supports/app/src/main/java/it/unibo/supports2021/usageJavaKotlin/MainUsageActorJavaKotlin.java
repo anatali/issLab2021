@@ -7,10 +7,11 @@ import it.unibo.supports2021.ActorBasicJava;
 import java.util.Vector;
 
 public class MainUsageActorJavaKotlin {
+    public static final int numOfActors = 40;
 
     public static void main(String[] args) {
         Long startTime  = sysUtil.getCurrentTime( );
-        int numOfActors = 40;
+
         System.out.println("==============================================");
         System.out.println("MainActor0Demo0 | START " + sysUtil.aboutSystem("applmain"));
         System.out.println("==============================================");
