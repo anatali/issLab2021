@@ -11,9 +11,7 @@ public class NaiveActorJavaKotlin extends ActorBasicJavaKotlin {
         super(name);
     }
 
-    protected void handleInput(String info){
-        showMsg("STRANGE:"+info);
-    }
+    //protected void handleInput(String info){ showMsg("STRANGE:"+info); }
 
     @Override
     protected void actorBody( ApplMessage msg ) {

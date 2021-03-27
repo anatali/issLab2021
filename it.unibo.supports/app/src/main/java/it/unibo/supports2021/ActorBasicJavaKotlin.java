@@ -2,6 +2,7 @@ package it.unibo.supports2021;
 
 import it.unibo.actor0.ActorBasicKotlin;
 import it.unibo.actor0.ApplMessage;
+import it.unibo.actor0.DispatchType;
 import it.unibo.actor0.MsgUtil;
 import it.unibo.interaction.IJavaKotlinActor;
 import kotlin.Unit;
@@ -10,8 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ActorBasicJavaKotlin  extends ActorBasicKotlin implements IJavaKotlinActor {
+
     public ActorBasicJavaKotlin(@NotNull String name ) {
-        super(name, false,true,false,50);
+        super(name, DispatchType.single,50);
     }
 
     @NotNull
@@ -23,6 +25,6 @@ public abstract class ActorBasicJavaKotlin  extends ActorBasicKotlin implements 
     @Override
     public void send(@NotNull String msg) {
         ApplMessage m = MsgUtil.buildDispatch( myname(), "cmd" , msg, this.myname() );
-        sendToMyself( m );
+        sendToYourself( m );
     }
 }

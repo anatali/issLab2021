@@ -10,11 +10,15 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.function.Consumer
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-abstract class ActorBasicKotlin(val name: String,
 
-                       var discardMessages : Boolean = false,
-                       val confined :    Boolean = true,
-                       val ioBound :     Boolean = false,
+enum class DispatchType {single, iobound, cpubound }
+
+abstract class ActorBasicKotlin(val name: String,
+                                //val scope: CoroutineScope = GlobalScope,
+                        val dispatchType: DispatchType = DispatchType.single,
+                        //var discardMessages : Boolean = false,
+                       //val confined :    Boolean = true,
+                       //val ioBound :     Boolean = false,
                        val channelSize : Int = 50 ) {
 
     val scope: CoroutineScope = GlobalScope
@@ -27,40 +31,19 @@ abstract class ActorBasicKotlin(val name: String,
     protected var actorLogfileName  : String = ""
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir
-    var dispatcher : CoroutineDispatcher = newSingleThreadContext("aThread")
-/*
-    constructor(myname: String) :
-            this(myname,GlobalScope,false, true,false,50 ) {
-        //configure()
-        //dispatcher = sysUtil.singleThreadContext
-            //if( confined ) sysUtil.singleThreadContext
-            //else  if( ioBound ) sysUtil.ioBoundThreadContext
-            //else sysUtil.cpusThreadContext
-        println("ActorBasicKotlin $name |  CREATE  $myname confined=$confined dispatcher=$dispatcher" )
-    }
-*/
+    lateinit var dispatcher : CoroutineDispatcher // = newSingleThreadContext("aThread")
+
     init{                                    //Coap Jan2020
         createMsglogFile()					//APR2020 : an Actor could have no context
         //isObservable = true
         logo    = "       ActorBasicKotlin(Resource) $name "
         ActorResourceRep = "$logo | created  "
-        dispatcher =
-                if( confined ) sysUtil.singleThreadContext
-                else  if( ioBound ) sysUtil.ioBoundThreadContext
-                else sysUtil.cpusThreadContext
-        //configure()
-    }
-
-    fun configure(){                                   //Coap Jan2020
-         createMsglogFile()					//APR2020 : an Actor could have no context
-        //isObservable = true
-        logo    = "       ActorBasicKotlin(Resource) $name "
-        ActorResourceRep = "$logo | created  "
-        //dispatcher = sysUtil.singleThreadContext
-            //if( confined ) sysUtil.singleThreadContext
-            //else  if( ioBound ) sysUtil.ioBoundThreadContext
-            //else sysUtil.cpusThreadContext
-        println("******************* ActorBasicKotlin $name |  configure  confined=$confined dispatcher=$dispatcher" )
+        when( dispatchType ){
+            DispatchType.single   -> dispatcher = newSingleThreadContext("singleThread")
+            DispatchType.iobound  -> dispatcher = newFixedThreadPoolContext(64, "pool64")
+            DispatchType.cpubound -> dispatcher = newFixedThreadPoolContext(sysUtil.cpus, "cpuspool")
+        }
+        println("%%% ActorBasicKotlin $name |  init  dispatcher=$dispatcher" )
     }
 
     @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -138,8 +121,9 @@ abstract class ActorBasicKotlin(val name: String,
     protected  fun sendToActor(info: ApplMessage,  dest: ActorBasicKotlin) {
         scope.launch {   dest.actor.send(info)  }
     }
-    protected  fun sendToMyself( msg: ApplMessage ) {
+    fun sendToYourself( msg: ApplMessage ) {    //for standard Java => create new Thread
         //println("$name  sendToMyself  ${msg}" );
+        //forward( msg.msgId, msg.msgContent, this )
         scope.launch {   getLocalActor().send(msg)  }
     }
 

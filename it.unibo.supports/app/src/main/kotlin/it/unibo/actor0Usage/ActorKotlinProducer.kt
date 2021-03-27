@@ -2,12 +2,13 @@ package it.unibo.actor0Usage
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin ) :
-        ActorBasicKotlin(name, true,true) {
+class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin, dispatchType : DispatchType) :
+        ActorBasicKotlin( name, dispatchType ) {
 
     override fun actorBody(msg: ApplMessage) {
         aboutThreads()
