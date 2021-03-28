@@ -1,27 +1,23 @@
 package it.unibo.actor0
 
-import it.unibo.interaction.IJavaActor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
-import java.util.Vector
-import java.util.concurrent.BlockingQueue
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.function.Consumer
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 
 enum class DispatchType {single, iobound, cpubound }
 
 abstract class ActorBasicKotlin(val name: String,
-                                //val scope: CoroutineScope = GlobalScope,
+                                val scope: CoroutineScope = GlobalScope,
                         val dispatchType: DispatchType = DispatchType.single,
                         //var discardMessages : Boolean = false,
                        //val confined :    Boolean = true,
                        //val ioBound :     Boolean = false,
                        val channelSize : Int = 50 ) {
 
-    val scope: CoroutineScope = GlobalScope
+    //protected val scope: CoroutineScope = GlobalScope
 
     //private val kactor = CoroutineScope( Dispatchers.Default ).actor
     val tt      = "               %%% "
@@ -32,41 +28,49 @@ abstract class ActorBasicKotlin(val name: String,
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir
     lateinit var dispatcher : CoroutineDispatcher // = newSingleThreadContext("aThread")
+    //lateinit var  actor : SendChannel<ApplMessage>
+    var ctx  : ActorContextLocal? = null //to be injected
 
     init{                                    //Coap Jan2020
-        createMsglogFile()					//APR2020 : an Actor could have no context
+        //createMsglogFile()					//APR2020 : an Actor could have no context
         //isObservable = true
-        logo    = "       ActorBasicKotlin(Resource) $name "
-        ActorResourceRep = "$logo | created  "
+        //logo    = "       ActorBasicKotlin(Resource) $name "
+        //ActorResourceRep = "$logo | created  "
         when( dispatchType ){
-            DispatchType.single   -> dispatcher = newSingleThreadContext("singleThread")
-            DispatchType.iobound  -> dispatcher = newFixedThreadPoolContext(64, "pool64")
-            DispatchType.cpubound -> dispatcher = newFixedThreadPoolContext(sysUtil.cpus, "cpuspool")
+            DispatchType.single   -> dispatcher = sysUtil.singleThreadContext
+            DispatchType.iobound  -> dispatcher = sysUtil.ioBoundThreadContext
+            DispatchType.cpubound -> dispatcher = sysUtil.cpusThreadContext
         }
-        println("%%% ActorBasicKotlin $name |  init  dispatcher=$dispatcher" )
+        //println("%%%  $name |  init  dispatcher=$dispatcher ${sysUtil.aboutThreads(name)}" )
+        ActorContextLocal.addActor( this )
     }
+
 
     @kotlinx.coroutines.ExperimentalCoroutinesApi
     @kotlinx.coroutines.ObsoleteCoroutinesApi
-    val actor = scope.actor<ApplMessage>( dispatcher, capacity=channelSize ) {
+    val actor = scope.actor<ApplMessage>(dispatcher, capacity = channelSize) {
         //println("ActorBasicKotlin $name |  RUNNING IN $dispatcher"  )
-        for( msg in channel ) {
-            //println("ActorBasicKotlin $name |  receives $msg"  )
-            sysUtil.traceprintln("$tt ActorBasicKotlin  $name |  msg= $msg ")
+        for (msg in channel) {
+            //println("%%% $name |  receives $msg   ${sysUtil.aboutThreads(name)} scope=$scope" )
+            sysUtil.traceprintln("$tt   $name |  msg= $msg ")
+            //actorBody(msg)
+            if( msg.msgId == "stopTheActor") {  terminate() }
+            else handleInput(msg)
             //updateObservers( msg  )   //called by specialized actor
             //writeMsgLog( msg )        //called by specialized actor
-            if( msg.msgContent == "stopTheActor") {  channel.close() }
-            else{
-                actorBody( msg )
-            }
         }
     }
 
-
     fun getLocalActor() : SendChannel<ApplMessage> {return actor}
 
-    //To be overridden by the application designer
-    abstract protected  fun actorBody(msg : ApplMessage)
+    /* To be overridden by the application designer
+    protected suspend fun actorBody(msg : ApplMessage){
+        if( msg.msgId == "startTheActor"  ) return
+        if( msg.msgId == "stopTheActor") {  terminate() }
+        else handleInput(msg)
+    }*/
+
+    abstract protected suspend fun handleInput(msg : ApplMessage);
 
 
     open fun createMsglogFile(){
@@ -121,10 +125,17 @@ abstract class ActorBasicKotlin(val name: String,
     protected  fun sendToActor(info: ApplMessage,  dest: ActorBasicKotlin) {
         scope.launch {   dest.actor.send(info)  }
     }
+
     fun sendToYourself( msg: ApplMessage ) {    //for standard Java => create new Thread
         //println("$name  sendToMyself  ${msg}" );
         //forward( msg.msgId, msg.msgContent, this )
-        scope.launch {   getLocalActor().send(msg)  }
+        scope.launch {   actor.send(msg)  }
+    }
+    @kotlinx.coroutines.ObsoleteCoroutinesApi
+    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    suspend open fun autoMsg(  msg : ApplMessage) {
+        //println("ActorBasic $name | autoMsg $msg actor=${actor}")
+        actor.send( msg )
     }
 
     suspend protected  fun updateObservers(info: ApplMessage) {

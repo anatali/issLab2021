@@ -1,16 +1,13 @@
 package it.unibo.actor0Usage
 
-import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0.ApplMessage
-import it.unibo.actor0.DispatchType
-import it.unibo.actor0.sysUtil
+import it.unibo.actor0.*
+import kotlinx.coroutines.CoroutineScope
 
-class ActorKotlinNaive(  name : String, dispatchType : DispatchType)
-                        : ActorBasicKotlin(  name, dispatchType ) {
+class ActorKotlinNaive(  name : String, scope: CoroutineScope, dispatchType : DispatchType) //, dispatchType : DispatchType
+                        : ActorBasicKotlin(  name, scope, dispatchType  ) {
 
-    override  fun actorBody(msg: ApplMessage) {
-        if( msg.msgId == "end" ) terminate()
-        else showMsg("$msg  ${sysUtil.aboutThreads(name)}")
+    override  suspend fun handleInput(msg: ApplMessage) {
+        showMsg("$msg  ${sysUtil.aboutThreads(name)}")
     }
 
 }

@@ -7,13 +7,14 @@ import it.unibo.actor0.MsgUtil;
 import it.unibo.interaction.IJavaKotlinActor;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import kotlinx.coroutines.GlobalScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ActorBasicJavaKotlin  extends ActorBasicKotlin implements IJavaKotlinActor {
 
     public ActorBasicJavaKotlin(@NotNull String name ) {
-        super(name, DispatchType.single,50);
+        super(name,  DispatchType.single,50);
     }
 
     @NotNull

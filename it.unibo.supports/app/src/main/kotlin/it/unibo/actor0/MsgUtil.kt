@@ -1,8 +1,6 @@
 package it.unibo.actor0
 //FILE MsgUtil.kt
 
- 
-
 enum class Protocol {
     SERIAL, TCP, UDP, BTH
 }

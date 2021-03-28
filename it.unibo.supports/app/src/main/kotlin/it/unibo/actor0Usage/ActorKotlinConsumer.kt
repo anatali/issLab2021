@@ -5,10 +5,10 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.DispatchType
 import kotlinx.coroutines.CoroutineScope
 
-class ActorKotlinConsumer( name : String, dispatchType : DispatchType) :
-                 ActorBasicKotlin(  name,  dispatchType ) {
+class ActorKotlinConsumer( name : String ) : //
+                 ActorBasicKotlin(  name  ) {
 
-    override fun actorBody(msg: ApplMessage) {
+    override suspend fun handleInput(msg: ApplMessage) {
         //aboutThreads()
         if( msg.msgId == "start") return
         if( msg.msgId == "end"){  println("$name | ENDS"); terminate(); return }

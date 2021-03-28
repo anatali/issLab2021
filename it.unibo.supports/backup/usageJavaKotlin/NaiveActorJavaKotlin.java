@@ -14,7 +14,7 @@ public class NaiveActorJavaKotlin extends ActorBasicJavaKotlin {
     //protected void handleInput(String info){ showMsg("STRANGE:"+info); }
 
     @Override
-    protected void actorBody( ApplMessage msg ) {
+    protected void handleInput( ApplMessage msg ) {
         if(  msg.getMsgId().equals("end") ){
             System.out.println("$name | ENDS"); terminate(); return; }
         else {

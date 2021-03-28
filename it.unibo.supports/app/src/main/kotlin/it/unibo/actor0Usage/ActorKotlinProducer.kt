@@ -5,12 +5,13 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin, dispatchType : DispatchType) :
-        ActorBasicKotlin( name, dispatchType ) {
+class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin ) : //CoroutineScope::class.java
+        ActorBasicKotlin( name  ) {
 
-    override fun actorBody(msg: ApplMessage) {
+    override suspend fun handleInput(msg: ApplMessage) {
         aboutThreads()
         showMsg("$msg")
         if( msg.msgId == "start") doProduce()

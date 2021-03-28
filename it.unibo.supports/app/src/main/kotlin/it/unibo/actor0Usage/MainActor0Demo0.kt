@@ -1,40 +1,59 @@
 package it.unibo.actor0Usage
 
-import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0.DispatchType
-import it.unibo.actor0.MsgUtil
-import it.unibo.actor0.sysUtil
+import it.unibo.actor0.*
 import it.unibo.supports2021.ActorBasicJava
-import it.unibo.supports2021.usageJavaKotlin.MainUsageActorJavaKotlin
-import it.unibo.supports2021.usageJavaKotlin.NaiveActorJavaKotlin
 import kotlinx.coroutines.*
 import java.util.*
 
 class MainActor0Demo0 {
     companion object{
         val appl_dispatchType = DispatchType.single //DispatchType.cpubound
+        val numOfActors = 5
     }
 
-    suspend fun demoActivateActors(){
-        val numOfActors = 5
-        val a = Vector<ActorKotlinNaive>()
+    @ExperimentalCoroutinesApi
+    suspend fun demoActivateActors(scope: CoroutineScope){
+        val startmsg = MsgUtil.buildDispatch("main", "start", "ok", "any" )
+        val endmsg   = MsgUtil.buildDispatch("main", "end", "ok", "any" )
+        //val aa = Vector<ActorKotlinNaive>()
+        for (i in 0..numOfActors-1) {
+            val a = ActorKotlinNaive("a$i", scope,DispatchType.single)
+            a.actor.send(startmsg)
+            //aa.add(a)
+        }
+        //for (i in 0..numOfActors-1) { aa.get(i).actor.send(endmsg) }
+        for (i in 0..numOfActors-1) {
+            val a = ActorContextLocal.getActor("a$i")
+            a!!.actor.send(endmsg)
+        }
+    }
+
+    suspend fun demoActivateActorsWithContext(scope: CoroutineScope){
+        val hellomsg = MsgUtil.buildDispatch("main", "hellomsg", "ok", "any" )
+        val endmsg   = MsgUtil.buildDispatch("main", "end", "ok", "any" )
+
+        //val a = Vector<ActorKotlinNaive>()
+        val localctx = ActorContextLocal.getLocalContext(scope)
+        for (i in 0..numOfActors-1) {
+            val newactor = ActorContextLocal.createActor(
+                    "a$i","it.unibo.actor0Usage.ActorKotlinNaive",scope)
+            //val startactor = MsgUtil.buildDispatch("main", "startTheActor", "ok", newactor.name )
+            newactor.sendToYourself(hellomsg)
+          }
+
+          //ActorBasicJava.delay(1000)
 
         for (i in 0..numOfActors-1) {
-            val aa  = ActorKotlinNaive("a$i", appl_dispatchType)
-            val msg = MsgUtil.buildDispatch("main", "start", "ok", "a$i" )
-            a.add(aa);
-            aa.forward("start","ok",aa)
-            //aa.sendToYourself(msg)
+             val a = ActorContextLocal.getActor("a$i")
+             if( a != null  ) //a.sendToYourself(endmsg )
+                 //MsgUtil.sendMsg("end","ok",a)
+                 MsgUtil.sendMsg("stopTheActor","ok",a)
         }
-        //MsgUtil.sendMsg("start", "start", a0);
 
-        ActorBasicJava.delay(1000)
+        localctx.terminate()
+     }
 
-        for (i in 0..numOfActors-1) {
-            val msg = MsgUtil.buildDispatch("main", "end", "ok", "a$i" )
-            a.get(i).forward("end","ok",a.get(i))
-            //a.get(i).sendToYourself(msg )
-        }
+    suspend fun doNothing(){
 
     }
     suspend fun prodCons(){
@@ -44,12 +63,12 @@ class MainActor0Demo0 {
 
     //CREATE AND START THE CONSUMERS
         for( i in 0..consumers.size-1){
-            consumers[i] = ActorKotlinConsumer("cons$i", appl_dispatchType)
+            consumers[i] = ActorKotlinConsumer("cons$i")    //, appl_dispatchType
             MsgUtil.sendMsg("start", "start", consumers[i]!!)
         }
 
     //CREATE THE PRODUCER connected to the first consumer
-        val prod = ActorKotlinProducer("prod", consumers[0]!!, appl_dispatchType)
+        val prod = ActorKotlinProducer("prod", consumers[0]!!) //, appl_dispatchType
 
     //REGISTER SOME CONSUMER AS PRODUCER OBSERVER
         for( i in 1..consumers.size-1){ //consumers[i] added as an observer
@@ -79,8 +98,25 @@ class MainActor0Demo0 {
 
         runBlocking {
             val appl = MainActor0Demo0()
-            appl.demoActivateActors( )
+            //appl.doNothing()
+            //appl.demoActivateActors( this )
+            appl.demoActivateActorsWithContext( this )
             //appl.prodCons( )
+            /*
+            val startmsg = MsgUtil.buildDispatch("main", "start", "ok", "any" )
+            val endmsg   = MsgUtil.buildDispatch("main", "end", "ok", "any" )
+            val aa = Vector<ActorKotlinNaive>()
+            for (i in 0..MainActor0Demo0.numOfActors-1) {
+                val a = ActorKotlinNaive("a$i", this,DispatchType.single)
+                a.actor.send(startmsg)
+                aa.add(a)
+            }
+            for (i in 0..MainActor0Demo0.numOfActors-1) {
+                aa.get(i).actor.send(endmsg)
+            }
+
+             */
+
         }
 
         val endTime = sysUtil.getDuration(startTime)
