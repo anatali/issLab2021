@@ -11,20 +11,15 @@ https://dl.bintray.com/jetbrains/kotlin/eclipse-plugin/last/
 
 //A module in kotlin is a set of Kotlin files compiled together
 object sysUtil{
-
-	val runtimeEnvironment     = Runtime.getRuntime()
 	val userDirectory          = System.getProperty("user.dir")
 	val cpus                   = Runtime.getRuntime().availableProcessors()
-
-	var mqttBrokerEventTopic : String? = ""
 	var trace   : Boolean = false
 	var logMsgs : Boolean = false
-	//val connActive : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()    //Oct2019
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-	val singleThreadContext    = newSingleThreadContext("aThread")
+	val singleThreadContext    = newSingleThreadContext("singleThread")
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "pool64")
@@ -32,17 +27,6 @@ object sysUtil{
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "cpuspool")
 
-
-
-	fun strRepToList( liststrRep: String ) : List<String>{
-		return liststrRep.replace("[","")
-			.replace("]","").split(",")
-	}
-  	fun strCleaned( s : String) : String{
-		if( s.startsWith("'")) return s.replace("'","")
-		else return s
-
-	}
  	fun traceprintln( msg : String ){
 		if( trace ) println( msg  )
 	}
@@ -79,7 +63,7 @@ object sysUtil{
 
 	@JvmStatic
 	fun aboutThreads(name: String): String =
-			"%%% $name in ${Thread.currentThread().name} | nthreads= ${Thread.activeCount()} cpus=$cpus"
+			"-%- $name in ${Thread.currentThread().name} | nthreads= ${Thread.activeCount()} cpus=$cpus"
 
 	@JvmStatic
 	fun aboutSystem(name: String): Long {

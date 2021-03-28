@@ -2,33 +2,31 @@ package it.unibo.actor0Usage
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
-import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
+import it.unibo.actor0.sysUtil
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ActorKotlinProducer(name : String, val dest : ActorBasicKotlin ) : //CoroutineScope::class.java
-        ActorBasicKotlin( name  ) {
+class ActorKotlinProducer(name : String, val consumer : ActorBasicKotlin, scope: CoroutineScope ) :
+        ActorBasicKotlin( name, scope  ) {
 
-    override suspend fun handleInput(msg: ApplMessage) {
-        aboutThreads()
-        showMsg("$msg")
+    override  fun handleInput(msg: ApplMessage) {
+        showMsg("$msg  ${sysUtil.aboutThreads(name)}" )
         if( msg.msgId == "start") doProduce()
         if( msg.msgId == "end") doEnd()
     }
 
-    fun doProduce(){
+     fun doProduce(){
         scope.launch {
-            dest.forward("info", "item", dest)
-            val msg = MsgUtil.buildEvent(name, "production", "info-item")
+            consumer.forward("info", "item", consumer)
+            val msg = MsgUtil.buildEvent(name, "prod", "info-item")
             updateObservers(msg)
         }
     }
 
-    fun doEnd(){
+     fun doEnd(){
         scope.launch {
-            dest.forward("end", "ok", dest)
+            consumer.forward("end", "ok", consumer)     //terminate the consumer
             terminate()
         }
     }

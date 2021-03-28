@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 class ActorKotlinNaive(  name : String, scope: CoroutineScope, dispatchType : DispatchType) //, dispatchType : DispatchType
                         : ActorBasicKotlin(  name, scope, dispatchType  ) {
 
-    override  suspend fun handleInput(msg: ApplMessage) {
+    override  fun handleInput(msg: ApplMessage) {
         showMsg("$msg  ${sysUtil.aboutThreads(name)}")
     }
 
