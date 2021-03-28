@@ -2,7 +2,6 @@ package it.unibo.supports2021.usageJavaKotlin;
 
 import it.unibo.actor0.ApplMessage;
 import it.unibo.actor0.sysUtil;
-import it.unibo.supports2021.ActorBasicJavaKotlin;
 import org.jetbrains.annotations.NotNull;
 
 public class NaiveActorJavaKotlin extends ActorBasicJavaKotlin {

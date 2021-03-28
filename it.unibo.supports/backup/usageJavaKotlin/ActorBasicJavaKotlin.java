@@ -1,4 +1,4 @@
-package it.unibo.supports2021;
+package it.unibo.supports2021.usageJavaKotlin;
 
 import it.unibo.actor0.ActorBasicKotlin;
 import it.unibo.actor0.ApplMessage;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ActorBasicJavaKotlin  extends ActorBasicKotlin implements IJavaKotlinActor {
 
     public ActorBasicJavaKotlin(@NotNull String name ) {
-        super(name,  DispatchType.single,50);
+        super( name );
     }
 
     @NotNull

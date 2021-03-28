@@ -12,6 +12,9 @@ abstract class ActorBasicKotlin(val name: String,
                                 val scope: CoroutineScope = GlobalScope,
                         val dispatchType: DispatchType = DispatchType.single,
                         val channelSize : Int = 50 ) {
+    constructor(name: String) : this(name, GlobalScope, DispatchType.single, 50) {
+
+    }
 
 
     val tt      = "               %%% "

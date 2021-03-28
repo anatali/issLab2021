@@ -1,5 +1,7 @@
 package it.unibo.supports2021.usageJavaKotlin;
 
+import it.unibo.actor0.ActorBasicKotlin;
+import it.unibo.actor0.ActorContextNaive;
 import it.unibo.actor0.MsgUtil;
 import it.unibo.actor0.sysUtil;
 import it.unibo.supports2021.ActorBasicJava;
@@ -7,7 +9,7 @@ import it.unibo.supports2021.ActorBasicJava;
 import java.util.Vector;
 
 public class MainUsageActorJavaKotlin {
-    public static final int numOfActors = 40;
+    public static final int numOfActors = 1;
 
     public static void main(String[] args) {
         Long startTime  = sysUtil.getCurrentTime( );
@@ -28,7 +30,9 @@ public class MainUsageActorJavaKotlin {
         ActorBasicJava.delay(1000);
 
         for( int i=0; i<numOfActors; i++){
-            a.get(i).send("end");
+            //a.get(i).send("end");
+            ActorBasicKotlin aaa = ActorContextNaive.getActor("a"+i);
+            aaa.terminate();
         }
 
         Long endTime = sysUtil.getDuration(startTime);
