@@ -73,11 +73,13 @@ class IssWsHttpKotlinSupport
     }
 
     fun cvtJsonToAppl(msgJson : String ) : String{
-        val msgJson = msgJson.replace("\"","'")
+        val msgJson = msgJson.replace(",","@") //HORRIBLE trick
         println( "IssWsHttpKotlinSupport |  $msgJson " )
         //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
         val msgAppl = ApplMessage("supportInfo", ApplMessageType.dispatch.toString(),
-                    "support", "observer", "\""+msgJson+"\"" )
+                    "support", "observer",
+                 msgJson  )
+                //"\""+msgJson+"\"" )
         return msgAppl.toString()
     }
 

@@ -39,7 +39,7 @@ class RbwKotlinActor(name:String, val support: IssWsHttpKotlinSupport) : ActorBa
             State.start -> {
                 //moves.cleanMovesRepresentation();
                 moves.showRobotMovesRepresentation()
-                if (move == "continue") {
+                if (move == "resume") {
                     curState = State.walking
                     doStep()
                     return
@@ -52,7 +52,7 @@ class RbwKotlinActor(name:String, val support: IssWsHttpKotlinSupport) : ActorBa
                 }
             }
             State.walking -> {
-                if (move == "continue") {
+                if (move == "resume") {
                     doStep()
                     return
                 }
@@ -72,7 +72,7 @@ class RbwKotlinActor(name:String, val support: IssWsHttpKotlinSupport) : ActorBa
                 }
             } //walk
             State.obstacle -> {
-                if (move == "continue") {
+                if (move == "resume") {
                     curState = State.walking
                     doStep()
                     return
@@ -119,9 +119,11 @@ class RbwKotlinActor(name:String, val support: IssWsHttpKotlinSupport) : ActorBa
         println( "$name  | handleInput: $msg" )
         if (msg.msgId == "startApp") fsm("", "")
         else if (msg.msgId == "supportInfo") {//msg.msgContent is Json
-            val msgJsonStr = msg.msgContent;
+            var msgJsonStr = msg.msgContent;
             println( "$name  | handleInput msgJsonStr: $msgJsonStr" )
-            msgDriven(JSONObject(msg.msgContent))
+            //HORRIBLE trick
+            if( msgJsonStr.contains("@") ) msgJsonStr=msgJsonStr.replace("@",",")
+             msgDriven( JSONObject(msgJsonStr) )
         }
         else if (msg.msgId == "robotcmd" )  //msg(robotcmd,dispatch,userConsole,any,resume,1)
             handleRobotCmd( msg.msgContent )
@@ -134,6 +136,7 @@ class RbwKotlinActor(name:String, val support: IssWsHttpKotlinSupport) : ActorBa
         ) else if (infoJson.has("sonarName")) handleSonar(infoJson)
           else if (infoJson.has("collision")) handleCollision(infoJson )
         //else if (infoJson.has("robotcmd")) handleRobotCmd(infoJson)
+
     }
 
     protected fun handleSonar(sonarinfo: JSONObject) {
@@ -159,19 +162,19 @@ class RbwKotlinActor(name:String, val support: IssWsHttpKotlinSupport) : ActorBa
         }
         if (cmd == "resume" && tripStopped) {
             tripStopped = false
-            fsm("continue", "")
+            fsm("resume", "")
         }
     }
 
     //------------------------------------------------
     suspend protected  fun doStep() {
+        delay(500) //to avoid too-rapid movement
         support.forward(forwardMsg)
-        delay(1000) //to avoid too-rapid movement
     }
 
     suspend protected fun turnLeft() {
+        delay(300) //to avoid too-rapid movement
         support.forward(turnLeftMsg)
-        delay(500) //to avoid too-rapid movement
     }
 
     suspend protected fun turnRight() {

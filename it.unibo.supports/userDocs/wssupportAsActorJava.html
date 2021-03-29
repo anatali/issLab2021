@@ -306,11 +306,9 @@ WebSocketListener</a> of the library <a href="https://square.github.io/okhttp/" 
 This class is able to send / receive messages via <tt>http/ws</tt> and is able to
 send information to  <a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><tt>ActorBasicJava.java</tt></a>
 actors registered as abservers.  
-<pre>
-public class <k>IssWsHttpJavaSupport</k> extends WebSocketListener
+<pre><m>public class <k>IssWsHttpJavaSupport</k> extends WebSocketListener
     implements IssActorObservable, IssCommSupport, IssOperations {
-
-</pre>
+</m></pre>
 
 <a href="../app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" target="code"><ks>IssCommActorSupport.kt</ks></a>:<br/>
  
@@ -370,10 +368,93 @@ the <tt>boundaryWalker</tt> application logic designed and implemented as a Meal
 <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/BoundaryWalkerActor.java" target="code">
 BoundaryWalkerActor</a>)</h4>
 <center><img src="./img/bwMealyReviewed.png" alt="bwMealyReviewed" width="90%" ></center> 
-.png
+ 
+</td>
+</tr>
+
+<tr>
+<td style="width:50%" >
+<h3>The resumableBoundaryWalker as a Finite State Machine</h3> 
+<a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" target="code">
+ResumableBoundaryWalkerActor.java</a> 
+ 
+<br/><br/>
+<m>
+<ul>
+<li>The fsm is activated with an input each time the <ks>handleInput</ks> receives a message <tt>endmove</tt> 
+(sent by the <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>)
+ or <tt>robotcmd</tt> 
+(sent by the <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui/ConsoleGuiActor.java" target="code">
+<ks>ConsoleGuiActor.java</ks></a>). </li>
+<li>A state transition with action <k>doStep</k> is performed only if the boolean variable <ks>tripStopped</ks> is <tt>false</tt>.</li>
+<li>The variable <ks>tripStopped</ks> is set to <tt>true</tt> when the user presses the <tt>STOP</tt> button.</li>
+<li>When the user presses the <tt>RESUME</tt> button, the <ks>handleInput</ks>  activates the fsm 
+(blocked in the state <em>walking</em> or in the state <em>obstacle</em>) with input <tt>resume</tt>. </li>
+
+</ul>
+</m>
+
+</td>
+<td> 
+
+<h4>UML-like model after coding  </h4>
+<center><img src="./img/resumablebwMealy.png" alt="resumablebwMealy" width="90%" ></center> 
+ 
+</td>
+</tr>
+
+ </tbody>
+</table>
+
+
+<!--
+<h3>Java</h3>
+<a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><tt>ActorBasicJava.java</tt></a>
+<br/><br/>
+<a href="../app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" target="code"><ks>IssWsHttpJavaSupport.java</ks></a>
+<br/><br/>
+<a href="../app/src/main/java/it/unibo/supports2021/usage/ActorBasicJavaUsage.java" target="code"><tt>ActorBasicJavaUsage.java</tt></a>
+
+-->
+
+<h2>ActorBasicKotlin</h2>
+
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" >
+ <a href="../app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code"><ks>ActorBasicKotlin.kt</ks></a>
+<br/><br/>
+ <a href="../app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" target="code"><ks>MainActor0Demo0.kt</ks></a>
+
+</td>
+<td>
+ 
 
 </td>
 </tr>
+
+
+ </tbody>
+</table>
+
+<h2>IssWsHttpKotlinSupport</h2>
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" >
+  <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>
+<br/><br/>
+  
+</td>
+<td>
+ 
+
+</td>
+</tr>
+
 
  </tbody>
 </table>

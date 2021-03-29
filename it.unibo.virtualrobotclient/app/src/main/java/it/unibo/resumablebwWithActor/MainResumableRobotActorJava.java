@@ -15,7 +15,6 @@ import it.unibo.supports2021.IssWsHttpJavaSupport;
 
 public class MainResumableRobotActorJava {
 
-
     //Constructor
     public MainResumableRobotActorJava( ){
         IssWsHttpJavaSupport support = IssWsHttpJavaSupport.createForWs("localhost:8091" );
@@ -29,7 +28,7 @@ public class MainResumableRobotActorJava {
         console.registerActor(ra);
         //console.registerActor(new NaiveObserverActor("naiveObs") );
 
-        ra.send("startApp");
+        //ra.send("startApp");
 
         System.out.println("MainRobotActorJava | CREATED  n_Threads=" + Thread.activeCount());
     }

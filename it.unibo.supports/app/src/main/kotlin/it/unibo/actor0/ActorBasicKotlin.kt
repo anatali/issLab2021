@@ -96,8 +96,9 @@ abstract class ActorBasicKotlin(val name: String,
     override fun send(applMessageStr:  String ){    //JSON data from support
         //{"endmove":"true","move":"moveForward"}
         try{
+
             println( "$name | send $applMessageStr " )
-            val msg = ApplMessage.create(applMessageStr)  //TODO problem with ,
+            val msg = ApplMessage.create(applMessageStr )  //TODO problem with , (@)
             scope.launch{ actor.send( msg ) }
         }catch( e : Exception) {
             println("$name |  send $applMessageStr NOT ApplMessage")

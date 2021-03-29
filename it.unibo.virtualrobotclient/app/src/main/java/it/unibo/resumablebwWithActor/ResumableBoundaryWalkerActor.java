@@ -29,48 +29,34 @@ public class ResumableBoundaryWalkerActor extends ActorBasicJava {
         System.out.println( myname + " | fsm state=" + curState + " tripStopped=" + tripStopped
                 + " stepNum=" + stepNum + " move=" + move + " endmove=" + endmove);
         switch( curState ) {
-
             case start: {
                 //moves.cleanMovesRepresentation();
                 moves.showRobotMovesRepresentation();
-                if( move.equals("continue")){
-                    curState = State.walking;
-                    doStep();
-                    return;
-                }
-                if( ! tripStopped ){
-                    doStep();
-                    curState = State.walking;
-                }else{ System.out.println("please resume ..."); }
+                doStep();
+                curState = State.walking;
                 break;
             }
             case walking: {
-                 if( move.equals("continue")){
+                 if( move.equals("resume")){
                      doStep();
-                     return;
-                 }
-                 if (move.equals("moveForward") && endmove.equals("true")) {
+                 } else if (move.equals("moveForward") && endmove.equals("true")) {
                     //curState = State.walk;
                     moves.updateMovesRep("w");
                     if( ! tripStopped   )  doStep();
                     else{ System.out.println("please resume ..."); }
                  } else if (move.equals("moveForward") && endmove.equals("false")) {
-                       //if (!tripStopped) {
-                           curState = State.obstacle;
-                           turnLeft();
-                       //}else System.out.println("please resume ...");
-                } else {System.out.println("IGNORE answer of turnLeft");
+                     curState = State.obstacle;
+                     turnLeft();
+                 } else {System.out.println("IGNORE answer of turnLeft");
                 }
                 break;
             }//walk
 
             case obstacle :
-                if( move.equals("continue") ){
+                if( move.equals("resume") ){
                     curState = State.walking;
                     doStep();
-                    return;
-                }
-                if( move.equals("turnLeft") && endmove.equals("true")) {
+                }else if( move.equals("turnLeft") && endmove.equals("true")) {
                     if( stepNum < 4  ) {
                         stepNum++;
                         moves.updateMovesRep("l");
@@ -80,10 +66,8 @@ public class ResumableBoundaryWalkerActor extends ActorBasicJava {
                             doStep();
                         }else System.out.println("please resume ...");
                     }else{  //at home again
-                        //if( ! tripStopped ) {
-                            curState = State.end;
-                            turnLeft(); //to force state transition
-                        //}
+                        curState = State.end;
+                        turnLeft(); //to force state transition
                     }
                 } break;
 
@@ -146,7 +130,7 @@ public class ResumableBoundaryWalkerActor extends ActorBasicJava {
         }
         if( cmd.equals("RESUME") && tripStopped ){
             tripStopped = false;
-            fsm("continue", "");
+            fsm("resume", "");
         }
     }
 
