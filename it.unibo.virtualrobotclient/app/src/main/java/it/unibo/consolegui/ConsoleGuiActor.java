@@ -15,14 +15,12 @@ import java.util.Observer;
 
 public class ConsoleGuiActor extends ActorBasicJava implements  Observer{	//Observer deprecated in 11 WHY?
 private String[] buttonLabels  = new String[]  { "STOP", "RESUME" };
-//private IJavaActor controller ;
 
 	public ConsoleGuiActor( ) {
 		super("userConsole");
 		GuiUtils.showSystemInfo();
 		ButtonAsGui concreteButton = ButtonAsGui.createButtons( "", buttonLabels );
 		concreteButton.addObserver( this );
-		//this.controller = controller;
  	}
 
  	@Override //Observer

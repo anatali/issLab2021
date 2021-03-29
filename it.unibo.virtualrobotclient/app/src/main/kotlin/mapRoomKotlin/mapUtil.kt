@@ -4,11 +4,20 @@ object mapUtil{
  	private var state = RobotState(0,0,Direction.DOWN)	 
 	var map   = RoomMap.getRoomMap()
 
-    @JvmStatic fun getMapAndClean() : String{ //(fName : String="storedMap.txt")
+    @JvmStatic
+    fun getMapAndClean() : String{ //(fName : String="storedMap.txt")
 		val outS = map.toString()
-		RoomMap.resetRoomMap()
-		return outS
+        RoomMap.resetRoomMap()
+        state    = RobotState(0,0,Direction.DOWN)
+        map      = RoomMap.getRoomMap()
+		return RoomMap.getRoomMap().toString()
 	}
+
+    @JvmStatic fun getCleanMap() : String{
+        RoomMap.resetRoomMap()
+        map      = RoomMap.getRoomMap()
+        return RoomMap.getRoomMap().toString()
+    }
 
     @JvmStatic fun getMapRep() : String{
         return map.toString()

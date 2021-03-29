@@ -29,7 +29,7 @@ private RobotMovesInfo robotInfo;
         boundaryWalkDone = false;
         System.out.println("RobotBoundaryLogic | FINAL MAP:"  );
         robotInfo.showRobotMovesRepresentation();
-        robotInfo.getMovesRepresentationAndClean();
+        robotInfo.cleanMovesRepresentation();
         robotInfo.showRobotMovesRepresentation();
     }
 
@@ -39,7 +39,7 @@ private RobotMovesInfo robotInfo;
     }
 
     public void updateMovesRep (String move ){
-        robotInfo.updateRobotMovesRepresentation(move);
+        robotInfo.updateMovesRep(move);
     }
 
  //Business logic in RobotBoundaryLogic

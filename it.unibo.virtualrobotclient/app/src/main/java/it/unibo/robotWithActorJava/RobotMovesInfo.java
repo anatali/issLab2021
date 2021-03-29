@@ -2,6 +2,9 @@ package it.unibo.robotWithActorJava;
 
 import mapRoomKotlin.mapUtil;
 
+import static mapRoomKotlin.mapUtil.*;
+import static mapRoomKotlin.mapUtil.getMapRep;
+
 public class RobotMovesInfo {
     private boolean  doMap = false;
     private String journey = "";
@@ -10,12 +13,12 @@ public class RobotMovesInfo {
         this.doMap = doMap;
     }
     public void showRobotMovesRepresentation(  ){
-        if( doMap ) mapUtil.showMap();
+        if( doMap ) showMap();
         else System.out.println( "journey=" + journey );
     }
 
-    public String getMovesRepresentationAndClean(  ){
-        if( doMap ) return mapUtil.getMapAndClean();
+    public String cleanMovesRepresentation(  ){
+        if( doMap ) return getMapAndClean(); //getCleanMap();
         else {
             String answer = journey;
             journey       = "";
@@ -24,12 +27,12 @@ public class RobotMovesInfo {
     }
 
     public String getMovesRepresentation(  ){
-        if( doMap ) return mapUtil.getMapRep();
+        if( doMap ) return getMapRep();
         else return journey;
     }
 
     public void updateMovesRep(String move ){
-        if( doMap )  mapUtil.doMove( move );
+        if( doMap )  doMove( move );
         else journey = journey + move;
     }
 

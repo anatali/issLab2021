@@ -1,10 +1,11 @@
-package it.unibo.robotWithActorJava;
+package it.unibo.resumablebwWithActor;
 
+import it.unibo.robotWithActorJava.RobotMovesInfo;
 import it.unibo.supports2021.ActorBasicJava;
 import it.unibo.supports2021.IssWsHttpJavaSupport;
 import org.json.JSONObject;
 
-public class BoundaryWalkerActor extends ActorBasicJava {
+public class ResumableBoundaryWalkerActor extends ActorBasicJava {
     final String forwardMsg   = "{\"robotmove\":\"moveForward\", \"time\": 350}";
     final String backwardMsg  = "{\"robotmove\":\"moveBackward\", \"time\": 350}";
     final String turnLeftMsg  = "{\"robotmove\":\"turnLeft\", \"time\": 300}";
@@ -17,55 +18,72 @@ public class BoundaryWalkerActor extends ActorBasicJava {
     private int stepNum          = 1;
     private RobotMovesInfo moves = new RobotMovesInfo(true);
 
-    public BoundaryWalkerActor(String name, IssWsHttpJavaSupport support) {
+    private boolean tripStopped  = true;
+
+    public ResumableBoundaryWalkerActor(String name, IssWsHttpJavaSupport support) {
         super(name);
         this.support = support;
     }
-/*
-//Removed since we want use just the fsm, without any 'external' code
-    public void reset(){
-        System.out.println("RobotBoundaryLogic | FINAL MAP:"  );
-        moves.showRobotMovesRepresentation();
-        stepNum        = 1;
-        curState       =  State.start;
-        moves.getMovesRepresentationAndClean();
-        moves.showRobotMovesRepresentation();
-    }
-*/
 
     protected void fsm(String move, String endmove){
-        System.out.println( myname + " | fsm state=" + curState + " stepNum=" + stepNum + " move=" + move + " endmove=" + endmove);
+        System.out.println( myname + " | fsm state=" + curState + " tripStopped=" + tripStopped
+                + " stepNum=" + stepNum + " move=" + move + " endmove=" + endmove);
         switch( curState ) {
+
             case start: {
+                //moves.cleanMovesRepresentation();
                 moves.showRobotMovesRepresentation();
-                doStep();
-                curState = State.walking;
+                if( move.equals("continue")){
+                    curState = State.walking;
+                    doStep();
+                    return;
+                }
+                if( ! tripStopped ){
+                    doStep();
+                    curState = State.walking;
+                }else{ System.out.println("please resume ..."); }
                 break;
             }
             case walking: {
-                if (move.equals("moveForward") && endmove.equals("true")) {
+                 if( move.equals("continue")){
+                     doStep();
+                     return;
+                 }
+                 if (move.equals("moveForward") && endmove.equals("true")) {
                     //curState = State.walk;
                     moves.updateMovesRep("w");
-                    doStep();
+                    if( ! tripStopped   )  doStep();
+                    else{ System.out.println("please resume ..."); }
                  } else if (move.equals("moveForward") && endmove.equals("false")) {
-                    curState = State.obstacle;
-                    turnLeft();
+                       //if (!tripStopped) {
+                           curState = State.obstacle;
+                           turnLeft();
+                       //}else System.out.println("please resume ...");
                 } else {System.out.println("IGNORE answer of turnLeft");
                 }
                 break;
             }//walk
 
             case obstacle :
+                if( move.equals("continue") ){
+                    curState = State.walking;
+                    doStep();
+                    return;
+                }
                 if( move.equals("turnLeft") && endmove.equals("true")) {
-                    if( stepNum < 4) {
+                    if( stepNum < 4  ) {
                         stepNum++;
                         moves.updateMovesRep("l");
                         moves.showRobotMovesRepresentation();
-                        curState = State.walking;
-                        doStep();
+                        if( ! tripStopped ) {
+                            curState = State.walking;
+                            doStep();
+                        }else System.out.println("please resume ...");
                     }else{  //at home again
-                        curState = State.end;
-                        turnLeft(); //to force state transition
+                        //if( ! tripStopped ) {
+                            curState = State.end;
+                            turnLeft(); //to force state transition
+                        //}
                     }
                 } break;
 
@@ -75,9 +93,13 @@ public class BoundaryWalkerActor extends ActorBasicJava {
                     moves.showRobotMovesRepresentation();
                     turnRight();    //to compensate last turnLeft
                 }else{
-                    stepNum   = 1;
-                    curState  =  State.start;
-                    moves     = new RobotMovesInfo(true);
+                    System.out.println("RESET ... "  );
+                    stepNum        = 1;
+                    curState       =  State.start;
+                    tripStopped    =  true;
+                    //moves           = new RobotMovesInfo(true);
+                    moves.cleanMovesRepresentation();
+                    moves.showRobotMovesRepresentation();
                 }
                 break;
             }
@@ -117,8 +139,15 @@ public class BoundaryWalkerActor extends ActorBasicJava {
     protected void handleRobotCmd( JSONObject robotCmd ){
         String cmd = (String)  robotCmd.get("robotcmd");
         System.out.println("===================================================="    );
-        System.out.println("RobotApplication | handleRobotCmd cmd=" + cmd  );
+        System.out.println("ResumableBoundaryWalkerActor | handleRobotCmd cmd=" + cmd  );
         System.out.println("===================================================="    );
+        if( cmd.equals("STOP") ) {
+            tripStopped = true;
+        }
+        if( cmd.equals("RESUME") && tripStopped ){
+            tripStopped = false;
+            fsm("continue", "");
+        }
     }
 
     //------------------------------------------------
