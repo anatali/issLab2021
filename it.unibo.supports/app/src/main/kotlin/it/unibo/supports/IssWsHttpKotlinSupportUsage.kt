@@ -1,9 +1,6 @@
 package it.unibo.supports
-import it.unibo.interaction.IJavaActor
 import it.unibo.interaction.MsgRobotUtil
 import it.unibo.supports2021.ActorBasicJava
-import it.unibo.supports2021.usage.NaiveActorObserver
-import it.unibo.supports2021.usage.RobotActorController
 import kotlinx.coroutines.*
 
 @ExperimentalCoroutinesApi
@@ -31,27 +28,31 @@ object WebSocketKotlinSupportUsage {
 
     }
 
-    val testObservers : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ) {
+    val testObservers : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
+        fun(scope, support ) {
         println("WebSocketKotlinSupportUsage | testObservers 1 ")
+        /*
         while (!support.isOpen()) {  //busy form of waiting
             println("WebSocketKotlinSupportUsage | testObservers support opening ... ")
             ActorBasicJava.delay(100)
-        }
+        }*/
         println("WebSocketKotlinSupportUsage | testObservers 2 ")
 
-        val observers = arrayOfNulls<NaiveActorObserver>(5)
-        for (i in 0..4) {
-            observers[i] = NaiveActorObserver("a$i", i)
+        val observers = arrayOfNulls<NaiveActorKotlinObserver>(5)
+        for (i in 0..1) {
+            observers[i] = NaiveActorKotlinObserver("a$i", i)
             support.registerActor(observers[i]!!)
         }
         println("WebSocketKotlinSupportUsage | testObservers 3 ")
         support.forward(MsgRobotUtil.turnLeftMsg)
 
+        //delay(3000)
         println("WebSocketKotlinSupportUsage | testObservers 4")
-        for (i in 0..4) {
+            /*
+        for (i in 0..1) {
             support.removeActor(observers[i]!!)
             observers[i]!!.terminate()
-        }
+        }*/
 
     }
 
@@ -73,7 +74,7 @@ fun main() = runBlocking {
     println("==============================================")
 
     //give time to see messages ...
-    delay(10000)  //CREATE new threads  !!!
+    delay(3000)  //CREATE new threads  !!!
     support.close()
 
     println("==============================================")

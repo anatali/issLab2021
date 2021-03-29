@@ -12,6 +12,8 @@ Observer of the socket, it is observable in its turn
 ===============================================================
  */
 package it.unibo.supports
+import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.ApplMessageType
 import it.unibo.interaction.IJavaActor
 import it.unibo.interaction.IssActorObservable
 import it.unibo.interaction.IssCommSupport
@@ -65,13 +67,21 @@ class IssWsHttpKotlinSupport
     }
 //===============================================================================
     fun updateObservers( msg: String){
-        println("IssWsHttpKotlinSupport | updateObservers " + actorobservers.size );
-        //observers.forEach{ it.handleInfo(msg) } //loose control
-        actorobservers.forEach{ it.send(msg) }
-        //scope.launch { socketMsgChannel.send( msg ) }
+        val msgAppl = cvtJsonToAppl(msg)
+        println("IssWsHttpKotlinSupport | updateObservers ${actorobservers.size} $msgAppl" )
+        actorobservers.forEach{ it.send(msgAppl) }
     }
-    //override fun registerObserver(obs: IssObserver) { observers.add(obs) }
-    //override fun removeObserver(obs: IssObserver)   { observers.remove(obs) }
+
+    fun cvtJsonToAppl(msgJson : String ) : String{
+        val msgJson = msgJson.replace("\"","'")
+        println( "IssWsHttpKotlinSupport |  $msgJson " )
+        //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+        val msgAppl = ApplMessage("supportInfo", ApplMessageType.dispatch.toString(),
+                    "support", "observer", "\""+msgJson+"\"" )
+        return msgAppl.toString()
+    }
+
+
     override fun registerActor(obs: IJavaActor) { actorobservers.add(obs) }
     override fun removeActor(obs: IJavaActor)   { actorobservers.remove(obs); }
     override fun isOpen() : Boolean {  return opened   }
@@ -79,7 +89,8 @@ class IssWsHttpKotlinSupport
 
 //===============================================================================
     fun wsconnect( //wsAddr : String ,
-                 callback : (CoroutineScope, IssWsHttpKotlinSupport)->Unit ) : WebSocket {
+    callback: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit
+) : WebSocket {
         workTodo = callback
         val request0 = Request.Builder()
             .url("ws://$addr")

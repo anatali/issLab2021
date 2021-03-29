@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class ActorKotlinProducer(name : String, val consumer : ActorBasicKotlin, scope: CoroutineScope ) :
         ActorBasicKotlin( name, scope  ) {
 
-    override  fun handleInput(msg: ApplMessage) {
+    override suspend fun handleInput(msg: ApplMessage) {
         showMsg("$msg  ${sysUtil.aboutThreads(name)}" )
         if( msg.msgId == "start") doProduce()
         if( msg.msgId == "end") doEnd()

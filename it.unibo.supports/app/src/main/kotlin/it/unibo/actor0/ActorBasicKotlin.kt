@@ -1,7 +1,10 @@
 package it.unibo.actor0
 
+import it.unibo.interaction.IJavaActor
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
+import org.json.JSONObject
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,14 +14,14 @@ enum class DispatchType {single, iobound, cpubound }
 abstract class ActorBasicKotlin(val name: String,
                                 val scope: CoroutineScope = GlobalScope,
                         val dispatchType: DispatchType = DispatchType.single,
-                        val channelSize : Int = 50 ) {
+                        val channelSize : Int = 50 ) : IJavaActor{
     constructor(name: String) : this(name, GlobalScope, DispatchType.single, 50) {
 
     }
 
 
     val tt      = "               %%% "
-    private val actorobservers =  mutableListOf<ActorBasicKotlin>()
+    private val actorobservers =  mutableListOf<IJavaActor>()
     protected var actorLogfileName  : String = ""
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir
@@ -52,8 +55,8 @@ abstract class ActorBasicKotlin(val name: String,
         }
     }
 
-
-    abstract protected  fun handleInput(msg : ApplMessage);
+    //fun getActor() : SendChannel<ApplMessage> { return actor }
+    abstract suspend protected  fun handleInput(msg : ApplMessage);
 
     open fun writeMsgLog( msg: ApplMessage){ //APR2020
         sysUtil.updateLogfile(actorLogfileName, "item($name,nostate,$msg).", dir = msgLogDir)
@@ -88,11 +91,31 @@ abstract class ActorBasicKotlin(val name: String,
 
 
     //---------------------------------------------------------------------------
-      fun registerActor(obs: ActorBasicKotlin) {
+    //IJavaActor
+    override fun myname() : String{ return name }
+    override fun send(applMessageStr:  String ){    //JSON data from support
+        //{"endmove":"true","move":"moveForward"}
+        try{
+            println( "$name | send $applMessageStr " )
+            val msg = ApplMessage.create(applMessageStr)  //TODO problem with ,
+            scope.launch{ actor.send( msg ) }
+        }catch( e : Exception) {
+            println("$name |  send $applMessageStr NOT ApplMessage")
+        }
+    }
+    override fun registerActor(obs: IJavaActor) {
         actorobservers.add(obs)
     }
 
-      fun removeActor(obs: ActorBasicKotlin) {
+    override fun removeActor(obs: IJavaActor) {
+        actorobservers.remove(obs)
+    }
+
+    fun registerActor(obs: ActorBasicKotlin) {
+        actorobservers.add(obs)
+    }
+
+    fun removeActor(obs: ActorBasicKotlin) {
         actorobservers.remove(obs)
     }
 
@@ -115,12 +138,14 @@ abstract class ActorBasicKotlin(val name: String,
     suspend protected  fun updateObservers(info: ApplMessage) {
         //println("$name  update  ${actorobservers.size}" );
         //actorobservers.forEach{ scope.launch {   it.actor.send(info)  } }
-        actorobservers.forEach{   it.actor.send(info)   }
+        actorobservers.forEach{   (it as ActorBasicKotlin).actor.send(info)   }
         //actorobservers.forEach{   println( "${it}" ); MsgUtil.sendMsg(info, it)   }
         //actorobservers.forEach{ println( "${it.name}" ) }
     }
 
-
+    fun doupdateObservers(info: ApplMessage) {
+        scope.launch{ actorobservers.forEach{   (it as ActorBasicKotlin).actor.send(info)   } }
+    }
 
 
 }

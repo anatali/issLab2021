@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 class ActorKotlinConsumer( name : String, scope: CoroutineScope ) :
                  ActorBasicKotlin(  name, scope  ) { //, DispatchType.cpubound
 
-    override  fun handleInput(msg: ApplMessage) {
+    override suspend fun handleInput(msg: ApplMessage) {
         if( msg.msgId == "start") return
         if( msg.msgId == "end"){  println("$name | ENDS"); terminate(); return }
         showMsg("$msg ${sysUtil.aboutThreads(name)}" )

@@ -11,7 +11,7 @@ private int count;
     }
     @Override
     protected void handleInput(String info) {
-        ActorBasicJava.delay(count*1000);
+        //ActorBasicJava.delay(count*1000);
         System.out.println( myname + " | " + info + " " + aboutThreads() );
      }
 

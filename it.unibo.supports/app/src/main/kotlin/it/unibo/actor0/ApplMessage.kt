@@ -5,13 +5,22 @@ package it.unibo.actor0
 enum class ApplMessageType{
     event, dispatch, request, reply, invitation
 }
-
+//msg(guiCmd,dispatch,userConsole,any,stop,1)
 open class ApplMessage(
         val msgId: String = "", val msgType: String = ApplMessageType.dispatch.toString(),
         val msgSender: String = "", val msgReceiver: String = "",
         val msgContent: String = "", val msgNum: String = "0"
 )  {
-    //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+
+    companion object{
+        //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+        fun create(msg: String) : ApplMessage{
+            val body  = msg.replace("msg","").replace("(","").replace(")","")
+            val items = body.split(",")
+            return ApplMessage(items[0],items[1], items[2], items[3], items[4],items[5] )
+        }
+    }
+
     /*
     protected var msgId: String = ""
     protected var msgType: String? = null
