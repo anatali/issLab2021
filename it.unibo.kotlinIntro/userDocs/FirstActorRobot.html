@@ -1,0 +1,555 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+	width: 750px;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 70%;
+	background-color: #fcf8c7; 
+}
+ 
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}    
+
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+<head>
+   
+<title>FirstActorRobot.</title></head>
+    
+<body>
+
+<div class="body"> 
+
+<h1>FirstActor | Using Kotlin actors to control a (virtual)robot</h1> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.issLabStart/userDocs/LectureBologna1920.html" 
+target="isslm">LabISS-lectures site</a> 
+
+<h2>Introduction</h2>
+The virtual robot introduced in  
+<a href="../../it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html" target="web">it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html</a>
+is just an example of a robot built according to some specific technology.
+<br/> 
+But, an important goal (<a href="https://en.wikipedia.org/wiki/Non-functional_requirement" target="web">non-functional requirement</a>)
+of a software system designer should be that of making the code of a robot application 
+<bc>as much independent as possible from the robot technology</bc>, in order to make it easier the substitution of a robot type with another.
+<br/><br/> 
+Kotlin actors help us to achieve such a goal, by providing in a quite natural way a <bc>more abstract layer of reasoning</bc>.
+ <br/>
+Let us report, as an example,  an actor written in Kotlin that 'provides services' for our 
+<a href="../../it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html" target="web">it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html</a>:<br/><br/>
+
+<center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:30%">
+<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
+
+</td>
+<td>
+<center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
+<m>
+The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport</a> 
+owns a <bc>reference</bc> to the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor</a>
+and sends to it <tt>JSON</tt> messages,
+whose content gives infornmation about a <tt>collision</tt> (or a sonar value).
+</m>
+
+ </td>
+</tr>
+</tbody>	
+</table></center>
+<br/>
+The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> works as a service able to handle a set
+of commands represented by Strings. 
+
+Its behavior is <bc>message-driven</bc>, since the actor executes actions related to the (starting part) of the first command received:
+ <ul>
+ <li><k>init</k>: starts its job</li>
+ <li><k>end</k>: terminates its job</li>
+ <li><k>move</k>: sends a move-command to the robot, using the  <bc>object</bc> 
+ <m><a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></m> as an utility</li>
+ <li><k>collision</k>: 'reacts' to a <i>collision message</i> sent by  
+ <m> <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></m> when a <em>robot-sonar</em> detects an obstacle</li>
+ <li><k>sensor</k>: 'reacts' to a <i>sensor message</i> sent by  
+ <m><a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></m> when a <em>scene-sonar</em> detects the robot</li>
+</ul>
+
+<h3>The role of the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></h3>
+
+The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a> works as a 'bridge'
+between the high-level actor (<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a>)
+and the virtual robot. Thus, it provides the method <em>setRobotTarget</em> to allow the 'injection' of a reference to the 
+high-level actor.
+<br/>
+The method <em>sendMsgToRobot</em> is used by the internal <bc>startSensorObserver coroutine</bc>  to sends message
+(about the <em>robot-sonar</em> data) to the high-level actor.
+
+<h3>The Actor as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
+The behavior of the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>:<br/><br/>
+
+<center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:40%">
+<pre>
+	while( <ks>state == "working"</ks> ){
+		var <ks>msg = channel.receive()</ks>
+		val msgSplitted = msg.split('(')
+		val msgFunctor  = msgSplitted[0]
+		when( msgFunctor ){
+			"<k>init</k>"      -> doInit()
+			"<k>end</k>"       -> doEnd()
+			"<k>sensor</k>"    -> doSensor(msg)
+			"<k>collision</k>" -> doCollision(msg)
+			"<k>move</k>"      -> doMove(msgSplitted)
+			else -> println("NO HANDLE for $msg")
+		}		
+ 	}
+ 	println("robotActor ENDS state=$state")
+</pre>
+</td>
+<td>
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="70%"  ></center><br/>
+ </td>
+</tr>
+</tbody>	
+</table></center>
+<br/>
+Each <bc>state</bc> is mapped into a <bc>function</bc> whose body specifies the <bc>actions</bc> to be executed in that state.
+<br/><br/>
+An example of using the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> can be found in 
+<a href="../src/virtualRobotUsage/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
+
+<h2>Application messages</h2>
+The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> is a active entity that works as a message-driven 'service'.
+However, its behavior is still strongly 
+related to the <tt>JSON</tt>-based language of the virtual robot (<i>concrete-robot interaction language</i> or <em>cril</em>).
+To overcome such a further  technology-dependency, let us introduce the definition of messages at application level:
+
+<br/><br/>
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:40%">
+The class <a href="../src/virtualRobotUsage/AppMsg.kt" target="code">AppMsg.kt</a> implements our idea of messages at application-level.
+<br/><br/>
+The external representation of an <tt>AppMsg</tt> is a String written in Prolog syntax as a Prolog-Term with 5 arguments:
+
+<pre>
+msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+</pre>
+</td>
+<td>
+We distinguish among different application-message types:
+<pre>
+enum class AppMsgType{ <k>event, dispatch, request, reply, invitation</k> }
+</pre>
+ </td>
+</tr>
+</tbody>	
+</table>
+</center>
+<br/>
+
+<h3>Application message types</h3>
+ 
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%">
+From the point of view of an application designer, we say that:
+ 
+<ul>
+<li><bc>Dispatch</bc>: a message '<i>fire and forget</i>': the sender does not expect any answer.</li>
+<li><bc>Request</bc>: the sender expects an <tt>answer</tt>.</li>
+<li><bc>Invitation</bc>: the sender expects an <tt>ack</tt>.</li>
+<li><bc>Event</bc>: the sender '<i>emits information</i>' without specifying any receiver (<tt>RECEIVER=none</tt>). </li>
+</ul>
+
+The class <a href="../src/virtualRobotUsage/AppMsg.kt" target="code">AppMsg.kt</a> provides two functions <m><ks>AppMsg.create(...)</ks></m> 
+that can be used as <a href="https://en.wikipedia.org/wiki/Factory_method_pattern" target="web">Factory methods</a>.
+
+</td>
+<td>
+We have already introduced our symbolic representation for most of them:<br/><br/>
+<center><img src="./img/msgTypes.png" alt="msgTypes" width="80%" ></center><br/>
+ </td>
+</tr>
+</tbody>	
+</table>
+</center>
+<br/>
+
+Now, if we send to the actor a <tt>AppMsg</tt>-representation String, 
+it can distiguish the input message by looking at its <tt>MSGID</tt>:
+
+<br/><br/>
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:40%">
+<pre>
+while( state == "working" ){
+  var msg = channel.receive()
+  <m><kc>//msg : msg(MSGID,MSGTYPE,SENDER,RECEIVER,CONTENT,SEQNUM)</kc></m>	
+  val <ks>applMsg</ks> = <k>AppMsg.create(msg)</k> <m><kc>//Factory method</kc></m>
+  when( <ks>applMsg</ks>.<k>MSGID</k> ){
+	"<k>init</k>"    -> doInit()
+	"<k>end</k>"    -> doEnd()
+	"<k>sensor</k>" -> doSensor(msg)
+	"<k>move</k>"   -> doMove(<k>applMsg.CONTENT</k>)
+	else            -> println("NO HANDLE for $msg")
+  }		
+}//while
+</pre>
+</td>
+<td>
+The new version of our robot actor based on <tt>AppMsg</tt> can be found in:
+<a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor.kt</a><br/><br/>
+
+<center><img src="./img/robotActor.png" alt="robotActor" width="100%" ></center><br/> 
+<m>
+The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport</a> 
+sends to the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor</a>
+messages of type <a href="../src/virtualRobotUsage/AppMsg.kt" target="code">AppMsg</a>,
+whose content gives infornmation about a <tt>collision</tt> (or a sonar value).
+</m>
+</td>
+</tr>
+</tbody>	
+</table>
+</center>
+<br/>
+
+<h3 id="msgstandard">Towards standards in messaging</h3>
+
+The class <a href="../src/virtualRobotUsage/AppMsg.kt" target="code">AppMsg.kt</a>  defines from now on a standard reference
+for our applications. In this way, we assure that each message will contain, besides its <tt>MSGID</tt> and some <tt>CONTENT</tt>,
+also a <tt>name</tt> for the sender (actor) and a name for the receiver (actor).
+<hr/>
+<div class="remark">
+From now on, we are interested in (at least) three 'layers' of standards:
+</div>
+<ol>
+<li>standard in <bc>message semantics</bc>: at the moment we will make reference to our <tt>enum class AppMsgType</tt>. </li>
+<li>standard in <bc>message content</bc>: this level is matter of the specific application.</li>
+<li>standard in message-communication <bc>protocols</bc> with particular reference to:
+	<ul>
+	<li> 
+	 <a href="https://www.deviceplus.com/arduino/arduino-communication-protocols-tutorial/" target="web">Arduino protcols</a> (mainly
+	 <a href="https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter" target="web">UART </a>).
+	 </li>	
+	<li>point-to-point, two-way protocols like <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol" target="web">UDP</a>,	
+	<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol" target="web">TCP</a>,
+	<a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="web">HTTP</a> </li>
+	<li>publish-subscribe protocols, like <a href="https://en.wikipedia.org/wiki/MQTT" target="web">MQTT</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Constrained_Application_Protocol" target="web">CoAP</a>, as 
+	a lightweight <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="web">REST</a>  protocol 
+	for <a href="https://en.wikipedia.org/wiki/Machine_to_machine" target="web">M2M interaction</a> 
+ 	</li>
+	</ul>
+	 </li>
+</ol>
+
+<hr/>
+As regards the message <tt>CONTENT</tt>, its structure is of course matter of the specific application. In our case, let us introduce
+our specific high-level <bc>robot-move language</bc>:
+<ul>
+<li> <k>w</k>: means '<i>go forward forever</i>'</li>
+<li> <k>s</k>: means '<i>go backward forever</i>'</li>
+<li> <k>h</k>: means '<i>stop the robot movement</i>'</li>
+<li> <k>a</k>: means '<i>rotate left forever</i>'</li>
+<li> <k>d</k>: means '<i>rotate right forever</i>'</li>
+<li> <k>l</k>: means '<i>rotate left 90</i>'</li>
+<li> <k>r</k>: means '<i>rotate right 90</i>'</li>
+</ul>
+
+
+
+<h3>An example</h3>
+ 
+An example of using the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor.kt</a> can be found in 
+<a href="../src/virtualRobotUsage/robotActorUsage.kt" target="code">robotActorUsage.kt</a>.
+In this example, we first introduce a set of application messages:
+<pre>
+val initMsg			= AppMsg.create(<k>"init"</k>,		"main","robotactor")		<kc>//content="none" by default</kc>
+val moveForwardMsg	= AppMsg.create(<k>"move"</k>,	"main","robotactor",		<k>"w"</k>,<k>AppMsgType.dispatch</k>) 
+val haltRobotMsg		= AppMsg.create(<k>"move"</k>,	"main","robotactor",		<k>"h"</k>) 
+</pre>
+
+Afterwards, we define a method <tt>forward</tt> to send messages of type <bc>dispatch</bc> (<tt>AppMsgType.dispatch</tt>)  to the robot-actor:
+
+<pre>
+suspend fun forward(  msg: AppMsg ){ <ks>robotActor</ks>.<k>send</k>( msg.toString()  ) }
+...
+forward( initMsg )
+...
+forward( moveForwardMsg )
+delay(1000)
+forward( haltRobotMsg )
+</pre>
+
+ 
+The task of translating the 'application level language' into  <em>cril</em>  and viceversa is delegated to
+the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a> 
+(see the functions <tt>translate</tt>, <tt>doApplMove</tt> and <tt>sendMsgToRobot</tt>).
+<br/><br/>
+In this way, the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor.kt</a> is made independent
+of the specific concrete robot to be used; 
+the  role of the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a>
+as a <a href="https://en.wikipedia.org/wiki/Translator_(computing)" target="web"><bc>language translator</bc></a> 
+ can be viewed as a sort of
+<a href="https://en.wikipedia.org/wiki/Adapter_pattern" target="web"><bc>adapter</bc></a>  in the message-passing world.
+
+<h2 id="todoBoundary">Work to do (Boundary Walker)</h2>
+ 
+We want define an <bc>actor</bc> that manages a virtual robot working in a empty, rectangular room. 
+The virtual robot is initially located in the left-upper corner of the room (<tt>home</tt> location).<br/>
+We want to give to the actor a <bc>goal</bc>: <i>walk along the boundary</i> of the room. 
+<hr/>
+The detailed requirements are:
+<div class="req">
+<ol>
+<li>the actor initially waits for a command <em>start</em>;</li>
+<li>after receiving  <em>start</em>, the actor begins its goal-work, by moving along the room boundary, until it reaches the <tt>home</tt> again;
+<center><img src="./img/boundary.png" alt="boundary" width="20%" ></center><br/> 
+
+</li>
+<li>while doing its goal-work, the actor must be able to react to the commands <em>stop</em>, by 'immediately' stopping the work;
+<li>while stopped, the actor waits for a commands <em>resume</em> to continue its goal-work from the point reached before stopping.
+</ol>
+</div>
+
+For a video, see <tt>FirstActorVR.264</tt>.
+ 
+<!-- 
+<video controls>
+   <source src="foo.ogg" type="video/ogg"> audio  
+  <source src="firstactorvr.264" type="video">
+  Your browser does not support the <code>video</code> element.
+</video>
+--> 
+ 
+<!--
+<h2>Towards more complex behavior</h2>
+The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> implements the business logic
+related to each message it can receive. However, since it is an active entity, we can now extend its behavior  
+so to satisfy the first requirement of our
+<a href="http://htmlpreview.github.io/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.issLabStart/userDocs/72939LabISSIntro.html#Application0" 
+target="web">Application0</a>. For example,we can say that:
+<hr/>
+<i>the robot starts to explore in a systematic and autonomous way the room after receiving the command '<k>explore</k>' </i>.
+<hr/>
+As <em>analysts</em>, we can say that the problem to face now is the design and development of a behavior that msut be both <bc>proactive</bc> (the robot must perform
+the exploration activity in autonomous way) and <bc>reactive</bc> 
+(while exploring, the robot should not lose its capability to handle other messages, for example <k>end</k> and <k>collision</k>).
+-->
+<br/><br/>
+
+<!--
+
+<h2>USING WENV WITH ACTORS</h2>
+
+<center><table style="width:95%">
+<tbody>	
+ 
+<tr>
+<td style="width:40%">
+<a href="clientWenvTcpObj.kt" target="code">RobotCmds.kt</a>
+</td>
+<td><m><em>Robot command messages</em></m></td>
+</tr>
+
+<tr>
+<td style="width:40%">
+<a href="../src/main/kotlin/it/unibo/robots19/basic/BasicRobotExecutor.kt" target="code">BasicRobotExecutor.kt</a>
+</td> 
+<td><m><em>Actor that executes commands</em> implemented by
+<a href="../src/main/kotlin/it/unibo/robots19/basic/RobotCmds.kt" target="code">RobotCmds.kt</a></m></td>
+</tr>
+
+<tr>
+<td style="width:40%">
+<a href="../executorDescr.pl" target="code">executorDescr.pl</a>
+</td>
+<td><m><em>Description of a qak system </em> managed with 
+<a href="../sysRules.pl" target="code">sysRules.pl</a>. A main is:
+<a href="../src/main/kotlin/it/unibo/robots19/experiment/MainExecutor.kt" target="code">MainExecutor.kt</a>
+</m></td>
+</tr>
+
+
+</tbody>	
+</table></center>
+
+<h3>Interacting with the BasicRobotExecutor </h3>
+ 
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:40%">
+<a href="../src/main/kotlin/it/unibo/robots19/basic/ClientToRobotExecutor.js" target="code">ClientToRobotExecutor.js</a>
+</td>
+<td><m><em>Client Node  </em> for the 
+<a href="../src/main/kotlin/it/unibo/robots19/basic/BasicRobotExecutor.kt" target="code">BasicRobotExecutor.kt</a>
+ 
+ 
+</m></td>
+</tr>
+
+</tbody>	
+</table></center>
+
+
+<div class="req">
+</div>	    
+ 	
+	
+	<h3>RESOURCES</h3>
+
+    <a href="http://137.204.107.10/iss2018/it.unibo.issMaterial/issdocs/Material/2016-02-26-raspbian-jessie-iss.img.zip" 
+								target="lecture">2016-02-26-raspbian-jessie-iss.img.zip</a> (<tt>WARNING: 1GB</tt>)<br/>
+    <a href="../CARD/guida_rpi.pdf" target="lecture">guida_rpi.pdf</a>,<br/>
+    <a href="../CARD/rpi_sd.pdf" target="lecture">rpi_sd.pdf</a>,<br/>
+    <a href="../CARD/istruzioni-aggiornate-raspi-linux.pdf" target="lecture">istruzioni-aggiornate-raspi-linux.pdf (Giacomo Venturini)</a> 
+	ed <a href="../CARD/esempio-procedura.html" target="lecture">esempio-procedura.html</a> ,<br/>
+-->
+
+</div>  
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>

@@ -1,0 +1,8 @@
+./app/node_modules
+
+.DS_Store
+
+.idea/*
+
+docker_password.txt
+

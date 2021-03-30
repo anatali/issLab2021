@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>Virtualrobot Controller</title>
+
+ <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- https://learn.jquery.com/
+ <link rel="stylesheet" href="teastyle.css">
+ <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+ <script type="text/javascript" src="/net"></script>
+ <script src="https://cdn.jsdelivr.net/webjars/stomp-websocket/stomp.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>  -->
+
+ <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+ <!--Your JavaScript file must be included below the jQuery library in the document or it will not work. -->
+ <script type="text/javascript" src="jqutils.js"></script>
+ <script type="text/javascript" src="webSocketUtils.js"></script>
+
+ <script>
+    function myIp() {
+      var ip = location.host;
+      document.getElementById("myIp").innerHTML = ip;
+    }
+
+function byeFunction() {
+  //alert("Thank you for visiting  ");
+  console.log("bye");
+  socket.send("WebSocket close ");
+  //socket.close();
+}
+  </script>
+
+
+</head>
+
+<body onload="myIp()"  onunload="byeFunction()">
+
+<noscript><h2 style="color: #ff0000">
+ Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+ enabled. Please enable Javascript and reload this page!</h2>
+</noscript>
+
+<h2>VirtualRobot-Console Selection</h2>
+<p style="background-color: #ffffb3; color:blue;">
+This <i>webguiServer</i></a> works on <span id="myIp"></span> and exploits <i>socket.io</i>
+to intereact with the virtual environment server (<i>WEnv</i>) on port 8090.
+<br/>
+The server <i>WEnv</i> sends over <i>socket.io</i> information about the current state of the virtual world.
+</p>
+
+<div style="background-color: #D2B4DE">
+
+ <button id="guisimple" type="submit">Use the simple, conventional gui</button>
+&nbsp;&nbsp;
+ <button id="guiJquery" type="submit">Use the Jquery gui</button>
+ &nbsp;&nbsp;
+ <button id="guisock" type="submit">Use the websocket gui</button>
+
+ <hr/>
+ <button id="displayconns" type="submit">Show Connections</button>
+ <button id="clear" type="submit">ClearHistory</button>
+ <br/>
+<!--
+ <form id="duration" type="submit">
+  <label for="fname">MoveTime</label>
+  <input type="text" id="fname" size=4  name="fname" value="800"> (double-click to send)
+
+ </form>
+-->
+ Move time: <input id="duration" type="text" size=5 name="duration">(double-click to send)
+
+<h3>DISPLAY AREA</h3>
+<hr/>
+<div><pre style="background-color: #ffffb3; color:blue;" id="robotDisplay"></pre></div>
+<hr/>
+
+
+<!-- RICARICA OGNI VOLTA
+<h3>Wenv</h3>
+<iframe src="http://192.168.1.132:8090" width="100%" height="100%" scrolling="yes" style="border:1px solid black; title="wenv">
+</iframe>
+-->
+<br/><br/>
+</body>
+</html>
+

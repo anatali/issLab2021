@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<meta charset = "utf-8" />
+<title>WebSocket Test</title>
+<body  onunload=byeFunction()>
+<script language = "javascript" type = "text/javascript">
+      var wsUri = "ws://localhost:8085/";
+      //var wsUri = "ws://echo.websocket.org/";
+      var output;
+      websocket = new WebSocket(wsUri);
+
+      function init() {
+         output = document.getElementById("output");
+         testWebSocket();
+      }
+
+      function testWebSocket() {
+
+
+         websocket.onopen = function(evt) {
+            onOpen(evt)
+         };
+
+         websocket.onclose = function(evt) {
+            onClose(evt)
+         };
+
+         websocket.onmessage = function(evt) {
+            onMessage(evt)
+         };
+
+         websocket.onerror = function(evt) {
+            onError(evt)
+         };
+      }
+
+      function onOpen(evt) {
+         writeToScreen("CONNECTED");
+         doSend("WebSocket test ");
+      }
+
+      function onClose(evt) {
+         writeToScreen("DISCONNECTED");
+
+      }
+
+      function onMessage(evt) {
+         writeToScreen('<span style = "color: blue;">RESPONSE: ' +
+            evt.data+'</span>');
+            //doSend("WebSocket DISCONNECTED ");
+            //websocket.close();
+      }
+
+      function onError(evt) {
+         writeToScreen('<span style = "color: red;">ERROR:</span> '
+            + evt.data);
+      }
+
+      function doSend(message) { //alert("doSend " + websocket);
+         writeToScreen("SENT: " + message); websocket.send(message);
+      }
+
+      function writeToScreen(message) {
+         var pre = document.createElement("p");
+         pre.style.wordWrap = "break-word";
+         pre.innerHTML = message;
+         output.appendChild(pre);
+      }
+//See https://www.w3schools.com/jsref/dom_obj_event.asp
+      window.addEventListener("load", init, false);
+/*
+      document.addEventListener("click", function(){
+            document.getElementById("output").innerHTML = "Yuo have clicked";
+      });
+*/
+
+function byeFunction() {
+  //alert("Thank you for visiting W3Schools!");
+  console.log("bye");
+  doSend("WebSocket close ");
+  websocket.close();
+}
+
+   </script>
+
+
+<h2>WebSocket Test</h2>
+<div id = "output"></div>
+</body>
+</html>

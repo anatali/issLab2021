@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexSock</title>
+<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+ <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+ <!--Your JavaScript file must be included below the jQuery library in the document or it will not work. -->
+ <script type="text/javascript" src="jqutils.js"></script>
+ <script type="text/javascript" src="webSocketUtils.js"></script>
+
+ <script>
+     function myIp() {
+       var ip = location.host;
+       document.getElementById("myIp").innerHTML = ip;
+     }
+
+ function byeFunction() {
+   alert("Thank you for visiting  ");
+   console.log("bye");
+   socket.send("WebSocket close ");
+   //socket.close();
+ }
+   </script>
+</head>
+
+<body >
+
+<h2>Virtual Robot Console (guisock)</h2>
+
+  <h5 style="fontcolor:blue;">Send message (<i>move</i>) via socket</h5>
+  <pre style="background-color: #ffffb3">
+click  -> jqutils  -> webSocketUtils.requestTodoTheMove (send on socket.io)  -> WEnv (socket) </pre>
+  <hr/>
+  <center>
+  <table style="width:50%">
+   <tbody>
+   <tr>
+    <td> <button id="lsocket" >l</button> </td>
+    <td> <button id="rsocket" >r</button> </td>
+    <td> <button id="wsocket" >w</button> </td>
+    <td> <button id="ssocket" >s</button> </td>
+    <td> <button id="hsocket" >h</button> </td>
+   </tr>
+
+   </tbody>
+  </table>
+  </center>
+  <hr/>
+
+
+
+</div>
+
+<button id="displayconns" type="submit">Show Connections</button>
+<button id="clear" type="submit">ClearHistory</button>
+
+<div style="background-color: #FAF19C">
+	<div>
+ 		<b>DISPLAY AREA</b>: <span id="robotDisplay"></span>
+  	</div>
+</div>
+
+</body>
+</html>

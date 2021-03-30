@@ -189,11 +189,11 @@ div.imagedesc{
     
 <head>
    
-<title>okhttp3supportactor</title></head>
+<title>JavaActorSupport</title></head>
     
 <body>
 <div id="top">
-<h1>Lab ISS | okhttp3 support with ActorBasicJava observers <font size="5"></font> </h1>
+<h1>LabIss2021 | wshttp support with ActorBasicJava observers<font size="5"></font> </h1>
 </div>  
 
 <div class="body"> 
@@ -353,12 +353,20 @@ components.
 
 <tr>
 <td style="width:50%" >
-<h3>The boundaryWalker as a Finite State Machine</h3> 
+<h3>The boundaryWalker as a <a href="fsm.html"><k>Finite State Machine</k></a></h3> 
 <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/BoundaryWalkerActor.java" target="code">
 BoundaryWalkerActor.java</a>:<br/>
-the <tt>boundaryWalker</tt> application logic designed and implemented as a Mealy Machine.
+the <tt>boundaryWalker</tt> application logic designed and implemented as a <i>Mealy Machine</i>.
 <br/><br/>
-
+<m>
+<ul>
+<li>The fsm is activated with an input each time the <ks>handleInput</ks> receives an input-message <tt>endmove</tt> 
+(sent by the <a href="../app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" target="code">
+<ks>IssWsHttpJavaSupport.java</ks></a>). </li>
+<li>The actions related to a state transition are performed when the specified input-message is received 
+and the conditions are true.</li>
+</ul>
+</m>
 
 </td>
 <td><h4>UML-like model sketch (not correct-not complete, but useful)</h4>
@@ -374,15 +382,25 @@ BoundaryWalkerActor</a>)</h4>
 
 <tr>
 <td style="width:50%" >
-<h3>The resumableBoundaryWalker as a Finite State Machine</h3> 
+<h3>The resumableBoundaryWalker as a <a href="fsm.html"><k>Finite State Machine</k></a></h3> 
 <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" target="code">
 ResumableBoundaryWalkerActor.java</a> 
  
 <br/><br/>
+<center><img src="./img/bwArch.png" alt="bwArch" width="90%" ></center> 
+ 
+
+
+</td>
+<td> 
+
+<h4>UML-like model after coding  </h4>
+<center><img src="./img/resumablebwMealy.png" alt="resumablebwMealy" width="90%" ></center> 
 <m>
 <ul>
-<li>The fsm is activated with an input each time the <ks>handleInput</ks> receives a message <tt>endmove</tt> 
-(sent by the <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>)
+<li>The fsm is activated each time the <ks>handleInput</ks> receives the input-message <tt>endmove</tt> 
+(sent by the <a href="../app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" target="code">
+<ks>IssWsHttpJavaSupport.java</ks></a>)
  or <tt>robotcmd</tt> 
 (sent by the <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui/ConsoleGuiActor.java" target="code">
 <ks>ConsoleGuiActor.java</ks></a>). </li>
@@ -392,14 +410,7 @@ ResumableBoundaryWalkerActor.java</a>
 (blocked in the state <em>walking</em> or in the state <em>obstacle</em>) with input <tt>resume</tt>. </li>
 
 </ul>
-</m>
-
-</td>
-<td> 
-
-<h4>UML-like model after coding  </h4>
-<center><img src="./img/resumablebwMealy.png" alt="resumablebwMealy" width="90%" ></center> 
- 
+</m> 
 </td>
 </tr>
 
@@ -408,6 +419,8 @@ ResumableBoundaryWalkerActor.java</a>
 
 
 <!--
+<a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>
+
 <h3>Java</h3>
 <a href="../app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" target="code"><tt>ActorBasicJava.java</tt></a>
 <br/><br/>
@@ -417,47 +430,7 @@ ResumableBoundaryWalkerActor.java</a>
 
 -->
 
-<h2>ActorBasicKotlin</h2>
-
-<table style="width:98%">
-<tbody>	
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code"><ks>ActorBasicKotlin.kt</ks></a>
-<br/><br/>
- <a href="../app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" target="code"><ks>MainActor0Demo0.kt</ks></a>
-
-</td>
-<td>
  
-
-</td>
-</tr>
-
-
- </tbody>
-</table>
-
-<h2>IssWsHttpKotlinSupport</h2>
-<table style="width:98%">
-<tbody>	
-
-<tr>
-<td style="width:50%" >
-  <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>
-<br/><br/>
-  
-</td>
-<td>
- 
-
-</td>
-</tr>
-
-
- </tbody>
-</table>
 
 
    <!--

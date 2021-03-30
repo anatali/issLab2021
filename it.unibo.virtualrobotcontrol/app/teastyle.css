@@ -1,0 +1,42 @@
+.my-table {
+    
+    border-spacing: 0;
+    width: 100%;
+    display: table
+}
+
+.my-table td,
+.my-table th {
+    border: 1px solid #ccc;
+    width: 50px;
+    height: 45px;
+    padding: 8px 8px;
+    /*display: table-cell;*/
+    text-align: center;
+    vertical-align: middle
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    /*background-color: #2196F3;*/
+    
+  }
+  .grid-item {
+    /*background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.8);*/
+    width: 95%;
+    height: 95%;
+    padding: 10px;
+    margin-bottom: 3.5px;
+    font-size: 20px;
+    text-align: center;
+  }
+
+.hided {
+    visibility: hidden;
+}
+
+#waiter {
+	//font-size: 10px;
+}

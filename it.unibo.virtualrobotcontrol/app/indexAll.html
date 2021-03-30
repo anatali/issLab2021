@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>Virtualrobot Controller</title>
+
+ <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- https://learn.jquery.com/
+ <link rel="stylesheet" href="teastyle.css">
+ <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+ <script type="text/javascript" src="/net"></script>
+ <script src="https://cdn.jsdelivr.net/webjars/stomp-websocket/stomp.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>  -->
+
+ <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+ <!--Your JavaScript file must be included below the jQuery library in the document or it will not work. -->
+ <script type="text/javascript" src="jqutils.js"></script>
+ <script type="text/javascript" src="webSocketUtils.js"></script>
+
+ <script>
+    function myIp() {
+      var ip = location.host;
+      document.getElementById("myIp").innerHTML = ip;
+    }
+
+function byeFunction() {
+  //alert("Thank you for visiting  ");
+  console.log("bye");
+  socket.send("WebSocket close ");
+  //socket.close();
+}
+  </script>
+
+
+</head>
+
+<body onload="myIp()"   onunload="byeFunction()">
+
+<noscript><h2 style="color: #ff0000">
+ Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+ enabled. Please enable Javascript and reload this page!</h2></noscript>
+
+<h2>Virtual Robot Console</h2>
+<pre style="background-color: #ffffb3; color:blue;">
+The <i>webguiServer</i> works on <span id="myIp"></span> and exploits <i>socket.io</i>
+to intereact with the virtual environment server (<i>WEnv</i>) on port 8090.
+------------------------------------------------------------------------------------------
+The server <i>WEnv</i> sends over <i>socket.io</i>
+information about the current state of the virtual world.
+</pre>
+
+
+ <div style="background-color: #D2B4DE">
+
+  <h5 style="color:blue;">HTML-form with POST</h5>
+
+  <pre style="background-color: #ffffb3;">
+click --> POST --> webguiServer (postTo8090 --> WEnv) </pre>
+  <hr/>
+  <center>
+   <table >
+    <tr>
+     <td></td>
+     <td></td>
+     <td align="center">
+       <form action="/w" method="post"><input type="submit" style="font-size:20px;" value="forward" ></form>
+     </td>
+     <td></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td align="center">
+      <form action="/z" method="post"><input type="submit" style="font-size:20px;"  value="z" ></form>
+     </td>
+     <td align="center">
+      <form action="/l" method="post">  <input type="submit" style="font-size:20px;"  value="left" ></form>
+     </td>
+     <td align="center">
+      <form action="/h" method="post">
+       <font size="3" color="red"><input type="submit" style="font-size:30px"  value="stop"  ></font>
+      </form>
+     </td>
+     <td align="center">
+      <form action="/r" method="post"><input type="submit" style="font-size:20px;" value="right"></form>
+     </td>
+     <td align="center">
+      <form action="/x" method="post"><input type="submit" style="font-size:20px;"  value="x" ></form>
+     </td>
+    </tr>
+    <tr>
+     <td></td>
+     <td></td>
+     <td align="center">
+      <form action="/s" method="post"><input type="submit" style="font-size:20px;"  value="backward"  ></form>
+     </td>
+     <td></td>
+     <td></td>
+    </tr>
+   </table>
+  </center>
+ <hr/>
+
+  <h5 style="color:blue;">Create a FORM with jQuery</h5>
+  <pre style="background-color: #ffffb3">
+click --> jqutils --> doPostToWenv (creates a FORM) --> webguiServer (postTo8090 --> WEnv)</pre>
+  <hr/>
+  <center>
+   <table style="width:50%">
+    <tbody>
+    <tr>
+     <td><button id="lpost8090">l8090</button></td>
+     <td><button id="rpost8090">r8090</button></td>
+     <td><button id="wpost8090">w8090</button></td>
+     <td><button id="spost8090">s8090</button></td>
+     <td><button id="hpost8090">h8090</button></td>
+    </tr>
+    </tbody>
+   </table>
+  </center>
+  <hr/>
+
+  <h5 style="color:blue;">Send message (<i>move</i>) via socket</h5>
+  <pre style="background-color: #ffffb3">
+click --> jqutils --> webSocketUtils.requestTodoTheMove (send on socket.io) --> WEnv (socket) </pre>
+  <hr/>
+  <center>
+  <table style="width:50%">
+   <tbody>
+   <tr>
+    <td> <button id="lsocket" >l</button> </td>
+    <td> <button id="rsocket" >r</button> </td>
+    <td> <button id="wsocket" >w</button> </td>
+    <td> <button id="ssocket" >s</button> </td>
+    <td> <button id="hsocket" >h</button> </td>
+   </tr>
+
+   </tbody>
+  </table>
+  </center>
+  <hr/>
+ </div>
+
+<button id="displayconns" type="submit">Show Connections</button>
+<button id="clear" type="submit">ClearHistory</button>
+
+<h3>DISPLAY AREA</h3>
+<hr/>
+<div><pre style="background-color: #ffffb3; color:blue;" id="robotDisplay"></pre></div>
+<!-- <textarea id="robotDisplay" rows="4" cols="80"> -->
+<hr/>
+<h3>Wenv</h3>
+
+<!-- RICARICA OGNI VOLTA
+<iframe src="http://192.168.1.132:8090" width="100%" height="100%" scrolling="yes" style="border:1px solid black; title="wenv">
+</iframe>
+-->
+<br/><br/>
+</body>
+</html>
+
+<!--
+USED WITH TCPServer (version before Jan 2021)
+
+<h5>Using post with jQuery</h5>
+<pre style="background-color: #ffffb3">click  -> jqutils in the page  -> doPostToWenv (dynamically creates a HTML form) </pre>
+<hr/>
+<center>
+<table style="width:50%">
+ <tbody>
+ <tr>
+  <td><button id="ljquery">ljquery</button></td>
+  <td><button id="rjquery">rjquery</button></td>
+  <td><button id="wjquery">wjquery</button></td>
+  <td><button id="sjquery">sjquery</button></td>
+  <td><button id="hjquery">hjquery</button></td>
+
+ </tr>
+ </tbody>
+</table>
+</center>
+<hr/>
+-->
+
