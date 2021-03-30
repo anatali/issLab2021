@@ -1,7 +1,5 @@
 package it.unibo.actor0
 
-
-
 enum class ApplMessageType{
     event, dispatch, request, reply, invitation
 }

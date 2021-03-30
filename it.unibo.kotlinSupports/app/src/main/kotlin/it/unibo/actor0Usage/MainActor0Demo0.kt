@@ -7,7 +7,7 @@ import java.util.*
 class MainActor0Demo0 {
     companion object{
         val appl_dispatchType = DispatchType.single //DispatchType.cpubound
-        val numOfActors = 5
+        val numOfActors = 50
     }
 
     @ExperimentalCoroutinesApi
@@ -113,8 +113,8 @@ class MainActor0Demo0 {
         runBlocking {
             val appl = MainActor0Demo0()
             //appl.doNothing()
-            //appl.demoActivateActors( this )
-            appl.demoActivateActorsWithContext( this )
+            appl.demoActivateActors( this )
+            //appl.demoActivateActorsWithContext( this )
             //appl.prodCons( this )
             /*
             val startmsg = MsgUtil.buildDispatch("main", "start", "ok", "any" )

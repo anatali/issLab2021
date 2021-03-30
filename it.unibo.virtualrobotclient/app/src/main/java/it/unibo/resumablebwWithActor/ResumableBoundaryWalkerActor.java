@@ -93,12 +93,15 @@ public class ResumableBoundaryWalkerActor extends ActorBasicJava {
         }
     }
 
-
+/*
+==================================================================================
+INPUT HANDLING
+==================================================================================
+*/
     @Override
     protected void handleInput(String msg ) {     //called when a msg is in the queue
         //System.out.println( name + " | input=" + msgJsonStr);
-        if( msg.equals("startApp"))  fsm("","");
-        else msgDriven( new JSONObject(msg) );
+        msgDriven( new JSONObject(msg) );
     }
 
     protected void msgDriven( JSONObject infoJson){
