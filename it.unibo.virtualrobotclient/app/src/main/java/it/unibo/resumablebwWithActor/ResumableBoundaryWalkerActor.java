@@ -30,11 +30,12 @@ public class ResumableBoundaryWalkerActor extends ActorBasicJava {
                 + " stepNum=" + stepNum + " move=" + move + " endmove=" + endmove);
         switch( curState ) {
             case start: {
-                //moves.cleanMovesRepresentation();
-                moves.showRobotMovesRepresentation();
-                doStep();
-                curState = State.walking;
-                break;
+                if( move.equals("resume") ){    //March30: better to include it
+                    moves.showRobotMovesRepresentation();
+                    doStep();
+                    curState = State.walking;
+                    break;
+                }
             }
             case walking: {
                  if( move.equals("resume")){
@@ -133,7 +134,7 @@ INPUT HANDLING
         }
         if( cmd.equals("RESUME") && tripStopped ){
             tripStopped = false;
-            fsm("resume", "");
+            fsm("resume", "");  //initially curState=start
         }
     }
 
