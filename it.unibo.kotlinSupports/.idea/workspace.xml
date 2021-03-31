@@ -23,17 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/MsgRobotUtil.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,6 +125,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
