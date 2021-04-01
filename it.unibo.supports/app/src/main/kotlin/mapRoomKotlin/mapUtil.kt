@@ -57,7 +57,7 @@ object mapUtil{
 	}
 
     @JvmStatic fun showMap(){
-		println( "$map"  )
+		println( "$map ${state}"  )
 	}
 	
 }
