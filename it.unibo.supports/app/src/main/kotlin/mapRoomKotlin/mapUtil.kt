@@ -47,7 +47,10 @@ object mapUtil{
  					state = state.turnRight();
                     map.put(state.x, state.y, Box(false, false, true))
                 }
- 
+                "o" -> {
+                    //state = state.turnRight();
+                    setObstacle();
+                }
 		   }//switch
 		   
 //		   println( "$map"  )

@@ -276,7 +276,7 @@ type docker_password.txt | docker login --username natbodocker --password-stdin
 </pre>
 </div>
 
-<!--
+
 <h3>The <a href="../../it.unibo.virtualRobot2020" target="web"> Virtual robot</a> project</h3>
 
 <pre>
@@ -284,15 +284,15 @@ gradle build                            <kc>Create the distribution</kc>
 docker build -t virtualrobotdisi:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualRobot2020/Dockerfile" target="web">Dockerfile</a></kc>
 
 <kc>Tag the image</kc>
-docker tag virtualrobotdisi:1.0 natbodocker/virtualrobotdisi:1.0
+docker tag virtualrobotdisi:1.0 natbodocker/virtualrobotdisi:2.0
 
-docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:1.0 /bin/sh	<kc>local test</kc>
+docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh	<kc>to change WEnv/WebGLScene/sceneConfig</kc>
 
 
 <kc>Register the image on <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></kc>
-docker push natbodocker/virtualrobotdisi:1.0
+docker push natbodocker/virtualrobotdisi:2.0
 </pre>
-
+<!--
 <h3>The <a href="../../it.unibo.virtualrobotclient" target="web">virtualrobotclient</a> project</h3>
 
 <pre>

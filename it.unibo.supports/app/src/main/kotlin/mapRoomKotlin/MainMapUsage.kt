@@ -12,7 +12,9 @@ fun doTestMove(){
 //	println( "-----------------------------------"  );
 //	println( "$map"  );
 	//Obstacle
-	mapUtil.setObstacle(  )
+	//mapUtil.setObstacle(  )
+	mapUtil.doMove("o")
+
   	mapUtil.doMove("s")
 	println( "-----------------------------------"  );
 	mapUtil.showMap()
