@@ -41,7 +41,7 @@ object WebSocketKotlinSupportUsage {
 
         val observers = arrayOfNulls<NaiveActorKotlinObserver>(5)
         for (i in 0..1) {
-            observers[i] = NaiveActorKotlinObserver("a$i", i)
+            observers[i] = NaiveActorKotlinObserver("a$i", i, scope)
             support.registerActor(observers[i]!!)
         }
         println("WebSocketKotlinSupportUsage | testObservers 3 ")

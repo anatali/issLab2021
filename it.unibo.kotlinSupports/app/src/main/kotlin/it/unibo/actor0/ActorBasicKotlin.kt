@@ -12,14 +12,9 @@ import org.json.JSONObject
 enum class DispatchType {single, iobound, cpubound }
 
 abstract class ActorBasicKotlin(val name: String,
-                                val scope: CoroutineScope = GlobalScope,
+                                val scope: CoroutineScope  ,
                         val dispatchType: DispatchType = DispatchType.single,
                         val channelSize : Int = 50 ) : IJavaActor{
-    constructor(name: String) : this(name, GlobalScope, DispatchType.single, 50) {
-
-    }
-
-
     val tt      = "               %%% "
     private val actorobservers =  mutableListOf<IJavaActor>()
     protected var actorLogfileName  : String = ""

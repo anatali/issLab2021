@@ -2,6 +2,7 @@ package it.unibo.executors
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.DispatchType
 import it.unibo.supports.IssWsHttpKotlinSupport
 import it.unibo.supports.WebSocketKotlinSupportUsage
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +15,8 @@ import java.util.*
 import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
-abstract class AbstractRobotActor(name: String, scope: CoroutineScope) : ActorBasicKotlin(name, scope) {
+abstract class AbstractRobotActor(name: String, scope: CoroutineScope)
+                : ActorBasicKotlin(name, scope, DispatchType.single) {
     protected var moveInterval = 500L //to avoid too-rapid movement
     protected var support: IssWsHttpKotlinSupport
     protected var cnsl = System.console() //returns null in an online IDE
@@ -22,14 +24,14 @@ abstract class AbstractRobotActor(name: String, scope: CoroutineScope) : ActorBa
 
     init {
         support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091")
-        support.registerActor(this)
-        support.wsconnect(  fun(scope, support ) {println("$name | connected ")} )
+        //support.registerActor(this)
+        support.wsconnect(  fun(scope, support ) {println("$name | connected ${infoThreads()}")} )
         MoveNameShort["moveForward"] = "w"
         MoveNameShort["moveBackward"] = "s"
         MoveNameShort["turnLeft"] = "l"
         MoveNameShort["turnRight"] = "r"
         MoveNameShort["alarm"] = "h"
-        //println( "$name AbstractRobotActor | init === $support")
+        println( "$name AbstractRobotActor | init ${infoThreads()}")
     }
 
     //val afterConnect : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ) {... }

@@ -23,7 +23,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/AbstractRobotActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/AbstractRobotActor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveObserver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveObserver.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupportUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupportUsage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/NaiveActorKotlinObserver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/NaiveActorKotlinObserver.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/kotlin/it/unibo/kotlinSupports/AppTest.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +46,23 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="it.unibo.kotlinSupports" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -72,6 +98,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Didattica2018Work/iss2021Lab/it.unibo.kotlinSupports" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -128,9 +155,44 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="build.gradle.kts" type="KotlinStandaloneScriptRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="it.unibo.kotlinSupports" />
+      <option name="filePath" value="$PROJECT_DIR$/app/build.gradle.kts" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$PROJECT_DIR$/app" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="filePath" value="$PROJECT_DIR$/app/build.gradle.kts" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" value="$PROJECT_DIR$/app" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MainExecutorsKt" />
+        <item itemvalue="Application.build.gradle.kts" />
         <item itemvalue="Application.MainActor0Demo0Kt" />
         <item itemvalue="Application.IssWsHttpKotlinSupportUsageKt" />
       </list>
@@ -161,5 +223,35 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="431" y="61" key="#com.intellij.ide.util.MemberChooser" timestamp="1617393986311">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state x="431" y="61" key="#com.intellij.ide.util.MemberChooser/0.0.1280.690@0.0.1280.690" timestamp="1617393986311" />
+    <state x="388" y="179" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1617391728931">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state x="388" y="179" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1280.690@0.0.1280.690" timestamp="1617391728931" />
+    <state width="1238" height="321" key="GridCell.Tab.0.bottom" timestamp="1617394737683">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="1238" height="321" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1617394737683" />
+    <state width="1238" height="321" key="GridCell.Tab.0.center" timestamp="1617394737682">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="1238" height="321" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1617394737682" />
+    <state width="1238" height="321" key="GridCell.Tab.0.left" timestamp="1617394737682">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="1238" height="321" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1617394737682" />
+    <state width="1238" height="321" key="GridCell.Tab.0.right" timestamp="1617394737682">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="1238" height="321" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1617394737682" />
+    <state x="299" y="155" width="672" height="677" key="run.anything.popup" timestamp="1617391672818">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state x="299" y="155" width="672" height="677" key="run.anything.popup/0.0.1280.690@0.0.1280.690" timestamp="1617391672818" />
   </component>
 </project>

@@ -2,6 +2,7 @@ package it.unibo.executors
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
 import it.unibo.interaction.IJavaActor
 import it.unibo.supports.ActorMsgs
@@ -26,29 +27,28 @@ The map is a singleton object, managed by mapUtil
 
  */
 @ExperimentalCoroutinesApi
-class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
+class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope)
+            : AbstractRobotActor(name, scope ) {
     protected enum class State {
         start, moving, obstacle, end
     }
 
     protected var curState = State.start
-    //protected var ownerActor: IJavaActor? = null
     protected lateinit var timer: TimerActor
     protected var plannedMoveTime = 0
     protected var backMsg = ""
     protected var answer = ""
     private var StartTime: Long = 0
 
-    //init {  this.ownerActor = ownerActor  }
 
     protected fun fsmstep(move: String, arg: String) {
-        //println(name+ " | state=" + curState + " move=" + move + " arg=" + arg)
+        println(name+ " | state=" + curState + " move=" + move + " arg=" + arg)
         when (curState) {
             State.start -> {
-                //run {
                     if (move == ApplMsgs.stepId) {
+                        support.registerActor(this)
                         StartTime = this.currentTime
-                        timer = TimerActor("t0", this)
+                        timer = TimerActor("t0", this, scope )
                         //timer.send(ActorMsgs.startTimerMsg.replace("TIME", arg))
                         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                             ActorMsgs.startTimerMsg.replace("TIME", arg),"t0")
@@ -68,7 +68,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
             }
             State.moving -> {
                 val dt = "" + this.getDuration(StartTime)
-                println(  "$name | moving .... dt=$dt move=$move")
+                println(  "$name | moving .... dt=$dt move=$move ${infoThreads()}")
                 if (move == ActorMsgs.endTimerId) {
                     answer = ApplMsgs.stepDoneMsg
                     support.forward(ApplMsgs.haltMsg)
@@ -114,7 +114,9 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                     println(name.toString() + " | FATAL error - curState = " + curState)
                 }
                 support.removeActor(this)
-                terminate()
+                curState = State.start
+
+                //terminate()
             }
             else -> {
                 println(name.toString() + " | error - curState = " + curState)

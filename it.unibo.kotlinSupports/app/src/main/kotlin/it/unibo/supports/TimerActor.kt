@@ -1,12 +1,15 @@
 package it.unibo.supports
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
 import it.unibo.interaction.IJavaActor
+import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 import kotlinx.coroutines.delay
 
-class TimerActor(name: String, owner: IJavaActor) : ActorBasicKotlin(name) {
+class TimerActor(name: String, owner: IJavaActor, scope: CoroutineScope)
+                          : ActorBasicKotlin(name, scope, DispatchType.single) {
     //private long tout          = 0;
     private var owner: IJavaActor
     private var killed = false
