@@ -84,4 +84,8 @@ class RobotState( x: Int, y: Int, direction: Direction) {
         return result
     }
 
+    override fun toString() : String{
+        return "($x,$y) $direction"
+    }
+
 }

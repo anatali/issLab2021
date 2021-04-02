@@ -23,27 +23,84 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/cautiousExplorerActors.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/img/cautiousExplorer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/it.unibo.kotlinSupports.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/AbstractRobotActor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ApplMsgs.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ExecutorActor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveObserver.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/RobotMovesInfo.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/RunawayActor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/SpiralExplorerActor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/ActorMsgs.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/MsgRobotUtil.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Box.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Box.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Direction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Direction.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/testMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/testMap.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/ActorBasicJavaUsage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/ActorBasicJavaUsage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/MainIssWsHttpJavaSupportUsage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/MainIssWsHttpJavaSupportUsage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/NaiveActorObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/NaiveActorObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/RobotActorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/RobotActorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorNaiveObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorNaiveObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/MsgRobotUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/MsgRobotUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Box.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Box.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Direction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Direction.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/testMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/testMap.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotcontrol/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.virtualrobotcontrol/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibolibs/IssWsHttpJavaSupport.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../unibolibs/IssWsHttpJavaSupport.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -54,6 +111,9 @@
         <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.3\plugins\maven\lib\maven3" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
   </component>
   <component name="ProjectId" id="1qSzFGhos2kh5w1g0bILmFjqjkw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -66,21 +126,26 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/usage" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Didattica2018Work/iss2021Lab/it.unibo.kotlinSupports" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\java" />
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo\usage" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\userDocs" />
-      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo" />
-      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="it.unibo.executors" />
+      <recent name="it.unibo.supports" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainActor0Demo0Kt">
+  <component name="RunManager" selected="Application.MainExecutorsKt">
     <configuration name="IssWsHttpKotlinSupportUsageKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <module name="it.unibo.kotlinSupports.app.main" />
       <option name="VM_PARAMETERS" />
@@ -107,8 +172,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MainExecutorsKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="it.unibo.kotlinSupports.app.main" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="it.unibo.executors.MainExecutorsKt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MainExecutorsKt" />
         <item itemvalue="Application.MainActor0Demo0Kt" />
         <item itemvalue="Application.IssWsHttpKotlinSupportUsageKt" />
       </list>
@@ -135,26 +214,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="1238" height="172" key="GridCell.Tab.0.bottom" timestamp="1617094010650">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1238" height="172" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1617094010650" />
-    <state width="1238" height="172" key="GridCell.Tab.0.center" timestamp="1617094010650">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1238" height="172" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1617094010650" />
-    <state width="1238" height="172" key="GridCell.Tab.0.left" timestamp="1617094010650">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1238" height="172" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1617094010650" />
-    <state width="1238" height="172" key="GridCell.Tab.0.right" timestamp="1617094010650">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1238" height="172" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1617094010650" />
   </component>
 </project>

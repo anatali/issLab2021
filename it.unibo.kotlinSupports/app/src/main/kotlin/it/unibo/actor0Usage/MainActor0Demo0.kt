@@ -7,7 +7,7 @@ import java.util.*
 class MainActor0Demo0 {
     companion object{
         val appl_dispatchType = DispatchType.single //DispatchType.cpubound
-        val numOfActors = 50
+        val numOfActors = 5
     }
 
     @ExperimentalCoroutinesApi
@@ -60,7 +60,7 @@ class MainActor0Demo0 {
 
     suspend fun doNothing(){
         println("--------------------------------------------------------")
-        println("MainActor0Demo0 | prodCons"  );
+        println("MainActor0Demo0 | doNothing"  );
         println("--------------------------------------------------------")
 
     }
@@ -116,20 +116,7 @@ class MainActor0Demo0 {
             appl.demoActivateActors( this )
             //appl.demoActivateActorsWithContext( this )
             //appl.prodCons( this )
-            /*
-            val startmsg = MsgUtil.buildDispatch("main", "start", "ok", "any" )
-            val endmsg   = MsgUtil.buildDispatch("main", "end", "ok", "any" )
-            val aa = Vector<ActorKotlinNaive>()
-            for (i in 0..MainActor0Demo0.numOfActors-1) {
-                val a = ActorKotlinNaive("a$i", this,DispatchType.single)
-                a.actor.send(startmsg)
-                aa.add(a)
-            }
-            for (i in 0..MainActor0Demo0.numOfActors-1) {
-                aa.get(i).actor.send(endmsg)
-            }
 
-             */
 
         }
 

@@ -19,6 +19,7 @@ plugins {
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
+    //flatDir{ dirs("../../unibolibs")   }   //Our libraries
 }
 
 java {

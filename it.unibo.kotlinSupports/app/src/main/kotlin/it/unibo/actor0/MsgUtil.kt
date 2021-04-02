@@ -1,4 +1,7 @@
 package it.unibo.actor0
+
+import it.unibo.interaction.IJavaActor
+
 //FILE MsgUtil.kt
 
 enum class Protocol {
@@ -49,10 +52,16 @@ var count = 1;
         //println("sendMsg $dispatchMsg")
         destActor.actor.send( dispatchMsg )
     }
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+@JvmStatic    suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJavaActor) {
+        sendMsg(sender, msgId, msg, destActor as ActorBasicKotlin)
+    }
+        @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @JvmStatic    suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasicKotlin) {
         destActor.actor.send(msg)
+    }
+@JvmStatic    suspend fun sendMsg(msg: ApplMessage, destActor: IJavaActor) {
+        sendMsg(msg,destActor as ActorBasicKotlin)
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi

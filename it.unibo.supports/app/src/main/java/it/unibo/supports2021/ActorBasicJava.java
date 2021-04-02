@@ -49,7 +49,7 @@ public abstract class ActorBasicJava extends Thread implements IJavaActor {
         while (goon){
             waitInputAndElab();
         }
-        System.out.println( myname + " | ENDS "  );
+        //System.out.println( name + " | waitInputAndElab END "  );
     }
 
     public void terminate(){
@@ -67,6 +67,8 @@ public abstract class ActorBasicJava extends Thread implements IJavaActor {
             e.printStackTrace();
         }
     }
+
+
 
 
 //---------------------------------------------------------------------------
@@ -95,15 +97,5 @@ public abstract class ActorBasicJava extends Thread implements IJavaActor {
             e.printStackTrace();
         }
     }
-
-    protected long getCurrentTime(){
-        return System.currentTimeMillis();
-    }
-
-    protected long getDuration( long start){
-        long d = System.currentTimeMillis() - start;
-        return d;
-    }
-    //StartTime = getCurrentTime()  Duration = getDuration(StartTime)
 
 }

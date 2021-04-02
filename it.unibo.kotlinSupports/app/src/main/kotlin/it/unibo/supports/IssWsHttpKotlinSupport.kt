@@ -52,7 +52,7 @@ class IssWsHttpKotlinSupport
 //===============================================================================
     //After open => execute workTodo that has been set by connect
     override fun onOpen(webSocket: WebSocket, response: Response ) {
-        println("IssWsHttpKotlinSupport | onOpen $response")
+        //println("IssWsHttpKotlinSupport | onOpen $response")
         opened = true
         workTodo( scope, this )
     }
@@ -68,18 +68,18 @@ class IssWsHttpKotlinSupport
 //===============================================================================
     fun updateObservers( msg: String){
         val msgAppl = cvtJsonToAppl(msg)
-        println("IssWsHttpKotlinSupport | updateObservers ${actorobservers.size} $msgAppl" )
+        //println("IssWsHttpKotlinSupport | updateObservers ${actorobservers.size} $msgAppl" )
         actorobservers.forEach{ it.send(msgAppl) }
     }
 
     fun cvtJsonToAppl(msgJson : String ) : String{
         val msgJson = msgJson.replace(",","@") //HORRIBLE trick
-        println( "IssWsHttpKotlinSupport |  $msgJson " )
+        //println( "IssWsHttpKotlinSupport | cvtJsonToAppl $msgJson " )
         //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
         val msgAppl = ApplMessage("supportInfo", ApplMessageType.dispatch.toString(),
                     "support", "observer",
                  msgJson  )
-                //"\""+msgJson+"\"" )
+
         return msgAppl.toString()
     }
 
@@ -91,8 +91,7 @@ class IssWsHttpKotlinSupport
 
 //===============================================================================
     fun wsconnect( //wsAddr : String ,
-    callback: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit
-) : WebSocket {
+    callback: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit) : WebSocket {
         workTodo = callback
         val request0 = Request.Builder()
             .url("ws://$addr")

@@ -81,11 +81,13 @@ abstract class ActorBasicKotlin(val name: String,
 
     fun showMsg(msg:String){ println("$name | $msg")  }
     fun aboutThreads() {  println( sysUtil.aboutThreads(name))  }
+    fun infoThreads() : String {  return sysUtil.aboutThreads(name)  }
 
     //------------------------------------------------
 
 
     fun terminate() {
+        println("$name | ENDS")
         actor.close()
     }
 
@@ -93,12 +95,12 @@ abstract class ActorBasicKotlin(val name: String,
     //---------------------------------------------------------------------------
     //IJavaActor
     override fun myname() : String{ return name }
+    //The following op is called by the support that sees the actor as a IJavaActor object
     override fun send(applMessageStr:  String ){    //JSON data from support
         //{"endmove":"true","move":"moveForward"}
         try{
-
-            println( "$name | send $applMessageStr " )
-            val msg = ApplMessage.create(applMessageStr )  //TODO problem with , (@)
+            //println( "$name | ActorBasicKotlin send fron obj to actor $applMessageStr " )
+            val msg = ApplMessage.create(applMessageStr )  //TODO see trick problem with , (@)
             scope.launch{ actor.send( msg ) }
         }catch( e : Exception) {
             println("$name |  send $applMessageStr NOT ApplMessage")

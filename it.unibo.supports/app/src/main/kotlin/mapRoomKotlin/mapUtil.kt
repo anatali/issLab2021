@@ -14,10 +14,14 @@ object mapUtil{
         return map.toString()
     }
 
-    @JvmStatic fun setObstacle(){
+    private fun setObstacleOnCell(){
 		map.put( state.x,  state.y, Box(true, false, false))
 	}
-
+    @JvmStatic fun setObstacle() {  //trick!!
+        doMove("w")
+        setObstacleOnCell()
+        doMove("s")
+    }
     @JvmStatic fun doMove(move: String ) {
        val x = state.x
        val y = state.y
@@ -47,10 +51,7 @@ object mapUtil{
  					state = state.turnRight();
                     map.put(state.x, state.y, Box(false, false, true))
                 }
-                "o" -> {
-                    //state = state.turnRight();
-                    setObstacle();
-                }
+ 
 		   }//switch
 		   
 //		   println( "$map"  )
@@ -60,7 +61,7 @@ object mapUtil{
 	}
 
     @JvmStatic fun showMap(){
-		println( "$map"  )
+		println( "$map ${state}"  )
 	}
 	
 }
