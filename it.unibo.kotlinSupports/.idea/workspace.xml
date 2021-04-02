@@ -23,64 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/cautiousExplorerActors.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/img/cautiousExplorer.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/it.unibo.kotlinSupports.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/AbstractRobotActor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ApplMsgs.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ExecutorActor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveObserver.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/RobotMovesInfo.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/RunawayActor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/SpiralExplorerActor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/ActorMsgs.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2021.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Box.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Box.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Direction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/Direction.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/testMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/mapRoomKotlin/testMap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/ActorBasicJava.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/IssWsHttpJavaSupport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/ActorBasicJavaUsage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/ActorBasicJavaUsage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/MainIssWsHttpJavaSupportUsage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/MainIssWsHttpJavaSupportUsage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/NaiveActorObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/NaiveActorObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/RobotActorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/RobotActorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorNaiveObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorNaiveObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/supports2021/usage/prodCons/ActorProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IJavaActor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommActorSupport.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObservable.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/MsgRobotUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/it/unibo/interaction/MsgRobotUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Box.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Box.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Direction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/Direction.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RobotState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/RoomMap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/testMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/kotlin/mapRoomKotlin/testMap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.virtualrobotcontrol/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.virtualrobotcontrol/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../unibolibs/IssWsHttpJavaSupport.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../unibolibs/IssWsHttpJavaSupport.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

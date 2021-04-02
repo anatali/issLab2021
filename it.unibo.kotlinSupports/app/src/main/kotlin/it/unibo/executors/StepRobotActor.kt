@@ -1,5 +1,6 @@
 package it.unibo.executors
 
+import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.interaction.IJavaActor
@@ -25,7 +26,7 @@ The map is a singleton object, managed by mapUtil
 
  */
 @ExperimentalCoroutinesApi
-class StepRobotActor(name: String, val ownerActor: IJavaActor, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
+class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
     protected enum class State {
         start, moving, obstacle, end
     }
@@ -49,12 +50,14 @@ class StepRobotActor(name: String, val ownerActor: IJavaActor, scope: CoroutineS
                         StartTime = this.currentTime
                         timer = TimerActor("t0", this)
                         //timer.send(ActorMsgs.startTimerMsg.replace("TIME", arg))
-
-                        //timer.send()
+                        val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
+                            ActorMsgs.startTimerMsg.replace("TIME", arg),"t0")
+                        timer.sendToYourself(m)
+                        /*
                         scope.launch {
                             MsgUtil.sendMsg(name, ActorMsgs.startTimerId,
                                 ActorMsgs.startTimerMsg.replace("TIME", arg), timer)
-                        }
+                        }*/
                         plannedMoveTime = arg.toInt()
                         val attemptStepMsg = "{\"robotmove\":\"moveForward\", \"time\": TIME}"
                             .replace("TIME", "" + (plannedMoveTime + 100))
@@ -92,10 +95,12 @@ class StepRobotActor(name: String, val ownerActor: IJavaActor, scope: CoroutineS
                 ) {
                     //println(name.toString() + " | end  arg=" + arg)
                     //ownerActor.send(answer)
+                        /*
                     scope.launch {
                         MsgUtil.sendMsg(name, "stepAnswer", answer, ownerActor)
-                    }
-
+                    }*/
+                    val m = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
+                    ownerActor.sendToYourself(m)
 
                 } else if (move == "collision") { //the last step was ok but with a collision
                     println(name.toString() + " | collision ? answer=" + answer)
