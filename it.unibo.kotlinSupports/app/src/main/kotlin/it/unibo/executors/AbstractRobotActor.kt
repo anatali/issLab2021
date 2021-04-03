@@ -18,20 +18,20 @@ import kotlin.collections.HashMap
 abstract class AbstractRobotActor(name: String, scope: CoroutineScope)
                 : ActorBasicKotlin(name, scope, DispatchType.single) {
     protected var moveInterval = 500L //to avoid too-rapid movement
-    protected var support: IssWsHttpKotlinSupport
+    protected lateinit var support: IssWsHttpKotlinSupport
     protected var cnsl = System.console() //returns null in an online IDE
     protected val MoveNameShort: MutableMap<String, String> = HashMap()
 
     init {
-        support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091")
+        //support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091")
         //support.registerActor(this)
-        support.wsconnect(  fun(scope, support ) {println("$name | connected ${infoThreads()}")} )
+        //support.wsconnect(  fun(scope, support ) {println("$name | connected ${infoThreads()}")} )
         MoveNameShort["moveForward"] = "w"
         MoveNameShort["moveBackward"] = "s"
         MoveNameShort["turnLeft"] = "l"
         MoveNameShort["turnRight"] = "r"
         MoveNameShort["alarm"] = "h"
-        println( "$name AbstractRobotActor | init ${infoThreads()}")
+        //println( "$name AbstractRobotActor | init ${infoThreads()}")
     }
 
     //val afterConnect : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ) {... }

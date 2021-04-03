@@ -14,26 +14,29 @@ Observer of the socket, it is observable in its turn
 package it.unibo.supports
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.ApplMessageType
+import it.unibo.actor0.sysUtil
 import it.unibo.interaction.IJavaActor
 import it.unibo.interaction.IssActorObservable
 import it.unibo.interaction.IssCommSupport
 import it.unibo.interaction.IssOperations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.*
+import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
 class IssWsHttpKotlinSupport
     private constructor(val scope: CoroutineScope, val addr:String, val wsconn:Boolean)
-     : WebSocketListener(), IssActorObservable, IssCommSupport, IssOperations {
+          : WebSocketListener(), IssActorObservable, IssCommSupport, IssOperations {
     lateinit var myWs: WebSocket
     lateinit var workTodo: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit
 
-    val  JSON_MediaType = "application/json; charset=utf-8".toMediaType()
-    val okHttpClient    = OkHttpClient()
+    val  JSON_MediaType        = "application/json; charset=utf-8".toMediaType()
+    val okHttpClient           = OkHttpClient()
     val actorobservers         = Vector<IJavaActor>()
     private var opened         = false
     private var connectForWs   = true
@@ -41,12 +44,35 @@ class IssWsHttpKotlinSupport
     //val socketMsgChannel: Channel<String> = Channel(10) //our channel buffer is 10 events
     //fun getInputChannel() : Channel<String> { return socketMsgChannel }
 
-    companion object {
+    companion object { //singleton
+        val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
+        val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
+
         fun createForHttp(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
-            return IssWsHttpKotlinSupport(scope, addr, false)
+            if( ! activeAconnsHttp.containsKey(addr)) {
+                activeAconnsHttp.put(addr, IssWsHttpKotlinSupport(scope, addr, false))
+            }
+            return activeAconnsHttp.get(addr)!!
         }
         fun createForWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
-            return IssWsHttpKotlinSupport(scope, addr, true)
+            if( ! activeAconnsWs.containsKey(addr)) {
+                val support = IssWsHttpKotlinSupport(scope, addr, false)
+                 activeAconnsWs.put(addr,support)
+                 println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
+            }
+            return activeAconnsWs.get(addr)!!
+        }
+
+        fun getConnectionWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
+            if( ! activeAconnsWs.containsKey(addr)) {
+                val support = IssWsHttpKotlinSupport(scope, addr, false)
+                activeAconnsWs.put(addr,support)
+                support.wsconnect(  fun(scope, support ) {
+                    println("IssWsHttpKotlinSupport | connected ${sysUtil.aboutThreads("isssupport")}")
+                } )
+                println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
+            }
+            return activeAconnsWs.get(addr)!!
         }
     }
 //===============================================================================

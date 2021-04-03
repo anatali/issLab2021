@@ -69,15 +69,22 @@ class SpiralExplorerActor(name: String, scope: CoroutineScope) : AbstractRobotAc
         if (mJson.has(ApplMsgs.activateId) && !engaged) {  //while working no more
             engaged = true //if engaged, the message is lost. We could store it in a local queue
             startNewJourney()
-        } else if (mJson.has(ApplMsgs.executorEndId)) {
+        } else
+            if( mJson.has(ApplMsgs.executorFailId) ) {
+                returnToDen( mJson.getString(ApplMsgs.executorFailId) )
+            }else if( mJson.has(ApplMsgs.executorDoneId) ){ //all ok
+                startNewJourney()
+            }
+            /*
+            if (mJson.has(ApplMsgs.executorEndId)) {
             val result = mJson.getString(ApplMsgs.executorEndId)
             println("$name | result of journey=$result")
             if (result == "ok") { //Executor has done a spiral
                 startNewJourney()
             } else { //Executor has found an obstacle
                 returnToDen(result)
-            }
-        } else if (mJson.has(ApplMsgs.runawyEndId)) {
+            }*/
+        else if (mJson.has(ApplMsgs.runawyEndId)) {
             support.registerActor(this)
             startNewJourney()
         }

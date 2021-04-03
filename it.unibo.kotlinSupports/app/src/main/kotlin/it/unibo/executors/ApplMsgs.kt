@@ -5,7 +5,7 @@ import it.unibo.executors.ApplMsgs
 object ApplMsgs {
     const val forwardMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
     const val backwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 350}"
-    const val microStepMsg = "{\"robotmove\":\"moveForward\", \"time\": 10}"
+    const val microStepMsg = "{\"robotmove\":\"moveForward\", \"time\": 5}"
     const val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 10}"
     const val turnLeftMsg = "{\"robotmove\":\"turnLeft\", \"time\": 300}"
     const val turnRightMsg = "{\"robotmove\":\"turnRight\", \"time\": 300}"
@@ -16,14 +16,16 @@ object ApplMsgs {
 
     const val activateId = "activate"
     val activateMsg = "{\"ID\":\"ARGS\" }".replace("ID", activateId)
+
     const val executorStartId = "executorstart"
     val executorstartMsg = "{\"ID\":\"PATHTODO\" }".replace("ID", executorStartId)
+    const val executorDoneId = "executorDone"
+    const val executorFailId = "executorFail"
+    val executorendokMsg = "{\"ID\":\"ok\" }".replace("ID", executorDoneId)
+    val executorendkoMsg = "{\"ID\":\"PATHDONE\" }".replace("ID", executorFailId)
 
     const val endMoveId = "endmove"
     val endMoveMsg = "{\"ID\":\"ENDMOVE\" }".replace("ID", endMoveId)
-    const val executorEndId = "executorend"
-    val executorendokMsg = "{\"ID\":\"ok\" }".replace("ID", executorEndId)
-    val executorendkoMsg = "{\"ID\":\"PATHDONE\" }".replace("ID", executorEndId)
  //
     const val runawyEndId = "runawayend"
     val runawyEndMsg = "{\"ID\":\"RESULT\" }".replace("ID", runawyEndId)

@@ -1,6 +1,6 @@
 package it.unibo.executors
 
- 
+import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.executors.ApplMsgs.endMoveId
 import it.unibo.executors.ApplMsgs.runawyEndMsg
 import it.unibo.executors.ApplMsgs.runawyStartId
@@ -12,24 +12,9 @@ import org.json.JSONObject
 /*
 The map is a singleton object, managed by mapUtil
  */
-class RunawayActor(name: String, ownerActor: IJavaActor, scope: CoroutineScope) : ExecutorActor(name, ownerActor, scope) {
+class RunawayActor(name: String, ownerActor: ActorBasicKotlin, scope: CoroutineScope)
+    : ExecutorActor(name, ownerActor, scope) {
 
-    /*
-    override fun updateTripInfo(move: String) {
-        moves.updateMovesRep(move)
-        mapUtil.doMove(move)
-    }*/
-    /*
-    override fun resetStateVars() {
-        curState = State.start
-        moves.cleanMovesRepresentation()
-        todoPath = ""
-    }*/
-    /*
-    override fun doMove(moveStep: Char) {
-        println("RunawayActor | doMove ... $moveStep totPath=$todoPath")
-        if (moveStep == 'w') doStep() else if (moveStep == 'l') turnLeft() else if (moveStep == 'r') turnRight() else if (moveStep == 's') doBackStep()
-    }*/
 
     protected fun fsmrunaway(move: String, endmove: String) {
         println(
@@ -39,7 +24,7 @@ class RunawayActor(name: String, ownerActor: IJavaActor, scope: CoroutineScope) 
         when (curState) {
             State.start -> {
                 if (move == runawyStartId) {
-                    println("=&=&=&=&=RunawayActor runaway&=&=&=&=&=&=&=&=&=&=& ")
+                    println("------------ RunawayActor --------------- ")
                 }
                 if (todoPath.length > 0) {
                     mapUtil.showMap()

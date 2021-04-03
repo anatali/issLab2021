@@ -6,6 +6,7 @@ import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
 import it.unibo.interaction.IJavaActor
 import it.unibo.supports.ActorMsgs
+import it.unibo.supports.IssWsHttpKotlinSupport
 import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,16 +30,23 @@ The map is a singleton object, managed by mapUtil
 @ExperimentalCoroutinesApi
 class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope)
             : AbstractRobotActor(name, scope ) {
+
+    init {
+        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "localhost:8091")
+        //support.wsconnect(  fun(scope, support ) {println("$name | connectedddd ${infoThreads()}")} )
+        println( "$name | StepRobotActor init ${infoThreads()}")
+    }
+
     protected enum class State {
         start, moving, obstacle, end
     }
 
-    protected var curState = State.start
     protected lateinit var timer: TimerActor
+    protected var curState        = State.start
     protected var plannedMoveTime = 0
-    protected var backMsg = ""
-    protected var answer = ""
-    private var StartTime: Long = 0
+    protected var backMsg         = ""
+    protected var answer          = ""
+    private var StartTime: Long   = 0L
 
 
     protected fun fsmstep(move: String, arg: String) {

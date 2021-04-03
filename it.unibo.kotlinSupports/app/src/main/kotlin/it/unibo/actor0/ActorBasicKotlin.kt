@@ -82,8 +82,8 @@ abstract class ActorBasicKotlin(val name: String,
 
 
     fun terminate() {
-        println("$name | ENDS")
         actor.close()
+        println("$name | ENDS ${this.infoThreads()}")
     }
 
 
