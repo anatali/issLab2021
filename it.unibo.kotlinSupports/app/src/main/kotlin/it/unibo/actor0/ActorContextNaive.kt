@@ -6,11 +6,17 @@ import kotlinx.coroutines.CoroutineScope
 object ActorContextNaive {
 
     val ctxActorMap = mutableMapOf<String, ActorBasicKotlin>()
+    var portNum = 8010
+    var name    = "ActorContextNaive"
 
     @JvmStatic
     fun getActor(name: String): ActorBasicKotlin? {
         if (ctxActorMap.containsKey(name)) return ctxActorMap.get(name)
         else return null
+    }
+    @JvmStatic
+    fun hasActor(name: String): Boolean {
+        return (ctxActorMap.containsKey(name))
     }
     @JvmStatic
     fun addActor(a: ActorBasicKotlin) {

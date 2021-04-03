@@ -1,5 +1,7 @@
 package it.unibo.actor0
 
+import it.unibo.`is`.interfaces.protocols.IConnInteraction
+
 enum class ApplMessageType{
     event, dispatch, request, reply, invitation
 }
@@ -10,6 +12,7 @@ open class ApplMessage(
         val msgContent: String = "", val msgNum: String = "0"
 )  {
 
+
     companion object{
         //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
         fun create(msg: String) : ApplMessage{
@@ -19,63 +22,7 @@ open class ApplMessage(
         }
     }
 
-    /*
-    protected var msgId: String = ""
-    protected var msgType: String? = null
-    protected var msgSender: String = ""
-    protected var msgReceiver: String = ""
-    protected var msgContent: String = ""
-    protected var msgNum: Int = 0
-*/
-    //var conn : IConnInteraction? = null   //Oct2019
-
-    /*
-       //@Throws(Exception::class)
-       constructor( MSGID: String, MSGTYPE: String, SENDER: String, RECEIVER: String,
-                    CONTENT: String, SEQNUM: String, connection : IConnInteraction? = null ) {
-           msgId = MSGID
-           msgType = MSGTYPE
-           msgSender = SENDER
-           msgReceiver = RECEIVER
-           msgContent = envelope(CONTENT)
-           msgNum = Integer.parseInt(SEQNUM)
-
-           conn   = connection //Oct2019 It is NOT NULL for a request
-           //		System.out.println("ApplMessage " + MSGID + " " + getDefaultRep() );
-       }
-
-       //@Throws(Exception::class)
-       constructor(msg: String) {
-           val msgStruct = Term.createTerm(msg) as Struct
-           setFields(msgStruct)
-       }
-   */
-
-/*
-    fun msgId(): String {
-        return msgId
-    }
-
-    fun msgType(): String? {
-        return msgType
-    }
-
-    fun msgSender(): String {
-        return msgSender
-    }
-
-    fun msgReceiver(): String {
-        return msgReceiver
-    }
-
-    fun msgContent(): String {
-        return msgContent
-    }
-
-    fun msgNum(): String {
-        return "" + msgNum
-    }
-*/
+    var conn : IConnInteraction? = null
 
     fun isEvent(): Boolean{
         return msgType == ApplMessageType.event.toString()

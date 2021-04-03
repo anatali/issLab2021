@@ -1,5 +1,6 @@
 package it.unibo.actor0
 
+import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
@@ -20,12 +21,9 @@ object sysUtil{
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	val singleThreadContext    = newSingleThreadContext("singleThread")
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "pool64")
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "cpuspool")
+	val userThreadContext      = newFixedThreadPoolContext(4, "userpool")
 
  	fun traceprintln( msg : String ){
 		if( trace ) println( msg  )
@@ -70,6 +68,9 @@ object sysUtil{
 		println(aboutThreads(name))
 		return getCurrentTime();
 	}
+//--------------------------------------------------------------------
+
+	val connActive : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()
 
 
 }//sysUtil

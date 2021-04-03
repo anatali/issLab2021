@@ -19,7 +19,7 @@ plugins {
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
-    //flatDir{ dirs("../../unibolibs")   }   //Our libraries
+    flatDir{ dirs("../../unibolibs")   }   //Our libraries
 }
 
 java {
@@ -52,6 +52,9 @@ dependencies {
 //JSON
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115" )
+//UNIBO
+    implementation( "uniboInterfaces:uniboInterfaces"  )
+    implementation( "uniboProtocolSupport:unibonoawtsupports"  )
 
 }
 

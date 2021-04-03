@@ -33,7 +33,7 @@ import kotlinx.coroutines.*
 
         val endTime = sysUtil.getDuration(startTime)
         println("==============================================")
-        println("MainActor0Demo0 | END TIME=$endTime ${sysUtil.aboutThreads("MainExecutors") }"  );
+        println("MainExecutors | END TIME=$endTime ${sysUtil.aboutThreads("MainExecutors") }"  );
         println("==============================================")
 
     }

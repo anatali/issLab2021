@@ -1,17 +1,23 @@
 package it.unibo.actor0
 
+import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.interaction.IJavaActor
+import it.unibo.supports.FactoryProtocol
 
 //FILE MsgUtil.kt
 
 enum class Protocol {
-    SERIAL, TCP, UDP, BTH
+    TCP, UDP //SERIAL,  BTH
 }
 
  
 object MsgUtil {
 var count = 1;
-@JvmStatic    fun buildDispatch( actor: String, msgId : String ,
+
+
+    val startDefaultMsg = buildDispatch("msgutil","start", "start", "any" )
+
+    @JvmStatic    fun buildDispatch( actor: String, msgId : String ,
                        content : String, dest: String ) : ApplMessage {
         return ApplMessage(msgId, ApplMessageType.dispatch.toString(),
             actor, dest, "$content", "${count++}")
@@ -73,19 +79,52 @@ var count = 1;
     }
 
 
-	
-	
+//==========================================================
 
+    @JvmStatic    fun getFactoryProtocol(protocol: Protocol) : FactoryProtocol{
+        var factoryProtocol : FactoryProtocol
+        when( protocol ){
+            //Protocol.SERIAL -> println("MsgUtil WARNING: TODO")
+            Protocol.TCP , Protocol.UDP -> factoryProtocol =
+                FactoryProtocol(null, "$protocol", "actor")
+            //else -> println("MsgUtil WARNING: protocol unknown")
+        }
+        return factoryProtocol
+    }
 
+    @JvmStatic    fun getConnection(protocol: Protocol, hostName: String, portNum: Int, clientName:String) : IConnInteraction? {
+        when( protocol ){
+            Protocol.TCP , Protocol.UDP -> {
+                val factoryProtocol = FactoryProtocol(null, "$protocol", clientName)
+                try {
+                    val conn = factoryProtocol.createClientProtocolSupport(hostName, portNum)
+                    return conn
+                }catch( e: Exception ){
+                    //println("MsgUtil: NO conn to $hostName ")
+                    return null
+                }
+            }
+            else -> {
+                return null
+            }
+        }
+    }
 
-	
-
-@JvmStatic    fun strToProtocol( ps: String): Protocol {
+    /* //TODO
+    @kotlinx.coroutines.ObsoleteCoroutinesApi
+    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    @JvmStatic    fun getConnectionSerial( portName: String, rate: Int) : IConnInteraction {
+        val  factoryProtocol =  FactoryProtocol(null,"${Protocol.SERIAL}",portName)
+        val conn = factoryProtocol.createSerialProtocolSupport(portName)
+        return conn
+    }
+    */
+    @JvmStatic    fun strToProtocol( ps: String): Protocol {
         //var p: Protocol
         when( ps.toUpperCase() ){
             Protocol.TCP.toString() -> return Protocol.TCP
             Protocol.UDP.toString() -> return Protocol.UDP
-            Protocol.SERIAL.toString() -> return Protocol.SERIAL
+            //Protocol.SERIAL.toString() -> return Protocol.SERIAL
             else -> return Protocol.TCP
         }
      }

@@ -1,5 +1,6 @@
 package it.unibo.executors
 
+import it.unibo.actor0.ApplMessage
 import it.unibo.executors.ApplMsgs
 
 object ApplMsgs {
@@ -39,6 +40,10 @@ object ApplMsgs {
     const val stepFailId = "stepFail"
     val stepFailMsg = "{\"ID\":\"TIME\" }".replace("ID", stepFailId)
 
+
+
+    val demoMsgAppl =
+        ApplMessage("cmd","dispatch","demo","obs","todo","1")
 
 
 }

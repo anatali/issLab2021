@@ -23,14 +23,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ExecutorActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ExecutorActor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextServer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainContextServer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveCaller.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibolibs/uniboInterfaces.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibolibs/unibonoawtsupports.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextNaive.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextNaive.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/sysUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/sysUtil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ApplMsgs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/ApplMsgs.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Stepper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Stepper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Walker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Walker.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,25 +100,29 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Didattica2018Work/iss2021Lab/it.unibo.kotlinSupports" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="it.unibo.executors" />
-      <recent name="it.unibo.supports" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo\executors" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\java" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo\usage" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\userDocs" />
-      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="it.unibo.executors" />
+      <recent name="it.unibo.actor0" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="it.unibo.executors" />
+      <recent name="it.unibo.supports" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainExecutorsKt">
+  <component name="RunManager" selected="Application.MainContextServerKt">
     <configuration name="IssWsHttpKotlinSupportUsageKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <module name="it.unibo.kotlinSupports.app.main" />
       <option name="VM_PARAMETERS" />
@@ -135,6 +144,19 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="it.unibo.actor0Usage.MainActor0Demo0Kt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainContextServerKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="it.unibo.kotlinSupports.app.main" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="it.unibo.executors.MainContextServerKt" />
       <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -189,6 +211,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MainContextServerKt" />
         <item itemvalue="Application.MainExecutorsKt" />
         <item itemvalue="Application.build.gradle.kts" />
         <item itemvalue="Application.MainActor0Demo0Kt" />
@@ -221,44 +244,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="431" y="61" key="#com.intellij.ide.util.MemberChooser" timestamp="1617443130494">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state x="431" y="61" key="#com.intellij.ide.util.MemberChooser/0.0.1280.690/2560.0.1024.738@0.0.1280.690" timestamp="1617443130494" />
-    <state x="431" y="61" key="#com.intellij.ide.util.MemberChooser/0.0.1280.690@0.0.1280.690" timestamp="1617393986311" />
-    <state x="388" y="179" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1617391728931">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state x="388" y="179" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1280.690@0.0.1280.690" timestamp="1617391728931" />
-    <state width="1215" height="187" key="GridCell.Tab.0.bottom" timestamp="1617444701447">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1215" height="187" key="GridCell.Tab.0.bottom/0.0.1280.690/2560.0.1024.738@0.0.1280.690" timestamp="1617444701447" />
-    <state width="940" height="244" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1617394854365" />
-    <state width="1215" height="187" key="GridCell.Tab.0.center" timestamp="1617444701447">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1215" height="187" key="GridCell.Tab.0.center/0.0.1280.690/2560.0.1024.738@0.0.1280.690" timestamp="1617444701447" />
-    <state width="940" height="244" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1617394854365" />
-    <state width="1215" height="187" key="GridCell.Tab.0.left" timestamp="1617444701447">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1215" height="187" key="GridCell.Tab.0.left/0.0.1280.690/2560.0.1024.738@0.0.1280.690" timestamp="1617444701447" />
-    <state width="940" height="244" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1617394854365" />
-    <state width="1215" height="187" key="GridCell.Tab.0.right" timestamp="1617444701447">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state width="1215" height="187" key="GridCell.Tab.0.right/0.0.1280.690/2560.0.1024.738@0.0.1280.690" timestamp="1617444701447" />
-    <state width="940" height="244" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1617394854365" />
-    <state x="339" y="63" width="581" height="534" key="find.popup" timestamp="1617444697651">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state x="339" y="63" width="581" height="534" key="find.popup/0.0.1280.690/2560.0.1024.738@0.0.1280.690" timestamp="1617444697651" />
-    <state x="299" y="155" width="672" height="677" key="run.anything.popup" timestamp="1617391672818">
-      <screen x="0" y="0" width="1280" height="690" />
-    </state>
-    <state x="299" y="155" width="672" height="677" key="run.anything.popup/0.0.1280.690@0.0.1280.690" timestamp="1617391672818" />
   </component>
 </project>
