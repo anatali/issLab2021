@@ -22,7 +22,7 @@ class Stepper(name:String, scope: CoroutineScope) : ActorBasicKotlin(name, scope
 
     fun doStep(){
         //MsgUtil.sendMsg("main", ApplMsgs.stepId, ApplMsgs.stepMsg.replace("TIME", "350"), stepper)
-        stepper.sendToYourself( startStepMsg )
+        stepper.send( startStepMsg )
     }
 
     override suspend fun handleInput(msg: ApplMessage) {

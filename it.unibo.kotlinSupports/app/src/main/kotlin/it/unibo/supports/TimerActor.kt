@@ -30,7 +30,7 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
                 //owner.send(ActorMsgs.endTimerMsg)
                 val answerMsg =
                         MsgUtil.buildDispatch(name, ActorMsgs.endTimerId, ActorMsgs.endTimerMsg, owner.name )
-                owner.sendToYourself(answerMsg)
+                owner.send(answerMsg)
                 terminate()
                 //MsgUtil.sendMsg(name, ActorMsgs.endTimerId, ActorMsgs.endTimerMsg, owner  )
             } //

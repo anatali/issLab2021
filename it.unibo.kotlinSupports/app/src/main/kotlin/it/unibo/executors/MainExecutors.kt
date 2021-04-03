@@ -7,14 +7,14 @@ import kotlinx.coroutines.*
         val stepperName = "stepper"
         val startmsg = MsgUtil.buildDispatch("main", "start", "ok", stepperName )
         val stepper = Stepper(stepperName, scope)
-        stepper.sendToYourself(startmsg)
+        stepper.send(startmsg)
     }
     fun demoDoPath(scope: CoroutineScope){
         val pathTodo   = "ww"
         val walkerName = "walker"
         val startmsg   = MsgUtil.buildDispatch("main", "start", pathTodo, walkerName )
         val walker     = Walker(walkerName, scope )
-        walker.sendToYourself(startmsg)
+        walker.send(startmsg)
     }
 
 

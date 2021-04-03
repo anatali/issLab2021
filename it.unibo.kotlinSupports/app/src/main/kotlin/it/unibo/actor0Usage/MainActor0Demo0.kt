@@ -43,7 +43,7 @@ class MainActor0Demo0 {
             val newactor = ActorContextNaive.createActor(//ActorContextLocal.createActor(
                     "a$i","it.unibo.actor0Usage.ActorKotlinNaive",scope)
             //val startactor = MsgUtil.buildDispatch("main", "startTheActor", "ok", newactor.name )
-            newactor.sendToYourself(hellomsg)
+            newactor.send(hellomsg)
           }
 
           delay(1000)

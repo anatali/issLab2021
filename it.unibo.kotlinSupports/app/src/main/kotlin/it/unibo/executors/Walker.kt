@@ -58,7 +58,7 @@ class Walker( name:String, scope: CoroutineScope) : AbstractRobotActor(name, sco
         val executor = ExecutorActor(executorName, this, scope )
         val pathtodo = ApplMsgs.executorstartMsg.replace("PATHTODO",path)
         val startmsg = MsgUtil.buildDispatch(name, ApplMsgs.executorStartId, pathtodo, executorName )
-        executor.sendToYourself(startmsg)
+        executor.send(startmsg)
     }
 
     fun doPathBack( ){
@@ -68,7 +68,7 @@ class Walker( name:String, scope: CoroutineScope) : AbstractRobotActor(name, sco
         val executor = ExecutorActor(executorName, this, scope )
         val pathtodo = ApplMsgs.executorstartMsg.replace("PATHTODO",path)
         val startmsg = MsgUtil.buildDispatch(name, ApplMsgs.executorStartId, pathtodo, executorName )
-        executor.sendToYourself(startmsg)
+        executor.send(startmsg)
     }
 
     protected fun reversePath(s: String): String {

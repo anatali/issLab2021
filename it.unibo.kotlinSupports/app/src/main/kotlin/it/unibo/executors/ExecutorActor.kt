@@ -69,7 +69,7 @@ open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: 
                 support.removeActor(this) //avoid to receive info form WEnv
                 //val stepper = StepRobotActor("stepper", this, scope )
                 val startmsg = MsgUtil.buildDispatch(name, ApplMsgs.stepId, stepMsg, "stepper" )
-                stepper.sendToYourself(startmsg)
+                stepper.send(startmsg)
                 curState = State.moving
             } else { //firstMove == 'l'
                 curState = State.turning
@@ -92,7 +92,7 @@ open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: 
         mapUtil.showMap()
         val koMsg     = executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
         val answerMsg =  MsgUtil.buildDispatch(name, ApplMsgs.executorFailId, koMsg, ownerActor.name)
-        ownerActor.sendToYourself(answerMsg)
+        ownerActor.send(answerMsg)
         support.removeActor(this)
         terminate()
         //resetStateVars();
@@ -136,7 +136,7 @@ open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: 
                 //ownerActor.send(ApplMsgs.executorendokMsg)
                 val okMsg     = ApplMsgs.executorendokMsg
                 val answerMsg =  MsgUtil.buildDispatch(name, ApplMsgs.executorDoneId, okMsg, ownerActor.name)
-                ownerActor.sendToYourself(answerMsg)
+                ownerActor.send(answerMsg)
                 mapUtil.showMap()
                 support.removeActor(this)
                 terminate()

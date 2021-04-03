@@ -101,6 +101,14 @@ abstract class ActorBasicKotlin(val name: String,
             println("$name |  send $applMessageStr NOT ApplMessage")
         }
     }
+    fun sendToYourself( msg: ApplMessage ) {    //for oop
+        //println("$name  sendToMyself  ${msg}" );
+        //forward( msg.msgId, msg.msgContent, this )
+        scope.launch {   actor.send(msg)  }
+    }
+    fun send( msg: ApplMessage ) {
+        scope.launch {   actor.send(msg)  }
+    }
     override fun registerActor(obs: IJavaActor) {
         actorobservers.add(obs)
     }
@@ -121,11 +129,7 @@ abstract class ActorBasicKotlin(val name: String,
         scope.launch {   dest.actor.send(info)  }
     }
 
-    fun sendToYourself( msg: ApplMessage ) {    //for standard Java => create new Thread
-        //println("$name  sendToMyself  ${msg}" );
-        //forward( msg.msgId, msg.msgContent, this )
-        scope.launch {   actor.send(msg)  }
-    }
+
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend open fun autoMsg(  msg : ApplMessage) {

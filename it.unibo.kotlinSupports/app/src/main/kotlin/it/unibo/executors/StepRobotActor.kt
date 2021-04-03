@@ -60,7 +60,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                         //timer.send(ActorMsgs.startTimerMsg.replace("TIME", arg))
                         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                             ActorMsgs.startTimerMsg.replace("TIME", arg),"t0")
-                        timer.sendToYourself(m)
+                        timer.send(m)
                         /*
                         scope.launch {
                             MsgUtil.sendMsg(name, ActorMsgs.startTimerId,
@@ -108,7 +108,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                         MsgUtil.sendMsg(name, "stepAnswer", answer, ownerActor)
                     }*/
                     val m = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
-                    ownerActor.sendToYourself(m)
+                    ownerActor.send(m)
 
                 } else if (move == "collision") { //the last step was ok but with a collision
                     println(name.toString() + " | collision ? answer=" + answer)
