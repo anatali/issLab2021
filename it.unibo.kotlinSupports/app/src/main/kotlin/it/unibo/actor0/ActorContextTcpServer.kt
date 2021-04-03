@@ -7,7 +7,7 @@ import kotlinx.coroutines.*
 Works at node level
 */
 
-class ActorContextServer( name:String, scope: CoroutineScope, val protocol: Protocol )
+class ActorContextTcpServer(name:String, scope: CoroutineScope, val protocol: Protocol )
                                         : ActorBasicKotlin( name, scope) {
     protected var hostName: String? = null
     val workTime = 1000L * 6000 //100 min	

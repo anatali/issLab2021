@@ -16,6 +16,7 @@ import org.json.JSONObject
 /*
 ==============================================================================
 Accept a  ApplMsgs.stepMsg to move ahead the robot for a given time.
+
 Returns a ApplMsgs.stepDoneMsg if the move is done with success.
 Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
 by an obstacle after time DT. In this case it moves back the robot for time DT
@@ -101,22 +102,13 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                 if (move == "moveBackward" && arg == "true" ||
                     move == "moveForward" && arg == "halted"
                 ) {
-                    //println(name.toString() + " | end  arg=" + arg)
-                    //ownerActor.send(answer)
-                        /*
-                    scope.launch {
-                        MsgUtil.sendMsg(name, "stepAnswer", answer, ownerActor)
-                    }*/
                     val m = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
                     ownerActor.send(m)
 
                 } else if (move == "collision") { //the last step was ok but with a collision
                     println(name.toString() + " | collision ? answer=" + answer)
                     if (answer == ApplMsgs.stepDoneMsg) ownerActor.send(answer) else ownerActor.send(
-                        ApplMsgs.stepFailMsg.replace(
-                            "TIME",
-                            "10"
-                        )
+                        ApplMsgs.stepFailMsg.replace("TIME", "10")
                     )
                 } else {
                     println(name.toString() + " | FATAL error - curState = " + curState)

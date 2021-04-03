@@ -10,19 +10,18 @@ import org.json.JSONObject
 class Stepper(name:String, scope: CoroutineScope) : ActorBasicKotlin(name, scope) {
     val stepMsg = ApplMsgs.stepMsg.replace("TIME", "350")
 
-    var stepper      : ActorBasicKotlin
-    var startStepMsg : ApplMessage
+    var steprobotactor    : ActorBasicKotlin
+    var startStepRobotMsg : ApplMessage
 
     init{
-        stepper = StepRobotActor("stepper", this, scope)
-        startStepMsg =
-                MsgUtil.buildDispatch("main", ApplMsgs.stepId, stepMsg, stepper.name )
+        steprobotactor      = StepRobotActor("stepactor", this, scope)
+        startStepRobotMsg = MsgUtil.buildDispatch("main", ApplMsgs.stepId, stepMsg, steprobotactor.name )
         println( "$name Stepper | init ${infoThreads()}")
     }
 
     fun doStep(){
         //MsgUtil.sendMsg("main", ApplMsgs.stepId, ApplMsgs.stepMsg.replace("TIME", "350"), stepper)
-        stepper.send( startStepMsg )
+        steprobotactor.send( startStepRobotMsg )
     }
 
     override suspend fun handleInput(msg: ApplMessage) {
@@ -31,6 +30,10 @@ class Stepper(name:String, scope: CoroutineScope) : ActorBasicKotlin(name, scope
         else if( msg.msgId == "stepAnswer" ){
             val answer = JSONObject(msg.msgContent)
             if( answer.has("stepDone")) doStep()
+            else{
+                println("$name  | handleInput $answer  ");
+                terminate()
+            }
         }
     }
 }//Stepper

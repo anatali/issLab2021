@@ -27,8 +27,8 @@ import kotlinx.coroutines.*
         println("==============================================")
 
         runBlocking {
-            //demoStepper( this )
-            demoDoPath( this )
+            demoStepper( this )
+            //demoDoPath( this )
         }
 
         val endTime = sysUtil.getDuration(startTime)

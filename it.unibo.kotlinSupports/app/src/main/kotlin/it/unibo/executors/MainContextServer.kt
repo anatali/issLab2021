@@ -15,12 +15,17 @@ import kotlinx.coroutines.*
         println("==============================================")
 
         runBlocking {
-            ActorContextServer("ctxServer", this, Protocol.TCP )
+            ActorContextTcpServer("ctxServer", this, Protocol.TCP )
             //val obs    = NaiveObserver("obs", this )
-            Walker( "walker", this)
-            val caller = NaiveCaller("caller", this)
+            //Walker( "walker", this)
+            //val caller = NaiveCaller("caller", this)
             //delay(1000)
-            caller.send(MsgUtil.startDefaultMsg)
+            //caller.send(MsgUtil.startDefaultMsg)
+
+            //val steprobotactor      = StepRobotActor("stepactor", null, this)
+            //val startStepRobotMsg = MsgUtil.buildDispatch("main", ApplMsgs.stepId, ApplMsgs.stepMsg, steprobotactor.name )
+
+
         }
 
         val endTime = sysUtil.getDuration(startTime)

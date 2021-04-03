@@ -71,7 +71,7 @@ fun main() = runBlocking {
     support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
 
     println("==============================================")
-    println("TestSupportJar | main BEFORE END ${sysUtil.aboutThreads("main")}" );
+    println("WebSocketUtilUsage |  BEFORE END ${sysUtil.aboutThreads("main")}" );
     println("==============================================")
 
     //give time to see messages ...
@@ -79,7 +79,7 @@ fun main() = runBlocking {
     support.close()
 
     println("==============================================")
-    println("WebSocketUtilUsage | main ${sysUtil.aboutThreads("main")}");
+    println("WebSocketUtilUsage | END ${sysUtil.aboutThreads("main")}");
     println("==============================================")
 
 }

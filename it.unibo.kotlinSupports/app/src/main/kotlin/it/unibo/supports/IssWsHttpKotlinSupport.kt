@@ -131,6 +131,17 @@ class IssWsHttpKotlinSupport
         println("IssWsHttpKotlinSupport | disconnecting from $myWs")
         var gracefulShutdown = myWs.close(1000, "appl_terminated")
         println("IssWsHttpKotlinSupport | gracefulShutdown = $gracefulShutdown")
+
+        okHttpClient.dispatcher.executorService.shutdown()
+        okHttpClient.connectionPool.evictAll()
+
+        Thread.sleep(1000)
+        Thread.getAllStackTraces().keys.stream()
+            .filter(Thread::isAlive)
+            .forEach(System.out::println)
+
+
+
     }
 //-----------------------------------------------------------------
 

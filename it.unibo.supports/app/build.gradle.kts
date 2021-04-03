@@ -48,6 +48,9 @@ dependencies {
 
 //OkHttp library for websockets with Kotlin
     implementation( "com.squareup.okhttp3:okhttp:4.9.0" )
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/mockwebserver
+    testImplementation ("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.2")
+
 //JSON
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115" )
