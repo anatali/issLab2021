@@ -1,17 +1,16 @@
 package fsm
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-class demoactor ( scope: CoroutineScope ) : Fsm( "demoactor", scope ){
+class demoactor ( scope: CoroutineScope ) : FsmBasic( "demoactor", scope ){
  	
 	override fun getInitialState() : String{
 		return "init"
 	}
 	
-	override fun getBody() : (Fsm.() -> Unit){	
+	override fun getBody() : (FsmBasic.() -> Unit){
 		return { //this:Fsm
 			state("init") {	
 				action { //it:State

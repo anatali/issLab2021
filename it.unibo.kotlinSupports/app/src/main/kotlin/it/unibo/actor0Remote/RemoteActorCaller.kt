@@ -1,10 +1,17 @@
-package it.unibo.executors
+/*
+============================================================
+RemoteActorCaller
+
+============================================================
+ */
+
+package it.unibo.actor0Usage
 
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.actor0.*
+import it.unibo.actor0robot.ApplMsgs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -19,9 +26,6 @@ class ConnReader(name: String, val conn: IConnInteraction ) :
             println("$name | RECEIVES: $v")
             //msg(stepAnswer,dispatch,stepRobot,ctxServer,{"stepDone":"ok" },9)
             val msg = ApplMessage.create(v)
-            //println("$name | RECEIVES: ${msg.msgContent}")
-            //val msgJson = JSONObject( msg.msgContent )
-            //println("$name | RECEIVES: ${msgJson.has("stepDone")}")
             this.updateObservers( msg )
         }
         terminate()
@@ -39,7 +43,7 @@ class ConnReader(name: String, val conn: IConnInteraction ) :
     }
 }
 
-class RemoteRobotCaller(name: String, scope: CoroutineScope) :
+class RemoteActorCaller(name: String, scope: CoroutineScope) :
         ActorBasicKotlin(name,scope, DispatchType.single) {
 
     val factoryProtocol = MsgUtil.getFactoryProtocol(Protocol.TCP)
@@ -59,7 +63,7 @@ class RemoteRobotCaller(name: String, scope: CoroutineScope) :
     }
 
     fun startConn(   ) {
-        conn = factoryProtocol.createClientProtocolSupport("localhost", ActorContextNaive.portNum)
+        conn = factoryProtocol.createClientProtocolSupport("localhost", ActorBasicContextKb.portNum)
         println("$name  | doTCPcall $conn ${infoThreads()}")
         val input = ConnReader("input", conn )
         input.registerActor(this)

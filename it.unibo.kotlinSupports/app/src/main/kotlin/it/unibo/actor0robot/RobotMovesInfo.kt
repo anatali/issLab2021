@@ -1,4 +1,4 @@
-package it.unibo.executors
+package it.unibo.actor0robot
 
 import mapRoomKotlin.mapUtil.showMap
 import mapRoomKotlin.mapUtil.getMapAndClean

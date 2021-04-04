@@ -1,26 +1,28 @@
 package it.unibo.fsm
 import kotlinx.coroutines.CoroutineScope
-import fsm.Fsm
+import fsm.FsmBasic
 import it.unibo.actor0.MsgUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
   
-val ndnt   		= "&&& "
-val backTime    = 80L
+
  
-enum class basicrobotstate {
-	stop, forward, backward, rleft, rright, obstacle
-}
+
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-class basicrobot ( name: String, scope: CoroutineScope,
-				   usemqtt:Boolean=false,
-				   val owner: Fsm?=null,
-				   discardMessages:Boolean=true
-				 ) : Fsm( name, scope, discardMessages,usemqtt){
- 
+class basicrobot (name: String, scope: CoroutineScope,
+				  usemqtt:Boolean=false,
+				  val owner: FsmBasic?=null,
+				  discardMessages:Boolean=true
+				 ) : FsmBasic( name, scope, discardMessages,usemqtt){
+	enum class basicrobotstate {
+		stop, forward, backward, rleft, rright, obstacle
+	}
+	val ndnt   		= "&&& "
+	val backTime    = 80L
+
 	companion object{ 
 		var rstate = basicrobotstate.stop	//here for testing purpose		
 	}
@@ -29,7 +31,7 @@ class basicrobot ( name: String, scope: CoroutineScope,
 		return "init"
 	}
 	
-	override fun getBody() : (Fsm.() -> Unit){	
+	override fun getBody() : (FsmBasic.() -> Unit){
 		return { //this:Fsm
 			state("init") {	
 				action { //it:State
@@ -65,7 +67,7 @@ class basicrobot ( name: String, scope: CoroutineScope,
 				action{
 					if( currentMsg.msgContent.startsWith("collision") ){ //defensive
 						doMove("s"); delay(backTime); doMove("h")	    //robot reflex for safety ...
-						if( owner is Fsm ) forward( currentMsg, owner )	//soon to gain time ...
+						if( owner is FsmBasic ) forward( currentMsg, owner )	//soon to gain time ...
 						//println("$ndnt basicrobot | collision $currentMsg - moving back a little ...  ")
   						rstate = basicrobotstate.obstacle
 					}

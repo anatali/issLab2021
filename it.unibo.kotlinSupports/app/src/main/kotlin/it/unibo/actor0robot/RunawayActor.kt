@@ -1,10 +1,9 @@
-package it.unibo.executors
+package it.unibo.actor0robot
 
 import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.executors.ApplMsgs.endMoveId
-import it.unibo.executors.ApplMsgs.runawyEndMsg
-import it.unibo.executors.ApplMsgs.runawyStartId
-import it.unibo.interaction.IJavaActor
+import it.unibo.actor0robot.ApplMsgs.endMoveId
+import it.unibo.actor0robot.ApplMsgs.runawyEndMsg
+import it.unibo.actor0robot.ApplMsgs.runawyStartId
 import kotlinx.coroutines.CoroutineScope
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject

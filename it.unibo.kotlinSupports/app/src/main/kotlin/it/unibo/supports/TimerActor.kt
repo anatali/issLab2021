@@ -3,8 +3,6 @@ import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
-import it.unibo.executors.ApplMsgs
-import it.unibo.interaction.IJavaActor
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 import kotlinx.coroutines.delay

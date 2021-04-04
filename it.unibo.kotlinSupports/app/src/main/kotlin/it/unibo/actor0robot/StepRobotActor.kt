@@ -1,16 +1,12 @@
-package it.unibo.executors
+package it.unibo.actor0robot
 
 import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0.ApplMessage
-import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
-import it.unibo.interaction.IJavaActor
 import it.unibo.supports.ActorMsgs
 import it.unibo.supports.IssWsHttpKotlinSupport
 import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 /*

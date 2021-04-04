@@ -1,7 +1,6 @@
-package it.unibo.executors
+package it.unibo.actor0robot
 
 import it.unibo.actor0.ApplMessage
-import it.unibo.executors.ApplMsgs
 
 object ApplMsgs {
     const val forwardMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"

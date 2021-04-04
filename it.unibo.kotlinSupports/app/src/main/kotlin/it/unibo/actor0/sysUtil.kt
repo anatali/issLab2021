@@ -5,12 +5,6 @@ import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
 
-/*
-ECLIPSE KOTLIN
-https://dl.bintray.com/jetbrains/kotlin/eclipse-plugin/last/
-*/
-
-//A module in kotlin is a set of Kotlin files compiled together
 object sysUtil{
 	val userDirectory          = System.getProperty("user.dir")
 	val cpus                   = Runtime.getRuntime().availableProcessors()

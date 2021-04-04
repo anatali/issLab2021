@@ -1,9 +1,17 @@
+/*
+============================================================
+ActorBasicContext
+creates actors with constructor with following arguments:
+    String::class.java, CoroutineScope::class.java, DispatchType::class.java
+============================================================
+ */
+
 package it.unibo.actor0
 
 import kotlinx.coroutines.CoroutineScope
 
 
-object ActorContextNaive {
+object ActorBasicContextKb {
 
     val ctxActorMap = mutableMapOf<String, ActorBasicKotlin>()
     var portNum = 8010
@@ -34,7 +42,7 @@ object ActorContextNaive {
             )  //Constructor<?>
             newactor = ctor.newInstance(actorName, scope, DispatchType.single) as ActorBasicKotlin
         } catch (e: Exception) {
-            println("ActorContextLocal  | createActor ERROR ${e}")
+            println("ActorBasicContext  | createActor ERROR ${e}")
             val ctor = clazz.getConstructor(String::class.java)  //Constructor<?>
             newactor = ctor.newInstance(actorName) as ActorBasicKotlin
         }

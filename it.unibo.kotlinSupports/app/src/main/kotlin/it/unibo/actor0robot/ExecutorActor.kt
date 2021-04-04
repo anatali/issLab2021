@@ -7,21 +7,18 @@ executorendokMsg  in case of success
 executorendkoMsg  with the path done in case of failure (obstacle)
 ===================================================================
  */
-package it.unibo.executors
+package it.unibo.actor0robot
 
 
 import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
-import it.unibo.executors.ApplMsgs.endMoveId
-import it.unibo.executors.ApplMsgs.executorStartId
-import it.unibo.executors.ApplMsgs.executorendkoMsg
-import it.unibo.executors.ApplMsgs.stepDoneId
-import it.unibo.executors.ApplMsgs.stepFailId
-import it.unibo.interaction.IJavaActor
+import it.unibo.actor0robot.ApplMsgs.endMoveId
+import it.unibo.actor0robot.ApplMsgs.executorStartId
+import it.unibo.actor0robot.ApplMsgs.executorendkoMsg
+import it.unibo.actor0robot.ApplMsgs.stepDoneId
+import it.unibo.actor0robot.ApplMsgs.stepFailId
 import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject
 import java.lang.Exception

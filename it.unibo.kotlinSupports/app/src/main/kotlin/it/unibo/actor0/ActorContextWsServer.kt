@@ -1,6 +1,5 @@
 package it.unibo.actor0
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
-import it.unibo.supports.FactoryProtocol
 import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.*
 
@@ -40,7 +39,7 @@ class ActorContextWsServer(name:String, scope: CoroutineScope )
         //GlobalScope.launch(Dispatchers.IO) {
         scope.launch(sysUtil.userThreadContext) {        //BLOCKS THE SYSTEM if we use DispatchType.single
             try {
-                val port = ActorContextNaive.portNum
+                val port = ActorBasicContextKb.portNum
                 while (true) {/*
                     println("%%% ActorContextServer $name | WAIT $protocol-CONNECTION on $port ${infoThreads()}")
                     val conn = factoryProtocol!!.createServerProtocolSupport(port) //BLOCKS
@@ -75,10 +74,10 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                         }
                         val dest = inputmsg.msgReceiver
 //println("%%% ActorContextServer  $name | dest:$dest  ")
-                        val existactor = ActorContextNaive.hasActor(dest)
+                        val existactor = ActorBasicContextKb.hasActor(dest)
                         if (existactor) {
                             try {
-                                val actor = ActorContextNaive.getActor(dest)!!
+                                val actor = ActorBasicContextKb.getActor(dest)!!
 //println("%%% ActorContextServer  $name | actor:$actor  ")
                                 if (inputmsg.isRequest()) { //Oct2019
                                     //set conn in the msg to the actor
@@ -88,7 +87,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                             } catch (e1: Exception) {
                                 println("%%% ActorContextServer $name |  ${e1.message}")
                             }
-                        } else println("%%% ActorContextServer $name | WARNING!! no local actor ${dest} in ${ActorContextNaive.name}")
+                        } else println("%%% ActorContextServer $name | WARNING!! no local actor ${dest} in ${ActorBasicContextKb.name}")
                     }// msg != null
                     else{
                         conn.closeConnection()

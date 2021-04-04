@@ -1,6 +1,6 @@
 package it.unibo.actor0
 
-import fsm.Fsm
+import fsm.FsmBasic
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.interaction.IJavaActor
 import it.unibo.supports.FactoryProtocol
@@ -137,7 +137,7 @@ var count = 1;
 */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-suspend fun forward(  sender: String, msgId : String, payload: String, dest : Fsm){
+suspend fun forward(  sender: String, msgId : String, payload: String, dest : FsmBasic){
     //println("forward  msgId: ${msgId} payload=$payload")
     val msg = buildDispatch(actor=sender, msgId=msgId , content=payload, dest=dest.name)
     if( ! dest.fsmactor.isClosedForSend) dest.fsmactor.send( msg  )

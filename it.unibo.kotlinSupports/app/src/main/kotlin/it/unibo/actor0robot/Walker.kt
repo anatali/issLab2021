@@ -1,4 +1,4 @@
-package it.unibo.executors
+package it.unibo.actor0robot
 
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
@@ -6,7 +6,6 @@ import it.unibo.actor0.sysUtil
 import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject
 

@@ -2,7 +2,6 @@ package it.unibo.actor0Usage
 
 import it.unibo.actor0.*
 import kotlinx.coroutines.*
-import java.util.*
 
 class MainActor0Demo0 {
     companion object{
@@ -19,44 +18,17 @@ class MainActor0Demo0 {
         val endmsg   = MsgUtil.buildDispatch("main", "end", "ok", "any" )
         //val aa = Vector<ActorKotlinNaive>()
         for (i in 0..numOfActors-1) {
-            val a = ActorKotlinNaive("a$i", scope,DispatchType.single)
+            val a = ActorBasicKotlinNaive("a$i", scope,DispatchType.single)
             a.actor.send(startmsg)
             //aa.add(a)
         }
         //for (i in 0..numOfActors-1) { aa.get(i).actor.send(endmsg) }
         for (i in 0..numOfActors-1) {
-            val a = ActorContextNaive.getActor("a$i") //ActorContextLocal.getActor("a$i")
+            val a = ActorBasicContextKb.getActor("a$i") //ActorContextLocal.getActor("a$i")
             a!!.terminate()
         }
     }
 
-    suspend fun demoActivateActorsWithContext(scope: CoroutineScope){
-        println("--------------------------------------------------------")
-        println("MainActor0Demo0 | demoActivateActorsWithContext"  );
-        println("--------------------------------------------------------")
-        val hellomsg = MsgUtil.buildDispatch("main", "hellomsg", "ok", "any" )
-        val endmsg   = MsgUtil.buildDispatch("main", "end", "ok", "any" )
-
-        //val a = Vector<ActorKotlinNaive>()
-        //val localctx = ActorContextLocal.getLocalContext(scope)
-        for (i in 0..numOfActors-1) {
-            val newactor = ActorContextNaive.createActor(//ActorContextLocal.createActor(
-                    "a$i","it.unibo.actor0Usage.ActorKotlinNaive",scope)
-            //val startactor = MsgUtil.buildDispatch("main", "startTheActor", "ok", newactor.name )
-            newactor.send(hellomsg)
-          }
-
-          delay(1000)
-
-        for (i in 0..numOfActors-1) {
-             val a = ActorContextNaive.getActor("a$i") //ActorContextLocal.getActor("a$i")
-             if( a != null  ) //a.sendToYourself(endmsg )
-                 //MsgUtil.sendMsg("end","ok",a)
-                 MsgUtil.sendMsg("stopTheActor","ok",a)
-        }
-
-        //localctx.terminate()
-     }
 
     suspend fun doNothing(){
         println("--------------------------------------------------------")
@@ -70,17 +42,13 @@ class MainActor0Demo0 {
         println("--------------------------------------------------------")
     val numOfConsumers = 10
     val consumers      = arrayOfNulls<ActorKotlinConsumer>(numOfConsumers)
-
-
-    //CREATE AND START THE CONSUMERS
+   //CREATE AND START THE CONSUMERS
         for( i in 0..consumers.size-1){
             consumers[i] = ActorKotlinConsumer("cons$i", scope)    //, appl_dispatchType
             MsgUtil.sendMsg("start", "start", consumers[i]!!)
         }
-
     //CREATE THE PRODUCER connected to the first consumer
         val prod = ActorKotlinProducer("prod", consumers[0]!!, scope) //, appl_dispatchType
-
     //REGISTER SOME CONSUMER AS PRODUCER OBSERVER
         for( i in 1..consumers.size-1){ //consumers[i] added as an observer
             prod.registerActor( consumers[i]!! )
@@ -94,7 +62,7 @@ class MainActor0Demo0 {
      //TERMINATE THE PRODUCER AND THE CONSUMER OBSERVERS
         MsgUtil.sendMsg("end", "ok", prod)
         for( i in 1..consumers.size-1){ //consumers[0] ended by producer
-            val a = ActorContextNaive.getActor("cons$i") //ActorContextLocal.getActor("cons$i")
+            val a = ActorBasicContextKb.getActor("cons$i") //ActorContextLocal.getActor("cons$i")
             if( a != null  ) //a.sendToYourself(endmsg )
                 MsgUtil.sendMsg("stopTheActor","ok",a)
             //MsgUtil.sendMsg("end", "ok", consumers[i]!!)
@@ -114,10 +82,7 @@ class MainActor0Demo0 {
             val appl = MainActor0Demo0()
             //appl.doNothing()
             appl.demoActivateActors( this )
-            //appl.demoActivateActorsWithContext( this )
             //appl.prodCons( this )
-
-
         }
 
         val endTime = sysUtil.getDuration(startTime)

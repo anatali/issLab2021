@@ -2,9 +2,7 @@ package it.unibo.actor0
 
 import it.unibo.interaction.IJavaActor
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
-import org.json.JSONObject
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,14 +13,14 @@ abstract class ActorBasicKotlin(val name: String,
                                 val scope: CoroutineScope  ,
                         val dispatchType: DispatchType = DispatchType.single,
                         val channelSize : Int = 50 ) : IJavaActor{
-    val tt      = "               %%% "
+    val tt                         = "               %%% "
     private val actorobservers     =  mutableListOf<IJavaActor>()
     protected var actorLogfileName  : String = ""
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir
     var dispatcher : CoroutineDispatcher
 
-    //var ctx  : ActorContextLocal? = null //to be injected
+    //var ctx  : ActorBasicContext? = null //to be injected
 
     init{                                    //Coap Jan2020
         //sysUtil.createMsglogFile("${name}_MsLog.txt")					//APR2020 : an Actor could have no context
@@ -33,7 +31,7 @@ abstract class ActorBasicKotlin(val name: String,
         }
         //println("%%%  $name |  init  dispatcher=$dispatcher ${sysUtil.aboutThreads(name)}" )
         //ActorContextLocal.addActor( this )
-        ActorContextNaive.addActor( this )
+        ActorBasicContextKb.addActor( this )
     }
 
 
@@ -63,6 +61,10 @@ abstract class ActorBasicKotlin(val name: String,
         destActor.actor.send(
                 MsgUtil.buildDispatch(name, msgId, msg, destActor.name))
     }
+    suspend fun forward( msg:ApplMessage, destActor: ActorBasicKotlin) {
+        destActor.actor.send(
+            MsgUtil.buildDispatch(name, msg.msgId, msg.msgContent, msg.msgReceiver))
+    }
 
     suspend fun request(msgId : String, msg: String, destActor: ActorBasicKotlin) {
         val m = MsgUtil.buildRequest(name, msgId, msg, destActor.name)
@@ -83,7 +85,7 @@ abstract class ActorBasicKotlin(val name: String,
 
     fun terminate() {
         actor.close()
-        println("$name | ENDS ${this.infoThreads()}")
+        println("$name | TERMINATES ${this.infoThreads()}")
     }
 
 

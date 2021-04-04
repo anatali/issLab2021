@@ -96,13 +96,13 @@ class Transition(val edgeName: String, val targetState: String) {
 	//"tcp://broker.hivemq.com" 
 val mqttbrokerAddr   =  "tcp://broker.hivemq.com"
 
-abstract class  Fsm(  val name:  String,
-                      val scope: CoroutineScope = GlobalScope,
-					  val discardMessages : Boolean = false,
-					  val usemqtt  :    Boolean = false,
-                      val confined :    Boolean = false,
-                      val ioBound :     Boolean = false,
-                      val channelSize : Int = 50 ) {
+abstract class  FsmBasic(val name:  String,
+                         val scope: CoroutineScope = GlobalScope,
+                         val discardMessages : Boolean = false,
+                         val usemqtt  :    Boolean = false,
+                         val confined :    Boolean = false,
+                         val ioBound :     Boolean = false,
+                         val channelSize : Int = 50 ) {
 	
 	protected lateinit var currentState: State
 	val NoMsg        = MsgUtil.buildEvent( name, "local_noMsg", "noMsg")
@@ -110,7 +110,7 @@ abstract class  Fsm(  val name:  String,
 	
 	private val stateList          = mutableListOf<State>()
 	protected var currentMsg       = NoMsg
-	protected var myself : Fsm
+	protected var myself : FsmBasic
 	private var isStarted          = false
 	private val msgQueueStore      = mutableListOf<ApplMessage>()
  
@@ -236,12 +236,12 @@ abstract class  Fsm(  val name:  String,
     }
 
 	
-    abstract fun getBody(): (Fsm.() -> Unit)
+    abstract fun getBody(): (FsmBasic.() -> Unit)
     abstract fun getInitialState(): String
 
 	@kotlinx.coroutines.ExperimentalCoroutinesApi
     @kotlinx.coroutines.ObsoleteCoroutinesApi
-    fun setBody( buildbody: Fsm.() -> Unit, initialStateName: String ) {
+    fun setBody(buildbody: FsmBasic.() -> Unit, initialStateName: String ) {
         buildbody()            //Build the structural part
         currentState = getStateByName(initialStateName)
         trace("Fsm $name | setBody send ${autoStartMsg}")
@@ -326,13 +326,13 @@ INTERACTION
  */	
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi
-	suspend fun forward(  msgId : String, payload: String, dest : Fsm ){
+	suspend fun forward(  msgId : String, payload: String, dest : FsmBasic ){
 		val msg = MsgUtil.buildDispatch(actor=name, msgId=msgId , content=payload, dest=dest.name)
 		forward( msg, dest )
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi
-	suspend fun forward(  msg : ApplMessage, dest : Fsm ){
+	suspend fun forward(  msg : ApplMessage, dest : FsmBasic ){
 	 	//println("		*** Fsm $name | forward  msg: ${msg} ")
 		 if( ! dest.fsmactor.isClosedForSend) dest.fsmactor.send( msg  )
 		else println("		*** Fsm $name | WARNING: Messages.forward attempts to send ${msg} to closed ${dest.name} ")
