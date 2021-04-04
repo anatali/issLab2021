@@ -16,7 +16,7 @@ abstract class ActorBasicKotlin(val name: String,
                         val dispatchType: DispatchType = DispatchType.single,
                         val channelSize : Int = 50 ) : IJavaActor{
     val tt      = "               %%% "
-    private val actorobservers =  mutableListOf<IJavaActor>()
+    private val actorobservers     =  mutableListOf<IJavaActor>()
     protected var actorLogfileName  : String = ""
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir

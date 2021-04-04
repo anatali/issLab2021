@@ -1,5 +1,6 @@
 package it.unibo.actor0
 
+import fsm.Fsm
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.interaction.IJavaActor
 import it.unibo.supports.FactoryProtocol
@@ -15,7 +16,7 @@ object MsgUtil {
 var count = 1;
 
 
-    val startDefaultMsg = buildDispatch("msgutil","start", "start", "any" )
+    val startDefaultMsg = buildDispatch("msgutil","start", "go", "any" )
 
     @JvmStatic    fun buildDispatch( actor: String, msgId : String ,
                        content : String, dest: String ) : ApplMessage {
@@ -128,4 +129,19 @@ var count = 1;
             else -> return Protocol.TCP
         }
      }
+
+
+//============================================================
+/*
+ Forward a dispatch to a destination actor given by reference
+*/
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
+suspend fun forward(  sender: String, msgId : String, payload: String, dest : Fsm){
+    //println("forward  msgId: ${msgId} payload=$payload")
+    val msg = buildDispatch(actor=sender, msgId=msgId , content=payload, dest=dest.name)
+    if( ! dest.fsmactor.isClosedForSend) dest.fsmactor.send( msg  )
+    else println("WARNING: Messages.forward attempts to send ${msg} to closed ${dest.name} ")
+}
+
 }

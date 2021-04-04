@@ -1,6 +1,7 @@
 package it.unibo.actor0
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.supports.FactoryProtocol
+import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.*
 
 /*
@@ -16,7 +17,9 @@ class ActorContextTcpServer(name:String, scope: CoroutineScope, val protocol: Pr
     init {
         System.setProperty("inputTimeOut", workTime.toString() )
         factoryProtocol = MsgUtil.getFactoryProtocol(protocol)
-        //this.sendToYourself(MsgUtil.startDefaultMsg)
+        //val wsSupport = IssWsHttpKotlinSupport.getConnectionWs(scope, IssWsHttpKotlinSupport.WEnvAddr)
+        //wsSupport.registerActor(this)   //better to avoid and observe actors rather than support
+
         /*
         scope.launch(Dispatchers.IO) {
             autoMsg( MsgUtil.startDefaultMsg )
@@ -28,8 +31,18 @@ class ActorContextTcpServer(name:String, scope: CoroutineScope, val protocol: Pr
     @ObsoleteCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun handleInput(msg: ApplMessage) {
-        //println("%%% ActorContextServer $name | READY TO RECEIVE CONNS ")
+        //println("%%% ActorContextTcpServer $name | READY TO RECEIVE CONNS ")
         waitForConnection()
+        println("%%% ActorContextTcpServer | $name receives: $msg conns=${sysUtil.connActive.size}")
+        updateExternalCallers(msg.toString())
+    }
+
+    private fun updateExternalCallers(msg: String ){
+
+        sysUtil.connActive.forEach{
+            //println("%%% ActorContextTcpServer | $name updates: $it  }")
+            it.sendALine(msg)
+        }
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -41,13 +54,13 @@ class ActorContextTcpServer(name:String, scope: CoroutineScope, val protocol: Pr
             try {
                 val port = ActorContextNaive.portNum
                 while (true) {
-                    println("%%% ActorContextServer $name | WAIT $protocol-CONNECTION on $port ${infoThreads()}")
+                    println("%%% ActorContextTcpServer $name | WAIT $protocol-CONNECTION on $port ${infoThreads()}")
                     val conn = factoryProtocol!!.createServerProtocolSupport(port) //BLOCKS
                     sysUtil.connActive.add(conn)
                     handleConnection( conn )
                 }
             } catch (e: Exception) {
-                 println("      ActorContextServer $name | WARNING: ${e.message}")
+                 println("      ActorContextTcpServer $name | WARNING: ${e.message}")
             }
         }
     }
@@ -60,34 +73,34 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
         //GlobalScope.launch(Dispatchers.IO) {
             //scope.launch(sysUtil.userThreadContext) {
             try {
-                sysUtil.traceprintln("%%% ActorContextServer $name | NEWWWWWWWWWW conn:$conn")
+                sysUtil.traceprintln("%%% ActorContextTcpServer $name | NEWWWWWWWWWW conn:$conn")
                 while (true) {
                     val msg = conn.receiveALine()       //BLOCKING
-//println("%%% ActorContextServer  $name | msg:$msg in ${sysUtil.aboutThreads(name)}")
+//println("%%% ActorContextTcpServer  $name | msg:$msg in ${sysUtil.aboutThreads(name)}")
                     if( msg != null ) {
                         val inputmsg = ApplMessage.create(msg)
-//println("%%% ActorContextServer  $name | inputmsg:$inputmsg  ")
+//println("%%% ActorContextTcpServer  $name | inputmsg:$inputmsg  ")
 						//sysUtil.updateLogfile( actorLogfileName, inputmsg.toString(), dir=msgLogNoCtxDir )
                         if (inputmsg.isEvent() ) {
                             //propagateEvent(inputmsg)
                             continue
                         }
                         val dest = inputmsg.msgReceiver
-//println("%%% ActorContextServer  $name | dest:$dest  ")
+//println("%%% ActorContextTcpServer  $name | dest:$dest  ")
                         val existactor = ActorContextNaive.hasActor(dest)
                         if (existactor) {
                             try {
                                 val actor = ActorContextNaive.getActor(dest)!!
-//println("%%% ActorContextServer  $name | actor:$actor  ")
+//println("%%% ActorContextTcpServer  $name | actor:$actor  ")
                                 if (inputmsg.isRequest()) { //Oct2019
                                     //set conn in the msg to the actor
                                     inputmsg.conn = conn
                                 }
                                 MsgUtil.sendMsg(inputmsg, actor)
                             } catch (e1: Exception) {
-                                println("%%% ActorContextServer $name |  ${e1.message}")
+                                println("%%% ActorContextTcpServer $name |  ${e1.message}")
                             }
-                        } else println("%%% ActorContextServer $name | WARNING!! no local actor ${dest} in ${ActorContextNaive.name}")
+                        } else println("%%% ActorContextTcpServer $name | WARNING!! no local actor ${dest} in ${ActorContextNaive.name}")
                     }// msg != null
                     else{
                         conn.closeConnection()
@@ -96,7 +109,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                     }
                 }
             } catch (e: Exception) {
-                println("%%% ActorContextServer $name | handleConnection: ${e.message}")
+                println("%%% ActorContextTcpServer $name | handleConnection: ${e.message}")
                 sysUtil.connActive.remove(conn)
             }
         //}//scope
@@ -107,12 +120,12 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun propagateEvent(event : ApplMessage){
          ctx.actorMap.forEach{
-             //sysUtil.traceprintln("       ActorContextServer $name | in ${ctx.name} propag $event to ${it.key} in ${it.value.context.name}")
+             //sysUtil.traceprintln("       ActorContextTcpServer $name | in ${ctx.name} propag $event to ${it.key} in ${it.value.context.name}")
              val a = it.value
              try{
                  a.actor.send(event)
              }catch( e1 : Exception) {
-                println("               %%% ActorContextServer $name | propagateEvent WARNING: ${e1.message}")
+                println("               %%% ActorContextTcpServer $name | propagateEvent WARNING: ${e1.message}")
              }
          }
     }*/

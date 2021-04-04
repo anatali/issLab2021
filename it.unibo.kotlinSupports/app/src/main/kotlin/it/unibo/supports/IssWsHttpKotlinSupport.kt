@@ -45,6 +45,7 @@ class IssWsHttpKotlinSupport
     //fun getInputChannel() : Channel<String> { return socketMsgChannel }
 
     companion object { //singleton
+        val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
 

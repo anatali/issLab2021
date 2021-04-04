@@ -23,20 +23,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextWsServer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainTestKtorServer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/okhttpServer/SampleServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/okhttpServer/WebSocketEcho.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/RemoteRobotCaller.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/fsm/FsmBasic.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/fsm/FsmUsage.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/fsm/basicrobot.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/fsm/demoactor.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextWsServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextWsServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainContextServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainContextServer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainExecutors.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveCaller.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveCaller.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/MainTestKtorServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backup/MainTestKtorServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/NaiveCaller.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/StepRobotActor.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Stepper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Stepper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Walker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors/Walker.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupportUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupportUsage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/okhttpServer/SampleServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/backup/okhttpServer/SampleServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.supports/app/src/main/java/it/unibo/okhttpServer/WebSocketEcho.java" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.supports/backup/okhttpServer/WebSocketEcho.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,18 +108,21 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/executors" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/supports" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo\supports" />
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo\executors" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\java" />
       <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin" />
-      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\app\src\main\kotlin\it\unibo\usage" />
-      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\userDocs" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Didattica2021\issLab2021\it.unibo.kotlinSupports\backup" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="it.unibo.actor0" />
@@ -123,7 +133,7 @@
       <recent name="it.unibo.supports" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainTestKtorServerKt">
+  <component name="RunManager" selected="Application.MainContextServerKt">
     <configuration name="IssWsHttpKotlinSupportUsageKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <module name="it.unibo.kotlinSupports.app.main" />
       <option name="VM_PARAMETERS" />
@@ -212,10 +222,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MainContextServerKt" />
         <item itemvalue="Application.MainTestKtorServerKt" />
         <item itemvalue="Application.IssWsHttpKotlinSupportUsageKt" />
         <item itemvalue="Application.MainExecutorsKt" />
-        <item itemvalue="Application.MainContextServerKt" />
         <item itemvalue="Application.build.gradle.kts" />
       </list>
     </recent_temporary>

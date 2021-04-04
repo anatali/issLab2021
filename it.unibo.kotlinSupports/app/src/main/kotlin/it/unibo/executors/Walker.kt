@@ -1,6 +1,5 @@
 package it.unibo.executors
 
-
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
@@ -97,6 +96,6 @@ class Walker( name:String, scope: CoroutineScope) : AbstractRobotActor(name, sco
     }
 
     override fun msgDriven(infoJson: JSONObject) {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented since we override handleInput")
     }
 }
