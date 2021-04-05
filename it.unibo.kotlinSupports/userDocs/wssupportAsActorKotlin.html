@@ -412,7 +412,7 @@ ResumableBoundaryWalkerActor.java</a>
 docker build -t steprobot:1.0 .  
 
 <kc>//run the image to test</kc>
-docker run -p 8010:8010 -ti --rm steprobot:1.0 /bin/bash   
+docker run -p 8010:8010 -ti --rm steprobot:1.0 <k>/bin/bash</k> <kc>//to use the console</kc>  
 </pre>
 </li>
 <li><h3>Build the image for integrated usage</h3>
@@ -428,6 +428,38 @@ docker-compose -f virtualrobotandstepper.yaml up
  <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/actor0remote/MainStepRobotActorCaller.kt" target="code"><ks>MainStepRobotActorCaller.kt</ks></a>
  in project <i>it.unibo.cautiousExplorer</i>
  
+</li>
+
+<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
+<pre>
+<kc>Login in DockerHub (get the password from a private file)</kc>
+ type docker_password.txt | docker login --username natbodocker --password-stdin
+ 
+<kc>Tag the image</kc>
+docker tag steprobot:1.0 natbodocker/steprobot:1.0
+
+<kc>Register the image</kc>
+docker push natbodocker/steprobot:1.0
+</pre>
+
+<h4>Change <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </h4>
+<pre>
+version: '3'
+services:
+  wenv:
+    image: docker.io/natbodocker/virtualrobotdisi:2.0
+    ##image: virtualrobotdisi:2.0
+    ports:
+      - 8090:8090
+      - 8091:8091
+  stepper:
+    ##image: steprobot:1.0
+	image: docker.io/natbodocker/steprobot:1.0
+    ports:
+      - 8010:8010
+    depends_on:
+      - wenv
+</pre>
 </li>
 </ul>
 
