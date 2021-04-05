@@ -104,7 +104,7 @@ open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: 
             State.start -> {
                 if (move == executorStartId) {
                     support.registerActor(this)
-                    stepper = StepRobotActor("steprobot", this, scope )
+                    stepper = StepRobotActor("steprobot", this, "localhost", scope )
                     nextMove()
                 }
             }

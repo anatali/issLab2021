@@ -1,16 +1,22 @@
-package it.unibo.actor0Remote
+/*
+============================================================
+MainDemoEchoContextServer
 
+============================================================
+ */
+
+package it.unibo.actor0Remote
 import it.unibo.actor0.*
 import it.unibo.actor0Usage.ActorBasicKotlinEcho
 import kotlinx.coroutines.*
 
 
-    @ExperimentalCoroutinesApi
+@ExperimentalCoroutinesApi
     fun main() {
         //sysUtil.trace = true
         val startTime = sysUtil.aboutSystem("applmain")
         println("==============================================")
-        println("MainDemoContextServer | START ${sysUtil.aboutSystem("mainCtxServer")}");
+        println("MainDemoEchoContextServer | START ${sysUtil.aboutSystem("mainCtxServer")}");
         println("==============================================")
 
         runBlocking {
@@ -22,7 +28,7 @@ import kotlinx.coroutines.*
 
         val endTime = sysUtil.getDuration(startTime)
         println("==============================================")
-        println("MainDemoContextServer | END TIME=$endTime ${sysUtil.aboutThreads("mainCtxServer")}");
+        println("MainDemoEchoContextServer | END TIME=$endTime ${sysUtil.aboutThreads("mainCtxServer")}");
         println("==============================================")
 
     }

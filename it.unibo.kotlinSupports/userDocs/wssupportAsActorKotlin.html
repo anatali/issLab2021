@@ -401,6 +401,36 @@ ResumableBoundaryWalkerActor.java</a>
  </tbody>
 </table>
 
+<h2>Deploy</h2>
+
+<ul>
+<li> <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a> </li>
+<li> <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </li>
+<li><h3>Build the image for local usage</h3>
+<pre>
+<kc>//Build the image of the steprobot service with wenvAddr=<k>localhost</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
+docker build -t steprobot:1.0 .  
+
+<kc>//run the image to test</kc>
+docker run -p 8010:8010 -ti --rm steprobot:1.0 /bin/bash   
+</pre>
+</li>
+<li><h3>Build the image for integrated usage</h3>
+<pre>
+<kc>//Build the image of the steprobot service with wenvAddr=<k>wenv</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
+docker build -t steprobot:1.0 .  
+
+<kc>//Run the steprobot service together with the wenv</kc>
+docker-compose -f virtualrobotandstepper.yaml up
+
+</pre>
+<h4>Run a demo</h4>
+ <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/actor0remote/MainStepRobotActorCaller.kt" target="code"><ks>MainStepRobotActorCaller.kt</ks></a>
+ in project <i>it.unibo.cautiousExplorer</i>
+ 
+</li>
+</ul>
+
 
    <!--
 <ol>

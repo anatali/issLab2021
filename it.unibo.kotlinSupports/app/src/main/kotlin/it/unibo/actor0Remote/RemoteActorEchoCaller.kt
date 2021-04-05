@@ -1,6 +1,6 @@
 /*
 ============================================================
-RemoteActorCaller
+RemoteActorEchoCaller
 
 ============================================================
  */
@@ -12,7 +12,7 @@ import it.unibo.actor0.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 
-class RemoteActorEchoCaller(name: String, scope: CoroutineScope, val disp: DispatchType) :
+class RemoteActorEchoCaller(name: String, scope: CoroutineScope, disp: DispatchType) :
         ActorBasicKotlin(name, scope, disp) {
 
     val factoryProtocol = MsgUtil.getFactoryProtocol(Protocol.TCP)

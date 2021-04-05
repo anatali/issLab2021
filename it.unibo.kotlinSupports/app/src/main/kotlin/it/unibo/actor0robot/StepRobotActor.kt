@@ -19,19 +19,17 @@ by an obstacle after time DT. In this case it moves back the robot for time DT
 ==============================================================================
  */
 
-
 /*
 The map is a singleton object, managed by mapUtil
-
  */
 @ExperimentalCoroutinesApi
-class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope)
+class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, val wenAddr: String="localhost", scope: CoroutineScope)
             : AbstractRobotActor(name, scope ) {
 
     init {
-        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "localhost:8091")
+        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "$wenAddr:8091")
         //support.wsconnect(  fun(scope, support ) {println("$name | connectedddd ${infoThreads()}")} )
-        println( "$name | StepRobotActor init ${infoThreads()}")
+        println( "$name | StepRobotActor init $support ${infoThreads()}")
     }
 
     protected enum class State {
@@ -69,7 +67,6 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                         support.forward(attemptStepMsg)
                         curState = State.moving
                     }
-
             }
             State.moving -> {
                 val dt = "" + this.getDuration(StartTime)

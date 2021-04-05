@@ -14,7 +14,7 @@ class Stepper(name:String, scope: CoroutineScope) : ActorBasicKotlin(name, scope
     var startStepRobotMsg : ApplMessage
 
     init{
-        steprobotactor      = StepRobotActor("stepactor", this, scope)
+        steprobotactor      = StepRobotActor("stepactor", this, "localhost", scope)
         startStepRobotMsg = MsgUtil.buildDispatch("main", ApplMsgs.stepId, stepMsg, steprobotactor.name )
         println( "$name Stepper | init ${infoThreads()}")
     }

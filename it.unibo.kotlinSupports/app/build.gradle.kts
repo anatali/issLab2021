@@ -13,7 +13,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     jacoco
-
+    distribution
 }
 
 repositories {
@@ -60,5 +60,34 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.supports.WebSocketKotlinSupportUsageKt")
+    mainClass.set("it.unibo.actor0robot.MainStepRobotServiceKt")
 }
+
+version = "1.0"
+/*
+val jar by tasks.getting(Jar::class) {
+    manifest {
+        attributes["Main-Class"] = "it.unibo.actor0Robot.MainStepRobotServiceKt"
+    }
+}
+*/
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "it.unibo.actor0robot.MainStepRobotServiceKt"
+        attributes(mapOf("Implementation-Title" to project.name,
+            "Implementation-Version" to project.version))
+    }
+}
+
+/*
+val fatJar = task("fatJar", type = Jar::class) {
+    baseName = "${project.name}-fat"
+    manifest {
+        attributes["Implementation-Title"] = "Gradle Jar File Example"
+        //attributes["Implementation-Version"] = version
+        attributes["Main-Class"] = "it.unibo.actor0Robot.MainStepRobotServiceKt"
+    }
+    //from(configurations.runtime.map({ if (it.isDirectory) it else zipTree(it) }))
+    from(configurations.runtime.map({  zipTree(it) }))
+    with(tasks["jar"] as CopySpec)
+}*/

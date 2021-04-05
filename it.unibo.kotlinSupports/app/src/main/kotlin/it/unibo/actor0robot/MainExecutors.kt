@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
     fun demoStepper(scope: CoroutineScope){
         val stepperName = "stepper"
         val startmsg = MsgUtil.buildDispatch("main", "start", "ok", stepperName )
-        val stepper = Stepper(stepperName, scope)
+        val stepper  = Stepper(stepperName, scope)
         stepper.send(startmsg)
     }
     fun demoDoPath(scope: CoroutineScope){
