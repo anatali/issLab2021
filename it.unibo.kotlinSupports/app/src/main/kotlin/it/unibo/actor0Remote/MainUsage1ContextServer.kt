@@ -8,21 +8,18 @@ import kotlinx.coroutines.*
     @ExperimentalCoroutinesApi
     fun main() {
         //sysUtil.trace = true
+        println("==============================================")
+        println("MainUsageContextServer | START ${sysUtil.aboutSystem("mainCtxServer")}");
+        println("==============================================")
         val startTime = sysUtil.aboutSystem("applmain")
-        println("==============================================")
-        println("MainDemoContextServer | START ${sysUtil.aboutSystem("mainCtxServer")}");
-        println("==============================================")
-
         runBlocking {
-            //Create a ActorContextTcpServer
-            val ctxserver = ActorContextTcpServer("ctxServer", Protocol.TCP, this ) //this
-            val echoActor = ActorBasicKotlinEcho("echo", this)
-            echoActor.registerActor(ctxserver)
+            val caller1 = RemoteActorEchoCaller("caller1", this, DispatchType.single )
+            caller1.send(MsgUtil.startDefaultMsg)
         }//runBlocking
 
         val endTime = sysUtil.getDuration(startTime)
         println("==============================================")
-        println("MainDemoContextServer | END TIME=$endTime ${sysUtil.aboutThreads("mainCtxServer")}");
+        println("MainUsageContextServer | END TIME=$endTime ${sysUtil.aboutThreads("mainusage")}");
         println("==============================================")
 
     }

@@ -1,6 +1,7 @@
 package it.unibo.actor0
 
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
@@ -17,8 +18,8 @@ object sysUtil{
 	val singleThreadContext    = newSingleThreadContext("singleThread")
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "pool64")
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "cpuspool")
-	val userThreadContext      = newFixedThreadPoolContext(4, "userpool")
-
+	val userThreadContext      = newFixedThreadPoolContext(2, "userpool") //@ObsoleteCoroutinesApi
+	val dispatecherIO          = Dispatchers.IO
  	fun traceprintln( msg : String ){
 		if( trace ) println( msg  )
 	}
@@ -55,7 +56,7 @@ object sysUtil{
 
 	@JvmStatic
 	fun aboutThreads(name: String): String =
-			"-%- $name in ${Thread.currentThread().name} | nthreads= ${Thread.activeCount()} cpus=$cpus"
+			"-%- $name in curThread:${Thread.currentThread().name} | nthreads= ${Thread.activeCount()} cpus=$cpus"
 
 	@JvmStatic
 	fun aboutSystem(name: String): Long {

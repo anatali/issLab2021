@@ -10,9 +10,9 @@ import kotlinx.coroutines.channels.actor
 enum class DispatchType {single, iobound, cpubound }
 
 abstract class ActorBasicKotlin(val name: String,
-                                val scope: CoroutineScope  ,
-                        val dispatchType: DispatchType = DispatchType.single,
-                        val channelSize : Int = 50 ) : IJavaActor{
+                val scope: CoroutineScope = CoroutineScope( newSingleThreadContext("single_$name") ) ,
+                val dispatchType: DispatchType = DispatchType.single,
+                val channelSize : Int = 50 ) : IJavaActor{
     val tt                         = "               %%% "
     private val actorobservers     =  mutableListOf<IJavaActor>()
     protected var actorLogfileName  : String = ""
@@ -38,7 +38,8 @@ abstract class ActorBasicKotlin(val name: String,
     @kotlinx.coroutines.ExperimentalCoroutinesApi
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     val actor = scope.actor<ApplMessage>(dispatcher, capacity = channelSize) {
-         for (msg in channel) {
+        //println("%%% $name |  ${infoThreads()} ACTIVATED  scope=$scope dispatcher=$dispatcher" )
+        for (msg in channel) {
             //println("%%% $name |  receives $msg   ${sysUtil.aboutThreads(name)} scope=$scope" )
             sysUtil.traceprintln("$tt   $name |  msg= $msg ")
             if( msg.msgId == "stopTheActor") {  terminate() }
@@ -83,7 +84,7 @@ abstract class ActorBasicKotlin(val name: String,
     //------------------------------------------------
 
 
-    fun terminate() {
+    open fun terminate() {
         actor.close()
         println("$name | TERMINATES ${this.infoThreads()}")
     }

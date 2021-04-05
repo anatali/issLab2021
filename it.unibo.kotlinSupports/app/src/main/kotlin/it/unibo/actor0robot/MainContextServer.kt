@@ -15,8 +15,7 @@ import kotlinx.coroutines.*
         println("==============================================")
 
         runBlocking {
-
-            val ctxserver = ActorContextTcpServer("ctxServer", this, Protocol.TCP )
+            val ctxserver = ActorContextTcpServer("ctxServer", Protocol.TCP, this )
             //val obs    = NaiveObserver("obs", this )
             StepRobotActor("stepRobot", ctxserver, this)
             //Walker( "walker", this)

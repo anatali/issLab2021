@@ -1,43 +1,43 @@
+
 package it.unibo.actor0
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.supports.FactoryProtocol
 import kotlinx.coroutines.*
 
 /*
-Works at node level
-*/
+============================================================
+ActorContextTcpServer
 
-class ActorContextTcpServer(name:String, scope: CoroutineScope, val protocol: Protocol )
-                                        : ActorBasicKotlin( name, scope) {
+============================================================
+ */
+
+class ActorContextTcpServer(name:String, val protocol: Protocol, scope:CoroutineScope   )
+                                        : ActorBasicKotlin( name,scope ) {
     protected var hostName: String? = null
     val workTime = 1000L * 6000 //100 min	
     var factoryProtocol : FactoryProtocol
+    lateinit var conn : IConnInteraction
+    lateinit var connInput : Job
 
     init {
         System.setProperty("inputTimeOut", workTime.toString() )
         factoryProtocol = MsgUtil.getFactoryProtocol(protocol)
-        //val wsSupport = IssWsHttpKotlinSupport.getConnectionWs(scope, IssWsHttpKotlinSupport.WEnvAddr)
-        //wsSupport.registerActor(this)   //better to avoid and observe actors rather than support
-
-        /*
-        scope.launch(Dispatchers.IO) {
-            autoMsg( MsgUtil.startDefaultMsg )
-        }*/
-        this.sendToYourself(MsgUtil.startDefaultMsg)
+        send(MsgUtil.startDefaultMsg)
     }
 
 
     @ObsoleteCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun handleInput(msg: ApplMessage) {
-        //println("%%% ActorContextTcpServer $name | READY TO RECEIVE CONNS ")
-        waitForConnection()
-        println("%%% ActorContextTcpServer | $name receives: $msg conns=${sysUtil.connActive.size}")
-        updateExternalCallers(msg.toString())
+        //println("%%% ActorContextTcpServer $name | $msg ")
+        if( msg.msgId=="start") waitForConnection()
+        else {
+            println("%%% ActorContextTcpServer | $name receives: $msg conns=${sysUtil.connActive.size}")
+            updateExternalCallers(msg.toString())
+        }
     }
 
     private fun updateExternalCallers(msg: String ){
-
         sysUtil.connActive.forEach{
             //println("%%% ActorContextTcpServer | $name updates: $it  }")
             it.sendALine(msg)
@@ -49,18 +49,19 @@ class ActorContextTcpServer(name:String, scope: CoroutineScope, val protocol: Pr
     suspend protected fun waitForConnection() {
         //We could handle several connections
         //GlobalScope.launch(Dispatchers.IO) {
-        scope.launch(sysUtil.userThreadContext) {        //BLOCKS THE SYSTEM if we use DispatchType.single
+        connInput = scope.launch(sysUtil.cpusThreadContext)  {   //sysUtil.userThreadContext  Dispatchers.IO    //BLOCKS THE SYSTEM if we use DispatchType.single
             try {
                 val port = ActorBasicContextKb.portNum
                 while (true) {
                     println("%%% ActorContextTcpServer $name | WAIT $protocol-CONNECTION on $port ${infoThreads()}")
-                    val conn = factoryProtocol!!.createServerProtocolSupport(port) //BLOCKS
+                    conn = factoryProtocol!!.createServerProtocolSupport(port) //BLOCKS
                     sysUtil.connActive.add(conn)
                     handleConnection( conn )
                 }
             } catch (e: Exception) {
                  println("      ActorContextTcpServer $name | WARNING: ${e.message}")
             }
+        //}
         }
     }
 /*
@@ -70,10 +71,9 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend protected fun handleConnection(conn: IConnInteraction) {
         //GlobalScope.launch(Dispatchers.IO) {
-            //scope.launch(sysUtil.userThreadContext) {
+            scope.launch(sysUtil.cpusThreadContext ) { //userThreadContext
             try {
-                sysUtil.traceprintln("%%% ActorContextTcpServer $name | NEWWWWWWWWWW conn:$conn")
-                while (true) {
+                 while (true) {
                     val msg = conn.receiveALine()       //BLOCKING
 //println("%%% ActorContextTcpServer  $name | msg:$msg in ${sysUtil.aboutThreads(name)}")
                     if( msg != null ) {
@@ -90,7 +90,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                         if (existactor) {
                             try {
                                 val actor = ActorBasicContextKb.getActor(dest)!!
-//println("%%% ActorContextTcpServer  $name | actor:$actor  ")
+println("%%% ActorContextTcpServer  $name | actor:${actor.name}  ${infoThreads()}")
                                 if (inputmsg.isRequest()) { //Oct2019
                                     //set conn in the msg to the actor
                                     inputmsg.conn = conn
@@ -101,7 +101,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                             }
                         } else println("%%% ActorContextTcpServer $name | WARNING!! no local actor ${dest} in ${ActorBasicContextKb.name}")
                     }// msg != null
-                    else{
+                    else{ msg == null
                         conn.closeConnection()
                         sysUtil.connActive.remove(conn)
                         break
@@ -111,22 +111,17 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                 println("%%% ActorContextTcpServer $name | handleConnection: ${e.message}")
                 sysUtil.connActive.remove(conn)
             }
-        //}//scope
+        }//scope
     }//handleConnection
 
-/*
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun propagateEvent(event : ApplMessage){
-         ctx.actorMap.forEach{
-             //sysUtil.traceprintln("       ActorContextTcpServer $name | in ${ctx.name} propag $event to ${it.key} in ${it.value.context.name}")
-             val a = it.value
-             try{
-                 a.actor.send(event)
-             }catch( e1 : Exception) {
-                println("               %%% ActorContextTcpServer $name | propagateEvent WARNING: ${e1.message}")
-             }
-         }
-    }*/
+    override fun terminate(){
+        sysUtil.connActive.forEach{ it.closeConnection() }
+        //Dispatchers.IO.cancel()
+        //sysUtil.userThreadContext.close()
+        connInput.cancel()
+        println("%%% ActorContextTcpServer $name | TERMINATE ... ")
+        super.terminate()
+    }
+
 }
 

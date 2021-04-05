@@ -17,6 +17,7 @@ var count = 1;
 
 
     val startDefaultMsg = buildDispatch("msgutil","start", "go", "any" )
+    val endDefaultMsg   = buildDispatch("msgutil","end", "do", "any" )
 
     @JvmStatic    fun buildDispatch( actor: String, msgId : String ,
                        content : String, dest: String ) : ApplMessage {
