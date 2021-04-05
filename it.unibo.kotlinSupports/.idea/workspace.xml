@@ -23,18 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cbd9079-1790-4dea-993b-eff79403b4ba" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/MainUsage1ContextServer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/MainUsage2ContextServer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/MsgUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/sysUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0/sysUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/ConnectionReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/ConnectionReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/MainDemoContextServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/MainDemoContextServer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/RemoteActorCaller.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/RemoteActorEchoCaller.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0Remote/RemoteActorEchoCaller.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0robot/MainContextServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/it/unibo/actor0robot/MainContextServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
