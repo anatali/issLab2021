@@ -1,15 +1,17 @@
+/*
+============================================================
+ActorContextTcpServer
+Accepts a TCP connection on port 8010 and
+- redirects an input ApplMessage to the local actor receiver
+- if it is set as observer of an actor, redirects to all the connected
+  clients the ApplMessage sent by that actor to its observers
+============================================================
+ */
 
 package it.unibo.actor0
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.supports.FactoryProtocol
 import kotlinx.coroutines.*
-
-/*
-============================================================
-ActorContextTcpServer
-
-============================================================
- */
 
 class ActorContextTcpServer(name:String, val protocol: Protocol, scope:CoroutineScope   )
                                         : ActorBasicKotlin( name,scope ) {
