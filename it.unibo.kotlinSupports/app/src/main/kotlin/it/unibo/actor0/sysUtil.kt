@@ -63,9 +63,18 @@ object sysUtil{
 		println(aboutThreads(name))
 		return getCurrentTime();
 	}
+
+	@JvmStatic
+	fun showAliveThreads(){
+		println("============= Alive threads ================== ")
+		Thread.getAllStackTraces().keys.stream()
+			.filter(Thread::isAlive)
+			.forEach(System.out::println)
+	}
 //--------------------------------------------------------------------
 
 	val connActive : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()
+
 
 
 }//sysUtil

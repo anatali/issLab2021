@@ -1,6 +1,5 @@
 package it.unibo.actor0
 
-import fsm.FsmBasic
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.interaction.IJavaActor
 import it.unibo.supports.FactoryProtocol
@@ -14,66 +13,68 @@ enum class Protocol {
  
 object MsgUtil {
 var count = 1;
+    val startDefaultMsg = ApplMessage("msgutil","start", "go", "any" )
+    val endDefaultMsg   = ApplMessage("msgutil","end", "do", "any" )
 
-
-    val startDefaultMsg = buildDispatch("msgutil","start", "go", "any" )
-    val endDefaultMsg   = buildDispatch("msgutil","end", "do", "any" )
-
-    @JvmStatic    fun buildDispatch( actor: String, msgId : String ,
-                       content : String, dest: String ) : ApplMessage {
-        return ApplMessage(msgId, ApplMessageType.dispatch.toString(),
-            actor, dest, "$content", "${count++}")
-    }
-@JvmStatic    fun buildRequest( actor: String, msgId : String ,
+@JvmStatic
+fun buildDispatch( actor:String, msgId:String, content:String, dest:String) : ApplMessage { //
+    val m = ApplMessage( msgId, ApplMessageType.dispatch.toString(), actor, dest, "$content", "${count++}" )
+    //println("MsgUtil | $m  ")
+    return m //ApplMessage("msgutil","start", "go", "any" )
+}
+@JvmStatic
+fun buildRequest( actor: String, msgId : String ,
                        content : String, dest: String ) : ApplMessage {
         return ApplMessage(msgId, ApplMessageType.request.toString(),
             actor, dest, "$content", "${count++}")
     }
-@JvmStatic    fun buildReply( actor: String, msgId : String ,
+@JvmStatic
+fun buildReply( actor: String, msgId : String ,
                       content : String, dest: String ) : ApplMessage {
         return ApplMessage(msgId, ApplMessageType.reply.toString(),
             actor, dest, "$content", "${count++}")
     }
-@JvmStatic    fun buildReplyReq( actor: String, msgId : String ,
+@JvmStatic
+fun buildReplyReq( actor: String, msgId : String ,
                     content : String, dest: String ) : ApplMessage {
         return ApplMessage(msgId, ApplMessageType.request.toString(),
             actor, dest, "$content", "${count++}")
     }
-@JvmStatic    fun buildEvent( actor: String, msgId : String , content : String  ) : ApplMessage {
+@JvmStatic
+fun buildEvent( actor: String, msgId : String , content : String  ) : ApplMessage {
         return ApplMessage(msgId, ApplMessageType.event.toString(),
             actor, "none", "$content", "${count++}")
     }
-	
-//@kotlinx.coroutines.ObsoleteCoroutinesApi
-//@kotlinx.coroutines.ExperimentalCoroutinesApi
-//@JvmStatic suspend fun sendAMsg( sender : String, msgId: String, msg: String, destActorName: String) {
-//		val a = sysUtil.getActor(destActorName)
-//        val dispatchMsg = buildDispatch(sender, msgId, msg, destActorName)
-//        //println("sendMsg $dispatchMsg")
-//        if( a != null ) a.actor.send( dispatchMsg )
-//    }
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-@JvmStatic    suspend fun sendMsg( 
-            sender : String, msgId: String, msg: String, destActor: ActorBasicKotlin) {
+@JvmStatic
+suspend fun sendMsg(sender : String, msgId: String, msg: String, destActor: ActorBasicKotlin) {
         val dispatchMsg = buildDispatch(sender, msgId, msg, destActor.name)
         //println("sendMsg $dispatchMsg")
         destActor.actor.send( dispatchMsg )
     }
-@JvmStatic    suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJavaActor) {
+
+@JvmStatic
+suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJavaActor) {
         sendMsg(sender, msgId, msg, destActor as ActorBasicKotlin)
-    }
-        @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
-@JvmStatic    suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasicKotlin) {
-        destActor.actor.send(msg)
-    }
-@JvmStatic    suspend fun sendMsg(msg: ApplMessage, destActor: IJavaActor) {
-        sendMsg(msg,destActor as ActorBasicKotlin)
-    }
+}
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-@JvmStatic    suspend fun sendMsg(
+@JvmStatic
+    suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasicKotlin) {
+        destActor.actor.send(msg)
+    }
+@JvmStatic
+    suspend fun sendMsg(msg: ApplMessage, destActor: IJavaActor) {
+        sendMsg(msg,destActor as ActorBasicKotlin)
+    }
+
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
+@JvmStatic
+    suspend fun sendMsg(
             msgId: String, msg: String, destActor: ActorBasicKotlin, source:String="unknown") {
         val dispatchMsg = buildDispatch(source, msgId, msg, destActor.name)
         //println("sendMsg $dispatchMsg")
@@ -135,14 +136,14 @@ var count = 1;
 //============================================================
 /*
  Forward a dispatch to a destination actor given by reference
-*/
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-@JvmStatic     suspend fun forward(  sender: String, msgId : String, payload: String, dest : FsmBasic){
+@JvmStatic     suspend fun forward(  sender: String, msgId : String, payload: String, dest : ActorBasicKotlin){
     //println("forward  msgId: ${msgId} payload=$payload")
     val msg = buildDispatch(actor=sender, msgId=msgId , content=payload, dest=dest.name)
-    if( ! dest.fsmactor.isClosedForSend) dest.fsmactor.send( msg  )
+    if( ! dest.actor.isClosedForSend) dest.actor.send( msg  )
     else println("WARNING: Messages.forward attempts to send ${msg} to closed ${dest.name} ")
 }
-
+*/
 }

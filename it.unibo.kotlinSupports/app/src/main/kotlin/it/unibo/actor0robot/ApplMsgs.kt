@@ -1,12 +1,13 @@
 package it.unibo.actor0robot
 
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.MsgUtil
 
 object ApplMsgs {
     const val forwardMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
     const val backwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 350}"
     const val microStepMsg = "{\"robotmove\":\"moveForward\", \"time\": 5}"
-    const val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 10}"
+    const val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 5}"
     const val turnLeftMsg = "{\"robotmove\":\"turnLeft\", \"time\": 300}"
     const val turnRightMsg = "{\"robotmove\":\"turnRight\", \"time\": 300}"
     const val haltMsg = "{\"robotmove\":\"alarm\", \"time\": 20}"
@@ -44,5 +45,6 @@ object ApplMsgs {
     val demoMsgAppl =
         ApplMessage("cmd","dispatch","demo","obs","todo","1")
 
+    fun test() : ApplMessage{ return MsgUtil.endDefaultMsg }
 
 }

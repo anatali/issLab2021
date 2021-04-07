@@ -1,11 +1,10 @@
 package it.unibo.supports
-import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0.ApplMessage
-import it.unibo.actor0.DispatchType
-import it.unibo.actor0.MsgUtil
+import it.unibo.actor0.*
+import it.unibo.actor0Usage.ActorBasicKotlinNaive
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
                           : ActorBasicKotlin(name, scope, DispatchType.single) {
@@ -25,7 +24,6 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
             delay( tout )
             //println("$name | elapsed $tout msecs killed=$killed")
             if (owner != null && !killed) {
-                //owner.send(ActorMsgs.endTimerMsg)
                 val answerMsg =
                         MsgUtil.buildDispatch(name, ActorMsgs.endTimerId, ActorMsgs.endTimerMsg, owner.name )
                 owner.send(answerMsg)
@@ -36,10 +34,29 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
     }
 
     fun kill() {
-        //System.out.println( myname + " | kill " );
+        //println( myname + " | kill " );
         terminate()
         killed = true
     }
 
+}
 
+fun main() {
+    println("==============================================")
+    println("Timer | START ${sysUtil.aboutSystem("timer") }"  );
+    println("==============================================")
+    lateinit var timer : TimerActor
+    lateinit var obs : ActorBasicKotlinNaive
+    runBlocking{
+        obs   = ActorBasicKotlinNaive("obs", this )
+        timer = TimerActor("t0", obs, this )
+        val m = MsgUtil.buildDispatch("main","startTimer","{\"startTimer\":\"300\" }", "to")
+        timer.send(m)
+        delay(1000)
+        obs.terminate()
+    }
+    //obs.terminate()
+    println("==============================================")
+    println("Timer | END  ${sysUtil.aboutThreads("applmain") }"  );
+    println("==============================================")
 }

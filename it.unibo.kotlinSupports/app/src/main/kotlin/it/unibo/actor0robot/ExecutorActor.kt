@@ -2,6 +2,7 @@
 ===================================================================
 ExecutorActor.kt
 Accepts an executorstartMsg that specifies a sequence of moves.
+
 Its goal is to execute the given sequence of moves and return:
 executorendokMsg  in case of success
 executorendkoMsg  with the path done in case of failure (obstacle)

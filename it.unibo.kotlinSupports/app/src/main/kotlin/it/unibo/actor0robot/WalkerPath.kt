@@ -1,3 +1,9 @@
+/*
+============================================================
+WalkerPath
+
+============================================================
+ */
 package it.unibo.actor0robot
 
 import it.unibo.actor0.ApplMessage
@@ -9,7 +15,7 @@ import kotlinx.coroutines.delay
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject
 
-class Walker( name:String, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
+class WalkerPath(name:String, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
 
     protected enum class State {
         start, checkResultAhead, checkResultBack, end
@@ -20,7 +26,7 @@ class Walker( name:String, scope: CoroutineScope) : AbstractRobotActor(name, sco
 
     init {
         support = IssWsHttpKotlinSupport.getConnectionWs(scope, "localhost:8091")
-        println( "$name | Walker init ${infoThreads()}")
+        println( "$name |  init ${infoThreads()}")
     }
     protected suspend fun fsm(move: String, arg: String) {
         println(name + " | state=" + curState + " move=" + move + " arg=" + arg)
@@ -33,16 +39,20 @@ class Walker( name:String, scope: CoroutineScope) : AbstractRobotActor(name, sco
             }
             State.checkResultAhead -> {
                 if( move==ApplMsgs.executorDoneId  ){
-                    turn180()
-                    doPathBack( )
-                    curState = State.checkResultBack
-                }else{
+                    println("$name | all ok path=$arg")
+                }else{ //fail
                     println("$name | partial path=$arg")
                 }
+                turn180()
+                doPathBack( )
+                curState = State.checkResultBack
             }
             State.checkResultBack -> {
                 println( "$name | All OK - BYE ${infoThreads()}")
+                support.close()
                 terminate()
+                delay(3000)
+                System.exit(100)
             }
             State.end -> {
 

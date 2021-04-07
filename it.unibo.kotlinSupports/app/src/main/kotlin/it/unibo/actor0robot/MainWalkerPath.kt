@@ -1,19 +1,20 @@
+/*
+============================================================
+MainWalkerPath
+
+============================================================
+ */
 package it.unibo.actor0robot
 
 import it.unibo.actor0.*
 import kotlinx.coroutines.*
 
-    fun demoStepper(scope: CoroutineScope){
-        val stepperName = "stepper"
-        val startmsg = MsgUtil.buildDispatch("main", "start", "ok", stepperName )
-        val stepper  = Stepper(stepperName, scope)
-        stepper.send(startmsg)
-    }
+
     fun demoDoPath(scope: CoroutineScope){
-        val pathTodo   = "ww"
-        val walkerName = "walker"
+        val pathTodo   = "wwww"
+        val walkerName = "walkerkpath"
         val startmsg   = MsgUtil.buildDispatch("main", "start", pathTodo, walkerName )
-        val walker     = Walker(walkerName, scope )
+        val walker     = WalkerPath(walkerName, scope )
         walker.send(startmsg)
     }
 
@@ -23,17 +24,16 @@ import kotlinx.coroutines.*
         //sysUtil.trace = true
         val startTime = sysUtil.aboutSystem("applmain")
         println("==============================================")
-        println("MainExecutors | START ${sysUtil.aboutSystem("MainExecutors")}");
+        println("MainWalkerPath | START ${sysUtil.aboutSystem("MainExecutors")}");
         println("==============================================")
 
         runBlocking {
-            demoStepper( this )
-            //demoDoPath( this )
+            demoDoPath( this )
         }
 
         val endTime = sysUtil.getDuration(startTime)
         println("==============================================")
-        println("MainExecutors | END TIME=$endTime ${sysUtil.aboutThreads("MainExecutors") }"  );
+        println("MainWalkerPath | END TIME=$endTime ${sysUtil.aboutThreads("MainExecutors") }"  );
         println("==============================================")
 
     }

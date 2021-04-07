@@ -137,11 +137,8 @@ class IssWsHttpKotlinSupport
         okHttpClient.connectionPool.evictAll()
 
         Thread.sleep(1000)
-        Thread.getAllStackTraces().keys.stream()
-            .filter(Thread::isAlive)
-            .forEach(System.out::println)
 
-
+         sysUtil.showAliveThreads()
 
     }
 //-----------------------------------------------------------------

@@ -121,7 +121,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, val wenAddr
 ======================================================================================
  */
     override fun msgDriven(msgJson: JSONObject) {
-        //if (! msgJson.has("sonarName")) println("$name StepRobotActor |  msgDriven:$msgJson")
+        if (! msgJson.has("sonarName")) println("$name StepRobotActor |  msgDriven:$msgJson")
         if (msgJson.has(ApplMsgs.stepId)) {
             //println( name + " |  msgJson:" + msgJson);
             val time: String = msgJson.getString(ApplMsgs.stepId)
