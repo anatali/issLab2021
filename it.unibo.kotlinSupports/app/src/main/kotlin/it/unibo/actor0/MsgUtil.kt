@@ -138,7 +138,7 @@ var count = 1;
 */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-suspend fun forward(  sender: String, msgId : String, payload: String, dest : FsmBasic){
+@JvmStatic     suspend fun forward(  sender: String, msgId : String, payload: String, dest : FsmBasic){
     //println("forward  msgId: ${msgId} payload=$payload")
     val msg = buildDispatch(actor=sender, msgId=msgId , content=payload, dest=dest.name)
     if( ! dest.fsmactor.isClosedForSend) dest.fsmactor.send( msg  )

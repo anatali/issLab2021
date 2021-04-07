@@ -15,10 +15,14 @@ import it.unibo.interaction.IssOperations;
 import okhttp3.*;
 import okhttp3.internal.http.RealResponseBody;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
 import java.util.Vector;
 
 public class IssWsHttpJavaSupport extends WebSocketListener
         implements IssActorObservable, IssCommSupport, IssOperations {
+    private static HashMap<String,IssWsHttpJavaSupport> connMap=
+            new HashMap<String,IssWsHttpJavaSupport>();
     private boolean connectForWs               = true;
     private Vector<IJavaActor> actorobservers  = new Vector<IJavaActor>();
     private WebSocket myWs;
@@ -29,10 +33,18 @@ public class IssWsHttpJavaSupport extends WebSocketListener
     private boolean opened = false;
 
     public static IssWsHttpJavaSupport createForHttp(String addr ){
-        return new IssWsHttpJavaSupport(addr, false);
+        if( ! connMap.containsKey(addr)){
+            IssWsHttpJavaSupport support = new IssWsHttpJavaSupport(addr, false);
+            connMap.put(addr, support);
+        }
+        return connMap.get(addr);
     }
     public static IssWsHttpJavaSupport createForWs(String addr ){
-        return new IssWsHttpJavaSupport(addr, true);
+        if( ! connMap.containsKey(addr)){
+            IssWsHttpJavaSupport support = new IssWsHttpJavaSupport(addr, true);
+            connMap.put(addr, support);
+        }
+        return connMap.get(addr);
     }
     //Constructor
     private IssWsHttpJavaSupport(String addr, boolean wsconn ){  //localhost:8091

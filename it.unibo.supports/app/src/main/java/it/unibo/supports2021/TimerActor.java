@@ -1,7 +1,6 @@
 package it.unibo.supports2021;
 
 import it.unibo.interaction.IJavaActor;
-import netscape.javascript.JSObject;
 import org.json.JSONObject;
 
 

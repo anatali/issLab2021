@@ -13,18 +13,26 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     jacoco
-
+    distribution
 }
 
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
 }
-
+/*
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+*/
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+version="1.0"
 
 dependencies {
     // Align versions of all Kotlin components

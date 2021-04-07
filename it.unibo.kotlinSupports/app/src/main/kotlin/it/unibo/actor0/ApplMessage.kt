@@ -12,8 +12,8 @@ open class ApplMessage(
         val msgContent: String = "", val msgNum: String = "0"
 )  {
 
-
     companion object{
+        @JvmStatic
         //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
         fun create(msg: String) : ApplMessage{
             val body  = msg.replace("msg","").replace("(","").replace(")","")

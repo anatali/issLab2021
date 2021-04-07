@@ -10,7 +10,7 @@ public class MainTimer {
     public static void main(String[] args) {
         System.out.println("%%% MainTimer | START " + ActorBasicJava.aboutThreads());
         ActorNaiveObserver obs = new ActorNaiveObserver("obs");
-        IJavaActor timer = new TimerActor("t0", obs);
+        IJavaActor timer       = new TimerActor("t0", obs);
         timer.send(ActorMsgs.startTimerMsg.replace("TIME", "500") );
 
     }
