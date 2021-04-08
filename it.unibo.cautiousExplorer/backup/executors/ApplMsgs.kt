@@ -1,19 +1,13 @@
-package it.unibo.actor0robot
+package it.unibo.executors
 
 import it.unibo.actor0.ApplMessage
-
-/*
-{"robotmove":"MOVE", "time":T}
-{"endmove":"RESULT", "move":MOVE}
-{ "sonarName": "sonarName", "distance": 1, "axis": "x" }
-{ "collision" : "false", "move": "moveForward"}
- */
+import it.unibo.executors.ApplMsgs
 
 object ApplMsgs {
     const val forwardMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
     const val backwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 350}"
     const val microStepMsg = "{\"robotmove\":\"moveForward\", \"time\": 5}"
-    const val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 5}"
+    const val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 10}"
     const val turnLeftMsg = "{\"robotmove\":\"turnLeft\", \"time\": 300}"
     const val turnRightMsg = "{\"robotmove\":\"turnRight\", \"time\": 300}"
     const val haltMsg = "{\"robotmove\":\"alarm\", \"time\": 20}"
@@ -46,15 +40,10 @@ object ApplMsgs {
     const val stepFailId = "stepFail"
     val stepFailMsg = "{\"ID\":\"TIME\" }".replace("ID", stepFailId)
 
-    const val robotMovecmdId = "robotmovecmd"
-    val robotMovecmdMsg = "{\"ID\":\"MOVE\" }".replace("ID", robotMovecmdId)
 
 
     val demoMsgAppl =
         ApplMessage("cmd","dispatch","demo","obs","todo","1")
-    //val robotcmdMsgAppl =
-        //ApplMessage("robotcmd","dispatch",SENDER,RECEIVER,CMD,"1")
-
 
 
 }

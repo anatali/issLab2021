@@ -22,16 +22,15 @@ import kotlinx.coroutines.*
             /*
             Accepts   ApplMsgs.stepMsg
             Returns   ApplMsgs.stepDoneMsg or ApplMsgs.stepFailMsg
-            Use wenvAddr=wenv if deploy with dockercompose
+            WARNING !!!!!!!!  Use wenvAddr=wenv if deploy with dockercompose
              */
-            val stepper = StepRobotActor("stepRobot", ctxserver, "wenv", this)
+            //val stepper    = StepRobotActor("stepRobot", ctxserver, "wenv") //, this
+
+            val stepper    = StepRobotActor("stepRobot", ctxserver, "localhost")
             //stepper.registerActor(ctxserver)
+            val basicrobot = BasicRobotActor("basicRobot") //, this
+            basicrobot.send( MsgUtil.startDefaultMsg)
 
-
-        val endTime = sysUtil.getDuration(startTime)
-        println("==============================================")
-        println("MainStepRobotService | END TIME=$endTime ${sysUtil.aboutThreads("main") }"  );
-        println("==============================================")
 
     }
 

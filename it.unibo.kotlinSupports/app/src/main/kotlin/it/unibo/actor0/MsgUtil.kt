@@ -1,5 +1,10 @@
 package it.unibo.actor0
-
+/*
+{"robotmove":"MOVE", "time":T}
+{"endmove":"RESULT", "move":MOVE}
+{"sonarName": "sonarName", "distance": 1, "axis": "x" }
+{"collision" : "false", "move": "moveForward"}
+ */
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.interaction.IJavaActor
 import it.unibo.supports.FactoryProtocol
@@ -13,8 +18,10 @@ enum class Protocol {
  
 object MsgUtil {
 var count = 1;
-    val startDefaultMsg = ApplMessage("msgutil","start", "go", "any" )
-    val endDefaultMsg   = ApplMessage("msgutil","end", "do", "any" )
+    val startDefaultId = "start"
+    val endDefaultId   = "end"
+    val startDefaultMsg = ApplMessage(startDefaultId,"dispatch", "any", "any", "do" )
+    val endDefaultMsg   = ApplMessage(endDefaultId,"dispatch", "do", "any", "do" )
 
 @JvmStatic
 fun buildDispatch( actor:String, msgId:String, content:String, dest:String) : ApplMessage { //

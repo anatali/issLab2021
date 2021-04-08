@@ -1,20 +1,21 @@
-package it.unibo.actor0robot
+package it.unibo.executors
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.DispatchType
 import it.unibo.supports.IssWsHttpKotlinSupport
+import it.unibo.supports.WebSocketKotlinSupportUsage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
-abstract class AbstractRobotActor(name: String,
-            scope: CoroutineScope= CoroutineScope( newSingleThreadContext("single_$name") ))
+abstract class AbstractRobotActor(name: String, scope: CoroutineScope)
                 : ActorBasicKotlin(name, scope, DispatchType.single) {
     protected var moveInterval = 500L //to avoid too-rapid movement
     protected lateinit var support: IssWsHttpKotlinSupport
@@ -85,7 +86,7 @@ abstract class AbstractRobotActor(name: String,
     //StartTime = getCurrentTime()  Duration = getDuration(StartTime)
     //protected fun reactivate(actor: IJavaActor) { actor.send(ApplMsgs.resumeMsg) }
 
-    fun waitUser(prompt: String) {
+    protected fun waitUser(prompt: String) {
         print(">>>  $prompt >>>  ")
         val scanner = Scanner(System.`in`)
         try {

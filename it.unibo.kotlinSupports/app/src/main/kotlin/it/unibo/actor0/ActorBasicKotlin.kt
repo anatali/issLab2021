@@ -8,7 +8,9 @@ import kotlinx.coroutines.channels.actor
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 
 enum class DispatchType {single, iobound, cpubound }
-
+/*
+Each actor could have its own scope
+ */
 abstract class ActorBasicKotlin(val name: String,
                 val scope: CoroutineScope = CoroutineScope( newSingleThreadContext("single_$name") ) ,
                 val dispatchType: DispatchType = DispatchType.single,

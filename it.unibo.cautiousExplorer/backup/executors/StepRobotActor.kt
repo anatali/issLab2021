@@ -1,38 +1,40 @@
-package it.unibo.actor0robot
+package it.unibo.executors
 
 import it.unibo.actor0.ActorBasicKotlin
+import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.DispatchType
 import it.unibo.actor0.MsgUtil
+import it.unibo.interaction.IJavaActor
 import it.unibo.supports.ActorMsgs
 import it.unibo.supports.IssWsHttpKotlinSupport
 import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 /*
 ==============================================================================
 Accept a  ApplMsgs.stepMsg to move ahead the robot for a given time.
-
 Returns a ApplMsgs.stepDoneMsg if the move is done with success.
 Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
 by an obstacle after time DT. In this case it moves back the robot for time DT
 ==============================================================================
  */
 
+
 /*
 The map is a singleton object, managed by mapUtil
+
  */
 @ExperimentalCoroutinesApi
-class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
-                     wenAddr: String="localhost",
-                     scope: CoroutineScope=CoroutineScope( newSingleThreadContext("single_$name") ))
-            : AbstractRobotActor(name  ) {
+class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope)
+            : AbstractRobotActor(name, scope ) {
 
     init {
-        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "$wenAddr:8091")
+        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "localhost:8091")
         //support.wsconnect(  fun(scope, support ) {println("$name | connectedddd ${infoThreads()}")} )
-        println( "$name | StepRobotActor init $support ${infoThreads()}")
+        println( "$name | StepRobotActor init ${infoThreads()}")
     }
 
     protected enum class State {
@@ -70,6 +72,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
                         support.forward(attemptStepMsg)
                         curState = State.moving
                     }
+
             }
             State.moving -> {
                 val dt = "" + this.getDuration(StartTime)
@@ -98,13 +101,22 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
                 if (move == "moveBackward" && arg == "true" ||
                     move == "moveForward" && arg == "halted"
                 ) {
+                    //println(name.toString() + " | end  arg=" + arg)
+                    //ownerActor.send(answer)
+                        /*
+                    scope.launch {
+                        MsgUtil.sendMsg(name, "stepAnswer", answer, ownerActor)
+                    }*/
                     val m = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
                     ownerActor.send(m)
 
                 } else if (move == "collision") { //the last step was ok but with a collision
                     println(name.toString() + " | collision ? answer=" + answer)
                     if (answer == ApplMsgs.stepDoneMsg) ownerActor.send(answer) else ownerActor.send(
-                        ApplMsgs.stepFailMsg.replace("TIME", "10")
+                        ApplMsgs.stepFailMsg.replace(
+                            "TIME",
+                            "10"
+                        )
                     )
                 } else {
                     println(name.toString() + " | FATAL error - curState = " + curState)
@@ -124,7 +136,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
 ======================================================================================
  */
     override fun msgDriven(msgJson: JSONObject) {
-        if (! msgJson.has("sonarName")) println("$name StepRobotActor |  msgDriven:$msgJson")
+        //if (! msgJson.has("sonarName")) println("$name StepRobotActor |  msgDriven:$msgJson")
         if (msgJson.has(ApplMsgs.stepId)) {
             //println( name + " |  msgJson:" + msgJson);
             val time: String = msgJson.getString(ApplMsgs.stepId)
