@@ -34,7 +34,8 @@ class BasicRobotActor(name: String, wenAddr: String="localhost" )
 /*
 ======================================================================================
  */
-override suspend fun handleInput(msg: ApplMessage) {
+    //Msg driven actor
+    override suspend fun handleInput(msg: ApplMessage) {
     println(  "$name | BasicRobotActor handleInput msg=$msg")
     val sender  = msg.msgSender
     if (msg.msgId == MsgUtil.startDefaultId){

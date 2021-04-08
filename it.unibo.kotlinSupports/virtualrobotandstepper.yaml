@@ -14,3 +14,4 @@ services:
     depends_on:
       - wenv
 
+##it.unibo.kotlinSupports>docker-compose -f virtualrobotandstepper.yaml up
