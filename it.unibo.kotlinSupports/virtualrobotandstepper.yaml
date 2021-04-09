@@ -6,12 +6,12 @@ services:
     ports:
       - 8090:8090
       - 8091:8091
-  stepper:
-    ##image: steprobot:1.0
-    image: docker.io/natbodocker/steprobot:1.0
+  server8010:
+    image: steprobot:2.0
+    ## image: docker.io/natbodocker/steprobot:1.0
     ports:
       - 8010:8010
     depends_on:
       - wenv
-
+## docker build -t steprobot:2.0 .
 ##it.unibo.kotlinSupports>docker-compose -f virtualrobotandstepper.yaml up

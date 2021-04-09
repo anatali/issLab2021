@@ -20,7 +20,7 @@ import kotlinx.coroutines.*
 
 
     @ExperimentalCoroutinesApi
-    fun main() {
+    fun mainwlakerpath() {
         //sysUtil.trace = true
         val startTime = sysUtil.aboutSystem("applmain")
         println("==============================================")

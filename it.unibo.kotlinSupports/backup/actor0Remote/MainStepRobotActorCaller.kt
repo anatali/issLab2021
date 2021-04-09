@@ -9,7 +9,7 @@ package it.unibo.actor0Remote
 
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.actor0.*
-import it.unibo.actor0robot.ApplMsgs
+import it.unibo.robotService.ApplMsgs
 import kotlinx.coroutines.*
 import org.json.JSONObject
 

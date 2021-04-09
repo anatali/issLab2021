@@ -66,10 +66,10 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.actor0robot.MainStepRobotServiceKt")
+    mainClass.set("it.unibo.robotService.MainRobotServiceKt")
 }
 
-version = "1.0"
+version = "2.0"
 /*
 val jar by tasks.getting(Jar::class) {
     manifest {
@@ -79,7 +79,7 @@ val jar by tasks.getting(Jar::class) {
 */
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "it.unibo.actor0robot.MainStepRobotServiceKt"
+        attributes["Main-Class"] = "it.unibo.robotService.MainRobotServiceKt"
         attributes(mapOf("Implementation-Title" to project.name,
             "Implementation-Version" to project.version))
     }

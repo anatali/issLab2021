@@ -13,11 +13,14 @@ package it.unibo.actor0robot
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.MsgUtil
-import it.unibo.actor0robot.ApplMsgs.endMoveId
-import it.unibo.actor0robot.ApplMsgs.executorStartId
-import it.unibo.actor0robot.ApplMsgs.executorendkoMsg
-import it.unibo.actor0robot.ApplMsgs.stepDoneId
-import it.unibo.actor0robot.ApplMsgs.stepFailId
+import it.unibo.robotService.AbstractRobotActor
+import it.unibo.robotService.ApplMsgs
+import it.unibo.robotService.ApplMsgs.endMoveId
+import it.unibo.robotService.ApplMsgs.executorStartId
+import it.unibo.robotService.ApplMsgs.executorendkoMsg
+import it.unibo.robotService.ApplMsgs.stepDoneId
+import it.unibo.robotService.ApplMsgs.stepFailId
+import it.unibo.robotService.StepRobotActor
 import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.CoroutineScope
 import mapRoomKotlin.mapUtil
@@ -27,8 +30,8 @@ import java.lang.Exception
 /*
 The map is a singleton object, managed by mapUtil
  */
-open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope)
-    : AbstractRobotActor(name,scope) {
+open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope )
+            : AbstractRobotActor(name, "localhost", scope ) {
     protected enum class State {
         start, nextMove, moving, turning, endok, endfail
     }
@@ -105,7 +108,7 @@ open class ExecutorActor(name: String, val ownerActor: ActorBasicKotlin, scope: 
             State.start -> {
                 if (move == executorStartId) {
                     support.registerActor(this)
-                    stepper = StepRobotActor("steprobot", this, "localhost", scope )
+                    stepper = StepRobotActor("steprobot", this )
                     nextMove()
                 }
             }

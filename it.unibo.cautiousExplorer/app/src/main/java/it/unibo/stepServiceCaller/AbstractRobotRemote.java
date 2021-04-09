@@ -18,9 +18,9 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
 
     public static final String startDefaultMsg =
             //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
-            ApplMessage.Companion.create("msg(start,dispatch,any,any,do,1)").toString();
+            ApplMessage.Companion.create("msg(start,dispatch,any,any,{\"start\":\"do\"},1)").toString();
     public static final String endDefaultMsg   =
-            ApplMessage.Companion.create("msg( end, dispatch, any, any, do, 1 )").toString();
+            ApplMessage.Companion.create("msg( end, dispatch, any, any, {\"end\":\"do\"}, 1 )").toString();
 
     protected IConnInteraction conn;
     protected int moveInterval          = 500;   //to avoid too-rapid movement
@@ -49,7 +49,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
         MoveJsonCmd.put("w", ApplMsgs.forwardMsg.replace(",","@"));
         MoveJsonCmd.put("s", ApplMsgs.backwardMsg.replace(",","@"));
         MoveJsonCmd.put("l", ApplMsgs.turnLeftMsg.replace(",","@"));
-        MoveJsonCmd.put("l", ApplMsgs.turnRightMsg.replace(",","@"));
+        MoveJsonCmd.put("r", ApplMsgs.turnRightMsg.replace(",","@"));
         MoveJsonCmd.put("h", ApplMsgs.haltMsg.replace(",","@"));
 
         startConn();
@@ -118,7 +118,13 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
 ======================================================================================
  */
     @Override
-    protected void handleInput(String infoJson) {
+    protected void handleInput(String info ) {
+        System.out.println("AbstractRobotRemote | handleInput:" + info );
+        String infoJson = info;
+        if( info.startsWith("msg")){    //Answer from the remote actor
+            ApplMessage m  = ApplMessage.create( info );
+            infoJson       =  m.getMsgContent();
+        }
         msgDriven( new JSONObject(infoJson) );
     }
 

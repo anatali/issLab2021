@@ -4,7 +4,7 @@ import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
 import kotlinx.coroutines.*
 
-
+     @kotlinx.coroutines.ExperimentalCoroutinesApi
      fun demoStepper(scope: CoroutineScope) {
         val stepperName = "stepper"
         val startmsg = MsgUtil.buildDispatch("main", "start", "ok", "stepper")
@@ -14,7 +14,7 @@ import kotlinx.coroutines.*
 
 
     @ExperimentalCoroutinesApi
-    fun main() {
+    fun oldmain() {
         //sysUtil.trace = true
         val startTime = sysUtil.aboutSystem("applmain")
         println("==============================================")

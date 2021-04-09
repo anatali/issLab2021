@@ -2,6 +2,7 @@ package it.unibo.actor0robot
 
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.actor0.*
+import it.unibo.robotService.ApplMsgs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

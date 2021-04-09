@@ -2,10 +2,11 @@ package it.unibo.actor0robot
 import mapRoomKotlin.mapUtil.showMap
 import mapRoomKotlin.mapUtil.doMove
 import it.unibo.interaction.IJavaActor
-import kotlinx.coroutines.CoroutineScope
+import it.unibo.robotService.AbstractRobotActor
+import it.unibo.robotService.ApplMsgs
 import org.json.JSONObject
 
-class SpiralExplorerActor(name: String, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
+class SpiralExplorerActor(name: String ) : AbstractRobotActor(name ) {
     private var numSpiral = 0
     private var engaged = false
     var curPathTodo = ""
@@ -31,7 +32,7 @@ class SpiralExplorerActor(name: String, scope: CoroutineScope) : AbstractRobotAc
         curPathTodo = getSpiralPath(numSpiral)
         val msg = ApplMsgs.executorstartMsg.replace("PATHTODO", curPathTodo)
         println("$name | msg=$msg numSpiral=$numSpiral")
-        val executor: IJavaActor = ExecutorActor("executor", this, scope )
+        val executor: IJavaActor = ExecutorActor("executor", this, scope  )
         waitUser("start new journey")
         executor.send(msg)
     }

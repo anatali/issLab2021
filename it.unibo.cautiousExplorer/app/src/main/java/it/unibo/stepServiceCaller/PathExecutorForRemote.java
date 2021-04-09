@@ -10,7 +10,7 @@ import it.unibo.actor0.ApplMessage;
 import it.unibo.executor.ApplMsgs;
 import it.unibo.executor.NaiveObserver;
 import it.unibo.interaction.IJavaActor;
-import mapRoomKotlin.mapUtil;
+import it.unibo.supports2021.ActorBasicJava;
 import org.json.JSONObject;
 
 
@@ -45,36 +45,34 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
 
     protected void nextMove(){
         if (todoPath.length() > 0) {
-            mapUtil.showMap();
+            moves.showMap();
             //waitUser();
             char firstMove = todoPath.charAt(0);
             todoPath       = todoPath.substring(1);
             if( firstMove == 'w' ){
-                //support.removeActor(this);  //avoid to receive info form WEnv
-                //IJavaActor stepper = new StepRobotActor("stepper", this );
-                doStep();
-                //ActorBasicJava.delay(300);  //give time to open ws
-                //stepper.send(stepMsg);
-                curState = State.moving;
+                 doStep();
+                 curState = State.moving;
             } else { //firstMove == 'l'
                 curState = State.turning;
                 doMove( ""+firstMove );
             }
         } else{ //todoPath.length() == 0
             microStep();
-            curState = State.endok;
+            //doMove("h");  //to force state change
+            curState = State.endok; //to force state change
         }
+        ActorBasicJava.delay(1000);  //give time to open ws
     }
 
     protected void obstacleFound(){
         System.out.println(myname + " | END KO ---------------- "  );
-        mapUtil.showMap();
+        moves.showMap();
         try {
-            mapUtil.setObstacle();
+            moves.setObstacle();
         } catch (Exception e) { //wall
             System.out.println(myname + " | outside the map " + e.getMessage());
         }
-        mapUtil.showMap();
+        moves.showMap();
         if( ownerActor != null ) {
             ownerActor.send(
                     ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.getJourney()));
@@ -91,8 +89,8 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
         switch (curState) {
             case start: {
                 if( move.equals(executorStartId)) {
-                      System.out.println("--- PathExecutorForRemote todoPath=" + todoPath);
-                      todoPath = arg;
+                    todoPath = arg;
+                    System.out.println("--- PathExecutorForRemote todoPath=" + todoPath);
                 }
                 nextMove();
                 break;
@@ -111,8 +109,6 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             }//turning
 
             case moving : {
-                System.out.println(myname + " | moving ... " + move  );
-                //support.registerActor(this);
                 if (move.equals(stepDoneId)){
                     moves.updateMovesRep("w");
                     nextMove();
@@ -125,7 +121,7 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             case endok: {
                 System.out.println(myname + " | END OK ---------------- "  );
                 ownerActor.send(ApplMsgs.executorendokMsg);
-                mapUtil.showMap();
+                moves.showMap();
                 //support.removeActor(this);
                 terminate();
                 //resetStateVars();
@@ -135,11 +131,11 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             case endfail: {
                 System.out.println(myname + " | END KO ---------------- "  );
                     try {
-                        mapUtil.setObstacle();
+                        moves.setObstacle();
                     } catch (Exception e) { //wall
                         System.out.println(myname + " | outside the map " + e.getMessage());
                     }
-                    mapUtil.showMap();
+                    moves.showMap();
                     ownerActor.send(
                             ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.getJourney()));
 

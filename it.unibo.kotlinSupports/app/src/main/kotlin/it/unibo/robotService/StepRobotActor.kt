@@ -1,13 +1,11 @@
-package it.unibo.actor0robot
+package it.unibo.robotService
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.MsgUtil
 import it.unibo.supports.ActorMsgs
-import it.unibo.supports.IssWsHttpKotlinSupport
 import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
 import org.json.JSONObject
 
 /*
@@ -24,16 +22,8 @@ by an obstacle after time DT. In this case it moves back the robot for time DT
 The map is a singleton object, managed by mapUtil
  */
 @ExperimentalCoroutinesApi
-class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
-                     wenAddr: String="localhost",
-                     scope: CoroutineScope=CoroutineScope( newSingleThreadContext("single_$name") ))
-            : AbstractRobotActor(name  ) {
-
-    init {
-        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "$wenAddr:8091")
-        //support.wsconnect(  fun(scope, support ) {println("$name | connectedddd ${infoThreads()}")} )
-        println( "$name | StepRobotActor init $support ${infoThreads()}")
-    }
+class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope )
+            : AbstractRobotActor( name, "wenv", scope ) {
 
     protected enum class State {
         start, moving, obstacle, end
@@ -45,6 +35,10 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
     protected var backMsg         = ""
     protected var answer          = ""
     private var StartTime: Long   = 0L
+
+    init {
+        println( "$name | StepRobotActor init $support ${infoThreads()}")
+    }
 
 
     protected fun fsmstep(move: String, arg: String) {
@@ -114,26 +108,24 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
 
                 //terminate()
             }
-            else -> {
-                println(name.toString() + " | error - curState = " + curState)
-            }
+            //else -> { println(name.toString() + " | error - curState = " + curState) }
         }
     }
 
 /*
 ======================================================================================
  */
-    override fun msgDriven(msgJson: JSONObject) {
-        if (! msgJson.has("sonarName")) println("$name StepRobotActor |  msgDriven:$msgJson")
-        if (msgJson.has(ApplMsgs.stepId)) {
+    override fun msgDriven(infoJson: JSONObject) {
+        if (! infoJson.has("sonarName")) println("$name StepRobotActor |  msgDriven:$infoJson")
+        if (infoJson.has(ApplMsgs.stepId)) {
             //println( name + " |  msgJson:" + msgJson);
-            val time: String = msgJson.getString(ApplMsgs.stepId)
+            val time: String = infoJson.getString(ApplMsgs.stepId)
             fsmstep(ApplMsgs.stepId, time)
-        } else if (msgJson.has(ActorMsgs.endTimerId)) {
+        } else if (infoJson.has(ActorMsgs.endTimerId)) {
             fsmstep(ActorMsgs.endTimerId, "")
-        } else if (msgJson.has("endmove")) {
-            fsmstep(msgJson.getString("move"), msgJson.getString("endmove"))
-        } else if (msgJson.has("collision")) {  //put as the last
+        } else if (infoJson.has("endmove")) {
+            fsmstep(infoJson.getString("move"), infoJson.getString("endmove"))
+        } else if (infoJson.has("collision")) {  //put as the last
             fsmstep("collision", "")
         }
     }

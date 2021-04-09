@@ -17,7 +17,7 @@ class ActorBasicWithContext {
         //val localctx = ActorContextLocal.getLocalContext(scope)
         for (i in 0..numOfActors-1) {
             val newactor = ActorBasicContextKb.createActor(//ActorContextLocal.createActor(
-                    "a$i","it.unibo.actor0Usage.ActorBasicKotlinNaive",scope)
+                    "a$i","ActorBasicKotlinNaive",scope)
             //val startactor = MsgUtil.buildDispatch("main", "startTheActor", "ok", newactor.name )
             newactor.send(hellomsg)
           }

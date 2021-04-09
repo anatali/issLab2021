@@ -1,12 +1,8 @@
-package it.unibo.actor0robot
+package it.unibo.robotService
 
-import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
-import it.unibo.supports.ActorMsgs
 import it.unibo.supports.IssWsHttpKotlinSupport
-import it.unibo.supports.TimerActor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import org.json.JSONObject
@@ -19,16 +15,13 @@ Accept a  ApplMsgs.cmdMsg to move the robot  .
  */
 
 @ExperimentalCoroutinesApi
-class BasicRobotActor(name: String, wenAddr: String="localhost" )
-            : AbstractRobotActor( name ) {
+class BasicRobotActor(name: String) : AbstractRobotActor( name ) {
 
     val turnRightMsg = "{\"robotmove\":\"turnRight\",   \"time\": 300}"
     val turnLeftMsg  = "{\"robotmove\":\"turnLeft\",    \"time\": 300}"
+
     init {
-        support = IssWsHttpKotlinSupport.getConnectionWs(scope, "$wenAddr:8091")
-        //support.wsconnect(  fun(scope, support ) {println("$name | connectedddd ${infoThreads()}")} )
-        //println( "$name | BasicRobotActor init $support ${infoThreads()}")
-        support.registerActor(this)
+        println(  "$name | BasicRobotActor init support=$support")
     }
 
 /*
@@ -38,11 +31,12 @@ class BasicRobotActor(name: String, wenAddr: String="localhost" )
     override suspend fun handleInput(msg: ApplMessage) {
     println(  "$name | BasicRobotActor handleInput msg=$msg")
     val sender  = msg.msgSender
-    if (msg.msgId == MsgUtil.startDefaultId){
+    if (msg.msgId == MsgUtil.startDefaultId){ /*
+        delay(500)
         support.forward(turnRightMsg)
-        delay(500)
+        delay(1000)
         support.forward(turnLeftMsg)
-        delay(500)
+        delay(500)*/
     }else if (msg.msgId == MsgUtil.endDefaultId){
         terminate()
     }else{
@@ -58,15 +52,16 @@ class BasicRobotActor(name: String, wenAddr: String="localhost" )
             this.updateObservers(answer)
         }else if(msgJson.has("collision")) {
             val answer = MsgUtil.buildDispatch(
-                name,"event", "collision" , sender)
+            name,"event", "collision" , sender)
             println( "$name | send answer:" + answer)
         }else if (msgJson.has("robotmove")) { //"{\"robotmove\":\"turnLeft\", \"time\": 300}"
             println( "$name | send msgJson:" + msgJson)
             support.forward(msgJson.toString())
         }else if (msgJson.has(ApplMsgs.endMoveId)){
             val endmove: String = msgJson.getString("move")
-            val answer = MsgUtil.buildDispatch(name,ApplMsgs.endMoveId, endmove , sender)
+            val answer = MsgUtil.buildDispatch(name, ApplMsgs.endMoveId, endmove , sender)
             println( "$name | send answer:" + answer)
+            this.updateObservers(answer)
         }
     }//else
 

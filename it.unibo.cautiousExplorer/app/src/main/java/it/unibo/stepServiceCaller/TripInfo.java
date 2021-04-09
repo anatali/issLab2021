@@ -16,7 +16,7 @@ public class TripInfo {
     public String getJourney(){ return journey; }
     public String getMap(){ return mapUtil.getMapRep(); }
 
-    public void showMap(){ System.out.println(getMap()); }
-    public void showJourney(){ System.out.println(getMap()); }
+    public void showMap(){ mapUtil.showMap(); }
+    public void showJourney(){ System.out.println(journey); }
 
 }

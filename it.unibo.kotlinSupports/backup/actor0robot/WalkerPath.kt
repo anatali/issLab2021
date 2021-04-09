@@ -9,13 +9,15 @@ package it.unibo.actor0robot
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
+import it.unibo.robotService.AbstractRobotActor
+import it.unibo.robotService.ApplMsgs
 import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject
 
-class WalkerPath(name:String, scope: CoroutineScope) : AbstractRobotActor(name, scope) {
+class WalkerPath(name:String, scope: CoroutineScope) : AbstractRobotActor(name, "localhost", scope) {
 
     protected enum class State {
         start, checkResultAhead, checkResultBack, end
@@ -38,7 +40,7 @@ class WalkerPath(name:String, scope: CoroutineScope) : AbstractRobotActor(name, 
                 }
             }
             State.checkResultAhead -> {
-                if( move==ApplMsgs.executorDoneId  ){
+                if( move== ApplMsgs.executorDoneId  ){
                     println("$name | all ok path=$arg")
                 }else{ //fail
                     println("$name | partial path=$arg")

@@ -1,9 +1,9 @@
 package it.unibo.actor0robot
 
 import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0robot.ApplMsgs.endMoveId
-import it.unibo.actor0robot.ApplMsgs.runawyEndMsg
-import it.unibo.actor0robot.ApplMsgs.runawyStartId
+import it.unibo.robotService.ApplMsgs.endMoveId
+import it.unibo.robotService.ApplMsgs.runawyEndMsg
+import it.unibo.robotService.ApplMsgs.runawyStartId
 import kotlinx.coroutines.CoroutineScope
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject

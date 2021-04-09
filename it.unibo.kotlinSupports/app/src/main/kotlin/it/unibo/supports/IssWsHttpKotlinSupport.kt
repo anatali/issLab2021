@@ -30,6 +30,7 @@ import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
 class IssWsHttpKotlinSupport
+
     private constructor(val scope: CoroutineScope, val addr:String, val wsconn:Boolean)
           : WebSocketListener(), IssActorObservable, IssCommSupport, IssOperations {
     lateinit var myWs: WebSocket
@@ -58,6 +59,7 @@ class IssWsHttpKotlinSupport
         fun createForWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
             if( ! activeAconnsWs.containsKey(addr)) {
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
+
                  activeAconnsWs.put(addr,support)
                  println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }

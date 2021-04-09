@@ -4,17 +4,21 @@ import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
+import it.unibo.robotService.ApplMsgs
+import it.unibo.robotService.StepRobotActor
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 class Stepper(name:String, scope: CoroutineScope) : ActorBasicKotlin(name, scope) {
     val stepMsg = ApplMsgs.stepMsg.replace("TIME", "350")
 
     var steprobotactor    : ActorBasicKotlin
     var startStepRobotMsg : ApplMessage
 
+
     init{
-        steprobotactor    = StepRobotActor("stepactor", this, "localhost", scope)
+        steprobotactor    = StepRobotActor("stepactor", this )
         startStepRobotMsg = MsgUtil.buildDispatch("main", ApplMsgs.stepId, stepMsg, steprobotactor.name )
         println( "$name Stepper | init ${infoThreads()}")
     }

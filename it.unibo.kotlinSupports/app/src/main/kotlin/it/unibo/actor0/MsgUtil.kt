@@ -20,8 +20,8 @@ object MsgUtil {
 var count = 1;
     val startDefaultId = "start"
     val endDefaultId   = "end"
-    val startDefaultMsg = ApplMessage(startDefaultId,"dispatch", "any", "any", "do" )
-    val endDefaultMsg   = ApplMessage(endDefaultId,"dispatch", "do", "any", "do" )
+    val startDefaultMsg = ApplMessage(startDefaultId,"dispatch", "any", "any", "{\"start\":\"do\"}" )
+    val endDefaultMsg   = ApplMessage(endDefaultId,"dispatch", "do", "any", "{\"end\":\"do\"}" )
 
 @JvmStatic
 fun buildDispatch( actor:String, msgId:String, content:String, dest:String) : ApplMessage { //
