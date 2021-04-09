@@ -10,7 +10,7 @@ public class MainStepRobotActor {
         System.out.println("MainStepRobotActor | main " + ActorBasicJava.aboutThreads() );
         System.out.println("================================================================");
     //Configure the system
-        NaiveObserver obs  = new NaiveObserver("obs",0);
+        NaiveObserver obs  = new NaiveObserver("obs" );
         IJavaActor stepper = new StepRobotActor("stepper", obs );
     //Activate the system
          for( int i =1; i<=5; i++ ) {

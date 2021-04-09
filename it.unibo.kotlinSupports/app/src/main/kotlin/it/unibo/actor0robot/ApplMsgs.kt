@@ -38,7 +38,8 @@ object ApplMsgs {
     val runawyEndMsg = "{\"ID\":\"RESULT\" }".replace("ID", runawyEndId)
     const val runawyStartId = "runawaystart"
     val runawyStartMsg = "{\"ID\":\"PATHTODO\" }".replace("ID", runawyStartId)
- //
+
+    //
     const val stepId = "step"
     val stepMsg = "{\"ID\":\"TIME\" }".replace("ID", stepId)
     const val stepDoneId = "stepDone"

@@ -4,10 +4,10 @@ import it.unibo.supports2021.ActorBasicJava;
 
 
 public class NaiveObserver extends ActorBasicJava {
-private int count;
-    public NaiveObserver(String name, int i){
+
+    public NaiveObserver(String name ){
         super(name);
-        count = i;
+
     }
     @Override
     protected void handleInput(String info) {

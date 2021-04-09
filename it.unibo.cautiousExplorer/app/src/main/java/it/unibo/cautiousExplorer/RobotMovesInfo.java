@@ -12,11 +12,14 @@ public class RobotMovesInfo {
     public RobotMovesInfo(boolean doMap){
         this.doMap = doMap;
     }
+
     public void showRobotMovesRepresentation(  ){
         if( doMap ) showMap();
         else System.out.println( "journey=" + journey );
     }
-
+    public String getJourney(   ){
+         return journey;
+    }
     public String cleanMovesRepresentation(  ){
         if( doMap ) return getMapAndClean(); //getCleanMap();
         else {

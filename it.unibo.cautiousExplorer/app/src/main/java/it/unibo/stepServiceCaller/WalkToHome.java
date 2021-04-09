@@ -1,44 +1,28 @@
-package it.unibo.executor;
-
+package it.unibo.stepServiceCaller;
+import it.unibo.executor.ApplMsgs;
+import it.unibo.executor.PathExecutorActor;
 import it.unibo.interaction.IJavaActor;
 import mapRoomKotlin.mapUtil;
 import org.json.JSONObject;
 
-import static it.unibo.executor.ApplMsgs.*;
+
 
 /*
 The map is a singleton object, managed by mapUtil
  */
-public class RunawayActor extends PathExecutorActor {
-
-    public RunawayActor(String name, IJavaActor ownerActor ) {
+public class WalkToHome extends PathExecutorActor{ //extends PathExecutorActor
+    
+    public WalkToHome(String name, IJavaActor ownerActor ) {
         super(name, ownerActor );
     }
-    protected void updateTripInfo(String move){
-        moves.updateMovesRep(move);
-        mapUtil.doMove(move);
-    }
 
-    protected void resetStateVars(){
-        curState          = State.start;
-        moves.cleanMovesRepresentation();
-        todoPath       = "";
-    }
-    protected void doMove(char moveStep){
-        System.out.println("RunawayActor | doMove ... " + moveStep + " totPath="+todoPath);
-        if( moveStep == 'w') doStep();
-        else if( moveStep == 'l') turnLeft();
-        else if( moveStep == 'r') turnRight();
-        else if( moveStep == 's') doBackStep();
-    }
-
-    protected void fsmrunaway(String move, String endmove) {
+    protected void fsmdopath(String move, String endmove) {
         System.out.println(myname + " | state=" +
                 curState +  " move=" + move + " endmove=" + endmove + " totPath="+todoPath );
         switch (curState) {
             case start: {
-                if( move.equals(runawyStartId)) {
-                    System.out.println(" ------ RunawayActor -------- ");
+                if( move.equals(ApplMsgs.runawyStartId)) {
+                    System.out.println(" ------------ WalkToHome -----------  ");
                 }
                 if (todoPath.length() > 0) {
                     mapUtil.showMap();
@@ -73,7 +57,7 @@ public class RunawayActor extends PathExecutorActor {
             }//moving
             case endok: {
                 System.out.println(myname + " | END OK ---------------- "  );
-                ownerActor.send(runawyEndMsg);
+                ownerActor.send(ApplMsgs.runawyEndMsg);
 
                 support.removeActor(this);
                 terminate();
@@ -96,13 +80,13 @@ public class RunawayActor extends PathExecutorActor {
  */
     @Override
     protected void msgDriven( JSONObject msgJson){
-         if( msgJson.has(runawyStartId) ) {
-             System.out.println("RunawayActor | runaway infoJson:" + msgJson);
-             this.todoPath = msgJson.getString(runawyStartId);
-             fsmrunaway( runawyStartId, "");
-         }else if( msgJson.has(endMoveId) ) {
-             System.out.println("RunawayActor | infoJson:" + msgJson);
-             fsmrunaway(msgJson.getString("move"), msgJson.getString("endmove"));
+         if( msgJson.has(ApplMsgs.runawyStartId) ) {
+             System.out.println("WalkToHome | runaway infoJson:" + msgJson);
+             this.todoPath = msgJson.getString(ApplMsgs.runawyStartId);
+             fsmdopath( ApplMsgs.runawyStartId, "");
+         }else if( msgJson.has(ApplMsgs.endMoveId) ) {
+             System.out.println("WalkToHome | infoJson:" + msgJson);
+             fsmdopath(msgJson.getString("move"), msgJson.getString("endmove"));
 
          }
     }

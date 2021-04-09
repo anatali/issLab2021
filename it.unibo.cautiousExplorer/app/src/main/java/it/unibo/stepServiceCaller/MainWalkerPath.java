@@ -1,20 +1,21 @@
 /*
 ============================================================
-WalkerPath
+MainWalkerPath
 Sends commands over TCP-8010
 ============================================================
  */
 package it.unibo.stepServiceCaller;
 
 import it.unibo.actor0.*;
-import it.unibo.cautiousExplorer.RobotMovesInfo;
+import it.unibo.executor.ApplMsgs;
+import it.unibo.interaction.IJavaActor;
 import it.unibo.is.interfaces.protocols.IConnInteraction;
 import it.unibo.supports.FactoryProtocol;
 import it.unibo.supports2021.ActorBasicJava;
-import mapRoomKotlin.mapUtil;
+
 import org.json.JSONObject;
 
-public class WalkerPath extends ActorBasicJava {
+public class MainWalkerPath extends ActorBasicJava {
 
     public static final String startDefaultMsg =
             //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
@@ -24,11 +25,12 @@ public class WalkerPath extends ActorBasicJava {
             //MsgUtil.buildDispatch("anysender","end", "do", "anyreceiver" ).toString();
 
     protected IConnInteraction conn;
-    protected String stepCmd         = "{\"step\":\"350\" }";
-    protected String destStepperName = "stepRobot"; //defined by the service
-    protected RobotMovesInfo moves   = new RobotMovesInfo(false);
+    protected String stepCmd            = "{\"step\":\"350\" }";
+    protected String destStepperName    = "stepRobot"; //defined by the service
+    protected String destBasicRobotName = "basicRobot"; //defined by the service
 
-    public WalkerPath(String name) {
+    protected TripInfo moves            = new TripInfo();
+    public MainWalkerPath(String name) {
         super(name);
     }
 
@@ -42,65 +44,79 @@ public class WalkerPath extends ActorBasicJava {
         reader.send(startDefaultMsg);
     }
 
-    protected void updateTripInfo(String move){
-        moves.updateMovesRep(move);
-        mapUtil.doMove(move);
+    protected void turnLeft() throws Exception { //Talk with BasicRobotActor
+        String msg =
+                ApplMessage.Companion.create("msg(robotmove,dispatch,walker,DEST,CMD,1)").toString()
+                .replace("DEST", destBasicRobotName)
+                .replace("CMD",ApplMsgs.turnLeftMsg.replace(",","@"));
+        System.out.println("WalkerPath | turnLeft msg:" + msg);
+        conn.sendALine(msg);
     }
-    protected void doStep() throws Exception {
+
+    protected void doStep() throws Exception { //Talk with StepRobotActor
         String msg = //MsgUtil.buildDispatch("walker", "step", stepCmd, destStepperName).toString();
                 ApplMessage.Companion.create("msg(step,dispatch,walker,DEST,CMD,1)").toString()
-                .replace("DEST", destStepperName).replace("CMD",stepCmd);
+                        .replace("DEST", destStepperName).replace("CMD",stepCmd);
         System.out.println("WalkerPath | doStep msg:" + msg);
         conn.sendALine(msg);
+
     }
 
     protected void nextMove(String answerJsonStr) throws Exception {
         //{"stepDone":"ok" } {"stepFail":"163" }
         JSONObject answer = new JSONObject(answerJsonStr);
         if( answer.has("stepDone")){
-            updateTripInfo("w");
-            mapUtil.showMap();
+            moves.updateMovesRep("w");
+            moves.showMap();
             ActorBasicJava.delay(1000);
             doStep();
         }else{
-            System.out.println("WalkerPath obstacle:"  );
-            try {
-                mapUtil.setObstacle();
+             try {
+                moves.setObstacle();
+                String pathSoFar = moves.getJourney();
+                System.out.println("WalkerPath obstacle - pathSoFar=" + pathSoFar );
+                //Return to home (den)
+                turn180(); //Talk with BasicRobotActor
+                String pathTodo   =   reverse( pathSoFar  ).replace("l","r") +"ll"; //;
+                IJavaActor goHome = new WalkToHome("goHome",this);
+                goHome.send(ApplMsgs.runawyStartMsg.replace("PATHTODO", pathTodo));
             } catch (Exception e) { //wall
                 System.out.println(myname + " | outside the map " + e.getMessage());
             }
-            mapUtil.showMap();
+            moves.showMap();
         }
     }
+    protected void turn180(){
+        try {
+            turnLeft();
+            moves.updateMovesRep("l");
+            ActorBasicJava.delay(300);
+            turnLeft();
+            moves.updateMovesRep("l");
+            ActorBasicJava.delay(300);
+        }catch( Exception e ){ e.printStackTrace();}
+    }
 
+
+    protected String reverse( String s  ){
+        if( s.length() <= 1 )  return s;
+        else return reverse( s.substring(1) ) + s.charAt(0) ;
+    }
     @Override
     protected void handleInput(String s) {
         try {
             System.out.println("WalkerPath handleInput:" + s);
             ApplMessage msg = ApplMessage.create(s);
             String msgId    = msg.getMsgId();
-            System.out.println("WalkerPath handleInput msg=" + msgId);
+            //System.out.println("WalkerPath handleInput msg=" + msgId);
             if (msgId.equals("start")) {
                 startConn();
-                mapUtil.showMap();
+                moves.showMap();
                 doStep();
             }else if(msgId.equals("stepAnswer")){
                 nextMove(msg.getMsgContent());
             }
-            /*
-                updateTripInfo("w");
-                mapUtil.showMap();
-                doStep();
-            }else if(msgId.equals("stepFail")){
-                System.out.println("WalkerPath obstacle:"  );
-                try {
-                    mapUtil.setObstacle();
-                } catch (Exception e) { //wall
-                    System.out.println(myname + " | outside the map " + e.getMessage());
-                }
-                mapUtil.showMap();
-            }*/
-        }catch( Exception e){
+          }catch( Exception e){
             System.out.println("WalkerPath ERROR:" + e.getMessage());
         }
     }
@@ -110,7 +126,7 @@ public class WalkerPath extends ActorBasicJava {
         System.out.println("WalkerPath | main "  ); //+ sysUtil.aboutThreads("main")
         System.out.println("================================================================");
         //Configure the system
-        WalkerPath walker = new WalkerPath("walker");
+        MainWalkerPath walker = new MainWalkerPath("walker");
         walker.send( startDefaultMsg );
 
     }

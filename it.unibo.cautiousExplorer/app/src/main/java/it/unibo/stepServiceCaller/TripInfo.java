@@ -1,0 +1,22 @@
+package it.unibo.stepServiceCaller;
+
+import mapRoomKotlin.RoomMap;
+import mapRoomKotlin.mapUtil;
+
+public class TripInfo {
+    private RoomMap map = RoomMap.Companion.getRoomMap();   //init
+    private String journey = "";
+
+    public void updateMovesRep(String move){
+        mapUtil.doMove( move );
+        journey = journey + move;
+    }
+
+    public void setObstacle(){ mapUtil.setObstacle(); }
+    public String getJourney(){ return journey; }
+    public String getMap(){ return mapUtil.getMapRep(); }
+
+    public void showMap(){ System.out.println(getMap()); }
+    public void showJourney(){ System.out.println(getMap()); }
+
+}

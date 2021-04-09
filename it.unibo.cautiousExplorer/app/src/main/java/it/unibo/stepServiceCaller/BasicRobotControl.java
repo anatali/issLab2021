@@ -1,6 +1,6 @@
 /*
 ============================================================
-WalkerPath
+BasicRobotControl
 Sends commands over TCP-8010
 ============================================================
  */
@@ -10,7 +10,6 @@ import it.unibo.actor0.ApplMessage;
 import it.unibo.actor0.MsgUtil;
 import it.unibo.actor0robot.ApplMsgs;
 import it.unibo.cautiousExplorer.RobotMovesInfo;
-
 import it.unibo.is.interfaces.protocols.IConnInteraction;
 import it.unibo.supports.FactoryProtocol;
 import it.unibo.supports2021.ActorBasicJava;
@@ -49,7 +48,7 @@ public class BasicRobotControl extends ActorBasicJava {
     }
 
     protected void doMove( ) throws Exception {
-        String m = ApplMsgs.turnLeftMsg.replace(",","@");
+        String m      = ApplMsgs.turnLeftMsg.replace(",","@");
         String cmd    = MsgUtil.buildDispatch("controller","robotmove",m
                 ,"basicRobot").toString();
         System.out.println("WalkerPath | doMove cmd:" + cmd);
