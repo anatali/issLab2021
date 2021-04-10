@@ -32,7 +32,7 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
     @ObsoleteCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun handleInput(msg: ApplMessage) {
-        //println("%%% ActorContextTcpServer $name | $msg ")
+        println("%%% ActorContextTcpServer $name | MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM $msg ")
         if( msg.msgId=="start") waitForConnection()
         else {
             //println("%%% ActorContextTcpServer | $name receives: $msg conns=${sysUtil.connActive.size}")

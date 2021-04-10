@@ -24,7 +24,7 @@ import kotlinx.coroutines.*
 
             val ctxserver = ActorContextTcpServer(
                 "ctxServer", Protocol.TCP,
-                CoroutineScope(newFixedThreadPoolContext(10, "ctxpool10"))
+                CoroutineScope(newFixedThreadPoolContext(5, "ctxpool5"))
             )
             /*
             Accepts   ApplMsgs.stepMsg

@@ -29,7 +29,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
 
     protected IConnInteraction conn;
     protected int moveInterval          = 500;   //to avoid too-rapid movement
-    protected String stepCmd            = "{\"step\":\"350\" }";
+    protected String stepCmd            = "{\"step\":\"400\" }";
     protected TripInfo moves            = new TripInfo();
     protected String destStepperName    = "stepRobot"; //defined by the service
     protected String destBasicRobotName = "basicRobot"; //defined by the service
@@ -71,16 +71,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
             reader.send( startDefaultMsg );
         }catch( Exception e ){ e.printStackTrace(); }
     }
-/*
-    protected void turnLeft()   { //Talk with BasicRobotActor
-        String msg =
-                ApplMessage.Companion.create("msg(robotmove,dispatch,walker,DEST,CMD,1)").toString()
-                        .replace("DEST", destBasicRobotName)
-                        .replace("CMD",ApplMsgs.turnLeftMsg.replace(",","@"));
-        System.out.println("AbstractRobotRemote | turnLeft msg:" + msg);
-        conn.sendALine(msg);
-    }
-*/
+
     protected void doMove(String moveShort)  { //Talk with BasicRobotActor
         try {
             String msg =

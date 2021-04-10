@@ -1,7 +1,8 @@
 /*
 ============================================================
 PathExecutorForRemote
-Executes a given path (e.g. wwwl) by using the StepRobotActor
+Executes a given path (e.g. www) by using the StepRobotActor
+Ends when the path is terminated or when an obstacle is found
 ============================================================
  */
 package it.unibo.stepServiceCaller;
@@ -57,7 +58,7 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             //doMove("h");  //do not force last state change since there is no answer from Wenv
             curState = State.endok; //to force state change
         }
-        ActorBasicJava.delay(700);  //give time to open ws
+        ActorBasicJava.delay(300);
     }
 
     protected void obstacleFound(){
@@ -171,12 +172,15 @@ protected void handleInput(String info ) {
              System.out.println(myname + " | executorStartId:" + msgJson);
              String todoPath = msgJson.getString(executorStartId);
              fsm(executorStartId, todoPath);
-         }else if( msgJson.has(endMoveId) ) {
+         }
+         //Sent by the BasicRobotActor (NOT BY the StepRobotActor)for turn moves
+         else if( msgJson.has(endMoveId) ) {
              //System.out.println(myname + " | endMoveId:" + msgJson);
              String moveResult = msgJson.getString(endMoveId);
              String moveDone   = msgJson.getString("move");
              fsm( moveDone, moveResult);
-         }else if( msgJson.has(stepDoneId) ) {
+         }
+         else if( msgJson.has(stepDoneId) ) {
             //System.out.println(myname + " | stepDoneId:" + msgJson);
             fsm(stepDoneId, "");
          }else if( msgJson.has(stepFailId) ) {
@@ -192,7 +196,7 @@ protected void handleInput(String info ) {
         //Configure the system
         NaiveObserver obs              = new NaiveObserver("obs");
         PathExecutorForRemote pathexec = new PathExecutorForRemote("pathexec", obs);
-        String executorStartMsg         = executorstartMsg.replace("PATHTODO", "wwwl");
+        String executorStartMsg         = executorstartMsg.replace("PATHTODO", "wwwwlwwwwlwwwwlwwwwl");
         pathexec.send( executorStartMsg );
 
     }

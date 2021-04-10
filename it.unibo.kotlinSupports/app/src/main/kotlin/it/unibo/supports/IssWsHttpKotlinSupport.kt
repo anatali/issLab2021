@@ -71,7 +71,7 @@ class IssWsHttpKotlinSupport
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
                 activeAconnsWs.put(addr,support)
                 support.wsconnect(  fun(scope, support ) {
-                    println("IssWsHttpKotlinSupport | connected ${sysUtil.aboutThreads("isssupport")}")
+                    println("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
                 } )
                 println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }

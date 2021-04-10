@@ -143,7 +143,7 @@ abstract class ActorBasicKotlin(val name: String,
     }
 
     suspend protected  fun updateObservers(info: ApplMessage) {
-        //println("$name  update  ${actorobservers.size}" );
+        println("$name  updateObservers  ${actorobservers.size}" );
         //actorobservers.forEach{ scope.launch {   it.actor.send(info)  } }
         actorobservers.forEach{   (it as ActorBasicKotlin).actor.send(info)   }
         //actorobservers.forEach{   println( "${it}" ); MsgUtil.sendMsg(info, it)   }

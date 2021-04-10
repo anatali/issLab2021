@@ -50,7 +50,6 @@ public class WalkToHome extends PathExecutorActor{ //extends PathExecutorActor
                     }
                 }else{  //endmove=false (obstacle)
                         System.out.println(myname + "|  FATAL ERROR: OUT OF HYPOTHESIS"  );
-
                         support.removeActor(this);
                         terminate();
                  }
