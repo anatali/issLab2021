@@ -53,11 +53,6 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                             ActorMsgs.startTimerMsg.replace("TIME", arg),"t0")
                         timer.send(m)
-                        /*
-                        scope.launch {
-                            MsgUtil.sendMsg(name, ActorMsgs.startTimerId,
-                                ActorMsgs.startTimerMsg.replace("TIME", arg), timer)
-                        }*/
                         plannedMoveTime = arg.toInt()
                         val attemptStepMsg = "{\"robotmove\":\"moveForward\", \"time\": TIME}"
                             .replace("TIME", "" + (plannedMoveTime + 100))
@@ -66,7 +61,8 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                     }
             }
             State.moving -> {
-                val dt = "" + this.getDuration(StartTime)
+                val dtVal = this.getDuration(StartTime)
+                val dt = "" + dtVal
                 println(  "$name | moving .... dt=$dt move=$move ${infoThreads()}")
                 if (move == ActorMsgs.endTimerId) {
                     answer = ApplMsgs.stepDoneMsg
@@ -75,10 +71,20 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
                 } else if (move == "collision") {
                     support.forward(ApplMsgs.haltMsg)
                     timer.kill()
-                    answer = ApplMsgs.stepFailMsg.replace("TIME", dt)
-                    backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dt)
-                    println(  "$name | answer=$answer backMsg=$backMsg")
-                    curState = State.obstacle
+                    if( dtVal < 320 ) {
+                        answer = ApplMsgs.stepFailMsg.replace("TIME", dt)
+                        backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dt)
+                        println("$name | answer=$answer backMsg=$backMsg")
+                        curState = State.obstacle
+                    }else{ //step almost done
+                        answer = ApplMsgs.stepDoneMsg
+                        backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", "20")
+                        println("$name | answer=$answer littlebackMsg=$backMsg")
+                        support.forward(backMsg)
+                        //curState = State.end
+                        curState = State.obstacle
+
+                    }
                 }
             } //moving
             State.obstacle -> {
