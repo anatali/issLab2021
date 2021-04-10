@@ -21,7 +21,7 @@ public class TripInfo {
     public void setObstacle(){ mapUtil.setObstacle(); }
     public String getJourney(){ return journey; }
     public String getMap(){ return mapUtil.getMapRep(); }
-
+    public String getDirection(){ return mapUtil.getDirection(); }
     public void showMap(){ mapUtil.showMap(); }
     public void showJourney(){ System.out.println(journey); }
 

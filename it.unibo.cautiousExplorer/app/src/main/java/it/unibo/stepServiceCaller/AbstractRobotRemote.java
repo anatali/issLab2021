@@ -29,7 +29,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
 
     protected IConnInteraction conn;
     protected int moveInterval          = 500;   //to avoid too-rapid movement
-    protected String stepCmd            = "{\"step\":\"400\" }";
+    protected String stepCmd            = "{\"step\":\"340\" }";
     protected TripInfo moves            = new TripInfo();
     protected String destStepperName    = "stepRobot"; //defined by the service
     protected String destBasicRobotName = "basicRobot"; //defined by the service

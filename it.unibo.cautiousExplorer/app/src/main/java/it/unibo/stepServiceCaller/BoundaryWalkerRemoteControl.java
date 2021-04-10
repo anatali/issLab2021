@@ -13,7 +13,7 @@ import it.unibo.supports2021.ActorBasicJava;
 import org.json.JSONObject;
 
 public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
-    private int count = 0;
+    private int count = 1;
 
     public BoundaryWalkerRemoteControl(String name) {
         super(name);
@@ -30,20 +30,20 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
             doStep();
         }else if( answer.has("stepFail")){
              //try {
-                moves.setObstacle();
+                //moves.setObstacle();      //AVOID in order to exclude ERROR:Index -1 out of bounds
                 String pathSoFar = moves.getJourney();
                 System.out.println("BoundaryWalkerRemoteControl | obstacle - pathSoFar=" + pathSoFar + " count=" + count);
                  moves.showMap();
                  doMove("l");
-                 /*
+
                 //ActorBasicJava.delay(500);
-                if( count > 4 ) {
-                    doMove("l");
+                if( count > 3 ) {
+                    //doMove("l");
                     terminate();
                 }else{
                     count++;
                     doStep();
-                }*/
+                }
               //} catch (Exception e) { //wall
                // System.out.println(myname + " | outside the map " + e.getMessage());
             //}
@@ -71,10 +71,10 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
     }
     @Override
     protected void handleInput(String s) {
+        if( ! s.contains("sonarInfo")) System.out.println("BoundaryWalkerRemoteControl handleInput:" + s);
+        ApplMessage msg = ApplMessage.create(s);
+        String msgId    = msg.getMsgId();
         try {
-            if( ! s.contains("sonarInfo")) System.out.println("BoundaryWalkerRemoteControl handleInput:" + s);
-            ApplMessage msg = ApplMessage.create(s);
-            String msgId    = msg.getMsgId();
             //System.out.println("BoundaryWalkerRemoteControl handleInput msg=" + msgId);
             if (msgId.equals("start")) {
                 //startConn();      //already done by AbstractRobotRemote
@@ -85,7 +85,16 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
                 nextMove(msg.getMsgContent());
             }
           }catch( Exception e){
+            String direction = moves.getDirection();
             System.out.println("BoundaryWalkerRemoteControl ERROR:" + e.getMessage());
+            System.out.println("BoundaryWalkerRemoteControl direction:" + direction);
+            if( direction.equals("UP")) {
+                try {
+                    nextMove(msg.getMsgContent());
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
         }
     }
 

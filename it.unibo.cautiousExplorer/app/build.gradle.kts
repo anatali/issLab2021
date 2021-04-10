@@ -76,8 +76,8 @@ dependencies {
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9")
 //UNIBO
     //implementation("uniboIssSupport:IssWsHttpJavaSupport")
-    implementation("uniboIssSupport:IssActorKotlinRobotSupport:1.0")
-    implementation("uniboIssSupport:IssWsHttpJavaSupport-1.0")
+    implementation("uniboIssSupport:IssActorKotlinRobotSupport:2.0")
+    implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")
     implementation("uniboInterfaces:uniboInterfaces")
     implementation("uniboProtocolSupport:unibonoawtsupports")
 }

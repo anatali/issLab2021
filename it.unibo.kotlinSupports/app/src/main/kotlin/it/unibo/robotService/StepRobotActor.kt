@@ -25,7 +25,7 @@ The map is a singleton object, managed by mapUtil
  */
 @ExperimentalCoroutinesApi
 class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope )
-            : AbstractRobotActor( name, "loclahost", scope ) {
+            : AbstractRobotActor( name, "localhost", scope ) {
 
     protected enum class State { start, moving }
 

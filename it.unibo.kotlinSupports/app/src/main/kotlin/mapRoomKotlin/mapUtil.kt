@@ -13,6 +13,9 @@ object mapUtil{
     @JvmStatic fun getMapRep() : String{
         return map.toString()
     }
+    @JvmStatic fun getDirection() : String{
+        return state.direction.toString()
+    }
 
     private fun setObstacleOnCell(){
 		map.put( state.x,  state.y, Box(true, false, false))

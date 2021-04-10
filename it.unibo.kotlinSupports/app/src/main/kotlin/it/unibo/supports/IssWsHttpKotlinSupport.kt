@@ -42,9 +42,15 @@ class IssWsHttpKotlinSupport
     private var opened         = false
     private var connectForWs   = true
 
+
     //val socketMsgChannel: Channel<String> = Channel(10) //our channel buffer is 10 events
     //fun getInputChannel() : Channel<String> { return socketMsgChannel }
 
+    init{
+        wsconnect(  fun(scope, support ) {
+            println("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
+        } )
+    }
     companion object { //singleton
         val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
@@ -59,7 +65,6 @@ class IssWsHttpKotlinSupport
         fun createForWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
             if( ! activeAconnsWs.containsKey(addr)) {
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
-
                  activeAconnsWs.put(addr,support)
                  println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }
@@ -70,9 +75,8 @@ class IssWsHttpKotlinSupport
             if( ! activeAconnsWs.containsKey(addr)) {
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
                 activeAconnsWs.put(addr,support)
-                support.wsconnect(  fun(scope, support ) {
+                //support.wsconnect(  fun(scope, support ) {
                     println("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
-                } )
                 println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }
             return activeAconnsWs.get(addr)!!
