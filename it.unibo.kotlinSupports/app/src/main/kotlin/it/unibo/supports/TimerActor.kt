@@ -5,6 +5,8 @@ import org.json.JSONObject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
                           : ActorBasicKotlin(name, scope, DispatchType.single) {
     //private long tout          = 0;
@@ -22,7 +24,7 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
             val tout = msgJson.getString("startTimer").toLong()
             delay( tout )
             //println("$name | elapsed $tout msecs killed=$killed")
-            if (owner != null && !killed) {
+            if ( !killed ) {
                 val answerMsg =
                         MsgUtil.buildDispatch(name, ActorMsgs.endTimerId, ActorMsgs.endTimerMsg, owner.name )
                 owner.send(answerMsg)
@@ -39,7 +41,8 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
     }
 
 }
-
+@kotlinx.coroutines.ExperimentalCoroutinesApi
+@kotlinx.coroutines.ObsoleteCoroutinesApi
 fun main() {
     println("==============================================")
     println("Timer | START ${sysUtil.aboutSystem("timer") }"  );

@@ -1,4 +1,9 @@
-
+/*
+============================================================
+AbstractRobotRemote
+ 
+============================================================
+ */
 package it.unibo.stepServiceCaller;
 
  
@@ -35,11 +40,11 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
     protected IJavaActor ownerActor ;
     protected String todoPath       = "";
     protected String stepMsg        = "{\"ID\":\"350\" }".replace("ID", ApplMsgs.stepId);
-
+    protected ConnectionReader reader;
 
     public AbstractRobotRemote( String name  ) {
         super(name );
-        this.ownerActor  = ownerActor;
+
         MoveNameShort.put("moveForward","w");
         MoveNameShort.put("moveBackward","s");
         MoveNameShort.put("turnLeft","l");
@@ -61,7 +66,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
             System.out.println("AbstractRobotRemote | fp:" + fp);
             conn = fp.createClientProtocolSupport("localhost", 8010);
             System.out.println("AbstractRobotRemote | connected:" + conn);
-            ConnectionReader reader = new ConnectionReader("reader", conn);
+            reader = new ConnectionReader("reader", conn);
             reader.registerActor(this);
             reader.send( startDefaultMsg );
         }catch( Exception e ){ e.printStackTrace(); }
@@ -84,6 +89,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
                             .replace("CMD", MoveJsonCmd.get(moveShort));
             System.out.println("AbstractRobotRemote | doMove msg:" + msg);
             conn.sendALine(msg);
+            moves.updateMovesRep(moveShort);
             delay(moveInterval); //to avoid too-rapid movement
         }catch( Exception e ){ e.printStackTrace(); }
     }
@@ -120,12 +126,22 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
     @Override
     protected void handleInput(String info ) {
         System.out.println("AbstractRobotRemote | handleInput:" + info );
-        String infoJson = info;
-        if( info.startsWith("msg")){    //Answer from the remote actor
-            ApplMessage m  = ApplMessage.create( info );
-            infoJson       =  m.getMsgContent();
+        String perhapsJson = "";
+        try{
+            if( info.startsWith("msg")){    //Answer from the remote actor
+                ApplMessage m   = ApplMessage.create( info );
+                perhapsJson     = m.getMsgContent();
+                JSONObject obj  =  new JSONObject( perhapsJson );
+                msgDriven( obj );
+            }else{
+                perhapsJson    = info;
+                JSONObject obj = new JSONObject( perhapsJson );
+                msgDriven( obj );
+            }
+        }catch(Exception e){
+                System.out.println("AbstractRobotRemote | sorry for:" + perhapsJson );
         }
-        msgDriven( new JSONObject(infoJson) );
+
     }
 
 

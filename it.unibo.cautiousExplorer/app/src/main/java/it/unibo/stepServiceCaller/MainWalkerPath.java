@@ -1,7 +1,7 @@
 /*
 ============================================================
 MainWalkerPath
-Sends commands over TCP-8010
+
 ============================================================
  */
 package it.unibo.stepServiceCaller;

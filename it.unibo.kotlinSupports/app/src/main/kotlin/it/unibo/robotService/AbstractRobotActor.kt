@@ -4,9 +4,7 @@ import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.DispatchType
 import it.unibo.supports.IssWsHttpKotlinSupport
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.lang.Exception
 import java.util.*
@@ -14,8 +12,9 @@ import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
 abstract class AbstractRobotActor(name: String, val wenvAddr: String="wenv",
-            scope: CoroutineScope= CoroutineScope( newSingleThreadContext("single_$name") ))
-                : ActorBasicKotlin(name, scope, DispatchType.single) {
+                                  //scope: CoroutineScope= GlobalScope)
+         scope: CoroutineScope= CoroutineScope( newSingleThreadContext("single_$name") ))
+                                  : ActorBasicKotlin(name, scope, DispatchType.single) {
     protected var moveInterval = 500L //to avoid too-rapid movement
     protected var cnsl = System.console() //returns null in an online IDE
     protected val MoveNameShort: MutableMap<String, String> = HashMap()
@@ -24,23 +23,20 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String="wenv",
     init {
         support = IssWsHttpKotlinSupport.getConnectionWs(scope, "${wenvAddr}:8091")
         support.registerActor(this)
-
         MoveNameShort["moveForward"] = "w"
         MoveNameShort["moveBackward"] = "s"
         MoveNameShort["turnLeft"] = "l"
         MoveNameShort["turnRight"] = "r"
         MoveNameShort["alarm"] = "h"
         println( "$name AbstractRobotActor | init $support ${infoThreads()}")
+        //doForward()
     }
 
     //val afterConnect : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ) {... }
         //------------------------------------------------
 
-    protected  fun doStep() {
-        //scope.launch {
-            support.forward(ApplMsgs.forwardMsg)
-            //delay(moveInterval) //to avoid too-rapid movement
-        //}
+    protected  fun doForward() {
+        support.forward(ApplMsgs.forwardMsg)
     }
 
     protected  fun microStep() {
@@ -48,7 +44,7 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String="wenv",
         //delay(moveInterval) //to avoid too-rapid movement
     }
 
-    protected  fun doBackStep() {
+    protected  fun doBackward() {
         support.forward(ApplMsgs.backwardMsg)
         //delay(moveInterval) //to avoid too-rapid movement
     }
@@ -69,10 +65,13 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String="wenv",
     }
 
     protected  fun doMove(moveStep: Char) {
-        if (moveStep == 'w') doStep()
-        else if (moveStep == 'l') turnLeft()
-        else if (moveStep == 'r') turnRight()
-        else if (moveStep == 's') doBackStep()
+        println( "$name AbstractRobotActor | doMove $moveStep")
+        //scope.launch {
+            if (moveStep == 'w') doForward()
+            else if (moveStep == 'l') turnLeft()
+            else if (moveStep == 'r') turnRight()
+            else if (moveStep == 's') doBackward()
+        //}
     }
 
     protected val currentTime: Long

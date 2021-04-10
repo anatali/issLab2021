@@ -12,13 +12,10 @@ import it.unibo.executor.NaiveObserver;
 import it.unibo.interaction.IJavaActor;
 import it.unibo.supports2021.ActorBasicJava;
 import org.json.JSONObject;
-
-
 import static it.unibo.executor.ApplMsgs.*;
 
 
 public class PathExecutorForRemote extends AbstractRobotRemote {
-
     protected enum State {start, nextMove, moving, turning, endok, endfail};
 
     protected State curState        = State.start ;
@@ -38,7 +35,6 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
 
     protected void resetStateVars(){
         curState       = State.start;
-        //moves.cleanMovesRepresentation();
         todoPath       = "";
     }
 
@@ -58,10 +54,10 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             }
         } else{ //todoPath.length() == 0
             microStep();
-            //doMove("h");  //to force state change
+            //doMove("h");  //do not force last state change since there is no answer from Wenv
             curState = State.endok; //to force state change
         }
-        ActorBasicJava.delay(1000);  //give time to open ws
+        ActorBasicJava.delay(700);  //give time to open ws
     }
 
     protected void obstacleFound(){
@@ -97,13 +93,15 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             }
 
             case turning: {
-                System.out.println(myname + " | turning ... arg= " + arg );
+                //System.out.println(myname + " | turning  move=" + move  + " arg=" + arg);
                 String moveShort = MoveNameShort.get(move);
                 if (arg.equals("true")) {
-                    moves.updateMovesRep(moveShort);
                     moves.showMap();
+                    moves.showJourney();
                     //waitUser("turning");
                     nextMove();
+                }else if (arg.equals("halted")) {
+
                 }else System.out.println(myname + " | FATAL ERROR " );
                 break;
             }//turning
@@ -112,9 +110,9 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
                 if (move.equals(stepDoneId)){
                     moves.updateMovesRep("w");
                     nextMove();
-                }else {
-                    obstacleFound();
-                }
+                }else if (arg.equals("halted")){
+
+                }else obstacleFound();
                 break;
             }
 
@@ -157,30 +155,33 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
  */
 @Override
 protected void handleInput(String info ) {
-    System.out.println(myname + " | handleInput:" + info );
+    System.out.println(myname + " | handleInput info=" + info );
     String infoJson = info;
-    if( info.startsWith("msg")){    //Answer from the remote actor
+    if( info.startsWith("msg")){    //Answer from the remote actor or step
         ApplMessage m  = ApplMessage.create( info );
-        infoJson       =  m.getMsgContent();
+        infoJson       =  m.getMsgContent().replace("@",",");
+        System.out.println(myname + " | handleInput infoJson=" + infoJson );
     }
     msgDriven( new JSONObject(infoJson) );
 }
 
-
     protected void msgDriven( JSONObject msgJson){
+         //System.out.println(myname + " | msgDriven:" + msgJson);
          if( msgJson.has(executorStartId) ) {
              System.out.println(myname + " | executorStartId:" + msgJson);
              String todoPath = msgJson.getString(executorStartId);
              fsm(executorStartId, todoPath);
-        } else if( msgJson.has(endMoveId) ) {
-                 System.out.println(myname + " | endMoveId:" + msgJson);
-                 fsm(msgJson.getString("move"), msgJson.getString(endMoveId));
+         }else if( msgJson.has(endMoveId) ) {
+             //System.out.println(myname + " | endMoveId:" + msgJson);
+             String moveResult = msgJson.getString(endMoveId);
+             String moveDone   = msgJson.getString("move");
+             fsm( moveDone, moveResult);
          }else if( msgJson.has(stepDoneId) ) {
-             System.out.println(myname + " | stepDoneId:" + msgJson);
-             fsm(stepDoneId, "");
+            //System.out.println(myname + " | stepDoneId:" + msgJson);
+            fsm(stepDoneId, "");
          }else if( msgJson.has(stepFailId) ) {
-             System.out.println(myname + " | stepFailed:" + msgJson);
-             fsm(stepFailId, msgJson.getString(stepFailId));
+            System.out.println(myname + " | stepFailed:" + msgJson);
+            fsm(stepFailId, msgJson.getString(stepFailId));
          }
     }
 
@@ -189,9 +190,9 @@ protected void handleInput(String info ) {
         System.out.println("PathExecutorForRemote | main "  ); //+ sysUtil.aboutThreads("main")
         System.out.println("================================================================");
         //Configure the system
-        NaiveObserver obs            = new NaiveObserver("obs");
+        NaiveObserver obs              = new NaiveObserver("obs");
         PathExecutorForRemote pathexec = new PathExecutorForRemote("pathexec", obs);
-        String executorStartMsg      = executorstartMsg.replace("PATHTODO", "ww");
+        String executorStartMsg         = executorstartMsg.replace("PATHTODO", "wwwl");
         pathexec.send( executorStartMsg );
 
     }

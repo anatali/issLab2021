@@ -3,7 +3,7 @@ package it.unibo.executor;
 public class ApplMsgs {
     public final static String forwardMsg         = "{\"robotmove\":\"moveForward\", \"time\": 350}";
     public final static String backwardMsg        = "{\"robotmove\":\"moveBackward\", \"time\": 350}";
-    public final static String microStepMsg       = "{\"robotmove\":\"moveForward\", \"time\": 10}";
+    public final static String microStepMsg       = "{\"robotmove\":\"moveForward\", \"time\": 5}";
     public final static String littleBackwardMsg  = "{\"robotmove\":\"moveBackward\", \"time\": 10}";
     public final static String turnLeftMsg        = "{\"robotmove\":\"turnLeft\", \"time\": 300}";
     public final static String turnRightMsg       = "{\"robotmove\":\"turnRight\", \"time\": 300}";

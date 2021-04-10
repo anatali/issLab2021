@@ -1,7 +1,12 @@
+/*
+============================================================
+ConnectionReader
+
+============================================================
+ */
 package it.unibo.stepServiceCaller;
 
 import it.unibo.actor0.ApplMessage;
-import it.unibo.actor0.sysUtil;
 import it.unibo.is.interfaces.protocols.IConnInteraction;
 import it.unibo.supports2021.ActorBasicJava;
 
@@ -15,11 +20,13 @@ public class ConnectionReader extends ActorBasicJava  {
 
     protected void getInput(ConnectionReader obj) throws Exception {
         while (true) {
+            //System.out.println("ConnectionReader  | waitInput ... "   );
             String v = conn.receiveALine();
-            System.out.println("ConnectionReader  | getInput " + v );
+            //System.out.println("ConnectionReader  | getInput " + v );
             if (v != null) {
                 String msg = ApplMessage.create(v).toString();
-                obj.updateObservers(msg);
+                //System.out.println("ConnectionReader  | updateObservers " + msg );
+                updateObservers(msg);
             }else{
                 break;
             }
@@ -30,9 +37,9 @@ public class ConnectionReader extends ActorBasicJava  {
     @Override
     protected void handleInput(String s) {
         try {
-            System.out.println("ConnectionReader handleInput:" + s);
+            //System.out.println("ConnectionReader handleInput:" + s);
             ApplMessage msg = ApplMessage.create(s);
-            System.out.println("ConnectionReader handleInput msg=" + msg.getMsgId());
+            //System.out.println("ConnectionReader handleInput msg=" + msg.getMsgId());
             if (msg.getMsgId().equals("start")) {
                 getInput( this );
             }

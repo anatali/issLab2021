@@ -13,27 +13,27 @@ public class BasicRobotRemoteControl extends AbstractRobotRemote {
  
     public BasicRobotRemoteControl(String name) {
         super(name);
+        //reader.registerActor(this);
     }
 
 
     @Override
     protected void msgDriven(JSONObject infoJson) {
         try {
-            System.out.println("BasicRobotControl msgDriven  " + infoJson);
-
+            //System.out.println("BasicRobotControl | msgDriven  " + infoJson);
             if (infoJson.has("start")) {
-                //startConn();
-                for( int i=1; i<=2; i++) {
-                    delay(500);
-                    moves.showMap();
-                    doMove("w");
-                    moves.updateMovesRep("w");
+                doMove("w");
+            }else if (infoJson.has("endmove") ) {
+                String moveResult = infoJson.getString("endmove");
+                System.out.println("BasicRobotControl | endmove " + moveResult );
+                if( moveResult.equals("true")) doMove("w");
+                else{
+                    System.out.println("BasicRobotControl | BYE  "  );
+                    terminate();
+                    //System.exit(1);
                 }
-                moves.showMap();
-                moves.showJourney();
-                //conn.closeConnection();
-                terminate();
-                //System.exit(1);
+            }else if (infoJson.has("sonarInfo") ) {
+                //avoid to show data
             }
 
         }catch( Exception e){

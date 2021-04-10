@@ -1,3 +1,9 @@
+/*
+============================================================
+TripInfo
+
+============================================================
+ */
 package it.unibo.stepServiceCaller;
 
 import mapRoomKotlin.RoomMap;

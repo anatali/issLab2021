@@ -1,3 +1,9 @@
+/*
+============================================================
+WalkToHome
+
+============================================================
+ */
 package it.unibo.stepServiceCaller;
 import it.unibo.executor.ApplMsgs;
 import it.unibo.executor.PathExecutorActor;
@@ -5,11 +11,6 @@ import it.unibo.interaction.IJavaActor;
 import mapRoomKotlin.mapUtil;
 import org.json.JSONObject;
 
-
-
-/*
-The map is a singleton object, managed by mapUtil
- */
 public class WalkToHome extends PathExecutorActor{ //extends PathExecutorActor
     
     public WalkToHome(String name, IJavaActor ownerActor ) {

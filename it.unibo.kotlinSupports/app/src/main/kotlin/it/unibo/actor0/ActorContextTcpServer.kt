@@ -42,7 +42,7 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
 
     private fun updateExternalCallers(msg: String ){
         sysUtil.connActive.forEach{
-            //println("%%% ActorContextTcpServer | $name updates: $it  }")
+            println("%%% ActorContextTcpServer | $name updates: $it $msg }")
             it.sendALine(msg)
         }
     }
@@ -93,7 +93,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
                         if (existactor) {
                             try {
                                 val actor = ActorBasicContextKb.getActor(dest)!!
-println("%%% ActorContextTcpServer  $name | actor:${actor.name}  ${infoThreads()}")
+println("%%% ActorContextTcpServer  $name | handleConnection actor:${actor.name}  ${infoThreads()}")
                                 if (inputmsg.isRequest()) { //Oct2019
                                     //set conn in the msg to the actor
                                     inputmsg.conn = conn

@@ -14,8 +14,8 @@ import kotlinx.coroutines.*
         runBlocking {
             //sysUtil.trace = true
             val startBasicRobotMsg = ApplMessage(
-                MsgUtil.startDefaultId,
-                "dispatch", "main", "basicRobot", "{\"start\":\"do\"}"
+                "startbasicrobot",
+                "dispatch", "main", "basicRobot", "{\"start\":\"dobasic\"}"
             )
 
             println("==============================================")
@@ -38,7 +38,9 @@ import kotlinx.coroutines.*
 
             //val basicrobot = BasicRobotActor("basicRobot", "localhost")
             val basicrobot = BasicRobotActor("basicRobot" )
+            basicrobot.registerActor(ctxserver)
             basicrobot.send( startBasicRobotMsg )
 
         }
+
     }
