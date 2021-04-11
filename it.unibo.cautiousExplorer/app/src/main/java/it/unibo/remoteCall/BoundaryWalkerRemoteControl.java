@@ -33,6 +33,7 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
                 System.out.println("BoundaryWalkerRemoteControl | obstacle - pathSoFar=" + pathSoFar + " count=" + count);
                  moves.showMap();
                  doMove("l", "stepRobot");
+                 moves.updateMovesRep("l");
                 if( count > 3 ) {
                      terminate();
                 }else{
@@ -60,7 +61,6 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
             //System.out.println("BoundaryWalkerRemoteControl handleInput msg=" + msgId);
             if (msgId.equals("start")) {
                 //startConn();      //already done by AbstractRobotRemote
-                //doMove("l");    //to avoid sonar
                 moves.showMap();
                 doStep();
             }else if(msgId.equals("stepAnswer")){

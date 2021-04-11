@@ -52,7 +52,7 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
 
     private fun updateExternalCallers(msg: String ){
         sysUtil.connActive.forEach{
-            println("%%% ActorContextTcpServer | $name updates: $it $msg }")
+            //println("%%% ActorContextTcpServer | $name updates: $it $msg }")
             it.sendALine(msg)
         }
     }

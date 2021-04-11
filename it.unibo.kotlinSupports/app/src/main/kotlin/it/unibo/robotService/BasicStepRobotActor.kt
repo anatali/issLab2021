@@ -21,6 +21,7 @@ import it.unibo.supports.ActorMsgs
 import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import org.json.JSONObject
  
 @ExperimentalCoroutinesApi
@@ -34,6 +35,7 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
     protected var answer          = ""
     private var StartTime: Long   = 0L
 
+    private var currentBasicMove  = "";
 
     protected suspend fun doStepMove(move: String, time: String){
         timer = TimerActor("t0", this, scope )
@@ -57,13 +59,15 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
         ownerActor.send(m)
     }
 
-    fun endStepKo( dtVal : String){
+    suspend fun endStepKo( dtVal : String){
         timer.kill()
-        println("$name | collision DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
-        //backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dt)
-        //println("$name | answer=$answer backMsg=$backMsg")
-        //delay(350)  //back immediately after a collision is not allowed
-        //support.forward(backMsg)
+        println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
+        backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
+        println("$name | answer=$answer backMsg=$backMsg")
+        delay(350)  //back immediately after a collision is not allowed
+        support.forward(backMsg)
+        //no change to currentBasicMove => no result propagation
+        //HYPOTHESIS: a little back move does not raise a collision
         //delay(350)  //back immediately after a collision is not allowed
         answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
         val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
@@ -87,19 +91,36 @@ override suspend fun handleInput(msg: ApplMessage) {
             doStepMove(ApplMsgs.stepId, time);
         }else if (infoJson.has(ActorMsgs.endTimerId)) {
             this.endStepOk();
-        }else if (infoJson.has("collision")) {  //HYPOTHESIS: no movebale obstacle
-            val dtVal = this.getDuration(StartTime)
-            this.endStepKo(""+dtVal);
+        }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
+            if( currentBasicMove.length > 0  ){
+                val payload = "{ \"collision\" : \"true\"@\"move\": \"$currentBasicMove\"}"
+                val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
+                ownerActor.send(m)
+                //currentBasicMove = "";        //set by endMove
+            }else{
+                val dtVal = this.getDuration(StartTime)
+                this.endStepKo(""+dtVal);
+            }
         }else if (infoJson.has("robotmove")){
             msgDriven(infoJson);
         }else if (infoJson.has("endmove")){
-
+            val moveResult = infoJson.getString("endmove")
+            if( moveResult != "true" && currentBasicMove.length > 0 ) {
+                val payload = "{ \"endmove\" : \"$moveResult\"@\"move\": \"$currentBasicMove\"}"
+                val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
+                currentBasicMove = "";
+                ownerActor.send(m)
+            }
         }
     }
 
     override fun msgDriven(msgJson: JSONObject) {
-        support.forward(msgJson.toString())
-    }
+        println("$name BasicStepRobotActor |  %%% msgDriven:$msgJson")
+        if( msgJson.has("robotmove")){
+            currentBasicMove = msgJson.getString("robotmove")
+            support.forward(msgJson.toString())
+        }
+     }
 
 
 }

@@ -15,11 +15,25 @@ public class BasicStepRobotRemoteControl extends AbstractRobotRemote {
         super(name);
     }
 
+    protected void performBasicMoves(){
+        doMove("l", "stepRobot");
+        moves.updateMovesRep("l");
+        doMove("r", "stepRobot");
+        moves.updateMovesRep("r");
+        doMove("w", "stepRobot");   //non control over result?
+        moves.updateMovesRep("w");
+    }
+
+    protected void performStepMoves(){
+        doStep();
+    }
+
     @Override
     protected void msgDriven(JSONObject infoJson) {
         try {
             System.out.println("BasicStepRobotRemoteControl | " + infoJson);
             if (infoJson.has("start")) {
+                //performBasicMoves();
                 doStep();
             }else if (infoJson.has("stepDone") ) {
                 moves.updateMovesRep("w");
@@ -27,11 +41,13 @@ public class BasicStepRobotRemoteControl extends AbstractRobotRemote {
                 String direction = moves.getDirection();
                 if( direction.equals("DOWN") ) doStep();
             }else if (infoJson.has("stepFail") ) {
+                /*
                 turn180("stepRobot");
                 moves.showMap();
-                doStep();
-            }else if (infoJson.has("sonarInfo") ) {
-                //avoid to show data
+                doStep();*/
+            }else if (infoJson.has("endMove") ) {
+                String result = infoJson.getString("endMove");
+                System.out.println("BasicStepRobotRemoteControl | result=" + result);
             }
 
         }catch( Exception e){

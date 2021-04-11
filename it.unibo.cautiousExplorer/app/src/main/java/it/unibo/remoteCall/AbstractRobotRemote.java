@@ -78,7 +78,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
                             .replace("CMD", MoveJsonCmd.get(moveShort));
             System.out.println("    --- " +myname + " AbstractRobotRemote | doMove msg:" + msg);
             conn.sendALine(msg);
-            moves.updateMovesRep(moveShort);
+            //moves.updateMovesRep(moveShort);    //WARNING: result unknown
             delay(moveInterval); //to avoid too-rapid movement
         }catch( Exception e ){ e.printStackTrace(); }
     }
