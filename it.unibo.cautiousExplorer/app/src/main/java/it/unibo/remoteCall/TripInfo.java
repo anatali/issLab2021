@@ -4,7 +4,7 @@ TripInfo
 
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 
 import mapRoomKotlin.RoomMap;
 import mapRoomKotlin.mapUtil;

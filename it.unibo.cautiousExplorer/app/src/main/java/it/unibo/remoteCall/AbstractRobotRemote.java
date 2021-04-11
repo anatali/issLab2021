@@ -4,7 +4,7 @@ AbstractRobotRemote
  
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 
  
 import it.unibo.actor0.ApplMessage;
@@ -37,9 +37,6 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
     protected final Map<String, String> MoveNameShort = new HashMap<String, String>();
     protected final Map<String, String> MoveJsonCmd   = new HashMap<String, String>();
 
-    protected IJavaActor ownerActor ;
-    protected String todoPath       = "";
-    protected String stepMsg        = "{\"ID\":\"350\" }".replace("ID", ApplMsgs.stepId);
     protected ConnectionReader reader;
 
     public AbstractRobotRemote( String name  ) {
@@ -63,23 +60,23 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
     protected void startConn()   {
         try {
             FactoryProtocol fp =  new FactoryProtocol(null, "TCP", "walker"); //MsgUtil.getFactoryProtocol(Protocol.TCP);
-            System.out.println("AbstractRobotRemote | fp:" + fp);
+            System.out.println("    --- " +myname + " AbstractRobotRemote | fp:" + fp);
             conn = fp.createClientProtocolSupport("localhost", 8010);
-            System.out.println("AbstractRobotRemote | connected:" + conn);
+            System.out.println("    --- " +myname + " AbstractRobotRemote | connected:" + conn);
             reader = new ConnectionReader("reader", conn);
             reader.registerActor(this);
             reader.send( startDefaultMsg );
         }catch( Exception e ){ e.printStackTrace(); }
     }
 
-    protected void doMove(String moveShort)  { //Talk with BasicRobotActor
+    protected void doMove(String moveShort, String dest)  { //Talk with BasicRobotActor
         try {
             String msg =
                     ApplMessage.Companion.create("msg(robotmove,dispatch,SENDER,DEST,CMD,1)").toString()
                             .replace("SENDER", myname)
-                            .replace("DEST", destBasicRobotName)
+                            .replace("DEST", dest)
                             .replace("CMD", MoveJsonCmd.get(moveShort));
-            System.out.println("AbstractRobotRemote | doMove msg:" + msg);
+            System.out.println("    --- " +myname + " AbstractRobotRemote | doMove msg:" + msg);
             conn.sendALine(msg);
             moves.updateMovesRep(moveShort);
             delay(moveInterval); //to avoid too-rapid movement
@@ -93,7 +90,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
                             .replace("MSGID", cmd)
                             .replace("SENDER", myname)
                             .replace("DEST", destBasicRobotName);
-            System.out.println("AbstractRobotRemote | engageBasicRobot msg:" + msg);
+            System.out.println("    --- " +myname + " AbstractRobotRemote | engageBasicRobot msg:" + msg);
             conn.sendALine(msg);
         }catch( Exception e ){ e.printStackTrace(); }
     }
@@ -102,8 +99,9 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
         try {
             String msg = //MsgUtil.buildDispatch("walker", "step", stepCmd, destStepperName).toString();
                     ApplMessage.Companion.create("msg(step,dispatch,walker,DEST,CMD,1)").toString()
-                            .replace("DEST", destStepperName).replace("CMD",stepCmd);
-            System.out.println("AbstractRobotRemote | doStep msg:" + msg);
+                            .replace("DEST", destStepperName)
+                            .replace("CMD",stepCmd);
+            System.out.println("    --- " +myname + " AbstractRobotRemote | doStep msg:" + msg);
             conn.sendALine(msg);
             delay(moveInterval); //to avoid too-rapid movement
         }catch( Exception e ){ e.printStackTrace(); }
@@ -115,13 +113,16 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
                     ApplMessage.Companion.create("msg(robotmove,dispatch,walker,DEST,CMD,1)").toString()
                             .replace("DEST", destBasicRobotName)
                             .replace("CMD", ApplMsgs.microStepMsg.replace(",", "@"));
-            System.out.println("AbstractRobotRemote | microStep msg:" + msg);
+            System.out.println("    --- " + myname + " AbstractRobotRemote | microStep msg:" + msg);
             conn.sendALine(msg);
             delay(moveInterval); //to avoid too-rapid movement
         }catch( Exception e ){ e.printStackTrace(); }
     }
 
-
+    protected void turn180(String dest){
+            doMove("l", dest);
+            doMove("l", dest);
+    }
 
 
 /*
@@ -129,7 +130,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
  */
     @Override
     protected void handleInput(String info ) {
-        System.out.println("AbstractRobotRemote | handleInput:" + info );
+        System.out.println("    --- " + myname + " AbstractRobotRemote | handleInput:" + info );
         String perhapsJson = "";
         try{
             if( info.startsWith("msg")){    //Answer from the remote actor
@@ -143,7 +144,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
                 msgDriven( obj );
             }
         }catch(Exception e){
-                System.out.println("AbstractRobotRemote | sorry for:" + perhapsJson );
+                System.out.println("    --- " +myname + " AbstractRobotRemote | sorry for:" + perhapsJson );
         }
 
     }

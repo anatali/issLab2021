@@ -1,15 +1,14 @@
 /*
 ============================================================
 BoundaryWalkerRemoteControl
-
+    Use BasicStepRobotActor  that is able to execute commands
+    - to perform basic moves
+    - to perform a step
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 
 import it.unibo.actor0.ApplMessage;
-import it.unibo.executor.ApplMsgs;
-import it.unibo.interaction.IJavaActor;
-import it.unibo.supports2021.ActorBasicJava;
 import org.json.JSONObject;
 
 public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
@@ -26,43 +25,26 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
         if( answer.has("stepDone")){
             moves.updateMovesRep("w");
             moves.showMap();
-            ActorBasicJava.delay(500);
+            //ActorBasicJava.delay(500);
             doStep();
         }else if( answer.has("stepFail")){
-             //try {
                 //moves.setObstacle();      //AVOID in order to exclude ERROR:Index -1 out of bounds
                 String pathSoFar = moves.getJourney();
                 System.out.println("BoundaryWalkerRemoteControl | obstacle - pathSoFar=" + pathSoFar + " count=" + count);
                  moves.showMap();
-                 doMove("l");
-
-                //ActorBasicJava.delay(500);
+                 doMove("l", "stepRobot");
                 if( count > 3 ) {
-                    //doMove("l");
-                    terminate();
+                     terminate();
                 }else{
                     count++;
                     doStep();
                 }
-              //} catch (Exception e) { //wall
-               // System.out.println(myname + " | outside the map " + e.getMessage());
-            //}
             moves.showMap();
         }else {
             System.out.println("BoundaryWalkerRemoteControl | todo ... ");
         }
     }
-    protected void turn180(){
-        try {
-            ActorBasicJava.delay(800);
-            doMove("l");  //does also moves.updateMovesRep("l");
-            //moves.updateMovesRep("l");
-            ActorBasicJava.delay(800);
-            doMove("l");
-            //moves.updateMovesRep("l");
-            ActorBasicJava.delay(500);
-        }catch( Exception e ){ e.printStackTrace();}
-    }
+
 
 
     protected String reverse( String s  ){
@@ -109,6 +91,7 @@ public class BoundaryWalkerRemoteControl extends AbstractRobotRemote { //
         System.out.println("================================================================");
         //Configure the system
         BoundaryWalkerRemoteControl walker = new BoundaryWalkerRemoteControl("walker");
+        ObserverRemoteNaive  obs           = new ObserverRemoteNaive("obs");
         walker.send( startDefaultMsg );
 
     }

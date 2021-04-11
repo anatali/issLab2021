@@ -605,7 +605,24 @@ In project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinS
 </tr>
 
 <tr>
-<td><h3>Step+Basic: case1</h3>
+<td><h3>Step+Basic: case 1</h3>
+<pre>
+BasicRobotActor
+
+Accept a
+    msg(engage,dispatch,SENDER,basicRobot,do,N)
+    msg(robotmove,dispatch,SENDER,basicRobot,
+	           <ks>{"robotmove":"MOVE"@ "TIME": 300}</ks>,N)
+
+Observes
+    all the messages (events) sent by the WEnv
+
+Propagates
+    the result of a move to the SENDER (connected TCP client)
+    the WEnv events to the external connected TCP clients
+
+</pre>
+
 </td>
 <td>
 <center><img src="./img/StepAndBasicArch1.png" alt="StepAndBasicArch1" width="80%" ></center> 

@@ -2,20 +2,31 @@
 ============================================================
 BasicRobotActor
 
-Accept a  ApplMsgs.cmdMsg to move the robot
+Accept a
+    msg(engage,dispatch,SENDER,basicRobot,do,N)
+    msg(robotmove,dispatch,SENDER,basicRobot,{"robotmove":"MOVE"@ "TIME": 300},1)
+
+Observes
+    all the messages (events) sent by the WEnv
+
+Propagates
+    the result of a move to the SENDER (connected TCP client)
+    the observer events to the external observers (connected TCP clients)
 ============================================================
 */
 package it.unibo.robotService
 
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import org.json.JSONObject
 
 
 @ExperimentalCoroutinesApi
-class BasicRobotActor(name: String) : AbstractRobotActor( name ) {
+open class BasicRobotActor(name: String,  wenvAddr: String="wenv", scope: CoroutineScope )
+        : AbstractRobotActor( name, wenvAddr, scope ) {
 
     val turnRightMsg = "{\"robotmove\":\"turnRight\",\"time\":300}"
     val turnLeftMsg  = "{\"robotmove\":\"turnLeft\",\"time\":300}"
@@ -26,14 +37,6 @@ class BasicRobotActor(name: String) : AbstractRobotActor( name ) {
         println(  "$name | BasicRobotActor init support=$support")
     }
 
-/*
-======================================================================================
-BasicRobotActor observes all the messages (events) sent by the WEnv
-The WEnv emits events also when it is called by the StepRobotActor
-Thus the BasicRobotActor updates its observers only when it is engaged
-
- */
-
     override suspend fun handleInput(msg: ApplMessage) {
     println("$name | BasicRobotActor handleInput msg=$msg")
     //val sender = msg.msgSender
@@ -42,7 +45,7 @@ Thus the BasicRobotActor updates its observers only when it is engaged
             "engage"  -> engagedBy = msg.msgSender
             "release" -> engagedBy = ""
             MsgUtil.endDefaultId -> terminate()
-            else -> {
+            else -> { //move
                 val msgJson = JSONObject(msg.msgContent.replace("@", ","))  //HORRIBLE trick
                 println("$name | handleInput msgJson=" + msgJson)
                 if( msgJson.has("robotmove") && working ){ //another move while still working

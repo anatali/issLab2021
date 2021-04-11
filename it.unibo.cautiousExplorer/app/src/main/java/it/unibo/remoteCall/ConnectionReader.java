@@ -4,7 +4,7 @@ ConnectionReader
 
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 
 import it.unibo.actor0.ApplMessage;
 import it.unibo.is.interfaces.protocols.IConnInteraction;

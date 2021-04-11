@@ -4,7 +4,7 @@ MainWalkerPath
 
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 
 import it.unibo.actor0.*;
 import it.unibo.executor.ApplMsgs;
@@ -34,7 +34,7 @@ public class MainWalkerPath extends AbstractRobotRemote { //
                 String pathSoFar = moves.getJourney();
                 System.out.println("WalkerPath obstacle - pathSoFar=" + pathSoFar );
                 //Return to home (den)
-                turn180(); //Talk with BasicRobotActor
+                turn180("basicRobot"); //Talk with BasicRobotActor
                 String pathTodo   =   reverse( pathSoFar  ).replace("l","r") +"ll"; //;
                  System.out.println("WalkerPath obstacle - pathTodo (after turn)=" + pathTodo );
                  moves.showMap();
@@ -46,17 +46,7 @@ public class MainWalkerPath extends AbstractRobotRemote { //
             moves.showMap();
         }
     }
-    protected void turn180(){
-        try {
-            ActorBasicJava.delay(800);
-            doMove("l");  //does also moves.updateMovesRep("l");
-            //moves.updateMovesRep("l");
-            ActorBasicJava.delay(800);
-            doMove("l");
-            //moves.updateMovesRep("l");
-            ActorBasicJava.delay(500);
-        }catch( Exception e ){ e.printStackTrace();}
-    }
+
 
 
     protected String reverse( String s  ){

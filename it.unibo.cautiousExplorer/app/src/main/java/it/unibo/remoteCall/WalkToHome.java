@@ -4,7 +4,7 @@ WalkToHome
 
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 import it.unibo.executor.ApplMsgs;
 import it.unibo.executor.PathExecutorActor;
 import it.unibo.interaction.IJavaActor;

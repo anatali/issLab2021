@@ -37,10 +37,13 @@ import kotlinx.coroutines.*
             //stepper.registerActor(ctxserver)
 
             //val basicrobot = BasicRobotActor("basicRobot", "localhost")
+            /*
             val basicrobot = BasicRobotActor("basicRobot" )
             basicrobot.registerActor(ctxserver)
             basicrobot.send( startBasicRobotMsg )
+            */
 
+            BasicStepRobotActor("stepRobot", ctxserver, wenvAddr="localhost", scope=this)
         }
 
     }

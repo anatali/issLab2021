@@ -5,7 +5,7 @@ Executes a given path (e.g. www) by using the StepRobotActor
 Ends when the path is terminated or when an obstacle is found
 ============================================================
  */
-package it.unibo.stepServiceCaller;
+package it.unibo.remoteCall;
 
 import it.unibo.actor0.ApplMessage;
 import it.unibo.executor.ApplMsgs;
@@ -51,7 +51,7 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
                  curState = State.moving;
             } else { //firstMove == 'l'
                 curState = State.turning;
-                doMove( ""+firstMove );
+                doMove( ""+firstMove, "basicRobot" );
             }
         } else{ //todoPath.length() == 0
             microStep();
