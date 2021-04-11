@@ -65,7 +65,7 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
         System.out.println(myname + " | END KO ---------------- "  );
         moves.showMap();
         try {
-            moves.setObstacle();
+            //moves.setObstacle();
         } catch (Exception e) { //wall
             System.out.println(myname + " | outside the map " + e.getMessage());
         }
@@ -130,7 +130,7 @@ public class PathExecutorForRemote extends AbstractRobotRemote {
             case endfail: {
                 System.out.println(myname + " | END KO ---------------- "  );
                     try {
-                        moves.setObstacle();
+                        //moves.setObstacle();
                     } catch (Exception e) { //wall
                         System.out.println(myname + " | outside the map " + e.getMessage());
                     }

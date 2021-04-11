@@ -32,7 +32,7 @@ import kotlinx.coroutines.*
             WARNING !!!!!!!!  Use wenvAddr=wenv if deploy with dockercompose
              */
 
-            StepRobotActor("stepRobot", ctxserver, this) //, "wenv"
+            //StepRobotActor("stepRobot", ctxserver, this) //, "wenv"
             //StepRobotActor("stepRobot", ctxserver, "localhost")
             //stepper.registerActor(ctxserver)
 

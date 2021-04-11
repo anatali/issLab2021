@@ -1,6 +1,6 @@
 /*
-==============================================================================
-StepRobotActor
+============================================================
+BasicStepRobotActor
 
 Accept a  ApplMsgs.stepMsg to move ahead the robot for a given time.
 
@@ -8,9 +8,10 @@ Returns a ApplMsgs.stepDoneMsg if the move is done with success.
 Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
 by an obstacle after time DT. In this case it moves back the robot for time DT
 
+
 The map is a singleton object, managed by mapUtil
-==============================================================================
- */
+============================================================
+*/
 package it.unibo.robotService
 
 import it.unibo.actor0.ActorBasicKotlin
@@ -22,9 +23,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import org.json.JSONObject
-
+ 
 @ExperimentalCoroutinesApi
-class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope )
+class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope )
             : AbstractRobotActor( name, "wenv", scope ) {
 
     protected enum class State { start, moving }
@@ -36,11 +37,25 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
     protected var answer          = ""
     private var StartTime: Long   = 0L
 
-    init {
-        println( "$name | StepRobotActor init $support ${infoThreads()}")
+
+    protected suspend fun doMove( move: String, arg: String){
+        if (move == ApplMsgs.stepId) {
+            timer = TimerActor("t0", this, scope )
+            val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
+                ActorMsgs.startTimerMsg.replace("TIME", arg),"t0")
+            val moveTime    = arg.toInt()
+            plannedMoveTime = moveTime - 70
+            println("$name | TIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE $plannedMoveTime / $moveTime ")
+            val attemptStepMsg = "{\"robotmove\":\"moveForward\", \"time\": TIME}"
+                .replace("TIME", "" + (plannedMoveTime))
+            timer.send(m)
+            StartTime = this.currentTime
+            support.forward(attemptStepMsg)
+            curState = State.moving
+        }else if (move == ApplMsgs.stepId) {
+
+        }
     }
-
-
     protected suspend fun fsmstep(move: String, arg: String) {
         println(name+ " | state=" + curState + " move=" + move + " arg=" + arg)
         when (curState) {
@@ -99,16 +114,20 @@ override suspend fun handleInput(msg: ApplMessage) {
     //println(  "$name | AbstractRobotActor handleInput msg=$msg")
     val infoJsonStr = msg.msgContent.replace("@",",")
     val infoJson    = JSONObject(infoJsonStr)
-        if (! infoJson.has("sonarName")) println("$name StepRobotActor |  handleInput:$infoJson")
+        if (! infoJson.has("sonarName")) println("$name BasicStepRobotActor |  handleInput:$infoJson")
         if (infoJson.has(ApplMsgs.stepId)) {
             //println( name + " |  msgJson:" + msgJson);
             val time: String = infoJson.getString(ApplMsgs.stepId)
             fsmstep(ApplMsgs.stepId, time)
+        } else if (infoJson.has(ApplMsgs.robotMoveId)) {
+            val move: String = infoJson.getString(ApplMsgs.robotMoveId)
+            val time: String = infoJson.getString(ApplMsgs.robotMoveTimeId)
+            fsmstep(move, time)
         } else if (infoJson.has(ActorMsgs.endTimerId)) {
             fsmstep(ActorMsgs.endTimerId, "")
         } /* else if (infoJson.has("endmove")) {
             fsmstep(infoJson.getString("move"), infoJson.getString("endmove"))
-        } */ else if (infoJson.has("collision")) {  //put as the last
+        } */ else if (infoJson.has("collision")) {
             fsmstep("collision", "")
         }
     }

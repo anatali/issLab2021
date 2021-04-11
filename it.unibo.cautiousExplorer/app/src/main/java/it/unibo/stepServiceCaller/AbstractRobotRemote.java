@@ -75,13 +75,26 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
     protected void doMove(String moveShort)  { //Talk with BasicRobotActor
         try {
             String msg =
-                    ApplMessage.Companion.create("msg(robotmove,dispatch,walker,DEST,CMD,1)").toString()
+                    ApplMessage.Companion.create("msg(robotmove,dispatch,SENDER,DEST,CMD,1)").toString()
+                            .replace("SENDER", myname)
                             .replace("DEST", destBasicRobotName)
                             .replace("CMD", MoveJsonCmd.get(moveShort));
             System.out.println("AbstractRobotRemote | doMove msg:" + msg);
             conn.sendALine(msg);
             moves.updateMovesRep(moveShort);
             delay(moveInterval); //to avoid too-rapid movement
+        }catch( Exception e ){ e.printStackTrace(); }
+    }
+    protected void engageBasicRobot( boolean doengage)  { //Talk with BasicRobotActor
+        try {
+            String cmd = doengage ? "engage" : "release";
+            String msg =
+                    ApplMessage.Companion.create("msg(MSGID,dispatch,SENDER,DEST,do,1)").toString()
+                            .replace("MSGID", cmd)
+                            .replace("SENDER", myname)
+                            .replace("DEST", destBasicRobotName);
+            System.out.println("AbstractRobotRemote | engageBasicRobot msg:" + msg);
+            conn.sendALine(msg);
         }catch( Exception e ){ e.printStackTrace(); }
     }
 
@@ -121,7 +134,7 @@ public abstract class AbstractRobotRemote extends ActorBasicJava {
         try{
             if( info.startsWith("msg")){    //Answer from the remote actor
                 ApplMessage m   = ApplMessage.create( info );
-                perhapsJson     = m.getMsgContent();
+                perhapsJson     = m.getMsgContent().replace("@",",");
                 JSONObject obj  =  new JSONObject( perhapsJson );
                 msgDriven( obj );
             }else{

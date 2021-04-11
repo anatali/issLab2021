@@ -29,7 +29,7 @@ public class MainWalkerPath extends AbstractRobotRemote { //
             doStep();
         }else{
              try {
-                moves.setObstacle();
+                //moves.setObstacle();
                 moves.showMap();
                 String pathSoFar = moves.getJourney();
                 System.out.println("WalkerPath obstacle - pathSoFar=" + pathSoFar );

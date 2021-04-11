@@ -13,7 +13,6 @@ public class BasicRobotRemoteControl extends AbstractRobotRemote {
  
     public BasicRobotRemoteControl(String name) {
         super(name);
-        //reader.registerActor(this);
     }
 
 
@@ -22,7 +21,10 @@ public class BasicRobotRemoteControl extends AbstractRobotRemote {
         try {
             //System.out.println("BasicRobotControl | msgDriven  " + infoJson);
             if (infoJson.has("start")) {
-                doMove("w");
+                this.engageBasicRobot(true);
+                doMove("l");
+                doMove("r");
+                //this.engageBasicRobot(false);
             }else if (infoJson.has("endmove") ) {
                 String moveResult = infoJson.getString("endmove");
                 System.out.println("BasicRobotControl | endmove " + moveResult );

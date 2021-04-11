@@ -1,3 +1,9 @@
+/*
+============================================================
+ApplMsgs
+
+============================================================
+*/
 package it.unibo.robotService
 
 import it.unibo.actor0.ApplMessage
@@ -30,6 +36,11 @@ object ApplMsgs {
     const val executorFailId = "executorFail"
     val executorendokMsg = "{\"ID\":\"ok\" }".replace("ID", executorDoneId)
     val executorendkoMsg = "{\"ID\":\"PATHDONE\" }".replace("ID", executorFailId)
+
+    const val robotMoveId     = "robotmove"
+    const val robotMoveTimeId = "time"
+    val robotMoveMsg = "{\"MOVEID\":\"MOVE\",\"TIMEID\":TIME}"
+        .replace("MOVEID", robotMoveId).replace("TIMEID", robotMoveTimeId)
 
     const val endMoveId = "endmove"
     val endMoveMsg = "{\"ID\":\"ENDMOVE\" }".replace("ID", endMoveId)

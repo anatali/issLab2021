@@ -21,6 +21,7 @@ abstract class ActorBasicKotlin(val name: String,
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir
     var dispatcher : CoroutineDispatcher
+    protected val msgQueueStore    = mutableListOf<ApplMessage>()
 
     //var ctx  : ActorBasicContext? = null //to be injected
 

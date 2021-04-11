@@ -73,7 +73,8 @@ object sysUtil{
 	}
 //--------------------------------------------------------------------
 
-	val connActive : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()
+	val connActive         : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()
+	val connActiveForActor : MutableMap<String,IConnInteraction> = mutableMapOf<String,IConnInteraction>()
 
 
 

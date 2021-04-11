@@ -1,3 +1,10 @@
+/*
+============================================================
+BasicRobotActor
+
+Accept a  ApplMsgs.cmdMsg to move the robot
+============================================================
+*/
 package it.unibo.robotService
 
 import it.unibo.actor0.ApplMessage
@@ -6,19 +13,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import org.json.JSONObject
 
-/*
-==============================================================================
-Accept a  ApplMsgs.cmdMsg to move the robot  .
-
-==============================================================================
- */
 
 @ExperimentalCoroutinesApi
 class BasicRobotActor(name: String) : AbstractRobotActor( name ) {
 
     val turnRightMsg = "{\"robotmove\":\"turnRight\",\"time\":300}"
     val turnLeftMsg  = "{\"robotmove\":\"turnLeft\",\"time\":300}"
-    private var engaged = false;
+    private var engagedBy = "";
+    private var working   = false;
 
     init {
         println(  "$name | BasicRobotActor init support=$support")
@@ -31,24 +33,87 @@ The WEnv emits events also when it is called by the StepRobotActor
 Thus the BasicRobotActor updates its observers only when it is engaged
 
  */
-    //Msg driven actor
+
     override suspend fun handleInput(msg: ApplMessage) {
-    println(  "$name | BasicRobotActor handleInput msg=$msg")
-    val sender  = msg.msgSender
-    if (msg.msgId == "startbasicrobot"){ /*
-        delay(500)
-        //println( "$name | handleInput send $turnRightMsg"  )
-        doMove('r')  //turnRight()
-        //support.forward(turnRightMsg)
-        delay(1000)
-        support.forward(turnLeftMsg)
-        delay(500) */
-    }else if (msg.msgId == MsgUtil.endDefaultId){
-        terminate()
-    }else{
-        val msgJson = JSONObject( msg.msgContent.replace("@",",") )  //HORRIBLE trick
+    println("$name | BasicRobotActor handleInput msg=$msg")
+    //val sender = msg.msgSender
+        when (msg.msgId) {
+            "startbasicrobot" -> { }
+            "engage"  -> engagedBy = msg.msgSender
+            "release" -> engagedBy = ""
+            MsgUtil.endDefaultId -> terminate()
+            else -> {
+                val msgJson = JSONObject(msg.msgContent.replace("@", ","))  //HORRIBLE trick
+                println("$name | handleInput msgJson=" + msgJson)
+                if( msgJson.has("robotmove") && working ){ //another move while still working
+                    msgQueueStore.add(msg)
+                } else elabRobotinfo(msgJson, msg.msgSender)
+            }
+        }
+    }//handleInput
+
+    suspend fun elabRobotinfo( infoJson: JSONObject, sender: String) {
+        if (infoJson.has(ApplMsgs.robotMoveId)){
+            if( engagedBy == sender || sender == "support" ) {
+                msgDriven(infoJson)
+            }else if( engagedBy != sender) {
+                val move     = infoJson.getString(ApplMsgs.robotMoveId)
+                val payload  = "{\"${ApplMsgs.endMoveId}\":\"notallowed_enaged\",\"move\":\"${move}\"}"
+                //val answer   = MsgUtil.buildDispatch(name, ApplMsgs.endMoveId, payload, sender)
+                val answer   = JSONObject(payload)
+                sendMoveAnswer( answer, sender )
+            }
+        }else if (infoJson.has(ApplMsgs.endMoveId)){
+            working = false;
+            sendMoveAnswer( infoJson, sender )
+            //this.waitUser("msgQueueStore1")
+            if( msgQueueStore.size > 0 ){
+                val next = msgQueueStore.removeAt(0)
+                val msgJson = JSONObject(next.msgContent.replace("@", ","))
+                //this.waitUser("msgQueueStore2")
+                elabRobotinfo( msgJson,  next.msgSender )
+            }
+        }else if ( infoJson.has("sonarName")){
+            val sonarName = infoJson.getString("sonarName")
+            val distance  = infoJson.getInt("distance").toString()
+            val sonarData = "${sonarName}_$distance"
+            val payload   = "{'sonarInfo':'${sonarData}'}"
+            val answer = MsgUtil.buildDispatch(name,"sonarInfo",payload, sender)
+            this.updateObservers(answer)
+        }
+
+    }//elabRobotinfo
+
+
+    override fun msgDriven(msgJson: JSONObject) { //execute a move
+        println("$name | BasicRobotActor msgDriven $msgJson")
+        if (msgJson.has("robotmove")) {
+            if( ! working ) {
+                support.forward(msgJson.toString())
+                working = true;
+            }
+        }
+    }
+
+    suspend fun sendMoveAnswer( msgJson: JSONObject, sender: String ){
+        val moveres  = msgJson.getString(ApplMsgs.endMoveId)
+        val movedone = msgJson.getString("move")
+        val payload  = "{\"${ApplMsgs.endMoveId}\":\"${moveres}\"@\"move\":\"$movedone\"}"
+        val answer   = MsgUtil.buildDispatch(name, ApplMsgs.endMoveId, payload, sender)
+        println("$name | send answer: $answer to $sender"   )
+        updateObservers(answer) //a way to induce ActorContextTcpServer to send info to the sender
+    }
+
+
+
+
+/*
+     }else{ //work
+         val msgJson = JSONObject( msg.msgContent.replace("@",",") )  //HORRIBLE trick
          println( "$name | handleInput msgJson=" + msgJson)
-         if (msgJson.has("robotmove")) { //"{\"robotmove\":\"turnLeft\", \"time\": 300}"
+         if (msgJson.has("robotmove")) {
+
+         }else if (msgJson.has("robotmove")) { //"{\"robotmove\":\"turnLeft\", \"time\": 300}"
              //The BasicRobotActor is engaged
              if( ! engaged ) {
                  engaged = true
@@ -56,6 +121,16 @@ Thus the BasicRobotActor updates its observers only when it is engaged
                  support.forward(msgJson.toString())
              }else{
                  println( "$name | WARNING: alrady engaged"  )
+             }
+        }else if (msgJson.has(ApplMsgs.endMoveId)) {
+             val moveres  = msgJson.getString(ApplMsgs.endMoveId)
+             val movedone = msgJson.getString("move")
+             val payload  = "{\"${ApplMsgs.endMoveId}\":\"${moveres}\"@\"move\":\"$movedone\"}"
+             val answer   = MsgUtil.buildDispatch(name, ApplMsgs.endMoveId, payload, sender)
+             println("$name | send answer:" + answer)
+             if (engaged) {
+                 updateObservers(answer)
+                 engaged = false
              }
         }else if ( msgJson.has("sonarName")){
             println("$name BasicRobotActor |  handleInput:$msgJson")
@@ -71,23 +146,12 @@ Thus the BasicRobotActor updates its observers only when it is engaged
             val answer = MsgUtil.buildDispatch(name,"collision", payload, sender)
             println( "$name | send answer:" + answer)
             if( engaged ) this.updateObservers(answer)
-        }else if (msgJson.has(ApplMsgs.endMoveId)){
-            val moveres  = msgJson.getString(ApplMsgs.endMoveId)
-            val movedone = msgJson.getString("move")
-            val payload = "{\"${ApplMsgs.endMoveId}\":\"${moveres}\"@\"move\":\"$movedone\"}"
-            val answer = MsgUtil.buildDispatch(name, ApplMsgs.endMoveId, payload , sender)
-            println( "$name | send answer:" + answer)
-             if( engaged ){
-                 updateObservers(answer)
-                 engaged = false
-             }
         }
-    }//else
 
-    }//handleInput
+    }//else work
+*/
 
-    override fun msgDriven(infoJson: JSONObject) {
-        TODO("Not yet implemented since we redefine handleInput")
-    }
+
+
 }
 
