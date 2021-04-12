@@ -1271,41 +1271,61 @@ The example above  shows that the coroutine works with reference to the <bc>Disp
 A <a href="https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html" target="web"><k>Dispatcher</k></a>
 determines the thread in which a coroutine will be executed. It can be provided by the <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html" target="web"> 
 Coroutine Scope</a> or specified using a builder.
-
-</td>
-<td>
+</m>
 <h3>On <a href="https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html" target="web"><k>Dispatchers</k></a></h3> 
-<m>
+ 
 A dispatcher can be provided in two ways:
 
 <ul>
 <li>By the<a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html" target="web">. 
-CoroutineScope</a> <br/><br/></li>
+CoroutineScope</a></li>
 <li><bc>Explicitly</bc>: the coroutine builder receives a coroutine context as a first parameter.
 <!-- See  <a href="#Dispatchers">Dispatchers</a> later on. -->
 </li>
 </ul>
-</m>
+ 
+
+
+   
+</td>
+<td>
+ <h3><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html" target="web"> 
+<k>Coroutine Scope</k></a></h3> 
+   defines a 
+  <a href="https://en.wikipedia.org/wiki/Scope_(computer_science)" target="web"> <k>Scope</k></a> for new coroutines. <br/>
+  <m>Every coroutine builder is an extension on 
+  <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/" target="web"> 
+    <em>CoroutineScope</em></a> and inherits its 
+  <a href="https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html" target="web"><k>coroutineContext</k></a>
+  to automatically propagate both context elements and cancellation.
+  </m>
+  <h3>Launch and join</h3> 
+<m>Coroutines started by  <bc>launch</bc> return a <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html" target="web">Job</a>
+ immediately,  which we can use to <tt>cancel</tt> 
+the computation or wait its completion with <bc>join</bc>.</m> 
 </td>
 </tr>
 
 <tr>
 <td>
- <h3><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html" target="web"> 
-<k>Coroutine Scope</k></a></h3> 
-  <m>defines a 
-  <a href="https://en.wikipedia.org/wiki/Scope_(computer_science)" target="web"> <k>Scope</k></a> for new coroutines. 
-  Every coroutine builder is an extension on 
-  <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/" target="web"> 
-    <em>CoroutineScope</em></a> and inherits its 
-  <a href="https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html" target="web"><k>coroutineContext</k></a>
-  to automatically propagate both context elements and cancellation.
- </m>  
+
 <pre>
 fun scopeDemo (){	<kc>//user-option 3</kc>
 	val scope = <k>CoroutineScope( Dispatchers.Default )</k>
 	println( <ks>scope.coroutineContext</ks> )
-	<k>scope.launch</k>{ runBlockThread() } 	
+	val job = <k>scope.launch</k>{
+		println("start coroutine 1 ${curThread()}")
+		runBlockThread(3000)
+		println("end coroutine 1 ${curThread()}")
+	}
+	//job.join()  
+<m>// should be called only from a coroutine or another suspend function</m>
+	<k>scope.launch</k>{
+		println("start coroutine 2 ${curThread()}")
+		<k>job.join()</k>
+		println("end coroutine 2 ${curThread()}")
+	}
+
 }
 </pre> </td>
 <td><m>
@@ -1313,20 +1333,103 @@ The <b>runBlockThread</b> is now called in a new Coroutine scope.
 </m>
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=2
-<ks>[JobImpl{Active}@606d8acf, DefaultDispatcher]</ks>
-work done in time= 0
-ENDS thread=main | nthreads=4
-><m>thread ends : <k>thread=DefaultDispatcher-worker-1</k> | nthreads=5 thcounter=1</m>
+BEGINS CPU=8 thread=main / nthreads=2  
+<ks>[JobImpl{Active}@567d299b, DefaultDispatcher]</ks>
+start coroutine 1 thread=DefaultDispatcher-worker-1 / nthreads=5  
+work done in time= 35
+ENDS   thread=main / nthreads=5  
+start coroutine 2 thread=DefaultDispatcher-worker-2 / nthreads=6  
+>end coroutine 1 thread=DefaultDispatcher-worker-1 / nthreads=6  
+end coroutine 2 thread=DefaultDispatcher-worker-1 / nthreads=6  
 </pre>
 <m>
 </m>
 </td>
 </tr>
 
+<tr>
+<td>
+<h3>runBlocking</h3> 
+<m><bc>runBlocking</bc> is a  <tt>Coroutine Builder</tt> wrapper that runs new coroutine and blocks current thread interruptibly until its completion. 
+<br/>
+Using <bc>launch</bc>, the coroutine is launched in the
+scope of the outer coroutine (that of <bc>runBlocking</bc> in this case). 
+</m>
+<pre>
+fun demoRunBlocking1(){
+	<k>runBlocking</k> {
+		println("Before run2  ${curThread()}")
+		val job =  <k>launch</k>{ runBlockThread(2000)  }
+		println("Just after launch ${curThread()}")
+		<k>job.join()</k>
+		println("After job ${curThread()}")
+	}
+	println("Ends run2 ${curThread()}")
+}
+</pre> </td>
+<td><m>
+No <tt>Thread.sleep</tt> tis required now.  <br/>
+</m>
+
+<pre>
+<kc>//OUTPUT</kc>
+BEGINS CPU=8 thread=main / nthreads=2  
+Before run2  thread=main / nthreads=2  
+Just after launch thread=main / nthreads=2  
+After job thread=main / nthreads=2  
+Ends run2 thread=main / nthreads=2  
+work done in time= 2031
+ENDS   thread=main / nthreads=2  
+>
+</pre>
+<m>
+Since we use <bc>launch</bc> instead of <bc>GlobalScope.launch</bc>, then the coroutine is launched in the
+scope of the outer <bc>runBlocking</bc> coroutine.<br/>
+This is an example of  
+<a href="https://kotlinlang.org/docs/reference/coroutines/basics.html#structured-concurrency" target="web">structured concurrency</a>:
+coroutines confined to different scopes  are more maintainable and manageable.
+
+<!-- <bc>runBlocking</bc>  is designed to bridge regular blocking code to libraries written in suspending style, 
+to be used in main functions and in tests. -->
+</m>
+</td>
+</tr>
 
 
+<tr>
+<td>
 
+<pre>
+fun demoRunBlocking2(){
+	<k>runBlocking</k> {
+		println("Before run1 ${curThread()}")
+		<k>launch</k>{  runBlockThread(2000)  }
+		println("Just after launch ${curThread()}")
+	}
+	println("Ends run1 ${curThread()}")
+}
+</pre> 
+</td>
+<td><m>
+<br/>
+</m>
+
+<pre>
+<kc>//OUTPUT</kc>
+BEGINS CPU=8 thread=main / nthreads=2  
+Before run1 thread=main / nthreads=2  
+Just after launch thread=main / nthreads=2  
+Ends run1 thread=main / nthreads=2  
+work done in time= 2023
+ENDS   thread=main / nthreads=2  
+>
+</pre>
+<m>
+The <tt>runBlocking</tt> won't complete before all of its 
+child coroutines finish.
+</m>
+</td>
+</tr>
 
 
 
@@ -1520,17 +1623,16 @@ Question: why the final value of the <tt>thcounter</tt> is not <tt>n*k = 1000000
 
 <tr>
 <td>
-<pre>fun scopeAsyncDemo (){  <kc>//user-option 6</kc>
+<pre>fun scopeAsyncDemo(){  <kc>//user-option 6</kc>
   val scope = CoroutineScope( Dispatchers.Default )
-  val res : Deferred<String>   = <k>scope.async</k>{
+  val <ks>res</ks> : Deferred&lt;String>   = <k>scope.async</k>{
     println("async starts")
-    Thread.sleep(3000)
-    println("async ends")
+    delay(2000) <kc>//See <a href="#delay">delay</a></kc>
    "hello from async"
   }
   scope.launch{
     println("starts to wait result")
-    val r = <k>res.await()</k>; 
+    val r = <k><ks>res</ks>.await()</k>; 
 	<kc>//must be called only from a coroutine or a suspend function</kc>	
     println("result= ${r}")
   }
@@ -1541,7 +1643,18 @@ Question: why the final value of the <tt>thcounter</tt> is not <tt>n*k = 1000000
 <m><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/async.html" target="web">CoroutineScope.async</a>:
 creates a coroutine and returns its future result as an implementation of 
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/index.html" target="web">Deferred</a>.
-</m>
+</m> 
+
+<pre>
+<kc>//OUTPUT</kc>
+BEGINS CPU=8 thread=main / nthreads=2  
+async starts
+work done in time= 30
+ENDS   thread=main / nthreads=5  
+starts to wait result ...
+>result= hello from async
+</pre>
+
 </td>
 </tr>
 </tbody>	
@@ -1817,7 +1930,7 @@ child coroutines finish.
 
 <tr>
 <td>
-<h3>delay</h3> 
+<h3 id="delay">delay</h3> 
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/delay.html" target="web">Kotlin delay</a>
 is a special <i>suspending function</i> that does not block a thread, but suspends the work.
 <hr/>

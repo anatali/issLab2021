@@ -1,36 +1,23 @@
-package kotlindemo
 //demoCoroutinesIntro.kt
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.async
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.newFixedThreadPoolContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import java.util.concurrent.Executors
 
- 
+package kotlindemo
+
+import kotlinx.coroutines.*
+import kotlin.system.measureTimeMillis
+
+
 //import kotlinx.coroutines.io.parallelis.IO_PARALLELISM_PROPERTY_NAME
 var thcounter=0
-val delayTime=0L
-//val dispatcher = Executors.newFixedThreadPool(128).asCoroutineDispatcher()
+var maxNumThread = 0;
 
 fun runBlockThread( delay : Long = 0L ){
 //     run { //Calls a function block; returns its result
 //       println("thread sleeps ... : ${curThread()}")
          Thread.sleep( delay )
+		 val nt =  Thread.activeCount()
+		  if( maxNumThread < nt )  maxNumThread = nt
          thcounter++
-         println("thread ends : ${curThread()} thcounter=${thcounter}")
+         //println("thread ends : ${curThread()} thcounter=${thcounter}")
 //     } 
 }
 
@@ -38,16 +25,27 @@ fun scopeDemo (){
 	thcounter=0
 	val scope = CoroutineScope( Dispatchers.Default )
 	println( scope.coroutineContext )
-	scope.launch{ runBlockThread(1500) } 	
+	val job = scope.launch{
+		println("start coroutine 1 ${curThread()}")
+		runBlockThread(3000)
+		println("end coroutine 1 ${curThread()}")
+	}
+	//job.join()  // should be called only from a coroutine or another suspend function
+	scope.launch{
+		println("start coroutine 2 ${curThread()}")
+		job.join();
+		println("end coroutine 2 ${curThread()}")
+	}
 }
  
 
 fun scopeAsyncDemo (){
 	val scope = CoroutineScope( Dispatchers.Default )
-	val res : Deferred<String>   = scope.async{
+	val res = scope.async{	//type: Deferred<String>
 		println("async starts")
-		Thread.sleep(3000)
-		println("async ends")
+		//Thread.sleep(3000)
+		delay(2000)
+		//println("async ends")
 		"hello from async"
 	}
 	scope.launch{
@@ -70,7 +68,7 @@ fun manyThreads(){
 		}			
 		jobs.forEach{ it.join()  }  //wait for termination of all threads
  	}
-  	println("manyThreads time= $time thcounter=$thcounter ")
+  	println("manyThreads time= $time thcounter=$thcounter maxNumThread=$maxNumThread ")
 }
 
 //Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
@@ -90,10 +88,31 @@ fun manyCoroutines(){
 			jobs.forEach { it.join() }
 			//println("manyCoroutines END ALL JOBS")
 	    }
-	    println("manyCoroutines time= $time  thcounter=$thcounter  ")
+	    println("manyCoroutines time= $time  thcounter=$thcounter  maxNumThread=$maxNumThread ")
 	}
 }
 
+
+
+fun demoRunBlocking1(){
+	runBlocking {
+		println("Before run2  ${curThread()}")
+		val job =  launch{ runBlockThread(2000)  }
+		println("Just after launch ${curThread()}")
+		job.join()
+		println("After job ${curThread()}")
+	}
+	println("Ends run2 ${curThread()}")
+}
+
+fun demoRunBlocking2(){
+	runBlocking {
+		println("Before run1 ${curThread()}")
+		launch{  runBlockThread(2000)  }
+		println("Just after launch ${curThread()}")
+	}
+	println("Ends run1 ${curThread()}")
+}
 //=================================================================
 var demoTodo : () -> Unit = { println("nothing to do") }
 
@@ -102,16 +121,18 @@ fun readInt() : Int { print(">"); return readLine()!!.toInt() }
 fun doDemo( input : Int ) = runBlocking{  
 	println("BEGINS CPU=$cpus ${curThread()}")
 	when( input ){
-		1 ->  demoTodo =  { runBlockThread(1500 )                      	}
+		1 ->  demoTodo =  { runBlockThread(1500 ) 	    }
 		2 ->  demoTodo =  { thcounter=0; GlobalScope.launch{ runBlockThread(1500) }	}
-		3 ->  demoTodo =  { scopeDemo()								}
- 		4 ->  demoTodo =  { manyThreads()                	        }
-  		5 ->  demoTodo =  { manyCoroutines()               	        }
-		6 ->  demoTodo =  { scopeAsyncDemo()             	        }
+		3 ->  demoTodo =  { scopeDemo()						    }
+ 		4 ->  demoTodo =  { maxNumThread = 0; manyThreads() 	}
+  		5 ->  demoTodo =  { maxNumThread = 0; manyCoroutines()	}
+		6 ->  demoTodo =  { demoRunBlocking1()             	    }
+		7 ->  demoTodo =  { demoRunBlocking2()             	    }
+		8 ->  demoTodo =  { scopeAsyncDemo()             	    }
 		else ->  { println("command unknown") }  //Note the block
 	} 			
 	println( "work done in time= ${measureTimeMillis(  demoTodo )}"  )
-	println("ENDS ${curThread()}")	
+	println("ENDS   ${curThread()}")
 }
 
 fun main() {
