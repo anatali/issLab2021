@@ -131,11 +131,12 @@ div.req{
 }    
 
 div.remark{
-	background-color: #FFFC33;     
-    border: 3px solid green;
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
     padding: 15px;
     margin: 10px;
-}  
+	border-radius: 25px;
+}
 
 table, th, td {
   border: 1px solid black;
@@ -241,11 +242,11 @@ use an IDE or <a href="https://play.kotlinlang.org" target="web">Kotlin Playgrou
 You can consult also: <a href="https://try.kotlinlang.org/#/Examples" target="web">Kotlin online</a>
 <br/> <br/> 
 
-For the examples hereunder, look at <a href="../src/kotlindemo/demoBasic.kt" target="code">demoBasic.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
-
+For the examples hereunder, look at <a href="../app/src/main/kotlin/kotlindemo/demoBasic.kt" target="code">demoBasic.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+ 
 <h2><a id="data"/>Data, Types and Variables</h2>
 
-<center><table style="width:95%">
+<center><table style="width:98%">
 
 <tbody>	
 <tr>
@@ -270,22 +271,31 @@ println( st )	//Hello Bob
 
 <tr>
 <td><pre>val data : String<k>?</k> = null
-val v = data<k>?</k>.length ?: 0
+val v = data<k>?</k>.length <k>?:</k> 0
 <kc>------</kc>
 println("v=$v")	//0
 </pre> </td>
-<td><m><em>Nullable type</em> with safe null access</m> </td>
+<td><m><em>Nullable type</em> with safe null access 
+<ul>
+<li><k>String?</k> &nbsp;&nbsp;   nullable string<br/></li>
+<li><k>?.</k>  &nbsp;&nbsp;&nbsp;  <ks>safe call operator</ks><br/></li>
+<li><k>?:</k>  &nbsp;&nbsp;&nbsp;  <ks>elvis  operator</ks>: the right-hand side is evaluated only if the left-hand side is null</li>
+</ul>
+</m></td>
 </tr>
 <tr>
 <td><pre>
 val v01 : <k>Any</k> = 23
 <kc>------</kc>
-println( "v01 is String=${v01 </k>is</k> String}") //false
-println( "v01 is Int=${v01 <k>is</k> Int}")	//true
+println( "v01 is String=${<ks>v01 </k>is</k> String</ks>}") <kc>//v01 is String=false</kc>
+println( "v01 is Int=${<ks>v01 <k>is</k> Int</ks>}")	<kc>//v01 is Int=true</kc>
 </pre> </td>
-<td><m><em>Type hierarchy</em>. <bc>Any</bc> is is a non-nullable type that denotes the root of the Kotlin class hierarchy. <br/>
-<bc>Unit</bc> is used as a return type of a function that has nothing to return.<br/>
- <bc>is</bc> is a predefined check operator (like Java <bc>instanceOf</bc>)
+<td><m><em>Type hierarchy</em>. <br/>
+<ul>
+<li><bc>Any</bc> is is a non-nullable type that denotes the root of the Kotlin class hierarchy. </li>
+<li><bc>Unit</bc> is used as a return type of a function that has nothing to return.</li>
+<li> <bc>is</bc> is a predefined check operator (like Java <bc>instanceOf</bc>)</li>
+ </ul>
 </m> </td>
 </tr>
 
@@ -293,12 +303,13 @@ println( "v01 is Int=${v01 <k>is</k> Int}")	//true
 <tr>
 <td><pre>
 val v02  : Any = "Bob"
-val sv02 = v02 is String
-val nv02 = v02 is Int
+val sv02 = v02 <k>is</k> String	<kc>//boolean</kc>
+val nv02 = v02 <k>is</k> Int    <kc>//boolean</kc>
 <kc>------</kc>
-println( "v02 is String=${sv02}") //true
-println( "v02 is Int=${nv02}")	//false
-<k>if (v02 is String)</k> print(v02.length)
+println( "v02 is String=${sv02}") <kc>//v02 is String=true</kc>
+println( "v02 is Int=${nv02}")	  <kc>//v02 is Int=false</kc>
+<kc>//val n = v02.length 		<ks>ERROR</ks></kc>
+<k>if (v02 is String)</k> print(v02.length)	<kc>//3</kc><ks> Smart cast</ks>
 </pre> </td>
 <td><m><em>Smart cast</em>.  The compiler tracks the is-checks (and explicit casts) for immutable values and inserts 
 (safe) casts automatically when needed.</m> 
@@ -306,50 +317,57 @@ println( "v02 is Int=${nv02}")	//false
 </tr>
 
 <tr>
-<td><pre>//val n = v02.length 		<kc>//ERROR</kc>
+<td><pre>
 val n02 = (v02 <k>as</k> String).length
 <kc>------</kc>
 println( "$n02")              <kc> //3</kc>
 
-println( "${v02 as Int}") <kc>//java.lang.ClassCastException</kc>
+<kc>//println( "${v02 <k>as</k> Int}") <ks>java.lang.ClassCastException</ks></kc>
 
 println( "${v02 <k>as?</k> Int}")  	<kc>//null</kc>
-val t : Int = v02 as? Int <k>?:</k> 100
+val t : Int = v02 <k>as?</k> Int <k>?:</k> 100
 <kc>------</kc>
 println( "$t") 				<kc>//100</kc>
 </pre> </td>
 <td><m><em>Explicit casting</em>.<br/>
- The <bc>as</bc> operator performs type casting. <br/><br/>
-The <bc>as?</bc> operator performs safe type casting.<br/><br/>
-The <bc>?:</bc> is the <em>Elvis operator</em> that provides default values instead of null.
+<ul>
+<li>The <bc>as</bc> operator performs type casting. <br/></li>
+<li>The <bc>as?</bc> operator performs safe type casting.<br/></li>
+<li>The <bc>?:</bc> is the <em>Elvis operator</em> that provides default values instead of null.<br/></li>
+</ul>
 </m> </td>
 </tr>
 
 <tr>
 <td ><pre>
-val s1 = "a"
-var s2 = "a"
+val s1 = "a"	<kc>//primitive type</kc>
+var s2 = "a"	<kc>//primitive type</kc>
 <kc>------</kc>
-println( "s1 === s2 : ${s1 <k>===</k> s2} ") 	<kc>//true</kc>
-println( "s1 == s2  : ${s1 <k>==</k> s2} ")	<kc>//true</kc>
-
+println( "s1 === s2 : ${s1 <k>===</k> s2} ") 	<kc>//s1 === s2 : true</kc>
+println( "s1 == s2  : ${s1 <k>==</k> s2} ")	<kc>//s1 == s2  : true</kc>
+<kc>------</kc>
 s2 = "b"
+println( "s1 === s2 : ${s1 === s2} ") 	<kc>//s1 === s2 : false</kc>
 <kc>------</kc>
-println( "s1 === s2 : ${s1 === s2} ") 	<kc>//false</kc>
 s2 = "a"
-<kc>------</kc>
-println( "s1 === s2 : ${s1 === s2} ")	<kc>//true</kc>
+println( "s1 === s2 : ${s1 === s2} ")	<kc>//s1 == s2  : true </kc>
 
-val fa = java.io.File("a")
-val fb = java.io.File("a")
 <kc>------</kc>
+val fa = java.io.File("a")  <kc>//<k>NON</k> primitive type</kc>
+val fb = java.io.File("a")	<kc>//<k>NON</k> primitive type</kc>
+
 println( "fa === fb : ${fa === fb}")	<kc>//false</kc>
 println( "fa == fb  : ${fa == fb}")		<kc>//true</kc>
 
 </pre> </td>
-<td><m><em>Referential equality</em> <bc>===</bc> <br/>
-<em>Structural equality</em> <bc>==</bc> 
-(translated into a call of the <bc>equals</bc> function of the class) </td>
+<td><m><em>Referential equality</em> <bc>===</bc> : true when two references point to the same object.
+<br/>
+For values represented by <ks>primitive types</ks> at runtime (for example, <ks>Int</ks>), 
+the <k>===</k> equality check is equivalent to the <k>==</k> check.
+<br/><br/>
+<em>Structural equality</em> <bc>==</bc> : translated into a call of the <bc>equals</bc> function of the class 
+
+</td>
 </tr>
 
 <tr>
@@ -357,22 +375,35 @@ println( "fa == fb  : ${fa == fb}")		<kc>//true</kc>
 val aToz = "a"<k>..</k>"z"
 val q = "q"
 <kc>------</kc>
-println( "q in aToz=${q <k>in</k> aToz}")				<kc>//true</kc>
-println( "1 in aToz=${<k>"""</k>1<k>"""</k> in aToz}") 	<kc>//false</kc>
+println( "q in aToz=${q <k>in</k> aToz}")   <kc>//q in aToz=true</kc>
+println( "1 in aToz=${<k>"""</k>1<k>"""</k> in aToz}") 	<kc>//1 in aToz=false</kc>
 </pre> </td>
-<td><m><em>Range</em> created by the <bc>..</bc> operator.
-The <bc>in</bc> infix operator performs a belong test. Triple quotes <bc>"""</bc> do not require escaping chars</m></td>
+<td><m><ul>
+<li><em>Range</em> created by the <bc>..</bc> operator.</li>
+<li>The <bc>in</bc> infix operator performs a belong test.</li>
+<li>Triple quotes <bc>"""</bc> do not require escaping chars.</li>
+</m></td>
 </tr>
 
 <tr>
 <td><pre>
 var arr = <k>arrayOf</k>(1,2,3)
 <kc>------</kc>
-println( "arr size=${arr.size}")
-println( "firstEl=${arr[0]}  lastEl=${arr[arr.size-1]}")
+println( "arr size=${arr<k>.size</k>}")	<kc>//arr size=3</kc>
+println( "firstEl=${arr[0]}  lastEl=${<ks>arr[arr.size-1]</ks>}")
+								<kc>//firstEl=1  lastEl=3</kc>
+								
+<kc>------</kc>								
+arr.forEach <ks>{ v -> print("arr $v ") }</ks>; println()  
+								<kc>//arr 1 arr 2 arr 3</kc>
+arr.forEach <ks>{ print("$<k>it</k>") }</ks>; println()	<kc>//1 2 3 - see later</kc>
 </pre> </td>
-<td><m><em>Array</em>. They are a regular collection class. <bc>size</bc> is a 
-<a href="https://kotlinlang.org/docs/reference/properties.html" target="code"><em>Property</em></a>
+<td><m>
+<ul>
+<li><em>Array</em>: a regular collection class.</li>
+<li> <bc>size</bc> is a 
+<a href="https://kotlinlang.org/docs/reference/properties.html" target="code"><em>Property</em></a></li>
+</ul>
 </m> </td>
 </tr>
 
@@ -380,21 +411,24 @@ println( "firstEl=${arr[0]}  lastEl=${arr[arr.size-1]}")
 </tbody>	
 </table></center>
 
-<br/><br/> 	
+<div class="remark">
+ See also see <a href="https://kotlinlang.org/spec/expressions.html" target="web">Kotlin language specification: expressions</a>
+ </div>
  
+ 	
 <h3>Utility functions</h3>
-For the examples hereunder, start from <a href="../src/kotlindemo/demoTemplate.kt" target="code">demoTemplate.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>)
+For the examples hereunder, start from <a href="../app/src/main/kotlin/kotlindemo/demoTemplate.kt" target="code">demoTemplate.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>)
 that introduces:
 
 <pre>
-val <k>cpus</k> = Runtime.getRuntime().availableProcessors();
+val <k>cpus</k> = <ks>Runtime.getRuntime().availableProcessors()</ks>;
 
 fun <k>curThread()</k> : String { 
-	return "thread=${Thread.currentThread().name} / nthreads=${Thread.activeCount()}" 
+	return "thread=${<ks>Thread.currentThread().name</ks>} / nthreads=${<ks>Thread.activeCount()</ks>}" 
 }
 
 inline fun <k>measureTimeMillis</k>(block: () -> Unit): Long {
-    val start = System.currentTimeMillis()
+    val start = <ks>System.currentTimeMillis()</ks>
     block()
     return System.currentTimeMillis() - start
 }
@@ -402,7 +436,7 @@ inline fun <k>measureTimeMillis</k>(block: () -> Unit): Long {
 
 <h2><a id="funs"/>Functions </h2>
 
-These examples are reported in  <a href="../src/kotlindemo/demoFun.kt" target="code">demoFun.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+These examples are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoFun.kt" target="code">demoFun.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
  
 
@@ -478,57 +512,70 @@ A  way to provide a value function is to use a <em>function literal</em>:
 
 <tr>
 <td><pre>
-val <k>ftaction= {</k> println("hello") <k>}</k>  <kc>//lambda expression</kc>
-<kc>------</kc>
+val <k>ftaction = {</k> println("hello") <k>}</k>  <kc>//lambda expr </kc>
 <ks>ftaction()</ks> 		<kc>//hello</kc>
 
-<k>ftsum = {</k>  x:Int, y:Int -> x+y <k>}</k>  <kc>//lambda expression</kc>
-val fva = <ks> ftsum(1,2)</ks> 
 <kc>------</kc>
+val <k>ftsum = {</k>x:Int, y:Int -> x+y<k>}</k>  <kc>//lambda expr</kc>
+val fva = <ks> ftsum(1,2)</ks> 
 println("fva=$fva")	      <kc>//fva=3</kc>
 
-val <k>ftgreet = {</k>  m: String -> { println(m)}   <k>}</k>
 <kc>------</kc>
-<ks> ftgreet( "Hello World" )<k>()</k></ks>  	<kc>//Hello World</kc>
+val <k>ftgreet = {</k>  m: String -> { println(m)}   <k>}</k>
+println( <ks>ftgreet( "Hello!" )</ks> )	<kc>//Function0&lt;kotlin.Unit></kc>
+<ks> ftgreet( "Hello!" )<k>()</k></ks>  	<kc>//Hello!</kc>
 
 println( <ks> { println( "Welcome" ) }</ks>)	<kc>//() -> kotlin.Unit</kc>
 println( <ks> { println( "Welcome" ) }<k>()</k>)</ks> <kc>//Welcome  kotlin.Unit</kc>
 
-
-val <k>fel = {</k>  print( "Last exp val:" ); 100  <k>}</k>
 <kc>------</kc>
-println( "${ <ks>fel()</ks> }" )  <kc>//Last exp val=100</kc>
+val <k>fel = {</k>  print( "Last exp val:" ); 100  <k>}</k>
+println( "${ <ks>fel()</ks> }" )  <kc>//Last exp val:100</kc>
+<ks>fel() returns <tt>100</tt> but before executes <tt>print</tt></ks>
 </td>
 <td><h3>Lambda Expression literal</h3>
-<m>it can be assigned to a variable, just like any other literal. <br/><br/>
-A call returns (the value of the) <bc>last</bc> expression </m> </td>
+<m>it can be assigned to a variable, just like any other <k>literal</k>
+(see <a href="https://kotlinlang.org/spec/expressions.html" target="web">Kotlin language specification: expressions</a>). <br/><br/>
+A call returns (the value of the) <bc>last</bc> expression.<br/>
+</m> 
+</td>
 </tr>
 
 <tr>
 <td>
 <pre>
-val faction: <k>()-> Unit</k> = <ks>fun()</ks> { println("Hello from faction") }
-<kc>------</kc>
-faction() 		<kc>//Hello from faction</kc>
+<ks>fun(){println("Hello-anonymous")}</ks>	<kc>//Anonymous funct</kc>
+println( <ks>fun(){println("Hello-anonymous")}</ks> ) 
+						<kc>//Function0&lt;kotlin.Unit></kc>
 
-val fsquare: <k>(Int)->Int</k>  = <ks>fun(x)</ks> = x * x
 <kc>------</kc>
+val faction=<ks>fun()</ks>{println("Hello-faction")} <kc>//type:<k>()-> Unit</k></kc> 
+faction() 		<kc>//Hello-faction</kc>
+
+<kc>------</kc>
+val fsquare=<ks>fun(x)</ks> = x * x       <kc>//Type: <k>(Int)->Int</k></kc>  
 println("fsquare=${fsquare(3)}")	      <kc>//fsquare=9</kc>
 
-val greet: <k>(String)->()->Unit</k> = 
-		<ks>fun</ks>(m:String) = <ks>fun()</ks>{ println("Printing $m") }
 <kc>------</kc>
-println( greet )			<kc>//(kotlin.String) -> () -> kotlin.Unit</kc>
-println( greet( "Hello World1" ) )	<kc>//() -> kotlin.Unit</kc>
-greet<ks>( "Hello World" )</ks><k>( )</k> 	<kc>//Printing Hello World</kc>
+val greet= <ks>fun</ks>(m:String) = <ks>fun()</ks>{ println("Printing $m") }
+	<kc>//Type:: <k>(String) -> ()->Unit</k> </kc>  
+println( greet )      
+<kc>//Function1&lt;java.lang.String, 
+  kotlin.jvm.functions.Function0&lt;? extends kotlin.Unit>></kc>
+println(greet("Hello World1"))	<kc>//Function0&lt;kotlin.Unit></kc>
+greet<ks>( "Hello World2" )</ks><k>( )</k> 	<kc>//Printing Hello World2</kc>
 
 ------------------------------------------
 fun fexec23( op: <k>(Int, Int) : Int</k> ) : Int  {  <k>return</k> op(2,3)  }
 
 val v23 =  fexec23( <ks>fun(x:Int,y:Int):Int{return x+y}</ks> )
-<kc>------</kc>
 println("$v23")         					<kc>//5</kc>
-println( fexec23( { x:Int, y:Int -> x*y } )	 )	<kc>//6</kc>
+
+println( fexec23( <ks>{ x:Int, y:Int -> x*y }</ks> )	 )	<kc>//6</kc>
+
+println( fexec23(<k>::fsum</k>))	 <kc>//5</kc> See <a href="#funcref">Function reference</a>
+
+
 </pre> </td>
 <td><h3>Anonymous function</h3>
 <m>another way to write a block of code instead of a Lambda expression. Needs <bc>return</bc>
@@ -549,7 +596,7 @@ is an interface with a single method. They are commonly referred to as <i>Single
 A Java functional interface can be implemented by a Java <m><k>Lambda Expression</k></m>
 (see <a href="http://tutorials.jenkov.com/java/lambda-expressions.html"  target="web">Tutorial on Java Lambda Expressions</a>).
 <br/><br/>
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoLambda.kt" target="code">demoLambda.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoLambda.kt" target="code">demoLambda.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
 
 <center><table style="width:95%">
@@ -699,7 +746,7 @@ println( x ) 		<kc>//11</kc>
 </pre>
 -->
 </td>
-<td><h3>Function reference</h3>
+<td><h3 id="funcref">Function reference</h3>
 <m>The</m> <bc>::</bc>  <m>operator creates a member reference or a (statically known) class reference.<br/>
 The <em>reference</em> is a value of type <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html" target="web">KClass</a>.<br/>
 A Kotlin class reference is not the same as a Java class reference. To obtain a Java class reference, 
@@ -780,7 +827,7 @@ logo=Starting v1=First v2=Second
  
 
 <h2><a id="clos"/>Closures, Callbacks and CPS</h2>
-These examples are reported in  <a href="../src/kotlindemo/demoCps.kt" target="code">demoCps.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+These examples are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoCps.kt" target="code">demoCps.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
 
 <center><table style="width:95%">
@@ -940,7 +987,7 @@ In order to avoid the <bc>anti-pattern</bc> known as
 </table></center>
 
 <h2 id="async">Towards Asynchronous Programming</h2>
-This example is reported in  <a href="../src/kotlindemo/demoCpsAsynch.kt" target="code">demoCpsAsynch.kt</a>  
+This example is reported in  <a href="../app/src/main/kotlin/kotlindemo/demoCpsAsynch.kt" target="code">demoCpsAsynch.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
 <center><table style="width:95%">
@@ -1111,7 +1158,7 @@ A current job can be retrieved from a current coroutine's context.
 </ul>
 
 <h3>Examples</h3>
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoCoroutinesIntro.kt" target="code">demoCoroutinesIntro.kt</a>  
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoCoroutinesIntro.kt" target="code">demoCoroutinesIntro.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).<br/>
 The main program now waits for a command from the user to select the demo to run:
 <hr/>
@@ -1447,7 +1494,7 @@ The size of this thread pool is 64.</li>
  	</ul>
 
 <h2><a id="dispatchers"/>Dispatchers</h2>
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoDispatchers.kt" target="code">demoDispatchers.kt</a>  
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoDispatchers.kt" target="code">demoDispatchers.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).<br/>
 
 <center><table style="width:95%">
@@ -1507,7 +1554,7 @@ or let it run unconfined.</li>
 <li>Coroutines can suspend on one thread and resume on another thread.</li>
 </ul>
 
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoDispatcherPatterns.kt" target="code">demoDispatcherPatterns.kt</a>  
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoDispatcherPatterns.kt" target="code">demoDispatcherPatterns.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).<br/>
 
 <center><table style="width:95%">
@@ -1625,7 +1672,7 @@ the function can suspend the execution of a coroutine.
 
 Suspending functions can invoke any other regular functions, but to actually suspend the execution, it has to be another suspending function.
 <br/><br/>
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoSuspended.kt" target="code">demoSuspended.kt</a>  
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoSuspended.kt" target="code">demoSuspended.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
 <!--
@@ -1874,7 +1921,7 @@ Kotlin defines several types of channels:
 </li>
 </ul>
 <hr/>
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoChannels.kt" target="code">demoChannels.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoChannels.kt" target="code">demoChannels.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
  
 <center><table style="width:95%">
@@ -2012,7 +2059,7 @@ fun main() = <k>runBlocking</k>{
 </pre>
 </td>
 <td>
-This example is reported in <a href="../src/prodCons/simpleProducerKotlin.kt" target="code">simpleProducerKotlin.kt</a>
+This example is reported in <a href="../app/src/prodCons/simpleProducerKotlin.kt" target="code">simpleProducerKotlin.kt</a>
 <hr/>
 <br/> 
 <m>  
@@ -2074,7 +2121,7 @@ fun main() = runBlocking{
 </pre>
 </td>
 <td>
-This example is reported in <a href="../src/prodCons/prodConsKotlin.kt" target="code">prodConsKotlin.kt</a>
+This example is reported in <a href="../app/src/prodCons/prodConsKotlin.kt" target="code">prodConsKotlin.kt</a>
 <hr/>
 <br/> 
 
@@ -2147,7 +2194,7 @@ fun main() = runBlocking{
 </pre>
 </td>
 <td>
-This example is reported in <a href="../src/prodCons/prodManyConsKotlin.kt" target="code">prodManyConsKotlin.kt</a>
+This example is reported in <a href="../app/src/prodCons/prodManyConsKotlin.kt" target="code">prodManyConsKotlin.kt</a>
 <br/><br/>
 
 <br/>The output is:</m>
@@ -2246,7 +2293,7 @@ fun main() = runBlocking{
 </pre>
 </td>
 <td>
-This example is reported in  <a href="../src/kotlindemo/demoActors.kt" target="code">demoActors.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+This example is reported in  <a href="../app/src/main/kotlin/kotlindemo/demoActors.kt" target="code">demoActors.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/><br/>
 <center><img src="./img/demoActor0.png" alt="demoActor0.png" width="70%"/></center>
 
@@ -2315,7 +2362,7 @@ suspend fun <k>CoroutineScope.manyRun</k>( action: <k>suspend () -> Unit</k> ) {
 
 <m></m>
 <br/>
-This example is reported in  <a href="../src/kotlindemo/demoActorCounter.kt" target="code">demoActorCounter.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+This example is reported in  <a href="../app/src/main/kotlin/kotlindemo/demoActorCounter.kt" target="code">demoActorCounter.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/> 
 
 <center><table style="width:95%">
@@ -2418,7 +2465,7 @@ A simple actor can be written as a function, but an actor with a complex state  
 
 <h2 id="sequences">SEQUENCES (SUSPENDABLE)</h2> 
 
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoSequences.kt" target="code">demoSequences.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoSequences.kt" target="code">demoSequences.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
 
 <center><table style="width:95%">
@@ -2532,7 +2579,7 @@ ENDS thread=main | nthreads=1</pre>
 
  
 <h2><a id="classes"/>Classes and Objects in Kotlin</h2>
-The examples hereunder are reported in  <a href="../src/kotlindemo/demoClasses.kt" target="code">demoClasses.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
+The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoClasses.kt" target="code">demoClasses.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
 <br/><br/>
 
 <center><table style="width:95%">

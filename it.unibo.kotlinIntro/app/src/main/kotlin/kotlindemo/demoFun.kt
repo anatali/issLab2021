@@ -10,22 +10,21 @@ fun decCounter() { fcounter-- }
 
 fun fsquare(v: Int) = v * v		//oneline function
 
+//val ftaction : () -> Unit
+val ftaction = { println("hello") }  //lambda expression
+//val ftsum : ( Int,  Int) -> Int
+val ftsum = {  x:Int, y:Int -> x+y }  //lambda expression
 
-val ftaction : () -> Unit
-					= { println("hello") } 		//lambda expression
-val ftsum : ( Int,  Int) -> Int
-					= {  x:Int, y:Int -> x+y }  //lambda expression
-
-val ftgreet: (String ) -> ()->Unit
-					= {  m: String -> { println(m)}   }
+//val ftgreet: (String ) -> ()->Unit
+val ftgreet	= {  m: String -> { println(m)}   }
 
 val fva = ftsum(1,2)
 
 val fel = {  print( "Last exp val:" ); 100  }
 
 
-//val faction: ()-> Unit   = fun() { println("Hello from faction") }
-val faction  = fun() { println("Hello from faction") }
+//val faction: ()-> Unit   = fun() { println("Hello-faction") }
+val faction  = fun() { println("Hello-faction") }
 //val fsquare: (Int)->Int  = fun(x) = x * x
 val fsquare  = fun(x:Int) = x * x
 //val greet: (String) -> () -> Unit = fun(m:String) = fun(){ println("Printing $m") }
@@ -48,27 +47,29 @@ fun funDemoWork(){
 	
 	println("fva=$fva")	      //fva=3
 	
-	
-	ftgreet( "Hello World" )() 	//Hello World
-	
+	println( ftgreet( "Hello!" ) )	//Function0<kotlin.Unit>
+	ftgreet( "Hello!" )() 	//Hello!
+
 	println( "${fel()}" )  		//Last exp val=100
 	
  	println( { println( "Welcome" ) } )			//() -> kotlin.Unit
  	println( { println( "Welcome" ) }() )		//Welcome  kotlin.Unit
 	
-println("Anonymous functions ----------")	
+println("Anonymous functions ----------")
+	println( fun() { println("Hello-anonymous") } ) //Function0<kotlin.Unit>
 	faction() 								 //Hello from faction
 	println("fsquare=${fsquare(3)}")		 //fsquare=9
-	println( greet )						//(kotlin.String) -> () -> kotlin.Unit
-	println( greet( "Hello World1" ) )		//() -> kotlin.Unit
-	greet( "Hello World1" ) 				// ???
+	println( greet )						//Function1<java.lang.String, kotlin.jvm.functions.Function0<? extends kotlin.Unit>>
+	println( greet( "Hello World1" ) )		//Function0<kotlin.Unit>
+	//greet( "Hello World1" ) 				// ???
 	greet( "Hello World2" )( ) 				//Printing Hello World
 	
 	println( fun(x:Int,y:Int):Int {return x+y} )	//(kotlin.Int, kotlin.Int) -> kotlin.Int
   	val v23 = fexec23( fun(x:Int,y:Int):Int {return x+y} )		 
   	println("v23=$v23")          //v23=5
  	println( fexec23( { x:Int, y:Int -> x*y } )	 )	 	//6
- }
+	println( fexec23( ::fsum  )	 )	//5
+}
 
 fun main() {
     println("BEGINS CPU=$cpus ${curThread()}")
