@@ -44,18 +44,16 @@ fun scopeDemo (){
 
 fun scopeAsyncDemo (){
 	val scope = CoroutineScope( Dispatchers.Default )
-	
 	val res : Deferred<String>   = scope.async{
 		println("async starts")
 		Thread.sleep(3000)
 		println("async ends")
 		"hello from async"
 	}
-							 
 	scope.launch{
-		println("result waiting starts")
+		println("starts to wait result")
 		val r = res.await(); //must be called only from a coroutine or a suspend function	
-		println("result waiting result= ${r}")
+		println("result= ${r}")
 	}
 }
 
@@ -107,10 +105,10 @@ fun doDemo( input : Int ) = runBlocking{
 		1 ->  demoTodo =  { runBlockThread(1500 )                      	}
 		2 ->  demoTodo =  { thcounter=0; GlobalScope.launch{ runBlockThread(1500) }	}
 		3 ->  demoTodo =  { scopeDemo()								}
- 		4 ->  demoTodo =  { scopeAsyncDemo()             	        }
- 		5 ->  demoTodo =  { manyThreads()                	        }
-  		6 ->  demoTodo =  { manyCoroutines()               	        }
-		else ->  { println("command unknown") }  //Note the block  
+ 		4 ->  demoTodo =  { manyThreads()                	        }
+  		5 ->  demoTodo =  { manyCoroutines()               	        }
+		6 ->  demoTodo =  { scopeAsyncDemo()             	        }
+		else ->  { println("command unknown") }  //Note the block
 	} 			
 	println( "work done in time= ${measureTimeMillis(  demoTodo )}"  )
 	println("ENDS ${curThread()}")	

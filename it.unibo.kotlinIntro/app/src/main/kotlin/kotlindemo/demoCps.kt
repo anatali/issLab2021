@@ -25,7 +25,7 @@ fun readAction() : String{
     return "myinput"
 }
 fun evalAction( v: Int, msg: String ) : String{
-    println("evalaction ... | ${curThread()}")
+    println("evalaction ... | v=$v ${curThread()}")
     return "$msg:$v"
 }
 
@@ -60,7 +60,7 @@ fun doJobCps( n: Int  ){
 //=========================================================================
 fun closureDemo(){
     val c1 = counterCreate()
-	println("closureDemo")
+	println("closureDemo --------------------- ")
 	println( c1 )			 //(kotlin.String) -> kotlin.Int
 	println( c1("val") ) 	//0
 	val c2 = counterCreate()
