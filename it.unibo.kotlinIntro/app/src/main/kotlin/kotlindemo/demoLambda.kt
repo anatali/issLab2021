@@ -26,13 +26,11 @@ fun testRunFunction() {
         println("First start:$logo  ${curThread()}")
         val logo = "First"	//local
         println("First ended : $logo")
-        logo
     }
     val v2 = run {
         println("Second start:$logo ${curThread()}")
         val logo = "Second"	//local
         println("Second ended: $logo ")
-        logo
     }
     println("logo=$logo v1=$v1 v2=$v2" )
 }
@@ -52,17 +50,22 @@ fun lambdaDemoWork() {
     println("v4=$v4")
 
 println("it    -------------- ")
-	println( p2{ it  } )   			 //2
+    println( p2{ it -> it  } )      //2
+    println( p2{ it  } )   			 //2
 	println( p2{ it -> it * it } )   //4
-	println( p2{ it * it / 2 } )     //2
+    println( p2{ it - 18 / 9 } )     //0
+    println( p2{ it - 18 }  / 9 )     //-1
 
-	println("modulo -------------- ")	
-	println(  modulo(3)  ) 		    //(kotlin.Int) -> kotlin.Int
+
+
+    println("modulo -------------- ")
+	println(  modulo(3)  ) 	 //Function1<java.lang.Integer, java.lang.Integer>
 	println(  modulo(3)(5) ) 		//2
 	println(  modulo(5)(3) )		//3
 
 println("params -------------- ")	
-	println( "${ sToN( s="123") }" ) 		//123
+	println( "${ sToN( s="123") }" ) 		    //123
+    println( "${ sToN( s="123", 8) }" ) 	//83
 	val v = mirror(2)
 	println("${v.first}, ${v.second} ")  	//2,-2
 	val(pos,neg) = mirror(3)

@@ -535,7 +535,7 @@ println( "${ <ks>fel()</ks> }" )  <kc>//Last exp val:100</kc>
 </td>
 <td><h3>Lambda Expression literal</h3>
 <m>it can be assigned to a variable, just like any other <k>literal</k>
-(see <a href="https://kotlinlang.org/spec/expressions.html" target="web">Kotlin language specification: expressions</a>). <br/><br/>
+(see <a href="https://kotlinlang.org/spec/expressions.html#lambda-literals" target="web">Kotlin language specification: expressions</a>). <br/><br/>
 A call returns (the value of the) <bc>last</bc> expression.<br/>
 </m> 
 </td>
@@ -607,8 +607,8 @@ The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlinde
 <td><pre>
 fun exec23( <k>op:(Int,Int) -> Int</k> ) : Int { return op(2,3) }
 
-val sum = { x:Int, y:Int -> x+y }
-val mul = { x:Int, y:Int -> x*y }
+val sum = { x:Int, y:Int -> x+y }	<kc>//lambda expr</kc>
+val mul = { x:Int, y:Int -> x*y }	<kc>//lambda expr</kc>
 
 println("${ exec23(sum) }")	      <kc>//5</kc>
 println("${ exec23(mul) }")	      <kc>//6</kc>
@@ -625,19 +625,18 @@ println("${ exec23(mul) }")	      <kc>//6</kc>
 <tr>
 <td><pre>
 val v1 = exec23( { x:Int, y:Int -> x-y } ) <k>//1) no shortcut</k>
-<kc>------</kc>
 println("v1=$v1")	      <kc>//v1=-1</kc>
 
-val v2 = exec23<k>()</k> { x:Int, y:Int -> x-y } <k>//2) lambda last arg</k>
 <kc>------</kc>
+val v2 = exec23<k>()</k> { x:Int, y:Int -> x-y } <k>//2) lambda last arg</k>
 println("v2=$v2")	      <kc>//v2=-1</kc>
 
-val v3 = exec23{ x:Int, y:Int -> x-y } <k>//3) () can be removed</k>
 <kc>------</kc>
+val v3 = exec23{ x:Int, y:Int -> x-y } <k>//3) () can be removed</k>
 println("v3=$v3")	      <kc>//v3=-1</kc>
 
-val v4 = exec23{ x,y -> x-y } <k>//4) arg types inferred</k>
 <kc>------</kc>
+val v4 = exec23{ x,y -> x-y } <k>//4) arg types inferred</k>
 println("v4=$v4")	      <kc>//v4=-1</kc>
 </td>
 <td><h3>Lambda syntax shortcut</h3> </td>
@@ -645,15 +644,20 @@ println("v4=$v4")	      <kc>//v4=-1</kc>
 
 <tr>
 <td><pre>
-fun p2( op: ( Int ) -> Int ) : Int { return op(2) }
+fun <k>p2</k>( <ks>op:( Int ) -> Int)</ks> : Int { return op(<k>2</k>) }
 
-    println( p2( { <k>x:Int-> x*x }</k> ) )	<kc>//4</kc>
-    println( p2<k>( )</k>  { x:Int-> x*x } )	<kc>//4</kc>
-    println(  p2 { <k>x:Int-> x*x</k> }	)	<kc>//4</kc>
-    println(  p2 { <k>x -> x*x</k> } )		<kc>//4</kc>
+    println( p2( { <k>x:Int-> x*x }</k> ) )	<kc>//4 - no shortcut</kc>
+    println( p2<k>( )</k>  { x:Int-> x*x } )	<kc>//4 - lambda last arg</kc>
+    println(  p2 { <k>x:Int-> x*x</k> }	)	<kc>//4 - last arg no ()</kc>
+    println(  p2 { <k>x -> x*x</k> } )		<kc>//4 - arg type inferred</kc>
+	-----------------------
+    println( p2{ <k>it -> it</k>  } )      <kc>//2</kc>
+    println( p2{ <k>it</k>  } )   		   <kc>//2</kc>
     println(  p2 { <k>it -> it*it</k> } )		<kc>//4</kc>
     println(  p2 { <k>it*it</k> } )			<kc>//4</kc>
-    println( p2{ <k>it * it / 2</k> } )		<kc>//2</kc>
+    println( p2{ <k>it -18 / 9</k> } )     <kc>//0</kc>
+    println( p2{ <k>it -18 </k>} / 9)     <kc>//-1 (int)</kc>
+     
 </pre> </td>
 <td><h3>Simplification in lambda call</h3>
 
@@ -668,14 +672,16 @@ p2 { it*it }
 
 <td><pre>
 fun modulo(k:Int): <k>(Int) -> Int</k>   <kc> //SIGNATURE</kc>
-            = { it % k  }               <kc>//BODY</kc>	
-<kc>------</kc>
+            = { <ks>it % k</ks>  }               <kc>//BODY</kc>	
+println(  <k>modulo(3)</k>  ) 	 
+   <kc>//Function1&lt;java.lang.Integer, java.lang.Integer>
 println(  <ks>modulo(3)<k>(5)</k></ks>     ) 	<kc>//2</kc>
 println(  <ks>modulo(5)<k>(3)</k></ks>     ) 	<kc>//3</kc>
 </pre> </td>
 <td><h3>Function as return value</h3>
 <center><img src="./img/funRetFun.png" alt="funRetFun.png" width="30%"/></center>
-<m>  </m> </td>
+<br/>
+<m>The modulo operation is a way to determine the <k>remainder</k> of a division operation </m> </td>
 </tr>
 
 
@@ -696,8 +702,8 @@ fun sToN( s: String, base: Int<k>=10</k> ) : Int{
     }
     return v
 }
-<kc>------</kc>
 println( " ${ sToN( <k>s=</k>"123") } " ) 	<kc>//123</kc>
+println( "${ sToN( <k>s="123", 8</k>) }" ) 	<kc>//83</kc>
 </pre> </td>
 <td><m><em>Default parameters</em> and <em>Named parameters</em> at call </m> </td>
 </tr>
@@ -710,16 +716,17 @@ println( " ${ sToN( <k>s=</k>"123") } " ) 	<kc>//123</kc>
 fun mirror(v: Int) : <k>Pair&ltInt,Int></k> {
 	return Pair(v, -v)
 }
+<kc>------</kc>
 val v = mirror(2)
-<kc>------</kc>
-println("${v.first}, ${v.second} ")  <kc>//2,-2</kc>
+println("${v<k>.first</k>}, ${v<k>.second</k>} ")  <kc>//2,-2</kc>
 
-val(pos,neg) = mirror(3)
 <kc>------</kc>
+<k>val(pos,neg)</k>  = mirror(3)
 println( " pos=$pos neg=$neg " ) 	<kc>//pos=3 neg=-3</kc>  
 </pre> </td>
 <td><m><em>Multiple return values</em>. To extract the values into separate values, we can exploit
-<bc>destructuring declarations</bc> (syntactic sugar)</m> 
+<a href="https://kotlinlang.org/docs/destructuring-declarations.html" target="web"><k>destructuring declarations</k></a>
+ (syntactic sugar)</m> 
 <pre>
 val(pos,neg) = mirror(3)
 </pre>
@@ -728,7 +735,7 @@ val(pos,neg) = mirror(3)
 
 
 
-<td><pre>val sToNref = <k>::</k>sToN
+<td><pre>val sToNref = <ks><k>::</k>sToN</ks>
 println( sToNref )	
 	<kc> //fun sToN(kotlin.String, kotlin.Int): kotlin.Int</kc> 
 -------------------------
@@ -785,13 +792,11 @@ fun testRunFunction() {
         println("First start:$logo  ${curThread()}")
         val logo = "First"	<kc>//local</kc>
         println("First ended : $logo")
-        logo
     <k>}</k>
     val <k>v2 = run { </k>
         println("Second start:$logo ${curThread()}")
         val logo = "Second"	<kc>//local</kc>
         println("Second ended: $logo ")
-        logo
     <k>}</k>
     println("logo=$logo v1=$<ks>v1</ks> v2=$<ks>v2</ks>" )
 }
@@ -809,15 +814,15 @@ testRunFunction()
 	<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/let.html" target="web"><k>let</k></a>
 	library functions.<br/>
 	Similar to the <tt>let</tt> function, the run function returns the last statement.<br/>
-	Unlike <tt>let</tt>, the <tt>run</tt> function <k>doesn’t support the it</k> keyword.
+	Unlike <tt>let</tt>, the <tt>run</tt> function <ks>doesn’t supports</ks> the <k>it</k> keyword.
  </m>
 <pre>
 <kc>//OUTPUT</kc>
-First start:Starting  thread=main | nthreads=1
+First start:Starting  thread=main | nthreads=2
 First ended : First
-Second start:Starting thread=main | nthreads=1
+Second start:Starting thread=main | nthreads=2
 Second ended: Second 
-logo=Starting v1=First v2=Second
+logo=Starting v1=kotlin.Unit v2=kotlin.Unit
 </pre>
 </td>
 </tr>

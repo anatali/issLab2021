@@ -24,3 +24,5 @@ CMD ["node", "WebpageServer"]
 #### docker build -t virtualrobotdisi:1.0 .
 #### docker run -ti -p 8090:8090  -p 8091:8091 --rm virtualrobotdisi:2.0 /bin/sh
 #### docker run -d -p 8090:8090 -p 8091:8091 --rm virtualrobotdisi:1.0   (Detach mode)
+#### docker cp sceneConfig.js  		( )
+#### docker cp sceneConfig.js 23df308fae4e:/home/node/WEnv/WebGLScene/sceneConfig.js
