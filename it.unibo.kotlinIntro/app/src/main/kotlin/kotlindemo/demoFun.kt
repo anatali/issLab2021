@@ -44,21 +44,26 @@ fun funDemoWork(){
 	println(  fsquare(3)  ) 	//9
 	
 	ftaction()		//hello
-	
+	//println(  "ftaction no (): ${ftaction()}"  )
+
 	println("fva=$fva")	      //fva=3
 	
 	println( ftgreet( "Hello!" ) )	//Function0<kotlin.Unit>
 	ftgreet( "Hello!" )() 	//Hello!
 
-	println( "${fel()}" )  		//Last exp val=100
-	
  	println( { println( "Welcome" ) } )			//() -> kotlin.Unit
  	println( { println( "Welcome" ) }() )		//Welcome  kotlin.Unit
-	
+
+	println( "${fel()}" )  		//Last exp val=100
+
 println("Anonymous functions ----------")
 	println( fun() { println("Hello-anonymous") } ) //Function0<kotlin.Unit>
 	faction() 								 //Hello from faction
+
 	println("fsquare=${fsquare(3)}")		 //fsquare=9
+	val fsquare1 = fun(x:Float ) = x * x
+	println("fsquare1=${fsquare1(3.0F)}")	 //fsquare=9.0
+
 	println( greet )						//Function1<java.lang.String, kotlin.jvm.functions.Function0<? extends kotlin.Unit>>
 	println( greet( "Hello World1" ) )		//Function0<kotlin.Unit>
 	//greet( "Hello World1" ) 				// ???

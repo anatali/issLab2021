@@ -69,7 +69,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.actor0robot.MainStepRobotServiceKt")
+    mainClass.set("kotlindemo.demoBasicKt")
 }
 
 version = "1.0"
