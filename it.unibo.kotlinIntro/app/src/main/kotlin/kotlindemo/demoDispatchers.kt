@@ -16,15 +16,24 @@ import kotlinx.coroutines.channels.Channel
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun testDispatchers(n : Int, scope: CoroutineScope) {
+        if( n== 0 ){
+             scope.launch {
+                delay(500)
+                println("0_a) runBlocking | ${curThread()}")
+             }
+             scope.launch { //context of the parent runBlocking
+                println("0_b) runBlocking | ${curThread()}")
+             }
+        }
         if( n== 1 ){
             runBlocking {
-                 launch { //context of the parent runBlocking
+                 launch {
                      delay(500)
                      println("1_a) runBlocking | ${curThread()}")
                  }
-                launch { //context of the parent runBlocking
+                 launch { //context of the parent runBlocking
                     println("1_b) runBlocking | ${curThread()}")
-                }
+                 }
             }
         }
         if( n== 2 ) {
@@ -33,10 +42,11 @@ fun testDispatchers(n : Int, scope: CoroutineScope) {
                 delay(500)
                 println("2_a) Default | ${curThread()}")
             }
-            scope.launch(dispatcher) { //DefaultDispatcher
+            scope.launch(dispatcher) {
                 println("2_b) Default | ${curThread()}")
             }
         }
+
         if( n== 3 ){
             val dispatcher = newSingleThreadContext("MyThr")
             scope.launch( dispatcher ) {
@@ -67,16 +77,43 @@ fun testDispatchers(n : Int, scope: CoroutineScope) {
                 println("5_b) Unconfined | ${curThread()}")
             }
         }
+        if( n== 6 ) {  //Working in a new scope and in the given one
+            val myscope = CoroutineScope(Dispatchers.Default)
+            scope.launch { delay(1000); println("just to avoid premature main end") }
+            val job1 = myscope.launch {
+                delay(500)
+                println("2_a) Default | ${curThread()}")
+            }
+            myscope.launch {
+                 //job1.join()
+                 println("2_b) Default | ${curThread()}")
+            }
+        }
+        if( n== 7 ) {    //Working in a new scope only
+            val myscope = CoroutineScope(Dispatchers.Default)
+            val job1 = myscope.launch {
+                delay(500)
+                println("2_a) Default | ${curThread()}")
+            }
+            myscope.launch {
+                println("2_b) Default | ${curThread()}")
+            }
+        }
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-fun main() = runBlocking{
+fun main(){
     println("BEGINS CPU=$cpus ${curThread()}")
-    testDispatchers(1, this)
-    //testDispatchers(2, this)
-    //testDispatchers(3, this)
-    //testDispatchers(4, this)
-    //testDispatchers(5, this)
+    runBlocking {
+        //testDispatchers(0, this)
+        //testDispatchers(1, this)
+        //testDispatchers(2, this)
+        //testDispatchers(3, this)
+        //testDispatchers(4, this)
+        //testDispatchers(5, this)
+        //testDispatchers(6, this)
+        testDispatchers(7, this)
+    }
     println("ENDS ${curThread()}")
 }

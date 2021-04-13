@@ -32,14 +32,14 @@ suspend fun launchWithSingle(i:Int,scope:CoroutineScope){
 fun main() = runBlocking {
 	println("BEGINS CPU=$cpus ${curThread()}")
 
- 	println(" --------- launchWithDefault")
-     for (i in 1..6) launchWithDefault(i,this)
+ 	//println(" --------- launchWithDefault")
+     //for (i in 1..6) launchWithDefault(i,this)
     /*
  	println(" --------- launchWithIO")
       for (i in 1..10) launchWithIO(i,this)
-
+*/
  	println(" --------- launchWithSingle")
      for (i in 1..6) launchWithSingle(i,this) 
-    */
+
 	println("ENDS ${curThread()}")
 }

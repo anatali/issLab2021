@@ -1305,11 +1305,11 @@ CoroutineScope</a></li>
 <m>Coroutines started by  <bc>launch</bc> return a <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html" target="web">Job</a>
  immediately,  which we can use to <tt>cancel</tt> 
 the computation or wait its completion with <bc>join</bc>.
-<br/><br/>
-
+<div class="remark">
 When <ks>launch{...}</ks> is used without parameters, it inherits the context 
 (and thus dispatcher) from the <tt>CoroutineScope</tt> it is being launched from. 
 Usually, it inherits the context of the main <ks>runBlocking</ks> coroutine which runs in the <tt>main</tt> thread.
+</div>
 </m> 
 </td>
 </tr>
@@ -1352,11 +1352,12 @@ ENDS   thread=main / nthreads=2
 </pre>
 <m>
 Since we use <bc>launch</bc> instead of <bc>GlobalScope.launch</bc>, then the coroutine is launched in the
-scope of the outer <bc>runBlocking</bc> coroutine.<br/>
+scope of the outer <bc>runBlocking</bc> coroutine.
+<div class="remark">
 This is an example of  
 <a href="https://kotlinlang.org/docs/reference/coroutines/basics.html#structured-concurrency" target="web">structured concurrency</a>:
 coroutines confined to different scopes  are more maintainable and manageable.
-
+</div>
 <!-- <bc>runBlocking</bc>  is designed to bridge regular blocking code to libraries written in suspending style, 
 to be used in main functions and in tests. -->
 </m>
@@ -1725,8 +1726,16 @@ starts to wait result ...
 </table></center>
 
 	
-<!--
+ 
 <h2><a id="dispatchers"/>Dispatchers</h2>
+<ul>
+<li>Coroutine dispatcher can confine coroutine execution to a specific thread, dispatch it to a thread pool, 
+or let it run unconfined.</li>
+<li>Coroutines can be executed concurrently using a multi-threaded dispatcher.</li>
+<li>Coroutines can suspend on one thread and resume on another thread.</li>
+</ul>
+
+
 The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoDispatchers.kt" target="code">demoDispatchers.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).<br/>
 
@@ -1737,28 +1746,28 @@ The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlinde
 @kotlinx.coroutines.ExperimentalCoroutinesApi</kc>
 fun testDispatchers(n : Int, scope: CoroutineScope) {
         if( n== 1 ){
-            runBlocking {
-                 launch { //context of the parent runBlocking
+            <ks>runBlocking</ks> {
+                 <k>launch</k> { <kc>//context of the parent runBlocking</kc>
                      delay(500)
                      println("1_a) runBlocking | ${curThread()}")
                  }
-                launch { //context of the parent runBlocking
+                <k>launch</k> { <kc>//context of the parent runBlocking</kc>
                     println("1_b) runBlocking | ${curThread()}")
                 }
             }
         }
         if( n== 2 ) {
-            val dispatcher = Dispatchers.Default
-            scope.launch(dispatcher) {
+            val dispatcher = <ks>Dispatchers.Default</ks>
+            <k>scope.launch(dispatcher)</k> {
                 delay(500)
                 println("2_a) Default | ${curThread()}")
             }
-            scope.launch(dispatcher) { //DefaultDispatcher
+            <k>scope.launch(dispatcher)</k> { 
                 println("2_b) Default | ${curThread()}")
             }
         }
         if( n== 3 ){
-            val dispatcher = newSingleThreadContext("MyThr")
+            val dispatcher = <ks>newSingleThreadContext("MyThr")</ks>
             scope.launch( dispatcher ) {
                 delay(500)
                  println("3-a) newSingleThreadContext | ${curThread()}")
@@ -1768,7 +1777,7 @@ fun testDispatchers(n : Int, scope: CoroutineScope) {
             }
         }
         if( n== 4 ) {
-            val dispatcher = Dispatchers.IO
+            val dispatcher = <ks>Dispatchers.IO</ks>
             scope.launch(dispatcher) {
                 delay(500)
                 println("4_a) Dispatchers.IO | ${curThread()}")
@@ -1778,7 +1787,7 @@ fun testDispatchers(n : Int, scope: CoroutineScope) {
             }
         }
          if( n== 5 ) {
-            val dispatcher = Dispatchers.Unconfined
+            val dispatcher = <ks>Dispatchers.Unconfined</ks>
             scope.launch(dispatcher) {
                 delay(500)
                 println("5_a) Unconfined | ${curThread()}")
@@ -1787,15 +1796,49 @@ fun testDispatchers(n : Int, scope: CoroutineScope) {
                 println("5_b) Unconfined | ${curThread()}")
             }
         }
+        if( n== 6 ) { <kc>//Working in a new scope and in the given one</kc>
+            val <k>myscope</k> = <ks>CoroutineScope(Dispatchers.Default)</ks>
+            scope.launch { delay(1000); println("just to avoid premature main end") }
+            val job1 = <k>myscope.launch</k> {
+                delay(500)
+                println("2_a) Default | ${curThread()}")
+            }
+            <k>myscope.launch</k> {
+                 //job1.join()
+                 println("2_b) Default | ${curThread()}")
+            }
+        }
+        if( n== 7 ) {  <kc>//Working in a new scope only</kc>
+           val <k>myscope</k> = <ks>CoroutineScope(Dispatchers.Default)</ks>
+          <k>myscope.launch</k>{
+              delay(500)
+              println("2_a) Default | ${curThread()}")
+           }
+           <k>myscope.launch</k>{
+              println("2_b) Default | ${curThread()}")
+           }
+        }		
 } 
 
 </pre> </td>
 <td><m></m>
-!--
--Dkotlinx.coroutines.debug JVM option https://play.kotlinlang.org/koans/overview
+<!-- Dkotlinx.coroutines.debug JVM option https://play.kotlinlang.org/koans/overview -->
 
-
-
+<pre>
+fun main(){
+    println("BEGINS CPU=$cpus ${curThread()}")
+    runBlocking {
+        testDispatchers(0, this)
+        //testDispatchers(1, this)
+        //testDispatchers(2, this)
+        //testDispatchers(3, this)
+        //testDispatchers(4, this)
+        //testDispatchers(5, this)
+        //testDispatchers(6, this)
+        //testDispatchers(7, this)
+    }
+    println("ENDS ${curThread()}")
+}</pre>
 <h3>Dispatchers</h3>
 <m>
  <ul>
@@ -1812,56 +1855,65 @@ fun testDispatchers(n : Int, scope: CoroutineScope) {
 
 </ul>	</m>
 <pre>
-fun main() = runBlocking{
-    println("BEGINS CPU=$cpus ${curThread()}")
-    testDispatchers(1, this)
-    //testDispatchers(2, this)
-    //testDispatchers(3, this)
-    //testDispatchers(4, this)
-    //testDispatchers(5, this)
-    println("ENDS ${curThread()}")
-}
-
 <kc>//OUPUT (run one at the time)</kc>
-BEGINS CPU=8 thread=main / nthreads=2  
+<kc>//testDispatchers(0, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+0_b) runBlocking | thread=main / nthreads=2  
+0_a) runBlocking | thread=main / nthreads=2  
+ENDS thread=main / nthreads=2   
+
+<kc>//testDispatchers(1, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
 1_b) runBlocking | thread=main / nthreads=2  
 1_a) runBlocking | thread=main / nthreads=2  
 ENDS thread=main / nthreads=2  
 
-BEGINS CPU=8 thread=main / nthreads=2  
+<kc>//testDispatchers(2, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+2_b) Default | thread=DefaultDispatcher-worker-3 / nthreads=5  
+2_a) Default | thread=DefaultDispatcher-worker-1 / nthreads=6  
 ENDS thread=main / nthreads=6  
-2_b) Default | thread=DefaultDispatcher-worker-2 / nthreads=7  
-2_a) Default | thread=DefaultDispatcher-worker-1 / nthreads=8  
-  
-BEGINS CPU=8 thread=main / nthreads=2  
-ENDS thread=main / nthreads=3  
+
+<kc>//testDispatchers(3, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
 3-b) newSingleThreadContext | thread=MyThr / nthreads=3  
-3-a) newSingleThreadContext | thread=MyThr / nthreads=3   
-
-BEGINS CPU=8 thread=main / nthreads=2  
-4_b) Dispatchers.IO | thread=DefaultDispatcher-worker-2 / nthreads=6  
-ENDS thread=main / nthreads=6  
-4_a) Dispatchers.IO | thread=DefaultDispatcher-worker-1 / nthreads=7  
-
-BEGINS CPU=8 thread=main / nthreads=2  
-5_b) Unconfined | thread=main / nthreads=3  
+3-a) newSingleThreadContext | thread=MyThr / nthreads=3  
 ENDS thread=main / nthreads=3  
+
+<kc>//testDispatchers(4, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+4_b) Dispatchers.IO | thread=DefaultDispatcher-worker-2 / nthreads=5  
+4_a) Dispatchers.IO | thread=DefaultDispatcher-worker-1 / nthreads=7  
+ENDS thread=main / nthreads=7  
+
+<kc>//testDispatchers(5, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+5_b) Unconfined | thread=main / nthreads=3  
 5_a) Unconfined | thread=kotlinx.coroutines.DefaultExecutor / nthreads=3  
+ENDS thread=main / nthreads=3  
+
+<kc>//testDispatchers(6, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+2_b) Default | thread=DefaultDispatcher-worker-3 / nthreads=5  
+2_a) Default | thread=DefaultDispatcher-worker-1 / nthreads=6  
+just to avoid premature main end
+ENDS thread=main / nthreads=6  
+
+<kc>//testDispatchers(7, this)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+2_b) Default | thread=DefaultDispatcher-worker-3 / nthreads=5  
+ENDS thread=main / nthreads=5 
+
 </pre>
 </td>
 </tr>
 
 </tbody>	
 </table></center>
--->
+ 
+ <!--
 <h3>Experiments with Dispatchers</h3>
 
-<ul>
-<li>Coroutine dispatcher can confine coroutine execution to a specific thread, dispatch it to a thread pool, 
-or let it run unconfined.</li>
-<li>Coroutines can be executed concurrently using a multi-threaded dispatcher.</li>
-<li>Coroutines can suspend on one thread and resume on another thread.</li>
-</ul>
 
 The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoDispatcherPatterns.kt" target="code">demoDispatcherPatterns.kt</a>  
 (project <m><ks>it.unibo.kotlinIntro</ks></m>).<br/>
@@ -1935,7 +1987,7 @@ hello 6 thread=DefaultDispatcher-worker-6 | nthreads=13
 
 <tr>
 <td><pre>
-val th = newSingleThreadContext("My Thread")
+val th = <ks>newSingleThreadContext</ks>("My Thread")
 
 suspend fun launchAction(i:Int,scope:CoroutineScope){
 	launchSingle(i,scope)
@@ -1971,7 +2023,7 @@ hello 6 thread=My Thread | nthreads=2
 
 </tbody>	
 </table></center>
-
+-->
 
 <h2><a id="suspend"/>Suspending functions</h2>
 A suspending function is just a regular Kotlin function with an additional <bc>suspend</bc> modifier which indicates that 
