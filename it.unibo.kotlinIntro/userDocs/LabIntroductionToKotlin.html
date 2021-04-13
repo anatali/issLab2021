@@ -2045,79 +2045,6 @@ The main program now waits for a command from the user to select the demo to run
 -->
 <center><table style="width:95%">
 <tbody>	
-<tr>
-<td>
-<h3>launch & runBlocking</h3> 
-<m><bc>runBlocking</bc> is a  <tt>Coroutine Builder</tt> wrapper that runs new coroutine and blocks current thread interruptibly until its completion. 
-<br/>
-Using <bc>launch</bc>, the coroutine is launched in the
-scope of the outer coroutine (that of <bc>runBlocking</bc> in this case). 
-</m>
-<pre>
-fun main() = <k>runBlocking</k> { 
-	println("BEGINS CPU=$cpus ${curThread()}")
-	<k>launch{</k>  runBlockThread()  <k>}</k>	
-	println("ENDS ${curThread()}")	
-}
-</pre> </td>
-<td><m>
-No <tt>Thread.sleep</tt> tis required now.  <br/>
-</m>
-
-<pre>
-<kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=1
-ENDS thread=main | nthreads=1
-thread sleeps ... : thread=main | nthreads=1
-thread ends : thread=main | nthreads=1
-</pre>
-<m>
-Since we use <bc>launch</bc> instead of <bc>GlobalScope.launch</bc>, then the coroutine is launched in the
-scope of the outer <bc>runBlocking</bc> coroutine.<br/>
-This is an example of  
-<a href="https://kotlinlang.org/docs/reference/coroutines/basics.html#structured-concurrency" target="web">structured concurrency</a>:
-coroutines confined to different scopes  are more maintainable and manageable.
-
-<!-- <bc>runBlocking</bc>  is designed to bridge regular blocking code to libraries written in suspending style, 
-to be used in main functions and in tests. -->
-</m>
-</td>
-</tr>
-
-
-<tr>
-<td>
-<h3>Launch and join</h3> 
-<m>Coroutines started by  <bc>launch</bc> return a <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html" target="web">Job</a>
- immediately,  which we can use to <tt>cancel</tt> 
-the computation or <em>await</em> its completion with <bc>join</bc>.</m> 
-<pre>
-fun main() =  <k>runBlocking</k> {  
-	println("BEGINS CPU=$cpus ${curThread()}")
-	<k>val job</k> =  <k>launch</k>{ runBlockThread()  }
-	<k>job.join()</k>
- 	println("ENDS ${curThread()}")
-}
-</pre> 
-</td>
-<td><m>
-<br/>
-</m>
-
-<pre>
-<kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=1
-thread sleeps ... : thread=main | nthreads=1
-thread ends : thread=main | nthreads=1
-ENDS thread=main | nthreads=1
-</pre>
-<m>
-We can remove the explicit <bc>join</bc>, since <tt>runBlocking</tt> won't complete before all of its 
-child coroutines finish.
-</m>
-</td>
-</tr>
-
 
 
 <tr>
@@ -2125,50 +2052,58 @@ child coroutines finish.
 <h3 id="delay">delay</h3> 
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/delay.html" target="web">Kotlin delay</a>
 is a special <i>suspending function</i> that does not block a thread, but suspends the work.
-<hr/>
+<div class="remark"><m>
 A function that can <bc>suspend</bc> its work cannot be called from a normal function,
 but only from <k>another suspend</k> function or from a <em>Coroutine</em>.
-<hr/>
+</m></div>
 </m> 
 <pre>
-<k>suspend</k> fun ioBoundFun(){
-	val <ks>timeElapsed</ks> = <ks>measureTimeMillis</ks> {
-		println("IO operation | STARTS in ${curThread()}")
-		<k>delay</k>(1000)
+<k>suspend</k> fun ioBoundFun(dt: Long = 1000L) : Long{
+	val <ks>time</ks> =  <b>measureTimeMillis</b>{
+		println("ioBoundFun | dt=$dt STARTS in ${curThread()}")
+		<k>delay</k>(dt)
 	}
-	println("IO operation | Done, TIME=<ks>$timeElapsed</ks>")
+    val res = dt/10
+    println("ioBoundFun | dt=$dt res=$res ${curThread()} TIME=$time")
+    <ks>return res</ks>
 }
 
-fun main() =  <k>runBlocking</k> {  
-	println("BEGINS CPU=$cpus ${curThread()}")
-	<ks>ioBoundFun()</ks>
-	println("ENDS ${curThread()}")
+fun main(){
+   println("BEGINS CPU=$cpus ${curThread()}")
+   run1()
+   //run2()
+   //run3()
+   println("ENDS ${curThread()}")
 }
 </pre> </td>
 <td>
 <pre>
+
+fun run1(){ <ks>runBlocking { ioBoundFun() }</ks> }
 <kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=1
-IO operation | STARTS in thread=main | nthreads=1
-IO operation | Done, TIME=1021
-ENDS thread=main | nthreads=1
-</pre>
-<m>If we execute:</m>
-<pre>
-fun main() =  <k>runBlocking</k> {  
-	<k>launch</k>{ <ks>ioBoundFun()</ks> }
-	println("BYE")
+BEGINS CPU=12 thread=main / nthreads=2  
+ioBoundFun | dt=1000 STARTS in thread=main / nthreads=2  
+ioBoundFun | dt=1000 res=100 thread=main / nthreads=2   TIME=1017
+ENDS thread=main / nthreads=2     
+<hr/>
+fun run2(){
+	val <k>myScope</k>=<ks>CoroutineScope(newSingleThreadContext("single")</ks>)
+	<k>myScope.launch</k>{ ioBoundFun(500L) }
+	<ks>runBlocking</ks> { ioBoundFun() }
+	<k>myScope.launch</k>{ ioBoundFun(300L) }
 }
-</pre>
-<m>the output is:</m>
-<br/>
-<pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=1
-ENDS thread=main | nthreads=1
-IO operation | STARTS in thread=main | nthreads=1
-IO operation | Done, TIME=1006
+BEGINS CPU=12 thread=main / nthreads=2  
+ioBoundFun | dt=1000 STARTS in thread=main / nthreads=3  
+ioBoundFun | dt=500 STARTS in thread=single / nthreads=3  
+ioBoundFun | dt=500 res=50 thread=single / nthreads=3   TIME=506
+ioBoundFun | dt=1000 res=100 thread=main / nthreads=3   TIME=1003
+ENDS thread=main / nthreads=3  
+ioBoundFun | dt=300 STARTS in thread=single / nthreads=3    
+<kc>//!!! The main ends before the termination of the last ioBoundFun</kc> 
+
 </pre>
+ 
 
 </td>
 </tr>
@@ -2185,22 +2120,18 @@ coroutine builder creates new coroutine and returns a
 in Kotlin): it promises to compute a value which we can wait for or  request at any time.
 </m>
 <pre>
-<k>suspend</k> fun <ks>activate()</ks>{	
-	val <ks>scope</ks> = CoroutineScope( Dispatchers.Default ) 
-	val job1 = <k><ks>scope</ks>.async</k>{ ioBoundFun() }
-	val job2 = <k><ks>scope</ks>.async</k>{ ioBoundFun() }
-	if( ! job1.isCompleted || ! job2.isCompleted ) 
-		println("Waiting for completion")
-	val end1 = <k>job1.await()</k>	<m><kc>//only from a coroutine or another suspend</kc></m> 	 
-	val end2 = <k>job2.await()</k>
-	println("All jobs done; end1=$end1 end2=$end2")
+ fun activate(<ks>mainscope</ks> : CoroutineScope){
+  val <k>myscope</k> = CoroutineScope( <ks>newSingleThreadContext("t1")</ks>)
+  val job1 =  <k>myscope.async</k> { ioBoundFun(500L) }
+  val job2 = <k>myscope.async</k>{ ioBoundFun(300L) }
+  <ks>mainscope.launch</ks> {
+    if (!job1.isCompleted || !job2.isCompleted) println("Waiting for completion")
+    val end1 = <k>job1.await()</k> <kc>//only from a coroutine or another suspend</kc>
+    val end2 = <k> job2.await()</k> 
+    println("All jobs done; end1=$end1 end2=$end2")
+  }
 }
 
-fun main() = <k>runBlocking</k>{
-	println("BEGINS CPU=$cpus ${curThread()}")
-	<ks>activate()</ks>
-	println("ENDS ${curThread()}")
-}
 </pre> </td>
 <td><m>
 <br/><br/>
@@ -2209,15 +2140,16 @@ fun main() = <k>runBlocking</k>{
 
 </m> 
 <pre>
+fun run3(){ <ks>runBlocking{ activate(this)  }</ks>}
 <kc>//OUPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=1
+BEGINS CPU=12 thread=main / nthreads=2  
+ioBoundFun | dt=500 STARTS in thread=t1 / nthreads=3  
+ioBoundFun | dt=300 STARTS in thread=t1 / nthreads=3  
 Waiting for completion
-IO operation | STARTS in thread=DefaultDispatcher-worker-2 | nthreads=5
-IO operation | STARTS in thread=DefaultDispatcher-worker-1 | nthreads=5
-IO operation | Done, TIME=1011
-IO operation | Done, TIME=1011
-All jobs done; end1=kotlin.Unit end2=kotlin.Unit
-ENDS thread=main | nthreads=6
+ioBoundFun | dt=300 res=30 thread=t1 / nthreads=3   TIME=309
+ioBoundFun | dt=500 res=50 thread=t1 / nthreads=3   TIME=513
+All jobs done; end1=50 end2=30
+ENDS thread=main / nthreads=3  
 </pre>
 
 <m>There is a laziness option to async using an optional start parameter with a value of <bc>CoroutineStart.LAZY</bc>. 

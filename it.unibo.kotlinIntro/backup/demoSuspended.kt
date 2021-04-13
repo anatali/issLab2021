@@ -45,9 +45,56 @@ suspend fun ioBoundFun(dt: Long=1000L) : Long{
 	}
 }
  
+//------------------ Wrap async calls with coroutineScope  ------------
+//val job: Job = Job()
+val job   = SupervisorJob()
+val scope = CoroutineScope(Dispatchers.Default + job) 	//
+
+fun asynchWork() : Deferred<String> =
+	scope.async { //(1) launches new coroutine that may throw an unhandled exception
+		println("asynchWork starts"); Thread.sleep(1000)
+		 1/0 //force an exception
+		"hello"
+	}  
+suspend fun asynchWorkWrapped() : String = coroutineScope{
+	async { //(1) launches new coroutine that may throw an unhandled exception
+		println("asynchWork starts"); Thread.sleep(1000)
+		 1/0 //force an exception
+		"hello"
+	}.await()  
+}
+
+fun loadData() = scope.launch { 
+	    try {
+			println("loadData starts");
+	        asynchWork().await()                               // (2) it will still crash
+			println("loadData ends");
+	    } catch (e: Exception) { println("loadData ERROR $e"); }
+}
+
+fun loadDataWrapped() = scope.launch { 
+	    try {
+			println("loadDataWrapped starts");
+	        asynchWorkWrapped()                                // (2) it will still crash
+			println("loadDataWrapped ends");
+	    } catch (e: Exception) { println("loadData ERROR $e"); }
+}
+//the failure of any of the job�s children leads to an immediate failure of its parent
+
+fun nowrapDemo(){
+	asynchWork()
+	loadData() 
+}
+
+suspend fun wrapDemo(){
+	asynchWorkWrapped()
+	loadDataWrapped() 
+}
 
 
-
+//suspend fun demoJoin(){
+//	val job =  launch{ runBlockThread()  }
+//}
 //=================================================================
 
 fun run1(){
@@ -64,7 +111,6 @@ fun run2(){
 }
 
 fun run3(){  runBlocking { activate(this)  }  }
-
 fun main() {
 	println("BEGINS CPU=$cpus ${curThread()}")
 	//run1()
