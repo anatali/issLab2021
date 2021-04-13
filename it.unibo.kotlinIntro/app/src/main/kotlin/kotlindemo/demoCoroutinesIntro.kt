@@ -37,23 +37,6 @@ fun scopeDemo (){
 		println("end coroutine 2 ${curThread()}")
 	}
 }
- 
-
-fun scopeAsyncDemo (){
-	val scope = CoroutineScope( Dispatchers.Default )
-	val res = scope.async{	//type: Deferred<String>
-		println("async starts")
-		//Thread.sleep(3000)
-		delay(2000)
-		//println("async ends")
-		"hello from async"
-	}
-	scope.launch{
-		println("starts to wait result")
-		val r = res.await(); //must be called only from a coroutine or a suspend function	
-		println("result= ${r}")
-	}
-}
 
 val n=10000		//number of Thread or Coroutines to launch
 val k=1000		//times an action is repeated by each Thread or Coroutine
@@ -112,6 +95,22 @@ fun demoRunBlocking2(){
 		println("Just after launch ${curThread()}")
 	}
 	println("Ends run1 ${curThread()}")
+}
+
+fun scopeAsyncDemo (){
+	val scope = CoroutineScope( Dispatchers.Default )
+	val res = scope.async{	//type: Deferred<String>
+		println("async starts")
+		//Thread.sleep(3000)
+		delay(2000)
+		//println("async ends")
+		"hello from async"
+	}
+	scope.launch{
+		println("starts to wait result")
+		val r = res.await(); //must be called only from a coroutine or a suspend function
+		println("result= ${r}")
+	}
 }
 //=================================================================
 var demoTodo : () -> Unit = { println("nothing to do") }
