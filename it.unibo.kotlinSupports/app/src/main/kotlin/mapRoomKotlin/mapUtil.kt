@@ -37,6 +37,7 @@ object mapUtil{
                      map.put(state.x, state.y, Box(false, false, true))
                 }
                 "s" -> {
+                     map.put(x, y, Box(false, false, false)) //clean the cell
 	                 state = state.backward();
                      map.put(state.x, state.y, Box(false, false, true))
                 }

@@ -6,11 +6,13 @@ fun doTestMove(){
 	//Going down
 	for( i in 1..3) mapUtil.doMove( "w"  )
 //	println( "-----------------------------------"  );
-//	println( "$map"  );
+	mapUtil.showMap()
  	mapUtil.doMove("l")
 	for( i in 1..3) mapUtil.doMove( "w"  )
+	for( i in 1..3) mapUtil.doMove( "s"  )
 //	println( "-----------------------------------"  );
-//	println( "$map"  );
+	mapUtil.showMap()
+	/*
 	//Obstacle
 	mapUtil.setObstacle(  )
   	mapUtil.doMove("s")
@@ -21,6 +23,8 @@ fun doTestMove(){
 	for( i in 1..3) mapUtil.doMove( "w"  )
 	println( "-----------------------------------"  );
 	mapUtil.showMap()
+
+	 */
 }
 
 fun main(){

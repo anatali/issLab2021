@@ -6,11 +6,11 @@ val nc = 5
  	fun buildRefTestMap(){
  			for( i in 1..nr ) mapUtil.doMove("w")
 			mapUtil.doMove("l")
-		    for( i in 1..nc ) mapUtil.doMove("w")
+		    for( i in 1..nc ) mapUtil.doMove("s")
 			mapUtil.doMove("l")
 			for( i in 1..nr ) mapUtil.doMove("w")
 			mapUtil.doMove("l")
-		    for( i in 1..nc ) mapUtil.doMove("w")
+		    for( i in 1..nc ) mapUtil.doMove("s")
 			mapUtil.doMove("l")
 		
 			targetMap = mapUtil.map

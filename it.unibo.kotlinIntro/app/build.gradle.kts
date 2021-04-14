@@ -61,8 +61,8 @@ dependencies {
 //UNIBO
     implementation( "uniboInterfaces:uniboInterfaces"  )
     implementation( "uniboProtocolSupport:unibonoawtsupports"  )
-    implementation("uniboIssSupport:IssWsHttpJavaSupport")
-    implementation("uniboIssSupport:IssActorKotlinRobotSupport")
+    implementation("uniboIssSupport:IssWsHttpJavaSupport-1.0")
+    implementation("uniboIssSupport:IssActorKotlinRobotSupport-2.0")
 
 }
 
