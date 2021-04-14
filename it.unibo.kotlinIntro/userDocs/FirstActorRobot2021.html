@@ -151,12 +151,11 @@ table, th, td {
 <div class="body"> 
 
 <h1>FirstActor | Using Kotlin actors to control a (virtual)robot</h1> 
-<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.issLabStart/userDocs/LectureBologna1920.html" 
-target="isslm">LabISS-lectures site</a> 
+ 
 
 <h2>Introduction</h2>
 The virtual robot introduced in  
-<a href="../../it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html" target="web">it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html</a>
+<a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="web">it.unibo.virtualRobot2020\userDocs\VirtualRobot2021.html</a>
 is just an example of a robot built according to some specific technology.
 <br/> 
 But, an important goal (<a href="https://en.wikipedia.org/wiki/Non-functional_requirement" target="web">non-functional requirement</a>)
@@ -166,22 +165,33 @@ of a software system designer should be that of making the code of a robot appli
 Kotlin actors help us to achieve such a goal, by providing in a quite natural way a <bc>more abstract layer of reasoning</bc>.
  <br/>
 Let us report, as an example,  an actor written in Kotlin that 'provides services' for our 
-<a href="../../it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html" target="web">it.unibo.virtualRobot2020\userDocs\LabVirtualRobot.html</a>:<br/><br/>
+<a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="web">VirtualRobot</a>:<br/><br/>
 
 <center><table style="width:95%">
 <tbody>	
 <tr>
 <td style="width:30%">
-<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
+<a href="../app/src/main/kotlin/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
 
 </td>
 <td>
 <center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
+
+<m>
+The <ks>virtualRobotSupport</ks> given by the unibo-library 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a> works as a 'bridge'
+between the high-level actor (<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a>)
+and the virtual robot. Thus, it provides the method <em>registerActor</em> <!-- <em>setRobotTarget</em>--> to allow the 'injection' of a reference to the 
+high-level actor.
+</m>
+
+<!--
 <m>
 The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport</a> 
-owns a <bc>reference</bc> to the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor</a>
+owns a <bc>reference</bc> to the <a href="../app/src/main/kotlin/virtualRobotUsage/robotActor.kt" target="code">robotActor</a>
 and sends to it <tt>JSON</tt> messages,
-whose content gives infornmation about a <tt>collision</tt> (or a sonar value).
+whose content gives infornmation about a <tt>collision</tt> (or a sonar value).  NO: now it is observed by
+-->
 </m>
 
  </td>
@@ -204,15 +214,14 @@ Its behavior is <bc>message-driven</bc>, since the actor executes actions relate
  <m><a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></m> when a <em>scene-sonar</em> detects the robot</li>
 </ul>
 
+
+
+<!--
 <h3>The role of the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></h3>
 
-The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a> works as a 'bridge'
-between the high-level actor (<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a>)
-and the virtual robot. Thus, it provides the method <em>setRobotTarget</em> to allow the 'injection' of a reference to the 
-high-level actor.
-<br/>
 The method <em>sendMsgToRobot</em> is used by the internal <bc>startSensorObserver coroutine</bc>  to sends message
 (about the <em>robot-sonar</em> data) to the high-level actor.
+-->
 
 <h3>The Actor as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
 The behavior of the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> 

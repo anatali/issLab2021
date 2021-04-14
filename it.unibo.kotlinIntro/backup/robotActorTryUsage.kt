@@ -1,6 +1,6 @@
 package virtualRobotUsage
 //robotActorTryUsage.kt
-
+/*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.delay
  
@@ -32,4 +32,4 @@ fun main( ) = runBlocking {
 	sendCrilCommands(   )
     println("BYE")
 }
-
+*/

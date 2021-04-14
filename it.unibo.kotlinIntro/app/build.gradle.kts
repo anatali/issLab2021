@@ -8,8 +8,7 @@
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    //id("org.jetbrains.kotlin.jvm") version "1.4.31"
-    id("org.jetbrains.kotlin.jvm") version "1.4.31"
+    id("org.jetbrains.kotlin.jvm") version "1.4.32"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -60,10 +59,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115" )
 //UNIBO
-    //implementation( "uniboInterfaces:uniboInterfaces"  )
-    //implementation( "uniboProtocolSupport:unibonoawtsupports"  )
-    //implementation("uniboIssSupport:IssWsHttpJavaSupport")
-    //implementation("uniboIssSupport:IssActorKotlinRobotSupport")
+    implementation( "uniboInterfaces:uniboInterfaces"  )
+    implementation( "uniboProtocolSupport:unibonoawtsupports"  )
+    implementation("uniboIssSupport:IssWsHttpJavaSupport")
+    implementation("uniboIssSupport:IssActorKotlinRobotSupport")
 
 }
 

@@ -21,9 +21,11 @@ val names = persons.asSequence()
 
 val fibonacciSeq = sequence{
     var a = 0
-    var b = 1 
+    var b = 1
+    println("fibonacciSeq yield-first: 1 ")
     yield(1)   //first
     while (true) {
+        println("fibonacciSeq yield: ${a + b} ")
         yield(a + b)   //next
         val tmp = a + b
         a = b
@@ -32,11 +34,20 @@ val fibonacciSeq = sequence{
 }
 
 fun useFibonacciSeq(){
-   val v = fibonacciSeq.elementAt(2)
-    println("element at 2=$v")
-    val firstNums = fibonacciSeq.take(5)  //calculated later 
-    println("firstNums=${firstNums}")
-    println("firstNums=${firstNums.joinToString()}")	
+    val v1 = fibonacciSeq.elementAt(1)
+    println("element at 1=$v1")
+
+    val v2 = fibonacciSeq.elementAt(2)
+    println("element at 2=$v2")
+
+    val firstNums = fibonacciSeq.take(5)  //calculated later
+    println("firstNums ... ${firstNums}") //kotlin.sequences.TakeSequence@7006c658
+
+    val v10 = fibonacciSeq.elementAt(10)
+    println("element at 10=$v10")
+
+    println("firstNums=${firstNums.joinToString()}")
+
 }
 
 fun testSequence(){

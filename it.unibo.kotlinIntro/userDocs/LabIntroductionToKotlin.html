@@ -2870,6 +2870,12 @@ Moreover, we can await for actor termination by writing<br/>
 A simple actor can be written as a function, but an actor with a complex state  is better suited for a class.<br/>
 -->
 
+<div class="remark">
+<hr/>
+Now it is time to model <a href="FirstActorRobot2021.html">xxx</a>
+<hr/>
+</div>
+
 <h2 id="sequences">SEQUENCES (SUSPENDABLE)</h2> 
 
 The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoSequences.kt" target="code">demoSequences.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
@@ -2917,10 +2923,10 @@ See <a href="https://winterbe.com/posts/2018/07/23/kotlin-sequence-tutorial/" ta
 </m>
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=8 thread=main | nthreads=1
+BEGINS CPU=8 thread=main | nthreads=2
 [Alice, Anna, Sonya]
 work done in time= 0
-ENDS thread=main | nthreads=1
+ENDS thread=main | nthreads=2
 </pre>
 <m>Sequences are <bc>stateless</bc> and they reset after being used.</m>
 </td>
@@ -2932,8 +2938,10 @@ ENDS thread=main | nthreads=1
 val fiboSeq = sequence{
     var a = 0
     var b = 1 
+    println("fibonacciSeq yield-first: 1 ")	
     <k>yield(1)</k>   <kc>//first</kc>
     while (true) {
+        println("fibonacciSeq yield: ${a + b} ")	
         <k>yield(a + b)</k>   <kc>//next</kc>
         val tmp = a + b
         a = b
@@ -2942,11 +2950,21 @@ val fiboSeq = sequence{
 }
 
 fun useFibonacciSeq(){
-   val v = <k>fibonacciSeq.elementAt(2)</k>
-    println("element at 2=$v")
-    val firstNums = <k>fibonacciSeq.take(5)</k>  <kc>//calculated later</kc> 
-    println("firstNums=${firstNums}")
-    println("firstNums=${<k>firstNums.joinToString()</k>}")	
+    val v1 = <k>fibonacciSeq.elementAt(1)</k>
+    println("element at 1=$v1")
+	
+    val v2 = <k>fibonacciSeq.elementAt(2)</k>
+    println("element at 1=$v2")
+	
+    val <ks>firstNums</ks> = <k>fibonacciSeq.take(5)</k>  <kc>//calculated later</kc> 
+    println("firstNums=${firstNums}") 
+			<kc>//kotlin.sequences.TakeSequence@...</kc>
+	
+    val v10 = <k>fibonacciSeq.elementAt(10)</k>
+    println("element at 10=$v10")	
+	
+    println("firstNums=${<k><ks>firstNums</ks>.joinToString()</k>}")	
+	
 }
 
 fun testSequence(){
@@ -2963,18 +2981,37 @@ fun main(){
 <td>
 <h3>Suspendable Sequences</h3>
 <m>A <em>suspend function</em> can suspend its execution while waiting for the execution of one or more computations to happen.
-<br/><br/>
-Instead, a <em>suspendable sequence</em> is a coroutine builder that can suspend between invocation by using the <bc>yield()</bc> function.
+<br/>
+Instead, 
+<div class="remark">
+a <em>suspendable sequence</em> is a coroutine builder that can suspend between invocation by using the <bc>yield()</bc> function.
+</div>
 <br/>
 </m>
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=8 thread=main | nthreads=1
-element at 2=2
-firstNums=kotlin.sequences.TakeSequence@28ba21f3
-firstNums=1, 1, 2, 3, 5
-work done in time= 13
-ENDS thread=main | nthreads=1</pre>
+BEGINS CPU=12 thread=main / nthreads=2  
+fibonacciSeq yield first: 1 
+fibonacciSeq yield 1 
+<b>element at 1=1</b>
+fibonacciSeq yield first: 1 
+fibonacciSeq yield 1 
+fibonacciSeq yield 2 
+<b>element at 2=2</b>
+firstNums ... kotlin.sequences.TakeSequence@7006c658
+fibonacciSeq yield-first: 1 
+fibonacciSeq yield: 1 
+...
+fibonacciSeq yield: 89 
+<b>element at 10=89</b>
+fibonacciSeq yield first: 1 
+fibonacciSeq yield 1 
+fibonacciSeq yield 2 
+fibonacciSeq yield 3 
+fibonacciSeq yield 5 
+<b>firstNums=1, 1, 2, 3, 5</b>
+work done in time= 8
+ENDS thread=main / nthreads=2 </pre>
 
 
 </m> 
