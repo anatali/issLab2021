@@ -37,10 +37,12 @@ fun consumer2(scope: CoroutineScope){
 
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-fun main() = runBlocking{
+fun main() {
     println("BEGINS CPU=${kotlindemo.cpus} ${kotlindemo.curThread()}")
-    consumer1(this )
-    consumer2(this)
-    println("ENDS ${kotlindemo.curThread()}")
-
+    runBlocking {
+        consumer1(this)
+        consumer2(this)
+        println("ENDS runBlocking ${kotlindemo.curThread()}")
+    }
+    println("ENDS main ${kotlindemo.curThread()}")
 }

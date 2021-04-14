@@ -47,34 +47,38 @@ fun createCounter(scope : CoroutineScope):SendChannel<CounterMsg>{
 }
 
 suspend fun showValue(counterActor: SendChannel<CounterMsg>){
-    val initVal = CompletableDeferred<Int>()
-    counterActor.send(CounterMsg("GET", initVal))
-    println("Counter VALUE=${initVal.await()}")	
+    val cVal = CompletableDeferred<Int>()
+    counterActor.send(CounterMsg("GET", cVal))
+    println("Counter VALUE=${cVal.await()}")
 }
-
+/*
 suspend fun sendManyMessages( scope : CoroutineScope, 
 		counterActor: SendChannel<CounterMsg>){
 	scope.manyRun {
 		counterActor.send( CounterMsg("INC") )
     }
 }
-
+*/
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-fun main() = runBlocking{
-    println("BEGINS CPU=$cpus ${curThread()}")
-	
-	val counter = createCounter( this )	
-	showValue( counter )
-	
-	sendManyMessages(this, counter)
-	showValue( counter )
-	
-	counter.send( CounterMsg("END") )
+fun main() {
+	println("BEGINS CPU=$cpus ${curThread()}")
+	runBlocking {
+		val counter = createCounter(this)
+		showValue(counter)
 
-	println("JOIN ${curThread()}")
-    (counter as Job).join()	//WAIT for termination	
-	//counter.close() //shutdown the actor	
+		//sendManyMessages(this, counter)
+		manyRun {counter.send( CounterMsg("INC"))}
 
-    println("ENDS ${curThread()}")
+		showValue(counter)
+
+		counter.send(CounterMsg("END"))
+
+		println("JOIN ${curThread()}")
+		(counter as Job).join()    //WAIT for termination
+		//counter.close() //shutdown the actor
+
+		println("ENDS runBlocking ${curThread()}")
+	}
+	println("ENDS main ${curThread()}")
 }

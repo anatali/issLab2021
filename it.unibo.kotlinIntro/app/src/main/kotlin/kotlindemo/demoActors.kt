@@ -4,49 +4,56 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.channels.SendChannel
 
-var senderActor   : SendChannel<String>?  = null
-var receiverActor : SendChannel<String>?  = null
+var dispatcher    = newSingleThreadContext("single")
+lateinit var receiverActor : SendChannel<String>
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-fun startReceiver( scope : CoroutineScope ){
-	receiverActor = scope.actor<String> {  //actor is a coroutine builder (dual of produce)
+fun startReceiver( scope : CoroutineScope){
+	receiverActor = scope.actor<String>( dispatcher, capacity = 0) {
+		//actor is a coroutine builder (dual of produce)
 		println("receiverActor STARTS")
-//		var n = 0		
-//		while( n < 5 ){
-//			println("receiverActor working $n ...")
-//			delay( 1000 )
-//			n++
-//		}		
+		/*
+		channel is a reference to the mailbox channel that this coroutine receives messages from.
+		It is provided for convenience, so that the code in the coroutine can refer to the channel
+		as channel as apposed to this.
+		All the ReceiveChannel functions on this interface delegate to the channel instance
+		returned by this function.
+		 */
+		delay(500)		//time of initialization ...
 		var msg = channel.receive()
 		while( msg != "end" ){ 	//message-driven
-			println("receiverActor receives $msg")
+			delay(500)   //time to elaborate the msg ...
+			println("receiverActor receives $msg ${curThread()}")
 			msg = channel.receive()
 		}
-		println("receiverActor ENDS")
+		println("receiverActor ENDS ${curThread()}")
 	}
 }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-fun startSender( scope : CoroutineScope){
-	senderActor = scope.actor<String> { //actor is a coroutine builder (dual of produce)
-		println("senderActor STARTS")
-		println("senderActor sends hello1")
- 		receiverActor!!.send("Hello1")
-		delay(500)
-		println("senderActor sends hello2")
- 		receiverActor!!.send("Hello2")
-		delay(500)
-		receiverActor!!.send("end")
-		println("senderActor ENDS")
+fun startSender( ){
+	val myScope = CoroutineScope(dispatcher)
+	//myScope.launch{	//(1)
+	val senderActor = myScope.actor<String> {	//(2)
+		println("sender STARTS")
+		for( i in 1..4 ) {
+			receiverActor.send("Hello$i")
+			println("sender has sent Hello$i ${curThread()}")
+		}
+		receiverActor.send("end")
+		println("sender ENDS ${curThread()}" )
  	}
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-fun main() = runBlocking{
-    println("BEGINS CPU=$cpus ${curThread()}")
- 	startReceiver( this )
-	startSender( this )
-    println("ENDS ${curThread()}")
+fun main() {
+	println("BEGINS CPU=$cpus ${curThread()}")
+	runBlocking {
+		startReceiver(this)	//first
+		startSender()
+		println("ENDS runBlocking ${curThread()}")
+	}
+	println("ENDS main ${curThread()}")
 }

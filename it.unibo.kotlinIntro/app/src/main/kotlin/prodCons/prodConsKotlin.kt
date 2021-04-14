@@ -14,14 +14,13 @@ import kotlinx.coroutines.CoroutineScope
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 val context  = newSingleThreadContext("myThread")
-
 var producer : ReceiveChannel<Any>? = null
 
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun createProducer(scope : CoroutineScope ){
     producer =
-    scope.produce(context, 3){
+    scope.produce(context, 1){
 		send(5.2)
 		println( "producer sent 5.2 in ${curThread()}")
 		send("a")
@@ -39,11 +38,12 @@ suspend fun doconsume(){
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-fun main() = runBlocking{ 
+fun main() {
     println("BEGINS CPU=$cpus ${kotlindemo.curThread()}")
-
-    createProducer(this);
-	doconsume()
-	
-    println("ENDS ${kotlindemo.curThread()}")
+    runBlocking {
+        createProducer(this);
+        doconsume()
+        println("ENDS runBlocking ${kotlindemo.curThread()}")
+    }
+    println("ENDS main ${kotlindemo.curThread()}")
 }

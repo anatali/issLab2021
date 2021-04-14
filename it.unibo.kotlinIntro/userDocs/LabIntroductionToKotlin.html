@@ -2146,7 +2146,7 @@ BEGINS CPU=12 thread=main / nthreads=2
 ioBoundFun | dt=500 STARTS in thread=t1 / nthreads=3  
 ioBoundFun | dt=300 STARTS in thread=t1 / nthreads=3  
 Waiting for completion
-ioBoundFun | dt=300 res=30 thread=t1 / nthreads=3   TIME=309
+ioBoundFun | dt=300 res=3	0 thread=t1 / nthreads=3   TIME=309
 ioBoundFun | dt=500 res=50 thread=t1 / nthreads=3   TIME=513
 All jobs done; end1=50 end2=30
 ENDS thread=main / nthreads=3  
@@ -2351,7 +2351,7 @@ val <ks>dispatcher</ks> = newSingleThreadContext("myThread")<kc>//Dispatchers.IO
 val <ks>simpleProducer</ks> : <k>ReceiveChannel&lt;Int>?</k> = null
 
 fun startProducer(<em>scope</em> : CoroutineScope ){
- <ks>simpleProducer</ks> = <em>scope</em><k>.produce(<ks>dispatcher, capacity=0</ks>)</k>{
+ <ks>simpleProducer</ks> = <em>scope</em><k>.produce(<ks>dispatcher, capacity=0</ks>)</k>{<kc>//capacity=2</kc>
    for( i in 1..3 ){
      println("producer PRE -> $i  in  ${curThread()}")
      <k>send( i )</k>
@@ -2438,10 +2438,10 @@ ENDS main thread=main / nthreads=3
 
 <pre>
 val <ks>context</ks> = newSingleThreadContext("myThread")
-var producer : <k>ReceiveChannel<Any>?</k> <ks>= null</ks>
+var producer : <k>ReceiveChannel&lt;Any>?</k> <ks>= null</ks>
 
 fun createProducer(<ks>scope</ks> : CoroutineScope ){
-    producer = <k><ks>scope</ks>.produce(<ks>context</ks>, 0)</k>{ <kc>//capacity=0</kc>
+    producer = <k><ks>scope</ks>.produce(<ks>context</ks>, capacity=0)</k>{ <kc>//capacity=1</kc>
 		<k>send(5.2)</k>
 		println( "producer sent 5.2 in ${curThread()}")
 		<k>send("a")</k>
@@ -2458,11 +2458,14 @@ suspend fun doconsume(){
 	println( "doconsume receives2 $it in ${curThread()}") }
 }
 
-fun main() = runBlocking{ 
+fun main() {
     println("BEGINS CPU=$cpus ${kotlindemo.curThread()}")
-		createProducer(this);
-		doconsume()
-    println("ENDS ${kotlindemo.curThread()}")
+    runBlocking {
+        createProducer(this);
+        doconsume()
+        println("ENDS runBlocking ${kotlindemo.curThread()}")
+    }
+    println("ENDS main ${kotlindemo.curThread()}")
 }
 
 </pre>
@@ -2475,28 +2478,30 @@ This example is reported in <a href="../app/src/prodCons/prodConsKotlin.kt" targ
 <m>When channel <bc>capacity = 0</bc> (default), the output is:</m> 
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=8 thread=main | nthreads=1
-producer sent 5.2 in thread=myThread / nthreads=2
-doconsume receives1 5.2 in thread=main / nthreads=2
-doconsume receives2 a in thread=main / nthreads=2
-producer sent a   in thread=myThread / nthreads=2
-doconsume receives2 100 in thread=main / nthreads=2
-producer sent 100 in thread=myThread / nthreads=2
-ENDS thread=main | nthreads=2
+BEGINS CPU=12 thread=main / nthreads=2  
+doconsume receives1 5.2 in thread=main / nthreads=3
+producer sent 5.2 in thread=myThread / nthreads=3
+doconsume receives2 a in thread=main / nthreads=3
+producer sent a   in thread=myThread / nthreads=3
+doconsume receives2 100 in thread=main / nthreads=3
+producer sent 100 in thread=myThread / nthreads=3
+ENDS runBlocking thread=main / nthreads=3  
+ENDS main thread=main / nthreads=3 
 </pre>
 
 <m>When channel <bc>capacity = 1</bc>, the output is:</m>
 
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=8 thread=main | nthreads=1
-producer sent 5.2 in thread=myThread / nthreads=2
-doconsume receives1 5.2 in thread=main / nthreads=2
-doconsume receives2 a in thread=main / nthreads=2
-producer sent a   in thread=myThread / nthreads=2
-producer sent 100 in thread=myThread / nthreads=2
-doconsume receives2 100 in thread=main / nthreads=2
-ENDS thread=main | nthreads=2
+BEGINS CPU=12 thread=main / nthreads=2  
+producer sent 5.2 in thread=myThread / nthreads=3
+producer sent a   in thread=myThread / nthreads=3
+doconsume receives1 5.2 in thread=main / nthreads=3
+doconsume receives2 a in thread=main / nthreads=3
+doconsume receives2 100 in thread=main / nthreads=3
+producer sent 100 in thread=myThread / nthreads=3
+ENDS runBlocking thread=main / nthreads=3  
+ENDS main thread=main / nthreads=3  
 </pre>
  
  
@@ -2532,11 +2537,14 @@ fun consumer2(scope: CoroutineScope){
  }
 }
 
-fun main() = runBlocking{
-  println( "BEGIN")
-  consumer1(this )
-  consumer2(this)
-  println( "END")
+fun main() {
+    println("BEGINS CPU=${kotlindemo.cpus} ${kotlindemo.curThread()}")
+    runBlocking {
+        consumer1(this)
+        consumer2(this)
+        println("ENDS runBlocking ${kotlindemo.curThread()}")
+    }
+    println("ENDS main ${kotlindemo.curThread()}")
 }
 </pre>
 </td>
@@ -2547,14 +2555,15 @@ This example is reported in <a href="../app/src/prodCons/prodManyConsKotlin.kt" 
 <br/>The output is:</m>
 <pre>
 <kc>//OUTPUT</kc>
-aProducer produces 1 in thread=DefaultDispatcher-worker-1 / nthreads=4
-BEGINS CPU=4 thread=main | nthreads=4
-ENDS thread=main | nthreads=4
-consumer2 receives 1 in thread=main / nthreads=4
-aProducer produces 2 in thread=DefaultDispatcher-worker-1 / nthreads=4
-aProducer produces 3 in thread=DefaultDispatcher-worker-1 / nthreads=4
-consumer1 receives 2 in thread=main / nthreads=4
-consumer2 receives 3 in thread=main / nthreads=5
+BEGINS CPU=12 thread=main / nthreads=5  
+aProducer produces 1 in thread=DefaultDispatcher-worker-1 / nthreads=5
+ENDS runBlocking thread=main / nthreads=5  
+consumer2 receives 1 in thread=main / nthreads=5
+aProducer produces 2 in thread=DefaultDispatcher-worker-1 / nthreads=5
+aProducer produces 3 in thread=DefaultDispatcher-worker-1 / nthreads=5
+consumer1 receives 2 in thread=main / nthreads=5
+consumer2 receives 3 in thread=main / nthreads=6
+ENDS main thread=main / nthreads=6 
 </pre>
  
  
@@ -2602,61 +2611,109 @@ since a producer is associated with the channel that it <i>sends</i> elements to
 
 <tr>
 <td style="width:50%"><pre>
-var senderActor   : SendChannel<String>?  = null
-var receiverActor : SendChannel<String>?  = null
+var <k>dispatcher</k>    = <ks>newSingleThreadContext</ks>("single")
+var receiverActor : <k>SendChannel&lt;String>?</k>  = null
 
 fun startReceiver( scope : CoroutineScope){
-	receiverActor = <k>scope.actor<String></k> {  
+	receiverActor = <ks>scope.actor&lt;String></ks>(<k>dispatcher</k>, <ks>capacity = 2</ks>) {  
 		<kc>//actor is a coroutine builder (dual of produce)</kc>
 		println("receiverActor STARTS")
-		var msg = <k>channel.receive()</k>
+		delay(500)	<kc>//time of initialization ...</kc>
+		var msg = <em>channel</em><k>.receive()</k>
 		while( msg != "end"){
-			println("receiverActor receives $msg")
-			msg = <k>channel.receive()</k>
+		    delay(500)   //time to elaborate the msg ...
+			println("receiverActor receives $msg ${curThread()}")
+			msg = <em>channel</em><k>.receive()</k>
 		}
-		println("receiverActor ENDS")
+		println("receiverActor ENDS ${curThread()}")
 	}
 }
 
-fun startSender( scope : CoroutineScope){
-	senderActor = <k>scope.actor<String></k> {  
-		<kc>//actor is a coroutine builder (dual of produce)</kc>
+fun startSender( ){
+    val myScope = CoroutineScope(<k>dispatcher</k>)
+	<kc>//myScope.launch{	//(1) </kc>
+	val senderActor = <ks>myScope.actor&lt;String></ks>{   <kc>//(2)</kc>
 		println("senderActor STARTS")
- 		<k>receiverActor!!.send("Hello1")</k>
-		delay(500)
- 		<k>receiverActor!!.send("Hello2")</k>
-		delay(500)
-		<k>receiverActor!!.send("end")</k>
-		println("senderActor ENDS")
+		for( i in 1..4 ) {
+			<k>receiverActor.send</k>("Hello$i")
+			println("sender has sent Hello$i ${curThread()}")
+		}
+		<k>receiverActor.send</k>("end")
+		println("sender ENDS ${curThread()}" )
  	}
 }
 
-fun main() = runBlocking{
-    println("BEGINS CPU=$cpus ${curThread()}")
- 	startReceiver( this )
-	startSender( this )
-    println("ENDS ${curThread()}")
+fun main() {
+	println("BEGINS CPU=$cpus ${curThread()}")
+	runBlocking {
+		startReceiver(this)
+		startSender()
+		println("ENDS runBlocking ${curThread()}")
+	}
+	println("ENDS main ${curThread()}")
 }
 </pre>
+<div class="remark"><m>
+<em>channel</em> is a reference to the mailbox channel that this coroutine receives messages from.
+It is provided for convenience, so that the code in the coroutine can refer to the channel
+as <em>channel</em> as apposed to <k>this</k>.
+</m></div>
 </td>
 <td>
-This example is reported in  <a href="../app/src/main/kotlin/kotlindemo/demoActors.kt" target="code">demoActors.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).
-<br/><br/><br/>
-<center><img src="./img/demoActor0.png" alt="demoActor0.png" width="70%"/></center>
+This example is reported in  <a href="../app/src/main/kotlin/kotlindemo/demoActors.kt" target="code">demoActors.kt</a>.
+<br/>
 
-<m>A Kotlin (experimental) 
+<center><img src="./img/demoActor0.png" alt="demoActor0.png" width="70%"/></center>
+<m>This picture is related to case <kc>(2)</kc>, when also the sender is modelled as an actor.
+Both actors run within the same thread.
+<br/><br/>
+A Kotlin (experimental) 
 <a href="https://kotlinlang.org/docs/reference/coroutines/shared-mutable-state-and-concurrency.html#actors" target="web">actor</a>:
 <ul>
-<li>has type (interface) <bc>SendChannel&ltT></bc>, where <bc>T</bc> is the type of message it can handle<br/></br></li>
-<li>confines the access of its state to a single <bc>Coroutine</bc><br/></br></li>
-<li>is associated with the 
-<a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/" target="web"><bc>channel</bc></a>
-(<tt>unbuffered</tt> by default ) that it receives messages from<br/></br></li>
-<li>modifies the state by handling the messages received on its 
-<a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/" target="web"><bc>channel</bc></a><br/></br></li>
+<li>has type (interface) <bc>SendChannel&ltT></bc>, where <bc>T</bc> is the type of message it can handle </li>
+<li>confines the access of its state to a single <bc>Coroutine</bc></li>
+<li>is associated with the <em>channel</em>
+<!-- <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/" target="web"><bc>channel</bc></a> NO -->
+(<tt>unbuffered</tt> by default ) that it receives messages from </li>
+<li>modifies the state by handling the messages received on its <em>channel</em>
 <li>works in a message-driven way</li>
 </ul>
 </m>
+<pre>
+<kc>//OUTPUT (receiver capacity=2) </kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+receiverActor STARTS
+ENDS runBlocking thread=main / nthreads=3  
+sender STARTS
+sender has sent Hello1 thread=single / nthreads=3  
+sender has sent Hello2 thread=single / nthreads=3  
+sender has sent Hello3 thread=single / nthreads=3  
+receiverActor receives Hello1 thread=single / nthreads=3  
+sender has sent Hello4 thread=single / nthreads=3  
+receiverActor receives Hello2 thread=single / nthreads=3  
+sender ENDS thread=single / nthreads=3  
+receiverActor receives Hello3 thread=single / nthreads=3  
+receiverActor receives Hello4 thread=single / nthreads=3  
+receiverActor ENDS thread=single / nthreads=3  
+ENDS main thread=main / nthreads=3  
+
+<kc>//OUTPUT (receiver capacity=0) </kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+receiverActor STARTS
+ENDS runBlocking thread=main / nthreads=3  
+sender STARTS
+sender has sent Hello1 thread=single / nthreads=3  
+receiverActor receives Hello1 thread=single / nthreads=3  
+sender has sent Hello2 thread=single / nthreads=3  
+receiverActor receives Hello2 thread=single / nthreads=3  
+sender has sent Hello3 thread=single / nthreads=3  
+receiverActor receives Hello3 thread=single / nthreads=3  
+sender has sent Hello4 thread=single / nthreads=3  
+receiverActor receives Hello4 thread=single / nthreads=3  
+receiverActor ENDS thread=single / nthreads=3  
+sender ENDS thread=single / nthreads=3  
+ENDS main thread=main / nthreads=3 
+</pre>
 </td>
 </tr>
 
@@ -2693,14 +2750,13 @@ suspend fun <k>CoroutineScope.manyRun</k>( action: <k>suspend () -> Unit</k> ) {
     val n=100		<kc>//number of coroutines to launch</kc>
     val k=1000		<kc>//times an action is repeated by each coroutine</kc>
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            <k>launch</k> { repeat(k) { action() }  }
+        val jobs = List(n) {	<kc>//launch 100 coroutines</kc>
+            <k>launch</k> { repeat(k) { action() }  } <kc>//each doing 1000 (inc) action</kc>
         }
         jobs.forEach { it.join() } <kc>//wait for termination of all coroutines</kc>
     }
     println("Completed ${n * k} actions in $time ms")
 }
-
 </pre>
 </li>
 </ul>
@@ -2722,12 +2778,12 @@ class <kc>CounterMsg</kc>(
 	val response: <k>CompletableDeferred&ltInt></k>?<ks>=null</ks>){
 }
 
-fun <ks>createCounter</ks>(scope : CoroutineScope):SendChannel&ltCounterMsg>{
+fun <ks>createCounter</ks>(scope : CoroutineScope):<k>SendChannel&ltCounterMsg></k>{
  val counterActor = <k>scope.actor&lt;<kc>CounterMsg</kc>></k> {
 	var k = 0 	<kc>//actor state</kc>
 	for (<k>msg in channel</k>) { <kc>// iterate over incoming messages</kc>
-	   <m>if( k>0 && k % 10000 == 0  && msg.cmd != "GET" )
-		println("${msg.cmd} | $k in ${curThread()} full=${channel.isFull}")</m>
+	    if( k>0 && k % 10000 == 0  && msg.cmd != "GET" )
+		<m>println("${msg.cmd} | $k in ${curThread()} full=${channel.isFull}")</m>
 		when ( msg.cmd ) {
 			<ks>"INC"</ks> -> k++
 			<ks>"DEC"</ks> -> k--
@@ -2740,24 +2796,25 @@ fun <ks>createCounter</ks>(scope : CoroutineScope):SendChannel&ltCounterMsg>{
  return counterActor
 }
 
-<k>suspend</k> fun <ks>showValue</ks>(<ks>counterActor</ks>: SendChannel&lt;CounterMsg>){
-    val initVal = CompletableDeferred&lt;Int>()
-    <ks>counterActor</ks>.<k>send</k>(<kc>CounterMsg</kc><ks>("GET", initVal))</ks>
-    println("Counter VALUE=${<k>initVal.await()</k>}")	
+<k>suspend</k> fun <ks>showValue</ks>(<ks>counterActor</ks>: <k>SendChannel&lt;CounterMsg></k>){
+    val <em>cVal</em> = <b>CompletableDeferred&lt;Int></b>()
+    <ks>counterActor</ks>.<k>send</k>(<kc>CounterMsg</kc><ks>("GET", <em>cVal</em>))</ks>
+    println("Counter VALUE=${<k><em>cVal</em>.await()</k>}")	
 }
-
+<!--
 <k>suspend</k> fun <ks>sendManyMessages</ks>( <ks>scope</ks> : CoroutineScope, 
 		<ks>counterActor</ks>: SendChannel&lt;CounterMsg>){
     <ks>scope</ks>.<k>manyRun</k> {<ks>counterActor</ks>.<k>send</k>( <kc>CounterMsg</kc><ks>("INC")</ks>)}
 }
-
-fun main() = <k>runBlocking</k>{
-    println("BEGINS CPU=$cpus ${curThread()}")
-
+-->
+fun main(){
+  println("BEGINS CPU=$cpus ${curThread()}")
+  <k>runBlocking</k>{
 	val <ks>counter</ks> = createCounter( this )
 	showValue( <ks>counter</ks> ) <kc>//initial value</kc>
 
-	sendManyMessages(this, <ks>counter</ks>)
+	<!-- sendManyMessages(this, <ks>counter</ks>) -->
+	<k>manyRun</k> {<ks>counter</ks>.send( CounterMsg("INC"))}
 	showValue( <ks>counter</ks> )
 	<kc>//TERMINATE THE COUNTER</kc>
 	<ks>counter</ks>.<k>send</k>( CounterMsg(<ks>"END"</ks>) )
@@ -2765,7 +2822,9 @@ fun main() = <k>runBlocking</k>{
 	<k>(counter as Job).join()</k>	<kc>//WAIT for counter termination</kc>
 	<kc>//<ks>counter</ks>.close() //shutdown the actor</kc>
 
-    println("ENDS ${curThread()}")
+    println("ENDS runBlocking ${curThread()}")
+  }
+  println("ENDS main ${curThread()}")
 }
 </pre>
 <m></m> 
@@ -2774,23 +2833,24 @@ fun main() = <k>runBlocking</k>{
 <center><img src="./img/demoActorCounter.png" alt="demoActorCounter.png" width="50%"/></center>
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main / nthreads=1  
+BEGINS CPU=12 thread=main / nthreads=2  
 Counter VALUE=0
-counter INC | 10000 in thread=main / nthreads=1   full=true
-counter INC | 20000 in thread=main / nthreads=1   full=true
-counter INC | 30000 in thread=main / nthreads=1   full=true
-counter INC | 40000 in thread=main / nthreads=1   full=true
-counter INC | 50000 in thread=main / nthreads=1   full=true
-counter INC | 60000 in thread=main / nthreads=1   full=true
-counter INC | 70000 in thread=main / nthreads=1   full=true
-counter INC | 80000 in thread=main / nthreads=1   full=true
-counter INC | 90000 in thread=main / nthreads=1   full=true
-Completed 100000 actions in 403 ms
+counter INC | 10000 in thread=main / nthreads=2   full=true
+counter INC | 20000 in thread=main / nthreads=2   full=true
+counter INC | 30000 in thread=main / nthreads=2   full=true
+counter INC | 40000 in thread=main / nthreads=2   full=true
+counter INC | 50000 in thread=main / nthreads=2   full=true
+counter INC | 60000 in thread=main / nthreads=2   full=true
+counter INC | 70000 in thread=main / nthreads=2   full=true
+counter INC | 80000 in thread=main / nthreads=2   full=true
+counter INC | 90000 in thread=main / nthreads=2   full=true
+Completed 100000 actions in 147 ms
 Counter VALUE=100000
-JOIN thread=main / nthreads=1  
-counter END | 100000 in thread=main / nthreads=1   full=true
+JOIN thread=main / nthreads=2  
+counter END | 100000 in thread=main / nthreads=2   full=true
 counter closing ...
-ENDS thread=main / nthreads=1  </pre>
+ENDS runBlocking thread=main / nthreads=2  
+ENDS main thread=main / nthreads=2  </pre>
 
 <h3>Actor termination</h3>
 <m>
