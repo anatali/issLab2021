@@ -1511,13 +1511,13 @@ A coroutine is typically launched using
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/launch.html"  target="web"><bc>launch</bc></a>
 coroutine builder:
 <pre>
-fun <k>CoroutineScope.launch</k>(		//<kc>extension function on CoroutineScope</kc>
+fun <k>CoroutineScope.launch</k>(		//<kc><a href="https://kotlinlang.org/docs/reference/extensions.html" target="web">Extension function</a> on CoroutineScope</kc>
     <ks>context</ks>: CoroutineContext = EmptyCoroutineContext,		//<kc>parameter</kc>
     // ...	
 ): <k>Job</k>
 </pre>
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/launch.html"  target="web"><bc>launch</bc></a>
- is defined as an extension function of the
+ is defined as an <a href="https://kotlinlang.org/docs/reference/extensions.html" target="web">Extension function</a> of the
 <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/"  target="web">CoroutineScope</a> interface
 that consists of a sole property (<m><kc>val  coroutineContext: CoroutineContext</kc></m>).
 <br/><m>
@@ -2226,7 +2226,8 @@ val n = 5
 val <ks>channel</ks> = <k>Channel&ltInt>(2)</k> <kc>//ArrayChannel capacity=2 size=0</kc>
 
      val sender = scope.launch {
-         repeat( n ) {
+         println( channel )
+         <b>repeat( n )</b> {
              <ks>channel</ks><k>.send( <ks>it</ks> )</k>
              println("SENDER | sent $it in ${curThread()}")
          }
@@ -2235,17 +2236,20 @@ val <ks>channel</ks> = <k>Channel&ltInt>(2)</k> <kc>//ArrayChannel capacity=2 si
 	 <ks>delay(500)</ks> <kc>//The receiver starts after a while ...</kc>
      
 	 val receiver = scope.launch {
-         for( i in 1..n ) {
+         <b>for( i in 1..n )</b> {
              val v = <ks>channel</ks><k>.receive()</k>
              println("RECEIVER | receives $v in ${curThread()}")
          }
      }
 }
  
-fun main() = runBlocking{
-	println("BEGINS CPU=$cpus ${curThread()}")
-	<ks>channelTest( this )</ks>
-	println("ENDS ${curThread()}")
+fun main() {
+    println("BEGINS CPU=$cpus ${curThread()}")
+    runBlocking {
+         <ks>channelTest</ks>(this)  
+        println("ENDS runBockig ${curThread()}")
+    }
+    println("ENDS main ${curThread()}")
 }
  </pre> </td>
 <td><m>
@@ -2254,18 +2258,37 @@ The example shows the usage of an <bc>ArrayChannel</bc> of capacity <tt>2</tt>.
 
 <pre>
 <kc>//OUTPUT</kc>
-BEGINS CPU=4 thread=main | nthreads=4
-SENDER | sent 0 in thread=main | nthreads=4
-SENDER | sent 1 in thread=main | nthreads=4
-ENDS thread=main | nthreads=4
-RECEIVER | receives 0 in thread=main | nthreads=4
-RECEIVER | receives 1 in thread=main | nthreads=4
-RECEIVER | receives 2 in thread=main | nthreads=4
-SENDER | sent 2 in thread=main | nthreads=4
-SENDER | sent 3 in thread=main | nthreads=4
-SENDER | sent 4 in thread=main | nthreads=4
-RECEIVER | receives 3 in thread=main | nthreads=4
-RECEIVER | receives 4 in thread=main | nthreads=4
+BEGINS CPU=8 thread=main / nthreads=2  
+<m>ArrayChannel@198e2867{EmptyQueue}(buffer:capacity=2,size=0)</m>
+SENDER | sent 0 in thread=main / nthreads=2  
+SENDER | sent 1 in thread=main / nthreads=2  
+ENDS runBockig thread=main / nthreads=2  
+RECEIVER | receives 0 in thread=main / nthreads=2  
+RECEIVER | receives 1 in thread=main / nthreads=2  
+RECEIVER | receives 2 in thread=main / nthreads=2  
+SENDER | sent 2 in thread=main / nthreads=2  
+SENDER | sent 3 in thread=main / nthreads=2  
+SENDER | sent 4 in thread=main / nthreads=2  
+RECEIVER | receives 3 in thread=main / nthreads=2  
+RECEIVER | receives 4 in thread=main / nthreads=2  
+ENDS main thread=main / nthreads=2 
+
+<kc>//OUTPUT wihout delay(500)</kc>
+BEGINS CPU=8 thread=main / nthreads=2  
+<m>ArrayChannel@2a098129{EmptyQueue}(buffer:capacity=2,size=0)</m>
+ENDS runBockig thread=main / nthreads=2  
+SENDER | sent 0 in thread=main / nthreads=2  
+SENDER | sent 1 in thread=main / nthreads=2  
+RECEIVER | receives 0 in thread=main / nthreads=2  
+RECEIVER | receives 1 in thread=main / nthreads=2  
+RECEIVER | receives 2 in thread=main / nthreads=2  
+SENDER | sent 2 in thread=main / nthreads=2  
+SENDER | sent 3 in thread=main / nthreads=2  
+SENDER | sent 4 in thread=main / nthreads=2  
+RECEIVER | receives 3 in thread=main / nthreads=2  
+RECEIVER | receives 4 in thread=main / nthreads=2  
+ENDS main thread=main / nthreads=2 
+
 </pre>
 
 
@@ -2274,11 +2297,11 @@ RECEIVER | receives 4 in thread=main | nthreads=4
 
 </tbody>	
 </table></center>
-
+<!--
 <div class="remark">
 Motto: Do not communicate by sharing memory; instead, share memory by communicating.
 </div>
-
+-->
  
  
 
@@ -2289,13 +2312,14 @@ Motto: Do not communicate by sharing memory; instead, share memory by communicat
 <li>The pattern where a coroutine is  producing a sequence of elements is quite common. 
 This is a part of <em>producer-consumer pattern</em> that is often found in concurrent code. 
 You could abstract such a producer into a function that takes <bc>channel</bc> as its parameter, 
-but this goes contrary to common sense that results must be returned from functions.
+<i>but this goes contrary to common sense that results must be returned from functions</i>.
 <br/><br/>
 </li>
 <li>There is a convenient coroutine builder named 
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html"  target="web"><bc>produce</bc></a>
  that makes it easy to do it right on producer side, 
-and an extension function <bc>consumeEach</bc>, that replaces a for loop on the consumer side.
+and an <a href="https://kotlinlang.org/docs/reference/extensions.html" target="web">Extension function</a>  
+<bc>consumeEach</bc>, that replaces a for loop on the consumer side.
 <br/><br/>
 </li>
 <li>The coroutine builder 
@@ -2308,7 +2332,7 @@ interface) requires a specific <tt>CoroutineContext</tt> (as with <bc>launch</bc
  
 <li>the body of the suspending lambda that is passed can suspend at any point</li>
 <li>a value from a producer can only be received in a suspending computation </li>
-<li>the channel has <em>no buffer</em> by default is closed when the coroutine completes</li>
+<li>the channel has <em>no buffer</em> by default; it is closed when the coroutine completes</li>
 </ul>
 </li>
  
@@ -2323,55 +2347,85 @@ interface) requires a specific <tt>CoroutineContext</tt> (as with <bc>launch</bc
 <h3 id="produce">Coroutine builder 
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html"  target="web"><bc>produce</bc></a></h3>
 <pre>
- 
+val <ks>dispatcher</ks> = newSingleThreadContext("myThread")<kc>//Dispatchers.IO</kc> 
 val <ks>simpleProducer</ks> : <k>ReceiveChannel&lt;Int>?</k> = null
 
-fun startProducer(scope : CoroutineScope ){
-	simpleProducer = <k>scope.produce</k> {
-		for( i in 1..3 ){
-			<k>send( i )</k>
-			println( "producer produced $i in  ${curThread()}")
-		}
-  }
-
-<k>suspend</k> fun consume(){
-    val v = <ks>simpleProducer!!</ks>.<k>receive()</k>
-    println( "consume receives ${v} in ${curThread()}" )
-    <ks>simpleProducer!!</ks>.<k>consumeEach</k> {
-         println( "consume receives $it in ${curThread()}" )
-    }
+fun startProducer(<em>scope</em> : CoroutineScope ){
+ <ks>simpleProducer</ks> = <em>scope</em><k>.produce(<ks>dispatcher, capacity=0</ks>)</k>{
+   for( i in 1..3 ){
+     println("producer PRE -> $i  in  ${curThread()}")
+     <k>send( i )</k>
+     println("producer POST-> $i at ${System.currentTimeMillis()}")
+   }
 }
 
-fun main() = <k>runBlocking</k>{
-	println("BEGINS CPU=$cpus ${curThread()}")
-	println( this ) <kc>//BlockingCoroutine{Active}@...</kc>
-	<ks>startProducer(this); 
-	consume()</ks>
-	println("ENDS ${curThread()}")
+<k>suspend</k> fun consume(){
+  val v = <ks>simpleProducer!!</ks>.<k>receive()</k>
+  println( "consume- first ${v} at ${System.currentTimeMillis()} in ${curThread()}")
+  <ks>simpleProducer!!</ks>.<k>consumeEach</k> {
+     println( "consume- $it at ${System.currentTimeMillis()} in ${curThread()}" )
+  }
+}
+
+fun main() {
+    println("BEGINS CPU=$cpus ${kotlindemo.curThread()}")
+    runBlocking {
+        startProducer(this)
+        consume()
+        println("ENDS runBlocking ${kotlindemo.curThread()}")
+    }
+    println("ENDS main ${kotlindemo.curThread()}")
 }
 </pre>
 </td>
 <td>
 This example is reported in <a href="../app/src/prodCons/simpleProducerKotlin.kt" target="code">simpleProducerKotlin.kt</a>
-<hr/>
-<br/> 
-<m>  
-The coroutine builder <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html" target="web"><bc>produce</bc></a> 
+<hr/><m> 
+<ul>
+<li>The ReceiveChannel has <ks>only the receive method</ks>. It does not have a send method. 
+This means that another coroutine can only read from this output channel.
+</li>
+<li>The channel has <em>no buffer by default</em>; it is closed when the coroutine completes.</li>
+<li>The coroutine builder <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html" target="web"><bc>produce</bc></a> 
 takes a suspending lambda as a parameter; only the code within this lambda can send items to the channel.
-The channel has <em>no buffer by default</em>; it is closed when the coroutine completes
+</li>
+</ul>
 </m>
-<br/> 
+ 
 <pre>
-<kc>//OUTPUT</kc>
-BEGINS CPU=8 thread=main | nthreads=1
-BlockingCoroutine{Active}@799f7e29
-producer produced 1 in  thread=main / nthreads=1
-consume receives 1 in thread=main / nthreads=1
-consume receives 2 in thread=main / nthreads=1
-producer produced 2 in  thread=main / nthreads=1
-producer produced 3 in  thread=main / nthreads=1
-consume receives 3 in thread=main / nthreads=1
-ENDS thread=main | nthreads=1
+<kc>//OUTPUT (singleThread, capacity=0)</kc>
+producer PRE -> 1  in  thread=myThread / nthreads=3  
+producer POST-> 1 at 1618394375343   
+producer PRE -> 2  in  thread=myThread / nthreads=3  
+consume- first 1 at 1618394375344 in thread=main / nthreads=3
+consume- 2 at 1618394375<ks>345</ks> in thread=main / nthreads=3
+producer POST-> 2 at 1618394375<ks>345</ks>   
+producer PRE -> 3  in  thread=myThread / nthreads=3  
+consume- 3 at 1618394375<k>346</k> in thread=main / nthreads=3
+producer POST-> 3 at 1618394375<k>346</k>   
+producer PRE -> 4  in  thread=myThread / nthreads=3  
+producer POST-> 4 at 1618394375346   
+consume- 4 at 1618394375351 in thread=main / nthreads=3
+ENDS runBlocking thread=main / nthreads=3  
+ENDS main thread=main / nthreads=3     
+
+<kc>//OUTPUT (singleThread, capacity=2)</kc>
+BEGINS CPU=8 thread=main / nthreads=2  
+producer PRE -> 1  in  thread=myThread / nthreads=3  
+producer POST-> 1 at 1618394697274   
+producer PRE -> 2  in  thread=myThread / nthreads=3  
+producer POST-> 2 at 1618394697274   
+producer PRE -> 3  in  thread=myThread / nthreads=3  
+consume- first 1 at 1618394697283 in thread=main / nthreads=3
+producer POST-> 3 at 1618394697<ks>285</ks>   
+producer PRE -> 4  in  thread=myThread / nthreads=3  
+consume- 2 at 1618394697<ks>285</ks> in thread=main / nthreads=3
+consume- 3 at 1618394697286 in thread=main / nthreads=3
+consume- 4 at 1618394697<k>286</k> in thread=main / nthreads=3
+producer POST-> 4 at 1618394697<k>286</k>  
+ENDS runBlocking thread=main / nthreads=3  
+ENDS main thread=main / nthreads=3  
+ 
 </pre>
 <m> </m>
  
