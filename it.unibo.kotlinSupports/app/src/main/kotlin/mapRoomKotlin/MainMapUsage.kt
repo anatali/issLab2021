@@ -27,7 +27,15 @@ fun doTestMove(){
 	 */
 }
 
+fun doTestTripInfo(){
+	val moves = TripInfo()
+	moves.showMap()
+	moves.updateMovesRep("w")
+	moves.updateMovesRep("s")
+	moves.showMap()
+}
 fun main(){
-	doTestMove()
+	//doTestMove()
+	doTestTripInfo()
 }
  		

@@ -12,8 +12,8 @@ produce coroutine builder : can send items to a ReceiveChannel
  */
 
 val dispatcher  = newSingleThreadContext("myThread") //Dispatchers.IO //
-var simpleProducer : ReceiveChannel<Int>? = null
-
+//var simpleProducer : ReceiveChannel<Int>? = null
+lateinit var simpleProducer : ReceiveChannel<Int>
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun startProducer( scope: CoroutineScope ) {
@@ -30,9 +30,9 @@ fun startProducer( scope: CoroutineScope ) {
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 suspend fun consume( ){
-    val v = simpleProducer!!.receive()  //the first
+    val v = simpleProducer.receive()  //the first
     println( "consume- first ${v} at ${System.currentTimeMillis()} in ${curThread()}" )
-    simpleProducer!!.consumeEach {
+    simpleProducer.consumeEach {
         println( "consume- $it at ${System.currentTimeMillis()} in ${curThread()}" )
     }
 }

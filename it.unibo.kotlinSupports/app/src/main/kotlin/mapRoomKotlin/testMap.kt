@@ -11,7 +11,7 @@ val nc = 5
 			for( i in 1..nr ) mapUtil.doMove("w")
 			mapUtil.doMove("l")
 		    for( i in 1..nc ) mapUtil.doMove("s")
-			mapUtil.doMove("l")
+			//mapUtil.doMove("l")
 		
 			targetMap = mapUtil.map
 //			println( "buildRefTestMap DONE" )

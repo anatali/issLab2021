@@ -12,10 +12,15 @@ import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.channels.SendChannel
 import mapRoomKotlin.TripInfo
 import org.json.JSONObject
+import prodCons.curThread
 import java.lang.Exception
 import java.util.HashMap
 
-//Actor that includes the business logic; the behavior is message-driven 
+/*
+Actor that includes the business logic; the behavior is message-driven
+ */
+lateinit var myrobot : SendChannel<String>
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun createActor(scope:CoroutineScope) : SendChannel<String> {
@@ -26,38 +31,35 @@ fun createActor(scope:CoroutineScope) : SendChannel<String> {
 			val MoveJsonCmd = HashMap<String, String>()
 			lateinit var conn: IConnInteraction
 
-			fun doInit() {
-				try {
-					println("robotActorTry doInit1  ${ApplMsgs.forwardMsg} MoveJsonCmd=$MoveJsonCmd") //
-			MoveJsonCmd.put("w", ApplMsgs.forwardMsg.replace(",", "@"))
-			MoveJsonCmd.put("s", ApplMsgs.backwardMsg.replace(",", "@"))
-			MoveJsonCmd.put("l", ApplMsgs.turnLeftMsg.replace(",", "@"))
-			MoveJsonCmd.put("r", ApplMsgs.turnRightMsg.replace(",", "@"))
-			MoveJsonCmd.put("h", ApplMsgs.haltMsg.replace(",", "@"))
-					println("robotActorTry doInit2 $MoveJsonCmd ") //
-
-					val fp = FactoryProtocol(null, "TCP", "robot")
-					println("    ---  robotActorTry | fp:$fp")
-					conn = fp.createClientProtocolSupport("localhost", 8010)
+		fun doInit() {
+println("robotActorTry | doInit1 ${curThread()}" )
+			try {
+				MoveJsonCmd.put("w", ApplMsgs.forwardMsg.replace(",", "@"))
+				MoveJsonCmd.put("s", ApplMsgs.backwardMsg.replace(",", "@"))
+				MoveJsonCmd.put("l", ApplMsgs.turnLeftMsg.replace(",", "@"))
+				MoveJsonCmd.put("r", ApplMsgs.turnRightMsg.replace(",", "@"))
+				MoveJsonCmd.put("h", ApplMsgs.haltMsg.replace(",", "@"))
+//println("robotActorTry doInit2 $MoveJsonCmd ") //
+				val fp = FactoryProtocol(null, "TCP", "robot")
+//println("    ---  robotActorTry | fp:$fp")
+				conn = fp.createClientProtocolSupport("localhost", 8010)
 					println("    --- robotActorTry | connected:$conn")
-					//reader = ConnectionReader("reader", conn)
-					//reader.registerActor(this)
-					//reader.send(it.unibo.remoteCall.robotActorTry.startDefaultMsg)
-				} catch (e: Exception) {
-					println("robotActorTry doInit error $e ")
-					e.printStackTrace()
-				}
-			}//doInit
+				createTcpInputReader( conn )
+			} catch (e: Exception) {
+				println("robotActorTry doInit error $e ")
+			}
+		}//doInit
 
 			suspend fun doMove(moveShort: String, dest: String) { //Talk with BasicRobotActor
 				try {
+					println("    ---   robotActorTry | doMove moveShort:$moveShort  " )
 					val cmd = MoveJsonCmd.get(moveShort)
 					val msg: String =
 						ApplMessage.Companion.create("msg(robotmove,dispatch,SENDER,DEST,CMD,1)").toString()
 							.replace("SENDER", "actortry")
 							.replace("DEST", dest)
 							.replace("CMD", cmd!!)
-					println("    ---   robotActorTry | doMove msg:$msg")
+					println("    ---   robotActorTry | doMove msg:$msg ${curThread()}" )
 					conn.sendALine(msg)
 					moves.updateMovesRep(moveShort);
 					moves.showMap()
@@ -68,34 +70,50 @@ fun createActor(scope:CoroutineScope) : SendChannel<String> {
 				}
 			}//doMove
 
+			 fun doEndMove( endOfMove: String, move: String ) {
+				if( endOfMove=="false") println("$move failed")
+			}
+
 			fun doEnd() = { state = "end" }
 			fun doSensor(msg: String) {
 				println("robotActorTry should handle: $msg")
 			}
 
 			suspend fun doCollision(msg: String) {
-				println("robotActorTry handles $msg going back a little");
-				val goback = "{ 'type': 'moveBackward', 'arg': 100 }"
-				virtualRobotSupport.domove(goback)  // not for plasticBox : the business logic is more complex ...
-				delay(500)
-			}//doCollision
+				println("robotActorTry | doCollision $msg  ");
+ 			}//doCollision
 
 			while (state == "working") {
 				var msg = channel.receive()
-				println("robotActorTry receives: $msg ") //
-				//val msgSplitted = msg.split('(')
-				//val msgFunctor  = msgSplitted[0]
+				println("robotActorTry working receives: $msg ") //
 				try {
 					val cmd = JSONObject(msg)
 					println("robotActorTry cmd: $cmd ") //
-					val move = cmd.getString("move")
-					println("robotActorTry move=$move ")
-					when (move) {
-						"init" -> doInit()
-						"end" -> doEnd()
-						"sensor" -> doSensor(msg)
+					var input = ""
+					var move  = ""
+					var endOfMove = "unknown"
+					if( cmd.has("collision")){	//first, to avoid premature check on move
+						input = "collision"
+						move  = cmd.getString("move")
+					}else if( cmd.has("endmove")){
+						input     = "endmove"
+						endOfMove = cmd.getString("endmove")
+						move      = cmd.getString("move")
+					}else if( cmd.has("move")){
+						input = "move"
+						move  = cmd.getString("move")
+					}else if( cmd.has("cmd")){
+						input = cmd.getString("cmd")
+					}
+					//val move = cmd.getString("move")
+					println("robotActorTry input=$input move=$move endOfMove=$endOfMove")
+					when (input) {
+						"init"      -> doInit()
+						"end"       -> doEnd()
+						"endmove"   -> doEndMove(endOfMove,move)
+						"sensor"    -> doSensor(msg)
 						"collision" -> doCollision(msg)
-						"l","r","w","s","h" -> doMove(move, "stepRobot")
+						"move"      -> doMove(move, "stepRobot")
 						else -> println("NO HANDLE for $msg")
 					}
 				} catch (e: Exception) {
@@ -106,38 +124,50 @@ fun createActor(scope:CoroutineScope) : SendChannel<String> {
 			println("robotActorTry ENDS state=$state")
 		}//actor
 	return robotActorTry
-}
-suspend fun sendApplCommands( scope:CoroutineScope  ) {
-
-	val robotActorTry = createActor(scope)
-
-	var jsonString = "{ \"move\": \"init\" }"
-	robotActorTry.send(jsonString)
-	delay(1000)
-	println("    ---  robotActorTry | turnLeft")
-	robotActorTry.send("{ \"move\": \"l\"  }")
-	robotActorTry.send("{ \"move\": \"r\"  }")
-	robotActorTry.send("{ \"move\": \"w\"  }")
-	robotActorTry.send("{ \"move\": \"l\"  }")
-	robotActorTry.send("{ \"move\": \"w\"  }")
-	robotActorTry.send("{ \"move\": \"w\"  }")
-	robotActorTry.send("{ \"move\": \"s\"  }")	//???
-
+}//createActor
 
 /*
-	val time = 2000L	//time = 1000 => collision
-//    for (i in 1..2) {
-	jsonString = "{ 'move': 'l'  }"
-	robotActorTry.send(jsonString)
-	delay(time)
+Input reader
+ */
+suspend fun getInput(  conn: IConnInteraction ) {
+	while (true) {
+		//println("	&&& tcpInputReader  | waitInput ... $conn ${curThread()} "   );
+		try {
+			val v = conn.receiveALine()    //blocking ...
+			println("	&&& tcpInputReader  | $v");
+			if (v != null) {
+				val msg = ApplMessage.create(v)
+				//println("tcpInputReader  | msg $msg ");
+				myrobot.send(msg.msgContent.replace("@",","))	//inform myrobot about the result
+			} else {
+				break
+			}
+		}catch( e : Exception){
+			println("	&&& tcpInputReader  | ERROR: ${e} ")
+			break
+		}
+	} //while
+}
+fun createTcpInputReader(  conn: IConnInteraction ) {	//: Job
+	val inputScope = CoroutineScope( Dispatchers.IO )
+	inputScope.launch { getInput(  conn) }
+}//createTcpInputReader
 
-	jsonString = "{ 'move': 'r' }"
-	robotActorTry.send(jsonString)
-	delay(1000)
+suspend fun sendApplCommands( scope:CoroutineScope  ) {
+	myrobot = createActor(scope)
 
-	jsonString = "{ 'move': 'end'  }"
-	robotActorTry.send(jsonString)
-	
+
+	var jsonString = "{ \"cmd\": \"init\" }"
+	myrobot.send(jsonString)
+	//delay(500)		//embedded in domove
+	myrobot.send("{ \"move\": \"l\"  }")
+	myrobot.send("{ \"move\": \"r\"  }")
+
+	myrobot.send("{ \"move\": \"w\"  }")
+/*	myrobot.send("{ \"move\": \"l\"  }")
+	myrobot.send("{ \"move\": \"w\"  }")
+	myrobot.send("{ \"move\": \"w\"  }")
+	myrobot.send("{ \"move\": \"s\"  }")
  */
 }
 
@@ -147,7 +177,6 @@ fun main( ) {
 	println("BEGINS CPU=$cpus ${kotlindemo.curThread()}")
 	runBlocking {
 		sendApplCommands(this)
-		//delay(15000)
 		println("ENDS runBlocking ${kotlindemo.curThread()}")
 	}
 	println("ENDS main ${kotlindemo.curThread()}")

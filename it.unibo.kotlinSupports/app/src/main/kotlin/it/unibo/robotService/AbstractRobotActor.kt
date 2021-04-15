@@ -17,7 +17,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
-abstract class AbstractRobotActor(name: String, val wenvAddr: String="localhost",
+abstract class AbstractRobotActor(name: String, val wenvAddr: String,
                                   //scope: CoroutineScope= GlobalScope)
          scope: CoroutineScope= CoroutineScope( newSingleThreadContext("single_$name") ))
                                   : ActorBasicKotlin(name, scope, DispatchType.single) {

@@ -10,6 +10,7 @@ RUN ls
 
 CMD ["bash", "app"]
 
+### gradelw distTar
 #### docker build -t steprobot:2.0 .
 ### run the image to test
 ### docker run -p 8010:8010 -ti --rm steprobot:2.0 /bin/bash //to use the console

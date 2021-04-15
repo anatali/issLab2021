@@ -45,14 +45,15 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
     private fun answerAndUpdate(msg: ApplMessage ){
         val dest = msg.msgReceiver
         val conn = connActiveForActor.get(dest)
-        if( conn != null )  conn.sendALine(msg.toString()) //answer only to sender
-        else updateExternalCallers(msg.toString())
+        //if( conn != null )  conn.sendALine(msg.toString()) //answer only to sender
+        //else
+            updateExternalCallers(msg.toString())
     }
 
 
     private fun updateExternalCallers(msg: String ){
         sysUtil.connActive.forEach{
-            //println("%%% ActorContextTcpServer | $name updates: $it $msg }")
+            println("%%% ActorContextTcpServer | $name updates: $it $msg }")
             it.sendALine(msg)
         }
     }

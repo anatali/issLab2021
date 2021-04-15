@@ -2348,7 +2348,7 @@ interface) requires a specific <tt>CoroutineContext</tt> (as with <bc>launch</bc
 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html"  target="web"><bc>produce</bc></a></h3>
 <pre>
 val <ks>dispatcher</ks> = newSingleThreadContext("myThread")<kc>//Dispatchers.IO</kc> 
-val <ks>simpleProducer</ks> : <k>ReceiveChannel&lt;Int>?</k> = null
+<b>lateinit var</b> <ks>simpleProducer</ks> : <k>ReceiveChannel&lt;Int></k> 
 
 fun startProducer(<em>scope</em> : CoroutineScope ){
  <ks>simpleProducer</ks> = <em>scope</em><k>.produce(<ks>dispatcher, capacity=0</ks>)</k>{<kc>//capacity=2</kc>
@@ -2360,9 +2360,9 @@ fun startProducer(<em>scope</em> : CoroutineScope ){
 }
 
 <k>suspend</k> fun consume(){
-  val v = <ks>simpleProducer!!</ks>.<k>receive()</k>
+  val v = <ks>simpleProducer</ks>.<k>receive()</k>
   println( "consume- first ${v} at ${System.currentTimeMillis()} in ${curThread()}")
-  <ks>simpleProducer!!</ks>.<k>consumeEach</k> {
+  <ks>simpleProducer</ks>.<k>consumeEach</k> {
      println( "consume- $it at ${System.currentTimeMillis()} in ${curThread()}" )
   }
 }
@@ -2382,7 +2382,7 @@ fun main() {
 This example is reported in <a href="../app/src/prodCons/simpleProducerKotlin.kt" target="code">simpleProducerKotlin.kt</a>
 <hr/><m> 
 <ul>
-<li>The ReceiveChannel has <ks>only the receive method</ks>. It does not have a send method. 
+<li>The <k>ReceiveChannel</k> has <ks>only the receive method</ks>. It does not have a send method. 
 This means that another coroutine can only read from this output channel.
 </li>
 <li>The channel has <em>no buffer by default</em>; it is closed when the coroutine completes.</li>
@@ -2438,7 +2438,7 @@ ENDS main thread=main / nthreads=3
 
 <pre>
 val <ks>context</ks> = newSingleThreadContext("myThread")
-var producer : <k>ReceiveChannel&lt;Any>?</k> <ks>= null</ks>
+<b>lateinit var</b> producer : <k>ReceiveChannel&lt;Any></k>  
 
 fun createProducer(<ks>scope</ks> : CoroutineScope ){
     producer = <k><ks>scope</ks>.produce(<ks>context</ks>, capacity=0)</k>{ <kc>//capacity=1</kc>
@@ -2452,9 +2452,9 @@ fun createProducer(<ks>scope</ks> : CoroutineScope ){
 }
 
 suspend fun doconsume(){
-	val v = <k><ks>producer!!</ks>.receive()</k>		<kc>//the first item</kc>
+	val v = <k><ks>producer</ks>.receive()</k>		<kc>//the first item</kc>
 	println( "doconsume receives1 $v in ${curThread()}")
-	<k><ks>producer!!</ks>.consumeEach</k> { 
+	<k><ks>producer</ks>.consumeEach</k> { 
 	println( "doconsume receives2 $it in ${curThread()}") }
 }
 
@@ -2621,7 +2621,7 @@ fun startReceiver( scope : CoroutineScope){
 		delay(500)	<kc>//time of initialization ...</kc>
 		var msg = <em>channel</em><k>.receive()</k>
 		while( msg != "end"){
-		    delay(500)   //time to elaborate the msg ...
+		    delay(500)  <kc>//time to elaborate the msg ...</kc>
 			println("receiverActor receives $msg ${curThread()}")
 			msg = <em>channel</em><k>.receive()</k>
 		}
@@ -2870,12 +2870,14 @@ Moreover, we can await for actor termination by writing<br/>
 A simple actor can be written as a function, but an actor with a complex state  is better suited for a class.<br/>
 -->
 
+<!--
 <div class="remark">
 <hr/>
 Now it is time to model <a href="FirstActorRobot2021.html">xxx</a>
 <hr/>
 </div>
 
+-->
 <h2 id="sequences">SEQUENCES (SUSPENDABLE)</h2> 
 
 The examples hereunder are reported in  <a href="../app/src/main/kotlin/kotlindemo/demoSequences.kt" target="code">demoSequences.kt</a>  (project <m><ks>it.unibo.kotlinIntro</ks></m>).

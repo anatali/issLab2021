@@ -105,7 +105,9 @@ override suspend fun handleInput(msg: ApplMessage) {
             msgDriven(infoJson);
         }else if (infoJson.has("endmove")){
             val moveResult = infoJson.getString("endmove")
-            if( moveResult != "true" && currentBasicMove.length > 0 ) {
+            //answer only for moves that fail ???
+            //if( moveResult != "true" && currentBasicMove.length > 0 ) {
+            if(  currentBasicMove.length > 0 ) {
                 val payload = "{ \"endmove\" : \"$moveResult\"@\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 currentBasicMove = "";
@@ -117,6 +119,10 @@ override suspend fun handleInput(msg: ApplMessage) {
     override fun msgDriven(msgJson: JSONObject) {
         println("$name BasicStepRobotActor |  %%% msgDriven:$msgJson")
         if( msgJson.has("robotmove")){
+            if( currentBasicMove.length > 0  ){
+                println("$name BasicStepRobotActor |  move already running: let us store the request")
+                return
+            }
             currentBasicMove = msgJson.getString("robotmove")
             support.forward(msgJson.toString())
         }

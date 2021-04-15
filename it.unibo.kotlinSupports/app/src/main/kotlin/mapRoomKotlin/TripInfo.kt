@@ -2,8 +2,6 @@ package mapRoomKotlin
 
 import mapRoomKotlin.mapUtil.getMapRep
 
-
-
 class TripInfo( ) {
 
     private var journey = ""

@@ -43,7 +43,9 @@ import kotlinx.coroutines.*
             basicrobot.send( startBasicRobotMsg )
             */
 
-            BasicStepRobotActor("stepRobot", ctxserver, wenvAddr="localhost", scope=this)
+            //NOTE THAT WE USE NAMED ARGS
+            //BasicStepRobotActor("stepRobot", ctxserver, wenvAddr="localhost", scope=this)
+            BasicStepRobotActor("stepRobot", ctxserver,  scope=this)
         }
 
     }
