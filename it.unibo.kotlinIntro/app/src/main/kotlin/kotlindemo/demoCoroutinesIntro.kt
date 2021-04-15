@@ -122,9 +122,10 @@ fun doDemo( input : Int ) = runBlocking{
 	println("BEGINS CPU=$cpus ${curThread()}")
 	when( input ){
 		1 ->  demoTodo =  { runBlockThread(1500 ) 	    }
-		2 ->  demoTodo =  { thcounter=0; GlobalScope.launch{ runBlockThread(1500) }	}
+		2 ->  demoTodo =  { thcounter=0;
+			GlobalScope.launch{ runBlockThread(1500) }	}
 		3 ->  demoTodo =  { scopeDemo()						    }
- 		4 ->  demoTodo =  { maxNumThread = 0; manyThreads() 	}
+ 		4 ->  demoTodo =  { maxNumThread = 0; manyThreads() 	} //9533085 9533634
   		5 ->  demoTodo =  { maxNumThread = 0; manyCoroutines()	}
 		6 ->  demoTodo =  { demoRunBlocking1()             	    }
 		7 ->  demoTodo =  { demoRunBlocking2()             	    }

@@ -1405,6 +1405,7 @@ child coroutines finish.
 
 <pre>
 fun scopeDemo (){	<kc>//user-option 3</kc>
+   thcounter=0
 	val scope = <k>CoroutineScope( Dispatchers.Default )</k>
 	println( <ks>scope.coroutineContext</ks> )
 	val job = <k>scope.launch</k>{
@@ -1669,7 +1670,7 @@ ENDS thread=main | nthreads=2
 <pre>
 fun <ks>manyCoroutines()</ks>{	<kc>//user-option 5</kc>
     //val d = newSingleThreadContext("single")
-	val d = <ks>newFixedThreadPoolContext(10,"d")</k>
+	val d = <ks>newFixedThreadPoolContext(10,"d")</ks>
 	//val d = Dispatchers.Default
 	val <k>scope</k> = CoroutineScope( d )
 	var thcounter=0
@@ -2100,7 +2101,7 @@ fun main(){
 <td>
 <pre>
 
-fun run1(){ <ks>runBlocking { ioBoundFun() }</ks> }
+fun <k>run1()</k>{ <ks>runBlocking { ioBoundFun() }</ks> }
 
 <kc>//OUTPUT</kc>
 BEGINS CPU=12 thread=main / nthreads=2  
@@ -2110,7 +2111,7 @@ ENDS thread=main / nthreads=2
 </pre>
 <hr/>
 <pre>
-fun run2(){
+fun <k>run2()</k>{
 	val <k>myScope</k>=<ks>CoroutineScope(newSingleThreadContext("single")</ks>)
 	<k>myScope.launch</k>{ ioBoundFun(500L) }
 	<ks>runBlocking</ks> { ioBoundFun() }
@@ -2128,12 +2129,8 @@ ioBoundFun | dt=300 STARTS in thread=single / nthreads=3
 <kc>//!!! The main ends before the termination of the last ioBoundFun</kc> 
 </pre>
 
-<hr/> 
-<pre>
-fun run3(){  runBlocking { activate(this)  }  }
+ 
 
-See the code
-</pre>
 </td>
 </tr>
  
@@ -2169,7 +2166,8 @@ in Kotlin): it promises to compute a value which we can wait for or  request at 
 
 </m> 
 <pre>
-fun run3(){ <ks>runBlocking{ activate(this)  }</ks>}
+fun <k>run3()</k>{ <ks>runBlocking{ activate(this)  }</ks>}
+
 <kc>//OUPUT</kc>
 BEGINS CPU=12 thread=main / nthreads=2  
 ioBoundFun | dt=500 STARTS in thread=t1 / nthreads=3  

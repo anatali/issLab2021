@@ -75,8 +75,10 @@ fun closureDemo(){
 	//readCps( { msg -> showAction(msg) } )		//output : myinputcps
 	readCps( { showAction(it) } )		//output : myinputcps
 	
-	println("doJobCps      ----------------------- ")   
-	doJobCps( 10  )
+	println("doJobCpsNoShortcut      ----------------------- ")
+    doJobCpsNoShortcut( 10 )
+    //println("doJobCps      ----------------------- ")
+    //doJobCps( 10  )
 	
  }
 

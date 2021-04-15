@@ -28,6 +28,7 @@ suspend fun ioBoundFun(dt: Long=1000L) : Long{
 	return res
 }
 
+
 //------------------ASYNC -----------------------------
  fun activate(mainscope : CoroutineScope){
 	val myscope = CoroutineScope( newSingleThreadContext("t1"))

@@ -6,8 +6,8 @@ import kotlinx.coroutines.*
 fun workTodo(i : Int) { println("hello $i ${curThread()}") }
 
 suspend fun runInScope(
-	scope:CoroutineScope=CoroutineScope(Dispatchers.IO)
-	//scope:CoroutineScope=CoroutineScope(newSingleThreadContext("MyThCtx")))
+	//scope:CoroutineScope=CoroutineScope(Dispatchers.IO)
+	scope:CoroutineScope=CoroutineScope(newSingleThreadContext("single"))
 ){
 	var job = mutableListOf<Job>()
 	for (i in 1..6){
@@ -21,8 +21,8 @@ suspend fun runInScope(
 fun main() = runBlocking {
 	println("BEGINS CPU=$cpus ${curThread()}")
 	//println("Run in current context ")
-	runInScope( this )
+	//runInScope( this )
 	println("Run in new scope ")
-	//runInScope(   )
+	runInScope(   )
 	println("ENDS ${curThread()}")
 }
