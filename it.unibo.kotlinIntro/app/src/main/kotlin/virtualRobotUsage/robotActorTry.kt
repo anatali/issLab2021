@@ -164,11 +164,11 @@ suspend fun sendApplCommands( scope:CoroutineScope  ) {
 	myrobot.send("{ \"move\": \"r\"  }")
 
 	myrobot.send("{ \"move\": \"w\"  }")
-/*	myrobot.send("{ \"move\": \"l\"  }")
+	myrobot.send("{ \"move\": \"l\"  }")
 	myrobot.send("{ \"move\": \"w\"  }")
 	myrobot.send("{ \"move\": \"w\"  }")
 	myrobot.send("{ \"move\": \"s\"  }")
- */
+
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi

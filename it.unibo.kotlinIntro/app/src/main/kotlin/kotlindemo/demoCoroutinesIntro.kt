@@ -57,8 +57,9 @@ fun manyThreads(){
 //Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
 
 fun manyCoroutines(){
-	//val d = newFixedThreadPoolContext(650,"d")
-	val d = Dispatchers.Default 
+	val d = newSingleThreadContext("single")
+	//val d = newFixedThreadPoolContext(10,"d")
+	//val d = Dispatchers.Default
 	val scope = CoroutineScope( d  ) 
 	thcounter=0
  	scope.launch{ 

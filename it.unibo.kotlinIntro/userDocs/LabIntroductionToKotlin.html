@@ -1471,7 +1471,7 @@ fun main() = runBlocking {
 </pre> </td>
 <td><h3>Example <a href="../app/src/main/kotlin/kotlindemo/demoScopeAndDispatcher.kt" target="code">demoScopeAndDispatcher.kt</a></h3> 
 <pre>
-<kc>//OUTPUT</kc>
+<kc>//OUTPUT ( runInScope( this ) )</kc>
 BEGINS CPU=8 thread=main / nthreads=2  
 Run in current context 
 hello 6 thread=main / nthreads=2  
@@ -1482,6 +1482,7 @@ hello 2 thread=main / nthreads=2
 hello 1 thread=main / nthreads=2  
 ENDS thread=main / nthreads=2  
 ------------------------------
+<kc>//OUTPUT ( runInScope( ) )</kc>
 BEGINS CPU=8 thread=main / nthreads=2  
 Run in new scope 
 hello 6 thread=DefaultDispatcher-worker-8 / nthreads=11  
@@ -1618,6 +1619,16 @@ The size of this thread pool is 64.</li>
 <tr>
 <td>
 <pre>
+var thcounter=0
+var maxNumThread = 0;
+
+fun runBlockThread( delay : Long = 0L ){
+	Thread.sleep( delay )
+	val nt =  Thread.activeCount()
+	if( maxNumThread &lt nt )  maxNumThread = nt
+	thcounter++
+}
+
 val n=10000	<m><kc>//number of Thread or Coroutines to launch</kc></m>
 val k=1000	<m><kc>//times an action is repeated by each Thread or Coroutine</kc></m>
 
@@ -1642,7 +1653,7 @@ fun <ks>manyThreads()</ks>{  <kc>//user-option 4</kc>
 <pre>
 <kc>//OUTPUT</kc>
 BEGINS CPU=4 thread=main | nthreads=2
-manyThreads time= <k>14811</k> counter=<k>9924712</k>
+manyThreads time= <k>14811</k> counter=<k>9924712</k> maxNumThread=100 
 work done in time= 14812
 ENDS thread=main | nthreads=2
 </pre>
@@ -1657,7 +1668,10 @@ ENDS thread=main | nthreads=2
 
 <pre>
 fun <ks>manyCoroutines()</ks>{	<kc>//user-option 5</kc>
-	val <k>scope</k> = CoroutineScope( Dispatchers.Default )
+    //val d = newSingleThreadContext("single")
+	val d = <ks>newFixedThreadPoolContext(10,"d")</k>
+	//val d = Dispatchers.Default
+	val <k>scope</k> = CoroutineScope( d )
 	var thcounter=0
 	
 	val time = measureTimeMillis {
@@ -1674,15 +1688,22 @@ fun <ks>manyCoroutines()</ks>{	<kc>//user-option 5</kc>
 <m>The function  <ks>manyCoroutines</ks> activates <tt>n=10000</tt> coroutines; each coroutine increments a global counter
 <tt>k=1000 times</tt>.</m>
 <pre>
-<kc>//OUTPUT</kc>
+<kc>//OUTPUT (Dispatchers.Default)</kc>
 BEGINS CPU=4 thread=main | nthreads=1
 work done in time= 11
 ENDS thread=main | nthreads=3
->manyCoroutines time= <k>4271</k> thcounter=9478141 <kc>//!!!</kc>
+>manyCoroutines time= <k>4271</k> thcounter=<k>9478141</k>  maxNumThread=14
 </pre>
-<m>The execution time is now much less than the case of using threads.<br/>
-Question: why the final value of the <tt>thcounter</tt> is not <tt>n*k = 10000000</tt>?.
-</m>
+<m>The execution time is now much less than the case of using threads.</m>
+
+<pre>
+<kc>//OUTPUT (newSingleThreadContext)</kc>
+BEGINS CPU=12 thread=main / nthreads=2  
+work done in time= 9
+ENDS   thread=main / nthreads=3  
+>manyCoroutines time= 1397  thcounter=<k>10000000</k>  maxNumThread=<k>3</k> 
+</pre>
+<m>Question: why the final value of the <tt>thcounter</tt> is now <tt>n*k = <k>10000000</k></tt>?.
 </td>
 </tr>
 
@@ -2080,18 +2101,22 @@ fun main(){
 <pre>
 
 fun run1(){ <ks>runBlocking { ioBoundFun() }</ks> }
+
 <kc>//OUTPUT</kc>
 BEGINS CPU=12 thread=main / nthreads=2  
 ioBoundFun | dt=1000 STARTS in thread=main / nthreads=2  
 ioBoundFun | dt=1000 res=100 thread=main / nthreads=2   TIME=1017
 ENDS thread=main / nthreads=2     
+</pre>
 <hr/>
+<pre>
 fun run2(){
 	val <k>myScope</k>=<ks>CoroutineScope(newSingleThreadContext("single")</ks>)
 	<k>myScope.launch</k>{ ioBoundFun(500L) }
 	<ks>runBlocking</ks> { ioBoundFun() }
 	<k>myScope.launch</k>{ ioBoundFun(300L) }
 }
+
 <kc>//OUTPUT</kc>
 BEGINS CPU=12 thread=main / nthreads=2  
 ioBoundFun | dt=1000 STARTS in thread=main / nthreads=3  
@@ -2101,10 +2126,14 @@ ioBoundFun | dt=1000 res=100 thread=main / nthreads=3   TIME=1003
 ENDS thread=main / nthreads=3  
 ioBoundFun | dt=300 STARTS in thread=single / nthreads=3    
 <kc>//!!! The main ends before the termination of the last ioBoundFun</kc> 
-
 </pre>
- 
 
+<hr/> 
+<pre>
+fun run3(){  runBlocking { activate(this)  }  }
+
+See the code
+</pre>
 </td>
 </tr>
  
