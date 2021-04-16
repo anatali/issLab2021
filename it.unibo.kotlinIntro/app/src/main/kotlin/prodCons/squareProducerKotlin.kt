@@ -1,5 +1,6 @@
+//squareProducerKotlin.kt
 package prodCons
-//simpleProducerKotlin.kt
+
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach

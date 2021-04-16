@@ -131,11 +131,12 @@ div.req{
 }    
 
 div.remark{
-	background-color: #FFFC33;     
-    border: 3px solid green;
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
     padding: 15px;
     margin: 10px;
-}  
+	border-radius: 25px;
+}
 
 table, th, td {
   border: 1px solid black;
@@ -164,28 +165,28 @@ of a software system designer should be that of making the code of a robot appli
 <br/><br/> 
 Kotlin actors help us to achieve such a goal, by providing in a quite natural way a <bc>more abstract layer of reasoning</bc>.
  <br/>
-Let us report, as an example,  an actor written in Kotlin that 'provides services' for our 
-<a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="web">VirtualRobot</a>:<br/><br/>
+Let us report, as an example,  an actor written in Kotlin that sends commands to our
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>:<br/><br/>
 
-<center><table style="width:95%">
+<center><table style="width:95%"> 
 <tbody>	
 <tr>
 <td style="width:30%">
-<a href="../app/src/main/kotlin/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
 
 </td>
 <td>
 <center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
-
+<!--
 <m>
 The <ks>virtualRobotSupport</ks> given by the unibo-library 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a> works as a 'bridge'
-between the high-level actor (<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a>)
-and the virtual robot. Thus, it provides the method <em>registerActor</em> <!-- <em>setRobotTarget</em>--> to allow the 'injection' of a reference to the 
+between the high-level actor (<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>)
+and the virtual robot. Thus, it provides the method <em>registerActor</em>  -- <em>setRobotTarget</em> to allow the 'injection' of a reference to the 
 high-level actor.
 </m>
 
-<!--
+
 <m>
 The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport</a> 
 owns a <bc>reference</bc> to the <a href="../app/src/main/kotlin/virtualRobotUsage/robotActor.kt" target="code">robotActor</a>
@@ -199,7 +200,7 @@ whose content gives infornmation about a <tt>collision</tt> (or a sonar value). 
 </tbody>	
 </table></center>
 <br/>
-The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> works as a service able to handle a set
+The <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> works as a service able to handle a set
 of commands represented by Strings. 
 
 Its behavior is <bc>message-driven</bc>, since the actor executes actions related to the (starting part) of the first command received:
@@ -224,7 +225,7 @@ The method <em>sendMsgToRobot</em> is used by the internal <bc>startSensorObserv
 -->
 
 <h3>The Actor as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
-The behavior of the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+The behavior of the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
 can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>:<br/><br/>
 
 <center><table style="width:95%">
@@ -257,8 +258,8 @@ can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine
 <br/>
 Each <bc>state</bc> is mapped into a <bc>function</bc> whose body specifies the <bc>actions</bc> to be executed in that state.
 <br/><br/>
-An example of using the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> can be found in 
-<a href="../src/virtualRobotUsage/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
+An example of using the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> can be found in 
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
 
 <h2>Application messages</h2>
 The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> is a active entity that works as a message-driven 'service'.
@@ -441,26 +442,6 @@ as a <a href="https://en.wikipedia.org/wiki/Translator_(computing)" target="web"
  can be viewed as a sort of
 <a href="https://en.wikipedia.org/wiki/Adapter_pattern" target="web"><bc>adapter</bc></a>  in the message-passing world.
 
-<h2 id="todoBoundary">Work to do (Boundary Walker)</h2>
- 
-We want define an <bc>actor</bc> that manages a virtual robot working in a empty, rectangular room. 
-The virtual robot is initially located in the left-upper corner of the room (<tt>home</tt> location).<br/>
-We want to give to the actor a <bc>goal</bc>: <i>walk along the boundary</i> of the room. 
-<hr/>
-The detailed requirements are:
-<div class="req">
-<ol>
-<li>the actor initially waits for a command <em>start</em>;</li>
-<li>after receiving  <em>start</em>, the actor begins its goal-work, by moving along the room boundary, until it reaches the <tt>home</tt> again;
-<center><img src="./img/boundary.png" alt="boundary" width="20%" ></center><br/> 
-
-</li>
-<li>while doing its goal-work, the actor must be able to react to the commands <em>stop</em>, by 'immediately' stopping the work;
-<li>while stopped, the actor waits for a commands <em>resume</em> to continue its goal-work from the point reached before stopping.
-</ol>
-</div>
-
-For a video, see <tt>FirstActorVR.264</tt>.
  
 <!-- 
 <video controls>

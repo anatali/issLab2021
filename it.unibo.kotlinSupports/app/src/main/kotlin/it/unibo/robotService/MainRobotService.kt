@@ -19,7 +19,7 @@ import kotlinx.coroutines.*
             )
 
             println("==============================================")
-            println("MainStepRobotService | START ${sysUtil.aboutSystem("mainCtxServer")}");
+            println("MainRobotService | START ${sysUtil.aboutSystem("mainCtxServer")}");
             println("==============================================")
 
             val ctxserver = ActorContextTcpServer(
