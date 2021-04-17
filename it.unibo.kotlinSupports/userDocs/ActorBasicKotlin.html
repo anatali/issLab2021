@@ -209,23 +209,79 @@ and  <a href="../app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" t
 <li></li>
 </ol>
 
-<h2>ActorBasicKotlin</h2>
+ 
+
+<h2>A new (abstract) component</h2>
+
+ 
 
 <center><table style="width:95%"> 
 <tbody>	
 <tr>
-<td style="width:30%">
+<td style="width:40%">
+<h3>The (unibo) Actor</h3>
+The abstract class 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+defines the properties of a new abstraction that can be used as the father of application (unibo) actors.
 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>  
+<br/><br/>
+<center><img src="./img/symActor.png" alt="symActor" width="30%"></center>
+<br/><br/>
+This class embeds a KotlinActor  (<ks>kactor</ks>) and exploits it to implement an active entity (<i>coroutine</i>) that interacts with
+other unibo-actors using messages that are representation of objects of class 
+<a href="..//app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>
 <br/><br/>
 
 </td>
 <td>
-<center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin.png" width="100%" height="60%"></center>
+<center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin" width="100%" height="60%"></center>
+
+<br/>
+Requires the specification of the method:
+<pre>
+ abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
+</pre>
+<!--
+called by the method that 
+<pre>
+ override suspend fun handleInput(msg: ApplMessage) {
+    msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
+ }
+</pre>
+-->
  </td>
 </tr>
+
+
+<tr>
+<td >The abstract class 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/AbstractRobotActor.kt" target="code">AbstractRobotActor.kt</a>
+defines the properties of a new abstraction that can be used as the father of unibo-actors that interact with a robot (virtual or real).
+
+ </td>
+<td>
+
+
+<br/>
+Requires the specification of the method:
+<pre>
+ abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
+</pre>
+<!--
+called by the method that 
+<pre>
+ override suspend fun handleInput(msg: ApplMessage) {
+    msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
+ }
+</pre>
+-->
+ </td>
+</tr>
+
+
 </tbody>	
 </table></center>
+
 
 <h3>ActorBasicKotlin</h3>
 

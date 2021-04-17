@@ -189,11 +189,11 @@ div.imagedesc{
     
 <head>
    
-<title>CautiousExplorerActors</title></head>
+<title>RobotService</title></head>
     
 <body>
 <div id="top">
-<h1>Lab ISS | the RobotService<font size="5"></font> </h1>
+<h1>LabIss2021  | the RobotService<font size="5"></font> </h1>
 </div>  
 
 <div class="body"> 
@@ -301,118 +301,7 @@ IssWsSupport.java</a><br/>
  </tbody>
 </table>
 
-<h2>Sprint review: <i>Divide et impera?</i></h2>
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:40%" >
-<h3>Step+Basic: case 0</h3>
-
-</td>
-<td>
-<center><img src="./img/StepAndBasicWrong.png" alt="StepAndBasicWrong" width="50%" ></center> 
-
-</td>
-</tr>
-
-<tr>
-<td><h3>Step+Basic: case 1</h3>
-<pre>
-BasicRobotActor
-
-Accept a
-    msg(engage,dispatch,SENDER,basicRobot,do,N)
-    msg(robotmove,dispatch,SENDER,basicRobot,
-	           <ks>{"robotmove":"MOVE"@ "TIME": 300}</ks>,N)
-
-Observes
-    all the messages (events) sent by the WEnv
-
-Propagates
-    the result of a move to the SENDER (connected TCP client)
-    the WEnv events to the external connected TCP clients
-
-</pre>
-
-</td>
-<td>
-<center><img src="./img/StepAndBasicArch1.png" alt="StepAndBasicArch1" width="80%" ></center> 
-</td>
-</tr>
-
-<tr>
-<td><h3>Step+Basic: case 2</h3>
-</td>
-<td>
-<center><img src="./img/StepAndBasicArch2.png" alt="StepAndBasicArch2" width="90%" ></center> 
-</td>
-</tr>
-
-
-<tr>
-<td><h3>Step+Basic: case 3</h3>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">
-<ks>BasicStepRobotActor	.kt</ks></a>
-</td>
-<td>
-<center><img src="./img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="90%" ></center> 
-<br/><br/>
-
-
-</td>
-</tr>
  
- 
- 
- </tbody>
-</table>
-
-
-  
-<!-- USEFUL
-<table style="width:100%" border="1">
-<tr>
-<td style="width:50%">
-</td>
-<td></td>
-</tr>
-</table>
- QUESTIONS:
-chiarisce cosa il committente intende con 'Optionally'  
-chiarisce cosa il committente intende con 'should remember' 
-chiarisce cosa il committente intende con 'mental map'
-definisce la user story in modo da comprendere TUTTI i requisiti (anche opzionali)
-discute se sia meglio avvalersi di HTTP o delle websocket e perchè
-discute se sia meglio usare il linguaggio di comando cril, aril (o altro) e perchè
-discute se sia meglio muovere il robot in modo random o in modo organizzato 
-discute se il ritorno alla den debba/possa avvenire senza ricalcare il percorso effettuato
-presenta ogni TestPlan collegandolo ad una user story e in modo 'concreto' (non come un insieme di intenti)
-propone diverse tipologie di scene/situazioni per il testing
-individua e propone (motivandola) una lista di priorità per il soddisfacimento dei requisiti 
-presenta una stima dei tempi di realizzazione 
-presenta un elenco delle risorse che sarebbe opportuno avere e/o procurarsi
-presenta una architettura di progetto
-presenta dettagli di progetto che permettono una precisa implementazione da parte di chi legge
-pone in evidenza le parti di funzionamento proattivo e quelle di funzionamento reattivo
-ECCEDE nelle dimensioni del file (al momento > 1600Kb)
-
-
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
- 
-
-</td>
-<td>
-</td>
-</tr>
- </tbody>
-</table>
--->
-	      	
-<br/><br/> 	
-</div>  
 
 </div>  
 <div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
