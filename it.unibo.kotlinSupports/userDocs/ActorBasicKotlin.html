@@ -189,7 +189,7 @@ div.imagedesc{
     
 <head>
    
-<title>KotlinActorSupport</title></head>
+<title>ActorBasicKotlin</title></head>
     
 <body>
 <div id="top">
@@ -219,7 +219,7 @@ and  <a href="../app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" t
 <tbody>	
 <tr>
 <td style="width:40%">
-<h3>The (unibo) Actor</h3>
+<h3>The basic unibo-Actor</h3>
 The abstract class 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
 defines the properties of a new abstraction that can be used as the father of application (unibo) actors.
@@ -241,20 +241,16 @@ Requires the specification of the method:
 <pre>
  abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
 </pre>
-<!--
-called by the method that 
-<pre>
- override suspend fun handleInput(msg: ApplMessage) {
-    msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
- }
-</pre>
--->
+
  </td>
 </tr>
 
 
 <tr>
-<td >The abstract class 
+
+<td >
+<h3>A basic unibo-Actor fot robot applications</h3>
+The abstract class 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/AbstractRobotActor.kt" target="code">AbstractRobotActor.kt</a>
 defines the properties of a new abstraction that can be used as the father of unibo-actors that interact with a robot (virtual or real).
 
@@ -265,16 +261,17 @@ defines the properties of a new abstraction that can be used as the father of un
 <br/>
 Requires the specification of the method:
 <pre>
- abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
+ protected abstract fun <k>msgDriven</k>(infoJson: JSONObject>)
 </pre>
-<!--
-called by the method that 
+
+called by the method that extracts the JSON payload from the 
+received <a href="..//app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage</a>
 <pre>
- override suspend fun handleInput(msg: ApplMessage) {
-    msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
+ override suspend fun <ks>handleInput</ks>(msg: ApplMessage) {
+    <k>msgDriven</k>(JSONObject( <ks>msg.msgContent.replace("@",",") )</ks> ) <k>//HORRIBLE trick (TODO)</k>
  }
 </pre>
--->
+ 
  </td>
 </tr>
 
