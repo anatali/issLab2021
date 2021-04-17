@@ -30,11 +30,12 @@ object InputReader {
             //println("	&&& InputReader  | waitInput ... $conn ${curThread()} "   );
             try {
                 val v = conn.receiveALine()    //blocking ...
-                println("	&&& InputReader  | $v");
+                //println("	&&& InputReader  | $v");
                 if (v != null) {
-                    val msg = ApplMessage.create(v)
-                    //println("InputReader  | msg $msg ");
-                    myrobot.send(msg.msgContent.replace("@",","))	//inform myrobot about the result
+                    val msgAppl = ApplMessage.create(v)
+                    val msg     = msgAppl.msgContent.replace("@",",")
+                    println("InputReader  | send $msg ");
+                    myrobot.send(msg)	//inform myrobot about the result
                 } else {
                     break
                 }

@@ -29,7 +29,7 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
                          scope: CoroutineScope,  wenvAddr: String ="wenv" )
             : AbstractRobotActor( name, wenvAddr, scope ) {
 
-    protected lateinit var timer: TimerActor
+    protected var timer: TimerActor? = null
     protected var plannedMoveTime = 0
     protected var backMsg         = ""
     protected var answer          = ""
@@ -46,7 +46,7 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
         println("$name | TIMEEEEE  $plannedMoveTime / $moveTime ")
         val attemptStepMsg = "{\"robotmove\":\"moveForward\", \"time\": TIME}"
                 .replace("TIME", "" + (plannedMoveTime))
-        timer.send(m)
+        timer?.send(m)
         StartTime = this.currentTime
         println("$name | SENDDDDD $attemptStepMsg")
         support.forward(attemptStepMsg)  //WARNING: possible conflict with BasicRobotActor
@@ -60,18 +60,20 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
     }
 
     suspend fun endStepKo( dtVal : String){
-        timer.kill()
-        println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
-        backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
-        println("$name | answer=$answer backMsg=$backMsg")
-        delay(350)  //back immediately after a collision is not allowed
-        support.forward(backMsg)
-        //no change to currentBasicMove => no result propagation
-        //HYPOTHESIS: a little back move does not raise a collision
-        //delay(350)  //back immediately after a collision is not allowed
-        answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
-        val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
-        ownerActor.send(m)
+
+            timer?.kill()
+            println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
+            backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
+            println("$name | answer=$answer backMsg=$backMsg")
+            delay(350)  //back immediately after a collision is not allowed
+            support.forward(backMsg)
+            //no change to currentBasicMove => no result propagation
+            //HYPOTHESIS: a little back move does not raise a collision
+            //delay(350)  //back immediately after a collision is not allowed
+            answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
+            val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
+            ownerActor.send(m)
+
     }
 
 
@@ -83,10 +85,13 @@ override suspend fun handleInput(msg: ApplMessage) {
     //println(  "$name | AbstractRobotActor handleInput msg=$msg")
     val infoJsonStr = msg.msgContent.replace("@",",")
     val infoJson    = JSONObject(infoJsonStr)
-        if (! infoJson.has("sonarName")) {
+        //if (! infoJson.has("sonarName"))
             println("$name BasicStepRobotActor |  handleInput:$infoJson")
-        }
-        if (infoJson.has(ApplMsgs.stepId)) {
+
+        if (infoJson.has("sonarName")) {
+            val m = MsgUtil.buildDispatch( name,"sonarEvent", infoJsonStr, ownerActor.myname() )
+            ownerActor.send(msg)    //update also the components connected via TCP
+        }else if (infoJson.has(ApplMsgs.stepId)) {
             val time: String = infoJson.getString(ApplMsgs.stepId)
             doStepMove(ApplMsgs.stepId, time);
         }else if (infoJson.has(ActorMsgs.endTimerId)) {

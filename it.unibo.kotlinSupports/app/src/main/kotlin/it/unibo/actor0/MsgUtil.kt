@@ -59,7 +59,7 @@ fun buildEvent( actor: String, msgId : String , content : String  ) : ApplMessag
 suspend fun sendMsg(sender : String, msgId: String, msg: String, destActor: ActorBasicKotlin) {
         val dispatchMsg = buildDispatch(sender, msgId, msg, destActor.name)
         //println("sendMsg $dispatchMsg")
-        destActor.actor.send( dispatchMsg )
+        destActor.kactor.send( dispatchMsg )
     }
 
 @JvmStatic
@@ -71,7 +71,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJa
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @JvmStatic
     suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasicKotlin) {
-        destActor.actor.send(msg)
+        destActor.kactor.send(msg)
     }
 @JvmStatic
     suspend fun sendMsg(msg: ApplMessage, destActor: IJavaActor) {
@@ -85,7 +85,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJa
             msgId: String, msg: String, destActor: ActorBasicKotlin, source:String="unknown") {
         val dispatchMsg = buildDispatch(source, msgId, msg, destActor.name)
         //println("sendMsg $dispatchMsg")
-        destActor.actor.send(dispatchMsg)
+        destActor.kactor.send(dispatchMsg)
     }
 
 

@@ -27,29 +27,31 @@ val MoveJsonCmd : HashMap<String, String> = hashMapOf(
 
 lateinit var robotActorTry: SendChannel<String>
 
-fun connectToRobotViaTcp() : IConnInteraction {
-	println("robotActorTry | connectToRobotViaTcp ${curThread()}" )
-	//try {
-		val fp = FactoryProtocol(null, "TCP", "robot")
-//println("    ---  robotActorTry | fp:$fp")
-		val conn = fp.createClientProtocolSupport("localhost", 8010)
-		println("    --- connectToRobotViaTcp | connected:$conn")
-		InputReader.createInputReader( robotActorTry, conn )
-		return conn
-	//} catch (e: Exception) { println("robotActorTry doInit error $e ") }
-}//connectToRobotViaTcp
-
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun createActor(scope:CoroutineScope) : SendChannel<String> {
-	 robotActorTry = scope.actor {
+	 println("createActor ${kotlindemo.curThread()}")
+	 robotActorTry = scope.actor( capacity = 3 ) {
 			val moves = TripInfo()
 			var state = "working"
          	lateinit var conn: IConnInteraction
 
 			fun doInit(){
-				conn = connectToRobotViaTcp()
- 			}
+				//println("robotActorTry | doInit ${curThread()}" )
+				val fp = FactoryProtocol(null, "TCP", "robot")
+				//println("    ---  robotActorTry | doInit fp:$fp")
+				conn = fp.createClientProtocolSupport("localhost", 8010)
+				println("    ---  doInit | connected:$conn")
+				InputReader.createInputReader( robotActorTry, conn )
+			}
+
+		    fun doCmd( cmd: String ){
+		    	when(cmd){
+		    		"init" -> doInit()
+					"end"  -> state = "end"
+					else   -> println("cmd unknown")
+		    	}
+		    }
 
 			suspend fun doMove(moveShort: String, dest: String) { //Talk with BasicRobotActor
 				try {
@@ -75,13 +77,19 @@ fun createActor(scope:CoroutineScope) : SendChannel<String> {
 				if( endOfMove=="false") println("$move failed")
 			}
 
- 			fun doSensor(msg: String) {
-				println("robotActorTry should handle: $msg")
+ 			suspend fun doSonar(msg: String) {
+				println("robotActorTry doSonar  $msg")
+				robotActorTry.send("{\"move\":\"s\"}" )	//automsg => capacity > 0
+				/*
+				with capacity=0 the actor is not able to elaborate this s-command
+				since it is still executing the previous
+				*/
 			}
 
 			suspend fun doCollision(msg: String) {
 				println("robotActorTry | doCollision $msg  ");
  			}//doCollision
+
 /*
 msg-driven behavior
  */
@@ -89,33 +97,15 @@ msg-driven behavior
 				var msg = channel.receive()
 				println("robotActorTry working receives: $msg ") //
 				try {
-					val cmd = JSONObject(msg)
-					//println("robotActorTry cmd: $cmd ") //
-					var input = ""
-					var move  = ""
-					var endOfMove = "unknown"
-					if( cmd.has("collision")){	//first, to avoid premature check on move
-						input = "collision"
-						move  = cmd.getString("move")
-					}else if( cmd.has("endmove")){
-						input     = "endmove"
-						endOfMove = cmd.getString("endmove")
-						move      = cmd.getString("move")
-					}else if( cmd.has("move")){
-						input = "move"
-						move  = cmd.getString("move")
-					}else if( cmd.has("cmd")){
-						input = cmd.getString("cmd")
-					}
-					//val move = cmd.getString("move")
-					println("robotActorTry input=$input move=$move endOfMove=$endOfMove")
-					when (input) {
-						"init"      -> doInit()
-						"end"       -> { state = "end" }
-						"endmove"   -> doEndMove(endOfMove,move)
-						"sensor"    -> doSensor(msg)
+					val msgJson = JSONObject(msg)
+ 					var input = msgJson.keys().next()
+					println("robotActorTry input: $input ")
+ 					when (input) {
+						"cmd"       -> doCmd (msgJson.getString("cmd") )
+						"move"      -> doMove(msgJson.getString("move"), "stepRobot")
+						"endmove"   -> doEndMove(msgJson.getString("endmove"),msgJson.getString("move"))
+						"sonarName" -> doSonar(msg)
 						"collision" -> doCollision(msg)
-						"move"      -> doMove(move, "stepRobot")
 						else -> println("NO HANDLE for $msg")
 					}
 				} catch (e: Exception) {
@@ -124,6 +114,7 @@ msg-driven behavior
 			}//while
 
 			println("robotActorTry ENDS state=$state")
+		    robotActorTry.close()
 		}//actor
 	return robotActorTry
 }//createActor

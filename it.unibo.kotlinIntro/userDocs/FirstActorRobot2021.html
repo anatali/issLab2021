@@ -21,6 +21,7 @@ a, a:visited, a:active, a:link, a:hover {
     text-decoration: underline;
     color: #545454;
     background-color: transparent;
+	font-size: 93%;
 }
 
 a:hover {
@@ -39,38 +40,23 @@ h1, h2, h3 {
     color: #242424;
     clear: left;
     font: 100% Tahoma, Helvetica, Arial, sans-serif;
-    margin: 10;
-    margin-right: 15px;
     margin-bottom: 0.5em;
     padding-top: 0.5em;
-    border-bottom: 1px solid #242424;
+	border-radius: 10px;
+	padding: 5px;
 }
 
-h1 {
-    font-size: 150%;
-    background-color: #b2c0ff;
+top {
+	width: 100%;
 }
 
-h2 {
-    background-color: #d9fbff;
-    font-size: 110%;
-}
 
-h3 {
-	background-color: #e6ccff;
-    font-size: 80%;
-}
-h4 {
-    background-color: #99ffcc;
-    font-size: 100%;
-	width: 750px;
-}
 #i {
     color: #ff1010;
 }
 tt{
 	font-family: "Arial";
-    font-size: 80%;
+    font-size: 90%;
 	color: #006600;
 }
 em{
@@ -78,49 +64,76 @@ em{
     font-size: 80%;
 	font-weight: bold;
 	border-style:solid;
-	border-color: #ccffff;
-    color: #0033cc;
+	border-color: #abe876;
+    color: #1632cc;
 }
 bc{
 	font-family: "Arial";
-	font-size: 80%;
+	font-size: 90%;
 	font-weight: bold;
     color: #990000;
 	background-color: #fcf8c7;
-}
-k{
-	font-family: "Arial";
-	font-weight: bold;
-    color: #990000;
-	 
 }
 ks{
 	font-family: "Arial";
 	font-weight: bold;
     color: #0000CD	;
-	 
+	font-size: 90%;
 }
 kc{
 	font-family: "Arial";
 	font-weight: bold;
     color: #008000	;
-	 
+	font-size: 90%;
 }
 pre{
-	font-family: "Helvetica";
-	font-size: 70%;
-	background-color: #fcf8c7; 
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
 }
- 
 m{
 	font-family: "Helvetica";
 	line-height: 100%;
  	font-size: 75%;
 }
 div.body{
-	width: 800px;
+	 
     font-size: 18px;
-}    
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
 div.req{
 	background-color: #d9ffb3;
     font-size: 18px;
@@ -128,8 +141,7 @@ div.req{
     border: 3px solid green;
     padding: 15px;
     margin: 10px;
-}    
-
+}
 div.remark{
 	background-color: #E3F2FD;
     border: 1.5px solid #d5f2ed;
@@ -137,10 +149,41 @@ div.remark{
     margin: 10px;
 	border-radius: 25px;
 }
-
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
 }
 </style>
 <head>
@@ -173,7 +216,9 @@ Let us report, as an example,  an actor written in Kotlin that sends commands to
 <tr>
 <td style="width:30%">
 <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
-
+<m>An example of usage is in:
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
+</m>
 </td>
 <td>
 <center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
@@ -199,7 +244,9 @@ whose content gives infornmation about a <tt>collision</tt> (or a sonar value). 
 </tr>
 </tbody>	
 </table></center>
+
 <br/>
+<!--
 The <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> works as a service able to handle a set
 of commands represented by Strings. 
 
@@ -217,50 +264,50 @@ Its behavior is <bc>message-driven</bc>, since the actor executes actions relate
 
 
 
-<!--
+
 <h3>The role of the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></h3>
 
 The method <em>sendMsgToRobot</em> is used by the internal <bc>startSensorObserver coroutine</bc>  to sends message
 (about the <em>robot-sonar</em> data) to the high-level actor.
 -->
 
-<h3>The Actor as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
+<h3>The Actor as <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
 The behavior of the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
-can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>:<br/><br/>
+can be modelled as a a <em>message-driven</em>  
+<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>
+where aeach <bc>state</bc> is mapped into a <em>function</em> whose body specifies the <bc>actions</bc> to be executed in that state.
+<br/><br/>
 
 <center><table style="width:95%">
 <tbody>	
 <tr>
 <td style="width:40%">
 <pre>
-	while( <ks>state == "working"</ks> ){
-		var <ks>msg = channel.receive()</ks>
-		val msgSplitted = msg.split('(')
-		val msgFunctor  = msgSplitted[0]
-		when( msgFunctor ){
-			"<k>init</k>"      -> doInit()
-			"<k>end</k>"       -> doEnd()
-			"<k>sensor</k>"    -> doSensor(msg)
-			"<k>collision</k>" -> doCollision(msg)
-			"<k>move</k>"      -> doMove(msgSplitted)
-			else -> println("NO HANDLE for $msg")
-		}		
- 	}
- 	println("robotActor ENDS state=$state")
+ while( <ks>state == "working"</ks> ){
+   var <ks>msg = channel.receive()</ks>
+   val msgJson = JSONObject(msg)
+   var input   = msgJson.keys().next()
+   when( input ){
+    "<k>cmd</k>"       -> doCmd(msgJson.getString("cmd"))
+    "<k>move</k>"      -> doMove(...)
+    "<k>sonarName</k>" -> doSonar(msg)
+    "<k>collision</k>" -> doCollision(msg)
+    else -> println("NO HANDLE for $msg")
+  }		
+ }
 </pre>
+
 </td>
 <td>
-<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="70%"  ></center><br/>
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="90%"  ></center><br/>
  </td>
 </tr>
 </tbody>	
 </table></center>
 <br/>
-Each <bc>state</bc> is mapped into a <bc>function</bc> whose body specifies the <bc>actions</bc> to be executed in that state.
 <br/><br/>
-An example of using the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> can be found in 
-<a href="../app/src/main/kotlin/robotWithActors/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
 
+<!--
 <h2>Application messages</h2>
 The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> is a active entity that works as a message-driven 'service'.
 However, its behavior is still strongly 
@@ -361,6 +408,24 @@ whose content gives infornmation about a <tt>collision</tt> (or a sonar value).
 </table>
 </center>
 <br/>
+-->
+
+<h2>A new (abstract) component</h2>
+<center><table style="width:95%"> 
+<tbody>	
+<tr>
+<td style="width:30%">
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+(in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>)
+<br/><br/>
+
+</td>
+<td>
+<center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin" width="100%" height="60%"></center>
+ </td>
+</tr>
+</tbody>	
+</table></center>
 
 <h3 id="msgstandard">Towards standards in messaging</h3>
 
