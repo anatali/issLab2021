@@ -21,6 +21,7 @@ a, a:visited, a:active, a:link, a:hover {
     text-decoration: underline;
     color: #545454;
     background-color: transparent;
+	font-size: 93%;
 }
 
 a:hover {
@@ -39,38 +40,23 @@ h1, h2, h3 {
     color: #242424;
     clear: left;
     font: 100% Tahoma, Helvetica, Arial, sans-serif;
-    margin: 10;
-    margin-right: 15px;
     margin-bottom: 0.5em;
     padding-top: 0.5em;
-    border-bottom: 1px solid #242424;
+	border-radius: 10px;
+	padding: 5px;
 }
 
-h1 {
-    font-size: 150%;
-    background-color: #b2c0ff;
+top {
+	width: 100%;
 }
 
-h2 {
-    background-color: #d9fbff;
-    font-size: 110%;
-}
 
-h3 {
-	background-color: #e6ccff;
-    font-size: 80%;
-}
-h4 {
-    background-color: #99ffcc;
-    font-size: 100%;
-	width: 750px;
-}
 #i {
     color: #ff1010;
 }
 tt{
 	font-family: "Arial";
-    font-size: 80%;
+    font-size: 90%;
 	color: #006600;
 }
 em{
@@ -78,49 +64,76 @@ em{
     font-size: 80%;
 	font-weight: bold;
 	border-style:solid;
-	border-color: #ccffff;
-    color: #0033cc;
+	border-color: #abe876;
+    color: #1632cc;
 }
 bc{
 	font-family: "Arial";
-	font-size: 80%;
+	font-size: 90%;
 	font-weight: bold;
     color: #990000;
 	background-color: #fcf8c7;
-}
-k{
-	font-family: "Arial";
-	font-weight: bold;
-    color: #990000;
-	 
 }
 ks{
 	font-family: "Arial";
 	font-weight: bold;
     color: #0000CD	;
-	 
+	font-size: 90%;
 }
 kc{
 	font-family: "Arial";
 	font-weight: bold;
     color: #008000	;
-	 
+	font-size: 90%;
 }
 pre{
-	font-family: "Helvetica";
-	font-size: 70%;
-	background-color: #fcf8c7; 
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
 }
- 
 m{
 	font-family: "Helvetica";
 	line-height: 100%;
  	font-size: 75%;
 }
 div.body{
-	width: 800px;
+	 
     font-size: 18px;
-}    
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
 div.req{
 	background-color: #d9ffb3;
     font-size: 18px;
@@ -128,18 +141,49 @@ div.req{
     border: 3px solid green;
     padding: 15px;
     margin: 10px;
-}    
-
+}
 div.remark{
-	background-color: #FFFC33;     
-    border: 3px solid green;
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
     padding: 15px;
     margin: 10px;
-}  
-
+	border-radius: 25px;
+}
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
 }
 </style>
 <head>
@@ -164,28 +208,30 @@ of a software system designer should be that of making the code of a robot appli
 <br/><br/> 
 Kotlin actors help us to achieve such a goal, by providing in a quite natural way a <bc>more abstract layer of reasoning</bc>.
  <br/>
-Let us report, as an example,  an actor written in Kotlin that 'provides services' for our 
-<a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="web">VirtualRobot</a>:<br/><br/>
+Let us report, as an example,  an actor written in Kotlin that sends commands to our
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>:<br/><br/>
 
-<center><table style="width:95%">
+<center><table style="width:95%"> 
 <tbody>	
 <tr>
 <td style="width:30%">
-<a href="../app/src/main/kotlin/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
-
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
+<m>An example of usage is in:
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
+</m>
 </td>
 <td>
 <center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
-
+<!--
 <m>
 The <ks>virtualRobotSupport</ks> given by the unibo-library 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a> works as a 'bridge'
-between the high-level actor (<a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a>)
-and the virtual robot. Thus, it provides the method <em>registerActor</em> <!-- <em>setRobotTarget</em>--> to allow the 'injection' of a reference to the 
+between the high-level actor (<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>)
+and the virtual robot. Thus, it provides the method <em>registerActor</em>  -- <em>setRobotTarget</em> to allow the 'injection' of a reference to the 
 high-level actor.
 </m>
 
-<!--
+
 <m>
 The <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport</a> 
 owns a <bc>reference</bc> to the <a href="../app/src/main/kotlin/virtualRobotUsage/robotActor.kt" target="code">robotActor</a>
@@ -198,8 +244,10 @@ whose content gives infornmation about a <tt>collision</tt> (or a sonar value). 
 </tr>
 </tbody>	
 </table></center>
+
 <br/>
-The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> works as a service able to handle a set
+<!--
+The <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> works as a service able to handle a set
 of commands represented by Strings. 
 
 Its behavior is <bc>message-driven</bc>, since the actor executes actions related to the (starting part) of the first command received:
@@ -216,50 +264,50 @@ Its behavior is <bc>message-driven</bc>, since the actor executes actions relate
 
 
 
-<!--
+
 <h3>The role of the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a></h3>
 
 The method <em>sendMsgToRobot</em> is used by the internal <bc>startSensorObserver coroutine</bc>  to sends message
 (about the <em>robot-sonar</em> data) to the high-level actor.
 -->
 
-<h3>The Actor as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
-The behavior of the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> 
-can be modelled as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>:<br/><br/>
+<h3>The Actor as <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
+The behavior of the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+can be modelled as a a <em>message-driven</em>  
+<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>
+where aeach <bc>state</bc> is mapped into a <em>function</em> whose body specifies the <bc>actions</bc> to be executed in that state.
+<br/><br/>
 
 <center><table style="width:95%">
 <tbody>	
 <tr>
 <td style="width:40%">
 <pre>
-	while( <ks>state == "working"</ks> ){
-		var <ks>msg = channel.receive()</ks>
-		val msgSplitted = msg.split('(')
-		val msgFunctor  = msgSplitted[0]
-		when( msgFunctor ){
-			"<k>init</k>"      -> doInit()
-			"<k>end</k>"       -> doEnd()
-			"<k>sensor</k>"    -> doSensor(msg)
-			"<k>collision</k>" -> doCollision(msg)
-			"<k>move</k>"      -> doMove(msgSplitted)
-			else -> println("NO HANDLE for $msg")
-		}		
- 	}
- 	println("robotActor ENDS state=$state")
+ while( <ks>state == "working"</ks> ){
+   var <ks>msg = channel.receive()</ks>
+   val msgJson = JSONObject(msg)
+   var input   = msgJson.keys().next()
+   when( input ){
+    "<k>cmd</k>"       -> doCmd(msgJson.getString("cmd"))
+    "<k>move</k>"      -> doMove(...)
+    "<k>sonarName</k>" -> doSonar(msg)
+    "<k>collision</k>" -> doCollision(msg)
+    else -> println("NO HANDLE for $msg")
+  }		
+ }
 </pre>
+
 </td>
 <td>
-<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="70%"  ></center><br/>
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="90%"  ></center><br/>
  </td>
 </tr>
 </tbody>	
 </table></center>
 <br/>
-Each <bc>state</bc> is mapped into a <bc>function</bc> whose body specifies the <bc>actions</bc> to be executed in that state.
 <br/><br/>
-An example of using the <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> can be found in 
-<a href="../src/virtualRobotUsage/robotActorTryUsage.kt" target="code">robotActorTryUsage.kt</a>
 
+<!--
 <h2>Application messages</h2>
 The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> is a active entity that works as a message-driven 'service'.
 However, its behavior is still strongly 
@@ -360,6 +408,24 @@ whose content gives infornmation about a <tt>collision</tt> (or a sonar value).
 </table>
 </center>
 <br/>
+-->
+
+<h2>A new (abstract) component</h2>
+<center><table style="width:95%"> 
+<tbody>	
+<tr>
+<td style="width:30%">
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+(in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>)
+<br/><br/>
+
+</td>
+<td>
+<center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin" width="100%" height="60%"></center>
+ </td>
+</tr>
+</tbody>	
+</table></center>
 
 <h3 id="msgstandard">Towards standards in messaging</h3>
 
@@ -441,26 +507,6 @@ as a <a href="https://en.wikipedia.org/wiki/Translator_(computing)" target="web"
  can be viewed as a sort of
 <a href="https://en.wikipedia.org/wiki/Adapter_pattern" target="web"><bc>adapter</bc></a>  in the message-passing world.
 
-<h2 id="todoBoundary">Work to do (Boundary Walker)</h2>
- 
-We want define an <bc>actor</bc> that manages a virtual robot working in a empty, rectangular room. 
-The virtual robot is initially located in the left-upper corner of the room (<tt>home</tt> location).<br/>
-We want to give to the actor a <bc>goal</bc>: <i>walk along the boundary</i> of the room. 
-<hr/>
-The detailed requirements are:
-<div class="req">
-<ol>
-<li>the actor initially waits for a command <em>start</em>;</li>
-<li>after receiving  <em>start</em>, the actor begins its goal-work, by moving along the room boundary, until it reaches the <tt>home</tt> again;
-<center><img src="./img/boundary.png" alt="boundary" width="20%" ></center><br/> 
-
-</li>
-<li>while doing its goal-work, the actor must be able to react to the commands <em>stop</em>, by 'immediately' stopping the work;
-<li>while stopped, the actor waits for a commands <em>resume</em> to continue its goal-work from the point reached before stopping.
-</ol>
-</div>
-
-For a video, see <tt>FirstActorVR.264</tt>.
  
 <!-- 
 <video controls>

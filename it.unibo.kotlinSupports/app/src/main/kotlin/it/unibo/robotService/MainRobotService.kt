@@ -19,7 +19,7 @@ import kotlinx.coroutines.*
             )
 
             println("==============================================")
-            println("MainStepRobotService | START ${sysUtil.aboutSystem("mainCtxServer")}");
+            println("MainRobotService | START ${sysUtil.aboutSystem("mainCtxServer")}");
             println("==============================================")
 
             val ctxserver = ActorContextTcpServer(
@@ -44,8 +44,8 @@ import kotlinx.coroutines.*
             */
 
             //NOTE THAT WE USE NAMED ARGS
-            //BasicStepRobotActor("stepRobot", ctxserver, wenvAddr="localhost", scope=this)
-            BasicStepRobotActor("stepRobot", ctxserver,  scope=this)
+            BasicStepRobotActor("stepRobot", ctxserver, wenvAddr="localhost", scope=this)
+            //BasicStepRobotActor("stepRobot", ctxserver,  scope=this)
         }
 
     }

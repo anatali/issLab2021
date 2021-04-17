@@ -193,275 +193,13 @@ div.imagedesc{
     
 <body>
 <div id="top">
-<h1>Lab ISS | the project cautiousExplorer with Actors<font size="5"></font> </h1>
+<h1>Lab ISS | the RobotService<font size="5"></font> </h1>
 </div>  
 
 <div class="body"> 
 <h2>Introduction</h2>
-This case-study deals with the design and development of proactive/reactive software systems 
-based on the concept of Actor, as introduced in 
-<a href="../../it.unibo.supports/userDocs/wssupportAsActorJava.html" target="web">
-LabIss2021 | wshttp support with ActorBasicJava observers</a>.
  
-<h2>Requirements</h2>
-
  
-<div class="remark">
-Design and build a software system that allow the robot described in 
-<a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a>
- to exibit the following behaviour:
-<ul>
-<li>the robot lives in a rectangular room, delimited by walls that includes one or more devices (e.g. sonar) able to detect the presence
-of obstacles, including the robot itself;</li>
-<li>the robot has a <ks>den</ks> for refuge, located in the position shown in the picture
-<center><img src="./img/cautiousExplorer.png" alt="cautiousExplorer" width="20%" ></center></li>
-<li>the robot works as an <i>explorer of the room</i>. Starting from its <ks>den</ks>,  the goal of the robot is to
-create a map of the room that records the position of the fixed obstacles. 
-The presence of mobile obstacles in the room is (at the moment) excluded;</li>
-<li>since the robot is <i>'cautious'</i>,  it  returns immediately to the <ks>den</ks> as soon as it finds an obstacle.
-It also stops for a while (e.g. 2 seconds), when it 'feels' that the sonar has detected its presence.
-</li>
- 
-</ul>
-</div>
-
- <h3>Delivery</h3>
-The customer requires to receive at <k>12 noon on April 6</k> a file named 
-<pre>
-cognome_nome_cea.pdf
-</pre>
-including a (synthetic) description of the project  (preceded by a proper analysis of the problem)
-based on components of type <a href="../../it.unibo.supports/userDocs/wssupportAsActorJava.html" target="web">ActorBasicJava</a>
-and a reference to a <i>first working prototype</i> (even with limited capabilities) of the system. 
- 
- <h3>Meeting</h3>
- A SPRINT-review phase with the customer is planned (via Teams) at <k>5.15 pm on April 6</k>.
-
-<h2>Requirement analysis</h2>
- 
-
-
-
-<h2>Problem analysis (divide et impera)</h2>
-
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:60%" >
-<div class="remark">
-<ul>
-<li>1) Exploration requires movements that must be <k>precise</k>, in order to keep a correct position in the map.</li>
-</ul></div> 
-
-Let us introuduce a 'service'  that:
- <m>
-<ul>
-<li>Accepts a  command <k>{"step":"350"}</k> to move ahead the robot for a given time.</li>
-<li>Returns <k>{"stepDone":"ok"},</k> if the move is done with success.</li>
-<li>Returns <k>{"stepFail":"<ks>DT</ks>"},</k> if the move is interrupted by an obstacle after time <ks>DT</ks>. 
-In this case it moves back the robot for time <ks>DT</ks>.
-</li>
-</ul>
-</m>
- 
-</td>
-<td> 
-<center><img src="./img/StepRobotActor.png" alt="StepRobotActor" width="100%" ></center>
-</td>
-</tr>
-
-
-<tr>
-<td>
-<div class="remark">
-<ul>
-<li>2) Return phase : <i>turn180</i> and reverse the path </li>
-
-</ul></div>  
-
-</td>
-<td>
- 
-
-</td>
-</tr>
-
-<tr>
-<td>
-<div class="remark">
-<ul>
-<li>3) Explore strategy:  i) spiral with 'holes' -  ii) spiral with obstacles  iii) ...</li>
-
-</ul></div>  
-
-</td>
-<td>
-<!-- <a href="../app/src/main/java/it/unibo/executor/RunawayActor.java" target="web"><ks>RunawayActor.java</ks></a> -->
-
-</td>
-</tr>
-
-
-<tr> 
-<td>
-<div class="remark">
-<ul>
-<li>4) Handling the sonar : similar to stop/resume user command</li>
-</ul></div>  
-
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
- 
-
- 
-
-<h2>Test plans</h2> 
-
-
-<h2>Project</h2> 
- 
- <table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:60%" >
-<div class="remark">
-<ul>
-<li>1) Exploration requires movements that must be <k>precise</k>, in order to keep a correct position in the map.</li>
-</ul></div> 
-
-Let us introuduce a 'service' 
-<a href="../app/src/main/java/it/unibo/executor/StepRobotActor.java" target="web"><ks>StepRobotActor.java</ks></a> that:<br/><br/>
-<m>
-<ul>
-<li>Accepts a  command <k>{"step":"350"}</k> to move ahead the robot for a given time.</li>
-<li>Returns <k>{"stepDone":"ok"},</k> if the move is done with success.</li>
-<li>Returns <k>{"stepFail":"<ks>DT</ks>"},</k> if the move is interrupted by an obstacle after time <ks>DT</ks>. 
-In this case it moves back the robot for time <ks>DT</ks>.
-</li>
-</ul>
-</m>
-
-In order to implement such a behavior, we introduce a 
-<a href="../app/src/main/kotlin/executors/TimerActor.kt" target="web"><ks>TimerActor.kt</ks></a> that:<br/><br/>
-<m>
-
-<ul>
-<li>Accepts a  command <k>"{\"startTimer\":\"INTERVAL\" }"</k>.</li>
-<li>Sends to its 'owner' actor the answer
-<k>{"endTimer":"ok" } </k> after <ks>INTERVAL</ks> msecs if not killed before</li>
-<li>It does not send any message to its owner if the timer is killed 
-(by the owner) before the given <ks>INTERVAL</ks> expires.  </li>
-</ul>
-</m>
-</td>
-<td>  
-
-<a href="../app/src/main/java/it/unibo/executor/StepRobotActor.java" target="web"><ks>StepRobotActor.java</ks></a>
-
-<br/><br/>
-<center><img src="./img/StepRobotActor.png" alt="StepRobotActor" width="100%" ></center>
-
-
-</td>
-</tr>
-
-<tr>
-
-<td>
-<h3>An actor that executes basic-robot moves</h3>
-Let us introuduce a 'service' 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/BasicRobotActor.kt" target="web">
-<ks>BasicRobotActor.kt</ks></a> that performs a given robot-move and sends the effects to its observers. 
-<br/><br/>
-The robot-move command is the paylaod of a message of type
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/ApplMessage.kt" target="web">
-<ks>ApplMessage.kt</ks></a>.
-<br/><br/>
-<center><img src="./img/BasicRobotActor.png" alt="BasicRobotActor" width="100%" ></center>  
-
-</td>
-<td>The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/BasicRobotActor.kt" target="web">
-<ks>BasicRobotActor.kt</ks></a>:<br/><br/>
-<m>
-<ul>
-<li>Accepts a  command <k>"start"</k> and performs some basic robot-move.</li>
-<li>Accepts a message like the following
-<pre>
-<kc>//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )</kc>
-msg(robotmove,dispatch,caller,basicRobot,
-     {"robotmove":"turnLeft"@ "time": 300},3)
-</pre>
-and performs the specified robot-move (after replacing <tt>@</tt> with ","). 
-<div class="remark">
-<k>Warning</k>This replacement is an horrible trick related to the very naive way to build an ApplMessage from a given string. 
-We will overcome this bad situation later.
-</div></li>
-<li>Sends the effects of the robot-move execution to its observers as 
-the paylaod of a message of type
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/ApplMessage.kt" target="web">
-<ks>ApplMessage.kt</ks></a>
-</li>
-</ul>
-</m>
-</td>
-</tr>
-
-
-
-
-
-<tr>
-<td>
-<div class="remark">
-<ul>
-<li>2) Return phase : <i>turn180</i> and reverse the <k>pathTodo</k> (+ "ll")</li>
-
-</ul></div>  
-
-</td>
-<td>
-<a href="../app/src/main/java/it/unibo/executor/RunawayActor.java" target="web"><ks>RunawayActor.java</ks></a>
-
-</td>
-</tr>
-
-<tr>
-<td>
-<div class="remark">
-<ul>
-<li>3) Explore strategy :  </li>
-
-</ul></div>  
-
-</td>
-<td>
-<!-- <a href="../app/src/main/java/it/unibo/executor/RunawayActor.java" target="web"><ks>RunawayActor.java</ks></a> -->
- 
-</td>
-</tr>
-
-
-
-
-<tr> 
-<td>
-<div class="remark">
-<ul>
-<li>4) Handling the sonar : later</li>
-</ul></div>  
-
-</td>
-<td>
-</td>
-</tr>
-</tbody>
-</table>
-
-
 <h2>Embedding 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/StepRobotActor.kt" target="code">
 <ks>StepRobotActor.kt</ks></a>
@@ -527,7 +265,7 @@ public interface IConnInteraction {
 </m>
 </td>
 <td>
- <center><img src="./img/StepRobotServiceZooming.png" alt="StepRobotServiceZooming" width="100%" ></center>
+ <center><img src="./img/RobotServiceZooming.png" alt="RobotServiceZooming" width="100%" ></center>
   <br/><br/>
  In project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinSupports</a>:
  
@@ -558,34 +296,7 @@ IssWsSupport.java</a><br/>
 </td>
 </tr>
 
-<tr>
-<td><h3>WalkerPath</h3>
-<div class="remark">
-<ul>
-<li>3) Explore strategy : let us introduce an actor that attempts to perform a given sequance of moves.  </li>
-</ul></div> 
-<a href="../app/src/main/java/it/unibo/stepServiceCaller/WalkerPath.java" target="web"><ks>WalkerPath.java</ks></a>:<br/>
-<ul>
-<li>attempts to execute a given sequence of moves (<k>pathTodo</k>)</li>
-<li>if it fails, executes the Return phase</li>
-</ul>
-</td>
-<td>
- <center><img src="./img/WalkerPathArch.png" alt="WalkerPathArch" width="100%" ></center> 
- <br/> <br/>
-
-In project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinSupports</a>:
-<ul>
-<li>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="web"><ks>ApplMessage.kt</ks></a>
-</li>
-<li>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ConnectionReader.kt" target="web"><ks>ConnectionReader.kt</ks></a>
-</li>
-</ul>
-
-</td>
-</tr>
+ 
 
  </tbody>
 </table>
@@ -640,9 +351,14 @@ Propagates
 
 <tr>
 <td><h3>Step+Basic: case 3</h3>
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">
+<ks>BasicStepRobotActor	.kt</ks></a>
 </td>
 <td>
-<center><img src="./img/BasicAndStepArch.png" alt="BasicAndStepArch" width="60%" ></center> 
+<center><img src="./img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="90%" ></center> 
+<br/><br/>
+
+
 </td>
 </tr>
  
@@ -652,17 +368,7 @@ Propagates
 </table>
 
 
-<h2>Testing</h2> 
- 
-
-<h2>Deployment</h2> 
-See <a href="../../it.unibo.kotlinSupports/userDocs/wssupportAsActorKotlin.html#deploy" target="web">
-<ks>LabIss2021 | wshttp support with ActorBasicKotlin observers DEPLOY</ks></a> 
-in the project <a href="../../it.unibo.kotlinSupports" target="web">
-<ks>it.unibo.kotlinSupports</ks></a>
- 
-<h2>Maintenance</h2> 
- 
+  
 <!-- USEFUL
 <table style="width:100%" border="1">
 <tr>
