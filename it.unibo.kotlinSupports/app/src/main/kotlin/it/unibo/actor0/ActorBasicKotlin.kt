@@ -53,7 +53,7 @@ abstract class ActorBasicKotlin(val name: String,
     }
 
     //fun getActor() : SendChannel<ApplMessage> { return actor }
-    abstract suspend protected  fun handleInput(msg : ApplMessage);
+    abstract suspend protected  fun handleInput(msg : ApplMessage)
 
     open fun writeMsgLog( msg: ApplMessage){ //APR2020
         sysUtil.updateLogfile(actorLogfileName, "item($name,nostate,$msg).", dir = msgLogDir)

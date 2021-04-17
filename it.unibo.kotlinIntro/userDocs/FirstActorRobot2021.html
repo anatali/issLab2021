@@ -348,22 +348,41 @@ where each <bc>state</bc> is mapped into a <em>function</em> whose body specifie
 </tbody>	
 </table></center>
 
-In the example, the  KotlinActor <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> handles messages
-in the form of JSON objects. 
+In the version, the  KotlinActor <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> handles messages
+in the form of JSON objects:
+<m>
  <ul>
  <li><k>{"cmd":"<ks>init</ks>"}</k>: starts its job</li>
  <li><k>{"cmd":"<ks>end</ks>"}</k>: terminates its job</li>
- <li><k>{"robotmove":"<ks>MOVE</ks>", "time":T}</k>: sends a move-command to the robot </li>
- <li><k>{"collision" : "...", "move": "..."}</k>: 'reacts' to a <i>collision message</i> sent by the WEnv </li>
+  <li><k>{"collision" : "...", "move": "..."}</k>: 'reacts' to a <i>collision message</i> sent by the WEnv </li>
  <li><k>{"sonarName": "...", "distance": ..., "axis": "..." }</k>: 'reacts' to a message sent by the WEnv  when a <em>scene-sonar</em> detects the robot</li>
-</ul>
-<br/>
+<li><k>{"robotmove":"<ks>MOVE</ks>", "time":T}</k>: sends a move-command to the robot. 
+ </li>
+</ul></m>
+ 
+Since the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a> understand messages represented in
+the form of <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>,
+the move-command must be written in the proper way. For example:
+ <pre>
+ msg(robotmove,dispatch,<ks>actortry</ks>,<em>stepRobot</em>,{"robotmove":"moveForward"@ "time": 350},1)</pre>
+ Note that now:
+ <div class="remark">
+the <b>sender</b> (that names itself as <ks>'actortry'</ks>) has no reference to the component that will handle its message.
+Rather it only knowns that the name of such a <b>destination</b> component is <em>'stepRobot'</em>.<br/>
+The <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a> will receive the message
+sent by the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>
+on the (TCP) port <ks>8010</ks> and will redirect it the component named 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/StepRobotActor.kt" target="code"><em>'stepRobot'</em></a>,
+which is  a specialization of a generic
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>.
 
+ </div>
+<!--
 However, it is quite simple to introduce a version of the  KotlinActor 
 (let us call it <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>)
 that accepts messages in the form of 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> 
-
+-->
 <h3>The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a> </h3>
 
 The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a>
@@ -378,9 +397,10 @@ msg(supportInfo,dispatch,support,observer,<ks>{"sonarName":"sonar2"@"distance":7
 
 
 
+
 The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> sends to the 
 <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a>
-the content of each received message
+<i>the content of each received message</i>
 (a string in JSON form) to the <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>.
 <br/><br/>
 Thus, it works as a (remote) observer of the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>
@@ -393,20 +413,41 @@ of the <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="c
  
 
 <h2>A new (abstract) component</h2>
+The abstract class 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+defines the properties of new abstraction that (from now on) can be used as the father of all our actors.
+
+ 
+
 <center><table style="width:95%"> 
 <tbody>	
 <tr>
 <td style="width:30%">
-<a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" target="code">ActorBasicKotlin.html</a>
-LabIss2021 | ActorBasicKotlin 
-<!--
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a> -->
-(in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>)
+<h3>The (unibo) Actor</h3>
+<br/><br/>
+<center><img src="./img/symActor.png" alt="symActor" width="40%"></center>
+
 <br/><br/>
 
 </td>
 <td>
 <center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin" width="100%" height="60%"></center>
+
+<br/>
+Requires the specification of the method:
+<pre>
+ abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
+</pre>
+<!--
+called by the method that 
+<pre>
+ override suspend fun handleInput(msg: ApplMessage) {
+    msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
+ }
+</pre>
+-->
+See <a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" target="code">LabIss2021 | ActorBasicKotlin.html</a>
+in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>.<br/>
  </td>
 </tr>
 </tbody>	
