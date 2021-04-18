@@ -6,6 +6,7 @@ AbstractRobotActor
 */
 package it.unibo.robotService
 
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.DispatchType
@@ -34,8 +35,7 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
         MoveNameShort["turnLeft"] = "l"
         MoveNameShort["turnRight"] = "r"
         MoveNameShort["alarm"] = "h"
-        println( "$name AbstractRobotActor | init $support ${infoThreads()}")
-        //doForward()
+        //println( "$name AbstractRobotActor | init $support ${infoThreads()}")
     }
 
     //val afterConnect : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ) {... }
@@ -71,7 +71,7 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
     }
 
     protected  fun doMove(moveStep: Char) {
-        println( "$name AbstractRobotActor | doMove $moveStep")
+        colorPrint( "$name AbstractRobotActor | doMove $moveStep", Color.BLUE)
         //scope.launch {
             if (moveStep == 'w') doForward()
             else if (moveStep == 'l') turnLeft()

@@ -1,8 +1,11 @@
 package it.unibo.actor0
 
+import com.andreapivetta.kolor.Color
+import com.andreapivetta.kolor.Kolor
 import it.unibo.interaction.IJavaActor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
+
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -88,7 +91,7 @@ abstract class ActorBasicKotlin(val name: String,
 
 
     open fun terminate() {
-        println("$name | TERMINATES ${this.infoThreads()}")
+        colorPrint("$name | TERMINATES ${this.infoThreads()}")
         kactor.close()
     }
 
@@ -96,11 +99,16 @@ abstract class ActorBasicKotlin(val name: String,
     //---------------------------------------------------------------------------
     //IJavaActor
     override fun myname() : String{ return name }
+
+    suspend fun dosleep(dt: Long){
+        delay(dt)
+    }
+
     //The following op is called by the support that sees the actor as a IJavaActor object
     override fun send(applMessageStr:  String ){    //JSON data from support
         //{"endmove":"true","move":"moveForward"}
         try{
-            //println( "$name | ActorBasicKotlin send from obj to actor $applMessageStr " )
+            //println( "$name | ActorBasicKotlin send from obj to actor $applMessageStr - $scope" )
             val msg = ApplMessage.create(applMessageStr )  //TODO see trick problem with , (@)
             scope.launch{ kactor.send( msg ) }
         }catch( e : Exception) {
@@ -144,7 +152,7 @@ abstract class ActorBasicKotlin(val name: String,
     }
 
     suspend protected  fun updateObservers(info: ApplMessage) {
-        println("$name  updateObservers  ${actorobservers.size}" );
+        //println("$name  updateObservers  ${actorobservers.size}" );
         //actorobservers.forEach{ scope.launch {   it.actor.send(info)  } }
         actorobservers.forEach{   (it as ActorBasicKotlin).kactor.send(info)   }
         //actorobservers.forEach{   println( "${it}" ); MsgUtil.sendMsg(info, it)   }
@@ -155,5 +163,10 @@ abstract class ActorBasicKotlin(val name: String,
         scope.launch{ actorobservers.forEach{   (it as ActorBasicKotlin).kactor.send(info)   } }
     }
 
-
+    fun colorPrint(msg : String, color : Color = Color.LIGHT_MAGENTA ){
+        println(Kolor.foreground("      $msg", color ) )
+    }
+    fun colorPrintNoTab(msg : String, color : Color = Color.BLUE ){
+        println(Kolor.foreground("$msg", color ) )
+    }
 }

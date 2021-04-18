@@ -6,18 +6,33 @@ import it.unibo.actor0.DispatchType;
 import it.unibo.actor0.MsgUtil;
 import it.unibo.actorAppl.AbstracMainForActor;
 import it.unibo.interaction.IJavaActor;
-import it.unibo.robotService.ApplMsgs;
-import it.unibo.robotService.BasicStepRobotActor;
-import it.unibo.supports.NaiveActorKotlinObserver;
+import kotlinx.coroutines.CoroutineScope;
+
 
 
 public class DemoMainJava extends AbstracMainForActor {
+//AbstracMainForActor is provided by the support
+
     @Override
-    public void mainJob() {
-        System.out.println("myscope=" +  getMyscope());
-        ActorBasicKotlin a = new NaiveActorObserverJava(
-                "a",getMyscope(), DispatchType.single,
-                10 );
+    public void mainJob(CoroutineScope scope) {
+        System.out.println("mainJob | scope=" +  scope );
+
+        IJavaActor a1 = new SimpleActorKJava("a1", scope);
+        IJavaActor a2 = new NaiveActorObserverKJava( "a2", scope);
+        a1.registerActor(a2);
+
+        String endMsg        = "{\"endKJava\":\"ok\" }";
+        ApplMessage endKJava = MsgUtil.buildDispatch("main", "endKJava", endMsg, "any");
+
+        String turnLeftMsg = "{\"robotmove\":\"turnLeft\" @ \"time\": 300}";
+        ApplMessage m      = MsgUtil.buildDispatch("main", "move", turnLeftMsg, "a1");
+        System.out.println("mainJob | send " + m );
+        a1.send( m.toString() );
+
+
+        a1.send( endKJava.toString() );
+        a2.send( endKJava.toString() );
+        /*
         IJavaActor b = new BasicStepRobotActor("stepRobot", a, getMyscope(), "localhost");
         String stepMsg = "{\"step\":\"350\" }";
         String turnLeftMsg = "{\"robotmove\":\"turnLeft\" @ \"time\": 300}";
@@ -27,10 +42,12 @@ public class DemoMainJava extends AbstracMainForActor {
         b.send( m.toString() );
 
         b.send( m.toString() );
+         */
     }
 
     public static void main(String[] args){
         DemoMainJava appl = new DemoMainJava();
-        appl.mainJob();
+        appl.startmain();
     }
+
 }

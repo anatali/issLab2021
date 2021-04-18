@@ -14,6 +14,7 @@ The map is a singleton object, managed by mapUtil
 */
 package it.unibo.robotService
 
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
@@ -36,35 +37,45 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
     private var StartTime: Long   = 0L
 
     private var currentBasicMove  = "";
+    private var stepGoingon       = false;
 
     protected suspend fun doStepMove(move: String, time: String){
+        if( stepGoingon || currentBasicMove.length > 0 ){
+            //println("$name | STEPGOINGONNNNNNNNNNNNNNNNNNNN   ")
+            answer = ApplMsgs.stepFailMsg.replace("TIME", "0")
+            val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer, ownerActor.myname() )
+            ownerActor.send(m)
+            return
+        }
+        stepGoingon = true;
         timer = TimerActor("t0", this, scope )
         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                 ActorMsgs.startTimerMsg.replace("TIME", time),"t0")
         val moveTime    = time.toInt()
         plannedMoveTime = moveTime - 70
-        println("$name | TIMEEEEE  $plannedMoveTime / $moveTime ")
+        //println("$name | TIMEEEEE  $plannedMoveTime / $moveTime ")
         val attemptStepMsg = "{\"robotmove\":\"moveForward\", \"time\": TIME}"
                 .replace("TIME", "" + (plannedMoveTime))
         timer?.send(m)
         StartTime = this.currentTime
-        println("$name | SENDDDDD $attemptStepMsg")
+        //println("$name | SENDDDDD $attemptStepMsg")
         support.forward(attemptStepMsg)  //WARNING: possible conflict with BasicRobotActor
     }//doStepMove
 
     fun endStepOk(  ){
-        println("$name | endStepOk   ")
+        stepGoingon = false;
+        //println("$name | endStepOk   ")
         answer = ApplMsgs.stepDoneMsg
         val m = MsgUtil.buildDispatch( name,"stepAnswer", answer, ownerActor.myname() )
         ownerActor.send(m)
     }
 
     suspend fun endStepKo( dtVal : String){
-
+            stepGoingon = false;
             timer?.kill()
-            println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
+            //println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
             backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
-            println("$name | answer=$answer backMsg=$backMsg")
+            colorPrint("$name | answer=$answer backMsg=$backMsg", Color.BLUE)
             delay(350)  //back immediately after a collision is not allowed
             support.forward(backMsg)
             //no change to currentBasicMove => no result propagation
@@ -86,7 +97,7 @@ override suspend fun handleInput(msg: ApplMessage) {
     val infoJsonStr = msg.msgContent.replace("@",",")
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
-            println("$name BasicStepRobotActor |  handleInput:$infoJson")
+            //println("$name BasicStepRobotActor |  handleInput:$infoJson")
 
         if (infoJson.has("sonarName")) {
             val m = MsgUtil.buildDispatch( name,"sonarEvent", infoJsonStr, ownerActor.myname() )
@@ -106,8 +117,12 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val dtVal = this.getDuration(StartTime)
                 this.endStepKo(""+dtVal);
             }
-        }else if (infoJson.has("robotmove")){
-            msgDriven(infoJson);
+        }else if( infoJson.has("robotmove") && currentBasicMove.length > 0 ){ //another move while working
+            colorPrint("$name BasicStepRobotActor |  move already running: let us store the request", Color.LIGHT_MAGENTA)
+            msgQueueStore.add(msg)
+            return
+        }else if( infoJson.has("robotmove") && currentBasicMove.length == 0 ) {
+            msgDriven(infoJson )
         }else if (infoJson.has("endmove")){
             val moveResult = infoJson.getString("endmove")
             //answer only for moves that fail ???
@@ -118,16 +133,26 @@ override suspend fun handleInput(msg: ApplMessage) {
                 currentBasicMove = "";
                 ownerActor.send(m)
             }
+            if( msgQueueStore.size > 0 ){
+                val next    = msgQueueStore.removeAt(0)
+                val msgJson = JSONObject(next.msgContent.replace("@", ",")) //already done=?
+                //this.waitUser("msgQueueStore2")
+                msgDriven( msgJson  )
+            }
+
         }
     }
 
     override fun msgDriven(msgJson: JSONObject) {
-        println("$name BasicStepRobotActor |  %%% msgDriven:$msgJson")
+        //println("$name BasicStepRobotActor |  %%% msgDriven:$msgJson")
+        /*
         if( msgJson.has("robotmove")){
             if( currentBasicMove.length > 0  ){
                 println("$name BasicStepRobotActor |  move already running: let us store the request")
+                msgQueueStore.add(msg)
                 return
-            }
+            }*/
+        if( msgJson.has("robotmove")) {
             currentBasicMove = msgJson.getString("robotmove")
             support.forward(msgJson.toString())
         }

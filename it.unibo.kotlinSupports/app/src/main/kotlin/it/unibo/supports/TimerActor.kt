@@ -1,4 +1,5 @@
 package it.unibo.supports
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.*
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
@@ -15,7 +16,7 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
 
     init {
         this.owner = owner
-        println( "$name  | TimerActor init ${infoThreads()}")
+        colorPrint( "$name  | TimerActor init ${infoThreads()}", Color.LIGHT_MAGENTA )
     }
 
     override suspend fun handleInput(msg: ApplMessage) {

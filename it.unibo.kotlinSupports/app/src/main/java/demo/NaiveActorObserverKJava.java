@@ -10,31 +10,27 @@ import it.unibo.robotService.BasicStepRobotActor;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.channels.SendChannel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class NaiveActorObserverJava extends ActorBasicKotlin{
+public class NaiveActorObserverKJava extends AbstractActorKJava{
 protected IJavaActor b;
-    public NaiveActorObserverJava(@NotNull String name,
-                                  @NotNull CoroutineScope scope,
-                                  @NotNull DispatchType dispatchType,
-                                  int channelSize ) {
-        super(name, scope, dispatchType, channelSize);
-        //this.owner =
-        //b = new BasicStepRobotActor("stepRobot", this, this.getScope(), "localhost");
+    public NaiveActorObserverKJava(@NotNull String name, @NotNull CoroutineScope scope ) {
+        super(name, scope );
     }
 
-    @Nullable
+
+
     @Override
-    protected Object handleInput(@NotNull ApplMessage msg, @NotNull Continuation<? super Unit> $completion) {
-        System.out.println("NaiveActorObserverJava | handleInput" + msg );
-        /*
+    protected void handleMsg(ApplMessage msg, SendChannel<ApplMessage> myactor) {
+        println("NaiveActorObserverKJava | handleInput" + msg );
+         /*
         if( msg.getMsgContent().contains("stepdone")){
             ApplMessage m  = MsgUtil.buildDispatch("main", "robotmove", "turnLeft", "stepRobot");
             b.send( m.toString() );
         }
 
          */
-          return null;
     }
 }

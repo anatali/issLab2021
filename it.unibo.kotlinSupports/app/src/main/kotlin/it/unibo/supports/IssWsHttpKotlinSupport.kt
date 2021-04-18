@@ -12,6 +12,8 @@ Observer of the socket, it is observable in its turn
 ===============================================================
  */
 package it.unibo.supports
+import com.andreapivetta.kolor.Color
+import com.andreapivetta.kolor.Kolor
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.ApplMessageType
 import it.unibo.actor0.sysUtil
@@ -48,13 +50,17 @@ class IssWsHttpKotlinSupport
 
     init{
         wsconnect(  fun(scope, support ) {
-            println("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
+            colorPrint("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
         } )
     }
     companion object { //singleton
         val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
+
+        fun colorPrint(msg : String, color : Color = Color.LIGHT_MAGENTA ){
+            println(Kolor.foreground("      $msg", color ) )
+        }
 
         fun createForHttp(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
             if( ! activeAconnsHttp.containsKey(addr)) {
@@ -66,7 +72,7 @@ class IssWsHttpKotlinSupport
             if( ! activeAconnsWs.containsKey(addr)) {
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
                  activeAconnsWs.put(addr,support)
-                 println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
+                colorPrint("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }
             return activeAconnsWs.get(addr)!!
         }
@@ -76,8 +82,8 @@ class IssWsHttpKotlinSupport
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
                 activeAconnsWs.put(addr,support)
                 //support.wsconnect(  fun(scope, support ) {
-                    println("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
-                println("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
+                colorPrint("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
+                colorPrint("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }
             return activeAconnsWs.get(addr)!!
         }
@@ -135,9 +141,9 @@ class IssWsHttpKotlinSupport
 
     fun disconnect( ){ //IssWsHttpKotlinSupport.disconnect( myWs )
         //see https://square.github.io/okhttp/4.x/okhttp/okhttp3/-web-socket/close/
-        println("IssWsHttpKotlinSupport | disconnecting from $myWs")
+        colorPrint("IssWsHttpKotlinSupport | disconnecting from $myWs")
         var gracefulShutdown = myWs.close(1000, "appl_terminated")
-        println("IssWsHttpKotlinSupport | gracefulShutdown = $gracefulShutdown")
+        colorPrint("IssWsHttpKotlinSupport | gracefulShutdown = $gracefulShutdown")
 
         okHttpClient.dispatcher.executorService.shutdown()
         okHttpClient.connectionPool.evictAll()
@@ -170,20 +176,22 @@ class IssWsHttpKotlinSupport
     }
 //========================================================================
     override fun forward(msgJson: String) {
-        if (connectForWs) myWs.send(msgJson) else println("SORRY: not connected for ws")
+        if (connectForWs) myWs.send(msgJson) else colorPrint("SORRY: not connected for ws", Color.RED)
     }
 
     override fun request(msgJson: String) {
-        if (connectForWs) myWs.send(msgJson) else println("SORRY: not connected for ws")
+        if (connectForWs) myWs.send(msgJson) else colorPrint("SORRY: not connected for ws",  Color.RED)
     }
 
     override fun reply(msgJson: String) {
-        if (connectForWs) myWs.send(msgJson) else println("SORRY: not connected for ws")
+        if (connectForWs) myWs.send(msgJson) else colorPrint("SORRY: not connected for ws",  Color.RED)
     }
 
     override fun requestSynch(msg: String): String {
         TODO("Not yet implemented")
     }
+
+
 
 }//IssWsHttpKotlinSupport
 
