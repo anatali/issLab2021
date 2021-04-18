@@ -1,7 +1,5 @@
 package it.unibo.cautiousExplorer;
 
-import mapRoomKotlin.mapUtil;
-
 import static mapRoomKotlin.mapUtil.*;
 import static mapRoomKotlin.mapUtil.getMapRep;
 

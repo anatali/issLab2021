@@ -74,12 +74,17 @@ dependencies {
 // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
     implementation("javax.websocket:javax.websocket-api:1.1")   //javax.websocket api is only the specification
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9")
+
+//PLANNER aimacode
+// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
+    implementation("com.googlecode.aima-java:aima-core:3.0.0")
+
 //UNIBO
-    //implementation("uniboIssSupport:IssWsHttpJavaSupport")
     implementation("uniboIssSupport:IssActorKotlinRobotSupport:2.0")
     implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")
     implementation("uniboInterfaces:uniboInterfaces")
     implementation("uniboProtocolSupport:unibonoawtsupports")
+    //implementation("uniboplanner20:it.unibo.planner20:1.0")
 }
 
 /*
