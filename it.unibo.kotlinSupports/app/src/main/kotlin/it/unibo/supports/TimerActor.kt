@@ -10,13 +10,12 @@ import kotlinx.coroutines.runBlocking
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
                           : ActorBasicKotlin(name, scope, DispatchType.single) {
-    //private long tout          = 0;
     private var owner: ActorBasicKotlin
     private var killed = false
 
     init {
         this.owner = owner
-        colorPrint( "$name  | TimerActor init ${infoThreads()}", Color.LIGHT_MAGENTA )
+        colorPrint( "$name  | TimerActor init ${infoThreads()}", Color.LIGHT_GRAY )
     }
 
     override suspend fun handleInput(msg: ApplMessage) {
@@ -24,19 +23,18 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
         if (msgJson.has("startTimer")) {
             val tout = msgJson.getString("startTimer").toLong()
             delay( tout )
-            //println("$name | elapsed $tout msecs killed=$killed")
+            colorPrint("$name | elapsed $tout msecs killed=$killed", Color.LIGHT_GRAY)
             if ( !killed ) {
                 val answerMsg =
                         MsgUtil.buildDispatch(name, ActorMsgs.endTimerId, ActorMsgs.endTimerMsg, owner.name )
                 owner.send(answerMsg)
                 terminate()
-                //MsgUtil.sendMsg(name, ActorMsgs.endTimerId, ActorMsgs.endTimerMsg, owner  )
-            } //
+            }
         }
     }
 
     fun kill() {
-        //println( myname + " | kill " );
+        colorPrint( "$name | kill ", Color.LIGHT_GRAY );
         terminate()
         killed = true
     }
