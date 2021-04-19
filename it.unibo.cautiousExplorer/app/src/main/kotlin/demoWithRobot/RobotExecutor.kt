@@ -40,20 +40,12 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
         moves.cleanMovesRepresentation()
         todoPath = ""
     }
-/*
-     override fun doMove(moveStep: Char) {
-        println("$name | doMove ... $moveStep todoPath=$todoPath")
-        if (moveStep == 'w') doStep()
-        else if (moveStep == 'l') turnLeft()
-        else if (moveStep == 'r') turnRight()
-        else if (moveStep == 's') doBackStep()
-    }
-*/
+
     protected fun nextMove() {
         if (todoPath.length > 0) {
             showMap()
-            //waitUser();
             val firstMove = todoPath[0]
+            waitUser("nextMove=$firstMove");
             todoPath = todoPath.substring(1)
             if (firstMove == 'w') {
                 support.removeActor(this) //avoid to receive info form WEnv
@@ -62,7 +54,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                 val applMsg = MsgUtil.buildDispatch(name,"step",stepMsg,"stepper")
                 stepper!!.send(applMsg)
                 curState = State.moving
-            } else { //firstMove == 'l'
+            } else if (firstMove == 'l' || firstMove == 'r')  {
                 curState = State.turning
                 doMove(firstMove)
             }
@@ -85,7 +77,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
             ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
         )
         support.removeActor(this)
-        terminate()
+        //terminate()
         //resetStateVars();
     }
 
@@ -124,10 +116,10 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
             }
             State.endok -> {
                 println("$name | END OK ---------------- ")
-                ownerActor.send(ApplMsgs.executorendokMsg)
+                ownerActor.send(HabitualMsgs.executorOkEnd(name))
                 showMap()
                 support.removeActor(this)
-                terminate()
+                //terminate()
             } //end
             State.endfail -> {
                 println("$name | END KO ---------------- ")
@@ -138,10 +130,11 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                 }
                 showMap()
                 ownerActor.send(
-                    ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
+                     HabitualMsgs.executorFailEnd(name, moves.movesRepresentation)
+                    //ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
                 )
                 support.removeActor(this)
-                terminate()
+                //terminate()
             }
             else -> {
                 println("$name | error - curState = $curState")
@@ -154,7 +147,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
  */
     override fun msgDriven(msgJson: JSONObject) {
         if (msgJson.has(ApplMsgs.executorStartId)) {
-            println("$name | executorStartId:$msgJson")
+            println("$name |  $msgJson")
             todoPath = msgJson.getString(ApplMsgs.executorStartId)
             fsm(ApplMsgs.executorStartId, "")
         } else if (msgJson.has(ApplMsgs.endMoveId)) {

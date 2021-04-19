@@ -1,11 +1,18 @@
 package demoWithRobot
 
+import it.unibo.actor0.ActorBasicKotlin
+import it.unibo.actor0.MsgUtil
+import it.unibo.actor0.sysUtil
+import it.unibo.robotService.ApplMsgs
+import it.unibo.supports.NaiveActorKotlinObserver
 import itunibo.planner.plannerUtil
+import kotlinx.coroutines.runBlocking
 
 //import mapRoomKotlin.plannerUtil
 
 object mainPlanRobotDemo {
-    fun explore() {
+
+    fun explore( robot: ActorBasicKotlin ) {
          try {
             plannerUtil.startTimer()
 
@@ -16,10 +23,15 @@ object mainPlanRobotDemo {
 
                        //plannerUtil.cell0DirtyForHome()
             plannerUtil.setGoal(1, 1);
-            plannerUtil.doPlan()
-                       executeMoves( )
-                       println("===== map after plan for home")
-            plannerUtil.showMap()
+            val actions = plannerUtil.doPlan()
+             val pathTodo = actions.toString()
+             val cmdStr  = ApplMsgs.executorstartMsg
+                 .replace("PATHTODO", pathTodo)
+                 .replace(",","@")
+             println("")
+             val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "any")
+             robot.send(cmd)
+             plannerUtil.showMap()
 
             plannerUtil.getDuration()
 
@@ -29,31 +41,21 @@ object mainPlanRobotDemo {
 
     }
 
-@Throws(Exception::class)
-    internal fun doSomeMOve() {
-    plannerUtil.doMove("w")
-    plannerUtil.doMove("l")
-    plannerUtil.doMove("w")
-    plannerUtil.doMove("w")
-    plannerUtil.doMove("r")
-    plannerUtil.doMove("w")
-    plannerUtil.doMove("l")
-        //mapUtil.doMove("obstacleOnRight")
-    }
  
 
-    @Throws(Exception::class)
-    internal fun executeMoves( ) {
-        var move = plannerUtil.getNextPlannedMove()
-        while ( move.length > 0 ) {
-            plannerUtil.doMove(move)
-			move = plannerUtil.getNextPlannedMove()
-        }
-    }
 
-    @JvmStatic
-    fun main(args: Array<String>) {
-        explore()
-    }
 
+}
+
+
+fun main() {
+    println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
+    runBlocking {
+        //CONFIGURE THE SYSTEM
+        val obs     = NaiveActorKotlinObserver("obs", 0, this)
+        val myrobot = RobotExecutor("myrobot", obs)
+        mainPlanRobotDemo.explore(myrobot)
+        println("ENDS runBlocking ${sysUtil.curThread()}")
+    }
+    println("ENDS main ${sysUtil.curThread()}")
 }
