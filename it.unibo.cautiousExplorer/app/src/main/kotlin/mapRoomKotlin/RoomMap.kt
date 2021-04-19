@@ -61,7 +61,7 @@ class RoomMap private constructor()  { //: Serializable
     open fun isObstacle(xs: String, ys: String): Boolean {
         return isObstacle(xs.toInt(), ys.toInt())
     }
-    
+
     fun isObstacle(x: Int, y: Int): Boolean {
         return try {
             val box = roomMap[y][x] ?: return false

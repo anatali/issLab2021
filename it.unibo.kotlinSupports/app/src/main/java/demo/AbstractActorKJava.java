@@ -18,11 +18,11 @@ public abstract class AbstractActorKJava extends ActorBasicKotlin {
 
     public AbstractActorKJava(@NotNull String name, @NotNull CoroutineScope scope ) {
         super(name, scope, DispatchType.single, 30);
-        colorPrint("CREATED | " + name, Color.CYAN );
+        colorPrint("AbstractActorKJava CREATED | " + name, Color.CYAN );
     }
     public AbstractActorKJava(@NotNull String name, @NotNull CoroutineScope scope, @NotNull DispatchType dispatchType ) {
         super(name, scope, dispatchType, 30);
-        colorPrint("CREATED | " + name, Color.CYAN );
+        colorPrint("AbstractActorKJava CREATED | " + name, Color.CYAN );
     }
 
 /*

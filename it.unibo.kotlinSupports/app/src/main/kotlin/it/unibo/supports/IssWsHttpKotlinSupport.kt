@@ -58,7 +58,7 @@ class IssWsHttpKotlinSupport
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
 
-        fun colorPrint(msg : String, color : Color = Color.LIGHT_MAGENTA ){
+        fun colorPrint(msg : String, color : Color = Color.CYAN ){
             println(Kolor.foreground("      $msg", color ) )
         }
 

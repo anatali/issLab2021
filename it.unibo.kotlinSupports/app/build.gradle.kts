@@ -58,7 +58,7 @@ dependencies {
 //JSON
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115" )
-//COLORS
+//STRING COLORS
     implementation( "com.andreapivetta.kolor:kolor:1.0.0" )
 //UNIBO
     implementation( "uniboInterfaces:uniboInterfaces"  )

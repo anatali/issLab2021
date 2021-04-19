@@ -79,6 +79,9 @@ dependencies {
 // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation("com.googlecode.aima-java:aima-core:3.0.0")
 
+//STRING COLORS
+    implementation( "com.andreapivetta.kolor:kolor:1.0.0" )
+
 //UNIBO
     implementation("uniboIssSupport:IssActorKotlinRobotSupport:2.0")
     implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")

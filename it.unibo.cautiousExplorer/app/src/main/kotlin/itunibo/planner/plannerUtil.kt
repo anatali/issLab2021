@@ -7,6 +7,8 @@ import aima.core.search.framework.problem.GoalTest
 import aima.core.search.framework.problem.Problem
 import aima.core.search.framework.qsearch.GraphSearch
 import aima.core.search.uninformed.BreadthFirstSearch
+import com.andreapivetta.kolor.Color
+import com.andreapivetta.kolor.Kolor
 import mapRoomKotlin.*
 import java.io.PrintWriter
 import java.io.FileWriter
@@ -36,7 +38,13 @@ object plannerUtil {
 
     private var search: BreadthFirstSearch? = null
     private var timeStart: Long = 0
-	
+
+	fun colorPrint(msg : String, color : Color = Color.LIGHT_GRAY ){
+		println(Kolor.foreground("      $msg", color ) )
+	}
+	fun colorPrintNoTab(msg : String, color : Color = Color.BLUE ){
+		println(Kolor.foreground("$msg", color ) )
+	}
 	
 /* 
  * ------------------------------------------------
@@ -47,16 +55,16 @@ object plannerUtil {
     @JvmStatic fun initAI() {
          robotState = RobotState(0, 0, Direction.DOWN)
          search     = BreadthFirstSearch(GraphSearch())
-       println("plannerUtil initAI done")
+	     colorPrint("plannerUtil initAI done")
     }
 
     @JvmStatic
 	fun setGoal( x: Int, y: Int) {
         try {
-             println("setGoal $x,$y while robot in cell: ${getPosX()},${getPosY()} direction=${getDirection()} ") //canMove=$canMove
+			colorPrint("setGoal $x,$y while robot in cell: ${getPosX()},${getPosY()} direction=${getDirection()} ") //canMove=$canMove
             
 			if( RoomMap.getRoomMap().isObstacle(x,y) ) {
-				println("ATTEMPT TO GO INTO AN OBSTACLE ")
+				colorPrint("ATTEMPT TO GO INTO AN OBSTACLE ")
 				currentGoalApplicable = false
  				resetActions()
 				return
@@ -76,36 +84,35 @@ object plannerUtil {
  
     @Throws(Exception::class)
     @JvmStatic fun doPlan(): List<Action>? {
-		println("plannerUtil doPlan  $curGoal" )
+		//colorPrint("plannerUtil doPlan  $curGoal" )
 		if( ! currentGoalApplicable ){
-			println("plannerUtil doPlan cannot go into an obstacle")
+			colorPrint("plannerUtil doPlan cannot go into an obstacle", Color.MAGENTA)
 			actions = listOf<Action>()
 			return actions		//empty list
 		} 
 		
         //val searchAgent: SearchAgent
-        println("plannerUtil doPlan newProblem (A) $curGoal" );
+		colorPrint("plannerUtil doPlan newProblem (A) $curGoal" );
 		val problem = Problem(robotState, Functions(), Functions(), curGoal, Functions())
 
-		println("plannerUtil doPlan problem $problem $search" );
-
+		//colorPrint("plannerUtil doPlan problem $problem $search" );
 		val searchAgent = SearchAgent(problem, search!!)
-		println("plannerUtil doPlan searchAgent $searchAgent " );
+		//colorPrint("plannerUtil doPlan searchAgent $searchAgent " );
 		actions     = searchAgent.actions
-		
-		println("plannerUtil doPlan actions=$actions")
+
+		colorPrint("plannerUtil doPlan actions=$actions")
 		
         if (actions == null || actions!!.isEmpty()) {
-            println("plannerUtil doPlan NO MOVES !!!!!!!!!!!! $actions!!"   )
+			colorPrint("plannerUtil doPlan NO MOVES !!!!!!!!!!!! $actions!!", Color.MAGENTA   )
             if (!RoomMap.getRoomMap().isClean) RoomMap.getRoomMap().setObstacles()
             //actions = ArrayList()
             return null
         } else if (actions!![0].isNoOp) {
-            println("plannerUtil doPlan NoOp")
+			colorPrint("plannerUtil doPlan NoOp", Color.MAGENTA )
             return null
         }
 		
-        //println("plannerUtil doPlan actions=$actions")
+        //colorPrint("plannerUtil doPlan actions=$actions")
 		setActionMoveSequence()
         return actions
     }
@@ -121,7 +128,7 @@ object plannerUtil {
 		val rmap = RoomMap.getRoomMap()
 		for( i in 0..getMapDimX( )-1 ){
 			for( j in 0..getMapDimY( )-1 ){
-				//println( ""+ i + "," + j + " -> " + rmap.isDirty(i,j)   );
+				//colorPrint( ""+ i + "," + j + " -> " + rmap.isDirty(i,j)   );
 				if( rmap.isDirty(i,j)  ){
 					setGoal( i,j )
 					doPlan() 
@@ -163,7 +170,7 @@ object plannerUtil {
         return actions!!
     }
 	@JvmStatic fun existActions() : Boolean{
-		//println("existActions ${actions!!.size}")
+		//colorPrint("existActions ${actions!!.size}")
 		return actions!!.size>0   
 	}
 	@JvmStatic fun resetActions(){
@@ -210,11 +217,11 @@ object plannerUtil {
 	}
 	
 	@JvmStatic fun showCurrentRobotState(){
-		println("===================================================")
+		colorPrint("===================================================")
 		showMap()
 		direction = getDirection()
-		println("RobotPos=(${curPos.first}, ${curPos.second})  direction=$direction  " )  
-		println("===================================================")
+		colorPrint("RobotPos=(${curPos.first}, ${curPos.second})  direction=$direction  " )
+		colorPrint("===================================================")
 	}
 
 /*
@@ -227,8 +234,8 @@ object plannerUtil {
 	@JvmStatic fun mapIsEmpty() : Boolean{return (getMapDimX( )==0 &&  getMapDimY( )==0 ) }
 
 	@JvmStatic fun showMap() {
-		print(RoomMap.getRoomMap().toString())
-		println( robotState )
+		colorPrintNoTab(RoomMap.getRoomMap().toString() + robotState.toString(), Color.BLUE)
+		//colorPrint( robotState.toString(), Color.BLUE )
     }
 	@JvmStatic fun getMap() : String{
 		return RoomMap.getRoomMap().toString() 
@@ -253,15 +260,15 @@ object plannerUtil {
 			val map  = inps.readObject() as RoomMap;
  			println("loadRoomMap = $fname DONE")
 			RoomMap.setRoomMap( map )
-		}catch(e:Exception){			
-			println("loadRoomMap = $fname FAILURE")
+		}catch(e:Exception){
+			colorPrint("loadRoomMap = $fname FAILURE")
 		}
 		mapDims = getMapDims()//Pair(dimMapx,dimMapy)
 	}
 	
  
-	@JvmStatic fun saveRoomMap(  fname : String)   {		
-        println("saveMap in $fname")
+	@JvmStatic fun saveRoomMap(  fname : String)   {
+		colorPrint("saveMap in $fname")
 		val pw = PrintWriter( FileWriter(fname+".txt") )
 		pw.print( RoomMap.getRoomMap().toString() )
 		pw.close()
@@ -343,7 +350,7 @@ object plannerUtil {
                 "downDir"  -> map.put(x, y + 1, Box(true, false, false))
 		   }//when
         } catch (e: Exception) {
-            println("plannerUtil doMove: ERROR:" + e.message)
+		   colorPrint("plannerUtil doMove: ERROR:" + e.message)
         }
     }
 	
@@ -367,7 +374,7 @@ object plannerUtil {
 		 val x       = getPosX()
 		 val y       = getPosY()
 		 setObstacleWall( dir,x,y )
- 		 println("plannerUtil wallFound dir=$dir  x=$x  y=$y dimMapX=$dimMapx dimMapY=$dimMapy");
+		 colorPrint("plannerUtil wallFound dir=$dir  x=$x  y=$y dimMapX=$dimMapx dimMapY=$dimMapy");
 		 doMove( dir.toString() )  //set cell
   		 if( dir == Direction.RIGHT) setWallDown(dimMapx,y)  
 		 if( dir == Direction.UP)    setWallRight(dimMapy,x)
@@ -399,7 +406,7 @@ object plannerUtil {
 	
     @JvmStatic fun getDuration() : Int{
         val duration = (System.currentTimeMillis() - timeStart).toInt()
-		println("DURATION = $duration")
+		colorPrint("DURATION = $duration")
 		return duration
     }
 	

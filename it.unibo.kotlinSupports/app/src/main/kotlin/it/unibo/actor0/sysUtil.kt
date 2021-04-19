@@ -77,5 +77,8 @@ object sysUtil{
 	val connActiveForActor : MutableMap<String,IConnInteraction> = mutableMapOf<String,IConnInteraction>()
 
 
-
+	fun curThread() : String {
+		val nt = Thread.activeCount()
+		return "thread=${Thread.currentThread().name} / nthreads=${nt}  "
+	}
 }//sysUtil

@@ -91,7 +91,7 @@ abstract class ActorBasicKotlin(val name: String,
 
 
     open fun terminate() {
-        colorPrint("$name | TERMINATES ${this.infoThreads()}")
+        colorPrint("$name | TERMINATES ${this.infoThreads()}", Color.BLUE)
         kactor.close()
     }
 
@@ -163,7 +163,7 @@ abstract class ActorBasicKotlin(val name: String,
         scope.launch{ actorobservers.forEach{   (it as ActorBasicKotlin).kactor.send(info)   } }
     }
 
-    fun colorPrint(msg : String, color : Color = Color.LIGHT_MAGENTA ){
+    fun colorPrint(msg : String, color : Color = Color.LIGHT_CYAN ){
         println(Kolor.foreground("      $msg", color ) )
     }
     fun colorPrintNoTab(msg : String, color : Color = Color.BLUE ){

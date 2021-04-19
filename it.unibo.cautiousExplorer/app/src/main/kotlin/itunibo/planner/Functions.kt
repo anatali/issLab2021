@@ -17,7 +17,8 @@ class Functions : ActionsFunction, ResultFunction, StepCostFunction, GoalTest {
     }
     override fun c(arg0: Any, arg1: Action, arg2: Any): Double {
         val action = arg1 as RobotAction
-        return if (action.action == RobotAction.FORWARD || action.action == RobotAction.BACKWARD) MOVECOST else TURNCOST
+        return if (action.action == RobotAction.FORWARD ||
+            action.action == RobotAction.BACKWARD) MOVECOST else TURNCOST
     }
 
     override fun result(arg0: Any, arg1: Action): Any {
@@ -44,7 +45,7 @@ class Functions : ActionsFunction, ResultFunction, StepCostFunction, GoalTest {
     }
 
     override fun isGoalState(arg0: Any): Boolean {
-        println("				isGoalState $arg0")
+        //plannerUtil.colorPrint("Functions - isGoalState $arg0")
         val state = arg0 as RobotState
         return if (getRoomMap().isDirty(state.x, state.y) &&
             ! getRoomMap().isObstacle(state.x, state.y)
