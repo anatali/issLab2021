@@ -89,7 +89,7 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
 
     //StartTime = getCurrentTime()  Duration = getDuration(StartTime)
     //protected fun reactivate(actor: IJavaActor) { actor.send(ApplMsgs.resumeMsg) }
-
+/*
     fun waitUser(prompt: String) {
         print(">>>  $prompt >>>  ")
         val scanner = Scanner(System.`in`)
@@ -99,7 +99,7 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
             e.printStackTrace()
         }
     }
-
+*/
     /*
 ======================================================================================
  */

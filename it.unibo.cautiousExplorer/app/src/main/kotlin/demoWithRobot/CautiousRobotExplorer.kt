@@ -9,6 +9,7 @@ import it.unibo.supports.NaiveActorKotlinObserver
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
+import mapRoomKotlin.mapUtil
 
 class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 
@@ -29,7 +30,6 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
             .replace(", ","")
         val cmdStr  = ApplMsgs.executorstartMsg
             .replace("PATHTODO", pathTodo)
-
         println("$name | cmdStr=$cmdStr")
         val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
         executor.send(cmd)
@@ -37,19 +37,20 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
      }
 
     fun backToHome(){
+
         plannerUtil.setGoal(0, 0);
         val actions = plannerUtil.doPlan()
+        if( actions==null ) return
+        println("$name | backToHome actions=$actions")
         val pathTodo = actions.toString()
             .replace("[","").replace("]","")
             .replace(", ","")
         val cmdStr  = ApplMsgs.executorstartMsg
             .replace("PATHTODO", pathTodo)
-
-        println("$name | cmdStr=$cmdStr")
+        println("$name | backToHome cmdStr=$cmdStr")
         val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
         executor.send(cmd)
         plannerUtil.showMap()
-
     }
 
     override suspend fun handleInput(msg: ApplMessage) {
@@ -57,8 +58,10 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
         if (msg.msgId == "start") {
             initWork()
             explore()
-
         }else if (msg.msgId == "executorend") {
+            plannerUtil.showMap()
+            mapUtil.showMap()
+            //waitUser("backToHome")
             backToHome()
         }
     }
@@ -66,7 +69,7 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
 fun main() {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val cautious    = CautiousRobotExplorer("cautious", this )
+        val cautious = CautiousRobotExplorer("cautious", this )
         cautious.send( HabitualMsgs.startAny("main") )
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }

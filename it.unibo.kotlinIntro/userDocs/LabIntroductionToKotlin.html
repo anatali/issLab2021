@@ -2387,7 +2387,7 @@ fun startProducer(<em>scope</em> : CoroutineScope ){
 }
 
 <k>suspend</k> fun consume(){
-  val v = <ks>simpleProducer</ks>.<k>receive()</k>
+  val v = <ks>simpleProducer</ks>.<k>receive()</k>	<kc/>//Get the first</kc>
   println( "consume- first ${v} at ${System.currentTimeMillis()} in ${curThread()}")
   <ks>simpleProducer</ks>.<k>consumeEach</k> {
      println( "consume- $it at ${System.currentTimeMillis()} in ${curThread()}" )
@@ -2465,7 +2465,7 @@ ENDS main thread=main / nthreads=3
 
 <pre>
 val <ks>context</ks> = newSingleThreadContext("myThread")
-<b>lateinit var</b> producer : <k>ReceiveChannel&lt;Any></k>  
+<b>lateinit var</b> producer : <k>ReceiveChannel&lt;Any></k> <kc>//postponed initialization</kc> 
 
 fun createProducer(<ks>scope</ks> : CoroutineScope ){
     producer = <k><ks>scope</ks>.produce(<ks>context</ks>, capacity=0)</k>{ <kc>//capacity=1</kc>
@@ -2639,10 +2639,10 @@ since a producer is associated with the channel that it <i>sends</i> elements to
 <tr>
 <td style="width:50%"><pre>
 var <k>dispatcher</k>    = <ks>newSingleThreadContext</ks>("single")
-var receiverActor : <k>SendChannel&lt;String>?</k>  = null
+<b>lateinit var</b> <ks>receiverActor</ks> : <k>SendChannel&lt;String></k> 
 
-fun startReceiver( scope : CoroutineScope){
-	receiverActor = <ks>scope.actor&lt;String></ks>(<k>dispatcher</k>, <ks>capacity = 2</ks>) {  
+fun startReceiver( <k>scope</k> : CoroutineScope){
+	receiverActor = <ks><k>scope</k>.actor&lt;String></ks>(<k>dispatcher</k>, <ks>capacity = 2</ks>) {  
 		<kc>//actor is a coroutine builder (dual of produce)</kc>
 		println("receiverActor STARTS")
 		delay(500)	<kc>//time of initialization ...</kc>
@@ -2656,16 +2656,24 @@ fun startReceiver( scope : CoroutineScope){
 	}
 }
 
+<div class="remark"> 
+<em>channel</em> is a reference to the mailbox channel 
+that this coroutine receives messages from.
+It is provided for convenience, so that the code 
+in the coroutine can refer to the channel
+as <em>channel</em> as apposed to <k>this</k>.
+ </div>
+
 fun startSender( ){
-    val myScope = CoroutineScope(<k>dispatcher</k>)
-	<kc>//myScope.launch{	//(1) </kc>
-	val senderActor = <ks>myScope.actor&lt;String></ks>{   <kc>//(2)</kc>
+    val <k>myScope</k> = CoroutineScope(<k>dispatcher</k>)
+	<kc>//</>myScope</k>.launch{	//(1) </kc>
+	val senderActor = <ks><k>myScope</k>.actor&lt;String></ks>{   <kc>//(2)</kc>
 		println("senderActor STARTS")
 		for( i in 1..4 ) {
-			<k>receiverActor.send</k>("Hello$i")
+			<k><ks>receiverActor</ks>.send</k>("Hello$i")
 			println("sender has sent Hello$i ${curThread()}")
 		}
-		<k>receiverActor.send</k>("end")
+		<k><ks>receiverActor</ks>.send</k>("end")
 		println("sender ENDS ${curThread()}" )
  	}
 }
@@ -2680,11 +2688,7 @@ fun main() {
 	println("ENDS main ${curThread()}")
 }
 </pre>
-<div class="remark"><m>
-<em>channel</em> is a reference to the mailbox channel that this coroutine receives messages from.
-It is provided for convenience, so that the code in the coroutine can refer to the channel
-as <em>channel</em> as apposed to <k>this</k>.
-</m></div>
+
 </td>
 <td>
 This example is reported in  <a href="../app/src/main/kotlin/kotlindemo/demoActors.kt" target="code">demoActors.kt</a>.
@@ -2805,10 +2809,10 @@ class <kc>CounterMsg</kc>(
 	val response: <k>CompletableDeferred&ltInt></k>?<ks>=null</ks>){
 }
 
-fun <ks>createCounter</ks>(scope : CoroutineScope):<k>SendChannel&ltCounterMsg></k>{
- val counterActor = <k>scope.actor&lt;<kc>CounterMsg</kc>></k> {
+fun <ks>createCounter</ks>(<k>scope</k> : CoroutineScope):<k>SendChannel&ltCounterMsg></k>{
+ val counterActor = <k>scope</k><ks>.actor&lt;<kc>CounterMsg</kc>></ks> {
 	var k = 0 	<kc>//actor state</kc>
-	for (<k>msg in channel</k>) { <kc>// iterate over incoming messages</kc>
+	for (<k>msg <ks>in</ks> channel</k>) { <kc>// iterate over incoming messages</kc>
 	    if( k>0 && k % 10000 == 0  && msg.cmd != "GET" )
 		<m>println("${msg.cmd} | $k in ${curThread()} full=${channel.isFull}")</m>
 		when ( msg.cmd ) {
@@ -2826,7 +2830,7 @@ fun <ks>createCounter</ks>(scope : CoroutineScope):<k>SendChannel&ltCounterMsg><
 <k>suspend</k> fun <ks>showValue</ks>(<ks>counterActor</ks>: <k>SendChannel&lt;CounterMsg></k>){
     val <em>cVal</em> = <b>CompletableDeferred&lt;Int></b>()
     <ks>counterActor</ks>.<k>send</k>(<kc>CounterMsg</kc><ks>("GET", <em>cVal</em>))</ks>
-    println("Counter VALUE=${<k><em>cVal</em>.await()</k>}")	
+    println("Counter VALUE=${<k><em>cVal</em>.await()</k>}")<kc>//wait for completion</kc>	
 }
 <!--
 <k>suspend</k> fun <ks>sendManyMessages</ks>( <ks>scope</ks> : CoroutineScope, 
@@ -2842,7 +2846,9 @@ fun main(){
 
 	<!-- sendManyMessages(this, <ks>counter</ks>) -->
 	<k>manyRun</k> {<ks>counter</ks>.send( CounterMsg("INC"))}
+	
 	showValue( <ks>counter</ks> )
+	
 	<kc>//TERMINATE THE COUNTER</kc>
 	<ks>counter</ks>.<k>send</k>( CounterMsg(<ks>"END"</ks>) )
 	println("JOIN ${curThread()}")

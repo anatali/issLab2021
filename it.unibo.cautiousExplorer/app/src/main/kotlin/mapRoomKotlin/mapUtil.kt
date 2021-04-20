@@ -4,7 +4,7 @@ import com.andreapivetta.kolor.Color
 import com.andreapivetta.kolor.Kolor
 
 object mapUtil{
- 	private var state = RobotState(0,0,Direction.DOWN)	 
+ 	var state = RobotState(0,0,Direction.DOWN)
 	var map   = RoomMap.getRoomMap()
 
     fun colorPrint(msg : String, color : Color = Color.LIGHT_GRAY ){

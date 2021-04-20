@@ -5,6 +5,7 @@ import com.andreapivetta.kolor.Kolor
 import it.unibo.interaction.IJavaActor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
+import java.util.*
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -95,7 +96,15 @@ abstract class ActorBasicKotlin(val name: String,
         kactor.close()
     }
 
-
+    fun waitUser(prompt: String) {
+        print(">>>  $prompt >>>  ")
+        val scanner = Scanner(System.`in`)
+        try {
+            scanner.nextInt()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
     //---------------------------------------------------------------------------
     //IJavaActor
     override fun myname() : String{ return name }

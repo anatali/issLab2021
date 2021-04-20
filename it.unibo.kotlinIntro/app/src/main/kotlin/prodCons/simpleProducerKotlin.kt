@@ -1,5 +1,5 @@
-package prodCons
 //simpleProducerKotlin.kt
+package prodCons
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
@@ -17,7 +17,7 @@ lateinit var simpleProducer : ReceiveChannel<Int>
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun startProducer( scope: CoroutineScope ) {
-    simpleProducer = scope.produce(dispatcher, capacity=2){ //capacity=1
+    simpleProducer = scope.produce(dispatcher, capacity=0){ //capacity=1
         for (i in 1..4) {
             println("producer PRE -> $i  in  ${curThread()}  ")
             send(i)
@@ -39,11 +39,32 @@ suspend fun consume( ){
 
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
+fun startProducer1( scope: CoroutineScope ) : ReceiveChannel<Int> {
+    return scope.produce(dispatcher, capacity=0){ //capacity=1
+        for (i in 1..4) {
+            println("producer1 PRE -> $i  in  ${curThread()}  ")
+            send(i)
+            println("producer1 POST-> $i at ${System.currentTimeMillis()}   ")
+        }//for
+    }
+}
+@kotlinx.coroutines.ExperimentalCoroutinesApi
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+suspend fun consume1( scope: CoroutineScope ){
+    startProducer1(scope).consumeEach {
+        println( "consume1- $it at ${System.currentTimeMillis()} in ${curThread()}" )
+    }
+}
+
+@kotlinx.coroutines.ExperimentalCoroutinesApi
+@kotlinx.coroutines.ObsoleteCoroutinesApi
 fun main() {
     println("BEGINS CPU=$cpus ${kotlindemo.curThread()}")
     runBlocking {
         startProducer(this)
         consume()
+//MORE FUNCTIONAL STYLE
+        //consume1(this)
         println("ENDS runBlocking ${kotlindemo.curThread()}")
     }
     println("ENDS main ${kotlindemo.curThread()}")

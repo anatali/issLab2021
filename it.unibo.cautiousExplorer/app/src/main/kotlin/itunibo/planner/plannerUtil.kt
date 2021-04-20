@@ -19,7 +19,7 @@ import java.io.FileInputStream
 
 
 object plannerUtil { 
-    private var robotState: RobotState? = null
+    //private var robotState: RobotState? = null
 	private var actions: List<Action>?    = null
  	
     private var curPos    : Pair<Int,Int> = Pair(0,0)
@@ -53,7 +53,7 @@ object plannerUtil {
  */
     @Throws(Exception::class)
     @JvmStatic fun initAI() {
-         robotState = RobotState(0, 0, Direction.DOWN)
+         //robotState = RobotState(0, 0, Direction.DOWN)
          search     = BreadthFirstSearch(GraphSearch())
 	     colorPrint("plannerUtil initAI done")
     }
@@ -61,6 +61,8 @@ object plannerUtil {
     @JvmStatic
 	fun setGoal( x: Int, y: Int) {
         try {
+        	this.showMap()
+
 			colorPrint("setGoal $x,$y while robot in cell: ${getPosX()},${getPosY()} direction=${getDirection()} ") //canMove=$canMove
             
 			if( RoomMap.getRoomMap().isObstacle(x,y) ) {
@@ -93,7 +95,7 @@ object plannerUtil {
 		
         //val searchAgent: SearchAgent
 		colorPrint("plannerUtil doPlan newProblem (A) $curGoal" );
-		val problem = Problem(robotState, Functions(), Functions(), curGoal, Functions())
+		val problem = Problem(mapUtil.state , Functions(), Functions(), curGoal, Functions())
 
 		//colorPrint("plannerUtil doPlan problem $problem $search" );
 		val searchAgent = SearchAgent(problem, search!!)
@@ -190,11 +192,11 @@ object plannerUtil {
 		return curPos
 	}
 
-	@JvmStatic fun getPosX() : Int{ return robotState!!.x }
-    @JvmStatic fun getPosY() : Int{ return robotState!!.y }
+	@JvmStatic fun getPosX() : Int{ return mapUtil.state!!.x }
+    @JvmStatic fun getPosY() : Int{ return mapUtil.state!!.y }
 	
 	@JvmStatic fun getDir()  :  Direction{
-		return robotState!!.direction
+		return mapUtil.state!!.direction
 	}
 
 	@JvmStatic fun getDirection() : String{
@@ -234,7 +236,7 @@ object plannerUtil {
 	@JvmStatic fun mapIsEmpty() : Boolean{return (getMapDimX( )==0 &&  getMapDimY( )==0 ) }
 
 	@JvmStatic fun showMap() {
-		colorPrintNoTab(RoomMap.getRoomMap().toString() + robotState.toString(), Color.BLUE)
+		colorPrintNoTab(RoomMap.getRoomMap().toString() + mapUtil.state.toString(), Color.BLUE)
 		//colorPrint( robotState.toString(), Color.BLUE )
     }
 	@JvmStatic fun getMap() : String{
@@ -313,32 +315,32 @@ object plannerUtil {
                 "w" -> {
                     //map.put(x, y, Box(false, false, false)) //clean the cell
 					map.cleanCell(x,y)
-                    robotState = Functions().result(robotState!!, RobotAction.wAction) as RobotState
+					mapUtil.state = Functions().result(mapUtil.state!!, RobotAction.wAction) as RobotState
                     //map.put(robotState!!.x, robotState!!.y, Box(false, false, true))
 					moveRobotInTheMap()
                 }
                 "s" -> {
-                    robotState = Functions().result(robotState!!, RobotAction.sAction) as RobotState
+					mapUtil.state = Functions().result(mapUtil.state!!, RobotAction.sAction) as RobotState
                     //map.put(robotState!!.x, robotState!!.y, Box(false, false, true))
 					moveRobotInTheMap()
                 }
                 "a"  -> {
-                    robotState = Functions().result(robotState!!, RobotAction.lAction) as RobotState
+					mapUtil.state = Functions().result(mapUtil.state!!, RobotAction.lAction) as RobotState
                     //map.put(robotState!!.x, robotState!!.y, Box(false, false, true))
 					moveRobotInTheMap()
                 }
                 "l" -> {
-                    robotState = Functions().result(robotState!!, RobotAction.lAction) as RobotState
+					mapUtil.state = Functions().result(mapUtil.state!!, RobotAction.lAction) as RobotState
                     //map.put(robotState!!.x, robotState!!.y, Box(false, false, true))
 					moveRobotInTheMap()
                 }
                 "d" -> {
-                    robotState = Functions().result(robotState!!, RobotAction.rAction) as RobotState
+					mapUtil.state = Functions().result(mapUtil.state!!, RobotAction.rAction) as RobotState
                     //map.put(robotState!!.x, robotState!!.y, Box(false, false, true))
 					moveRobotInTheMap()
                 }
                 "r" -> {
-                    robotState = Functions().result(robotState!!, RobotAction.rAction) as RobotState
+					mapUtil.state = Functions().result(mapUtil.state!!, RobotAction.rAction) as RobotState
                     //map.put(robotState!!.x, robotState!!.y, Box(false, false, true))
 					moveRobotInTheMap()
                 }
@@ -355,7 +357,7 @@ object plannerUtil {
     }
 	
 	@JvmStatic fun moveRobotInTheMap(){
-		RoomMap.getRoomMap().put(robotState!!.x, robotState!!.y, Box(false, false, true))
+		RoomMap.getRoomMap().put(mapUtil.state!!.x, mapUtil.state!!.y, Box(false, false, true))
 	}
 	
 /*

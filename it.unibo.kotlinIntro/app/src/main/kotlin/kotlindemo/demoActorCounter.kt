@@ -49,7 +49,22 @@ fun createCounter(scope : CoroutineScope):SendChannel<CounterMsg>{
 suspend fun showValue(counterActor: SendChannel<CounterMsg>){
     val cVal = CompletableDeferred<Int>()
     counterActor.send(CounterMsg("GET", cVal))
-    println("Counter VALUE=${cVal.await()}")
+	println("Counter showValue wait for completion .... ")
+
+	val result = cVal.await()	//wait for completion
+/*
+Awaits for completion of this value without blocking a thread
+and resumes when deferred computation is complete,
+returning the resulting value or throwing the corresponding exception
+if the deferred was cancelled.
+This suspending function is cancellable.
+If the Job of the current coroutine is cancelled or completed
+while this suspending function is waiting, this function
+immediately resumes with CancellationException.
+This function can be used in select invocation with onAwait clause.
+Use isCompleted to check for completion of this deferred value without waiting.
+*/
+    println("Counter VALUE=${result}")
 }
 /*
 suspend fun sendManyMessages( scope : CoroutineScope, 

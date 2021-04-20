@@ -20,7 +20,7 @@ lateinit var producer : ReceiveChannel<Any>
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun createProducer(scope : CoroutineScope ){
     producer =
-    scope.produce(context, 1){
+    scope.produce(context, 0){
 		send(5.2)
 		println( "producer sent 5.2 in ${curThread()}")
 		send("a")

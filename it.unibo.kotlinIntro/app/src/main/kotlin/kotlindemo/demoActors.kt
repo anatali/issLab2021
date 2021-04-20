@@ -10,7 +10,7 @@ lateinit var receiverActor : SendChannel<String>
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun startReceiver( scope : CoroutineScope){
-	receiverActor = scope.actor<String>( dispatcher, capacity = 0) {
+	receiverActor = scope.actor<String>( dispatcher, capacity = 2) {
 		//actor is a coroutine builder (dual of produce)
 		println("receiverActor STARTS")
 		/*

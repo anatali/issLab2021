@@ -20,7 +20,7 @@ The map is a singleton object, managed by mapUtil
 class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                                             : AbstractRobotActor(name, "localhost") {
     protected enum class State {
-        start, nextMove, moving, turning, endok, endfail
+        start, continueJob, moving, turning, endok, endfail
     }
 
     protected var curState = State.start
@@ -45,7 +45,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
         if (todoPath.length > 0) {
             showMap()
             val firstMove = todoPath[0]
-            waitUser("nextMove=$firstMove");
+            //waitUser("nextMove=$firstMove")
             todoPath = todoPath.substring(1)
             if (firstMove == 'w') {
                 support.removeActor(this) //avoid to receive info form WEnv
@@ -55,6 +55,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                 stepper!!.send(applMsg)
                 curState = State.moving
             } else if (firstMove == 'l' || firstMove == 'r')  {
+                //support.registerActor(this) //TODO
                 curState = State.turning
                 doMove(firstMove)
             }
@@ -88,11 +89,17 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
         when (curState) {
             State.start -> {
                 if (move == ApplMsgs.executorStartId) {
-                    stepper = //StepRobotActor("stepper", this)
-                        BasicStepRobotActor(
+                    stepper =   BasicStepRobotActor(
                             "stepper", this, scope, "localhost")
                 }
+                support.registerActor(this)
                 nextMove()
+            }
+            State.continueJob -> {
+                if (move == ApplMsgs.executorStartId) {
+                    support.registerActor(this)
+                    nextMove()
+                }
             }
             State.turning -> {
                 println("$name | turning ... endmove= $endmove")
@@ -100,13 +107,12 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                 if (endmove == "true") {
                     updateTripInfo(moveShort)
                     showMap()
-                    //waitUser("turning");
                     nextMove()
                 } else println("$name | FATAL ERROR ")
             } //turning
             State.moving -> {
                 println("$name | moving ... $move")
-                support.registerActor(this)
+                //support.registerActor(this)
                 if (move == ApplMsgs.stepDoneId) {
                     updateTripInfo("w")
                     nextMove()
@@ -119,8 +125,8 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                 ownerActor.send(HabitualMsgs.executorOkEnd(name))
                 showMap()
                 support.removeActor(this)
-                //terminate()
-            } //end
+                curState = State.continueJob
+            } //endok
             State.endfail -> {
                 println("$name | END KO ---------------- ")
                 try {
@@ -134,6 +140,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                     //ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
                 )
                 support.removeActor(this)
+                curState = State.continueJob
                 //terminate()
             }
             else -> {
