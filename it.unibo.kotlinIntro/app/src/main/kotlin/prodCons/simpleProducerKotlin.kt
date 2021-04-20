@@ -17,7 +17,7 @@ lateinit var simpleProducer : ReceiveChannel<Int>
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun startProducer( scope: CoroutineScope ) {
-    simpleProducer = scope.produce(dispatcher, capacity=0){ //capacity=1
+    simpleProducer = scope.produce(dispatcher, capacity=2){ //capacity=1
         for (i in 1..4) {
             println("producer PRE -> $i  in  ${curThread()}  ")
             send(i)
@@ -31,8 +31,10 @@ fun startProducer( scope: CoroutineScope ) {
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 suspend fun consume( ){
     val v = simpleProducer.receive()  //the first
+    //delay(50)
     println( "consume- first ${v} at ${System.currentTimeMillis()} in ${curThread()}" )
     simpleProducer.consumeEach {
+        //delay(50)
         println( "consume- $it at ${System.currentTimeMillis()} in ${curThread()}" )
     }
 }
@@ -61,10 +63,11 @@ suspend fun consume1( scope: CoroutineScope ){
 fun main() {
     println("BEGINS CPU=$cpus ${kotlindemo.curThread()}")
     runBlocking {
-        startProducer(this)
-        consume()
+        //startProducer(this)
+        //consume()
 //MORE FUNCTIONAL STYLE
-        //consume1(this)
+        val myscope = CoroutineScope(dispatcher)
+        consume1(myscope)
         println("ENDS runBlocking ${kotlindemo.curThread()}")
     }
     println("ENDS main ${kotlindemo.curThread()}")

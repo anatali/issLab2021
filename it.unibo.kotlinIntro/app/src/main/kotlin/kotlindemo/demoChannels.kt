@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 suspend fun channelTest( scope : CoroutineScope ){
 val n = 5
-val channel = Channel<Int>(2)
+val channel = Channel<Int>(1)
 		println( channel )	//ArrayChannel capacity=2 size=0
 	
         val sender = scope.launch {
@@ -24,6 +24,7 @@ val channel = Channel<Int>(2)
 		val receiver = scope.launch {
             for( i in 1..n ) {
                 val v = channel.receive()
+                delay(50)
                 println("RECEIVER | receives $v in ${curThread()}")
             }
         }
@@ -48,7 +49,7 @@ suspend fun channelTestMany( scope : CoroutineScope ){
         }
     }
 
-    delay(500) //The receiver starts after a while ...
+    //delay(500) //The receiver starts after a while ...
 
     val receiver1 = scope.launch {
         for( i in 1..n ) {
@@ -69,8 +70,8 @@ suspend fun channelTestMany( scope : CoroutineScope ){
 fun main() {
     println("BEGINS CPU=$cpus ${curThread()}")
     runBlocking {
-        //channelTest(this)
-        channelTestMany(this)
+        channelTest(this)
+        //channelTestMany(this)
         println("ENDS runBockig ${curThread()}")
      }
     println("ENDS main ${curThread()}")
