@@ -1,12 +1,11 @@
-package itunibo.planner
+/*
+mainPlanDemo
+ */
 
-import mapRoomKotlin.mapUtil
-//import mapRoomKotlin.plannerUtil
+package itunibo.planner
 
 object mainPlanDemo {
     fun demo() {
-        println("===== demo")
-
         try {
 			plannerUtil.startTimer()
 
@@ -25,8 +24,6 @@ object mainPlanDemo {
             executeMoves( )			
             println("===== map after plan no goal")
             plannerUtil.showMap()
-
-
                        //plannerUtil.cell0DirtyForHome()
                        plannerUtil.setGoal(0,0);
                        plannerUtil.doPlan()

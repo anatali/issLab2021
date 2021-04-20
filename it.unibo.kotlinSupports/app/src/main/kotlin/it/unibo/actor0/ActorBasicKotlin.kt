@@ -118,7 +118,7 @@ abstract class ActorBasicKotlin(val name: String,
         //{"endmove":"true","move":"moveForward"}
         try{
             //println( "$name | ActorBasicKotlin send from obj to actor $applMessageStr - $scope" )
-            val msg = ApplMessage.create(applMessageStr )  //TODO see trick problem with , (@)
+            val msg = ApplMessage.create(applMessageStr )
             scope.launch{ kactor.send( msg ) }
         }catch( e : Exception) {
             println("$name |  send $applMessageStr NOT ApplMessage")

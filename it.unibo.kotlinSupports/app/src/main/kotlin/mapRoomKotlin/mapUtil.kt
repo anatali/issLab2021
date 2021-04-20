@@ -1,7 +1,7 @@
 package mapRoomKotlin
 
 object mapUtil{
- 	private var state = RobotState(0,0,Direction.DOWN)	 
+ 	var state = RobotState(0,0,Direction.DOWN)
 	var map   = RoomMap.getRoomMap()
 
 

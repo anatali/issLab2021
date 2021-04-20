@@ -106,7 +106,7 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
     //Transform an ApplMessage into a JSONObject by using the HORRIBLE trick
     override suspend fun handleInput(msg: ApplMessage) {
         //println(  "$name | AbstractRobotActor handleInput msg=$msg")
-        msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
+        msgDriven(JSONObject( msg.msgContent ) ) //.replace("@",",") HORRIBLE trick
     }
 
     protected abstract fun msgDriven(infoJson: JSONObject)

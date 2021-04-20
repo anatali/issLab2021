@@ -1,16 +1,17 @@
+/*
+RobotExecutor.kt
+
+An unibo-actor that executes a given sequence of moves (todoPath)
+and returns to its ownerActor
+ */
 package demoWithRobot
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.MsgUtil
-import mapRoomKotlin.mapUtil.doMove
-import mapRoomKotlin.mapUtil.showMap
-import mapRoomKotlin.mapUtil.setObstacle
-import it.unibo.cautiousExplorer.RobotMovesInfo
-import it.unibo.executor.ApplMsgs
-import it.unibo.interaction.IJavaActor
 import it.unibo.robotService.AbstractRobotActor
+import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
-import kotlinx.coroutines.delay
+import mapRoomKotlin.TripInfo
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -24,38 +25,33 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
     }
 
     protected var curState = State.start
-    protected var moves = RobotMovesInfo(false)
+    //protected var moves = RobotMovesInfo(false)
     protected var todoPath = ""
     protected var stepMsg = "{\"ID\":\"350\" }".replace("ID", ApplMsgs.stepId)
     protected var stepper: ActorBasicKotlin? = null
+    protected var moves  = TripInfo()
 
 
-    protected fun updateTripInfo(move: String?) {
-        moves.updateMovesRep(move)
-        doMove(move!!)
-    }
 
     protected fun resetStateVars() {
         curState = State.start
-        moves.cleanMovesRepresentation()
+        //moves.cleanMovesRepresentation()
         todoPath = ""
     }
 
     protected fun nextMove() {
         if (todoPath.length > 0) {
-            showMap()
+            moves.showMap()
             val firstMove = todoPath[0]
             //waitUser("nextMove=$firstMove")
             todoPath = todoPath.substring(1)
             if (firstMove == 'w') {
-                support.removeActor(this) //avoid to receive info form WEnv
-                //IJavaActor stepper = new StepRobotActor("stepper", this );
-                //delay(300) //give time to open ws
+                //support.removeActor(this) //avoid to receive info form WEnv
                 val applMsg = MsgUtil.buildDispatch(name,"step",stepMsg,"stepper")
                 stepper!!.send(applMsg)
                 curState = State.moving
             } else if (firstMove == 'l' || firstMove == 'r')  {
-                //support.registerActor(this) //TODO
+                support.registerActor(this) //TODO
                 curState = State.turning
                 doMove(firstMove)
             }
@@ -67,15 +63,15 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
 
     protected fun obstacleFound() {
         println("$name | END KO ---------------- ")
-        showMap()
+        moves.showMap()
         try {
-            setObstacle()
+            moves.setObstacle()
         } catch (e: Exception) { //wall
             println("$name | outside the map " + e.message)
         }
-        showMap()
+        moves.showMap()
         ownerActor.send(
-            ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
+            ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.getJourney())
         )
         support.removeActor(this)
         //terminate()
@@ -89,8 +85,7 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
         when (curState) {
             State.start -> {
                 if (move == ApplMsgs.executorStartId) {
-                    stepper =   BasicStepRobotActor(
-                            "stepper", this, scope, "localhost")
+                    stepper = BasicStepRobotActor("stepper", this, scope, "localhost")
                 }
                 support.registerActor(this)
                 nextMove()
@@ -102,41 +97,42 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
                 }
             }
             State.turning -> {
-                println("$name | turning ... endmove= $endmove")
+                println("$name | turning ... $move endmove= $endmove")
                 val moveShort = MoveNameShort[move]
                 if (endmove == "true") {
-                    updateTripInfo(moveShort)
-                    showMap()
+                    moves.updateMovesRep(moveShort!!)
+                    moves.showMap()
                     nextMove()
                 } else println("$name | FATAL ERROR ")
             } //turning
             State.moving -> {
                 println("$name | moving ... $move")
-                //support.registerActor(this)
+                support.registerActor(this)
                 if (move == ApplMsgs.stepDoneId) {
-                    updateTripInfo("w")
+                //if (move == "moveForward") {
+                    moves.updateMovesRep("w")
                     nextMove()
-                } else {
+                } else if (move == ApplMsgs.stepFailId) {
                     obstacleFound()
                 }
             }
             State.endok -> {
                 println("$name | END OK ---------------- ")
-                ownerActor.send(HabitualMsgs.executorOkEnd(name))
-                showMap()
+                ownerActor.send(ApplMsgs.executorOkEnd(name))
+                moves.showMap()
                 support.removeActor(this)
                 curState = State.continueJob
             } //endok
             State.endfail -> {
                 println("$name | END KO ---------------- ")
                 try {
-                    setObstacle()
+                    moves.setObstacle()
                 } catch (e: Exception) { //wall
                     println("$name | outside the map " + e.message)
                 }
-                showMap()
+                moves.showMap()
                 ownerActor.send(
-                     HabitualMsgs.executorFailEnd(name, moves.movesRepresentation)
+                    ApplMsgs.executorFailEnd(name, moves.getJourney())
                     //ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.movesRepresentation)
                 )
                 support.removeActor(this)
@@ -154,17 +150,19 @@ class RobotExecutor (name: String, protected var ownerActor: ActorBasicKotlin)
  */
     override fun msgDriven(msgJson: JSONObject) {
         if (msgJson.has(ApplMsgs.executorStartId)) {
-            println("$name |  $msgJson")
+            println("$name | msgDriven  $msgJson")
             todoPath = msgJson.getString(ApplMsgs.executorStartId)
             fsm(ApplMsgs.executorStartId, "")
         } else if (msgJson.has(ApplMsgs.endMoveId)) {
-            println("$name | endMoveId:$msgJson")
-            fsm(msgJson.getString("move"), msgJson.getString(ApplMsgs.endMoveId))
+            //println("$name | msgDriven endMoveId:$msgJson")
+            val moveDone = msgJson.getString("move")
+            if( moveDone == "moveForward")  return  //IGNORE, since we look at stepDone or stepFail
+            else fsm(moveDone, msgJson.getString(ApplMsgs.endMoveId))
         } else if (msgJson.has(ApplMsgs.stepDoneId)) {
-            println("$name | stepDoneId:$msgJson")
+            println("$name | msgDriven stepDoneId:$msgJson")
             fsm(ApplMsgs.stepDoneId, "")
         } else if (msgJson.has(ApplMsgs.stepFailId)) {
-            println("$name | stepFailed:$msgJson")
+            println("$name | msgDriven stepFailed:$msgJson")
             fsm(ApplMsgs.stepFailId, msgJson.getString(ApplMsgs.stepFailId))
         }
     }

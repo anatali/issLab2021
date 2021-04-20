@@ -1,5 +1,7 @@
 package it.unibo.actor0
 
+import com.andreapivetta.kolor.Color
+import com.andreapivetta.kolor.Kolor
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newFixedThreadPoolContext
@@ -40,6 +42,13 @@ object sysUtil{
 	}
 	fun updateLogfile( fname: String, msg : String, dir : String = "logs" ){
 		if( logMsgs ) File("$userDirectory/$dir/$fname").appendText("${msg}\n")
+	}
+//-----------------------------------------
+	fun colorPrint(msg : String, color : Color = Color.LIGHT_CYAN ){
+		println(Kolor.foreground("      $msg", color ) )
+	}
+	fun colorPrintNoTab(msg : String, color : Color = Color.BLUE ){
+		println(Kolor.foreground("$msg", color ) )
 	}
 
 //-----------------------------------------

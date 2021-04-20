@@ -5,7 +5,6 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
-import it.unibo.supports.NaiveActorKotlinObserver
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
@@ -70,7 +69,7 @@ fun main() {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
         val cautious = CautiousRobotExplorer("cautious", this )
-        cautious.send( HabitualMsgs.startAny("main") )
+        cautious.send( ApplMsgs.startAny("main") )
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
     println("ENDS main ${sysUtil.curThread()}")

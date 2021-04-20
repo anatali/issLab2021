@@ -97,7 +97,7 @@ class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: Coro
  */
 override suspend fun handleInput(msg: ApplMessage) {
     //println(  "$name | AbstractRobotActor handleInput msg=$msg")
-    val infoJsonStr = msg.msgContent.replace("@",",")
+    val infoJsonStr = msg.msgContent //.replace("@",",")
     val infoJson    = JSONObject(infoJsonStr)
         if (! infoJson.has("sonarName")) println("$name StepRobotActor |  handleInput:$infoJson")
         if (infoJson.has(ApplMsgs.stepId)) {

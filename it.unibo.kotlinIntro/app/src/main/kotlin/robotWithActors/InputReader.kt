@@ -6,8 +6,10 @@ InputReader
  */
 package robotWithActors
 
+import com.andreapivetta.kolor.Color
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.sysUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.SendChannel
@@ -30,17 +32,17 @@ object InputReader {
             //println("	&&& InputReader  | waitInput ... $conn ${curThread()} "   );
             try {
                 val v = conn.receiveALine()    //blocking ...
-                //println("	&&& InputReader  | $v");
+                sysUtil.colorPrint("InputReader  | $v", Color.BLUE);
                 if (v != null) {
                     val msgAppl = ApplMessage.create(v)
-                    val msg     = msgAppl.msgContent.replace("@",",")
-                    println("InputReader  | send $msg ");
+                    val msg     = msgAppl.msgContent //.replace("@",",")
+                    sysUtil.colorPrint("InputReader  | send $msg ", Color.BLUE);
                     myrobot.send(msg)	//inform myrobot about the result
                 } else {
                     break
                 }
             }catch( e : Exception){
-                println("	&&& InputReader  | ERROR: ${e} ")
+                sysUtil.colorPrint("InputReader  | ERROR: ${e} ")
                 break
             }
         } //while

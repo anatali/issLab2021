@@ -7,6 +7,7 @@ ApplMsgs
 package it.unibo.robotService
 
 import it.unibo.actor0.ApplMessage
+import it.unibo.actor0.MsgUtil
 
 /*
 {"robotmove":"MOVE", "time":T}
@@ -44,7 +45,9 @@ object ApplMsgs {
 
     const val endMoveId = "endmove"
     val endMoveMsg = "{\"ID\":\"ENDMOVE\" }".replace("ID", endMoveId)
- //
+    const val executorEndId = "executorend"
+
+    //
     const val runawyEndId = "runawayend"
     val runawyEndMsg = "{\"ID\":\"RESULT\" }".replace("ID", runawyEndId)
     const val runawyStartId = "runawaystart"
@@ -62,10 +65,38 @@ object ApplMsgs {
     val robotMovecmdMsg = "{\"ID\":\"MOVE\" }".replace("ID", robotMovecmdId)
 
 
-    val demoMsgAppl =
-        ApplMessage("cmd","dispatch","demo","obs","todo","1")
-    //val robotcmdMsgAppl =
-        //ApplMessage("robotcmd","dispatch",SENDER,RECEIVER,CMD,"1")
+    val startMsgStr = "{\"start\":\"ok\" }"
+    val endMsgStr = "{\"end\":\"ok\" }"
+
+
+    fun stepRobot_l(caller:String) : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "move", turnLeftMsg, "stepRobot")
+    }
+    fun stepRobot_r(caller:String) : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "move", turnRightMsg, "stepRobot")
+    }
+    fun stepRobot_step(caller:String) : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "step", stepMsg, "stepRobot")
+    }
+
+    fun startAny( caller:String) : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "start", startMsgStr, "any")
+    }
+    fun endAny( caller:String) : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "start", endMsgStr, "any")
+    }
+
+    fun executorOkEnd( caller:String ) :  ApplMessage {
+        return MsgUtil.buildDispatch(caller, executorEndId, executorendokMsg, "any")
+    }
+    fun executorFailEnd( caller:String, pathDone: String ) :  ApplMessage {
+        val answer = executorendkoMsg.replace("PATHDONE", pathDone)
+        return MsgUtil.buildDispatch(caller, executorEndId, answer, "any")
+    }
+
+    fun testCreateMsg( ) :  ApplMessage {
+        return MsgUtil.buildDispatch("tester", "cmd", robotMoveMsg, "any")
+    }
 
 
 

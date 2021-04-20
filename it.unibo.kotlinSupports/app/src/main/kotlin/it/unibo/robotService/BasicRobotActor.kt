@@ -46,7 +46,7 @@ open class BasicRobotActor(name: String,  wenvAddr: String="wenv", scope: Corout
             "release" -> engagedBy = ""
             MsgUtil.endDefaultId -> terminate()
             else -> { //move
-                val msgJson = JSONObject(msg.msgContent.replace("@", ","))  //HORRIBLE trick
+                val msgJson = JSONObject(msg.msgContent)  //.replace("@", ",") HORRIBLE trick
                 println("$name | handleInput msgJson=" + msgJson)
                 if( msgJson.has("robotmove") && working ){ //another move while still working
                     msgQueueStore.add(msg)
@@ -72,7 +72,7 @@ open class BasicRobotActor(name: String,  wenvAddr: String="wenv", scope: Corout
             //this.waitUser("msgQueueStore1")
             if( msgQueueStore.size > 0 ){
                 val next = msgQueueStore.removeAt(0)
-                val msgJson = JSONObject(next.msgContent.replace("@", ","))
+                val msgJson = JSONObject(next.msgContent) //.replace("@", ",")
                 //this.waitUser("msgQueueStore2")
                 elabRobotinfo( msgJson,  next.msgSender )
             }
@@ -101,7 +101,7 @@ open class BasicRobotActor(name: String,  wenvAddr: String="wenv", scope: Corout
     suspend fun sendMoveAnswer( msgJson: JSONObject, sender: String ){
         val moveres  = msgJson.getString(ApplMsgs.endMoveId)
         val movedone = msgJson.getString("move")
-        val payload  = "{\"${ApplMsgs.endMoveId}\":\"${moveres}\"@\"move\":\"$movedone\"}"
+        val payload  = "{\"${ApplMsgs.endMoveId}\":\"${moveres}\",\"move\":\"$movedone\"}"
         val answer   = MsgUtil.buildDispatch(name, ApplMsgs.endMoveId, payload, sender)
         println("$name | send answer: $answer to $sender"   )
         updateObservers(answer) //a way to induce ActorContextTcpServer to send info to the sender

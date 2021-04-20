@@ -1,5 +1,4 @@
 package mapRoomKotlin
-import java.io.Serializable
 import java.util.*
 
 class RoomMap private constructor()  { //: Serializable
@@ -58,14 +57,30 @@ class RoomMap private constructor()  { //: Serializable
         }
     }
 
+    //fun isObstacle(x: Int, y: Int): Boolean { return roomMap[y][x].isObstacle }
+    fun isObstacle(xs: String, ys: String): Boolean {
+        return isObstacle(xs.toInt(), ys.toInt())
+    }
+
     fun isObstacle(x: Int, y: Int): Boolean {
-		return roomMap[y][x].isObstacle
+        return try {
+            val box = roomMap[y][x] //?: return false
+            //System.out.println(" ... RoomMap  isObstacle " + box.isObstacle());
+            if (box.isObstacle) true else false
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            false
+        }
     }
-
+    //fun isNotExplored(x: Int, y: Int): Boolean { return roomMap[y][x].notExplored }
     fun isNotExplored(x: Int, y: Int): Boolean {
-		return roomMap[y][x].notExplored
+        return try {
+            val box = roomMap[y][x]
+            //System.out.println(" ... RoomMap  isNotExplored " + box.isDirty() );
+            return box.notExplored
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            false
+        }
     }
-
     fun canMove(x: Int, y: Int, direction: Direction): Boolean {
         return when (direction) {
             Direction.UP -> canMoveUp(x, y)
@@ -75,22 +90,44 @@ class RoomMap private constructor()  { //: Serializable
         }
     }
 
+    //fun canMoveUp(x: Int, y: Int): Boolean { return ! roomMap[y - 1][x].isObstacle }
     fun canMoveUp(x: Int, y: Int): Boolean {
-		return ! roomMap[y - 1][x].isObstacle
+        return if (y <= 0) false else try {
+            val box = roomMap[y - 1][x] //?: return true
+            if (box.isObstacle) false else true
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            true
+        }
     }
-
+    //fun canMoveRight(x: Int, y: Int): Boolean { return ! roomMap[y][x+1].isObstacle }
     fun canMoveRight(x: Int, y: Int): Boolean {
-		return ! roomMap[y][x+1].isObstacle
+        return try {
+            val box = roomMap[y][x + 1] //?: return true
+            if (box.isObstacle) false else true
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            true
+        }
     }
 
+    //fun canMoveDown(x: Int, y: Int): Boolean { return ! roomMap[y+1][x].isObstacle }
     fun canMoveDown(x: Int, y: Int): Boolean {
-		return ! roomMap[y+1][x].isObstacle
+        return try {
+            val box = roomMap[y + 1][x] //?: return true
+            if (box.isObstacle) false else true
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            true
+        }
     }
 
+    //fun canMoveLeft(x: Int, y: Int): Boolean { return ! roomMap[y][x-1].isObstacle }
     fun canMoveLeft(x: Int, y: Int): Boolean {
-		return ! roomMap[y][x-1].isObstacle
+        return if (x <= 0) false else try {
+            val box = roomMap[y][x - 1] //?: return true
+            if (box.isObstacle) false else true
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            true
+        }
     }
-
     override fun toString(): String {
         val builder = StringBuilder()
         for (a in roomMap) {  //row ArrayList
@@ -145,5 +182,16 @@ class RoomMap private constructor()  { //: Serializable
             }
         }
     }
-
+//-------------------------------------
+    fun isDirty(x: Int, y: Int): Boolean {
+        return try {
+            val box = roomMap[y][x] //?: return true
+            if (box.notExplored ) true else false
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            true
+        }
+    }
+    fun cleanCell(x: Int, y: Int) {
+        put(x, y, Box(false, false, false))
+    }
 }

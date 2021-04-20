@@ -93,8 +93,8 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
 ======================================================================================
  */
 override suspend fun handleInput(msg: ApplMessage) {
-    //println(  "$name | AbstractRobotActor handleInput msg=$msg")
-    val infoJsonStr = msg.msgContent.replace("@",",")
+    colorPrint(  "$name | AbstractRobotActor handleInput msg=$msg")
+    val infoJsonStr = msg.msgContent //.replace("@",",")
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
             //println("$name BasicStepRobotActor |  handleInput:$infoJson")
@@ -109,7 +109,7 @@ override suspend fun handleInput(msg: ApplMessage) {
             this.endStepOk();
         }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
             if( currentBasicMove.length > 0  ){
-                val payload = "{ \"collision\" : \"true\"@\"move\": \"$currentBasicMove\"}"
+                val payload = "{ \"collision\" : \"true\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 ownerActor.send(m)
                 //currentBasicMove = "";        //set by endMove
@@ -128,14 +128,14 @@ override suspend fun handleInput(msg: ApplMessage) {
             //answer only for moves that fail ???
             //if( moveResult != "true" && currentBasicMove.length > 0 ) {
             if(  currentBasicMove.length > 0 ) {
-                val payload = "{ \"endmove\" : \"$moveResult\"@\"move\": \"$currentBasicMove\"}"
+                val payload = "{ \"endmove\" : \"$moveResult\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 currentBasicMove = "";
                 ownerActor.send(m)
             }
             if( msgQueueStore.size > 0 ){
                 val next    = msgQueueStore.removeAt(0)
-                val msgJson = JSONObject(next.msgContent.replace("@", ",")) //already done=?
+                val msgJson = JSONObject(next.msgContent) //.replace("@", ",")already done=?
                 //this.waitUser("msgQueueStore2")
                 msgDriven( msgJson  )
             }

@@ -1,16 +1,24 @@
 package mapRoomKotlin
 
+import com.andreapivetta.kolor.Color
+import com.andreapivetta.kolor.Kolor
+
 object mapUtil{
- 	private var state = RobotState(0,0,Direction.DOWN)	 
+ 	var state = RobotState(0,0,Direction.DOWN)
 	var map   = RoomMap.getRoomMap()
 
+    fun colorPrint(msg : String, color : Color = Color.LIGHT_GRAY ){
+        println(Kolor.foreground("      $msg", color ) )
+    }
+    fun colorPrintNoTab(msg : String, color : Color = Color.BLUE ){
+        println(Kolor.foreground("$msg", color ) )
+    }
 
     @JvmStatic fun getMapAndClean() : String{ //(fName : String="storedMap.txt")
 		val outS = map.toString()
 		RoomMap.resetRoomMap()
 		return outS
 	}
-
 
 
 //=================================================================================
@@ -32,7 +40,7 @@ object mapUtil{
     @JvmStatic fun doMove(move: String ) {
        val x = state.x
        val y = state.y
-//       println("doMove move=$move  dir=${state.direction} x=$x y=$y dimMapX=$map.dimX{} dimMapY=${map.dimY}")
+//       colorPrint("doMove move=$move  dir=${state.direction} x=$x y=$y dimMapX=$map.dimX{} dimMapY=${map.dimY}")
        try {
             when (move) {
                 "w" -> {
@@ -62,14 +70,14 @@ object mapUtil{
  
 		   }//switch
 		   
-//		   println( "$map"  )
+//		   colorPrint( "$map"  )
         } catch (e: Exception) {
-            println("doMove: ERROR:" + e.message)
+           colorPrint("doMove: ERROR:" + e.message)
         }
 	}
 
     @JvmStatic fun showMap(){
-		println( "$map ${state}"  )
+        colorPrintNoTab( "$map ${state}", Color.LIGHT_RED  )
 	}
 	
 }
