@@ -13,13 +13,13 @@ import mapRoomKotlin.mapUtil
 class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 
 
-    private lateinit var executor: RobotExecutor
+    private lateinit var executor: PathExecutor
 
     fun initWork(){
         plannerUtil.initAI()
         println("===== initial map")
         plannerUtil.showMap()
-        executor = RobotExecutor("executor", scope, this)
+        executor = PathExecutor("executor", scope, this)
     }
     fun explore() {
         plannerUtil.setGoal(1, 1);
@@ -63,7 +63,7 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
             plannerUtil.showMap()
             val atHome = plannerUtil.atHome()
             println("$name | atHome: ${atHome}")
-            plannerUtil.showCurrentRobotState()
+            //plannerUtil.showCurrentRobotState()
             if( ! atHome ) {
                 waitUser("backToHome")
                 backToHome()

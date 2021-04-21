@@ -76,12 +76,11 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
             timer?.kill()
             //println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
             backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
-            colorPrint("$name | answer=$answer backMsg=$backMsg", Color.BLUE)
+            colorPrint("$name | backMsg=$backMsg" )
             delay(350)  //back immediately after a collision is not allowed
             support.forward(backMsg)
             //no change to currentBasicMove => no result propagation
-            //HYPOTHESIS: a little back move does not raise a collision
-            //delay(350)  //back immediately after a collision is not allowed
+            //HYPOTHESIS: a little back move does not raise a collisio
             answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
             val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
             ownerActor.send(m)
@@ -94,7 +93,7 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
 ======================================================================================
  */
 override suspend fun handleInput(msg: ApplMessage) {
-    colorPrint(  "$name | AbstractRobotActor handleInput msg=$msg")
+    colorPrint(  "$name | AbstractRobotActor handleInput $msg currentBasicMove=$currentBasicMove")
     val infoJsonStr = msg.msgContent //.replace("@",",")
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
@@ -115,7 +114,9 @@ override suspend fun handleInput(msg: ApplMessage) {
                 //currentBasicMove = "";        //set by endMove
             }else{
                 val dtVal = this.getDuration(StartTime)
-                this.endStepKo(""+dtVal);
+                if( currentBasicMove.length == 0 ) this.endStepKo(""+dtVal)
+                else{  //time elapsed for a convnetional move
+                }
             }
         }else if( infoJson.has("robotmove") && currentBasicMove.length > 0 ){ //another move while working
             colorPrint("$name BasicStepRobotActor |  move already running: store the request", Color.LIGHT_MAGENTA)
@@ -125,8 +126,6 @@ override suspend fun handleInput(msg: ApplMessage) {
             msgDriven(infoJson )
         }else if (infoJson.has("endmove")){
             val moveResult = infoJson.getString("endmove")
-            //answer only for moves that fail ???
-            //if( moveResult != "true" && currentBasicMove.length > 0 ) {
             if(  currentBasicMove.length > 0 ) {
                 val payload = "{ \"endmove\" : \"$moveResult\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
@@ -138,7 +137,7 @@ override suspend fun handleInput(msg: ApplMessage) {
             }
             if( msgQueueStore.size > 0 ){
                 val next    = msgQueueStore.removeAt(0)
-                val msgJson = JSONObject(next.msgContent) //.replace("@", ",")already done=?
+                val msgJson = JSONObject(next.msgContent)
                 //this.waitUser("msgQueueStore2")
                 msgDriven( msgJson  )
             }

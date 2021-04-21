@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 class SimpleRobotCaller(name: String ) : ActorBasicKotlin( name ) {
-/*
+    /*
     private val stepMsg = "{\"step\":\"350\" }"
     private val turnLeftMsg = "{\"robotmove\":\"turnLeft\" @ \"time\": 300}"
     private val turnleft = buildDispatch("main", "move", turnLeftMsg, "stepRobot")
@@ -20,6 +20,8 @@ class SimpleRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
     protected fun doMoves() {
         robot.registerActor(this)
+        //robot.send(ApplMsgs.stepRobot_w("main", "800"))
+
         robot.send(ApplMsgs.stepRobot_step("main", "350"))
         //robot.send(turnleft.toString())
     }
@@ -32,15 +34,19 @@ class SimpleRobotCaller(name: String ) : ActorBasicKotlin( name ) {
         if (msg.msgId == "stepAnswer") {
             val answerJson = JSONObject(msg.msgContent)
             if (answerJson.has("stepDone")) {
-                robot.send( ApplMsgs.stepRobot_l("main") )
+                robot.send(ApplMsgs.stepRobot_l("main"))
+            }else if (answerJson.has("stepFail")){
+                val tback = answerJson.getString("stepFail")
+                println("$name | handleInput stepFail tback=$tback")
+                //robot.send(ApplMsgs.stepRobot_s("main", tback))
             }
         }
         if (msg.msgId == "endmove") {
-            val answerJson = JSONObject(msg.msgContent.replace("@", ","))
-            if (answerJson.getString("endmove") != "notallowed") {
-                robot.terminate()
-                terminate()
-                System.exit(0 )
+            val answerJson = JSONObject(msg.msgContent)  //.replace("@", ","))
+            if (answerJson.has("endmove")) {//&& answerJson.getString("endmove") == "notallowed"){
+                val endmove = answerJson.getString("endmove")
+                val move = answerJson.getString("move")
+                println("endmove=${endmove} move=$move")
             }
         }
     }
@@ -49,9 +55,9 @@ class SimpleRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val myrobot = SimpleRobotCaller("myrobot")
+        val rc = SimpleRobotCaller("rc")
 
-        myrobot.send(ApplMsgs.startAny("main"))
+        rc.send(ApplMsgs.startAny("main"))
 
         //delay(5000)
 

@@ -24,9 +24,11 @@ object mapUtil{
     }
 
     private fun setObstacleOnCell(){
+        sysUtil.colorPrint("setObstacleOnCell ${state.x},${state.y}", Color.RED)
 		map.put( state.x,  state.y, Box(true, false, false))
 	}
-    @JvmStatic fun setObstacle() {  //trick!!
+    @JvmStatic
+    fun setObstacle() {  //trick!!
         doMove("w")
         setObstacleOnCell()
         doMove("s")

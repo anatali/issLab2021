@@ -1,5 +1,5 @@
 /*
-RobotExecutor.kt
+PathExecutor.kt
 
 An unibo-actor that executes a given sequence of moves (todoPath)
 and returns to its ownerActor
@@ -22,7 +22,7 @@ import java.lang.Exception
 The map is a singleton object, managed by mapUtil
  */
 @Suppress("REDUNDANT_ELSE_IN_WHEN")
-class RobotExecutor (name: String, scope: CoroutineScope, protected var ownerActor: ActorBasicKotlin)
+class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActor: ActorBasicKotlin)
     : ActorBasicKotlin( name, scope ) {
                                             //: AbstractRobotActor(name, "localhost") {
     protected enum class State { start, continueJob, moving, turning }
@@ -65,15 +65,15 @@ class RobotExecutor (name: String, scope: CoroutineScope, protected var ownerAct
 
     protected fun obstacleFound() {
         println("$name | END FAIL ---------------- ")
-        moves.showMap()
+        //moves.showMap()
         try {
             moves.setObstacle()
         } catch (e: Exception) { //wall
             println("$name | outside the map " + e.message)
         }
         moves.showMap()
-        ownerActor.send(
-            ApplMsgs.executorendkoMsg.replace("PATHDONE", moves.getJourney())
+
+        ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney())
         )
     }
 
@@ -146,11 +146,11 @@ class RobotExecutor (name: String, scope: CoroutineScope, protected var ownerAct
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val path     = "wl"
+        val path     = "wlwwwwwwrwrr"
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
-        val obs      = NaiveObserverActorKotlin("obs",  this)
-        val executor = RobotExecutor("executor", this, obs)
+        val obs      = NaiveObserverActorKotlin("peobs",  this)
+        val executor = PathExecutor("pathExec", this, obs)
         executor.send(cmd)
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }

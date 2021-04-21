@@ -68,7 +68,15 @@ object ApplMsgs {
     val startMsgStr = "{\"start\":\"ok\" }"
     val endMsgStr = "{\"end\":\"ok\" }"
 
-
+    fun stepRobot_w(caller:String, time: String="350") : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "move", forwardMsg.replace("350",time), "stepRobot")
+    }
+    fun stepRobot_s(caller:String, time: String="350") : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "move", backwardMsg.replace("350",time), "stepRobot")
+    }
+    fun stepRobot_h(caller:String, time: String="20") : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "move", haltMsg.replace("20",time), "stepRobot")
+    }
     fun stepRobot_l(caller:String) : ApplMessage {
         return MsgUtil.buildDispatch(caller, "move", turnLeftMsg, "stepRobot")
     }
