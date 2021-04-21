@@ -364,7 +364,7 @@ Since the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" tar
 the form of <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>,
 the move-command must be written in the proper way. For example:
  <pre>
- msg(robotmove,dispatch,<ks>actortry</ks>,<em>stepRobot</em>,{"robotmove":"moveForward"@ "time": 350},1)</pre>
+ msg(robotmove,dispatch,<ks>actortry</ks>,<em>stepRobot</em>,{"robotmove":"moveForward" , "time": 350},1)</pre>
  Note that now:
  <div class="remark">
 the <b>sender</b> (that names itself as <ks>'actortry'</ks>) has no reference to the component that will handle its message.
@@ -390,9 +390,9 @@ handles the messages
 (strings that represent an <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> ) 
 sent by the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>; for example
 <pre>
-msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"collision" : "true"@"move": "moveForward"}</ks>,5)
-msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"endmove" : "false"@"move": "moveForward"}</ks>,6)
-msg(supportInfo,dispatch,support,observer,<ks>{"sonarName":"sonar2"@"distance":7@"axis":"x"}</ks>,0) }
+msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"collision" : "true" , "move": "moveForward"}</ks>,5)
+msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"endmove" : "false" , "move": "moveForward"}</ks>,6)
+msg(supportInfo,dispatch,support,observer,<ks>{"sonarName":"sonar2" , "distance":7 , "axis":"x"}</ks>,0) }
 </pre> 
 
 
@@ -422,22 +422,58 @@ defines the properties of new abstraction that (from now on) can be used as the 
 <center><table style="width:95%"> 
 <tbody>	
 <tr>
-<td style="width:30%">
-<h3>The unibo-Actor</h3>
+<td style="width:45%">
+<h3>The uniboActor (outside view)</h3>
 <br/><br/>
-<center><img src="./img/symActor.png" alt="symActor" width="40%"></center>
-
+<center><img src="./img/symActor.png" alt="symActor" width="15%"></center>
 <br/><br/>
+An <tt>uniboActor</tt> is a specializaztion of the abstract class 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+defined in the project 
+ <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>
+and provides the following features:
+<ul> 
+<li>owns a <ks>name</ks> that should be <k>unique</k> in the application system</li>
+<li>implements the interface
+ <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IUniboActor.kt" target="code">IUniboActor.kt</a>
+ that inherits from <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IssActorObservable.kt" target="code">IssActorObservable.kt</a> 
+ </li>
+ <li>is <k>observable</k> by other <tt>uniboActors</tt> 
+ </li>
+<li>is able to handle messages expressed as String that are the representation of the type 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
+</li>
+<li>requires a specialized version of the abstract operation
+<pre>
+ abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
+</pre>
+</li>
+ 
 
+</ul>
 </td>
 <td>
-<center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin" width="100%" height="60%"></center>
+<h3>The uniboActor (internal view)</h3>
+<center><img src="./img/ActorBasicKotlin.png" alt="ActorBasicKotlin" width="70%"  ></center>
 
 <br/>
+The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+embeds a kotlin acor (referred by the var <ks>kactor</ks>). It is  able to perform the following actions:
+<m>
+<ul>
+<li>send a message to itself (<ks>send,  sendToYourself</ks>) </li>
+<li>send a message (<ks>forward, sendToActor</ks>) to another <tt>uniboActor</tt> kown by reference</li>
+<li>delay  (<ks>dosleep</ks>) the execution for a given time  </li>
+<li>end its activity (<ks>terminate</ks>) </li>
+<li>wait for a user command (<ks>waitUser</ks>): useful during debugging</li>
+</ul></m>
+<br/><br/>
+<!--
 Requires the specification of the method:
 <pre>
  abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
 </pre>
+-->
 <!--
 called by the method that 
 <pre>
@@ -450,6 +486,99 @@ See <a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" targe
 in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>.<br/>
  </td>
 </tr>
+
+
+
+<tr>
+<td>
+ <h3>AbstractRobotActor</h3>
+The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/AbstractRobotActor.kt" target="code">AbstractRobotActor.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a> and
+provides a <tt>uniboActor</tt> that:<br/><br/>
+
+<m>
+<ul>
+<li>
+accepts messages of type <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
+with payload given by Strings that represents JSON objects, as  defined  in the utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a>.<br/>
+</li>
+
+<li>
+implements the operation <ks>handleInput</ks> by delegating to an abstract operation <ks>msgDriven</ks> the handling of the JSON-payload:  
+<pre>
+ override suspend fun <ks>handleInput</ks>(msg: ApplMessage) {
+   msgDriven( JSONObject( msg.msgContent ) )  
+ }
+
+ protected abstract fun <ks>msgDriven</ks>(infoJson: JSONObject)
+ </pre>
+</li>
+
+</m>
+
+
+</td>
+<td>
+  <h3>Basic <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a></h3>
+  Let us report here some of the JSON strings that represent basic robot-moves:
+  <pre><m>
+    val <ks>forwardMsg</ks> = "{\"robotmove\":\"moveForward\", \"time\": 350}"
+    val <ks>backwardMsg</ks> = "{\"robotmove\":\"moveBackward\", \"time\": 350}"
+    val <ks>turnLeftMsg</ks> = "{\"robotmove\":\"turnLeft\", \"time\": 300}"
+    val <ks>turnRightMsg</ks> = "{\"robotmove\":\"turnRight\", \"time\": 300}"
+    val <ks>haltMsg</ks> = "{\"robotmove\":\"alarm\", \"time\": 20}"
+	... 
+    val endMoveId = "endmove"
+    val <ks>endMoveMsg</ks> = "{\"ID\":\"ENDMOVE\" }".replace("ID", endMoveId)
+	...
+    val stepId = "step"
+    val <ks>stepMsg</ks> = "{\"ID\":\"TIME\" }".replace("ID", stepId)
+    val stepDoneId = "stepDone"
+    val <ks>stepDoneMsg</ks> = "{\"ID\":\"ok\" }".replace("ID", stepDoneId)
+    val stepFailId = "stepFail"
+    val <ks>stepFailMsg</ks> = "{\"ID\":\"TIME\" }".replace("ID", stepFailId)
+	...</m></pre>
+</td>
+</tr>
+
+<tr>
+<td>
+ <h3>BasicStepRobotActor</h3>
+The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">AbstractRobotActor.kt</a>. 
+<br/>It provides a <tt>uniboActor</tt> that
+accepts messages of type <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
+with payload given by Strings defined in the class   
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.</em></a>.<br/>
+More spcifically:
+ 
+
+<ul>
+<li><ks>stepRobot_step()</ks> : to perform a robot ahead the robot for a given time. The answer will be
+<pre>
+
+</pre>
+</li>
+<li>stepRobot_w : to move ahead the robot for a given time</li>
+</ul>
+
+Returns a ApplMsgs.stepDoneMsg if the move is done with success.
+Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
+by an obstacle after time DT. In this case it moves back the robot for time DT
+
+
+The map is a singleton object, managed by mapUtil
+
+
+
+</td>
+<td>
+<center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
+ 
+</td>
+</tr>
+
 </tbody>	
 </table></center>
 

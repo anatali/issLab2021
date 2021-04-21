@@ -2,7 +2,7 @@ package it.unibo.actor0
 
 import com.andreapivetta.kolor.Color
 import com.andreapivetta.kolor.Kolor
-import it.unibo.interaction.IJavaActor
+import it.unibo.interaction.IUniboActor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
 import java.util.*
@@ -18,9 +18,9 @@ Each actor could have its own scope
 abstract class ActorBasicKotlin(val name: String,
                 val scope: CoroutineScope = CoroutineScope( newSingleThreadContext("single_$name") ) ,
                 val dispatchType: DispatchType = DispatchType.single,
-                val channelSize : Int = 50 ) : IJavaActor{
+                val channelSize : Int = 50 ) : IUniboActor{
     val tt                         = "               %%% "
-    private val actorobservers     =  mutableListOf<IJavaActor>()
+    private val actorobservers     =  mutableListOf<IUniboActor>()
     protected var actorLogfileName  : String = ""
     protected var msgLogNoCtxDir   = "logs/noctx"
     protected var msgLogDir        = msgLogNoCtxDir
@@ -126,17 +126,20 @@ abstract class ActorBasicKotlin(val name: String,
     }
     fun sendToYourself( msg: ApplMessage ) {    //for oop
         //println("$name  sendToMyself  ${msg}" );
-        //forward( msg.msgId, msg.msgContent, this )
-        scope.launch {   kactor.send(msg)  }
+         scope.launch {   kactor.send(msg)  }
     }
     fun send( msg: ApplMessage ) {
         scope.launch {   kactor.send(msg)  }
     }
-    override fun registerActor(obs: IJavaActor) {
+    protected  fun sendToActor(info: ApplMessage,  dest: ActorBasicKotlin) {
+        scope.launch {   dest.kactor.send(info)  }
+    }
+
+    override fun registerActor(obs: IUniboActor) {
         actorobservers.add(obs)
     }
 
-    override fun removeActor(obs: IJavaActor) {
+    override fun removeActor(obs: IUniboActor) {
         actorobservers.remove(obs)
     }
 
@@ -148,9 +151,7 @@ abstract class ActorBasicKotlin(val name: String,
         actorobservers.remove(obs)
     }
 
-    protected  fun sendToActor(info: ApplMessage,  dest: ActorBasicKotlin) {
-        scope.launch {   dest.kactor.send(info)  }
-    }
+
 
 
     @kotlinx.coroutines.ObsoleteCoroutinesApi

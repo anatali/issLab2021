@@ -4,9 +4,11 @@ ConnectionReader
 
 ============================================================
  */
-package it.unibo.actor0
+package it.unibo.actor0Service
 
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
+import it.unibo.actor0.ActorBasicKotlin
+import it.unibo.actor0.ApplMessage
 
 
 class ConnectionReader (name: String, val conn: IConnInteraction ) :

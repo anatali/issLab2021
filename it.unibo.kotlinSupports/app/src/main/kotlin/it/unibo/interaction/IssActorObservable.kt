@@ -6,6 +6,6 @@
  */
 package it.unibo.interaction
 interface IssActorObservable {
-    fun registerActor(obs: IJavaActor)
-    fun removeActor(obs: IJavaActor)
+    fun registerActor(obs: IUniboActor)
+    fun removeActor(obs: IUniboActor)
 }

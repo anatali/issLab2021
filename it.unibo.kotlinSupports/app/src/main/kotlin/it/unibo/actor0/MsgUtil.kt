@@ -6,7 +6,7 @@ package it.unibo.actor0
 {"collision" : "false", "move": "moveForward"}
  */
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
-import it.unibo.interaction.IJavaActor
+import it.unibo.interaction.IUniboActor
 import it.unibo.supports.FactoryProtocol
 
 //FILE MsgUtil.kt
@@ -63,7 +63,7 @@ suspend fun sendMsg(sender : String, msgId: String, msg: String, destActor: Acto
     }
 
 @JvmStatic
-suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJavaActor) {
+suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IUniboActor) {
         sendMsg(sender, msgId, msg, destActor as ActorBasicKotlin)
 }
 
@@ -74,7 +74,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IJa
         destActor.kactor.send(msg)
     }
 @JvmStatic
-    suspend fun sendMsg(msg: ApplMessage, destActor: IJavaActor) {
+    suspend fun sendMsg(msg: ApplMessage, destActor: IUniboActor) {
         sendMsg(msg,destActor as ActorBasicKotlin)
     }
 

@@ -17,51 +17,51 @@ import it.unibo.actor0.MsgUtil
  */
 
 object ApplMsgs {
-    const val forwardMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
-    const val backwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 350}"
-    const val microStepMsg = "{\"robotmove\":\"moveForward\", \"time\": 5}"
-    const val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 5}"
-    const val turnLeftMsg = "{\"robotmove\":\"turnLeft\", \"time\": 300}"
-    const val turnRightMsg = "{\"robotmove\":\"turnRight\", \"time\": 300}"
-    const val haltMsg = "{\"robotmove\":\"alarm\", \"time\": 20}"
-    const val goBackMsg = "{\"goBack\":\"goBack\" }"
-    const val resumeMsg = "{\"resume\":\"resume\" }"
-    const val forwardstepMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
+    val forwardMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
+    val backwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 350}"
+    val microStepMsg = "{\"robotmove\":\"moveForward\", \"time\": 5}"
+    val littleBackwardMsg = "{\"robotmove\":\"moveBackward\", \"time\": 5}"
+    val turnLeftMsg = "{\"robotmove\":\"turnLeft\", \"time\": 300}"
+    val turnRightMsg = "{\"robotmove\":\"turnRight\", \"time\": 300}"
+    val haltMsg = "{\"robotmove\":\"alarm\", \"time\": 20}"
+    val goBackMsg = "{\"goBack\":\"goBack\" }"
+    val resumeMsg = "{\"resume\":\"resume\" }"
+    val forwardstepMsg = "{\"robotmove\":\"moveForward\", \"time\": 350}"
 
-    const val activateId = "activate"
+    val activateId = "activate"
     val activateMsg = "{\"ID\":\"ARGS\" }".replace("ID", activateId)
 
-    const val executorStartId = "executorstart"
+    val executorStartId = "executorstart"
     val executorstartMsg = "{\"ID\":\"PATHTODO\" }".replace("ID", executorStartId)
-    const val executorDoneId = "executorDone"
-    const val executorFailId = "executorFail"
+    val executorDoneId = "executorDone"
+    val executorFailId = "executorFail"
     val executorendokMsg = "{\"ID\":\"ok\" }".replace("ID", executorDoneId)
     val executorendkoMsg = "{\"ID\":\"PATHDONE\" }".replace("ID", executorFailId)
 
-    const val robotMoveId     = "robotmove"
-    const val robotMoveTimeId = "time"
+    val robotMoveId     = "robotmove"
+    val robotMoveTimeId = "time"
     val robotMoveMsg = "{\"MOVEID\":\"MOVE\",\"TIMEID\":TIME}"
         .replace("MOVEID", robotMoveId).replace("TIMEID", robotMoveTimeId)
 
-    const val endMoveId = "endmove"
+    val endMoveId = "endmove"
     val endMoveMsg = "{\"ID\":\"ENDMOVE\" }".replace("ID", endMoveId)
-    const val executorEndId = "executorend"
+    val executorEndId = "executorend"
 
     //
-    const val runawyEndId = "runawayend"
+    val runawyEndId = "runawayend"
     val runawyEndMsg = "{\"ID\":\"RESULT\" }".replace("ID", runawyEndId)
-    const val runawyStartId = "runawaystart"
+    val runawyStartId = "runawaystart"
     val runawyStartMsg = "{\"ID\":\"PATHTODO\" }".replace("ID", runawyStartId)
 
     //
-    const val stepId = "step"
+    val stepId = "step"
     val stepMsg = "{\"ID\":\"TIME\" }".replace("ID", stepId)
-    const val stepDoneId = "stepDone"
+    val stepDoneId = "stepDone"
     val stepDoneMsg = "{\"ID\":\"ok\" }".replace("ID", stepDoneId)
-    const val stepFailId = "stepFail"
+    val stepFailId = "stepFail"
     val stepFailMsg = "{\"ID\":\"TIME\" }".replace("ID", stepFailId)
 
-    const val robotMovecmdId = "robotmovecmd"
+    val robotMovecmdId = "robotmovecmd"
     val robotMovecmdMsg = "{\"ID\":\"MOVE\" }".replace("ID", robotMovecmdId)
 
 
