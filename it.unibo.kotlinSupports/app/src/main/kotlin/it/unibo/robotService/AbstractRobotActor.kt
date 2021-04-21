@@ -13,8 +13,6 @@ import it.unibo.actor0.DispatchType
 import it.unibo.supports.IssWsHttpKotlinSupport
 import kotlinx.coroutines.*
 import org.json.JSONObject
-import java.lang.Exception
-import java.util.*
 import kotlin.collections.HashMap
 
 @ExperimentalCoroutinesApi
@@ -24,17 +22,15 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
                                   : ActorBasicKotlin(name, scope, DispatchType.single) {
     protected var moveInterval = 500L //to avoid too-rapid movement
     protected var cnsl = System.console() //returns null in an online IDE
-    protected val MoveNameShort: MutableMap<String, String> = HashMap()
-    protected lateinit var support: IssWsHttpKotlinSupport
+    protected val MoveNameShort = mutableMapOf<String, String>(
+        "turnLeft" to "l",  "turnRight" to "r", "moveForward" to "w",
+        "moveBackward" to "s" , "alarm" to "h"
+    )
+    protected var support: IssWsHttpKotlinSupport
 
     init {
         support = IssWsHttpKotlinSupport.getConnectionWs(scope, "${wenvAddr}:8091")
         support.registerActor(this)
-        MoveNameShort["moveForward"] = "w"
-        MoveNameShort["moveBackward"] = "s"
-        MoveNameShort["turnLeft"] = "l"
-        MoveNameShort["turnRight"] = "r"
-        MoveNameShort["alarm"] = "h"
         //println( "$name AbstractRobotActor | init $support ${infoThreads()}")
     }
 
@@ -72,12 +68,10 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
 
     protected  fun doMove(moveStep: Char) {
         colorPrint( "$name AbstractRobotActor | doMove $moveStep", Color.BLUE)
-        //scope.launch {
             if (moveStep == 'w') doForward()
             else if (moveStep == 'l') turnLeft()
             else if (moveStep == 'r') turnRight()
             else if (moveStep == 's') doBackward()
-        //}
     }
 
     protected val currentTime: Long
@@ -89,24 +83,14 @@ abstract class AbstractRobotActor(name: String, val wenvAddr: String,
 
     //StartTime = getCurrentTime()  Duration = getDuration(StartTime)
     //protected fun reactivate(actor: IJavaActor) { actor.send(ApplMsgs.resumeMsg) }
-/*
-    fun waitUser(prompt: String) {
-        print(">>>  $prompt >>>  ")
-        val scanner = Scanner(System.`in`)
-        try {
-            scanner.nextInt()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-*/
+
     /*
 ======================================================================================
  */
     //Transform an ApplMessage into a JSONObject by using the HORRIBLE trick
     override suspend fun handleInput(msg: ApplMessage) {
         //println(  "$name | AbstractRobotActor handleInput msg=$msg")
-        msgDriven(JSONObject( msg.msgContent ) ) //.replace("@",",") HORRIBLE trick
+        msgDriven( JSONObject( msg.msgContent ) ) //.replace("@",",") HORRIBLE trick
     }
 
     protected abstract fun msgDriven(infoJson: JSONObject)

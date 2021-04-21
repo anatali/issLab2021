@@ -17,13 +17,12 @@ import com.andreapivetta.kolor.Kolor
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.ApplMessageType
 import it.unibo.actor0.sysUtil
-import it.unibo.interaction.IJavaActor
+import it.unibo.interaction.IUniboActor
 import it.unibo.interaction.IssActorObservable
 import it.unibo.interaction.IssCommSupport
 import it.unibo.interaction.IssOperations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -40,7 +39,7 @@ class IssWsHttpKotlinSupport
 
     val  JSON_MediaType        = "application/json; charset=utf-8".toMediaType()
     val okHttpClient           = OkHttpClient()
-    val actorobservers         = Vector<IJavaActor>()
+    val actorobservers         = Vector<IUniboActor>()
     private var opened         = false
     private var connectForWs   = true
 
@@ -123,8 +122,8 @@ class IssWsHttpKotlinSupport
     }
 
 
-    override fun registerActor(obs: IJavaActor) { actorobservers.add(obs) }
-    override fun removeActor(obs: IJavaActor)   { actorobservers.remove(obs); }
+    override fun registerActor(obs: IUniboActor) { actorobservers.add(obs) }
+    override fun removeActor(obs: IUniboActor)   { actorobservers.remove(obs); }
     override fun isOpen() : Boolean {  return opened   }
     override fun close(){  disconnect( )  }
 

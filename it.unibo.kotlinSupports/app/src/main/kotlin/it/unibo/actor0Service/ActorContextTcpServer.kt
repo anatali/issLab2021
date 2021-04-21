@@ -9,8 +9,9 @@ Accepts a TCP connection on port 8010 and
 ============================================================
  */
 
-package it.unibo.actor0
+package it.unibo.actor0Service
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
+import it.unibo.actor0.*
 import it.unibo.actor0.sysUtil.connActiveForActor
 import it.unibo.supports.FactoryProtocol
 import kotlinx.coroutines.*
@@ -42,7 +43,7 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
         }
     }
 
-    private fun answerAndUpdate(msg: ApplMessage ){
+    private fun answerAndUpdate(msg: ApplMessage){
         val dest = msg.msgReceiver
         val conn = connActiveForActor.get(dest)
         //if( conn != null )  conn.sendALine(msg.toString()) //answer only to sender
@@ -85,7 +86,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend protected fun handleConnection(conn: IConnInteraction) {
         //GlobalScope.launch(Dispatchers.IO) {
-            scope.launch(sysUtil.cpusThreadContext ) { //userThreadContext
+            scope.launch(sysUtil.cpusThreadContext) { //userThreadContext
             try {
                  while (true) {
                     val msg = conn.receiveALine()       //BLOCKING

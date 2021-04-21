@@ -1,11 +1,9 @@
 package demo;
 
-import it.unibo.actor0.ActorBasicKotlin;
 import it.unibo.actor0.ApplMessage;
 import it.unibo.actor0.MsgUtil;
 import it.unibo.actorAppl.AbstracMainForActor;
-import it.unibo.interaction.IJavaActor;
-import it.unibo.robotService.BasicStepRobotActor;
+import it.unibo.interaction.IUniboActor;
 import kotlinx.coroutines.CoroutineScope;
 
 
@@ -21,7 +19,7 @@ public class UseStepRobotMainJava extends AbstracMainForActor {
     public void mainJob(CoroutineScope scope) {
         System.out.println("UseStepRobotMainJava  | mainJob scope=" +  scope );
 
-        IJavaActor worker = new SimpleRobotUserKJava("worker", scope);
+        IUniboActor worker = new SimpleRobotUserKJava("worker", scope);
         worker.send( startMsg.toString() );
 
         //ActorBasicKotlin obs = new NaiveActorObserverKJava( "a2", scope);

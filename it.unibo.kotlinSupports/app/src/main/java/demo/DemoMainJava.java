@@ -1,11 +1,9 @@
 package demo;
 
-import it.unibo.actor0.ActorBasicKotlin;
 import it.unibo.actor0.ApplMessage;
-import it.unibo.actor0.DispatchType;
 import it.unibo.actor0.MsgUtil;
 import it.unibo.actorAppl.AbstracMainForActor;
-import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import kotlinx.coroutines.CoroutineScope;
 
 
@@ -17,8 +15,8 @@ public class DemoMainJava extends AbstracMainForActor {
     public void mainJob(CoroutineScope scope) {
         System.out.println("mainJob | scope=" +  scope );
 
-        IJavaActor a1 = new SimpleActorKJava("a1", scope);
-        IJavaActor a2 = new NaiveActorObserverKJava( "a2", scope);
+        IUniboActor a1 = new SimpleActorKJava("a1", scope);
+        IUniboActor a2 = new NaiveActorObserverKJava( "a2", scope);
         a1.registerActor(a2);
 
         String endMsg        = "{\"endKJava\":\"ok\" }";

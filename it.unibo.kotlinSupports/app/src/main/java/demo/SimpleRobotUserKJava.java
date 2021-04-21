@@ -1,10 +1,8 @@
 package demo;
 
-import com.andreapivetta.kolor.Color;
 import it.unibo.actor0.ActorBasicKotlin;
 import it.unibo.actor0.ApplMessage;
 import it.unibo.actor0.MsgUtil;
-import it.unibo.interaction.IJavaActor;
 import it.unibo.robotService.BasicStepRobotActor;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.channels.SendChannel;
