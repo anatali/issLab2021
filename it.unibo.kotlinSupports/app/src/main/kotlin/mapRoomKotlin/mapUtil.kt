@@ -1,5 +1,8 @@
 package mapRoomKotlin
 
+import com.andreapivetta.kolor.Color
+import it.unibo.actor0.sysUtil
+
 object mapUtil{
  	var state = RobotState(0,0,Direction.DOWN)
 	var map   = RoomMap.getRoomMap()
@@ -68,7 +71,7 @@ object mapUtil{
 	}
 
     @JvmStatic fun showMap(){
-		println( "$map ${state}"  )
+		sysUtil.colorPrintNoTab( "$map ${state}", Color.CYAN  )
 	}
 	
 }

@@ -75,8 +75,12 @@ object ApplMsgs {
     fun stepRobot_r(caller:String) : ApplMessage {
         return MsgUtil.buildDispatch(caller, "move", turnRightMsg, "stepRobot")
     }
-    fun stepRobot_step(caller:String) : ApplMessage {
-        return MsgUtil.buildDispatch(caller, "step", stepMsg, "stepRobot")
+    fun stepRobot_turn(caller:String, dir: String="r") : ApplMessage {
+        val turnMsg = if (dir=="l")  turnLeftMsg else turnRightMsg //no ternary op in kotlin
+        return MsgUtil.buildDispatch(caller, "move", turnMsg, "stepRobot")
+    }
+    fun stepRobot_step(caller:String, time:String) : ApplMessage {
+        return MsgUtil.buildDispatch(caller, "step", stepMsg.replace("TIME",time), "stepRobot")
     }
 
     fun startAny( caller:String) : ApplMessage {

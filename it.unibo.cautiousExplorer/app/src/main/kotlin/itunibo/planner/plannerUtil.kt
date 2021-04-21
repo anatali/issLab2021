@@ -22,7 +22,7 @@ object plannerUtil {
     //private var robotState: RobotState? = null
 	private var actions: List<Action>?    = null
  	
-    private var curPos    : Pair<Int,Int> = Pair(0,0)
+    //private var curPos    : Pair<Int,Int> = Pair(0,0)
 	//private var curDir    = Direction.DOWN
     private var curGoal: GoalTest = Functions()		 
 
@@ -142,7 +142,7 @@ object plannerUtil {
 
 
 	@JvmStatic fun memoCurentPlan(){
-		storedPos            = curPos
+		//storedPos            = curPos
 		storedactionSequence = actionSequence;
 	}
 	
@@ -187,13 +187,14 @@ object plannerUtil {
  * ------------------------------------------------
  * INSPECTING ROBOT POSITION AND DIRECTION
  * ------------------------------------------------
-*/		
+*/
+	/*
 	@JvmStatic fun get_curPos() : Pair<Int,Int>{
 		return curPos
-	}
+	}*/
 
-	@JvmStatic fun getPosX() : Int{ return mapUtil.state!!.x }
-    @JvmStatic fun getPosY() : Int{ return mapUtil.state!!.y }
+	@JvmStatic fun getPosX() : Int{ return mapUtil.state.x }
+    @JvmStatic fun getPosY() : Int{ return mapUtil.state.y }
 	
 	@JvmStatic fun getDir()  :  Direction{
 		return mapUtil.state!!.direction
@@ -210,19 +211,22 @@ object plannerUtil {
  		}
   	}
 	
-	@JvmStatic fun atHome() : Boolean{
-		return curPos.first == 0 && curPos.second == 0
+	@JvmStatic
+	fun atHome() : Boolean{
+		//return curPos.first == 0 && curPos.second == 0
+		return getPosX() == 0 && getPosY() == 0
 	}
 	
 	@JvmStatic fun atPos( x: Int, y: Int ) : Boolean{
-		return curPos.first == x && curPos.second == y
+		//return curPos.first == x && curPos.second == y
+		return getPosX() == x && getPosY() == y
 	}
 	
 	@JvmStatic fun showCurrentRobotState(){
 		colorPrint("===================================================")
 		showMap()
-		direction = getDirection()
-		colorPrint("RobotPos=(${curPos.first}, ${curPos.second})  direction=$direction  " )
+		//colorPrint("RobotPos=(${curPos.first}, ${curPos.second})  direction=$direction  " )
+		colorPrint("RobotPos=(${getPosX()}, ${getPosY()})  direction=${getDirection()}  " )
 		colorPrint("===================================================")
 	}
 
@@ -302,7 +306,7 @@ object plannerUtil {
 		direction     =  getDirection()
 		val posx      =  getPosX()
 		val posy      =  getPosY()
-		curPos        =  Pair( posx,posy )
+		//curPos        =  Pair( posx,posy )
 	}
  	
     @JvmStatic fun doMove(move: String) {

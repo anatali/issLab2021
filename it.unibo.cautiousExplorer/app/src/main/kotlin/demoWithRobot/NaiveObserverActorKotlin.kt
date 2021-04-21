@@ -5,13 +5,10 @@ import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
 class NaiveObserverActorKotlin(name: String, scope:CoroutineScope)
-    : ActorBasicKotlin(name, scope) {
+                                     : ActorBasicKotlin(name, scope) {
 
     override protected suspend fun handleInput(info : ApplMessage){
         var msgJsonStr = info.msgContent
-        //if( msgJsonStr.contains("@") ) msgJsonStr=msgJsonStr.replace("@",",")
-        //println("$name  | appl $info   ${ aboutThreads()}" )
-        //println("$name  | msgJsonStr=$msgJsonStr   " )
         val msgJson = JSONObject(msgJsonStr)
         println("$name  | msgJson=$msgJson   " )
     }

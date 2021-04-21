@@ -26,6 +26,7 @@ import kotlinx.coroutines.delay
 import org.json.JSONObject
  
 @ExperimentalCoroutinesApi
+@kotlinx.coroutines.ObsoleteCoroutinesApi
 class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
                          scope: CoroutineScope,  wenvAddr: String ="wenv" )
             : AbstractRobotActor( name, wenvAddr, scope ) {
@@ -39,7 +40,7 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
     private var currentBasicMove  = "";
     private var stepGoingon       = false;
 
-    protected suspend fun doStepMove(move: String, time: String){
+    protected suspend fun doStepMove( time: String ){
         if( stepGoingon || currentBasicMove.length > 0 ){
             //println("$name | STEPGOINGONNNNNNNNNNNNNNNNNNNN   ")
             answer = ApplMsgs.stepFailMsg.replace("TIME", "0")
@@ -98,13 +99,12 @@ override suspend fun handleInput(msg: ApplMessage) {
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
             //println("$name BasicStepRobotActor |  handleInput:$infoJson")
-
         if (infoJson.has("sonarName")) {
             val m = MsgUtil.buildDispatch( name,"sonarEvent", infoJsonStr, ownerActor.myname() )
-            ownerActor.send(msg)    //update also the components connected via TCP
+            ownerActor.send(m)    //update also the components connected via TCP
         }else if (infoJson.has(ApplMsgs.stepId)) {
             val time: String = infoJson.getString(ApplMsgs.stepId)
-            doStepMove(ApplMsgs.stepId, time);
+            doStepMove( time );
         }else if (infoJson.has(ActorMsgs.endTimerId)) {
             this.endStepOk();
         }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
@@ -118,7 +118,7 @@ override suspend fun handleInput(msg: ApplMessage) {
                 this.endStepKo(""+dtVal);
             }
         }else if( infoJson.has("robotmove") && currentBasicMove.length > 0 ){ //another move while working
-            colorPrint("$name BasicStepRobotActor |  move already running: let us store the request", Color.LIGHT_MAGENTA)
+            colorPrint("$name BasicStepRobotActor |  move already running: store the request", Color.LIGHT_MAGENTA)
             msgQueueStore.add(msg)
             return
         }else if( infoJson.has("robotmove") && currentBasicMove.length == 0 ) {
@@ -132,6 +132,9 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 currentBasicMove = "";
                 ownerActor.send(m)
+            }else{
+                val move = infoJson.getString("move")
+                colorPrint("$name BasicStepRobotActor |  no currentBasicMove for ${move}" )
             }
             if( msgQueueStore.size > 0 ){
                 val next    = msgQueueStore.removeAt(0)
@@ -143,7 +146,7 @@ override suspend fun handleInput(msg: ApplMessage) {
         }
     }
 
-    override fun msgDriven(msgJson: JSONObject) {
+    override fun msgDriven(infoJson: JSONObject) {
         //println("$name BasicStepRobotActor |  %%% msgDriven:$msgJson")
         /*
         if( msgJson.has("robotmove")){
@@ -152,9 +155,9 @@ override suspend fun handleInput(msg: ApplMessage) {
                 msgQueueStore.add(msg)
                 return
             }*/
-        if( msgJson.has("robotmove")) {
-            currentBasicMove = msgJson.getString("robotmove")
-            support.forward(msgJson.toString())
+        if( infoJson.has("robotmove")) {
+            currentBasicMove = infoJson.getString("robotmove")
+            support.forward(infoJson.toString())
         }
      }
 

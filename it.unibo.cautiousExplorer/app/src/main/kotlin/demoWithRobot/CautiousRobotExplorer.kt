@@ -19,7 +19,7 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
         plannerUtil.initAI()
         println("===== initial map")
         plannerUtil.showMap()
-        executor = RobotExecutor("executor", this)
+        executor = RobotExecutor("executor", scope, this)
     }
     fun explore() {
         plannerUtil.setGoal(1, 1);
@@ -43,14 +43,16 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
         println("$name | backToHome actions=$actions")
         val pathTodo = actions.toString()
             .replace("[","").replace("]","")
-            .replace(", ","")
-        val cmdStr  = ApplMsgs.executorstartMsg
-            .replace("PATHTODO", pathTodo)
+            .replace(", ","") + "l"
+        //added a final turnLeft to restore initial state
+        val cmdStr  = ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
         println("$name | backToHome cmdStr=$cmdStr")
         val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
         executor.send(cmd)
         plannerUtil.showMap()
     }
+
+    //var atHomeAgain = false
 
     override suspend fun handleInput(msg: ApplMessage) {
         println("$name | handleInput $msg")
@@ -59,9 +61,22 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
             explore()
         }else if (msg.msgId == "executorend") {
             plannerUtil.showMap()
-            mapUtil.showMap()
-            //waitUser("backToHome")
-            backToHome()
+            val atHome = plannerUtil.atHome()
+            println("$name | atHome: ${atHome}")
+            plannerUtil.showCurrentRobotState()
+            if( ! atHome ) {
+                waitUser("backToHome")
+                backToHome()
+            }
+            /*
+            else{ //the planner says that we are at home
+                if( ! atHomeAgain ) { //turnLeft to restore initial state
+                    atHomeAgain = true
+                    val cmdStr  = ApplMsgs.executorstartMsg.replace("PATHTODO", "l")
+                    val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
+                    executor.send(cmd)
+                }
+            }*/
         }
     }
 }
