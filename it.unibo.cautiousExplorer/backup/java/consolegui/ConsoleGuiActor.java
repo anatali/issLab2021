@@ -8,7 +8,9 @@ sent to the WEnv by using WEnvConnSupportNoChannel.sendMessage
  */
 package consolegui;
 
+import it.unibo.interaction.IUniboActor;
 import it.unibo.supports2021.ActorBasicJava;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -39,6 +41,16 @@ private String[] buttonLabels  = new String[]  { "STOP", "RESUME" };
 
 	@Override
 	protected void handleInput(String s) {
+
+	}
+
+	@Override
+	public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+	}
+
+	@Override
+	public void removeActor(@NotNull IUniboActor iUniboActor) {
 
 	}
 }

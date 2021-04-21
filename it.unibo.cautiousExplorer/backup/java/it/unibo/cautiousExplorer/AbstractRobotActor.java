@@ -18,11 +18,12 @@ public abstract class AbstractRobotActor extends ActorBasicJava {
         super(name);
         support = IssWsHttpJavaSupport.createForWs("localhost:8091" );
         support.registerActor(this);
+        /*
         MoveNameShort.put("moveForward","w");
         MoveNameShort.put("moveBackward","s");
         MoveNameShort.put("turnLeft","l");
         MoveNameShort.put("turnRight","r");
-        MoveNameShort.put("alarm","h");
+        MoveNameShort.put("alarm","h");*/
     }
 
 

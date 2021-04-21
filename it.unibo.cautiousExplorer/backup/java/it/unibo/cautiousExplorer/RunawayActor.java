@@ -1,7 +1,9 @@
 package it.unibo.cautiousExplorer;
 
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import mapRoomKotlin.mapUtil;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 /*
@@ -9,6 +11,16 @@ The robot cannot be stopped.
 The returnPath is obstacle-free
  */
 public class RunawayActor extends AbstractRobotActor {
+
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 
     private enum State {start, moving, end };
 

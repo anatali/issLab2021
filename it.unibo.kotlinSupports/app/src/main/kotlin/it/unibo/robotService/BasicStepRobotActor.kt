@@ -101,11 +101,16 @@ override suspend fun handleInput(msg: ApplMessage) {
         if (infoJson.has("sonarName")) {
             val m = MsgUtil.buildDispatch( name,"sonarEvent", infoJsonStr, ownerActor.myname() )
             ownerActor.send(m)    //update also the components connected via TCP
-        }else if (infoJson.has(ApplMsgs.stepId)) {
+        }else if (infoJson.has(ApplMsgs.stepId) ) {
+            if( currentBasicMove.length > 0 ) {
+                colorPrint("$name BasicStepRobotActor |  $currentBasicMove running: store $msg", Color.LIGHT_MAGENTA)
+                msgQueueStore.add(msg)
+                return
+            }
             val time: String = infoJson.getString(ApplMsgs.stepId)
             doStepMove( time );
         }else if (infoJson.has(ActorMsgs.endTimerId)) {
-            this.endStepOk();
+            endStepOk();
         }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
             if( currentBasicMove.length > 0  ){
                 val payload = "{ \"collision\" : \"true\",\"move\": \"$currentBasicMove\"}"
@@ -119,7 +124,7 @@ override suspend fun handleInput(msg: ApplMessage) {
                 }
             }
         }else if( infoJson.has("robotmove") && currentBasicMove.length > 0 ){ //another move while working
-            colorPrint("$name BasicStepRobotActor |  move already running: store the request", Color.LIGHT_MAGENTA)
+            colorPrint("$name BasicStepRobotActor |  $currentBasicMove running: store $msg", Color.LIGHT_MAGENTA)
             msgQueueStore.add(msg)
             return
         }else if( infoJson.has("robotmove") && currentBasicMove.length == 0 ) {
@@ -139,7 +144,11 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val next    = msgQueueStore.removeAt(0)
                 val msgJson = JSONObject(next.msgContent)
                 //this.waitUser("msgQueueStore2")
-                msgDriven( msgJson  )
+                colorPrint("$name BasicStepRobotActor |  RESUMES from msgQueueStore: ${msgJson}", Color.LIGHT_MAGENTA )
+                if( msgJson.has("step")){
+                    val time: String = msgJson.getString(ApplMsgs.stepId)
+                    doStepMove( time );
+                } else msgDriven( msgJson  )
             }
 
         }

@@ -458,30 +458,26 @@ and provides the following features:
 
 <br/>
 The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
-embeds a kotlin acor (referred by the var <ks>kactor</ks>). It is  able to perform the following actions:
+embeds a kotlin acor (referred by the var <ks>kactor</ks>). It is  able to perform the following actions: <br/><br/>
 <m>
 <ul>
-<li>send a message to itself (<ks>send,  sendToYourself</ks>) </li>
-<li>send a message (<ks>forward, sendToActor</ks>) to another <tt>uniboActor</tt> kown by reference</li>
-<li>delay  (<ks>dosleep</ks>) the execution for a given time  </li>
-<li>end its activity (<ks>terminate</ks>) </li>
-<li>wait for a user command (<ks>waitUser</ks>): useful during debugging</li>
-</ul></m>
-<br/><br/>
-<!--
-Requires the specification of the method:
+<li><i>send a message</i> to itself (<ks>send,  sendToYourself</ks>) </li>
+<li><i>send a message</i> (<ks>forward, sendToActor</ks>) to another <tt>uniboActor</tt> kown by reference</li>
+<li><i>delay</i>  (<ks>dosleep</ks>) the execution for a given time  </li>
+<li><i>end its activity</i> (<ks>terminate</ks>) </li>
+<li><i>wait for a user command</i> (<ks>waitUser</ks>): useful during debugging</li>
+</ul>
+
+<div class="remark">
+Moreover it defines a  data structure that can be used to store a message <ks>M</ks>, when the actor is in a state
+whose transition set does not include <ks>M</ks>:
 <pre>
- abstract suspend protected  fun <ks>handleInput</ks>(msg : <ks>ApplMessage</ks>)
+protected val msgQueueStore = mutableListOf&lt;ApplMessage>()
 </pre>
--->
-<!--
-called by the method that 
-<pre>
- override suspend fun handleInput(msg: ApplMessage) {
-    msgDriven(JSONObject( msg.msgContent.replace("@",",") ) ) //HORRIBLE trick
- }
-</pre>
--->
+</div>
+</m>
+ 
+ 
 See <a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" target="code">LabIss2021 | ActorBasicKotlin.html</a>
 in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>.<br/>
  </td>
@@ -546,38 +542,113 @@ implements the operation <ks>handleInput</ks> by delegating to an abstract opera
 <td>
  <h3>BasicStepRobotActor</h3>
 The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
-extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">AbstractRobotActor.kt</a>. 
-<br/>It provides a <tt>uniboActor</tt> that
-accepts messages of type <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
-with payload given by Strings defined in the class   
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.</em></a>.<br/>
-More spcifically:
- 
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">AbstractRobotActor.kt</a>
+with the aim of moving the robot.
 
+<br/><br/>
+This actor is able to perform both <tt>basic-moves</tt> and <tt>step-moves</tt>. <br/>
+A <k>step-move</k> is a forward-move with a time properly set, so that
+the distance traveled by the robot is equal to the diameter of the circle in which it is supposed to be inscribed.
+<br/><br/>
+While the (payload of the) answer to a <tt>basic-move</tt> is a <ks>endMoveMsg</ks>, the (payload of the) answer to a <tt>step-move</tt> is
+(see <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a>)
 <ul>
-<li><ks>stepRobot_step()</ks> : to perform a robot ahead the robot for a given time. The answer will be
-<pre>
-
-</pre>
-</li>
-<li>stepRobot_w : to move ahead the robot for a given time</li>
+<li><ks>stepDoneMsg</ks>: if the step is done with success</li>
+<li><ks>stepFailMsg</ks>: if the step cannot be completed</li>
 </ul>
 
-Returns a ApplMsgs.stepDoneMsg if the move is done with success.
-Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
-by an obstacle after time DT. In this case it moves back the robot for time DT
-
-
-The map is a singleton object, managed by mapUtil
-
-
+<div class="remark">
+The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+avoids the interference among overlapping commands. In fact, it exploits the <k>msgQueueStore</k>
+to store a robot-move command while another <tt>basic-move</tt> or <tt>step-move</tt> is still in execution.
+The stored move is executed when the move in execution ends.
+</div>
 
 </td>
 <td>
 <center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
+ <br/><br/>
+ <hr/>
+ The class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.</em></a> 
+defines operations that return a <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
+that can be sent to a 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>.
+More specifically:
+<br/><br/> 
+
+<ul>
+<li><ks>stepRobot_step()</ks> :  for a <tt>step-move</tt>
  
+</li>
+<li><ks>stepRobot_<k>MOVE</k>()</ks> : for a <tt>basic-move</tt> <k>MOVE = <tt>w | s | l | r | h</tt></k></li>
+</ul>
+
 </td>
 </tr>
+
+<tr> 
+<td><h3>BasicStepRobotCaller</h3>
+  The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotCaller.kt" target="code">BasicStepRobotCaller.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+with the aim of sending some commands to the 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+to test its behavior.
+<pre>
+val robot = BasicStepRobotActor(
+     "stepRobot", ownerActor=this, scope, "localhost")
+
+	robot.registerActor(this)
+	robot.send(ApplMsgs.stepRobot_l("main" ))
+	robot.send(ApplMsgs.stepRobot_r("main" ))
+
+</pre>
+</td>
+
+<td>Note that the robot perform the moves, but the ouput shows the message:
+<pre>
+<k>stepRobot BasicStepRobotActor |  move already running: store the request</k>
+</pre>
+In fact, the caller sends the move-commands without any delay between them.
+</td>
+</tr>
+
+
+
+<tr> 
+<td><h3>PathExecutor</h3>
+
+ The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/PathExecutor.kt" target="code">PathExecutor.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+with the aim of sending commands to the 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>,
+so to moving the robot along a given path (e.g. <ks>"wwl"</ks>).
+<br/><br/>
+This <tt>uniboActor</tt> exploits the utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/TripInfo.kt" target="code">TripInfo.kt</a>
+to create a map as a a singleton object, managed by another utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>
+
+ 
+
+ 
+ 
+</td>
+<td>
+<center><img src="./img/pathExecutor.png" alt="pathExecutor" width="100%"  ></center>
+ <br/><br/>
+
+
+</td>
+</tr>
+
+<tr> 
+<td>
+ 
+</td>
+<td>
+</td>
+</tr>
+
 
 </tbody>	
 </table></center>

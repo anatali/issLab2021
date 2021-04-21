@@ -1,10 +1,22 @@
 package it.unibo.cautiousExplorer;
 
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import mapRoomKotlin.mapUtil;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 public class CautiousExplorerActor extends AbstractRobotActor {
+
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 
     private enum State {start, exploring, turning, obstacle, atHomeAgain, end };
 
