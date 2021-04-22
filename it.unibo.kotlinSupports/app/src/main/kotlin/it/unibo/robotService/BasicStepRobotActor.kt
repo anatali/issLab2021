@@ -94,13 +94,14 @@ class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
  */
 override suspend fun handleInput(msg: ApplMessage) {
     colorPrint(  "$name | AbstractRobotActor handleInput $msg currentBasicMove=$currentBasicMove")
-    val infoJsonStr = msg.msgContent //.replace("@",",")
+    val infoJsonStr = msg.msgContent
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
             //println("$name BasicStepRobotActor |  handleInput:$infoJson")
         if (infoJson.has("sonarName")) {
             val m = MsgUtil.buildDispatch( name,"sonarEvent", infoJsonStr, ownerActor.myname() )
-            ownerActor.send(m)    //update also the components connected via TCP
+            ownerActor.send(m)    //owner=ctxserver => update also the components connected via TCP
+            updateObservers(m)
         }else if (infoJson.has(ApplMsgs.stepId) ) {
             if( currentBasicMove.length > 0 ) {
                 colorPrint("$name BasicStepRobotActor |  $currentBasicMove running: store $msg", Color.LIGHT_MAGENTA)
@@ -116,6 +117,7 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val payload = "{ \"collision\" : \"true\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 ownerActor.send(m)
+                updateObservers(m)
                 //currentBasicMove = "";        //set by endMove
             }else{
                 val dtVal = this.getDuration(StartTime)
@@ -136,6 +138,7 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 currentBasicMove = "";
                 ownerActor.send(m)
+                updateObservers(m)
             }else{
                 val move = infoJson.getString("move")
                 colorPrint("$name BasicStepRobotActor |  no currentBasicMove for ${move}" )

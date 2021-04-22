@@ -4,14 +4,11 @@ robotUsage.kt
  */
 
 package kactorWEnv
-import it.unibo.`is`.interfaces.protocols.IConnInteraction
-import it.unibo.actor0.ApplMessage
 import it.unibo.robotService.ApplMsgs
 import kotlindemo.cpus
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.channels.SendChannel
-import mapRoomKotlin.TripInfo
 import org.json.JSONObject
 import java.lang.Exception
 import java.util.HashMap
@@ -35,6 +32,8 @@ fun createRobotUsagekActor(scope:CoroutineScope, robot: SendChannel<String>) : S
  
 
 		suspend fun doWork(){
+			robot.send( MoveJsonCmd.get("r")!! )
+			delay(500)
 			robot.send( MoveJsonCmd.get("l")!! )
 		}
 
@@ -80,9 +79,12 @@ fun main( ) {
 //CONFIGURE THE SYSTEM
 		createBasicActor(this)		//set basicRobotKactor and support
 		createRobotUsagekActor(this, basicRobotKactor )  //set robotUsage
+
 		val obs  = WEnvSupportObserver("obs",robotUsage,this)
 		support.registerActor(obs)
+
 		robotUsage.send("{\"cmd\":\"work\"}")
+
 		println("main ENDS runBlocking ${kotlindemo.curThread()}")
 	}
 	println("main ENDS ${kotlindemo.curThread()}")

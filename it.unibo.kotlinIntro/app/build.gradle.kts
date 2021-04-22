@@ -63,8 +63,7 @@ dependencies {
 //UNIBO
     implementation( "uniboInterfaces:uniboInterfaces"  )
     implementation( "uniboProtocolSupport:unibonoawtsupports"  )
-    implementation("uniboIssSupport:IssActorKotlinRobotSupport-2.0")
-
+    implementation( "uniboIssSupport:IssActorKotlinRobotSupport-2.0")
 }
 
 application {

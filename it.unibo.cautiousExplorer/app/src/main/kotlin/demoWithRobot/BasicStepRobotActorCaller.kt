@@ -11,10 +11,14 @@ import org.json.JSONObject
 class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
     private val robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
+    private val obs   = NaiveObserverActorKotlin("obs", scope )
 
     protected fun doMoves() {
-        robot.registerActor(this)
-        //robot.send(ApplMsgs.stepRobot_w("main", "800"))
+
+        robot.registerActor(obs)
+
+
+
         robot.send(ApplMsgs.stepRobot_l("main" ))
         robot.send(ApplMsgs.stepRobot_r("main" ))
         robot.send(ApplMsgs.stepRobot_step("main", "350"))
@@ -58,7 +62,13 @@ fun main( ) {
     runBlocking {
         val rc = BasicStepRobotCaller("rc")
 
-        rc.send(ApplMsgs.startAny("main"))
+        println("main | ${ApplMsgs.stepRobot_l("main" )}")
+        println("main | ${ApplMsgs.stepRobot_step("main", "350" )}")
+
+        val startMsg = ApplMsgs.startAny("main")
+        println("main | $startMsg")
+
+        rc.send( startMsg )
 
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
