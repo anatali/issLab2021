@@ -14,8 +14,8 @@
 package it.unibo.interaction
 
 interface IssOperations {
-    fun forward(msg: String) //String related to cril, aril, AppMsg
-    fun request(msg: String)
-    fun reply(msg: String)
-    fun requestSynch(msg: String): String
+    fun forward(msgJson: String) //String related to cril, aril, AppMsg
+    fun request(msgJson: String)
+    fun reply(msgJson: String)
+    fun requestSynch(msgJson: String): String
 }

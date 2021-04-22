@@ -198,69 +198,83 @@ div.imagedesc{
  
 
 <h2>Introduction</h2>
-The virtual robot introduced in  
+The system introduced in  
 <a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="web">it.unibo.virtualRobot2020\userDocs\VirtualRobot2021.html</a>
-is just an example of a robot built according to some specific technology.
+is an example of a software component that:<br/><br/>
+<ul>
+<li>operates in an <em>environment</em> (<tt>WEnv</tt>)</li>
+<li>embeds a <em>device</em> (the virtual robot) built according to some specific technology</li>
+<li>interacts with its users by means of <em>asynchronous messages</em> (sent over a websocket at port 8091)</li>
+<li>is the <em>source of information</em> (related to the current state of the robot or of the <tt>WEnv</tt>)
+the that could be useful for several other components besides the component that controls the robot
+(i.e. the '<k>robot-owner</k>').</li>
+</ul>
+
+ 
 <br/> 
-But, an important goal (<a href="https://en.wikipedia.org/wiki/Non-functional_requirement" target="web">non-functional requirement</a>)
-of a software system designer should be that of making the code of a robot application 
-<bc>as much independent as possible from the robot technology</bc>, in order to make it easier the substitution of a robot type with another.
-<br/><br/> 
-Kotlin actors help us to achieve such a goal, by providing in a quite natural way a <bc>more abstract layer of reasoning</bc>.
+An important goal (<a href="https://en.wikipedia.org/wiki/Non-functional_requirement" target="web">non-functional requirement</a>)
+of its design was that of making  the code of a robot application <k>as much independent as possible</k>:
+<ul>
+<li><ks>from the robot technology</ks>, in order to make it easier the substitution of a robot type with another</li>
+<li><ks>from the interaction protocol</ks>, , in order to capture the <em>essence</em> of the information flow among the
+<tt>WEnv</tt> system and the other application components</li> </ks>
+</ul>
+ 
+(Kotlin)actors help us to design and build <tt>WEnv</tt>-based applications, by providing in a quite natural way 
+a <k>more abstract layer of reasoning and of writing the code</k> .
 
-<h2>Divide et impera?</h2>
 
-<center><table style="width:95%">
+<h3>A first example</h3>
+
+<table style="width:98%">
 <tbody>	
-
 <tr>
-<td style="width:40%"><h3>Step+Basic: case 0</h3>
-<center><img src="./img/RobotUsageCall.png" alt="RobotUsageCall" width="80%" ></center>
- </td>
-<td> 
-<center><img src="./img/StepAndBasic.png" alt="StepAndBasic" width="60%" ></center>
-</td>
-</tr>
+<td style="width:50%" >
+<center><img src="./img/RobotUsageBasicRobot.png" alt="RobotUsageBasicRobot" width="100%" ></center>
 
-<tr>
-<td><h3>Step+Basic: case 1</h3>
-
-<pre></pre>
+<m>
+This example exploits the   
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
+(defined in the project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>)
+that can be observed by components that implement the interface 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IUniboActor.kt" target="code">IUniboActor.kt</a>
+(see the section <a href="#uniboActor">uniboActor</a> hereunder).
+</m>
 
 </td>
 <td>
-<center><img src="./img/StepAndBasicArch1.png" alt="StepAndBasicArch1" width="80%" ></center> 
+<ol>
+<li>The kactor <a href="../app/src/main/kotlin/kactorWEnv/robotUsage.kt" target="code">robotUsage.kt</a>
+send move-commands to the 
+kactor <a href="../app/src/main/kotlin/kactorWEnv/BasicRobotKactor.kt" target="code">BasicRobotKactor.kt</a>
+</li>
+<li>The  kactor <a href="../app/src/main/kotlin/kactorWEnv/BasicRobotKactor.kt" target="code">BasicRobotKactor.kt</a>
+executes the received command by using the provided support
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
+</li>
+<li>The component <a href="../app/src/main/kotlin/kactorWEnv/WEnvSupportObserver.kt" target="code">WEnvSupportObserver.kt</a>
+is a specilization of a
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>.
+<br/>
+It acts as an <i>observer of the support</i>, that redirects to <a href="../app/src/main/kotlin/kactorWEnv/robotUsage.kt" target="code">robotUsage.kt</a>
+the observed messages sent by the WEnv.
+</li>
+</ol>
 </td>
 </tr>
-
-<tr>
-<td><h3>Step+Basic: case 2</h3>
-</td>
-<td>
-<center><img src="./img/StepAndBasicArch2.png" alt="StepAndBasicArch2" width="90%" ></center> 
-</td>
-</tr>
+ </tbody>
+</table>
 
 
-<tr>
-<td><h3>Step+Basic: case 3</h3>
-<center><img src="./img/RobotUsageCall.png" alt="RobotUsageCall" width="60%" ></center>
-</td>
-<td>
-<!-- <center><img src="./img/BasicAndStepArch.png" alt="BasicAndStepArch" width="60%" ></center>  -->
-<center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
 
-</td>
-</tr>
-
-
-</tbody>	
-</table></center>
 
 <h2 id="msgstandard">Towards standards in messaging</h2>
 
-We note that the interaction with the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a> requires
-the usage of messages of type  <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>
+We note that the interaction among actors of type
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>.
+<!-- <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a> -->
+requires the usage of messages of type  
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>
 that requires, besides a <tt>MSGID</tt> and a <tt>CONTENT</tt>, also the specification 
  a <tt>name</tt> for the <tt>SENDER</tt>  and a name for the <tt>RECEIVER</tt>. 
  <br/>The external representation is a String written with the syntax of a <k>Prolog Term</k> with 5 arguments:
@@ -337,7 +351,91 @@ We remember that , we use our specific <em> high-level robot-move language</em>:
 </ol>
 </div>
 
+<h2>Divide et impera?</h2>
+As usully happens in oop, the
+<a href="https://stackify.com/solid-design-principles/" target="web">Single Responsibility Principle</a> could induce
+the software designer to distribute different behaviours in different actors.
+<br/> 
+An accurate analysis is required to consider the effects of different architectural configurations.	
+<br/> 
+Let us consider here what could happen if we want to introduce a <tt>StepRobotActor</tt>, as discussed 
+in the project phase of 
+<a href="../../it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project" target="web">cautiousExplorerActors.html</a>.
+<div class="remark">
+The main feature of a <tt>StepRobotActor</tt> is related to its capability of executing a <k>step</k> in 
+'atomic' way (i.e. all or nothing). <br/>
+A step is done when distance traveled by the robot is equal to the diameter of the circle in which it is supposed to be inscribed.
 
+</div>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:40%"><h3>Step+Basic: case 0</h3>
+<center><img src="./img/RobotUsageCall.png" alt="RobotUsageCall" width="80%" ></center>
+ </td>
+<td> 
+<center><img src="./img/StepAndBasic.png" alt="StepAndBasic" width="60%" ></center>
+<hr/>
+<ul>
+<li><ks>pros:</ks> </li>
+<li><ks>cons:</ks> </li>
+<li><ks>caveat:</ks> </li>
+</ul>
+</td>
+</tr>
+
+<tr>
+<td><h3>Step+Basic: case 1</h3>
+
+<hr/>
+<ul>
+<li><ks>pros:</ks> </li>
+<li><ks>cons:</ks> </li>
+<li><ks>caveat:</ks> </li>
+</ul>
+
+</td>
+<td>
+<center><img src="./img/StepAndBasicArch1.png" alt="StepAndBasicArch1" width="80%" ></center> 
+</td>
+</tr>
+
+<tr>
+<td><h3>Step+Basic: case 2</h3>
+
+<hr/>
+<ul>
+<li><ks>pros:</ks> </li>
+<li><ks>cons:</ks> </li>
+<li><ks>caveat:</ks> </li>
+</ul>
+</td>
+<td>
+<center><img src="./img/StepAndBasicArch2.png" alt="StepAndBasicArch2" width="90%" ></center> 
+</td>
+</tr>
+
+
+<tr>
+<td><h3>Step+Basic: case 3</h3>
+<center><img src="./img/RobotUsageCall.png" alt="RobotUsageCall" width="60%" ></center>
+</td>
+<td>
+<!-- <center><img src="./img/BasicAndStepArch.png" alt="BasicAndStepArch" width="60%" ></center>  -->
+<center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
+<hr/>
+<ul>
+<li><ks>pros:</ks> </li>
+<li><ks>cons:</ks> </li>
+<li><ks>caveat:</ks> </li>
+</ul>
+</td>
+</tr>
+
+
+</tbody>	
+</table></center>
  
 <h2>Towards a robot service</h2>
  <br/>
@@ -464,7 +562,7 @@ of the <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="c
 
  
 
-<h2>A new (abstract) component</h2>
+<h2 id="uniboActor">A new (abstract) component</h2>
 The abstract class 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
 defines the properties of new abstraction that (from now on) can be used as the father of all our actors.

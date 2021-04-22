@@ -49,7 +49,7 @@ class IssWsHttpKotlinSupport
 
     init{
         wsconnect(  fun(scope, support ) {
-            colorPrint("IssWsHttpKotlinSupport | connected ... ${sysUtil.aboutThreads("isssupport")}")
+            colorPrint("IssWsHttpKotlinSupport | wsconnect ... ${sysUtil.aboutThreads("isssupport")}")
         } )
     }
     companion object { //singleton
@@ -186,7 +186,7 @@ class IssWsHttpKotlinSupport
         if (connectForWs) myWs.send(msgJson) else colorPrint("SORRY: not connected for ws",  Color.RED)
     }
 
-    override fun requestSynch(msg: String): String {
+    override fun requestSynch(msgJson: String): String {
         TODO("Not yet implemented")
     }
 
