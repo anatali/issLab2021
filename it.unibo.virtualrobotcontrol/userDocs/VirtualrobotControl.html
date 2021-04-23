@@ -281,10 +281,10 @@ type docker_password.txt | docker login --username natbodocker --password-stdin
 
 <pre>
 gradle build                            <kc>Create the distribution</kc>
-docker build -t virtualrobotdisi:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualRobot2020/Dockerfile" target="web">Dockerfile</a></kc>
+docker build -t virtualrobotdisi:2.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualRobot2020/Dockerfile" target="web">Dockerfile</a></kc>
 
 <kc>Tag the image</kc>
-docker tag virtualrobotdisi:1.0 natbodocker/virtualrobotdisi:2.0
+docker tag virtualrobotdisi:2.0 natbodocker/virtualrobotdisi:2.0
 
 docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh	<kc>to change WEnv/WebGLScene/sceneConfig</kc>
 
@@ -312,16 +312,16 @@ docker push natbodocker/usingvirtualrobot:1.0
 
 <h3>The <a href="../../it.unibo.virtualrobotcontrol" target="web">virtualrobotcontrol</a> project</h3>
 <pre>
-docker build -t virtualrobotcontrol:1.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualrobotcontrol/Dockerfile" target="web">Dockerfile</a></kc>
+docker build -t virtualrobotcontrol:2.0 .  <kc>Create the image using the <a href="../../it.unibo.virtualrobotcontrol/Dockerfile" target="web">Dockerfile</a></kc>
 
-docker run -ti -p 3000:3000 --rm  virtualrobotcontrol:1.0 /bin/sh	<kc>local test</kc>
+docker run -ti -p 3000:3000 --rm  virtualrobotcontrol:2.0 /bin/sh	<kc>local test</kc>
 ls
 ...
 node webguiServer
 
 
 <kc>Tag the image</kc>
-docker tag virtualrobotcontrol:1.0 natbodocker/virtualrobotcontrol:1.0
+docker tag virtualrobotcontrol:1.0 natbodocker/virtualrobotcontrol:2.0
 
 <kc>Register the image on <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></kc>
 docker push natbodocker/virtualrobotcontrol:1.0

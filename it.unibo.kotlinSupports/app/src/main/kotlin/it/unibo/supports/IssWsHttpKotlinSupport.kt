@@ -83,6 +83,10 @@ class IssWsHttpKotlinSupport
             return activeAconnsWs.get(addr)!!
         }
     }
+
+    override fun getConnectionWs(scope: CoroutineScope, addr: String): IssWsHttpKotlinSupport {
+        return IssWsHttpKotlinSupport.getConnectionWs(scope, addr)
+    }
 //===============================================================================
     //After open => execute workTodo that has been set by connect
     override fun onOpen(webSocket: WebSocket, response: Response ) {
@@ -120,6 +124,8 @@ class IssWsHttpKotlinSupport
 
     override fun registerActor(obs: IUniboActor) { actorobservers.add(obs) }
     override fun removeActor(obs: IUniboActor)   { actorobservers.remove(obs); }
+
+
     override fun isOpen() : Boolean {  return opened   }
     override fun close(){  disconnect( )  }
 

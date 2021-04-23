@@ -34,19 +34,3 @@ import kotlinx.coroutines.*
         }
 
     }
-/*
-Accepts   ApplMsgs.stepMsg
-Returns   ApplMsgs.stepDoneMsg or ApplMsgs.stepFailMsg
-WARNING !!!!!!!!  Use wenvAddr=wenv if deploy with dockercompose
- */
-
-//StepRobotActor("stepRobot", ctxserver, this) //, "wenv"
-//StepRobotActor("stepRobot", ctxserver, "localhost")
-//stepper.registerActor(ctxserver)
-
-//val basicrobot = BasicRobotActor("basicRobot", "localhost")
-/*
-val basicrobot = BasicRobotActor("basicRobot" )
-basicrobot.registerActor(ctxserver)
-basicrobot.send( startBasicRobotMsg )
-*/

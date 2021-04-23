@@ -201,21 +201,15 @@ div.imagedesc{
  
  
 <h2>Embedding 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/StepRobotActor.kt" target="code">
-<ks>StepRobotActor.kt</ks></a>
+<a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
 into a service</h2>
 
-The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/StepRobotActor.kt" target="code">
-<ks>StepRobotActor.kt</ks></a> is implemented in Kotlin in the project 
-<a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>.
+The <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a> is implemented in Kotlin 
+as described in <a href="ActorWithKotlinSupport.html" target="web">LabIss2021 | support for Actors based on Kotlin</a>.
 <br/> 
 In order to facilitate the usage of such a component, we embed it in a 'service' that accepts messages of type
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/ApplMessage.kt" target="web">
-<ks>ApplMessage.kt</ks></a> sent over the TCP port <ks>8010</ks>.
+<a href="../app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><ks>ApplMessage.kt</ks></a> sent over the TCP port <ks>8010</ks>.
 <br/> 
-See <a href="../../it.unibo.kotlinSupports/userDocs/wssupportAsActorKotlin.html" target="web">
-<tt>LabIss2021 | wshttp support with ActorBasicKotlin observers</tt></a> in the project <a href="../../it.unibo.kotlinSupports" target="web">
-<ks>it.unibo.kotlinSupports</ks></a>.
 <br/> 
 Let us report here some detail about its implementation.<br/><br/> 
 
@@ -283,10 +277,11 @@ public interface IConnInteraction {
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="web">
 <ks>IssWsHttpKotlinSupport.kt</ks></a><br/>
 <m><ul>
-<li>The kotlin version of the support introduced in
-
+<li>The kotlin version of the support first introduced in
 <a href="../../it.unibo.boundaryWalk/app/src/main/java/it/unibo/robotSupports/IssWsSupport.java" target="web">
-IssWsSupport.java</a><br/>
+IssWsSupport.java</a> and afterwards described in <a href="ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="web">LabIss2021 | support for Actors based on Kotlin</a>.
+
+<br/>
 
 </li>
 
@@ -301,6 +296,280 @@ IssWsSupport.java</a><br/>
  </tbody>
 </table>
 
+
+
+
+<h3>Examples</h3>
+ <br/>
+
+<center><table style="width:95%"> 
+<tbody>	
+<tr>
+<td style="width:30%">
+This example is in the project <a href="../../it.unibo.kotlinIntro" target="code">it.unibo.kotlinIntro</a>
+
+<h4>A Koltin actor</h4>
+An actor written in Kotlin (kactor) that sends commands to our
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>: 
+<a href="../../it.unibo.kotlinIntro/app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
+<m>An example of usage is in:
+<a href="../../it.unibo.kotlinIntro/app/src/main/kotlin/robotWithActors/MainRobotActorTry.kt" target="code">MainRobotActorTry.kt</a>
+</m>
+</td>
+<td>
+<center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
+ <div class="remark">
+The  <i>RobotService</i> receives the message
+sent by the <a href="../../it.unibo.kotlinIntro/app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>
+on the (TCP) port <ks>8010</ks> and redirects such a message to the component named 
+<a href="../app/src/main/kotlin/it/unibo/robotService/StepRobotActor.kt" target="code"><em>'stepRobot'</em></a>,
+<!-- which is  a specialization of a generic
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>.-->
+ </div>
+
+ </td>
+</tr>
+
+<tr>
+<td style="width:40%">
+<h3>The KotlinActor <a href="../../it.unibo.kotlinIntro/app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+as <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
+The behavior of the <a href="../../it.unibo.kotlinIntro/app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+can be modelled as a a <em>message-driven</em>  
+<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>
+where each <bc>state</bc> is mapped into a <em>function</em> whose body specifies the <bc>actions</bc> to be executed in that state.
+ 
+
+<pre><m>
+ while( <ks>state == "working"</ks> ){
+   var <ks>msg = channel.receive()</ks>
+   val msgJson = JSONObject(msg)
+   var input   = msgJson.keys().next()
+   when( input ){
+    "<k>cmd</k>"       -> doCmd(msgJson.getString("cmd"))
+    "<k>move</k>"      -> doMove(...)
+    "<k>sonarName</k>" -> doSonar(msg)
+    "<k>collision</k>" -> doCollision(msg)
+    else -> println("NO HANDLE for $msg")
+  }		
+ }</m>
+</pre>
+
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="60%"  ></center><br/>
+</td>
+<td>
+
+
+The  Kactor <a href="../../it.unibo.kotlinIntro/app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> handles messages
+in the form of JSON objects:
+<m>
+ <ul>
+ <li><k>{"cmd":"<ks>init</ks>"}</k>: starts its job</li>
+ <li><k>{"cmd":"<ks>end</ks>"}</k>: terminates its job</li>
+  <li><k>{"collision" : "...", "move": "..."}</k>: 'reacts' to a <i>collision message</i> sent by the WEnv </li>
+ <li><k>{"sonarName": "...", "distance": ..., "axis": "..." }</k>: 'reacts' to a message sent by the WEnv  when a <em>scene-sonar</em> detects the robot</li>
+<li><k>{"robotmove":"<ks>MOVE</ks>", "time":T}</k>: sends a move-command to the robot. 
+ </li>
+</ul>
+
+</m>
+ 
+Since the <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor</a>
+  understand messages represented in
+the form of <a href="../app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>,
+the move-command must be written in the proper way. For example:
+ <pre>
+ msg(move,dispatch,<ks>actortry</ks>,<em>stepRobot</em>,{"robotmove":"moveForward","time":350},1)
+<hr/><m>val cmd     = MoveJsonCmd.get(moveShort)
+val applMsg = "msg(robotmove,dispatch,actortry,DEST,CMD,1)".replace("DEST", dest).replace("CMD", cmd!!)
+val msg     = <k>ApplMessage.create(applMsg)</k>
+conn.sendALine(msg.toString())</m></pre>
+
+ <div class="remark">
+  Note that now:<hr/>
+the <b>sender</b> (that names itself as <ks>'actortry'</ks>) has no reference to the component that will handle its message.
+Rather it only knowns that the name of such a <b>destination</b> component is <em>'stepRobot'</em>.
+ </div>
+ </td>
+</tr>
+
+
+</tbody>	
+</table></center>
+
+<br/>
+
+
+ 
+
+
+<!--
+However, it is quite simple to introduce a version of the  KotlinActor 
+(let us call it <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>)
+that accepts messages in the form of 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> 
+-->
+<h3>The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a> </h3>
+
+The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a>
+handles the messages 
+(strings that represent an <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> ) 
+sent by the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>; for example
+<pre>
+msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"collision" : "true" , "move": "moveForward"}</ks>,5)
+msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"endmove" : "false" , "move": "moveForward"}</ks>,6)
+msg(supportInfo,dispatch,support,observer,<ks>{"sonarName":"sonar2" , "distance":7 , "axis":"x"}</ks>,0) }
+</pre> 
+
+
+
+
+The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> sends to the 
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a>
+<i>the content of each received message</i>
+(a string in JSON form) to the <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>.
+<br/><br/>
+Thus, it works as a (remote) observer of the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>
+that updates <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a> as an 'observer'
+of the <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> itself.
+
+
+<br/><br/>
+
+
+
+
+
+
+
+
+
+
+<h2 id="deploy">Deploy</h2>
+
+<ol>
+<li><h3>Set the main class in <a href="../app/build.gradle.kts" target="code"><ks>build.gradle.kts</ks></a></h3>
+For example:
+<pre>
+application {
+     mainClass.set("it.unibo.robotService.MainRobotServiceKt")
+}
+</pre>
+</li>
+<li><h3>Create the distribution</h3>
+<pre>
+gradlew distTar
+</pre>
+</li>
+<li><h3>Define the <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a></h3>
+<pre>
+FROM openjdk:12.0.2
+
+ADD ./app/build/distributions/app-2.0.tar  /
+
+WORKDIR /app-2.0/bin
+
+CMD ["bash", "app"]
+</pre> 
+</li>
+
+<li><h3>Build the image for local usage</h3>
+<pre>
+<kc>//Build the image of the steprobot service with wenvAddr=<k>localhost</k> at line 32 of 
+<a href="../app/src/main/kotlin/it/unibo/actor0robot/MainRobotService.kt" target="code"><ks>MainRobotService.kt</ks></a>) ) </kc>
+docker build -t steprobot:2.0 .  
+
+<kc>//run the image to test</kc>
+docker run -p 8010:8010 -ti --rm steprobot:2.0 <k>/bin/bash</k> <kc>//to use the console</kc>  
+</pre>
+</li>
+
+
+<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
+<pre>
+<kc>Login in DockerHub (get the password from a private file)</kc>
+ type docker_password.txt | docker login --username natbodocker --password-stdin
+ 
+<kc>Tag the image</kc>
+docker tag steprobot:2.0 natbodocker/steprobot:2.0
+
+<kc>Register the image</kc>
+docker push natbodocker/steprobot:2.0
+</pre>
+</li>
+
+
+<li><h3>Build the image for integrated usage</h3>
+<pre>
+<kc>//Build the image of the steprobot service with wenvAddr=<k>wenv</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
+docker build -t steprobot:2.0 .  
+</pre>
+<h4>Run a demo</h4>
+ <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/actor0remote/MainStepRobotActorCaller.kt" target="code"><ks>MainStepRobotActorCaller.kt</ks></a>
+ in project <i>it.unibo.cautiousExplorer</i>
+ 
+</li>
+
+
+<li><h3>Define the docker-compose specification file <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a></h3>
+For example:
+<pre>
+version: '3'
+services:
+  wenv:
+    image: docker.io/natbodocker/virtualrobotdisi:2.0
+    ##image: virtualrobotdisi:2.0
+    ports:
+      - 8090:8090
+      - 8091:8091
+  server8010:
+    <k>image: steprobot:2.0</k>
+    ports:
+      - 8010:8010
+    depends_on:
+      - wenv
+	  
+	  
+<kc>//Run the steprobot service together with the wenv</kc>
+docker-compose -f virtualrobotandstepper.yaml up
+
+
+</pre>
+
+ </li>
+
+
+
+<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
+<pre>
+<kc>Login in DockerHub (get the password from a private file)</kc>
+ type docker_password.txt | docker login --username natbodocker --password-stdin
+ 
+<kc>Tag the image</kc>
+docker tag steprobot:2.0 natbodocker/steprobot:2.0
+
+<kc>Register the image</kc>
+docker push natbodocker/steprobot:2.0
+</pre>
+
+<h4>Change <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </h4>
+<pre>
+version: '3'
+services:
+  wenv:
+    image: docker.io/natbodocker/virtualrobotdisi:2.0
+    ports:
+      - 8090:8090
+      - 8091:8091
+  stepper:
+	<k>image: docker.io/natbodocker/steprobot:2.0</k>
+    ports:
+      - 8010:8010
+    depends_on:
+      - wenv
+</pre>
+</li>
+<ol>
  
 
 </div>  

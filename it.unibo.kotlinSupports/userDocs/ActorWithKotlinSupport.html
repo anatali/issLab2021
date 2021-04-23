@@ -193,7 +193,7 @@ div.imagedesc{
     
 <body>
 <div id="top">
-<h1>LabIss2021 | wshttp support with ActorBasicKotlin observers <font size="5"></font> </h1>
+<h1>LabIss2021 | support for Actors based on Kotlin<font size="5"></font> </h1>
 </div>  
 
 <div class="body"> 
@@ -300,7 +300,7 @@ in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlin
 <tbody>	
 
 <tr>
-<td style="width:50%" ><h3>IssWsHttpKotlinSupport</h3>
+<td style="width:50%" ><h3 id="IssWsHttpKotlinSupport">IssWsHttpKotlinSupport</h3>
 The class
   <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
   provides a singleton (for each ip address) that defines utility operations to connect/disconnect (to the given ip address) 
@@ -419,7 +419,7 @@ as answer to a <tt>basic-move</tt>
 <center><img src="./img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
  
 <div class="remark">
-The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+The <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
 avoids the interference among overlapping commands. In fact, it exploits the <k>msgQueueStore</k>
 to store a robot-move command while another <tt>basic-move</tt> or <tt>step-move</tt> is still in execution.
 The stored move is executed when the move in execution ends.
@@ -439,7 +439,7 @@ to test its behavior.
  The class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.</em></a> 
 defines operations that return a <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
 that can be sent to a 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>.
+<a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>.
 More specifically:
 <hr/>
 
@@ -476,120 +476,43 @@ In fact, the caller sends the move-commands without any delay between them.
 
 <tr> 
 <td>
- 
+
+Todo: BoundaryWalk
+<hr/>
+use the  <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+to define an actor that solves the problems introduced in
+<a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html" target="lab">LabIss2021 | BoundaryWalk</a>
+and  in <a href="../../it.unibo.virtualrobotclient/userDocs/resumableBoundaryWalker.html" target="web">Lab ISS | the project resumableBoundaryWalker</a>
 </td>
 <td>
+<div class="remark">
+Next: build a <k>RobotService</k>
+<hr/>
+See <a href="RobotService.html" target="web">LabIss2021 | a RobotService</a>
+</div> 
 </td>
 </tr>
  </tbody>
 </table>
 
-<h2 id="deploy">Deploy</h2>
+<h2 id="deploy">Deployment</h2>
 
 <ol>
-<li><h3>Set the main class in <a href="../app/build.gradle.kts" target="code"><ks>build.gradle.kts</ks></a></h3>
-For example:
+
+<li><h3>Create the library</h3>
 <pre>
-application {
-     mainClass.set("it.unibo.robotService.MainRobotServiceKt")
-}
-</pre>
+gradlew distJar
+
+<kc>Creates the file <ks>app-2.0.jar</ks>, renamed in <k>IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
 </li>
-<li><h3>Create the distribution</h3>
+
+<li><h3>Copy the library</h3>
 <pre>
-gradlew distTar
-</pre>
+Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-2.0.jar</ks> into 
+<k>/unibolibs/IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
 </li>
-<li><h3>Define the <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a></h3>
-<pre>
-FROM openjdk:12.0.2
 
-ADD ./app/build/distributions/app-2.0.tar  /
-
-WORKDIR /app-2.0/bin
-
-# COPY ./*.pl ./
-# RUN ls
-
-CMD ["bash", "app"]
-
-</pre> </li>
-<li><h3>Define the docker-compose specification file <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a></h3>
-For example:
-<pre>
-version: '3'
-services:
-  wenv:
-    image: docker.io/natbodocker/virtualrobotdisi:2.0
-    ##image: virtualrobotdisi:2.0
-    ports:
-      - 8090:8090
-      - 8091:8091
-  server8010:
-    image: steprobot:2.0
-    ## image: docker.io/natbodocker/steprobot:1.0
-    ports:
-      - 8010:8010
-    depends_on:
-      - wenv
-</pre>
-
- </li>
-<li><h3>Build the image for local usage</h3>
-<pre>
-<kc>//Build the image of the steprobot service with wenvAddr=<k>localhost</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
-docker build -t steprobot:1.0 .  
-
-<kc>//run the image to test</kc>
-docker run -p 8010:8010 -ti --rm steprobot:1.0 <k>/bin/bash</k> <kc>//to use the console</kc>  
-</pre>
-</li>
-<li><h3>Build the image for integrated usage</h3>
-<pre>
-<kc>//Build the image of the steprobot service with wenvAddr=<k>wenv</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
-docker build -t steprobot:1.0 .  
-
-<kc>//Run the steprobot service together with the wenv</kc>
-docker-compose -f virtualrobotandstepper.yaml up
-
-</pre>
-<h4>Run a demo</h4>
- <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/actor0remote/MainStepRobotActorCaller.kt" target="code"><ks>MainStepRobotActorCaller.kt</ks></a>
- in project <i>it.unibo.cautiousExplorer</i>
  
-</li>
-
-<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
-<pre>
-<kc>Login in DockerHub (get the password from a private file)</kc>
- type docker_password.txt | docker login --username natbodocker --password-stdin
- 
-<kc>Tag the image</kc>
-docker tag steprobot:1.0 natbodocker/steprobot:1.0
-
-<kc>Register the image</kc>
-docker push natbodocker/steprobot:1.0
-</pre>
-
-<h4>Change <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </h4>
-<pre>
-version: '3'
-services:
-  wenv:
-    image: docker.io/natbodocker/virtualrobotdisi:2.0
-    ##image: virtualrobotdisi:2.0
-    ports:
-      - 8090:8090
-      - 8091:8091
-  stepper:
-    ##image: steprobot:1.0
-	image: docker.io/natbodocker/steprobot:1.0
-    ports:
-      - 8010:8010
-    depends_on:
-      - wenv
-</pre>
-</li>
 <ol>
 
 

@@ -20,9 +20,11 @@ import it.unibo.supports.ActorMsgs
 import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.delay
 import org.json.JSONObject
 
+@ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class StepRobotActor(name: String, val ownerActor: ActorBasicKotlin, scope: CoroutineScope )
             : AbstractRobotActor( name, "wenv", scope ) {
