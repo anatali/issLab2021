@@ -297,10 +297,10 @@ IssWsSupport.java</a> and afterwards described in <a href="ActorWithKotlinSuppor
 </table>
 
 
+ 
 
-
-<h3>Examples</h3>
- <br/>
+<h2>Examples using kactors</h2>
+ 
 
 <center><table style="width:95%"> 
 <tbody>	
@@ -394,21 +394,10 @@ Rather it only knowns that the name of such a <b>destination</b> component is <e
 </tr>
 
 
-</tbody>	
-</table></center>
-
-<br/>
 
 
- 
 
-
-<!--
-However, it is quite simple to introduce a version of the  KotlinActor 
-(let us call it <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>)
-that accepts messages in the form of 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> 
--->
+<tr><td>
 <h3>The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a> </h3>
 
 The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a>
@@ -416,14 +405,16 @@ handles the messages
 (strings that represent an <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> ) 
 sent by the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>; for example
 <pre>
-msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"collision" : "true" , "move": "moveForward"}</ks>,5)
-msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"endmove" : "false" , "move": "moveForward"}</ks>,6)
-msg(supportInfo,dispatch,support,observer,<ks>{"sonarName":"sonar2" , "distance":7 , "axis":"x"}</ks>,0) }
+msg(endmove,dispatch,stepRobot,ctxServer,
+		<ks>{"collision" : "true" , "move": "moveForward"}</ks>,5)
+msg(endmove,dispatch,stepRobot,ctxServer,
+		<ks>{"endmove" : "false" , "move": "moveForward"}</ks>,6)
+msg(supportInfo,dispatch,support,observer,
+		<ks>{"sonarName":"sonar2" , "distance":7 , "axis":"x"}</ks>,0) }
 </pre> 
 
-
-
-
+</td>
+<td>
 The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> sends to the 
 <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a>
 <i>the content of each received message</i>
@@ -433,6 +424,97 @@ Thus, it works as a (remote) observer of the <a href="../../it.unibo.kotlinSuppo
 that updates <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a> as an 'observer'
 of the <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> itself.
 
+</td>
+</tr>
+
+
+
+</tbody>	
+</table></center>
+ 
+ <h2>Examples using Java</h2>
+ 
+ <center><table style="width:95%"> 
+<tbody>	
+<tr>
+<td style="width:50%">
+
+ </td>
+ <td>
+
+</td>
+</tr>
+
+<tr>
+<td style="width:50%" >
+<h3>WalkerPath</h3>
+ 
+ The class 
+<a href="../../it.unibo.cautiousExplorer/app/src/main/java/it/unibo/remoteCall/WalkerPath.java" target="web"><ks>WalkerPath.java</ks></a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/AbstractRobotRemote.kt" target="code">AbstractRobotRemote.kt</a>
+
+
+
+<ul>
+<li>attempts to execute a given sequence of moves (<k>pathTodo</k>)</li>
+<li>if it fails, executes the Return phase</li>
+</ul>
+</td>
+<td>
+ <center><img src="./img/WalkerPathArch.png" alt="WalkerPathArch" width="100%" ></center> 
+ <br/> <br/>
+
+In project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>:
+<ul>
+<li>
+<a href="../app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><ks>ApplMessage.kt</ks></a>
+</li>
+<li>
+<a href="../app/src/main/kotlin/it/unibo/actor0Service/ConnectionReader.kt" target="code"><ks>ConnectionReader.kt</ks></a>
+</li>
+</ul>
+
+</td>
+</tr>
+
+</tbody>	
+</table></center>
+
+
+ <h2>Examples using uniboActors </h2>
+ 
+ <center><table style="width:95%"> 
+<tbody>	
+<tr> 
+<td style="width:50%"><h3>PathExecutor</h3>
+
+ The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/PathExecutor.kt" target="code">PathExecutor.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+with the aim of sending commands to the 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>,
+so to moving the robot along a given path (e.g. <ks>"wwl"</ks>).
+<br/><br/>
+This <tt>uniboActor</tt> exploits the utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/TripInfo.kt" target="code">TripInfo.kt</a>
+to create a map as a a singleton object, managed by another utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>
+
+ 
+
+ 
+ 
+</td>
+<td>
+<center><img src="./img/pathExecutor.png" alt="pathExecutor" width="100%"  ></center>
+ <br/><br/>
+
+
+</td>
+</tr>
+
+
+</tbody>	
+</table></center>
 
 <br/><br/>
 

@@ -345,8 +345,8 @@ In this case it moves back the robot for time <ks>DT</ks>.
 </ul>
 </m>
 
-In order to implement such a behavior, we introduce a 
-<a href="../app/src/main/kotlin/executors/TimerActor.kt" target="web"><ks>TimerActor.kt</ks></a> that:<br/><br/>
+In order to implement such a behavior, we introduce (in project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinSupports</a>) a 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/TimerActor.kt" target="web"><ks>TimerActor.kt</ks></a> that:<br/><br/>
 <m>
 
 <ul>
@@ -369,8 +369,8 @@ In order to implement such a behavior, we introduce a
 </td>
 </tr>
 
+<!--
 <tr>
-
 <td>
 <h3>An actor that executes basic-robot moves</h3>
 Let us introuduce a 'service' 
@@ -410,7 +410,7 @@ the paylaod of a message of type
 </td>
 </tr>
 
-
+-->
 
 
 
@@ -461,206 +461,25 @@ the paylaod of a message of type
 </tbody>
 </table>
 
-
-<h2>Embedding 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/StepRobotActor.kt" target="code">
-<ks>StepRobotActor.kt</ks></a>
-into a service</h2>
-
-The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/StepRobotActor.kt" target="code">
-<ks>StepRobotActor.kt</ks></a> is implemented in Kotlin in the project 
-<a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>.
-<br/> 
-In order to facilitate the usage of such a component, we embed it in a 'service' that accepts messages of type
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0robot/ApplMessage.kt" target="web">
-<ks>ApplMessage.kt</ks></a> sent over the TCP port <ks>8010</ks>.
-<br/> 
-See <a href="../../it.unibo.kotlinSupports/userDocs/wssupportAsActorKotlin.html" target="web">
-<tt>LabIss2021 | wshttp support with ActorBasicKotlin observers</tt></a> in the project <a href="../../it.unibo.kotlinSupports" target="web">
-<ks>it.unibo.kotlinSupports</ks></a>.
-<br/> 
-Let us report here some detail about its implementation.<br/><br/> 
-
-
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
- 
- 
-In project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinSupports</a>:
-<ul>
-<li>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" target="web">
-<ks>ActorContextTcpServer.kt</ks></a><br/>
-<m>
-<ul>
-<li>Uses a <tt>FactoryProtocol</tt> utilty that returns an object that implements the interface <tt>IConnInteraction</tt>.
-</li>
-</ul>
-
-
-<h4>The <tt>unibonoawtsupports</tt> </h4>
- 
-The unibo library <bc>unibonoawtsupports.jar</bc> provides a support for communications based on connection-based, 
-two-way protocols such as <tt>TCP, UDP</tt>, etc. or a serial line (the case of <tt>Arduino</tt>).  
-
-<center><img src="./img/noawtsupport.png" alt="noawtsupport" width="50%" height="40%"></center>
-
-The library is a first step towards a  
-<a href="#infras" target="code">custom infrastructure</a> and includes:
-<ul>
-<li>a set of specialized factories (<tt>FactoryTcpProtocol</tt>, <tt>FactoryUdpProtocol</tt>, etc.) that 
-provide protocol-specific supports (sockets, datagrams etc);  </li>
-<li> the factory <bc>FactoryProtocol</bc> that hides  details related to the specific protocol.
-Each operation of the factory returns an object that implements the interface <bc>IConnInteraction</bc> 
-(defined in the custom library <bc>uniboInterfaces.jar</bc>) 
-that can be used to send/receive information on the connection.
-
-<pre>
-public interface IConnInteraction {
-    void sendALine(String s) throws Exception;
-    String receiveALine() throws Exception;
-    void closeConnection() throws Exception;
-}
-</pre>
-</m>
-</td>
-<td>
- <center><img src="./img/StepRobotServiceZooming.png" alt="StepRobotServiceZooming" width="100%" ></center>
-  <br/><br/>
- In project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinSupports</a>:
- 
-
-<ul>
-<li><a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicContextKb.kt" target="web">
-<ks>ActorBasicContextKb.kt</ks></a>
-<m>
-<ul>
-<li>Stores knowledge about actors ruuning in the local node</li>
-</ul></m>
-</li>
-
-<li>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="web">
-<ks>IssWsHttpKotlinSupport.kt</ks></a><br/>
-<m><ul>
-<li>The kotlin version of the support introduced in
-
-<a href="../../it.unibo.boundaryWalk/app/src/main/java/it/unibo/robotSupports/IssWsSupport.java" target="web">
-IssWsSupport.java</a><br/>
-
-</li>
-
-</ul>
-
-
-</td>
-</tr>
-
-<tr>
-<td><h3>WalkerPath</h3>
+<h3>Towards more convinient supports</h3>
 <div class="remark">
-<ul>
-<li>3) Explore strategy : let us introduce an actor that attempts to perform a given sequance of moves.  </li>
-</ul></div> 
-<a href="../app/src/main/java/it/unibo/stepServiceCaller/WalkerPath.java" target="web"><ks>WalkerPath.java</ks></a>:<br/>
-<ul>
-<li>attempts to execute a given sequence of moves (<k>pathTodo</k>)</li>
-<li>if it fails, executes the Return phase</li>
-</ul>
-</td>
-<td>
- <center><img src="./img/WalkerPathArch.png" alt="WalkerPathArch" width="100%" ></center> 
- <br/> <br/>
+Before continuing this project in Java, let us introduce more convenient supports written in Kotlin. See:
 
-In project <a href="../../it.unibo.kotlinSupports" target="web">it.unibo.kotlinSupports</a>:
-<ul>
-<li>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="web"><ks>ApplMessage.kt</ks></a>
-</li>
-<li>
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ConnectionReader.kt" target="web"><ks>ConnectionReader.kt</ks></a>
-</li>
-</ul>
-
-</td>
-</tr>
-
- </tbody>
-</table>
-
-<h2>Sprint review: <i>Divide et impera?</i></h2>
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:40%" >
-<h3>Step+Basic: case 0</h3>
-
-</td>
-<td>
-<center><img src="./img/StepAndBasicWrong.png" alt="StepAndBasicWrong" width="50%" ></center> 
-
-</td>
-</tr>
-
-<tr>
-<td><h3>Step+Basic: case 1</h3>
-<pre>
-BasicRobotActor
-
-Accept a
-    msg(engage,dispatch,SENDER,basicRobot,do,N)
-    msg(robotmove,dispatch,SENDER,basicRobot,
-	           <ks>{"robotmove":"MOVE"@ "TIME": 300}</ks>,N)
-
-Observes
-    all the messages (events) sent by the WEnv
-
-Propagates
-    the result of a move to the SENDER (connected TCP client)
-    the WEnv events to the external connected TCP clients
-
-</pre>
-
-</td>
-<td>
-<center><img src="./img/StepAndBasicArch1.png" alt="StepAndBasicArch1" width="80%" ></center> 
-</td>
-</tr>
-
-<tr>
-<td><h3>Step+Basic: case 2</h3>
-</td>
-<td>
-<center><img src="./img/StepAndBasicArch2.png" alt="StepAndBasicArch2" width="90%" ></center> 
-</td>
-</tr>
-
-
-<tr>
-<td><h3>Step+Basic: case 3</h3>
-</td>
-<td>
-<center><img src="./img/BasicAndStepArch.png" alt="BasicAndStepArch" width="60%" ></center> 
-</td>
-</tr>
+<ol>
+<li><a href="../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html" target="web">Lab ISS | Introduction to KOTLIN</a></li>
+<li><a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html" target="web">LabIss2021 | support for Actors based on Kotlin</a></li>
+<li> <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a></li>
  
- 
- 
- </tbody>
-</table>
 
+</ol>
+ 
+</div>
 
 <h2>Testing</h2> 
  
 
 <h2>Deployment</h2> 
-See <a href="../../it.unibo.kotlinSupports/userDocs/wssupportAsActorKotlin.html#deploy" target="web">
-<ks>LabIss2021 | wshttp support with ActorBasicKotlin observers DEPLOY</ks></a> 
-in the project <a href="../../it.unibo.kotlinSupports" target="web">
-<ks>it.unibo.kotlinSupports</ks></a>
- 
+  
 <h2>Maintenance</h2> 
  
 <!-- USEFUL

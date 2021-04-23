@@ -1,15 +1,12 @@
 package demo;
 
 import com.andreapivetta.kolor.Color;
-import com.andreapivetta.kolor.Kolor;
 import it.unibo.actor0.ActorBasicKotlin;
 import it.unibo.actor0.ApplMessage;
 import it.unibo.actor0.DispatchType;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.CoroutineScope;
-import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.channels.SendChannel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
