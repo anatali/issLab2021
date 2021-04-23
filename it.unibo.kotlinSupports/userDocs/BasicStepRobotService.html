@@ -351,32 +351,68 @@ implements the operation <ks>handleInput</ks> by delegating to an abstract opera
 </tbody>	
 </table></center>
 
-<h2>IssWsHttpKotlinSupport</h2>
-<table style="width:98%">
-<tbody>	
 
-<tr>
-<td style="width:50%" >
-  <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>
-<br/><br/>
-  
-</td>
-<td>
+<h2 id="deploy">Deploy</h2>
+
+<ul>
+<li> <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a> </li>
+<li> <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </li>
+<li><h3>Build the image for local usage</h3>
+<pre>
+<kc>//Build the image of the steprobot service with wenvAddr=<k>localhost</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
+docker build -t steprobot:1.0 .  
+
+<kc>//run the image to test</kc>
+docker run -p 8010:8010 -ti --rm steprobot:1.0 <k>/bin/bash</k> <kc>//to use the console</kc>  
+</pre>
+</li>
+<li><h3>Build the image for integrated usage</h3>
+<pre>
+<kc>//Build the image of the steprobot service with wenvAddr=<k>wenv</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
+docker build -t steprobot:1.0 .  
+
+<kc>//Run the steprobot service together with the wenv</kc>
+docker-compose -f virtualrobotandstepper.yaml up
+
+</pre>
+<h4>Run a demo</h4>
+ <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/actor0remote/MainStepRobotActorCaller.kt" target="code"><ks>MainStepRobotActorCaller.kt</ks></a>
+ in project <i>it.unibo.cautiousExplorer</i>
  
+</li>
 
-</td>
-</tr>
-
-<tr>
-<td style="width:50%" >
- </td>
-<td> 
- </td>
-</tr>
+<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
+<pre>
+<kc>Login in DockerHub (get the password from a private file)</kc>
+ type docker_password.txt | docker login --username natbodocker --password-stdin
  
- </tbody>
-</table>
+<kc>Tag the image</kc>
+docker tag steprobot:1.0 natbodocker/steprobot:1.0
 
+<kc>Register the image</kc>
+docker push natbodocker/steprobot:1.0
+</pre>
+
+<h4>Change <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </h4>
+<pre>
+version: '3'
+services:
+  wenv:
+    image: docker.io/natbodocker/virtualrobotdisi:2.0
+    ##image: virtualrobotdisi:2.0
+    ports:
+      - 8090:8090
+      - 8091:8091
+  stepper:
+    ##image: steprobot:1.0
+	image: docker.io/natbodocker/steprobot:1.0
+    ports:
+      - 8010:8010
+    depends_on:
+      - wenv
+</pre>
+</li>
+</ul>
 
 <h2>Examples</h2>
 
@@ -484,72 +520,261 @@ to create a map as a a singleton object, managed by another utility class
 </table></center>
 
 
+<h2>Towards a robot service</h2>
+ <br/>
+Let us report, as an example,  an actor written in Kotlin that sends commands to our
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>:<br/><br/>
 
-<h2 id="deploy">Deploy</h2>
+<center><table style="width:95%"> 
+<tbody>	
+<tr>
+<td style="width:30%">
+<h4>A Koltin actor at work</h3>
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a><br/><br/>
+<m>An example of usage is in:
+<a href="../app/src/main/kotlin/robotWithActors/MainRobotActorTry.kt" target="code">MainRobotActorTry.kt</a>
+</m>
+</td>
+<td>
+<center><img src="./img/robotActorTry.png" alt="robotActorTry" width="100%" height="60%"></center>
 
-<ul>
-<li> <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a> </li>
-<li> <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </li>
-<li><h3>Build the image for local usage</h3>
+
+ </td>
+</tr>
+</tbody>	
+</table></center>
+
+<br/>
+
+<h3>The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+as <a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a></a></h3>
+The behavior of the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> 
+can be modelled as a a <em>message-driven</em>  
+<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a>
+where each <bc>state</bc> is mapped into a <em>function</em> whose body specifies the <bc>actions</bc> to be executed in that state.
+<br/><br/>
+
+<center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:40%">
 <pre>
-<kc>//Build the image of the steprobot service with wenvAddr=<k>localhost</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
-docker build -t steprobot:1.0 .  
-
-<kc>//run the image to test</kc>
-docker run -p 8010:8010 -ti --rm steprobot:1.0 <k>/bin/bash</k> <kc>//to use the console</kc>  
+ while( <ks>state == "working"</ks> ){
+   var <ks>msg = channel.receive()</ks>
+   val msgJson = JSONObject(msg)
+   var input   = msgJson.keys().next()
+   when( input ){
+    "<k>cmd</k>"       -> doCmd(msgJson.getString("cmd"))
+    "<k>move</k>"      -> doMove(...)
+    "<k>sonarName</k>" -> doSonar(msg)
+    "<k>collision</k>" -> doCollision(msg)
+    else -> println("NO HANDLE for $msg")
+  }		
+ }
 </pre>
-</li>
-<li><h3>Build the image for integrated usage</h3>
-<pre>
-<kc>//Build the image of the steprobot service with wenvAddr=<k>wenv</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
-docker build -t steprobot:1.0 .  
 
-<kc>//Run the steprobot service together with the wenv</kc>
-docker-compose -f virtualrobotandstepper.yaml up
+</td>
+<td>
+<center><img src="./img/robotActorFsm.png" alt="robotActorFsm" width="60%"  ></center><br/>
+ </td>
+</tr>
+</tbody>	
+</table></center>
 
-</pre>
-<h4>Run a demo</h4>
- <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/actor0remote/MainStepRobotActorCaller.kt" target="code"><ks>MainStepRobotActorCaller.kt</ks></a>
- in project <i>it.unibo.cautiousExplorer</i>
+In the version, the  KotlinActor <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a> handles messages
+in the form of JSON objects:
+<m>
+ <ul>
+ <li><k>{"cmd":"<ks>init</ks>"}</k>: starts its job</li>
+ <li><k>{"cmd":"<ks>end</ks>"}</k>: terminates its job</li>
+  <li><k>{"collision" : "...", "move": "..."}</k>: 'reacts' to a <i>collision message</i> sent by the WEnv </li>
+ <li><k>{"sonarName": "...", "distance": ..., "axis": "..." }</k>: 'reacts' to a message sent by the WEnv  when a <em>scene-sonar</em> detects the robot</li>
+<li><k>{"robotmove":"<ks>MOVE</ks>", "time":T}</k>: sends a move-command to the robot. 
+ </li>
+</ul></m>
  
-</li>
+Since the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a> understand messages represented in
+the form of <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>,
+the move-command must be written in the proper way. For example:
+ <pre>
+ msg(robotmove,dispatch,<ks>actortry</ks>,<em>stepRobot</em>,{"robotmove":"moveForward" , "time": 350},1)</pre>
+ Note that now:
+ <div class="remark">
+the <b>sender</b> (that names itself as <ks>'actortry'</ks>) has no reference to the component that will handle its message.
+Rather it only knowns that the name of such a <b>destination</b> component is <em>'stepRobot'</em>.<br/>
+The <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a> will receive the message
+sent by the <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>
+on the (TCP) port <ks>8010</ks> and will redirect it the component named 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/StepRobotActor.kt" target="code"><em>'stepRobot'</em></a>,
+which is  a specialization of a generic
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>.
 
-<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
+ </div>
+<!--
+However, it is quite simple to introduce a version of the  KotlinActor 
+(let us call it <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry.kt</a>)
+that accepts messages in the form of 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> 
+-->
+<h3>The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a> </h3>
+
+The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader.kt</a>
+handles the messages 
+(strings that represent an <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a> ) 
+sent by the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>; for example
 <pre>
-<kc>Login in DockerHub (get the password from a private file)</kc>
- type docker_password.txt | docker login --username natbodocker --password-stdin
- 
-<kc>Tag the image</kc>
-docker tag steprobot:1.0 natbodocker/steprobot:1.0
+msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"collision" : "true" , "move": "moveForward"}</ks>,5)
+msg(endmove,dispatch,stepRobot,ctxServer,<ks>{"endmove" : "false" , "move": "moveForward"}</ks>,6)
+msg(supportInfo,dispatch,support,observer,<ks>{"sonarName":"sonar2" , "distance":7 , "axis":"x"}</ks>,0) }
+</pre> 
 
-<kc>Register the image</kc>
-docker push natbodocker/steprobot:1.0
+
+
+
+The KotlinActor <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> sends to the 
+<a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a>
+<i>the content of each received message</i>
+(a string in JSON form) to the <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt</a>.
+<br/><br/>
+Thus, it works as a (remote) observer of the <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">RobotService</a>
+that updates <a href="../app/src/main/kotlin/robotWithActors/robotActorTry.kt" target="code">robotActorTry</a> as an 'observer'
+of the <a href="../app/src/main/kotlin/robotWithActors/InputReader.kt" target="code">InputReader</a> itself.
+
+
+<br/><br/>
+
+<!--
+
+<h3>An example</h3>
+ 
+An example of using the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor.kt</a> can be found in 
+<a href="../src/virtualRobotUsage/robotActorUsage.kt" target="code">robotActorUsage.kt</a>.
+In this example, we first introduce a set of application messages:
+<pre>
+val initMsg			= AppMsg.create(<k>"init"</k>,		"main","robotactor")		<kc>//content="none" by default</kc>
+val moveForwardMsg	= AppMsg.create(<k>"move"</k>,	"main","robotactor",		<k>"w"</k>,<k>AppMsgType.dispatch</k>) 
+val haltRobotMsg		= AppMsg.create(<k>"move"</k>,	"main","robotactor",		<k>"h"</k>) 
 </pre>
 
-<h4>Change <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </h4>
+Afterwards, we define a method <tt>forward</tt> to send messages of type <bc>dispatch</bc> (<tt>AppMsgType.dispatch</tt>)  to the robot-actor:
+
 <pre>
-version: '3'
-services:
-  wenv:
-    image: docker.io/natbodocker/virtualrobotdisi:2.0
-    ##image: virtualrobotdisi:2.0
-    ports:
-      - 8090:8090
-      - 8091:8091
-  stepper:
-    ##image: steprobot:1.0
-	image: docker.io/natbodocker/steprobot:1.0
-    ports:
-      - 8010:8010
-    depends_on:
-      - wenv
+suspend fun forward(  msg: AppMsg ){ <ks>robotActor</ks>.<k>send</k>( msg.toString()  ) }
+...
+forward( initMsg )
+...
+forward( moveForwardMsg )
+delay(1000)
+forward( haltRobotMsg )
 </pre>
-</li>
-</ul>
+
+ 
+The task of translating the 'application level language' into  <em>cril</em>  and viceversa is delegated to
+the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a> 
+(see the functions <tt>translate</tt>, <tt>doApplMove</tt> and <tt>sendMsgToRobot</tt>).
+<br/><br/>
+In this way, the <a href="../src/virtualRobotUsage/robotActor.kt" target="code">robotActor.kt</a> is made independent
+of the specific concrete robot to be used; 
+the  role of the <a href="../src/virtualRobotUsage/virtualRobotSupport.kt" target="code">virtualRobotSupport.kt</a>
+as a <a href="https://en.wikipedia.org/wiki/Translator_(computing)" target="web"><bc>language translator</bc></a> 
+ can be viewed as a sort of
+<a href="https://en.wikipedia.org/wiki/Adapter_pattern" target="web"><bc>adapter</bc></a>  in the message-passing world.
 
  
 
+ 
+ 
+<h2>Towards more complex behavior</h2>
+The <a href="../src/virtualRobotUsage/robotActorTry.kt" target="code">robotActorTry.kt</a> implements the business logic
+related to each message it can receive. However, since it is an active entity, we can now extend its behavior  
+so to satisfy the first requirement of our
+<a href="http://htmlpreview.github.io/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.issLabStart/userDocs/72939LabISSIntro.html#Application0" 
+target="web">Application0</a>. For example,we can say that:
+<hr/>
+<i>the robot starts to explore in a systematic and autonomous way the room after receiving the command '<k>explore</k>' </i>.
+<hr/>
+As <em>analysts</em>, we can say that the problem to face now is the design and development of a behavior that msut be both <bc>proactive</bc> (the robot must perform
+the exploration activity in autonomous way) and <bc>reactive</bc> 
+(while exploring, the robot should not lose its capability to handle other messages, for example <k>end</k> and <k>collision</k>).
+-->
+ 
 
+<!--
+
+<h2>USING WENV WITH ACTORS</h2>
+
+<center><table style="width:95%">
+<tbody>	
+ 
+<tr>
+<td style="width:40%">
+<a href="clientWenvTcpObj.kt" target="code">RobotCmds.kt</a>
+</td>
+<td><m><em>Robot command messages</em></m></td>
+</tr>
+
+<tr>
+<td style="width:40%">
+<a href="../src/main/kotlin/it/unibo/robots19/basic/BasicRobotExecutor.kt" target="code">BasicRobotExecutor.kt</a>
+</td> 
+<td><m><em>Actor that executes commands</em> implemented by
+<a href="../src/main/kotlin/it/unibo/robots19/basic/RobotCmds.kt" target="code">RobotCmds.kt</a></m></td>
+</tr>
+
+<tr>
+<td style="width:40%">
+<a href="../executorDescr.pl" target="code">executorDescr.pl</a>
+</td>
+<td><m><em>Description of a qak system </em> managed with 
+<a href="../sysRules.pl" target="code">sysRules.pl</a>. A main is:
+<a href="../src/main/kotlin/it/unibo/robots19/experiment/MainExecutor.kt" target="code">MainExecutor.kt</a>
+</m></td>
+</tr>
+
+
+</tbody>	
+</table></center>
+
+<h3>Interacting with the BasicRobotExecutor </h3>
+ 
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:40%">
+<a href="../src/main/kotlin/it/unibo/robots19/basic/ClientToRobotExecutor.js" target="code">ClientToRobotExecutor.js</a>
+</td>
+<td><m><em>Client Node  </em> for the 
+<a href="../src/main/kotlin/it/unibo/robots19/basic/BasicRobotExecutor.kt" target="code">BasicRobotExecutor.kt</a>
+ 
+ 
+</m></td>
+</tr>
+
+</tbody>	
+</table></center>
+
+
+<div class="req">
+</div>	    
+ 	
+	
+	<h3>RESOURCES</h3>
+
+    <a href="http://137.204.107.10/iss2018/it.unibo.issMaterial/issdocs/Material/2016-02-26-raspbian-jessie-iss.img.zip" 
+								target="lecture">2016-02-26-raspbian-jessie-iss.img.zip</a> (<tt>WARNING: 1GB</tt>)<br/>
+    <a href="../CARD/guida_rpi.pdf" target="lecture">guida_rpi.pdf</a>,<br/>
+    <a href="../CARD/rpi_sd.pdf" target="lecture">rpi_sd.pdf</a>,<br/>
+    <a href="../CARD/istruzioni-aggiornate-raspi-linux.pdf" target="lecture">istruzioni-aggiornate-raspi-linux.pdf (Giacomo Venturini)</a> 
+	ed <a href="../CARD/esempio-procedura.html" target="lecture">esempio-procedura.html</a> ,<br/>
+-->
+<!-- 
+<video controls>
+   <source src="foo.ogg" type="video/ogg"> audio  
+  <source src="firstactorvr.264" type="video">
+  Your browser does not support the <code>video</code> element.
+</video>
+--> 
 
 
 
@@ -691,7 +916,62 @@ When created, an actor stores a reference in the
 </table>
 
 
+<h2>IssWsHttpKotlinSupport</h2>
+<table style="width:98%">
+<tbody>	
 
+<tr>
+<td style="width:50%" >
+  <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>
+<br/><br/>
+  
+</td>
+<td>
+ 
+
+</td>
+</tr>
+
+<tr>
+<td style="width:50%" >
+<h3>The resumableBoundaryWalker as a <a href="../../it.unibo.virtualrobotclient/userDocs/fsm.html" target="info"><k>Finite State Machine</k></a></h3> 
+<a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/resumablebwWithActor/ResumableBoundaryWalkerActor.java" target="code">
+ResumableBoundaryWalkerActor.java</a> 
+ 
+<br/><br/>
+ 
+<center><img src="./img/bwArch.png" alt="bwArch" width="90%" ></center> 
+
+
+
+</td>
+<td> 
+
+<h4>UML-like model after coding  </h4>
+<center><img src="./img/resumablebwMealy.png" alt="resumablebwMealy" width="90%" ></center> 
+<br/><br/>
+ <m>
+<ul>
+<li>The fsm is activated with an input each time the <ks>handleInput</ks> receives a message <tt>endmove</tt> 
+(sent by the <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>)
+ or <tt>robotcmd</tt> 
+(sent by the <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui/ConsoleGuiActorKotlin.java" target="code">
+<ks>ConsoleGuiActorKotlin.java</ks></a>). </li>
+<li>A state transition with action <k>doStep</k> is performed only if the boolean variable <ks>tripStopped</ks> is <tt>false</tt>.</li>
+<li>The variable <ks>tripStopped</ks> is set to <tt>true</tt> when the user presses the <tt>STOP</tt> button.</li>
+<li>When the user presses the <tt>RESUME</tt> button, the <ks>handleInput</ks>  activates the fsm 
+(blocked in the state <em>walking</em> or in the state <em>obstacle</em>) with input <tt>resume</tt>. </li>
+
+</ul>
+</m>
+</td>
+</tr>
+
+ 
+
+
+ </tbody>
+</table>
 
 
 

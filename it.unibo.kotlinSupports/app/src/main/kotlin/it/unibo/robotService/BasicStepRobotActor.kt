@@ -27,7 +27,7 @@ import org.json.JSONObject
  
 @ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-class BasicStepRobotActor(name: String, val ownerActor: ActorBasicKotlin,
+class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKotlin,
                          scope: CoroutineScope,  wenvAddr: String ="wenv" )
             : AbstractRobotActor( name, wenvAddr, scope ) {
 

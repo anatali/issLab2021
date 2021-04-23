@@ -189,7 +189,7 @@ div.imagedesc{
     
 <head>
    
-<title>KotlinActorSupport</title></head>
+<title>ActorsWithKotlinSupport</title></head>
     
 <body>
 <div id="top">
@@ -281,18 +281,63 @@ See <a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" targe
 in project <a href="../../it.unibo.kotlinSupports" target="code">it.unibo.kotlinSupports</a>.<br/>
  </td>
 </tr>
+ 
+<tr> 
+<td>
+ 
+</td>
+<td>
+</td>
+</tr>
 
 
+</tbody>	
+</table></center>
+
+<h2>Support for robots</h2>
+
+<table style="width:98%">
+<tbody>	
 
 <tr>
-<td>
+<td style="width:50%" ><h3>IssWsHttpKotlinSupport</h3>
+The class
+  <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
+  provides a singleton (for each ip address) that defines utility operations to connect/disconnect (to the given ip address) 
+  via HTTP or a websocket, using the library  <a href="https://square.github.io/okhttp/" target="web">okhttp3</a>.
+  <br/> <br/>
+  This utility:
+  <ul>
+  <li>implements the interface <a href="../app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" target="code">IssCommSupport.kt</a>  </li>
+  <li>implements the operations defined in the interface
+  <a href="../app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" target="code">IssOperations.kt</a></li>
+  <li>works as an observer of the ws-socket</li>
+  <li>is, in its turn,  observable by components that implement the interface
+   <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IUniboActor.kt" target="code">IUniboActor.kt</a></li>
+  </ul>
+ 
+
+<br/><br/>
+  
+</td>
+<td><center><img src="./img/IssWsHttpKotlinSupport.png" alt="IssWsHttpKotlinSupport" width="80%"  ></center>
+Usage example:
+<pre>
+IssWsHttpKotlinSupport.getConnectionWs(scope,"localhost:8091")
+</pre>
+
+</td>
+</tr>
+<tr>
+<td style="width:50%">
  <h3>AbstractRobotActor</h3>
 The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/AbstractRobotActor.kt" target="code">AbstractRobotActor.kt</a>
 extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a> and
 provides a <tt>uniboActor</tt> that:<br/><br/>
-
 <m>
 <ul>
+<li>includes the <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
+for the virtual robot working in the WEnv</li>
 <li>
 accepts messages of type <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
 with payload given by Strings that represents JSON objects, as  defined  in the utility class
@@ -312,6 +357,9 @@ implements the operation <ks>handleInput</ks> by delegating to an abstract opera
 
 </m>
 
+
+<center><img src="./img/AbstractRobot.png" alt="AbstractRobot" width="100%"  ></center>
+ 
 
 </td>
 <td>
@@ -337,53 +385,6 @@ implements the operation <ks>handleInput</ks> by delegating to an abstract opera
 </td>
 </tr>
 
-
-
-<tr> 
-<td>
- 
-</td>
-<td>
-</td>
-</tr>
-
-
-</tbody>	
-</table></center>
-
-<h2>IssWsHttpKotlinSupport</h2>
-<table style="width:98%">
-<tbody>	
-
-<tr>
-<td style="width:50%" >
-  <a href="../app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><ks>IssWsHttpKotlinSupport.kt</ks></a>
-<br/><br/>
-  
-</td>
-<td>
- 
-
-</td>
-</tr>
-
-<tr>
-<td style="width:50%" >
- </td>
-<td> 
- </td>
-</tr>
- 
- </tbody>
-</table>
-
-
-<h2>Examples</h2>
-
-<center><table style="width:95%">
-<tbody>	
-
- 
 <tr>
 <td style="width:50%">
  <h3>BasicStepRobotActor</h3>
@@ -392,17 +393,31 @@ extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/acto
 with the aim of moving the robot.
 
 <br/><br/>
-This actor is able to perform both <tt>basic-moves</tt> and <tt>step-moves</tt>. <br/>
-A <k>step-move</k> is a forward-move with a time properly set, so that
-the distance traveled by the robot is equal to the diameter of the circle in which it is supposed to be inscribed.
-<br/><br/>
-While the (payload of the) answer to a <tt>basic-move</tt> is a <ks>endMoveMsg</ks>, the (payload of the) answer to a <tt>step-move</tt> is
-(see <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a>)
+This actor 
 <ul>
-<li><ks>stepDoneMsg</ks>: if the step is done with success</li>
-<li><ks>stepFailMsg</ks>: if the step cannot be completed</li>
-</ul>
+<li>has the default name <k>stepRobot</k></li>
+<li>is related to a <k>onwer</k> actor thet must be given at cretion time</li>
+<li>is able to perform both <tt>basic-moves</tt> and <tt>step-moves</tt>
+<m>A <k>step-move</k> is a forward-move with a time properly set, so that
+the distance traveled by the robot is equal to the diameter of the circle in which it is supposed to be inscribed.
+</m>
+</li>
+<li>gives a <k>endMoveMsg</k> 
+(see <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a>) 
+as answer to a <tt>basic-move</tt>
+</li>
+<li>gives as (payload) answer to a <tt>step-move</tt> 
+	<ul>
+	<li><k>stepDoneMsg</k>: if the step is done with success</li>
+	<li><k>stepFailMsg</k>: if the step cannot be completed</li>
+	</ul>
+</li>
 
+</ul>
+</td>
+<td>
+<center><img src="./img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
+ 
 <div class="remark">
 The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
 avoids the interference among overlapping commands. In fact, it exploits the <k>msgQueueStore</k>
@@ -411,16 +426,22 @@ The stored move is executed when the move in execution ends.
 </div>
 
 </td>
-<td>
-<center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
- <br/><br/>
+</tr>
+
+<tr> 
+<td><h3>Example: BasicStepRobotCaller</h3>
+  The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotActorCaller.ktt" target="code">BasicStepRobotActorCaller.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+with the aim of sending some commands to the 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+to test its behavior.
  <hr/>
  The class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.</em></a> 
 defines operations that return a <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code"><em>ApplMessage.kt</em></a>
 that can be sent to a 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>.
 More specifically:
-<br/><br/> 
+<hr/>
 
 <ul>
 <li><ks>stepRobot_step()</ks> :  for a <tt>step-move</tt>
@@ -429,16 +450,6 @@ More specifically:
 <li><ks>stepRobot_<k>MOVE</k>()</ks> : for a <tt>basic-move</tt> <k>MOVE = <tt>w | s | l | r | h</tt></k></li>
 </ul>
 
-</td>
-</tr>
-
-<tr> 
-<td><h3>BasicStepRobotCaller</h3>
-  The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotCaller.kt" target="code">BasicStepRobotCaller.kt</a>
-extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
-with the aim of sending some commands to the 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
-to test its behavior.
 <pre>
 <m>val robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")</m>
 
@@ -449,7 +460,12 @@ to test its behavior.
 </pre>
 </td>
 
-<td>Note that the robot perform the moves, but the ouput shows the message:
+<td>
+The code is in the project <a href="../../it.unibo.cautiousExplorer" target="code">it.unibo.cautiousExplorer</a>.
+<br/><br/>
+<center><img src="./img/BasicStepRobotActorCaller.png" alt="BasicStepRobotActorCaller" width="80%"  ></center>
+ 
+Note that the robot perform the moves, but the ouput shows the message:
 <pre>
 <k>stepRobot BasicStepRobotActor |  move already running: store the request</k>
 </pre>
@@ -458,38 +474,67 @@ In fact, the caller sends the move-commands without any delay between them.
 </tr>
 
 
-
 <tr> 
-<td><h3>PathExecutor</h3>
-
- The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/PathExecutor.kt" target="code">PathExecutor.kt</a>
-extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
-with the aim of sending commands to the 
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>,
-so to moving the robot along a given path (e.g. <ks>"wwl"</ks>).
-<br/><br/>
-This <tt>uniboActor</tt> exploits the utility class
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/TripInfo.kt" target="code">TripInfo.kt</a>
-to create a map as a a singleton object, managed by another utility class
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>
+<td>
+ 
 </td>
 <td>
-<center><img src="./img/pathExecutor.png" alt="pathExecutor" width="100%"  ></center>
- <br/><br/>
 </td>
 </tr>
-
-
-</tbody>	
-</table></center>
-
-
+ </tbody>
+</table>
 
 <h2 id="deploy">Deploy</h2>
 
-<ul>
-<li> <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a> </li>
-<li> <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a> </li>
+<ol>
+<li><h3>Set the main class in <a href="../app/build.gradle.kts" target="code"><ks>build.gradle.kts</ks></a></h3>
+For example:
+<pre>
+application {
+     mainClass.set("it.unibo.robotService.MainRobotServiceKt")
+}
+</pre>
+</li>
+<li><h3>Create the distribution</h3>
+<pre>
+gradlew distTar
+</pre>
+</li>
+<li><h3>Define the <a href="../Dockerfile" target="code"><ks>Dockerfile</ks></a></h3>
+<pre>
+FROM openjdk:12.0.2
+
+ADD ./app/build/distributions/app-2.0.tar  /
+
+WORKDIR /app-2.0/bin
+
+# COPY ./*.pl ./
+# RUN ls
+
+CMD ["bash", "app"]
+
+</pre> </li>
+<li><h3>Define the docker-compose specification file <a href="../virtualrobotandstepper.yaml" target="code"><ks>virtualrobotandstepper.yaml</ks></a></h3>
+For example:
+<pre>
+version: '3'
+services:
+  wenv:
+    image: docker.io/natbodocker/virtualrobotdisi:2.0
+    ##image: virtualrobotdisi:2.0
+    ports:
+      - 8090:8090
+      - 8091:8091
+  server8010:
+    image: steprobot:2.0
+    ## image: docker.io/natbodocker/steprobot:1.0
+    ports:
+      - 8010:8010
+    depends_on:
+      - wenv
+</pre>
+
+ </li>
 <li><h3>Build the image for local usage</h3>
 <pre>
 <kc>//Build the image of the steprobot service with wenvAddr=<k>localhost</k> at line 27 of <a href="../app/src/main/kotlin/it/unibo/actor0robot/MainStepRobotService.kt" target="code"><ks>MainStepRobotService.kt</ks></a>) ) </kc>
@@ -545,155 +590,7 @@ services:
       - wenv
 </pre>
 </li>
-</ul>
-
- 
-
-
-
-
-
-
-<hr/><hr/><hr/>
-
-<h2>ActorBasicKotlin</h2>
-
-<table style="width:98%">
-<tbody>	
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code"><ks>ActorBasicKotlin.kt</ks></a>
-<br/> 
-When created, an actor stores a reference in the 
-<a href="../app/src/main/kotlin/it/unibo/actor0/ActorBasicContextKb.kt" target="code"><ks>ActorBasicContextKb.kt</ks></a> 
-<br/>
-</td>
-<td>
- <a href="../app/src/main/kotlin/it/unibo/actor0Usage/MainActor0Demo0.kt" target="code"><ks>MainActor0Demo0.kt</ks></a>
 <ol>
-<li>demoActivateActors</li>
-<li>prodCons</li>
-</ol> 
- 
- 
-</td>
-</tr>
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0/ActorBasicContextKb.kt" target="code"><ks>ActorBasicContextKb.kt</ks></a>
-  <br/> 
-  A kotlin object that keep track of actors
-  <br/><br/>
-</td>
-<td>
-
-  <a href="../app/src/main/kotlin/it/unibo/actor0Usage/MainDemoActorBasicWithContext.kt" target="code"><ks>MainDemoActorBasicWithContext.kt</ks></a>
-<br/><br/>
-</td>
-</tr>
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0/ActorContextTcpServer.kt" target="code"><ks>ActorContextTcpServer.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0/sysUtil.kt" target="code"><ks>sysUtil.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
-
-
-
- </tbody>
-</table>
-
-<h2>Actor for robots</h2>
-
-<table style="width:98%">
-<tbody>	
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0robot/AbstractRobotActor.kt" target="code"><ks>AbstractRobotActor.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0robot/StepRobotActor.kt" target="code"><ks>StepRobotActor.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0robot/ExecutorActor.kt" target="code"><ks>ExecutorActor.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/actor0robot/RemoteRobotCaller.kt" target="code"><ks>RemoteRobotCaller.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
- </tbody>
-</table>
-
-<h2>FSM</h2>
-
-<table style="width:98%">
-<tbody>	
-
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/fsm/FsmBasic.kt" target="code"><ks>FsmBasic.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-<tr>
-<td style="width:50%" >
- <a href="../app/src/main/kotlin/it/unibo/fsm/FsmBasicUsage.kt" target="code"><ks>FsmBasicUsage.kt</ks></a>
- <br/><br/>
-</td>
-<td>
-</td>
-</tr>
-
-
- </tbody>
-</table>
-
-
-
-
-
 
 
    <!--

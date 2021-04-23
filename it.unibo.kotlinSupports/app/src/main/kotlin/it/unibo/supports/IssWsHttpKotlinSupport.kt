@@ -32,7 +32,7 @@ import kotlin.collections.HashMap
 @ExperimentalCoroutinesApi
 class IssWsHttpKotlinSupport
 
-    private constructor(val scope: CoroutineScope, val addr:String, val wsconn:Boolean)
+    private constructor(val scope: CoroutineScope, val ipaddr:String, val wsconn:Boolean)
           : WebSocketListener(), IssActorObservable, IssCommSupport, IssOperations {
     lateinit var myWs: WebSocket
     lateinit var workTodo: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit
@@ -42,10 +42,6 @@ class IssWsHttpKotlinSupport
     val actorobservers         = Vector<IUniboActor>()
     private var opened         = false
     private var connectForWs   = true
-
-
-    //val socketMsgChannel: Channel<String> = Channel(10) //our channel buffer is 10 events
-    //fun getInputChannel() : Channel<String> { return socketMsgChannel }
 
     init{
         wsconnect(  fun(scope, support ) {
@@ -132,7 +128,7 @@ class IssWsHttpKotlinSupport
     callback: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit) : WebSocket {
         workTodo = callback
         val request0 = Request.Builder()
-            .url("ws://$addr")
+            .url("ws://$ipaddr")
             .build()
         myWs = okHttpClient.newWebSocket(request0, this)
         return myWs
