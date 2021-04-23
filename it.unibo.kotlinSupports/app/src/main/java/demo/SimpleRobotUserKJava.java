@@ -12,7 +12,7 @@ import org.json.JSONObject;
 public class SimpleRobotUserKJava extends AbstractActorKJava {
     private ActorBasicKotlin robot;
     private String stepMsg        = "{\"step\":\"350\" }";
-    private String turnLeftMsg    = "{\"robotmove\":\"turnLeft\" @ \"time\": 300}";
+    private String turnLeftMsg    = "{\"robotmove\":\"turnLeft\" , \"time\": 300}";
     private ApplMessage turnleft  = MsgUtil.buildDispatch("main", "move", turnLeftMsg, "stepRobot");
     private ApplMessage dostep    = MsgUtil.buildDispatch("main", "step", stepMsg, "stepRobot");
 

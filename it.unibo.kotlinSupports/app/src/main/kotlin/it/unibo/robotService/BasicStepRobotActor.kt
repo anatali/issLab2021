@@ -39,7 +39,9 @@ class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKo
 
     private var currentBasicMove  = "";
     private var stepGoingon       = false;
-
+init{
+    colorPrint("BasicStepRobotActor CREATED")
+}
     protected suspend fun doStepMove( time: String ){
         if( stepGoingon || currentBasicMove.length > 0 ){
             //println("$name | STEPGOINGONNNNNNNNNNNNNNNNNNNN   ")

@@ -427,9 +427,37 @@ The stored move is executed when the move in execution ends.
 
 </td>
 </tr>
+ </tbody>
+</table>
+
+<h2 id="deploy">Deployment</h2>
+
+<ol>
+
+<li><h3>Create the library</h3>
+<pre>
+gradlew distJar
+
+<kc>Creates the file <ks>app-2.0.jar</ks>, renamed in <k>IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
+</li>
+
+<li><h3>Copy the library</h3>
+<pre>
+Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-2.0.jar</ks> into 
+<k>/unibolibs/IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
+</li>
+
+ 
+<ol>
+
+
+<h2>Examples of usage (in Kotlin)</h2>
+
+ <center><table style="width:95%"> 
+<tbody>	
 
 <tr> 
-<td><h3>Example: BasicStepRobotCaller</h3>
+<td><h3>BasicStepRobotCaller</h3>
   The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotActorCaller.ktt" target="code">BasicStepRobotActorCaller.kt</a>
 extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
 with the aim of sending some commands to the 
@@ -474,33 +502,50 @@ In fact, the caller sends the move-commands without any delay between them.
 </tr>
 
 
-<tr> 
-<td>
 
-Todo: BoundaryWalk
-<hr/>
-use the  <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
-to define an actor that solves the problems introduced in
-<a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html" target="lab">LabIss2021 | BoundaryWalk</a>
-and  in <a href="../../it.unibo.virtualrobotclient/userDocs/resumableBoundaryWalker.html" target="web">Lab ISS | the project resumableBoundaryWalker</a>
+<tr> 
+<td style="width:50%">
+<h3>PathExecutor</h3>
+The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/PathExecutor.kt" target="code">PathExecutor.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
+with the aim of sending commands to the 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>,
+so to moving the robot along a given path (e.g. <ks>"wwl"</ks>).
+<br/><br/>
+This <tt>uniboActor</tt> exploits the utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/TripInfo.kt" target="code">TripInfo.kt</a>
+to create a map as a a singleton object, managed by another utility class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>
 </td>
 <td>
-<div class="remark">
-Next: build a <k>RobotService</k>
-<hr/>
-See <a href="RobotService.html" target="web">LabIss2021 | a RobotService</a>
-</div> 
+The code is in project <a href="../../it.unibo.cautiousExplorer" target="code">it.unibo.cautiousExplorer</a><br/><br/>
+<center><img src="./img/pathExecutor.png" alt="pathExecutor" width="100%"  ></center>
+ <br/><br/>
 </td>
 </tr>
- </tbody>
-</table>
+
+<tr>
+<td style="width:50%">
+<h3>ExplorerWithPlanner</h3>
+The code is in project <a href="../../it.unibo.cautiousExplorer" target="code">it.unibo.cautiousExplorer</a>.<br/><br/>
+ The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/ExplorerWithPlanner.kt" target="code">
+ ExplorerWithPlanner.kt</a>
+
+</td>
+ <td>The code is in project <a href="../../it.unibo.cautiousExplorer" target="code">it.unibo.cautiousExplorer</a>.<br/><br/>
+</td>
+</tr>
+
+
+</tbody>	
+</table></center>
 
 
 
 
 <h2>Using from Java</h2>
 
-<table style="width:98%">
+<center><table style="width:95%">
 <tbody>	
 
 <tr>
@@ -516,6 +561,7 @@ It creates an instance of  <a href="../app/src/main/kotlin/it/unibo/robotService
 and sends some message to it.
 
 </td>
+
 <td>
 <a href="../app/src/main/java/demo/DemoMainJava.java" target="code">DemoMainJava.java</a> 
 extends 
@@ -534,12 +580,34 @@ extends
 
 <tr>
 <td style="width:50%" > 
-
-
-
-
 </td>
 <td>
+</td>
+</tr>
+ </tbody>
+</table>
+</center>
+
+<h2>Next steps</h2>
+
+<table style="width:98%">
+<tbody>	
+
+<tr> 
+<td style="width:50%">
+Todo: BoundaryWalk
+<hr/>
+<m>use the  <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+to define an actor that solves the problems introduced in
+<a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html" target="lab">LabIss2021 | BoundaryWalk</a>
+and  in <a href="../../it.unibo.virtualrobotclient/userDocs/resumableBoundaryWalker.html" target="web">Lab ISS | the project resumableBoundaryWalker</a>
+</m></td>
+<td>
+<div class="remark">
+Next: build a <k>RobotService</k>
+<hr/>
+See <a href="RobotService.html" target="web">LabIss2021 | a RobotService</a>
+</div> 
 </td>
 </tr>
  </tbody>
@@ -550,29 +618,6 @@ extends
 
 
 
-
-
-
-
-<h2 id="deploy">Deployment</h2>
-
-<ol>
-
-<li><h3>Create the library</h3>
-<pre>
-gradlew distJar
-
-<kc>Creates the file <ks>app-2.0.jar</ks>, renamed in <k>IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
-</li>
-
-<li><h3>Copy the library</h3>
-<pre>
-Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-2.0.jar</ks> into 
-<k>/unibolibs/IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
-</li>
-
- 
-<ol>
 
 
    <!--

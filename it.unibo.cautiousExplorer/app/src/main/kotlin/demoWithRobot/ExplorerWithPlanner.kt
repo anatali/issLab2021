@@ -8,7 +8,7 @@ import it.unibo.robotService.ApplMsgs
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
-import mapRoomKotlin.mapUtil
+ 
 
 class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 

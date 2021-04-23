@@ -32,8 +32,8 @@ public class DemoMainJava extends AbstracMainForActor {
         a1.send( m1.toString() );
 
 
-        a1.send( endKJava.toString() );
-        a2.send( endKJava.toString() );
+        //a1.send( endKJava.toString() );
+        //a2.send( endKJava.toString() );
 
     }
 
