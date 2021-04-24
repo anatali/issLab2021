@@ -1,0 +1,445 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ 
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 700px;
+    font-size: 15px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px; 
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #C0F0E0;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+	
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #E3F2FD;	
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+} 
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}     
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+	
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>LabArchitectures</title></head>
+    
+<body>
+<div id="body">
+<h1>LabArchitectures | From MVC to Hexagonal architectures</h1>
+
+<h2>The pattern <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="web">MVC</a></h3>
+The <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="web">Model-VIew-Controller (MVC)</a>
+is a design pattern that whose <bc>original responsibility</bc> is to  splits the user interface interaction into three distinct roles.
+
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+
+
+
+<h3>MVC in Web applications</h3>
+In Web applications, MVC provides a framework for high level interoperability between data sources, control elements, and UI elements.
+ 
+ <ul>
+<li>Some web MVC frameworks take a <a href="https://en.wikipedia.org/wiki/Thin_client"  target="web">thin client</a> approach that places almost the entire model, view and controller logic on the server.</li>
+ 
+<li>Other frameworks such as   <a href=" https://en.wikipedia.org/wiki/AngularJS"  target="web">AngularJS</a>, 
+allow the MVC components to execute partly on the client. </li>
+ </ul>
+ 
+<h3>MVC in IOT</h3>
+ In IoT applications, MVC provides a framework for the structured division of responsibility between people 
+ and software.
+
+<ul>
+<li>The <bc>Model</bc> is a representation or an abstraction of the physical things and their attributes, which informs a Controller. </li>
+<li>The <bc>Controller</bc> is  software which makes actuation decisions based on the information, and sends actuation commands 
+to the thing using it’s modeled affordances.
+ </li> 
+ 
+</ul>
+
+ </td>
+
+<td>
+<img src="./img/mvc.png" alt="mvc.png" width="80%"  />
+<div class="remark">Software goal: to maintain a desired state of the thing through it’s model.</div>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<br/><br/>
+Note that, over the years, the MVC pattern evolved from a micro to a <bc>macro pattern</bc>. The important thing to remember is that:
+
+<div class="remark">
+<center>
+
+An <bc>application controller</bc> is a very different beast then an MVC controller - <i>Martin Fowler</i> 
+<br/>
+The <bc>domain model</bc> we need to solve use cases is  <ks>different</ks> then the <bc>view model</bc>
+<!-- we need to provide an user-interface (UI) with appropriate data to build views for the user. -->
+<br/>
+Be aware of the <a href="https://www.tripled.io/25/08/2016/The-anemic-domain-model/" target="web">The anemic domain model</a>
+</center>
+</div>
+
+ <table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>From  <a href="https://www.tripled.io/08/11/2017/mvc-architecture/" target="web">MODEL, VIEW, CONTROLLER… BUT WHICH MODEL?</a> </h3>
+When MVC is seen as an implementation of the classic three tier architecture then the <i>model</i> represents the data, 
+the <i>controllers</i> contain the business logic, and all view related responsibilities belong in the <i>view</i>. <br/> 
+This then often gives rise to the <a href="https://www.tripled.io/25/08/2016/The-anemic-domain-model/" target="web">The anemic domain model</a>
+(why are domain models so often anemic? Simple answer: They start with databases ...) .
+<br/><br/>
+
+<img src="./img/mvc-architecture.png" alt="mvc-architecture.png" width="80%"  /> 
+<ul>
+<li>The MVC pattern should not depend on the <bc>domain model</bc> directly.</li>
+<li>The<b> model from MVC is its own model</b> created for the specific views.</li>
+<li>Do not connect your presentation directly to the domain model. The domain model should not concern itself with presentation details.</li>
+<li>The MVC patterns belong in the <bc>front end</bc> infrastructure.</li>
+</ul>
+See also <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel" target="web">Model–view–viewmodel</a></li>
+ 
+
+  </td>
+<td>
+<div class="remark">
+<center>
+The use cases could be implemented using a domain model completely independent from any UI implementation details.
+</center>
+</div>
+
+
+<img src="./img/mvc-frontend.png" alt="mvc-frontend.png" width="60%"  /> 
+<div class="remark">
+<center>
+The infrastructure details do not dictate the use cases! Any UI, rest or other front end infrastructure concerns do not trickle through into the domain.
+</center>
+</div>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h2><a href="https://en.wikipedia.org/wiki/Application_domain" target="web">Application domains</a></h2>
+<ul>
+<li>An application domain is the <ks>segment of reality</ks> for which a software system is developed. 
+It is the background or starting point for the actual-state analysis and the creation of a <bc>domain model</bc>.</li>
+<li>An application domain can be an organization, a department within an organization, or a single workplace.</li>
+<li>From the application developer's perspective, it is desirable to keep the application domain <ks>as small as possible</ks> to reduce the complexity of the project.
+</li>
+<li><a href="https://martinfowler.com/articles/microservices.html" target="web"><bc>Microservices</bc></a> have a symbiotic relationship 
+with domain-driven design (<bc>DDD</bc>)
+
+</li>
+<li>An application domain normally includes a <bc>domain-specific language</bc>. 
+This means that people in this domain use specific terms and concepts and think about their domain in a specific way.
+</li>
+</ul>
+ 
+
+
+
+
+
+
+<!--
+	<h3 id="domains">Domains</h3>
+
+  	<center><table style="width:95%">
+	<tbody>	
+	<tr>
+	<td style="width:80%">
+ 	<center><img src="./img/domains.png" alt="domains" width="100%" height="52%"/></center>
+ 	<li> </li>
+	</td>
+	<td>
+ 
+ 	</td>
+	</tr>
+	 </table>
+	</center> 
+
+-->	
+<h3 id="ddd"> <a href="https://en.wikipedia.org/wiki/Domain-driven_design" target="web">Domain Driven design(DDD)</a> </h3>
+   	<center><table style="width:95%">
+	<tbody>	
+	<tr>
+	<td style="width:80%">
+ 	<center><img src="./img/ddd.png" alt="ddd.png" width="100%" height="52%"/></center>
+	</td>
+	<!--
+	<td>		
+	<h4>Hexagonal architectures</h4>
+	<img src="./img/portAdapterArch.png" alt="portAdapterArch" width="100%" />
+	
+		<m>
+ 		
+	See 	
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/it.unibo.eclipse.qak.robot/userDocs/Lab11.html#domainmodel"
+target="lecture">Lab11: Resource model</a>	
+	
+	
+	<br/><br/>
+ 		</m>
+	</td>
+-->
+	</tr>
+	 </table>
+	</center> 
+
+	
+<h3 id="dsl">Domain Specific Languages</h3>
+  	<center><table style="width:95%">
+	<tbody>	
+	<tr>
+	<td style="width:100%">
+ 	<center><img src="./img/dslSlide.png" alt="dslSlide" width="100%" height="52%"/></center><br/>
+ 	<li><a href="https://www.slideshare.net/zirrus/domainspecific-langauges" target="web">Domain-specific
+Languages, by Javier Luis Cánovas Izquierdo</a>, Inria <br/></li>
+<li><a href="https://www.slideshare.net/mariofusco/real-world-dsl" target="web">Real World DSL, by Mario Fusco</a>, Red Hat <br/></li>
+ 
+<!-- https://www.slideshare.net/peterfriese/the-unbearable-stupidity-of-modeling -->
+<div class="remark">
+<li>For an example of internal DSL in Kotlin we have introduced
+<a href="http://htmlpreview.github.io/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.actorfsm/userDocs/FSM.html"
+target="lecture">FSM | A kotlin-based DSL</a></li>
+<li>For an example of external DSL we have introduced the
+<a href="http://htmlpreview.github.io/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.qakactor/userDocs/LabQakIntro2020.html"
+target="lecture">QAkactors</a></li>
+
+</div>
+ 
+	</td>
+	</tr>
+
+	 </table>
+	</center> 
+
+
+<h2>Hexagonal architectures</h2>
+
+ <table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>From <a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="web">The Clean Architecture</a> </h3>
+<img src="./img/CleanArchitecture.jpg" alt="CleanArchitecture.jpg" width="100%"  /> 
+
+  </td>
+<td>
+<h3>Hexagonal architectures</h3>
+See 	
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/it.unibo.eclipse.qak.robot/userDocs/Lab11.html#domainmodel"
+target="lecture">Lab11: Resource model</a><br/><br/>
+<img src="./img/hexarch1.jpg" alt="hexarch1.jpg" width="100%"  /> 
+</td>
+</tr>
+ </tbody>
+</table>
+ 
+ 
+ 
+
+
+
+
+
+
+
+ 
+ <br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+ <br/><br/>
+</div>  
+
+ 
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>
+
+
+ 
