@@ -54,18 +54,18 @@ object ApplMsgs {
     val runawyStartMsg = "{\"ID\":\"PATHTODO\" }".replace("ID", runawyStartId)
 
     //
-    val stepId = "step"
-    val stepMsg = "{\"ID\":\"TIME\" }".replace("ID", stepId)
-    val stepDoneId = "stepDone"
-    val stepDoneMsg = "{\"ID\":\"ok\" }".replace("ID", stepDoneId)
-    val stepFailId = "stepFail"
-    val stepFailMsg = "{\"ID\":\"TIME\" }".replace("ID", stepFailId)
+    val stepId      = "step"
+    val stepMsg     = "{\"$stepId\":\"TIME\" }"
+    val stepDoneId  = "stepDone"
+    val stepDoneMsg = "{\"$stepDoneId\":\"ok\" }"
+    val stepFailId  = "stepFail"
+    val stepFailMsg = "{\"$stepFailId\":\"TIME\" }"
 
-    val robotMovecmdId = "robotmovecmd"
-    val robotMovecmdMsg = "{\"ID\":\"MOVE\" }".replace("ID", robotMovecmdId)
+    val robotMovecmdId  = "robotmovecmd"
+    val robotMovecmdMsg = "{\"$robotMovecmdId\":\"MOVE\" }"
 
-
-    val startMsgStr = "{\"start\":\"ok\" }"
+    val startAnyId  = "start"
+    val startMsgStr = "{\"$startAnyId\":\"ok\" }"
     val endMsgStr = "{\"end\":\"ok\" }"
 
     fun stepRobot_w(caller:String, time: String="350") : ApplMessage {
@@ -92,10 +92,10 @@ object ApplMsgs {
     }
 
     fun startAny( caller:String) : ApplMessage {
-        return MsgUtil.buildDispatch(caller, "start", startMsgStr, "any")
+        return MsgUtil.buildDispatch(caller, startAnyId, startMsgStr, "any")
     }
     fun endAny( caller:String) : ApplMessage {
-        return MsgUtil.buildDispatch(caller, "start", endMsgStr, "any")
+        return MsgUtil.buildDispatch(caller, startAnyId, endMsgStr, "any")
     }
 
     fun executorOkEnd( caller:String ) :  ApplMessage {

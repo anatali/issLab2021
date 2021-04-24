@@ -95,7 +95,7 @@ init{
 ======================================================================================
  */
 override suspend fun handleInput(msg: ApplMessage) {
-    colorPrint(  "$name | AbstractRobotActor handleInput $msg currentBasicMove=$currentBasicMove")
+    colorPrint(  "$name | handleInput $msg currentBasicMove=$currentBasicMove")
     val infoJsonStr = msg.msgContent
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
@@ -160,14 +160,7 @@ override suspend fun handleInput(msg: ApplMessage) {
     }
 
     override fun msgDriven(infoJson: JSONObject) {
-        //println("$name BasicStepRobotActor |  %%% msgDriven:$msgJson")
-        /*
-        if( msgJson.has("robotmove")){
-            if( currentBasicMove.length > 0  ){
-                println("$name BasicStepRobotActor |  move already running: let us store the request")
-                msgQueueStore.add(msg)
-                return
-            }*/
+        //colorPrint("$name | msgDriven:$infoJson support=$support")
         if( infoJson.has("robotmove")) {
             currentBasicMove = infoJson.getString("robotmove")
             support.forward(infoJson.toString())

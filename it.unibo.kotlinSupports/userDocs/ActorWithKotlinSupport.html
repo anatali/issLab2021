@@ -594,22 +594,57 @@ extends
 <tbody>	
 
 <tr> 
-<td style="width:50%">
-Todo: BoundaryWalk
-<hr/>
-<m>use the  <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
-to define an actor that solves the problems introduced in
-<a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html" target="lab">LabIss2021 | BoundaryWalk</a>
-and  in <a href="../../it.unibo.virtualrobotclient/userDocs/resumableBoundaryWalker.html" target="web">Lab ISS | the project resumableBoundaryWalker</a>
-</m></td>
-<td>
+<td style="width:30%">
 <div class="remark">
-Next: build a <k>RobotService</k>
-<hr/>
+Todo: BoundaryWalk
+</div>
+ 
+</td>
+<td>
+Use the  <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+to define an actor that solves the problems introduced in
+<a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html" target="lab">LabIss2021 | BoundaryWalk</a>.<br/><br/>
+and  in <a href="../../it.unibo.virtualrobotclient/userDocs/resumableBoundaryWalker.html" target="web">Lab ISS | the project resumableBoundaryWalker</a>
+
+<h3>Possible SPRINTs</h3>
+Use the <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>:
+<ol>
+<li>
+in a <ks>local</ks> Kotlin or Java application</li>
+<li>
+<ks>embedded in a service</ks> callable via TCP (see <a href="RobotService.html" target="web">LabIss2021 | a RobotService</a>)
+</li>
+<li>
+in an <ks>'abstract way'</ks>, by focussing only on the name of the destination. <br/>
+<m>As a subproblem, define in a proper utility (e.g. an abstract class) that alleviates the problem of
+detecting the proper 'interaction technology' required to communicate with the
+<a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>.<br/>
+For example, the application layer should simply write sentences like the following one:
+<pre>
+<k>forward</k>( MSGID, MSGCONTENT, "stepRobot" )  <kc>//"stepRobot"</kc> is the DESTINATION
+<k>request</k>( MSGID, MSGCONTENT, "stepRobot" )
+</pre>
+</m> 
+</ol>
+
+
+ 
+ </td>
+</tr>
+
+<tr> 
+<td >
+<div class="remark">
+Next step: build a <k>RobotService</k>
+</div>
+</td>
+<td>
+  
 See <a href="RobotService.html" target="web">LabIss2021 | a RobotService</a>
-</div> 
+ <center><img src="./img/RobotServiceZooming.png" alt="RobotServiceZooming" width="30%" ></center>
 </td>
 </tr>
+
  </tbody>
 </table>
 
