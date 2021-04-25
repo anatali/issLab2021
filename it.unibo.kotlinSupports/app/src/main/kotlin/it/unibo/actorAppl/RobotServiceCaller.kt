@@ -23,7 +23,7 @@ import java.util.HashMap
 
 class RobotServiceCaller(name: String, owner: ActorBasicKotlin) : ActorBasicKotlin(name){
 	var conn: IConnInteraction
-  
+
 	init{
  		val fp = FactoryProtocol(null, "TCP", name)
 		conn   = fp.createClientProtocolSupport("localhost", 8010)
@@ -50,9 +50,9 @@ class RobotServiceCaller(name: String, owner: ActorBasicKotlin) : ActorBasicKotl
 			"move"      -> doMove( msg.toString() )
 			/*
 			The caller does not receive the messages sent by the remote actor
-			They are redirected by the ConnectionReader to the owner
+			when they are redirected to the owner by the ConnectionReader
 			 */
-			else -> println("$name | NO HANDLE for $msg")
+			else -> colorPrint("$name | NO HANDLE for $msg", Color.MAGENTA)
 		}
 	}
 

@@ -124,7 +124,7 @@ override suspend fun handleInput(msg: ApplMessage) {
             }else{
                 val dtVal = this.getDuration(StartTime)
                 if( currentBasicMove.length == 0 ) this.endStepKo(""+dtVal)
-                else{  //time elapsed for a convnetional move
+                else{  //time elapsed for a conventional move
                 }
             }
         }else if( infoJson.has("robotmove") && currentBasicMove.length > 0 ){ //another move while working

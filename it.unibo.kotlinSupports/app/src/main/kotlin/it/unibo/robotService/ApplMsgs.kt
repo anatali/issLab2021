@@ -87,7 +87,7 @@ object ApplMsgs {
         val turnMsg = if (dir=="l")  turnLeftMsg else turnRightMsg //no ternary op in kotlin
         return MsgUtil.buildDispatch(caller, "move", turnMsg, "stepRobot")
     }
-    fun stepRobot_step(caller:String, time:String) : ApplMessage {
+    fun stepRobot_step(caller:String, time:String="350") : ApplMessage {
         return MsgUtil.buildDispatch(caller, "step", stepMsg.replace("TIME",time), "stepRobot")
     }
 
