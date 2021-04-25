@@ -47,12 +47,12 @@ class RobotServiceCaller(name: String, owner: ActorBasicKotlin) : ActorBasicKotl
 		val input = msg.msgId
 		//colorPrint("$name | input: $input ", Color.BLUE)
 		when (input) {
-			"move"      -> doMove( msg.toString() )
+			"move" , "step" -> doMove( msg.toString() )
 			/*
 			The caller does not receive the messages sent by the remote actor
 			when they are redirected to the owner by the ConnectionReader
 			 */
-			else -> colorPrint("$name | NO HANDLE for $msg", Color.MAGENTA)
+			//else -> colorPrint("$name | NO HANDLE for $msg", Color.MAGENTA)
 		}
 	}
 

@@ -2,7 +2,9 @@ package it.unibo.executor;
 
 import it.unibo.cautiousExplorer.AbstractRobotActor;
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import mapRoomKotlin.mapUtil;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 public class WalkStrategyActor extends AbstractRobotActor {
@@ -96,4 +98,13 @@ public class WalkStrategyActor extends AbstractRobotActor {
     }//msgdriven
 
 
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 }

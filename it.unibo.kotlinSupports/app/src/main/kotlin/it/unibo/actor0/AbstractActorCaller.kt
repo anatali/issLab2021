@@ -18,7 +18,7 @@ abstract class AbstractActorCaller(name: String, scope: CoroutineScope) //, val 
     var rsc: RobotServiceCaller? = null
 
     fun forward (msg: ApplMessage ) {
-        colorPrint("$name | forward  msg:$msg  ", Color.GREEN )
+        colorPrint("$name | AbstractActorCaller forward  msg:$msg  ", Color.GREEN )
         val  destActorName = msg.msgReceiver
         val dest           = ActorBasicContextKb.getActor(destActorName)
         if( dest != null ) sendToActor( msg,dest  )
@@ -36,13 +36,10 @@ abstract class AbstractActorCaller(name: String, scope: CoroutineScope) //, val 
             val applMsg = "msg($msgId,dispatch,$name,DEST,CMD,1)"
                 .replace("DEST", destActorName)
                 .replace("CMD", msg)
-            colorPrint("$name | forward to rsc applMsg:$applMsg", Color.GREEN )
+            colorPrint("$name | AbstractActorCaller forward to rsc applMsg:$applMsg", Color.GREEN )
             //val msg = ApplMessage.create(applMsg)
             rsc?.send(applMsg)
         }
     }
-
- 
- 
  }
 

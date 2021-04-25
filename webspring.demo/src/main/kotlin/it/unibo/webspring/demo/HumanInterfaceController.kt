@@ -27,38 +27,10 @@ class HumanInterfaceController {
     var appName: String?    = null
     var applicationModelRep = "waiting"
 
-    lateinit var obs         : NaiveActorKotlinObserver
-    lateinit var robot       : BasicStepRobotActorCaller
-    //lateinit var robotCaller : it.unibo.actorAppl.BasicStepRobotActorCaller
-
     init{
-        initRobotLocal()
-        //initRobotCaller()
+        RobotResource.initRobotResource()
     }
 
-    fun initRobotLocal(){
-        val myscope = CoroutineScope(Dispatchers.Default)
-        sysUtil.colorPrint("HumanInterfaceController | init ${sysUtil.curThread()} ", Color.GREEN)
-        //TODO: define an observer that updates the HTML page
-        obs   = NaiveActorKotlinObserver("obs", 0, myscope)
-        //Create a local BasicStepRobotActor => no need for a TCP calls
-        BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "localhost")
-        robot = BasicStepRobotActorCaller("robot", myscope )
-    }
-    fun initRobotCaller(){
-        val fp = FactoryProtocol(null, "TCP", "hmi")
-        val conn : IConnInteraction = fp.createClientProtocolSupport("localhost", 8010)
-        sysUtil.colorPrint("hmi | init connected:$conn", Color.BLUE)
-
-        val myscope = CoroutineScope(Dispatchers.Default)
-        sysUtil.colorPrint("HumanInterfaceController | init ${sysUtil.curThread()} ", Color.GREEN)
-        obs   = NaiveActorKotlinObserver("obs", 0, myscope)
-        robot = BasicStepRobotActorCaller("robot", myscope )
-        //val reader = ConnectionReader ("reader", conn )
-        //reader.registerActor(owner)	//the answer received by the reader are redirected to the owner
-        //reader.send( ApplMsgs.startAny(name))
-
-    }
     @GetMapping("/")    //defines that the method handles GET requests.
     fun entry(model: Model): String {
         model.addAttribute("arg", appName)
@@ -87,26 +59,18 @@ class HumanInterfaceController {
     //@ResponseBody
     fun move( model: Model, @RequestParam(name = "movetodo") move:String ) : String {
         sysUtil.colorPrint("HumanInterfaceController | doMove  $move", Color.GREEN)
-        execMove(move)
+        RobotResource.execMove(move)
         return  "naiveRobotGui"
     }
 
     @PostMapping("/domove")
     fun do_move(model: Model, @RequestParam(name = "movetodo") move:String) : String {
         sysUtil.colorPrint("HumanInterfaceController | do_move $move ", Color.GREEN)
-        execMove(move)
+        RobotResource.execMove(move)
         return  "naiveRobotGui"
     }
 
-    fun execMove( move : String ) {
-        when (move) {
-            "l" -> robot.send(ApplMsgs.stepRobot_l("spring"))
-            "r" -> robot.send(ApplMsgs.stepRobot_r("spring"))
-            "w" -> robot.send(ApplMsgs.stepRobot_w("spring"))
-            "s" -> robot.send(ApplMsgs.stepRobot_s("spring"))
-            "p" -> robot.send(ApplMsgs.stepRobot_step("spring", "350"))
-        }
-    }
+
 
 
 }
