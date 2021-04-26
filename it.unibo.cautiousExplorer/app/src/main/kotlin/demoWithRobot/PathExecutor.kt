@@ -29,7 +29,6 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
                                             //: AbstractRobotActor(name, "localhost") {
     protected enum class State { start, continueJob, moving, turning }
 
-
     protected val MoveNameShort = mutableMapOf<String, String>(
         "turnLeft" to "l",  "turnRight" to "r", "moveForward" to "w",
         "moveBackward" to "s" , "alarm" to "h"
@@ -40,22 +39,22 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
     protected var moves    = TripInfo()
 
     protected var stepper : BasicStepRobotActorCaller //BasicStepRobotActor("stepper", this, scope, "localhost")
+    protected var robot   : BasicStepRobotActor
 
     init{
          resetStateVars()
-         stepper = BasicStepRobotActorCaller("pathrobot", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
+         stepper = BasicStepRobotActorCaller("stepper", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
          //setup a receiver from TCP
          stepper.registerActor(this)
          println("$name | STARTS ")
         //Uncomment if you want to use a local (non-TCP) BasicStepRobotActor
         //val obs = NaiveObserverActorKotlin("obs", scope)
-        BasicStepRobotActor("stepRobot", ownerActor=stepper, scope, "localhost")
+        robot = BasicStepRobotActor("stepRobot", ownerActor=stepper, scope, "localhost")
     }
     protected fun resetStateVars() {
-         curState = State.start
-        //moves.cleanMovesRepresentation()
+        curState = State.start
         todoPath = ""
-        moves    = TripInfo()
+        //moves    = TripInfo()
         println("$name PathExecutor STARTS todoPath=$todoPath")
     }
 
@@ -88,9 +87,8 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
             println("$name | outside the map " + e.message)
         }
         moves.showMap()
-
-        ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney())
-        )
+        ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney()))
+        curState = State.continueJob
     }
 
     fun endOk(){
@@ -134,6 +132,11 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
                 println("$name | fsm moving - after move state= $curState")
             }
         }
+    }
+
+    override fun terminate(){
+        stepper.terminate()
+        robot.terminate()
     }
 
     /*

@@ -7,6 +7,7 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
+import it.unibo.robotService.BasicStepRobotActor
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
@@ -17,6 +18,8 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
 
     //private lateinit var executor: PathExecutor
     var counter = 0;
+    var myexecutor = PathExecutor("executor${counter++}", scope, this)
+
     fun initWork(){
         plannerUtil.initAI()
         plannerUtil.showMap()
@@ -32,7 +35,8 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
     }
 
     fun doThePath(pathTodo: String){
-        val myexecutor  = PathExecutor("executor${counter++}", scope, this)
+        //myexecutor.terminate()
+        //myexecutor  = PathExecutor("executor${counter++}", scope, this)
         this.waitUser("exec")
         val cmdStr= ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
         val cmd   = MsgUtil.buildDispatch(name, ApplMsgs.executorStartId,cmdStr,"executor")
@@ -52,9 +56,7 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
         plannerUtil.setGoal(x, y);
         val actions  = plannerUtil.doPlan()
         val pathTodo = getPlanTodo(actions)
-        //doThePath(pathTodo)
-
-        doThePath("r")
+        doThePath(pathTodo)
     }
 
 
@@ -64,8 +66,8 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
             this.waitUser("backToHome")
             planWithNOTEmptyMap(0,0)
         }else{
-            this.waitUser("goto(1,1")
-            planWithNOTEmptyMap(1,1)
+            this.waitUser("goto(3,3)")
+            planWithNOTEmptyMap(3,3)  //attempt to reach again
         }
     }
 
@@ -84,6 +86,7 @@ fun main() {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
         val demop = DemoPlanner("demop", this )
+        //BasicStepRobotActor("stepRobot", ownerActor=demop, this, "localhost")
         demop.send( ApplMsgs.startAny("main") )
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
