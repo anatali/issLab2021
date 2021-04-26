@@ -23,7 +23,7 @@ object mapUtil{
         return state.direction.toString()
     }
 
-    private fun setObstacleOnCell(){
+    fun setObstacleOnCell(){
         sysUtil.colorPrint("setObstacleOnCell ${state.x},${state.y}", Color.RED)
 		map.put( state.x,  state.y, Box(true, false, false))
 	}
@@ -31,7 +31,9 @@ object mapUtil{
     fun setObstacle() {  //trick!!
         doMove("w")
         setObstacleOnCell()
-        doMove("s")
+        //back without cleaning the current cell
+        state = state.backward();
+        map.put(state.x, state.y, Box(false, false, true))
     }
     @JvmStatic fun doMove(move: String ) {
        val x = state.x

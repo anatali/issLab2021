@@ -9,12 +9,15 @@ fun doTestMove(){
 	mapUtil.showMap()
  	mapUtil.doMove("l")
 	for( i in 1..3) mapUtil.doMove( "w"  )
-	for( i in 1..3) mapUtil.doMove( "s"  )
 //	println( "-----------------------------------"  );
 	mapUtil.showMap()
-	/*
 	//Obstacle
 	mapUtil.setObstacle(  )
+	mapUtil.showMap()
+
+	for( i in 1..3) mapUtil.doMove( "s"  )
+
+	/*
   	mapUtil.doMove("s")
 	println( "-----------------------------------"  );
 	mapUtil.showMap()

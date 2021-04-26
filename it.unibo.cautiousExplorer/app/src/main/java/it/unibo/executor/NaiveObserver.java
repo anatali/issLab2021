@@ -1,6 +1,8 @@
 package it.unibo.executor;
 
+import it.unibo.interaction.IUniboActor;
 import it.unibo.supports2021.ActorBasicJava;
+import org.jetbrains.annotations.NotNull;
 
 
 public class NaiveObserver extends ActorBasicJava {
@@ -17,4 +19,13 @@ public class NaiveObserver extends ActorBasicJava {
         this.terminate();
      }
 
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 }

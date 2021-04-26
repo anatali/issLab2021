@@ -4,8 +4,10 @@ package it.unibo.executor;
 import it.unibo.cautiousExplorer.AbstractRobotActor;
 import it.unibo.cautiousExplorer.RobotMovesInfo;
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import it.unibo.supports2021.ActorBasicJava;
 import mapRoomKotlin.mapUtil;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import static it.unibo.executor.ApplMsgs.*;
@@ -14,6 +16,16 @@ import static it.unibo.executor.ApplMsgs.*;
 The map is a singleton object, managed by mapUtil
  */
 public class PathExecutorActor extends AbstractRobotActor {
+
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 
     protected enum State {start, nextMove, moving, turning, endok, endfail};
 

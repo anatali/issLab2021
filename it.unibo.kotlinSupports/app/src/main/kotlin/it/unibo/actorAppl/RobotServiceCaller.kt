@@ -30,7 +30,7 @@ class RobotServiceCaller(name: String, owner: ActorBasicKotlin) : ActorBasicKotl
 		colorPrint("$name | init connected:$conn", Color.BLUE)
 		val reader = ConnectionReader ("reader", conn )
 		reader.registerActor(owner)	//the answer received by the reader are redirected to the owner
-		reader.send( ApplMsgs.startAny(name))
+		reader.send( ApplMsgs.startAny(name) )
 	}
 
 	suspend fun doMove( msg: String ) {
@@ -47,7 +47,8 @@ class RobotServiceCaller(name: String, owner: ActorBasicKotlin) : ActorBasicKotl
 		val input = msg.msgId
 		//colorPrint("$name | input: $input ", Color.BLUE)
 		when (input) {
-			"move" , "step" -> doMove( msg.toString() )
+			 "move"  -> doMove( msg.toString() )
+			 "step"  -> doMove( msg.toString() )
 			/*
 			The caller does not receive the messages sent by the remote actor
 			when they are redirected to the owner by the ConnectionReader

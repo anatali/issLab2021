@@ -7,8 +7,10 @@ ConnectionReader
 package it.unibo.remoteCall;
 
 import it.unibo.actor0.ApplMessage;
+import it.unibo.interaction.IUniboActor;
 import it.unibo.is.interfaces.protocols.IConnInteraction;
 import it.unibo.supports2021.ActorBasicJava;
+import org.jetbrains.annotations.NotNull;
 
 public class ConnectionReader extends ActorBasicJava  {
     private IConnInteraction conn;
@@ -49,4 +51,13 @@ public class ConnectionReader extends ActorBasicJava  {
 
     }//handleInput
 
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 }

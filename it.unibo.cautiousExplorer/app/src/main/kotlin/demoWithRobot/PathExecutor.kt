@@ -10,9 +10,11 @@ import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
+import it.unibo.actorAppl.BasicStepRobotActorCaller
 import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import mapRoomKotlin.TripInfo
 import org.json.JSONObject
@@ -27,7 +29,6 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
                                             //: AbstractRobotActor(name, "localhost") {
     protected enum class State { start, continueJob, moving, turning }
 
-    protected var stepper = BasicStepRobotActor("stepper", this, scope, "localhost")
 
     protected val MoveNameShort = mutableMapOf<String, String>(
         "turnLeft" to "l",  "turnRight" to "r", "moveForward" to "w",
@@ -36,31 +37,46 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 
     protected var curState = State.start
     protected var todoPath = ""
-    protected var moves  = TripInfo()
+    protected var moves    = TripInfo()
 
+    protected var stepper : BasicStepRobotActorCaller //BasicStepRobotActor("stepper", this, scope, "localhost")
+
+    init{
+         resetStateVars()
+         stepper = BasicStepRobotActorCaller("pathrobot", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
+         //setup a receiver from TCP
+         stepper.registerActor(this)
+         println("$name | STARTS ")
+        //Uncomment if you want to use a local (non-TCP) BasicStepRobotActor
+        //val obs = NaiveObserverActorKotlin("obs", scope)
+        BasicStepRobotActor("stepRobot", ownerActor=stepper, scope, "localhost")
+    }
     protected fun resetStateVars() {
-        curState = State.start
+         curState = State.start
         //moves.cleanMovesRepresentation()
         todoPath = ""
+        moves    = TripInfo()
+        println("$name PathExecutor STARTS todoPath=$todoPath")
     }
 
-    protected fun nextMove()   { //return true when nothing to to
+    protected fun nextMove()   {
         if( todoPath.length == 0 ){
              endOk()
         } else {
             moves.showMap()
             val firstMove = todoPath[0]
-            //waitUser("nextMove=$firstMove")
             todoPath = todoPath.substring(1)
+            println("$name PathExecutor nextMove - firstMove=$firstMove todoPath=$todoPath")
             if (firstMove == 'w') {
                 stepper.send( ApplMsgs.stepRobot_step("$name", "350") )
                 curState = State.moving
-            } else if (firstMove == 'l' || firstMove == 'r')  {
+            }else if (firstMove == 'l' || firstMove == 'r')  {
                 curState = State.turning
+                println("---- curState=$curState todoPath=$todoPath")
                 stepper.send( ApplMsgs.stepRobot_turn("$name", ""+firstMove) )
             }
+            //delay(300)  //avoid too fast moving
         }
-
     }
 
     protected fun obstacleFound() {
@@ -85,16 +101,15 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
     }
 
     protected fun fsm(move: String, endmove: String) {
-        println("$name | state=" +
-                    curState + " move=" + move + " endmove=" + endmove + " todoPath=" + todoPath
-        )
+        println("$name | fsm state= $curState move= $move endmove=$endmove todoPath=$todoPath")
         when (curState) {
             State.start -> {
-                nextMove()
-            }
+                nextMove()  //modifies curState in moving or turning
+                println("$name | fsm start - after move state= $curState")
+           }
             State.continueJob -> {
                 if (move == ApplMsgs.executorStartId) {
-                    nextMove()
+                    nextMove()  //modifies curState in moving or turning
                 }
             }
             State.turning -> {
@@ -103,17 +118,20 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
                 if (endmove == "true") {
                     moves.updateMovesRep(moveShort!!)
                     moves.showMap()
-                    nextMove()
+                    nextMove()  //modifies curState in moving or turning
                 } else println("$name | FATAL ERROR ")
             } //turning
             State.moving -> {
                 println("$name | moving ... $move")
                 if (move == ApplMsgs.stepDoneId) {
                      moves.updateMovesRep("w")
-                    nextMove()
+                     nextMove()
                 } else if (move == ApplMsgs.stepFailId) {
                     obstacleFound()
+                } else if (endmove == "true") {
+                    nextMove()
                 }
+                println("$name | fsm moving - after move state= $curState")
             }
         }
     }
@@ -122,20 +140,22 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 ======================================================================================
  */
     override suspend fun handleInput(msg: ApplMessage) {
+        println("$name | handleInput ... $msg $curState")
+
         val msgJson = JSONObject( msg.msgContent )
         if (msgJson.has(ApplMsgs.executorStartId)) {
-            println("$name | handleInput  $msgJson")
+            //println("$name | handleInput  $msgJson")
             todoPath = msgJson.getString(ApplMsgs.executorStartId)
             fsm(ApplMsgs.executorStartId, "")
         } else if (msgJson.has(ApplMsgs.endMoveId)) {
-            //println("$name | handleInput endMoveId:$msgJson")
+            //println("$name | handleInput endMove:$msgJson $curState")
             val moveDone = msgJson.getString("move")
             fsm(moveDone, msgJson.getString(ApplMsgs.endMoveId))
         } else if (msgJson.has(ApplMsgs.stepDoneId)) {
-            println("$name | handleInput stepDoneId:$msgJson")
+            //println("$name | handleInput stepDone:$msgJson")
             fsm(ApplMsgs.stepDoneId, "")
         } else if (msgJson.has(ApplMsgs.stepFailId)) {
-            println("$name | handleInput stepFailed:$msgJson")
+            //println("$name | handleInput stepFailed:$msgJson")
             fsm(ApplMsgs.stepFailId, msgJson.getString(ApplMsgs.stepFailId))
         }
     }
@@ -146,12 +166,13 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val path     = "wlwwwwwwrwrr" //wlwwwwwwrwrr
+        val path     = "lw" //wlwwwwwwrwrr   wlwwwllwwwrwll
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")
         val obs      = NaiveObserverActorKotlin("peobs",  this)
         val executor = PathExecutor("pathExec", this, obs)
+        delay(1000) //give time to connect with remote robot via TCP
         executor.send(cmd)
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }

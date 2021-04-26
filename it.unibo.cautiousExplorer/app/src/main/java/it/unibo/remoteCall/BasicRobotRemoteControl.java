@@ -6,6 +6,8 @@ Sends commands over TCP-8010
  */
 package it.unibo.remoteCall;
 import it.unibo.actor0.sysUtil;
+import it.unibo.interaction.IUniboActor;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 
@@ -55,6 +57,16 @@ public class BasicRobotRemoteControl extends AbstractRobotRemote {
         BasicRobotRemoteControl controller = new BasicRobotRemoteControl("controller");
         ObserverRemoteNaive  obs           = new ObserverRemoteNaive("obs");
         controller.send( startDefaultMsg );
+
+    }
+
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
 
     }
 }

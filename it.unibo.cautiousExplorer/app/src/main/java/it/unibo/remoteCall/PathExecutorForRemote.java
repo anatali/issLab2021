@@ -11,12 +11,24 @@ import it.unibo.actor0.ApplMessage;
 import it.unibo.executor.ApplMsgs;
 import it.unibo.executor.NaiveObserver;
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import it.unibo.supports2021.ActorBasicJava;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import static it.unibo.executor.ApplMsgs.*;
 
 
 public class PathExecutorForRemote extends AbstractRobotRemote {
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
     protected enum State {start, nextMove, moving, turning, endok, endfail};
 
     protected State curState        = State.start ;

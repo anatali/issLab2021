@@ -10,8 +10,10 @@ by an obstacle after time DT. In this case it moves back the robot for time DT
  */
 import it.unibo.cautiousExplorer.AbstractRobotActor;
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import it.unibo.supports2021.ActorMsgs;
 import it.unibo.supports2021.TimerActor;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import static it.unibo.executor.ApplMsgs.*;
@@ -21,6 +23,16 @@ The map is a singleton object, managed by mapUtil
 
  */
 public class StepRobotActor extends AbstractRobotActor {
+
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
+
+    }
 
     protected enum State {start, moving, obstacle, end };
 

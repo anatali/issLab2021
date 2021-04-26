@@ -9,12 +9,13 @@ package it.unibo.remoteCall;
 import it.unibo.actor0.*;
 import it.unibo.executor.ApplMsgs;
 import it.unibo.interaction.IJavaActor;
+import it.unibo.interaction.IUniboActor;
 import it.unibo.supports2021.ActorBasicJava;
-
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-public class MainWalkerPath extends AbstractRobotRemote { //
-     public MainWalkerPath(String name) {
+public class WalkerPath extends AbstractRobotRemote { //
+     public WalkerPath(String name) {
         super(name);
     }
 
@@ -83,8 +84,18 @@ public class MainWalkerPath extends AbstractRobotRemote { //
         System.out.println("WalkerPath | main "  ); //+ sysUtil.aboutThreads("main")
         System.out.println("================================================================");
         //Configure the system
-        MainWalkerPath walker = new MainWalkerPath("walker");
+        WalkerPath walker = new WalkerPath("walker");
         walker.send( startDefaultMsg );
+
+    }
+
+    @Override
+    public void registerActor(@NotNull IUniboActor iUniboActor) {
+
+    }
+
+    @Override
+    public void removeActor(@NotNull IUniboActor iUniboActor) {
 
     }
 }

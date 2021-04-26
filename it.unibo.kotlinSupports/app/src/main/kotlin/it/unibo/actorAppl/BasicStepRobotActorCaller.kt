@@ -1,5 +1,6 @@
 package it.unibo.actorAppl
 
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.AbstractActorCaller
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.ApplMessageType
@@ -16,9 +17,17 @@ class BasicStepRobotActorCaller( name: String, scope: CoroutineScope  ) :
                             AbstractActorCaller( name, scope ) {
 
     override suspend fun handleInput(msg: ApplMessage) {
-        println("$name | handleInput $msg")
-        when( msg.msgType ){
-            ApplMessageType.dispatch.toString() -> forward( msg )
+        colorPrint("$name | BasicStepRobotActorCaller handleInput $msg", Color.GREEN)
+        when( msg.msgType  ){
+            ApplMessageType.dispatch.toString() -> {
+                val mJson = JSONObject( msg.msgContent )
+                val forMe = mJson.has("robotmove") || mJson.has("step")
+                if( forMe ) forward( msg )
+                else {
+                    colorPrint("$name | BasicStepRobotActorCaller msg to be handled by an observer",Color.GREEN)
+                    this.updateObservers(msg)
+                }
+            }  //dispatch
         }
     }
  }

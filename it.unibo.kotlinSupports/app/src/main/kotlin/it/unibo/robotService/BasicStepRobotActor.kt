@@ -95,7 +95,7 @@ init{
 ======================================================================================
  */
 override suspend fun handleInput(msg: ApplMessage) {
-    colorPrint(  "$name | handleInput $msg currentBasicMove=$currentBasicMove")
+    colorPrint(  "$name BasicStepRobotActor|  handleInput $msg currentBasicMove=$currentBasicMove")
     val infoJsonStr = msg.msgContent
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
@@ -140,7 +140,7 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 currentBasicMove = "";
                 ownerActor.send(m)
-                updateObservers(m)
+                //updateObservers(m)        //the owner could be an observer?
             }else{
                 val move = infoJson.getString("move")
                 colorPrint("$name BasicStepRobotActor |  no currentBasicMove for ${move}" )
@@ -160,7 +160,7 @@ override suspend fun handleInput(msg: ApplMessage) {
     }
 
     override fun msgDriven(infoJson: JSONObject) {
-        //colorPrint("$name | msgDriven:$infoJson support=$support")
+        colorPrint("$name | msgDriven:$infoJson  ")
         if( infoJson.has("robotmove")) {
             currentBasicMove = infoJson.getString("robotmove")
             support.forward(infoJson.toString())
