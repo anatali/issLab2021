@@ -10,13 +10,18 @@ import org.json.JSONObject
 
 class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
-    private val robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
-    private val obs   = NaiveObserverActorKotlin("obs", scope )
+    //private val robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
+    //private val obs   = NaiveObserverActorKotlin("obs", scope )
+    private var robot : BasicStepRobotActor
+    private val obs   : NaiveObserverActorKotlin
+
+    init{
+        robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
+        obs   = NaiveObserverActorKotlin("obs", scope )
+        robot.registerActor(obs)
+    }
 
     protected fun doMoves() {
-
-        robot.registerActor(obs)
-
         robot.send(ApplMsgs.stepRobot_l("main" ))
         robot.send(ApplMsgs.stepRobot_r("main" ))
         robot.send(ApplMsgs.stepRobot_step("main", "350"))

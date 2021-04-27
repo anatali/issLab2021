@@ -10,7 +10,6 @@ package it.unibo.actor0
 
 import kotlinx.coroutines.CoroutineScope
 
-
 object ActorBasicContextKb {
 
     val ctxActorMap = mutableMapOf<String, ActorBasicKotlin>()
@@ -28,6 +27,7 @@ object ActorBasicContextKb {
     }
     @JvmStatic
     fun addActor(a: ActorBasicKotlin) {
+        //if( ctxActorMap.containsKey(a.name) ) ...
         if (!ctxActorMap.containsKey(a.name)) ctxActorMap.put(a.name, a)
     }
     @JvmStatic

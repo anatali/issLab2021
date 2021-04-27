@@ -1,5 +1,6 @@
 package it.unibo.supports
 import it.unibo.actor0.sysUtil
+import it.unibo.actorAppl.NaiveActorKotlinObserver
 import it.unibo.interaction.MsgRobotUtil
 
 import kotlinx.coroutines.*
@@ -41,7 +42,7 @@ object WebSocketKotlinSupportUsage {
 
         val observers = arrayOfNulls<NaiveActorKotlinObserver>(5)
         for (i in 0..1) {
-            observers[i] = NaiveActorKotlinObserver("a$i", i, scope)
+            observers[i] = NaiveActorKotlinObserver("a$i", scope)
             support.registerActor(observers[i]!!)
         }
         println("WebSocketKotlinSupportUsage | testObservers 3 ")

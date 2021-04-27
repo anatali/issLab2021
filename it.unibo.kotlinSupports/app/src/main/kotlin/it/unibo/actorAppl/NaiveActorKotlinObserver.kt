@@ -1,10 +1,10 @@
-package it.unibo.supports
+package it.unibo.actorAppl
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
-class NaiveActorKotlinObserver(name: String, private val count: Int, scope:CoroutineScope)
+class NaiveActorKotlinObserver(name: String, scope:CoroutineScope)
     : ActorBasicKotlin(name, scope) {
 
     override protected suspend fun handleInput(msg : ApplMessage){

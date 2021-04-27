@@ -16,6 +16,7 @@ import it.unibo.actor0Service.ConnectionReader
 import it.unibo.robotService.ApplMsgs
 import it.unibo.supports.FactoryProtocol
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.lang.Exception
 import java.util.HashMap
@@ -57,6 +58,21 @@ class RobotServiceCaller(name: String, owner: ActorBasicKotlin) : ActorBasicKotl
 		}
 	}
 
+}
+
+
+
+fun main( ) {
+	println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
+	runBlocking {
+		val obs    = NaiveActorKotlinObserver("obs", this )
+		val caller = RobotServiceCaller("caller", obs)
+		caller.send( ApplMsgs.stepRobot_l("main") )
+		delay(1000)
+		caller.terminate()
+		println("ENDS runBlocking ${sysUtil.curThread()}")
+	}
+	println("ENDS main ${sysUtil.curThread()}")
 }
 
 

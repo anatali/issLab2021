@@ -493,7 +493,7 @@ with the aim of sending commands to the
 so to moving the robot along a given path (e.g. <ks>"wwl"</ks>).
 <br/><br/>
 This <tt>uniboActor</tt> exploits the utility class
-<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/TripInfo.kt" target="code">TripInfo.kt</a>
+<a href="../app/src/main/kotlin/mapRoomKotlin/TripInfo.kt" target="code">TripInfo.kt</a>
 to create a map as a a singleton object, managed by another utility class
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a>
 </td>
@@ -544,6 +544,12 @@ application {
 </pre>
 </li>
 <li><h3>Create the distribution</h3>
+<div class="remark">
+In <a href="../app/src/main/kotlin/it/unibo/robotService/MainRobotService.kt" target="code">MainRobotService.kt</a> write:
+<pre>
+BasicStepRobotActor("stepRobot", ctxserver, <k>wenvAddr="wenv"</k>, scope=this)	 
+</pre>
+</div>
 <pre>
 gradlew distTar
 </pre>
