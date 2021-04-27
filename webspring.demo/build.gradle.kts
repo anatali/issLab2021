@@ -55,6 +55,16 @@ dependencies {
 	//OkHttp library for websockets with Kotlin
 	implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
+//OkHttp library for websockets with Kotlin
+	implementation( "com.squareup.okhttp3:okhttp:4.9.0" )
+
+//ADDED FOR THE HTTP CLIENT
+	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+	implementation ("org.apache.httpcomponents:httpclient:4.5")
+	// https://mvnrepository.com/artifact/commons-io/commons-io
+	implementation ("commons-io:commons-io:2.6")
+
+
 //PLANNER aimacode
 // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
 	implementation("com.googlecode.aima-java:aima-core:3.0.0")

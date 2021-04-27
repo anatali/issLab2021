@@ -32,6 +32,13 @@ public class SimpleRobotUserKJava extends AbstractActorKJava {
         println("SimpleRobotUserKJava | " + msg   );
         if( msg.getMsgId().equals("start")) {
             doMoves();
+        }else if( msg.getMsgId().equals("move")   ){
+            JSONObject cmd = new JSONObject( msg.getMsgContent() );
+            if( cmd.has("robotmove")){
+                String movetodo = cmd.getString("robotmove");
+                if( movetodo.equals("turnLeft")) robot.send( turnleft.toString() );
+                //else if( movetodo.equals("")) robot.send( .toString() );
+            }
         }else if( msg.getMsgId().equals("stepAnswer")   ){
             JSONObject answerJson = new JSONObject( msg.getMsgContent() );
             if( answerJson.has("stepDone")){

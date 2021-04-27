@@ -425,6 +425,9 @@ avoids the interference among overlapping commands. In fact, it exploits the <k>
 to store a robot-move command while another <tt>basic-move</tt> or <tt>step-move</tt> is still in execution.
 The stored move is executed when the move in execution ends.
 </div>
+See also the discussion in
+<a href="../../it.unibo.kotlinIntro/userDocs/FirstActorRobot2021.html#DivideImpera" target="web">
+LabIss2021 |  Divide et impera?</a>
 
 </td>
 </tr>
@@ -459,7 +462,7 @@ Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-
 
 <tr> 
 <td><h3>BasicStepRobotCaller</h3>
-  The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotActorCaller.ktt" target="code">BasicStepRobotActorCaller.kt</a>
+  The  class <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotCaller.kt" target="code">BasicStepRobotCaller.kt</a>
 extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">ActorBasicKotlin.kt</a>
 with the aim of sending some commands to the 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
@@ -499,6 +502,8 @@ Note that the robot perform the moves, but the ouput shows the message:
 <k>stepRobot BasicStepRobotActor |  move already running: store the request</k>
 </pre>
 In fact, the caller sends the move-commands without any delay between them.
+
+
 </td>
 </tr>
 
@@ -643,6 +648,20 @@ Next step: build a <k>RobotService</k>
   
 See <a href="RobotService.html" target="web">LabIss2021 | a RobotService</a>
  <center><img src="./img/RobotServiceZooming.png" alt="RobotServiceZooming" width="30%" ></center>
+ 
+ <div class="remark"><m>
+The component
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actorAppl/RobotServiceCaller.kt" target="code">
+RobotServiceCaller.kt</a>  implements  a call to a remote <tt>BasicStepRobotActor</tt> via the TCP-service
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0Service/ActorContextTcpServer.kt" target="code">
+ActorContextTcpServer.kt</a>.<br/>
+The component
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actorAppl/BasicStepRobotActorCaller.kt" target="code">
+BasicStepRobotActorCaller.kt</a> extends 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/AbstractActorCaller.kt" target="code">
+AbstractActorCaller.kt</a> and implements either a local-call or a call via TCP.
+</m>
+</div>
 </td>
 </tr>
 

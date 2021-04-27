@@ -33,9 +33,9 @@ object RobotResource {
         }
         //Not already condfigured
          configured = true
-         myscope              = CoroutineScope(Dispatchers.Default)
-        //TODO: define an observer that updates the HTML page
+         myscope    = CoroutineScope(Dispatchers.Default)
          obs     = NaiveActorKotlinObserver("obs", 0, myscope)
+        //TODO: define an observer that updates the HTML page
          robot   = BasicStepRobotActorCaller("robot", myscope )
          if( local ){
             BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "localhost")
@@ -55,28 +55,3 @@ object RobotResource {
 
 
 }
-
-/*
-    fun initRobotLocal(){
-         sysUtil.colorPrint("RobotResource | init ${sysUtil.curThread()} ", Color.GREEN)
-        //obs   = NaiveActorKotlinObserver("obs", 0, myscope)
-        //Create a local BasicStepRobotActor => no need for a TCP calls
-        BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "localhost")
-        //robot = BasicStepRobotActorCaller("robot", myscope )
-    }
-
-    fun initRobotCaller(){
-        /*
-        val fp = FactoryProtocol(null, "TCP", "hmi")
-        val conn : IConnInteraction = fp.createClientProtocolSupport("localhost", 8010)
-        sysUtil.colorPrint("hmi | init connected:$conn", Color.BLUE)
-        */
-        sysUtil.colorPrint("RobotResource | init ${sysUtil.curThread()} ", Color.GREEN)
-        //obs   = NaiveActorKotlinObserver("obs", 0, myscope)
-        //robot = BasicStepRobotActorCaller("robot", myscope )
-        //val reader = ConnectionReader ("reader", conn )
-        //reader.registerActor(owner)	//the answer received by the reader are redirected to the owner
-        //reader.send( ApplMsgs.startAny(name))
-    }
-
- */

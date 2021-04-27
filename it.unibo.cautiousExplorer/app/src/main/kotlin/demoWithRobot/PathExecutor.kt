@@ -169,7 +169,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val path     = "lw" //wlwwwwwwrwrr   wlwwwllwwwrwll
+        val path     = "wwwwlwwwwlwwwwlwwwwl" //wlwwwwwwrwrr   wlwwwllwwwrwll
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")

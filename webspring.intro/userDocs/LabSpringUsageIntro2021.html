@@ -254,10 +254,12 @@ Create the following file  <m><ks>webspring.demo\src\main\resources\templates\we
 <li>
 Insert in <m><ks>webspring.demo\src\main\resources\application.properties</ks></m> the sentence:
 <pre>
-spring.application.name =First Spring Application iss2020
-human.log               =Gui for human-machine interaction
-machine.logo            =Gui for machine-to-machine interaction
-</pre>
+spring.application.name=First Spring Application iss2020
+
+spring.banner.location=classpath:banner.txt
+server.port   = 8081
+human.logo    = Gui for human-machine interaction
+machine.logo  = Gui for machine-to-machine interaction</pre>
 </li>
 <li>
 Create a  <ks>it.unibo.webspring.demo.BaseController</ks> as:
@@ -302,8 +304,8 @@ import ...
  
 @Controller 
 public class BaseController { 
-    @Value("${spring.application.name}")
-    String appName;
+@Value("${spring.application.name}")
+String appName;
 
   @GetMapping("/") 		 
   public String homePage(Model model) {
@@ -404,34 +406,31 @@ RESPONSE=Hello world from Application
 <pre>
 <bc>@Controller</bc> 
 public class HumanInterfaceController {
-  <bc> @GetMapping("/") </bc> 		 
+<bc> @Value</bc> ("\${human.logo}")	<kc>//see <a href="../../webspring.demo/src/main/resources/application.properties" target="code"><ks>application.properties</ks></a></kc></kc>
+var appName: String?    = null
+
+  <bc>@GetMapping("/")</bc> 		 
   public String entry(Model model) {
-	model.addAttribute("arg", appName);
-	return "gui";	<k>//see in templates</k>
+	<bc>model</bc>.addAttribute("arg", appName);
+	return "naiveRobotGui";	<kc>//see <a href="../../webspring.demo/src/main/resources/templates/naiveRobotGui.html" target="code"><ks>naiveRobotGui.html</ks></a></kc>
   } 
   
-  <bc>@PostMapping( path = "/move" ) </bc> 
-  public String doMove( 
-	<bc>@RequestParam</bc> (name="move", 
-			required=false, defaultValue="h") 
-	String moveName, Model viewmodel) {<m>
-	if( robotMoves.contains(moveName) ) {
-			applicationModelRep = moveName;
-			viewmodel.addAttribute("arg", 
-				"Current Robot State:"+applicationModelRep);
-	}else {
-			viewmodel.addAttribute("arg", 
-			  "Sorry: move unknown - Current Robot State:"+applicationModelRep );
-	}</m>
-    return "guiMoves"; <kc>//see in templates</kc>
+  <bc>@PostMapping( "/move" ) </bc> 
+  public String doMove( Model viewmodel,
+	<bc>@RequestParam</bc> (name="movetodo", 
+			required=false, defaultValue="h") String moveName,
+	) {
+        RobotResource.execMove(move)
+        return  "naiveRobotGui"	 <kc>//see <a href="../../webspring.demo/src/main/resources/templates/naiveRobotGui.html" target="code"><ks>naiveRobotGui.html</ks></a></kc>
+	
+	
   }	
-  
-  ...
 }
 </pre> 
 </td>
 <td>
-The full code is in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/HumanInterfaceController.kt" target="code">HumanInterfaceController.kt</a>
+The full code is in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/HumanInterfaceController.kt" target="code">
+HumanInterfaceController.kt</a>
 <h3>Usage</h3>
 Open a browser and input
 <pre>
@@ -458,39 +457,30 @@ See <a href="LabArchitectures.html" target="lab">LabArchitectures | From MVC to 
 <h3>Machine-to-machine</h3>
 <pre>
 <bc>@RestController</bc>  
-public class MachineInterfaceController { 
-
-  <bc>@GetMapping("/")</bc> 		 
-  public String entry(Model model) {
-     model.addAttribute("arg", appName);
-      return "gui";	<kc>//just a string, no more a view ...</kc>
-  } 
-
-  <bc>@PostMapping( path = "/move" )</bc> 
-  public String doMove( 
-	<bc>@RequestParam</bc>(name="move", 
-	       required=false, defaultValue="h") 
-	String moveName, Model viewmodel) {
-	if( robotMoves.contains(moveName) ) {	
-		<k>//NO MORE view model since no more view ...</k>
-		applicationModelRep = moveName;
-		return "guiMoves move=" + applicationModelRep;	
-	}else {
-		return "Sorry: move " + moveName + " unknown ";
-	}		
-  }	
-	...
+public class M2MRestController { 
+    init{
+        RobotResource.initRobotResource()
+    }
+ 
+  <bc>@PostMapping( "/moverest" )</bc> 
+    fun doMove(  <k>@RequestParam</k>(
+	    name="move", required=false, defaultValue="h") moveName:String)
+		:String {
+        RobotResource.execMove(moveName)
+        <kc>//TODO: handle the answer to the move execution</kc>
+        return "done $moveName"
+    }
 }
 </pre>
 </td>
 <td>
 The full code is in 
-<a href="../src/main/kotlin/it/unibo/webspring/demo/MachineInterfaceController.kt" target="code">MachineInterfaceController.kt</a>
+<a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" target="code">M2MRestController.kt</a>
 
 <h3>Usage</h3>
 <pre>
 curl localhost:8080
-curl -d move=w localhost:8080/move
+curl -d move=w localhost:8080/moverest
 </pre>
 
 See <a href="https://curl.haxx.se/docs/manual.html" target="web">curl tutorial </a>
@@ -508,6 +498,7 @@ or in some other language.
 </table>
  <br/><br/>
  
+<!-- 
 <h2><a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/web-reactive.html" 
 target="web">Spring WebFlux</a> (TODO)</h2>
 <ol>
@@ -554,6 +545,7 @@ Build Reactive REST APIs With Spring WebFlux </a>
  </tbody>
 </table>
  <br/><br/>
+ -->
 </div>  
 
  

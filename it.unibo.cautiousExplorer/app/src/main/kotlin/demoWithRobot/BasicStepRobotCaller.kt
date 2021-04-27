@@ -17,8 +17,6 @@ class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
         robot.registerActor(obs)
 
-
-
         robot.send(ApplMsgs.stepRobot_l("main" ))
         robot.send(ApplMsgs.stepRobot_r("main" ))
         robot.send(ApplMsgs.stepRobot_step("main", "350"))
@@ -62,12 +60,11 @@ fun main( ) {
     runBlocking {
         val rc = BasicStepRobotCaller("rc")
 
-        println("main | ${ApplMsgs.stepRobot_l("main" )}")
-        println("main | ${ApplMsgs.stepRobot_step("main", "350" )}")
+        //println("main | ${ApplMsgs.stepRobot_l("main" )}")
+        //println("main | ${ApplMsgs.stepRobot_step("main", "350" )}")
 
         val startMsg = ApplMsgs.startAny("main")
         println("main | $startMsg")
-
         rc.send( startMsg )
 
         println("ENDS runBlocking ${sysUtil.curThread()}")

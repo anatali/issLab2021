@@ -1,16 +1,9 @@
 package it.unibo.actor0
 
 import com.andreapivetta.kolor.Color
-import it.unibo.actor0.ActorBasicKotlin
-import it.unibo.actor0.ApplMessage
-import it.unibo.actor0.sysUtil
 import it.unibo.actorAppl.RobotServiceCaller
-import it.unibo.interaction.IUniboActor
-import it.unibo.robotService.ApplMsgs
-import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
+
 
 abstract class AbstractActorCaller(name: String, scope: CoroutineScope) //, val owner: IUniboActor
                          : ActorBasicKotlin( name, scope ) {
