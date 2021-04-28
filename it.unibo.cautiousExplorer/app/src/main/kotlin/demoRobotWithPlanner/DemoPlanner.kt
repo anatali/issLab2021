@@ -1,4 +1,4 @@
-package demoWithRobot
+package demoRobotWithPlanner
 
 import aima.core.agent.Action
 import com.andreapivetta.kolor.Color
@@ -63,10 +63,10 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
     fun handleEndPathExecution(resultJson : String){
         val resJson = JSONObject( resultJson )
         if( resJson.has("executorFail")){
-            this.waitUser("backToHome")
+            waitUser("backToHome")
             planWithNOTEmptyMap(0,0)
         }else{
-            this.waitUser("goto(3,3)")
+            waitUser("goto(3,3)")
             planWithNOTEmptyMap(3,3)  //attempt to reach again
         }
     }

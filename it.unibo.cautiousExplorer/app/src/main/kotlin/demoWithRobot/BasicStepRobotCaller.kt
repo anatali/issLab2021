@@ -1,5 +1,6 @@
 package demoWithRobot
 
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.sysUtil
@@ -63,6 +64,7 @@ class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
+        sysUtil.colorPrint("WARNING: another BasicStepRobotActor could be running", Color.RED)
         val rc = BasicStepRobotCaller("rc")
 
         //println("main | ${ApplMsgs.stepRobot_l("main" )}")

@@ -79,12 +79,14 @@ init{
             //println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
             backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
             colorPrint("$name | backMsg=$backMsg" )
-            delay(350)  //back immediately after a collision is not allowed
+            delay(350)  //after a collision there is a move still running
+            currentBasicMove="sysback"
             support.forward(backMsg)
             //no change to currentBasicMove => no result propagation
             //HYPOTHESIS: a little back move does not raise a collisio
             answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
             val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
+            delay(350)  //give time to end the sysback
             ownerActor.send(m)
 
     }
@@ -95,7 +97,8 @@ init{
 ======================================================================================
  */
 override suspend fun handleInput(msg: ApplMessage) {
-    colorPrint(  "$name BasicStepRobotActor|  handleInput $msg currentBasicMove=$currentBasicMove")
+    //DO NOT PRINT (not alterate timing)
+    //colorPrint(  "$name BasicStepRobotActor|  handleInput $msg currentBasicMove=$currentBasicMove")
     val infoJsonStr = msg.msgContent
     val infoJson    = JSONObject(infoJsonStr)
         //if (! infoJson.has("sonarName"))
@@ -115,17 +118,23 @@ override suspend fun handleInput(msg: ApplMessage) {
         }else if (infoJson.has(ActorMsgs.endTimerId)) {
             endStepOk();
         }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
+            val dtVal = this.getDuration(StartTime)
+            colorPrint(  "$name BasicStepRobotActor|  handleInput $msg currentBasicMove=$currentBasicMove")
+            if( currentBasicMove=="sysback"){//IGNORE THE CASE
+                //currentBasicMove=""
+                return
+            }
             if( currentBasicMove.length > 0  ){
                 val payload = "{ \"collision\" : \"true\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
                 ownerActor.send(m)
                 updateObservers(m)
                 //currentBasicMove = "";        //set by endMove
-            }else{
-                val dtVal = this.getDuration(StartTime)
+            }else{ endStepKo(""+dtVal)
+                /* val dtVal = this.getDuration(StartTime)
                 if( currentBasicMove.length == 0 ) this.endStepKo(""+dtVal)
                 else{  //time elapsed for a conventional move
-                }
+                }*/
             }
         }else if( infoJson.has("robotmove") && currentBasicMove.length > 0 ){ //another move while working
             colorPrint("$name BasicStepRobotActor |  $currentBasicMove running: store $msg", Color.LIGHT_MAGENTA)
@@ -134,29 +143,39 @@ override suspend fun handleInput(msg: ApplMessage) {
         }else if( infoJson.has("robotmove") && currentBasicMove.length == 0 ) {
             msgDriven(infoJson )
         }else if (infoJson.has("endmove")){
+            colorPrint(  "$name BasicStepRobotActor|  ENDMOVE $msg currentBasicMove=$currentBasicMove")
             val moveResult = infoJson.getString("endmove")
-            if(  currentBasicMove.length > 0 ) {
+            val move       = infoJson.getString("move")
+            if( move =="moveBackward" && currentBasicMove=="sysback"){
+                //currentBasicMove = ""
+                lookAtmsgQueueStore()
+            }
+            else if(  currentBasicMove.length > 0 ) {
                 val payload = "{ \"endmove\" : \"$moveResult\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
-                currentBasicMove = "";
+                currentBasicMove = ""
                 ownerActor.send(m)
+                lookAtmsgQueueStore()
                 //updateObservers(m)        //the owner could be an observer?
             }else{
-                val move = infoJson.getString("move")
                 colorPrint("$name BasicStepRobotActor |  no currentBasicMove for ${move}" )
             }
-            if( msgQueueStore.size > 0 ){
-                val next    = msgQueueStore.removeAt(0)
-                val msgJson = JSONObject(next.msgContent)
-                //this.waitUser("msgQueueStore2")
-                colorPrint("$name BasicStepRobotActor |  RESUMES from msgQueueStore: ${msgJson}", Color.LIGHT_MAGENTA )
-                if( msgJson.has("step")){
-                    val time: String = msgJson.getString(ApplMsgs.stepId)
-                    doStepMove( time );
-                } else msgDriven( msgJson  )
-            }
-
+            //lookAtmsgQueueStore()
         }
+    }
+
+    suspend fun lookAtmsgQueueStore(){
+        if( msgQueueStore.size > 0 ){
+            val next    = msgQueueStore.removeAt(0)
+            val msgJson = JSONObject(next.msgContent)
+            //this.waitUser("msgQueueStore2")
+            colorPrint("$name BasicStepRobotActor |  RESUMES from msgQueueStore: ${msgJson}", Color.LIGHT_MAGENTA )
+            if( msgJson.has("step")){
+                val time: String = msgJson.getString(ApplMsgs.stepId)
+                doStepMove( time );
+            } else msgDriven( msgJson  )
+        }
+
     }
 
     override fun msgDriven(infoJson: JSONObject) {

@@ -99,7 +99,7 @@ object plannerUtil {
 
 		//colorPrint("plannerUtil doPlan problem $problem $search" );
 		val searchAgent = SearchAgent(problem, search!!)
-		//colorPrint("plannerUtil doPlan searchAgent $searchAgent " );
+		colorPrint("plannerUtil doPlan searchAgent $searchAgent " );
 		actions     = searchAgent.actions
 
 		colorPrint("plannerUtil doPlan actions=$actions")

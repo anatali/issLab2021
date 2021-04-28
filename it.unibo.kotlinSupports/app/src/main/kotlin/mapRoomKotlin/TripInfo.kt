@@ -36,5 +36,9 @@ class TripInfo( ) {
         println(journey)
     }
 
+    fun resetJourney(){
+        journey = ""
+    }
+
 
 }

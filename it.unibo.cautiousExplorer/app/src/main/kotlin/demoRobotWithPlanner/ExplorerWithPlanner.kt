@@ -1,4 +1,4 @@
-package demoWithRobot
+package demoRobotWithPlanner
 
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
@@ -7,13 +7,14 @@ import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 
-class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
-
+class ExplorerWithPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 
     private lateinit var executor: PathExecutor
+    private var targetCell = 1
 
     fun initWork(){
         plannerUtil.initAI()
@@ -22,7 +23,7 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
         executor = PathExecutor("executor", scope, this)
     }
     fun explore() {
-        plannerUtil.setGoal(1, 1);
+        plannerUtil.setGoal(targetCell, targetCell);
         val actions = plannerUtil.doPlan()
         val pathTodo = actions.toString()
             .replace("[","").replace("]","")
@@ -36,10 +37,9 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
      }
 
     fun backToHome(){
-
         plannerUtil.setGoal(0, 0);
         val actions = plannerUtil.doPlan()
-        if( actions==null ) return
+        if( actions== null||  actions.size == 0 ) return
         println("$name | backToHome actions=$actions")
         val pathTodo = actions.toString()
             .replace("[","").replace("]","")
@@ -60,31 +60,30 @@ class CautiousRobotExplorer( name: String, scope: CoroutineScope) : ActorBasicKo
             initWork()
             explore()
         }else if (msg.msgId == "executorend") {
+            //msg(executorend,dispatch,executor,any,{"executorFail":"wwl" },20)
             plannerUtil.showMap()
             val atHome = plannerUtil.atHome()
             println("$name | atHome: ${atHome}")
             //plannerUtil.showCurrentRobotState()
             if( ! atHome ) {
-                waitUser("backToHome")
+                //waitUser("backToHome")
+                    //delay(350)  //to avoid not allowed
                 backToHome()
             }
-            /*
-            else{ //the planner says that we are at home
-                if( ! atHomeAgain ) { //turnLeft to restore initial state
-                    atHomeAgain = true
-                    val cmdStr  = ApplMsgs.executorstartMsg.replace("PATHTODO", "l")
-                    val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
-                    executor.send(cmd)
-                }
-            }*/
+            else{ //the system says that we are at home
+                targetCell++
+                waitUser("explore ($targetCell,$targetCell)")
+                if( targetCell <= 5) explore()
+                else println("BYE")
+            }
         }
     }
 }
 fun main() {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val cautious = CautiousRobotExplorer("cautious", this )
-        cautious.send( ApplMsgs.startAny("main") )
+        val explorer = ExplorerWithPlanner("explorer", this )
+        explorer.send( ApplMsgs.startAny("main") )
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
     println("ENDS main ${sysUtil.curThread()}")

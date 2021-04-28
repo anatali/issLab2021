@@ -3,9 +3,15 @@ PathExecutor.kt
 
 An unibo-actor that executes a given sequence of moves (todoPath)
 and returns to its ownerActor
+-----------------------------------------------------------------
+WARNING: if you use the virtualrobotandstepper SERVICE
+DO NOT CREATE another BasicStepRobotActor
+-----------------------------------------------------------------
  */
-package demoWithRobot
+package demoRobotWithPlanner
 
+import demoWithRobot.BasicStepGenericCaller
+import demoWithRobot.NaiveObserverActorKotlin
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
@@ -38,18 +44,18 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
     protected var todoPath = ""
     protected var moves    = TripInfo()
 
-    protected var stepper : BasicStepRobotActorCaller //BasicStepRobotActor("stepper", this, scope, "localhost")
-    protected var robot   : BasicStepRobotActor
+    protected var stepper : BasicStepGenericCaller //BasicStepRobotActor("stepper", this, scope, "localhost")
+    //protected var robot   : BasicStepRobotActor
 
     init{
          resetStateVars()
-         stepper = BasicStepRobotActorCaller("stepper", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
+         stepper = BasicStepGenericCaller("caller", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
          //setup a receiver from TCP
          stepper.registerActor(this)
-         println("$name | STARTS ")
-        //Uncomment if you want to use a local (non-TCP) BasicStepRobotActor
-        //val obs = NaiveObserverActorKotlin("obs", scope)
-        robot = BasicStepRobotActor("stepRobot", ownerActor=stepper, scope, "localhost")
+         //println("$name | STARTS ")
+         //Uncomment if you want to use a local (non-TCP) BasicStepRobotActor
+         //val obs = NaiveObserverActorKotlin("obs", scope)
+         //robot = BasicStepRobotActor("stepRobot", ownerActor=stepper, scope, "localhost")
     }
     protected fun resetStateVars() {
         curState = State.start
@@ -88,6 +94,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
         }
         moves.showMap()
         ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney()))
+        moves.resetJourney()
         curState = State.continueJob
     }
 
@@ -95,6 +102,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
         println("$name | END OK ---------------- ")
         ownerActor.send(ApplMsgs.executorOkEnd(name))
         moves.showMap()
+        moves.resetJourney()
         curState = State.continueJob
     }
 
@@ -136,7 +144,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 
     override fun terminate(){
         stepper.terminate()
-        robot.terminate()
+        //robot.terminate()
     }
 
     /*
@@ -169,7 +177,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val path     = "wwwwlwwwwlwwwwlwwwwl" //wlwwwwwwrwrr   wlwwwllwwwrwll
+        val path     = "wwwwlwwwwwlwwwwlwwwwwl" //wlwwwwwwrwrr   wlwwwllwwwrwll
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")
