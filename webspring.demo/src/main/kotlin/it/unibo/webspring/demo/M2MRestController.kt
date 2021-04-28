@@ -1,6 +1,4 @@
 package it.unibo.webspring.demo
-
-
 import it.unibo.actor0.sysUtil
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam

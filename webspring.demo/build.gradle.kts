@@ -6,10 +6,13 @@ plugins {
 	kotlin("jvm") version "1.4.32"
 	kotlin("plugin.spring") version "1.4.32"
 	java
+	application
+	jacoco
+	distribution
 }
 
 group = "it.unibo"
-version = "0.0.1-SNAPSHOT"
+version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -93,4 +96,18 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+application {
+	// Define the main class for the application.
+	mainClass.set("it.unibo.webspring.demo.ApplicationKt")
+}
+
+version = "1.0.1"
+
+tasks.jar {
+	manifest {
+		attributes["Main-Class"] = "it.unibo.webspring.demo.ApplicationKt"
+		attributes(mapOf("Implementation-Title" to project.name,
+			"Implementation-Version" to project.version))
+	}
 }

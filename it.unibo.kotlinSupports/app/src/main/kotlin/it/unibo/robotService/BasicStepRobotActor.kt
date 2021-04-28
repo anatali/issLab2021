@@ -202,7 +202,13 @@ override suspend fun handleInput(msg: ApplMessage) {
             if( msgJson.has("step")){
                 val time: String = msgJson.getString(ApplMsgs.stepId)
                 doStepMove( time );
-            } else msgDriven( msgJson  )
+            } else{
+                //msgDriven( msgJson  )
+                colorPrint("$name | robotmove:$msgJson  ")
+                currentBasicMove = msgJson.getString("robotmove")
+                resetInfoAboutSysBack()
+                support.forward(msgJson.toString())
+            }
         }
     }
 

@@ -1,13 +1,10 @@
 package it.unibo.webspring.demo
 
-import com.andreapivetta.kolor.Color
-import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.actor0.sysUtil
 import it.unibo.actorAppl.BasicStepRobotActorCaller
+import it.unibo.actorAppl.NaiveActorKotlinObserver
 import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
-
-import it.unibo.supports.NaiveActorKotlinObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.springframework.stereotype.Component
@@ -19,12 +16,7 @@ object RobotResource {
      lateinit var obs         : NaiveActorKotlinObserver
      lateinit var robot       : BasicStepRobotActorCaller
      var configured           = false
-    /*
-    val myscope              = CoroutineScope(Dispatchers.Default)
-    //TODO: define an observer that updates the HTML page
-    val obs   = NaiveActorKotlinObserver("obs", 0, myscope)
-    val robot = BasicStepRobotActorCaller("robot", myscope )
-    */
+
 
     fun initRobotResource(local: Boolean=false){
         if( configured ){
@@ -34,11 +26,11 @@ object RobotResource {
         //Not already condfigured
          configured = true
          myscope    = CoroutineScope(Dispatchers.Default)
-         obs     = NaiveActorKotlinObserver("obs", 0, myscope)
+         obs        = NaiveActorKotlinObserver("obs", myscope)
         //TODO: define an observer that updates the HTML page
          robot   = BasicStepRobotActorCaller("robot", myscope )
          if( local ){
-            BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "localhost")
+            BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "wenv")
          }
          sysUtil.colorPrint("RobotResource | configured localRobot=$local - ${sysUtil.curThread()} " )
     }
