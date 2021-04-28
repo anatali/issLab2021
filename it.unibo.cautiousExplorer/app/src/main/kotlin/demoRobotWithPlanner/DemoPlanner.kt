@@ -7,7 +7,6 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
-import it.unibo.robotService.BasicStepRobotActor
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
@@ -35,8 +34,6 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
     }
 
     fun doThePath(pathTodo: String){
-        //myexecutor.terminate()
-        //myexecutor  = PathExecutor("executor${counter++}", scope, this)
         this.waitUser("exec")
         val cmdStr= ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
         val cmd   = MsgUtil.buildDispatch(name, ApplMsgs.executorStartId,cmdStr,"executor")
