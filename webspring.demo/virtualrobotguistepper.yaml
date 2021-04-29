@@ -13,5 +13,11 @@ services:
       - 8081:8081
     depends_on:
       - wenv
-
+  server8010:
+    image: steprobot:2.0
+    ## image: docker.io/natbodocker/steprobot:2.0
+    ports:
+      - 8010:8010
+    depends_on:
+      - wenv
 ##it.unibo.kotlinSupports>docker-compose -f virtualrobotguistepper.yaml up

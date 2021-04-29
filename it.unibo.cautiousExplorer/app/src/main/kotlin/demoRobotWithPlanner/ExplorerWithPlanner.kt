@@ -1,3 +1,8 @@
+/*
+ExplorerWithPlanner
+Uses the stepRobot to explore a room by executing a plan
+The proposed plan is executed by the PathExecutor component
+ */
 package demoRobotWithPlanner
 
 import it.unibo.actor0.ActorBasicKotlin

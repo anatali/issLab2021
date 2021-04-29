@@ -1,3 +1,8 @@
+/*
+BasicStepGenericCaller
+Performs a call to a local or to a remote BasicStepRobot named 'stepRobot'
+WARNING: check that it is the only one 'stepRobot' running
+ */
 package demoWithRobot
 
 import com.andreapivetta.kolor.Color
@@ -6,6 +11,7 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.ApplMessageType
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
+import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -15,6 +21,7 @@ class BasicStepGenericCaller( name: String, scope: CoroutineScope  ) :
                             AbstractActorCaller( name, scope ) {
 var lastMove = "none"
     override suspend fun handleInput(msg: ApplMessage) {
+        if(msg.msgId=="sonarEvent") return
         colorPrint("$name | BasicStepGenericCaller handleInput $msg", Color.LIGHT_BLUE)
         when( msg.msgType  ){
             ApplMessageType.dispatch.toString() -> {
@@ -26,7 +33,7 @@ var lastMove = "none"
                     forward( msg )
                 }
                 else { //answer from the previous call
-                    colorPrint("$name | BasicStepGenericCaller lastMove=$lastMove",Color.LIGHT_MAGENTA)
+                    //colorPrint("$name | BasicStepGenericCaller lastMove=$lastMove",Color.LIGHT_MAGENTA)
                     this.updateObservers(msg)
                 }
             }  //dispatch
@@ -34,13 +41,19 @@ var lastMove = "none"
     }
  }
 
+//OPTIONAL ...
+fun createStepRobotLocal(scope: CoroutineScope){
+    val obs = NaiveObserverActorKotlin("obs", scope)
+    BasicStepRobotActor("stepRobot",obs, scope, "localhost")
+}
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val rac    = BasicStepGenericCaller("rac", this )
-        rac.send( ApplMsgs.stepRobot_step("test") )
+        createStepRobotLocal(this) //WARNING: check that it is the only one running
+        val caller    = BasicStepGenericCaller("rac", this )
+        caller.send( ApplMsgs.stepRobot_step("test") )
         delay(1000)
-        rac.terminate()
+        caller.terminate()
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
     println("ENDS main ${sysUtil.curThread()}")

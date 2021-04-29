@@ -38,9 +38,10 @@ class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKo
     private var StartTime: Long   = 0L
 
     private var currentBasicMove  = "";
-    private var doingBack         = false;
     private var doingStep         = false;
-
+    /* //sysBack synch
+    private var doingBack         = false;
+    */
 
 init{
     colorPrint("BasicStepRobotActor CREATED")
@@ -57,7 +58,7 @@ init{
             return
         }
         doingStep = true;
-        resetInfoAboutSysBack()
+        //resetInfoAboutSysBack()       //sysBack synch
         timer = TimerActor("t0", this, scope )
         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                 ActorMsgs.startTimerMsg.replace("TIME", time),"t0")
@@ -84,18 +85,22 @@ init{
             timer?.kill()
             //println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
             backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
-            colorPrint("$name | backMsg=$backMsg", Color.GREEN )
+            colorPrint("$name | backMsg=$backMsg  wenvAddr=$wenvAddr", Color.GREEN )
             delay(350)  //after a collision there is a move still running
+        /*
             setInfoAboutSysBack()
             support.forward(backMsg)
             //no change to currentBasicMove => no result propagation
-            //HYPOTHESIS: a little back move does not raise a collisio
+            //HYPOTHESIS: a little back move does not raise a collision
+         */
+            val backResult = support.sendHttp(backMsg, "$wenvAddr:8090/api/move")
+            colorPrint("$name | backResult=$backResult", Color.GREEN )
             answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
             val m  = MsgUtil.buildDispatch( name,"stepAnswer", answer,ownerActor.myname() )
-            delay(350)  //give time to end the sysback
+           // delay(350)  //give time to end the sysback
             ownerActor.send(m)
     }
-
+/*
     fun setInfoAboutSysBack(){
         currentBasicMove="sysback"
         doingBack = true
@@ -104,7 +109,7 @@ init{
     fun resetInfoAboutSysBack(){
         doingBack = false
     }
-
+*/
 /*
 ======================================================================================
  */
@@ -133,13 +138,14 @@ override suspend fun handleInput(msg: ApplMessage) {
             endStepOk();
         }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
             var dtVal = this.getDuration(StartTime)
-            colorPrint(  "$name BasicStepRobotActor|  collision doingStep=$doingStep doingBack=$doingBack currentBasicMove=$currentBasicMove", Color.RED)
+            colorPrint(  "$name BasicStepRobotActor|  collision doingStep=$doingStep currentBasicMove=$currentBasicMove", Color.RED)
             //this.waitUser("collision")
+            /* //sysBack synch
             if(  doingBack &&  (currentBasicMove=="") ){//collision before the endmove of systemBack
                  doingBack = false
                  return    //Just to ignore the collision
                  //lookAtmsgQueueStore()
-            }
+            }*/
             if( currentBasicMove.length > 0  ){ //a conventional move was running
                 val payload = "{ \"collision\" : \"true\",\"move\": \"$currentBasicMove\"}"
                 val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
@@ -164,7 +170,7 @@ override suspend fun handleInput(msg: ApplMessage) {
             //msgDriven(infoJson )
             colorPrint("$name | robotmove:$infoJson  ")
             currentBasicMove = infoJson.getString("robotmove")
-            resetInfoAboutSysBack()
+            //resetInfoAboutSysBack() //sysBack synch
             support.forward(infoJson.toString())
         }else if (infoJson.has("endmove")){
             colorPrint(  "$name BasicStepRobotActor|  ENDMOVE $msg currentBasicMove=$currentBasicMove")
@@ -185,9 +191,10 @@ override suspend fun handleInput(msg: ApplMessage) {
             }else{ //end of a moveforward for the step without a collision or for a systemback
                 val move = infoJson.getString("move")
                 colorPrint("$name BasicStepRobotActor |  no currentBasicMove for ${move}" )
+                /* //sysBack synch
                 if( move=="moveBackward" && doingBack ){
                     doingBack = false
-                }
+                }*/
             }
             //lookAtmsgQueueStore()
         }
@@ -206,7 +213,7 @@ override suspend fun handleInput(msg: ApplMessage) {
                 //msgDriven( msgJson  )
                 colorPrint("$name | robotmove:$msgJson  ")
                 currentBasicMove = msgJson.getString("robotmove")
-                resetInfoAboutSysBack()
+                //resetInfoAboutSysBack()   //sysBack synch
                 support.forward(msgJson.toString())
             }
         }

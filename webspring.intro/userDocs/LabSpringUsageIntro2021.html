@@ -496,6 +496,19 @@ or in some other language.
 
  </tbody>
 </table>
+
+<h2>Deployment</h2>
+In project <a href="../../webspring.demo">webspring.demo</a> do:
+<pre>
+gradlew build	<kc>//look at the generated distribution</kc>
+
+docker build -t webspringrobot:1.0.1 .  <kc>//look at <a href="../../webspring.demo/Dockerfile">Dockerfile</a></kc>
+
+docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  <kc>//check if the image runs</kc>
+
+<k>Check that no other BasicStepRobot is running</k>
+docker-compose -f virtualrobotguistepper.yaml up
+</pre>
  <br/><br/>
  
 <!-- 

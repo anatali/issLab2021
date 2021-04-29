@@ -2,7 +2,8 @@
 PathExecutor.kt
 
 An unibo-actor that executes a given sequence of moves (todoPath)
-and returns to its ownerActor
+of the 'stepRobot' and returns and answer to its ownerActor
+The call to the 'stepRobot' is executed by using the BasicStepGenericCaller
 -----------------------------------------------------------------
 WARNING: if you use the virtualrobotandstepper SERVICE
 DO NOT CREATE another BasicStepRobotActor
@@ -44,19 +45,24 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
     protected var todoPath = ""
     protected var moves    = TripInfo()
 
-    protected var stepper : BasicStepGenericCaller //BasicStepRobotActor("stepper", this, scope, "localhost")
-    //protected var robot   : BasicStepRobotActor
+    protected var stepper : BasicStepGenericCaller
+    protected lateinit var robot   : BasicStepRobotActor
 
     init{
          resetStateVars()
-         stepper = BasicStepGenericCaller("caller", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
+         stepper = BasicStepGenericCaller("gencaller", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
          //setup a receiver from TCP
          stepper.registerActor(this)
          //println("$name | STARTS ")
          //Uncomment if you want to use a local (non-TCP) BasicStepRobotActor
-         //val obs = NaiveObserverActorKotlin("obs", scope)
-         //robot = BasicStepRobotActor("stepRobot", ownerActor=stepper, scope, "localhost")
+          //createStepRobotLocal(scope)
     }
+
+    fun createStepRobotLocal(scope: CoroutineScope){
+        //val obs = NaiveObserverActorKotlin("obs", scope)
+        robot = BasicStepRobotActor("stepRobot",stepper, scope, "localhost")
+    }
+
     protected fun resetStateVars() {
         curState = State.start
         todoPath = ""
@@ -64,7 +70,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
         println("$name PathExecutor STARTS todoPath=$todoPath")
     }
 
-    protected fun nextMove()   {
+    protected suspend fun nextMove()   {
         if( todoPath.length == 0 ){
              endOk()
         } else {
@@ -72,6 +78,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
             val firstMove = todoPath[0]
             todoPath = todoPath.substring(1)
             println("$name PathExecutor nextMove - firstMove=$firstMove todoPath=$todoPath")
+            delay(250)  //avoid too fast moving
             if (firstMove == 'w') {
                 stepper.send( ApplMsgs.stepRobot_step("$name", "350") )
                 curState = State.moving
@@ -80,7 +87,6 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
                 println("---- curState=$curState todoPath=$todoPath")
                 stepper.send( ApplMsgs.stepRobot_turn("$name", ""+firstMove) )
             }
-            //delay(300)  //avoid too fast moving
         }
     }
 
@@ -106,7 +112,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
         curState = State.continueJob
     }
 
-    protected fun fsm(move: String, endmove: String) {
+    protected suspend fun fsm(move: String, endmove: String) {
         println("$name | fsm state= $curState move= $move endmove=$endmove todoPath=$todoPath")
         when (curState) {
             State.start -> {
@@ -177,7 +183,8 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        val path     = "wwwwlwwwwwlwwwwlwwwwwl" //wlwwwwwwrwrr   wlwwwllwwwrwll
+        val importantPathToCheck = "wwlw"  //an obstacle with back that could collide
+        val path     = "wwwlwwwwlwwwlwwwwl" //wlwwwwwwrwrr   wlwwwllwwwrwll
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")

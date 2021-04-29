@@ -1,3 +1,7 @@
+/*
+BasicStepRobotCaller
+Performs a call to a local BasicStepRobot named 'stepRobot'
+ */
 package demoWithRobot
 
 import com.andreapivetta.kolor.Color
@@ -11,8 +15,6 @@ import org.json.JSONObject
 
 class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
-    //private val robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
-    //private val obs   = NaiveObserverActorKotlin("obs", scope )
     private var robot : BasicStepRobotActor
     private val obs   : NaiveObserverActorKotlin
 

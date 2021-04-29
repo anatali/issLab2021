@@ -1,6 +1,7 @@
 /*
 mainPlanDemo
- */
+shows the behavior of a planner
+*/
 
 package itunibo.planner
 
@@ -32,7 +33,7 @@ object mainPlanDemo {
                        plannerUtil.showMap()
 
 			plannerUtil.getDuration()
-
+            plannerUtil.saveRoomMap("demoMap")
 		} catch (e: Exception) {
             e.printStackTrace()
         }

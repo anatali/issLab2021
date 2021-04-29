@@ -475,9 +475,12 @@ Verso un nuovo componente-base:
  
 <a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html" target="web">LabIss2021 | support for Actors based on Kotlin</a>.
 <!-- <a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" target="web">ActorBasicKotlin.html</a> -->
-<br/><br/>
-Verso un robot accessibile in remoto via TCP: <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>.
-  <br/><br/>
+<br/>
+Introduzione al deployment con Docker: <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html#deploy" target="web">
+LabIss2021 | deployment </a>.
+<br/> 
+<a href="https://web.microsoftstream.com/video/aa834291-8dea-4b6c-8065-19bfe2706d32" target="issvideo">Registrazione April27</a> 
+
 </td>
 <td>Project <bc>it.unibo.kotlinSupports</bc><br/>
 </td>
@@ -486,9 +489,59 @@ Verso un robot accessibile in remoto via TCP: <a href="../../it.unibo.kotlinSupp
 </tr>
 
 <tr>
-<td style="width:60%">	 
- Verso un robot accessibile in remoto via SpringBoot: 
- <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">Lab ISS | Introduction to the usage of Spring Boot</a>.
+<td><h3>Esempi</h3>
+<ul>
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotCaller.kt" target="code">
+BasicStepRobotCaller.kt</a>: performs a call to a local BasicStepRobot named 'stepRobot'</li>
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" target="code">
+BasicStepGenericCaller.kt</a>: performs a call to a local or to a remote BasicStepRobot named 'stepRobot'.<br/>
+See <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a></li>
+
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" target="code">
+mainPlanDemo.kt</a>: shows the behavior of a planner  </li>
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" target="code">
+PathExecutor.kt</a>: an unibo-actor that executes a given sequence of moves (todoPath)
+of the 'stepRobot' and returns and answer to its ownerActor.
+The call to the 'stepRobot' is executed by using the <tt>BasicStepGenericCaller</tt></li>
+
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/DemoPlanner.kt" target="code">
+DemoPlanner.kt</a>: shows the behavior of a planner that moves a robot using PathExecutor</li>
+
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlanner.kt" target="code">
+ExplorerWithPlanner.kt</a>: uses the 'stepRobot' to explore a room by executing a plan.
+The proposed plan is executed by the PathExecutor component</li>
+
+
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/spiralwalker.qak" target="code">
+spiralwalker.qak</a>: see <a href="../../it.unibo.cautiousExplorer/userDocs/LabPlanner2021.html#spiralwalkernorobot" target="web">
+LabPlanner | Exploiting Planning Tools</li>
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/resumablewalker.qak" target="code">
+resumablewalker.qak</a>: see <a href="../../it.unibo.cautiousExplorer/userDocs/LabPlanner2021.html#resumablewalkernorobot" target="web">
+LabPlanner | Exploiting Planning Tools</li>
+<li></li>
+</ul>
+</td>
+<td>Project <bc>it.unibo.cautiousExplorer</bc><br/>
+</td>
+
+</tr>
+
+
+<tr>
+<td style="width:60%">	
+Verso sistemi distributi:<br/>
+
+Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
+<br/>
+Un robot accessibile in remoto via SpringBoot: <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
+Lab ISS | Introduction to the usage of Spring Boot</a>.
 Codice in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo" target="web">webspring.demo</a>
   
  

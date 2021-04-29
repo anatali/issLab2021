@@ -14,11 +14,11 @@ object WebSocketKotlinSupportUsage {
 
         scope.launch {
             support.sendWs( MsgRobotUtil.turnLeftMsg  )
-            delay(300)
-            support.sendWs( MsgRobotUtil.turnRightMsg  )
-            delay(300)
-            support.sendWs( MsgRobotUtil.forwardMsg  )
             delay(400)
+            support.sendWs( MsgRobotUtil.turnRightMsg  )
+            delay(400)
+            support.sendWs( MsgRobotUtil.forwardMsg  )
+            delay(500)
             support.sendWs( MsgRobotUtil.backwardMsg  )
             delay(1000)
             var answer = support.sendHttp(MsgRobotUtil.forwardMsg ,  "localhost:8090/api/move")
@@ -41,15 +41,15 @@ object WebSocketKotlinSupportUsage {
         println("WebSocketKotlinSupportUsage | testObservers 2 ")
 
         val observers = arrayOfNulls<NaiveActorKotlinObserver>(5)
-        for (i in 0..1) {
+        for (i in 1..1) {
             observers[i] = NaiveActorKotlinObserver("a$i", scope)
             support.registerActor(observers[i]!!)
         }
-        println("WebSocketKotlinSupportUsage | testObservers 3 ")
-        support.forward(MsgRobotUtil.turnLeftMsg)
+        //println("WebSocketKotlinSupportUsage | testObservers 3 ")
+        //support.forward(MsgRobotUtil.turnLeftMsg)
 
         //delay(3000)
-        println("WebSocketKotlinSupportUsage | testObservers 4")
+        //println("WebSocketKotlinSupportUsage | testObservers 4")
             /*
         for (i in 0..1) {
             support.removeActor(observers[i]!!)
@@ -60,25 +60,29 @@ object WebSocketKotlinSupportUsage {
 
 }
 
+suspend fun testWs(scope: CoroutineScope){
+    val support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091" )
+    //val ws      =
+    //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
+    support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
+    //support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
+    //give time to see messages ...
+    delay(30000)  //CREATE new threads  !!!
+    support.close()
+
+}
+suspend fun testHttp(scope: CoroutineScope){
+    val support = IssWsHttpKotlinSupport.createForHttp(scope , "localhost:8090")
+    val answer = support.sendHttp(MsgRobotUtil.turnLeftMsg,"localhost:8090/api/move")
+    println("testHttp answer=$answer")
+}
 @ExperimentalCoroutinesApi
 fun main() = runBlocking {
     println("==============================================")
     println("WebSocketUtilUsage | main start ${sysUtil.aboutThreads("main")}"  );
     println("==============================================")
-    val support = IssWsHttpKotlinSupport.createForWs(this, "localhost:8091" )
-    //val ws      =
-    //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
-    //support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
-    support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
-
-    println("==============================================")
-    println("WebSocketUtilUsage |  BEFORE END ${sysUtil.aboutThreads("main")}" );
-    println("==============================================")
-
-    //give time to see messages ...
-    delay(3000)  //CREATE new threads  !!!
-    support.close()
-
+    //testWs(this)
+    testHttp(this)
     println("==============================================")
     println("WebSocketUtilUsage | END ${sysUtil.aboutThreads("main")}");
     println("==============================================")

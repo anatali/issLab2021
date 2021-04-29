@@ -1,3 +1,7 @@
+/*
+DemoPlanner
+shows the behavior of a planner that moves a robot using PathExecutor
+*/
 package demoRobotWithPlanner
 
 import aima.core.agent.Action
@@ -22,7 +26,6 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
     fun initWork(){
         plannerUtil.initAI()
         plannerUtil.showMap()
-        //executor = PathExecutor("executor", scope, this)
     }
 
     fun getPlanTodo( actions: List<Action>?) : String{
