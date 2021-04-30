@@ -64,6 +64,10 @@ dependencies {
     implementation( "uniboInterfaces:uniboInterfaces"  )
     implementation( "uniboProtocolSupport:unibonoawtsupports"  )
 
+//SPRING (client)
+    // https://mvnrepository.com/artifact/org.springframework/spring-web
+    implementation("org.springframework:spring-web:5.3.6")
+
 }
 
 application {

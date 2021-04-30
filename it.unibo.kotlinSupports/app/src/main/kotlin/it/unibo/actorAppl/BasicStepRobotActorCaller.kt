@@ -1,5 +1,8 @@
+/*
+BasicStepRobotActorCaller
+Extends AbstractActorCaller.kt and implements either a local-call or a call via TCP.
+ */
 package it.unibo.actorAppl
-
 import com.andreapivetta.kolor.Color
 import it.unibo.actor0.AbstractActorCaller
 import it.unibo.actor0.ApplMessage
@@ -11,8 +14,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
-class BasicStepRobotActorCaller( name: String, scope: CoroutineScope  ) :
-                            AbstractActorCaller( name, scope ) {
+class BasicStepRobotActorCaller( name: String, scope: CoroutineScope,  web:Boolean=true  ) :
+                            AbstractActorCaller( name, scope, web) {
 
     override suspend fun handleInput(msg: ApplMessage) {
         colorPrint("$name | BasicStepRobotActorCaller handleInput $msg", Color.GREEN)

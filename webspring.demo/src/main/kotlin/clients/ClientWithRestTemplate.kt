@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.client.RestTemplate
 import java.util.HashMap
 
-
-
-
 object ClientWithRestTemplate {
-    @Autowired
+    //@Autowired
     private lateinit var restTemplate: RestTemplate
 
     fun doGet(){
