@@ -16,19 +16,21 @@ import org.json.JSONObject
 class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
     private var robot : BasicStepRobotActor
-    private val obs   : NaiveObserverActorKotlin
+    //private val obs   : NaiveObserverActorKotlin
 
     init{
         robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
-        obs   = NaiveObserverActorKotlin("obs", scope )
-        robot.registerActor(obs)
+        //obs   = NaiveObserverActorKotlin("obs", scope )
+        //robot.registerActor(obs)
     }
 
     protected fun doMoves() {
-        robot.send(ApplMsgs.stepRobot_l("main" ))
-        robot.send(ApplMsgs.stepRobot_r("main" ))
+        //robot.send(ApplMsgs.stepRobot_l("main" ))
+        //robot.send(ApplMsgs.stepRobot_r("main" ))
         robot.send(ApplMsgs.stepRobot_step("main", "350"))
-/*
+        //robot.send(ApplMsgs.stepRobot_l("main" ))
+        //robot.send(ApplMsgs.stepRobot_step("main", "350"))
+    /*
         robot.send(ApplMsgs.stepRobot_l("main" ))
         robot.send(ApplMsgs.stepRobot_l("main" ))
         robot.send(ApplMsgs.stepRobot_step("main", "350"))
@@ -47,9 +49,9 @@ class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
             if (answerJson.has("stepDone")) {
                 //robot.send(ApplMsgs.stepRobot_l("main"))
             }else if (answerJson.has("stepFail")){
-                val tback = answerJson.getString("stepFail")
-                println("$name | handleInput stepFail tback=$tback")
-                //robot.send(ApplMsgs.stepRobot_s("main", tback))
+                //val tback = answerJson.getString("stepFail")
+                //println("$name | handleInput stepFail tback=$tback")
+                robot.send(ApplMsgs.stepRobot_l("main"))
             }
         }
         if (msg.msgId == "endmove") {

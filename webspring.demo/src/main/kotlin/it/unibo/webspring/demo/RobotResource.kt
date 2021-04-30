@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 @Component
 object RobotResource {
      lateinit var myscope     : CoroutineScope
-     lateinit var obs         : NaiveActorKotlinObserver
+     lateinit var obs         : DoNothingObserver
      lateinit var robot       : BasicStepRobotActorCaller
      var configured           = false
 
@@ -26,7 +26,7 @@ object RobotResource {
         //Not already condfigured
          configured = true
          myscope    = CoroutineScope(Dispatchers.Default)
-         obs        = NaiveActorKotlinObserver("obs", myscope)
+         obs        = DoNothingObserver("obs", myscope)
         //TODO: define an observer that updates the HTML page
          robot   = BasicStepRobotActorCaller("robot", myscope )
          if( local ){

@@ -14,4 +14,4 @@ CMD ["bash", "webspring.demo"]
 #### docker build -t webspringrobot:1.0.1 .
 ### run the image to test
 ### docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1 /bin/bash //to use the console
-
+### docker-compose -f virtualrobotguistepper.yaml up
