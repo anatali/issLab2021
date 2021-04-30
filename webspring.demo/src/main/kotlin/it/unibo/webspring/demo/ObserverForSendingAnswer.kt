@@ -1,16 +1,17 @@
 package it.unibo.webspring.demo
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
-class ObserverForSendingAnswer(name: String, scope:CoroutineScope)
+class ObserverForSendingAnswer(name: String, scope:CoroutineScope )
     : ActorBasicKotlin(name, scope) {
 
-    var result = ""
+    var result = "none"
 
     override suspend fun handleInput(msg : ApplMessage){
-        println("$name msg=$msg")
+        colorPrint("$name msg=$msg"  , Color.MAGENTA)
         result = msg.msgContent
     }
 

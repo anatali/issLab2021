@@ -42,7 +42,7 @@ class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKo
     //protected var moves         = TripInfo()  //NO: the BasicStepRobotActor hos no notion of map
 
 init{
-    colorPrint("BasicStepRobotActor CREATED")
+    colorPrint("BasicStepRobotActor synch CREATED")
 }
     protected suspend fun doStepMove( time: String ){
         if( doingStep || currentBasicMove.length > 0 ){

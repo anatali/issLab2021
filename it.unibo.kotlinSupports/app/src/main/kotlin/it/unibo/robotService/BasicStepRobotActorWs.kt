@@ -44,7 +44,7 @@ class BasicStepRobotActorWs(name: String="stepRobot", val ownerActor: ActorBasic
     */
 
 init{
-    colorPrint("BasicStepRobotActor CREATED")
+    colorPrint("BasicStepRobotActorWs CREATED")
 }
     protected suspend fun doStepMove( time: String ){
         if( doingStep || currentBasicMove.length > 0 ){
