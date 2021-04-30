@@ -23,7 +23,7 @@ class BasicStepRobotActorCaller( name: String, scope: CoroutineScope,  web:Boole
             ApplMessageType.dispatch.toString() -> {
                 val mJson = JSONObject( msg.msgContent )
                 val forMe = mJson.has("robotmove") || mJson.has("step")
-                if( forMe ) forward( msg )
+                if( forMe ) forward( msg ) //defined in AbstractActorCaller
                 else {
                     colorPrint("$name | BasicStepRobotActorCaller msg to be handled by an observer",Color.GREEN)
                     this.updateObservers(msg)
@@ -37,7 +37,7 @@ fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
         val rac    = BasicStepRobotActorCaller("rac", this )
-        rac.send( ApplMsgs.stepRobot_l("test") )
+        rac.send( ApplMsgs.stepRobot_w("test") )
         delay(1000)
         rac.terminate()
         println("ENDS runBlocking ${sysUtil.curThread()}")

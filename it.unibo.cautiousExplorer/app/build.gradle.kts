@@ -82,6 +82,10 @@ dependencies {
 //STRING COLORS
     implementation( "com.andreapivetta.kolor:kolor:1.0.0" )
 
+//SPRING (client)
+    // https://mvnrepository.com/artifact/org.springframework/spring-web
+    implementation("org.springframework:spring-web:5.3.6")
+
 //UNIBO
     implementation("uniboIssActorKotlin:IssActorKotlinRobotSupport:2.0")
     implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")

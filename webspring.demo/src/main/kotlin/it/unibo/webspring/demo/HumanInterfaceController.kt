@@ -15,7 +15,7 @@ class HumanInterfaceController {
     var applicationModelRep = "waiting"
 
     init{
-        RobotResource.initRobotResource(true) //we want a local BasicStepRobotActorCaller
+        RobotResource.initRobotResource() //we want a local BasicStepRobotActorCaller
     }
 
     @GetMapping("/")    //defines that the method handles GET requests.

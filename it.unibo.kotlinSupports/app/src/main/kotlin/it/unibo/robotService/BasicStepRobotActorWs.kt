@@ -8,6 +8,7 @@ Returns a ApplMsgs.stepDoneMsg if the move is done with success.
 Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
 by an obstacle after time DT. In this case it moves back the robot for time DT
 
+
 The map is a singleton object, managed by mapUtil
 ============================================================
 */
@@ -22,13 +23,12 @@ import it.unibo.supports.TimerActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import mapRoomKotlin.TripInfo
 import org.json.JSONObject
  
 @ExperimentalCoroutinesApi
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKotlin,
-                         scope: CoroutineScope,  wenvAddr: String ="wenv" )
+class BasicStepRobotActorWs(name: String="stepRobot", val ownerActor: ActorBasicKotlin,
+                            scope: CoroutineScope, wenvAddr: String ="wenv" )
             : AbstractRobotActor( name, wenvAddr, scope ) {
 
     protected var timer: TimerActor? = null
@@ -39,7 +39,9 @@ class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKo
 
     private var currentBasicMove  = "";
     private var doingStep         = false;
-    //protected var moves         = TripInfo()  //NO: the BasicStepRobotActor hos no notion of map
+    /* //sysBack synch
+    private var doingBack         = false;
+    */
 
 init{
     colorPrint("BasicStepRobotActor CREATED")
@@ -56,6 +58,7 @@ init{
             return
         }
         doingStep = true;
+        //resetInfoAboutSysBack()       //sysBack synch
         timer = TimerActor("t0", this, scope )
         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                 ActorMsgs.startTimerMsg.replace("TIME", time),"t0")
@@ -71,6 +74,7 @@ init{
 
     fun endStepOk(  ){
         doingStep = false;
+        //println("$name | endStepOk   ")
         answer = ApplMsgs.stepDoneMsg
         val m = MsgUtil.buildDispatch( name,"stepAnswer", answer, ownerActor.myname() )
         ownerActor.send(m)
@@ -82,7 +86,13 @@ init{
             //println("$name | endStepKo DTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT $dtVal")
             backMsg = "{\"robotmove\":\"moveBackward\", \"time\": BACKT}".replace("BACKT", dtVal)
             colorPrint("$name | backMsg=$backMsg  wenvAddr=$wenvAddr", Color.GREEN )
-            delay(350)  //after a collision there is a forward move still running
+            delay(350)  //after a collision there is a move still running
+        /*
+            setInfoAboutSysBack()
+            support.forward(backMsg)
+            //no change to currentBasicMove => no result propagation
+            //HYPOTHESIS: a little back move does not raise a collision
+         */
             val backResult = support.sendHttp(backMsg, "$wenvAddr:8090/api/move")
             colorPrint("$name | backResult=$backResult", Color.GREEN )
             answer = ApplMsgs.stepFailMsg.replace("TIME", dtVal)
@@ -90,7 +100,16 @@ init{
            // delay(350)  //give time to end the sysback
             ownerActor.send(m)
     }
+/*
+    fun setInfoAboutSysBack(){
+        currentBasicMove="sysback"
+        doingBack = true
+    }
 
+    fun resetInfoAboutSysBack(){
+        doingBack = false
+    }
+*/
 /*
 ======================================================================================
  */
@@ -101,16 +120,12 @@ override suspend fun handleInput(msg: ApplMessage) {
     //colorPrint(  "$name BasicStepRobotActor|  handleInput $msg currentBasicMove=$currentBasicMove")
     val infoJsonStr = msg.msgContent
     val infoJson    = JSONObject(infoJsonStr)
+        //if (! infoJson.has("sonarName"))
+            //println("$name BasicStepRobotActor |  handleInput:$infoJson")
         if (infoJson.has("sonarName")) {
             val m = MsgUtil.buildDispatch( name,"sonarEvent", infoJsonStr, ownerActor.myname() )
             ownerActor.send(m)    //owner=ctxserver => update also the components connected via TCP
             updateObservers(m)
-        }else if( infoJson.has("robotmove")  ) {
-            val move = infoJson.getString("robotmove")
-            val moveResult = support.sendHttp(infoJson.toString(), "$wenvAddr:8090/api/move")
-            colorPrint("$name | moveResult=$moveResult", Color.GREEN )
-            val m = MsgUtil.buildDispatch( name,"endmove", moveResult, ownerActor.myname() )
-            ownerActor.send(m)
         }else if (infoJson.has(ApplMsgs.stepId) ) {
             if( currentBasicMove.length > 0 ) {  //Step requested before the end of a basic move
                 colorPrint("$name BasicStepRobotActor |  $currentBasicMove running: store $msg", Color.LIGHT_MAGENTA)
@@ -123,11 +138,65 @@ override suspend fun handleInput(msg: ApplMessage) {
             endStepOk();
         }else if (infoJson.has("collision")) {      //Hypothesis: no movable obstacles
             var dtVal = this.getDuration(StartTime)
-            if(doingStep){
+            colorPrint(  "$name BasicStepRobotActor|  collision doingStep=$doingStep currentBasicMove=$currentBasicMove", Color.RED)
+            //this.waitUser("collision")
+            /* //sysBack synch
+            if(  doingBack &&  (currentBasicMove=="") ){//collision before the endmove of systemBack
+                 doingBack = false
+                 return    //Just to ignore the collision
+                 //lookAtmsgQueueStore()
+            }*/
+            if( currentBasicMove.length > 0  ){ //a conventional move was running
+                val payload = "{ \"collision\" : \"true\",\"move\": \"$currentBasicMove\"}"
+                val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
+                ownerActor.send(m)
+                updateObservers(m)
+                //currentBasicMove = "";        //set by endMove
+            }else if(doingStep){ //executiing a step
                 if( dtVal > 50 ) dtVal = dtVal - 30 //attempt to avoid a collision while doing a backStep
-                colorPrint("$name BasicStepRobotActor | doingStep=$doingStep currentBasicMove=$currentBasicMove dtVal=$dtVal", Color.LIGHT_MAGENTA)
+                colorPrint("$name BasicStepRobotActor |  doingStep=$doingStep currentBasicMove=$currentBasicMove dtVal=$dtVal", Color.LIGHT_MAGENTA)
                 endStepKo(""+(dtVal))
+                /* val dtVal = this.getDuration(StartTime)
+                if( currentBasicMove.length == 0 ) this.endStepKo(""+dtVal)
+                else{  //time elapsed for a conventional move
+                }*/
             }
+        }else if( infoJson.has("robotmove") &&
+               (currentBasicMove.length > 0 || doingStep ) ){ //another move while working
+            colorPrint("$name BasicStepRobotActor |  $currentBasicMove running: store $msg", Color.LIGHT_MAGENTA)
+            msgQueueStore.add(msg)
+            return
+        }else if( infoJson.has("robotmove") && currentBasicMove.length == 0   ) {
+            //msgDriven(infoJson )
+            colorPrint("$name | robotmove:$infoJson  ")
+            currentBasicMove = infoJson.getString("robotmove")
+            //resetInfoAboutSysBack() //sysBack synch
+            support.forward(infoJson.toString())
+        }else if (infoJson.has("endmove")){
+            colorPrint(  "$name BasicStepRobotActor|  ENDMOVE $msg currentBasicMove=$currentBasicMove")
+            val moveResult = infoJson.getString("endmove")
+            val move       = infoJson.getString("move")
+            if( move =="moveBackward" && currentBasicMove=="sysback"){
+                //A collision that arrives later is managed by looking at doingBack
+                currentBasicMove = ""
+                lookAtmsgQueueStore()
+            }
+            else if(  currentBasicMove.length > 0 ) { //end of a basic move
+                val payload = "{ \"endmove\" : \"$moveResult\",\"move\": \"$currentBasicMove\"}"
+                val m = MsgUtil.buildDispatch( name,"endmove", payload, ownerActor.myname() )
+                currentBasicMove = ""
+                ownerActor.send(m)
+                lookAtmsgQueueStore()
+                //updateObservers(m)        //the owner could be an observer?
+            }else{ //end of a moveforward for the step without a collision or for a systemback
+                val move = infoJson.getString("move")
+                colorPrint("$name BasicStepRobotActor |  no currentBasicMove for ${move}" )
+                /* //sysBack synch
+                if( move=="moveBackward" && doingBack ){
+                    doingBack = false
+                }*/
+            }
+            //lookAtmsgQueueStore()
         }
     }
 

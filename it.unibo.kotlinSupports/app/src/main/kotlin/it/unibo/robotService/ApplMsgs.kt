@@ -68,6 +68,18 @@ object ApplMsgs {
     val startMsgStr = "{\"$startAnyId\":\"ok\" }"
     val endMsgStr = "{\"end\":\"ok\" }"
 
+    fun shortMove( move : String ) : String{
+        when (move) {
+            "turnLeft"      -> return "l"
+            "turnRight"     -> return "r"
+            "moveForward"   -> return "w"
+            "moveBackward"  -> return "s"
+            "haltMsg"       -> return "h"
+            else            -> return "h"
+        }
+    }
+
+
     fun stepRobot_w(caller:String, time: String="350") : ApplMessage {
         return MsgUtil.buildDispatch(caller, "move", forwardMsg.replace("350",time), "stepRobot")
     }

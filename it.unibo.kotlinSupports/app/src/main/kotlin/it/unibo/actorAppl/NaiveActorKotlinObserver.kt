@@ -9,10 +9,7 @@ class NaiveActorKotlinObserver(name: String, scope:CoroutineScope)
 
     override protected suspend fun handleInput(msg : ApplMessage){
         var msgJsonStr = msg.msgContent
-        //if( msgJsonStr.contains("@") ) msgJsonStr=msgJsonStr.replace("@",",")
-        println("$name  | appl $msg   ${ aboutThreads()}" )
-        println("$name  | msgJsonStr=$msgJsonStr   " )
         val msgJson = JSONObject(msgJsonStr)
-        println("$name  | msgJson=$msgJson   " )
+        println("$name  | msgJson=$msgJson  ${ aboutThreads()} " )
     }
 }

@@ -15,11 +15,14 @@ class MainDemo : AbstracMainForActor() {
         val a = NaiveActorKotlinObserver("obs_a", scope)
         val b = BasicStepRobotActor("stepRobot", a, wenvAddr="localhost", scope=scope)
         println("MainDemo | b= $b")
-        val stepMsg = ApplMsgs.stepMsg.replace("TIME", "350")
-        val m = MsgUtil.buildDispatch("main", ApplMsgs.stepId, stepMsg, "stepRobot"  )
+        //val stepMsg = ApplMsgs.stepMsg.replace("TIME", "350")
+        //val m = MsgUtil.buildDispatch("main", ApplMsgs.stepId, stepMsg, "stepRobot"  )
         b.registerActor(a);
-        b.send( m )
         //b.send( m )
+        b.send( ApplMsgs.stepRobot_l("main" ) )
+        b.send( ApplMsgs.stepRobot_r("main" ) )
+        b.send( ApplMsgs.stepRobot_step("main", "350") )
+        //b.send( ApplMsgs.stepRobot_r("main" ) )
     }
 }
 

@@ -3,6 +3,8 @@ package it.unibo.actor0
 import com.andreapivetta.kolor.Color
 import it.unibo.actorAppl.RobotRestCaller
 import it.unibo.actorAppl.RobotServiceCaller
+import it.unibo.robotService.ApplMsgs
+import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
@@ -11,10 +13,10 @@ abstract class AbstractActorCaller(name: String,
  scope: CoroutineScope, val web:Boolean=true) : ActorBasicKotlin( name, scope ) {
 
     var rsc: RobotServiceCaller? = null
-    var restCaller: RobotRestCaller? = null
+
 
     fun forward (msg: ApplMessage ) {
-        //colorPrint("$name | AbstractActorCaller forward  msg:$msg  ", Color.GREEN )
+        colorPrint("$name | AbstractActorCaller forward  msg:$msg web=$web", Color.GREEN )
         val  destActorName = msg.msgReceiver
         val dest           = ActorBasicContextKb.getActor(destActorName)
         if( dest != null ) sendToActor( msg,dest  )
@@ -25,7 +27,8 @@ abstract class AbstractActorCaller(name: String,
                 rsc?.send(msg.toString())
             }else { //web
                 val content = msg.msgContent  //
-                val move    = JSONObject( content ).get("robotmove").toString()
+                val moveTodo= JSONObject( content ).get("robotmove").toString()
+                val move    = ApplMsgs.shortMove(moveTodo)
                 colorPrint("$name | move=$move", Color.GREEN )
                 RobotRestCaller.doPostSimple("localhost:8081",move)
             }

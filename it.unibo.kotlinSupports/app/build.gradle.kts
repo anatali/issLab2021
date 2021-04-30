@@ -60,13 +60,14 @@ dependencies {
     implementation("org.json:json:20201115" )
 //STRING COLORS
     implementation( "com.andreapivetta.kolor:kolor:1.0.0" )
-//UNIBO
-    implementation( "uniboInterfaces:uniboInterfaces"  )
-    implementation( "uniboProtocolSupport:unibonoawtsupports"  )
 
 //SPRING (client)
     // https://mvnrepository.com/artifact/org.springframework/spring-web
     implementation("org.springframework:spring-web:5.3.6")
+
+//UNIBO
+    implementation( "uniboInterfaces:uniboInterfaces"  )
+    implementation( "uniboProtocolSupport:unibonoawtsupports"  )
 
 }
 

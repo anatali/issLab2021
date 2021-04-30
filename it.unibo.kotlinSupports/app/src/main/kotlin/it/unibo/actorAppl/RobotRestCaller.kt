@@ -1,7 +1,9 @@
 package it.unibo.actorAppl
 
+import com.andreapivetta.kolor.Color
+import it.unibo.actor0.sysUtil
 import org.springframework.web.client.RestTemplate
-import java.util.HashMap
+
 
 object RobotRestCaller {
     private lateinit var restTemplate: RestTemplate
@@ -18,8 +20,9 @@ object RobotRestCaller {
         var answer = ""
         restTemplate = RestTemplate()
         val uri = "http://$addr/moverest?move=$move"
+        sysUtil.colorPrint("RobotRestCaller | doPostSimple  uri:$uri", Color.GREEN )
         val result = restTemplate.postForObject(uri, answer, String::class.java )
-        println(result)
+        sysUtil.colorPrint("RobotRestCaller | $result", Color.GREEN)
     }
 
 }
