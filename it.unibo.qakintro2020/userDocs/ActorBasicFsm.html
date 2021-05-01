@@ -1,0 +1,508 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+<!--
+
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+	width: 750px;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 90%;
+	background-color: #fcf8c7;
+	border: 1px solid blue;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}    
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+  -->
+</style>
+    
+<head>
+   
+<title>ActorBasicFsm</title></head>
+    
+<body>
+
+<div class="body"> 
+
+<h1>LabQak | ActorBasicFsm</h1> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/LectureBologna1819.html" target="isslm">LabISS-lectures site</a></font> 
+
+<br/><br/>
+TO BE COMPLETED ...
+
+
+<h2 id="mqtt">QActor as Finite State Machine</h2>
+
+The behavior of a <tt>Qakactor</tt> as a
+<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="web">Finite State Machine</a> (<bc>FSM</bc>) is based on the following
+concepts:
+
+<ol>
+<li>A fsm-actor can be described as a 5-tuple <em>(States, Inputs, Outputs, Transitions, InitialState)</em>:
+ 
+
+<ul>
+<li><em>States</em>: Set of possible states (StateSpace)</li>
+<li><em>Inputs</em>: Set of possible input elements (called <tt>input alphabet</tt>; in our case <i>messages</i>)</li>
+<li><em>Outputs</em>: Set of possible output elements (called <tt>output alphabet</tt>; in our case <i>actions</i> ) </li>
+<li><em>InitialState</em>: The initial state</li>
+<li><em>Transition</em>: A <tt>Transition</tt> defines the new state and output given the current state and input.
+It is often expressed by two functions:
+<pre>
+nextState:      States x Inputs -> States
+output:         States x Inputs -> Outputs
+</pre>
+</li>
+</ul>
+ 
+
+</li>
+<li>A  <bc>Moore FSM</bc> generates output while it is in a particular state (output depends on state only).
+Thus, when the fsm-actor is in state, it first executes a sequence of terminating <bc>Actions</bc> and then  checks 
+for the possibility to 'fire' a transition among the set of the active transitions related to that state. </li>
+</ol>
+
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:55%"><img src="./img/actorBasicFsm.png" alt="actorBasicFsm." width="98%" height="40%"/></td>
+ <td><m>
+
+ When a message <tt>msg</tt> is  received, the actor checks for a possible transition for that <tt>msg</tt> in the <tt>current state</tt>.
+ <br/> <br/>
+If no transition is possible, the message <tt>msg</tt> is <b>discarded if it is an event</b>; otherwise it us stored in a local msgQueue.
+ <br/> <br/>
+If the transition is possible, the actor goes into the next state related to that transition and then looks at empty moves or to transitions
+related to stored messages. 
+ <br/><br/>
+ The actor attempts to manage <b>all</b> the stored messages before looking to a new message.
+  <br/><br/>
+This behavior is implemented as a 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/it.unibo.kotlin.dsl/userDocs/LabDsl.html" target="web">Kotlin internal DSL</a>
+(see <a href="#impl">About implementation</a>)
+<!-- in <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">
+it.unibo.qakactor.ActorBasicFsm.kt</a>. -->
+</m> 
+ </td>
+</tr>
+</table>
+</center>
+
+The availability of a platform like that introduced in  
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qak.radar2020/userDocs/LabRadarGui.html#platform" target="lab">
+LabRadarGui | Building a platform</a> allows us to exploit the class 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qak.radar2020/userDocs/LabRadarGui.html#ActorBasicFsm" target="lab">
+LabRadarGui | ActorBasicFsm</a> to write code of each component with an explicit representation of the states and of the transitions:
+
+<pre><m>class robotSonar( name : String, scope : CoroutineScope  ) : <k>ActorBasicFsm</k>( name, scope ) {
+	<ks>override fun</ks> <k>getInitialState()</k>: String{ return <ks>"INIT"</ks>}	
+	<ks>override fun</ks> <k>getBody()</k> : (ActorBasicFsm.() -> Unit){ 	 <kc>//See <a href="../../it.unibo.kotlin.dsl/userDocs/LabDsl.html#lamdarec" target="code">Lambda with receiver</a></kc>
+ 		return {
+			<k>state</k>(<ks>"INIT"</ks>) { <kc>//state is defined by  <tt>ActorBasicFsm</tt>: add a state to a state list</kc>
+				<k>action</k>{     <kc>//action is defined by <a href="#State">State</a>: add an action to a action list</kc>
+					<ks>//Sequence of (terminating) actions written by the application designer</ks>
+				}
+				<k>transition</k>(edgeName="t0",targetState=<ks>"SENDREQUEST"</ks>,cond=<k>doswitch()</k> ) <kc>//EMPTY MOVE</kc>
+				 <kc>//transition is defined by <a href="#State">State</a>: add a state to a state list</kc>
+				 <kc>//doswitch is defined by <tt>ActorBasicFsm</tt>: set an <ks>edgeEventHandler</ks> that checks for firing</kc>
+			}
+			<k>state</k>(<ks>"SENDREQUEST"</ks>) {
+				<k>action</k>{
+					//<kc> ... </kc>
+				}
+				<k>transition</k>(edgeName="t0",targetState=<ks>"ELABANSWER"</ks>, cond=<k>whenReply("answer")</k> ) <kc>//EMPTY MOVE</kc>
+			}
+		}
+	}
+}
+</m></pre>
+
+We highlight that:
+<ul>
+<li>a call to the operation <k>transition(...)</k> does not perform any <tt>receive</tt> operation. It is just a way to 'denote interest' for a message.
+The input-handling part is implemented by a proper separate component within the platform (see
+<a href="../../it.unibo.qakactor/src/main/kotlin/QakContextServer.kt" target="code">
+QakContextServer.kt</a>)<br/><br/></li>
+<li>the <k>doswitch()</k> operation represents an 'empty move', i.e. the transition specifies that the components goes from the state<m> <ks>INIT</ks></m> 
+to the state <m><ks>SENDREQUEST</ks></m>  without waiting any information from the outside world.<br/><br/></li>
+<li>the <k>whenReply( msgId : String )</k> operation means that transition will go to the specified state ( <m><ks>ELABANSWER</ks></m> in the example) 
+when the message of type <m><ks>reply</ks></m> and identifier <m><ks>answer</ks></m> is received. A similar task is done by the operations
+ <m><k>whenEvent( msgId : String ) </k></m>, <m><k>whenDispatch( msgId : String )</k></m> and <m><k>whenRequest( msgId : String )</k></m>.<br/><br/>
+</li>
+<li>the operations of form <k>whenXXXGuarded</k>( msgId: String, <k>guard:()->Boolean</k>) implement the concept of guarded transitions, i.e. a
+transition that can 'fire' only if the given <ks>guard</ks> is true.<br/><br/></li>
+</ul>
+ 
+The class  <em>ActorBasicFsm</em> is expressed in a domain-specific language  by exploiting the Kotlin capability to define internal-DSL.
+See <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.kotlin.dsl/userDocs/LabDsl.html" target="lab">
+LABDsl | Kotlin Internal DSL</a>. 
+
+
+
+<center><table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%">
+<h3>State</h3>
+<m></m>
+</td>
+<td>
+<h3>Transition</h3>
+</td>
+</tr>
+
+<tr>
+<td id="State">
+<pre><m>
+class <k>State</k>(val stateName : String ) {
+    private val edgeList          = mutableListOf&lt;Transition>()
+    private val stateEnterAction  = mutableListOf&lt; <k>(State) -> Unit</k>>()
+    private val myself : State    = this
+
+    fun <k>transition</k>( edgeName: String, 
+		targetState: String, cond: <k>Transition.() -> Unit</k>) {
+        val trans = Transition(edgeName, targetState)
+        trans.cond()  
+        edgeList.add(trans)
+    }
+    fun action(  a:  (State) -> Unit) {
+          stateEnterAction.add( a )
+    }
+    fun addAction (action:  (State) -> Unit) {
+        stateEnterAction.add(action)
+    }
+    fun enterState() {
+        stateEnterAction.forEach {  it(this) }
+     }
+    fun getTransitionForMessage(msg: ApplMessage): Transition? {
+        val first = edgeList.firstOrNull { it.canHandleMessage(msg) }
+        return first
+    }
+}</m>
+</pre>
+</td>
+<td>
+<pre><m>
+class <k>Transition</k>(val edgeName: String, val targetState: String) {
+
+    lateinit var edgeEventHandler: (ApplMessage) -> Boolean
+    private val actionList = mutableListOf<(Transition) -> Unit>()
+
+    fun <k>action</k>(action: (Transition) -> Unit) { //MEALY?
+        actionList.add(action)
+    }
+
+    <kc>//Invoke when you go down the transition to another state</kc>
+    fun enterTransition(retrieveState: (String) -> State): State {
+        actionList.forEach { it(this) }         //MEALY?
+        return retrieveState(targetState)
+    }
+
+    fun canHandleMessage(msg: ApplMessage): Boolean {
+         return edgeEventHandler(msg)
+    }
+}</m>
+</pre>
+</td>
+</tr>
+</tbody>	
+</table></center>
+
+<h3>Behavior</h3>
+<center><table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%">
+
+<pre><m>
+abstract class <k>ActorBasicFsm</k>( 
+	name: String,
+	val fsmscope: CoroutineScope = GlobalScope,
+	confined :    Boolean = false,
+	ioBound :     Boolean = false,
+	channelSize : Int = 50
+	) : <k>ActorBasic</k>(name,smscope,confined,ioBound,channelSize)
+ 
+	private var isStarted = false
+	private lateinit var currentState: State
+	private lateinit var mybody : ActorBasicFsm.() -> Unit
+	val autoStartMsg = MsgUtil.buildDispatch(
+			name, "autoStartSysMsg", "start", name)
+	var currentMsg = NoMsg
+...
+	<k>init</k> {
+		<ks>setBody( getBody(), getInitialState() )</ks>
+	}
+    <k>abstract fun getBody()</k> : (<ks>ActorBasicFsm.() -> Unit</ks>)
+							<kc>//See <a href="../../it.unibo.kotlin.dsl/userDocs/LabDsl.html#lamdarec" target="code">Lambda with receiver</a></kc>
+    <k>abstract fun getInitialState()</k> : String
+
+    override suspend fun <k>actorBody</k>(msg: ApplMessage) {
+         if( msg.msgId() == autoStartMsg.msgId() && ! isStarted ) {          
+            fsmStartWork()
+         }else{  fsmwork(msg)  }
+	}
+	fun fsmStartWork() {
+		isStarted = true
+		currentState.enterState()
+		<ks>checkDoEmptyMove()</ks>
+	}
+
+    fun fsmwork(msg : ApplMessage) {
+        var nextState = <ks>checkTransition(msg)</ks>
+        var b = hanldeCurrentMessage( msg, nextState )
+        while(  b  ){ <kc>//handle previous messages</kc>
+            currentState.enterState()
+            <ks>checkDoEmptyMove()</ks>
+            val nextState = <ks>lookAtMsgQueueStore()</ks>
+            b = hanldeCurrentMessage( msg, nextState, memo=false )
+         }
+	}
+	...
+</m></pre>
+ 
+</td>
+<td><m>
+<pre>
+    private fun <ks>checkTransition</ks>(msg: ApplMessage): State? {
+        val <k>trans</k> = <ks>currentState.getTransitionForMessage(msg)</ks>
+          return if (trans != null) {
+           <k>trans</k>.<ks>enterTransition { getStateByName(it) }</ks>
+        } else {
+              null
+        }
+    }
+
+</pre>
+
+<br/><br/>
+The full code is in 
+<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a>
+</m>
+</td>
+</tr>
+
+<!--
+<tr>
+<td style="width:50%">
+<h3>STRUCTURAL</h3>
+<pre><m>
+	fun state(name: String, build: State.() -> Unit) {
+        val state = State(name)
+        state.build()
+        stateList.add(state)
+	}
+
+	private fun getStateByName(name: String): State {
+        return stateList.firstOrNull { it.name == name }
+            ?: throw NoSuchElementException(name)
+	}
+	
+	fun setBody( buildbody: ActorBasicFsm.() -> Unit,
+                         initialStateName: String ){
+        buildbody()            //Build the structural part
+        currentState = getStateByName( initialStateName )
+        scope.launch { autoMsg(autoStartMsg) }  //auto-start
+	}
+</m></pre>
+ 
+</td>
+<td><m>
+The code is in 
+<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a>
+</m>
+</td>
+</tr>
+
+</tbody>	
+</table></center>
+-->
+
+<center><table style="width:98%">
+<tbody>	
+
+
+<!--
+<tr>
+<td style="width:50%">
+<h3>Example</h3>
+<pre><m>
+fun main() = runBlocking {
+    val qa = ActorBasicFsm("qa", this, "init", {
+        state(name = "init") {
+            action { println("hello init") }
+            action { scope.launch{ autoMsg( NoMsg ) } }
+            transition(name = "e1", targetState = "s1", cond=doSwitch())
+        }
+        state(name = "s1") {
+            action { println("$currentMsg") }
+        }
+    }
+    )
+}</m>
+</pre>
+</td>
+<td>
+</td>
+</tr>
+
+</tbody>	
+</table></center>
+
+-->
+ 
+ 
+</p>
+<!--
+ <h2>BLSD7Segm (Work to do)</h2>
+ <div class="req">
+Design and build a <tt>Distributed</tt> software system in which
+<ul>
+<li>A </li>
+<li>shows the value on <bc>Seven-Segment Display</bc>
+</li>
+</ul>
+-->
+
+ 
+</div>	 
+
+
+</div>  
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>
