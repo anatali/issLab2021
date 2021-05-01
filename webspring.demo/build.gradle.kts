@@ -15,6 +15,11 @@ group = "it.unibo"
 version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+	kotlinOptions {
+		jvmTarget = "11"
+	}
+}
 repositories {
 	mavenCentral()
 	jcenter() 	//required by andrea pivetta

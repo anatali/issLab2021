@@ -58,7 +58,7 @@ class PathExecutor (name: String, scope: CoroutineScope,
         if( todoPath.length == 0 ){
              endOk()
         } else {
-            moves.showMap()
+            //moves.showMap()
             val firstMove = todoPath[0]
             todoPath = todoPath.substring(1)
             println("$name PathExecutor nextMove - firstMove=$firstMove todoPath=$todoPath")
@@ -80,13 +80,14 @@ class PathExecutor (name: String, scope: CoroutineScope,
 
     protected fun obstacleFound() {
         println("$name | END FAIL ---------------- ")
-        //moves.showMap()
+        /*
+        moves.showMap()
         try {
             moves.setObstacle()
         } catch (e: Exception) { //wall
             println("$name | outside the map " + e.message)
         }
-        moves.showMap()
+        moves.showMap()*/
         ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney()))
         moves.resetJourney()
         curState = State.continueJob
@@ -95,7 +96,7 @@ class PathExecutor (name: String, scope: CoroutineScope,
     fun endOk(){
         println("$name | END OK ---------------- ")
         ownerActor.send(ApplMsgs.executorOkEnd(name,moves.getJourney(),ownerActor.name))
-        moves.showMap()
+        //moves.showMap()
         moves.resetJourney()
         curState = State.continueJob
     }
@@ -115,20 +116,20 @@ class PathExecutor (name: String, scope: CoroutineScope,
                 println("$name | turning ... $move endmove= $endmove")
                 val moveShort = MoveNameShort[move]
                 if (endmove == "true") {
-                    moves.updateMovesRep(moveShort!!)
-                    moves.showMap()
+                    moves.updateJourney(moveShort!!)
+                    //moves.showMap()
                     nextMove()  //modifies curState in moving or turning
                 } else println("$name | FATAL ERROR ")
             } //turning
             State.moving -> {
                 println("$name | moving ... $move")
                 if (move == ApplMsgs.stepDoneId) {
-                     moves.updateMovesRep("w")
+                     moves.updateJourney("w")
                      nextMove()
                 } else if (move == ApplMsgs.stepFailId) {
                     obstacleFound()
                 } else if (endmove == "true") {
-                    moves.updateMovesRep("s")
+                    moves.updateJourney("s")
                     nextMove()
                 }
              }

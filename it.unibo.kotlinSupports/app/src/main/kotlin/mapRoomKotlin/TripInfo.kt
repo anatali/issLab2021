@@ -11,11 +11,13 @@ class TripInfo( ) {
         mapUtil.doMove(move)
         journey = journey + move
     }
-
     fun setObstacle() {
         mapUtil.setObstacle()
     }
 
+    fun updateJourney(move: String) {
+        journey = journey + move
+    }
     fun getJourney(): String {
         return journey
     }

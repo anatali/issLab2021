@@ -14,10 +14,12 @@ import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.springframework.web.client.RestTemplate
 
 
 class ExplorerWithPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 
+    private lateinit var restTemplate: RestTemplate
     private lateinit var executor: PathExecutor
     private var targetCell = 1
 
@@ -27,17 +29,21 @@ class ExplorerWithPlanner( name: String, scope: CoroutineScope) : ActorBasicKotl
         plannerUtil.showMap()
         executor = PathExecutor("executor", scope, this)
     }
+
     fun explore() {
         plannerUtil.setGoal(targetCell, targetCell);
-        val actions = plannerUtil.doPlan()
+        val actions  = plannerUtil.doPlan()
         val pathTodo = actions.toString()
             .replace("[","").replace("]","")
             .replace(", ","")
+
         val cmdStr  = ApplMsgs.executorstartMsg
             .replace("PATHTODO", pathTodo)
         println("$name | cmdStr=$cmdStr")
         val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
         executor.send(cmd)
+
+
         plannerUtil.showMap()
      }
 
@@ -50,10 +56,12 @@ class ExplorerWithPlanner( name: String, scope: CoroutineScope) : ActorBasicKotl
             .replace("[","").replace("]","")
             .replace(", ","") + "l"
         //added a final turnLeft to restore initial state
+
         val cmdStr  = ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
         println("$name | backToHome cmdStr=$cmdStr")
         val cmd = MsgUtil.buildDispatch("main", ApplMsgs.executorStartId, cmdStr, "executor")
         executor.send(cmd)
+
         plannerUtil.showMap()
     }
 

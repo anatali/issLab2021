@@ -74,7 +74,7 @@ class M2MRestController {
         }
         obsRobot.owner = obsRobot   //reset
         sysUtil.colorPrint("result=$answerPath"  , Color.MAGENTA)
-        return "done $answerPath"
+        return "$answerPath"
     }
 
 

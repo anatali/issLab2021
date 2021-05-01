@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 object demoCallRest {
     val addr = "localhost:8081" ///moverest?move=$move" added by the caller
     fun doPath(path: String=""){
-        RobotRestCaller.doPostSimple(addr,"r")
+        RobotRestCaller.doPostBasicmove(addr,"r")
     }
 }
 
