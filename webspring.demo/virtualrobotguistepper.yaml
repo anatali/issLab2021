@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   wenv:
     image: docker.io/natbodocker/virtualrobotdisi:2.0

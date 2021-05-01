@@ -7,6 +7,7 @@ of the 'stepRobot' and returns and answer to its ownerActor
 package features
 
 
+import com.andreapivetta.kolor.Color
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
@@ -27,7 +28,7 @@ The map is a singleton object, managed by mapUtil
 @Suppress("REDUNDANT_ELSE_IN_WHEN")
 class PathExecutor (name: String, scope: CoroutineScope,
                     val robot      : BasicStepRobotActor,
-                    val ownerActor : ActorBasicKotlin       //used for non-m2m demo
+                    val ownerActor : ActorBasicKotlin
                     )
     : ActorBasicKotlin( name, scope ) {
                                             //: AbstractRobotActor(name, "localhost") {
@@ -172,21 +173,36 @@ fun main( ) {
         val importantPathToCheck = "wwlw"  //an obstacle with back that could collide
         val path     = "lrwwswss" //"wwwlwwwwlwwwlwwwwl" wlwwwwwwrwrr   wlwwwllwwwrwll
 
-        val obs      = ObserverForSendingAnswer("obsanswer",  this, { println("move answer=$it") } )
-        val robot    = BasicStepRobotActor("stepRobot",obs, this, "localhost")
+        //Create a local robot with its own observer for doing this test
+        val obsRobot = ObserverForSendingAnswer("obsanswer",  this,
+            { sysUtil.colorPrint("move answer=$it", Color.BLUE) } )
+        val robot    = BasicStepRobotActor("stepRobot",obsRobot, this, "localhost")
+        //Create a PathExecutor with ots own observer
         val obs1     = ObserverForSendingAnswer("obspath",  this, { println("path answer=$it") } )
         val executor = PathExecutor("pathExec", this, robot, obs1)
-        //obs.owner    = executor
+        //Set the PathExecutor as the owner of the robot
+        obsRobot.owner = executor
 
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")
 
         executor.send(cmd)
+        delay(6000)
+        //Reset the observer
+        obsRobot.owner = null  //to execute the callback
+        robot.send( ApplMsgs.stepRobot_l("main"))
+        robot.send( ApplMsgs.stepRobot_r("main"))
         //send another command
-        //delay(7000)
+         //
         //executor.send(cmd)
+        delay(1000)
+        robot.terminate()
+        executor.terminate()
+        obsRobot.terminate()
+        obs1.terminate()
         println("ENDS runBlocking ${sysUtil.curThread()}")
-    }
+        System.exit(0)
+    }//runBlocking
     println("ENDS main ${sysUtil.curThread()}")
 }

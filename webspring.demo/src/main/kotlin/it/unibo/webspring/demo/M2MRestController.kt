@@ -1,6 +1,7 @@
 package it.unibo.webspring.demo
 import com.andreapivetta.kolor.Color
 import features.PathExecutor
+import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
@@ -14,23 +15,30 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class M2MRestController {
     lateinit var robot      : BasicStepRobotActor
-    //lateinit var obs        : ObserverForSendingAnswer
+    lateinit var obsRobot   : ObserverForSendingAnswer
     lateinit var pathexec   : PathExecutor
     val myscope = CoroutineScope(Dispatchers.Default)
     var answerMove  = ""  //used by the ObserverForSendingAnswer
     var answerPath  = ""  //used by the ObserverForSendingAnswer
 
-    fun setAnswerForMove(v:String){ answerMove=v }
-    fun setAnswerForPath(v:String){ answerPath=v }
-
+    fun setAnswerForMove(v:String){ answerMove=v }  //used by ObserverForSendingAnswer
+    fun setAnswerForPath(v:String){ answerPath=v }  //used by ObserverForSendingAnswer
+    fun redirToPathexec(v:ApplMessage){   }
     init{
         //RobotResource.initRobotResource() //OLD APPROACH: we want a local BasicStepRobotActorCaller
-        val obs     = ObserverForSendingAnswer("obsMoveanswer", myscope, ::setAnswerForMove )
-        robot       = BasicStepRobotActor("stepRobot", ownerActor= obs, myscope, "wenv")
-        val obspath = ObserverForSendingAnswer("obsPathanswer", myscope, ::setAnswerForPath )
-        pathexec    = PathExecutor("pathexec", myscope, robot, obspath)
+        obsRobot    = ObserverForSendingAnswer("obsRobot", myscope, ::setAnswerForMove )
+        robot       = BasicStepRobotActor("stepRobot", ownerActor= obsRobot, myscope, "wenv")
 
-    }
+
+        //The answer of the robot must go to the PathExecutor
+        /*
+        val obs1     = ObserverForSendingAnswer("obs1", myscope, { println("obs1 $it")  } )
+        val robot1   = BasicStepRobotActor("stepRobot", ownerActor= obs1, myscope, "wenv")
+        */
+        val obspath  = ObserverForSendingAnswer("obsPathanswer", myscope, ::setAnswerForPath )
+        pathexec     = PathExecutor("pathexec", myscope, robot, obspath)
+        //obs1.owner   = pathexec
+     }
 
 
     @kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -55,7 +63,8 @@ class M2MRestController {
         //Activate PathExecutor and send the answer to the caller
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
         val cmd      = MsgUtil.buildDispatch("m2m",ApplMsgs.executorStartId,cmdStr,"pathexec")
-        answerPath        = ""
+        answerPath      = ""
+        obsRobot.owner  = pathexec  //The answer of the robot must go to the PathExecutor
         runBlocking{
             pathexec.send(cmd)
             while( answerPath=="" ){ //POLLING not so bad here
@@ -63,6 +72,7 @@ class M2MRestController {
                 delay(50)
             }
         }
+        obsRobot.owner = obsRobot   //reset
         sysUtil.colorPrint("result=$answerPath"  , Color.MAGENTA)
         return "done $answerPath"
     }
@@ -89,3 +99,4 @@ class M2MRestController {
 
 //curl -d move=l localhost:8081/moverest
 
+//https://code-with-me.jetbrains.com/lQaF6hxwe_Y-lf6az_zO2A#p=IC&fp=28C376F117E242763A56D8152AA07279F60FCAB06A9A2D80EDBFEF8C6737C385
