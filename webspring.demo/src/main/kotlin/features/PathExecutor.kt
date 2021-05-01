@@ -3,11 +3,6 @@ PathExecutor.kt
 
 An unibo-actor that executes a given sequence of moves (todoPath)
 of the 'stepRobot' and returns and answer to its ownerActor
-The call to the 'stepRobot' is executed by using the BasicStepGenericCaller
------------------------------------------------------------------
-WARNING: if you use the virtualrobotandstepper SERVICE
-DO NOT CREATE another BasicStepRobotActor
------------------------------------------------------------------
  */
 package features
 
@@ -16,10 +11,9 @@ import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
-import it.unibo.actorAppl.BasicStepRobotActorCaller
-import it.unibo.actorAppl.NaiveActorKotlinObserver
 import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
+import it.unibo.webspring.demo.ObserverForSendingAnswer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -31,7 +25,10 @@ import java.lang.Exception
 The map is a singleton object, managed by mapUtil
  */
 @Suppress("REDUNDANT_ELSE_IN_WHEN")
-class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActor: ActorBasicKotlin)
+class PathExecutor (name: String, scope: CoroutineScope,
+                    val robot      : BasicStepRobotActor,
+                    val ownerActor : ActorBasicKotlin       //used for non-m2m demo
+                    )
     : ActorBasicKotlin( name, scope ) {
                                             //: AbstractRobotActor(name, "localhost") {
     protected enum class State { start, continueJob, moving, turning }
@@ -45,28 +42,14 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
     protected var todoPath = ""
     protected var moves    = TripInfo()
 
-    protected var stepper : BasicStepRobotActorCaller
-    protected lateinit var robot   : BasicStepRobotActor
-
     init{
          resetStateVars()
-         stepper = BasicStepRobotActorCaller("webcaller", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
-         //setup a receiver from TCP
-         stepper.registerActor(this)
-         //println("$name | STARTS ")
-         //Uncomment if you want to use a local (non-TCP) BasicStepRobotActor
-          //createStepRobotLocal(scope)
     }
 
-    fun createStepRobotLocal(scope: CoroutineScope){
-        //val obs = NaiveObserverActorKotlin("obs", scope)
-        robot = BasicStepRobotActor("stepRobot",stepper, scope, "localhost")
-    }
 
     protected fun resetStateVars() {
         curState = State.start
         todoPath = ""
-        //moves    = TripInfo()
         println("$name PathExecutor STARTS todoPath=$todoPath")
     }
 
@@ -80,12 +63,16 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
             println("$name PathExecutor nextMove - firstMove=$firstMove todoPath=$todoPath")
             delay(250)  //avoid too fast moving
             if (firstMove == 'w') {
-                stepper.send( ApplMsgs.stepRobot_step("$name", "350") )
+                robot.send( ApplMsgs.stepRobot_step("$name" ) )
                 curState = State.moving
             }else if (firstMove == 'l' || firstMove == 'r')  {
                 curState = State.turning
                 println("---- curState=$curState todoPath=$todoPath")
-                stepper.send( ApplMsgs.stepRobot_turn("$name", ""+firstMove) )
+                robot.send( ApplMsgs.stepRobot_turn("$name", ""+firstMove) )
+            }else if (firstMove == 's')  {
+                curState = State.moving
+                println("---- curState=$curState todoPath=$todoPath")
+                robot.send( ApplMsgs.stepRobot_s("$name" ) )
             }
         }
     }
@@ -106,7 +93,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 
     fun endOk(){
         println("$name | END OK ---------------- ")
-        ownerActor.send(ApplMsgs.executorOkEnd(name))
+        ownerActor.send(ApplMsgs.executorOkEnd(name,moves.getJourney(),ownerActor.name))
         moves.showMap()
         moves.resetJourney()
         curState = State.continueJob
@@ -117,7 +104,6 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
         when (curState) {
             State.start -> {
                 nextMove()  //modifies curState in moving or turning
-                println("$name | fsm start - after move state= $curState")
            }
             State.continueJob -> {
                 if (move == ApplMsgs.executorStartId) {
@@ -141,15 +127,15 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
                 } else if (move == ApplMsgs.stepFailId) {
                     obstacleFound()
                 } else if (endmove == "true") {
+                    moves.updateMovesRep("s")
                     nextMove()
                 }
-                println("$name | fsm moving - after move state= $curState")
-            }
+             }
         }
     }
 
     override fun terminate(){
-        stepper.terminate()
+        //stepper.terminate()
         //robot.terminate()
     }
 
@@ -184,14 +170,22 @@ fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
         val importantPathToCheck = "wwlw"  //an obstacle with back that could collide
-        val path     = importantPathToCheck //"wwwlwwwwlwwwlwwwwl" wlwwwwwwrwrr   wlwwwllwwwrwll
+        val path     = "lrwwswss" //"wwwlwwwwlwwwlwwwwl" wlwwwwwwrwrr   wlwwwllwwwrwll
+
+        val obs      = ObserverForSendingAnswer("obsanswer",  this, { println("move answer=$it") } )
+        val robot    = BasicStepRobotActor("stepRobot",obs, this, "localhost")
+        val obs1     = ObserverForSendingAnswer("obspath",  this, { println("path answer=$it") } )
+        val executor = PathExecutor("pathExec", this, robot, obs1)
+        //obs.owner    = executor
+
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")
-        val obs      = NaiveActorKotlinObserver("peobs",  this)
-        val executor = PathExecutor("pathExec", this, obs)
-        delay(1000) //give time to connect with remote robot via TCP
+
         executor.send(cmd)
+        //send another command
+        //delay(7000)
+        //executor.send(cmd)
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
     println("ENDS main ${sysUtil.curThread()}")

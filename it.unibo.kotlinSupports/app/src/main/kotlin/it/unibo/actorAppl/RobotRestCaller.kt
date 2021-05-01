@@ -16,7 +16,7 @@ object RobotRestCaller {
     }
 
 
-    fun doPostSimple( addr: String, move: String){  //Move = w | s | ...
+    fun doPostBasicmove(addr: String, move: String){  //Move = w | s | ...
         var answer = ""
         restTemplate = RestTemplate()
         val uri = "http://$addr/moverest?move=$move"
@@ -28,6 +28,6 @@ object RobotRestCaller {
 }
 fun main(args: Array<String>) {
     //ClientWithRestTemplate.doGet()
-    RobotRestCaller.doPostSimple("localhost:8081","l")
+    RobotRestCaller.doPostBasicmove("localhost:8081","l")
 
 }

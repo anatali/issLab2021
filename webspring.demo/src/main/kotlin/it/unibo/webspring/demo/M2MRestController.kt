@@ -1,6 +1,9 @@
 package it.unibo.webspring.demo
 import com.andreapivetta.kolor.Color
+import features.PathExecutor
+import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
+import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.*
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,50 +13,79 @@ import org.springframework.web.bind.annotation.RestController
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @RestController
 class M2MRestController {
+    lateinit var robot      : BasicStepRobotActor
+    //lateinit var obs        : ObserverForSendingAnswer
+    lateinit var pathexec   : PathExecutor
     val myscope = CoroutineScope(Dispatchers.Default)
-    @kotlinx.coroutines.ObsoleteCoroutinesApi
-    lateinit var robot : BasicStepRobotActor
-    lateinit var obs   : ObserverForSendingAnswer
+    var answerMove  = ""  //used by the ObserverForSendingAnswer
+    var answerPath  = ""  //used by the ObserverForSendingAnswer
 
+    fun setAnswerForMove(v:String){ answerMove=v }
+    fun setAnswerForPath(v:String){ answerPath=v }
 
     init{
         //RobotResource.initRobotResource() //OLD APPROACH: we want a local BasicStepRobotActorCaller
-        obs     = ObserverForSendingAnswer("obsforanswer", myscope)
-        robot   = BasicStepRobotActor("stepRobot", ownerActor= obs, myscope, "wenv")
+        val obs     = ObserverForSendingAnswer("obsMoveanswer", myscope, ::setAnswerForMove )
+        robot       = BasicStepRobotActor("stepRobot", ownerActor= obs, myscope, "wenv")
+        val obspath = ObserverForSendingAnswer("obsPathanswer", myscope, ::setAnswerForPath )
+        pathexec    = PathExecutor("pathexec", myscope, robot, obspath)
+
     }
+
+
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     @PostMapping( "/moverest" )
     fun doMove( @RequestParam(name="move", required=false, defaultValue="h") moveName : String) : String {
         sysUtil.colorPrint("M2MRestController | $moveName | $this")
-        //handle the answer to the move execution
-        var result = "todo"
+        answerMove     = ""
+        //RobotResource.execMove(robot, moveName)
         runBlocking{
-            //robot       = BasicStepRobotActor("stepRobot", ownerActor= obs, myscope, "wenv")
-            var job = myscope.launch{
-                RobotResource.execMove(robot, moveName)
-                delay(500)  //TODO synch with obs
-                result = obs.result
-                sysUtil.colorPrint("obs result=$result  ")
-                obs.result = "none"
-            }//launch
-            delay(600)
+            execMove(robot, moveName)
+            while( answerMove=="" ){ //POLLING not so bad here
+                //sysUtil.colorPrint("waiting for answer ...  ")
+                delay(50)
+            }
         }//runBlocking
-        sysUtil.colorPrint("result=$result"  , Color.MAGENTA)
-        return "done robotMOve: $result"
+        sysUtil.colorPrint("result=$answerMove"  , Color.MAGENTA)
+        return "done robotMOve: $answerMove"
     }
     @PostMapping( "/dopath" )
     fun doPath( @RequestParam(name="path", required=false, defaultValue="") pathTodo : String) : String {
-        sysUtil.colorPrint("M2MRestController | $pathTodo")
+        sysUtil.colorPrint("M2MRestController | pathTodo=$pathTodo")
         //Activate PathExecutor and send the answer to the caller
-        return "done $pathTodo"
-    }
-}
-//curl -d move=l localhost:8081/moverest
-/*
-            val res : Deferred<String> = myscope.async{
-                println("async starts")
-                RobotResource.execMove(robot, moveName) //blokcs ...
-                "robot has executed"
+        val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
+        val cmd      = MsgUtil.buildDispatch("m2m",ApplMsgs.executorStartId,cmdStr,"pathexec")
+        answerPath        = ""
+        runBlocking{
+            pathexec.send(cmd)
+            while( answerPath=="" ){ //POLLING not so bad here
+                //sysUtil.colorPrint("waiting for answer ...  ")
+                delay(50)
             }
- */
-//val r = res.await()
+        }
+        sysUtil.colorPrint("result=$answerPath"  , Color.MAGENTA)
+        return "done $answerPath"
+    }
+
+
+
+//--------------------------------------------------
+    @kotlinx.coroutines.ObsoleteCoroutinesApi
+    fun execMove( robot: BasicStepRobotActor, move : String ) {
+        sysUtil.colorPrint("execMove $move")
+        when (move) {
+            "l" -> robot.send(ApplMsgs.stepRobot_l("spring"))
+            "r" -> robot.send(ApplMsgs.stepRobot_r("spring"))
+            "w" -> robot.send(ApplMsgs.stepRobot_w("spring"))
+            "s" -> robot.send(ApplMsgs.stepRobot_s("spring"))
+            "p" -> robot.send(ApplMsgs.stepRobot_step("spring", "350"))
+        }
+    }
+    @kotlinx.coroutines.ObsoleteCoroutinesApi
+    fun execMove(  move : String ) {
+        execMove( robot, move )
+    }
+}//M2MRestController
+
+//curl -d move=l localhost:8081/moverest
+

@@ -4,7 +4,6 @@ import com.andreapivetta.kolor.Color
 import it.unibo.actorAppl.RobotRestCaller
 import it.unibo.actorAppl.RobotServiceCaller
 import it.unibo.robotService.ApplMsgs
-import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
@@ -30,7 +29,7 @@ abstract class AbstractActorCaller(name: String,
                 val moveTodo= JSONObject( content ).get("robotmove").toString()
                 val move    = ApplMsgs.shortMove(moveTodo)
                 colorPrint("$name | move=$move", Color.GREEN )
-                RobotRestCaller.doPostSimple("localhost:8081",move)
+                RobotRestCaller.doPostBasicmove("localhost:8081",move)
             }
         }
     }

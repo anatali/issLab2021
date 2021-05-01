@@ -110,8 +110,8 @@ object ApplMsgs {
         return MsgUtil.buildDispatch(caller, startAnyId, endMsgStr, "any")
     }
 
-    fun executorOkEnd( caller:String ) :  ApplMessage {
-        return MsgUtil.buildDispatch(caller, executorEndId, executorendokMsg, "any")
+    fun executorOkEnd( caller:String, pathDone:String="", dest:String="any" ) :  ApplMessage {
+        return MsgUtil.buildDispatch(caller, executorEndId, executorendokMsg.replace("ok",pathDone), dest)
     }
     fun executorFailEnd( caller:String, pathDone: String ) :  ApplMessage {
         val answer = executorendkoMsg.replace("PATHDONE", pathDone)

@@ -36,7 +36,7 @@ object RobotResource {
 
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     fun execMove( robot: BasicStepRobotActor, move : String ) {
-        println("execMove $move")
+        sysUtil.colorPrint("execMove $move")
         when (move) {
             "l" -> robot.send(ApplMsgs.stepRobot_l("spring"))
             "r" -> robot.send(ApplMsgs.stepRobot_r("spring"))

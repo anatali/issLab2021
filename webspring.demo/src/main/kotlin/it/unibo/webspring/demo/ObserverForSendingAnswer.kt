@@ -3,16 +3,20 @@ import com.andreapivetta.kolor.Color
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import kotlinx.coroutines.CoroutineScope
-import org.json.JSONObject
 
-class ObserverForSendingAnswer(name: String, scope:CoroutineScope )
-    : ActorBasicKotlin(name, scope) {
-
-    var result = "none"
+class ObserverForSendingAnswer(
+    name: String, scope:CoroutineScope,
+    val callback:( String )-> Unit
+    //val controller: M2MRestController? = null,
+    //var owner: ActorBasicKotlin? = null
+    ) : ActorBasicKotlin(name, scope) {
 
     override suspend fun handleInput(msg : ApplMessage){
         colorPrint("$name msg=$msg"  , Color.MAGENTA)
-        result = msg.msgContent
+        //controller?.answer = msg.msgContent
+        callback( msg.msgContent )
+        //owner?.send(msg)
+        //result = msg.msgContent
     }
 
 

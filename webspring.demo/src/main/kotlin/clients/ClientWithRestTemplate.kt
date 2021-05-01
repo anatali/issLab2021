@@ -24,19 +24,30 @@ object ClientWithRestTemplate {
         val result = restTemplate.postForObject(uri, answer, String::class.java, params)
         println(result)
     }
-    fun doPostSimple(moveTodo: String){
+    fun doPostBasicmove(moveTodo: String){
         var answer = ""
         restTemplate = RestTemplate()
         val uri = "http://localhost:8081/moverest?move=$moveTodo"
         val result = restTemplate.postForObject(uri, answer, String::class.java )
         println(result)
     }
+    fun doPostPath(pathTodo: String){
+        var answer = ""
+        restTemplate = RestTemplate()
+        val uri    = "http://localhost:8081/dopath?path=$pathTodo"
+        val result = restTemplate.postForObject(uri, answer, String::class.java )
+        println(result)
+    }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     //ClientWithRestTemplate.doGet()
-    ClientWithRestTemplate.doPostSimple("l")
-    //ClientWithRestTemplate.doPostSimple("r")
-    ClientWithRestTemplate.doPostSimple("w")
+    /*
+    ClientWithRestTemplate.doPostBasicmove("l")
+    ClientWithRestTemplate.doPostBasicmove("r")
+    ClientWithRestTemplate.doPostBasicmove("w")
+    ClientWithRestTemplate.doPostBasicmove("p")
+*/
+    ClientWithRestTemplate.doPostPath("lr")
     //ClientWithRestTemplate.doPostWithParams()
 }

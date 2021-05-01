@@ -157,23 +157,22 @@ class IssWsHttpKotlinSupport
 //-----------------------------------------------------------------
 
     fun sendHttp(msgJson : String, httpaddr : String) : String {
-        //val client = OkHttpClient()
         val body    = msgJson.toRequestBody(JSON_MediaType)
-        println("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson  ")
+        colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson  ")
         val request = Request.Builder()
             .url( "http://$httpaddr" )
             .post(body)
             .build()
         val response = okHttpClient.newCall(request).execute()
         //val response = client.newCall(request).execute()
-        //println("IssWsHttpKotlinSupport | post response=$response ")
+        //colorPrint("IssWsHttpKotlinSupport | post response=$response ")
         val answer  =  response.body!!.string()
-        //println("IssWsHttpKotlinSupport | post answer=$answer ")
+        //colorPrint("IssWsHttpKotlinSupport | post answer=$answer ")
         return answer
     }
 
       fun sendWs( msgJson : String   ){
-          //println("sendWs $msgJson")
+          //colorPrint("sendWs $msgJson")
         myWs.send(msgJson);
     }
 //========================================================================
