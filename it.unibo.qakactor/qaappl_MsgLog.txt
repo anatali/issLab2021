@@ -1,0 +1,4 @@
+msg(cmd,dispatch,any,qaappl,cmd(w),2)
+msg(alarm,event,qaappl,none,alarm(fire),3)
+msg(cmd,dispatch,any,qaappl,cmd(w),2)
+msg(alarm,event,qaappl,none,alarm(fire),3)

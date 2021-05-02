@@ -8,12 +8,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 	
-class Qa0 ( name: String, scope: CoroutineScope ) : ActorBasicFsm( name, scope){
- 	
+class Qa0 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scope ){
+
 	override fun getInitialState() : String{
 		return "s0"
 	}
-		
+	@kotlinx.coroutines.ObsoleteCoroutinesApi
+	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
@@ -21,11 +22,6 @@ class Qa0 ( name: String, scope: CoroutineScope ) : ActorBasicFsm( name, scope){
 						println("qa0 sends w to qacoded")
 						forward("cmd", "cmd(w)" ,"qacoded" ) 
 						delay(500) 
-						println("qa0 sends  ledCmd : ledCmd( on )  to the external led")
-						forward("ledCmd", "ledCmd(on)" ,"led" ) 
-						delay(1000) 
-						println("qa0 sends  ledCmd : ledCmd( off ) to the external led")
-						forward("ledCmd", "ledCmd(off)" ,"led" ) 
 					}
 					 transition( edgeName="goto",targetState="s1", cond=doswitch() )
 				}	 
