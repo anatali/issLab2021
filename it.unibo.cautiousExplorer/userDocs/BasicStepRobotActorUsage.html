@@ -197,7 +197,7 @@ div.imagedesc{
 </div>  
 
 <div class="body"> 
-<h2>Introduction</h2>
+<h2 id="local">Local use of the component</h2>
  
 <table style="width:98%">
 <tbody>	
@@ -247,9 +247,12 @@ Performs a call to a local
 The actor  <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" target="code">
 BasicStepGenericCaller.kt</a> performs a call to a local or to a remote 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a>
- named 'stepRobot'.<br/><br/>
-It is related to <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>
-and <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="web">Lab ISS | RobotAPI2021</a>.
+ named 'stepRobot'.
+ <br/><br/>
+The issue of remote robot is introduced in (see <a href="#distrSys">Towards distributed systems</a>):
+<ul><li><a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a></li>
+<li><a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="web">Lab ISS | RobotAPI2021</a></li>
+</ul>
 
 
 </td>
@@ -259,36 +262,58 @@ and <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="web">Lab I
 <td>
 <h3> <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" target="code">
 PathExecutor.kt</a></h3>
+Executes a given sequence of moves (<tt>todoPath</tt>)
+of the 'stepRobot' and returns and answer to its ownerActor.<br/>
+The 'stepRobot' can be local or remote (see <a href="#distrSys">Towards distributed systems</a>)
 
 
+<center><img src="./img/pathExecutor.png" alt="pathExecutor" width="100%" ></center>
+
+ 
  
 </td>
 <td>Project <bc>it.unibo.cautiousExplorer</bc>
 <hr/>
- <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" target="code">
-PathExecutor.kt</a>: an unibo-actor that executes a given sequence of moves (todoPath)
-of the 'stepRobot' and returns and answer to its ownerActor.
-The call to the 'stepRobot' is executed by using the <tt>BasicStepGenericCaller</tt></li>
+The call to the 'stepRobot' is executed by using the 
+<a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" target="code">
+BasicStepGenericCaller</a></li>
 
 </td>
  
 </tr>
 
+</table>
+</center> 	
+
+<h2 id="distrSys">Towards distributed systems</h2>
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:60%" >	
+<h3>Using TCP</h3>
+ Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
+
+<center><img src="./img/StepRobotServiceUsage.png" alt="StepRobotServiceUsage" width="80%" ></center>
+
+ 
+</td>
+<td>Project <bc>it.unibo.kotlinSupports</bc><br/>
+ 
+</td>
+ 
+
+</tr>
 
 <tr>
 <td >	
-<h3>Verso sistemi distributi</h3>
-<ul>
-<li>Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
-<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
-<br/><br/>
-</li>
-<li>
-Un robot accessibile in remoto via SpringBoot: <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
+ 
+ 
+<h3>Using SpringBoot</h3> <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
 Lab ISS | Introduction to the usage of Spring Boot</a>.
-Codice in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo" target="web">webspring.demo</a>
-</li>
-</ul>  
+Code in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo" target="web">webspring.demo</a>
+   
  
 </td>
 <td>Project <bc>webspring.intro</bc><br/>
@@ -297,6 +322,13 @@ Project <bc>webspring.demo</bc><br/>
  
 
 </tr>
+
+</table>
+</center> 	
+
+<h2>Using a planner</h2>
+<table style="width:98%">
+<tbody>	
 
 <tr>
 <td>
