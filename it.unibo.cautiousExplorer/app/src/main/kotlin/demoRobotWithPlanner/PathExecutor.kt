@@ -12,12 +12,11 @@ DO NOT CREATE another BasicStepRobotActor
 package demoRobotWithPlanner
 
 import demoWithRobot.BasicStepGenericCaller
-import demoWithRobot.NaiveObserverActorKotlin
+import demoWithRobot.NaiveObserver
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
-import it.unibo.actorAppl.BasicStepRobotActorCaller
 import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.CoroutineScope
@@ -188,7 +187,7 @@ fun main( ) {
         val cmdStr   = ApplMsgs.executorstartMsg.replace("PATHTODO", path)
         val cmd      = MsgUtil.buildDispatch("main",ApplMsgs.executorStartId,cmdStr,"executor")
         println("main | $cmd")
-        val obs      = NaiveObserverActorKotlin("peobs",  this)
+        val obs      = NaiveObserver("peobs",  this)
         val executor = PathExecutor("pathExec", this, obs)
         delay(1000) //give time to connect with remote robot via TCP
         executor.send(cmd)

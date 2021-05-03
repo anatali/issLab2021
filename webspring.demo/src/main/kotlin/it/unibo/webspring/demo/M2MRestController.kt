@@ -55,7 +55,7 @@ class M2MRestController {
             }
         }//runBlocking
         sysUtil.colorPrint("result=$answerMove"  , Color.MAGENTA)
-        return "done robotMOve: $answerMove"
+        return "$answerMove"
     }
     @PostMapping( "/dopath" )
     fun doPath( @RequestParam(name="path", required=false, defaultValue="") pathTodo : String) : String {
@@ -72,7 +72,7 @@ class M2MRestController {
                 delay(50)
             }
         }
-        obsRobot.owner = obsRobot   //reset
+        obsRobot.owner = null   //reset
         sysUtil.colorPrint("result=$answerPath"  , Color.MAGENTA)
         return "$answerPath"
     }

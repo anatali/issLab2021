@@ -184,222 +184,21 @@ div.imagedesc{
     
 <head>
    
-<title>LabSpringUsageIntro2021</title></head>
+<title>RobotAPI2021</title></head>
     
 <body>
 <div id="body">
-<h1>Lab ISS | Introduction to the usage of Spring Boot</h1>
+<h1>Lab ISS | RobotAPI2021</h1>
 
  
 
-<!-- http://192.168.1.244/debug/clip.html -->
 
-<h2>Start-up</h2>
- 
-<ol>
-<li>Connect to <a href="https://start.spring.io/">https://start.spring.io/</a> </li>
-<li>Select <tt>Gradle Project, Kotlin</tt>, <tt><ks>Group=</ks>it.unibo</tt>, <tt><ks>Artifact=</ks>webspring.demo</tt>
-(<tt><ks>Options</ks>:Packaging=Jar, Java=11</tt>), <m><ks>Dependencies</ks></m>:
-<hr/>
-<ul>
-<li><bc>Spring Web</bc>: builds the web, including RESTful, applications using Spring MVC. Uses Apache Tomcat as the default embedded container. </li>
-<li><bc>Thymeleaf</bc>: a modern server-side Java template engine for both web and standalone environments. 
-Allows HTML to be correctly displayed in browsers and as static prototypes. </li>
-<li><bc>Spring Boot DevTools</bc>: Provides fast application restarts, LiveReload, and configurations for enhanced development experience.
-Speeds up this refresh cycle (coding a change, restarting application, and refreshing the browser to view the change).</li>
-</ul>
-<hr/> 
- 
- </li>
-<li>Click on <k>Generate</k></li>
-<li>Unzip the generated file <tt>webspring.demo.zip</tt> into an empty dir (e.g. <tt>C:/xxx</tt>) and execute
-<pre>
-gradlew build
-</pre>
-</li>
-<li>Open an IDE and open or import the project <tt>webspring.demo</tt>.<br/>
-Look at the generated class <m><ks>it.unibo.webspring.demo.Application.kt</ks></m>:
-<pre>
-ppackage it.unibo.webspring.demo
-
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-
-@SpringBootApplication
-class Application
-
-fun main(args: Array<String>) {
-	runApplication<Application>(*args)
-}
-</pre>
-<!-- <img src="./img/springboot0.png" alt="springboot0.png" width="50%"  />  -->
-<li>Run <ks>Application.kt</ks></li>
-<li>Open a browser on <tt>localhost:8080</tt><br/>
-<img src="./img/springboot1.png" alt="springboot1.png" width="30%"  />
-</li>
-
-<li>
-Create the following file  <m><ks>webspring.demo\src\main\resources\templates\welcome.html</ks></m>
-<pre>
-&lt;html xmlns:th="http://www.thymeleaf.org"> 
-&lt;head>&lt;title>Welcome&lt;/title>&lt;/head>
-&lt;body>
-&lt;h1>Welcome (in templates)&lt;/h1>
-&lt;p>Welcome to &lt;b>&lt;span th:text="${arg}">Our Arg&lt;/span>&lt;/b>.&lt;/p>
-&lt;/body>
-&lt;/html>
-&lt;/pre>
-</li>
-
-<li>
-Insert in <m><ks>webspring.demo\src\main\resources\application.properties</ks></m> the sentence:
-<pre>
-spring.application.name=First Spring Application iss2020
-
-spring.banner.location=classpath:banner.txt
-server.port   = 8081
-human.logo    = Gui for human-machine interaction
-machine.logo  = Gui for machine-to-machine interaction</pre>
-</li>
-<li>
-Create a  <ks>it.unibo.webspring.demo.BaseController</ks> as:
-
-<table style="width:100%" border="1">
-<tr>
-<td style="width:50%">
-<h3>Kotlin class</h3>
-<pre>
-package it.unibo.webspring.demo
-
-import ...
-
-@Controller
-class BaseController {
-    @Value("\${spring.application.name}")
-    var appName: String? = null
-    @GetMapping("/")
-    fun homePage(model: Model): String {
-        println("------------------- BaseController homePage $model")
-        model.addAttribute("arg", appName)
-        return "welcome"
-    }
-
-    @ExceptionHandler
-    fun handle(ex: Exception): ResponseEntity<*> {
-        val responseHeaders = HttpHeaders()
-        return ResponseEntity<Any?>(
-            "BaseController ERROR ${ex.message}", 
-			responseHeaders, HttpStatus.CREATED
-        )
-    }
-}
-</pre>
-</td>
-<td>
-<h3>Java class</h3>
-<pre>
-package it.unibo.webspring.demo;
-
-import ...
- 
-@Controller 
-public class BaseController { 
-@Value("${spring.application.name}")
-String appName;
-
-  @GetMapping("/") 		 
-  public String homePage(Model model) {
-	  System.out.println(
-	      "------------------- BaseController homePage " + model  );
-	  model.addAttribute("arg", appName);
-	  return "welcome";
-   } 
-    
-    @ExceptionHandler 
-    public ResponseEntity<String> handle(Exception ex) {
-    	HttpHeaders responseHeaders = new HttpHeaders();
-        return new ResponseEntity<String>(
-        		"BaseController ERROR " + ex.getMessage(), 
-				responseHeaders, HttpStatus.CREATED);
-    }
-}
-</pre></td>
-</tr>
-</table>
-
- 
-
-</li>
-<!--
-<li>Change the application code as follows:
-<pre>
-@SpringBootApplication
-<ks>@RestController</ks> 		
-public class Application {
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
-<ks>
-    @GetMapping("/")   <kc>//REST API just return data in form of JSON or XML  because most of the REST clients are programs</kc>
-    public String entry( ) {
-    	return "Hello world from Application";
-    }</ks>
-}
-</pre>
-</li>
--->
-<li>Run again <ks>Application.kt</ks> and refresh  <tt>localhost:8080</tt>:<br/>
-<img src="./img/springboot2.png" alt="springboot2.png" width="30%"  />
-</li>
-
-</ol>
-
-<!--
-We have built in avery short time a 'microservice' that can be used by programs. For example:
-
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
-<pre>
-curl http://localhost:8080
-
-<kc>//OUTPUT</kc>
-Hello world from Application
-</pre> 
-
-</td>
-<td>
-<pre><m>
-public class AClient {
-	public static void main(String[] args) {
-        try {
-            String strUrl     = "http://localhost:8080/";
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpGet request   = new HttpGet(strUrl);
-            HttpResponse response = client.execute(request);
-            String answer     = IOUtils.toString(response.getEntity().getContent(), "UTf-8");
-            System.out.println( "RESPONSE=" + answer );
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-}</m>
-<kc>//OUTPUT</kc>
-RESPONSE=Hello world from Application
-</pre>
-</td>
-</tr>
-</tbody>
-</table>
-
--->
-For an example of a possible application, see
-<a href="../../webspring.demo/userDocs/RobotAPI2021.html">RobotAPI2021.html</a> (in webspring.demo).
-<br/><br/>
-<!--
 <h2>Interaction with humans and with machines</h2>
 
+Starting from 
+<a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html">Lab ISS | Introduction to the usage of Spring Boot</a> 
+(in webspring.intro), let us define an example of a possibile support for the interaction with a (virtual) robot.
+<br/><br/>
 
 <table style="width:98%">
 <tbody>	
@@ -409,13 +208,13 @@ For an example of a possible application, see
 <pre>
 <bc>@Controller</bc> 
 public class HumanInterfaceController {
-<bc> @Value</bc> ("\${human.logo}")	<kc>//see <a href="../../webspring.demo/src/main/resources/application.properties" target="code"><ks>application.properties</ks></a></kc></kc>
+<bc> @Value</bc> ("\${human.logo}")	<kc>//see <a href="../src/main/resources/application.properties" target="code"><ks>application.properties</ks></a></kc></kc>
 var appName: String?    = null
 
   <bc>@GetMapping("/")</bc> 		 
   public String entry(Model model) {
 	<bc>model</bc>.addAttribute("arg", appName);
-	return "naiveRobotGui";	<kc>//see <a href="../../webspring.demo/src/main/resources/templates/naiveRobotGui.html" target="code"><ks>naiveRobotGui.html</ks></a></kc>
+	return "naiveRobotGui";	<kc>//see <a href="../src/main/resources/templates/naiveRobotGui.html" target="code"><ks>naiveRobotGui.html</ks></a></kc>
   } 
   
   <bc>@PostMapping( "/move" ) </bc> 
@@ -424,7 +223,7 @@ var appName: String?    = null
 			required=false, defaultValue="h") String moveName,
 	) {
         RobotResource.execMove(move)
-        return  "naiveRobotGui"	 <kc>//see <a href="../../webspring.demo/src/main/resources/templates/naiveRobotGui.html" target="code"><ks>naiveRobotGui.html</ks></a></kc>
+        return  "naiveRobotGui"	 <kc>//see <a href="../src/main/resources/templates/naiveRobotGui.html" target="code"><ks>naiveRobotGui.html</ks></a></kc>
 	
 	
   }	
@@ -432,7 +231,7 @@ var appName: String?    = null
 </pre> 
 </td>
 <td>
-The full code is in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/HumanInterfaceController.kt" target="code">
+The full code is in <a href="../src/main/kotlin/it/unibo/webspring/demo/HumanInterfaceController.kt" target="code">
 HumanInterfaceController.kt</a>
 <h3>Usage</h3>
 Open a browser and input
@@ -478,7 +277,7 @@ public class M2MRestController {
 </td>
 <td>
 The full code is in 
-<a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" target="code">M2MRestController.kt</a>
+<a href="../src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" target="code">M2MRestController.kt</a>
 
 <h3>Usage</h3>
 <pre>
@@ -490,7 +289,7 @@ See <a href="https://curl.haxx.se/docs/manual.html" target="web">curl tutorial <
 
 <br/><br/>
 Usually we will define our own code, for example a HTTP client written in Java 
-(<a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/AClientApacheHttp.kt" target="code">AClientApacheHttp.kt</a>)
+(<a href="../src/main/kotlin/it/unibo/webspring/demo/AClientApacheHttp.kt" target="code">AClientApacheHttp.kt</a>)
 or in some other language.
 
 
@@ -505,15 +304,13 @@ In project <a href="../../webspring.demo">webspring.demo</a> do:
 <pre>
 gradlew build	<kc>//look at the generated distribution</kc>
 
-docker build -t webspringrobot:1.0.1 .  <kc>//look at <a href="../../webspring.demo/Dockerfile">Dockerfile</a></kc>
+docker build -t webspringrobot:1.0.1 .  <kc>//look at <a href="../Dockerfile">Dockerfile</a></kc>
 
 docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  <kc>//check if the image runs</kc>
 
 <k>WARNING:Check that no other BasicStepRobot is running</k>
 docker-compose -f virtualrobotguistepper.yaml up
 </pre>
-
-
 
 <h2>API (code in <a href="../../webspring.demo">webspring.demo</a>)</h2>
 
@@ -523,7 +320,7 @@ docker-compose -f virtualrobotguistepper.yaml up
 <tr>
 <td style="width:50%" >
 In 
-<a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" target="code">M2MRestController.kt</a>
+<a href="../src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" target="code">M2MRestController.kt</a>
 we define the following set of Representational State Transfer API:
 
 <ul>
@@ -554,7 +351,7 @@ OUTPUT: JSON object representing the result of the journey
 <ks>curl -d <k>path=rlw</k> localhost:8081/dopath</ks>   <kc>//Near an obstacle</kc>
 <kc>{"executorFail":"rl" }</kc>
 ---------------------------------------------------------------------------
-See also <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/DemoCallPathRest.kt" target="code">DemoCallPathRest.kt</a>
+See also <a href="../src/main/kotlin/it/unibo/webspring/demo/DemoCallPathRest.kt" target="code">DemoCallPathRest.kt</a>
 </pre>
 <h3>Applications (in project <a href="../../it.unibo.cautiousExplorer" target="web">it.unibo.cautiousExplorer</a>)</h3>
 <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlannerM2m.kt" target="code">

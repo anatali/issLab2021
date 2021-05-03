@@ -1,14 +1,22 @@
 /*
 ============================================================
 BasicStepRobotActor
+Performs BASIC moves and STEP and returns info to its OWNER
+UPDATES observers only for SONAR data
 
-Accept a  ApplMsgs.stepMsg to move ahead the robot for a given time.
+BASIC MOVES
+Accepts {"robotmove" : "moveForward" , "time": 350}
+Returns {"endmove" : "BOOL" , "move": MOVEDONE}
 
-Returns a ApplMsgs.stepDoneMsg if the move is done with success.
-Returns a ApplMsgs.stepFailMsg with TIME=DT if the move is interrupted
+STEP
+Accepts a  ApplMsgs.stepMsg ({"step":"TIME" })to move ahead the robot for a given time.
+Returns a ApplMsgs.stepDoneMsg ({"stepDone":"ok" }) if the move is done with success.
+Returns a ApplMsgs.stepFailMsg ({"stepFail": TIME }) with TIME=DT if the move is interrupted
 by an obstacle after time DT. In this case it moves back the robot for time DT
 
-The map is a singleton object, managed by mapUtil
+HAS NO map
+
+
 ============================================================
 */
 package it.unibo.robotService
@@ -36,7 +44,6 @@ class BasicStepRobotActor(name: String="stepRobot", val ownerActor: ActorBasicKo
     protected var backMsg         = ""
     protected var answer          = ""
     private var StartTime: Long   = 0L
-
     private var currentBasicMove  = "";
     private var doingStep         = false;
     //protected var moves         = TripInfo()  //NO: the BasicStepRobotActor hos no notion of map
@@ -141,10 +148,8 @@ override suspend fun handleInput(msg: ApplMessage) {
                 val time: String = msgJson.getString(ApplMsgs.stepId)
                 doStepMove( time );
             } else{
-                //msgDriven( msgJson  )
                 colorPrint("$name | robotmove:$msgJson  ")
                 currentBasicMove = msgJson.getString("robotmove")
-                //resetInfoAboutSysBack()   //sysBack synch
                 support.forward(msgJson.toString())
             }
         }

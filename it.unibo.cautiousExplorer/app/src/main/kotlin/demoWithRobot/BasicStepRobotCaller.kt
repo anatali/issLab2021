@@ -1,6 +1,6 @@
 /*
 BasicStepRobotCaller
-Performs a call to a local BasicStepRobot named 'stepRobot'
+Performs a call to a LOCAL BasicStepRobot named 'stepRobot'
  */
 package demoWithRobot
 
@@ -10,24 +10,26 @@ import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 class BasicStepRobotCaller(name: String ) : ActorBasicKotlin( name ) {
 
     private var robot : BasicStepRobotActor
-    //private val obs   : NaiveObserverActorKotlin
+    private val obs   : NaiveObserver
 
     init{
         robot = BasicStepRobotActor("stepRobot", ownerActor=this, scope, "localhost")
-        //obs   = NaiveObserverActorKotlin("obs", scope )
-        //robot.registerActor(obs)
+        obs   = NaiveObserver("obs", scope )
+        robot.registerActor(obs)
     }
 
     protected fun doMoves() {
         //robot.send(ApplMsgs.stepRobot_l("main" ))
         //robot.send(ApplMsgs.stepRobot_r("main" ))
-        robot.send(ApplMsgs.stepRobot_step("main", "350"))
+        robot.send(ApplMsgs.stepRobot_w("main" ))
+        //robot.send(ApplMsgs.stepRobot_step("main", "350"))
         //robot.send(ApplMsgs.stepRobot_l("main" ))
         //robot.send(ApplMsgs.stepRobot_step("main", "350"))
     /*
@@ -77,7 +79,7 @@ fun main( ) {
         val startMsg = ApplMsgs.startAny("main")
         println("main | $startMsg")
         rc.send( startMsg )
-
+        delay(1000) //To see obs
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
     println("ENDS main ${sysUtil.curThread()}")

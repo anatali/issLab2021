@@ -5,6 +5,7 @@ The proposed plan is executed by the PathExecutor POST API dopath on port 8081
  */
 package demoRobotWithPlanner
 
+import demoWithRobot.CallRestWithApacheHTTP
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.sysUtil
@@ -15,13 +16,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import mapRoomKotlin.mapUtil
 import org.json.JSONObject
-import org.springframework.web.client.RestTemplate
 import java.util.*
 
 class ExplorerWithPlannerM2m( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 
-    private lateinit var restTemplate: RestTemplate
-    private var targetCell = 1
+     private var targetCell = 1
 
     fun initWork(){
         plannerUtil.initAI()
@@ -29,21 +28,13 @@ class ExplorerWithPlannerM2m( name: String, scope: CoroutineScope) : ActorBasicK
         //plannerUtil.showMap()
     }
 
-    fun doPostPath(pathTodo: String) : String{
-        var answer = ""
-        restTemplate = RestTemplate()
-        val uri    = "http://localhost:8081/dopath?path=$pathTodo"
-        val result = restTemplate.postForObject(uri, answer, String::class.java )
-        println(result)
-        return result
-    }
     fun explore() {
         plannerUtil.setGoal(targetCell, targetCell);
         val actions  = plannerUtil.doPlan()
         val pathTodo = actions.toString()
             .replace("[","").replace("]","")
             .replace(", ","")
-        val result = doPostPath(pathTodo)       //request-response
+        val result = CallRestWithApacheHTTP.doPath(pathTodo)       //request-response
         updateMapAfterPathexecution( result )
      }
 
@@ -76,7 +67,7 @@ class ExplorerWithPlannerM2m( name: String, scope: CoroutineScope) : ActorBasicK
             .replace("[","").replace("]","")
             .replace(", ","") + "l"
         //added a final turnLeft to restore initial state
-        val result = doPostPath(pathTodo)
+        val result = CallRestWithApacheHTTP.doPath(pathTodo)
         updateMapAfterPathexecution( result )
     }
 

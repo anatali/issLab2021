@@ -471,7 +471,7 @@ Lab ISS | the project cautiousExplorer with Actors</a> come sorgente di nuovi co
 
 <tr>
 <td style="width:60%">	 
-Verso un nuovo componente-base: 
+<h3>Verso un nuovo componente-base</h3> 
  
 <a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html" target="web">LabIss2021 | support for Actors based on Kotlin</a>.
 <!-- <a href="../../it.unibo.kotlinSupports/userDocs/ActorBasicKotlin.html" target="web">ActorBasicKotlin.html</a> -->
@@ -480,7 +480,8 @@ Introduzione al deployment con Docker: <a href="../../it.unibo.kotlinSupports/us
 LabIss2021 | deployment </a>.
 <br/> 
 <a href="https://web.microsoftstream.com/video/aa834291-8dea-4b6c-8065-19bfe2706d32" target="issvideo">Registrazione April27</a> 
-
+<br/><br/>
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a>
 </td>
 <td>Project <bc>it.unibo.kotlinSupports</bc><br/>
 </td>
@@ -489,24 +490,62 @@ LabIss2021 | deployment </a>.
 </tr>
 
 <tr>
-<td><h3>Esempi</h3>
+<td><h3>Esempi di uso di <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a></h3>
 <ul>
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotCaller.kt" target="code">
-BasicStepRobotCaller.kt</a>: performs a call to a local BasicStepRobot named 'stepRobot'</li>
+BasicStepRobotCaller.kt</a>: performs a call to a local 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a> named 'stepRobot'</li>
 
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" target="code">
-BasicStepGenericCaller.kt</a>: performs a call to a local or to a remote BasicStepRobot named 'stepRobot'.<br/>
+BasicStepGenericCaller.kt</a>: performs a call to a local or to a remote 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a>
+ named 'stepRobot'.<br/>
 See <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a></li>
 
-
-<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" target="code">
-mainPlanDemo.kt</a>: shows the behavior of a planner  </li>
 
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" target="code">
 PathExecutor.kt</a>: an unibo-actor that executes a given sequence of moves (todoPath)
 of the 'stepRobot' and returns and answer to its ownerActor.
 The call to the 'stepRobot' is executed by using the <tt>BasicStepGenericCaller</tt></li>
 
+</ul>
+</td>
+<td>Project <bc>it.unibo.cautiousExplorer</bc><br/>
+</td>
+<td></td>
+</tr>
+
+
+<tr>
+<td style="width:60%">	
+<h3>Verso sistemi distributi</h3>
+<ul>
+<li>Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
+<br/><br/>
+</li>
+<li>
+Un robot accessibile in remoto via SpringBoot: <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
+Lab ISS | Introduction to the usage of Spring Boot</a>.
+Codice in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo" target="web">webspring.demo</a>
+</li>
+</ul>  
+ 
+</td>
+<td>Project <bc>webspring.intro</bc><br/>
+Project <bc>webspring.demo</bc><br/>
+</td>
+<td>
+</td>
+
+</tr>
+
+<tr>
+<td>
+<h3>Un planner e suo utilizzo</h3>
+<ul>
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" target="code">
+mainPlanDemo.kt</a>: shows the behavior of a planner  </li>
 
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/DemoPlanner.kt" target="code">
 DemoPlanner.kt</a>: shows the behavior of a planner that moves a robot using PathExecutor</li>
@@ -529,30 +568,15 @@ LabPlanner | Exploiting Planning Tools</li>
 </td>
 <td>Project <bc>it.unibo.cautiousExplorer</bc><br/>
 </td>
-
+<td></td>
 </tr>
 
+</table>
+</center> 	
 
-<tr>
-<td style="width:60%">	
-Verso sistemi distributi:<br/>
-
-Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
-<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
-<br/>
-Un robot accessibile in remoto via SpringBoot: <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
-Lab ISS | Introduction to the usage of Spring Boot</a>.
-Codice in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo" target="web">webspring.demo</a>
-  
- 
-</td>
-<td>Project <bc>webspring.intro</bc><br/>
-Project <bc>webspring.demo</bc><br/>
-</td>
-<td>
-</td>
-</tr>
-
+<h2>QAk actors</h2>
+<center>
+<table style="width:98%">
 <tr>
 <td style="width:60%">	 
 <a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html" target="web">LabIss2021 | Introduction to QAkactors</a>

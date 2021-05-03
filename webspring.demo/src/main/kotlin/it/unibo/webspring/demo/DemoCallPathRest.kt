@@ -1,60 +1,59 @@
 package it.unibo.webspring.demo
 
-import org.apache.commons.io.IOUtils
+import it.unibo.actor0.sysUtil
+import it.unibo.actorAppl.RobotRestCaller
+import kotlinx.coroutines.runBlocking
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.commons.io.IOUtils
 import java.lang.Exception
-import org.apache.http.client.entity.UrlEncodedFormEntity
 
-import org.apache.http.message.BasicNameValuePair
+object DemoCallPathRest {
+    val addr = "localhost:8081" ///moverest?move=$move" added by the caller
 
-import org.apache.http.NameValuePair
-
-import java.util.ArrayList
-
-object AClient {
-
-    fun doSimplePost(){
+    fun doMoveApache(moveTodo: String){
         try {
-            val strUrl = "http://localhost:8081/moverest"
+            val strUrl = "http://localhost:8081/moverest?move=$moveTodo"
             val client: HttpClient = HttpClientBuilder.create().build()
             val request = HttpPost(strUrl)
             val response: HttpResponse = client.execute(request)
             val answer: String = IOUtils.toString(response.getEntity().getContent(), "UTf-8")
             println("RESPONSE=$answer")
             //val obj =  JSONObject(json);
-//            println(obj.get("url"));
         } catch (ex: Exception) {
             println(ex.message)
         }
     }
 
-    fun doPostWithParams(){
+    fun doPathApache(pathTodo: String){
         try {
-            val strUrl = "http://localhost:8081/moverest"
+            val strUrl = "http://localhost:8081/dopath?path=$pathTodo"
             val client: HttpClient = HttpClientBuilder.create().build()
             val request = HttpPost(strUrl)
-
-            val params: MutableList<NameValuePair> = ArrayList()
-            params.add(BasicNameValuePair("move", "l"))
-            request.setEntity(UrlEncodedFormEntity(params))
-
             val response: HttpResponse = client.execute(request)
-            //            System.out.println( "RESPONSE=" + response.getEntity().getContent());
             val answer: String = IOUtils.toString(response.getEntity().getContent(), "UTf-8")
             println("RESPONSE=$answer")
             //val obj =  JSONObject(json);
-//            println(obj.get("url"));
         } catch (ex: Exception) {
             println(ex.message)
         }
+
     }
 
-    @JvmStatic
-    fun main(args: Array<String>) {
-        //doSimplePost()
-        doPostWithParams()
+    fun doMove(moveTodo: String=""){
+        RobotRestCaller.doPostBasicmove(addr,moveTodo)
     }
+}
+
+fun main( ) {
+    println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
+    runBlocking {
+        //DemoCallPathRest.doMove("r")
+        DemoCallPathRest.doMoveApache("l")
+        //DemoCallPathRest.doPathApache("rl")
+        println("ENDS runBlocking ${sysUtil.curThread()}")
+    }
+    println("ENDS main ${sysUtil.curThread()}")
 }

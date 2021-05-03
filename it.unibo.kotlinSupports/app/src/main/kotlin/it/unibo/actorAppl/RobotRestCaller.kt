@@ -20,7 +20,7 @@ object RobotRestCaller {
         var answer = ""
         restTemplate = RestTemplate()
         val uri = "http://$addr/moverest?move=$move"
-        sysUtil.colorPrint("RobotRestCaller | doPostSimple  uri:$uri", Color.GREEN )
+        sysUtil.colorPrint("RobotRestCaller | doPostBasicmove  uri:$uri", Color.GREEN )
         val result = restTemplate.postForObject(uri, answer, String::class.java )
         sysUtil.colorPrint("RobotRestCaller | $result", Color.GREEN)
     }

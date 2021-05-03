@@ -1,0 +1,358 @@
+	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>BasicStepRobotActorUsage</title></head>
+    
+<body>
+<div id="top">
+<h1>Lab ISS | Usage of the component BasicStepRobotActor<font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduction</h2>
+ 
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" >
+<h3>
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a></h3>
+
+ 
+<center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%" ></center>
+</td>
+<td>
+Project <bc>it.unibo.kotlinSupports</bc>
+<pre>
+
+Performs BASIC moves and STEP and returns info to its OWNER
+UPDATES observers only for SONAR data
+
+BASIC MOVES<m>
+Accepts <ks>{"robotmove" : "moveForward" , "time": 350}</ks>
+Returns <ks>{"endmove" : "BOOL" , "move": MOVEDONE}</ks>
+</m>
+STEP<m>
+Accepts a  ApplMsgs.stepMsg (<ks>{"step":"TIME" }</ks>) to move ahead the robot for a given time.
+Returns a ApplMsgs.stepDoneMsg (<ks>{"stepDone":"ok" }</ks>) if the move is done with success.
+Returns a ApplMsgs.stepFailMsg (<ks>{"stepFail": TIME }</ks>) with TIME=DT if the move is interrupted
+by an obstacle after time DT. In this case it moves back the robot for time DT
+</m>
+HAS NO map
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><h3> 
+<a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepRobotCaller.kt" target="code">
+BasicStepRobotCaller.kt</a></h3> 
+Performs a call to a local 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a> named 'stepRobot'</li>
+
+<center><img src="../../it.unibo.kotlinSupports/userDocs/img/BasicStepRobotActorCaller.png" alt="BasicStepRobotActorCaller" width="70%" ></center>
+
+</td>
+<td>Project <bc>it.unibo.cautiousExplorer</bc>
+<hr/>
+The actor  <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" target="code">
+BasicStepGenericCaller.kt</a> performs a call to a local or to a remote 
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="web">BasicStepRobotActor.kt</a>
+ named 'stepRobot'.<br/><br/>
+It is related to <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>
+and <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="web">Lab ISS | RobotAPI2021</a>.
+
+
+</td>
+</tr>
+
+<tr>
+<td>
+<h3> <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" target="code">
+PathExecutor.kt</a></h3>
+
+
+ 
+</td>
+<td>Project <bc>it.unibo.cautiousExplorer</bc>
+<hr/>
+ <a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" target="code">
+PathExecutor.kt</a>: an unibo-actor that executes a given sequence of moves (todoPath)
+of the 'stepRobot' and returns and answer to its ownerActor.
+The call to the 'stepRobot' is executed by using the <tt>BasicStepGenericCaller</tt></li>
+
+</td>
+ 
+</tr>
+
+
+<tr>
+<td >	
+<h3>Verso sistemi distributi</h3>
+<ul>
+<li>Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
+<a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
+<br/><br/>
+</li>
+<li>
+Un robot accessibile in remoto via SpringBoot: <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
+Lab ISS | Introduction to the usage of Spring Boot</a>.
+Codice in <a href="../../webspring.demo/src/main/kotlin/it/unibo/webspring/demo" target="web">webspring.demo</a>
+</li>
+</ul>  
+ 
+</td>
+<td>Project <bc>webspring.intro</bc><br/>
+Project <bc>webspring.demo</bc><br/>
+</td>
+ 
+
+</tr>
+
+<tr>
+<td>
+<h3>Un planner e suo utilizzo</h3>
+<ul>
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" target="code">
+mainPlanDemo.kt</a>: shows the behavior of a planner  </li>
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/DemoPlanner.kt" target="code">
+DemoPlanner.kt</a>: shows the behavior of a planner that moves a robot using PathExecutor</li>
+
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlanner.kt" target="code">
+ExplorerWithPlanner.kt</a>: uses the 'stepRobot' to explore a room by executing a plan.
+The proposed plan is executed by the PathExecutor component</li>
+
+
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/spiralwalker.qak" target="code">
+spiralwalker.qak</a>: see <a href="../../it.unibo.cautiousExplorer/userDocs/LabPlanner2021.html#spiralwalkernorobot" target="web">
+LabPlanner | Exploiting Planning Tools</li>
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/resumablewalker.qak" target="code">
+resumablewalker.qak</a>: see <a href="../../it.unibo.cautiousExplorer/userDocs/LabPlanner2021.html#resumablewalkernorobot" target="web">
+LabPlanner | Exploiting Planning Tools</li>
+<li></li>
+</ul>
+</td>
+<td>Project <bc>it.unibo.cautiousExplorer</bc><br/>
+</td>
+ 
+</tr>
+
+</table>
+</center> 	
+
+<!--
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+</div>  
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>

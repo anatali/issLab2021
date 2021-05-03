@@ -86,6 +86,12 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework/spring-web
     implementation("org.springframework:spring-web:5.3.6")
 
+//HTTP CLIENT
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation ("org.apache.httpcomponents:httpclient:4.5")
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation ("commons-io:commons-io:2.6")
+
 //UNIBO
     implementation("uniboIssActorKotlin:IssActorKotlinRobotSupport:2.0")
     implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")

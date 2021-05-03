@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate
 
 class ExplorerWithPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
 
-    private lateinit var restTemplate: RestTemplate
     private lateinit var executor: PathExecutor
     private var targetCell = 1
 

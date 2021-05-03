@@ -30,7 +30,7 @@ var lastMove = "none"
                 if( forMe ){
                     lastMove = mJson.keys().next()
                     colorPrint("$name | BasicStepGenericCaller move=$lastMove",Color.GREEN)
-                    forward( msg )
+                    forward( msg )  //defined in AbstractActorCaller
                 }
                 else { //answer from the previous call
                     //colorPrint("$name | BasicStepGenericCaller lastMove=$lastMove",Color.LIGHT_MAGENTA)
@@ -43,8 +43,8 @@ var lastMove = "none"
 
 //OPTIONAL ...
 fun createStepRobotLocal(scope: CoroutineScope){
-    val obs = NaiveObserverActorKotlin("obs", scope)
-    BasicStepRobotActor("stepRobot",obs, scope, "localhost")
+    val obs = NaiveObserver("obs", scope)
+    //BasicStepRobotActor("stepRobot",obs, scope, "localhost")
 }
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
