@@ -18,6 +18,7 @@ a, a:visited, a:active, a:link, a:hover {
     text-decoration: underline;
     color: #545454;
     background-color: transparent;
+	font-size: 93%;
 }
 
 a:hover {
@@ -52,7 +53,7 @@ top {
 }
 tt{
 	font-family: "Arial";
-    font-size: 80%;
+    font-size: 90%;
 	color: #006600;
 }
 em{
@@ -65,7 +66,7 @@ em{
 }
 bc{
 	font-family: "Arial";
-	font-size: 80%;
+	font-size: 90%;
 	font-weight: bold;
     color: #990000;
 	background-color: #fcf8c7;
@@ -74,13 +75,13 @@ ks{
 	font-family: "Arial";
 	font-weight: bold;
     color: #0000CD	;
-	 
+	font-size: 90%;
 }
 kc{
 	font-family: "Arial";
 	font-weight: bold;
     color: #008000	;
-	 
+	font-size: 90%;
 }
 pre{
 	font-family: "Consolas";
@@ -95,17 +96,18 @@ m{
  	font-size: 75%;
 }
 div.body{
-	width: 700px;
-    font-size: 15px;
+	 
+    font-size: 18px;
 }
 k{
     color: #990000;
 	font-weight: bold;
+	font-size: 90%;
 }
 h1 {
     font-size: 150%;
     background-color: #b2c0ff;
-	padding: 10px; 
+	padding: 10px;
 }
 
 h2 {
@@ -118,7 +120,7 @@ h3 {
     font-size: 100%;
 }
 h4 {
-    background-color: #C0F0E0;
+    background-color: #ccffcc;
     font-size: 100%;
 	width: 95%;
 	border-radius: 5px;
@@ -127,8 +129,8 @@ h4 {
 h5 {
     background-color: #d5ffb0;
     font-size: 100%;
-	
-}    
+
+}
 div.req{
 	background-color: #d9ffb3;
     font-size: 18px;
@@ -136,25 +138,25 @@ div.req{
     border: 3px solid green;
     padding: 15px;
     margin: 10px;
-}       
+}
 div.remark{
-	background-color: #E3F2FD;	
+	background-color: #E3F2FD;
     border: 1.5px solid #d5f2ed;
     padding: 15px;
     margin: 10px;
 	border-radius: 25px;
-}  
+}
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
-} 
+}
 
 ol, ul, li {
   margin: 0;
   margin-left: 10px;
   padding: 0;
   padding-bottom: 5px;
-}     
+}
 
 table, th, td {
 	border: 1px solid black;
@@ -162,7 +164,7 @@ table, th, td {
 
 img {
 	border: 1.5px solid #d5f2ed
-	
+
 }
 
 a, a:visited, a:active, a:link, a:hover {
@@ -185,19 +187,95 @@ div.imagedesc{
 <head>
    
 <title>RobotAPI2021</title></head>
-    
 <body>
-<div id="body">
+<div class="body"> 
+ 
 <h1>Lab ISS | RobotAPI2021</h1>
 
+In <a href="../../it.unibo.cautiousExplorer/userDocs/BasicStepRobotActorUsage.html#UseSpringBoot" target="web">
+Lab ISS | Usage of the component BasicStepRobotActor</a> we introduced the idea of embedding a and other
+components 
+within a Web application based on SpringBoot in order to provide a RESTful API.
  
+<h2>REST: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="web">Representational State Transfer</a></h2>
+
+REST is a 
+<a href="https://en.wikipedia.org/wiki/Resource-oriented_architecture" target="web">resource-oriented architecture (<k>ROA</k>)</a>, 
+where every component of a system or an
+application is called a <em>resource</em>. A resource is explicitly identified and can be individually addressed.  
+<br/><br/>
+Using the exact same standard naming scheme as all other web resources
+allows you to seamlessly integrate Things and their properties into the web because
+their functions, data, or sensors can be linked to, shared, bookmarked, and used just
+like anything else on the web.
+<br/><br/>
+Let us recall the basic concepts:
+
+
+<ol>
+<li>Interactions between components are based on the 
+<a href="https://en.wikipedia.org/wiki/Request%E2%80%93response" target="web">request-response pattern</a>, where a client
+sends a request to a server and gets back a response</li>
+<li>Loose coupling between components can be achieved using a <em>uniform interface</em> that all components in the system respect.<br/>
+Uniform interfaces make it easy to design a <em>layered system</em>, which means that several
+intermediate components can hide what’s behind them.</li>
+<li><em>Caching</em> is a key element in the performance.<br/><br/></li>
+<li>A <em>resource</em> is any concept or piece of data in an application
+that needs to be referenced or used. Every resource must have a <em>unique identifier</em>
+and should be addressable using a <em>unique referencing mechanism</em>. On the
+web, this is done by assigning every resource a unique <k>URL</k> .</li>
+<li>A 
+<a href="https://en.wikipedia.org/wiki/URL" target="web">Uniform Resource Locator (<k>URL</k>)</a>
+is a type  of 
+<a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier" target="web">Uniform Resource Identifier (<k>URI</k>)</a>
+that identifies a resource via a representation of its primary
+access mechanism. On the web, a <tt>URL</tt> is a <tt>URI</tt> beginning with the <tt>http:// scheme</tt>
+<br/>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<img src="./img/thingURL.png" alt="thingURL" width="90%"  /><br/>
+<m>
+A <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier" target="web">URI</a> (standard scheme defined in <tt>RFC 3986.4</tt>) 
+is a sequence of characters that unambiguously identifies an abstract or physical
+resource.</m>
+
+<pre>
+&lt;scheme> ":" <authority><path> [ "?" query ] [ "#" fragment ]
+</pre>
+</td>
+<td><h3>A Thing URL</h3>
+<m>
+the protocol is <tt>HTTP+TLS/SSL</tt> (<k>HTTPS</k>); <br/>
+the domain is resolved by <tt>DNS</tt> to an <tt>IP</tt> address; <br/>
+the port is used by <tt>TCP</tt> to know what process to redirect to;<br/>
+finally the <tt>REST</tt> resource is specified.
+</m>
+</td>
+</tr>
+</table>
+
+<br/> 
+
+</li>
+ 
+
+<li><h3>HATEOAS</h3>
+<div class="remark">
+Servers shouldn’t keep track of each client’s state because stateless applications are easier to scale.
+</div>
+Instead, application state should be addressable via its own URL, and each
+resource should contain links and information about what operations are possible
+in each state and how to navigate across states 
+(<a href="https://en.wikipedia.org/wiki/HATEOAS" target="web">Hypermedia as the engine of the application state - <k>HATEOAS</k></a>).</li>
+</ol>
 
 
 <h2>Interaction with humans and with machines</h2>
 
 Starting from 
 <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html">Lab ISS | Introduction to the usage of Spring Boot</a> 
-(in webspring.intro), let us define an example of a possibile support for the interaction with a (virtual) robot.
+(in project <bc>webspring.intro</bc>), let us define an example of a possibile support for the interaction with a (virtual) robot.
 <br/><br/>
 
 <table style="width:98%">
@@ -414,8 +492,8 @@ Build Reactive REST APIs With Spring WebFlux </a>
 </table>
  <br/><br/>
  -->
-</div>  
-
+ 
+</div>
  
 
 <div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
