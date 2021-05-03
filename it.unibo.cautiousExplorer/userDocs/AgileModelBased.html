@@ -1,0 +1,653 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 700px;
+    font-size: 15px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px; 
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #C0F0E0;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+	
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #ffffb3;	
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+} 
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}     
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+	
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>AgileModelBased</title></head>  
+    
+<body>
+<div id="top">
+<h1>Methodology | Model-based Agile Development<font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+
+<ol>
+<li><a href="#intro">Introduction</a>
+	<ul>
+	<li><a href="#stepperproblem">The stepper problem</a> </li>
+	</ul>
+</li>
+<li><a href="#qakwork">QActors at work</a></li>
+<li><a href="#Methodology">Methodology</a></li>
+</ol>
+ 
+<h2 id="intro">Introduction</h2>
+Let us recall the path we have covered so far:
+<ol>
+<li id="problem">we started by introducing a problem (the <bc>'boundary-robot' problem</bc>) to be solved with Kotlin actors. The problem was defined by the 
+set of requirements reported in:<br/>
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary.html" 
+target="web">RobotActorBoundary | A first actor-based robot-application</a>.<br/>
+In this phase we introduced a quite simple first <ks>logic architecture</ks>:
+<center><img src="./img/logicArchBoundary.png" alt="logicArchBoundary" width="30%" ></center><br/> 
+The interaction  between the actors was based on a 'fire-and-forget' operation (named <bc>forward</bc>) and on the concept of a
+message as a <bc>dispatch</bc>.<br/><br/>
+</li>
+
+<li id="step">in order to define a proper <bc>TestPlan</bc>, we introduced the idea that a robot should be able to move in <i>'step-wise' way</i> 
+in order to be able to represent its position on a <i>grid-based</i> representation of the room:   
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary2.html" 
+target="web">RobotActorBoundary | From test plans to a layered architecture</a>.<br/>
+In this phase, our <ks>design</ks> was a layered architecture, whose layers are  implemented by one or more actors, each working as a Finite State Machine:
+<center><img src="./img/layered1.png" alt="layered1p" width="60%" ></center><br/><br/>
+The technological details of the robot were hiddin behind proper 'technology aware' low-levl support (the <tt>virtualRobotSupportApp</tt>) by allowing 
+the higher levels to focus on the application logic only.<br/><br/>
+</li>
+<li>the next step was the implementation of the first logical layer (the <bc>'basicrobot'</bc>) by using a <ks>custom DSL</ks>:<br/> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.actorfsm/userDocs/FSM.html" target="web"> 	
+FSM | A kotlin-based DSL</a>)<br/>
+to better express the behavior of the actors as a Finite State Machine:<br/>
+
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.actorfsm/userDocs/basicrobot.html" target="web"> 	
+basicrobot | A reusable actor (towards 'microservices');<br/><br/></a>
+</li>
+
+<li>the vision of working <i>'towards microservices'</i> was supported by the capability of our abstract <ks>FSM</ks> class to provide also aversion of
+the high-level <bc>forward</bc> operation with reference to <bc>MQTT</bc> broker. 
+We made also some experiment to move a 'basicrobot' by sending commands from a remote site;<br/><br/>
+</li>
+
+<li id="stepperproblem">the implementation of the <bc>'stepper'</bc> was fast, but quite simplistic, since we did not take into account a typical problem in distributed
+systems: the fact that information sent as a message takes time to be delivered and thus to be perceived by a receiver. 
+Our 'stepper' was designed as follows:
+
+<center><img src="./img/stepper.png" alt="stepper" width="50%" ></center> 
+
+The idea was the following one:
+<ul>
+<li>the state <tt>doStep</tt> creates a <i>timeractor</i> that sends the message <m><ks>endtime</ks></m> when a prefixed interval of time 
+(the 'steptime') expires; moreover, it sends to <m><tt>virtualrobotsupportApp</tt></m> the command to move ahead (<tt>'w'</tt>); </li>
+<li>if the robots hits an obstacle, the  'basicrobot' sends (via <m><tt>virtualrobotsupportApp</tt></m>)  the message <m><ks>sensor</ks></m> to the <tt>stepper</tt>;
+<li>if <m><ks>sensor</ks></m> is delivered  at time <bc>ts</bc> and <m><ks>endtime</ks></m> is delivered at time <bc>te</bc>
+and <bc>ts &lt; te</bc>, then the <tt>stepper</tt> should go in the state <m><ks>stepKo</ks></m>.
+</li>
+</ul>
+<br/>
+ But the problem is that - <b>sometimes, not always</b> - the 'stepper' could perceive the message <m><ks>endtime</ks></m>
+ <bc>BEFORE</bc> <m><ks>sensor</ks></m> even if <bc>ts &lt; te</bc>. 
+ <br/>
+ Fortunately, this (paradigmatic) problem was discovered during testing:
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.actorfsm/test/TestPlanBoundary.kt" target="web"> 
+TestPlanBoundary.kt</a>. 
+ <br/><br/>
+Another problem is that <m><ks>endtime</ks></m> messages are not consumed when <tt>stepKo</tt>.
+ <br/> <br/>
+A possible new solution could be:
+<center><img src="./img/stepperReviewed.png" alt="stepperReviewed" width="70%" ></center>
+<br/><br/>
+
+However, since testing <b>does not assure the discovery</b> of all possible errors, the lesson learned from these problem persuaded us of 
+ <div class="remark">
+<center>the need of a more accurate <bc>analysis phase</bc> <br/>
+and of the opportunity of <bc> fast-prototyping</bc>  the application logic</center>
+</div>
+
+</li>
+
+<li>at this point (during a SCRUM <ks>sprint-retrospective</ks>) we decided to introduce a custom software factory based on a
+<bc>custom metamodel</bc>, by exploiting the XText technology:<br/>
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.qakactor/userDocs/LabQakIntro2020.html" 
+target="web">LabQakIntro2020.html | Introduction to QAkactors</a>.
+<br/><br/>
+</li>
+ 
+</ol>
+
+<h3 id="qakwork">QActors at work</h3>
+As said in <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.qakactor/userDocs/LabQakIntro2020.html#process" 
+target="web">LabQakIntro2020.html | QActors and process development</a>, the goal was to enable application designers to define 
+a <bc>set of evolving models</bc> of the system, by starting from the early phases of our software development process,
+i.e. requirement analysis and problem analysis. 
+<br/><br/>
+
+The possibility to execute a model of a system as the result of the problem analysis phase  can be very useful: 
+<ul>
+<li>to establish a more productive interaction with the customer in order to better understand the requirements</li>
+<li>to help in defining the product backlog</li>
+<li>to introduce proper functional test-plans in form of program-sketches</li>
+</ul>
+
+ 
+<div class="remark">
+The effort of building  formal (i.e. executable) models of a system in the early phases of software development
+<!-- definition of the logical architecture of a system  by means of an executable model, as the main, concrete result of problem analysis -->
+should be remunerated by a better management of
+the development process, that can be accomplished by <bc>'zooming'</bc> into the set of components identified by the logical architecture
+and by adding (if needed ) other appropriate components, <bc>without breaking the constraints</bc> settled in the analysis phase. 
+</div>
+
+
+<br/><br/>
+ 
+<!--
+In this work, we intend to give an example of a process of this kind, by introducing a set of executable QAkactor  models for the 'robotboundary' problem.
+
+<h2 id="Methodology">Methodology</h2>
+
+<ol>
+<li>What are the deliverables at the end of the <bc>Requirement Analysis</bc>?</li>
+<li>What are the deliverables at the end of the <bc>Problems Analysis</bc>?</li>
+<li>When is it appropriate to deal with <bc>Testing</bc> and to define functional Test-Plans?</li>
+<li>How do we assemble the<bc> Team</bc> of people devoted to the development of the software?</li>
+<li>If the Team splits the development into sequence of (Scrum) Sprints:
+ 
+<ol type="a">
+<li>What really does  a <bc>Sprint Review</bc>? </li>
+<li>What is the main goal of a  <bc>Sprint Retrospective</bc>? </li>
+<li>Since software development is mainly  </li>
+<li>Is it wise to start from a top-down approach or it is better start with reference to a properly selected technology (e.g. Spring Boot)</li>
+</ol>
+
+</li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+
+</ol>
+
+Some reference points
+
+<div class="remark"> 
+<ol type="A"> 
+<li>There is no code without (some) project</li>
+<li>A top-down approach should put in the foreground the overall logical architecture of the system </li>
+<li>Besides the technical dimensions, it is important to take in account also the <bc>application domain</bc></li>
+<li>Problem analysis should help in finding appropriate technologies for each of the main sub-systems introduced in the ogical architecture</li>
+<li>Details should be discovered tackled on by <bc>zooming</bc> into the compoenents </li>
+<li>Knowing that <bc>'evil is in the details'</bc> we must be prepared to introduce feedbacks in our analysis (the sprial approach) </li>
+<li></li>
+<li></li>
+</ol>
+</div>
+-->
+<!--
+<pre>
+
+È necessario lavorare secondo il criterio degli Sprint di Scrum in modo da vedersi ad ogni sprint 
+per discutere della deliverable (lavoro prodotto).  
+Capire come si fa in termini concreti lo sviluppo incrementale basato sulla countinuous integration.
+
+-	Quando inizio ad occuparmi del Testing del sistema? 
+-	Cosa avrò in mano quando ho finito la fase di Analisi dei Requisiti?
+-	Cosa avrò in mano quando ho finito la fase di Analisi del Problema?
+-	Ammettendo di seguire un approccio incrementale evolutivo sarò in grado, e fino a che punto, 
+di implementare dei sistemi che evolvono in maniera monotona crescente? Andrò sempre dritto verso 
+la meta oppure devo mettere in conto che avrò dei ripensamenti durante la fase di feedback?
+-	Ma che cosa intende realmente Scrum quando parla di Sprint Review?
+-	Cosa intende realmente Scrum quando parla di Sprint Retrospective?
+
+Lo scopo è costruire un prodotto software di qualità in maniera consapevole (quindi saper dire 
+in ogni momento cosa sto facendo e perché).
+
+-	Mi interessa che qualcosa sopravviva alla fine di questo progetto o no? Sono interessato 
+che alla fine del progetto rimanga qualcosa di riutilizzabile?
+
+Uno dei punti chiavi della Agile Programming è: non fare niente di più di quello che è 
+richiesto dai requisiti, ciò nonostante…. 
+
+Man mano che vado avanti, come impresa, in un certo dominio applicativo, come posso 
+accumulare know-how riutilizzabile?
+
+-	 Se fossi un responsabile aziendale, come organizzo il team? Quali competenze devo 
+ricercare nel team di sviluppo dato un certo progetto?
+
+Grande prillo: passare dal bottom-up al top-down.
+
+Più il problema è significativo/complesso più diventa essenziale e strategico il ruolo 
+dell’Analisi (sia dei requisiti sia del problema) come premessa ad una corretta progettazione. 
+Il resto dovrebbe essere implementazione.
+
+Affrontare il problema al giusto livello concettuale in fase di analisi.
+
+-	Chi decide il giusto livello concettuale con cui aggredire le fasi iniziali di analisi? 
+
+Strategia: devo pensare da Analista e non da Progettista.
+
+</pre>
+ 
+-->
+<br/><br/>
+<!--
+
+
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%">
+
+<h3>The basicrobot</h3>
+<a href="../../it.unibo.qak20.basicrobot/src/basicrobot.qak" target="code">basicrobot.qak</a> in project <i>it.unibo.qak20.basicrobot</i>
+ 
+</td>
+<td> <m>The 'basicrobot'
+<ul>
+<li>is able to execute basic move commands, by handling a <bc>dispatch</bc> (for the elementary commands <tt>w | s | ... </tt>)
+and a <bc>request</bc> (for the command <tt>step</tt>);<br/><br/></li>
+</li>
+<li>maintains information on its current functional state;<br/><br/>   </li>
+<li>interacts with a concrete robot  by means of a (<a href="https://en.wikipedia.org/wiki/Plain_old_Java_object" target="web">POJO</a>) object 
+(<a href="../../it.unibo.qak20.basicrobot/resources/unibo/robot/robotSupport.kt" target="code">resources/unibo/robot/robotSupport.kt</a> 
+in project <i>it.unibo.qak20.basicrobot</i>)
+working as an adapter for devices described in the configuration file
+<a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+;<br/><br/>   </li>
+<li>is a source of <bc>collision</bc> events, that are generated by the low-level robot support</li>
+</ul> 
+ 
+ </m>
+<pre></pre>
+</td>
+</tr>
+
+<tr>
+<td>
+
+<h3>The robotboundary</h3>
+<a href="../../it.unibo.qak20.robotboundary/src/robotboundary.qak" target="code">robotboundary.qak</a> in project <i>it.unibo.qak20.robotboundary</i>
+</td>
+<td>  <m></m>
+<pre></pre>
+</td>
+</tr>
+</table>
+
+
+
+
+
+
+</m>
+
+
+ 
+<h2>Test plans</h2> 
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%">
+
+<h3>Test plan-basicrobot</h3>
+<a href="../../it.unibo.qak20.basicrobot/test/testBasicrobot.kt" target="code">testBasicrobot.kt</a> in project <i>it.unibo.qak20basicrobot</i>
+ 
+</td>
+<td> <m></m>
+<pre></pre>
+</td>
+</tr>
+
+<tr>
+<td>
+
+<h3>Test plan-robotboundary</h3>
+<a href="../../it.unibo.qak20.robotboundary/test/TestRobotboundary.kt" target="code">TestRobotboundary.kt</a> 
+in project <i>it.unibo.robotboundary</i>
+</td>
+<td>  <m></m>
+<pre></pre>
+</td>
+</tr>
+</table>
+
+
+
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+	      	
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>
+-->
+
+<!--
+
+HUE
+https://developers.meethue.com/develop/get-started-2/  BEN FATTO
+
+
+{"devicetype":"my_hue_app#nat"}  POST
+
+[
+	{
+		"success": {
+			"username": "gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R"
+		}
+	}
+]
+
+ 
+
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights
+
+{
+	"1": {
+		"state": {
+			"on": false,
+			"bri": 1,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": true
+		},
+		"swupdate": {
+			"state": "readytoinstall",
+			"lastinstall": "2018-03-23T16:50:33"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 1",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:a3:32:03-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	},
+	"2": {
+		"state": {
+			"on": false,
+			"bri": 77,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": false
+		},
+		"swupdate": {
+			"state": "readytoinstall",
+			"lastinstall": "2018-03-22T21:03:40"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 2",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:c4:9a:8a-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	},
+	"3": {
+		"state": {
+			"on": true,
+			"bri": 0,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": false
+		},
+		"swupdate": {
+			"state": "transferring",
+			"lastinstall": "2018-03-23T15:58:39"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 3",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:c6:4f:e8-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	}
+}
+
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights/1
+...
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights/1/state
+{"on":false}  PUT
+{"on":true, "sat":254, "bri":254,"hue":10000}
+
+https://developers.meethue.com/develop/get-started-2/core-concepts/
+
+-->
+
