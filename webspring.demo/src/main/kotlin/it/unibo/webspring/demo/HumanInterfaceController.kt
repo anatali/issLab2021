@@ -20,7 +20,7 @@ class HumanInterfaceController {
 
     @GetMapping("/")    //defines that the method handles GET requests.
     fun entry(model: Model): String {
-        model.addAttribute("arg", appName)
+        model.addAttribute("arg", appName+"xxx")
         println("HumanInterfaceController | entry model=$model")
         return "naiveRobotGui"
     }

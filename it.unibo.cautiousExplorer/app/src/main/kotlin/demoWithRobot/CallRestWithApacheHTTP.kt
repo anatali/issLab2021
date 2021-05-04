@@ -47,9 +47,10 @@ object CallRestWithApacheHTTP {
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        //CallRestWithApacheHTTP.doMove("r")
+        //val result = CallRestWithApacheHTTP.doMove("p")
         //CallRestWithApacheHTTP.doMoveApache("l")
-        val result = CallRestWithApacheHTTP.doPath("rl")
+        val importantPathToCheck = "wwlw"
+        val result = CallRestWithApacheHTTP.doPath(importantPathToCheck)
         println("result=$result  ")
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
