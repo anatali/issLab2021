@@ -85,7 +85,7 @@ dependencies {
 
 //HTTP CLIENT
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-    implementation ("org.apache.httpcomponents:httpclient:4.5.14")
+    implementation ("org.apache.httpcomponents:httpclient:4.5.13")
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation ("commons-io:commons-io:2.6")
 

@@ -4,6 +4,8 @@ import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.commons.io.IOUtils
+import it.unibo.actor0.sysUtil
+import kotlinx.coroutines.runBlocking
 
 object CallRestWithApacheHTTP {
     val addr = "localhost:8081" ///moverest?move=$move" added by the caller
@@ -35,3 +37,16 @@ object CallRestWithApacheHTTP {
     }
  
 }//Object
+
+fun main( ) {
+    println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
+    runBlocking {
+        //val result = CallRestWithApacheHTTP.doMove("p")
+        //CallRestWithApacheHTTP.doMoveApache("l")
+        val importantPathToCheck = "wwlw"
+        val result = CallRestWithApacheHTTP.doPath(importantPathToCheck)
+        println("result=$result  ")
+        println("ENDS runBlocking ${sysUtil.curThread()}")
+    }
+    println("ENDS main ${sysUtil.curThread()}")
+}

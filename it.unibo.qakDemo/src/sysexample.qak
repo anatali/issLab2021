@@ -1,7 +1,7 @@
 System sysexample
 
 Dispatch cmd    : cmd(X)
-Dispatch ledCmd : ledCmd(X)  
+Dispatch ledCmd : ledCmd(X)   
 
 Event alarm     : alarm(X)
 Context ctxSysExample  ip [host="localhost"     port=8072]
