@@ -1,0 +1,37 @@
+System sysexample
+
+Dispatch cmd    : cmd(X)
+Dispatch ledCmd : ledCmd(X)  
+
+Event alarm     : alarm(X)
+Context ctxSysExample  ip [host="localhost"     port=8072]
+ 
+QActor qa0 context ctxSysExample{    
+	[# var Json="{\"a\":\"b\"}" #]
+	State s0 initial{  
+		println("qa0 sends  to qacoded") 
+		forward qacoded -m cmd : cmd( $Json  )
+		delay 500   
+		/*
+		println("qa0 sends  ledCmd : ledCmd( on )  to the external led") 
+		forward led -m ledCmd : ledCmd( on )
+		delay 1000 
+		println("qa0 sends  ledCmd : ledCmd( off ) to the external led") 
+		*/ 
+	}
+	Goto s1		//test about event emitted by qacoded
+	
+	State s1{
+		println("qa0 waiting ... ") 
+	}
+	Transition t0 
+		whenEvent alarm -> handleAlarm
+		
+	State handleAlarm{
+		printCurrentMessage
+	}
+	Goto s1  
+} 
+
+CodedQActor qacoded context ctxSysExample className "kotlinCode.qacoded"  //"kotlinCode.demo" 
+
