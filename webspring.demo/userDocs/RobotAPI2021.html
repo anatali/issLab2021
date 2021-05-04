@@ -320,7 +320,7 @@ http://localhost:8080/model
 <div class="remark">
 <center>
 What is the <bc>model</bc>? <br/>
-See <a href="LabArchitectures.html" target="lab">LabArchitectures | From MVC to Hexagonal architectures</a>
+See <a href="../../webspring.intro/userDocs/LabArchitectures.html" target="lab">LabArchitectures | From MVC to Hexagonal architectures</a>
 </center>
 </div> 
 </td>
@@ -385,9 +385,16 @@ gradlew build	<kc>//look at the generated distribution</kc>
 docker build -t webspringrobot:1.0.1 .  <kc>//look at <a href="../Dockerfile">Dockerfile</a></kc>
 
 docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  <kc>//check if the image runs</kc>
+---------------------------------------------------------------------------------------------------------
+type docker_password.txt | docker login --username natbodocker --password-stdin <kc>//Login in DockerHub</kc>
+
+docker tag webspringrobot:1.0.1 natbodocker/webspringrobot:1.0.1	<kc>//Tag the image</kc>
+
+docker push natbodocker/webspringrobot:1.0.1 	<kc>//Register the image</kc>
+---------------------------------------------------------------------------------------------------------
 
 <k>WARNING:Check that no other BasicStepRobot is running</k>
-docker-compose -f virtualrobotguistepper.yaml up
+docker-compose -f <a href="../virtualrobotguistepper.yaml">virtualrobotguistepper.yaml</a> up
 </pre>
 
 <h2>API (code in <a href="../../webspring.demo">webspring.demo</a>)</h2>

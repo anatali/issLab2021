@@ -529,12 +529,12 @@ The call to the 'stepRobot' is executed by using the <tt>BasicStepGenericCaller<
 <ul>
 <li>Embedding <tt>BasicStepRobotActor</tt> in un 'service' accessibile via TCP: 
 <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html" target="web">LabIss2021 | a RobotService</a>. 
-<br/><br/>
+<br/> 
 </li>
 <li>
 Un robot accessibile in remoto via SpringBoot: <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="web">
 Lab ISS | Introduction to the usage of Spring Boot</a>.
-<br/><br/>
+<br/> 
 </li>
 <li>
 <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="web">RobotAPI2021.html</a>
@@ -555,6 +555,17 @@ Project <bc>webspring.demo</bc><br/>
 </center> 	
 
 <h2>Applications</h2>
+
+<pre>
+webspring.demo:            docker-compose -f virtualrobotguistepper.yaml up
+                           DemoCallPathRest
+						   
+it.unibo.cautiousExplorer: CallRestWithApacheHTTP	 
+                           BasicStepGenericCaller
+						   PathExecutor
+                           ExplorerWithPlannerM2m		
+</pre>
+<!--
 <table style="width:98%">
 
 <tr>
@@ -590,6 +601,7 @@ LabPlanner | Exploiting Planning Tools</li>
 
 </table>
 </center> 	
+-->
 
 <h2>Methodology</h2>
 <center>

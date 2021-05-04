@@ -344,14 +344,18 @@ See <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="web">Robot
 </table>
 </center> 	
 
-<h2>Using a planner</h2>
+<h2 id="planner">Using a planner</h2>
 <table style="width:98%">
 <tbody>	
 
 <tr>
-<td>
-<h3>Un planner e suo utilizzo</h3>
+<td style="width:70%">
+ 
 <ul>
+
+<li><a href="LabPlanner2021.html" target="code">
+Lab ISS | Exploiting Planning Tools</a>:    </li>
+
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" target="code">
 mainPlanDemo.kt</a>: shows the behavior of a planner  </li>
 
@@ -360,8 +364,14 @@ DemoPlanner.kt</a>: shows the behavior of a planner that moves a robot using Pat
 
 
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlanner.kt" target="code">
-ExplorerWithPlanner.kt</a>: uses the 'stepRobot' to explore a room by executing a plan.
+ExplorerWithPlanner.kt</a>: uses the 'stepRobot' to explore a room by executing a sequence of plans (as an oracle).
 The proposed plan is executed by the PathExecutor component</li>
+
+<li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlannerM2m.kt" target="code">
+ExplorerWithPlannerM2m.kt</a>: uses the 'stepRobot' to explore a room by executing a sequence of plans (as an oracle).
+The proposed plan is executed by the PathExecutor POST API <k>/dopath</k> on port <tt>8081</tt>
+</li>
+
 
 <li><hr/></li>
 

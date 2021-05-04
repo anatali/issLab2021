@@ -17,8 +17,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
-class BasicStepGenericCaller( name: String, scope: CoroutineScope  ) :
-                            AbstractActorCaller( name, scope ) {
+class BasicStepGenericCaller( name: String, scope: CoroutineScope, web: Boolean  ) :
+                            AbstractActorCaller( name, scope, web ) {
 var lastMove = "none"
     override suspend fun handleInput(msg: ApplMessage) {
         if(msg.msgId=="sonarEvent") return
@@ -44,14 +44,16 @@ var lastMove = "none"
 //OPTIONAL ...
 fun createStepRobotLocal(scope: CoroutineScope){
     val obs = NaiveObserver("obs", scope)
-    //BasicStepRobotActor("stepRobot",obs, scope, "localhost")
+    BasicStepRobotActor("stepRobot",obs, scope, "localhost")
 }
 fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
-        createStepRobotLocal(this) //WARNING: check that it is the only one running
-        val caller    = BasicStepGenericCaller("rac", this )
+        //createStepRobotLocal(this) //WARNING: check that it is the only one running
+        val caller    = BasicStepGenericCaller("rac", this, true )
         caller.send( ApplMsgs.stepRobot_step("test") )
+        //caller.send( ApplMsgs.stepRobot_l("test") )
+        //caller.send( ApplMsgs.stepRobot_r("test") )
         delay(1000)
         caller.terminate()
         println("ENDS runBlocking ${sysUtil.curThread()}")

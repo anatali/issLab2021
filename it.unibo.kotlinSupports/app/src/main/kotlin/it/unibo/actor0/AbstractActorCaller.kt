@@ -26,10 +26,19 @@ abstract class AbstractActorCaller(name: String,
                 rsc?.send(msg.toString())
             }else { //web
                 val content = msg.msgContent  //
-                val moveTodo= JSONObject( content ).get("robotmove").toString()
-                val move    = ApplMsgs.shortMove(moveTodo)
-                colorPrint("$name | move=$move", Color.GREEN )
-                RobotRestCaller.doPostBasicmove("localhost:8081",move)
+
+                val moveTodoJson= JSONObject( content )
+                if( moveTodoJson.has("robotmove")) {
+                    val moveTodo = moveTodoJson.get("robotmove").toString()
+                    val move = ApplMsgs.shortMove(moveTodo)
+                    colorPrint("$name | move=$move", Color.GREEN)
+                    RobotRestCaller.doPostBasicmove("localhost:8081", move)
+                }else if( moveTodoJson.has("step")) {
+                    val time = moveTodoJson.get("step").toString()
+                    val move = "p"
+                    colorPrint("$name | move=$move", Color.GREEN)
+                    RobotRestCaller.doPostBasicmove("localhost:8081", move)
+                }
             }
         }
     }

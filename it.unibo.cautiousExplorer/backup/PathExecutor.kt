@@ -49,7 +49,7 @@ class PathExecutor (name: String, scope: CoroutineScope, protected var ownerActo
 
     init{
          resetStateVars()
-         stepper = BasicStepGenericCaller("gencaller", scope, true )//BasicStepRobotActor("stepper", this, scope, "localhost")
+         stepper = BasicStepGenericCaller("gencaller", scope )//BasicStepRobotActor("stepper", this, scope, "localhost")
          //setup a receiver from TCP
          stepper.registerActor(this)
          //println("$name | STARTS ")

@@ -51,8 +51,8 @@ fun main( ) {
     println("BEGINS CPU=${sysUtil.cpus} ${sysUtil.curThread()}")
     runBlocking {
         //DemoCallPathRest.doMove("r")
-        DemoCallPathRest.doMoveApache("l")
-        //DemoCallPathRest.doPathApache("rl")
+        //DemoCallPathRest.doMoveApache("l")
+        DemoCallPathRest.doPathApache("rl")
         println("ENDS runBlocking ${sysUtil.curThread()}")
     }
     println("ENDS main ${sysUtil.curThread()}")

@@ -12,9 +12,7 @@ import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.springframework.web.client.RestTemplate
 
 
 class ExplorerWithPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
