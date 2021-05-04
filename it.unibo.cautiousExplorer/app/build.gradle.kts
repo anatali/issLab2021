@@ -61,9 +61,6 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-//HTTP
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-    implementation("org.apache.httpcomponents:httpclient:4.5.13")
 //JSON
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115")
@@ -88,7 +85,7 @@ dependencies {
 
 //HTTP CLIENT
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-    implementation ("org.apache.httpcomponents:httpclient:4.5")
+    implementation ("org.apache.httpcomponents:httpclient:4.5.14")
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation ("commons-io:commons-io:2.6")
 
