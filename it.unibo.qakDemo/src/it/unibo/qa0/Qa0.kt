@@ -30,9 +30,10 @@ class Qa0 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scope 
 					action { //it:State
 						println("qa0 waiting ... ")
 					}
-					 transition(edgeName="t00",targetState="handleAlarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t00",targetState="handleEvent",cond=whenEvent("alarm"))
+					transition(edgeName="t01",targetState="handleEvent",cond=whenEvent("wenvinfo"))
 				}	 
-				state("handleAlarm") { //this:State
+				state("handleEvent") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}

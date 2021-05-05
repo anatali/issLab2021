@@ -4,6 +4,8 @@ Dispatch cmd    : cmd(X)
 Dispatch ledCmd : ledCmd(X)   
 
 Event alarm     : alarm(X)
+Event wenvinfo  : answer(X)
+
 Context ctxSysExample  ip [host="localhost"     port=8072]
  
 QActor qa0 context ctxSysExample{    
@@ -25,9 +27,10 @@ QActor qa0 context ctxSysExample{
 		println("qa0 waiting ... ") 
 	}
 	Transition t0 
-		whenEvent alarm -> handleAlarm
+		whenEvent alarm    -> handleEvent
+		whenEvent wenvinfo -> handleEvent
 		
-	State handleAlarm{
+	State handleEvent{
 		printCurrentMessage
 	}
 	Goto s1  

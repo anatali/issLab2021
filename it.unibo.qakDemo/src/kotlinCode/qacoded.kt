@@ -6,9 +6,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.delay
 import it.unibo.robotService.ApplMsgs
 
- 
-
-
 class qacoded( name : String ) : ActorBasic( name ){
 	
 	val a = demo("a")
@@ -18,10 +15,15 @@ class qacoded( name : String ) : ActorBasic( name ){
     }
     override suspend fun actorBody(msg : ApplMessage){
         println("	$name handles $msg ")
-		emit("alarm", "alarm(fire)")
+		
 		val answer = CallRestWithApacheHTTP.doPath("rl")
 		println("	$name answer=$answer ")
-		a.send(ApplMsgs.startAny("main").toString())
+		
+		//Convert the wenv annswer into the event wenvinfo
+		emit("wenvinfo", "answer($answer)")
+		
+		//Activate the demo uniboActor
+		//a.send(ApplMsgs.startAny("main").toString())
 		//
     }
 }//qacoded
