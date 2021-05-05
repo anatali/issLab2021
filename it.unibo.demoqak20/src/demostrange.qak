@@ -1,0 +1,35 @@
+//https://dl.bintray.com/jetbrains/kotlin/eclipse-plugin/0.8.19/
+
+System  demostrange
+
+Dispatch cmd : cmd(X) 
+
+Context ctxdemostrange ip [host="localhost" port=8055]
+
+QActor demostrange context ctxdemostrange{
+	State s0 initial { 	 
+ 		println("demostrange | s0")
+ 		printCurrentMessage
+ 		forward demostrange -m cmd : cmd(a)
+ 	}   
+	Goto s1 
+  	
+ 	State s1{
+ 		println("demostrange | s1")  
+ 		forward demostrange -m cmd : cmd(b) 
+ 	}
+ 	Goto s2
+  	 
+ 	State s2{
+ 		printCurrentMessage
+  		println("demostrange | s2 ") 		
+ 	}
+ 	Transition t0 whenTime 10 -> s3
+ 				  whenMsg cmd -> s2  
+
+ 	State s3{
+ 		printCurrentMessage
+  		println("demostrange | s3, BYE")
+ 		
+ 	}
+ }

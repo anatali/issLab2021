@@ -1,0 +1,93 @@
+System -trace bls
+
+//Led e button modellati come attori
+//appartenenti allo stesso sistema distribuito
+//ma in contesti diversi
+//il main simula la pressione del bottone
+//Se utilizziamo stessi contesti per tutti gli attori
+//il problema non si pone
+//Allo stesso modo se utilizziamo al posto di "event"
+//un dispatch, il problema non sussiste. Ci chiedevamo quindi
+//se potesse essere un problema legato agli eventi
+
+Event onPressed : onPressed(V)
+Dispatch press: press(V) 
+
+Context ctxButton ip [host="localhost" port=8074]
+Context ctxBls    ip [host="127.0.0.1" port=8095]
+
+QActor led context ctxBls{
+	[#
+		var led: Int
+		var count=0 //To see the number of events
+	#]
+	State s0 initial{
+		println("Led initializing...")
+	}
+	Goto off
+	
+	State off {
+		println("Led turning off...")
+		[#led=0#]
+		println("Led: ${led}")
+		//Inc the number of received events
+		onMsg(onPressed:onPressed(V)){
+			[#count++#]
+			println("Pressed received ${count}")
+		}
+	}
+	Transition t0
+		whenEvent onPressed -> on
+	
+	State on {
+		println("Led turning on...")
+		[#led=1#]
+		println("Led: ${led}")
+		//Inc the number of received events
+		onMsg(onPressed:onPressed(V)){
+			[#count++#]
+			println("Pressed received ${count}")
+			
+		}
+	}
+	Transition t0
+		whenEvent onPressed -> off
+}
+
+QActor button context ctxButton{
+	State s0 initial {
+		println("Button initializing...")
+	}
+	Goto wait
+	
+	State wait {
+		println("Button in wait state")
+	}
+	Transition t0
+		whenMsg press -> pressed
+	
+	State pressed {
+		println("Button pressed, emitting onPressed signal...")
+		emit onPressed: onPressed(ButtonPressed)
+	}
+	Goto wait
+}
+
+QActor main context ctxButton{
+	State s0 initial {
+		println("Forwarding press 1")
+		forward button -m press: press(press)
+//		delay 2000
+//		println("Forwarding press 2")
+//		forward button -m press: press(press)
+//		delay 2000
+//		println("Forwarding press 3")
+//		forward button -m press: press(press)
+//		delay 2000
+//		println("Forwarding press 4")
+//		forward button -m press: press(press)
+//		delay 2000
+		terminate 0
+	
+	}
+}

@@ -1,0 +1,26 @@
+//Prepared for April 23, 2020
+
+balzani | 835699 | es0 | mattia.balzani@studio.unibo.it
+tornatore | 0900066745 | es1 | gabriele.tornatore@studio.unibo.it
+farina | 936113 | es2 | angelo.farina@studio.unibo.it
+desantis | 919631 | es3 | simone.desantis@studio.unibo.it
+drudi | 952507 | es4 | elisa.drudi4@studio.unibo.it
+alsadi | 927752 | es0 | amir.alsadi@studio.unibo.it
+bolognini | 929797 | es1 | damiano.bolognini@studio.unibo.it
+stanzione | 939701 | es2 | vincenzo.stanzione@studio.unibo.it
+volgarino | 948414 | es3 | antoniopio.volgarino@studio.unibo.it
+chieregato | 925264 | es4 | federico.chieregato@studio.unibo.it
+piazza | 908824 | es0 | lorenzo.piazza4@studio.unibo.it
+verdini | 946756 | es1 | paolo.verdini@studio.unibo.it
+piano | 282286 | es2 | francesco.piano@studio.unibo.it
+cerulo | 928145 | es3 | eugenio.cerulo@studio.unibo.it
+govoni | 884931 | es4 | dario.govoni3@studio.unibo.it
+turra | 933031 | es0 | riccardo.turra@studio.unibo.it
+bida | 123456 | es1 | mihail.bida@studio.unibo.it
+rimondi | 54957 | es2 | simone.rimondi@studio.unibo.it
+martini | 946550 | es3 | elena.martini6@studio.unibo.it
+giorgio | 954901 | es1 | giuseppe.giorgio3@studio.unibo.it
+carroll |        | es4 | 
+pandolfi | 886202 | es0 | francesco.pandolfi2@studio.unibo.it
+denardi | 793310  | es1 | dario.denardi@studio.unibo.it
+cavalcanti | 919787 | es2 | ugoleone.cavalcanti@studio.unibo.it

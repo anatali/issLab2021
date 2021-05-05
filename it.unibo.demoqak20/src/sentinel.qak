@@ -1,0 +1,72 @@
+System sentinel
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+//mqttBroker "broker.hivemq.com" : 1883
+ 
+Event   alarm : alarm(V) 
+
+Context ctxsentinel ip [host="localhost" port=8055]
+   
+QActor sentinel context ctxsentinel{
+[# var counter=0 #]		//Kotlin code
+	State s0 initial { 	
+		println("sentinel | STARTS")	 
+ 	} 
+ 	Goto watch if [# counter==0 #] else end //guard
+ 	
+ 	State watch{
+ 		println("sentinel | WATCH") 
+ 	}	
+ 	Transition t0  whenTime 1000 -> timeout			//(1)
+ 			whenEvent alarm and [# counter==0 #] -> handleAlarm
+ 	 
+ 	State timeout{
+   		printCurrentMessage
+  		println("sentinel | TIMEOUT")	 
+  		[# counter++ 	#]	
+ 	}
+ 	Goto s0
+ 	 
+ 	State handleAlarm{
+  		printCurrentMessage
+  		onMsg ( alarm : alarm(V) ) { 
+  			println("sentinel | ALARM ${payloadArg(0)} ")  // 
+  		} 
+  		delay 1500
+   	}	
+//   	Goto s0		//(2) the sentinel is able to perceive the next alarm
+    	Transition t0 whenTime 10  -> explore  
+ 			//if another alarm (tsunami) arrives before 1,5 sec, it will be lost
+    	
+ 	State explore{
+ 		println("sentinel | exploring (quite fast) ...")
+ 	}
+ 	Goto watch
+  	
+ 	State end{
+ 		println("sentinel | ENDS")	
+   	}
+   	//Goto watch	//(3)
+ }
+
+/*  
+ * For local test
+ */
+ 
+QActor sender context ctxsentinel{
+	State s0 initial { 	
+ 		 println("			watcher emits fire")
+		 emit alarm : alarm( fire )  
+		 delay 1200
+ 		 println("			watcher emits tsunami")
+		 emit alarm : alarm( tsunami )	 
+		 
+//		 delay 1000
+//		 terminate 0 
+	}
+	
+}
+ /* */

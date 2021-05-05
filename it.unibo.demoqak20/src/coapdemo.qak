@@ -1,0 +1,60 @@
+System -msglog coapdemo
+
+Dispatch cmd      : cmd(X)
+Request  cmd      : cmd(X) 
+Reply    cmdansw  : cmdansw(X)
+
+Context ctxcoapdemo ip [ host= "localhost" port= 8037 ]   
+
+QActor actorcoap context ctxcoapdemo{ 
+	State s0 initial{ 
+		println("Please activate a CoAP client observer (e.g. actorQakCoapObserver.kt)")
+		updateResource [# "actorcoap init done" #]
+		delay 1000
+ 	}   
+ 	Goto work 
+ 	
+ 	State work{
+ 		updateResource [# "actorcoap is ready to work"  #]	 
+ 	}
+ 	Transition t0 whenMsg    cmd  -> handleCmd
+ 				  whenRequest cmd -> handleRequest
+ 	
+ 	State handleCmd{
+ 		printCurrentMessage
+ 		onMsg( cmd:cmd(V) ){
+ 			[# val V = payloadArg(0) #]
+ 			println( "actorcoap is handling dispatch cmd($V)" )
+ 			updateResource [# "actorcoap is handling dispatch cmd($V)" #]
+ 		}
+  	}
+  	Goto work
+ 	
+ 	State handleRequest{
+ 		onMsg( cmd : cmd(V) ){
+ 			[#  val V      = payloadArg(0)
+ 				val Answer = "answerTo_${V}" 
+ 			#]
+ 			println( "actorcoap is handling request cmd($V)" )
+ 			updateResource [# "actorcoap is handling request cmd($V)" #]
+ 			replyTo cmd with cmdansw : cmdansw( $Answer )
+ 		}		
+ 	}
+  	Goto work 
+}   
+/* 
+QActor caller context ctxcoapdemo{
+	State s0 initial{ 
+		println("caller STARTS")
+		request actorcoap -m cmd : cmd(a)
+		delay 500
+		request actorcoap -m cmd : cmd(b)		
+  	}
+ 	Transition t0 whenReply cmdansw -> handleReply
+ 	
+ 	State handleReply{
+ 		printCurrentMessage 
+ 	}
+	Transition t0 whenReply cmdansw -> handleReply
+}
+*/

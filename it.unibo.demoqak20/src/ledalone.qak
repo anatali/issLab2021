@@ -1,0 +1,153 @@
+/*
+ * This model gives essential and relevant information about
+ * 	     STRUCTURE, INTERACTION and BEHAVIOR
+ * about the system
+ * 
+ * The model is EXECUTABLE
+ */
+
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+
+System -msglog ledalone
+mqttBroker "broker.hivemq.com" :  1883  eventTopic "unibo/ledalone/events"
+
+Dispatch turnOn  : turnOn(X)       
+Dispatch turnOff : turnOff(X)  
+Dispatch config  : config(TYPE)
+
+Event ledchanged : ledchanged( V ) 
+
+Context ctxblsledalone ip [host="localhost" port=8080] 	 	 
+  
+QActor led context ctxblsledalone {  
+[# 
+   var state   = false  
+   lateinit var leddev : it.unibo.bls.interfaces.ILed  //CONCRETE DEVICE 
+#]    
+	State s0 initial {  		
+  		println("led started")
+ 	} 
+ 	Transition t0 whenMsg  config -> doConfig
+ 	
+ 	State doConfig{
+ 		println(" === LED CONFIGURATION === ")
+ 		onMsg( config : config( TYPE ) ){
+ 			[# leddev = resources.bls.kotlin.ledsupport.create( payloadArg(0) ) 
+			   state = false 
+  		       leddev.turnOff()   
+ 			#] 			
+			emit ledchanged : ledchanged(off)
+ 		}
+ 	}
+	Goto waitCmd       
+	 
+	State waitCmd{  
+		println("led waits ...") 
+	}   
+	Transition t0     
+ 		whenMsg turnOn  -> turnLedOn
+		whenMsg turnOff -> turnLedOff
+		whenMsg  config -> doConfig
+  	  
+	State  turnLedOn{  
+		printCurrentMessage   
+ 		[# leddev.turnOn()	#]  
+		[# state = true 	#]
+		emit ledchanged : ledchanged(on)
+		updateResource [# "ledstate($state)"#]
+		
+ 	}	
+	Goto waitCmd  
+	      
+	State  turnLedOff{  
+ 		printCurrentMessage   
+		[# leddev.turnOff() 	#]  
+		[# state = false 		#]		 
+		emit ledchanged : ledchanged(off)
+		updateResource [# "ledstate($state)"	#]
+ 	}	
+	Goto waitCmd         
+}
+
+/*
+ * WARNING:
+ * Events are not perceived by an entity external not working via MQTT
+ * 
+ */
+ 
+/*
+ * Just to test ...
+ */
+QActor manager context ctxblsledalone { 
+	[# var counter = 0 #]
+	State s0 initial {   
+		forward led -m config  : config( ledgui )
+	}
+	Goto work
+	
+	State work {  
+  		println("manager starts $counter ")
+  		[# counter++ #]
+  		delay 100
+  		forward led -m turnOn  : turnOn(0)
+   		delay 500
+		forward led -m turnOff :  turnOff(0)   	
+		delay 2000	    
+	 } 	
+	 Goto end if [# counter == 3 #] else  work	
+
+	 State end{ println("manager BYE") }
+}
+
+//docker build --rm -t uniboledonly8080 .			//create image
+//docker run --rm -p8080:8080 uniboledonly8080
+ 
+//docker build --rm -t ledjava .			//create image
+//docker run --rm  ledjava
+
+//docker tag uniboledonly8080 habibridho/uniboledonly8080
+//docker push habibridho/uniboledonly8080
+//docker pull habibridho/uniboledonly8080
+ 
+//docker run --rm -p8080:8080 habibridho/uniboledonly8080
+
+
+//https://medium.com/@habibridho/docker-as-deployment-tools-5a6de294a5ff 
+ /*
+List all images:
+	docker images
+Remove image:
+	docker rmi _image_tag_
+List all containers:
+	docker ps -a
+Remove container:
+	docker stop _container_name_
+	docker rm _container_name_
+Build image:
+	docker build -t _image_tag_ .
+Run container:
+	docker run --name _container_name_ -p 80:80 -p 443:443 -d -t _image_tag_
+Launch application:
+	boot2docker ip
+browser: http:// _your_ip_  
+
+
+docker run -p 8484 -a stdin -a stdout -i -t --name natdocker node:nat /bin/bash
+docker ps
+docker start /stop --container
+
+
+
+  
+docker run -ti -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+Run for MQTT + websocket:
+docker run -d -p 1883:1883 -p 9001:9001 --name=mosquitto sourceperl/mosquitto
+docker ps -a
+docker start d8a5f1fefc5b
+docker ps
+docker exec -it d8a5f1fefc5b /bin/bash wizardly_ride
+* */

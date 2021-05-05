@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+<!--
+
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 70%;
+	background-color: #fcf8c7; 
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}    
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+  -->
+</style>
+    
+<head>
+   
+<title>LabQakExamples2020</title></head>
+    
+<body>
+
+<div class="body"> 
+
+<h1>LabQakExamples2020 | Using the QActor (meta)model</h1> 
+
+<h2><a id=""/>Starting</h2>
+
+
+<ol>
+<li>Download <a href="https://www.eclipse.org/Xtext/download.html" target="web">Eclipse Xtext</a>  and Install Eclipse plugin for Kotlin.</li>
+<li>Set (via <tt>Windws->Preferences</tt>) the Java compiler to version <tt>1.8</tt> and the installed jre to <tt>jre1.8.0_ ... </tt> </li>
+<li>Copy in <tt>dropins</tt> the files that constitute the support to the <bc>qak</bc> meta-model:<br/>
+<bc>it.unibo.Qactork_1.2.3.jar</bc>, <bc>it.unibo.Qactork.ui_1.2.3.jar</bc>, <bc>it.unibo.Qactork.ide_1.2.3.jar</bc>.
+<li>In an empty workspace, create a new project of type <tt>Kotlin project</tt> (e.g. <tt>it.unibo.eclipse.bls</tt>).</li>
+<!-- <li>Set the gradle to your <em>Gradle User Home</em> (<tt>Windows->Preferences->Gradle</tt>) </li> -->
+<li>In <tt>src</tt>, create a file with extension <tt>qak</tt></li>
+</li>
+</ol>
+<p>
+At this point, Eclipse should present a window like the following one:
+</p>
+<center><img src="./img/blsStarting.png" alt="blsStarting" width="50%" height="50%"></center>
+<p>
+
+<h2>Examples</h2>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:50%">
+<h3 id="demonottodo">demonottodo</h3>
+<a href="../src/demonottodo.qak" target="code">demonottodo.qak</a>.<br/>
+<m>A model 'non-model'.<br/><br/>
+We must always remember that a qak file should include the (textual) definition of a <bc>model</bc>, 
+in order to define structure, interaction and behavior of (logical) architectures of distributed systems.
+</m>
+</td>
+<td>
+Since the QAk language aims at capturing the interaction between (distributed) actors, it is not
+'computationally completed' and part of the behavior could be sometimes directly expressed in Kotlin.
+But <bc>without overstating</bc> such a possibility.</m>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%">
+<h3 id="demostrange">demostrange</h3>
+<a href="../src/demostrange.qak" target="code">demostrange.qak</a>.<br/>
+<m> This example allows us to better understand the behavior of empty-moves 
+and the 
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#msghandlerules" target="lab">Message handling rules</a>
+
+</m>
+</td>
+<td>
+<center><img src="./img/demostrange.png" alt="demostrange" width="60%" ></center>
+ 
+<m></m>
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<h3 id="demo0">demo0</h3>
+<a href="../src/demo0.qak" target="code">demo0.qak</a>.<br/>
+<m>This is the example introduced in 
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#demo" target="web"" target="code">LabQakExamples2020.html</a>.</m>
+<br/>
+<m>
+If we send the sequence: <tt>msg1, msg1, msg2</tt> and
+run with <bc>discardMsg On</bc> or with <bc>discardMsg Off</bc>, we have different results:</m>
+	<table style="width:95%">
+	<td><pre><kc>//discardMsg On</kc>
+	demo in s1
+	demo in s2 since msg1:msg1(1)
+	demo in s3 since msg2:msg2(1)
+	demo in s1
+
+	</pre></td>
+	<td><pre><kc>//discardMsg Off</kc>
+	demo in s1
+	demo in s2 since msg1:msg1(1)
+	demo in s3 since msg2:msg2(1)
+	demo in s1
+	demo in s2 since msg1:msg1(2)</pre></td>
+	<tr>
+	</tr>
+	</table>
+</td> 
+<td><m>
+<center><img src="./img/demoDSL.png" alt="demoDSL" width="90%" ></center>
+</m></td>
+</tr>
+
+<tr>
+<td>
+<h3 id="sentinel">sentinel</h3>
+<a href="../src/sentinel.qak" target="code">sentinel.qak</a><br/>
+<m>This is the example introduced in 
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#sentinel" target="web"" target="code">LabQakExamples2020.html</a>
+and shows guards in transition.
+<center><img src="./img/sentinel.png" alt="sentinel" width="70%" ></center>
+</m>
+	<table style="width:95%">
+	<td><pre><kc>//Output</kc>
+sentinel | STARTS
+		watcher emits fire
+sentinel | WATCH
+<m>sentinel in handleAlarm | msg(...<k>alarm(fire)</k>,8)</m>
+sentinel | ALARM fire 
+sentinel | STARTS
+sentinel | WATCH
+<m>sentinel in timeout | msg(local_tout_...)</m>
+sentinel | TIMEOUT
+sentinel | STARTS
+sentinel | ENDS
+		watcher emits tsunami
+	</pre></td>
+	<td><pre><kc>//output when no <bc>whenTime</bc> in <tt>(1)</tt></kc>
+ sentinel | STARTS
+			watcher emits fire
+sentinel | WATCH
+<m>sentinel in handleAlarm | msg(...<k>alarm(fire)</k>,8)</m>
+sentinel | ALARM fire 
+sentinel | STARTS
+sentinel | WATCH
+			watcher emits tsunami
+<m>sentinel in handleAlarm | msg(... <k>alarm(tsunami)</k>,9)</m>
+sentinel | ALARM tsunami 
+sentinel | STARTS
+sentinel | WATCH	
+<pre>
+<tr>
+	</tr>
+	</table>
+<m>To understand why the sentinel perceives the second alarm, see  
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#msghandlerules" target="lab">Message handling rules</a>
+<br/>
+Note that, if we  insert <bc>delay 1500</bc> in state <tt>handleAlarm</tt>, eliminate <bc>Goto s0</bc> in <tt>(2)</tt>
+and insert the commented  <bc>Transition t0 whenTime 10  -> explore</bc>,
+the second alarm is lost.
+
+</m>
+
+</td>
+<td>
+<h3>Events emitted by 'aliens'</h3>
+<m>
+Comment <bc>whenTime</bc> in <tt>(1)</tt> and insert <bc>Goto watch</bc> in <tt>(3)</tt>.<br/><br/>
+Examples of 'Aliens' written in Ptyhon3 that emit events are:<br/>
+
+<ul>
+<li><a href="../resources/python/tcp_emitter.py" target="code">tcp_emitter.py</a> (that makes use of the TCP on the context port) <br/><br/></li>
+<li> <a href="../resources/python/mqtt_emitter.py" target="code">mqtt_emitter.py</a> (that makes use of the MQTT broker
+specified by the sentinel). <br/> <br/>
+Remember to activate the 'sentinel' by specifying a MQTT Broker.
+</li>
+</ul>
+ 
+</m></td>
+</tr>
+
+
+
+<tr>
+<td>
+<h3 id="reqsimple">Request simple</h3>
+<a href="../src/demo_req_a.qak" target="code">demo_req_a.qak</a>
+<center><img src="./img/reqreply.png" alt="reqreply" width="90%" ></center>
+</td>
+<td><m>An example of using request/reply
+</m></td>
+</tr>
+
+
+<tr>
+<td>
+<h3 id="reqask">Request with askfor </h3>
+<a href="../src/demo_req_b.qak" target="code">demo_req_b.qak</a>
+<center><img src="./img/reqaskreply.png" alt="reqaskreply" width="90%" ></center>
+ 
+</td>
+<td><m>An example of using request/reply with <bc>askFor</bc>.
+</m></td>
+</tr>
+ 
+<tr>
+<td>
+<h3 id="prolog">Using Prolog</h3>
+<a href="../src/prologusage.qak" target="code">prologusage.qak</a>
+ <br/>
+ <m>An example of using Prolog and an user-defined declarative knowledge-base:
+<a href="../userKb.pl" target="code">userKb.pl</a>
+</m>
+
+</td>
+<td><m> The QAk infrastructure makes use of a set of system rules expressed in Prolog:
+ <a href="../sysRules.pl" target="code">sysRules.pl</a></m></td>
+</tr> 
+
+
+<tr>
+<td>
+<h3 id="coap">Actors as CoAP resources</h3>
+<a href="../src/coapdemo.qak" target="code">coapdemo.qak</a>
+ <br/>
+ <a href="../src/coapdemocaller.qak" target="code">coapdemocaller.qak</a>
+ <br/><br/>
+ A CoAP observer written in Kotlin is defined in:
+ <a href="../resources/coap/actorQakCoapObserver.kt" target="code">resources/coap/actorQakCoapObserver.kt</a>
+ <m>
+</m>
+
+</td>
+<td><m> An example of another caller wriiten in Kotlin:
+ 
+ <a href="../resources/coap/actorQakCoapClient.kt" target="code">resources/coap/actorQakCoapClient.kt</a>
+<br/><br/>
+The possibility to write a CoAP caller in Python is still under investigation  
+ </m></td>
+</tr> 
+
+<tr>
+<td>
+<h3 id="qastreams">Actors as streams</h3>
+<center><img src="./img/demoStreams.png" alt="demoStreams" width="100%"></center>
+<a href="../src/streamsdemo.qak" target="code">streamsdemo.qak</a>
+ <br/><br/>
+ <i>Actors that work in message-driven way</i>
+ <m>
+ <ul>
+ <li><a href="../resources/rx/sonarSimulator.kt" target="code">sonarSimulator.kt</a>: once activated, exploits a 
+  <a href="../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#sequences" target="lab">Suspendable Sequence</a>
+ to generate a  sequence of (sonar) data  in the form of <i>qak events</i>: <bc>Event sonarRobot  : sonar(DISTANCE)</bc>
+ <br/><br/></li>
+ <li><a href="../resources/rx/dataLogger.kt" target="code">dataLogger.kt</a>: when it receives a message from the previous component in the pipe,
+shows the message and aftwerwards propagates the message (as it is) to the next  component of the pipe.
+  <br/><br/></li>
+ <li><a href="../resources/rx/dataCleaner.kt" target="code">dataCleaner.kt</a>: when it receives a message (event <bc>sonarRobot</bc>) from the previous component in the pipe,
+propagates to the next component only the events whose <bc>DISTANCE</bc> is within a prefixed interval of values;
+  <br/><br/></li>
+ <li><a href="../resources/rx/distanceFilter.kt" target="code">distanceFilter.kt</a>;
+ when it receives a message (event <bc>sonarRobot</bc>) from the previous component in the pipe,
+propagates to the next component a new event (<bc>Event obstacle : obstacle(DISTANCE)</bc>) when  the value of <bc>DISTANCE</bc> i sless than 
+a prefixed value;
+<br/><br/></li>
+ <li><bc>qasink</bc>: is the actor defined in the model <a href="../src/streamsdemo.qak" target="code">streamsdemo.qak</a>.
+ It crreates the pipe and handles the events emitted by <a href="../resources/rx/distanceFilter.kt" target="code">distanceFilter.kt</a>
+ </li>
+ 
+ </ul>
+</m>  
+
+</td>
+<td>
+<h3>Coded QAkactors</h3>
+<m> 
+The model  <a href="../src/streamsdemo.qak" target="code">streamsdemo.qak</a> defines a system composed by the <bc>qasink</bc>
+and a set of actors qualified as <tt>CodedQActor</tt>.
+<br/><br/>
+A <bc>CodedQActor</bc> is an actor completely written in Kotlin that can be included in the system by specifying its class name.
+Its presence is included in the description of the system. In fact, in our case, such a descripiton, wrtiten in
+<a href="../streamsdemo.pl" target="code">streamsdemo.pl</a> is:
+<pre>
+context(ctxstreamsdemo, "localhost",  "TCP", "8045").
+ qactor( sonarsimulator, ctxstreamsdemo, "rx.sonarSimulator").
+  qactor( datalogger, ctxstreamsdemo, "rx.dataLogger").
+  qactor( datacleaner, ctxstreamsdemo, "rx.dataCleaner").
+  qactor( distancefilter, ctxstreamsdemo, "rx.distanceFilter").
+  qactor( qasink, ctxstreamsdemo, "it.unibo.qasink.Qasink").
+</pre>
+ 
+Thus, the <tt>QA-infrastructure</tt> handles a <tt>CodedQActor</tt> as a usual; in particular, it will <bc>'inject'</bc> into it the context
+specified by the model. 
+<br/>
+Note that each <tt>CodedQActor</tt> in this example is defined as a specialized version of 
+<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2020.html#ActorBasic" tragte="lab">ActorBasic</a> that has no context at creation time.
+  </m></td>
+</tr> 
+
+</tbody>	
+</table></center>
+
+
+<h2>Case studies</h2>
+
+
+<center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:70%">
+<m>
+<k>es0</k>: Design and build a software system (named<em>workshift</em>) that allows to manage a machine according to three turns:
+
+<ol>
+<li>in the first turn (in the morning) the machine is able to handle messages (dispatches) of type <tt>m1:m1(V)</tt></li>
+<li>in the second turn (in the afternoon) the machine is able to handle messages (dispatches) of type <tt>m2:m2(V)</tt></li>
+<li>in the third turn (in the nigth) the machine 'sleeps'</li>
+</ol>
+
+Messages of types <tt>m1</tt> and <tt>m2</tt> can be sent by external entities at every time.
+</m>
+
+</td>
+<td><a href="../src/workshift.qak" target="code">workshift.qak</a></td>
+</tr>
+
+
+
+
+<tr>
+<td><m>
+Design and build a <tt>ButtonLed</tt> software system (<em>bls</em>) that makes human users able to control a <em>led</em> 
+according to different control policies each time a <em>button</em> is pressed:
+
+<ol>
+<li><k>es1</k>: Turn on/off the <em>led</em></li>
+<li><k>es2</k>-Blink/un-blink the <em>led</em></li>
+<li><k>es3</k>-Control the <em>led</em> to send  a  maritime signal (e.g. 'passage to the east'
+( blank ) blinking at groups of three, every 5 seconds) </li>
+</ol>
+
+The system should be a distributed system, in which the Button and the Led run on a <i>different computational supports</i>, e.g. a Conventional PC, a RaspberryPi or Arduino.
+
+ 
+</m>
+</td> 
+<td>
+See <a href="../../it.unibo.bls20/userdocs/bls2020.html" target="lab">BLS2020: The button-led system</a>
+<!--
+<a href="../src/blses1_onoff.qak" target="code">blses1_onoff.qak</a><br/> 
+<a href="../src/blses2_blink.qak" target="code">blses2_blink.qak</a> 
+<h3>Distributed version</h3>
+<a href="../src/blsledonly.qak" target="code">blsledonly.qak</a><br/>
+<a href="../src/blsblink.qak" target="code">blsblink.qak</a><br/>
+-->
+<m></m></td>
+</tr>
+
+<tr>
+<td><m>
+<k>es4</k>:Design and build a  software system (named <em>taskdeploy</em>) that makes a teacher able to 
+assign a set of <ks>N (N>0)</ks> different tasks to the students, like that we are using now.
+</m>
+</td> 
+<td><a href="../src/gettaskdeploy.qak" target="code">gettaskdeploy.qak</a><br/> 
+<m></m></td>
+</tr>
+
+ 
+</tbody>	
+</table></center>
+
+<br/><br/>
+</div>
+
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>

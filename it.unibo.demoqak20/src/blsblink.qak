@@ -1,0 +1,76 @@
+/*
+ * This model gives essential and relevant information about
+ * 	     STRUCTURE, INTERACTION and BEHAVIOR
+ * about the  system
+ * 
+ * The model is EXECUTABLE
+ */
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+
+System -msglog blsblink 
+
+mqttBroker "broker.hivemq.com" :  1883 eventTopic "unibo/blsblink/events"
+
+Event    local_buttonCmd : local_buttonCmd(X)  
+Event    end : end(X)  
+
+Dispatch ledCmd : ledCmd(X)  
+
+
+/* 
+ * WARNING: 
+ *    blsblink and blsledonly should be devloped in TWO DIFFERENT PROJECTS 
+ * (to avoid interference in launching the main programs from the generated blsxxx.pl files)
+ * If you develop both blsblink and blsledonly in the same Eclipse project
+ * AND you don't use MQTT
+ * THEN compile and run each model separately (by starting from blsledonly)
+ * If you use MQTT, change ctxblsledonly hereunder to some other different name 
+ */  
+Context ctxblsledonlyyyy	 ip [host="localhost" port=8075] 		 
+Context ctxblsblink     	 ip [host="127.0.0.1" port=8077] 	 	 
+
+ExternalQActor led context ctxblsledonlyyyy 
+   
+QActor blsblink context ctxblsblink {
+	[# 
+		var odd         = true 
+ 		var toutCounter = 0
+	#]
+	State s0 initial { 	
+		qrun resources.bls.kotlin.buttonEventEmitter.create( myself, "blink/unblink")  
+	}
+	Goto waitclick
+	State waitclick{
+		
+	}
+	Transition t0 
+ 		whenEvent local_buttonCmd -> startblink
+		whenEvent end -> endOfWork
+		 
+	State endOfWork{ 
+		println("blsblink BYE")
+		terminate 0
+ 	}
+ 	State startblink{ 
+ 		println("blsblink doblink")
+  		if[# odd #]{
+			updateResource [# "ledCmdOn" #]
+			forward led -m ledCmd : ledCmd(on)
+  		}else{
+			updateResource [# "ledCmdOff" #]
+			forward led -m ledCmd : ledCmd(off)  			
+  		}
+		[# odd = !odd #]
+ 	}
+ 	Transition t0 whenTime 300 -> startblink
+ 	 			  whenEvent local_buttonCmd -> waitclick
+				  whenEvent end -> endOfWork
+ }	
+
+ 
+ 
+ 

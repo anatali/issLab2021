@@ -1,0 +1,100 @@
+/*
+ * This model gives essential and relevant information about
+ * 	     STRUCTURE, INTERACTION and BEHAVIOR
+ * about the system
+ * 
+ * The model is EXECUTABLE
+ */
+
+System -msglog blses2_blink
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+//mqttBroker "broker.hivemq.com" :  1883 
+
+Event    local_buttonCmd : local_buttonCmd(X)  
+Event    end : end(X)  
+
+Dispatch ledCmd : ledCmd(X)  
+  
+Context ctxblses2  ip [host="localhost" port=8075] 		 
+    
+QActor blsblink context ctxblses2 {
+	[# 
+		var odd         = true 
+ 		var toutCounter = 0
+	#]
+	State s0 initial { 	
+		qrun resources.bls.kotlin.buttonEventEmitter.create( myself, "blink/unblink")  
+	}
+	Goto waitclick
+	State waitclick{
+		
+	}
+	Transition t0 
+ 		whenEvent local_buttonCmd -> startblink
+		whenEvent end -> endOfWork
+		 
+	State endOfWork{
+		println("blsblink BYE")
+		terminate 0
+ 	}
+ 	State startblink{ 
+  		if[# odd #]{
+			updateResource [# "ledCmdOn" #]
+			forward led -m ledCmd : ledCmd(on)
+  		}else{
+			updateResource [# "ledCmdOff" #]
+			forward led -m ledCmd : ledCmd(off)  			
+  		}
+		[# odd = !odd #]
+ 	}
+ 	Transition t0 whenTime 500 -> startblink
+ 	 			  whenEvent local_buttonCmd -> waitclick
+				  whenEvent end -> endOfWork
+
+
+ }	
+
+ 
+QActor led context ctxblses2 {  
+[# 
+	var counter = 0 
+	val leddev = resources.bls.kotlin.led.create()	
+#]    
+	State s0 initial {  
+		//run resources.it.unibo.bls.devices.gui.LedAsGui.create( )
+ 		println("led started")
+ 		[# leddev.turnOff() #]
+	} 
+	Goto waitCmd   
+	
+	State waitCmd{  println("led waits ...") 
+	}   
+	Transition t0     
+ 		whenMsg ledCmd            -> handleLedCmd
+  	  
+	State  handleLedCmd{  
+		printCurrentMessage   
+		
+		onMsg ( ledCmd : ledCmd(X) ) { 
+			[# val Cmd = payloadArg(0)
+			   counter++
+			#]
+			if[# Cmd == "on" #] {  
+ 				println( "led ON counter=$counter" )
+ 				[# leddev.turnOn() #]
+ 				updateResource [# "ledOn" #]
+			}else{
+				println( "led OFF counter=$counter" )
+				[# leddev.turnOff() #]
+				updateResource [# "ledOff" #]
+			}
+		}
+	}	
+	Goto waitCmd        
+}
+ 
+ 

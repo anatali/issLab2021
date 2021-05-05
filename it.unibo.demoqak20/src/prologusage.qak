@@ -1,0 +1,158 @@
+/*
+ * prologusage.qak
+ */ 
+
+System prologusage
+Dispatch goon : goon(X)
+ 
+Context ctxprologdemo ip [host="localhost" port=8075]
+
+QActor kb context ctxprologdemo{
+[# var CHAINCOUNTER = 1 #]	
+
+	State s0 initial{ 
+		 solve( consult("sysRules.pl")	 ) 
+		 solve( consult("prologUsage.pl"))
+		 solve( consult("userKb.pl")	 )
+		 solve( showSystemConfiguration  ) 
+	} 
+	Goto exampleElab
+	
+	State exampleElab{
+		println(" ------------ exampleElab  ------------ ")
+		solve( assign(n,3) )
+		solve( inc(n,10,N1) )
+		solve( getVal( N1,V ) )
+		[# val solution = getCurSol("V") #]	
+		println( "V=${solution}" )   	//V=13 
+	}	
+	Goto exampleUnfiy
+/* 
+ * UNIFICATION
+ */
+	State exampleUnfiy{
+		println(" ------------ exampleUnfiy  ------------ ")
+ 		solve( unify( p(X,X ), p(1,2) ) )
+		println( currentSolution )	//no.
+		
+		solve( unify( p(X,b(X) ), p(1,Y) ) )
+		println( currentSolution )	//yes X / 1  Y / b(1)
+		[# val x = getCurSol("X") 
+		   val y = getCurSol("Y") 
+		#]
+ 		ifSolved{ println( "X=${x} Y=${y}" ) }	//X=1 Y=b(1)
+ 		 		
+	}
+	Goto exampleStart  
+
+/* 
+ * RULES AT WORK
+ */
+	State exampleStart{
+		println(" ------------ exampleStart    ------------ ")
+		solve( vertical(line( point(16, 4), point(16, 72) )) )
+		println( currentSolution ) 						//yes.
+		solve(  horizontal(line(point(1,1),point(2,Y)))  )
+		[# val y = getCurSol("Y")  #]
+		ifSolved { println( "Y=${y}" ) }				//Y=1
+		println( "............................." ) 
+		solve(  horizontalLine( point(1,5),P )  ) 
+		//println( currentSolution )  
+		[# val P = getCurSol("P")  #]
+		ifSolved { println( "P=${P} " ) } 				//P=point(3,5)
+		println( "............................." ) 
+		solve(  allHLines( point(1,5),L )  ) 
+		//println( currentSolution )  
+		[# val lines = getCurSol("L")  #]
+		ifSolved { println( "all lines=${lines} " ) }
+		//all lines=[secondPoint(point(3,5)),secondPoint(point(7,5))] 
+  	}
+	Goto exampleKb1   
+/*
+ * KNOWLEDGE one / all
+ */	
+	State exampleKb1{
+		println(" ------------ exampleKb1    ------------ ")
+		solve( chain(N,LED) )
+		[# val N   = getCurSol("N") 
+		   val LED = getCurSol("LED") 
+		#]
+		println( "N=${N} LED=${LED}" ) 				//N=1 LEDY=led1
+		solve( getLedNames(LEDNAMES) )
+		[# val lednamelist   = getCurSol("LEDNAMES") #]
+		println( "lednamelist=$lednamelist" )		//lednamelist=[led1,led2]		 
+ 	}
+ 	Goto exampleKb2Init    
+ 
+ /*
+ * KNOWLEDGE step by step at model level
+ */		
+	State exampleKb2Init{  
+		[# CHAINCOUNTER=1 #]
+		println(" ------------ INIT exampleKb2    ------------ ")
+	}
+	Goto exampleKb2 
+	
+	State exampleKb2{ 
+ 		solve( chain($CHAINCOUNTER,LED) )
+	}
+	Goto exampleKb2continue if [# currentSolution.isSuccess() #]  else exampleKb2end
+	
+	State exampleKb2continue{ 
+		[# val LED = getCurSol("LED") #]
+		println( "LED=${LED}" ) // LED=led1, led2, ....
+		[# CHAINCOUNTER++ #]				
+	}
+	Goto exampleKb2
+	
+	State exampleKb2end{  
+		println(" ------------ END exampleKb2    ------------ ") 		
+	}
+	Goto exampleKb2Coded
+
+ /*
+ * KNOWLEDGE step by step at Kotlin code level
+ */				
+	State exampleKb2Coded{
+		println(" ------------ exampleKb2Coded    ------------ ") 		
+		//this code should be better defined into a static class
+	[#   CHAINCOUNTER=1
+		 do{
+			solve( "chain($CHAINCOUNTER,LED)" )
+            if(currentSolution.isSuccess()){
+				 val curLed = getCurSol("LED")
+				 println( "LED=$curLed " )		//LED=...
+				 CHAINCOUNTER++
+			}
+		 }while(currentSolution.isSuccess())			
+	#]
+	}
+	
+	Goto exampleKb2PrologInit
+
+ /*
+ * KNOWLEDGE step by step at Prolog code level
+ */				
+	State exampleKb2PrologInit{
+		println(" ------------ INIT exampleKb2Prolog    ------------ ") 		
+		solve( initStepCounter )
+ 	}
+ 	Goto exampleKb2Prolog
+ 	    
+	State exampleKb2Prolog {             
+ 		solve( getNextLedName(LEDNAME) )	//getNextLedName defined in userKb.pl	
+		ifSolved { 
+			[# var curledname = getCurSol("LEDNAME") #]
+			println( "curledname=$curledname" )		//curledname=...
+		} else { println("no more leds") }    
+	}
+	Goto exampleKb2Prolog if [# currentSolution.isSuccess() #]  else endOfWork
+ 
+	State endOfWork{ 
+		println(" ------------ BYE    ------------ ") 	   	
+	}    
+	   
+} 
+//CodedQActor clienttcp context ctxPrologExample className "resources.clientWenvTcp"  
+//ExternalQActor radar context ctxPrologExample  
+ 

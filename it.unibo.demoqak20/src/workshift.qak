@@ -1,0 +1,100 @@
+/*
+ * This model gives essential and relevant information about
+ * 	     STRUCTURE, INTERACTION and BEHAVIOR
+ * about the system
+ * 
+ * The model is EXECUTABLE
+ */
+
+System -msglog workshift
+//mqttBroker "localhost" : 1883
+
+Dispatch m1 : m1(ARG)
+Dispatch m2 : m2(ARG)
+ 
+Context ctxworkshift ip [host="localhost" port=8055]
+
+QActor worker context ctxworkshift{
+[#
+	var StartWorktime     = 0L
+	var ElapsedWorktime   = 0L
+	var ResidualWorktime  = 0L
+	var TurnWorkktime     = 3000L //14400000L
+#]
+	State s0 initial { 	 
+		discardMsg Off
+ 	}   
+ 	Goto startTheWork 
+ 	
+ 	State startTheWork{
+  		memoCurrentTime StartWorktime
+		println("================= Working in the morning (for m1) ============= ") 		
+  	}
+ 	Transition t0 whenTimeVar TurnWorkktime     -> changeTurn  
+ 				  whenMsg m1                    -> workshiftMorning
+ 	
+ 	State workshiftMorning{
+		printCurrentMessage 		
+ 		setDuration ElapsedWorktime from StartWorktime
+ 		[# ResidualWorktime = TurnWorkktime - ElapsedWorktime #]
+ 		println("time residual in the morning: $ResidualWorktime")
+ 	}
+ 	Transition t0 whenTimeVar ResidualWorktime  -> changeTurn  
+ 				  whenMsg m1                    -> workshiftMorning
+ 	 
+ 	State changeTurn{
+ 		println("================= Working in the afternoon (for m2) ============= ")
+ 		memoCurrentTime StartWorktime 		
+ 	}
+ 	Transition t0 whenTimeVar TurnWorkktime  -> sleeping  
+ 				  whenMsg m2                 -> workshiftAfternoon
+ 	
+ 	State workshiftAfternoon{
+ 		printCurrentMessage
+  		setDuration ElapsedWorktime from StartWorktime
+ 		[# ResidualWorktime = TurnWorkktime - ElapsedWorktime #]
+ 		println("time residual in the afternoon: $ResidualWorktime")
+    } 
+  	Transition t0 whenTimeVar ResidualWorktime  -> sleeping
+ 				  whenMsg m2                    -> workshiftAfternoon
+
+ 	State sleeping{
+ 		println("================= Sleeping ============= ")
+  		//resume next day ...	
+  		//In the meantime the messages are stored in the worker queue	
+ 	}
+ 	Transition t0 whenTimeVar TurnWorkktime -> startTheWork
+   
+}
+ 
+
+QActor sender context ctxworkshift{
+	State s0 initial { 	
+		 println("---------- sender forward m2") 
+ 		 forward worker -m m2 : m2(1)
+		 delay 100
+		 println("---------- sender forward m1") 
+		 forward worker -m m1 : m1(1)
+		 delay 100
+		 println("---------- sender forward m1") 
+		 forward worker -m m2 : m2(2)
+		 delay 100
+		 println("---------- sender forward m2") 
+		 forward worker -m m2 : m2(3)		  
+		 delay 500  
+		 println("---------- sender forward m1") 
+		 forward worker -m m1 : m1(2)		  
+		 delay 4000 
+		 println("---------- sender forward m1") 
+		 forward worker -m m1 : m1(3)		  
+		 delay 1000 
+		 println("---------- sender forward m1") 
+		 forward worker -m m1 : m1(4)		  
+		 delay 1000 
+		 println("---------- sender forward m2") 
+		 forward worker -m m2 : m2(4)		  
+	} 
+	
+} 
+
+ 
