@@ -5,7 +5,7 @@ Dispatch ledCmd : ledCmd(X)
 
 Event alarm     : alarm(X)
 Event wenvinfo  : answer(X)
-
+ 
 Context ctxSysExample  ip [host="localhost"     port=8072]
  
 QActor qa0 context ctxSysExample{    
