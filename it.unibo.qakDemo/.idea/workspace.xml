@@ -1,71 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/MarchegianiObserverForSendingAnswer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/.settings/org.jetbrains.kotlin.core.prefs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxdemo0.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/demo0.pl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxdemo0/MainCtxdemo0.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/demo/Demo.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/perceiver/Perceiver.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/sender/Sender.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/it.unibo.qakDemo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlanner.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/backup/ExplorerWithPlanner.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build2021.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Californium.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build_ctxSysExample.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build_ctxSysExample.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sysexample.qak" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/koltinCode/pathExec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/koltinCode/pathExec.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/spiralwalker/Spiralwalker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/spiralwalker/Spiralwalker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/spiralwalker.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/spiralwalker.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actorAppl/RobotRestCaller.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kotlinCode/qacoded.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/kotlinCode/qacoded.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sysexample.qak" beforeDir="false" afterPath="$PROJECT_DIR$/src/sysexample.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
   <component name="ProjectId" id="1s8BAcwBJgLaCjx7isGZyT3ICdU" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RunManager">
     <configuration name="MainCtxSysExampleKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <module name="it.unibo.qakDemo" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="it.unibo.ctxSysExample.MainCtxSysExampleKt" />
-      <option name="WORKING_DIRECTORY" />
+      <module name="it.unibo.qakDemo" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.MainCtxSysExampleKt" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -88,5 +108,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

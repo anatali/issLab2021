@@ -1,6 +1,8 @@
 bin
 bin/default
 .metadata
+.classpath
+.project
 build
 logs
 
@@ -23,5 +25,5 @@ gradlew.bat
 /ReadMe.html
 .lck/ 
 docker/
-../metadata/
+/.metadata/
 /src-gen/

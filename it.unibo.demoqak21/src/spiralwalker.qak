@@ -1,5 +1,7 @@
 System spiralwalker
-
+/*
+ * TODO: complete this code for the case of path failure
+ */
 Dispatch pathDone : pathDone(X)
 
 Context ctxspiralwalker  ip [host="localhost" port=8038]    
@@ -8,7 +10,7 @@ QActor spiralwalker context ctxspiralwalker{
 [#  var stepCounter        = 0
 	var CurrentPlannedMove = ""
 	val mapname            = "roomMap"
-	val maxNumSteps        = 4	  
+	val maxNumSteps        = 3	  
 	val MYSELF             = myself
 	
 #]	  
@@ -26,41 +28,17 @@ QActor spiralwalker context ctxspiralwalker{
 		//run itunibo.planner.plannerUtil.planForGoal("$stepCounter","$stepCounter")
 		run kotlinCode.pathExec.doJob("$stepCounter", MYSELF)
  	} 
- 	/* 
- 	Goto doPlannedMoves //execPlannedMoves
- 	 	
- 	
- 	State doPlannedMoves{
-     	 run kotlinCode.pathExec.doJob(1, MYSELF)
- 	}
  	Goto waitForAnswer
- 	*/
- 	
+
+ 	  
  	State waitForAnswer{
  		println("waitForAnswer ... ") 
  	}
  	Transition t0 whenMsg pathDone -> backToHome
-/* 
-	State execPlannedMoves{ 
- 		[#  CurrentPlannedMove = itunibo.planner.plannerUtil.getNextPlannedMove() #]
- 	}
- 	Goto wMove if [# CurrentPlannedMove == "w" #] else otherPlannedMove
- 
- 	State wMove {  
- 		
- 		run itunibo.planner.plannerUtil.updateMap( "w" )
- 	}
- 	Goto execPlannedMoves  if [# CurrentPlannedMove.length > 0 #] else testIfAtHome
- 	
- 	State otherPlannedMove{
-  		if [# CurrentPlannedMove == "l" || CurrentPlannedMove == "r"  #]{
- 			run itunibo.planner.plannerUtil.updateMap( "$CurrentPlannedMove" )
-  		} 
- 	}   
- 	Goto execPlannedMoves  if [# CurrentPlannedMove.length > 0 #] else testIfAtHome 
-*/
- 	
+  	
 	State backToHome{
+		println("backToHome ... ")
+		
 		//run itunibo.planner.plannerUtil.planForGoal("0","0")
 		run kotlinCode.pathExec.doJob("0", MYSELF)
 	} 
@@ -70,10 +48,7 @@ QActor spiralwalker context ctxspiralwalker{
  		println("waitForBackToHome ... ") 
  	}
  	Transition t0 whenMsg pathDone -> continueJob
-/* 
-	State testIfAtHome{}
- 	Goto backToHome if[# ! itunibo.planner.plannerUtil.atHome()  #] else continueJob 
-*/	 	
+ 	
 	State continueJob{
 		println("MAP AFTER BACK TO HOME $stepCounter")
 		run itunibo.planner.plannerUtil.showMap()		

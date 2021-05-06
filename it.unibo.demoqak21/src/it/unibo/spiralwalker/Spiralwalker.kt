@@ -19,7 +19,7 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 		  var stepCounter        = 0
 			var CurrentPlannedMove = ""
 			val mapname            = "roomMap"
-			val maxNumSteps        = 4	  
+			val maxNumSteps        = 3	  
 			val MYSELF             = myself
 			
 		return { //this:ActionBasciFsm
@@ -38,6 +38,7 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						 stepCounter = stepCounter + 1  
 						kotlinCode.pathExec.doJob( "$stepCounter", MYSELF  )
 					}
+					 transition( edgeName="goto",targetState="waitForAnswer", cond=doswitch() )
 				}	 
 				state("waitForAnswer") { //this:State
 					action { //it:State
@@ -47,6 +48,7 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 				}	 
 				state("backToHome") { //this:State
 					action { //it:State
+						println("backToHome ... ")
 						kotlinCode.pathExec.doJob( "0", MYSELF  )
 					}
 					 transition( edgeName="goto",targetState="waitForBackToHome", cond=doswitch() )

@@ -1,0 +1,33 @@
+System pathexecutor
+
+Dispatch dopath : dopath( PATH )
+Context ctxPathexecutor  ip [host="localhost" port=8032]
+
+QActor pathexec context ctxPathexecutor{
+	State s0 initial{  
+		println("pathexec starts") 
+ 
+	}
+	Transition t0 whenMsg dopath -> dojob
+	
+	State dojob{
+		printCurrentMessage
+ 		run kotlinCode.pathexecutil.memoCurPath( "$currentMsg" )
+	}
+	Goto nextMove 
+	
+	State nextMove{
+		[# var MoveTodo = kotlinCode.pathexecutil.nextMove() #]
+		println("pathexec MoveTodo=$MoveTodo ") 
+	} 
+	//TODO: continue ...
+}   
+
+QActor testexec context ctxPathexecutor{
+	State s0 initial{  
+		[# val PathTodo = "{\"path\":\"rl\"}" #]
+		println("testexec starts") 
+		forward pathexec -m dopath : dopath( path($PathTodo) )
+ 
+	}
+}

@@ -11,14 +11,14 @@ object pathExec{
 		val answJson = JSONObject( answer )
 		if( answJson.has("executorDone")){
 			val path = answJson.getString("executorDone")
-			println("doPlannedMoves automsg to $master")
+			println("doPlannedMoves automsg to $master for $path")
+			path.forEach {  itunibo.planner.plannerUtil.updateMap(""+it) }
+			itunibo.planner.plannerUtil.showMap()
 			//master.emit("pathDone","pathDone($path)")
 			master.autoMsg("pathDone","pathDone($path)")
 		}
-
 	}
-	suspend fun doJob(n: Int, master: ActorBasic){
-		val ns = ""+n
+	suspend fun doJob(ns: String, master: ActorBasic){
 		itunibo.planner.plannerUtil.planForGoal(ns,ns)
 		val Moves = itunibo.planner.plannerUtil.getActions()
 		//println("pathExec MOVES=$Moves")
@@ -26,18 +26,6 @@ object pathExec{
 		Moves.forEach({path=path+it})
 		//println("pathExec PATH=$path")
 		doPlannedMoves(path, master)
-		/*
-		val answer = CallRestWithApacheHTTP.doPath(path)
-		println("pathExec answer=$answer")
-		
-		val answJson = JSONObject( answer )
-		
-		if( answJson.has("executorDone")){
-			val path = answJson.getString("executorDone")
-			println("pathExec automsg to $master")
-			//master.emit("pathDone","pathDone($path)")
-			master.autoMsg("pathDone","pathDone($path)")
-		} */
 	}
  
 
