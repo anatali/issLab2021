@@ -586,17 +586,40 @@ The proposed plan is executed by the PathExecutor component</li>
 </table>
 </center> 	
 
-<h2>Applications</h2>
+<h2>Applications (May 6)</h2>
 
+<ol>
+<li>Attivare 
 <pre>
-webspring.demo:            docker-compose -f virtualrobotguistepper.yaml up
-                           DemoCallPathRest
-						   
-it.unibo.cautiousExplorer: CallRestWithApacheHTTP	 
-                           BasicStepGenericCaller
-						   PathExecutor
-                           ExplorerWithPlannerM2m		
+docker-compose -f virtualrobotguistepper.yaml up in <ks>webspring.demo </ks>          
+</pre></li>
+<li>Provare ad eseguire
+<pre>
+CallRestWithApacheHTTP in <ks>it.unibo.cautiousExplorer</ks>
 </pre>
+</li>
+<li>
+Provare ad eseguire
+<pre>
+ExplorerWithPlannerM2m in <ks>it.unibo.cautiousExplorer</ks>
+</pre>
+Analizzare il codice e catturare gli apsetti salienti della soluzione
+</li>
+<li>Affrontare il nuovo problema:
+<div>
+Esplorare il territorio con la possibilità di reagire (con policitca da stabilire) a un <k>evento di allarme</k>
+</div>
+Analisi del problema:
+<ul>
+<li>PathExcutor è un servizio che ....</li>
+<li>Un evento (di allarme) è informazione volatile ....</li>
+<li>...</li>
+</ul>
+</li>
+ 
+</ol>
+
+ 
 <!--
 <table style="width:98%">
 
