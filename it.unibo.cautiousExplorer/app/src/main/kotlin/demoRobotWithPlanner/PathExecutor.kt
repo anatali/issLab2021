@@ -77,15 +77,7 @@ class PathExecutor (name: String, scope: CoroutineScope,
 
     protected fun obstacleFound() {
         println("$name | END FAIL ---------------- ")
-        /*
-        moves.showMap()
-        try {
-            moves.setObstacle()
-        } catch (e: Exception) { //wall
-            println("$name | outside the map " + e.message)
-        }
-        moves.showMap()*/
-        ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney()))
+         ownerActor.send(ApplMsgs.executorFailEnd(name, moves.getJourney()))
         moves.resetJourney()
         curState = State.continueJob
     }

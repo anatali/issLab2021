@@ -2,6 +2,8 @@
 ExplorerWithPlannerM2m
 Explores a room by executing a sequence of plans (as an oracle)
 The proposed plan is executed by the PathExecutor POST API dopath on port 8081
+Thus, ExplorerWithPlannerM2m USES in SYNCH way a remote service
+
  */
 package demoRobotWithPlanner
 

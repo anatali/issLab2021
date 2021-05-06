@@ -1,9 +1,16 @@
 System pathexecutor
 
 Dispatch dopath : dopath( PATH )
+
+Dispatch moveok   : move( MOVESHORT )
+Dispatch movefail : move( MOVESHORT )
+
+Event alarm     : alarm(X)
+
 Context ctxPathexecutor  ip [host="localhost" port=8032]
 
 QActor pathexec context ctxPathexecutor{
+	[# var MYSELF = myself #]
 	State s0 initial{  
 		println("pathexec starts") 
  
@@ -16,12 +23,34 @@ QActor pathexec context ctxPathexecutor{
 	}
 	Goto nextMove 
 	
-	State nextMove{
+	State nextMove{ 
 		[# var MoveTodo = kotlinCode.pathexecutil.nextMove() #]
 		println("pathexec MoveTodo=$MoveTodo ") 
+		//[# MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove("$MoveTodo") #]
+		[# kotlinCode.pathexecutil.doMove("$MoveTodo", MYSELF) #]
 	} 
-	//TODO: continue ...
+	Transition t0 whenEvent alarm  -> handleAlarm  
+				  whenMsg moveok   ->  pathcontinue
+				  whenMsg movefail ->  pathfailure
+	
+	
+	State handleAlarm{
+		printCurrentMessage
+	}
+	 
+	
+	State pathcontinue{
+		printCurrentMessage
+	}
+	
+	State pathfailure{
+		printCurrentMessage
+		 
+	}	
 }   
+
+
+
 
 QActor testexec context ctxPathexecutor{
 	State s0 initial{  

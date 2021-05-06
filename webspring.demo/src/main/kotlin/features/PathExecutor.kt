@@ -119,7 +119,7 @@ class PathExecutor (name: String, scope: CoroutineScope,
                     moves.updateJourney(moveShort!!)
                     //moves.showMap()
                     nextMove()  //modifies curState in moving or turning
-                } else println("$name | FATAL ERROR ")
+                } else println("$name | FATAL ERROR in turning ")
             } //turning
             State.moving -> {
                 println("$name | moving ... $move")
@@ -189,6 +189,7 @@ fun main( ) {
         println("main | $cmd")
 
         executor.send(cmd)
+        /*
         delay(6000)
         //Reset the observer
         obsRobot.owner = null  //to execute the callback
@@ -197,6 +198,7 @@ fun main( ) {
         //send another command
          //
         //executor.send(cmd)
+         */
         delay(1000)
         robot.terminate()
         executor.terminate()

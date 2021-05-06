@@ -16,6 +16,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		 var MYSELF = myself  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -34,6 +35,25 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 					action { //it:State
 						 var MoveTodo = kotlinCode.pathexecutil.nextMove()  
 						println("pathexec MoveTodo=$MoveTodo ")
+						 kotlinCode.pathexecutil.doMove("$MoveTodo", MYSELF)  
+					}
+					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t02",targetState="pathcontinue",cond=whenDispatch("moveok"))
+					transition(edgeName="t03",targetState="pathfailure",cond=whenDispatch("movefail"))
+				}	 
+				state("handleAlarm") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+					}
+				}	 
+				state("pathcontinue") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+					}
+				}	 
+				state("pathfailure") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
 					}
 				}	 
 			}

@@ -5,29 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoWithRobot/BasicStepGenericCaller.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/koltinCode/pathExec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/koltinCode/pathExec.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/roomMap.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/spiralwalker/Spiralwalker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/spiralwalker/Spiralwalker.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/spiralwalker.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/spiralwalker.qak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actorAppl/RobotRestCaller.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlannerM2m.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlannerM2m.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/demoMap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/demoMap.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kotlinCode/qacoded.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/kotlinCode/qacoded.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sysexample.qak" beforeDir="false" afterPath="$PROJECT_DIR$/src/sysexample.qak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build_ctxPathexecutor.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build_ctxPathexecutor.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/unibo/pathexec/Pathexec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/pathexec/Pathexec.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kotlinCode/pathexecutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/kotlinCode/pathexecutil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pathexecutor.qak" beforeDir="false" afterPath="$PROJECT_DIR$/src/pathexecutor.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/features/PathExecutor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/features/PathExecutor.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,9 +38,22 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="it.unibo.pathexecutor" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="it.unibo.pathexecutor" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -80,8 +86,14 @@
   </component>
   <component name="RunManager">
     <configuration name="MainCtxSysExampleKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="it.unibo.ctxSysExample.MainCtxSysExampleKt" />
       <module name="it.unibo.qakDemo" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="it.unibo.ctxSysExample.MainCtxSysExampleKt" />
+      <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>

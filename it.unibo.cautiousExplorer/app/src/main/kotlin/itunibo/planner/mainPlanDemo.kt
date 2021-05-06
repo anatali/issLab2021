@@ -5,6 +5,8 @@ shows the behavior of a planner
 
 package itunibo.planner
 
+import mapRoomKotlin.mapUtil
+
 object mainPlanDemo {
     fun demo() {
         try {
@@ -43,13 +45,15 @@ object mainPlanDemo {
 @Throws(Exception::class)
     internal fun doSomeMOve() {
     plannerUtil.doMove("w")
+    /*
     plannerUtil.doMove("l")
     plannerUtil.doMove("w")
     plannerUtil.doMove("w")
     plannerUtil.doMove("r")
     plannerUtil.doMove("w")
     plannerUtil.doMove("l")
-        //mapUtil.doMove("obstacleOnRight")
+     */
+    mapUtil.setObstacle()
     }
  
 
