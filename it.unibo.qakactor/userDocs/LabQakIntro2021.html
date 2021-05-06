@@ -226,10 +226,11 @@ div.imagedesc{
 	<li><a href="#actorasresource">Actors as (CoAP) resources</li>
 	<li><a href="#actorasstream">Actors as streams</a></li> 
 	</ul>
-<li><a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html" target="web">Examples</a> (in project <i>it.unibo.demoqak20</i> )</li> 
-<li><a href="#process">QActors and process development</a></li>
-<li><a href="#metam">Models and meta-models</a></li>
-<li><a href="#dsl">Domain Specific Languages</a></li>
+<li><a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html" target="web">Examples</a> (in project <i>it.unibo.demoqak21</i> )</li> 
+
+<li><a href="QakAndProcess.html#process">QActors and process development</a></li>
+<li><a href="QakAndProcess.html#metam">Models and meta-models</a></li>
+<li><a href="QakAndProcess.html#dsl">Domain Specific Languages</a></li>
 <!-- <li><a href="#vision">Vision </a></li>   Model Driven Software Development -->
 
  
@@ -525,9 +526,9 @@ transition including a message <tt>m</tt> the message is stored in a queue local
 <m>The code of a <tt>QActor</tt> mirrors the structure of a FSM diagram introduced in
 <a href="../../it.unibo.actorfsm/userDocs/FSM.html#FSMexample" target="lab">FSM | A kotlin-based DSL</a>: 
 <center><img src="./img/demoDSL.png" alt="demoDSL" width="70%" ></center>
-The code is in <a href="../../it.unibo.demoqak20/src/demo0.qak" target="code">demo0.qak</a>.
-and described in <a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html#demo0" target="code">
-LabQakExamples2020 | Using the QActor (meta)model</a> (project <i>it.unibo.demoqak20</i>)
+The code is in <a href="../../it.unibo.demoqak21/src/demo0.qak" target="code">demo0.qak</a>.
+and described in <a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#demo0" target="code">
+LabQakExamples2020 | Using the QActor (meta)model</a> (project <i>it.unibo.demoqak21</i>)
 </m>
 <pre>
 System demo
@@ -619,7 +620,7 @@ QActor sender context ctxdemo{
 </m>
 <br/>
 The full code of this example is reported in 
-<a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html#sentinel" target="web"" target="code">LabQakExamples2020.html</a>
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#sentinel" target="web"" target="code">LabQakExamples2021.html</a>
 
 </td>
  <td>
@@ -1013,8 +1014,10 @@ class qacoded (name : String ) : <k>ActorBasic</k>( name ) {
  	}
 }
 </pre>
-For a complete example, see:
-<a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html#qastreams" target="web"" target="code">LabQakExamples2020.html#qastreams</a>
+For examples, see:<br/>
+<a href="../../it.unibo.qakDemo/src/kotlinCode/qacoded.kt" target="code"" target="code">it.unibo.qakDemo/src/kotlinCode/qacoded.kt</a>
+<br/>
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#qastreams" target="web"" target="code">LabQakExamples2021.html#qastreams</a>
 </td>
 </tr>
 
@@ -1044,7 +1047,7 @@ class qacoded (name : String ) : <k>ActorBasic</k>( name ) {
 }
 </pre>
 For a complete example, see:
-<a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html#qastreams" target="web"" target="code">LabQakExamples2020.html#qastreams</a>
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#qastreams" target="web"" target="code">LabQakExamples2021.html#qastreams</a>
 </td>
 </tr>
 -->
@@ -1061,7 +1064,7 @@ For a complete example, see:
 <pre>
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
     id 'application'
 }
 ...
@@ -1141,7 +1144,7 @@ of the resource can be stored as a <tt>String</tt> in the variable <ks>ActorReso
 QAkactor language.
 <br/>
 An example is given in 
-<a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html#coap" target="web"" target="code">LabQakExamples2020.html</a>
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#coap" target="web"" target="code">LabQakExamples2021.html</a>
 
  
 
@@ -1197,7 +1200,7 @@ subscribed to it.
 Each subscriber will process the data 'in parallel' with the others and can work as an observable in its turn.
 <br/>
 See the example in 
-<a href="../../it.unibo.demoqak20/userdocs/LabQakExamples2020.html#qastreams" target="web"" target="code">LabQakExamples2020.html</a>
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#qastreams" target="web"" target="code">LabQakExamples2021.html</a>
 
 </m></td>
 </tr>
@@ -1230,194 +1233,7 @@ target="lecture">LabStreams | Using streams</a>) -->
  
 
 
-<h2 id="process">QActors and process development</h2>
-<tt>QActor</tt> models should be introduced in the early stages of the software development process, to express in a concise way
-the overall <em>architecture</em> of a distributed system composed of a set of actors that use 
-<bc>high-level</bc> message-oriented operations, by abstracting from the fact that they could work
-in a local  environment (i.e. in a same <tt>JVM</tt>) or on different computational nodes.
-<br/><br/>
 
-The intent is to exploit the features of the <tt>QActor</tt> language to capture the <bc>logic of the interaction</bc>
-rather than the technological details of its implementation.
-<br/><br/>
-The possibility to execute a (simple) <tt>QActor</tt> model of a system as the result of the 
-<em>problem analysis</em> phase can be very useful for a more productive interaction with the customer in order to
-better understand the requirements, define the product backlog and introduce proper functional test-plans
-already expressed as programs.
-
-<h3>Logical architectures</h3>
-Moreover, a system analyst could exploit the <tt>QActor</tt>  modeling language to define
-a <bc>logical architecture</bc> of the system, to be used as a reference-point for software development.
-<br/><br/>
-Clearly, such a simple initial architectural model must be refined in the next steps of process development 
-(mainly in the <em>project phase</em>) by gradually <bc>zooming</bc> into
-the details of each resource and of each actor.
-<br/><br/>
-The concepts embedded into the <tt>QActor</tt> language can express (running) models of software system
-bot at the 'macro' level (of a distributed, heterogeneous system) and at the 'micro' level (of each node composing the system)
-in a 'seamless' way. 
-<br/><br/>
-The mapping between the logical level and the appropriate interaction-technology support(s) identified by the designer,
-can be done in a quite automated way by a proper software factory built around the <tt>QActor</tt> concepts,
-as formally defined in the <bc>QActor meta-model</bc>.
-
-
-<h2 id="metam">Models and meta-models</h2>
- 
- <center><table style="width:100%">
-<tbody>	
-<tr>
-<td style="width:35%"><h3>Metamodeling</h3>
-The <a href="https://en.wikipedia.org/wiki/Object_Management_Group" target="web"> 
-Object Management Group (OMG)</a> has developed a metamodeling architecture to define the 
-<a href="https://en.wikipedia.org/wiki/Unified_Modeling_Language" target="web"><em>UML</em></a>, called the
-<a href="https://en.wikipedia.org/wiki/Meta-Object_Facility" target="web"> <bc>Meta-Object Facility (MOF)</bc></a>,
-designed as a four-layered architecture. 
-<br/><br/>
-The most prominent example of a Layer 2 MOF model is the 
-<a href="http://www.cs.sjsu.edu/faculty/pearce/modules/lectures/uml2/index.htm" target="web"> 
-<em>UML metamodel</em></a>, which describes the UML itself.  
- 
-<br/><br/>
-The UML language can be extended using a mechanism called 
-<a href="https://en.wikipedia.org/wiki/Stereotype_(UML)" target="web"> 
-<em>stereotyping</em></a>, but this has been criticized as being insufficient/untenable.
-</td>
-<td>
-<img src="./img/slide8.png" alt="slide8" width="100%" /> 
-<m>
-M2-models describe elements of the M1-layer, and thus M1-models. These would be, for example, models written in UML. 
-The last layer is the M0-layer or data layer. It is used to describe runtime instances of the system. </m>
-</td>
-</tr>
-
-	<tr>
-	<td >
-	<h3 id=""mdsd>Model Driven Software Development</h3>
-		<div class="remark">
-		See <li> <a href="UMLHarelRumpe.pdf" target="lecture">On semantics</a></li>    
-<li> <a href="Whatmodelsmean.pdf" target="lecture">What models mean</a></li>   
-		</div>
-	</td>
-	<td>
-	<center><img src="./img/mdsdpng.png" alt="mdsdpng.png" width="100%" /></center>  
-
-	</td>
-	</tr>
-	
-	
-<tr>
-<td><h3 id="xtext"><a href="https://www.eclipse.org/Xtext/" target="web">EMF and Xtext</a></h3>
-<m>
-The <a href="https://www.eclipse.org/modeling/emf/" target="web">Eclipse Modeling Framework (EMF)</a>
-is a modeling framework and code generation facility for building tools and other applications based on a structured data model
-based on the <a href="https://en.wikipedia.org/wiki/Eclipse_Modeling_Framework" target="web">EMF (core) </a>standard.
-<br/><br/>
-
-
-<a href="https://www.eclipse.org/Xtext/" target="web">Xtext</a> is a framework for development of programming languages 
-and domain-specific languages. 
-<br/><br/>
-Xtext uses 
-<a href=" https://www.eclipse.org/Xtext/documentation/308_emf_integration.html" target="web">EMF models</a>
- as the in-memory representation of any parsed text files. 
-This in-memory object graph is called the abstract syntax tree (AST). Depending on the community this concepts 
-is also called document object model (<bc>DOM</bc>), semantic model, or simply model.
-<br/><br/>
-With Xtext you define your language using a powerful grammar language. 
-As a result you get a full infrastructure, including <b>parser, linker, typechecker, compiler</b> 
-as well as <b>editing support</b> for Eclipse.
-<br/>
-
-</m>
-
-</td>
-<td>
-<h3>The <a href="https://www.eclipse.org/modeling/emf/" target="web">Eclipse Modeling Framework</a></h3>
-<img src="./img/emf.png" alt="emf" width="100%" /></td>
-</tr>
-
-<tr>
-<td>
-<b>Definition of a custom language: example</b>
-<pre>
-grammar it.unibo.xtext.intro19.Iot 
-	with org.eclipse.xtext.common.Terminals
-generate iot "http://www.unibo.it/xtext/intro19/Iot"
-terminal VARID : ('A'..'Z'|'_ ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
-
-IotSystem: "<ks>System</ks>" spec=IotSystemSpec ;
-QualifiedName : ID ('.' ID)* ;
-
-IotSystemSpec: name=ID  			 
-	 (mqttBroker = BrokerSpec)?     <kc>//<k>?</k> means Optional</kc>
-	 (message   += Message   )*     <kc>//<k>*</k> means N>=0</kc>
-;
-BrokerSpec : "<ks>mqttBroker</ks>" host=STRING ":" port=INT ;
-
-Message :  Event | Dispatch  ;
-
-Event: 	  "<ks>Event</ks>"    name=ID  ":" msg = STRING  ;
-Dispatch: "<ks>Dispatch</ks>" name=ID  ":" msg = STRING  ;
-</pre> 	
- 
-</td>
-<td>
-<img src="./img/xtextGrammar.png" alt="xtextGrammar" width="100%" />
-</td>
-</tr>
-
-</table>
-</center> 	
-
-
-
-
- 
-<h2 id="dsl">Domain Specific Languages</h2>
-
-A <a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="web">Domain-specific languages (DSL)</a> 
-is a computer language specialized to a particular application domain. 
-Examples of DSL are <tt>Gradle</tt> and <tt>SQL</tt>.
-This is in contrast to a 
-<a href="https://en.wikipedia.org/wiki/General-purpose_programming_language" target="web">general-purpose programming language (GPL)</a>,
- which is broadly applicable across domains.  
-<br/><br/>
-DSL are specialized in solving a specific problem domain and can be very efficient at it.
-Moreover, by  <bc>incorporating knowledge</bc> about that domain, DSLs can lead to more concise and more analyzable programs, 
-promote <em>effective communication with customers</em>, better code quality and increased development speed.  
-<br/><br/>
-DSLs come in two main forms: external and internal.
-<ul>
-<li><bc>External DSLs</bc> are DSLs with their own syntax that's parsed independently of the host GPL. 
-They requires work when integrating to an application written with a general programming language.</li>
-<li><bc>Internal DSLs</bc> are written in the syntax of a general programming language.
-They are a particular form of API in a host general purpose language, often referred to as a 
-<a href="https://en.wikipedia.org/wiki/Fluent_interface" target="web"><em>fluent interface</em></a> .</li>
-</ul>
-
-
- 
-
-  	<center><table style="width:95%">
-	<tbody>	
-	<tr>
-	<td style="width:100%">
-  	<li><a href="https://www.slideshare.net/zirrus/domainspecific-langauges" target="web">Domain-specific
-Languages, by Javier Luis Cánovas Izquierdo</a>, Inria <br/></li>
-<li><a href="https://www.slideshare.net/mariofusco/real-world-dsl" target="web">Real World DSL, by Mario Fusco</a>, Red Hat <br/></li>
- 
-<!-- https://www.slideshare.net/peterfriese/the-unbearable-stupidity-of-modeling -->
-<div class="remark">
-For an example using Kotlin to define internal DSL see 
-<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.kotlinIntro/userDocs/LabDsl.html"
-target="lecture">LabDsl.html</a>.
-</div>	<center><img src="./img/dslSlide.png" alt="dslSlide" width="100%" height="52%"/></center><br/>
-
-	</td>
-	</tr>
-	 </table>
-	</center> 
  
 
 

@@ -3,10 +3,10 @@
 build2021
 GENERATED ONLY ONCE
 USAGE:	 
-  	gradle  -b build2021 eclipse		//to set the dependency on the library
-	gradle  -b build2021 distZip
-	gradle  -b build2021 -q tasks --all
-	gradle  -b build2021 cleanDistDir	//to clean the src directory
+  	gradle  -b build2021.gradle eclipse		//to set the dependency on the library
+	gradle  -b build2021.gradle distZip
+	gradle  -b build2021.gradle -q tasks --all
+	gradle  -b build2021.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {
@@ -52,26 +52,30 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 	//compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.2'
 
+//HTTP CLIENT
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation ("org.apache.httpcomponents:httpclient:4.5")
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation ("commons-io:commons-io:2.6")
+
 //CUSTOM
     compile name: 'uniboInterfaces'
     compile name: '2p301'
     compile name: 'it.unibo.qakactor-2.4'
- 
-    //For p2p two-way connections (TCP, UDP, BTH, Serial ...)
     compile name: 'unibonoawtsupports'
-
+	compile name: 'IssActorKotlinRobotSupport-2.0'
 	//BLS
 	//compile name: 'it.unibo.bls19Local-1.0'
 	//RADAR
-	compile name: 'radarPojo'
+	//compile name: 'radarPojo'
 	//RADAR GUI
 	// https://mvnrepository.com/artifact/org.pushingpixels/trident
-	compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
+	//compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
 	//ROBOT nano (SAM)
     //compile name: 'labbaseRobotSam'
 	//compile mame: 'pi4j-core' //2-12 SNAPSHOT non in gradle
  	//PLANNER
-    //compile name: 'it.unibo.planner'
+    compile name: 'it.unibo.planner20-1.0'
  	// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
 	compile group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 }

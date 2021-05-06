@@ -231,7 +231,7 @@ in order to define structure, interaction and behavior of (logical) architecture
 <td>
 Since the QAk language aims at capturing the interaction between (distributed) actors, it is not
 'computationally completed' and part of the behavior could be sometimes directly expressed in Kotlin.
-<!-- But <bc>without overstating</bc> such a possibility. -->
+ But <bc>without overstating</bc> such a possibility.  
 </td>
 </tr>
 
@@ -241,7 +241,7 @@ Since the QAk language aims at capturing the interaction between (distributed) a
 <a href="../models/demostrange.qakt" target="code">demostrange.qak</a>.<br/>
 <m> This example allows us to better understand the behavior of empty-moves 
 and the 
-<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#msghandlerules" target="lab">Message handling rules</a>
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2021.html#msghandlerules" target="lab">Message handling rules</a>
 
 </m>
 </td>
@@ -258,7 +258,7 @@ and the
 <h3 id="demo0">demo0</h3>
 <a href="../models/demo0.qakt" target="code">demo0.qak</a>.<br/>
 <m>This is the example introduced in 
-<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#demo" target="web"" target="code">LabQakExamples2020.html</a>.</m>
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2021.html#demo" target="web"" target="code">LabQakExamples2021.html</a>.</m>
 <br/>
 <m>
 If we send the sequence: <tt>msg1, msg1, msg2</tt> and
@@ -291,7 +291,7 @@ run with <bc>discardMsg On</bc> or with <bc>discardMsg Off</bc>, we have differe
 <h3 id="sentinel">sentinel</h3>
 <a href="../models/sentinel.qakt" target="code">sentinel.qak</a><br/>
 <m>This is the example introduced in 
-<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#sentinel" target="web"" target="code">LabQakExamples2020.html</a>
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2021.html#sentinel" target="web"" target="code">LabQakIntro2021.html</a>
 and shows guards in transition.
 <center><img src="./img/sentinel.png" alt="sentinel" width="50%" ></center>
 </m>
@@ -328,7 +328,7 @@ sentinel | WATCH
 	</tr>
 	</table>
 <m>To understand why the sentinel perceives the second alarm, see  
-<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2020.html#msghandlerules" target="lab">Message handling rules</a>
+<a href="../../it.unibo.qakactor/userdocs/LabQakIntro2021.html#msghandlerules" target="lab">Message handling rules</a>
 <br/>
 Note that, if we  insert <bc>delay 1500</bc> in state <tt>handleAlarm</tt>, eliminate <bc>Goto s0</bc> in <tt>(2)</tt>
 and insert the commented  <bc>Transition t0 whenTime 10  -> explore</bc>,
@@ -468,7 +468,7 @@ Thus, the <tt>QA-infrastructure</tt> handles a <tt>CodedQActor</tt> as a usual; 
 specified by the model. 
 <br/>
 Note that each <tt>CodedQActor</tt> in this example is defined as a specialized version of 
-<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2020.html#ActorBasic" tragte="lab">ActorBasic</a> that has no context at creation time.
+<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#ActorBasic" tragte="lab">ActorBasic</a> that has no context at creation time.
   </m></td>
 </tr> 
 

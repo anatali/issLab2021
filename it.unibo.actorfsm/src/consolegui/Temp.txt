@@ -1,0 +1,15 @@
+	fun doForwardAsync( sender: String, msgId : String, payload: String, destName : String, mqtt: MqttUtils ):
+			CompletableFuture<Int> =
+		
+    future { forward( sender, msgId, payload, destName, mqtt ) }
+
+    
+    
+    		BuildersKt.launch(GlobalScope.INSTANCE,
+                Dispatchers.getMain(),//context to be ran on
+                CoroutineStart.DEFAULT,
+                (coroutineScope, continuation) -> 
+					Messages.forward("gui","cmd", move, destName, mqtt, continuation)
+		
+		//suspendFunction(arguments)
+    

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="72872339-a0d1-4086-b48a-f54a15f5d983" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/it.unibo.mbot2020.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/TestPlanBoundary.kt" beforeDir="false" afterPath="$PROJECT_DIR$/test/TestPlanBoundary.kttt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/testBasicrobot.kt" beforeDir="false" afterPath="$PROJECT_DIR$/test/testBasicrobot.kttt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/demo0.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/demo0.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/demo_req_a.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/demo_req_a.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/gettaskdeploy.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/gettaskdeploy.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/blsblink/Blsblink.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/blsblink/Blsblink.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/ctxdemoreqa/MainCtxdemoreqa.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/ctxdemoreqa/MainCtxdemoreqa.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/led/Led.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/led/Led.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/sender/Sender.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak20/src/it/unibo/sender/Sender.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2020Bo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2020Bo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.mbot2020/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.mbot2020/src/mbotdemo.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.mbot2020/src/mbotdemo.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qak20.basicrobot/src/it/unibo/basicrobot/Basicrobot.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qak20.basicrobot/src/it/unibo/basicrobot/Basicrobot.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/mappingwalker.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/mappingwalker.pl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/src/it/unibo/ctxbasicrobot/MainCtxbasicrobot.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/src/it/unibo/ctxbasicrobot/MainCtxbasicrobot.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/src/it/unibo/mappingwalker/Mappingwalker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/src/it/unibo/mappingwalker/Mappingwalker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/src/it/unibo/optimisticwalker/Optimisticwalker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qak20.robotroommap/src/it/unibo/optimisticwalker/Optimisticwalker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakactor/qaappl_MsgLog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakactor/qaappl_MsgLog.txt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1qhWBd91eM4H2PI7pK6ynjmsJO2" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1585503112228" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunManager">
+    <configuration name="ConsoleGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="consolegui.ConsoleGui" />
+      <module name="it.unibo.actorfsm" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="consolegui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ConsoleGui" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="72872339-a0d1-4086-b48a-f54a15f5d983" name="Default Changelist" comment="" />
+      <created>1585503069800</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585503069800</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

@@ -1,0 +1,433 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+<!--
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 90%;
+}
+h4 {
+	background-color: #ffffcc;
+    font-size: 100%;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+	font-weight: bold;
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 90%;
+	background-color: #fcf8c7;
+	border: 1px solid blue;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}         
+    
+  -->
+</style>
+    
+<head>
+   
+<title>basicrobot</title></head>
+    
+<body>
+<div id="top">
+</div>  
+
+<div class="body"> 
+ 
+<h1>basicrobot | A reusable FSM actor (towards 'microservices')<font size="5"></font> </h1>
+
+<h2>Introduction</h2>
+This report is related to the first work to do 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary2.html#todo" target="web"> 	
+work to do</a>  related to our
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary2.html#fig1" target="web"> 	
+layered architecture</a>.
+ 
+ 
+
+ 
+<h2>Requirements</h2>
+<div class="req">
+Design, build and test the <bc>basicrobot</bc> introduced in our last  
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary2.html#fig1" target="web"> 	
+layered architecture</a> 
+
+ by specifying its behavior with  the custom DSL language  provided by <a href="../src/fsm/Fsm.kt" target="code">fsm/Fsm.kt</a> 
+ and described in <a href="FSM.html" target="code">FSM.html</a>.
+ <center><img src="./img/basicrobotrequirem.png" alt="basicrobotrequirem.png" width="50%" ></center>
+
+</div>
+<h2>Requirement analysis</h2>
+With reference to our
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary.html#req" target="web"> 	
+first actor-based robot-application</a>,
+the requirement consists in exploiting a precise technology (the custom DSL language <a href="../src/fsm/Fsm.kt" target="code">fsm/Fsm.kt</a> 
+described in <a href="FSM.html" target="code">FSM.html</a>) to 
+express the behavior of the actor as a (message-based) Finite State Machine.
+ 
+
+ 
+<h2>Problem analysis</h2>
+The code re-factoring  is related to a component that will be part of a 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary2.html#fig1" target="web"> 	
+layered architecture</a>.
+As a consequence,  there is a first main change to be introduced in our first  
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.boundaryRobot/userDocs/RobotActorBoundary.html#problemAnalysis" target="web">
+RobotActorBoundary |  logical architecture</a>.
+<br/>More specifically, since:
+<div class="remark">
+ the <bc>basicrobot</bc> is not a simple actuators of commands, but it is also a <em>source of sensor-data</em>
+</div>
+the problem is that the sensor-data must be propagated to <bc>basicrobot</bc> user component, in order to 
+inform such an user <em>as soon as possible</em> (i.e. without asking the robot via polling) about the state of the world in which the robot is running.
+<br/><br/>
+Moreover, from now-on, we must be prepared to abandon the <em>homogeneity hypothesis</em>, i.e. that all the components of our systems
+will be coded with the same programming language.
+We must foresee the possibility that the user-component could be a <bc>remote entity </bc>
+written in some unknown code (called - from non on - an '<em>alien</em>'). 
+<br/><br/>
+Thus, our reference logic-architecture might (the <i>homogeneity hypothesis</i> is not excluded) become:
+
+<center><img src="./img/basicrobotfsmusage.png" alt="basicrobotfsmusage" width="40%" ></center>
+
+In this case, our <bc>basicrobot</bc> has no reference to the calling 'alien' and we must find a way to send sensor information to it.
+
+<h3>Events</h3>
+From now on:
+<div class="remark">
+with the term<bc> event</bc> we will denote information emitted by an actor without any explicit destination.
+</div> 
+
+<!-- https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels/ -->
+
+<h2>Test plans</h2> 
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+To make a test possible we could: 
+<m>
+<ol>
+<li>introduce an <em>explicit representation</em> of the current <bc>logical state</bc> of the robot:
+<pre>enum class basicrobotstate {
+	<ks>stop, forward, backward, rleft, rright, obstacle</ks>
+}</pre>
+Note that the logical state is related with the state of the FSM but <bc>it is not the  state of the FSM</bc>.<br/><br/>
+ </li>
+<li>check the logical state of the robot after the execution of each command.<br/><br/></li>
+<li>plan to hit an obstacle an check that the logical state of the robot is equal to 
+<em>basicrobotstate.obstacle</em></li>
+</ol>
+</m>
+ 
+</td>
+<td>This, a possible test is:
+<pre><m>
+fun testObstacle(){
+  runBlocking{
+	delay(1000)  //time for robot to start
+	Messages.forward( "test","cmd", "w", robot   )
+	delay(1500)
+	//AFTER obstacle
+	<ks>assertTrue( basicrobot.rstate == basicrobotstate.obstacle)</ks>			
+	Messages.forward( "test", "end", "end", robot   )
+	println("testObstacleLocal END with robot in  ${basicrobot.rstate}")
+	robot.waitTermination()
+  }
+}</m>
+</pre>
+For a more complete testing code see
+<a href="../backup/testBasicrobot.kt"  target="code">testBasicrobot.kt</a>
+</td>
+</tr>
+</table> 
+ 
+<h2>Project</h2> 
+The  full code is reported in  <a href="../src/robotAppl/basicrobot.kt" target="code">robotAppl/basicrobot.kt</a> (project <i>it.unibo.actorfsm</i>).
+<table style="width:100%" border="1">
+<tr>
+<td style="width:60%">
+<m>The basicrobot is a specialized version of the class  <a href="../src/fsm/Fsm.kt" target="code">fsm/Fsm.kt</a> <br/>
+<center><img src="./img/basicrobot.png" alt="basicrobota" width="60%" ></center>
+
+<br/>
+Its behavior can be modeled as a Finite State Machine:
+<img src="./img/basicrobotfsmdiag.png" alt="basicrobotfsmdiag" width="100%" ></center>
+ 
+The state transitions are 'fired' by messages with the following <tt>msgId</tt>;
+<ul>
+<li><k>sensor</k>: sent by the (virtual)tobot</li>
+<li><k>end</k>: sent ny the user</li>
+<li><k>cmd</k>: sent ny the user with payload=<tt>h | w | s | r | l</tt</li>
+</ul>
+
+The code is in <a href="../src/robotAppl/basicrobot.kt" target="code">basicrobot.kt</a>.
+</m>
+</td>
+<td>
+<m> The <a href="../src/robotAppl/basicrobot.kt" target="code">basicrobot</a> class is defined as follows:
+<pre>
+class basicrobot ( name: String, scope: CoroutineScope,
+				   usemqtt:Boolean=false,
+				   val <k>owner</k>: Fsm?=null,
+				   discardMessages:Boolean=true
+				 ) : <a href="../src/fsm/Fsm.kt" target="code"><ks>Fsm</ks></a>( name, scope, discardMessages,usemqtt){
+</pre>
+
+The optional property <k>owner</k> is a reference to the actor that uses the <tt>basicrobot</tt>.
+<br/><br/>
+The state diagram on the left is mirrored in the structure of the code, thanks to the 
+<a href="../src/fsm/Fsm.kt" target="code"><ks>DSL language</ks></a>
+introduced in <a href="FSM.html" target="code">FSM.html</a>
+<pre> 
+override fun getBody() : (Fsm.() -> Unit){	
+ return {  
+	state("<ks>init</ks>") {	
+	  action { ... }
+	  transition( edgeName="t0",targetState="waitcmd", cond=<ks>doswitch()</ks> )
+	}
+			
+	state("<ks>waitcmd</ks>"){
+	  action { ... }
+	  transition( <m>edgeName="t0",targetState=</m>"<ks>handlesensor</ks>", cond=whenDispatch("<k>sensor</k>") )
+	  transition( <m>edgeName="t1",targetState=</m>"<ks>endwork</ks>", cond=whenDispatch("<k>end</k>") )
+	  transition( <m>edgeName="t2",targetState=</m>"<ks>execcmd</ks>", cond=whenDispatch("<k>cmd</k>") )
+	}
+	state("<ks>execcmd</ks>"){
+	  action { ... }
+	  transition( edgeName="t0",targetState="<ks>waitcmd</ks>", cond=<ks>doswitch()</ks> )
+	}
+	state("<ks>handlesensor</ks>")
+	  action { ... }
+	  transition( edgeName="t0",targetState="<ks>waitcmd</ks>", cond=<ks>doswitch()</ks> )
+	}
+	state("<ks>endwork</ks>") {
+	  action { ... } 			
+	}	 							
+
+ }<kc>//return</kc>
+}
+</pre></m>
+</td>
+</tr>
+</table>
+
+<h3>Using the actor from another actor</h3>
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<center><img src="./img/basicrobotLocalUsage.png" alt="basicrobotLocalUsage" width="70%" ></center>
+</td>
+<td>
+<m>
+<pre>
+<kc>//The owner  can write</kc>
+lateinit var <k>robot</k> : <a href="../src/fsm/Fsm.kt" target="code"><ks>Fsm</ks></a>
+val msg = ApplMsg.buildDispatch( ... )
+<k>forward( msg, robot )</k>
+
+
+<kc>//A main program can write</kc>
+<k>Messages.forward</k>( "user","cmd", "r", <k>robot</k>   )
+</pre>
+
+See the utility  <a href="../src/utils/Messages.kt" target="code">utils/Messages.kt</a>
+</m>
+</td>
+</tr>
+</table>
+
+
+<h3>Using the actor via MQTT</h3>
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<center><img src="./img/basicrobotMqttUsage.png" alt="basicrobotMqttUsage" width="100%" ></center>
+</td>
+<td>
+<m>
+<pre>
+<kc>//An 'alien' could write</kc>
+val msg = ApplMsg.buildDispatch( ... )
+<k>mqtt.publish("unibo/qak/basicrobot", msg.toString(), 0, false);</k> 
+<kc>//mqtt is the MQTT-support of type <a href="../src/utils/MqttUtils.kt" target="code"><ks>MqttUtils</ks></a> 
+<!-- defined in <a href="../src/fsm/Fsm.kt" target="code"><ks>Fsm</ks></kc> -->
+For an example, see <a href="../src/consolegui/ConsoleGui.java" target="code">consolegui/ConsoleGui.java</a>
+
+<kc>//A main program can write</kc>
+val <ks>mqttMain</ks> = MqttUtils("main")
+
+<k>Messages.emit</k>( "main","alarm", "fire", <ks>mqttMain</ks> )
+
+See the utility <a href="../src/utils/Messages.kt" target="code">utils/Messages.kt</a>
+
+</pre>
+ 
+See also <a href="FSM.html" target="code">FSM.html</a>.
+</m>
+</td>
+</tr>
+</table>
+ 
+<h2 id="appl">An application</h2>
+In our working <em>it.unibo.actorfsm</em> project:
+ 
+
+<ol>
+<li>Remove any resource using <bc>JUnit</bc> form the <bc>src</bc> directory.<br/><br/></li>
+<li>Assure that the file <a href="../src/robotAppl/sensorObserver.kt" target="code">sensorObserver.kt</a> 
+includes a <m><ks>main</ks></m> that activates the actor  with <bc>usemqtt=true</bc>.<br/><br/> </li>
+<li>Change the <tt>build.gradle</tt> according to the <a href="../build.gradle" target="code">last version</a>
+and set
+<pre>
+<k>mainClassName = 'robotAppl.<ks>S</ks>ensorObserver<ks>Kt</ks>'</k></pre>
+Remember that <i><b>Kotlin generates standard Java code</b></i>.<br/><br/></li>
+<li>Execute <bc>gradle build distZip</bc> and (remove the <tt>filter</tt> related to <i>Gradle build folder</i>) 
+look at the generated <m><k>build/distribution/it.unibo.actorfsm-1.0.zip</k></m>.<br/><br/></li>
+<li>Expand the zip file somewhere (e.g. into a <m><ks>issRun</ks></m> directory).<br/><br/></li>
+<li><bc>cd</bc> to <m><ks>issRun/it.unibo.actorfsm-1.0\bin</ks></m> and run <bc>it.unibo.actorfsm.bat</bc>
+to start the actor <a href="../src/robotAppl/sensorObserver.kt" target="code">sensorObserver.kt</a>.<br/><br/>
+</li>
+<li>Activate the <a href="../src/robotAppl/basicRobot.kt" target="code">robotAppl/basicRobot.kt</a>
+with the operation <bc>demoUsingMqtt</bc>.<br/><br/> </li>
+<li>Activate the <a href="../src/consolegui/ConsoleGui.java" target="code">consolegui/ConsoleGui.java</a>
+with <m><ks>new ConsoleGui(<bc>"basicrobot"</bc> )</ks></m> to publish commands for the actor named 'basicrobot'.
+<br/><br/> 
+<center><img src="./img/guiBrSensorObs.png" alt="guiBrSensorObs" width="80%" ></center>
+<br/><br/>  </li>
+<li>Move the robot by clicking on the buttons <tt>w|s|l|r|h</tt> (<tt>p</tt> sends a <bc>step</bc> command and will be user later on)
+so that the robot hits some obstacle, 
+and look at the output of the <a href="../src/robotAppl/sensorObserver.kt" target="code">sensorObserver.kt</a>.<br/><br/>  
+</li>
+</ol>
+ 
+
+ 
+
+<br/><br/>
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>

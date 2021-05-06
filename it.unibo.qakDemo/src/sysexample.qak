@@ -1,6 +1,6 @@
 System sysexample
 
-Dispatch cmd    : cmd(X)
+Dispatch cmd    : cmd(X)   
 Dispatch ledCmd : ledCmd(X)   
 
 Event alarm     : alarm(X)
