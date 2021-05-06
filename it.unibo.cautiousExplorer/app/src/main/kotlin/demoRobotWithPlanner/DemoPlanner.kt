@@ -6,26 +6,35 @@ package demoRobotWithPlanner
 
 import aima.core.agent.Action
 import com.andreapivetta.kolor.Color
+import demoWithRobot.NaiveObserver
 import it.unibo.actor0.ActorBasicKotlin
 import it.unibo.actor0.ApplMessage
 import it.unibo.actor0.MsgUtil
 import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
+import it.unibo.robotService.BasicStepRobotActor
 import itunibo.planner.plannerUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 
 class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,scope) {
-
-    //private lateinit var executor: PathExecutor
     var counter = 0;
-    var myexecutor = PathExecutor("executor${counter++}", scope, this)
+    var answerMove = Channel<String>()
+    var answerPath = Channel<String>()
+    val obsRobot = MarchegianiObserverForSendingAnswer("obsanswer",  scope,answerMove )
+    val robot    = BasicStepRobotActor("stepRobot",obsRobot, scope, "localhost")
+    val obs1     = MarchegianiObserverForSendingAnswer("obspath",  scope, answerPath )
+    var myexecutor = PathExecutor("executor${counter++}", scope, robot, obs1)
+
+
 
     fun initWork(){
         plannerUtil.initAI()
         plannerUtil.showMap()
+        obsRobot.owner = myexecutor
     }
 
     fun getPlanTodo( actions: List<Action>?) : String{
@@ -36,14 +45,16 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
         return pathTodo
     }
 
-    fun doThePath(pathTodo: String){
+    suspend fun doThePath(pathTodo: String){
         this.waitUser("exec")
         val cmdStr= ApplMsgs.executorstartMsg.replace("PATHTODO", pathTodo)
         val cmd   = MsgUtil.buildDispatch(name, ApplMsgs.executorStartId,cmdStr,"executor")
         myexecutor.send(cmd)
+        colorPrint("$name | wait on channel ... ", Color.BLUE)
+        val answer = answerPath.receive()
     }
 
-    fun planWithEmptyMap() {
+    suspend fun planWithEmptyMap() {
         plannerUtil.setGoal(3, 3);
         val actions  = plannerUtil.doPlan()
         val pathTodo = getPlanTodo(actions)
@@ -51,7 +62,7 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
         plannerUtil.showMap()
      }
 
-    fun planWithNOTEmptyMap(x: Int, y: Int) {
+    suspend fun planWithNOTEmptyMap(x: Int, y: Int) {
         //executor.terminate()
         plannerUtil.setGoal(x, y);
         val actions  = plannerUtil.doPlan()
@@ -60,7 +71,7 @@ class DemoPlanner( name: String, scope: CoroutineScope) : ActorBasicKotlin(name,
     }
 
 
-    fun handleEndPathExecution(resultJson : String){
+    suspend fun handleEndPathExecution(resultJson : String){
         val resJson = JSONObject( resultJson )
         if( resJson.has("executorFail")){
             waitUser("backToHome")
