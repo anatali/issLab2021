@@ -19,23 +19,9 @@ class Testexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						 val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"testexec\"}"  
+						 val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"spiralwalker\"}"  
 						println("testexec starts")
-						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
-						delay(1000) 
-						emit("alarm", "alarm(fire)" ) 
-					}
-					 transition(edgeName="t09",targetState="handlePathDone",cond=whenDispatch("pathdone"))
-					transition(edgeName="t010",targetState="handlePathFail",cond=whenDispatch("pathfail"))
-				}	 
-				state("handlePathDone") { //this:State
-					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
-					}
-				}	 
-				state("handlePathFail") { //this:State
-					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
+						forward("start", "start(0)" ,"spiralwalker" ) 
 					}
 				}	 
 			}

@@ -29,7 +29,7 @@ java {
 */
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 }
 
@@ -70,6 +70,11 @@ dependencies {
     implementation ("org.apache.httpcomponents:httpclient:4.5.13")
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation ("commons-io:commons-io:2.6")
+
+//PLANNER
+    //compile name: 'it.unibo.planner'
+    // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
+    implementation("com.googlecode.aima-java:aima-core:3.0.0")
 
 //UNIBO
     implementation( "uniboInterfaces:uniboInterfaces"  )

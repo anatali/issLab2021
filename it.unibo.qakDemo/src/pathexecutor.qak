@@ -12,6 +12,7 @@
  */
 System -msglog pathexecutor  
 
+Dispatch start    : start( ARG )
 Dispatch dopath   : dopath( PATH, OWNER )
 Dispatch pathdone : pathdone( P )
 Dispatch pathfail : pathdone( P )
@@ -40,7 +41,7 @@ QActor pathexec context ctxPathexecutor{
 		[# kotlinCode.pathexecutil.doNextMove(MYSELF) #]		
 	} 
 	Transition t0 whenEvent alarm  ->  handleAlarm  //first
-				  whenMsg pathdone ->  endJob 
+				  whenMsg pathdone ->  pathcompleted 
 				  whenMsg moveok   ->  nextMove  
 				  whenMsg pathfail ->  pathfailure		  
 	  
@@ -51,34 +52,102 @@ QActor pathexec context ctxPathexecutor{
 		println(" AAAA | Pathtodo= $Pathtodo ...")
 	}
 	Transition t0 whenEvent alarm  ->  handleAlarm  //first 
-				  whenMsg pathdone ->  endJob 	//manage pending messages
+				  whenMsg pathdone ->  pathcompleted 	//manage pending messages
 				  whenMsg moveok   ->  nextMove  
 				  whenMsg movefail ->  pathfailure 
 		
 	State pathfailure{
 		printCurrentMessage		
+		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath() #]
 		println("END FAIL | ")    
+		forward spiralwalker -m  pathfail : pathfail( $Pathtodo )
 	}	 
-	
-	State endJob{ 
+	Transition t0 whenMsg dopath -> dojob //DO ANOTHER PATH
+	 
+	State pathcompleted{ 
 		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath() #]
 		println("END OK | Pathtodo= $Pathtodo ") 
-	}
+		forward spiralwalker -m pathdone : pathdone(ok)
+	} 
+	Transition t0 whenMsg dopath -> dojob //DO ANOTHER PATH
 }   
 
-
-
 /*
- *  OWNER
-*/ 
+ * spiralwalker
+ * TODO: complete this code for the case of path failure
+*/
+
+QActor spiralwalker context ctxPathexecutor{     
+[#  var stepCounter        = 1
+	var CurrentPlannedMove = ""
+	val mapname            = "roomMap"
+	val maxNumSteps        = 3	  
+	val MYSELF             = myself
+	  
+#]	  
+	State s0 initial {	     
+		println("&&&  spiralwalker STARTED")
+		run itunibo.planner.plannerUtil.initAI()
+		println("INITIAL MAP") 
+ 		run itunibo.planner.plannerUtil.showMap() 
+		run itunibo.planner.plannerUtil.startTimer()  
+ 	} 
+	Goto  exploreStep  
+	 
+	State exploreStep{
+		[# val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter++}" ) 
+		   //val PathTodo = "{\"path\":\"$PathPlanned\" , \"owner\":\"spiralwalker\"}"  
+		#]
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 
+ 	} 
+ 	Transition t0 whenMsg pathdone -> backToHomeok
+ 	    		  whenMsg pathfail -> backToHomeKO
+	State backToHomeok{
+		println("backToHomeok ... ")
+		run kotlinCode.walkerutil.updateMapOk()
+		//run kotlinCode.walkerutil.doPlan( "0" )
+		[# val PathTodo = kotlinCode.walkerutil.doPlan("0") #]
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 		
+	} 
+ 	Transition t0 whenMsg pathdone -> continueJob
+ 	
+ 	 
+ 	State backToHomeKO{
+		println("backToHomeKO ... ")	
+		run kotlinCode.walkerutil.updateMapKO(mapname) 	
+ 		[# val PathTodo = kotlinCode.walkerutil.doPlan("0") #]
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 		
+ 	}
+ 	
+	State continueJob{
+		println("MAP AFTER BACK TO HOME nextstep=$stepCounter")
+		run kotlinCode.walkerutil.updateMapOk(mapname) 
+		//run itunibo.planner.plannerUtil.showMap()		
+		//run itunibo.planner.plannerUtil.saveRoomMap(mapname)	 
+		[# kotlinCode.pathexecutil.waitUser("another step") #]	
+	}
+ 	Goto exploreStep if[# stepCounter < maxNumSteps #] else endOfJob 
+  	
+	State endOfJob{
+		run itunibo.planner.plannerUtil.getDuration() 
+	}
+ 	
+}//spiralwalker
+     
+/*
+ *  main
+*/  
 QActor testexec context ctxPathexecutor{
 	State s0 initial{  
-		[# val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"testexec\"}" #]
+		[# val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"spiralwalker\"}" #]
+		//The RESULT of path execution must be sent to the owner
 		println("testexec starts")   
-		forward pathexec -m dopath : dopath(  $PathTodo   ) 
-		delay  1000
-		emit alarm : alarm(fire) 
-	}
+		//forward pathexec -m dopath : dopath(  $PathTodo   ) 
+		forward spiralwalker -m start : start(  0   )
+		//delay  1000
+		//emit alarm : alarm(fire) 
+	}  
+	/* 
 	Transition t0 whenMsg pathdone -> handlePathDone
 				  whenMsg pathfail -> handlePathFail
 	
@@ -88,5 +157,5 @@ QActor testexec context ctxPathexecutor{
 	 
 	State handlePathFail{
 		printCurrentMessage
-	}
+	}*/
 }

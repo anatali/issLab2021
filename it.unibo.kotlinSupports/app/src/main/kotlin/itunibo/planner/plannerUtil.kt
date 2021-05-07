@@ -1,32 +1,22 @@
 package itunibo.planner
 
-import java.util.ArrayList
 import aima.core.agent.Action
 import aima.core.search.framework.SearchAgent
 import aima.core.search.framework.problem.GoalTest
 import aima.core.search.framework.problem.Problem
 import aima.core.search.framework.qsearch.GraphSearch
 import aima.core.search.uninformed.BreadthFirstSearch
-import java.io.PrintWriter
-import java.io.FileWriter
-import java.io.ObjectOutputStream
-import java.io.FileOutputStream
-import java.io.ObjectInputStream
-import java.io.FileInputStream
-import itunibo.planner.model.RobotState
-import itunibo.planner.model.Functions
-import itunibo.planner.model.RobotState.Direction
-import itunibo.planner.model.RobotAction
-import itunibo.planner.model.RoomMap
-import itunibo.planner.model.Box
-import kotlinx.coroutines.delay
+import itunibo.planner.model.*
+import mapRoomKotlin.*
+
+import java.io.*
 
 object plannerUtil { 
     private var robotState: RobotState? = null
 	private var actions: List<Action>?    = null
  	
     private var curPos    : Pair<Int,Int> = Pair(0,0)
-	private var curDir    : RobotState.Direction  = RobotState.Direction.DOWN
+	private var curDir    = Direction.DOWN
     private var curGoal: GoalTest = Functions()		 
 
 	private var mapDims   : Pair<Int,Int> = Pair(0,0)
@@ -50,7 +40,7 @@ object plannerUtil {
  */
     @Throws(Exception::class)
     @JvmStatic fun initAI() {
-         robotState = RobotState(0, 0, RobotState.Direction.DOWN)
+         robotState = RobotState(0, 0, Direction.DOWN)
          search     = BreadthFirstSearch(GraphSearch())
        println("plannerUtil initAI done")
     }
@@ -189,11 +179,11 @@ object plannerUtil {
 		return curPos
 	}
 
-	@JvmStatic fun getPosX() : Int{ return robotState!!.getX() }
-    @JvmStatic fun getPosY() : Int{ return robotState!!.getY() }
+	@JvmStatic fun getPosX() : Int{ return robotState!!.x }
+    @JvmStatic fun getPosY() : Int{ return robotState!!.y }
 	
-	@JvmStatic fun getDir()  : RobotState.Direction{
-		return robotState!!.getDirection()
+	@JvmStatic fun getDir()  : Direction{
+		return robotState!!.direction
 	}
 
 	@JvmStatic fun getDirection() : String{
@@ -233,10 +223,10 @@ object plannerUtil {
 	@JvmStatic fun mapIsEmpty() : Boolean{return (getMapDimX( )==0 &&  getMapDimY( )==0 ) }
 
 	@JvmStatic fun showMap() {
-        println(RoomMap.getRoomMap().toString() )
+        println(RoomMap.getRoomMap().toString() + mapUtil.state.toString() ) //robotState.toString()
     }
 	@JvmStatic fun getMap() : String{
-		return RoomMap.getRoomMap().toString() 
+		return RoomMap.getRoomMap().toString()
 	}
 	@JvmStatic fun getMapOneLine() : String{ 
 		return  "'"+RoomMap.getRoomMap().toString().replace("\n","@").replace("|","").replace(",","") +"'" 
@@ -246,8 +236,8 @@ object plannerUtil {
 		if( RoomMap.getRoomMap() == null ){
 			return Pair(0,0)
 		}
-	    val dimMapx = RoomMap.getRoomMap().getDimX()
-	    val dimMapy = RoomMap.getRoomMap().getDimY()
+	    val dimMapx = RoomMap.getRoomMap().dimX
+	    val dimMapy = RoomMap.getRoomMap().dimY
 	    //println("getMapDims dimMapx = $dimMapx, dimMapy=$dimMapy")
 		return Pair(dimMapx,dimMapy)	
 	}
@@ -353,7 +343,8 @@ object plannerUtil {
     }
 	
 	@JvmStatic fun moveRobotInTheMap(){
-		RoomMap.getRoomMap().put(robotState!!.x, robotState!!.y, Box(false, false, true))
+		RoomMap.getRoomMap().put(robotState!!.x, robotState!!.y,
+			Box(false, false, true))
 	}
 	
 /*
@@ -366,15 +357,15 @@ object plannerUtil {
 		if( dir == Direction.RIGHT ){ RoomMap.getRoomMap().put(x + 1, y, Box(true, false, false)) }
 	}
 	@JvmStatic fun wallFound(){
- 		 val dimMapx = RoomMap.getRoomMap().getDimX()
-		 val dimMapy = RoomMap.getRoomMap().getDimY()
+ 		 val dimMapx = RoomMap.getRoomMap().dimX
+		 val dimMapy = RoomMap.getRoomMap().dimY
 		 val dir     = getDir()
 		 val x       = getPosX()
 		 val y       = getPosY()
 		 setObstacleWall( dir,x,y )
  		 println("plannerUtil wallFound dir=$dir  x=$x  y=$y dimMapX=$dimMapx dimMapY=$dimMapy");
 		 doMove( dir.toString() )  //set cell
-  		 if( dir == Direction.RIGHT) setWallDown(dimMapx,y)  
+  		 if( dir == Direction.RIGHT) setWallDown(dimMapx,y)
 		 if( dir == Direction.UP)    setWallRight(dimMapy,x)
  	}
 	@JvmStatic fun setWallDown(dimMapx: Int, y: Int ){

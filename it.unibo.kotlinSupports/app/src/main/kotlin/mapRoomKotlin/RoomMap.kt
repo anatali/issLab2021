@@ -1,10 +1,10 @@
 package mapRoomKotlin
 import java.util.*
 
-class RoomMap private constructor()  { //: Serializable
+class RoomMap private constructor() : java.io.Serializable { //: Serializable
     private var roomMap : MutableList<ArrayList<Box>> = ArrayList<ArrayList<Box>>()
 
-	companion object {
+    companion object {
 //      private const val serialVersionUID = 1L
         private var singletonRoomMap: RoomMap? = null
         fun getRoomMap(): RoomMap {

@@ -5,7 +5,7 @@ import org.json.JSONObject
 import it.unibo.kactor.ActorBasicFsm
 import java.util.Scanner
 import alice.tuprolog.*
-import com.andreapivetta.kolor.*
+ 
 
 object pathexecutil{
 var pathDone = ""
@@ -23,22 +23,24 @@ lateinit var  owner:  String
 
 	fun memoCurPath( msg: String  ){
 		//msg(dopath,dispatch,testexec,pathexec,'dopath(path({"path":"wwlw"}),caller)',8)
-		println("pathexecutil | msg=$msg")
+		//println("pathexecutil | memoCurPath msg=$msg")
 		//PROLOG version
+		/*
 		val ap = it.unibo.kactor.ApplMessage(msg)
 		val cc = ap.msgContent()	//a String
-		//println("pathexecutil | PROLOG ap=$ap cc=$cc ")
-		//val cct = Term.createTerm(cc)
-		//println("pathexecutil | PROLOG ap=$ap cc=$cc cct=$cct")
+		println("pathexecutil | PROLOG ap=$ap cc=$cc ")
+		val cct = Term.createTerm(cc)
+		println("pathexecutil | PROLOG ap=$ap cc=$cc cct=$cct")
+		*/
 		//2021 version
 		val am      = ApplMessage.create(msg)
 		val content = am.msgContent
-		println("pathexecutil | content=$content")	//{"path":"wwlw", "owner":"textexec"}
+		//println("pathexecutil | memoCurPath content=$content")	//{"path":"wwlw", "owner":"textexec"}
 		val amJson = JSONObject( content )
 		curPath    = amJson.get("path").toString()
-		owner      = amJson.get("owner").toString()
-		pathDone  = ""
-		println("pathexecutil | curPath=$curPath owner=$owner")
+		//owner      = amJson.get("owner").toString()
+		pathDone   = ""
+		println("pathexecutil | memoCurPath curPath=$curPath ")
 	}
 
 	fun nextMove() : String{
@@ -55,7 +57,7 @@ lateinit var  owner:  String
 		//println("pathexecutil | doNextMove=$move")
 		if( move.length == 0 ) {
 			master.autoMsg("pathdone","pathtodo($curPath)")
-			println("!!!!!!!!!!! SEND pathdone to OWNER=$owner" )
+			//println("!!!!!!!!!!! SEND pathdone to OWNER=$owner" )
 		}else{
 			doMove(move, master)
 		}
@@ -64,14 +66,13 @@ lateinit var  owner:  String
 	suspend fun doMove(moveTodo: String, master: ActorBasicFsm){
 		val MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove(moveTodo)
 		val answJson = JSONObject( MoveAnsw )
-		println("pathexecutil | answJson=$answJson")
+		//println("pathexecutil | answJson=$answJson")
 		if( answJson.has("endmove") && answJson.getString("endmove") == "true"){
 			pathDone = pathDone+moveTodo
 			master.autoMsg("moveok","move($moveTodo)")
 		}else{
-			//master.autoMsg("movefail","move($moveTodo)")
 			master.autoMsg("pathfail","pathdone($pathDone)")
-			println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
+			//println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
 		}
 	}
 
