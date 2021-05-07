@@ -37,7 +37,7 @@ lateinit var  owner:  String
 		val content = am.msgContent
 		//println("pathexecutil | memoCurPath content=$content")	//{"path":"wwlw", "owner":"textexec"}
 		val amJson = JSONObject( content )
-		curPath    = amJson.get("path").toString()
+		curPath    = amJson.get("path").toString().replace("w","p")
 		//owner      = amJson.get("owner").toString()
 		pathDone   = ""
 		println("pathexecutil | memoCurPath curPath=$curPath ")
@@ -61,13 +61,20 @@ lateinit var  owner:  String
 		}else{
 			doMove(move, master)
 		}
-	}
+	} 
 
 	suspend fun doMove(moveTodo: String, master: ActorBasicFsm){
 		val MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove(moveTodo)
+		 
+		if( MoveAnsw.contains("sonarName")){
+			println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS ")
+			master.autoMsg("sonar","distance(todo)")
+			return
+		}     
 		val answJson = JSONObject( MoveAnsw )
 		//println("pathexecutil | answJson=$answJson")
-		if( answJson.has("endmove") && answJson.getString("endmove") == "true"){
+		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
+			|| answJson.has("stepDone") ){
 			pathDone = pathDone+moveTodo
 			master.autoMsg("moveok","move($moveTodo)")
 		}else{

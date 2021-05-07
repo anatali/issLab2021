@@ -21,7 +21,7 @@ object mainPlanDemo {
             println("===== map after some move")
             plannerUtil.showMap()
 
-
+/*
             val actions = plannerUtil.doPlan()  //no goal
             println("===== plan actions: ${actions!!} "   )
             executeMoves( )			
@@ -33,7 +33,7 @@ object mainPlanDemo {
                        executeMoves( )
                        println("===== map after plan for home")
                        plannerUtil.showMap()
-
+*/
 			plannerUtil.getDuration()
             plannerUtil.saveRoomMap("demoMap")
 		} catch (e: Exception) {
@@ -45,15 +45,13 @@ object mainPlanDemo {
 @Throws(Exception::class)
     internal fun doSomeMOve() {
     plannerUtil.doMove("w")
-    /*
     plannerUtil.doMove("l")
     plannerUtil.doMove("w")
     plannerUtil.doMove("w")
     plannerUtil.doMove("r")
     plannerUtil.doMove("w")
-    plannerUtil.doMove("l")
-     */
-    mapUtil.setObstacle()
+
+    plannerUtil.updateMapObstacleOnCurrentDirection()
     }
  
 

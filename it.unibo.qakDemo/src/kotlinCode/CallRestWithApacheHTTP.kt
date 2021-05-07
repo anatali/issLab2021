@@ -20,6 +20,15 @@ object CallRestWithApacheHTTP {
             val response: HttpResponse = client.execute(request)
             val answer: String = IOUtils.toString(response.getEntity().getContent(), "UTf-8")
             println("CallRestWithApacheHTTP | RESPONSE for $moveTodo=$answer")
+		/*
+            if( 	answer.contains("stepDone")
+            		|| answer.contains("stepFail")
+            		|| answer.contains("endmove")
+			) return answer
+		    else {
+				return ""
+			}
+		*/
             return answer
             //val obj =  JSONObject(json);
         //} catch (ex: Exception) { println(ex.message) }

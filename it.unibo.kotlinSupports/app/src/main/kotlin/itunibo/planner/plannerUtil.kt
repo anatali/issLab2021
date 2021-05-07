@@ -223,7 +223,7 @@ object plannerUtil {
 	@JvmStatic fun mapIsEmpty() : Boolean{return (getMapDimX( )==0 &&  getMapDimY( )==0 ) }
 
 	@JvmStatic fun showMap() {
-        println(RoomMap.getRoomMap().toString() + mapUtil.state.toString() ) //robotState.toString()
+        println(RoomMap.getRoomMap().toString() + robotState.toString() ) //robotState.toString()
     }
 	@JvmStatic fun getMap() : String{
 		return RoomMap.getRoomMap().toString()

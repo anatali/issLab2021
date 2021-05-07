@@ -16,12 +16,11 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		 var MYSELF = myself  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("pathexec starts")
-						 kotlinCode.pathexecutil.register(MYSELF)  
+						 kotlinCode.pathexecutil.register(myself)  
 					}
 					 transition(edgeName="t00",targetState="dojob",cond=whenDispatch("dopath"))
 				}	 
@@ -34,12 +33,12 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("nextMove") { //this:State
 					action { //it:State
-						 kotlinCode.pathexecutil.doNextMove(MYSELF)  
+						 kotlinCode.pathexecutil.doNextMove(myself)  
 					}
 					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
 					transition(edgeName="t02",targetState="pathcompleted",cond=whenDispatch("pathdone"))
-					transition(edgeName="t03",targetState="nextMove",cond=whenDispatch("moveok"))
-					transition(edgeName="t04",targetState="pathfailure",cond=whenDispatch("pathfail"))
+					transition(edgeName="t03",targetState="pathfailure",cond=whenDispatch("pathfail"))
+					transition(edgeName="t04",targetState="nextMove",cond=whenDispatch("moveok"))
 				}	 
 				state("handleAlarm") { //this:State
 					action { //it:State
@@ -55,16 +54,16 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("pathfailure") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
-						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath()  
-						println("END FAIL | ")
+						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w")  
+						println("pathexec | END FAIL ")
 						forward("pathfail", "pathfail($Pathtodo)" ,"spiralwalker" ) 
 					}
 					 transition(edgeName="t09",targetState="dojob",cond=whenDispatch("dopath"))
 				}	 
 				state("pathcompleted") { //this:State
 					action { //it:State
-						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath()  
-						println("END OK | Pathtodo= $Pathtodo ")
+						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w")  
+						println("pathexec | END  Pathtodo= $Pathtodo ")
 						forward("pathdone", "pathdone(ok)" ,"spiralwalker" ) 
 					}
 					 transition(edgeName="t010",targetState="dojob",cond=whenDispatch("dopath"))

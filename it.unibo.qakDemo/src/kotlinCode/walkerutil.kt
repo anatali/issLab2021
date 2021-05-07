@@ -15,14 +15,14 @@ object walkerutil{
 	}
 	
 	fun updateMapOk(mapname: String="walkermap", show: Boolean = true ){
-		val path = pathexecutil.pathDone
+		val path = pathexecutil.pathDone.replace("p","w")
 		path.forEach {  plannerUtil.updateMap(""+it) }
 		plannerUtil.showMap()
 		plannerUtil.saveRoomMap(mapname)
 	}
 	
 	fun updateMapKO(mapname: String="walkermap", show: Boolean = true ){
-		val path = pathexecutil.pathDone
+		val path = pathexecutil.pathDone.replace("p","w")
 		path.forEach {  plannerUtil.updateMap(""+it) }
 		plannerUtil.updateMapObstacleOnCurrentDirection()
 		plannerUtil.showMap()

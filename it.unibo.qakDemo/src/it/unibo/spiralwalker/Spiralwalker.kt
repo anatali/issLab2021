@@ -19,9 +19,8 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 		  var stepCounter        = 1
 			var CurrentPlannedMove = ""
 			val mapname            = "roomMap"
-			val maxNumSteps        = 3	  
-			val MYSELF             = myself
-			  
+			val maxNumSteps        = 5	  
+			//val MYSELF             = myself	     
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -58,12 +57,13 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						 val PathTodo = kotlinCode.walkerutil.doPlan("0")  
 						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
 					}
+					 transition(edgeName="t014",targetState="continueJob",cond=whenDispatch("pathdone"))
 				}	 
 				state("continueJob") { //this:State
 					action { //it:State
 						println("MAP AFTER BACK TO HOME nextstep=$stepCounter")
 						kotlinCode.walkerutil.updateMapOk( mapname  )
-						 kotlinCode.pathexecutil.waitUser("another step")  
+						 kotlinCode.pathexecutil.waitUser("another step $stepCounter")  
 					}
 					 transition( edgeName="goto",targetState="exploreStep", cond=doswitchGuarded({ stepCounter < maxNumSteps  
 					}) )
