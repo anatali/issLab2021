@@ -21,6 +21,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("s0") { //this:State
 					action { //it:State
 						println("pathexec starts")
+						 kotlinCode.pathexecutil.register(MYSELF)  
 					}
 					 transition(edgeName="t00",targetState="dojob",cond=whenDispatch("dopath"))
 				}	 
@@ -33,27 +34,34 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("nextMove") { //this:State
 					action { //it:State
-						 var MoveTodo = kotlinCode.pathexecutil.nextMove()  
-						println("pathexec MoveTodo=$MoveTodo ")
-						 kotlinCode.pathexecutil.doMove("$MoveTodo", MYSELF)  
+						 kotlinCode.pathexecutil.doNextMove(MYSELF)  
 					}
 					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t02",targetState="pathcontinue",cond=whenDispatch("moveok"))
-					transition(edgeName="t03",targetState="pathfailure",cond=whenDispatch("movefail"))
+					transition(edgeName="t02",targetState="endJob",cond=whenDispatch("pathdone"))
+					transition(edgeName="t03",targetState="nextMove",cond=whenDispatch("moveok"))
+					transition(edgeName="t04",targetState="pathfailure",cond=whenDispatch("pathfail"))
 				}	 
 				state("handleAlarm") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath()  
+						println(" AAAA | Pathtodo= $Pathtodo ...")
 					}
-				}	 
-				state("pathcontinue") { //this:State
-					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
-					}
+					 transition(edgeName="t05",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t06",targetState="endJob",cond=whenDispatch("pathdone"))
+					transition(edgeName="t07",targetState="nextMove",cond=whenDispatch("moveok"))
+					transition(edgeName="t08",targetState="pathfailure",cond=whenDispatch("movefail"))
 				}	 
 				state("pathfailure") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						println("END FAIL | ")
+					}
+				}	 
+				state("endJob") { //this:State
+					action { //it:State
+						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath()  
+						println("END OK | Pathtodo= $Pathtodo ")
 					}
 				}	 
 			}

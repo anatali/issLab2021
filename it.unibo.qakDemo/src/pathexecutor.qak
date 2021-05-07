@@ -1,7 +1,20 @@
-System pathexecutor
+/*
+ * pathexecutor.qak
+ * This MODEL defines the interaction and the behaviour of an ActorFsm component
+ * that has the responsibility to execute a given path and to handle alarm events.
+ * 
+ * The components uses the kotlinCode.pathexecutil that provides the following operations
+ *  - memoCurPath :
+ *  - nextMove : 
+ *  - doMove :  send a command to move the robot by using CallRestWithApacheHTTP
+ *              and send to the caller a dispatch (moveok|movefail) related to the answer
+ *  -
+ */
+System -msglog pathexecutor  
 
-Dispatch dopath : dopath( PATH )
-
+Dispatch dopath   : dopath( PATH, OWNER )
+Dispatch pathdone : pathdone( P )
+Dispatch pathfail : pathdone( P )
 Dispatch moveok   : move( MOVESHORT )
 Dispatch movefail : move( MOVESHORT )
 
@@ -11,52 +24,69 @@ Context ctxPathexecutor  ip [host="localhost" port=8032]
 
 QActor pathexec context ctxPathexecutor{
 	[# var MYSELF = myself #]
-	State s0 initial{  
+	State s0 initial{  	
 		println("pathexec starts") 
- 
-	}
+ 		[# kotlinCode.pathexecutil.register(MYSELF) #]
+	}	
 	Transition t0 whenMsg dopath -> dojob
 	
 	State dojob{
 		printCurrentMessage
  		run kotlinCode.pathexecutil.memoCurPath( "$currentMsg" )
 	}
-	Goto nextMove 
+	Goto nextMove   
 	
 	State nextMove{ 
-		[# var MoveTodo = kotlinCode.pathexecutil.nextMove() #]
-		println("pathexec MoveTodo=$MoveTodo ") 
-		//[# MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove("$MoveTodo") #]
-		[# kotlinCode.pathexecutil.doMove("$MoveTodo", MYSELF) #]
+		[# kotlinCode.pathexecutil.doNextMove(MYSELF) #]		
 	} 
-	Transition t0 whenEvent alarm  -> handleAlarm  
-				  whenMsg moveok   ->  pathcontinue
-				  whenMsg movefail ->  pathfailure
-	
+	Transition t0 whenEvent alarm  ->  handleAlarm  //first
+				  whenMsg pathdone ->  endJob 
+				  whenMsg moveok   ->  nextMove  
+				  whenMsg pathfail ->  pathfailure		  
+	  
 	
 	State handleAlarm{
 		printCurrentMessage
+		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath() #]
+		println(" AAAA | Pathtodo= $Pathtodo ...")
 	}
-	 
-	
-	State pathcontinue{
-		printCurrentMessage
-	}
-	
+	Transition t0 whenEvent alarm  ->  handleAlarm  //first 
+				  whenMsg pathdone ->  endJob 	//manage pending messages
+				  whenMsg moveok   ->  nextMove  
+				  whenMsg movefail ->  pathfailure 
+		
 	State pathfailure{
-		printCurrentMessage
-		 
-	}	
+		printCurrentMessage		
+		println("END FAIL | ")    
+	}	 
+	
+	State endJob{ 
+		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath() #]
+		println("END OK | Pathtodo= $Pathtodo ") 
+	}
 }   
 
 
 
-
+/*
+ *  OWNER
+*/ 
 QActor testexec context ctxPathexecutor{
 	State s0 initial{  
-		[# val PathTodo = "{\"path\":\"rl\"}" #]
-		println("testexec starts") 
-		forward pathexec -m dopath : dopath( path($PathTodo) )
- 
+		[# val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"testexec\"}" #]
+		println("testexec starts")   
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 
+		delay  1000
+		emit alarm : alarm(fire) 
+	}
+	Transition t0 whenMsg pathdone -> handlePathDone
+				  whenMsg pathfail -> handlePathFail
+	
+	State handlePathDone{
+		printCurrentMessage
+	}
+	 
+	State handlePathFail{
+		printCurrentMessage
 	}
 }

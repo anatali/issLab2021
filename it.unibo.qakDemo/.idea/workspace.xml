@@ -5,22 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlannerM2m.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlannerM2m.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/PathExecutor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/app/src/main/kotlin/itunibo/planner/mainPlanDemo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/demoMap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.cautiousExplorer/demoMap.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build_ctxPathexecutor.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build_ctxPathexecutor.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pathexecutor.pl" beforeDir="false" afterPath="$PROJECT_DIR$/pathexecutor.pl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/it/unibo/pathexec/Pathexec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/pathexec/Pathexec.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/unibo/testexec/Testexec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/testexec/Testexec.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/kotlinCode/pathexecutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/kotlinCode/pathexecutil.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pathexecutor.qak" beforeDir="false" afterPath="$PROJECT_DIR$/src/pathexecutor.qak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/features/PathExecutor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/features/PathExecutor.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
