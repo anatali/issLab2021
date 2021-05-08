@@ -22,7 +22,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						println("pathexec starts")
 						 kotlinCode.pathexecutil.register(myself)  
 					}
-					 transition(edgeName="t00",targetState="dojob",cond=whenDispatch("dopath"))
+					 transition(edgeName="t00",targetState="dojob",cond=whenRequest("dopath"))
 				}	 
 				state("dojob") { //this:State
 					action { //it:State
@@ -56,17 +56,17 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						println("$name in ${currentState.stateName} | $currentMsg")
 						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w")  
 						println("pathexec | END FAIL ")
-						forward("pathfail", "pathfail($Pathtodo)" ,"spiralwalker" ) 
+						answer("dopath", "dopathfail", "dopathfail($Pathtodo)"   )  
 					}
-					 transition(edgeName="t09",targetState="dojob",cond=whenDispatch("dopath"))
+					 transition(edgeName="t09",targetState="dojob",cond=whenRequest("dopath"))
 				}	 
 				state("pathcompleted") { //this:State
 					action { //it:State
 						 val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w")  
 						println("pathexec | END  Pathtodo= $Pathtodo ")
-						forward("pathdone", "pathdone(ok)" ,"spiralwalker" ) 
+						answer("dopath", "dopathdone", "dopathdone($Pathtodo)"   )  
 					}
-					 transition(edgeName="t010",targetState="dojob",cond=whenDispatch("dopath"))
+					 transition(edgeName="t010",targetState="dojob",cond=whenRequest("dopath"))
 				}	 
 			}
 		}

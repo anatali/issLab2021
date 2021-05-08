@@ -41,17 +41,17 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 				state("exploreStep") { //this:State
 					action { //it:State
 						 val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter++}","${stepCounter}" )  
-						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
+						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
-					 transition(edgeName="t012",targetState="backToHomeok",cond=whenDispatch("pathdone"))
-					transition(edgeName="t013",targetState="backToHomeKO",cond=whenDispatch("pathfail"))
+					 transition(edgeName="t012",targetState="backToHomeok",cond=whenReply("dopathdone"))
+					transition(edgeName="t013",targetState="backToHomeKO",cond=whenReply("dopathfail"))
 				}	 
 				state("backToHomeok") { //this:State
 					action { //it:State
 						println("backToHomeok ... ")
 						kotlinCode.walkerutil.updateMapOk(  )
 						 val PathTodo = kotlinCode.walkerutil.doPlan("0","0")  
-						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
+						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
 					 transition(edgeName="t014",targetState="continueJob",cond=whenDispatch("pathdone"))
 				}	 
@@ -60,7 +60,7 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						println("backToHomeKO ... ")
 						kotlinCode.walkerutil.updateMapKO( mapname  )
 						 val PathTodo = kotlinCode.walkerutil.doPlan("0","0")  
-						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
+						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
 					 transition(edgeName="t015",targetState="continueJob",cond=whenDispatch("pathdone"))
 				}	 

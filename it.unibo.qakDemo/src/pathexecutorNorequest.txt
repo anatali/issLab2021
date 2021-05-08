@@ -13,9 +13,7 @@
 System -msglog pathexecutor  
 
 Dispatch start    : start( ARG )
-Request  dopath   : dopath( PATH, OWNER )
-Reply dopathdone  : dopathdone( ARG )
-Reply dopathfail  : dopathfail( ARG )
+Dispatch dopath   : dopath( PATH, OWNER )
 Dispatch pathdone : pathdone( P )
 Dispatch pathfail : pathdone( P )
 Dispatch moveok   : move( MOVESHORT )
@@ -34,7 +32,7 @@ QActor pathexec context ctxPathexecutor{
 		println("pathexec starts") 
  		[# kotlinCode.pathexecutil.register(myself) #]
 	}	
-	Transition t0 whenRequest dopath -> dojob
+	Transition t0 whenMsg dopath -> dojob
 	
 	State dojob{
 		printCurrentMessage
@@ -65,18 +63,16 @@ QActor pathexec context ctxPathexecutor{
 		printCurrentMessage		
 		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w") #]
 		println("pathexec | END FAIL ")    
-		//forward spiralwalker -m  pathfail : pathfail( $Pathtodo ) //better to use request-response
-		replyTo dopath with dopathfail : dopathfail( $Pathtodo )
+		forward spiralwalker -m  pathfail : pathfail( $Pathtodo )
 	}	  
-	Transition t0 whenRequest dopath -> dojob //DO ANOTHER PATH
+	Transition t0 whenMsg dopath -> dojob //DO ANOTHER PATH
 	 
 	State pathcompleted{ 
 		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w") #]
 		println("pathexec | END  Pathtodo= $Pathtodo ") 
-		//forward spiralwalker -m pathdone : pathdone(ok)  //better to use request-response
-		replyTo dopath with dopathdone : dopathdone( $Pathtodo )
+		forward spiralwalker -m pathdone : pathdone(ok)  //better to use request-response
 	} 
-	Transition t0 whenRequest dopath -> dojob //DO ANOTHER PATH
+	Transition t0 whenMsg dopath -> dojob //DO ANOTHER PATH
 }   
 
 /*
@@ -107,18 +103,16 @@ QActor spiralwalker context ctxPathexecutor{
 	
 	State exploreStep{
 		[# val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter++}","${stepCounter}" ) #]
-		//forward pathexec -m dopath : dopath(  $PathTodo   ) 
-		request pathexec -m dopath : dopath(  $PathTodo   ) 
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 
  	} 
- 	Transition t0   whenReply dopathdone -> backToHomeok
- 					whenReply dopathfail -> backToHomeKO
- 	
+ 	Transition t0 whenMsg pathdone -> backToHomeok
+ 	    		  whenMsg pathfail -> backToHomeKO
+	
 	State backToHomeok{
 		println("backToHomeok ... ")
 		run kotlinCode.walkerutil.updateMapOk()
 		[# val PathTodo = kotlinCode.walkerutil.doPlan("0","0") #]
-		//forward pathexec -m dopath : dopath(  $PathTodo   ) 		
-		request pathexec -m dopath : dopath(  $PathTodo   ) 	
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 		
 	} 
  	Transition t0 whenMsg pathdone -> continueJob
  	 
@@ -127,8 +121,7 @@ QActor spiralwalker context ctxPathexecutor{
 		println("backToHomeKO ... ")	
 		run kotlinCode.walkerutil.updateMapKO(mapname) 	
  		[# val PathTodo = kotlinCode.walkerutil.doPlan("0","0") #]
-		//forward pathexec -m dopath : dopath(  $PathTodo   ) 
-		request pathexec -m dopath : dopath(  $PathTodo   )		
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 		
  	}
  	Transition t0 whenMsg pathdone -> continueJob
  	 
@@ -253,19 +246,16 @@ QActor testexec context ctxPathexecutor{
 	
 	State reachAPoint{
 		[# kotlinCode.pathexecutil.waitUser("reachAPoint")  
-		   val PathTodo = kotlinCode.walkerutil.doPlan("3","2") #]  
-		//forward pathexec -m dopath : dopath(  $PathTodo   ) 		
-		request pathexec -m dopath : dopath(  $PathTodo   )  
+		   val PathTodo = kotlinCode.walkerutil.doPlan("2","1" ) #]
+		forward pathexec -m dopath : dopath(  $PathTodo   ) 		
 	}
- 	Transition t0 whenReply  dopathdone -> reachAPointDone
- 	    		  whenReply  dopathfail -> reachAPointFailure
+ 	Transition t0 whenMsg pathdone -> reachAPointDone
+ 	    		  whenMsg pathfail -> reachAPointFailure
 		  
     State reachAPointDone{
-    	 run kotlinCode.walkerutil.updateMapOk("pointOkMap") 
     	 [# println(itunibo.planner.plannerUtil.showMap()) #]
     }
     State reachAPointFailure{
-    	run kotlinCode.walkerutil.updateMapKO("pointFaiMap") 
     	[# println(itunibo.planner.plannerUtil.showMap()) #]
     	println("WARNING: point or path not free")
     }

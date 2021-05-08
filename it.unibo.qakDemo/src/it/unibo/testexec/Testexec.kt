@@ -43,19 +43,21 @@ class Testexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("reachAPoint") { //this:State
 					action { //it:State
 						 kotlinCode.pathexecutil.waitUser("reachAPoint")  
-								   val PathTodo = kotlinCode.walkerutil.doPlan("2","1" )  
-						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
+								   val PathTodo = kotlinCode.walkerutil.doPlan("3","2")  
+						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
-					 transition(edgeName="t022",targetState="reachAPointDone",cond=whenDispatch("pathdone"))
-					transition(edgeName="t023",targetState="reachAPointFailure",cond=whenDispatch("pathfail"))
+					 transition(edgeName="t022",targetState="reachAPointDone",cond=whenReply("dopathdone"))
+					transition(edgeName="t023",targetState="reachAPointFailure",cond=whenReply("dopathfail"))
 				}	 
 				state("reachAPointDone") { //this:State
 					action { //it:State
+						kotlinCode.walkerutil.updateMapOk( "pointOkMap"  )
 						 println(itunibo.planner.plannerUtil.showMap())  
 					}
 				}	 
 				state("reachAPointFailure") { //this:State
 					action { //it:State
+						kotlinCode.walkerutil.updateMapKO( "pointFaiMap"  )
 						 println(itunibo.planner.plannerUtil.showMap())  
 						println("WARNING: point or path not free")
 					}
