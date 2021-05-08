@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+<!--
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+	width: 750px;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 90%;
+	background-color: #fcf8c7;
+	border: 1px solid blue;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}         
+    
+  -->
+</style>
+    
+<head>
+   
+<title>LabCoAP</title></head>
+    
+<body>
+<div id="top">
+<h1>LabCoAP | Introduction to <a href="https://en.wikipedia.org/wiki/Constrained_Application_Protocol" target="web">CoAP</a><font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduction: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="web">Representational State Transfer (REST)</a></h2>
+
+REST is a 
+<a href="https://en.wikipedia.org/wiki/Resource-oriented_architecture" target="web">resource-oriented architecture (<k>ROA</k>)</a>, 
+where every component of a system or an
+application is called a <em>resource</em>. A resource is explicitly identified and can be individually addressed.  
+<br/><br/>
+Using the exact same standard naming scheme as all other web resources
+allows you to seamlessly integrate Things and their properties into the web because
+their functions, data, or sensors can be linked to, shared, bookmarked, and used just
+like anything else on the web.
+<br/><br/>
+Let us recall the basic concepts:
+
+
+<ol>
+<li>Interactions between components are based on the 
+<a href="https://en.wikipedia.org/wiki/Request%E2%80%93response" target="web">request-response pattern</a>, where a client
+sends a request to a server and gets back a response</li>
+<li>Loose coupling between components can be achieved using a <em>uniform interface</em> that all components in the system respect.<br/>
+Uniform interfaces make it easy to design a <em>layered system</em>, which means that several
+intermediate components can hide what’s behind them.</li>
+<li><em>Caching</em> is a key element in the performance.<br/><br/></li>
+<li>A <em>resource</em> is any concept or piece of data in an application
+that needs to be referenced or used. Every resource must have a <em>unique identifier</em>
+and should be addressable using a <em>unique referencing mechanism</em>. On the
+web, this is done by assigning every resource a unique <k>URL</k> .</li>
+<li>A 
+<a href="https://en.wikipedia.org/wiki/URL" target="web">Uniform Resource Locator (<k>URL</k>)</a>
+is a type  of 
+<a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier" target="web">Uniform Resource Identifier (<k>URI</k>)</a>
+that identifies a resource via a representation of its primary
+access mechanism. On the web, a <tt>URL</tt> is a <tt>URI</tt> beginning with the <tt>http:// scheme</tt>
+<br/>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<img src="./img/thingURL.png" alt="thingURL" width="90%"  /><br/>
+<m>
+A <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier" target="web">URI</a> (standard scheme defined in <tt>RFC 3986.4</tt>) 
+is a sequence of characters that unambiguously identifies an abstract or physical
+resource.</m>
+
+<pre>
+&lt;scheme> ":" <authority><path> [ "?" query ] [ "#" fragment ]
+</pre>
+</td>
+<td><h3>A Thing URL</h3>
+<m>
+the protocol is <tt>HTTP+TLS/SSL</tt> (<k>HTTPS</k>); <br/>
+the domain is resolved by <tt>DNS</tt> to an <tt>IP</tt> address; <br/>
+the port is used by <tt>TCP</tt> to know what process to redirect to;<br/>
+finally the <tt>REST</tt> resource is specified.
+</m>
+</td>
+</tr>
+</table>
+
+<br/> 
+
+</li>
+ 
+
+<li>Servers shouldn’t keep track of each client’s state because stateless applications are easier to scale.
+Instead, application state should be addressable via its own URL, and each
+resource should contain links and information about what operations are possible
+in each state and how to navigate across states 
+(<a href="https://en.wikipedia.org/wiki/HATEOAS" target="web">Hypermedia as the engine of the application state - <k>HATEOAS</k></a>).</li>
+</ol>
+
+
+
+<h2>The Constrained Application Protocol</h2>
+See  <a href="https://dzone.com/articles/coap-protocol-step-by-step-guide" target="web">
+CoAP Protocol: Step-by-Step Guide</a><br/>
+<br/>
+From <a href="https://en.wikipedia.org/wiki/Constrained_Application_Protocol" target="web">wikipedia</a> we read:
+
+<hr/><m>
+<a href="https://coap.technology/spec.html" target="web">Constrained Application Protocol (CoAP Specification)</a> 
+is a specialized Internet Application Protocol for constrained devices.
+It is a <i>service layer protocol</i> that is intended for use in resource-constrained Internet devices,
+such as wireless sensor network nodes.
+<br/><br/>
+Multicast, low overhead, and simplicity are extremely important for Internet of Things (<k>IoT</k>) and Machine-to-Machine (<k>M2M</k>) devices, 
+which tend to be deeply embedded and have much less memory and power supply than traditional Internet devices have. 
+Therefore, efficiency is very important. CoAP can run on most devices that support <tt>UDP</tt> or a <tt>UDP</tt> analogue.
+<br/><br/>
+The <a href="https://en.wikipedia.org/wiki/Internet_Engineering_Task_Force" target="web">Internet Engineering Task Force (<ks>IETF</ks>)</a>
+ <i>Constrained RESTful Environments Working Group</i> (
+ <a href="https://datatracker.ietf.org/wg/core/charter/" target="web"><ks>CoRE</ks></a>
+ ) has done the major standardization work for this protocol.
+</m><hr/>
+
+<h3>
+<a href="https://tools.ietf.org/html/rfc7252#section-12.1.2 "target="web">Response Codes Codes (RFC 7252 section-12.1.2)</a>
+
+</h3>
+<pre><m>
++------+------------------------------+-----------+
+| Code | Description                  | Reference |
++------+------------------------------+-----------+
+| 2.01 | Created                      [ [RFC7252] |
+| 2.02 | Deleted                      | [RFC7252] |
+| 2.03 | Valid                        | [RFC7252] |
+| 2.04 | Changed                      | [RFC7252] |
+| 2.05 | Content                      | [RFC7252] |
+| 4.00 | Bad Request                  | [RFC7252] |
+| 4.01 | Unauthorized                 | [RFC7252] |
+| 4.02 | Bad Option                   | [RFC7252] |
+| 4.03 | Forbidden                    | [RFC7252] |
+| 4.04 | Not Found                    | [RFC7252] |
+| 4.05 | Method Not Allowed           | [RFC7252] |
+| 4.06 | Not Acceptable               | [RFC7252] |
+| 4.12 | Precondition Failed          | [RFC7252] |
+| 4.13 | Request Entity Too Large     | [RFC7252] |
+| 4.15 | Unsupported Content-Format   | [RFC7252] |
+| 5.00 | Internal Server Error        | [RFC7252] |
+| 5.01 | Not Implemented              | [RFC7252] |
+| 5.02 | Bad Gateway                  | [RFC7252] |
+| 5.03 | Service Unavailable          | [RFC7252] |
+| 5.04 | Gateway Timeout              | [RFC7252] |
+| 5.05 | Proxying Not Supported       | [RFC7252] |
++------+------------------------------+-----------+
+</m></pre>
+
+<h3>The Californium framework</h3>
+From <a href="https://www.eclipse.org/californium/" target="web">https://www.eclipse.org/californium/</a> we read:
+<hr/><m>
+Californium is a powerful CoAP framework targeting back-end services communicating with smaller Internet of Things devices. 
+Stronger Internet of Things devices may use Californium also. 
+It provides a convenient API for RESTful Web services that support all of CoAP's features.
+</m>
+<hr/>
+Californium manages CoAP requests based on the type of incoming instance.  Moreover:
+<ul>
+<li><ks>CoapResource</ks> is a basic implementation of a resource. </li>
+<li>A CoAP server hosts a <ks>tree of Resources</ks> which are exposed to clients by means of one or more Endpoints which are bound to a network interface.</li>
+<li>CoapResource uses four distinct methods to handle requests: <tt>handleGET(), handlePOST(), handlePUT()</tt> and <tt>handleDELETE()</tt>.</li>
+<li>The class <ks>Exchange</ks> is used internally in Californium to keep the state of an exchange of CoAP messages</li>
+<li>Each resource is allowed to define its own <ks>executor</ks>. When a request arrives, it will be handled by that executor. If the resource 
+does not define its own executor, the executor of its parent or transitively an ancestor will be used. If no ancestor up to the root
+defines an executor, the thread that delivers the request will invoke the handling method. </li>
+<li>CoapResource supports <i>CoAP’s observe mechanism</i>. Enable a CoapResource to be observable by a CoAP client by marking it as observable with 
+<tt>setObservable(boolean)</tt>.
+Notify all CoAP observers  by calling the method <tt>changed()</tt>, that reprocesses the request from observing clients.
+A CoAP observe relation between the resource and a CoAP client is represented by an instance of <ks>ObserveRelation</ks>. </li>
+<li>The class <ks>ResourceObserver</ks> has nothing to do with CoAP's observe mechanism but is an implementation of the general observe-pattern.
+It is invoked whenever the path of a resource changes, when a child resource is added/removed or when a CoAP observe relation is added or canceled.
+</li>
+</ul>
+
+<!--
+<h2>Example</h2>
+
+ <table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/coapIntro.png" alt="coapIntro" width="100%"  /></td>
+<td>Project <i>it.unibo.coapIntro</i><br/>
+<m>
+The device has <tt>robot</tt> as root and <tt>sonar</tt> as its sensor resource:
+<img src="./img/urlExample.png" alt="urlExample" width="100%"  /><br/><br/>
+</m>
+ </td>
+</tr>
+</tbody>
+</table>
+
+To run:
+<ol>
+<li>Activate the CoAP-observable resource <a href="../src/it/unibo/coapintro/Resource.java" target="code">Resource.java</a></li>
+<li>Look at the initial content of the resource by running the reader-client <a href="../src/it/unibo/coapintro/ResourceClientReader.java" target="code">
+ResourceClientReader.java</a></li>
+<li>Activate a observer-client <a href="../src/it/unibo/coapintro/ResourceClientObserver.java" target="code">ResourceClientObserver.java</a></li>
+<li>Update the resource by running the producer-client <a href="../src/it/unibo/coapintro/ResourceClientProducer.java" target="code">ResourceClientProducer.java</a></li>
+</ol>
+-->
+<h3>Installation notes</h3>
+The Californium framework makes use of the logger library <tt>slf4j</tt> that should be included
+in the dependencies: 
+<pre>
+compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+</pre>	      
+This library 
+<ul>
+<li>Requires the presence in the directory <k>src</k> of the file <a href="../src/log4j.properties" target="code">log4j.properties</a> </li>
+<li>generates (at run-time) the file <ks>log4jInfo.log</ks></li>
+</ul>
+
+
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>

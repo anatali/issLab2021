@@ -294,7 +294,62 @@ run with <bc>discardMsg On</bc> or with <bc>discardMsg Off</bc>, we have differe
 <a href="../../it.unibo.qakactor/userdocs/LabQakIntro2021.html#sentinel" target="web"" target="code">LabQakIntro2021.html</a>
 and shows guards in transition.
 <center><img src="./img/sentinel.png" alt="sentinel" width="50%" ></center>
-</m>
+<pre><k>Event</k>   alarm : alarm(V)
+
+<ks>QActor</ks> sentinel context ctxdemo{
+  [# val counter=0 	#]	<kc>//Kotlin code</kc>
+  <ks>State s0</ks> initial { println("sentinel | STARTS") } <kc>//QActor action</kc>	  		  
+  
+  Goto <ks>watch</ks> if <k>"counter==0"</k> else <ks>end</ks> <kc>//guard</kc>
+ 	
+  <ks>State watch</ks>{ println("sentinel | WATCH") }	
+  <bc>Transition</bc> t0 
+   <k>whenTime</k> 1000 -> <ks>timeout</ks>                 <em>(0)</em>
+   <k>whenEvent</k> <ks>alarm</ks> <k>and [# counter==0 #]</k> -> <ks>handleAlarm</ks> <kc>//guard</kc>
+ 	
+  <ks>State timeout</ks>{
+	printCurrentMessage		<kc>//QActor action</kc>
+	println("sentinel | TIMEOUT")	
+	[# counter++ 	#]	 	<kc>//Kotlin code</kc>
+  }
+  <bc>Goto</bc> <ks>s0</ks>                                 <em>(1)</em>
+  <bc>//Transition</bc> t0 whenTime 10  > explore <ks>s0</ks>  <em>(2)</em>
+  
+  <ks>State handleAlarm</ks>{
+	printCurrentMessage
+	<k>onMsg</k> ( alarm : alarm(V) ) { <kc>//QActor action</kc>
+		println("sentinel | ALARM ${<ks>payloadArg</ks>(0)}") 
+		delay 1000
+	}
+  }
+  <bc>Goto</bc> <ks>s0</ks> 
+  
+  <ks>State explore</ks>{ println("sentinel | exploring (quite fast) ...") }
+  <bc>Goto</bc> watch
+ 	
+  <ks>State end</ks>{ println("sentinel | ENDS") }
+ }
+</pre>
+
+</td>
+<td>
+<pre><m>//<kc>An emitter</kc> 
+<ks>QActor</ks> sender context ctxdemo{
+  State s0 initial { 	 		 
+	<k>emit</k> alarm : alarm( fire )
+	delay 1200
+	<k>emit</k> alarm : alarm( tsunami )
+}</m></pre>
+
+
+The sentinel actor:
+<ul>
+<li>waits for an alarm event</li>
+<li>ends its job after 1sec</li>
+<li>handles the alarm with an activity tha lasts 1500 msecs</li>
+<li>restarts its job, after an event-handling </li>
+</ul>
+<!--
 	<table style="width:95%">
 	<td><pre><kc>//Output</kc>
 sentinel | STARTS
@@ -310,7 +365,7 @@ sentinel | STARTS
 sentinel | ENDS
 		watcher emits tsunami
 	</pre></td>
-	<td><pre><kc>//output when no <bc>whenTime</bc> in <tt>(1)</tt></kc>
+	<td><pre><kc>//output when no <bc>whenTime</bc> in <tt>(0)</tt></kc>
  sentinel | STARTS
 			watcher emits fire
 sentinel | WATCH
@@ -327,17 +382,38 @@ sentinel | WATCH
 <tr>
 	</tr>
 	</table>
-<m>To understand why the sentinel perceives the second alarm, see  
+-->	
+ 
+<m>To understand how the sentinel perceives alarm events, see  
 <a href="../../it.unibo.qakactor/userdocs/LabQakIntro2021.html#msghandlerules" target="lab">Message handling rules</a>
-<br/>
-Note that, if we  insert <bc>delay 1500</bc> in state <tt>handleAlarm</tt>, eliminate <bc>Goto s0</bc> in <tt>(2)</tt>
-and insert the commented  <bc>Transition t0 whenTime 10  -> explore</bc>,
+<div class="remark">
+Note that, if we  insert <bc>delay 1500</bc> in state <tt>handleAlarm</tt>, eliminate <bc>Goto s0</bc> in <em>(1)</em>
+and insert the commented  <bc>Transition t0 whenTime 10  -> explore</bc> <em>(2)</em>,
 the second alarm is lost.
+</div>
+
+	<table style="width:98%">
+	 
+
+	<tr><td style="width:50%"><h4>Case <ks>Goto s0</ks></h4>
+   	   The actor specifies an empty move. Thus, in this state it does not declare 
+           nothing about events or messages.
+           The next <tt>alarm</tt> event (tsunami) is inserted in the actor queue, that will be
+           inspected in the state <ks>watch</ks>. Thus it will be perceived
+	
+	</td>
+	<td><h4>Case <ks>Transition t0 whenTime 10->explore</ks> </h4>
+	The actor declares no interest for the alarm event in this state.
+	If the next <tt>alarm event</tt> (tsunami) arrives before <tt>1,5</tt> sec, it is ignored (lost)
+	</td>
+	</tr>
+	</table>
+ 
+
 
 </m>
 
-</td>
-<td>
+
 <h3>Events emitted by 'aliens'</h3>
 <m>
 Comment <bc>whenTime</bc> in <tt>(1)</tt> and insert <bc>Goto watch</bc> in <tt>(3)</tt>.<br/><br/>
@@ -406,7 +482,7 @@ Remember to activate the 'sentinel' by specifying a MQTT Broker.
 </m>
 
 </td>
-<td><m> An example of another caller wriiten in Kotlin:
+<td><m> An example of another caller written in Kotlin:
  
  <a href="../resources/coap/actorQakCoapClient.kt" target="code">resources/coap/actorQakCoapClient.kt</a>
 <br/><br/>

@@ -822,7 +822,8 @@ by defining the  method <m><ks>actorBody</ks></m> so to implement the behavior o
 		fsmwork(msg)
 	}</m>
 </pre>
-<pre id="fsmwork"><m>//<kc>fsmwork: the behavior of <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a></kc> 
+<h3 id="fsmwork">fsmwork</h3>
+<pre > //<kc>behavior of <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a></kc> 
 	suspend fun fsmwork(<bc>applMsg</bc>: ApplMessage) {	
 		<kc>//see <a href="#msghandlerules">Message handling rules</a> later on</kc>
 		<!--
@@ -831,7 +832,7 @@ by defining the  method <m><ks>actorBody</ks></m> so to implement the behavior o
 		if a next state exists, execute its body (Moore machine)
 		and afterwards, look at the stored messages (if any)</kc> -->
 	}
-</m></pre>
+ </pre>
  <m>
 This class <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a>  is designed according the same principles exposed in 
 <a href="../../it.unibo.actorfsm/userDocs/FSM.html" target="lab">FSM | A kotlin-based DSL</a>

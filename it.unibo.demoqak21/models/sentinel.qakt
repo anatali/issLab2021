@@ -1,3 +1,18 @@
+/*
+ * See it.unibo.demoqak21/userdocs/LabQakExamples2021.html#sentinel
+ * ----------------------------------------------------------------------------
+ * The sentinel actor
+ * - waits for an alarm event  
+ * - ends its job after 1sec
+ * - handles the alarm with an activity tha lasts 1500 msecs
+ * - after an event-handling, it restarts its job again
+ *   
+ * 
+ * The sender actor
+ *  - generates a alarm(fire) event 'immediately' (before 1 sec)
+ *  - generates a alarm(tsunami) event after 1200 mssec
+ */
+ 
 System sentinel
  	//"tcp://mqtt.eclipse.org:1883"
 	//mqtt.eclipse.org
@@ -28,19 +43,28 @@ QActor sentinel context ctxsentinel{
   		println("sentinel | TIMEOUT")	 
   		[# counter++ 	#]	
  	}
- 	Goto s0
+ 	Goto s0     
  	 
  	State handleAlarm{
   		printCurrentMessage
   		onMsg ( alarm : alarm(V) ) { 
   			println("sentinel | ALARM ${payloadArg(0)} ")  // 
   		} 
-  		delay 1500
+  		delay 1500		   
    	}	
-//   	Goto s0		//(2) the sentinel is able to perceive the next alarm
-    	Transition t0 whenTime 10  -> explore  
- 			//if another alarm (tsunami) arrives before 1,5 sec, it will be lost
-    	
+    	Goto s0		
+    	/* Goto s0:
+    	   The actor specifies an empty move  => in this state it does not declare 
+           nothing about events or messages.
+           The next alarm event (tsunami) is inserted in the actor queue, that will be
+           inspected in the state s0 -> watch. Thus it will be perceived
+   	     */
+    	//Transition t0 whenTime 10  -> explore  
+    	/* 
+    	 * The actor declares no interest for the alarm event in this state.
+    	 * If the next alarm event (tsunami) arrives before 1,5 sec, it is ignored (lost) 
+    	 * */
+     	
  	State explore{
  		println("sentinel | exploring (quite fast) ...")
  	}
