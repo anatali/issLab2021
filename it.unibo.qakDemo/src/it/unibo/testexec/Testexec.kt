@@ -16,12 +16,48 @@ class Testexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		 val doboundary = true  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+					}
+					 transition( edgeName="goto",targetState="boundarywalk", cond=doswitchGuarded({ doboundary  
+					}) )
+					transition( edgeName="goto",targetState="explorewalk", cond=doswitchGuarded({! ( doboundary  
+					) }) )
+				}	 
+				state("boundarywalk") { //this:State
+					action { //it:State
+						forward("start", "start(any)" ,"boundarywalker" ) 
+					}
+					 transition(edgeName="t020",targetState="reachAPoint",cond=whenDispatch("mapDone"))
+				}	 
+				state("explorewalk") { //this:State
+					action { //it:State
 						 val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"spiralwalker\"}"  
-						println("testexec starts")
-						forward("start", "start(0)" ,"spiralwalker" ) 
+						println("doexplore starts")
+						forward("start", "start(any)" ,"spiralwalker" ) 
+					}
+					 transition(edgeName="t021",targetState="reachAPoint",cond=whenDispatch("mapDone"))
+				}	 
+				state("reachAPoint") { //this:State
+					action { //it:State
+						 kotlinCode.pathexecutil.waitUser("reachAPoint")  
+								   val PathTodo = kotlinCode.walkerutil.doPlan("2","1" )  
+						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
+					}
+					 transition(edgeName="t022",targetState="reachAPointDone",cond=whenDispatch("pathdone"))
+					transition(edgeName="t023",targetState="reachAPointFailure",cond=whenDispatch("pathfail"))
+				}	 
+				state("reachAPointDone") { //this:State
+					action { //it:State
+						 println(itunibo.planner.plannerUtil.showMap())  
+					}
+				}	 
+				state("reachAPointFailure") { //this:State
+					action { //it:State
+						 println(itunibo.planner.plannerUtil.showMap())  
+						println("WARNING: point or path not free")
 					}
 				}	 
 			}

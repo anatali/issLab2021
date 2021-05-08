@@ -7,6 +7,7 @@ import it.unibo.actor0.sysUtil
 import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicStepRobotActor
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -15,18 +16,23 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class M2MRestController {
     lateinit var robot      : BasicStepRobotActor
-    lateinit var obsRobot   : ObserverForSendingAnswer
+    lateinit var obsRobot   : ObserverForSendingAnswerOnChannels
     lateinit var pathexec   : PathExecutor
     val myscope = CoroutineScope(Dispatchers.Default)
     var answerMove  = ""  //used by the ObserverForSendingAnswer
     var answerPath  = ""  //used by the ObserverForSendingAnswer
-
+    var answerMoveChannel = Channel<String>()
+    var answerPathChannel = Channel<String>()
+    //Callback that leads to polling
     fun setAnswerForMove(v:String){ answerMove=v }  //used by ObserverForSendingAnswer
     fun setAnswerForPath(v:String){ answerPath=v }  //used by ObserverForSendingAnswer
-    fun redirToPathexec(v:ApplMessage){   }
+    //
+    //
+
     init{
         //RobotResource.initRobotResource() //OLD APPROACH: we want a local BasicStepRobotActorCaller
-        obsRobot    = ObserverForSendingAnswer("obsRobot", myscope, ::setAnswerForMove )
+        //obsRobot    = ObserverForSendingAnswer("obsRobot", myscope, ::setAnswerForMove )
+        obsRobot    = ObserverForSendingAnswerOnChannels("obsrobotch", myscope, answerMoveChannel)
         robot       = BasicStepRobotActor("stepRobot", ownerActor= obsRobot, myscope, "wenv")
 
 
@@ -35,8 +41,9 @@ class M2MRestController {
         val obs1     = ObserverForSendingAnswer("obs1", myscope, { println("obs1 $it")  } )
         val robot1   = BasicStepRobotActor("stepRobot", ownerActor= obs1, myscope, "wenv")
         */
-        val obspath  = ObserverForSendingAnswer("obsPathanswer", myscope, ::setAnswerForPath )
-        pathexec     = PathExecutor("pathexec", myscope, robot, obspath)
+        //val obspath  = ObserverForSendingAnswer("obsPathanswer", myscope, ::setAnswerForPath )
+        val obspath   = ObserverForSendingAnswerOnChannels("obspathch", myscope, answerPathChannel)
+        pathexec      = PathExecutor("pathexec", myscope, robot, obspath)
         //obs1.owner   = pathexec
      }
 
@@ -49,10 +56,12 @@ class M2MRestController {
         //RobotResource.execMove(robot, moveName)
         runBlocking{
             execMove(robot, moveName)
-            while( answerMove=="" ){ //POLLING not so bad here
+            /*
+            while( answerMove=="" ){ //POLLING not so bad here, but better use channels
                 //sysUtil.colorPrint("waiting for answer ...  ")
                 delay(50)
-            }
+            }*/
+            answerMove=answerMoveChannel.receive()
         }//runBlocking
         sysUtil.colorPrint("result=$answerMove"  , Color.MAGENTA)
         return "$answerMove"
@@ -67,10 +76,13 @@ class M2MRestController {
         obsRobot.owner  = pathexec  //The answer of the robot must go to the PathExecutor
         runBlocking{
             pathexec.send(cmd)
+            /*
             while( answerPath=="" ){ //POLLING not so bad here
                 //sysUtil.colorPrint("waiting for answer ...  ")
                 delay(50)
             }
+            */
+            answerPath=answerPathChannel.receive()
         }
         obsRobot.owner = null   //reset
         sysUtil.colorPrint("result=$answerPath"  , Color.MAGENTA)

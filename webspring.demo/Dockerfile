@@ -10,8 +10,8 @@ RUN ls
 
 CMD ["bash", "webspring.demo"]
 
-### gradelw distTar
-#### docker build -t webspringrobot:1.0.1 .
+### gradlew distTar
+#### docker build -t webspringrobot:1.0.2 .
 ### run the image to test
 ### docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1 /bin/bash //to use the console
 ### docker-compose -f virtualrobotguistepper.yaml up

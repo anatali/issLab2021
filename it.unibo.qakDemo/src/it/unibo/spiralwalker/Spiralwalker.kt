@@ -16,13 +16,19 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		  var stepCounter        = 1
-			var CurrentPlannedMove = ""
+		  var stepCounter        = 1 
+			var CurrentPlannedMove = "" 
 			val mapname            = "roomMap"
 			val maxNumSteps        = 5	  
 			//val MYSELF             = myself	     
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
+					action { //it:State
+						println("&&&  spiralwalker ACTIVE ...")
+					}
+					 transition(edgeName="t011",targetState="work",cond=whenDispatch("start"))
+				}	 
+				state("work") { //this:State
 					action { //it:State
 						println("&&&  spiralwalker STARTED")
 						itunibo.planner.plannerUtil.initAI(  )
@@ -34,36 +40,34 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 				}	 
 				state("exploreStep") { //this:State
 					action { //it:State
-						 val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter++}" ) 
-								   //val PathTodo = "{\"path\":\"$PathPlanned\" , \"owner\":\"spiralwalker\"}"  
+						 val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter++}","${stepCounter}" )  
 						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
 					}
-					 transition(edgeName="t011",targetState="backToHomeok",cond=whenDispatch("pathdone"))
-					transition(edgeName="t012",targetState="backToHomeKO",cond=whenDispatch("pathfail"))
+					 transition(edgeName="t012",targetState="backToHomeok",cond=whenDispatch("pathdone"))
+					transition(edgeName="t013",targetState="backToHomeKO",cond=whenDispatch("pathfail"))
 				}	 
 				state("backToHomeok") { //this:State
 					action { //it:State
 						println("backToHomeok ... ")
 						kotlinCode.walkerutil.updateMapOk(  )
-						 val PathTodo = kotlinCode.walkerutil.doPlan("0")  
+						 val PathTodo = kotlinCode.walkerutil.doPlan("0","0")  
 						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
 					}
-					 transition(edgeName="t013",targetState="continueJob",cond=whenDispatch("pathdone"))
+					 transition(edgeName="t014",targetState="continueJob",cond=whenDispatch("pathdone"))
 				}	 
 				state("backToHomeKO") { //this:State
 					action { //it:State
 						println("backToHomeKO ... ")
 						kotlinCode.walkerutil.updateMapKO( mapname  )
-						 val PathTodo = kotlinCode.walkerutil.doPlan("0")  
+						 val PathTodo = kotlinCode.walkerutil.doPlan("0","0")  
 						forward("dopath", "dopath($PathTodo)" ,"pathexec" ) 
 					}
-					 transition(edgeName="t014",targetState="continueJob",cond=whenDispatch("pathdone"))
+					 transition(edgeName="t015",targetState="continueJob",cond=whenDispatch("pathdone"))
 				}	 
 				state("continueJob") { //this:State
 					action { //it:State
 						println("MAP AFTER BACK TO HOME nextstep=$stepCounter")
 						kotlinCode.walkerutil.updateMapOk( mapname  )
-						 kotlinCode.pathexecutil.waitUser("another step $stepCounter")  
 					}
 					 transition( edgeName="goto",targetState="exploreStep", cond=doswitchGuarded({ stepCounter < maxNumSteps  
 					}) )
@@ -73,6 +77,7 @@ class Spiralwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 				state("endOfJob") { //this:State
 					action { //it:State
 						itunibo.planner.plannerUtil.getDuration(  )
+						forward("mapDone", "mapDone(mapname)" ,"testexec" ) 
 					}
 				}	 
 			}

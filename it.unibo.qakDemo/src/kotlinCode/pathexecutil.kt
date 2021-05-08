@@ -5,6 +5,7 @@ import org.json.JSONObject
 import it.unibo.kactor.ActorBasicFsm
 import java.util.Scanner
 import alice.tuprolog.*
+import kotlinx.coroutines.delay
  
 
 object pathexecutil{
@@ -55,6 +56,7 @@ lateinit var  owner:  String
 	suspend fun doNextMove( master: ActorBasicFsm) {
 		val move = nextMove()
 		//println("pathexecutil | doNextMove=$move")
+		delay(150)  	//to reduce path speed
 		if( move.length == 0 ) {
 			master.autoMsg("pathdone","pathtodo($curPath)")
 			//println("!!!!!!!!!!! SEND pathdone to OWNER=$owner" )
@@ -64,15 +66,17 @@ lateinit var  owner:  String
 	} 
 
 	suspend fun doMove(moveTodo: String, master: ActorBasicFsm){
+		//println("pathexecutil | doMove moveTodo=$moveTodo")
 		val MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove(moveTodo)
-		 
+		//println("pathexecutil | doMove $moveTodo MoveAnsw=$MoveAnsw")
+		/*
 		if( MoveAnsw.contains("sonarName")){
 			println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS ")
 			master.autoMsg("sonar","distance(todo)")
 			return
-		}     
+		}     */
 		val answJson = JSONObject( MoveAnsw )
-		//println("pathexecutil | answJson=$answJson")
+		println("pathexecutil | doMove $moveTodo answJson=$answJson")
 		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
 			|| answJson.has("stepDone") ){
 			pathDone = pathDone+moveTodo

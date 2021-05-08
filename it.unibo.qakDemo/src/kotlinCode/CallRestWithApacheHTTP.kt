@@ -14,12 +14,13 @@ object CallRestWithApacheHTTP {
 	
 	fun doMove(moveTodo: String) : String {
         //try {
-            val strUrl = "http://localhost:8081/moverest?move=$moveTodo"
-            //val client: HttpClient = HttpClientBuilder.create().build()
+    		//println("CallRestWithApacheHTTP | doMove moveTodo=$moveTodo")
+		    val strUrl = "http://localhost:8081/moverest?move=$moveTodo"
+            val client: HttpClient = HttpClientBuilder.create().build()
             val request = HttpPost(strUrl)
             val response: HttpResponse = client.execute(request)
             val answer: String = IOUtils.toString(response.getEntity().getContent(), "UTf-8")
-            println("CallRestWithApacheHTTP | RESPONSE for $moveTodo=$answer")
+            //println("CallRestWithApacheHTTP | RESPONSE for $moveTodo=$answer")
 		/*
             if( 	answer.contains("stepDone")
             		|| answer.contains("stepFail")
