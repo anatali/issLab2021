@@ -246,7 +246,7 @@ and the
 </m>
 </td>
 <td>
-<center><img src="./img/demostrange.png" alt="demostrange" width="30%" ></center>
+<center><img src="./img/demostrange.png" alt="demostrange" width="35%" ></center>
  
 <m></m>
 </td>
@@ -265,25 +265,70 @@ If we send the sequence: <tt>msg1, msg1, msg2</tt> and
 run with <bc>discardMsg On</bc> or with <bc>discardMsg Off</bc>, we have different results:</m>
 	<table style="width:95%">
 	<td><pre><kc>//discardMsg On</kc>
-	demo in s1
-	demo in s2 since msg1:msg1(1)
-	demo in s3 since msg2:msg2(1)
-	demo in s1
+demo in s1
+demo in s2 since msg1:msg1(1)
+demo in s3 since msg2:msg2(1)
+demo in s1
 
 	</pre></td>
 	<td><pre><kc>//discardMsg Off</kc>
-	demo in s1
-	demo in s2 since msg1:msg1(1)
-	demo in s3 since msg2:msg2(1)
-	demo in s1
-	demo in s2 since msg1:msg1(2)</pre></td>
+demo in s1
+demo in s2 since msg1:msg1(1)
+demo in s3 since msg2:msg2(1)
+demo in s1
+demo in s2 since msg1:msg1(2)</pre></td>
 	<tr>
 	</tr>
 	</table>
 </td> 
-<td><m>
+<td>
 <center><img src="./img/demoDSL.png" alt="demoDSL" width="50%" ></center>
-</m></td>
+</td>
+</tr>
+
+
+<tr>
+<td><h4>demo0: activation <k>without</k> MQTT</h4>
+<m>
+<pre><b>
+System demo0 
+//mqttBroker "localhost" : 1883 <k>eventTopic "demo0/events"</k>
+Dispatch msg1 : msg1(ARG)
+Dispatch msg2 : msg2(ARG) 
+Event alarm   : alarm( KIND )    
+Context ctxdemo0 ip [host="localhost" port=8095]</b>
+---------------------------------------------------------------------------
+    %%% sysUtil | createTheContext ctxdemo0 FOR host=localhost  
+    %%% <ks>CoapResourceCtx ctxdemo0 | created </ks> 
+    %%% QakContext |  localhost:8095 INIT 
+    %%% <kc>QakContextServer serverctxdemo0 | READY TO RECEIVE TCP CONNS on 8095</kc> 
+    %%% <ks>QakContext ctxdemo0 |  serverCoap started on port: 8095</ks>
+    %%% QakContext | CREATING THE ACTORS on localhost 
+    %%% <ks>CoapResourceCtx ctxdemo0 | addActorResource demo</ks> 
+    %%% <ks>CoapResourceCtx ctxdemo0 | addActorResource sender</ks> 
+    %%% <ks>CoapResourceCtx ctxdemo0 | addActorResource perceiver</ks> 
+    %%% QakContext | createContexts on localhost ENDS 
+</pre></m>
+</td>
+<td>
+<h4>demo0: activation with MQTT (<k>mosquitto</k> on <ks>localhost</ks>)</h4>
+<m>
+<pre>
+    %%% sysUtil | context ctxdemo0 WORKS ALSO WITH MQTT mqttAddr=tcp://broker.hivemq.com:1883
+    %%% sysUtil | createTheContext ctxdemo0 FOR host=localhost  
+    %%% <ks>CoapResourceCtx ctxdemo0 | created</ks>  
+    %%% QakContext |  localhost:8095 INIT 
+    %%% <kc>QakContextServer serverctxdemo0 | READY TO RECEIVE TCP CONNS on 8095</kc> 
+    %%% <ks>QakContext ctxdemo0 |  serverCoap started on port: 8095</ks>
+    %%% QakContext | CREATING THE ACTORS on localhost 
+%%% MqttUtils demo | connect DONE demo to tcp://localhost:1883 
+    %%% <ks>CoapResourceCtx ctxdemo0 | addActorResource demo</ks> 
+%%% MqttUtils sender | connect DONE sender to tcp://localhost:1883
+    %%% <ks>CoapResourceCtx ctxdemo0 | addActorResource sender</ks> 
+%%% MqttUtils perceiver | connect DONE perceiver to tcp://localhost:1883
+    %%% <ks>CoapResourceCtx ctxdemo0 | addActorResource perceiver</ks> 
+    %%% QakContext | createContexts on localhost ENDS 
+</pre></m></td>
 </tr>
 
 <tr>
@@ -298,35 +343,35 @@ and shows guards in transition.
 
 <ks>QActor</ks> sentinel context ctxdemo{
   [# val counter=0 	#]	<kc>//Kotlin code</kc>
-  <ks>State s0</ks> initial { println("sentinel | STARTS") } <kc>//QActor action</kc>	  		  
-  
+  <ks>State s0</ks> initial { println("sentinel | STARTS") } <kc>//QActor action</kc>  		  
+
   Goto <ks>watch</ks> if <k>"counter==0"</k> else <ks>end</ks> <kc>//guard</kc>
- 	
-  <ks>State watch</ks>{ println("sentinel | WATCH") }	
-  <bc>Transition</bc> t0 
+
+  <ks>State watch</ks>{ println("sentinel | WATCH") }
+  <bc>Transition</bc> t0
    <k>whenTime</k> 1000 -> <ks>timeout</ks>                 <em>(0)</em>
    <k>whenEvent</k> <ks>alarm</ks> <k>and [# counter==0 #]</k> -> <ks>handleAlarm</ks> <kc>//guard</kc>
- 	
+
   <ks>State timeout</ks>{
 	printCurrentMessage		<kc>//QActor action</kc>
-	println("sentinel | TIMEOUT")	
+	println("sentinel | TIMEOUT")
 	[# counter++ 	#]	 	<kc>//Kotlin code</kc>
   }
   <bc>Goto</bc> <ks>s0</ks>                                 <em>(1)</em>
   <bc>//Transition</bc> t0 whenTime 10  > explore <ks>s0</ks>  <em>(2)</em>
-  
+ 
   <ks>State handleAlarm</ks>{
 	printCurrentMessage
 	<k>onMsg</k> ( alarm : alarm(V) ) { <kc>//QActor action</kc>
-		println("sentinel | ALARM ${<ks>payloadArg</ks>(0)}") 
+		println("sentinel | ALARM ${<ks>payloadArg</ks>(0)}")
 		delay 1000
 	}
   }
-  <bc>Goto</bc> <ks>s0</ks> 
-  
+  <bc>Goto</bc> <ks>s0</ks>
+
   <ks>State explore</ks>{ println("sentinel | exploring (quite fast) ...") }
-  <bc>Goto</bc> watch
- 	
+  <bc>Goto</bc> watch                            <em>(3)</em>
+
   <ks>State end</ks>{ println("sentinel | ENDS") }
  }
 </pre>
@@ -341,14 +386,14 @@ and shows guards in transition.
 	<k>emit</k> alarm : alarm( tsunami )
 }</m></pre>
 
-
+<m>
 The sentinel actor:
 <ul>
 <li>waits for an alarm event</li>
-<li>ends its job after 1sec</li>
-<li>handles the alarm with an activity tha lasts 1500 msecs</li>
+<li>ends its job after some time (e.g. 1sec)</li>
+<li>handles the alarm with a 1500 msecs-activity</li>
 <li>restarts its job, after an event-handling </li>
-</ul>
+</ul></m>
 <!--
 	<table style="width:95%">
 	<td><pre><kc>//Output</kc>
@@ -414,20 +459,37 @@ the second alarm is lost.
 </m>
 
 
-<h3>Events emitted by 'aliens'</h3>
-<m>
-Comment <bc>whenTime</bc> in <tt>(1)</tt> and insert <bc>Goto watch</bc> in <tt>(3)</tt>.<br/><br/>
+<h3>Events emitted by 'aliens'</h3>  
+<m> 
+Comment <bc>whenTime</bc> in <tt>(0)</tt> (or set the time to a high value)) and insert <bc>Goto watch</bc> 
+in <em>(3)</em>.<br/><br/>
 Examples of 'Aliens' written in Ptyhon3 that emit events are:<br/>
 
 <ul>
 <li><a href="../resources/python/tcp_emitter.py" target="code">tcp_emitter.py</a> (that makes use of the TCP on the context port) <br/><br/></li>
 <li> <a href="../resources/python/mqtt_emitter.py" target="code">mqtt_emitter.py</a> (that makes use of the MQTT broker
-specified by the sentinel). <br/> <br/>
-Remember to activate the 'sentinel' by specifying a MQTT Broker.
+specified by the sentinel). 
+</m>
+
+ 
 </li>
 </ul>
- 
-</m></td>
+<h3>Activation sequence</h3>
+<ol>
+<li>Activate a local MQTT Broker or select a public one</li>
+<li>Activate the <ks>sentinel</ks> system by specifying the selected MQTT Broker </li>
+<li>Activate the CoaP observer (Kotlin code) 
+<a href="../kotlincode/sentinelCoapObserver.kt" target="code">sentinelCoapObserver.kt</a>
+</li>
+<li>Activate jupyter notebook and open localhost:8888 file: 
+ <a href="mqtt_emitter.ipynb" target="code">mqtt_emitter.ipynb</a> or  
+ <a href="tcpEmitter.ipynb" target="code">tcpEmitter.ipynb</a> .
+ </li>
+<li>Run the python programs the generate alarm-events and look at the <tt>sentinelCoapObserver</tt> </li>
+</ol> 
+</m>
+
+</td>
 </tr>
 
 

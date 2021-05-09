@@ -365,8 +365,8 @@ the  <em>QActor-metamodel</em>. These concepts can be summarized as follows:
 <tr>
 <td style="width:55%">
 <ul>
-<li>A <bc>QA-System</bc> is a collection of active entities (<tt>QActors</tt>) each working in a 
-computational node (<tt>Context</tt>).<br/><br/>
+<li>A <bc>QA-System</bc> is a collection of active entities (<k>QActors</k>) each working in a 
+computational node (<k>Context</k>).<br/><br/>
 </li> 
 <li>QActors interact by using <a href="#messages">Messages</a> of different types (<tt>Dispatch,
 Request,...</tt>) and  <a href="#events">Events</a>.<br/><br/></li>
@@ -374,7 +374,17 @@ Request,...</tt>) and  <a href="#events">Events</a>.<br/><br/></li>
 by using a send-operation or by emitting events.<br/><br/>
 </li>
 <li>High-level send-operations do not use low-level references, but only <bc>actor-names</bc> 
-(<tt>DESTNAME</tt> in the operations on the right)</li>
+(<tt>DESTNAME</tt> in the operations on the right).<br/><br/></li>
+
+<li>Each context owns a set <k>QActors</k> that can interact with components (actors or 'aliens')
+ working on a different node,  by means of the following protcols:
+<ul>
+<li><ks>TCP</ks>  : on the port specified by the <k>Context</k></li>
+<li><ks>CoAP</ks> : on the port specified by the <k>Context</k> </li>
+<li><ks>MQTT</ks> : using the broker specified in the <k>mqttBroker</k> declaration</li>
+
+</ul>
+</li>
 </ul>
  
 </td>
@@ -383,16 +393,20 @@ by using a send-operation or by emitting events.<br/><br/>
 <h3>Qak specification template</h3>
 <pre>
 <k>System</k> &lt; NAME OF THE SYSTEM >
-<kc>//OPTIONAL mqttBroker-address SPECIFICATION </kc>
-<k>mqttBroker</k> "broker.hivemq.com" : 1883
+<k>mqttBroker</k> "broker.hivemq.com" : 1883 <kc>//OPTIONAL </kc>
 
 <kc>//DECLARATION OF MESSAGES AND EVENTS</kc>
 
 <kc>//DECLARATION OF CONTEXTS</kc>
+<k>Context</k> CTXNAME ip [host="HOSTIP" port=PORTNUM]
 
 <kc>//DECLARATION OF ACTORS</kc>
-
 </pre> 
+
+For an introductory example, see the <tt>sentinel</tt> actor in
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#sentinel" target="web"" target="code">
+LabQakExamples2021.html</a>
+
 </td>
 </tr>
 
@@ -570,57 +584,43 @@ A <bc>guard</bc> is expressed as a condition written in user-defined Kotlin code
 <td>
  
 <h3 id="sentinel">An example (sentinel)</h3>
-<pre><m>
-<k>Event</k>   alarm : alarm(V)
+<pre><m><k>Event</k>   alarm : alarm(V)
 
 <ks>QActor</ks> sentinel context ctxdemo{
-[# val counter=0 	#]	<kc>//Kotlin code</kc>
-  <ks>State s0</ks> initial { 	
-	println("sentinel | STARTS") <kc>//QActor action</kc>	  		  
-  }
+  [# val counter=0 	#]	<kc>//Kotlin code</kc>
+  <ks>State s0</ks> initial { println("sentinel | STARTS") } <kc>//QActor action</kc>  		  
+
   Goto <ks>watch</ks> if <k>"counter==0"</k> else <ks>end</ks> <kc>//guard</kc>
- 	
-  <ks>State watch</ks>{
-	println("sentinel | WATCH")
-  }	
-  Transition t0 
-   <k>whenTime</k> 1000 -> <ks>timeout</ks>
+
+  <ks>State watch</ks>{ println("sentinel | WATCH") }
+  <bc>Transition</bc> t0
+   <k>whenTime</k> 1000 -> <ks>timeout</ks>                 <em>(0)</em>
    <k>whenEvent</k> <ks>alarm</ks> <k>and [# counter==0 #]</k> -> <ks>handleAlarm</ks> <kc>//guard</kc>
- 	
+
   <ks>State timeout</ks>{
 	printCurrentMessage		<kc>//QActor action</kc>
-	println("sentinel | TIMEOUT")	
+	println("sentinel | TIMEOUT")
 	[# counter++ 	#]	 	<kc>//Kotlin code</kc>
   }
-  Goto <ks>s0</ks> 
- 	 
+  <bc>Goto</bc> <ks>s0</ks>                                 <em>(1)</em>
+  <bc>//Transition</bc> t0 whenTime 10  > explore <ks>s0</ks>  <em>(2)</em>
+ 
   <ks>State handleAlarm</ks>{
 	printCurrentMessage
 	<k>onMsg</k> ( alarm : alarm(V) ) { <kc>//QActor action</kc>
-		println("sentinel | ALARM ${<ks>payloadArg</ks>(0)}") 
+		println("sentinel | ALARM ${<k>payloadArg</k>(0)}")
 		delay 1000
 	}
   }
-  Goto <ks>s0</ks> 
- 	
-  <ks>State end</ks>{
-	println("sentinel | ENDS")	
-  }
- }
+  <bc>Goto</bc> <ks>s0</ks>
 
-------------------------------------------------------------------
-//<kc>An emitter</kc> 
-QActor sender context ctxdemo{
-  State s0 initial { 	 		 
-	<k>emit</k> alarm : alarm( fire )
-	delay 1200
-	<k>emit</k> alarm : alarm( tsunami )
-}</m>
-</pre>
+  <ks>State explore</ks>{ println("sentinel | exploring (quite fast) ...") }
+  <bc>Goto</bc> watch
+
+  <ks>State end</ks>{ println("sentinel | ENDS") }
+ }
+</m></pre>
 </m>
-<br/>
-The full code of this example is reported in 
-<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#sentinel" target="web"" target="code">LabQakExamples2021.html</a>
 
 </td>
  <td>
@@ -659,19 +659,10 @@ The system event is <em>not emitted</em> if a message can be handled before that
  The payloadArg is described later, in <a href="#shortcut">shortcut</a>
 
  <h3>The output</h3>
-</m> 
- <pre><m>
-sentinel | STARTS
-sentinel | WATCH
-sentinel in handleAlarm | msg(alarm,event,sender,none,alarm(fire),10)
-sentinel | ALARM fire 
-sentinel | STARTS
-sentinel | WATCH
-sentinel in timeout | msg(local_tout_sentinel_watch,event,...)
-sentinel | TIMEOUT
-sentinel | STARTS
-sentinel | ENDS
-</m> </pre>
+ 
+The full code of this example is reported in 
+<a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#sentinel" target="web"" target="code">LabQakExamples2021.html</a>
+
  
   
 </td>
