@@ -128,11 +128,12 @@ div.req{
     margin: 10px;
 }    
 div.remark{
-	background-color: #FFFC33;     
-    border: 3px solid green;
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
     padding: 15px;
     margin: 10px;
-}  
+	border-radius: 25px;
+}
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
@@ -560,6 +561,12 @@ Project <bc>webspring.demo</bc><br/>
 <br/>
 <a href="../../it.unibo.demoqak21/userDocs/LabQakExamples2021.html" target="web">LabIss2021 |LabQakExamples2021</a>
 (Project <bc>it.unibo.demoqak21</bc>)
+<div class="remark">
+<a href="../../it.unibo.qakDemo/userDocs/LabQakDemo2021.html" target="web">LabIss | Explorer with QActor</a>
+(Project <bc>it.unibo.qakDemo</bc>) that defines models for a boundary robot and a the cautious explorer
+able to react to alarms ad sonar events.
+ </div>
+
 </td>
 <td>Project <bc>it.unibo.qakactor</bc><br/>
 </td>
@@ -583,7 +590,7 @@ DemoPlanner.kt</a>: shows the behavior of a planner that moves a robot using Pat
 <li><a href="../../it.unibo.cautiousExplorer/app/src/main/kotlin/demoRobotWithPlanner/ExplorerWithPlanner.kt" target="code">
 ExplorerWithPlanner.kt</a>: uses the 'stepRobot' to explore a room by executing a plan.
 The proposed plan is executed by the PathExecutor component</li>
-
+ 
 </td>
 <td>Project <bc>it.unibo.cautiousExplorer</bc><br/></td>
 <td></td>
@@ -612,7 +619,7 @@ Analizzare il codice e catturare gli aspetti salienti della soluzione
 </li>
 <li>Affrontare il nuovo problema:
 <div>
-Esplorare il territorio con la possibilità di reagire (con policitca da stabilire) a un <k>evento di allarme</k>
+Esplorare il territorio con la possibilità di reagire (con politica da stabilire) a un <k>evento di allarme</k>
 </div>
 Analisi del problema:
 <ul>

@@ -20,7 +20,7 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 		val mapname     = "roomBoundary"  		 
 		var NumStep     = 0
 		 
-		//REAL ROBOT
+		//REAL ROBOT 
 		//var StepTime   = 600	 
 		    
 		//VIRTUAL ROBOT
@@ -29,7 +29,6 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 				state("s0") { //this:State
 					action { //it:State
 						println("&&&  boundarywalker ACTIVE ...")
-						 kotlinCode.pathexecutil.register(myself)  
 					}
 					 transition(edgeName="t016",targetState="work",cond=whenDispatch("start"))
 				}	 
@@ -55,6 +54,7 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 				}	 
 				state("doAheadMove") { //this:State
 					action { //it:State
+						delay(300) 
 						 kotlinCode.pathexecutil.doMove("p",myself)  
 					}
 					 transition(edgeName="t017",targetState="stepDone",cond=whenDispatch("moveok"))

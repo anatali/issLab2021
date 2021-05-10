@@ -6,6 +6,8 @@ import it.unibo.kactor.ActorBasicFsm
 import java.util.Scanner
 import alice.tuprolog.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
+import it.unibo.supports.IssWsHttpKotlinSupport
  
 
 object pathexecutil{
@@ -86,7 +88,14 @@ lateinit var  owner:  String
 			//println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
 		}
 	}
-
+	
+	
+	fun createSonarObserver(scope: CoroutineScope ){
+		val support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091" )
+		val obs     = SonarObserver("sonarobs", scope )
+		support.registerActor( obs )
+	}
+ 
 	fun waitUser(prompt: String) {
 		print(">>>  $prompt >>>  ")
 		val scanner = Scanner(System.`in`)

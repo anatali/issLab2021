@@ -51,6 +51,9 @@ dependencies {
 //MONGO
 	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 	//compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.2'
+
+//OkHttp library for websockets with Kotlin
+    implementation( "com.squareup.okhttp3:okhttp:4.9.0" )
 //COLORS
 	// https://mvnrepository.com/artifact/com.andreapivetta.kolor/kolor
 	implementation group: 'com.andreapivetta.kolor', name: 'kolor', version: '1.0.0'	

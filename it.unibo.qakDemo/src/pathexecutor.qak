@@ -23,8 +23,8 @@ Dispatch movefail : move( MOVESHORT )
 Dispatch mapDone  : mapDone( FNAME )
 
  
-
 Event alarm     : alarm(X)
+Event sonar     : distance(X)
 
 Context ctxPathexecutor  ip [host="localhost" port=8032]
 
@@ -32,7 +32,7 @@ QActor pathexec context ctxPathexecutor{
 	//[# var MYSELF = myself #]
 	State s0 initial{  	
 		println("pathexec starts") 
- 		[# kotlinCode.pathexecutil.register(myself) #]
+ 		//[# kotlinCode.pathexecutil.register(myself) #]
 	}	
 	Transition t0 whenRequest dopath -> dojob
 	
@@ -156,7 +156,7 @@ QActor boundarywalker context ctxPathexecutor{
 val mapname     = "roomBoundary"  		 
 var NumStep     = 0
  
-//REAL ROBOT
+//REAL ROBOT 
 //var StepTime   = 600	 
     
 //VIRTUAL ROBOT
@@ -164,7 +164,7 @@ var NumStep     = 0
 #]
 	State s0 initial {	 
 		println("&&&  boundarywalker ACTIVE ...") 
-		[# kotlinCode.pathexecutil.register(myself) #]
+		//[# kotlinCode.pathexecutil.register(myself) #]
    	}
    	Transition t0 whenMsg start -> work
 
@@ -181,8 +181,9 @@ var NumStep     = 0
     	updateResource [# "detectBoundary step=$NumStep" #]
      } 
     Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
- 
+  
  	State doAheadMove{ 
+ 		delay 300 //to avoid too rapid chages
    		[# kotlinCode.pathexecutil.doMove("p",myself) #]
 	} 
 	Transition t0   whenMsg moveok   -> stepDone   
@@ -220,11 +221,27 @@ var NumStep     = 0
    		
    		forward testexec -m mapDone : mapDone(mapname)
   	}
-     
-    
-    
-  	      
 }	     
+  
+QActor sonarsentinel context ctxPathexecutor{  
+	State s0 initial{  
+		[# kotlinCode.pathexecutil.register(myself) #]
+		[# kotlinCode.pathexecutil.createSonarObserver(scope) #] 		
+	}
+	Goto doWork
+	
+	State doWork{
+		
+	}
+	Transition t0  whenEvent sonar -> handleSonar
+
+	State handleSonar{
+		println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+		printCurrentMessage
+		println("----------------------------------------------------------------")
+	}
+	Goto doWork
+}
      
      
 /*
@@ -240,7 +257,8 @@ QActor testexec context ctxPathexecutor{
 		forward boundarywalker -m start : start(  any   )
 	}
 	Transition t0 whenMsg mapDone -> reachAPoint
-	
+				   
+				  
 	State explorewalk{
 		[# val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"spiralwalker\"}" #]
 		//The RESULT of path execution should be sent to the owner

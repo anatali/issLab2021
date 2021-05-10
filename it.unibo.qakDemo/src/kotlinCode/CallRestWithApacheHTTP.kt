@@ -6,6 +6,7 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.commons.io.IOUtils
 import it.unibo.actor0.sysUtil
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
 
 object CallRestWithApacheHTTP {
     val addr = "localhost:8081" ///moverest?move=$move" added by the caller
@@ -56,9 +57,10 @@ fun main( ) {
     runBlocking {
         //val result = CallRestWithApacheHTTP.doMove("p")
         CallRestWithApacheHTTP.doMove("w")
-		CallRestWithApacheHTTP.doMove("w")
-		CallRestWithApacheHTTP.doMove("l")
-		CallRestWithApacheHTTP.doMove("w")
+		delay( 500 ) //to look at the sonar events
+		CallRestWithApacheHTTP.doMove("s")
+		//CallRestWithApacheHTTP.doMove("s")
+		//CallRestWithApacheHTTP.doMove("s")
 /*
         val importantPathToCheck = "wwlw"
         val result = CallRestWithApacheHTTP.doPath(importantPathToCheck)

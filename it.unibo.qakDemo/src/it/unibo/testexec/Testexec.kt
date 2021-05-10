@@ -30,7 +30,7 @@ class Testexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 					action { //it:State
 						forward("start", "start(any)" ,"boundarywalker" ) 
 					}
-					 transition(edgeName="t020",targetState="reachAPoint",cond=whenDispatch("mapDone"))
+					 transition(edgeName="t021",targetState="reachAPoint",cond=whenDispatch("mapDone"))
 				}	 
 				state("explorewalk") { //this:State
 					action { //it:State
@@ -38,7 +38,7 @@ class Testexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						println("doexplore starts")
 						forward("start", "start(any)" ,"spiralwalker" ) 
 					}
-					 transition(edgeName="t021",targetState="reachAPoint",cond=whenDispatch("mapDone"))
+					 transition(edgeName="t022",targetState="reachAPoint",cond=whenDispatch("mapDone"))
 				}	 
 				state("reachAPoint") { //this:State
 					action { //it:State
@@ -46,8 +46,8 @@ class Testexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 								   val PathTodo = kotlinCode.walkerutil.doPlan("3","2")  
 						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
-					 transition(edgeName="t022",targetState="reachAPointDone",cond=whenReply("dopathdone"))
-					transition(edgeName="t023",targetState="reachAPointFailure",cond=whenReply("dopathfail"))
+					 transition(edgeName="t023",targetState="reachAPointDone",cond=whenReply("dopathdone"))
+					transition(edgeName="t024",targetState="reachAPointFailure",cond=whenReply("dopathfail"))
 				}	 
 				state("reachAPointDone") { //this:State
 					action { //it:State

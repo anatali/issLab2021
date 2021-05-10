@@ -64,8 +64,8 @@ suspend fun testWs(scope: CoroutineScope){
     val support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091" )
     //val ws      =
     //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
-    support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
-    //support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
+    //support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
+    support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
     //give time to see messages ...
     delay(30000)  //CREATE new threads  !!!
     support.close()
@@ -81,8 +81,8 @@ fun main() = runBlocking {
     println("==============================================")
     println("WebSocketUtilUsage | main start ${sysUtil.aboutThreads("main")}"  );
     println("==============================================")
-    //testWs(this)
-    testHttp(this)
+    testWs(this)
+    //testHttp(this)
     println("==============================================")
     println("WebSocketUtilUsage | END ${sysUtil.aboutThreads("main")}");
     println("==============================================")

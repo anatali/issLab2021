@@ -35,7 +35,6 @@ class M2MRestController {
         obsRobot    = ObserverForSendingAnswerOnChannels("obsrobotch", myscope, answerMoveChannel)
         robot       = BasicStepRobotActor("stepRobot", ownerActor= obsRobot, myscope, "wenv")
 
-
         //The answer of the robot must go to the PathExecutor
         /*
         val obs1     = ObserverForSendingAnswer("obs1", myscope, { println("obs1 $it")  } )

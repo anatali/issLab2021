@@ -13,7 +13,7 @@ plugins {
     id 'java'
     id 'eclipse'
     //id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.71'
 }
 
 version '1.0'
@@ -51,42 +51,27 @@ dependencies {
 //MONGO
 	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 	//compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.2'
-//COLORS
-	// https://mvnrepository.com/artifact/com.andreapivetta.kolor/kolor
-	implementation group: 'com.andreapivetta.kolor', name: 'kolor', version: '1.0.0'	
 
-//SPRING (client)
-    // https://mvnrepository.com/artifact/org.springframework/spring-web
-    implementation group: 'org.springframework', name:'spring-web', version:'5.3.6'
-
-//HTTP CLIENT
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-    implementation ("org.apache.httpcomponents:httpclient:4.5")
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation ("commons-io:commons-io:2.6")
-
-//UNIBO
+//CUSTOM
     compile name: 'uniboInterfaces'
     compile name: '2p301'
     compile name: 'it.unibo.qakactor-2.4'
-    compile name: 'IssActorKotlinRobotSupport-2.0'
-    
+ 
     //For p2p two-way connections (TCP, UDP, BTH, Serial ...)
     compile name: 'unibonoawtsupports'
 
 	//BLS
 	//compile name: 'it.unibo.bls19Local-1.0'
 	//RADAR
-	//compile name: 'radarPojo'
+	compile name: 'radarPojo'
 	//RADAR GUI
 	// https://mvnrepository.com/artifact/org.pushingpixels/trident
-	//compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
+	compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
 	//ROBOT nano (SAM)
     //compile name: 'labbaseRobotSam'
 	//compile mame: 'pi4j-core' //2-12 SNAPSHOT non in gradle
- 	
  	//PLANNER
-    compile name: 'it.unibo.planner'
+    //compile name: 'it.unibo.planner'
  	// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
 	compile group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 }

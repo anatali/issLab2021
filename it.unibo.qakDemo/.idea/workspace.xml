@@ -5,23 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxsentinel.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/sentinel.pl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/it.unibo.pathexecutor.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxcoapdemo.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/coapdemo.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/demo0.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/models/demo0.qakt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/models/demo0.qakt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxgettaskdeploy.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/gettaskdeploy.pl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/taskstorage.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxdemo0.gradle" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/coapdemo.qak" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/actorcoap/Actorcoap.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxcoapdemo/MainCtxcoapdemo.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/demo0.qak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxdemo0/MainCtxdemo0.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/demo/Demo.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/perceiver/Perceiver.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/userdocs/LabQakExamples2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/userdocs/LabQakExamples2021.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupportUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupportUsage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roomBoundary.bin" beforeDir="false" afterPath="$PROJECT_DIR$/roomBoundary.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roomBoundary.txt" beforeDir="false" afterPath="$PROJECT_DIR$/roomBoundary.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/unibo/boundarywalker/Boundarywalker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/boundarywalker/Boundarywalker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/unibo/pathexec/Pathexec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/pathexec/Pathexec.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/unibo/spiralwalker/Spiralwalker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/spiralwalker/Spiralwalker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/unibo/testexec/Testexec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/unibo/testexec/Testexec.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kotlinCode/CallRestWithApacheHTTP.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/kotlinCode/CallRestWithApacheHTTP.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kotlinCode/pathexecutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/kotlinCode/pathexecutil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pathexecutor.qak" beforeDir="false" afterPath="$PROJECT_DIR$/src/pathexecutor.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userDocs/LabQakExamples2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/userDocs/LabQakDemo2021.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/walkermap.bin" beforeDir="false" afterPath="$PROJECT_DIR$/walkermap.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/walkermap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/walkermap.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/M2MRestController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/ObserverForSendingAnswerOnChannels.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../webspring.demo/src/main/kotlin/it/unibo/webspring/demo/ObserverForSendingAnswerOnChannels.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

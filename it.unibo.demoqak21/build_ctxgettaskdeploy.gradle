@@ -1,12 +1,12 @@
 /*
 ================================================================================
-build_ctxboundarywalker.gradle
+build_ctxgettaskdeploy.gradle
 GENERATED ONLY ONCE
 USAGE:	 
-  	gradle  -b build_ctxboundarywalker.gradle eclipse		//to set the dependency on the library
-	gradle  -b build_ctxboundarywalker.gradle distZip
-	gradle  -b build_ctxboundarywalker.gradle -q tasks --all
-	gradle  -b build_ctxboundarywalker.gradle cleanDistDir	//to clean the src directory
+  	gradle  -b build_ctxgettaskdeploy.gradle eclipse		//to set the dependency on the library
+	gradle  -b build_ctxgettaskdeploy.gradle distZip
+	gradle  -b build_ctxgettaskdeploy.gradle -q tasks --all
+	gradle  -b build_ctxgettaskdeploy.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {

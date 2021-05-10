@@ -20,7 +20,6 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("s0") { //this:State
 					action { //it:State
 						println("pathexec starts")
-						 kotlinCode.pathexecutil.register(myself)  
 					}
 					 transition(edgeName="t00",targetState="dojob",cond=whenRequest("dopath"))
 				}	 
