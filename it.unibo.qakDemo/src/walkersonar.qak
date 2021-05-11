@@ -1,0 +1,32 @@
+System boundarywalkerqak
+
+Event sonar     : distance(X)
+Event alarm     : alarm(X)
+
+Context ctxWalkerSonar  ip [host="localhost" port=8034]
+
+/*
+ * ------------------------------------------------------------------
+ *  walkersonar
+ * ------------------------------------------------------------------
+ */    
+QActor walkersonar context ctxWalkerSonar{  
+	State s0 initial{  
+		[# kotlinCode.pathexecutil.register(myself) #]
+		[# kotlinCode.pathexecutil.createSonarObserver(scope) #] 		
+	}
+	Goto doWork
+	
+	State doWork{
+		 
+	}
+	Transition t0  whenEvent sonar -> handleSonar
+
+	State handleSonar{
+		println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+		printCurrentMessage
+		println("----------------------------------------------------------------")
+		emit alarm : alarm(sonar)
+	}
+	Goto doWork
+}

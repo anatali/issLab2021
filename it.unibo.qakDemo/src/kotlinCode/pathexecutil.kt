@@ -71,12 +71,7 @@ lateinit var  owner:  String
 		//println("pathexecutil | doMove moveTodo=$moveTodo")
 		val MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove(moveTodo)
 		//println("pathexecutil | doMove $moveTodo MoveAnsw=$MoveAnsw")
-		/*
-		if( MoveAnsw.contains("sonarName")){
-			println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS ")
-			master.autoMsg("sonar","distance(todo)")
-			return
-		}     */
+ 
 		val answJson = JSONObject( MoveAnsw )
 		println("pathexecutil | doMove $moveTodo answJson=$answJson")
 		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")

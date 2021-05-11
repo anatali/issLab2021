@@ -10,7 +10,7 @@
  *              and send to the caller a dispatch (moveok|movefail) related to the answer
  *  -
  */
-System -msglog pathexecutor  
+System -msglog pathexecutor   
 
 Dispatch start    : start( ARG )
 Request  dopath   : dopath( PATH, OWNER )
@@ -74,14 +74,13 @@ QActor pathexec context ctxPathexecutor{
 		[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w") #]
 		println("pathexec | END  Pathtodo= $Pathtodo ") 
 		//forward spiralwalker -m pathdone : pathdone(ok)  //better to use request-response
-		replyTo dopath with dopathdone : dopathdone( $Pathtodo )
+		replyTo dopath with dopathdone : dopathdone( ok )  //$Pathtodo
 	} 
 	Transition t0 whenRequest dopath -> dojob //DO ANOTHER PATH
 }   
 
 /*
  * spiralwalker
- * TODO: complete this code for the case of path failure
 */
  
 QActor spiralwalker context ctxPathexecutor{     
@@ -106,8 +105,7 @@ QActor spiralwalker context ctxPathexecutor{
 	Goto  exploreStep  
 	
 	State exploreStep{
-		[# val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter++}","${stepCounter}" ) #]
-		//forward pathexec -m dopath : dopath(  $PathTodo   ) 
+		[# val PathTodo = kotlinCode.walkerutil.doPlan("${stepCounter}","${stepCounter}" ); stepCounter++ #]
 		request pathexec -m dopath : dopath(  $PathTodo   ) 
  	} 
  	Transition t0   whenReply dopathdone -> backToHomeok
@@ -120,7 +118,7 @@ QActor spiralwalker context ctxPathexecutor{
 		//forward pathexec -m dopath : dopath(  $PathTodo   ) 		
 		request pathexec -m dopath : dopath(  $PathTodo   ) 	
 	} 
- 	Transition t0 whenMsg pathdone -> continueJob
+ 	Transition t0 whenReply dopathdone -> continueJob
  	 
  	 
  	State backToHomeKO{
@@ -130,7 +128,7 @@ QActor spiralwalker context ctxPathexecutor{
 		//forward pathexec -m dopath : dopath(  $PathTodo   ) 
 		request pathexec -m dopath : dopath(  $PathTodo   )		
  	}
- 	Transition t0 whenMsg pathdone -> continueJob
+ 	Transition t0 whenReply dopathdone -> continueJob
  	 
 	State continueJob{ 
 		println("MAP AFTER BACK TO HOME nextstep=$stepCounter")
@@ -141,124 +139,21 @@ QActor spiralwalker context ctxPathexecutor{
   	
 	State endOfJob{
 		run itunibo.planner.plannerUtil.getDuration() 
-		forward testexec -m mapDone : mapDone( mapname )
+		forward testpatheexec -m mapDone : mapDone( mapname )
 	}
  	
 }//spiralwalker
      
-/*
- * ------------------------------------------------------------------
- *  boundarywalker
- * ------------------------------------------------------------------
-*/     
-QActor boundarywalker context ctxPathexecutor{         
-[#
-val mapname     = "roomBoundary"  		 
-var NumStep     = 0
- 
-//REAL ROBOT 
-//var StepTime   = 600	 
-    
-//VIRTUAL ROBOT
- var StepTime   = 360L	  
-#]
-	State s0 initial {	 
-		println("&&&  boundarywalker ACTIVE ...") 
-		//[# kotlinCode.pathexecutil.register(myself) #]
-   	}
-   	Transition t0 whenMsg start -> work
-
-  	State work{  		 
-   		[# NumStep = 0   #] 
-    	run itunibo.planner.plannerUtil.initAI()
-  	}
-    Goto detectBoundary  
-     
-    State detectBoundary{     
-    	[# NumStep++ #]
-    	println("boundarywalker detectBoundary $NumStep")
-    	run itunibo.planner.plannerUtil.showCurrentRobotState()
-    	updateResource [# "detectBoundary step=$NumStep" #]
-     } 
-    Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
-  
- 	State doAheadMove{ 
- 		delay 300 //to avoid too rapid chages
-   		[# kotlinCode.pathexecutil.doMove("p",myself) #]
-	} 
-	Transition t0   whenMsg moveok   -> stepDone   
-					whenMsg pathfail -> stepFailed 
-	 
- 	State stepDone{  
- 		updateResource [# itunibo.planner.plannerUtil.getMap() #]
- 		run itunibo.planner.plannerUtil.updateMap(  "w" )
-  	}
-	Goto doAheadMove
-
-	
-	State stepFailed{  //has found an obstacle (a wall)
- 		println("boundarywalker | FOUND A WALL")
- 		//[# kotlinCode.pathexecutil.waitUser("onwall_$NumStep") #] 
- 	 		if [# ! itunibo.planner.plannerUtil.atHome() #]{
-	 			run itunibo.planner.plannerUtil.wallFound() 
-		 		updateResource [# "found a wall" #]
-		 		[# kotlinCode.pathexecutil.doMove("l",myself) #]
-				run itunibo.planner.plannerUtil.updateMap(  "l" )
-				run itunibo.planner.plannerUtil.showCurrentRobotState()
-  	 		}else{
-  	 			[# kotlinCode.pathexecutil.doMove("l",myself) #]
-  	 			run itunibo.planner.plannerUtil.updateMap(  "l" )
-  	 		}		 	      
- 	}   
-    Transition t0 whenMsg moveok -> detectBoundary  
- 
- 	State boundaryFound{
-		run itunibo.planner.plannerUtil.saveRoomMap(mapname)
-		println("robotmapper | FINAL MAP")   
- 		run itunibo.planner.plannerUtil.showCurrentRobotState()	
- 		updateResource [#  itunibo.planner.plannerUtil.getMap() #]
-   		[# println(itunibo.planner.plannerUtil.showMap()) #]
-   		
-   		forward testexec -m mapDone : mapDone(mapname)
-  	}
-}	     
-  
-QActor sonarsentinel context ctxPathexecutor{  
-	State s0 initial{  
-		[# kotlinCode.pathexecutil.register(myself) #]
-		[# kotlinCode.pathexecutil.createSonarObserver(scope) #] 		
-	}
-	Goto doWork
-	
-	State doWork{
-		
-	}
-	Transition t0  whenEvent sonar -> handleSonar
-
-	State handleSonar{
-		println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-		printCurrentMessage
-		println("----------------------------------------------------------------")
-	}
-	Goto doWork
-}
-     
+      
      
 /*
  *  main
-*/  
-QActor testexec context ctxPathexecutor{
-	[# val doboundary = true #]
-	State s0 initial{  
+*/   
+QActor testpatheexec context ctxPathexecutor{
+ 	State s0 initial{  
 	}
-	Goto boundarywalk if [# doboundary #] else explorewalk
-	
-	State boundarywalk{
-		forward boundarywalker -m start : start(  any   )
-	}
-	Transition t0 whenMsg mapDone -> reachAPoint
-				   
-				  
+	Goto  explorewalk
+  				  
 	State explorewalk{
 		[# val PathTodo = "{\"path\":\"wwlw\" , \"owner\":\"spiralwalker\"}" #]
 		//The RESULT of path execution should be sent to the owner
@@ -277,7 +172,7 @@ QActor testexec context ctxPathexecutor{
 	}
  	Transition t0 whenReply  dopathdone -> reachAPointDone
  	    		  whenReply  dopathfail -> reachAPointFailure
-		  
+		    
     State reachAPointDone{
     	 run kotlinCode.walkerutil.updateMapOk("pointOkMap") 
     	 [# println(itunibo.planner.plannerUtil.showMap()) #]
@@ -287,5 +182,5 @@ QActor testexec context ctxPathexecutor{
     	[# println(itunibo.planner.plannerUtil.showMap()) #]
     	println("WARNING: point or path not free")
     }
-    
+   
 }

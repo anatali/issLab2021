@@ -7,7 +7,6 @@ import it.unibo.kactor.ActorBasic
 import it.unibo.actor0.ApplMessage
 import it.unibo.kactor.MsgUtil
 
- 
 
 class SonarObserver(name: String, scope:CoroutineScope   )
     : ActorBasicKotlin(name, scope) {

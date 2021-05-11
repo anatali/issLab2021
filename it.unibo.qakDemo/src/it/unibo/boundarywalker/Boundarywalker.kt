@@ -19,18 +19,13 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 		
 		val mapname     = "roomBoundary"  		 
 		var NumStep     = 0
-		 
-		//REAL ROBOT 
-		//var StepTime   = 600	 
-		    
-		//VIRTUAL ROBOT
-		 var StepTime   = 360L	  
+		   
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("&&&  boundarywalker ACTIVE ...")
 					}
-					 transition(edgeName="t016",targetState="work",cond=whenDispatch("start"))
+					 transition(edgeName="t00",targetState="work",cond=whenDispatch("start"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -56,25 +51,29 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 					action { //it:State
 						delay(300) 
 						 kotlinCode.pathexecutil.doMove("p",myself)  
+						updateResourceRep( "moving"  
+						)
 					}
-					 transition(edgeName="t017",targetState="stepDone",cond=whenDispatch("moveok"))
-					transition(edgeName="t018",targetState="stepFailed",cond=whenDispatch("pathfail"))
+					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t02",targetState="stepDone",cond=whenDispatch("moveok"))
+					transition(edgeName="t03",targetState="stepFailed",cond=whenDispatch("pathfail"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
 						updateResourceRep( itunibo.planner.plannerUtil.getMap()  
 						)
 						itunibo.planner.plannerUtil.updateMap( "w"  )
+						updateResourceRep( "stepDone"  
+						)
 					}
 					 transition( edgeName="goto",targetState="doAheadMove", cond=doswitch() )
 				}	 
 				state("stepFailed") { //this:State
 					action { //it:State
-						println("boundarywalker | FOUND A WALL")
+						updateResourceRep( "stepFailed"  
+						)
 						if(  ! itunibo.planner.plannerUtil.atHome()  
 						 ){itunibo.planner.plannerUtil.wallFound(  )
-						updateResourceRep( "found a wall"  
-						)
 						 kotlinCode.pathexecutil.doMove("l",myself)  
 						itunibo.planner.plannerUtil.updateMap( "l"  )
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
@@ -84,18 +83,37 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 						 itunibo.planner.plannerUtil.updateMap( "l"  )
 						 }
 					}
-					 transition(edgeName="t019",targetState="detectBoundary",cond=whenDispatch("moveok"))
+					 transition(edgeName="t04",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t05",targetState="detectBoundary",cond=whenDispatch("moveok"))
 				}	 
 				state("boundaryFound") { //this:State
 					action { //it:State
 						itunibo.planner.plannerUtil.saveRoomMap( mapname  )
 						println("robotmapper | FINAL MAP")
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
-						updateResourceRep(  itunibo.planner.plannerUtil.getMap()  
-						)
 						 println(itunibo.planner.plannerUtil.showMap())  
-						forward("mapDone", "mapDone(mapname)" ,"testexec" ) 
+						forward("mapDone", "mapDone(mapname)" ,"testboundary" ) 
 					}
+				}	 
+				state("handleAlarm") { //this:State
+					action { //it:State
+						println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $ActorResourceRep")
+						println("$name in ${currentState.stateName} | $currentMsg")
+						println("----------------------------------------------------------------")
+					}
+					 transition(edgeName="t06",targetState="detectBoundary",cond=whenDispatchGuarded("moveok",{ ActorResourceRep == "stepFailed"  
+					}))
+					transition(edgeName="t07",targetState="stepDone",cond=whenDispatchGuarded("moveok",{ ActorResourceRep == "moving"  
+					}))
+					transition(edgeName="t08",targetState="stepFailed",cond=whenDispatch("pathfail"))
+				}	 
+				state("handleAlarmAfterStep") { //this:State
+					action { //it:State
+						println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP $ActorResourceRep")
+						println("$name in ${currentState.stateName} | $currentMsg")
+						println("----------------------------------------------------------------")
+					}
+					 transition( edgeName="goto",targetState="doAheadMove", cond=doswitch() )
 				}	 
 			}
 		}

@@ -1,12 +1,12 @@
 /*
 ================================================================================
-build_ctxSysExample.gradle
+build_ctxcalledb.gradle
 GENERATED ONLY ONCE
 USAGE:	 
-  	gradle  -b build_ctxSysExample.gradle eclipse		//to set the dependency on the library
-	gradle  -b build_ctxSysExample.gradle distZip
-	gradle  -b build_ctxSysExample.gradle -q tasks --all
-	gradle  -b build_ctxSysExample.gradle cleanDistDir	//to clean the src directory
+  	gradle  -b build_ctxcalledb.gradle eclipse		//to set the dependency on the library
+	gradle  -b build_ctxcalledb.gradle distZip
+	gradle  -b build_ctxcalledb.gradle -q tasks --all
+	gradle  -b build_ctxcalledb.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {

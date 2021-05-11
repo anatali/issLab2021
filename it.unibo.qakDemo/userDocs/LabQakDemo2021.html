@@ -207,7 +207,7 @@ div.imagedesc{
 </td>
 <td>
 
-<h3><a href="../kotlinCode/CallRestWithApacheHTTP.k" target="code">CallRestWithApacheHTTP.k</a> </h3>
+<h3><a href="../src/kotlinCode/CallRestWithApacheHTTP.kt" target="code">CallRestWithApacheHTTP.kt</a> </h3>
 A Kotlin object that provides the following operations:
 <ul>
 <li><bc>doPath</bc>: calls the <ks>API doPath</ks> of the service <k>localhost:8081</k> and returns the payload of the
@@ -219,14 +219,14 @@ response (<tt>ApplMessage</tt>) as answer</li>
 </ul>
 
  
-<h3><a href="../kotlinCode/SonarObserver.k" target="code">SonarObserver.k</a>   </h3>
+<h3><a href="../src/kotlinCode/SonarObserver.kt" target="code">SonarObserver.kt</a>   </h3>
 An actor of type <tt>ActorBasicKotlin</tt> that handles messages (of type <tt>it.unibo.actor0.ApplMessage</tt>)
 related to the sonar  sent by the wenv  and uses the  master 
 registered in pathexecutil to  generate an event <k>sonar : distance(D)</k> 
 that can be perceived by all the components of the system included the master.
 
 
-<h3><a href="../kotlinCode/pathexecutil.k" target="code">pathexecutil.k</a> </h3>
+<h3><a href="../src/kotlinCode/pathexecutil.kt" target="code">pathexecutil.kt</a> </h3>
 A Kotlin object that provides the following operations:
 <ul>
 <li><bc>memoCurPath</bc></li>
@@ -248,15 +248,13 @@ IssWsHttpKotlinSupport on the websocket 8091 and registers to that support the
 
  
 
-<h3>spiralwalker  </h3>
-A component defined in the model <a href="../src/pathexecutor.qak" target="code">pathexecutor.qak</a> 
+<h3><a href="../src/spiralwalker.qak" target="code">spiralwalker.qak</a>   </h3>
+Uses <a href="../src/kotlinCode/pathexecutil.kt" target="code">pathexecutil.kt</a>
+<br/>
 
-<h3>boundarywalker  </h3>
-A component defined in the model <a href="../src/pathexecutor.qak" target="code">pathexecutor.qak</a>.
+<h3><a href="../src/boundarywalker.qak" target="code">boundarywalker.qak</a>  </h3>
+ 
 Uses  <bc>doMove</bc> of <a href="../kotlinCode/pathexecutil.k" target="code">pathexecutil.k</a> 
-
-
-
 
 <h3>testexec  </h3>
 A component defined in the model <a href="../src/pathexecutor.qak" target="code">pathexecutor.qak</a> 
