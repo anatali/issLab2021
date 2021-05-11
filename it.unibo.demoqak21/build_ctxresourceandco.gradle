@@ -1,12 +1,12 @@
 /*
 ================================================================================
-build_ctxcalledb.gradle
+build_ctxresourceandco.gradle
 GENERATED ONLY ONCE
 USAGE:	 
-  	gradle  -b build_ctxcalledb.gradle eclipse		//to set the dependency on the library
-	gradle  -b build_ctxcalledb.gradle distZip
-	gradle  -b build_ctxcalledb.gradle -q tasks --all
-	gradle  -b build_ctxcalledb.gradle cleanDistDir	//to clean the src directory
+  	gradle  -b build_ctxresourceandco.gradle eclipse		//to set the dependency on the library
+	gradle  -b build_ctxresourceandco.gradle distZip
+	gradle  -b build_ctxresourceandco.gradle -q tasks --all
+	gradle  -b build_ctxresourceandco.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {
