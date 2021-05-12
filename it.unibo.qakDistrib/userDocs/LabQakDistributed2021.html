@@ -217,12 +217,69 @@ a single context, in order to check the logic of the system.
 <center><table style="width:98%">
 <tbody>	
 
+<tr>
+<td style="width:50%">
+<h3 id="resourceandco">Resource and callers</h3>
+<center><img src="./img/resourceCallersCo.png" alt="resourceCallersCo" width="70%" /></center>
+ <br/>
+<a href="../src/resourceandcallers.qak" target="code">resourceandcallers.qak</a>.<br/>
+<m>
+A resource accepts requests of type <ks>cmd:cmd(X)</ks>. <br/>
+The resource elaborates the request as follows:
+<ul>
+<li>updates (using the primitive <k>updateResource </k>) its internal <em>CoAP-observable data</em> </li>
+<li>sends an answer of type <ks>replytocmd:replytocmd(X)</ks> to the sender of the request </li>
+</ul>
+The resource is activated in a context that includes also the callers. 
+
+<h4>A CoAP observer written in Kotlin</h4>
+
+<a href="../kotlinCode/CoapObserverCommon.kt" target="code">CoapObserverCommon.kt</a>
+</m>
+
+<br/></td>
+<td>
+<h3 id="callers">Callers</h3>
+<a href="../models/caller1.qakt" target="code">caller1.qak</a> 
+<br/>
+<a href="../models/caller2.qakt" target="code">caller2.qakt</a> 
+<br/><br/>
+<m>
+Each caller sends a request to the resource and waits for a reply. 
+<br/>While waiting for the answer, a caller could elaborate events or other messages.
+This case is shown for the <a href="../models/caller2.qakt" target="code">caller2.qakt</a>.
+
+<br/>
+The callers  is activated in a context that includes also the resource. 
+</m>
+<h4>Caller in Python3</h4>
+A caller written in Python3 can be activated by launching
+<pre>
+jupyter notebook
+</pre>
+and opening the file
+<a href="../ResourceCallerPython3.ipynb" target="code">ResourceCallerPython3.ipynb</a> 
+</td>
+</tr>
+
+
  
+</tbody>	
+</table></center>
+
+<h2>Step 2: for local to distributed </h2>
+In this step we move some actor to a different context, in oder to distribute the code over different computational nodes.
+<div class="remark">
+In this phase the application code <k>should not change</k>. 
+</div>
+
+<center><table style="width:98%">
+<tbody>	
 
 <tr>
 <td style="width:50%">
 <h3 id="resourceandco">Resource and callers</h3>
-<a href="../src/resourceandcallers.qak" target="code">resourceandcallers.qak</a>.<br/>
+<a href="../src/resource.qak" target="code">resource.qak</a>.<br/>
 <m>
 A resource accepts requests of type <ks>cmd:cmd(X)</ks>. <br/>
 The resource elaborates the request as follows:
@@ -247,19 +304,16 @@ This case is shown for the <a href="../models/caller2.qakt" target="code">caller
 
 <br/>
 The callers  is activated in a context that includes also the resource. 
-</m></td>
+</m>
+aaaa
+
+</td>
 </tr>
 
 
  
 </tbody>	
 </table></center>
-
-<h2>Step 2: for local to distributed </h2>
-In this step we move some actor to a different context, in oder to distribute the code over different computational nodes.
-<div class="remark">
-In this phase the application code <k>should not change</k>. 
-</div>
  <br/><br/>
 
 
