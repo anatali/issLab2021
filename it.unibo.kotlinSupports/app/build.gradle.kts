@@ -59,6 +59,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20201115" )
 //STRING COLORS
+    // https://mvnrepository.com/artifact/com.andreapivetta.kolor/kolor
     implementation( "com.andreapivetta.kolor:kolor:1.0.0" )
 
 //SPRING (client)

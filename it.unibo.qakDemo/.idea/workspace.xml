@@ -5,24 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxdemo0.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/demo0.qak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxdemo0/MainCtxdemo0.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxcalledb.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxcallerb.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxgettaskdeploy.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/build_ctxsentinel.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/demo0.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/demo0.pl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/kotlinCode/pathExec.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/kotlinCode/pathExec.ktttt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/sentinel.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/sentinel.pl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/demo_req_b.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/demo_req_b.qakt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/calledb/Calledb.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/callerb/Callerb.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxcalledb/MainCtxcalledb.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxcallerb/MainCtxcallerb.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.settings/org.jetbrains.kotlin.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/Californium.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/build_ctxresourceandco.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/it.unibo.qakDistrib.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/resourceandcallers.pl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/callerco1/Callerco1.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/callerco2/Callerco2.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/ctxresourceandco/MainCtxresourceandco.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/resourceandco/Resourceandco.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/test/test.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/resourceandcallers.qak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/sysRules.pl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.kotlinSupports/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.kotlinSupports/app/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/.project" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/build2021.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/build2021.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/userDocs/LabQakDistributed2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/userDocs/LabQakDistributed2021.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

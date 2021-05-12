@@ -220,18 +220,33 @@ a single context, in order to check the logic of the system.
  
 
 <tr>
-<td style="width:40%">
+<td style="width:50%">
 <h3 id="resourceandco">Resource and callers</h3>
-<a href="../models/resourceandcallers.qakt" target="code">resourceandcallers.qak</a>
+<a href="../src/resourceandcallers.qak" target="code">resourceandcallers.qak</a>.<br/>
+<m>
+A resource accepts requests of type <ks>cmd:cmd(X)</ks>. <br/>
+The resource elaborates the request as follows:
+<ul>
+<li>updates (using the primitive <k>updateResource </k>) its internal <em>CoAP-observable data</em> </li>
+<li>sends an answer of type <ks>replytocmd:replytocmd(X)</ks> to the sender of the request </li>
+</ul>
+The resource is activated in a context that includes also the callers. 
+</m>
+
 <br/></td>
 <td>
 <h3 id="callers">Callers</h3>
-
-<m>
 <a href="../models/caller1.qakt" target="code">caller1.qak</a> 
 <br/>
 <a href="../models/caller2.qakt" target="code">caller2.qakt</a> 
+<br/><br/>
+<m>
+Each caller sends a request to the resource and waits for a reply. 
+<br/>While waiting for the answer, a caller could elaborate events or other messages.
+This case is shown for the <a href="../models/caller2.qakt" target="code">caller2.qakt</a>.
 
+<br/>
+The callers  is activated in a context that includes also the resource. 
 </m></td>
 </tr>
 
