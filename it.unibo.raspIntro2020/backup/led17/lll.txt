@@ -1,0 +1,25 @@
+2020-01-01 23:58:13 - WebIOPi - INFO - Starting WebIOPi/0.7.1/Python3.5
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.digitalCount to REST GET /GPIO/count
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.digitalRead to REST GET /GPIO/%(channel)d/value
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.digitalWrite to REST POST /GPIO/%(channel)d/value/%(value)d
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.getFunctionString to REST GET /GPIO/%(channel)d/function
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.getPulse to REST GET /GPIO/%(channel)d/pulse
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.outputSequence to REST POST /GPIO/%(channel)d/sequence/%(args)s
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.portRead to REST GET /GPIO/*/integer
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.portWrite to REST POST /GPIO/*/integer/%(value)d
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.pulse to REST POST /GPIO/%(channel)d/pulse/
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.pulseAngle to REST POST /GPIO/%(channel)d/pulseAngle/%(value)f
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.pulseRatio to REST POST /GPIO/%(channel)d/pulseRatio/%(value)f
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.setFunctionString to REST POST /GPIO/%(channel)d/function/%(value)s
+2020-01-01 23:58:13 - WebIOPi - DEBUG - Mapping GPIO.wildcard to REST GET /GPIO/*
+2020-01-01 23:58:13 - WebIOPi - INFO - GPIO - Native mapped to REST API /GPIO
+2020-01-01 23:58:13 - WebIOPi - INFO - Loading configuration from /etc/webiopi/config
+2020-01-01 23:58:13 - WebIOPi - INFO - Loading scriptLed17 from /home/pi/nat/cam-robot/WebIOPi-0.7.1/nat/scriptLed17.py
+2020-01-01 23:58:13 - WebIOPi - INFO - Access protected using /etc/webiopi/passwd
+2020-01-01 23:58:13 - WebIOPi - INFO - HTTP Server binded on http://192.168.137.2:8000/
+2020-01-01 23:58:13 - WebIOPi - INFO - CoAP Server binded on coap://192.168.137.2:5683/
+2020-01-01 23:58:13 - WebIOPi - INFO - CoAP Server binded on coap://224.0.1.123:5683/ (MULTICAST)
+2020-01-01 23:59:28 - HTTP - DEBUG - "POST /GPIO/17/value/1 HTTP/1.1" - 200 OK (Client: ::ffff:192.168.1.6 <Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36>)
+2020-01-01 23:59:29 - HTTP - DEBUG - "POST /GPIO/17/value/0 HTTP/1.1" - 200 OK (Client: ::ffff:192.168.1.6 <Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36>)
+2020-01-01 23:59:30 - HTTP - DEBUG - "POST /GPIO/17/value/1 HTTP/1.1" - 200 OK (Client: ::ffff:192.168.1.6 <Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36>)
+2020-01-01 23:59:31 - HTTP - DEBUG - "POST /GPIO/17/value/0 HTTP/1.1" - 200 OK (Client: ::ffff:192.168.1.6 <Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36>)

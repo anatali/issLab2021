@@ -1,0 +1,163 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content = "height = device-height, width = 420, user-scalable = no" />
+	<title>Osoyoo RobotCar</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+ 		var phi = 0, flipped = 0, mirrored = 0;
+alert("start");  //by AN
+		function setXformClass () {
+			$('.xform').each(function(idx,el) {
+				el.className = "xform x" +(flipped ? "-flipped":"") + (mirrored ? "-mirrored" : "") + "-rotated-" + phi;
+			});
+		}
+		$(document).ready(function() {
+			// set rotation angle phi and toggle rotate class
+			$('#rotate').click(function() {
+				phi = (phi + 90) % 360;
+				setXformClass();
+				// if (phi % 180) {
+				// 	$('.xform-p').addClass('rotated');
+				// } else {
+				// 	$('.xform-p').removeClass('rotated');
+				// }
+			});
+			// toggle mirror class component
+			$('#mirror').click(function() {
+				mirrored = ! mirrored;
+				setXformClass();
+			});
+			// toggle flip class component
+			$('#flip').click(function() {
+				flipped = ! flipped;
+				setXformClass();
+			});
+			$("#increase").click(function(){
+				$('.xform').width(320);
+				$('.xform').height(240);
+			});
+			$("#decrease").click(function(){
+				$('.xform').width(320);
+				$('.xform').height(180);
+			});
+			// $("#heightIncrease").click(function(){
+			// 	let currHeight = $('.xform').height();
+			// 	$('.xform').height(currHeight*1.1);
+			// });
+			// $("#heightDecrease").click(function(){
+			// 	let currHeight = $('.xform').height();
+			// 	$('.xform').height(currHeight*0.9);
+			// });
+		});
+	</script>
+	<script type="text/javascript" src="/webiopi.js"></script>
+	<script type="text/javascript" src="js/jquery.rotate.js"></script>
+	
+</head>
+<body>
+	<div id="content" align="center">
+		<div>
+		<img src="" class="xform" id="img_src" alt=""  width="320" height="240"><br/> 
+		</div>
+		<div id="up"></div>
+		<div id="middle"></div>
+		<div id="down"></div>
+		<div id="speed"></div>
+	</div>
+	<p id="xform" align="center">
+		<button id="mirror" class="Default btn btn-outline-primary"><span class="glyphicon glyphicon-resize-horizontal"></span></button>
+		<button id="flip" class="Default btn btn-outline-primary"><span class="glyphicon glyphicon-resize-vertical"></span></button>
+	</p>
+	<p id="size" align="center">
+		<button id="increase" class="Default btn btn-outline-primary">
+			<span class="glyphicon glyphicon-zoom-in"></span>
+		</button>
+		<button id="decrease" class="Default btn btn-outline-primary"><span class="glyphicon glyphicon-zoom-out"></span></button>
+	</p>
+</body>
+
+
+<script type="text/javascript">
+	 var url = window.location.host;
+     var len = url.length;
+     var n= url.indexOf(":");
+     var j = url.substring(n+1,len);
+     var ip = url.replace(j,'8899');
+	 ip = "http://" + ip + "/?action=stream";
+     document.getElementById("img_src").src = ip;
+
+	 function init() {
+		 var button;
+		 button = webiopi().createButton("up", "", go_forward, stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-arrow-up\"></span>");
+		 $("#up").append(button);
+
+		 button = webiopi().createButton("left", "", turn_left, stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-arrow-left\"></span>");
+		 $("#middle").append(button);
+
+		 button = webiopi().createButton("stop", "", stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-pause\"></span>");
+		 $("#middle").append(button);
+
+		 button = webiopi().createButton("right", "", turn_right, stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-arrow-right\"></span>");
+		 $("#middle").append(button);
+
+		 button = webiopi().createButton("down","",go_backward,stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-arrow-down\"></span>");
+		 $("#down").append(button);
+
+		 button = webiopi().createButton("sub","",down_speed,stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-minus\"></span>");
+		 $("#speed").append(button);
+
+		 button = webiopi().createButton("add","",add_speed,stop);
+		 button.addClass("btn btn-outline-primary");
+		 button.append("<span class=\"glyphicon glyphicon-plus\"></span>");
+		 $("#speed").append(button);
+
+	 }
+
+	 function go_forward() {
+	 alert("go_forward");
+	 	webiopi().callMacro("go_forward");
+	 }
+
+	 function go_backward() {
+	 	webiopi().callMacro("go_backward");
+	 }
+
+	 function turn_right() {
+	 	webiopi().callMacro("turn_right");
+	 }
+
+	 function turn_left() {
+	 	webiopi().callMacro("turn_left");
+	 }
+
+	 function stop() {
+	 	webiopi().callMacro("stop");
+	 }
+
+	 function down_speed() {
+	 	webiopi().callMacro("down_speed");
+	 }
+
+	 function add_speed() {
+	 	webiopi().callMacro("add_speed");
+	 }
+	
+	 webiopi().ready(init);
+</script>
+</html>
