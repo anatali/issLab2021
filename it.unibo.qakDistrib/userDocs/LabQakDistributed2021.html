@@ -240,18 +240,13 @@ The resource is activated in a context that includes also the callers.
 <br/></td>
 <td>
 <h3 id="callers">Callers</h3>
-<a href="../models/caller1.qakt" target="code">caller1.qak</a> 
-<br/>
-<a href="../models/caller2.qakt" target="code">caller2.qakt</a> 
-<br/><br/>
-<m>
-Each caller sends a request to the resource and waits for a reply. 
+ 
+Each caller (defined in the model <a href="../src/resourceandcallers.qak" target="code">resourceandcallers.qak</a>) 
+sends a request to the resource and waits for a reply. 
 <br/>While waiting for the answer, a caller could elaborate events or other messages.
-This case is shown for the <a href="../models/caller2.qakt" target="code">caller2.qakt</a>.
+This is the case of the  caller named <ks>callerco2</ks> .
 
-<br/>
-The callers  is activated in a context that includes also the resource. 
-</m>
+ 
 <h4>Caller in Python3</h4>
 A caller written in Python3 can be activated by launching
 <pre>
@@ -267,7 +262,7 @@ and opening the file
 </tbody>	
 </table></center>
 
-<h2>Step 2: for local to distributed </h2>
+<h2>Step 2: from local to distributed </h2>
 
 In this step we move some actor to a different context, in oder to distribute the code over different computational nodes.
 <div class="remark">
@@ -291,25 +286,67 @@ The resource elaborates the request as follows:
 <li>updates (using the primitive <k>updateResource </k>) its internal <em>CoAP-observable data</em> </li>
 <li>sends an answer of type <ks>replytocmd:replytocmd(X)</ks> to the sender of the request </li>
 </ul>
-The resource is activated in a context that includes also the callers. 
+The resource is activated in its own context. 
+<h4>The system description</h4>
+The generated file <a href="../callersealone.pl" target="code">callersealone.pl</a>  that describes the system 
+has the following content
+<pre>
+context(ctxresource, "localhost",  "TCP", "8048").
+ qactor( resource, ctxresource, "it.unibo.resource.Resource").
+msglogging		
+</pre>
+
 </m>
 
 <br/></td>
 <td>
 <h3 id="callers">Callers</h3>
-<a href="../models/caller1.qakt" target="code">caller1.qak</a> 
+<a href="../src/caller1.qakt" target="code">caller1.qak</a> 
 <br/>
-<a href="../models/caller2.qakt" target="code">caller2.qakt</a> 
+<a href="../src/caller2.qakt" target="code">caller2.qakt</a> 
 <br/><br/>
-<m>
-Each caller sends a request to the resource and waits for a reply. 
-<br/>While waiting for the answer, a caller could elaborate events or other messages.
-This case is shown for the <a href="../models/caller2.qakt" target="code">caller2.qakt</a>.
+ 
+The  callers are activated in a context diferent from the context of the resource.<br/>
+However, the model related to the callersi does include also a declaration about the required resource: 
+<pre>
+Context ctxcallers  ip [ host= <ks>"localhost"</ks> port= 8049 ]  
+Context ctxresource ip [ host= <ks>"127.0.0.1"</ks> port= 8048 ]   <kc>//Each contesxt must have a different IP</kc>
 
-<br/>
-The callers  is activated in a context that includes also the resource. 
+<k>ExternalQActor</k> resource context ctxresource	<kc>//The resource is part of the system by not defined here</kc>
+</pre>
+
+<h4>The system description</h4>
+The generated file <a href="../callersealone.pl" target="code">callersealone.pl</a>  that describes the system 
+has the following content
+<pre>
+context(ctxcallers, "localhost",  "TCP", "8049").
+context(ctxresource, "127.0.0.1",  "TCP", "8048").
+ qactor( resource, ctxresource, "external").
+ qactor( caller1, ctxcallers, "it.unibo.caller1.Caller1").
+ qactor( caller2, ctxcallers, "it.unibo.caller2.Caller2").
+msglogging.
+</pre>
+<div class="remark">
+Since the system specifies two contexts with different IP,
+the <i>QActor software factory</i> generates two main programs:
+<ul>
+<li><a href="../src/it/unibo/ctxcallers/MainCtxcallers.kt" target="code">it.unibo.ctxcallers.MainCtxcallers.kt</a> </li>
+<li><a href="../src/it/unibo/ctxcallers/MainCtxresource.kt" target="code">it.unibo.ctxcallers.MainCtxresource.kt</a> </li>
+</ul>
+</div>
+
+<h3>The main program for the callers</h3>
+The main program for the callers generated in the file 
+<a href="../src/it/unibo/ctxcallers/MainCtxcallers.kt" target="code">it.unibo.ctxcallers.MainCtxcallers.kt</a> is:
+<pre>
+fun main() = runBlocking {
+	QakContext.createContexts(
+	        <k>"localhost"</k>, this, <ks>"callersealone.pl"</ks>, "sysRules.pl"
+	)
+</pre>
+
 </m>
-aaaa
+
 
 </td>
 </tr>
