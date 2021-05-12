@@ -219,7 +219,7 @@ a single context, in order to check the logic of the system.
 
 <tr>
 <td style="width:50%">
-<h3 id="resourceandco">Resource and callers</h3>
+<h3 id="resourceandco">Resource and callers: all local version</h3>
 <center><img src="./img/resourceCallersCo.png" alt="resourceCallersCo" width="70%" /></center>
  <br/>
 <a href="../src/resourceandcallers.qak" target="code">resourceandcallers.qak</a>.<br/>
@@ -268,6 +268,7 @@ and opening the file
 </table></center>
 
 <h2>Step 2: for local to distributed </h2>
+
 In this step we move some actor to a different context, in oder to distribute the code over different computational nodes.
 <div class="remark">
 In this phase the application code <k>should not change</k>. 
@@ -278,7 +279,10 @@ In this phase the application code <k>should not change</k>.
 
 <tr>
 <td style="width:50%">
-<h3 id="resourceandco">Resource and callers</h3>
+<h3 id="resourceandco">Resource and callers: distributed version</h3>
+<center><img src="./img/resourceCallersDistr.png" alt="resourceCallersDistr" width="70%" /></center>
+ <br/>
+
 <a href="../src/resource.qak" target="code">resource.qak</a>.<br/>
 <m>
 A resource accepts requests of type <ks>cmd:cmd(X)</ks>. <br/>
