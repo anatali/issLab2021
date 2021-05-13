@@ -26,12 +26,12 @@ QActor taskdeploy context ctxgettaskdeploy{
 	var Counter     =  0
 	var Esname      = ""
 #]
-	State s0 initial { 
-		
+	State s0 initial { 		 
 	} 
 	Transition t0 whenRequest getmeatask -> assignatask
 	
 	State assignatask{
+		printCurrentMessage
 		onMsg( getmeatask : getmeatask( NAME, MATR, MAIL )){
 			[#
 				var studentName  = payloadArg(0) 
@@ -40,11 +40,29 @@ QActor taskdeploy context ctxgettaskdeploy{
 				var esindex      = Counter++ % 5 
 				Esname           = "$EsPrefix${esindex}"
 			#]
-			run utils.append("$studentName | $studentbadge | $Esname | $studentmail") 
-			println("taskdeploy | assignatask to $studentName badge=$studentbadge mail=$studentmail")
+			run kotlinCode.utils.append("$studentName | $studentbadge | $Esname | $studentmail") 
+			println("taskdeploy | assignatask to stud=$studentName badge=$studentbadge mail=$studentmail Esname=$Esname")
 		}
 		replyTo getmeatask with tasktodo : tasktodo( $Esname )
 	}
 	Transition t0 whenRequest getmeatask -> assignatask 
 }
 
+
+QActor studmock context ctxgettaskdeploy{
+	State s0 initial { 
+		request taskdeploy -m getmeatask : getmeatask(x,y,z)
+		
+	} 
+	Transition t0 whenReply tasktodo -> handleAnswer
+	
+	State handleAnswer{
+		printCurrentMessage
+		request taskdeploy -m getmeatask : getmeatask(x,y,z)
+	}
+	Transition t0 whenReply tasktodo -> endJob
+	
+	State endJob{
+		printCurrentMessage
+	}
+}

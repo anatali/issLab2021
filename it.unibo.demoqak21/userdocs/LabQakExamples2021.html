@@ -637,7 +637,7 @@ Note that each <tt>CodedQActor</tt> in this example is defined as a specialized 
 </table></center>
 
 
-<h2>Case studies</h2>
+<h2 id="es0-3">Case studies</h2>
 
 
 <center><table style="width:95%">
@@ -666,14 +666,16 @@ Design and build a <tt>ButtonLed</tt> software system (<em>bls</em>) that makes 
 according to different control policies each time a <em>button</em> is pressed:
 
 <ol>
-<li><k>es1</k>: Turn on/off the <em>led</em></li>
-<li><k>es2</k>-Blink/un-blink the <em>led</em></li>
- 
-<li><k>es3</k>- Todo<!--Control the <em>led</em> to send  a  maritime signal (e.g. 'passage to the east'
-( blank ) blinking at groups of three, every 5 seconds)--> </li> 
+<li><k>es1</k>: Turn on/off a <em>led</em> using a button (ON/OFF).
+ The system should be a distributed system, in which the Button and the Led run on a <i>different computational supports</i>, 
+ e.g. a Conventional PC, a RaspberryPi or Arduino.
+</li>
+<li><k>es2</k>-Blink/Unblink a <em>led</em> using one or two buttons (e.g. START/STOP)</li>
+
+<li><k>es3</k>- Write a service able to answer to requests sent by a remote clients by asking the client 
+- if it is the case - for some missing informaztion </li> 
 </ol>
 
-The system should be a distributed system, in which the Button and the Led run on a <i>different computational supports</i>, e.g. a Conventional PC, a RaspberryPi or Arduino.
 
  
 </m>
@@ -693,7 +695,7 @@ The system should be a distributed system, in which the Button and the Led run o
 <tr>
 <td><m>
 <k>es4</k>:Design and build a  software system (named <em>taskdeploy</em>) that makes a teacher able to 
-assign a set of <ks>N (N>0)</ks> different tasks to the students, like that we are using now.
+assign a set of <ks>N (N>0)</ks> different tasks to the students.
 </m>
 </td> 
 <td><!-- <a href="../models/gettaskdeploy.qakt" target="code">gettaskdeploy.qak</a><br/>  -->

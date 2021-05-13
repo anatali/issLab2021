@@ -37,3 +37,9 @@ a | b | es1 | c
 a | b | es2 | c
 a | b | es3 | c
 a | b | es4 | c
+x | y | es0 | z
+x | y | es1 | z
+stud | 0 | es2 | mmm
+stud | 0 | es3 | mmm
+stud | 0 | es4 | mmm
+stud | 0 | es0 | mmm

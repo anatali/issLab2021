@@ -233,6 +233,8 @@ div.imagedesc{
 
 <li><a href="#deploy">Deploy QAk models on RaspberryPi</a></li>
 
+<li><a href="#docker">Docker on RaspberryPi</a></li>
+
 </ol>
 
 
@@ -1089,7 +1091,49 @@ bash it.unibo.raspIntro2020-1.0
 </table></center>
 </li>
 </ol>	
- 
+
+
+<h2 id="docker">Docker on RaspberryPi</h2>
+Raspberry Pis use the <tt>ARM</tt> architecture, and as a result, won't be compatible with all containers out of the box. 
+Images will need to be built from an <bc>ARM</bc> base image. 
+<br/>
+See <a href="https://www.docker.com/blog/happy-pi-day-docker-raspberry-pi/" target="web">Happy Pi Day with Docker and Raspberry Pi</a>.
+<br/>
+ <center><table style="width:95%">
+<tr>
+ 	<td style="width:30%">Install <bc>Docker</bc></td>
+ 	<td ><pre>curl -sSL https://get.docker.com | sh </pre></td>
+</tr>
+
+<tr>
+ 	<td>Add permission to run Docker Commands </td>
+ 	<td ><pre>sudo usermod -aG docker pi </pre>
+	<k>reboot !!!</k></td>
+</tr>
+
+<tr>
+ 	<td>Test Docker installation </td>
+ 	<td ><pre>docker run hello-world </pre></td>
+</tr>
+
+<tr>
+ 	<td>Install proper dependencies </td>
+ 	<td ><pre>sudo apt-get install -y libffi-dev libssl-dev
+sudo apt-get install -y python3 python3-pip
+sudo apt-get remove python-configparser </pre></td>
+</tr>
+
+<tr>
+ 	<td>Install <bc>Docker Compose</bc> </td>
+ 	<td ><pre>sudo pip3 install docker-compose </pre></td>
+</tr>
+
+</table>
+</center> 
+
+<h3>Build and deploy an image</h3>
+See <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html#deploy">LabIss2021 | RobotService: Deploy</a>
+ <!--
 <table style="width:98%">
 <tbody>	
 <tr>
@@ -1102,6 +1146,7 @@ bash it.unibo.raspIntro2020-1.0
 </tr>
  </tbody>
 </table>
+-->
  <br/><br/>
 </div>  
 
