@@ -43,3 +43,13 @@ stud | 0 | es2 | mmm
 stud | 0 | es3 | mmm
 stud | 0 | es4 | mmm
 stud | 0 | es0 | mmm
+stud | 0 | es1 | mmm
+x | y | es0 | z
+x | y | es1 | z
+stud | 0 | es2 | mmm
+x | y | es0 | z
+x | y | es1 | z
+stud | 0 | es2 | mmm
+x | y | es0 | z
+x | y | es1 | z
+stud | 0 | es2 | mmm
