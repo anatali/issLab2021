@@ -12,11 +12,11 @@ Request r2 : r2(X)
 Reply   a1 : a1(X) 
   
 
-//Context ctxdemoreqb ip [host="localhost" port=8014]    //for first run (debug)
-Context ctxcallerb ip [host="localhost" port=8076]  
-Context ctxcalledb ip [host="127.0.0.1" port=8078]  
+Context ctxdemoreqb ip [host="localhost" port=8014]    //for first run (debug)
+//Context ctxcallerb ip [host="localhost" port=8076]  
+//Context ctxcalledb ip [host="127.0.0.1" port=8078]  
 
-QActor callerb context ctxcallerb {
+QActor callerb context ctxdemoreqb {
 	State init initial {
 		println("	callerb request r1(10)")
 		request calledb -m r1 : r1(10)
@@ -48,7 +48,7 @@ QActor callerb context ctxcallerb {
 	Goto work
 }  
 
-QActor calledb context ctxcalledb {
+QActor calledb context ctxdemoreqb {
 [# var RequestArg = "0" #]
 	State init initial { 
 		//println("calledb init")

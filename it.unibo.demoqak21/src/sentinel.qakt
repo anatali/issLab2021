@@ -19,7 +19,7 @@ System sentinel
 	//tcp://test.mosquitto.org
 	//mqtt.fluux.io
 	//"tcp://broker.hivemq.com" 
-mqttBroker "localhost" : 1883 eventTopic "sentinel/events"
+//mqttBroker "localhost" : 1883 eventTopic "sentinel/events"
  
 Event   alarm : alarm(V)  
 
@@ -53,7 +53,7 @@ QActor sentinel context ctxsentinel{
   		} 
   		delay 1500		   
    	}	
-    	Goto s0		
+    	Goto s0		 
     	/* Goto s0:
     	   The actor specifies an empty move  => in this state it does not declare 
            nothing about events or messages.
@@ -83,16 +83,19 @@ QActor sentinel context ctxsentinel{
  
 QActor sender context ctxsentinel{
 	State s0 initial { 	  
-		/* 
+		/*  		  
  		 println("			sender emits fire")
-		 emit alarm : alarm( fire )  
+		 emit alarm : alarm( disaster(fire) )  
+		 
 		 delay 1200
  		 println("			sender emits tsunami")
 		 emit alarm : alarm( tsunami )	 
-		 */
+		 
 //		 delay 1000
 //		 terminate 0 
+
+*/
 	}
+
 	
 }
- /* */

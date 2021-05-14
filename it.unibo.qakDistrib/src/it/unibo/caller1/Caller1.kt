@@ -20,7 +20,7 @@ class Caller1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 				state("s0") { //this:State
 					action { //it:State
 						println("caller1 request cmd ")
-						request("cmd", "cmd(callerco1)" ,"resource" )  
+						request("cmd", "cmd(caller1)" ,"resource" )  
 					}
 					 transition(edgeName="t00",targetState="handleReply",cond=whenReply("replytocmd"))
 				}	 

@@ -20,12 +20,13 @@ class Caller2 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 				state("s0") { //this:State
 					action { //it:State
 						println("caller2 request cmd ")
-						request("cmd", "cmd(callerco2)" ,"resource" )  
+						request("cmd", "cmd(caller2)" ,"resource" )  
 					}
-					 transition( edgeName="goto",targetState="waitAnswer", cond=doswitch() )
+					 transition( edgeName="goto",targetState="waitForInput", cond=doswitch() )
 				}	 
-				state("waitAnswer") { //this:State
+				state("waitForInput") { //this:State
 					action { //it:State
+						println("caller2 waiting ... ")
 					}
 					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
 					transition(edgeName="t02",targetState="handleReply",cond=whenReply("replytocmd"))
@@ -34,6 +35,7 @@ class Caller2 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
+					 transition( edgeName="goto",targetState="waitForInput", cond=doswitch() )
 				}	 
 				state("handleAlarm") { //this:State
 					action { //it:State
@@ -41,7 +43,7 @@ class Caller2 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 						println("$name in ${currentState.stateName} | $currentMsg")
 						println("---------------------------------------------------")
 					}
-					 transition( edgeName="goto",targetState="waitAnswer", cond=doswitch() )
+					 transition( edgeName="goto",targetState="waitForInput", cond=doswitch() )
 				}	 
 			}
 		}

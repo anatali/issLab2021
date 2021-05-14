@@ -27,9 +27,14 @@ QActor resourceandco context ctxresourceandco {
  	}
 #]
 	State s0 initial { 
-		 //[# CoapObserver.activate() #]
+		 //[# CoapObserverCommon.activate() #]
+		 delay 1000    
+	}
+	Goto waitRequest    
+	
+	State waitRequest{
 		 updateResource [# resourceInfo() #]
-		 println("resource waiting ...") 	  	 
+		 println("resource waiting ...") 	  	 		
 	}
 	Transition t0  
 		whenRequest cmd -> handleRequestCmd
@@ -38,12 +43,12 @@ QActor resourceandco context ctxresourceandco {
 		printCurrentMessage
 		updateResource [# resourceInfo() #]
 		onMsg( cmd : cmd(X) ){
-			[# val ANSW = "answerFor_${payloadArg(0)}" #]
-			emit alarm : alarm(fire)		//to see what happens in the system ...
+			[# val ANSW = "answerFor_${payloadArg(0)}" #]    
+		 	//emit alarm : alarm(fire)		//to see what happens in the system ...
 			replyTo cmd with replytocmd : replytocmd( $ANSW ) 
 		}		 		
 	}
-	Goto s0	
+	Goto waitRequest	
 	 
  }
 /*
