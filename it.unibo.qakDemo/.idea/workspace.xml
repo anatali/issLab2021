@@ -5,40 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/ResourceCallerPython3.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/ResourceCallerPython3.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/demo_req_b.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/demo_req_b.pl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/demo_req_b.qakt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/demo_req_b.qakt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/gettaskdeploy.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/gettaskdeploy.qakt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/caller1/Caller1.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/callerco1/Callerco1.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/callerco2/Callerco2.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxcaller1/MainCtxcaller1.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxgettaskdeploy/MainCtxgettaskdeploy.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxres1/MainCtxres1.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/ctxresourceandco/MainCtxresourceandco.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/resourceandco/Resourceandco.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/studmock/Studmock.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/it/unibo/taskdeploy/Taskdeploy.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/src/sentinel.qakt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/src/sentinel.qakt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/LabQakEvents2020(OLD).html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/LabQakIntro2020.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/ActorBasicCode.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/bls0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/bls1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/bls2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/blsBetter.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/blsStarting.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/evsys0_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/evsys0_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/evsys1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/evsys2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/extcases.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/extcasesA.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/extcasesB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/ledGuarded.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/legenda.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/legendaAll.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/img/smartRobotSystem.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.demoqak21/userdocs/LabQakExamples2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.demoqak21/userdocs/LabQakExamples2021.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/it.unibo.qakDemo.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/.ipynb_checkpoints/ResourceCallerPython3-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.ipynb_checkpoints/ResourceCallerPython3-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/ResourceCallerPython3.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/ResourceCallerPython3.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/callersealone.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/callersealone.pl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/callers.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/callers.qak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/caller2/Caller2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/caller2/Caller2.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/callerco1/Callerco1.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/callerco2/Callerco2.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/ctxresourceandco/MainCtxresourceandco.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/resource/Resource.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/resourceandco/Resourceandco.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/it/unibo/test/test.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/resourceandcallers.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/src/resourceandcallers.qakt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistribResource/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistribResource/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistrib/userDocs/LabQakDistributed2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistrib/userDocs/LabQakDistributed2021.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistribResource/resourcealone.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistribResource/resourcealone.pl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistribResource/src/it/unibo/ctxresource/MainCtxresource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistribResource/src/it/unibo/ctxresource/MainCtxresource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistribResource/src/it/unibo/resource/Resource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistribResource/src/it/unibo/resource/Resource.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../it.unibo.qakDistribResource/src/resource.qak" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakDistribResource/src/resource.qak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/LabQakIntro2021.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakactor/userDocs/LabQakIntro2021.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,14 +103,7 @@
   </component>
   <component name="RunManager">
     <configuration name="MainCtxSysExampleKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="&quot;it.unibo.ctxSysExample.MainCtxSysExampleKt&quot;" />
-      <option name="WORKING_DIRECTORY" />
-      <module name="" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>

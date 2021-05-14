@@ -355,6 +355,19 @@ fun main() = runBlocking {
  
 </tbody>	
 </table></center>
+
+<h2>About avents and event propagation</h2>
+ Before sending the answer, the <a href="../src/resource.qak" target="code">resource.qak</a> emits an <ks>alarm</ks> event.
+ <br/>
+ This event is propagated (via TCP) to all the contexts known by the <tt>resource subsystem</tt>.
+ Thus, in the model of the reosurce, we could insert also the declaration of a context for the callers.
+ But, in this case, the resource subsystem does not start in absence of the callers. 
+ <div class="remark">
+ To allow the <a href="../src/resource.qak" target="code">resource.qak</a> to start as a standalone system
+ and to allow the perception of events, we should introduce the possibility of interaction based on  MQTT.
+ and to allow the perception of events, we should introduce the possibility of interaction based on  MQTT.
+</div>
+
  <br/><br/>
 
 

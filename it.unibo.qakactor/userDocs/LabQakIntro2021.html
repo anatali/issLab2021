@@ -708,6 +708,7 @@ with the help of the Eclipse <bc>QActor software factory</bc>  deployed by the
 
 
 
+
  </tbody>
 </table>
 </center>
@@ -960,7 +961,50 @@ attempt is made to send the reply via <tt>MQTT</tt>, hoping that the 'alien' was
 </td>
 </tr>
 
+<tr>
+<td>
+<h3>Event propagation rules</h3>
 
+ 
+ 
+<ol>
+<li>The event emitted by a <tt>QActor</tt> that belongs to a qak-system (<ks>qasys</ks>) is <i>propagated via <tt>Context</tt></i> to 
+<k>all</k> the other <tt>QActor</tt> of <ks>qasys</ks>.
+<li>
+ A standalone <tt>QActor</tt> (e.g. <a href="../../it.unibo.qakDistribResource/src/resource.qak" target="code">resource.qak</a>)
+ that <em>does not use MQTT</em>
+ does not propagate events to <tt>QActors</tt> that use it, neither can perceive events emitted by them.</li>
+<li>
+An event emiited by an 'alien' component connected to a <tt>QActor</tt> via <k>TCP</k> will be perceived by the connected
+<tt>QActor</tt> only (i.e. it is not propagated to the other <tt>Contexts</tt> of the system).
+</li>
+<li>The event that reaches a <tt>Context</tt>  (since propagated from another <tt>Contexts</tt> or emitted by an 'alien') 
+is <k>propagated only</k> to the actors internal to that <tt>Context</tt>.</li>
+<li>The event emitted by a <tt>QActor</tt> of a  <ks>qasys</ks> that uses <k>MQTT</k> are propagated on the specified topic.</li>
+</ol> 
+ 
+ <!--
+<hr/>
+
+
+<br/><br/>
+ Before sending the answer, the <a href="../../it.unibo.qakDistribResource/src/resource.qak" target="code">resource.qak</a> emits an <ks>alarm</ks> event.
+ <br/>
+ This event is propagated (via TCP) to all the contexts known by the <tt>resource subsystem</tt>.
+ Thus, in the model of the reosurce, we could insert also the declaration of a context for the callers.
+ But, in this case, the resource subsystem does not start in absence of the callers. 
+ -->
+</td>
+<td>
+<div class="remark">
+ To allow a <tt>QActor</tt> to start as a standalone system (see for example 
+ <a href="../../it.unibo.qakDistribResource/src/resource.qak" target="code">resource.qak</a>) 
+ and to allow the perception of events, we should introduce <k>MQTT</k>-based interaction.
+ <hr/>
+ See <ks>ResourceCallerMqtt.ipynb</ks> in project <a href="../../it.unibo.qakDistrib" target="code">it.unibo.qakDistrib</a>
+</div>
+</td>
+</tr>
 
 <tr>
 <td><h3 id="msglog">Flag <bc>-msglog</bc></h3>

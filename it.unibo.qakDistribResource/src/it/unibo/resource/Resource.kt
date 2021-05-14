@@ -20,7 +20,7 @@ class Resource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 			fun resourceInfo() : String {
 		 		return "$name | state=${currentState.stateName}  msg=$currentMsg"
 		 	}
-		 	var evCount  = 1
+		 	var evCount  = 1 
 		 	fun getEventName() : String{ return ""+evCount++   }
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
@@ -29,8 +29,8 @@ class Resource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						)
 						println("resource waiting ...")
 					}
-					 transition(edgeName="t00",targetState="handleRequestCmd",cond=whenRequest("cmd"))
-					transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t00",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t01",targetState="handleRequestCmd",cond=whenRequest("cmd"))
 				}	 
 				state("handleAlarm") { //this:State
 					action { //it:State
