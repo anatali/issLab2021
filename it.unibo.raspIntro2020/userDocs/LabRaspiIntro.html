@@ -321,6 +321,20 @@ sudo chmod 775 /usr/local/bin/checkwifi.sh
 </td>
 </tr>
 
+<tr>
+<td><h3>No wifi?</h3></td>
+<td>
+<ol>
+<li>Connect to wired option temporarily</li>
+<li>Open terminal and type: sudo raspi-config</li>
+<li>Select option 8 to update the pi</li>
+<li>Reboot</li>
+<li>You should now be able to right click and turn on wifi and remove the wired network connection</li>
+</ol>
+
+
+</td>
+</tr>
 
 <tr>
 <td style="width:50%" >
@@ -1102,13 +1116,22 @@ See <a href="https://www.docker.com/blog/happy-pi-day-docker-raspberry-pi/" targ
  <center><table style="width:95%">
 <tr>
  	<td style="width:30%">Install <bc>Docker</bc></td>
- 	<td ><pre>curl -sSL https://get.docker.com | sh </pre></td>
+ 	<td ><pre>curl -sSL https://get.docker.com | sh
+<kc>Shorcut for	</kc>
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh	
+</pre></td>
 </tr>
 
 <tr>
  	<td>Add permission to run Docker Commands </td>
- 	<td ><pre>sudo usermod -aG docker pi </pre>
-	<k>reboot !!!</k></td>
+ 	<td >
+<pre>sudo usermod -aG docker pi 
+	<k>reboot !!!</k>
+<k>dockerd</k> <kc>//daemon runs with its default configuration</kc>
+docker version		<kc>//20.10.6</kc>
+docker info
+</pre>	</td>
 </tr>
 
 <tr>
@@ -1127,6 +1150,27 @@ sudo apt-get remove python-configparser </pre></td>
  	<td>Install <bc>Docker Compose</bc> </td>
  	<td ><pre>sudo pip3 install docker-compose </pre></td>
 </tr>
+
+<tr>
+ 	<td>Check and purge</td>
+ 	<td >
+<pre>
+journalctl -u docker.service</pre>
+	<h3></h3>
+<pre>sudo apt-get update   
+sudo apt-get full-upgrade	<kc>//better full</kc>
+sudo systemctl disable dphys-swapfile	<kc>//if required</bc>
+
+sudo apt purge docker.io 		<kc>//(removes Docker)</kc>
+sudo apt autoremove 			<kc>//(remove its other dependencies)</kc>
+sudo apt install docker.io 		<kc>//(installs Docker)</kc>
+
+<kc>or</kc>
+sudo apt-get purge docker-ce</pre>
+	
+	</td>
+</tr>
+
 
 </table>
 </center> 

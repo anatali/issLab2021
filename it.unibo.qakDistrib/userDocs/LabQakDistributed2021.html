@@ -310,22 +310,23 @@ The  callers are activated in a context diferent from the context of the resourc
 However, the model related to the callersi does include also a declaration about the required resource: 
 <pre>
 Context ctxcallers  ip [ host= <ks>"localhost"</ks> port= 8049 ]  
-Context ctxresource ip [ host= <ks>"127.0.0.1"</ks> port= 8048 ]   <kc>//Each contesxt must have a different IP</kc>
+Context ctxresource ip [ host= <ks>"127.0.0.1"</ks> port= 8048 ]   
+	<kc>//Each contesxt must have a different IP</kc>
 
-<k>ExternalQActor</k> resource context ctxresource	<kc>//The resource is part of the system by not defined here</kc>
+<k>ExternalQActor</k> resource context ctxresource	
+	<kc>//The resource is part of the system by not defined here</kc>
 </pre>
 
 <h4>The system description</h4>
 The generated file <a href="../callersealone.pl" target="code">callersealone.pl</a>  that describes the system 
 has the following content
-<pre>
-context(ctxcallers, "localhost",  "TCP", "8049").
+<pre><m>context(ctxcallers, "localhost",  "TCP", "8049").
 context(ctxresource, "127.0.0.1",  "TCP", "8048").
  qactor( resource, ctxresource, "external").
  qactor( caller1, ctxcallers, "it.unibo.caller1.Caller1").
  qactor( caller2, ctxcallers, "it.unibo.caller2.Caller2").
 msglogging.
-</pre>
+</m></pre>
 <div class="remark">
 Since the system specifies two contexts with different IP,
 the <i>QActor software factory</i> generates two main programs:
@@ -351,22 +352,76 @@ fun main() = runBlocking {
 </td>
 </tr>
 
-
- 
-</tbody>	
-</table></center>
-
-<h2>About avents and event propagation</h2>
+<tr>
+<td><h3>About <a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#eventRules">events and event propagation</a></h3>
  Before sending the answer, the <a href="../src/resource.qak" target="code">resource.qak</a> emits an <ks>alarm</ks> event.
  <br/>
- This event is propagated (via TCP) to all the contexts known by the <tt>resource subsystem</tt>.
- Thus, in the model of the reosurce, we could insert also the declaration of a context for the callers.
- But, in this case, the resource subsystem does not start in absence of the callers. 
- <div class="remark">
+ This event is propagated (via TCP) to all the contexts known by the <tt>resource subsystem</tt>.<br/>
+ Thus, in the model of the resource, we could insert also the declaration of a context for the callers.
+ But, in this case, <k>the resource subsystem does not start in absence of the callers</k>. 
+ </td>
+<td><div class="remark">
  To allow the <a href="../src/resource.qak" target="code">resource.qak</a> to start as a standalone system
  and to allow the perception of events, we should introduce the possibility of interaction based on  MQTT.
  and to allow the perception of events, we should introduce the possibility of interaction based on  MQTT.
 </div>
+</td>
+</tr>
+ 
+</tbody>	
+</table></center>
+
+<h2>Step 3: using 'alien' components </h2>
+
+<center><table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:35%">
+<a href="../kotlinCode/CoapObserverCommon.kt" target="code"><em>CoapObserverCommon.kt</em></a>
+</td>
+<td>
+A CoAP observer of the <a href="../src/resource.qak" target="code">resource</a> written in Kotlin.
+</td>
+</tr>
+
+<tr>
+<td  >
+<a href="../kotlinCode/ResourceCoapClient.kt" target="code"><em>ResourceCoapClient.kt</em></a>
+</td>
+<td>
+A Kotlin program that calls the <a href="../src/resource.qak" target="code">resource</a> using CoAP.
+</td>
+</tr>
+
+
+<tr>
+<td >
+<a href="../pythonCode/ResourceCallerPython3.py" target="code"><em>ResourceCallerPython3.py</em></a><br/>
+
+</td>
+<td>
+A Python program that calls the <a href="../src/resource.qak" target="code">resource</a> using <k>TCP</k>.
+<br/>
+Version in <a href="https://jupyter.org/" target="web">Jupyter</a>:
+in project <a href="../" target="web"><tt>it.unibo.qakDistrib</tt></a>.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="../pythonCode/ResourceCallerMQTTPython3.py" target="code"><em>ResourceCallerMQTTPython3.py</em></a>
+</td>
+<td>
+A Python program that calls the <a href="../src/resource.qak" target="code">resource</a> using <k>MQTT</k>.
+<br/>
+Version in <a href="https://jupyter.org/" target="web">Jupyter</a>
+in project <a href="../" target="web"><tt>it.unibo.qakDistrib</tt></a>.
+</td>
+</tr>
+ 
+</tbody>	
+</table></center>
 
  <br/><br/>
 
