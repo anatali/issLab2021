@@ -244,7 +244,11 @@ div.imagedesc{
 <tr>
 <td style="width:50%">
 <ol>	
-	<li>See <a href="https://www.digikey.com/en/maker/blogs/raspberry-pi-wi-fi-bluetooth-setup-how-to-configure-your-pi-4-model-b-3-model-b" target="web">
+	<li>See 
+	<!-- <a href="https://www.youtube.com/watch?v=qLo-0Tmmlrc" target="web">Raspberry PI 2 B first time Setup</a> 
+	(explains PIB, PIB+, PIBv2 models)
+	and -->
+	<a href="https://www.digikey.com/en/maker/blogs/raspberry-pi-wi-fi-bluetooth-setup-how-to-configure-your-pi-4-model-b-3-model-b" target="web">
 B+ Connectivity</a>. <br/><br/>
 </li>
 	<li>Create on a SD (min 8GB) the image from file:<br/>  <ks>2020-02-13-raspbian-buster-lite</ks> <!-- <ks>2019-09-26-raspbian-buster-lite.zip</ks> --> 
@@ -277,8 +281,10 @@ The voltage drop may be caused by the USB cable used: length, cable thickness, c
 <pre><m>uname -a
 <kc>Linux raspberrypi 4.19.66-v7+ #1253 SMP Thu Aug 15 11:49:46 BST 2019 armv7l GNU/Linux</kc>
 
-cat /etc/debian_version
-<kc>9.11</kc>
+cat /etc/os-release
+<kc>VERSION="10 (buster)"</kc>
+
+iproute 	<kc>//replaces <ks>ifconfig</ks></kc>
 </m></pre>
 See also: <a href="https://www.raspberryitaly.com/raspberrypi-tutti-i-comandi-utili-a-colpo-docchio/" target="web">
 RaspberryPi: Tutti i comandi utili a colpo d’occhio</a>
@@ -332,6 +338,7 @@ sudo chmod 775 /usr/local/bin/checkwifi.sh
 
 <tr>
 <td><h3>No wifi?</h3></td>
+
 <td>
 <ol>
 <li>Connect to wired option temporarily</li>
@@ -340,7 +347,9 @@ sudo chmod 775 /usr/local/bin/checkwifi.sh
 <li>Reboot</li>
 <li>You should now be able to right click and turn on wifi and remove the wired network connection</li>
 </ol>
-
+<pre>
+sudo ip link set wlan0 up
+</pre>
 
 </td>
 </tr>

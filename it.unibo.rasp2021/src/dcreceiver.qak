@@ -1,0 +1,24 @@
+System dcreceiver
+//	"mqtt.eclipse.org:1883  mosquitto.org mqtt.fluux.io  broker.hivemq.com
+//mqttBroker "mqtt.eclipse.org" : 1883 eventTopic "unibo/polar"  
+
+Dispatch cmd : cmd(X)
+
+Context ctxdcreceiver ip [host="localhost" port=8037]
+
+QActor dcreceiver context ctxdcreceiver{
+	State s0 initial { 
+		println("dcreceiver waits ...")
+		//updateResource [# "dcreceiver waits" #]
+	}
+	Transition t0
+		whenMsg cmd -> handleCmd
+		
+	State 	handleCmd{
+		printCurrentMessage
+		updateResource [# "dcreceiver ${currentMsg}" #] 
+	}
+	Goto s0
+}
+
+//git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch C:/Didattica2018Work/iss2020LabBo' HEAD
