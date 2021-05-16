@@ -264,13 +264,22 @@ network={
 	<li>Insert the SD into the RaspberryPi </li>
 	<li>on your <tt>MODEM HUB</tt> look at the <bc>Raspberry IP address</bc> (optionally, connect the RaspberryPi with an Ethernet cable to the <tt>MODEM</tt>) 
 	<li>Connect via ssh (by using <a href="https://www.putty.org/" target="web">Putty</a> ) 
+	<li>When the system is running, the file is moved forn <ks>boot</ks> to <em>etc/wpa_supplicant/wpa_supplicant.conf</em></li>
 </ol>
 
-
+<m>
 <div class="remark">
 <ks>Under-voltage detected</ks><br/>
 The voltage drop may be caused by the USB cable used: length, cable thickness, connector quality
 </div>
+</m>
+<h3>Info sul sistema</h3>
+<pre><m>uname -a
+<kc>Linux raspberrypi 4.19.66-v7+ #1253 SMP Thu Aug 15 11:49:46 BST 2019 armv7l GNU/Linux</kc>
+
+cat /etc/debian_version
+<kc>9.11</kc>
+</m></pre>
 See also: <a href="https://www.raspberryitaly.com/raspberrypi-tutti-i-comandi-utili-a-colpo-docchio/" target="web">
 RaspberryPi: Tutti i comandi utili a colpo d’occhio</a>
 
@@ -1128,7 +1137,7 @@ sudo sh get-docker.sh
  	<td >
 <pre>sudo usermod -aG docker pi 
 	<k>reboot !!!</k>
-<k>dockerd</k> <kc>//daemon runs with its default configuration</kc>
+<k>sudo dockerd &</k> <kc>//daemon runs with default configuration</kc>
 docker version		<kc>//20.10.6</kc>
 docker info
 </pre>	</td>
