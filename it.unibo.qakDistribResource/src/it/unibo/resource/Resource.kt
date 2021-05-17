@@ -16,12 +16,10 @@ class Resource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		   
+		  
 			fun resourceInfo() : String {
 		 		return "$name | state=${currentState.stateName}  msg=$currentMsg"
 		 	}
-		 	var evCount  = 1 
-		 	fun getEventName() : String{ return ""+evCount++   }
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -29,28 +27,17 @@ class Resource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						)
 						println("resource waiting ...")
 					}
-					 transition(edgeName="t00",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t01",targetState="handleRequestCmd",cond=whenRequest("cmd"))
-				}	 
-				state("handleAlarm") { //this:State
-					action { //it:State
-						println("---------------------------------------------------")
-						println("$name in ${currentState.stateName} | $currentMsg")
-						println("---------------------------------------------------")
-					}
-					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
+					 transition(edgeName="t00",targetState="handleRequestCmd",cond=whenRequest("cmd"))
 				}	 
 				state("handleRequestCmd") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						updateResourceRep( resourceInfo()  
 						)
-						 var EvBody = "alarm(${getEventName()})"   
-						emit("alarm", "$EvBody" ) 
 						if( checkMsgContent( Term.createTerm("cmd(X)"), Term.createTerm("cmd(X)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
+								emit("alarm", "alarm(fire)" ) 
 								 val ANSW = "answerFor_${payloadArg(0)}"  
-								delay(1000) 
 								answer("cmd", "replytocmd", "replytocmd($ANSW)"   )  
 						}
 					}

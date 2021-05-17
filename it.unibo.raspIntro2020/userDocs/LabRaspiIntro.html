@@ -280,6 +280,8 @@ The voltage drop may be caused by the USB cable used: length, cable thickness, c
 <h3>Info sul sistema</h3>
 <pre><m>uname -a
 <kc>Linux raspberrypi 4.19.66-v7+ #1253 SMP Thu Aug 15 11:49:46 BST 2019 armv7l GNU/Linux</kc>
+cat /proc/cpuinfo | grep model
+<kc>model name : ARMv7 Processor rev 4 (v7l)"</kc>
 
 cat /etc/os-release
 <kc>VERSION="10 (buster)"</kc>
@@ -1193,9 +1195,67 @@ sudo apt-get purge docker-ce</pre>
 </table>
 </center> 
 
-<h3>Build and deploy an image</h3>
-See <a href="../../it.unibo.kotlinSupports/userDocs/RobotService.html#deploy">LabIss2021 | RobotService: Deploy</a>
- <!--
+<h2 id="deploy">Deploy (example <a href="../../it.unibo.rasp2021/src/blses1_onoff.qak" target="code">blses1_onoff.qak</a>
+in project <a href="../../it.unibo.rasp2021" target="code">it.unibo.rasp2021</a>)</h2>
+ 
+<ol>
+<li><h3>Set the main class in <a href="../../it.unibo.rasp2021/build2021.gradle" target="code"><ks>build2021.gradle</ks></a></h3>
+<pre>
+mainClassName = 'it.unibo.ctxblses1.MainCtxblses1Kt'
+
+jar {
+    println("executing jar")
+    from sourceSets.main.allSource
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
+}
+</pre>
+</li>
+<li><h3>Create the distribution</h3>
+<pre>
+gradlew distTar
+</pre>
+</li>
+<li><h3>Define the <a href="../../it.unibo.rasp2021/Dockerfile" target="code"><ks>Dockerfile</ks></a></h3>
+<pre>
+FROM <k>hypriot/rpi-java</k>		##uses jessie
+EXPOSE 8075
+## ADD extracts the tar
+ADD *.tar /
+WORKDIR /it.unibo.rasp2021-1.0/bin
+COPY ./*.pl ./
+COPY ./*.sh ./
+COPY ./*.py ./
+CMD ["bash", "it.unibo.rasp2021"]
+</pre> 
+</li>
+
+<li><h3>Build and run the image </h3>
+<pre>
+docker build -t qakled2021 . 
+
+<kc>//run the image </kc>
+docker run -it --rm --name led2021 -p8075:8075/tcp -p8075:8075/udp <k>--privileged</k> qakled2021  <ks>/bin/bash</ks> <kc>//to use the console</kc>  
+</pre>
+</li>
+ 
+<li><h3>Tag the image and register on  <a href="https://hub.docker.com/?ref=login" target="web">DockerHub</a></h3>
+<pre>
+<kc>Login in DockerHub (get the password from a private file)</kc>
+ type docker_password.txt | docker login --username natbodocker --password-stdin
+ 
+<kc>Tag the image</kc>
+docker tag qakled2021 natbodocker/qakled2021
+
+<kc>Register the image</kc>
+docker push natbodocker/qakled2021
+</pre>
+</li>
+</ol>
+
+
+  <!--
 <table style="width:98%">
 <tbody>	
 <tr>

@@ -1,17 +1,24 @@
 ## ----------------------------------------------------------
-## Dockerfile for dcreceiver
+## Dockerfile for qakled2021
 ## ----------------------------------------------------------
-## see https://hub.docker.com/r/amd64/openjdk/
-FROM openjdk:12.0.2
-EXPOSE 8037
+## see https://iotbytes.wordpress.com/create-your-first-docker-container-for-raspberry-pi-to-blink-an-led/
+FROM hypriot/rpi-java		##uses jessie
+EXPOSE 8075
 ## ADD extracts the tar
-ADD ./build/distributions/*.tar /
-WORKDIR /it.unibo.dockerCompose.receiver-1.0/bin
+ADD *.tar /
+WORKDIR /it.unibo.rasp2021-1.0/bin
 COPY ./*.pl ./
-RUN ls
-CMD ["bash", "it.unibo.dockerCompose.receiver"]
+COPY ./*.sh ./
+COPY ./*.py ./
 
-##  docker build -t dcreceiver . 
-##  docker run -it --name dcr -p8037:8037/tcp -p8037:8037/udp dcreceiver   
-##  docker run -it --name dcr1 -p8047:8037/tcp -p8049:8037/udp dcreceiver  /bin/bash	(OLD)
-    
+RUN sudo apt-get update -y
+RUN sudo apt-get install -y wiringpi
+RUN sudo apt-get install -y python
+
+CMD ["bash", "it.unibo.rasp2021"]
+
+##  docker build -t qakled2021 . 
+##  docker run -it --rm --name led2021 -p8075:8075/tcp -p8075:8075/udp --privileged qakled2021  /bin/bash
+
+## https://hub.docker.com/r/arm32v7/python/
+## docker run -d -p 80:80 hypriot/rpi-busybox-httpd		##works, but ???

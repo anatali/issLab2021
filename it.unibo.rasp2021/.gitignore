@@ -6,6 +6,8 @@ bin/default
 build
 logs
 
+docker_password.txt
+
 log4jInfo.log
 
 #node
