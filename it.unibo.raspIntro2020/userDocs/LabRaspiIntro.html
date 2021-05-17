@@ -1227,16 +1227,29 @@ WORKDIR /it.unibo.rasp2021-1.0/bin
 COPY ./*.pl ./
 COPY ./*.sh ./
 COPY ./*.py ./
+<m><kc>Does not work ---------------
+## RUN apt-get update -y
+## RUN apt-get install -y wiringpi
+## RUN sudo apt-get install -y python
+---------------------------------- </kc></m>
 CMD ["bash", "it.unibo.rasp2021"]
 </pre> 
 </li>
 
-<li><h3>Build and run the image </h3>
+<li><h3>Build, modify and run the image </h3>
 <pre>
 docker build -t qakled2021 . 
 
-<kc>//run the image </kc>
-docker run -it --rm --name led2021 -p8075:8075/tcp -p8075:8075/udp <k>--privileged</k> qakled2021  <ks>/bin/bash</ks> <kc>//to use the console</kc>  
+docker run -it --rm --name led2021 -p8075:8075/tcp -p8075:8075/udp <k>--privileged</k> qakled2021  <ks>/bin/bash</ks> <kc>//use the console</kc>
+sudo apt-get update -y
+sudo apt-get install wiringpi
+sudo docker commit 0b53c2e4320b qakled2021gpio
+
+bash it.unibo.rasp2021
+ 
+<kc>//run the image (augmented with wiringpi)</kc>
+docker run -it --rm --name led2021 -p8075:8075/tcp -p8075:8075/udp <k>--privileged</k> qakled2021gpio  <ks>/bin/bash</ks> or <ks>bash it.unibo.rasp2021</ks>
+bash led25Gpio.sh  <ks>//to test that gpio is working</ks>
 </pre>
 </li>
  
@@ -1246,10 +1259,16 @@ docker run -it --rm --name led2021 -p8075:8075/tcp -p8075:8075/udp <k>--privileg
  type docker_password.txt | docker login --username natbodocker --password-stdin
  
 <kc>Tag the image</kc>
-docker tag qakled2021 natbodocker/qakled2021
+docker tag qakled2021gpio natbodocker/qakled2021gpio
 
 <kc>Register the image</kc>
-docker push natbodocker/qakled2021
+docker push natbodocker/qakled2021gpio
+</pre>
+</li>
+
+<li><h3>Use <a href="../../it.unibo.rasp2021/qakled2021pio.yaml">qakled2021pio.yaml</a></h3>
+<pre>
+docker-compose -f qakled2021pio.yaml up
 </pre>
 </li>
 </ol>

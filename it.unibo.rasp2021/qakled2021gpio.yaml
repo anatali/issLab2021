@@ -1,0 +1,7 @@
+version: '3'
+services:
+  led2021:
+    image: docker.io/natbodocker/qakled2021gpio
+    ## image: qakled2021gpio
+    ports:
+      - 8075:8075 

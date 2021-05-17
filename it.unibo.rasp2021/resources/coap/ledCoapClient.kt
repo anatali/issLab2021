@@ -13,7 +13,7 @@ import org.eclipse.californium.core.CoapHandler
 object ledCoapClient {
 
     private val client      = CoapClient()	
-	private val ipaddr      = "192.168.1.26:8075"		//5683 default
+	private val ipaddr      = "192.168.1.9:8075"		//5683 default
 	private val context     = "ctxblses1"
  	private val destactor   = "led"
  
@@ -24,13 +24,16 @@ object ledCoapClient {
 	}
 
 	fun work(){
+		doObserve()
 		for( i in 1..5 ){
+			println("ledCoapClient | turnon")
 			sendToLedOnRasp("on")
 			Thread.sleep(500)
+			println("ledCoapClient | turnoff")
 			sendToLedOnRasp("off")
 			Thread.sleep(500)
 		}
-	}
+	} 
 	
 	fun sendToLedOnRasp(move: String) {
 		val r       = MsgUtil.buildDispatch("coapclient", "ledCmd", "ledCmd($move)", "led" )

@@ -1,7 +1,0 @@
-version: '3'
-services:
-  led2021:
-    image: docker.io/natbodocker/qakled2021
-    ## image: qakled2021
-    ports:
-      - 8075:8075
