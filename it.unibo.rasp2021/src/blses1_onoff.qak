@@ -29,7 +29,7 @@ QActor blsonoff context ctxblses1 {
 		var odd         = true
 		var toutCounter = 0
 		val maxCounter  = 5
-	#]
+	#] 
 	State s0 initial { 	
 		//qrun resources.bls.kotlin.buttonEventEmitter.create( myself, "clickOnOff")  
 	}

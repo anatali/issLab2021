@@ -19,11 +19,13 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 		
 		val mapname     = "roomBoundary"  		 
 		var NumStep     = 0
-		   
+		var Myself      = myself   
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("&&&  boundarywalker ACTIVE ...")
+						 kotlinCode.pathexecutil.register(myself)  
+						 kotlinCode.pathexecutil.createSonarObserver(scope)  
 					}
 					 transition(edgeName="t00",targetState="work",cond=whenDispatch("start"))
 				}	 
@@ -50,7 +52,7 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 				state("doAheadMove") { //this:State
 					action { //it:State
 						delay(300) 
-						 kotlinCode.pathexecutil.doMove("p",myself)  
+						kotlinCode.pathexecutil.doMove(myself ,"p" )
 						updateResourceRep( "moving"  
 						)
 					}
@@ -74,12 +76,12 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 						)
 						if(  ! itunibo.planner.plannerUtil.atHome()  
 						 ){itunibo.planner.plannerUtil.wallFound(  )
-						 kotlinCode.pathexecutil.doMove("l",myself)  
+						kotlinCode.pathexecutil.doMove(myself ,"l" )
 						itunibo.planner.plannerUtil.updateMap( "l"  )
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
 						}
 						else
-						 { kotlinCode.pathexecutil.doMove("l",myself)  
+						 {kotlinCode.pathexecutil.doMove(myself ,"l" )
 						 itunibo.planner.plannerUtil.updateMap( "l"  )
 						 }
 					}

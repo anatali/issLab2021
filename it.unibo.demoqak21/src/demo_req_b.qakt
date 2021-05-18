@@ -4,13 +4,12 @@ System -msglog /* -trace */ demo_req_b
 	//tcp://test.mosquitto.org
 	//mqtt.fluux.io
 	//"tcp://broker.hivemq.com" 
-
+ 
 //mqttBroker "broker.hivemq.com" : 1883
-
+ 
 Request r1 : r1(X)
 Request r2 : r2(X)
 Reply   a1 : a1(X) 
-  
 
 Context ctxdemoreqb ip [host="localhost" port=8014]    //for first run (debug)
 //Context ctxcallerb ip [host="localhost" port=8076]  
@@ -22,9 +21,9 @@ QActor callerb context ctxdemoreqb {
 		request calledb -m r1 : r1(10)
 		delay 1000
 		request calledb -m r1 : r1(20)
-	}
+	}  
 	Goto work 
-	
+	 
 	State work{
 		//println("	callerb work")
 	}

@@ -18,8 +18,8 @@ QActor walkersonar context ctxWalkerSonar{
 	Goto doWork
 	
 	State doWork{
-		 
-	}
+		   
+	} 
 	Transition t0  whenEvent sonar -> handleSonar
 
 	State handleSonar{

@@ -649,7 +649,47 @@ Nuovo materiale:
 <tr><td><em>Week 14</em></td><td></td><td></td></tr>    
     
 <tr><td><m>18/05/2021 (11-13)</m></td><td>ON LINE</td> 
+<td>
+<ol>
+<li>I modelli (eseguibili) come strumento organizzativo nell'ambito di 
+<a href="../../it.unibo.issLabStart/userDocs/72939LabISSIntro.html#aboutSoftwareDevelop" target="web">processi di sviluppo agili </a> 
+(ad esempio <a href="../../it.unibo.issLabStart/userDocs/72939LabISSIntro.html#agile" target="web">SCRUM</a>) 
+</li>
+<li>I modelli (eseguibili) come orchestratori di alto livello di operazioni low-level. Esempi:
+<pre>
+[# kotlin code #]
+<k>run</k>  resources.it.unibo.bls.devices.gui.LedAsGui.create( )
+<k>qrun</k> resources.bls.kotlin.buttonEventEmitter.create( <ks>myself</ks>, "clickOnOff")
+<k>machineExec</k> "\"sudo bash led25GpioTurnOn.sh\""
+</pre>
+</li>
+<li>L'interazione come elemento-chiave per impostare l'architettura (logica) di un sistema.
+I casi di studio es0, es1, es2, es3</li>
+<li>Non solo dispatch/request ma anche 
+<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#events" target="web">Events (qak)</a> 
+e
+<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#eventRules" target="web">Event propagation rules (qak)</a>.
+Il caso <a href="../../it.unibo.qakDistribResource/src/resource.qak" target="web">resource.qak</a>
+con uso di MQTT: <em>ResourceCallerMqtt.ipynb</em> in project <a href="../../it.unibo.qakDistrib" target="code">it.unibo.qakDistrib</a>.
 
+</li>
+<li>I <em>sonar</em> come emettirori di eventi: il caso WEnv:
+<a href="../../it.unibo.qakDemo/userDocs/LabQakDemo2021.html" target="web">LabIss | Explorer with QActor</a>.
+
+
+ </li>
+<li>Applicazine al caso di studio  boundaryWalker</li>
+<li>La dimensione architetturale:
+<a href="../../it.unibo.issLabStart/userDocs/Architectures.html" target="web">LABISS2021 | Software Architectures </a>
+e le architetture esagonali:
+<a href="../../webspring.intro/userDocs/LabArchitectures.html" target="web">LabArchitectures | From MVC to Hexagonal architectures</a>
+</li>
+<li>Applicazione nel mondo reale: sperimentazioni su RaspberryPi: il progetto
+<a href="../../it.unibo.rasp2021" target="code">it.unibo.rasp2021</a>
+
+</li>
+</ol>
+ 
 <br/>
 
 <td>

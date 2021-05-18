@@ -63,11 +63,11 @@ lateinit var  owner:  String
 			master.autoMsg("pathdone","pathtodo($curPath)")
 			//println("!!!!!!!!!!! SEND pathdone to OWNER=$owner" )
 		}else{
-			doMove(move, master)
+			doMove(master, move)
 		}
 	} 
 
-	suspend fun doMove(moveTodo: String, master: ActorBasicFsm){
+	suspend fun doMove(master: ActorBasicFsm, moveTodo: String ){
 		//println("pathexecutil | doMove moveTodo=$moveTodo")
 		val MoveAnsw = kotlinCode.CallRestWithApacheHTTP.doMove(moveTodo)
 		//println("pathexecutil | doMove $moveTodo MoveAnsw=$MoveAnsw")

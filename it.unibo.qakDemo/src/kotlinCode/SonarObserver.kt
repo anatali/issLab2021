@@ -13,17 +13,16 @@ class SonarObserver(name: String, scope:CoroutineScope   )
 
 	
     override protected suspend fun handleInput(msg : ApplMessage){
-		//println("SonarObserver | msg=$msg")
+		println("SonarObserver | msg=$msg")
   		val master = pathexecutil.master
         var msgJsonStr = msg.msgContent 
         val msgJson    = JSONObject(msgJsonStr)
         if( msgJson.has("distance")){
             val distance   = msgJson.getInt("distance").toString()
-            //println("$name  | msgJson=$msgJson  distance=$distance master=$master"  )
-
+            println("$name  | msgJson=$msgJson  distance=$distance master=${master.name} ------------- "  )
             val event      = MsgUtil.buildEvent("wenv", "sonar", "distance($distance)" )
 
-            master.emit(event, true)	//sometimes gives java.lang.ArrayIndexOutOfBoundsException
+            //master.emit(event, true)	//sometimes gives java.lang.ArrayIndexOutOfBoundsException
         }
 
     }

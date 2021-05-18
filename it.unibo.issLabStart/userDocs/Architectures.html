@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 700px;
+    font-size: 15px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #C0F0E0;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>Software Architectures</title></head>
+    
+<body>
+<div id="top">
+<h1>LABISS2021 |  Software Architectures<font size="5"></font> </h1>
+ </div>  
+
+
+<div class="body"> 
+<h2>Introduction</h2>
+
+<ol>
+<li>Big Ball of Mud 122 52<br/>
+<center><img src="./img/Architectures/bigballofmud.png" alt="bigballofmud.png" width="40%" height="40%"></center>
+ 
+</li>
+<li>Client-Server 124 <br/>
+<center><img src="./img/Architectures/clientServer3Tier.png" alt="clientServer3Tier.png" width="40%" height="40%"></center>
+ 
+
+</li>
+<li><h4>Monolithic</h4> </li>
+<li>Layers 135<br/>
+<center><img src="./img/Architectures/layered.png" alt="layered.png" width="40%" height="40%"></center>
+</li>
+<li>Pipeline 145<br/>
+<center><img src="./img/Architectures/pipline.png" alt="pipline.png" width="70%" height="70%"></center>
+ 
+</li>
+<li>Microkernel 151 58<br/>
+<center><img src="./img/Architectures/microkernel.png" alt="microkernel.png" width="50%" height="50%"></center>
+ 
+</li>
+<li><h4>Distributed 126</h4> </li>
+<li>Service-based 163<br/>
+<center><img src="./img/Architectures/service-based.jpg" alt="service-based.jpg" width="60%" height="60%"></center>
+
+</li>
+<li>Event-driven 179 60<br/>
+ <center> broker <img src="./img/Architectures/event-driven-broker.png" alt="event-driven-broker.png" width="50%" height="50%"></center>
+ <center> mediator <img src="./img/Architectures/event-driven-mediator.png" alt="event-driven-mediator.png" width="50%" height="50%"></center> 
+</li>
+<li>Space-based 211 63 (mediator?)<br/>
+<center>  <img src="./img/Architectures/Space_based_architecture.gif" alt="Space_based_architecture.gif" width="60%" height="60%"></center>
+
+
+</li>
+<li>Service-oriented 235 65<br/>
+<center>  <img src="./img/Architectures/soa-esb.png" alt="soa-esb.png" width="60%" height="60%"></center>
+</li>
+
+<li>Microservices 245 68<br/>
+<center>  <img src="./img/Architectures/microservicelayered.png" alt="microservicelayered.png" width="60%" height="60%"></center>
+<center>  <img src="./img/Architectures/microservices.png" alt="microservices.png" width="60%" height="60%"></center>
+</li>
+
+<li>Hexagonal<br/>
+<center>  <img src="./img/Architectures/hexArchitectureInKotlin.svg" alt="hexArchitectureInKotlin.svg" width="60%" height="60%"></center>
+<!--
+https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/comment-page-1/
+https://cloudnative.ly/hexagonal-architecture-534d2c425360
+https://hexagonkt.com/
+-->
+</li>
+
+</li>
+<li>Subsumption<br/>
+<center>  <img src="./img/Architectures/Subsumption_Architecture_Abstract_Diagram.png" alt="Subsumption_Architecture_Abstract_Diagramg.png" width="80%" height="60%"></center>
+<center>  <img src="./img/Architectures/Subsumption_ArchitectureRobotic.gif" alt="Subsumption_ArchitectureRobotic.gif" width="80%" height="60%"></center>
+
+<!-- https://sites.google.com/site/aithroughrobotics/home/subsumption-architecture -->
+</li>
+
+<li>IOT<br/>
+<center>  <img src="./img/Architectures/iot0.png" alt="iot0.png" width="80%" height="60%"></center>
+
+ 
+
+
+</li>
+<!--
+<li><h4>BEA 73 why?</h4></li>
+<li>Baas 76</li>
+<li>Faas 77 AWS</li>
+-->
+</ol>
+
+<!--
+
+<h2>Appunti</h2>
+<ol>
+<li>Parto dal problema a dalla analisi con l'obiettivo di formalizzare TestPlans</li>
+<li>Parlo di sistemi software e quindi di componenti e loro organizzazione</li>
+<li>Capisco che ci sono bias nel modo di pensare e che un problema (o la logica/esperienza) suggerisce 
+forme di organizzazione non pienamente catturate dai linguaggi di programmazione disponibili</li>
+<li>Occorre parlare di struttura, interazione e comportamento delle parti (dei componenti) e del tutto (del sistema)
+riconoscendo che non sempre le propreità del tutto sono riconducibili alle proprietà delle parti.
+Il modo di interconnettere e di interoperare i componenti fa 'emergere' nuove proprietà.</li>
+<li>I sistemi software sono utili perchè svolgono funzioni. Lo possono fare 'su richiesta' di enti esterni a loro
+oppure perchè capaci di comportamento autonomo, come ad esempio il sistema di controllo di un robot.</li>
+<li>I sistemi vengon progettati e costruiti da noi, e potrebbero possedere anche proprietà 'auto-organizzanti'
+ed essere capaci di replicazione. Ricerche nel campo della AI e della Biologia cercano di capire come
+sistemi possano auto-costruirsi in base alle leggi fisiche conosciute e a 'eventi' capaci di creare
+strutture composte (complesse) a partire da parti più semplici.
+ 
+<div class="remark"> 
+ There are no separate systems. The world is a continuum. Where to draw a boundary around a system depends on the purpose of the discussion.
+Donella H. Meadows B8 
+</div>
+</li>
+
+<li>A noi interessa costruire sistemi capaci di soddisfare requisiti epressi in linguaggio naturale e organizzati in modo 
+da potere essere (facilmente) modificati (estesi), manutenuti e deployed. 
+Un ruolo fondamentale è svolto dalla Architettura del sistema in un ecosistema di software development in rapida evoluzione. 
+
+<div class="remark">
+An architect is expected to define the architecture decisions and design principles used to guide technology decisions
+within a software development team.
+</div>
+</li>
+
+<li>La definizione della architettura più appropriata di un sistema è sempre legata ad una accurata analisi del problema
+ed è sempre il risulato di un compromesso. 
+	<div class="remark">
+	<ul>
+	<li>Architecture is about the important stuff ... whatever that is (Ralph Johson) 1</li>
+	<li>Everything in software architecture is a trade-off. (First law of Software Architecture) 18</li>
+	<li><ks>Why</ks> is more important than <ks>how</ks>. (Second law of Software Architecture) 18</li>
+	<li>The architecture for a software system arises from the combinations of requriments and additional concerns 
+	(Auditability, Performance, Security, Legality, Scalability ...) each protected by <k>fitness functions</k> B10
+	(objective functions used to summarize how close a design solution is to achieving the set aims)</li>
+	<li>All architecture become iterative becuase of <ks>unknown of unknowns</ks>. 
+	What we need today is an <ks>Evolutionary Architecture</ks>. 15 The evolvability is a meta-characteristic that protects  all
+	the other architectural characteristics, to ensure they <ks>don't erode</ks> B6.</li>
+	<li>An Evolutionary Architecture supports guided, incremental changes across multiple dimensions B25
+	including <k>-ilities</k> B 2 and broader (Technical, Data, Security, Operational B9)</li>
+	<li>The software development ecosystem (tools, frameworks, prectices, ..) forms a <k>dynamic equilibrium</k> B4 - much like a
+	biological system.</li>
+	<li>The <k>Continuos Delivery</k> and <k>DevOps</k> movements added a new factor in the dynamic equilibrium. B73</li>
+
+	<li>To build evolvable software systems, architets must think <ks>beyond just the technical</ks> architecture.
+
+	</ul>
+
+</div>  
+
+<h2>References</h2>
+<ul>
+<li>10 Common Software Architectural Patterns in a nutshell 
+<br/>
+https://towardsdatascience.com/10-common-software-architectural-patterns-in-a-nutshell-a0b47a1e9013</li>
+<li>
+What Is Service-Oriented Architecture?<br/>
+https://medium.com/@SoftwareDevelopmentCommunity/what-is-service-oriented-architecture-fa894d11a7ec</li>
+<li>
+Space-based architecture<br/>
+https://en.wikipedia.org/wiki/Space-based_architecture
+</li>
+<li>Microservices vs. service-oriented architecture<br/>
+https://www.oreilly.com/radar/microservices-vs-service-oriented-architecture/<br/>
+https://www.slideshare.net/pintux/parliamo-di-soa
+</li>
+<li>
+mictroservices<br/>
+https://dzone.com/articles/top-5-microservices-architecture-and-design-best-p
+</li>
+<li>From Big Ball of Mud to Emergent Design<br/>
+http://www.mamuz.de/article/from-big-ball-of-mud-to-emergent-design/0Pw682Kxk
+</li>
+<li></li>
+</ul>
+
+-->
+<br/><br/>
+</div>
+ </li>
+</ol>
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+</body>
+</html>
