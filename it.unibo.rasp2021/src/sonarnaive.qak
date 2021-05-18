@@ -1,0 +1,37 @@
+/*
+ * ----------------------------------------------------------------------
+ * ----------------------------------------------------------------------
+ */
+
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+
+System -msglog  sonarnaive  
+mqttBroker "broker.hivemq.com" :  1883 eventTopic "unibo/nat/sonar/events"
+
+Dispatch sonarstart         : sonarstart(V)  
+Event    sonarRobot 		: sonar( V )   //emitted by rx.sonarSimulator or sensors.sonarHCSR04SupportActor	
+
+Context ctxsonar ip [host="localhost" port=8068] 	 	 
+CodedQActor sonardatasource context ctxsonar className "resources.rasp.sonar.sonarHCSR04Support2021"
+
+QActor sonar context ctxsonar {     
+[#  #]
+ 	State s0 initial {  		 
+ 		discardMsg On		//
+ 		//run rasp.sonar.sonarHCSR04Support2021("sonarHCSR04Support2021")  	 
+ 		forward sonardatasource -m sonarstart : sonarstart(ok)
+  		println("sonar started")  
+  	}  
+  	  	Transition t0  whenEvent sonarRobot -> handleEvent  
+					  
+ 	
+  	State handleEvent{
+  		printCurrentMessage
+  	}
+   	Transition t0 whenEvent sonarRobot -> handleEvent
+ }
+

@@ -98,11 +98,12 @@ compileTestKotlin {
 
 sourceSets {
     main.java.srcDirs += 'src'
-    //main.java.srcDirs += 'resources'
-    test.java.srcDirs += 'test.kt'		//test.kt is specific
+    main.java.srcDirs += 'resources'
+    //test.java.srcDirs += 'test.kt'		//test.kt is specific
 }
  
-mainClassName = 'it.unibo.ctxblses1.MainCtxblses1Kt'
+//mainClassName = 'it.unibo.ctxblses1.MainCtxblses1Kt'
+mainClassName = 'it.unibo.ctxsonar.MainCtxsonarKt'
 
 jar {
     println("executing jar")

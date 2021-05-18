@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+	width: 90%;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 90%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>LabSonar_2020</title></head>
+    
+<body>
+<div id="body">
+<h1>Lab ISS2021 | Raspberry basic demo<font size="5"></font> </h1>
+
+  
+<center><table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:40%">
+<h3><a href="../src/blses1_onoff.qak">blses1_onoff.qak</a></h3> 
+</td>
+<td> 
+<img src="./img/wotBook.jpg" alt="wotBook" width="40%"  /><br/>
+</td>
+</tr>
+
+<tr>
+<td>
+<h3><a href="../src/sonarnaive.qak">sonarnaive.qak</a></h3> 
+
+</td>
+<td> 
+<h4>Deployoment</h4>
+<ol>
+<li>
+<pre>
+mainClassName = <ks>'it.unibo.ctxsonar.MainCtxsonarKt'</ks>	<kc>//in <a href="../build2021.gradle">build2021.gradle</a></kc>
+gradle  -b build2021.gradle distZip		<kc>//create distribution</kc>
+</pre>
+
+</li>
+<li>copy the distribution <ks>it.unibo.rasp2021-1.0.zip</ks> on Rasp and unzip </li>
+<li><pre>cd <k>it.unibo.rasp2021-1.0/bin</k></k></li>
+<li>copy <a href="../resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> into <k>bin</k> </li>
+<li>copy <a href="../sonarnaive.pl" target="code">sonarnaive.pl</a> into <k>bin</k> </li>
+<li>copy <a href="../sysRules.pl" target="code">sysRules.pl</a> into <k>bin</k> </li>
+<li><pre>g++  SonarAlone.c -l wiringPi -o  SonarAlone	<kc>//compile</kc>
+./SonarAlone 					<kc>//check</kc></pre>  
+</li>
+<li><pre>bash it.unibo.rasp2021			<kc>//run</kc></pre>	 </li>
+</ol> 
+</td>
+</tr>
+
+ </table>
+</center>
+
+ 
+
+
+<br/><br/>
+</div>  
+
+ 
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>
+
+
+<!--
+A ddr robot  equipped with a <tt>HC-SR04</tt> sonar device on its front can be considered as an autonomous agent, able to produce sonar data
+that can be consumed by some other (remote) agent.
+In this section, our consumer will be a device able to show to data on a <tt>GUI</tt>, like the 'radar' made available (as a plain object) by the project
+<i>it.unibo.java.radar</i>.
+
+<center><img src="./img/robotRadar.png" alt="robotRadar" width="50%"  /></center>
+
+<h2>Handling the sonar</h2> 
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><a href="../src/kotlincode/sonarOnRasp.kt" target="code">sonarOnRasp.kt</a></td>
+<td><m>An object written in Kotlin that 
+<li>starts <a href="../resources/sensors/SonarAlone.c" target="code">SonarAlone.c</a></li>
+<li>reads sonar data from the standard input</li>
+<li>writes sonar data on the standard output</li>
+</m>  </td>
+</tr>
+</tbody>
+</table>
+
+
+
+<br/>
+
+<h2 id="problemrr">The interaction robot-radar</h2>
+
+The project <i>it.unibo.java.radar</i> deploys the library <tt>radarPojo.jar</tt>  that provides an object utility to create
+a radar-GUI and to show values on that GUI:
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.java.radar/src/radarPojo/radarSupport.java" target="code">
+radarSupport.java</a>.
+<br/><br/>
+In a bottom-up approach, the software designer must find a way to make the radar able to receive the sonar data produced by the robot. Thus the designer
+must face two problems:
+
+<ol>
+<li>Find a way to transmit data from the robot to the radar.</li>
+<li>Build a new radar component able to receive data and to display them by using the available 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.java.radar/src/radarPojo/radarSupport.java" target="code">
+radarSupport.java</a></li>
+
+</ol>
+
+The picture below (left part) shows two main integration strategies:
+
+<ol>
+<li>The use of a two-way point-to-point communication protocol (e.g. TCP/UDP/etc.). </li>
+<li>The use of a middleware, for example a MQTT broker or a CoAP resource.</li>
+</ol>
+
+The right part of the picture is a possible step towards a more high-level way of reasoning, based on a custom set
+of communication-pattern names (dispatch, request, event). The intent id to capture (or better to express) the <k>logic</k> of the
+interaction between the robot and the radar, rather than the particular low-level technology that makes such an interaction possible.
+<br/><br/>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/robotAsDataSource.png" alt="robotAsDataSource" width="100%"  /></td>
+<td> <img src="./img/robotAsDataSourceConceptual.png" alt="robotAsDataSourceConceptual" width="100%"  /></td>
+</tr>
+</tbody>
+</table>
+<br/>
+In the following, we will base our low-level communication technology on the CoAP RESTful protocol and on the concept of (CoaP)<k>resource</k>.
+ 
+
+
+<h2>CoAP-based interaction </h2>
+
+Let us start from the basic principles and concepts of interaction among distributed agents related to the Constrained Application Protocol
+reported in 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.coapintro/userDocs/LabCoAP.html" target="lab">
+LabCoAP | Introduction to CoAP</a>.
+<br/><br/>
+Since REST is a <em>resource-oriented architecture</em>,at the center of our system,  there is now the <k>CoapResource</k>
+(<a href="../src/javacode/Resource.java" target="code">Resource.java</a>) defined as follows:
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<pre>
+public class Resource extends CoapResource {
+...
+}
+	public static void main(String[] args) {
+		CoapServer server = new CoapServer();
+		server.add( 
+				new Resource("robot").add(
+					new Resource("sonar") )
+		);
+		server.start();
+	}
+
+</pre>
+
+</td>
+
+<td>The device has <tt>robot</tt> as root and <tt>sonar</tt> as its sensor resource:
+<img src="./img/urlExample.png" alt="urlExample" width="100%"  /><br/><br/>
+
+ 
+</td>
+<m></m>
+</tr>
+</table>
+
+ 
+
+This resource allows us to acquire sonar data in RESTful way, by using the CoAP protocol.
+For example:
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<pre>
+CoapClient client = new CoapClient();
+String uriStr     = "coap://localhost:5683/robot/sonar";
+client.setURI( uriStr );
+CoapResponse respGet = client.get();
+String sonarData = respGet.getResponseText()
+</pre>
+
+</td>
+<td></td>
+</tr>
+</table>
+-->
