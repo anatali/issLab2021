@@ -6,6 +6,7 @@ import org.eclipse.californium.core.CoapServer;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import it.unibo.kactor.ApplMessage;
+import radarPojo.radarSupport;
  
 
 class SonarDataHandler implements CoapHandler {
@@ -16,7 +17,7 @@ class SonarDataHandler implements CoapHandler {
 		 ApplMessage m = new ApplMessage( msg );
 		 //System.out.println("SonarDataHandler " + m.msgContent());	//sonar(d)
 		 String distance = ((Struct) Term.createTerm(m.msgContent())).getArg(0).toString();
-		 radarPojo.radarSupport.update(distance,"0");
+		 radarSupport.update(distance,"0");
   	}					
 	@Override public void onError() {
 		System.err.println("SonarDataHandler  |  FAILED (press enter to exit)");

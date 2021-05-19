@@ -6,6 +6,9 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.ApplMessageType;
+
 
 class MyHandler implements CoapHandler {
 	public MyHandler ( ) {		 
@@ -47,7 +50,11 @@ private CoapObserveRelation relation = null;
 	}
 
 	public boolean updateResource( String msg ) {
-		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
+     	ApplMessage m = new ApplMessage(
+	        "sonar", ApplMessageType.event.toString(),
+        	"sonarRasp", "none", "sonar("+msg+")", "1" , null);
+
+		CoapResponse resp = client.put(m.toString(), MediaTypeRegistry.TEXT_PLAIN);
 //			if( resp != null ) System.out.println("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());	
 //			else System.out.println("CoapSupport | updateResource FAILURE: "  );
 		return resp != null;
@@ -55,8 +62,8 @@ private CoapObserveRelation relation = null;
 	
 	
 	public void test() {
-		//String v = readResource();
-		//System.out.println("   CoapSupport | v=" + v);
+		String v = readResource();
+		System.out.println("   CoapSupport | v=" + v);
 		updateResource("23");
 //		v = readResource();
 //		System.out.println("   CoapSupport | v=" + v);		

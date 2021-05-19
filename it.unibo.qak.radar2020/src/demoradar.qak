@@ -1,7 +1,7 @@
 System demoradar
 
 Context ctxdemoradar ip [ host= "localhost"   port= 8039 ]  
-
+ 
 QActor demoradargui context ctxdemoradar{ 
 	
 	State s0 initial{ 
