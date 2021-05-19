@@ -1,0 +1,200 @@
+2021-05-19 12:14:07 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2021\qakDemo\it.unibo.radarresource\Californium.properties
+2021-05-19 12:14:07 INFO  CoapServer:207 - Starting server
+2021-05-19 12:14:07 INFO  CoapServer:212 - no endpoints have been defined for server, setting up server endpoint on default port 5683
+2021-05-19 12:14:07 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 12:14:07 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 12:14:07 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 12:14:07 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 12:14:07 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 12:14:07 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:5683, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 12:14:07 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:5683
+2021-05-19 12:14:17 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2021\qakDemo\it.unibo.radarresource\Californium.properties
+2021-05-19 12:14:17 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 12:14:17 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 12:14:17 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 12:14:17 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 12:14:17 INFO  CoapEndpoint:452 - Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2021-05-19 12:14:17 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 12:14:17 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:52775, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 12:14:17 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:52775
+2021-05-19 12:14:17 INFO  EndpointManager:140 - created implicit endpoint coap://0.0.0.0:52775 for coap
+2021-05-19 12:14:17 INFO  CoapResource:722 - successfully established observe relation between /127.0.0.1:52775#[cb79a5e928fc5b90] and resource /robot/sonar (Exchange[R1], size 1)
+2021-05-19 12:15:19 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:52775#[cb79a5e928fc5b90] and resource /robot/sonar (new Exchange[R2], size 1)
+2021-05-19 12:18:49 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2021\qakDemo\it.unibo.radarresource\Californium.properties
+2021-05-19 12:18:49 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 12:18:49 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 12:18:49 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 12:18:49 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 12:18:49 INFO  CoapEndpoint:452 - Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2021-05-19 12:18:49 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 12:18:49 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:56078, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 12:18:49 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:56078
+2021-05-19 12:18:49 INFO  EndpointManager:140 - created implicit endpoint coap://0.0.0.0:56078 for coap
+2021-05-19 12:18:49 INFO  CoapResource:722 - successfully established observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (Exchange[R5], size 2)
+2021-05-19 12:19:51 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (new Exchange[R6], size 2)
+2021-05-19 12:20:53 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (new Exchange[R7], size 2)
+2021-05-19 12:21:59 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (new Exchange[R9], size 2)
+2021-05-19 12:23:01 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (new Exchange[R10], size 2)
+2021-05-19 12:24:03 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (new Exchange[R11], size 2)
+2021-05-19 12:25:05 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:56078#[75a5d71520ef86f1] and resource /robot/sonar (new Exchange[R12], size 2)
+2021-05-19 12:25:35 WARN  CoapClient:1377 - exception while handling response
+java.lang.ClassCastException: alice.tuprolog.Int cannot be cast to alice.tuprolog.Struct
+	at javacode.DataHandler.handleAsApplMessage(ResourceObserverRadar.java:14)
+	at javacode.DataHandler.onLoad(ResourceObserverRadar.java:21)
+	at org.eclipse.californium.core.CoapClient$ObserveMessageObserverImpl.deliver(CoapClient.java:1446)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl$1.run(CoapClient.java:1375)
+	at org.eclipse.californium.core.CoapClient.execute(CoapClient.java:1223)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl.succeeded(CoapClient.java:1371)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl.onResponse(CoapClient.java:1361)
+	at org.eclipse.californium.core.CoapClient$Adapter.onNotification(CoapClient.java:1327)
+	at org.eclipse.californium.core.network.CoapEndpoint$NotificationDispatcher.onNotification(CoapEndpoint.java:696)
+	at org.eclipse.californium.core.network.BaseMatcher$2.onResponse(BaseMatcher.java:240)
+	at org.eclipse.californium.core.coap.Request.setResponse(Request.java:701)
+	at org.eclipse.californium.core.network.EndpointManager$ClientMessageDeliverer.deliverResponse(EndpointManager.java:272)
+	at org.eclipse.californium.core.network.stack.BaseCoapStack$StackTopAdapter.receiveResponse(BaseCoapStack.java:170)
+	at org.eclipse.californium.core.network.stack.AbstractLayer.receiveResponse(AbstractLayer.java:86)
+	at org.eclipse.californium.core.network.stack.ObserveLayer.receiveResponse(ObserveLayer.java:157)
+	at org.eclipse.californium.core.network.stack.BlockwiseLayer.receiveResponse(BlockwiseLayer.java:679)
+	at org.eclipse.californium.core.network.stack.ReliabilityLayer.receiveResponse(ReliabilityLayer.java:286)
+	at org.eclipse.californium.core.network.stack.AbstractLayer.receiveResponse(AbstractLayer.java:86)
+	at org.eclipse.californium.core.network.stack.BaseCoapStack.receiveResponse(BaseCoapStack.java:104)
+	at org.eclipse.californium.core.network.CoapEndpoint$InboxImpl$3.runStriped(CoapEndpoint.java:953)
+	at org.eclipse.californium.core.network.StripedExchangeJob.run(StripedExchangeJob.java:65)
+	at eu.javaspecialists.tjsn.concurrency.stripedexecutor.StripedExecutorService$SerialJob.run(StripedExecutorService.java:548)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(Unknown Source)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2021-05-19 12:26:07 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2021\qakDemo\it.unibo.radarresource\Californium.properties
+2021-05-19 12:26:07 INFO  CoapServer:207 - Starting server
+2021-05-19 12:26:07 INFO  CoapServer:212 - no endpoints have been defined for server, setting up server endpoint on default port 5683
+2021-05-19 12:26:07 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 12:26:07 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 12:26:07 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 12:26:07 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 12:26:07 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 12:26:07 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:5683, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 12:26:07 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:5683
+2021-05-19 12:26:14 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2021\qakDemo\it.unibo.radarresource\Californium.properties
+2021-05-19 12:26:15 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 12:26:15 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 12:26:15 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 12:26:15 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 12:26:15 INFO  CoapEndpoint:452 - Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2021-05-19 12:26:15 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 12:26:15 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:57985, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 12:26:15 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:57985
+2021-05-19 12:26:15 INFO  EndpointManager:140 - created implicit endpoint coap://0.0.0.0:57985 for coap
+2021-05-19 12:26:15 INFO  CoapResource:722 - successfully established observe relation between /127.0.0.1:57985#[c3bd7b66d25c6587] and resource /robot/sonar (Exchange[R1], size 1)
+2021-05-19 12:26:38 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2021\qakDemo\it.unibo.radarresource\Californium.properties
+2021-05-19 12:26:38 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 12:26:38 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 12:26:38 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 12:26:38 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 12:26:38 INFO  CoapEndpoint:452 - Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2021-05-19 12:26:38 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 12:26:38 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:57986, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 12:26:38 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:57986
+2021-05-19 12:26:38 INFO  EndpointManager:140 - created implicit endpoint coap://0.0.0.0:57986 for coap
+2021-05-19 12:26:38 INFO  CoapResource:722 - successfully established observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (Exchange[R2], size 2)
+2021-05-19 12:26:54 WARN  CoapClient:1377 - exception while handling response
+java.lang.ClassCastException: alice.tuprolog.Int cannot be cast to alice.tuprolog.Struct
+	at javacode.DataHandler.handleAsApplMessage(ResourceObserverRadar.java:14)
+	at javacode.DataHandler.onLoad(ResourceObserverRadar.java:21)
+	at org.eclipse.californium.core.CoapClient$ObserveMessageObserverImpl.deliver(CoapClient.java:1446)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl$1.run(CoapClient.java:1375)
+	at org.eclipse.californium.core.CoapClient.execute(CoapClient.java:1223)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl.succeeded(CoapClient.java:1371)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl.onResponse(CoapClient.java:1361)
+	at org.eclipse.californium.core.CoapClient$Adapter.onNotification(CoapClient.java:1327)
+	at org.eclipse.californium.core.network.CoapEndpoint$NotificationDispatcher.onNotification(CoapEndpoint.java:696)
+	at org.eclipse.californium.core.network.BaseMatcher$2.onResponse(BaseMatcher.java:240)
+	at org.eclipse.californium.core.coap.Request.setResponse(Request.java:701)
+	at org.eclipse.californium.core.network.EndpointManager$ClientMessageDeliverer.deliverResponse(EndpointManager.java:272)
+	at org.eclipse.californium.core.network.stack.BaseCoapStack$StackTopAdapter.receiveResponse(BaseCoapStack.java:170)
+	at org.eclipse.californium.core.network.stack.AbstractLayer.receiveResponse(AbstractLayer.java:86)
+	at org.eclipse.californium.core.network.stack.ObserveLayer.receiveResponse(ObserveLayer.java:157)
+	at org.eclipse.californium.core.network.stack.BlockwiseLayer.receiveResponse(BlockwiseLayer.java:679)
+	at org.eclipse.californium.core.network.stack.ReliabilityLayer.receiveResponse(ReliabilityLayer.java:286)
+	at org.eclipse.californium.core.network.stack.AbstractLayer.receiveResponse(AbstractLayer.java:86)
+	at org.eclipse.californium.core.network.stack.BaseCoapStack.receiveResponse(BaseCoapStack.java:104)
+	at org.eclipse.californium.core.network.CoapEndpoint$InboxImpl$3.runStriped(CoapEndpoint.java:953)
+	at org.eclipse.californium.core.network.StripedExchangeJob.run(StripedExchangeJob.java:65)
+	at eu.javaspecialists.tjsn.concurrency.stripedexecutor.StripedExecutorService$SerialJob.run(StripedExecutorService.java:548)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(Unknown Source)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2021-05-19 12:27:56 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R4], size 2)
+2021-05-19 12:27:56 WARN  CoapClient:1377 - exception while handling response
+java.lang.ClassCastException: alice.tuprolog.Int cannot be cast to alice.tuprolog.Struct
+	at javacode.DataHandler.handleAsApplMessage(ResourceObserverRadar.java:14)
+	at javacode.DataHandler.onLoad(ResourceObserverRadar.java:21)
+	at org.eclipse.californium.core.CoapClient$ObserveMessageObserverImpl.deliver(CoapClient.java:1446)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl$1.run(CoapClient.java:1375)
+	at org.eclipse.californium.core.CoapClient.execute(CoapClient.java:1223)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl.succeeded(CoapClient.java:1371)
+	at org.eclipse.californium.core.CoapClient$MessageObserverImpl.onResponse(CoapClient.java:1361)
+	at org.eclipse.californium.core.coap.Request.setResponse(Request.java:701)
+	at org.eclipse.californium.core.network.EndpointManager$ClientMessageDeliverer.deliverResponse(EndpointManager.java:272)
+	at org.eclipse.californium.core.network.stack.BaseCoapStack$StackTopAdapter.receiveResponse(BaseCoapStack.java:170)
+	at org.eclipse.californium.core.network.stack.AbstractLayer.receiveResponse(AbstractLayer.java:86)
+	at org.eclipse.californium.core.network.stack.ObserveLayer.receiveResponse(ObserveLayer.java:157)
+	at org.eclipse.californium.core.network.stack.BlockwiseLayer.receiveResponse(BlockwiseLayer.java:679)
+	at org.eclipse.californium.core.network.stack.ReliabilityLayer.receiveResponse(ReliabilityLayer.java:286)
+	at org.eclipse.californium.core.network.stack.AbstractLayer.receiveResponse(AbstractLayer.java:86)
+	at org.eclipse.californium.core.network.stack.BaseCoapStack.receiveResponse(BaseCoapStack.java:104)
+	at org.eclipse.californium.core.network.CoapEndpoint$InboxImpl$3.runStriped(CoapEndpoint.java:953)
+	at org.eclipse.californium.core.network.StripedExchangeJob.run(StripedExchangeJob.java:65)
+	at eu.javaspecialists.tjsn.concurrency.stripedexecutor.StripedExecutorService$SerialJob.run(StripedExecutorService.java:548)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(Unknown Source)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2021-05-19 12:29:12 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R8], size 2)
+2021-05-19 12:30:14 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R9], size 2)
+2021-05-19 12:31:16 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R10], size 2)
+2021-05-19 12:32:18 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R11], size 2)
+2021-05-19 12:33:20 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R12], size 2)
+2021-05-19 12:34:22 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R13], size 2)
+2021-05-19 12:35:24 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R14], size 2)
+2021-05-19 12:36:26 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R15], size 2)
+2021-05-19 12:37:29 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R16], size 2)
+2021-05-19 12:38:31 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R17], size 2)
+2021-05-19 12:39:33 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R18], size 2)
+2021-05-19 12:40:35 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R19], size 2)
+2021-05-19 12:41:37 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R20], size 2)
+2021-05-19 12:42:39 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R21], size 2)
+2021-05-19 12:43:41 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R22], size 2)
+2021-05-19 12:44:43 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:57986#[a3d62f9d93693a86] and resource /robot/sonar (new Exchange[R23], size 2)
+2021-05-19 15:29:58 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2018Work\iss2020Lab\it.unibo.radarresource\Californium.properties
+2021-05-19 15:29:58 INFO  CoapServer:207 - Starting server
+2021-05-19 15:29:58 INFO  CoapServer:212 - no endpoints have been defined for server, setting up server endpoint on default port 5683
+2021-05-19 15:29:59 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 15:29:59 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 15:29:59 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 15:29:59 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 15:29:59 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 15:29:59 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:5683, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 15:29:59 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:5683
+2021-05-19 15:30:11 INFO  NetworkConfig:372 - loading properties from file C:\Didattica2018Work\iss2020Lab\it.unibo.radarresource\Californium.properties
+2021-05-19 15:30:11 INFO  RandomTokenGenerator:55 - using tokens of 8 bytes in length
+2021-05-19 15:30:11 INFO  CoapEndpoint:423 - CoapEndpoint uses udp plain
+2021-05-19 15:30:11 INFO  BlockwiseLayer:207 - BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000 and MAX_RESOURCE_BODY_SIZE=8192
+2021-05-19 15:30:11 INFO  ReliabilityLayer:83 - ReliabilityLayer uses ACK_TIMEOUT=2000, ACK_RANDOM_FACTOR=1.5, and ACK_TIMEOUT_SCALE=2.0
+2021-05-19 15:30:11 INFO  CoapEndpoint:452 - Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2021-05-19 15:30:11 INFO  UDPConnector:161 - UDPConnector starts up 8 sender threads and 8 receiver threads
+2021-05-19 15:30:11 INFO  UDPConnector:187 - UDPConnector listening on 0.0.0.0/0.0.0.0:52996, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2021-05-19 15:30:11 INFO  CoapEndpoint:485 - Started endpoint at coap://0.0.0.0:52996
+2021-05-19 15:30:11 INFO  EndpointManager:140 - created implicit endpoint coap://0.0.0.0:52996 for coap
+2021-05-19 15:30:11 INFO  CoapResource:722 - successfully established observe relation between /127.0.0.1:52996#[bd9315381c8c9ab9] and resource /robot/sonar (Exchange[R1], size 1)
+2021-05-19 15:31:13 INFO  CoapResource:719 - replacing observe relation between /127.0.0.1:52996#[bd9315381c8c9ab9] and resource /robot/sonar (new Exchange[R2], size 1)
