@@ -6,7 +6,7 @@
  * 
  * A qak actor is 'genetically' a resource like this 
  */
-package javacode;
+
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED;

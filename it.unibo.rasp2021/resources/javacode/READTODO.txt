@@ -1,0 +1,6 @@
+Porto SonarOnRaspCoap on Raspberry
+
+Attivo it.unibo.qakradar2021\src\radargui.qak su PC 
+(non posso usare docker image a meno di non installare X11)
+
+Attivo SonarOnRaspCoap su Raspberry e osservo le distanze sulla GUI sonar
