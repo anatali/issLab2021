@@ -6,8 +6,8 @@
  * ================================================================================
  */ 
 System /*-trace*/ robotradar2021
-//mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/radar"
-mqttBroker "localhost" : 1883 eventTopic "unibo/radar"
+mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/radar"
+//mqttBroker "localhost" : 1883 eventTopic "unibo/radar"
 
 /*
  *polar:polar(D,A) can be perceived as a dispatch, as a request or as an event
@@ -46,7 +46,7 @@ QActor radargui context ctxradargui{
   
 	//WARNING: the current message is lost after an empty-move
  	State showSpotNoReply{ 
- 		//printCurrentMessage	 
+ 		printCurrentMessage	 
 		onMsg( polar : polar(D,A) ) {
 			[#
 				DistanceStr = payloadArg(0)
@@ -60,7 +60,7 @@ QActor radargui context ctxradargui{
  	
  
 	State showSpotReply{
-		//printCurrentMessage
+		printCurrentMessage
    		onMsg( polar : polar(D,A) ) {
 			[#
 				DistanceStr = payloadArg(0)

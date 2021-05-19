@@ -37,6 +37,7 @@ class Radargui ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("showSpotNoReply") { //this:State
 					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("polar(D,A)"), Term.createTerm("polar(D,A)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								
@@ -50,6 +51,7 @@ class Radargui ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("showSpotReply") { //this:State
 					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("polar(D,A)"), Term.createTerm("polar(D,A)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								

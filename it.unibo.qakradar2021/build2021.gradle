@@ -3,7 +3,7 @@
 build2021
 USAGE:	 
   	gradle  -b build2021.gradle eclipse		//to set the dependency on the library
-	gradle  -b build2021.gradle distZip
+	gradle  -b build2021.gradle distTar
 	gradle  -b build2021.gradle -q tasks --all
 	gradle  -b build2021.gradle cleanDistDir	//to clean the src directory
 ================================================================================
@@ -11,7 +11,7 @@ USAGE:
 plugins {
     id 'java'
     id 'eclipse'
-    //id 'application'
+    id 'application'
     id("org.jetbrains.kotlin.jvm") version "1.4.32"
 }
 
@@ -102,14 +102,14 @@ sourceSets {
     //test.java.srcDirs += 'test.kt'		//test.kt is specific
 }
  
-//mainClassName = "it.unibo.ctxblses1.MainCtxblses1Kt"
-//mainClassName = "resources.kotlincode.SonarSimulateWithActorKt"
-/*
+mainClassName = "it.unibo.ctxradargui.MainCtxradarguiKt"
+
+
 jar {
-    println("executing jar")
+    println("doing jar")
     from sourceSets.main.allSource
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }
 }
-*/ 
+
