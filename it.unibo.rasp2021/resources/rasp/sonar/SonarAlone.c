@@ -3,7 +3,6 @@
 #include <fstream>
 #include <cmath>
 
-
 #define TRIG 0
 #define ECHO 2
 

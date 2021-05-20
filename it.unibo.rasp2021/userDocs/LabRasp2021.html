@@ -219,6 +219,8 @@ gradle  -b build2021.gradle distZip		<kc>//create distribution</kc>
 <li><pre>cd <k>it.unibo.rasp2021-1.0/bin</k></k></li>
 <li>copy <a href="../blses1_onoff.pl" target="code">blses1_onoff.pl</a> into <k>bin</k> </li>
 <li>copy <a href="../sysRules.pl" target="code">sysRules.pl</a> into <k>bin</k> </li>
+<li>copy <a href="../led25GpioTurnOff.sh" target="code">led25GpioTurnOff.sh</a> into <k>bin</k> </li>
+<li>copy <a href="../led25GpioTurnOn.sh" target="code">led25GpioTurnOn.sh</a> into <k>bin</k> </li>
 <li><pre>bash it.unibo.rasp2021			<kc>//run</kc></pre>	 </li>
 </ol> 
 <h4>Deployoment (su docker)</h4>
@@ -243,7 +245,7 @@ gradle  -b build2021.gradle distZip		<kc>//create distribution</kc>
 </li>
 <li>copy the distribution <ks>it.unibo.rasp2021-1.0.zip</ks> on Rasp and unzip </li>
 <li><pre>cd <k>it.unibo.rasp2021-1.0/bin</k></k></li>
-<li>copy <a href="../resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> into <k>bin</k> </li>
+<li>copy <a href="../resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> and <k>compile</k> into <k>bin</k> </li>
 <li>copy <a href="../sonarnaive.pl" target="code">sonarnaive.pl</a> into <k>bin</k> </li>
 <li>copy <a href="../sysRules.pl" target="code">sysRules.pl</a> into <k>bin</k> </li>
 <li><pre>g++  SonarAlone.c -l wiringPi -o  SonarAlone	<kc>//compile</kc>
