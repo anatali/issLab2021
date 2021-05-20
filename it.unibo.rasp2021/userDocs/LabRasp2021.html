@@ -202,16 +202,36 @@ div.imagedesc{
 
 <tr>
 <td style="width:40%">
-<h3><a href="../src/blses1_onoff.qak">blses1_onoff.qak</a></h3> 
+<h3 id="led"><a href="../src/blses1_onoff.qak">blses1_onoff.qak</a></h3> 
 </td>
 <td> 
-<img src="./img/wotBook.jpg" alt="wotBook" width="40%"  /><br/>
+<!-- <img src="./img/wotBook.jpg" alt="wotBook" width="40%"  /><br/>-->
+<h4>Deployoment (tradizionale)</h4>
+<ol>
+<li>
+<pre>
+mainClassName = <ks>'it.unibo.ctxsonar.MainCtxsonarKt'</ks>	<kc>//in <a href="../build2021.gradle">build2021.gradle</a></kc>
+gradle  -b build2021.gradle distZip		<kc>//create distribution</kc>
+</pre>
+
+</li>
+<li>copy the distribution <ks>it.unibo.rasp2021-1.0.zip</ks> on Rasp and unzip </li>
+<li><pre>cd <k>it.unibo.rasp2021-1.0/bin</k></k></li>
+<li>copy <a href="../resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> into <k>bin</k> </li>
+<li>copy <a href="../sonarnaive.pl" target="code">sonarnaive.pl</a> into <k>bin</k> </li>
+<li>copy <a href="../sysRules.pl" target="code">sysRules.pl</a> into <k>bin</k> </li>
+<li><pre>g++  SonarAlone.c -l wiringPi -o  SonarAlone	<kc>//compile</kc>
+./SonarAlone 					<kc>//check</kc></pre>  
+</li>
+<li><pre>bash it.unibo.rasp2021			<kc>//run</kc></pre>	 </li>
+</ol> 
+<h4>Deployoment (su docker)</h4>
 </td>
 </tr>
 
 <tr>
 <td>
-<h3><a href="../src/sonarnaive.qak">sonarnaive.qak</a></h3> 
+<h3 id="sonar"><a href="../src/sonarnaive.qak">sonarnaive.qak</a></h3> 
 
 </td>
 <td> 

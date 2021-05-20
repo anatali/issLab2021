@@ -629,7 +629,7 @@ The model  <a href="../models/streamsdemo.qakt" target="code">streamsdemo.qak</a
 and a set of actors qualified as <tt>CodedQActor</tt>.
 <br/><br/>
 A <bc>CodedQActor</bc> is an actor completely written in Kotlin that can be included in the system by specifying its class name.
-Its presence is included in the description of the system. In fact, in our case, such a descripiton, wrtiten in
+Its presence is included in the description of the system. In fact, in our case, such a descripiton, written in
 <a href="../streamsdemo.pl" target="code">streamsdemo.pl</a> is:
 <pre>
 context(ctxstreamsdemo, "localhost",  "TCP", "8045").
@@ -643,7 +643,8 @@ context(ctxstreamsdemo, "localhost",  "TCP", "8045").
 Thus, the <tt>QA-infrastructure</tt> handles a <tt>CodedQActor</tt> as a usual; in particular, it will <bc>'inject'</bc> into it the context
 specified by the model. 
 <br/>
-Note that each <tt>CodedQActor</tt> in this example is defined as a specialized version of 
+Note that each <tt>CodedQActor</tt> in this example (e.g. <a href="../resources/rx/distanceFilter.kt" target="code">distanceFilter.kt</a>)
+is defined as a specialized version of 
 <a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#ActorBasic" tragte="lab">ActorBasic</a> that has no context at creation time.
   </m></td>
 </tr> 

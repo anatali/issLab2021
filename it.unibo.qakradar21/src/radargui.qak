@@ -1,0 +1,84 @@
+/* 
+ * ================================================================================
+ * radargui.qak		
+ * VERSION May 20, 2021
+ * Handles the event polar : polar( D,A ) 
+ * ================================================================================
+ */  
+System /*-trace*/ robotradar2021
+mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/radar"
+//mqttBroker "localhost" : 1883 eventTopic "unibo/radar"
+
+/*
+ *polar:polar(D,A) can be perceived as a dispatch, as a request or as an event
+ */
+Request  polar        : polar(D,A) 
+Reply    fromRadarGui : fromRadarGui(X)     
+
+Dispatch polar        : polar(D,A)   
+Event    polar        : polar(D,A) 
+ 
+Context ctxradargui ip [ host= "localhost"   port= 8038 ]  
+
+/* 
+ * -----------------------------------------------------------
+ * Embeds the radarpojo and provides message-based interaction
+ * (it is the 'exoskeleton - decorator')
+ * -----------------------------------------------------------
+ */ 
+QActor radargui context ctxradargui{ 
+[# var DoReply     = false
+  var DistanceStr  = "0"
+  var Distance     = 0
+  var Angle        = "0"
+#] 
+	State s0 initial{ 
+		println("radargui start") 
+		run radarPojo.radarSupport.setUpRadarGui()
+	} 
+	Goto waitForDataToShow
+	
+	State waitForDataToShow{   } 
+	Transition t0  
+		 whenRequest polar -> showSpotReply
+		 whenMsg     polar -> showSpotNoReply
+		 whenEvent   polar -> showSpotNoReply
+  
+	//WARNING: the current message is lost after an empty-move
+ 	State showSpotNoReply{ 
+ 		printCurrentMessage	 
+		onMsg( polar : polar(D,A) ) {
+			[#
+				DistanceStr = payloadArg(0)
+			    Distance    = DistanceStr.toInt()
+				Angle       = payloadArg(1) 
+                DoReply     = false
+			#]
+		}
+ 	} 
+ 	Goto showSpot 
+ 	
+ 
+	State showSpotReply{
+		printCurrentMessage
+   		onMsg( polar : polar(D,A) ) {
+			[#
+				DistanceStr = payloadArg(0)
+			    Distance    = DistanceStr.toInt()
+				Angle       = payloadArg(1) 
+                DoReply     = true
+			#]
+ 	 	} 
+ 	 }  
+ 	 Goto showSpot  
+	
+	
+ 	State showSpot{
+  		if [# Distance <= 90 #]  {   
+			run radarPojo.radarSupport.update(  DistanceStr,  Angle )
+			if [# DoReply #] {  replyTo polar with fromRadarGui : fromRadarGui( done($DistanceStr) ) }
+ 		}   
+ 	}
+	Goto waitForDataToShow
+	
+}

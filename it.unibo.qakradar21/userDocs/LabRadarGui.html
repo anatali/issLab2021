@@ -1,0 +1,1059 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>LabRadarGui</title></head>
+    
+<body>
+<div id="body">
+<h1>LabRadarGui | Radar GUI as a service (from BottomUp to TopDown)<font size="5"></font> </h1>
+
+In this work we will build a <em>radarGuiservice</em> that shows data on a graphical interface that looks like the screen of a radar. These  data could be:
+<ul>
+<li>simulated by an user, by using a proper utility; for example
+<a href="../resources/utils/sonarDataSimulator.kt" target="code">sonarDataSimulator.kt</a> or
+<a href="../resources/coap/sonarDataSimulatorCoap.kt" target="code">sonarDataSimulatorCoap.kt</a> that read the data from a user console;
+<br/><br/>
+</li>
+<li>produced by a <tt>HC-SR04</tt> sonar device mounted on the front of a ddr robot (<em>robot-sonar</em>). For example, 
+<a href="../resources/utils/SonarAlone.c" target="code">SonarAlone.c</a> that - on a RaspberryPi - reads sonar data from <tt>HC-SR04</tt> and 
+writes these data on the standard output.
+<br/><br/>
+<center><img src="./img/robotRadar.png" alt="robotRadar" width="50%"  /></center>
+ </li>
+
+</ul>
+
+The library <k>radarPojo.jar</k> (from the project <i>it.unibo.java.radar</i>) provides an object-utility
+(<a href="../resources/radarPojo/radarSupport.java" target="code">radarSupport.java</a>) to create a radar-like-GUI and to show values on that GUI. It could be useful in building the <em>radarGuiservice</em>.
+<br/>
+
+ 
+<h2>A bottom-up approach </h2>
+
+In a bottom-up approach, the software designer must find a way to make the radar able to receive the sonar data produced by the <em>robot-sonar</em>. 
+Thus, there are two main problems to solve:
+
+<ol>
+<li>Find a way to transmit data from the <em>robot-sonar</em> to the <em>radarGui</em>.</li>
+<li>Build a new radar component (the <em>radarGuiservice</em> indeed) able to receive sonar-data and to display them by using the available 
+<a href="../resources/radarPojo/radarSupport.java" target="code">radarSupport.java</a></li>
+</ol>
+
+The picture below shows our initial situation:
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/RobotSonarStarting.png" alt="RobotSonarStarting" width="100%"  /></td>
+<td><m>We have to write code in order to allow data to flow from the <em>robot-sonar</em> to the <em>radarGui</em>
+In other words, we must find a proper <ks>component integration strategy</ks>.
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/>
+
+The picture below shows two main component integration strategies:
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<img src="./img/srrIntegrate1.png" alt="srrIntegrate1" width="100%"  /></td>
+<td><m> <h3>Direct communication</h3>
+Data might flow from the <em>robot-sonar</em> to the <em>radarGui</em>, by using a 
+two-way point-to-point <ks>communication protocol</ks> (e.g.  (TCP, UDP, BTH, HTTP, …).
+</m>  </td>
+</tr>
+
+<tr>
+<td style="width:50%" >
+<img src="./img/srrIntegrate2.png" alt="srrIntegrate2" width="100%"  /></td>
+<td><m> <h3>Using a middleware </h3>
+Data might flow from the <em>robot-sonar</em> to the <em>radarGui</em>, by using a 
+mediator, like a MQTT broker, a CoAP resource, a TupleSpace etc.
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/>
+
+In both cases we have to write proper code 'around' our starting available resources.
+
+<h3 id="TCPinteract">Interaction based on TCP</h3>
+A direct communication based on some standard protocol (e.g. TCP)  can be implemented in a quite easy way. 
+The <a href="https://en.wikipedia.org/wiki/Proxy_pattern" target="web">proxy design pattern</a>  can be taken as a reference point
+for the required modifications in our system architecture.
+<hr/>
+
+The main project choice is related to
+question of the location of the server-TCP socket. The most 'natural' choice seems to activate a the server-socket
+on the node that runs the <em>radarGui</em>, by considering (in a <tt>IOT</tt> perspective) the radar  as a 'service' used by the 'robot-as-thing'.
+<div class="remark">
+The task of building such a TCP-based system is left to the reader, with the goal to keep track of the time required
+to build a working prototype and to 'document' in a proper way the solution. 
+</div>
+
+<h4>A SPRINT Review meeting and Retrospective</h4>
+ 
+A report about our meetings related to SPRINT Review and SPRINT Retrospective is given in 
+<a href="LabRadarGuiTcpSprintReview.html" target="web">LabRadarGuiTcp | Sprint Review</a> 
+that includes also some possible refactoring of the code.
+
+<h3 id="bottomCoap">Interaction based on a CoAP-Resource</h3>
+According to 
+<a href="../../it.unibo.coapintro/userDocs/LabCoAP.html" target="lab">
+LabCoAP | Introduction to CoAP</a>, let us introduce first of all a CoAP resource :
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:35%" ><img src="./img/resource.png" alt="resource" width="80%"  />
+<br/>
+The device has <tt>robot</tt> as root and <tt>sonar</tt> as its sensor resource:
+<img src="./img/urlExample.png" alt="urlExample" width="100%"  />
+</td>
+<td><m>The class <a href="../resources/coap/Resource.java" target="code">Resource.java</a></ks> defines a  <i>CoAP Resource-Tree</i>
+<pre>
+public class <ks>Resource extends</ks> <k>CoapResource</k> {
+	public void <k>handlePUT(CoapExchange exchange)</k> {...}	<kc>//reads</kc>
+	public void <k>handlePUT(CoapExchange exchange)</k> {...}  <kc>//updates</kc>
+	...
+}
+	public static void main(String[] args) {
+		CoapServer server = new CoapServer();
+		server.add( <k>new Resource("robot").add(
+					      new Resource("sonar") )</k>
+		);
+		server.start();
+	}
+</pre>
+The <i>CoAP Resource-Tree</i>: 
+<ul>
+<li>defines its logical content as a String variable of name <ks>lastMsg</ks> that assumes the form of the external representation
+of a <tt>it.unibo.kactor.ApplMessage</tt>:
+<pre>
+<kc>msg(sonar,event,EMITTER,none,sonar(VALUE),MSGNUM)</kc>
+</pre>
+ </li>
+ <li>the last sonar value is addressable with <kc>URI-path</kc> = <ks>robot/sonar</ks> </li>
+</ul>
+<!--
+The method <kc>handlePUT(CoapExchange exchange)</kc> updates the value of <ks>lastMsg</ks> with
+<kc>exchange.getRequestText()</kc>.
+-->
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/> 
+
+This resource allows us to acquire sonar data in RESTful way, by using the CoAP protocol.
+For example:
+
+<pre>
+CoapClient <ks>client</ks> = <k>new CoapClient()</k>;
+String uriStr     = <ks>"coap://localhost:5683/robot/sonar"</ks>;
+<k><ks>client</ks>.setURI( uriStr );</k>
+<k>CoapResponse</k> respGet = <k><ks>client</ks>.get()</k>;
+String sonarData = respGet.<k>getResponseText()</k>   <kc>//The sonar-data value</kc>
+
+</pre>
+
+However, as our second step, let us introduce an <ks>Utility</ks> to interact with a CoAP resource:
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>The utility CoapSupport</h3>
+<img src="./img/ResourceSupport.png" alt="ResourceSupport" width="100%"  /></td>
+<td><m>The class <a href="../resources/coap/CoapSupport.java" target="code">CoapSupport.java</a></ks> provides a conventional
+object with methods to <kc>read/update</kc> and <kc>observe</kc> a CoAP resource.
+<br/>
+The <kc>observe</kc> method requires an object of interface <ks>org.eclipse.californium.core.CoapHandler</ks>. For example:
+<pre>
+class MyHandler implements <k>CoapHandler</k> {
+	@Override public void onLoad(CoapResponse response) {
+		String content = response.getResponseText();
+		System.out.println("MyHandler | NOTIFICATION: " + content);
+ 	}					
+	@Override public void onError() {
+		System.err.println("MyHandler  |  FAILED (press enter to exit)");
+	}
+}
+</pre>
+
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/>
+
+Now, we can  build our system:
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<m> 
+<h3>The RadarGui</h3>
+The class <a href="../resources/coap/RadarGuiCoap.java" target="code">RadarGuiCoap.java</a>:
+<ol>
+<li>creates a radar-like GUI</li>
+<li> looks (via polling or via observation) at the 
+ <a href="../resources/coap/Resource.java" target="code">Resource.java</a> in order to show sonar-data on the GUI.</li>
+</ol>
+  
+ For the sake of simplicity, it crates also the CoAP resource itself.
+</m>  </td>
+<td><m><h3>A sonar data source simulator</h3>
+The Kotlin object <a href="../resources/coap/sonarDataSimulatorCoap.kt" target="code">sonarDataSimulatorCoap.kt</a>:
+<ol>
+<li>waits for a sonar-data value from the user console;</li>
+<li>updates the CoAP resource with that value.</li>
+</ol>
+
+</m></td>
+</tr>
+</tbody>
+</table>
+
+<h4>Run / deploy the system</h4>
+<ol>
+<li>Execute <a href="../resources/coap/RadarGuiCoap.java" target="code">RadarGuiCoap.java</a></li>
+<li>Launch <a href="../resources/coap/sonarDataSimulatorCoap.kt" target="code">sonarDataSimulatorCoap.kt</a></li>
+</ol>
+
+<hr/>
+<m>
+Remember that the <i>Californium framework</i> makes use of the logger library <tt>slf4j</tt> that should be included
+in the dependencies: 
+<pre>
+compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+</pre>
+
+This library 
+<ul>
+<li>Requires the presence in the directory <k>src</k> of the file <a href="../src/log4j.properties" target="code">log4j.properties</a> </li>
+<li>generates (at run-time) the file <ks>log4jInfo.log</ks></li>
+</ul>
+</m>
+<hr/> 
+<!--
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/RobotSonarStarting.png" alt="RobotSonarStarting" width="100%"  /></td>
+<td><m> 
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/>
+-->
+
+<h3 id="realdata">Using real sonar-data from the <tt>HC-SR04</tt><tt>HC-SR04</tt> device</h3>
+Let us replace the sonar data simulator with an agent that runs on a <tt>RaspberryPi</tt>. It will use the
+<a href="../resources/utils/SonarAlone.c" target="code">SonarAlone.c</a> to acquire data from the <tt>HC-SR04</tt> device
+in order to update the CoAP resource.
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/raspSonarCoap.png" alt="raspSonarCoap.png" width="90%"  /></td>
+<td> 
+
+ 
+The <em>radarGuiservice</em> is now an observer of the CoAP resource that runs on a PC.
+<br/><br/>
+The CoAP resource can run both on the Raspberry and on the PC.
+<!--
+See <a href="../..//it.unibo.raspIntro2020/userDocs/LabRobotRadar_2020.html" target="lab">LabRobotRadar_2020 | A robot-radar system</a> 
+-->
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Beyond bottom-up</h3>
+Of course, the structure of a CoAP-based system is completely different from the structure of a system based on a two-way, direct connection.
+Let us investigate now what kind of system could result by starting from a top-down (model-based) design.
+
+
+<h2>A top-down approach </h2>
+In a top-down approach to software development, we aim at leaving technological details 'in the background' by focusing our
+attention on the 'logical-interaction' between our system components. Thus, our starting point could be represented as follows:
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/RobotSonarLogicalStarting.png" alt="RobotSonarLogicalStarting" width="100%"  /></td>
+<td><m>The <em>robot-sonar</em> and the <em>radarGui</em> are considered as two autonomous entities 
+(we could refer to them as <ks>agents</ks> or <ks>actors</ks> rather than <i>objects</i> or <i>processes</i>) that must
+exchange information in order to achieve a common goal. 
+<br/><br/>
+The <ks>component integration strategy</ks> should be 
+a consequence of the <k>requirements</k>: the data produced by the <em>robot-sonar</em> must be consumed by the <em>radarGui</em>
+with a minimal consumption of energy, bandwidth, money, etc.
+<br/><br/>
+Technological details (quite important in any case) are at the moment put 'behind the scene', 'embedded' within
+the agents.
+</m>  </td>
+</tr>
+</tbody> 
+</table>
+
+<h2>Interaction patterns</h2>
+
+From the logical point of view, the <em>robot-sonar</em> could be viewed in two main different ways:
+<ol>
+<li>an <ks>source</ks> agent that emits information</li>
+<li>as a <ks>resource</ks>  that stores and provides data</li>
+</ol>
+ 
+As a consequence, the <em>radarGui</em> could be viewed as:
+
+<ol>
+<li>an <ks>information-receiver</ks> agent that is able to <i>'perceive'</i> information emitted by the source:
+	<ol>
+	<li>by using a two-way connection-based protocol (TCP, UDP, BTH, etc)</li>
+	<li>by subscribing to a topic of a MQTT broker</li>
+	</ol>
+</li>
+<li>or as :
+	<ol>
+	<li>a <ks>resource-reader</ks> (that works in 'polling' mode)</li>
+	<li>a <ks>resource-observer</ks> (that works according to the 
+	<a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="web">Inversion of Control Principle</a>- or <kc>Hollywood Principle</kc>)</li>
+	</li>
+	</ol>
+ </li>
+</ol> 
+
+Let us explore each of these patterns in a more detailed way.
+
+<h3><ks>1.1)</ks> Using connection-based protocols</h3>
+In this pattern, the <em>robot-sonar</em> agent can send information to the <em>radarGui</em> agent in two main, different modes:
+<ol>
+<li>in a <i>'fire-and-forget'</i> way.</li>
+<li>as a <i>request</i> to perform an action (e.g. show the data).</li>
+</ol> 
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/logicalP2P.png" alt="logicalP2P" width="100%"  /></td>
+<td><m>The <em>robot-sonar</em> is logically viewed here as an emitter that:
+<ol>
+<li>can send information to the <em>radarGui</em> in a <i>'fire-and-forget'</i> way.</li>
+<li>can send to the <em>radarGui</em> a <i>request</i> to show the data, by expecting an <tt>answer</tt> (or an <tt>ack</tt>) to it.</li>
+</ol> 
+</m>  </td>
+</tr>
+</tbody>
+</table>
+
+<h3><ks>1.2)</ks> Using publish-subscribe</h3>
+In this pattern, the <em>robot-sonar</em> agent works as a <i>publisher</i> of information (on a MQTT-<tt>topic</tt>), while the <em>radarGui</em> works as
+a <i>subscriber</i> of information (on the <tt>topic</tt>).
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/logicalBroker.png" alt="logicalBroker" width="100%"  /></td>
+<td><m>The <em>robot-sonar</em> works as a  <i>publisher</i> of information (on a MQTT-<tt>topic</tt>), while the <em>radarGui</em> works as-
+a <i>subscriber</i>. Both the components use the <tt>MQTT-Broker</tt> as a mediator, by sending a Dispatch to it.
+</m>  </td>
+</tr>
+</tbody>
+</table>
+ 
+
+<h3><ks>2.1)</ks> Polling</h3>
+The idea of 'polling' is captured by a request-based interaction, from the <em>radarGui</em>to the <em>robot-sonar</em>.
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/logicalPolling.png" alt="logicalPolling" width="100%"  /></td>
+<td><m>The <em>radarGui</em> explicitly asks the <em>robot-sonar</em> for sonar-data
+</m>  </td>
+</tr>
+</tbody>
+</table>
+ 
+
+<h3><ks>2.2)</ks> Resource observation</h3>
+In this pattern,  the <em>robot-sonar</em> agent produces a state-change in a resource that can be 'observed' 
+by interested components, like the the <em>radarGui</em>.
+<br/><br/> 
+ 
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/logicalObserver.png" alt="logicalObserver" width="100%"  /></td>
+<td><m>The <em>robot-sonar</em> is logically viewed here as an emitter that  can generate information for the
+'registered' components. 
+ <!-- as an <k>event</k> logicalEvent -->
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/>
+<!--
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><img src="./img/srrIntegrateModel.png" alt="srrIntegrateModel" width="100%"  /></td>
+<td><m> From the logical point of view, the <em>robot-sonar</em> is viewed here as an emitter that:
+<ol>
+<li>can send information to the <em>radarGui</em> in a <i>'fire-and-forget'</i> way.</li>
+<li>can send to the <em>radarGui</em> a <i>request</i> to show the data, by expecting an <tt>answer</tt> (or an <tt>ack</tt>) to it.</li>
+<li>can emit information 'in the world' without any specific destination.</li>
+</ol>
+
+The picture excludes 
+</m>  </td>
+</tr>
+</tbody>
+</table>
+<br/>
+-->
+
+<h3 id="hlconcepts">Towards a standard set of high-level concepts</h3>
+Let us introduce a more precise (although still informal) description of the terminology used so far:<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%" ><img src="./img/robotAsDataSourceConceptual.png" alt="robotAsDataSourceConceptual" width="100%"  /></td>
+<td><m> From the logical point of view:
+<ol>
+<li>the term <em>Dispatch</em> is used to capture the idea of information sent from a source to a destination in a 'fire-and-forget' way.<br/><br/></li>
+<li>the term <em>Request</em>  is used to capture the idea of the request of execution of some service, by expecting an <tt>answer</tt> (or an <tt>ack</tt>) to it.<br/><br/></li>
+<li>the term <em>Event</em>  is used to capture the idea that information can be emitted 'in the world' without any specific destination.<br/><br/></li>
+</ol>
+
+Each of these terms captures an abstraction can should be implemented in some way.
+
+</m>  
+</td>
+</tr>
+</tbody>
+</table>
+<div class="remark">
+The high-level concepts introduced above, can be used during problem analysis to <k>better understand the requirements</k>
+and to <k>avoid any premature technology-lock</k>. <br/>
+Moreover, these concepts can be used a a guide to design and build a run-time support able to allow a software designer
+to develop the interaction between the components of a software applications in terms of <tt>dispatch/request/event</tt> 
+<i><b>rather than in term of network-communication supports</b></i>.
+</div>
+
+<h2 id="platform">Building a platform</h2>
+A proper run-time support has been developed in the project <k>it.unibo.qakactor</k> that  includes a set
+of kotlin classes developed under <tt>IntelliJ IDEA Community Edition</tt>. Among them, there are:
+<ol>
+<li> <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>.
+
+</li>
+<li> <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a> is
+an abstract class  that extends <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a> 
+by defining the  method <k>actorBody</k> ao to implement the behavior of a <tt>FSM</tt>.  
+</li>
+<li><a href="../../it.unibo.qakactor/src/main/kotlin/ApplMessage.kt" target="code">ApplMessage.kt</a> (that requires
+<a href="http://tuprolog.sourceforge.net/doc/2p-guide.pdf">tuProlog</a>).</li>
+<li><a href="../../it.unibo.qakactor/src/main/kotlin/MsgUtil.kt" target="code">MsgUtil.kt</a>.</li>
+</ol>
+
+<!--
+OLD: done in Cesena a.a 2019/2020 but already known in Bologna
+<h3>ActorBasic</h3>
+
+ <table style="width:100%">
+<tr>
+ 
+<td width="50%">
+ <m><pre>
+ abstract class  ActorBasic(val name:        String,
+                           val scope:        CoroutineScope = GlobalScope,
+                           val confined :    Boolean = false,
+                           val ioBound :     Boolean = false,
+                           val channelSize : Int = 50
+                        ) : <k>MqttCallback</k> { <kc>//For MQTT messages</kc>
+
+    <kc>@kotlinx.coroutines.ExperimentalCoroutinesApi
+    @kotlinx.coroutines.ObsoleteCoroutinesApi</kc>
+    val <k>actor</k> = <ks>scope.actor&lt;ApplMessage></ks>( dispatcher, capacity=channelSize ) {
+         for( <ks>msg</ks> <k>in channel</k> ) {
+			...
+			<ks>actorBody( msg )</ks>
+		}
+    <kc>//To be defined by the application designer</kc>
+    <k>abstract suspend</k> fun <ks>actorBody</ks>(msg : ApplMessage)
+
+    <k>suspend open fun</k> <ks>autoMsg</ks>(  msg : ApplMessage) {
+      actor.send( msg )
+    }
+	
+     suspend fun <k>sendMessageToActor</k>( <kc>//Implements message-sending</kc>
+	  msg : ApplMessage , destName: String, conn : IConnInteraction? = null ) { ... }
+
+    <k>suspend fun</k> <ks>forward</ks>(msgId : String, msg: String, destName: String) {
+        val m = <ks>MsgUtil.buildDispatch</ks>(name, msgId, msg, destName)
+        <k>sendMessageToActor</k>( m, destName)	<kc>//</kc>
+     }	
+	 
+    <k>suspend fun</k> <ks>request</ks>( msgId : String, msg: String, destActor: ActorBasic) {
+        val m = <ks>MsgUtil.buildRequest</ks>(name, msgId, msg, destName)
+        <k>sendMessageToActor</k>( m, destName)	<kc>//</kc>
+	 }
+	 ...
+}
+</pre></m>
+</td>
+<td width="50%">
+<m>
+<img src="./img/actorBasic.png" alt="actorBasic" width="90" > <br/>
+<em>ActorBasic</em> is an abstract class  that implements the concept of <tt>qakactor</tt> as a message-driven entity that
+handles messages by delegating the work to the abstract the method <tt>actorBody</tt>
+<br/><br/>
+The methods that an application designer can used to deliver messages are:<br/>
+<ul>
+<li><ks>forward</ks> for a Dispatch</li>
+<li><ks>request</ks> for a Request</li>
+<li><ks>emit</ks> for an Event</li>
+</ul>
+
+To receive messages, the application designer must write the <ks>actorBody</ks> method.
+Thus, <em>ActorBasic</em> promotes a <k>message-driven</k> behavior.
+<br/><br/>
+A received message of type:
+<a href="../../it.unibo.qakactor/src/main/kotlin/ApplMessage.kt" target="code">ApplMessage.kt</a> (requires
+<a href="http://tuprolog.sourceforge.net/doc/2p-guide.pdf">tuProlog</a>). Some help in building and sending
+messages is given by 
+<a href="../../it.unibo.qakactor/src/main/kotlin/MsgUtil.kt" target="code">MsgUtil.kt</a>.
+<br/><br/>
+The full code is in <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>
+</m>
+</td>
+</tr>
+</table>
+</center>
+
+<h4>Example</h4>
+See <a href="../resources/actors/RadarGui.kt" target="code">RadarGui.kt</a>
+
+<br/><br/>
+
+<h3>ActorBasicFsm</h3>
+To provide actors with <k>message-based</k> behavior rather than <k>message-driven</k> behavior, we introduce the class
+<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a> whose behavior
+s summarized in the following figure:
+
+
+ 
+<br/><br/>
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:55%"><img src="./img/actorBasicFsm.png" alt="actorBasicFsm." width="98%" height="40%"/></td>
+ <td><m>
+
+ When a message <tt>msg</tt> is (<i>event-driven</i>) received, the actor checks for a possible transition for that <tt>msg</tt> in the <tt>current state</tt>.
+ <br/> <br/>
+If no transition is possible, the message <tt>msg</tt> is <b>discarded if it is an event</b>; otherwise it us stored in a local queue.
+ <br/> <br/>
+If the transition is possible, the actor goes into the next state related to that transition and then looks at empty moves or to transitions
+related to stored messages. 
+ <br/><br/>
+ The actor attempts to manage <b>all</b> the stored messages before looking to a new message.
+<div class="remark">
+This behavior is better described in
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/ActorBasicFsm.html" target="web">
+LabQak | ActorBasicFsm</a>. The implementation is based on a
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.kotlin.dsl/userDocs/LabDsl.html" target="web">Kotlin internal DSL</a>
+ 
+</div>
+</m> 
+ </td>
+</tr>
+</table>
+</center>
+<h4>Example</h4>
+This kind of actor is introduced to be used together with a DSL. An example (taken from the code generated by the Qak factory) is
+in <a href="../resources/actors/RadarGuiFsm.kt" target="code">RadarGuiFsm.kt</a>
+
+
+
+<h3 id="towardDistr">Towards distribution</h3>
+An important <em>internal requirement</em> seems to arise at this point:
+
+<div class="req"><m>
+Since the components could be allocated on different computational nodes, we should provide
+the possibility of a proper <em>system description</em>, to be used 
+to build in automatic way the proper infrastructural network support. </m>
+</div>	
+
+To achieve this goal, we start from the idea that a system is composed of a set of components (each conceived as an actor of type <em>ActorBasic</em>
+or <em>ActorBasicFsm</em>) that work into a set of (different) computational nodes (<em>Contexts</em>), of type 
+<a href="../../it.unibo.qakactor/src/main/kotlin/QakContext.kt" target="code">QakContext.kt</a>.
+<br/><br/>
+... TO BE COMPLETED ...
+ 
+
+<h1>A model-based approach</h1> 
+The <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/LabQakIntro2020.html" target="web">
+Qak metamodel </a>  gives a formal definition of the terms introduced in <a href="#hlconcepts">High-level concepts</a>, 
+and is connected with a software factory (the <tt>it.unibo.Qactork_1.1.7.</tt> plugins for Eclipse) that provides a custom (Domain Specific) language 
+and code generation that uses the run-time library (<tt>it.unibo.qakactor-1.2.jar</tt>)  introduced in <a href="#platform">Building a platform</a>.
+
+Using the <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/LabQakIntro2020.html" target="web">
+Qak metamodel </a>, the <em>radarGui</em> agent can be modeled as an actor able to handle messages (Dispatch, Request) or Events. 
+Let us start with the case of messages.
+
+<h2>1.1) A P2P message-based system model</h2>
+In this case, we model the  <em>radarGui</em>  as an actor able to handle either a Dispatch or a Request. The full code is
+<a href="../src/radar.qak" target="code">radar.qak</a>; however, let us introduce the model step-by-step:
+
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><m> <pre>
+System robotradarsys   
+
+<k>Dispatch</k> <ks>polar     : polar(D,A) </ks>
+<k>Request</k>   <ks>polar     : polar(D,A)  </ks>
+<k>Reply</k>    <ks>fromRadarGui : fromRadarGui(X)</ks>    
+ 
+Context <ks>ctxRadarGui</ks> ip [ host= "localhost"   port= 8038 ]  
+
+QActor <ks>radargui</ks> context <ks>ctxRadarGui</ks>{ 
+	...
+}
+</pre></m></td>
+<td> <m>The <ks>radargui</ks> will be able to handle <ks>polar</ks> messages that can be sent
+either in a 'fire-and-forget' way (<k>Dispatch</k>) or in a request-response way (<k>Request</k>)</m></td>
+</tr>
+
+
+</tbody>
+</table>
+<br/>
+The behavior of the actor <ks>radargui</ks> must be defined as a Moore's state machine:
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><m> <pre>
+QActor <ks>radargui</ks> context <ks>ctxRadarGui</ks>{ 
+<k>["</k> <ks>&lt;user variable declaration></ks> <k>"]</k> <kc>actor variables, visible in all the states</kc>
+	State s0 initial{ 
+		println("radar start") 
+		<k>run</k> <ks>radarPojo.radarSupport</ks>.setUpRadarGui()
+	} 
+	Goto waitForDataToShow
+	
+	State waitForDataToShow{	} 
+	Transition t0  
+		 <k>whenRequest</k> <ks>polar</ks> -> showSpotReply
+		 <k>whenMsg</k>     <ks>polar</ks> -> showSpotNoReply
+		 
+	State showSpotNoReply{ 
+		...
+	}Goto showSpot 
+	
+	State showSpotReply{ 
+		...
+	}Goto showSpot 
+	
+ 	State showSpot{
+  		if "Distance <= 90 "  {   
+			<k>run</k> <ks>radarPojo.radarSupport</ks>.update(  <kc>DistanceStr</kc>,  Angle )
+			if "<kc>DoReply</kc>" {  <k>replyTo</k> <ks>polar</ks> <k>with</k> fromRadarGui : fromRadarGui( done ) }
+ 		}   
+ 	}
+	Goto waitForDataToShow
+}
+</pre></m></td>
+<td> <m>
+The <ks>&lt;user variable declaration></ks> section is:
+<pre>
+<k>["</k><kc>
+var DoReply     = false
+var DistanceStr = \"0\"
+var Distance    = 0
+var Angle       = \"0\"
+</kc><k>"]</k>
+</pre>
+ 
+The <ks>radargui</ks> creates the radar-like GUI in its initial state. Afterwards, it waits for a <ks>polar</ks> message.
+<br/><br/>
+The states <ks>showSpotReply</ks> and <ks>showSpotNoReply</ks> update the variables (as another form of state):
+<pre>
+State showSpotReply{
+	<k>onMsg</k>( polar : polar(D,A) ) {
+	<k>["</k><kc>
+		DistanceStr = payloadArg(0)
+		Distance    = DistanceStr.toInt()
+		Angle       = payloadArg(1) 
+		DoReply     = true
+	</kc><k>"]</k>
+	}
+}
+</pre>
+ 
+The state <ks>showSpot</ks> updates the GUI and (if <ks>polar</ks> was a request) sends a reply to the caller.
+</m>
+</td>
+</tr>
+</tbody>
+</table>
+<br/> 
+A working prototype can be easily built by introducing another actor (<tt>sonarsimulator</tt>) that performs message-sending.
+<br/> <br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<m><pre>
+QActor sonarsimulator context <ks>ctxRadarGui</ks> {
+[" val <ks>ResultMap</ks>=hashMapOf( \"key1\" to \"item1\" ) "]  <kc>//utility map </kc>
+	State s0 initial{
+		println("demo STARTS working using dispatch")
+		delay 4000 //give time to start the GUI
+		<k>forward</k> <ks>radargui</ks> -m polar : polar( 0,0 )
+		delay 500
+		<k>forward</k> <ks>radargui</ks> -m polar : polar( 45,0 ) 
+		delay 500
+		<k>forward</k> <ks>radargui</ks> -m polar : polar( 90,0 )
+		delay 500
+		<k>forward</k> <ks>radargui</ks> -m polar : polar( 120,0 )		
+	}
+	Goto workUsingRequest
+	
+	State workUsingRequest{
+ 		<k>run</k> <ks>utils.sonarDataSimulator</ks>.sonarValFromUser(ResultMap, "sonarVal")
+ 		<k>["</k> val Result = <ks>ResultMap</ks>.remove(\"sonarVal\") <k>"]</k>
+ 		<k>request</k> <ks>radargui</ks> -m polar : polar( $Result,0 ) 		
+	}  
+	Transition t0 
+		<k>whenTime</k> 1000          -> handleAnwerTimeout
+		<k>whenReply</k> fromRadarGui -> handleRadarReply   <kc>//Blocks until answer</kc>
+	
+	State handleRadarReply{
+		printCurrentMessage
+	}
+	Goto workUsingRequest
+	
+	State handleAnwerTimeout{
+		println("WARNING: the radar does not send the answer ... ")
+	}
+	Goto workUsingRequest
+}</pre></m>
+ </td>
+<td><m>
+In the initial state, the <tt>sonarsimulator</tt> sends a sequence of <ks>polar</ks> messages, each as a Dispatch.
+<br/>
+Afterwards, it sends a sequence of <ks>polar</ks> Request, by waiting for the answer after each request.
+<br/><br/>
+The Kotlin object <a href="../resources/utils/sonarDataSimulator.kt" target="code">sonarDataSimulator.kt</a> 
+provides the method <ks>sonarValFromUser</ks> that puts ( with key="sonarVal" ) in the given <ks>ResultMap</ks>
+a sonar-value read from the user-console.
+</m>
+<h3>Non-blocking requests</h3>
+<m>
+A client that sends a sequence of requests without waiting for the reply is shown hereunder. It
+will consume the replies at some later time.
+<pre>
+	State workUsingRequestNoWait{
+   		<k>request</k> radargui -m polar : polar( 30,90 ) 
+   		delay 1000
+   		<k>request</k> radargui -m polar : polar( 50,90 )	
+   		delay 1000
+   		<k>request</k> radargui -m polar : polar( 70,90 )	   			
+	}  
+	Goto <ks>handleAllRadarReply</ks>    
+	
+	State <ks>handleAllRadarReply</ks>{  printCurrentMessage  }
+	Transition t0 
+		whenTime 1000          -> handleAnwerTimeout
+		whenReply fromRadarGui -> handleAllRadarReply    
+</pre>
+</m>  </td>
+</tr>
+</tbody>
+</table>
+
+<h3>Final Notes (Sprint Review)</h3>
+
+The model described in the file <a href="../src/radar.qak" target="code">radar.qak</a>, can be put in execution; this fact gives us
+the opportunity to interact quite soon with the customer, and to understand and fix the system requirements. All the technological details related to
+network communications are hidden behind the scenes in the Qak platform, that creates a TCP-server in each context (see
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/LabQakIntro2020.html#QakInfrastructure" target="web">
+LabQakIntro2020.html | QakInfrastructure</a>).
+ <br/> <br/>
+Initially, we put the <tt>sonarsimulator</tt> in the same context of the <em>radargui</em>. Later, it can be put
+in a different context and replaced by another actor that handles real data coming from a <tt>HC-SR04</tt> sonar device. 
+ 
+<h2>1.2) Using a MQTT broker</h2>
+Now, let us suppose that we want to change the component interaction by using the <i>Message Queue Telemetry Transport</i> (MQTT) protocol and a 
+<a href="https://mosquitto.org/" target="web">Mosquitto </a>MQTT broker.
+<br/><br/>
+In a bottom-up approach, it is highly probable that we have to change our code in a significant way. But we
+must ask ourselves whether the usage of a MQTT broker changes the logic of our system. If not, the model above is still valid, and we
+should 'only' replace the default QAk infrastructure (based on Context-TCP-servers)  with another infrastructure that implements the
+high level concepts of Dispatch and Request by using MQTT.
+<br/><br/>
+This 'change of infrastucture' can be done by the QAk software factory by introducing a declaration for the MQTT broker to use and
+a <k>+mqtt</k> flag on the Context:
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<pre>
+System <k>-trace</k> robotradarsys   
+
+<k>mqttBroker</k> "localhost" : 1883 
+<m>
+Request  polar        : polar(D,A) 
+Dispatch polar        : polar(D,A) 
+Reply    fromRadarGui : fromRadarGui(X)    
+</m> 
+Context ctxRadarGui ip [ host= "localhost"   port= 8038 ] <k>+mqtt</k>
+
+QActor <ks>radargui</ks> context ctxRadarGui{ ... }
+</pre>
+</td>
+<td>
+<m>With the  <k>mqttBroker</k> declaration and the <k>+mqtt</k> flag, we change the run-time behavior of the model.
+<br/><br/>
+All the messages sent to the <em>radargui</em> from actors working in a different Context,
+will be published on the topic named <k>unibo/qak/radargui</k>. 
+<br/>
+The <em>radargui</em> actor works as a subscriber
+on that topic, as described in 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/LabQakIntro2020.html#mqtt" target="web">
+LabQakIntro2020.html | mqtt</a>
+<br/><br/>
+The flag <k>-trace</k> allows us to see on the standard output the details of the messages exchanged.
+<br/><br/>
+For an example of interaction with this version of the <em>radarGui</em>, see 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.radarUsage2020/userDocs/LabRadarUsage.html " target="lab">
+LabRadarUsage | Using the RadarGUI service</a>
+ 
+</m>
+ </td>
+</tr>
+</tbody>
+</table>
+<br/>
+
+
+
+<h2>2) Using CoAP resources</h2>
+ <br/><br/>
+... TO BE COMPLETED ...
+ 
+-->
+
+<br/><br/>
+</div>  
+
+ 
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>

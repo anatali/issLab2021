@@ -1,0 +1,602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+
+<title>LabRadarGuiTcpSprintReview</title></head>
+    
+<body>
+<div id="body">
+<h1>LabRadarGuiTcp | Sprint Review<font size="5"></font> </h1>
+
+In this work we report the results of a possible SPRINT review meeting, done after the development of the system 
+introduced in <a href="LabRadarGui.html#TCPinteract" target="web">LabRadarGui | Interaction based on TCP</a>.
+<br/>
+The task is to build a <em>radarGuiservice</em> that shows data on a graphical interface that looks like the screen of a radar.
+<br/><br/>
+<h3 id="review">A summary of the first SPRINT-Review meeting</h3>
+ The main results of our SPRINT review meeting can be summarized as follows:
+
+<ol>
+<li>The code of the <em>robot-sonar</em> makes use of a TCP-client, while the code of the <em>radarGui</em> is embedded in a TCP-server.
+However, the code related to the application logic is often not clearly separated from the code releated to communication</li>
+<li>The behavior is expressed as a FSM, starting from a (UML-like) diagram. The FSM 
+id often implemented with a switch on a variable. Sometimes the FSM is expressed directly in the code work-flow
+using procedures for the states. In this approach, the JVM stack could overflow </li>
+<li>TCP-interaction is often spread in the code </li>
+<li>There is no separate input-handling. Making a component both reactive and proactive could be difficult</li>
+<li>There is no layered structure of communication, while high-level interaction should be
+clearly distinguishable (by reading the code) from low-level (protocol-dependent) communication </li>
+</ol>
+
+Let us report a more detailed description of a possible refactoring path.
+<br/><br/>
+The result of each (new) SPRINT review meeting is given as a value in the range <ks>A-F</ks>, 
+together with an indication of the next work to do.
+
+
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" ><m><h2>Naive</h2>
+Behavior expressed as a control-flow in a main program. Comments used to mark logical states.
+Interaction expressed directly using <ks>java.net</ks> and  <ks>java.io</ks>.
+</m></td>
+<td>
+<li><a href="../resources/sonarRadarNaive/radarGui.kt" target="code">sonarRadarNaive/radarGui.kt</a></li>
+<li><a href="../resources/sonarRadarNaive/robotSonar.kt" target="code">sonarRadarNaive/robotSonar.kt</a></li>
+<h3>Assesment: D</h3>
+<tt>Code refactoring required</tt>
+  </td>
+</tr>
+
+<tr>
+<td style="width:50%" ><m><h2>NaiveBetter</h2>
+Behavior expressed as methods in a class. Comments used to mark logical states in the body of method <tt>work</tt>.
+The details of TCP-based communications are embedded in the <ks>lowLevelComms</ks> library.
+Interaction expressed using an object of interface <ks>IConnInteraction</ks>.
+
+</m></td>
+<td>
+<li><a href="../resources/sonarRadarNaiveBetter/radarGui.kt" target="code">sonarRadarNaiveBetter/radarGui.kt</a></li>
+<li><a href="../resources/sonarRadarNaiveBetter/robotSonar.kt" target="code">sonarRadarNaiveBetter/robotSonar.kt</a></li>
+<m><k>TCP-Supports</k></m><br/>
+<li><a href="../resources/lowLevelComms/tcpSupport.kt" target="code">lowLevelComms.tcpSupport.kt</a></li>
+<li><a href="../resources/lowLevelComms/tcpConnSupport.kt" target="code">lowLevelComms.tcpConnSupport.kt</a></li>
+<h3>Assesment: C</h3>
+<tt>
+1) Introduce an explicit representation of states for the FSM<br/>
+2) Introduce the concept of high-level communication
+</tt>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%" ><m><h2>FSM</h2>
+Interaction expressed using an object of interface <ks>IConnInteraction</ks>.
+Behavior expressed within a class working as an FSM with explicit representation of states (using  <tt>enum</tt>).<br/>
+Input  expressed as a <ks>receive</ks> action within a state. </br>
+<em>robotSonar</em> sends a String that represents a natural number with base=10.
+</m></td>
+<td>
+<li><a href="../resources/sonarRadarFsm/radarGui.kt" target="code">sonarRadaFsm/radarGui.kt</a></li>
+<li><a href="../resources/sonarRadarFsm/robotSonar.kt" target="code">sonarRadaFsm/robotSonar.kt</a></li>
+<h3>Assesment: C/B</h3>
+<tt>
+1) Introduce an explicit representation of transitions (eliminate action <ks>receiveALine</ks> in states like <m><ks>WAITREQUEST</ks></m>)<br/>
+2) Introduce the concept of high-level communication
+</tt>
+ </td>
+</tr>
+
+<tr>
+<td style="width:50%" ><m><h2>FSM and HL-Comm</h2>
+<k>Layered communication</k> framework:
+ high-level communications supported by the <ks>hlComm</ks> library (working <k>upon</k> <ks>lowLevelComms</ks>).<br/>
+ Explicit representation of <i>states as String</i> and of <i>transitions as a method</i> inherited from a class
+( <a href="../resources/sonarRadarFsmHlComm/fsmAbstract.kt" target="code">fsmAbstract.kt</a> )
+that captures the logical behavior of a FSM.<br/>
+Explicit definition of <ks>msgId</ks> promoted:
+<pre>
+robotSonar --> <ks>polar</ks> : polar( D,A )     -->    radarGui
+                  <-- <ks>answer</ks> : work(done)  <--
+</pre>
+ 
+</m></td>
+<td>
+<li><a href="../resources/sonarRadarFsmHlComm/fsmAbstract.kt" target="code">sonarRadarFsmHlComm/fsmAbstract.kt</a></li>
+<br/>
+<li><a href="../resources/highLevelComms/hlComm.kt" target="code">highLevelComms/hlComm.kt</a></li>
+<br/>
+<li><a href="../resources/sonarRadarFsmHlComm/radarGui.kt" target="code">sonarRadarFsmHlComm/radarGui.kt</a></li>
+<li><a href="../resources/sonarRadarFsmHlComm/robotSonar.kt" target="code">sonarRadarFsmHlComm/robotSonar.kt</a></li>
+<h3>Assesment: B+</h3>
+<tt>
+1) Make the methods <m><ks>connectAsReceiver()</ks>></m> and <m><ks>connectAsSender()</ks></m> 
+configurable according to the protocol, by
+using a reusable support for <m><ks>layered communications</ks></m> as <a href="#unibonoawtsupports">unibonoawtsupports</a>.<br/>
+2) Change the behavior of the operation <ks>transition</ks> by removing from it the operation <i>receive</i>
+</m>
+</tt>
+  </td>
+</tr>
+
+ 
+
+</tbody>
+</table>
+<br/>
+
+  <!--
+<li><a href="../resources/sonarRadarOnTcp/radarGuiAsTcpServer.kt" target="code">radarGuiAsTcpServer.kt</a></li>
+<li><a href="../resources/sonarRadarOnTcp/robotSonarAsTcpClient.kt" target="code">robotSonarAsTcpClient.kt</a></li>
+<li></li>
+<li></li>
+<li><a href="../resources/highLevelComms/hlComm.kt" target="code">hlComm.kt</a></li>
+<li><a href="../resources/highLevelComms/sonarRadarWithConnSupport.kt" target="code">sonarRadarWithConnSupport.kt</a></li>
+<li></li>
+<li><a href="../resources/kotlinTcp/sonarRadarTcpProdCons.kt" target="code">kotlinTcp/sonarRadarTcpProdCons.kt.kt</a></li>
+<li></li>
+<li><a href="../resources/kotlincomponents/sonarRadarProdCons.kt" target="code">kotlincomponents/sonarRadarProdCons.kt</a></li>
+ 
+
+
+
+
+ See https://www.itif.org/files/networkmanagementschemes.pdf
+ -->
+<h1 id="retrospective">A SPRINT Review Retrospective</h1>
+After several code refactoring, the working-team agrees that the development of a distributed software system should
+be faced by starting from a new set of concepts with respect to the mechanisms usually available from conventional
+programming lanaguages.
+
+<h2>Reasoning about interactions related to communications</h2>
+The working-team agrees on the fact that code related to the interaction between components should always clearly distinguish between:
+<ul>
+<li><i><k>low-level communication</k></i>: a layer that uses basic two-way connection-based protocols (TCP, UDP, etc) or other 
+middleware-based supports to deliver information from a source so that is can be received by a destination. This level 
+does not pose any logical constraint on the message payload.
+
+ </li>
+<li><i><k>high-level communication</k></i>: this level should be agnostic as regards low-level technology, since it focus is on logical
+aspects/constraints of the interaction.  
+</li>
+</ul> 
+ 
+
+Since the task re-building interaction from scratch for each application it is quite time-consuming (and error-prone),
+our software production process should focus on the application-level (i.e. on high-level communication) and not on low-level details.
+<br/><br/>
+Thus, it could be worthwhile to  factorize low-level communication  on some (custom) support 
+(for example, see <a href="#unibonoawtsupports">A reusable support for layered communications</a> hereunder)
+and to provide tools to create an <em>internal standard</em>  for high-level communications
+(see <a href="#standardFsm">Towards a standard structure for FSM</a> hereunder).
+ 
+ 
+ <h3 id="unibonoawtsupports">A reusable support for <k>layered communications</k></h3>
+ 
+To minimize the impact of changes in the code in the case we want to change the low-level communication protocol, 
+the custom library <bc>unibonoawtsupports.jar</bc>  provides a support for communications based on connection-based, 
+two-way protocols such as <tt>TCP, UDP</tt>, etc. or a serial line (the case of <tt>Arduino</tt>).  
+
+<center><img src="./img/noawtsupport.png" alt="noawtsupport" width="40%" height="40%"/></center>
+
+
+The library <tt>unibonoawtsupports</tt> includes:</br/>
+
+<ul>
+<li>a set of specialized factories (<tt>FactoryTcpProtocol</tt>, <tt>FactoryUdpProtocol</tt>, etc.) that 
+provide protocol-specific supports (sockets, datagrams etc);  </li>
+<li> the factory <bc>FactoryProtocol</bc> that hides  details related to the specific protocol.
+Each operation of the factory returns an object that implements the interface <bc>IConnInteraction</bc> 
+(defined in the custom library <bc>uniboInterfaces.jar</bc>) 
+that can be used to send/receive information on the connection.
+
+<pre><m>public interface <k>IConnInteraction</k> {
+    void <ks>sendALine</ks>(String s) throws Exception;
+    String <ks>receiveALine</ks>() throws Exception;
+    void <ks>closeConnection</ks>() throws Exception;
+}
+</m></pre>
+</li>
+</ul>
+ 
+For an example, see <a href="../resources/sonarRadarFsmHlComm/fsmAbstract.kt" target="code">sonarRadarFsmHlComm/fsmAbstract.kt</a>
+that defines two operations that make use of the support:
+
+<pre>
+fun connectAsReceiver( protocol: String, port : Int  ){ ... }
+fun connectAsSender( protocol: String, host: String, port : Int  ){ ... }
+</pre>
+
+ <h3 id="hlcomm">High-level communications</h3>
+ While <i>low-level communication</i> is essentially based on the idea of reding/writing  bits on some channel - in a <tt>P2P</tt> way
+ or by using a mediator - connecting two components, high-level communication could be related to concepts
+ such as <m><k>dispatch, request, reply, event, ...</k></m> introduced in 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qak.radar2020/userDocs/LabRadarGui.html#hlconcepts" target="lab">
+LabRadarGui | Towards a standard set of high-level concepts</a> and already used in the library
+<a href="../resources/highLevelComms/hlComm.kt" target="code">highLevelComms/hlComm.kt</a>.
+<br/><br/>
+ 
+<h2>Reasoning about behavior</h2>
+ The working-team agrees on the fact that each component of a distributed system should be associated with its own control flow
+ and that the  behavior of the component should be, in general both <i>proactive</i> and <i>reactive</i>:
+<ul>
+<li><em>proactive</em>: a component must be able to perform some specific job </li>
+<li><em>reactive</em>: each component  should be able to change its behavior - for example modify its basic job -
+a s a consequence of information (request, dispatch, event, etc. - message in general) received from the external world</li>
+</ul>  
+
+
+Moreover, the 'reactive' part could structured in two main different ways:
+ <ul>
+<li>in a <em>message-driven</em> way: the component executes a job as a consequence of a received message. </li>
+<li>in a <em>message-based</em> way:: each component is a <tt>FSM</tt> that performs a change of state either in
+autonomous way (<em>empty move</em>) or as a consequence of a received message (<em>transition</em>).</li>
+</ul>  
+
+In the <em>message-based</em> (<tt>FSM</tt>) model, a <em>transition</em> should be considered as a specification of the
+set <tt>TS</tt> of messages that the component expects to transit from a state <tt>S</tt> to another. If a component
+in <tt>S</tt> recives a message outside the set <tt>TS</tt>, two strategies are possibile:
+
+<ul>
+<li><em>ignore</em> the message: the received information  is lost. </li>
+<li><em>store</em> the message in a local queue (<em>msgMemoQueue</em>) to be consulted in a future transtion
+</li>
+</ul> 
+
+<h3>From objects to actors</h3>
+Starting from the experience gained from several projects of distributed software systems built in bottom-up way,
+the working-team agrees on the opportunity to abandon the idea of components as object and to start from
+the idea that each component is conceived as a actor (e.g. an Akka actor or a Kotlin actor).
+<br/><br/>
+At this point, the team decides to design and build two main abstract classes :
+
+<ul>
+<li>the class <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>
+that provide a support for components working in a <em>message-driven</em> way. <br/>
+For example, the component <em>radarGui</em> can be written as reported in 
+<a href="../resources/actors/RadarGui.kt" target="code">actors/RadarGui.kt</a><br/><br/>
+
+
+</li>
+<li> the class <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a>
+that provide a support for components working in a <em>message-based</em> way.<br/>
+For example, the component <em>radarGui</em> can be written as reported in 
+ <a href="../resources/actors/RadarGuiFsm.kt" target="code">actors/RadarGuiFsm.kt</a>
+ </li>
+ </ul>
+ 
+
+The availability of a platform like that introduced in  
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qak.radar2020/userDocs/LabRadarGui.html#platform" target="lab">
+LabRadarGui | Building a platform</a> allows us to exploit the class 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qak.radar2020/userDocs/LabRadarGui.html#ActorBasicFsm" target="lab">
+LabRadarGui | ActorBasicFsm</a> to write code of each component with an explicit representation of the states and of the transitions:
+
+<pre><m>class robotSonar( name : String, scope : CoroutineScope  ) : <k>ActorBasicFsm</k>( name, scope ) {
+	<ks>override fun</ks> <k>getInitialState()</k>: String{ return <ks>"INIT"</ks>}	
+	<ks>override fun</ks> <k>getBody()</k> : (ActorBasicFsm.() -> Unit){
+ 		return {
+			<k>state</k>(<ks>"INIT"</ks>) {
+				<k>action</k>{
+					//<kc>Sequence of (terminating) actions written by the application designer</kc>
+				}
+				<k>transition</k>(edgeName="t0",targetState=<ks>"SENDREQUEST"</ks>,cond=<k>doswitch()</k> ) <kc>//EMPTY MOVE</kc>
+			}
+			<k>state</k>(<ks>"SENDREQUEST"</ks>) {
+				<k>action</k>{
+					//<kc>S...</kc>
+				}
+				<k>transition</k>(edgeName="t0",targetState=<ks>"ELABANSWER"</ks>, cond=<k>whenReply("answer")</k> ) <kc>//EMPTY MOVE</kc>
+			}
+		}
+	}
+}
+</m></pre>
+
+We highlight that:
+<ul>
+<li>a call to the operation <k>transition(...)</k> does not perform any <tt>receive</tt> operation. It is just a way to 'denote interest' for a message.
+The input-handling part is implemented by a proper separate component within the platform (see
+<a href="../../it.unibo.qakactor/src/main/kotlin/QakContextServer.kt" target="code">
+QakContextServer.kt</a>)<br/><br/></li>
+<li>the <k>doswitch()</k> operation represents an 'empty move', i.e. the transition specifies that the components goes from the state<m> <ks>INIT</ks></m> 
+to the state <m><ks>SENDREQUEST</ks></m>  without waiting any information from the outside world.<br/><br/></li>
+<li>the <k>whenReply( msgId : String )</k> operation means that transition will go to the specified state ( <m><ks>ELABANSWER</ks></m> in the example) 
+when the message of type <m><ks>reply</ks></m> and identifier <m><ks>answer</ks></m> is received. A similar task is done by the operations
+ <m><k>whenEvent( msgId : String ) </k></m>, <m><k>whenDispatch( msgId : String )</k></m> and <m><k>whenRequest( msgId : String )</k></m>.<br/><br/>
+</li>
+<li>the operations of form <k>whenXXXGuarded</k>( msgId: String, <k>guard:()->Boolean</k>) implement the concept of guarded transitions, i.e. a
+transition that can 'fire' only if the given <ks>guard</ks> is true.<br/><br/></li>
+</ul>
+ 
+The class  <em>ActorBasicFsm</em> is expressed in a domain-specific language  by exploiting the Kotlin capability to define internal-DSL.
+See <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.kotlin.dsl/userDocs/LabDsl.html" target="lab">
+LABDsl | Kotlin Internal DSL</a>
+and
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/ActorBasicFsm.html" target="lab">LabQak | ActorBasicFsm</a>
+ 
+
+
+<h2 id="standardFsm">From bottom-up to top-dwon </h2>
+
+The availability of a custom platform promotes a top-down approach of software design and building of 
+distributed applications, based on the possibility to express the behavior of each component as a finite state
+machine, whose transitions are driven by high-level communication concepts, such as <m><k>dispatch, request, reply, event, ...</k></m>.
+<br/>
+For example, the design of the <em>radarGuiservice</em> can start from the state diagrams of its two main components:
+<br/><br/>
+
+<center><img src="./img/sonarRadarFsms.png" alt="sonarRadarFsms" width="50%" /></center>
+<br/><br/>
+
+At this level of description, low-level communication details are hidden behind the actions named <m><ks>connectToRadarGuiServer</ks></m> 
+(in the <tt>sonarRobot</tt>) and  <m> <ks>waitConnection</ks></m> (in the <tt>radarGui</tt>).
+
+     
+<h3>Application using <tt>ActorBasicFsm</tt></h3>
+The main components are now written as extensions of the class <em>ActorBasicFsm</em> introduced in 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020Lab/blob/master/it.unibo.qakintro2020/userDocs/ActorBasicFsm.html" target="lab">LabQak | ActorBasicFsm</a>
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:30%" ><h3>robotSonar </h3></td>
+<td>
+ <li><a href="../resources/sonarRadarFsmAppl/robotSonar.kt" target="code">sonarRadarFsmAppl/robotSonar.kt</a></li>
+  </td>
+</tr>
+ 
+<tr>
+<td><h3>radargui</h3><m></m></td>
+<td>
+<li><a href="../resources/sonarRadarFsmAppl/radarGui.kt" target="code">sonarRadarFsmAppl/radarGui.kt</a></li>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+<h2 id="todistr">Towards distribution</h2>
+So far, the platform based on <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>
+and <a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasicFsm.kt" target="code">ActorBasicFsm.kt</a> 
+do not provide any support for distribution.
+<br/>
+Therefore, since the <em>radaGui</em> component  must receive information via network, the application designer must introduce 
+other actors; for example:
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:30%" ><h3>msgNetServer</h3><m></m></td>
+<td>
+<a href="../resources/sonarRadarFsmAppl/msgNetServer.kt" target="code">sonarRadarFsmAppl/msgNetServer.kt</a>.<br/><br/>
+ <li>This actor waits for a connection and then creates a <tt>msgReceiver</tt>.
+</li> 
+  </td>
+</tr>
+
+<tr>
+<td style="width:30%" ><h3>msgReceiver</h3><m></m></td>
+<td>
+<a href="../resources/sonarRadarFsmAppl/msgReceiver.kt" target="code">sonarRadarFsmAppl/msgReceiver.kt</a>.<br/><br/>
+<li>This actor is associated, at construction time, with a destination applicative actor.
+It waits for an input message on the given connection and then transforms the input in a <m><k>ApplMessage</k></m> to be sent
+to the given destination applicative actor. In case of errors (e.g. the connection is reset by the client)
+it sends to given destination applicative actor the event <m><ks>failure</ks> . 
+</li>
+  </td>
+</tr>
+
+</tbody>
+</table>
+<br/>
+At this point of our development, the team could plan an extension of the platform, so to allow high-level forms
+of communication among components based on component-names, by delegating to the platform the task to handle the
+details of communicating with local components or with remote components.
+<br/><br/>
+In other words, the team agrees on stating the new <i>internal requirement</i> introduced in
+<a href="LabRadarGui.html#towardDistr" target="lab">LabRadarGui | Towards distribution</a>.
+
+
+<br/><br/>
+
+</div>  
+
+ 
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>

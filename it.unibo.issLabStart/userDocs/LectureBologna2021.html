@@ -698,7 +698,48 @@ e le architetture esagonali:
 
 <tr><td><m>20/05/2021 (15-18)</m></td><td>Lab2</td> 
 <td>
+<h3>Un tuffo '<ks>verso il basso</ks>'</h3>
+<ol>
+<li>Accendiamo un led (esempio di <k>output device</k>):
+ <a href="../../it.unibo.rasp2021/userDocs/LabRasp2021.html#led" target="web">Lab ISS2021 | Raspberry basic demo: blses1_onoff.qak</a></li>
+<li>Attiviamo un sonar HC-SR04 (esempio di <k>input device</k>) 
+<a href="../../it.unibo.rasp2021/userDocs/LabRasp2021.html#sonar" target="web">Lab ISS2021 | Raspberry basic demo: sonarnaive.qak</a></li>
+<li><div class="remark">TODO (caso di studio <bc>ledAsAlarm</bc>): accendere il led quando il sonar rileva una distanza <ks>d&lt;=V</ks> con <ks>V</ks> valore intero prefissato 
+(<ks>5&lt;V&lt;= 80</ks>)</div></li>
+<li>
+</li>
 
+
+</ol>
+<h3>Un tuffo '<ks>verso l'alto</ks>'</h3>
+<ol>
+<li>Risorse (REST):<br/>
+<a href="../../it.unibo.radarresource/src/javacode/Resource.java" target="code">Resource.java</a>,
+<a href="../../it.unibo.radarresource/src/javacode/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a>
+</li>
+
+<li><div class="remark">TODO (caso di studio <bc>radarGui</bc>): visualizzare i valori rilevati dal sonar usando una GUI 'radar-like' fornita 
+nella libreria unibo <ks>radarPojo.jar</ks><br/>
+si veda <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html" target="web">
+LabRadarGui | Radar GUI as a service (from BottomUp to TopDown)</a>: 
+(un survery di quanto fatto nel corso che conduce al progetto definito nel modello
+<a href="../../it.unibo.qakradar21/src/radargui.qak" target="code">radargui.qak</a>
+deployed in <a href="../../it.unibo.issLabStart/resources/deploy/it.unibo.qakradar21-1.0.zip" target="code">it.unibo.qakradar21-1.0.zip</a>
+) </div>
+
+
+ </li>
+<li>Uno sguardo al reactive programming: <br/>
+<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#actorasstream" target="web">
+LabIss2021 | Introduction to QAkactors: Actors as streams</a>
+e <a href="../../it.unibo.demoqak21/userdocs/LabQakExamples2021.html#qastreams" target="web">
+LabIss | Using the QActor (meta)model: Actors as streams</a>
+</li>
+<li>Basi di conoscenza:<br/>
+<a href="../../it.unibo.qakactor/userDocs/LabQakPrologUsage2021.html" target="web">LabISS | Using Prolog</a>
+</li>
+<li></li>
+</ol>
  </td>
 </tr>
 
