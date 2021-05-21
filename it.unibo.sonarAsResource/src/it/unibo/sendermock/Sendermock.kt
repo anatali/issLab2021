@@ -16,12 +16,21 @@ class Sendermock ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		 val input   = java.util.Scanner(System.`in`)  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("sendermock start")
-						forward("putval", "val(10)" ,"sonarresource" ) 
 					}
+				}	 
+				state("work") { //this:State
+					action { //it:State
+						delay(500) 
+						 print("VALUE>")
+									var Data = input.nextLine()  
+						emit("sonarrobot", "sonar($Data)" ) 
+					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 			}
 		}

@@ -1,8 +1,13 @@
+/*
+ * SimulateSonarData
+ * Reads a value data from the user console
+ * Calls coapSupport.updateResourceWithValue( data  ) to PUT on the resource an event
+ * 		msg(sonarrobot,event,support,none,sonar(data),1)
+ * 
+ */
 package coap;
 
 import java.util.Scanner;
-
-import it.unibo.kactor.MsgUtil;
 
 public class SimulateSonarData {
 	
@@ -14,10 +19,8 @@ public class SimulateSonarData {
 		String data = "";
 		while( ! data.equals("q")) {
 			System.out.print("INPUT>");
-			data = in.nextLine();;
-			//String m = MsgUtil.buildEvent("simulator", "sonarRobot", "sonar("+data+")").toString();
-			if( ! coapSupport.updateResourceWithValue( data  ) ) 
-				System.out.println("EMIT failure"  );
+			data = in.nextLine();
+			if( ! coapSupport.updateResourceWithValue( data  ) ) System.out.println("EMIT failure"  );
 		}
 		
 	}

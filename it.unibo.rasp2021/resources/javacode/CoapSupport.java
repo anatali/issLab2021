@@ -6,18 +6,22 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.ApplMessageType;
 
+ 
 class MyHandler implements CoapHandler {
 	public MyHandler ( ) {		 
 	}
 	@Override public void onLoad(CoapResponse response) {
 		String content = response.getResponseText();
-		System.out.println("MyHandler | NOTIFICATION: " + content);
+		System.out.println("MyHandler | value: " + content);
  	}					
 	@Override public void onError() {
 		System.err.println("MyHandler  |  FAILED (press enter to exit)");
 	}
 }
+ 
 
 public class CoapSupport {
 private CoapClient client;
@@ -27,11 +31,12 @@ private CoapObserveRelation relation = null;
 		String url = address + "/" + path;
 		client = new CoapClient( url );
 		System.out.println("CoapSupport | STARTS url=" +  url + " client=" + client );
-		client.setTimeout( 1000L );		 
+		client.setTimeout( 1000L );	
+		String rep = readResource();
+		System.out.println("CoapSupport | initial rep=" +  rep );
+		//observeResource( new MyHandler() );
 	}
-	public CoapSupport( String address ) {  
-		this(address, Resource.path);
-	}
+ 
 	
 	public String readResource(   ) {
 		CoapResponse respGet = client.get( );
@@ -47,23 +52,33 @@ private CoapObserveRelation relation = null;
 	}
 
 	public boolean updateResource( String msg ) {
+		System.out.println("CoapSupport | updateResource " + msg);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-//			if( resp != null ) System.out.println("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());	
-//			else System.out.println("CoapSupport | updateResource FAILURE: "  );
-		return resp != null;
+ 			if( resp != null ) System.out.println("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());	
+ 			else System.out.println("CoapSupport | updateResource FAILURE: " + resp );
+ 			return resp != null;
 	}
 	
 	
+	public boolean updateResourceWithValue( String data ) {
+     	ApplMessage m = new ApplMessage(
+    	        "sonarrobot", ApplMessageType.event.toString(),
+            	"support", "none", "sonar("+data+")", "1" , null);
+		return updateResource(m.toString());
+	}
+	
 	public void test() {
-		//String v = readResource();
-		//System.out.println("   CoapSupport | v=" + v);
-		updateResource("23");
-//		v = readResource();
-//		System.out.println("   CoapSupport | v=" + v);		
+		String v = readResource();
+		System.out.println("CoapSupport | PRE v=" + v);
+		updateResourceWithValue("55");
+		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+ 		v = readResource();
+ 		System.out.println("CoapSupport | POST v=" + v);		
 	}
 	
 	public static void main(String[] args) {
-		CoapSupport cs = new CoapSupport("coap://localhost:5683","robot/sonar");
+		//CoapSupport cs = new CoapSupport("coap://localhost:5683","robot/sonar");
+		CoapSupport cs = new CoapSupport("coap://localhost:8028","ctxsonarresource/sonarresource");
 		cs.test();		
 	}
 	

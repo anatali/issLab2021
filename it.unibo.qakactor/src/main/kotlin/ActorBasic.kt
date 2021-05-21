@@ -568,8 +568,8 @@ KNOWLEDGE BASE
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     fun fromPutToMsg( msg : ApplMessage, exchange: CoapExchange ) {
-        sysUtil.traceprintln("$logo | fromPutToMsg msg=$msg")
-        if( msg.isDispatch() ) {
+        sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
+        if( msg.isDispatch() || msg.isEvent() ) {
             scope.launch { autoMsg(msg) }
             exchange.respond( CHANGED )
             return

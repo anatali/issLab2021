@@ -1,14 +1,21 @@
 /*
  * sonarResource.qak
  * A CoAP-observable component
+ * 1) launch sonarresource
+ * 2) launch SonarresourceObserver or SonarresourceObserverRadar
+ * 3a) launch SimulateSonarData that reads  data from the user console and emits the event 
+ *             msg(sonarrobot,event,support,none,sonar(data),1)
+ * 3b) launch on Raspberry an emitter of sonarRobot event e.g. sonar in sonarnaive.qak
+ *    that launches a CodedQactor that reads data from SonarAlone and emits the event
+ * 	            msg(sonarrobot,event,sonarHCSR04Support,none,sonar(data),1)
  */
  
-System  sonarresource
-mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/sonarresource"
+System -trace sonarresource
+mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/nat/sonar/events"
 
 Dispatch putval     : val(V)
 Event    alarm      : alarm(X)
-Event    sonarRobot : sonar( V )
+Event    sonarrobot : sonar( V )
 
 Context ctxsonarresource ip [ host= "localhost"   port= 8028 ]
 
@@ -22,15 +29,17 @@ QActor sonarresource context ctxsonarresource{
 		println("sonarresource waits ... ") 
 	}
 	Transition t0 whenMsg putval       -> handleValue
-	              whenEvent sonarRobot -> handleSonarData
+	              whenEvent sonarrobot -> handleSonarData
 	              
 	State handleSonarData{
-		onMsg( sonarRobot : sonar(V) ){
+		printCurrentMessage
+		onMsg( sonarrobot : sonar(V) ){
 			[# val distance = payloadArg(0) #]
 			updateResource [# "$distance" #]  
  			println("distance=$distance")
 		}	 	
 	}
+	Goto work
 	
 	State handleValue{
 		onMsg( putval : val(V) ){
@@ -45,13 +54,23 @@ QActor sonarresource context ctxsonarresource{
 
 /*
  * rapid test
-*/
-/*
+
+ 
 QActor sendermock context ctxsonarresource{
+[# val input   = java.util.Scanner(System.`in`) #]
 	State s0 initial{ 
 		println("sendermock start") 
-		forward sonarresource -m putval : val(10)
+		//forward sonarresource -m putval : val(10)		
 	}
+	//Goto work	//WARNING: input.nextLine() BLOCKS (also sonarresource)
+	
+	State work{
+		delay 500     //release the resource
+		[# print("VALUE>")
+			var Data = input.nextLine() #] 
+		emit sonarrobot : sonar($Data)
+	}
+	Goto work
 	
 } 
-*/
+*/ 

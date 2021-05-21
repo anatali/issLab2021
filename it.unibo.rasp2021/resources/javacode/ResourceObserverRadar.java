@@ -33,7 +33,7 @@ class DataHandler implements CoapHandler {
 }
 
 public class ResourceObserverRadar {
-	private CoapSupport coapSupport = new CoapSupport("coap://localhost:5683");
+	private CoapSupport coapSupport = new CoapSupport("coap://localhost:8028","ctxsonarresource/sonarresource");
 	
 	public ResourceObserverRadar(){
 		//client = new CoapClient("coap://localhost:5683/robot/sonar");

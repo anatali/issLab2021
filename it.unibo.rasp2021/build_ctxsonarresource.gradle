@@ -1,24 +1,29 @@
 /*
 ================================================================================
-build.gradle
- 	gradle build eclipse		//to set the dependency on the library
+build_ctxsonarresource.gradle
+GENERATED ONLY ONCE
+USAGE:	 
+  	gradle  -b build_ctxsonarresource.gradle eclipse		//to set the dependency on the library
+	gradle  -b build_ctxsonarresource.gradle distZip
+	gradle  -b build_ctxsonarresource.gradle -q tasks --all
+	gradle  -b build_ctxsonarresource.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {
     id 'java'
     id 'eclipse'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+    //id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.71'
 }
 
-version '2.4' 
+version '1.0'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    flatDir {  
-       dirs '../unibolibs'
-    }
+    jcenter()
+    flatDir {   dirs '../unibolibs'	 }
 }
 
 dependencies {
@@ -42,21 +47,33 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
 	compile group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
 //LOG4j	
-	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25' 
+//MONGO
+	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
+	//compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.2'
 
 //CUSTOM
     compile name: 'uniboInterfaces'
     compile name: '2p301'
-    //compile name: 'it.unibo.qakactor-2.0'
+    compile name: 'it.unibo.qakactor-2.4'
+ 
     //For p2p two-way connections (TCP, UDP, BTH, Serial ...)
     compile name: 'unibonoawtsupports'
 
-
-    //compile fileTree(dir: 'C:/Didattica2018Work/iss2019Lab/libs', include: 'uniboInterfaces.jar')
-    //compile fileTree(dir: 'C:/Didattica2018Work/iss2019Lab/libs', include: '2p301.jar')
-    //compile fileTree(dir: 'C:/Didattica2018Work/iss2019Lab/libs', include: 'it.unibo.bls19Local-1.0.jar')
-    //For p2p two-way connections (TCP, UDP, BTH, Serial ...)
-    //compile fileTree(dir: 'C:/Didattica2018Work/iss2019Lab/libs', include: 'unibonoawtsupports.jar')
+	//BLS
+	//compile name: 'it.unibo.bls19Local-1.0'
+	//RADAR
+	compile name: 'radarPojo'
+	//RADAR GUI
+	// https://mvnrepository.com/artifact/org.pushingpixels/trident
+	compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
+	//ROBOT nano (SAM)
+    //compile name: 'labbaseRobotSam'
+	//compile mame: 'pi4j-core' //2-12 SNAPSHOT non in gradle
+ 	//PLANNER
+    //compile name: 'it.unibo.planner'
+ 	// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
+	compile group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 }
 
 compileKotlin {
@@ -67,10 +84,18 @@ compileTestKotlin {
 }
 
 sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src'
+    main.java.srcDirs += 'resources'
+    test.java.srcDirs += 'test'		//test is specific
 }
+/*
+mainClassName = 'it.unibo.TODOKt'
 
 jar {
-    println("building jar")
+    println("executing jar")
     from sourceSets.main.allSource
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
 }
+*/

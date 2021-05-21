@@ -19,8 +19,41 @@ class Sonarresource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( na
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						println("sonarresource start")
 					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
+				}	 
+				state("work") { //this:State
+					action { //it:State
+						println("sonarresource waits ... ")
+					}
+					 transition(edgeName="t00",targetState="handleValue",cond=whenDispatch("putval"))
+					transition(edgeName="t01",targetState="handleSonarData",cond=whenEvent("sonarrobot"))
+				}	 
+				state("handleSonarData") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						if( checkMsgContent( Term.createTerm("sonar(V)"), Term.createTerm("sonar(V)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val distance = payloadArg(0)  
+								updateResourceRep( "$distance"  
+								)
+								println("distance=$distance")
+						}
+					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
+				}	 
+				state("handleValue") { //this:State
+					action { //it:State
+						if( checkMsgContent( Term.createTerm("val(V)"), Term.createTerm("val(V)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val distance = payloadArg(0)  
+								updateResourceRep( "$distance"  
+								)
+								emit("alarm", "alarm(fire)" ) 
+								println("distance=$distance")
+						}
+					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 			}
 		}
