@@ -1,3 +1,10 @@
+/*
+ sonarHCSR04Support2021
+ A CodedQactor that is activated by the  dispatch  sonarstart : sonarstart(V).
+ Launches a process p that activates SonarAlone.
+ Reads data from the InputStream of p and, for each value,
+ emits the event   sonarRobot : sonar( V ).
+ */
 package rasp.sonar
 
 import java.io.BufferedReader
@@ -9,10 +16,7 @@ import kotlinx.coroutines.delay
 import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 
-/*
- Handles Dispatch sonarstart         : sonarstart(V)  
- Emits the event sonarRobot : sonar( V )
- */
+
 class sonarHCSR04Support2021 ( name : String ) : ActorBasic( name ) {
 	lateinit var reader : BufferedReader
 	 

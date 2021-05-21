@@ -1,4 +1,4 @@
-package javacode;
+package coap;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -32,9 +32,7 @@ private CoapObserveRelation relation = null;
 		System.out.println("CoapSupport | STARTS url=" +  url + " client=" + client );
 		client.setTimeout( 1000L );		 
 	}
-	public CoapSupport( String address ) {  
-		this(address, Resource.path);
-	}
+ 
 	
 	public String readResource(   ) {
 		CoapResponse respGet = client.get( );
@@ -55,9 +53,10 @@ private CoapObserveRelation relation = null;
 	        "sonar", ApplMessageType.event.toString(),
         	"sonarRasp", "none", "sonar("+msg+")", "1" , null);
 */
+		System.out.println("CoapSupport | updateResource " + msg);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-//			if( resp != null ) System.out.println("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());	
-//			else System.out.println("CoapSupport | updateResource FAILURE: "  );
+ 			if( resp != null ) System.out.println("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());	
+ 			else System.out.println("CoapSupport | updateResource FAILURE: "  );
 		return resp != null;
 	}
 	

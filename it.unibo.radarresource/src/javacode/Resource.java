@@ -12,7 +12,7 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 public class Resource extends CoapResource {
 	public static String path = "robot/sonar";
 
-private String lastMsg = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
+private String lastMsg = "msg(sonar,event,sonarOnRaspCoap,none,sonar(0),0)";
 
 	public Resource( String name ) {
 		super(name);

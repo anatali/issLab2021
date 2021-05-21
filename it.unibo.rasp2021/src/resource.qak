@@ -1,15 +1,7 @@
 /*
- * A resource is called by two actors that send a request cmd:cmd(X)
- * The resource elaborates the request 
- * 	by updating its internal CoAP-observable info  
- * 	and sends the answer replytocmd to the sender of the request 
- * 
- * ABOUT EVENTS and EVENT PROPAGATION
- * Before sending the answer, the resource emit the alarm event
- * This event is propagated (via TCP) to all the contexts known by the resource subsystem
- * Thus we could insert the declaration in (1).
- * But be aware that in this case the resource subsystem does not start in absence of the
- * callers. To avoid this, we could use MQTT in the whole system.
+-----------------------------------------------------------------------
+  
+-----------------------------------------------------------------------
  
  */
 System -trace -msglog  resourcealone
@@ -26,7 +18,7 @@ Reply   replytocmd  : replytocmd(X)
 Event   alarm       : alarm(X)
    
 Context ctxresource  ip [ host= "127.0.0.1" port= 8048 ]  
-//Context ctxcallers   ip [ host= "localhost" port= 8049 ] 	//(1)
+ 
   
 QActor resource context ctxresource { 
 [#   
