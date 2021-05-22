@@ -1,7 +1,16 @@
 /*
  * ----------------------------------------------------------------------
- * Activates the CodedQActor sonardatasource of class resources.rasp.sonar.sonarHCSR04Support2021
- * Shows events
+ * RUNS ON Raspberry
+ *
+ * - loads the kb about the system (sonar2021Kb.pl) and showSystemConfiguration
+ * - loads the sonar2021ConfigKb.pl and reads the sonar-data source (real or simulated).
+ *   	If real, activates the CodedQActor sonardatasource of class sonarHCSR04Support2021
+ *   	If simulated, activates the CodedQActor sonarsimulator of class sonarsimulator
+ * - setup the sonar-data pipe that emits-on-stream the event sonar:distance( V )
+ * - handles the event sonar and emits the event sonarrobot:sonar( D )
+ * 
+ * TO INTERACT from Rasp to PC without MQTT => 
+ *            remove Windows firewall or allow port 8028
  * ----------------------------------------------------------------------
  */
 
@@ -12,7 +21,7 @@
 	//"tcp://broker.hivemq.com" 
 
 System -msglog  sonarnaive   
-mqttBroker "broker.hivemq.com" :  1883 eventTopic "sonar/data"
+//mqttBroker "broker.hivemq.com" :  1883 eventTopic "sonar/data"
 
 Dispatch sonarstart      : sonarstart(V)  
 Dispatch simulatorstart  : simulator(V)  
@@ -20,35 +29,35 @@ Event    sonar           : distance( V )   //emitted by rx.sonarSimulator or sen
 Event    sonarrobot      : sonar( V )      //for the application level
  
 Context ctxsonar         ip [host="localhost"     port=8068   ] 	 	
-//Context ctxsonarresource ip [host= "127.0.0.1" port= 8028 ]
- 
+Context ctxsonarresource ip [host= "127.0.0.1"    port=8028   ]
+  
 //DATA SOURCES
 CodedQActor sonarsimulator  context ctxsonar className "sonarSimulator"  
 CodedQActor sonardatasource context ctxsonar className "sonarHCSR04Support2021"
 
 //Filters
-//CodedQActor datalogger     context ctxsonar className "rx.dataLogger"
+//CodedQActor datalogger     context ctxsonar className "dataLogger"
 CodedQActor datacleaner    context ctxsonar className "dataCleaner"
-//CodedQActor distancefilter context ctxsonar className "rx.distanceFilter"
+//CodedQActor distancefilter context ctxsonar className "distanceFilter"
 
-//ExternalQActor sonarresource context ctxsonarresource
+ExternalQActor sonarresource context ctxsonarresource
  
 QActor sonar context ctxsonar {     
 [# var simulate = true
    lateinit var firstActorInPipe : ActorBasic 
 #]
  	State s0 initial {  		 
+ 		println("sonar START")
  		discardMsg On		 		/*
  		 * INTROSPECTION
  		 */
- 		solve( consult("sonar2021Kb.pl")	 )
  		solve( consult("sysRules.pl")	 )
  		solve( consult("sonarnaive.pl")       )
  		solve( showSystemConfiguration   )
  		/*
  		 * CONFIGURATION
  		 */
- 		solve( consult("sonar2021Kb.pl")	 ) 		
+ 		solve( consult("sonar2021ConfigKb.pl")	 )
  		solve( simulate(X) )
 		println( currentSolution )	//yes X / on oppure X / off
 		[# val x = getCurSol("X").toString() 
@@ -80,7 +89,7 @@ QActor sonar context ctxsonar {
   		 onMsg( sonar : distance(D) ){
   		 	[# val d = payloadArg(0) 
   		 	   val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($d)")
-  		 	   emit( ev, false  )  //Not emit for me (but not for MQTT)
+  		 	   emit( ev, false  )  //Not emit for me (but not applies to MQTT)
   		 	#]  
   		 }
   	}

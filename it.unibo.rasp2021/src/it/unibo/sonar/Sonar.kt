@@ -21,12 +21,12 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						println("sonar START")
 						discardMessages = true
-						solve("consult('sonar2021Kb.pl')","") //set resVar	
 						solve("consult('sysRules.pl')","") //set resVar	
 						solve("consult('sonarnaive.pl')","") //set resVar	
 						solve("showSystemConfiguration","") //set resVar	
-						solve("consult('sonar2021Kb.pl')","") //set resVar	
+						solve("consult('sonar2021ConfigKb.pl')","") //set resVar	
 						solve("simulate(X)","") //set resVar	
 						println(currentSolution)
 						 val x = getCurSol("X").toString() 
@@ -56,7 +56,7 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val d = payloadArg(0) 
 								  		 	   val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($d)")
-								  		 	   emit( ev, false  )  //Not emit for me (but not for MQTT)
+								  		 	   emit( ev, false  )  //Not emit for me (but not applies to MQTT)
 						}
 					}
 					 transition(edgeName="t01",targetState="handleSonarData",cond=whenEvent("sonar"))

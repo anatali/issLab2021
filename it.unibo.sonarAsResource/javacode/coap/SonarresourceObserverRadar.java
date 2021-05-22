@@ -34,7 +34,7 @@ class DataHandler implements CoapHandler {
 }
 
 public class SonarresourceObserverRadar {
-	private CoapSupport coapSupport = new CoapSupport("coap://localhost:8028","ctxsonarresource/sonarresource");
+	private CoapSupport coapSupport = new CoapSupport("coap://192.168.1.40:8028","ctxsonarresource/sonarresource");
 	
 	public SonarresourceObserverRadar(){
 		radarPojo.radarSupport.setUpRadarGui();

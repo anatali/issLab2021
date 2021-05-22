@@ -277,28 +277,75 @@ Our domain can be reduced to the idea of a resource that changes its state when 
 <br/><br/>
 <center><img src="./img/sonarresource.PNG" alt="sonarresource" width="50%" ></center>
 <br/>
-Let us define our basic domain-resource as a qak actor. In this way the resource will be CoAP-observale
-and CoAP-modifiable.
-
-<ul>
-<li><a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> </li>
-</ul>
 
 
  
 
 </td>
 <td>
+Let us define our basic domain-resource as a qak actor. In this way the resource will be CoAP-observale
+and CoAP-modifiable.
 
+<ul>
+<li><a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> </li>
+<li><a href="../src/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a> </li>
+</ul>
 
+The resource could operate by using MQTT, but it is not necessary.
+<br/><br/>
+The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
+ 
+</td>
+</tr>
+
+<tr>
+<td ><h3>The sonar-data source</h3>
+<center><img src="./img/sonarpipe.png" alt="sonarpipe" width="90%" ></center><br/>
+In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a> 
+the qak model <a href="../../it.unibo.rasp2021/src/sonarnaive.qak" target="code">sonarnaive.qak</a> :<br/><br/>
+<ul> 
+<li>loads the Prolog-kb about the system (<a href="../../it.unibo.rasp2021/sonar2021Kb.pl" target="code">sonar2021Kb.pl </a>) 
+and calls (solve) the rule <tt>showSystemConfiguration</tt>
+defined in <a href="../../it.unibo.rasp2021/sysRules.pl" target="code">sysRules.pl </a></li> 
+<li>loads the <a href="../../it.unibo.rasp2021/sonar2021ConfigKb.pl" target="code">sonar2021ConfigKb.pl </a> 
+and reads the sonar-data source (real or simulated).<br/>
+- If real, activates the CodedQActor 
+<a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a><br/>
+- If simulated, activates the CodedQActor 
+<a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>
+ </li>
+<li>handles the event <ks>sonar:distance(D)</ks> and emits the event <ks>sonarrobot:sonar(D)</ks></li> 
+</ul>
+ 
+
+</td>
+<td>In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>:
+<br/><br/> 
+ 
+ 
+
+<ul>
+<li><ks>sonar</ks> represents the source of sonar-data chosen by the user 
+(either <a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a>
+or <a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>)
+ <br/><br/>
+ </li>
+<li><a href="../../it.unibo.rasp2021/codedqak/dataCleaner.kt" target="code">dataCleaner.kt</a>:
+a CodedQActor that elimnates spurious sonar-data <br/><br/>
+ </li>
+<li><a href="../../it.unibo.rasp2021/codedqak/dataLogger.kt" target="code">dataLogger.kt</a> 
+a CodedQActor that wites the data emitted by the sonar on the file <tt>datalogger.txt</tt> <br/><br/>
+</li>
+ 
+</ul>
 
 </td>
 </tr>
 
 
 <tr>
-<td >
-<center><img src="./img/sonarpipe.png" alt="sonarpipe" width="90%" ></center>
+<td ><h3>Deployment1: the resource on a PC</h3>
+<center><img src="./img/sonarpipeDistrib.png" alt="sonarpipeDistrib" width="90%" ></center>
 </td>
 <td>
 
@@ -311,16 +358,12 @@ and CoAP-modifiable.
 </tr>
 
 <tr>
-<td>
+<td><h3>Deployment2: the resource on the RaspberryPi </h3>
+<center><img src="./img/sonarpipeDistribonRasp.png" alt="sonarpipeDistribonRasp" width="90%" ></center>
  
 </td>
 <td>
-<ul>
-<li><a href="../../it.unibo.rasp2021/src/sonarnaive.qak" target="code">sonarnaive.qak</a> </li>
-<li><a href="../../it.unibo.rasp2021/codedqak/dataCleaner.kt" target="code">dataCleaner.kt</a> </li>
-<li><a href="../../it.unibo.rasp2021/codedqak/dataLogger.kt" target="code">dataLogger.kt</a> </li>
-<li><a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a> </li>
-</ul>
+
 
 </td>
 </tr>

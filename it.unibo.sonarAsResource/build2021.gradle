@@ -11,7 +11,7 @@ USAGE:
 plugins {
     id 'java'
     id 'eclipse'
-    //id 'application'
+    id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.4.32'
 }
 
@@ -98,14 +98,14 @@ compileTestKotlin {
 
 sourceSets {
     main.java.srcDirs += 'src'
-    main.java.srcDirs += 'kotlin'
+    //main.java.srcDirs += 'kotlin'
     //main.java.srcDirs += 'resources'
     //test.java.srcDirs += 'test.kt'		//test.kt is specific
 }
  
-//mainClassName = "it.unibo.ctxblses1.MainCtxblses1Kt"
-//mainClassName = "resources.kotlincode.SonarSimulateWithActorKt"
-/*
+mainClassName = "it.unibo.ctxsonarresource.MainCtxsonarresourceKt"
+ 
+ 
 jar {
     println("executing jar")
     from sourceSets.main.allSource
@@ -113,4 +113,4 @@ jar {
         attributes 'Main-Class': "$mainClassName"
     }
 }
-*/ 
+ 
