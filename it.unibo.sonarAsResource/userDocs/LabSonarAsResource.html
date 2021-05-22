@@ -230,11 +230,74 @@ The user must be allowed to choose a proper sonar data-source before launching t
 
 
 <h2>Project</h2> 
- 
+
+
+
+
+
+
+
  <center><table style="width:95%">
 <tbody>	
 <tr>
 <td style="width:50%">
+<!-- <center><img src="./img/hexArch.png" alt="hexArch" width="90%" ></center> -->
+<center><img src="./img/portAdapterArch.png" alt="portAdapterArch" width="90%" ></center>
+
+ 
+</td>
+<td>
+<h3>Hexagonal(ports and adapters) architecture</h3>
+About <a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​s</a>,
+the computer scientist
+<a href="https://en.wikipedia.org/wiki/Alistair_Cockburn" target="web">Alistair Cockburn​</a> says:
+<ul>
+<li>Allow an application to equally be driven by users, programs, automated test or batch scripts, 
+and to be developed and tested in isolation from its eventual run-time devices and databases. ​
+</li>
+<li>As events arrive from the outside world at a port, a technology-specific adapter converts it into 
+a usable procedure call or message and passes it to the application. 
+The application is blissfully ignorant of the nature of the input device. ​
+</li>
+<li>When the application has something to send out, it sends it out through a port to an adapter, 
+which creates the appropriate signals needed by the receiving technology (human or automated). ​
+</li>
+<li>The application has a semantically sound interaction with the adapters on all sides of it, 
+without actually knowing the nature of the things on the other side of the adapters.​
+</li>
+</ul>
+ <center><img src="./img/hexlinear.PNG" alt="hexlinear" width="90%" ></center>
+</td>
+</tr>
+
+<tr>
+<td >
+<h3>The resource</h3>
+Our domain can be reduced to the idea of a resource that changes its state when a new sonar value is generated. 
+<br/><br/>
+<center><img src="./img/sonarresource.PNG" alt="sonarresource" width="50%" ></center>
+<br/>
+Let us define our basic domain-resource as a qak actor. In this way the resource will be CoAP-observale
+and CoAP-modifiable.
+
+<ul>
+<li><a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> </li>
+</ul>
+
+
+ 
+
+</td>
+<td>
+
+
+
+</td>
+</tr>
+
+
+<tr>
+<td >
 <center><img src="./img/sonarpipe.png" alt="sonarpipe" width="90%" ></center>
 </td>
 <td>
