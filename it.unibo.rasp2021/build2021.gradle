@@ -102,7 +102,7 @@ sourceSets {
     main.java.srcDirs += 'codedqak'
     //test.java.srcDirs += 'test.kt'		//test.kt is specific
 }
- 
+  
 //mainClassName = 'it.unibo.ctxblses1.MainCtxblses1Kt'
 mainClassName = 'it.unibo.ctxsonar.MainCtxsonarKt'
 

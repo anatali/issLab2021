@@ -11,16 +11,17 @@
 	//mqtt.fluux.io
 	//"tcp://broker.hivemq.com" 
 
-System -msglog  sonarnaive  
-mqttBroker "broker.hivemq.com" :  1883 eventTopic "unibo/nat/sonar/events"
+System -msglog  sonarnaive   
+mqttBroker "broker.hivemq.com" :  1883 eventTopic "sonar/data"
 
 Dispatch sonarstart      : sonarstart(V)  
 Dispatch simulatorstart  : simulator(V)  
-Event    sonarrobot      : sonar( V )   //emitted by rx.sonarSimulator or sensors.sonarHCSR04SupportActor	
-
+Event    sonar           : distance( V )   //emitted by rx.sonarSimulator or sensors.sonarHCSR04SupportActor	
+Event    sonarrobot      : sonar( V )      //for the application level
+ 
 Context ctxsonar         ip [host="localhost"     port=8068   ] 	 	
-Context ctxsonarresource ip [host= "192.168.1.132" port= 8028 ]
-
+//Context ctxsonarresource ip [host= "127.0.0.1" port= 8028 ]
+ 
 //DATA SOURCES
 CodedQActor sonarsimulator  context ctxsonar className "sonarSimulator"  
 CodedQActor sonardatasource context ctxsonar className "sonarHCSR04Support2021"
@@ -30,13 +31,31 @@ CodedQActor sonardatasource context ctxsonar className "sonarHCSR04Support2021"
 CodedQActor datacleaner    context ctxsonar className "dataCleaner"
 //CodedQActor distancefilter context ctxsonar className "rx.distanceFilter"
 
+//ExternalQActor sonarresource context ctxsonarresource
  
 QActor sonar context ctxsonar {     
-[# val simulate = true
+[# var simulate = true
    lateinit var firstActorInPipe : ActorBasic 
 #]
  	State s0 initial {  		 
- 		discardMsg On		//
+ 		discardMsg On		 		/*
+ 		 * INTROSPECTION
+ 		 */
+ 		solve( consult("sonar2021Kb.pl")	 )
+ 		solve( consult("sysRules.pl")	 )
+ 		solve( consult("sonarnaive.pl")       )
+ 		solve( showSystemConfiguration   )
+ 		/*
+ 		 * CONFIGURATION
+ 		 */
+ 		solve( consult("sonar2021Kb.pl")	 ) 		
+ 		solve( simulate(X) )
+		println( currentSolution )	//yes X / on oppure X / off
+		[# val x = getCurSol("X").toString() 
+		   simulate = ( x == "on")	
+		   println( "simulate=$simulate" )
+		#] 		
+
 		//CREATE THE PIPE
 		[#  if( simulate ) firstActorInPipe = sysUtil.getActor("sonarsimulator")!!  //generates simulated data
 			else firstActorInPipe           = sysUtil.getActor("sonardatasource")!!  //generates REAL data
@@ -47,20 +66,24 @@ QActor sonar context ctxsonar {
  				//subscribeLocalActor("distancefilter").		//propagates the lcoal stream event obstacle
   				subscribeLocalActor("sonar")  
 		#]    
- 		//ACTIVATE THE DATA SOURCE   
-		if [# simulate #]{forward sonarsimulator -m simulatorstart : simulatorstart(qasource) }
- 		else{ forward sonardatasource -m simulatorstart : simulatorstart(qasource) }
- 
- 		//forward sonardatasource -m sonarstart : sonarstart(ok)
-  		println("sonar started")  
+  
+ 		//ACTIVATE THE DATA SOURCE (REAL or SIMULATED)
+		if [# simulate #]{forward sonarsimulator -m simulatorstart : simulatorstart(ok) }
+ 		else{ forward sonardatasource -m sonarstart : sonarstart(ok) }  //payload don't care
+
   	}  
-  	  	//Transition t0  whenEvent sonarrobot -> handleEvent  
+  	Transition t0  whenEvent sonar -> handleSonarData  
 					  
  	
-  	State handleEvent{
+  	State handleSonarData{
   		printCurrentMessage
-  		//TODO: better to emit here or in sonardatasource??
+  		 onMsg( sonar : distance(D) ){
+  		 	[# val d = payloadArg(0) 
+  		 	   val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($d)")
+  		 	   emit( ev, false  )  //Not emit for me (but not for MQTT)
+  		 	#]  
+  		 }
   	}
-   	Transition t0 whenEvent sonarrobot -> handleEvent
+   	Transition t0 whenEvent sonar -> handleSonarData
  }
 

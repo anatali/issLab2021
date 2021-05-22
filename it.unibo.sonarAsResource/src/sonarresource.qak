@@ -9,9 +9,9 @@
  *    that launches a CodedQactor that reads data from SonarAlone and emits the event
  * 	            msg(sonarrobot,event,sonarHCSR04Support,none,sonar(data),1)
  */
- 
-System -trace sonarresource
-mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/nat/sonar/events"
+  
+System -trace sonarresource 
+mqttBroker "broker.hivemq.com" : 1883  eventTopic "sonar/data"
 
 Dispatch putval     : val(V)
 Event    alarm      : alarm(X)

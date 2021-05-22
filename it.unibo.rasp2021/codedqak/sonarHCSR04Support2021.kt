@@ -45,11 +45,11 @@ class sonarHCSR04Support2021 ( name : String ) : ActorBasic( name ) {
 				var data = reader.readLine()
 				println("sonarHCSR04Support data = $data"   )
 				if( data != null ){
-					try{
+					try{ 
 						val v = data.toInt()
 						if( v <= 100 ){	//A first filter ...
-							val m1 = "sonar( ${v*2} )"
-							val event = MsgUtil.buildEvent( "sonarHCSR04Support","sonarrobot",m1)
+							val m1 = "distance( ${v*2} )"
+							val event = MsgUtil.buildEvent( "sonarHCSR04Support","sonar",m1)
 							//emit( event )  //should be propagated also to the remote resource
 							emitLocalStreamEvent( event )		//not propagated to remote actors
 							println("sonarHCSR04Support doRead ${counter++}: $event "   )							

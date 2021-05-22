@@ -6,7 +6,7 @@ import it.unibo.kactor.MsgUtil
 import kotlinx.coroutines.runBlocking
 
 /*
- -------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
  
 -------------------------------------------------------------------------------------------------
  */
@@ -14,10 +14,10 @@ import kotlinx.coroutines.runBlocking
 class sonarSimulator ( name : String ) : ActorBasic( name ) {
   
 	val data = sequence<Int>{
-		var v0 = 15
+		var v0 = 80
 		yield(v0)
 		while(true){
-			v0 = v0 - 1
+			v0 = v0 - 5
 			yield( v0 )
 		}
 	}
@@ -34,9 +34,9 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
 	suspend fun startDataReadSimulation(    ){
   			var i = 0
 			while( i < 10 ){
- 	 			val m1 = "sonar( ${data.elementAt(i*2)} )"
+ 	 			val m1 = "distance( ${data.elementAt(i*2)} )"
 				i++
- 				val event = MsgUtil.buildEvent( name,"sonarrobot",m1)								
+ 				val event = MsgUtil.buildEvent( name,"sonar",m1)								
   				emitLocalStreamEvent( event )
  				//println("$tt $name | generates $event")
 //				emit(event)  //APPROPRIATE ONLY IF NOT INCLUDED IN A PIPE

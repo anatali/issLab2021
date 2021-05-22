@@ -16,12 +16,22 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		 val simulate = true
+		 var simulate = true
 		   lateinit var firstActorInPipe : ActorBasic 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						discardMessages = true
+						solve("consult('sonar2021Kb.pl')","") //set resVar	
+						solve("consult('sysRules.pl')","") //set resVar	
+						solve("consult('sonarnaive.pl')","") //set resVar	
+						solve("showSystemConfiguration","") //set resVar	
+						solve("consult('sonar2021Kb.pl')","") //set resVar	
+						solve("simulate(X)","") //set resVar	
+						println(currentSolution)
+						 val x = getCurSol("X").toString() 
+								   simulate = ( x == "on")	
+								   println( "simulate=$simulate" )
 						  if( simulate ) firstActorInPipe = sysUtil.getActor("sonarsimulator")!!  //generates simulated data
 									else firstActorInPipe           = sysUtil.getActor("sonardatasource")!!  //generates REAL data
 						 			firstActorInPipe.
@@ -31,19 +41,25 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 						 				//subscribeLocalActor("distancefilter").		//propagates the lcoal stream event obstacle
 						  				subscribeLocalActor("sonar")  
 						if(  simulate  
-						 ){forward("simulatorstart", "simulatorstart(qasource)" ,"sonarsimulator" ) 
+						 ){forward("simulatorstart", "simulatorstart(ok)" ,"sonarsimulator" ) 
 						}
 						else
-						 {forward("simulatorstart", "simulatorstart(qasource)" ,"sonardatasource" ) 
+						 {forward("sonarstart", "sonarstart(ok)" ,"sonardatasource" ) 
 						 }
-						println("sonar started")
 					}
+					 transition(edgeName="t00",targetState="handleSonarData",cond=whenEvent("sonar"))
 				}	 
-				state("handleEvent") { //this:State
+				state("handleSonarData") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						if( checkMsgContent( Term.createTerm("distance(V)"), Term.createTerm("distance(D)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val d = payloadArg(0) 
+								  		 	   val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($d)")
+								  		 	   emit( ev, false  )  //Not emit for me (but not for MQTT)
+						}
 					}
-					 transition(edgeName="t00",targetState="handleEvent",cond=whenEvent("sonarrobot"))
+					 transition(edgeName="t01",targetState="handleSonarData",cond=whenEvent("sonar"))
 				}	 
 			}
 		}
