@@ -54,9 +54,10 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("distance(V)"), Term.createTerm("distance(D)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val d = payloadArg(0) 
-								  		 	   val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($d)")
-								  		 	   emit( ev, false  )  //Not emit for me (but not applies to MQTT)
+								 val D = payloadArg(0) 
+								  		 	   //val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($D)")
+								  		 	   //emit( ev, false  )  //Not emit for me (but not applies to MQTT)
+								emit("sonarrobot", "sonar($D)" ) 
 						}
 					}
 					 transition(edgeName="t01",targetState="handleSonarData",cond=whenEvent("sonar"))

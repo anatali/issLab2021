@@ -153,26 +153,26 @@ table, th, td {
 <h1>LabRobotRadar_2020 | A robot-radar system <font size="5"></font> </h1>
 
 The goal of this work is to build a distributed version of the system described in 
- <a href="../../it.unibo.qak.radar2020/userDocs/LabRadarGui.html" target="web">
+ <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html" target="web">
 LabRadarGui | Radar GUI as a service</a>  in which sonar data are produced by a <tt>HC-SR04</tt> device mounted on a RaspberryPi.
 <br/><br/>
 The interaction between the <em>robot-sonar</em> and the <em>radarGuiservice</em> will be based on a CoAP Resource, according to the architecture
 shown in the following figure:
 <br/><br/>
-  <table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:60%" ><img src="./img/raspSonarCoap.png" alt="raspSonarCoap.png" width="100%"  /></td>
-<td> 
+<table style="width:98%">
+	<tbody>	
+	<tr>
+	<td style="width:60%" ><img src="./img/raspSonarCoap.png" alt="raspSonarCoap.png" width="100%"  /></td>
+	<td> 
 
-<li><a href="../src/javacode/Resource.java" target="code">Resource.java</a> is the CoAP Resource. 
-<br/><br/></li>
-<li>
-<a href="../resources/sensors/SonarAlone.c" target="code">SonarAlone.c</a> writes <tt>HC-SR04</tt> data on the standard output.
-<br/><br/></li>
+	<li><a href="../resources/javacode/Resource.java" target="code">Resource.java</a> is the CoAP Resource. 
+	<br/><br/></li>
+	<li>
+	<a href="../resources/sensors/SonarAlone.c" target="code">SonarAlone.c</a> writes <tt>HC-SR04</tt> data on the standard output.
+	<br/><br/></li>
 
-<li><a href="../src/javacode/SonarOnRaspCoap.java" target="code">SonarOnRaspCoap.java</a> runs on the  
-RaspberryPi. It reads sonar-data and updates the  CoAP Resource with 'messages'  of form :
+	<li><a href="../resources/javacode/SonarOnRaspCoap.java" target="code">SonarOnRaspCoap.java</a> runs on the  
+	RaspberryPi. It reads sonar-data and updates the  CoAP Resource with 'messages'  of form :
 
 <pre>
 <ks>msg(sonar,event,robot,none,sonar(V),N)</ks>
@@ -180,10 +180,10 @@ RaspberryPi. It reads sonar-data and updates the  CoAP Resource with 'messages' 
 </li>
 
 <li>
-<a href="../src/javacode/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a> is the <em>radarGuiservice</em>
+<a href="../resources/javacode/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a> is the <em>radarGuiservice</em>
 that reads 'messages' from the  CoAP Resource and updates the GUI
 <br/><br/></li>
-<li><a href="../src/javacode/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource</li>
+<li><a href="../resources/javacode/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource</li>
 <m></m>
 </td>
 </tr>
@@ -192,12 +192,12 @@ that reads 'messages' from the  CoAP Resource and updates the GUI
 
 To run:
 <ol>
-<li>Activate the CoAP-observable resource <a href="../src/it/unibo/coapintro/Resource.java" target="code">Resource.java</a></li>
+<li>Activate the CoAP-observable resource <a href="../resources/javacode/Resource.java" target="code">Resource.java</a></li>
 <!--
 <li>Look at the initial content of the resource by running <a href="../src/it/unibo/coapintro/ResourceObserver.java" target="code">
 ResourceObserver.java</a></li>
 -->
-<li>Activate a radar <a href="../src/it/unibo/coapintro/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a></li>
+<li>Activate a radar <a href="../resources/javacode/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a></li>
 <li>Activate  a producer of sonar data
 </li>
 </ol>

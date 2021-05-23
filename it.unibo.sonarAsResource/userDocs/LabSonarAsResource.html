@@ -200,28 +200,89 @@ div.imagedesc{
 
 <h2>Introduction</h2>
 This case-study intends to experiment with the concept of 
-<a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​s</a>, 
-proposed in 2005 by the computer scientist
-<a href="https://en.wikipedia.org/wiki/Alistair_Cockburn" target="web">Alistair Cockburn​</a> 
-in an attempt to avoid known structural pitfalls in object-oriented software design, 
-such as <i>undesired dependencies</i> between layers and <i>contamination of user interface code with business logic</i>.<br/><br/>
-This approach is an alternative to the traditional layered architecture, and, 
-according to some authors, it is at the origin of the 
+<a href="LabCleanArch#cleanarch" target="web">Clean Architecture​</a>, as forerunner of the 
 <a href="https://en.wikipedia.org/wiki/Microservices" target="web">microservices architecture</a>.
+<br/><br/>
+The main 
+<a href="https://en.wikipedia.org/wiki/Robert_C._Martin" target="web">principles of the Clean Architecture</a>
+will guide the definition of a logic architecture described by a qak-model.
+ 
+<h2>Requirements</h2>
+<div class="remark">
+<ks>radarGui</ks>: Design, build and deploy a distributed software system able to show sonar data on 
+a GUI that looks like the screen of a radar.<br/>
+The sonar data can be produced by a <ks>real device</ks> (e.g. a 
+<a href="https://www.acmesystems.it/HC-SR04" target="web">HC-SR04 ultrasonic sensor</a> device mounted on a RaspberryPi 
+(on the front of a ddr robot) or by a <ks>simulator</ks>. <br/>
+The user must be allowed to choose a proper sonar data-source before launching the system, by means of a configuration file.
+<br/><br/>
+<ks>ledAsAlarm</ks>: Extend the previous system, by introducing a component that <i>turns on</i> a led (mounted on a RaspberryPi) when
+the sonar detects a distance  <ks>d&lt;=V</ks> with <ks>V</ks> prefixed value (<ks>5&lt;V&lt;= 80</ks>)
+and <i>turns off</i> the led when <ks>d>=V</ks>.
+</div>
+ 
+ 
+
+ 
+
+<h2>Requirement analysis</h2>
+ 
+ <h3>Use-case <ks>radarGui</ks></h3>
+The use-case <ks>radarGui</ks> is similar to the case-study reported in
+<a href="../../it.unibo.raspIntro2020/userDocs/LabRobotRadar_2020.html" target="web">LabRobotRadar_2020 | A robot-radar system​</a>.
+<h4>The sonar</h4>
+The <a href="https://www.acmesystems.it/HC-SR04" target="web">HC-SR04 ultrasonic sensor</a> could be activated 'on demand'
+or could be embedded in a component that provides a <k>'hot-source' of data</k>, i.e. an active component that emits information
+in a continuous way.
+<br/>
+A component of this type is given by the program 
+<a href="../../it.unibo.rasp2021/resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> 
+(project <a href="../../it.unibo.rasp2021" target="lab">it.unibo.rasp2021</a>) that writes sonar data on the standard output file.
+<br/>
+After a meeting with the customer, the proper high-level model for the sonar is a component that emit events:
+<pre>
+Event <ks>sonarrobot : sonar( D )</ks>      <kc>//for the application level</kc>
+QActor sonar context ctxsonar { 
+    ...
+    <k>emit</k> <ks>sonarrobot : sonar($DISTANCE)</ks>	
+}
+</pre>
+
+
+<h4>The GUI radar-like</h4>
+The library <k>radarPojo.jar</k> (from an old project <i>it.unibo.java.radar</i>) provides an object-utility
+(<a href="radarSupport.java" target="code">radarSupport.java</a>) to create and update a radar-like-GUI.  
+<br/>
+This POJO should be embedded in some othe component, able to interact with the rest of the system
 
 
 
+ <h3>Use-case <ks>ledAlarm</ks></h3>
+The led is a pyhsical device that can be turned on/off by using some low-level code; for example:
+<a href="../../it.unibo.rasp2021/resources/Raspberry/bls/led25GpioTurnOn.sh" target="code">led25GpioTurnOn.sh</a> and
+<a href="../../it.unibo.rasp2021/resources/Raspberry/bls/led25GpioTurnOff.sh" target="code">led25GpioTurnOff.sh</a>.
 
 
+<h2>Problem analysis</h2>
+ The use-case <ks>radarGui</ks> is similar to .
+<br/>
+For the case-study reported in
+<a href="../../it.unibo.raspIntro2020/userDocs/LabRobotRadar_2020.html" target="web">LabRobotRadar_2020 | A robot-radar system​</a>, 
+the system did put a CoAP resource at the center of the system. The code was
+written in Java using the library <a href="https://www.eclipse.org/californium/" target="web">org.eclipse.californium CoAP</a>			
 
+<br/><br/>
+<!-- summarises the main contents of the course 
+<a href="https://www.unibo.it/en/teaching/course-unit-catalogue/course-unit/2020/385373" target="web">72939 - Software Systems Engineering M</a>
+-->
 
 
 <table style="width:98%">
 	<tbody>	
 	<tr>
-	<td style="width:60%" ><img src="./img/raspSonarCoap.png" alt="raspSonarCoap.png" width="100%"  /></td>
+	<td style="width:40%" ><img src="./img/raspSonarCoap.png" alt="raspSonarCoap.png" width="100%"  /></td>
 	<td> 
-
+<ul>
 	<li><a href="../javacode/resourceCoap/Resource.java" target="code">Resource.java</a> is the CoAP Resource. 
 	<br/><br/></li>
 	<!--
@@ -229,6 +290,8 @@ according to some authors, it is at the origin of the
 	<a href="../resources/sensors/SonarAlone.c" target="code">SonarAlone.c</a> writes <tt>HC-SR04</tt> data on the standard output.
 	<br/><br/></li>
 -->
+<li><a href="../javacode/coap/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource
+<br/><br/></li>
 	<li><a href="../javacode/coap/SonarOnRaspCoap.java" target="code">SonarOnRaspCoap.java</a> runs on the  
 	RaspberryPi. It reads sonar-data and updates the  CoAP Resource with 'messages'  of form :
 
@@ -239,42 +302,57 @@ according to some authors, it is at the origin of the
 
 <li>
 <a href="../javacode/resourceCoap/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a> is the <em>radarGuiservice</em>
-that reads 'messages' from the  CoAP Resource and updates the GUI
+that reads 'messages' from the  CoAP Resource and updates the GUI using the  POJO
+<a href="radarSupport.java" target="code">radarSupport.java</a>.
 <br/><br/></li>
-<li><a href="../javacode/coap/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource</li>
-<m></m>
+</ul>
+ 
+
+<m>To run:
+<ol>
+<li>Activate the CoAP-observable resource <a href="../javacode/resourceCoap/Resource.java" target="code">Resource.java</a></li>
+<!--
+<li>Look at the initial content of the resource by running <a href="../src/it/unibo/coapintro/ResourceObserver.java" target="code">
+ResourceObserver.java</a></li>
+-->
+<li>Activate a radar <a href="../javacode/resourceCoap/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a></li>
+<li>Activate  a producer of sonar data 
+(e.g. <a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>)
+</li>
+</ol></m>
 </td>
 </tr>
 </tbody>
 </table>
 
-summarises the main contents of the course 
-<a href="https://www.unibo.it/en/teaching/course-unit-catalogue/course-unit/2020/385373" target="web">72939 - Software Systems Engineering M</a>
-<br/><br/>
- 
-<h2>Requirements</h2>
-<div class="remark">
-Design, build and deploy a distributed software system able to show sonar data on a graphical interface that looks like the screen of a radar.<br/>
-The sonar data can be produced by a <ks>real device</ks> (e.g. a 
-<a href="https://www.acmesystems.it/HC-SR04" target="web">HC-SR04 ultrasonic sensor</a> device mounted on a RaspberryPi 
-or on the front of a ddr robot)
-or by a <ks>simulator</ks>. <br/>
-The user must be allowed to choose a proper sonar data-source before launching the system, by means of a configuration file.
-</div>
- 
- 
+<br/<br/>
+Now the qak models:
 
- 
+<h3>Resource (domain)</h3>
+<pre>
 
-<h2>Requirement analysis</h2>
- 
+</pre>
 
- 
+<h3>Sonar as resource updater</h3>
+<pre>
 
-<h2>Problem analysis</h2>
- 
+</pre>
+
+<h3>Gui as resource observer</h3>
+<pre>
+
+</pre>
+
 
 <h2>Test plans</h2> 
+ <h3>Use-case <ks>radarGui</ks></h3>
+ Generate a sonar value <ks>d</ks> and check that the gui properly receives the pair <ks>(d,a)</ks> with <ks>0&lt;=a&lt;=180</ks>.
+ 
+ 
+ <h3>Use-case <ks>ledAlarm</ks></h3>
+Generate a sonar value  <ks>d, d&lt;=V</ks> and check that the led turns on.<br/>
+Generate a sonar value  <ks>d, d>V</ks> and check that the led turns off.<br/>
+
 
 
 <h2>Project</h2> 

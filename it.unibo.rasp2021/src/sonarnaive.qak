@@ -87,10 +87,11 @@ QActor sonar context ctxsonar {
   	State handleSonarData{
   		printCurrentMessage
   		 onMsg( sonar : distance(D) ){
-  		 	[# val d = payloadArg(0) 
-  		 	   val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($d)")
-  		 	   emit( ev, false  )  //Not emit for me (but not applies to MQTT)
+  		 	[# val D = payloadArg(0) 
+  		 	   //val ev = MsgUtil.buildEvent(name,"sonarrobot","sonar($D)")
+  		 	   //emit( ev, false  )  //Not emit for me (but not applies to MQTT)
   		 	#]  
+  		 	emit sonarrobot : sonar($D)
   		 }
   	}
    	Transition t0 whenEvent sonar -> handleSonarData
