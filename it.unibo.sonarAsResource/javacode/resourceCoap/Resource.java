@@ -32,7 +32,7 @@ private String lastMsg = "msg(sonar,event,sonarOnRaspCoap,none,sonar(0),0)";
 	@Override
 	public void handlePOST(CoapExchange exchange) {
 		exchange.accept();		
-		if (exchange.getRequestOptions().isContentFormat(MediaTypeRegistry.TEXT_XML)) {
+		if (exchange.getRequestOptions().isContentFormat(MediaTypeRegistry.TEXT_PLAIN)) {
 			String xml = exchange.getRequestText();
 			exchange.respond(CREATED, xml.toUpperCase());
 			

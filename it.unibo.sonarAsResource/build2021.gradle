@@ -42,9 +42,10 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20160810'
 //COAP
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
-	compile group: 'org.eclipse.californium', name: 'californium-core', version: '3.0.0-M1'
+	//FOR A MORE RECENT VERSION, WE MUST INTRODUCE SOME Exception handling in the code
+	compile group: 'org.eclipse.californium', name: 'californium-core', version: '2.0.0-M12'  
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
-	compile group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.6.0'
+	compile group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
 //LOG4j	
 	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25' 
 //MONGO

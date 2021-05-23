@@ -212,11 +212,11 @@ writes these data on the standard output.
 </ul>
 
 The library <k>radarPojo.jar</k> (from the project <i>it.unibo.java.radar</i>) provides an object-utility
-(<a href="../resources/radarPojo/radarSupport.java" target="code">radarSupport.java</a>) to create a radar-like-GUI and to show values on that GUI. It could be useful in building the <em>radarGuiservice</em>.
+(<a href="../../it.unibo.sonarAsResource/userDocs/radarSupport.java" target="code">radarSupport.java</a>) to create a radar-like-GUI and to show values on that GUI. It could be useful in building the <em>radarGuiservice</em>.
 <br/>
 
  
-<h2>A bottom-up approach </h2>
+<h2 id="bottomup">A bottom-up approach </h2>
 
 In a bottom-up approach, the software designer must find a way to make the radar able to receive the sonar data produced by the <em>robot-sonar</em>. 
 Thus, there are two main problems to solve:
@@ -224,7 +224,7 @@ Thus, there are two main problems to solve:
 <ol>
 <li>Find a way to transmit data from the <em>robot-sonar</em> to the <em>radarGui</em>.</li>
 <li>Build a new radar component (the <em>radarGuiservice</em> indeed) able to receive sonar-data and to display them by using the available 
-<a href="../resources/radarPojo/radarSupport.java" target="code">radarSupport.java</a></li>
+<a href="../../it.unibo.sonarAsResource/userDocs/radarSupport.java" target="code">radarSupport.java</a></li>
 </ol>
 
 The picture below shows our initial situation:
@@ -468,7 +468,7 @@ Of course, the structure of a CoAP-based system is completely different from the
 Let us investigate now what kind of system could result by starting from a top-down (model-based) design.
 
 
-<h2>A top-down approach </h2>
+<h2 id="topdown">A top-down approach </h2>
 In a top-down approach to software development, we aim at leaving technological details 'in the background' by focusing our
 attention on the 'logical-interaction' between our system components. Thus, our starting point could be represented as follows:
 <br/><br/>

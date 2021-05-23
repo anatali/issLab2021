@@ -264,12 +264,24 @@ The led is a pyhsical device that can be turned on/off by using some low-level c
 
 
 <h2>Problem analysis</h2>
- The use-case <ks>radarGui</ks> is similar to .
-<br/>
-For the case-study reported in
-<a href="../../it.unibo.raspIntro2020/userDocs/LabRobotRadar_2020.html" target="web">LabRobotRadar_2020 | A robot-radar system​</a>, 
-the system did put a CoAP resource at the center of the system. The code was
-written in Java using the library <a href="https://www.eclipse.org/californium/" target="web">org.eclipse.californium CoAP</a>			
+<h3>Use-case <ks>radarGui</ks></h3>
+Let us recall the analysis we made in <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html" target="lab">
+LaLabRadarGui | Radar GUI as a service (from BottomUp to TopDown)</a>:<br/><br/>
+
+<ol>
+<li>In section <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#bottomup" target="lab">
+<ks>A bottom-up approach</ks></a>: we discussed the problem of making the radar-GUI able to receive the sonar-data.
+The proposal was to attempt a direct interaction using TCP.<br/><br/>
+</li>
+<li>In section  <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#bottomCoap" target="lab">
+<ks>Interaction based on a CoAP-Resource</ks></a>: we discussed the opportunity of introducing a CoAP resource, to
+be updated in RESTful way with sonar-data and observed by some other component, included the radar-GUI.	 </li> 
+<!-- <li><a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#realdata" target="lab">
+Using real sonar-data from the HC-SR04HC-SR04 device</a></li> -->
+ </ol>
+
+A prototype was built in Java using the library 
+<a href="https://www.eclipse.org/californium/" target="web">org.eclipse.californium CoAP</a>:			
 
 <br/><br/>
 <!-- summarises the main contents of the course 
@@ -290,9 +302,9 @@ written in Java using the library <a href="https://www.eclipse.org/californium/"
 	<a href="../resources/sensors/SonarAlone.c" target="code">SonarAlone.c</a> writes <tt>HC-SR04</tt> data on the standard output.
 	<br/><br/></li>
 -->
-<li><a href="../javacode/coap/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource
+<li><a href="../javacode/resourceCoap/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource
 <br/><br/></li>
-	<li><a href="../javacode/coap/SonarOnRaspCoap.java" target="code">SonarOnRaspCoap.java</a> runs on the  
+	<li><a href="../javacode/resourceCoap/SonarOnRaspCoap.java" target="code">SonarOnRaspCoap.java</a> runs on the  
 	RaspberryPi. It reads sonar-data and updates the  CoAP Resource with 'messages'  of form :
 
 <pre>
@@ -323,22 +335,30 @@ ResourceObserver.java</a></li>
 </td>
 </tr>
 </tbody>
-</table>
+</table> 
+ 
+ 
+<h3>A qak model</h3>
+In the section <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#topdown" target="lab">
+LabRadarGui | Radar GUI as a service (from BottomUp to TopDown) : A top-down approach</a>
+we  introduced the opportunity/need to define high-level interaction concepts, 
+in order to focus our attention on the business components and on the (logic) architecture.
+<div class="remark">
+Let us continue here along this direction, with the goal of discussing/defining a logical architecture of the system
+by  using the qak language/metamodel.
+</div>
 
-<br/<br/>
-Now the qak models:
-
-<h3>Resource (domain)</h3>
+<h4>Resource (domain)</h4>
 <pre>
 
 </pre>
 
-<h3>Sonar as resource updater</h3>
+<h4>Sonar as resource updater</h4>
 <pre>
 
 </pre>
 
-<h3>Gui as resource observer</h3>
+<h4>Gui as resource observer</h4>
 <pre>
 
 </pre>
