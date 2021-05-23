@@ -336,11 +336,11 @@ ResourceObserver.java</a></li>
 </tr>
 </tbody>
 </table> 
+ <br/><br/>
  
- 
-<h3>A qak model</h3>
+<!-- <h3>A qak model</h3> -->
 In the section <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#topdown" target="lab">
-LabRadarGui | Radar GUI as a service (from BottomUp to TopDown) : A top-down approach</a>
+LabRadarGui | Radar GUI as a service (from BottomUp to TopDown) : <ks>A top-down approach</ks></a>
 we  introduced the opportunity/need to define high-level interaction concepts, 
 in order to focus our attention on the business components and on the (logic) architecture.
 <div class="remark">
@@ -348,21 +348,76 @@ Let us continue here along this direction, with the goal of discussing/defining 
 by  using the qak language/metamodel.
 </div>
 
-<h4>Resource (domain)</h4>
-<pre>
-
-</pre>
+ <h4>The resource</h4>
+ <center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>The resource</h3>
+Our domain can be reduced to the idea of a resource that changes its state when a new sonar value is generated. 
+<br/><br/>
+<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="30%" ></center>
+<br/>
+</td>
+<td>
+Our basic domain-resource as a qak actor can be defined as reported in:
+<a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> 
+<br/>
+In this way, the resource is CoAP-observale and CoAP-modifiable.
+<br/><br/> 
+Sonar-data can be sent to our resource model via TCP, via MQTT or via CoAP.
+A CoAP-based simulator is defined in 
+<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a> 
+ 
+<br/><br/>
+The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
+ 
+</td>
+</tr>
+  </tbody>
+</table></center>
 
 <h4>Sonar as resource updater</h4>
+ <center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:50%" ><h3>Sonar as resource updater</h3>
+Let us name <ks>sonar</ks> the component chosen by the user  to generates sonar-data.
+Fir the real world, it is  
+<a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a>
+that embeds <a href="../../it.unibo.rasp2021/resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> ,
+while a simulator is provided by
+<a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>.
+ </td>
+<td>Both components are extensions of  our basic class
+<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>.<br/>
+In our analysis, the <ks>sonar</ks> is an autonmous active component that does not 'known' any other component.
+Thus it is actually modelled as an emitter of events
 <pre>
-
+sonar : distance(D)
 </pre>
+ 
+<center><img src="./img/sonarresource.PNG" alt="sonarresource" width="50%" ></center>
+ </td>
+</tr>
+  </tbody>
+</table></center>
 
 <h4>Gui as resource observer</h4>
-<pre>
 
-</pre>
+ <center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:40%" ><h3>The radar-Gui as resource observer</h3>
+<center><img src="./img/radarGuiAsObserver.PNG" alt="radarGuiAsObserver" width="50%" ></center>
+ 
 
+ </td>
+<td>
+ </td>
+</tr>
+  </tbody>
+</table></center>
 
 <h2>Test plans</h2> 
  <h3>Use-case <ks>radarGui</ks></h3>
@@ -385,7 +440,6 @@ Generate a sonar value  <ks>d, d>V</ks> and check that the led turns off.<br/>
 
  <center><table style="width:95%">
 <tbody>	
- 
 <tr>
 <td style="width:50%" >
 <h3>The resource</h3>
@@ -393,21 +447,17 @@ Our domain can be reduced to the idea of a resource that changes its state when 
 <br/><br/>
 <center><img src="./img/sonarresource.PNG" alt="sonarresource" width="50%" ></center>
 <br/>
-
-
- 
-
 </td>
 <td>
-Let us define our basic domain-resource as a qak actor. In this way the resource will be CoAP-observale
-and CoAP-modifiable.
-
-<ul>
-<li><a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> </li>
-<li><a href="../src/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a> </li>
-</ul>
-
-The resource could operate by using MQTT, but it is not necessary.
+Let us define our basic domain-resource as a qak actor:
+<a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> 
+<br/>
+In this way, the resource is CoAP-observale and CoAP-modifiable.
+<br/><br/> 
+Sonar-data can be sent to our resource model via TCP, via MQTT or via CoAP.
+A CoAP-based simulator is defined in 
+<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a> 
+ 
 <br/><br/>
 The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
  
