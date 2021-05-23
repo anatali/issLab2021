@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>CleanArch</title></head>
+
+
+	     
+    
+<body>
+<div id="body">
+<h1>LabIss | The clean architecture<font size="5"></font> </h1>
+
+ 
+
+<h2>The <a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​</a></h2>
+ <center><table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:50%">
+The concept of <a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​s</a>, 
+proposed in 2005 by the computer scientist
+<a href="https://en.wikipedia.org/wiki/Alistair_Cockburn" target="web">Alistair Cockburn​</a> 
+in an attempt to avoid known structural pitfalls in object-oriented software design, 
+such as <k><i>undesired dependencies</i> between layers and <i>contamination of user interface code with business logic</i></k>.<br/><br/>
+This approach is an alternative to the traditional layered architecture, and, 
+according to some authors, it is at the origin of the 
+<a href="https://en.wikipedia.org/wiki/Microservices" target="web">microservices architecture</a>.
+<br/><br/>
+<!-- <center><img src="./img/hexArch.png" alt="hexArch" width="90%" ></center> -->
+<center><img src="./img/portAdapterArch.png" alt="portAdapterArch" width="90%" ></center>
+
+ 
+</td>
+<td>
+ 
+About <a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​s</a>,
+the computer scientist
+<a href="https://en.wikipedia.org/wiki/Alistair_Cockburn" target="web">Alistair Cockburn​</a> says:
+<ul>
+<li>Allow an application to equally be driven by users, programs, automated test or batch scripts, 
+and to be <ks>developed and tested in isolation</ks> from its eventual run-time devices and databases. ​
+</li>
+<li>As events arrive from the outside world at a port, a technology-specific adapter converts it into 
+a usable procedure call or message and passes it to the application. 
+<ks>The application is blissfully ignorant of the nature of the input device.</ks> ​
+</li>
+<li>When the application has something to send out, <ks>it sends it out through a port to an adapter</ks>, 
+which creates the appropriate signals needed by the receiving technology (human or automated). ​
+</li>
+<li>The application has a semantically sound interaction with the adapters on all sides of it, 
+<ks>without actually knowing the nature of the things on the other side of the adapters</ks>.​
+</li>
+</ul>
+ <center><img src="./img/hexlinear.PNG" alt="hexlinear" width="90%" ></center>
+</td>
+</tr>
+</table></center>
+
+<h2>The <a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="web">clean architecture</a> </h2>
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+
+<img src="./img/cleanArch.jpg" alt="cleanArch.jpg" width="90%"  /> 
+
+ 
+</td>
+<td>
+<img src="./img/cleanArchBook.jpg" alt="cleanArchBook.jpg" width="30%"  /> (<tt>ISBN-10 : 0134494164</tt>)
+<br/><br/>
+
+The clean architecture proposed by 
+<a href="https://en.wikipedia.org/wiki/Robert_C._Martin" target="web">Robert C. Martin (uncle Bob)</a>
+in 2012 provides additional levels of detail of the component, 
+which are presented as concentric rings
+(see also ). 
+<!-- <a href="https://mirkorap16.gitbook.io/clean-architecture/" target="web">USEFUL</a> -->
+<br/><br/>
+It isolates adapters and interfaces (user interface, databases, external systems, devices) 
+in the outer rings of the architecture and <ks>leaves the inner rings for use cases and entities</ks>. 
+<br/><br/>
+The clean architecture uses the principle of 
+<a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle" target="web"><k>dependency inversion</k></a>
+ with the strict rule that dependencies 
+shall only exist between an outer ring to an inner ring and never the contrary.
+
+<h3>The <a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle" target="web">dependency inversion principle</a></h3>
+The principle states: <br/><br/>
+
+<ul>
+<li><k>High-level modules should not depend on low-level modules</k>. Both should depend on abstractions (e.g., interfaces).</li>
+<li><k>Abstractions should not depend on details</k>. Details (concrete implementations) should depend on abstractions.</li>
+</ul>
+
+</td>
+</tr>
+
+<tr>
+<td ><img src="./img/cleanArchCone.jpg" alt="cleanArchCone.jpg" width="80%"  />
+</td>
+<td>
+<m>
+<h3>Entities</h3>
+<ul>
+<li><ks>Represent your domain object</ks></li>
+<li>Apply only logic that is applicable in general to the whole entity (e.g., validating the format of a hostname)</li>
+<li>Plain objects: no frameworks, no annotations</li>
+</ul>
+
+<h3>Use Cases</h3>
+<ul>
+<li>Represent your business actions: it’s what you can do with the application. Expect one use case for each business action</li>
+<li>Pure business logic, plain code (except maybe some utils libraries)</li>
+<li><ks>The use case doesn’t know who triggered it and how the results are going to be presented </ks>
+(for example, could be on a web page, or — returned as JSON, or simply logged, and so on.)</li>
+<li>Throws business exceptions</li>
+</ul>
+
+<h3>Interfaces / Adapters</h3>
+<ul>
+<li>Retrieve and store data from and to a number of sources (database, network devices, file system, 3rd parties, and so on.)</li>
+<li>Define interfaces for the data that they need in order to apply some logic. 
+One or more data providers will implement the interface, but the use case doesn’t know where the data is coming from</li>
+<li><ks>Implement the interfaces defined by the use case</ks></li>
+<li>There are <ks>ways to interact with the application</ks>, and typically involve a delivery mechanism 
+(for example, <ks>REST APIs</ks>, scheduled jobs, GUI, other systems)</li>
+<li>Trigger a use case and convert the result to the appropriate format for the delivery mechanism
+the controller for a MVC</li>
+</ul>
+
+<h3>External Interfaces</h3>
+<ul>
+<li>Use <ks>whatever framework is most appropriate</ks> (they are going to be isolated here anyway) </li>
+</ul>
+</m>
+</td>
+</tr>
+
+<tr>
+<td >
+</td>
+<td></td>
+</tr>
+
+</table>
+
+ 
+ 
+<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+-->
+
+
+ 
+<br/><br/>
+</div>  
+
+ 
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>

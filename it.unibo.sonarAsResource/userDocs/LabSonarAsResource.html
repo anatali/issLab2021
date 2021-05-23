@@ -199,10 +199,58 @@ div.imagedesc{
 <h1>LabIss | Sonar as resource<font size="5"></font> </h1>
 
 <h2>Introduction</h2>
-This case-study summarises the main contents of the course 
+This case-study intends to experiment with the concept of 
+<a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​s</a>, 
+proposed in 2005 by the computer scientist
+<a href="https://en.wikipedia.org/wiki/Alistair_Cockburn" target="web">Alistair Cockburn​</a> 
+in an attempt to avoid known structural pitfalls in object-oriented software design, 
+such as <i>undesired dependencies</i> between layers and <i>contamination of user interface code with business logic</i>.<br/><br/>
+This approach is an alternative to the traditional layered architecture, and, 
+according to some authors, it is at the origin of the 
+<a href="https://en.wikipedia.org/wiki/Microservices" target="web">microservices architecture</a>.
+
+
+
+
+
+
+
+
+<table style="width:98%">
+	<tbody>	
+	<tr>
+	<td style="width:60%" ><img src="./img/raspSonarCoap.png" alt="raspSonarCoap.png" width="100%"  /></td>
+	<td> 
+
+	<li><a href="../javacode/resourceCoap/Resource.java" target="code">Resource.java</a> is the CoAP Resource. 
+	<br/><br/></li>
+	<!--
+	<li>
+	<a href="../resources/sensors/SonarAlone.c" target="code">SonarAlone.c</a> writes <tt>HC-SR04</tt> data on the standard output.
+	<br/><br/></li>
+-->
+	<li><a href="../javacode/coap/SonarOnRaspCoap.java" target="code">SonarOnRaspCoap.java</a> runs on the  
+	RaspberryPi. It reads sonar-data and updates the  CoAP Resource with 'messages'  of form :
+
+<pre>
+<ks>msg(sonar,event,robot,none,sonar(V),N)</ks>
+</pre>
+</li>
+
+<li>
+<a href="../javacode/resourceCoap/ResourceObserverRadar.java" target="code">ResourceObserverRadar.java</a> is the <em>radarGuiservice</em>
+that reads 'messages' from the  CoAP Resource and updates the GUI
+<br/><br/></li>
+<li><a href="../javacode/coap/CoapSupport.java" target="code">CoapSupport.java</a> is the Utility to access the CoAP Resource</li>
+<m></m>
+</td>
+</tr>
+</tbody>
+</table>
+
+summarises the main contents of the course 
 <a href="https://www.unibo.it/en/teaching/course-unit-catalogue/course-unit/2020/385373" target="web">72939 - Software Systems Engineering M</a>
-
-
+<br/><br/>
  
 <h2>Requirements</h2>
 <div class="remark">
@@ -239,39 +287,9 @@ The user must be allowed to choose a proper sonar data-source before launching t
 
  <center><table style="width:95%">
 <tbody>	
-<tr>
-<td style="width:50%">
-<!-- <center><img src="./img/hexArch.png" alt="hexArch" width="90%" ></center> -->
-<center><img src="./img/portAdapterArch.png" alt="portAdapterArch" width="90%" ></center>
-
  
-</td>
-<td>
-<h3>Hexagonal(ports and adapters) architecture</h3>
-About <a href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)" target="web">Hexagonal Architecture​s</a>,
-the computer scientist
-<a href="https://en.wikipedia.org/wiki/Alistair_Cockburn" target="web">Alistair Cockburn​</a> says:
-<ul>
-<li>Allow an application to equally be driven by users, programs, automated test or batch scripts, 
-and to be developed and tested in isolation from its eventual run-time devices and databases. ​
-</li>
-<li>As events arrive from the outside world at a port, a technology-specific adapter converts it into 
-a usable procedure call or message and passes it to the application. 
-The application is blissfully ignorant of the nature of the input device. ​
-</li>
-<li>When the application has something to send out, it sends it out through a port to an adapter, 
-which creates the appropriate signals needed by the receiving technology (human or automated). ​
-</li>
-<li>The application has a semantically sound interaction with the adapters on all sides of it, 
-without actually knowing the nature of the things on the other side of the adapters.​
-</li>
-</ul>
- <center><img src="./img/hexlinear.PNG" alt="hexlinear" width="90%" ></center>
-</td>
-</tr>
-
 <tr>
-<td >
+<td style="width:50%" >
 <h3>The resource</h3>
 Our domain can be reduced to the idea of a resource that changes its state when a new sonar value is generated. 
 <br/><br/>

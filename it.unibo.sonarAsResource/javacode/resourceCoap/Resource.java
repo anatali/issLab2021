@@ -1,4 +1,4 @@
-package coap;
+package resourceCoap;
 
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
