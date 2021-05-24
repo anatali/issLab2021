@@ -380,15 +380,25 @@ Sonar-data can be sent (as a <ks>event</ks>, or as a <ks>dispatch</ks> or as a <
 
 The (generated) description of this stand-alone respource is in <a href="../sonarresource.pl" target="code">sonarresource.pl</a>.
 <br/>
-A CoAP-based sonar-data simulator is defined in 
-<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>.
-<br/>
-A TCP-based sonar-data simulator is defined in 
+
+The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
+
+<h4>Testing using sonar-data simulators</h4>
+<ul>
+<li>A TCP-based sonar-data simulator is defined in 
 <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a>.
+</li>
+<li>A MQTT-based sonar-data simulator is defined in 
+<a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerMQTT.ipynb" target="code">sonarResourceCallerMQTT.ipynb</a>.
+</li>
+<li>A CoAP-based sonar-data simulator is defined in 
+<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a><br/>
+<m>(to define another jupyter file we should find a proper coap library for Python3)</m>.
+</li>
+</ul>
+ 
 
  
-<br/><br/>
-The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
  
 </td>
 </tr>
@@ -552,7 +562,7 @@ as follows:<br/><br/>
 <ul> 
 <li>Allow us to experiment with different system configurations:
 <ol>
-<li>Define a system that is aware of the resource <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>
+<li><em>ResourceAware</em>: Define a system that is aware of the resource <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>
 <pre>
 Context ctxsonaronrasp   ip [host="localhost"       port=8068]
 Context <k>ctxsonarresource</k> ip [host= "<ks>192.1.68.1.x</ks>" port=8028]
@@ -561,7 +571,7 @@ ExternalQActor sonarresource context ctxsonarresource
 Note that <ks>host=127.0.0.1</ks> for <k>ctxsonarresource</k>,
  means that we intend to deploy the resourcse on the Raspberry.
 </li>
-<li>Define a component that emits filtered sonar-data using MQTT
+<li><em>UseMQTT</em>:  Define a component that emits filtered sonar-data using MQTT
 <pre>
 <k>mqttBroker</k> "broker.hivemq.com" : 1883 <ks>eventTopic "sonar/data"</ks>
 
@@ -596,17 +606,162 @@ and reads the sonar-data source (real or simulated).<br/>
 </tr>
 
 
+
 <tr>
-<td ><h3>Deployment1: the resource on a PC</h3>
-<center><img src="./img/sonarpipeDistrib.png" alt="sonarpipeDistrib" width="90%" ></center>
+<td> 
+ 
 </td>
 <td>
 
-<h3>Deployment2: the resource on the RaspberryPi </h3>
-<center><img src="./img/sonarpipeDistribonRasp.png" alt="sonarpipeDistribonRasp" width="90%" ></center>
 
 </td>
 </tr>
+ </tbody>
+</table></center>
+
+<h2>Testing</h2> 
+ 
+
+<h2>Deployment</h2> 
+
+<div class="remark">
+Remember to copy under the directory <k>bin</k> the proper (configuration) files required by the models, such as:
+<pre>
+sysRules.pl, 
+sonarresource.pl,  sonaronrasp.pl, sonar2021Config.pl, 
+Sonar.c (and compile it with <tt>g++  SonarAlone.c -l wiringPi -o  SonarAlone</tt>) 
+etc.</pre>
+</div>
+
+<h3>Deployment-1a: the resource on a PC | Configuration <em>UseMQTT</em>
+<m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+
+<table style="width:100%" border="1">
+
+<tr>
+<td style="width:50%">
+<center><img src="./img/sonarpipeDistrib.png" alt="sonarpipeDistrib" width="90%" ></center>
+<ol>
+<li>Launch <ks>sonarresource</ks> on PC</li>
+<li>Test with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerMQTT.ipynb" target="code">sonarResourceCallerMQTT.ipynb</a>
+<m>(but works also with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a>)</m></li>
+<li>Launch <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code"><ks>SonarresourceObserverRadar.java</ks></a> on PC</li>
+<li>Launch <ks>sonaronrasp</ks> on RaspberryPi</li>
+</ol>
+</ul>
+</td>
+<td>Events are emitted and received via MQTT.
+ <pre>nat/<ks>qaksonarResourceOnrasp</ks>/it.unibo.rasp2021-1.0/bin
+<m>%====================================================================================
+% sonarresource description    (file <ks>sonarresource.pl</ks> )
+%====================================================================================
+<k>mqttBroker("broker.hivemq.com", "1883", "sonar/data").</k>
+context(ctxsonarresource, "localhost",  "TCP", "8028").
+ qactor( sonarresource, ctxsonarresource, "it.unibo.sonarresource.Sonarresource").
+tracing.
+
+%====================================================================================
+% sonaronrasp description   (file <ks>sonaronrasp.pl</ks> )
+%====================================================================================
+<k>mqttBroker("broker.hivemq.com", "1883", "sonar/data").</k>
+mqttBroker("broker.hivemq.com", "1883", "sonar/data").
+context(ctxsonaronrasp, "localhost",  "TCP", "8068").
+  qactor( sonarsimulator, ctxsonaronrasp, "sonarSimulator").
+  qactor( sonardatasource, ctxsonaronrasp, "sonarHCSR04Support2021").
+  qactor( datacleaner, ctxsonaronrasp, "dataCleaner").
+  qactor( sonar, ctxsonaronrasp, "it.unibo.sonar.Sonar").
+msglogging.</m></pre>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h3>Deployment-1b: the resource on a PC | Configuration <em>ResourceAware</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+
+<table style="width:100%" border="1">
+
+<tr>
+<td style="width:50%">
+<center><img src="./img/sonarpipeDistrib.png" alt="sonarpipeDistrib" width="90%" ></center>
+<ol>
+<li>Launch <ks>sonarresource</ks> on PC</li>
+<li>Test with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerMQTT.ipynb" target="code">sonarResourceCallerMQTT.ipynb</a>
+<m>(but works also with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a>)</m></li>
+<li>Launch <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code"><ks>SonarresourceObserverRadar.java</ks></a> on PC</li>
+<li>Launch <ks>sonaronrasp</ks> on RaspberryPi</li>
+</ol>
+
+</td>
+<td>
+<pre>nat/<ks>qaksonarResourceRemote</ks>/it.unibo.rasp2021-1.0/bin
+<m>%====================================================================================
+% sonarresource description   (file <ks>sonarresource.pl</ks> )
+%====================================================================================
+<kc>%% mqttBroker("broker.hivemq.com", "1883", "sonar/data").</kc>	<k>//NO RELOAD required: simple editing</k>
+context(ctxsonarresource, "localhost",  "TCP", "8028").
+ qactor( sonarresource, ctxsonarresource, "it.unibo.sonarresource.Sonarresource").
+tracing.
+
+%====================================================================================
+% sonaronrasp description   (file <ks>sonaronrasp.pl</ks> )
+%====================================================================================
+<kc>%% mqttBroker("broker.hivemq.com", "1883", "sonar/data").</kc>  <kc>//NO RELOAD required: simple editing</kc>
+context(ctxsonaronrasp, "localhost",  "TCP", "8068").
+<k>context(ctxsonarresource, "192.168.1.43",  "TCP", "8028").
+  qactor( sonarresource, ctxsonarresource, "external").</k>
+  qactor( sonarsimulator, ctxsonaronrasp, "sonarSimulator").
+  qactor( sonardatasource, ctxsonaronrasp, "sonarHCSR04Support2021").
+  qactor( datacleaner, ctxsonaronrasp, "dataCleaner").
+  qactor( sonar, ctxsonaronrasp, "it.unibo.sonar.Sonar").
+%%tracing. <kc>//NO RELOAD required: simple editing</kc>
+msglogging. </m></pre>
+</td>
+</tr>
+ </tbody>
+</table>
+
+
+<h3>Deployment-2a: the resource on the RaspberryPi | Configuration <em>UseMQTT</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+<table style="width:100%" border="1">
+
+<tr>
+<td style="width:50%">
+<center><img src="./img/sonarpipeDistribonRasp.png" alt="sonarpipeDistribonRasp" width="90%" ></center>
+ 
+
+
+<ol>
+<li>Launch <ks>sonarresource</ks> on RaspberryPi</li>
+<li>Test with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerMQTT.ipynb" target="code">sonarResourceCallerMQTT.ipynb</a>
+<m>(but works also with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a>)</m></li>
+<li>Launch <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code"><ks>SonarresourceObserverRadar.java</ks></a> on PC</li>
+<li>Launch <ks>sonaronrasp</ks> on RaspberryPi</li>
+</ol>
+ 
+</td>
+<td>Events are emitted and received using MQTT.
+<pre>nat/<ks>qaksonarResourceOnrasp</ks>/it.unibo.rasp2021-1.0/bin
+<m>%====================================================================================
+% sonarresource description    (file <ks>sonarresource.pl</ks> )
+%====================================================================================
+<k>mqttBroker("broker.hivemq.com", "1883", "sonar/data").</k>
+context(ctxsonarresource, "localhost",  "TCP", "8028").
+ qactor( sonarresource, ctxsonarresource, "it.unibo.sonarresource.Sonarresource").
+tracing.
+
+%====================================================================================
+% sonaronrasp description   (file <ks>sonaronrasp.pl</ks> )
+%====================================================================================
+<k>mqttBroker("broker.hivemq.com", "1883", "sonar/data").</k>
+context(ctxsonaronrasp, "localhost",  "TCP", "8068").
+  qactor( sonarsimulator, ctxsonaronrasp, "sonarSimulator").
+  qactor( sonardatasource, ctxsonaronrasp, "sonarHCSR04Support2021").
+  qactor( datacleaner, ctxsonaronrasp, "dataCleaner").
+  qactor( sonar, ctxsonaronrasp, "it.unibo.sonar.Sonar").
+msglogging.</m></pre>
+</td>
+</tr>
+
 
 <tr>
 <td> 
@@ -620,10 +775,52 @@ and reads the sonar-data source (real or simulated).<br/>
  </tbody>
 </table>
 
-<h2>Testing</h2> 
- 
 
-<h2>Deployment</h2> 
+
+<h3>Deployment-2b: the resource on the RaspberryPi | Configuration <em>ResourceAware</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+<table style="width:100%" border="1">
+
+<tr>
+<td style="width:50%">
+<center><img src="./img/sonarpipeDistribonRasp.png" alt="sonarpipeDistribonRasp" width="90%" ></center>
+ 
+<ol>
+<li>Launch <ks>sonarresource</ks> on RaspberryPi</li>
+<li>Test with <a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a></li>
+<li>Launch <ks>sonaronrasp</ks> on RaspberryPi</li>
+<li>Launch <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code"><ks>SonarresourceObserverRadar.java</ks></a> on PC</li>
+</ol> 
+</td>
+ 
+<td> 
+Events are emitted using CoAP.
+<pre>nat/<ks>qaksonarResourceOnrasp</ks>/it.unibo.rasp2021-1.0/bin
+<m>%====================================================================================
+% sonarresource description   (file <ks>sonarresource.pl</ks> )
+%====================================================================================
+<kc>%% mqttBroker("broker.hivemq.com", "1883", "sonar/data").</kc>	<k>//NO RELOAD required: simple editing</k>
+context(ctxsonarresource, "localhost",  "TCP", "8028").
+ qactor( sonarresource, ctxsonarresource, "it.unibo.sonarresource.Sonarresource").
+tracing.
+
+%====================================================================================
+% sonaronrasp description   (file <ks>sonaronrasp.pl</ks> )
+%====================================================================================
+<kc>%% mqttBroker("broker.hivemq.com", "1883", "sonar/data").</kc>  <kc>//NO RELOAD required: simple editing</kc>
+context(ctxsonaronrasp, "localhost",  "TCP", "8068").
+<k>context(ctxsonarresource, "127.0.0.1",  "TCP", "8028").
+  qactor( sonarresource, ctxsonarresource, "external").</k>
+  qactor( sonarsimulator, ctxsonaronrasp, "sonarSimulator").
+  qactor( sonardatasource, ctxsonaronrasp, "sonarHCSR04Support2021").
+  qactor( datacleaner, ctxsonaronrasp, "dataCleaner").
+  qactor( sonar, ctxsonaronrasp, "it.unibo.sonar.Sonar").
+%%tracing. <kc>//NO RELOAD required: simple editing</kc>
+msglogging. </m></pre>
+</td>
+ 
+</tr>
+ </tbody>
+</table>
 
  
 <h2>Maintenance</h2> 

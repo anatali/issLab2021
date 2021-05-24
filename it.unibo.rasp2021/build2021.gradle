@@ -103,8 +103,9 @@ sourceSets {
     //test.java.srcDirs += 'test.kt'		//test.kt is specific
 }
   
-//mainClassName = 'it.unibo.ctxblses1.MainCtxblses1Kt'
-mainClassName = 'it.unibo.ctxsonar.MainCtxsonarKt'
+mainClassName = 'it.unibo.ctxsonaronrasp.MainCtxsonaronraspKt'	
+//qaksonarResourceOnraspMQTT or qaksonarResourceOnraspNoMqtt
+
 
 jar {
     println("executing jar")

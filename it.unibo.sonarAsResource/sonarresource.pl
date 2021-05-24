@@ -1,7 +1,7 @@
 %====================================================================================
 % sonarresource description   
 %====================================================================================
-mqttBroker("broker.hivemq.com", "1883", "sonar/data").
+mqttBroker("192.168.1.43", "1883", "sonar/data").
 context(ctxsonarresource, "localhost",  "TCP", "8028").
  qactor( sonarresource, ctxsonarresource, "it.unibo.sonarresource.Sonarresource").
-tracing.
+  qactor( sendermock, ctxsonarresource, "it.unibo.sendermock.Sendermock").
