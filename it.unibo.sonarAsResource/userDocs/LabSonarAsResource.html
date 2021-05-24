@@ -357,7 +357,13 @@ by  using the qak language/metamodel.
 Our domain can be reduced to the idea of a resource that changes its state when a new sonar value is generated. 
 <br/><br/>
 <center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="30%" ></center>
-<br/>
+<pre>
+Event    sonarrobot : sonar( V )
+Dispatch sonarrobot : sonar( V )
+//Request  sonarrobot : sonar( V )		<kc>//not implemented</kc>
+//Reply    replysonar : updated(V)		<kc>//not implemented</kc>
+</pre>
+
 </td>
 <td>
 Our basic domain-resource as a qak actor can be defined as reported in:
@@ -365,9 +371,21 @@ Our basic domain-resource as a qak actor can be defined as reported in:
 <br/>
 In this way, the resource is CoAP-observale and CoAP-modifiable.
 <br/><br/> 
-Sonar-data can be sent to our resource model via TCP, via MQTT or via CoAP.
-A CoAP-based simulator is defined in 
-<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a> 
+Sonar-data can be sent (as a <ks>event</ks>, or as a <ks>dispatch</ks> or as a <ks>request</ks>) to our resource model via 
+<ul>
+<li>TCP  (port <ks>8038</ks>)</li>
+<li>MQTT (topic <ks>sonar/data</ks>) </li>
+<li>CoAP (path <ks>ctxsonarresource/sonarresource</ks>)</li>
+</ul>
+
+The (generated) description of this stand-alone respource is in <a href="../sonarresource.pl" target="code">sonarresource.pl</a>.
+<br/>
+A CoAP-based sonar-data simulator is defined in 
+<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>.
+<br/>
+A TCP-based sonar-data simulator is defined in 
+<a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a>.
+
  
 <br/><br/>
 The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
@@ -377,43 +395,79 @@ The resource could be deployed as a stand-alone component on a PC or on a Raspbe
   </tbody>
 </table></center>
 
-<h4>Sonar as resource updater</h4>
+<h4>The Sonar</h4>
  <center><table style="width:95%">
 <tbody>	
 <tr>
-<td style="width:50%" ><h3>Sonar as resource updater</h3>
+<td style="width:50%" ><h3>Sonar as event emitter</h3>
 Let us name <ks>sonar</ks> the component chosen by the user  to generates sonar-data.
-Fir the real world, it is  
+<br/> <br/> 
+In our analysis, the <ks>sonar</ks> is an autonmous active component that does not 'known' any other component.
+Thus, it is actually modelled as an emitter of events
+<pre>
+<k>Event</k> sonar : distance(D)
+</pre>
+ <div class="remark">
+ But which is the better protocol to interact with <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>?
+ <ul>
+<li><ks>TCP</ks>  (port <tt>8038</tt>): &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<bc>PRO:</bc> ... <bc>CONS:</bc> ... </li>
+<li><ks>MQTT</ks> (topic <tt>sonar/data</tt>): <bc>PRO:</bc> ... <bc>CONS:</bc> ...  </li>
+<li><ks>CoAP</ks> (path <tt>ctxsonarresource/sonarresource</tt>): <bc>PRO:</bc> ... <bc>CONS:</bc> ... </li>
+</ul>
+</div>
+<!-- Note that, in order to use TCP, the <ks>sonar</ks> -->
+ </td>
+<td>
+
+For the real world, the  model of the <ks>sonar</ks> could be defined as a qak
 <a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a>
 that embeds <a href="../../it.unibo.rasp2021/resources/rasp/sonar/SonarAlone.c" target="code">SonarAlone.c</a> ,
-while a simulator is provided by
+<br/> <br/> 
+<center><img src="./img/sonarSupport2021.PNG" alt="sonarSupport2021" width="50%" ></center>
+<br/> 
+This component is written in Kotlin and emits events. <br/><br/>
+As an extensionons of the qak basic class
+<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>, 
+it is an example of a <a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#codedqa" target="code">CodedQactor</a>,
+that does not yet partecipate to any system.<br/>
+Therefore, to be used, this component must be included in a system model, written in the qak-language, as done
+in <a href="../../it.unibo.rasp2021/src/sonarnaive.qak" target="code">sonarnaive.qak</a> 
+discussed in the <a href="#project">Project section</a>.
+
+<div class="remark">
+When using a real sonar, several 'bad' things can happen, including the possibility to generate spurios values.
+</div>
+<!-- 
+A simulator that emits the <ks>sonar:distance(D)</ks> event is defined in
 <a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>.
- </td>
-<td>Both components are extensions of  our basic class
-<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>.<br/>
-In our analysis, the <ks>sonar</ks> is an autonmous active component that does not 'known' any other component.
-Thus it is actually modelled as an emitter of events
-<pre>
-sonar : distance(D)
-</pre>
- 
-<center><img src="./img/sonarresource.PNG" alt="sonarresource" width="50%" ></center>
+-->
  </td>
 </tr>
   </tbody>
 </table></center>
 
-<h4>Gui as resource observer</h4>
+<h4>The radar-Gui</h4>
 
  <center><table style="width:95%">
 <tbody>	
 <tr>
-<td style="width:40%" ><h3>The radar-Gui as resource observer</h3>
-<center><img src="./img/radarGuiAsObserver.PNG" alt="radarGuiAsObserver" width="50%" ></center>
- 
-
+<td style="width:40%" ><h3>The radar-Gui</h3>
+The radar-gui component should exploit the POJO-utility <a href="radarSupport.java" target="code">radarSupport.java</a>
+provided by the library <tt>radarPojo.jar</tt>.
+  <br/><br/>
+<center><img src="./img/radarGui.PNG" alt="radarGui" width="50%" ></center> 
+<br/><br/>
+The class <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a> 
+provides conventional Java program that works as a CoAP-observer of the resource
+<a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>.
  </td>
-<td>
+<td><h3>The radar-Gui (as qak resource observer)</h3>
+<!--
+<center><img src="./img/radarGuiAsObserver.PNG" alt="radarGuiAsObserver" width="50%" ></center>
+-->
+<div class="remark">
+Is it opportune/convenient to introduce a model written in qak?
+</div>
  </td>
 </tr>
   </tbody>
@@ -430,62 +484,43 @@ Generate a sonar value  <ks>d, d>V</ks> and check that the led turns off.<br/>
 
 
 
-<h2>Project</h2> 
-
-
-
-
-
-
+<h2 id="project">Project</h2> 
 
  <center><table style="width:95%">
 <tbody>	
 <tr>
 <td style="width:50%" >
 <h3>The resource</h3>
-Our domain can be reduced to the idea of a resource that changes its state when a new sonar value is generated. 
-<br/><br/>
-<center><img src="./img/sonarresource.PNG" alt="sonarresource" width="50%" ></center>
-<br/>
+The model introduced in the analysis phase can be adopted also as our domain-core in the project phase.
+<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="30%" ></center>
+<pre>
+Event    sonarrobot : sonar( V )
+Dispatch sonarrobot : sonar( V )
+</pre>
+ 
 </td>
 <td>
-Let us define our basic domain-resource as a qak actor:
+<h3>Deployment</h3>
+The resource
 <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> 
-<br/>
-In this way, the resource is CoAP-observale and CoAP-modifiable.
-<br/><br/> 
-Sonar-data can be sent to our resource model via TCP, via MQTT or via CoAP.
-A CoAP-based simulator is defined in 
-<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a> 
- 
-<br/><br/>
-The resource could be deployed as a stand-alone component on a PC or on a RaspberryPi
- 
+could be deployed as a stand-alone component on a PC or on a RaspberryPi
+
 </td>
 </tr>
 
 <tr>
-<td ><h3>The sonar-data source</h3>
-<center><img src="./img/sonarpipe.png" alt="sonarpipe" width="90%" ></center><br/>
-In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a> 
-the qak model <a href="../../it.unibo.rasp2021/src/sonarnaive.qak" target="code">sonarnaive.qak</a> :<br/><br/>
-<ul> 
-<li>loads the Prolog-kb about the system (<a href="../../it.unibo.rasp2021/sonar2021Kb.pl" target="code">sonar2021Kb.pl </a>) 
-and calls (solve) the rule <tt>showSystemConfiguration</tt>
-defined in <a href="../../it.unibo.rasp2021/sysRules.pl" target="code">sysRules.pl </a></li> 
-<li>loads the <a href="../../it.unibo.rasp2021/sonar2021ConfigKb.pl" target="code">sonar2021ConfigKb.pl </a> 
-and reads the sonar-data source (real or simulated).<br/>
-- If real, activates the CodedQActor 
-<a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a><br/>
-- If simulated, activates the CodedQActor 
-<a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>
- </li>
-<li>handles the event <ks>sonar:distance(D)</ks> and emits the event <ks>sonarrobot:sonar(D)</ks></li> 
-</ul>
- 
+<td ><h3>Sonar as resource updater</h3>
+In our project, we exploit the possibility of using a qak-actor as the component of a pipe,
+(see <a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html#actorasstream" target="code">
+LabIss2021 | Introduction to QAkactors: Actors as streams</a>)
+in order to filter spurios data.
 
-</td>
-<td>In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>:
+
+<br/><br/>
+<center><img src="./img/sonarpipe.png" alt="sonarpipe" width="90%" ></center>
+<br/><br/>
+
+In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>:
 <br/><br/> 
  
  
@@ -497,12 +532,64 @@ or <a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">so
  <br/><br/>
  </li>
 <li><a href="../../it.unibo.rasp2021/codedqak/dataCleaner.kt" target="code">dataCleaner.kt</a>:
-a CodedQActor that elimnates spurious sonar-data <br/><br/>
+a <tt>CodedQActor</tt> that elimnates spurious sonar-data <br/><br/>
  </li>
 <li><a href="../../it.unibo.rasp2021/codedqak/dataLogger.kt" target="code">dataLogger.kt</a> 
-a CodedQActor that wites the data emitted by the sonar on the file <tt>datalogger.txt</tt> <br/><br/>
+a <tt>CodedQActor</tt> that writes the data emitted by the sonar on the file <tt>datalogger.txt</tt> <br/><br/>
 </li>
  
+</ul>
+
+ 
+
+</td>
+<td><h3>The system <a href="../../it.unibo.rasp2021/src/sonaronrasp.qak" target="code">sonaronrasp</a></h3>
+In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a> 
+the qak model <a href="../../it.unibo.rasp2021/src/sonaronrasp.qak" target="code">sonaronrasp.qak</a> 
+improves the initial model
+ <a href="../../it.unibo.rasp2021/src/sonarnaive.qak" target="code">sonarnaive.qak</a> 
+as follows:<br/><br/>
+<ul> 
+<li>Allow us to experiment with different system configurations:
+<ol>
+<li>Define a system that is aware of the resource <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>
+<pre>
+Context ctxsonaronrasp   ip [host="localhost"       port=8068]
+Context <k>ctxsonarresource</k> ip [host= "<ks>192.1.68.1.x</ks>" port=8028]
+ExternalQActor sonarresource context ctxsonarresource
+</pre>
+Note that <ks>host=127.0.0.1</ks> for <k>ctxsonarresource</k>,
+ means that we intend to deploy the resourcse on the Raspberry.
+</li>
+<li>Define a component that emits filtered sonar-data using MQTT
+<pre>
+<k>mqttBroker</k> "broker.hivemq.com" : 1883 <ks>eventTopic "sonar/data"</ks>
+
+Context ctxsonaronrasp   ip [host="localhost" port=8068  }
+</pre>
+</li>
+</ol>
+
+</li> 
+<li>loads the (generated) Prolog-KB about the system (<a href="../../it.unibo.rasp2021/sonaronrasp.pl" target="code">sonaronrasp.pl </a>) 
+and calls (<ks>solve</ks>) the rule <tt>showSystemConfiguration</tt>
+defined in <a href="../../it.unibo.rasp2021/sysRules.pl" target="code">sysRules.pl </a>
+<br/><br/></li> 
+
+<li>
+builds the pipe shown in the figure n the left
+<br/><br/></li> 
+
+<li>loads the <a href="../../it.unibo.rasp2021/sonar2021ConfigKb.pl" target="code">sonar2021ConfigKb.pl </a> 
+and reads the sonar-data source (real or simulated).<br/>
+- If real, activates the CodedQActor 
+<a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a><br/>
+- If simulated, activates the CodedQActor 
+<a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>
+<br/><br/>
+ </li>
+<li>handles the event <ks>sonar:distance(D)</ks> and emits the event <ks>sonarrobot:sonar(D)</ks>
+<br/><br/></li> 
 </ul>
 
 </td>
@@ -515,17 +602,14 @@ a CodedQActor that wites the data emitted by the sonar on the file <tt>datalogge
 </td>
 <td>
 
-<ul>
-<li><a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> </li>
-<li><a href="../javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a> </li>
-</ul>
+<h3>Deployment2: the resource on the RaspberryPi </h3>
+<center><img src="./img/sonarpipeDistribonRasp.png" alt="sonarpipeDistribonRasp" width="90%" ></center>
 
 </td>
 </tr>
 
 <tr>
-<td><h3>Deployment2: the resource on the RaspberryPi </h3>
-<center><img src="./img/sonarpipeDistribonRasp.png" alt="sonarpipeDistribonRasp" width="90%" ></center>
+<td> 
  
 </td>
 <td>

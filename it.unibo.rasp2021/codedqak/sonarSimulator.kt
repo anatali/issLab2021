@@ -39,7 +39,7 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
  				val event = MsgUtil.buildEvent( name,"sonar",m1)								
   				emitLocalStreamEvent( event )
  				//println("$tt $name | generates $event")
-//				emit(event)  //APPROPRIATE ONLY IF NOT INCLUDED IN A PIPE
+ 				//emit(event)  //APPROPRIATE ONLY IF NOT INCLUDED IN A PIPE
  				delay( 500 )
   			}			
 			terminate()
