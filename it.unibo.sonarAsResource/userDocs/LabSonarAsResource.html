@@ -505,7 +505,7 @@ Generate a sonar value  <ks>d, d>V</ks> and check that the led turns off.<br/>
 <td style="width:50%" >
 <h3>The resource</h3>
 The model introduced in the analysis phase can be adopted also as our domain-core in the project phase.
-<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="30%" ></center>
+<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="60%" ></center>
 <pre>
 Event    sonarrobot : sonar( V )
 Dispatch sonarrobot : sonar( V )
@@ -636,7 +636,7 @@ Sonar.c (and compile it with <tt>g++  SonarAlone.c -l wiringPi -o  SonarAlone</t
 etc.</pre>
 </div>
 
-<h3>Deployment-1a: the resource on a PC | Configuration <em>UseMQTT</em>
+<h3 id="Deployment-1a">Deployment-1a: the resource on a PC | Configuration <em>UseMQTT</em>
 <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
 
 <table style="width:100%" border="1">
@@ -679,7 +679,7 @@ msglogging.</m></pre>
  </tbody>
 </table>
 
-<h3>Deployment-1b: the resource on a PC | Configuration <em>ResourceAware</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+<h3 id="Deployment-1b">Deployment-1b: the resource on a PC | Configuration <em>ResourceAware</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
 
 <table style="width:100%" border="1">
 
@@ -724,7 +724,7 @@ msglogging. </m></pre>
 </table>
 
 
-<h3>Deployment-2a: the resource on the RaspberryPi | Configuration <em>UseMQTT</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+<h3 id="Deployment-2a">Deployment-2a: the resource on the RaspberryPi | Configuration <em>UseMQTT</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
 <table style="width:100%" border="1">
 
 <tr>
@@ -780,7 +780,7 @@ msglogging.</m></pre>
 
 
 
-<h3>Deployment-2b: the resource on the RaspberryPi | Configuration <em>ResourceAware</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
+<h3 id="Deployment-2b">Deployment-2b: the resource on the RaspberryPi | Configuration <em>ResourceAware</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
 <table style="width:100%" border="1">
 
 <tr>
@@ -826,7 +826,71 @@ msglogging. </m></pre>
 </table>
 
  
-<h2>Maintenance</h2> 
+<h2>Usage and Maintenance</h2> 
+
+<ol>
+<li><h3>Logic only - PC but no RaspberryPi </h3>
+Launch on PC the code of <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> with or without MQTT <k>Using a local MQTT broker (moquitto)</k>
+<br/>
+(Optional) Launch <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code"><ks>SonarresourceObserverRadar.java</ks></a>
+<br/>
+<k>Launch a sonar-data simulator on PC</k>:<m>
+<ul>
+<li>A TCP-based sonar-data simulator is defined in 
+<a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerTCP.ipynb" target="code">sonarResourceCallerTCP.ipynb</a>.
+</li>
+<li>A MQTT-based sonar-data simulator is defined in 
+<a href="../../it.unibo.issLabStart/resources/jupyter/sonarResourceCallerMQTT.ipynb" target="code">sonarResourceCallerMQTT.ipynb</a>.
+</li>
+<li>A CoAP-based sonar-data simulator is defined in 
+<a href="../javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a><br/>
+</li>
+</ul></m>
+</li>
+<li><h3>RaspberryPi - no sonar </h3>
+Load (and launch) on Rasp the code of <a href="../../it.unibo.rasp2021/src/sonaronrasp.qak" target="code">sonaronrasp.qak</a> 
+with the following content of <a href="../../it.unibo.rasp2021/sonar2021ConfigKb.pl" target="code">sonar2021ConfigKb.pl</a>:
+<pre>
+simulate(<k>on</k>).
+</pre>
+
+<h4>Configurations no Resource on Rasp: <a href="#Deployment-1a">Deployment-1a</a>, <a href="#Deployment-1b">Deployment-1b</a>
+(<bc>nat/<ks>qaksonarResourceRemote</ks>/it.unibo.rasp2021-1.0/bin</bc>)</h4>
+Launch on PC the code of <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> 
+<pre>
+%====================================================================================
+% sonaronrasp description
+%====================================================================================
+mqttBroker("192.168.1.43", "1883", "sonar/data").	<kc>//Using a local MQTT broker (moquitto)</kc>
+context(ctxsonaronrasp, "localhost",  "TCP", "8068").
+ qactor( sonarsimulator, ctxsonaronrasp, "sonarSimulator").
+  qactor( sonardatasource, ctxsonaronrasp, "sonarHCSR04Support2021").
+  qactor( datacleaner, ctxsonaronrasp, "dataCleaner").
+  qactor( sonar, ctxsonaronrasp, "it.unibo.sonar.Sonar").
+msglogging.
+</pre>
+
+
+<h4>Configurations  Resource on Rasp: <a href="#Deployment-2a">Deployment-2ab</a>, <a href="#Deployment-2b">Deployment-2b</a>
+(<bc>nat/<ks>qaksonarResourceOnrasp</ks>/it.unibo.rasp2021-1.0/bin</bc>)</h4>
+Load and launch on Rasp the code of <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> 
+(<bc>nat/<ks>sonarResource</ks>/it.unibo.sonarAsResource-1.0/bin</bc>)
+<br/><br/>
+(Optional) Launch <a href="../javacode/coap/SonarresourceObserverRadar.java" target="code"><ks>SonarresourceObserverRadar.java</ks></a> on PC
+</li>
+
+
+<li><h3>RaspberryPi - with sonar no led </h3>
+ As the previous case, 
+ with the following content of <a href="../../it.unibo.rasp2021/sonar2021ConfigKb.pl" target="code">sonar2021ConfigKb.pl </a>:
+<pre>
+simulate(<k>off</k>).
+</pre>
+</li>
+<li><h3>RaspberryPi - with sonar and led </h3>
+TODO <br/><br/>
+</li>
+</ol>
  
 <!-- USEFUL
 <table style="width:100%" border="1">
