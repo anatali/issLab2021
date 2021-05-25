@@ -8,10 +8,10 @@
  * 3b) launch on Raspberry an emitter of sonarRobot event e.g. sonar in sonarnaive.qak
  *    that launches a CodedQactor that reads data from SonarAlone and emits the event
  * 	            msg(sonarrobot,event,sonarHCSR04Support,none,sonar(data),1)
- */
+ */ 
    
 System /* -trace */ sonarresource  
-mqttBroker "192.168.1.43" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
+//mqttBroker "192.168.1.43" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
 
  
 Event    alarm      : alarm(X)
@@ -55,10 +55,11 @@ QActor sendermock context ctxsonarresource{
 [# val input   = java.util.Scanner(System.`in`) #]
 	State s0 initial{ 
 		println("sendermock start") 
+		emit sonarrobot : sonar(50)	
 		forward sonarresource -m sonarrobot : sonar(10)		
 	}
 	//Goto work	//WARNING: input.nextLine() BLOCKS (also sonarresource)
-	
+	 
 	State work{
 		delay 500     //release the resource
 		[# print("VALUE>")

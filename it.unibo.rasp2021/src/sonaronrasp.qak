@@ -48,11 +48,12 @@ QActor sonar context ctxsonaronrasp {
 #]
  	State s0 initial {  		 
  		println("sonar START")
- 		discardMsg On		 		/*
+ 		discardMsg On		 		
+ 		/*
  		 * INTROSPECTION
  		 */
  		solve( consult("sysRules.pl")	 )
- 		solve( consult("sonaronrasp.pl")       )
+ 		solve( consult("sonaronrasp.pl") )
  		solve( showSystemConfiguration   )
  		/*
  		 * CONFIGURATION

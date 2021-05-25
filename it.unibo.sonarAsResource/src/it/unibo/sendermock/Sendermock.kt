@@ -21,6 +21,7 @@ class Sendermock ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("s0") { //this:State
 					action { //it:State
 						println("sendermock start")
+						emit("sonarrobot", "sonar(50)" ) 
 						forward("sonarrobot", "sonar(10)" ,"sonarresource" ) 
 					}
 				}	 
