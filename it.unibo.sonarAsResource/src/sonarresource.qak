@@ -24,7 +24,7 @@ Reply    replysonar : updated(V)
 Context ctxsonarresource ip [ host= "localhost"   port= 8028 ]
 
 QActor sonarresource context ctxsonarresource{ 
-	State s0 initial{ 
+	State s0 initial{  
 		//println("sonarresource start") 
 	}
 	Goto work
