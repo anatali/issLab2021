@@ -214,12 +214,12 @@ Let us recall the basic concepts:
 
 <ol>
 <li>Interactions between components are based on the 
-<a href="https://en.wikipedia.org/wiki/Request%E2%80%93response" target="web">request-response pattern</a>, where a client
+<a href="https://en.wikipedia.org/wiki/Request%E2%80%93response" target="web"><em>request-response pattern</em></a>, where a client
 sends a request to a server and gets back a response</li>
 <li>Loose coupling between components can be achieved using a <em>uniform interface</em> that all components in the system respect.<br/>
 Uniform interfaces make it easy to design a <em>layered system</em>, which means that several
 intermediate components can hide what’s behind them.</li>
-<li><em>Caching</em> is a key element in the performance.<br/><br/></li>
+<li><em>Caching</em> is a key element in the performance.</li>
 <li>A <em>resource</em> is any concept or piece of data in an application
 that needs to be referenced or used. Every resource must have a <em>unique identifier</em>
 and should be addressable using a <em>unique referencing mechanism</em>. On the
@@ -260,14 +260,13 @@ finally the <tt>REST</tt> resource is specified.
 </li>
  
 
-<li><h3>HATEOAS</h3>
+<li><h3><a href="https://en.wikipedia.org/wiki/HATEOAS" target="web">Hypermedia as the engine of the application state - <k>HATEOAS</k></a></h3>
 <div class="remark">
 Servers shouldn’t keep track of each client’s state because stateless applications are easier to scale.
 </div>
 Instead, application state should be addressable via its own URL, and each
 resource should contain links and information about what operations are possible
-in each state and how to navigate across states 
-(<a href="https://en.wikipedia.org/wiki/HATEOAS" target="web">Hypermedia as the engine of the application state - <k>HATEOAS</k></a>).</li>
+in each state and how to navigate across states.</li>
 </ol>
 
 

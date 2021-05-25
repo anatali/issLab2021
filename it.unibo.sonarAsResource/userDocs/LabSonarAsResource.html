@@ -200,11 +200,11 @@ div.imagedesc{
 
 <h2>Introduction</h2>
 This case-study intends to experiment with the concept of 
-<a href="LabCleanArch#cleanarch" target="web">Clean Architecture​</a>, as forerunner of the 
+<a href="LabCleanArch.html#cleanarch" target="web">Clean Architecture​</a>, as forerunner of the 
 <a href="https://en.wikipedia.org/wiki/Microservices" target="web">microservices architecture</a>.
 <br/><br/>
 The main 
-<a href="https://en.wikipedia.org/wiki/Robert_C._Martin" target="web">principles of the Clean Architecture</a>
+<a href="https://clevercoder.net/2018/09/08/clean-architecture-summary-review/" target="web">principles of the Clean Architecture</a>
 will guide the definition of a logic architecture described by a qak-model.
  
 <h2>Requirements</h2>
@@ -275,7 +275,9 @@ The proposal was to attempt a direct interaction using TCP.<br/><br/>
 </li>
 <li>In section  <a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#bottomCoap" target="lab">
 <ks>Interaction based on a CoAP-Resource</ks></a>: we discussed the opportunity of introducing a CoAP resource, to
-be updated in RESTful way with sonar-data and observed by some other component, included the radar-GUI.	 </li> 
+be updated in RESTful way 
+(see also <a href="../../webspring.demo/userDocs/RobotAPI2021.html"><em>Lab ISS | RobotAPI2021</em></a>)
+with sonar-data and observed by some other component, included the radar-GUI.	 </li> 
 <!-- <li><a href="../../it.unibo.qakradar21/userDocs/LabRadarGui.html#realdata" target="lab">
 Using real sonar-data from the HC-SR04HC-SR04 device</a></li> -->
  </ol>
@@ -354,9 +356,9 @@ by  using the qak language/metamodel.
 <tr>
 <td style="width:50%" >
 <h3>The resource</h3>
-Our domain can be reduced to the idea of a resource that changes its state when a new sonar value is generated. 
+Our domain can be reduced here to the idea of a resource that changes its state when a new sonar value is generated. 
 <br/><br/>
-<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="30%" ></center>
+<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="60%" ></center>
 <pre>
 Event    sonarrobot : sonar( V )
 Dispatch sonarrobot : sonar( V )
@@ -372,12 +374,13 @@ Our basic domain-resource as a qak actor can be defined as reported in:
 In this way, the resource is CoAP-observale and CoAP-modifiable.
 <br/><br/> 
 Sonar-data can be sent (as a <ks>event</ks>, or as a <ks>dispatch</ks> or as a <ks>request</ks>) to our resource model via 
+<m>
 <ul>
-<li>TCP  (port <ks>8038</ks>)</li>
-<li>MQTT (topic <ks>sonar/data</ks>) </li>
-<li>CoAP (path <ks>ctxsonarresource/sonarresource</ks>)</li>
+<li>TCP  (port number: <ks>8038</ks>)</li>
+<li>MQTT (topic name: <ks>sonar/data</ks>) </li>
+<li>CoAP (REST-path: <ks>ctxsonarresource/sonarresource</ks>)</li>
 </ul>
-
+</m>
 The (generated) description of this stand-alone respource is in <a href="../sonarresource.pl" target="code">sonarresource.pl</a>.
 <br/>
 
