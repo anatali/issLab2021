@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ResourceAccess</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script>
+function escapeRegExp(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+var socket  = io.connect();
+socket.on('connect', function(){ 
+	console.log("socket connected");
+});
+socket.on( 'message', function(v){ 
+  console.log("RECEIVED " + v);
+  if( v.indexOf("distance")  >= 0 ){document.getElementById('sonarRobotDisplay').innerHTML=v; }
+  if( v.indexOf("pos")       >= 0 ){document.getElementById('robotDisplay').innerHTML=v; }
+  //if( v.indexOf("obstacle")  >= 0 ){document.getElementById('infoDisplay').innerHTML=v; }
+  //if( v.indexOf("polar")     >= 0 ){document.getElementById('sonarRobotDisplay').innerHTML=v; }
+
+});
+</script>
+ 
+</head>
+
+<body>
+<!--
+===============================================================================
+Commands elaborated by frontend/uniboSupports/applCode
+that calls changeResourceModelCoap that exec a coap.put
+that emits modelChange
+===============================================================================
+--> 
+<div style="background-color: #D2B4DE">
+<h2>Robot Console</h2>   
+<center>
+			<table >
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="center">
+							<form action="/w" method="post">
+							  	<input type="submit" style="font-size:30px;" value="forward" >
+							</form>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td align="center">
+							<form action="/z" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="z" >
+							</form>
+						</td>
+						<td align="center">
+							<form action="/l" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="left" >
+							</form>
+						</td>
+						<td align="center">						
+							<form action="/h" method="post">
+							    <font size="3" color="red">
+							  	<input type="submit" style="font-size:40px;"  value="  h  "  >
+							  	</font>
+							</form>
+						</td>
+						<td align="center">
+							<form action="/r" method="post">
+							  	<input type="submit" style="font-size:30px;" value="right"  >
+							</form>
+						</td>
+						<td align="center">
+							<form action="/x" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="x" >
+							</form>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="center">
+							<form action="/s" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="backward"  >
+							</form>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+</center>
+ 
+
+<h2>Application console</h2>   
+<center>
+			<table >	
+					<tr>
+						<td align="center">
+							<form action="/0" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="reset" >
+							</form>
+ 						</td>
+						<td align="center">
+							<form action="/p" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="step" >
+							</form>
+ 						</td>
+						<td align="center">							
+							<form action="/k" method="post">							    
+							  	<input type="submit" style="font-size:30px; color:red;"  value="STOP"  >							  	 
+							</form>
+						</td>
+						<td align="center">
+							<form action="/b" method="post">
+							  	<input type="submit" style="font-size:30px;"  value="boundary">
+							</form>
+						</td>
+				</table>
+</center>
+
+</div>
+<div style="background-color: #FAF19C">
+	<div>
+ 		<b>ROBOT STATE</b>: <span id="robotDisplay"></span>
+  	</div>
+	<div>
+ 		<b>INFO</b>: <span id="infoDisplay"></span>
+  	</div>
+	<div>
+  		<b>SONAR STATE</b>: <span id="sonarRobotDisplay"></span>
+	</div>
+	<div>
+  		<b>ROOM MAP</b>: <span id="mapDisplay"></span>
+	</div>
+
+</div>
+<center></center>
+</body>
+</html>

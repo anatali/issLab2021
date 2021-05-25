@@ -27,3 +27,5 @@ gradlew.bat
 docker/
 /.metadata/
 /src-gen/
+
+/html/node_modules
