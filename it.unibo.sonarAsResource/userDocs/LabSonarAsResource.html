@@ -531,7 +531,7 @@ in order to filter spurios data.
 
 <br/><br/>
 <center><img src="./img/sonarpipe.png" alt="sonarpipe" width="90%" ></center>
-<br/><br/>
+
 
 In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>:
 <br/><br/> 
@@ -542,18 +542,42 @@ In project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp202
 <li><ks>sonar</ks> represents the source of sonar-data chosen by the user 
 (either <a href="../../it.unibo.rasp2021/codedqak/sonarHCSR04Support2021.kt" target="code">sonarHCSR04Support2021.kt</a>
 or <a href="../../it.unibo.rasp2021/codedqak/sonarsimulator.kt" target="code">sonarsimulator.kt</a>)
- <br/><br/>
+ <br/> 
  </li>
 <li><a href="../../it.unibo.rasp2021/codedqak/dataCleaner.kt" target="code">dataCleaner.kt</a>:
-a <tt>CodedQActor</tt> that elimnates spurious sonar-data <br/><br/>
+a <tt>CodedQActor</tt> that elimnates spurious sonar-data <br/ 
  </li>
 <li><a href="../../it.unibo.rasp2021/codedqak/dataLogger.kt" target="code">dataLogger.kt</a> 
-a <tt>CodedQActor</tt> that writes the data emitted by the sonar on the file <tt>datalogger.txt</tt> <br/><br/>
+a <tt>CodedQActor</tt> that writes the data emitted by the sonar on the file <tt>datalogger.txt</tt> <br/> 
 </li>
- 
 </ul>
 
- 
+<h3>Actors used as objects</h3>
+In the qak model <a href="../../it.unibo.rasp2021/src/sonaronrasp.qak" target="code">sonaronrasp.qak</a> 
+discussed on the right part of this row, the pipe above is built by the following Kotlin code:
+<pre>
+<m>CodedQActor <ks>sonardatasource</ks> context ctxsonaronrasp className "sonarHCSR04Support2021"</m>
+...
+firstActorInPipe = <k>sysUtil.getActor</k>("<ks>sonardatasource</ks>")!!
+
+firstActorInPipe.
+  <k>subscribeLocalActor</k>("datacleaner").
+  <k>subscribeLocalActor</k>("sonar") 
+</pre>
+<m>
+Note that:
+<ul>
+<li>the operation <k>sysUtil.getActor</k> 
+of <a href="../../it.unibo.qakactor/src/main/kotlin/sysUtil.kt" target="code">sysUtil.kt</a>
+returns a reference to the actor named <ks>sonardatasource</ks>;</li>
+<li>the operation <k>subscribeLocalActor</k> (defined in 
+<a href="../../it.unibo.qakactor/src/main/kotlin/ActorBasic.kt" target="code">ActorBasic.kt</a>)
+that works on a actor <ks>A</ks>, inserts a reference to the actor of the given name into the list of 'stream observers' of the
+<ks>A</ks> and returns <ks>A</ks>.
+</li>
+</ul>
+</m>
+Thus, in this code, we use actors as conventional objects (a further reason to call them <i>'quasi-actors'</i>).
 
 </td>
 <td><h3>The system <a href="../../it.unibo.rasp2021/src/sonaronrasp.qak" target="code">sonaronrasp</a></h3>
@@ -590,7 +614,7 @@ defined in <a href="../../it.unibo.rasp2021/sysRules.pl" target="code">sysRules.
 <br/><br/></li> 
 
 <li>
-builds the pipe shown in the figure n the left
+builds the pipe shown in the figure on the left
 <br/><br/></li> 
 
 <li>loads the <a href="../../it.unibo.rasp2021/sonar2021ConfigKb.pl" target="code">sonar2021ConfigKb.pl </a> 
@@ -723,6 +747,15 @@ msglogging. </m></pre>
  </tbody>
 </table>
 
+<h3>Sonar and resource models both on RaspberryPi</h3>
+<div class="remark">
+If we decide to deploy the code of
+<a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> on the same RaspberryPi used for 
+the code of <a href="../../it.unibo.rasp2021/src/sonaronrasp.qak" target="code">sonaronrasp.qak</a> , there is the possibility to
+compact the specification of the system into a single context. The reader should discuss the <bc>PRO/CONS</bc>
+of a decision of this kind.<br/>
+Il the rest of this work, we will keep the contexts separate.
+</div>
 
 <h3 id="Deployment-2a">Deployment-2a: the resource on the RaspberryPi | Configuration <em>UseMQTT</em> <m>(project  <a href="../../it.unibo.rasp2021" target="code"><bc>it.unibo.rasp2021</bc></a>)</m></h3>
 <table style="width:100%" border="1">
@@ -892,6 +925,32 @@ TODO <br/><br/>
 </li>
 </ol>
  
+ 
+<h2>New requirements</h2> 
+
+In <ks>it.unibo.sonarAsResource/html</ks> you'll find the file
+<a href="../html/package.json" target="code">package.json</a>. Now:<br/><br/>
+<ol>
+<li>in <a href="../html/uniboSupports/coapClientToResourceModel.js" target="code">coapClientToResourceModel.js</a>,
+set the <ks>var coapAddr</ks> with the ip of your computer (or <tt>localhost</tt>, for the moment); </li>
+<li>look at the files <a href="../html/sonar.js" target="code">sonar.js</a>
+(that defines a node-express application with <i>socket.io</i> and <i>coap</i>)
+<a href="../html/sonarGui.html" target="code">sonarGui.html</a>
+(that defines a HTML page working a user-interface  )
+</li>
+<li>execute:
+<pre>
+npm install
+node sonar
+</pre></li>
+<li>Open http://localhost:3000</li>
+</ol>
+
+
+ 
+<div class="remark">
+Design and build a SonarWebGUI that 
+</div>
 <!-- USEFUL
 <table style="width:100%" border="1">
 <tr>
