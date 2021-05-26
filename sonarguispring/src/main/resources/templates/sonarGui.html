@@ -21,12 +21,78 @@
 
 
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<!-- <script type="text/javascript" src="/socket.io/socket.io.js"></script> -->
+<script language = "javascript" type = "text/javascript">
+    var wsUri = "ws://192.168.1.132:8083/";
+    //var wsUri = "ws://echo.websocket.org/";
+    var output;
+    websocket = new WebSocket(wsUri);
 
+
+      function init() {
+         output = document.getElementById("output");
+         testWebSocket();
+      }
+
+      function testWebSocket() {
+
+
+         websocket.onopen = function(evt) {
+            onOpen(evt)
+         };
+
+         websocket.onclose = function(evt) {
+            onClose(evt)
+         };
+
+         websocket.onmessage = function(evt) {
+            onMessage(evt)
+         };
+
+         websocket.onerror = function(evt) {
+            onError(evt)
+         };
+      }//testWebSocket
+
+      function onOpen(evt) {
+         writeToScreen("CONNECTED");
+         doSend("WebSocket test ");
+      }
+
+      function onClose(evt) {
+         writeToScreen("DISCONNECTED");
+
+      }
+
+      function onMessage(evt) {
+         writeToScreen('<span style = "color: blue;">RESPONSE: ' +
+            evt.data+'</span>');
+            //doSend("WebSocket DISCONNECTED ");
+            //websocket.close();
+      }
+
+      function onError(evt) {
+         writeToScreen('<span style = "color: red;">ERROR:</span> '
+            + evt.data);
+      }
+
+      function doSend(message) { //alert("doSend " + websocket);
+         writeToScreen("SENT: " + message); websocket.send(message);
+      }
+
+      function writeToScreen(message) {
+         var pre = document.createElement("p");
+         pre.style.wordWrap = "break-word";
+         pre.innerHTML = message;
+         output.appendChild(pre);
+      }
+
+</script>
 <script>
 function escapeRegExp(str) {
     return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
+/*
 var socket  = io.connect();
 socket.on('connect', function(){ 
 	console.log("socket connected");
@@ -39,6 +105,7 @@ socket.on( 'chat message', function(v){
   console.log("RECEIVED " + v);
   document.getElementById('sonarDisplay').innerHTML=v; 
 });
+*/
 </script>
  
 </head>
@@ -72,7 +139,7 @@ that emits modelChange
 
 
 <script>
-  function prepareForm(socket){
+  function prepareForm( ){
     //alert( document.getElementById('form') );
     var form  = document.getElementById('form');
   	var input = document.getElementById('input');
@@ -81,7 +148,7 @@ that emits modelChange
 	    e.preventDefault();
 	    if (input.value) {
 	      //alert(input.value);
-	      socket.emit('sonarvalue', input.value);
+	      //socket.emit('sonarvalue', input.value);
 	      input.value = '';
 	    }
   	   });
@@ -90,11 +157,11 @@ that emits modelChange
 
 <script>
   var messages = document.getElementById('messages');
-  var socket   = io();
+  //var socket   = io();
   //not specifying any URL when call io(), 
   //since it defaults to trying to connect to the host that serves the page.
   
-  prepareForm(socket)
+  prepareForm( )
   
   /* //UPDATE INFO
   socket.on('...', function(msg) {

@@ -928,28 +928,54 @@ TODO <br/><br/>
  
 <h2>New requirements</h2> 
 
-In <ks>it.unibo.sonarAsResource/html</ks> you'll find the file
-<a href="../html/package.json" target="code">package.json</a>. Now:<br/><br/>
+<h3 id="sonarGuiNode">Premise: the application <ks>sonarGuiNode</ks> </h3>
+The folder <a href="../html" target="code"><ks>it.unibo.sonarAsResource/html</ks></a>  includes the Node code
+for a simple Web-console that allow an user to send sonar-data to the <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>.
+The  Node modules required for this application are defined in 
+<a href="../html/package.json" target="code">package.json</a>. 
+<br/>
+In order to set-up and run this application, we must:<br/><br/>
 <ol>
-<li>in <a href="../html/uniboSupports/coapClientToResourceModel.js" target="code">coapClientToResourceModel.js</a>,
-set the <ks>var coapAddr</ks> with the ip of your computer (or <tt>localhost</tt>, for the moment); </li>
+<li>set the ip of our computer (or <tt>localhost</tt>, for the moment):<br/>
+- in the variable <ks>coapAddr</ks> of 
+<a href="../html/uniboSupports/coapClientToResourceModel.js" target="code">coapClientToResourceModel.js</a>
+<br/>
+- in the variable <ks>coapSupport</ks> of 
+<a href="../src/javacode/coap/SonarresourceObserverRadar.jav" target="code">javacode/coap/SonarresourceObserverRadar.java</a>
+</li>
 <li>look at the files <a href="../html/sonar.js" target="code">sonar.js</a>
-(that defines a node-express application with <i>socket.io</i> and <i>coap</i>)
-<a href="../html/sonarGui.html" target="code">sonarGui.html</a>
+(that defines a node-express application using <i>socket.io</i> and <i>coap</i>)
+and <a href="../html/sonarGui.html" target="code">sonarGui.html</a>
 (that defines a HTML page working a user-interface  )
 </li>
 <li>execute:
 <pre>
 npm install
 node sonar
+----------------------------------------------------------------------------
+launch <a href="../src/it.unibo.ctxsonarresource/MainCtxsonarresource.kt" target="code">it.unibo.ctxsonarresource/MainCtxsonarresource.kt</a>
+----------------------------------------------------------------------------
+Open <tt>http://localhost:3000</tt> and send sonar-data (between 0 and 90)
+----------------------------------------------------------------------------
+(optionally) activate the radar-gui CoAP observer application (<k>on another PC</k>: perhaps overcoming the (Windows) firewall ...) 
+----------------------------------------------------------------------------
+
+<a href="../src/javacode/coap/SonarresourceObserverRadar.java" target="code">javacode/coap/SonarresourceObserverRadar.java</a>
+
 </pre></li>
-<li>Open http://localhost:3000</li>
+ 
 </ol>
 
-
+<h3>Work to do</h3>
  
 <div class="remark">
-Design and build a SonarWebGUI that 
+<ks>SonarGUISpring</ks> : Design and build an application that reproduces the behaviour of the application 
+<a href="#sonarGuiNode"><ks>sonarGuiNode</ks></a> using SpringBoot 
+(see <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="lab">webspring.demo/userDocs/RobotAPI2021.html</a>
+and <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="lab">webspring.intro/userDocs/LabSpringUsageIntro2021.html</a>)
+<br/><br/>
+<ks>SonarGUIDeploy</ks> : build a docker image for a system that includes <ks>SonarGUISpring</ks> together with the 
+code for <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>.
 </div>
 <!-- USEFUL
 <table style="width:100%" border="1">

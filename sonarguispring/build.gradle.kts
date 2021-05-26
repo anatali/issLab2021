@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.4.5"
+	id("org.springframework.boot") version "2.5.0"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	kotlin("jvm") version "1.4.32"
-	kotlin("plugin.spring") version "1.4.32"
+	kotlin("jvm") version "1.5.10"
+	kotlin("plugin.spring") version "1.5.10"
+
 	java
 	application
 	jacoco
@@ -12,7 +13,7 @@ plugins {
 }
 
 group = "it.unibo"
-version = "1.0"
+version = "1.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -34,15 +35,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	//See https://mkyong.com/spring-boot/intellij-idea-spring-boot-template-reload-is-not-working/
-	/* INTELLIJ
-	File –> Setting –> Build, Execution, Deployment –> Compiler –> check this Build project automatically
-	SHIFT+CTRL+A registry | compiler.automake.allow.when.app.running
-	If the static files are not reloaded, press CTRL+F9 to force a reload.
-	 */
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-//KOTLIN
 
 	// Align versions of all Kotlin components
 	implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -52,6 +45,7 @@ dependencies {
 
 	// This dependency is used by the application.
 	implementation("com.google.guava:guava:29.0-jre")
+
 
 	//COROUTINE
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.1.0")
@@ -91,7 +85,6 @@ dependencies {
 	//implementation("uniboplanner20:it.unibo.planner20:1.0")
 
 
-
 }
 
 tasks.withType<KotlinCompile> {
@@ -103,18 +96,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-application {
-	// Define the main class for the application.
-	mainClass.set("it.unibo.webspring.demo.ApplicationKt")
-}
-
-version = "1.0.1"
-
-tasks.jar {
-	manifest {
-		attributes["Main-Class"] = "it.unibo.webspring.demo.ApplicationKt"
-		attributes(mapOf("Implementation-Title" to project.name,
-			"Implementation-Version" to project.version))
-	}
 }
