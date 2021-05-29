@@ -925,7 +925,7 @@ TODO <br/><br/>
 </li>
 </ol>
  
- 
+
 <h2>New requirements</h2> 
 
 <h3 id="sonarGuiNode">Premise: the application <ks>sonarGuiNode</ks> </h3>
@@ -974,10 +974,27 @@ Open <tt>http://localhost:3000</tt> and send sonar-data (between 0 and 90)
 (see <a href="../../webspring.demo/userDocs/RobotAPI2021.html" target="lab">webspring.demo/userDocs/RobotAPI2021.html</a>
 and <a href="../../webspring.intro/userDocs/LabSpringUsageIntro2021.html" target="lab">webspring.intro/userDocs/LabSpringUsageIntro2021.html</a>)
 <br/><br/>
+<ks>SonarGUIWithWsSocket</ks> : Extend the <ks>SonarGUISpring</ks> application to provide automatic updating of the user web-page
+when the <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a> is updated.<br/>
+For this part consult: 
+<a href="https://spring.io/guides/gs/messaging-stomp-websocket/" target="web">Using WebSocket to build an interactive web application</a>
+which is based on the
+<a href="https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol" target="web">
+Simple (or Streaming) Text Oriented Message Protocol (STOMP)</a> message service.
+<!--
 <ks>SonarGUIDeploy</ks> : build a docker image for a system that includes <ks>SonarGUISpring</ks> together with the 
 code for <a href="../src/sonarresource.qak" target="code">sonarresource.qak</a>.
+-->
 </div>
+
+
 <!-- USEFUL
+See it.unibo.supports/userDocs/wssupportAsActorJava.html
+
+Simple (or Streaming) Text Oriented Message Protocol (STOMP)
+https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol
+
+
 <table style="width:100%" border="1">
 <tr>
 <td style="width:50%">

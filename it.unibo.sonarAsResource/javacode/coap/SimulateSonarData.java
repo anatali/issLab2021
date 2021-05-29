@@ -14,7 +14,7 @@ public class SimulateSonarData {
 	private CoapSupport coapSupport ;
 	
 	public void doJob() {
-		coapSupport = new CoapSupport( "coap://192.168.1.68:8028","ctxsonarresource/sonarresource" );
+		coapSupport = new CoapSupport( "coap://192.168.1.45:8028","ctxsonarresource/sonarresource" );
 		Scanner in  = new Scanner(System.in);
 		String data = "";
 		while( ! data.equals("q")) {
@@ -22,7 +22,6 @@ public class SimulateSonarData {
 			data = in.nextLine();
 			if( ! coapSupport.updateResourceWithValue( data  ) ) System.out.println("EMIT failure"  );
 		}
-		
 	}
 	
 	public static void main(String[] args) {

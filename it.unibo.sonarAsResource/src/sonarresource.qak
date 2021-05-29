@@ -11,7 +11,7 @@
  */ 
    
 System /* -trace */ sonarresource  
-//mqttBroker "192.168.1.43" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
+mqttBroker "192.168.1.45" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
 
  
 Event    alarm      : alarm(X)
@@ -21,7 +21,7 @@ Dispatch sonarrobot : sonar( V )
 Request  sonarrobot : sonar( V )
 Reply    replysonar : updated(V)
 
-Context ctxsonarresource ip [ host= "localhost"   port= 8028 ]
+Context ctxsonarresource ip [ host= "192.168.1.45"   port= 8028 ]
 
 QActor sonarresource context ctxsonarresource{ 
 	State s0 initial{  
@@ -35,15 +35,19 @@ QActor sonarresource context ctxsonarresource{
 	Transition t0 whenMsg   sonarrobot -> handleSonarData
 	              whenEvent sonarrobot -> handleSonarData
 	              
-	State handleSonarData{
+	State handleSonarData{ 
 		printCurrentMessage
 		onMsg( sonarrobot : sonar(V) ){
 			[# val distance = payloadArg(0) #]
-			updateResource [# "$distance" #]  
+			updateResource [# "{\"sonarvalue\":\"$distance\"}" #]  	//JSON rep for resource
+			//updateResource [# "{\"sonarvalue\":\"$distance\", \"info\":\"$distance\"}" #]  	 
  			println("distance=$distance")
+ 			delay 1000 
+ 			//The resource changes its representation in autonomous way ...
+ 			updateResource [# "{\"info\":\"$distance\"}" #]  
  			//emit alarm : alarm(fire) //just to see what happens ...
 		}	 	
-	}
+	} 
 	Goto work
 }
 

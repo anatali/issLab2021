@@ -20,9 +20,9 @@
 	//mqtt.fluux.io
 	//"tcp://broker.hivemq.com" 
 
-System -msglog  sonaronrasp   
-mqttBroker "broker.hivemq.com" :  1883 eventTopic "sonar/data"
-
+System -trace  sonaronrasp   
+mqttBroker "192.168.1.45" : 1883 eventTopic "sonar/data"   //broker.hivemq.com
+ 
 Dispatch sonarstart      : sonarstart(V)  
 Dispatch simulatorstart  : simulator(V)  
 Event    sonar           : distance( V )   //emitted by rx.sonarSimulator or sensors.sonarHCSR04SupportActor	
@@ -30,7 +30,7 @@ Event    sonarrobot      : sonar( V )      //for the application level
  
 Context ctxsonaronrasp   ip [host="localhost"     port=8068   ] 	
 //REMOVE THE COMMENTS IN CASE OF RESOURCE-AWARE CONFIGURATION 	
-//Context ctxsonarresource ip [host= "127.0.0.1"    port=8028   ]	//127.0.0.1 Deploy on Rasp
+//Context ctxsonarresource ip [host= "192.168.1.45"    port=8028   ]	//127.0.0.1 Deploy on Rasp
 //ExternalQActor sonarresource context ctxsonarresource
   
 //DATA SOURCES
@@ -41,7 +41,7 @@ CodedQActor sonardatasource context ctxsonaronrasp className "sonarHCSR04Support
 //CodedQActor datalogger     context ctxsonaronrasp className "dataLogger"
 CodedQActor datacleaner    context ctxsonaronrasp className "dataCleaner"
 //CodedQActor distancefilter context ctxsonaronrasp className "distanceFilter"
- 
+  
 QActor sonar context ctxsonaronrasp {     
 [# var simulate = true
    lateinit var firstActorInPipe : ActorBasic 
@@ -51,13 +51,13 @@ QActor sonar context ctxsonaronrasp {
  		discardMsg On		 		
  		/*
  		 * INTROSPECTION
- 		 */
+ 		 
  		solve( consult("sysRules.pl")	 )
  		solve( consult("sonaronrasp.pl") )
- 		solve( showSystemConfiguration   )
+ 		solve( showSystemConfiguration   )*/
  		/*
  		 * CONFIGURATION
- 		 */
+ 		*/ 
  		solve( consult("sonar2021ConfigKb.pl")	 )
  		solve( simulate(X) )
 		println( currentSolution )	//yes X / on oppure X / off
@@ -65,7 +65,7 @@ QActor sonar context ctxsonaronrasp {
 		   simulate = ( x == "on")	
 		   println( "simulate=$simulate" )
 		#] 		
-
+ 
 		//CREATE THE PIPE
 		[#  if( simulate ) firstActorInPipe = sysUtil.getActor("sonarsimulator")!!  //generates simulated data
 			else firstActorInPipe           = sysUtil.getActor("sonardatasource")!!  //generates REAL data
@@ -76,7 +76,7 @@ QActor sonar context ctxsonaronrasp {
  				//subscribeLocalActor("distancefilter").		//propagates the lcoal stream event obstacle
   				subscribeLocalActor("sonar")  
 		#]    
-  
+
  		//ACTIVATE THE DATA SOURCE (REAL or SIMULATED)
 		if [# simulate #]{forward sonarsimulator -m simulatorstart : simulatorstart(ok) }
  		else{ forward sonardatasource -m sonarstart : sonarstart(ok) }  //payload don't care

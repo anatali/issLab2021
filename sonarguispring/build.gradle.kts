@@ -37,17 +37,27 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+//WebSockets
+
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
+	implementation("org.webjars:webjars-locator-core")
+	implementation("org.webjars:sockjs-client:1.0.2")
+	implementation("org.webjars:stomp-websocket:2.3.3")
+	implementation("org.webjars:bootstrap:3.3.7")
+	implementation("org.webjars:jquery:3.1.1-1")
+
+
+
+
 	// Align versions of all Kotlin components
 	implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
 	// Use the Kotlin JDK 8 standard library.
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	//implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	// This dependency is used by the application.
 	implementation("com.google.guava:guava:29.0-jre")
-
-
-	//COROUTINE
+//COROUTINE
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.1.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0")
 
@@ -56,8 +66,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.json/json
 	implementation("org.json:json:20201115" )
 
-	//OkHttp library for websockets with Kotlin
-	implementation("com.squareup.okhttp3:okhttp:4.9.0")
+//COAP
+	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
+	//FOR A MORE RECENT VERSION, WE MUST INTRODUCE SOME Exception handling in the code
+	implementation("org.eclipse.californium:californium-core:2.0.0-M12")
+	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
+	implementation("org.eclipse.californium:californium-proxy:2.0.0-M12")
+
 
 //OkHttp library for websockets with Kotlin
 	implementation( "com.squareup.okhttp3:okhttp:4.9.0" )
@@ -82,8 +97,8 @@ dependencies {
 	implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")
 	implementation("uniboInterfaces:uniboInterfaces")
 	implementation("uniboProtocolSupport:unibonoawtsupports")
-	//implementation("uniboplanner20:it.unibo.planner20:1.0")
-
+	implementation("uniboplanner20:it.unibo.planner20:1.0")
+	implementation("qak:it.unibo.qakactor:2.4")
 
 }
 

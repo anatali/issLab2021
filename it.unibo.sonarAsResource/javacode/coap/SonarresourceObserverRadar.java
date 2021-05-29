@@ -2,6 +2,8 @@
 
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
+import org.json.JSONObject;
+
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import it.unibo.kactor.ApplMessage;
@@ -9,7 +11,7 @@ import it.unibo.kactor.ApplMessage;
 class DataHandler implements CoapHandler {
 	
 	protected String handleAsApplMessage(String content) {
-		System.out.println("ResourceObserverRadar | observes_0: " + content  );
+		System.out.println("DataHandler | observes_0: " + content  );
 		if( content.contains("created")) return "0";
 		/*
 		//content = msg(sonar,event,sonarOnRaspCoap,none,sonar(V),N)
@@ -19,14 +21,20 @@ class DataHandler implements CoapHandler {
 		String value    = data.getArg(0).toString();
 		System.out.println("ResourceObserverRadar | observes_2: " + value );
 		*/
-		radarPojo.radarSupport.update(content, "90");
+		JSONObject jsonContent = new JSONObject(content);
+		String distance        = jsonContent.getString("sonarvalue");
+		System.out.println("DataHandler | observes: " + distance );
+		radarPojo.radarSupport.update(distance, "90");
 		return content;
 	}
 
 	@Override public void onLoad(CoapResponse response) {
-		String content  = handleAsApplMessage(response.getResponseText());	 //later ...
-		System.out.println("DataHandler | observes: " + content );
-		radarPojo.radarSupport.update(content, "90");
+		String content  = handleAsApplMessage(response.getResponseText());	  
+		//content= {"sonarvalue":"D" , "info":"..." }
+		JSONObject jsonContent = new JSONObject(content);
+		String distance        = jsonContent.getString("sonarvalue");
+		System.out.println("DataHandler | observes: " + distance );
+		radarPojo.radarSupport.update(distance, "90");
 	}					
 	@Override public void onError() {
 		System.out.println("DataHandler |  FAILED (press enter to exit)");
@@ -35,7 +43,7 @@ class DataHandler implements CoapHandler {
 
 public class SonarresourceObserverRadar {
 	private CoapSupport coapSupport = 
-			new CoapSupport("coap://192.168.1.132:8028","ctxsonarresource/sonarresource");
+			new CoapSupport("coap://192.168.1.45:8028","ctxsonarresource/sonarresource");
 	
 	public SonarresourceObserverRadar(){
 		radarPojo.radarSupport.setUpRadarGui();

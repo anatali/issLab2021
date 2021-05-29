@@ -20,7 +20,7 @@
 	//"tcp://broker.hivemq.com" 
 
 System -msglog  sonarnaive   
-mqttBroker "broker.hivemq.com" :  1883 eventTopic "sonar/data"
+mqttBroker "192.168.1.45" :  1883 eventTopic "sonar/data"  //broker.hivemq.com
 
 Dispatch sonarstart      : sonarstart(V)  
 Dispatch simulatorstart  : simulator(V)  

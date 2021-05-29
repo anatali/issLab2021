@@ -14,7 +14,7 @@ public class SonarresourceObserver {
 	private CoapClient client = null;
 	
 	public SonarresourceObserver(){
-		client = new CoapClient("coap://localhost:8028/ctxsonarresource/sonarresource");
+		client = new CoapClient("coap://192.168.1.45:8028/ctxsonarresource/sonarresource");
 	}
 	
 	public void  observe( ) {

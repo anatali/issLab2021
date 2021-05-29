@@ -23,9 +23,6 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 					action { //it:State
 						println("sonar START")
 						discardMessages = true
-						solve("consult('sysRules.pl')","") //set resVar	
-						solve("consult('sonaronrasp.pl')","") //set resVar	
-						solve("showSystemConfiguration","") //set resVar	
 						solve("consult('sonar2021ConfigKb.pl')","") //set resVar	
 						solve("simulate(X)","") //set resVar	
 						println(currentSolution)

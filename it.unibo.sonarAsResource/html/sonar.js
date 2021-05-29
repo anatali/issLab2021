@@ -20,8 +20,8 @@ GOALS:
 	1) modify the resource using CoAp
 	2) interact with the qak model sonarresource
 */
-app.post("/start", function(req, res,next) { coap.coapPut(cmd); });	
-app.post("/stop",  function(req, res,next) { coap.coapPut(cmd); });	
+//app.post("/start", function(req, res,next) { coap.coapPut(cmd); });	
+//app.post("/stop",  function(req, res,next) { coap.coapPut(cmd); });	
 
 
 

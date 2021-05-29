@@ -6,49 +6,94 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.messaging.handler.annotation.Payload
+import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.simp.SimpMessagingTemplate
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.util.HtmlUtils
+import org.eclipse.californium.core.CoapResponse
+import org.eclipse.californium.core.CoapHandler
 
+
+
+/*
+The HIController USES the sonarresources via CoAP
+See also it.unibo.boundaryWalk/userdocs/websocketInteraction.html
+ */
+/*
+ * Update the page vie socket.io when the application-resource changes.
+ * Thanks to Eugenio Cerulo
+ * See also https://www.baeldung.com/spring-websockets-send-message-to-user
+ */
 
 @Controller
 class HIController {
     @Value("\${human.logo}")
     var appName: String?    = null
-    var applicationModelRep = "waiting"
 
+    var coap    = CoapSupport("coap://192.168.1.45:8028", "ctxsonarresource/sonarresource")
+    //lateinit var connQakSupport:connQakCoap
+
+    @Autowired
+    var  simpMessagingTemplate : SimpMessagingTemplate? = null
+
+    //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
     init{
         sysUtil.colorPrint("HumanInterfaceController | INIT", Color.GREEN)
+        //connQakSupport = connQakCoap()
+        //connQakSupport.createConnection()
+        coap.observeResource( WebPageHandler(this) ) //TODO: update the HTML page via socket
     }
+
+
 
     @GetMapping("/")    //defines that the method handles GET requests.
     fun entry(model: Model): String {
         model.addAttribute("arg", appName )
-        println("HumanInterfaceController | entry model=$model")
+        sysUtil.colorPrint("HIController | entry model=$model", Color.GREEN)
+        //peparePageUpdating()
         return "sonarGui"
     }
-
-    /*
-    Spring provides a Model object which can be passed into the controller.
-    You can configure this model object via the addAttribute(key, value) method.
-     */
 /*
-    @GetMapping("/model")
-    @ResponseBody   //With this annotation, the String returned by the methods is sent to the browser as plain text.
-    fun  homePage( model: Model) : String{
-        model.addAttribute("arg", appName)
-        sysUtil.colorPrint("HumanInterfaceController | homePage model=$model", Color.GREEN)
-        return String.format("HumanInterfaceController text normal state= $applicationModelRep"  );
+    fun peparePageUpdating() {
+        connQakSupport.client.observe(object : CoapHandler {
+            override fun onLoad(response: CoapResponse) {
+                sysUtil.colorPrint("HIController --> CoapClient changed -> ${response.responseText}", Color.BLUE )
+                simpMessagingTemplate?.convertAndSend(
+                    WebSocketConfig.topicForClient,
+                    ResourceRep("" + HtmlUtils.htmlEscape(response.responseText))
+                )
+            }
+
+            override fun onError() {
+                println("HIController --> CoapClient error!")
+            }
+        })
     }
 
-    //@RequestMapping methods assume @ResponseBody semantics by default.
-    //https://springframework.guru/spring-requestmapping-annotation/
-
-    //@RequestMapping( "/move") //, method = RequestMethod.POST,  MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    @PostMapping("/move")  //signals that this method handles POST requests
-    //@ResponseBody
-    fun move( model: Model, @RequestParam(name = "movetodo") move:String ) : String {
-        sysUtil.colorPrint("HumanInterfaceController | doMove  $move", Color.GREEN)
-        //RobotResource.execMove(move)
-        return  "naiveRobotGui"
+ */
+    @PostMapping( "/sonardata" )
+    fun  handleSonarValue(model : Model,
+        @RequestParam(name="sonarvalue", required=false, defaultValue="0")v : String): String{
+        sysUtil.colorPrint("HIController | set sonar value:$v", Color.RED)
+        //connQakSupport.updateResourceWithValue(v)
+        coap.updateResourceWithValue(v)
+        model.addAttribute("sonarval", v)
+        return "sonarGui"
     }
-*/
+    /*
+     * Update the page via socket.io. Thanks to Eugenio Cerulo
+     * https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/MessageMapping.html
+     * https://spring.io/guides/gs/messaging-stomp-websocket/
+     * https://www.toptal.com/java/stomp-spring-boot-websocket
+     */
+    @MessageMapping("/update")
+    @SendTo("/topic/infodisplay")
+    fun updateTheMap(@Payload message: RequestMessageOnSock): ResourceRep {
+        sysUtil.colorPrint("HIController | message=$message", Color.BLUE)
+        return ResourceRep("todo")
+    }
+
 
 }

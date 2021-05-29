@@ -2,7 +2,7 @@
 uniboSupports/coapClientToResourceModel
 */
 const coap             = require("node-coap-client").CoapClient; 
-var coapAddr           = "coap://192.168.1.132:8028"        
+var coapAddr           = "coap://192.168.1.45:8028"        
 var coapResourceAddr   = coapAddr + "/ctxsonarresource/sonarresource"
 /*
 coap

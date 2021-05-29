@@ -35,9 +35,12 @@ class Sonarresource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( na
 						if( checkMsgContent( Term.createTerm("sonar(V)"), Term.createTerm("sonar(V)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val distance = payloadArg(0)  
-								updateResourceRep( "$distance"  
+								updateResourceRep( "{\"sonarvalue\":\"$distance\"}"  
 								)
 								println("distance=$distance")
+								delay(1000) 
+								updateResourceRep( "{\"info\":\"$distance\"}"  
+								)
 						}
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
