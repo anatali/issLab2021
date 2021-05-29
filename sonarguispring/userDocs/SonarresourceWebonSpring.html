@@ -1,0 +1,524 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 130%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>SonarresourceWebonSpring</title></head>
+    
+<body>
+<div id="top">
+<h1>LabIss  | A user-interface based on SpringBoot for sonar resource <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+
+<ol>
+<li><a href="#">Introduction</a></li>
+  
+ 
+</ol>
+ 
+
+<h2 id="intro">Introduction</h2>
+
+In this work, we will develop a Web-based user-interface for the sonar resource introduced in <br/>
+<a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="web">LabIss | Sonar as resource</a>.
+
+<br/>
+<!--
+<center><img src="./img/robotWebTuesday26.png" alt="robotWebTuesday26" width="60%" ></center><br/> 
+-->
+<h3>The application core</h3>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%"><a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a>
+</td>
+<td></td>
+</tr>
+</table>
+
+<h3>The controller for the Human-Machine interface</h3>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%"><a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a>
+</td>
+<td></td>
+</tr>
+</table>
+
+<h3>The HTML Web-page</h3>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%"><a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a>
+</td>
+<td></td>
+</tr>
+</table>
+
+<h3>The web-socket</h3>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%"><a href="../src/main/resources/static/app.js" target="code">resources/static/app.js</a>
+</td>
+<td></td>
+</tr>
+</table>
+
+
+<h3>The external components</h3>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%"><h4>A resource observer</h4>
+<a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>
+</td>
+<td><h4>A sonar-data simulator</h4>
+<a href="../../it.unibo.sonarAsResource/javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a></td>
+</tr>
+</table>
+
+<ol>
+<li>The application core: <a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a></li>
+<li>The controller for the Human-Machine interface: <a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a></li>
+<li>The HTML Web-page: <a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a></li>
+<li>The web-socket <a href="../src/main/resources/static/app.js" target="code">resources/static/app.js</a></li>
+<li></li>
+
+<li>A sonar-data simulator: <a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a></li>
+<li>A resource (CoAP) observer: <a href="../../it.unibo.sonarAsResource/javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a></li>
+</ol>
+More precisely, we operate as follows:
+
+<ol>
+<li><h3 id="onpc">Workflow</h3>
+
+	<ol>
+	<li>Activate  the sonar resource described in 
+	<a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="code">LabIss | Sonar as resource</a> 
+	 on a PC (address <m><ks>192.168.1.pc</ks></m>).</li>
+	<li>Working in this project (<m><k>sonarguispring</k></m>), set the proper values in the configuration file
+	<a href="../src/main/resources/connQak/configurator.kt" target="code">configurator.kt</a>.
+	<br/>Now, activate the Spring application 
+	<a href="../src/main/java/sonarguispring/SonarguigpringApplication.kt">SonarguigpringApplication.kt</a> 
+	on the PC, open a browser on <m><ks>localhost:8083</ks></m> (or <m><ks>192.168.1.pc:8083</ks></m>) 
+	and send some command to the <a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a>. </li>
+	<br/><img src="./img/guiwebwithsocket.png" alt="guiwebwithsocket" width="30%" > <br/>
+
+	<li>Activate a CoAP client working as an observer of the 
+	<a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a> resource, 
+	e.g.  <a href="../../it.unibo.qak20.basicrobot/resources/connQak/actorQakCoapObserver.kt" target="code">actorQakCoapObserver.kt</a>,
+	move the <a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a>
+	and notice that it shows, after a command, the same values that appears in the <tt>Resource state</tt> section of the web-page.
+	</li>
+	
+	<li>Optionally, change the HTML page to be displayed, by changing the <m><ks>String htmlPage</ks></m> in 
+	<a href="../src/main/java/it/unibo\robotWeb2020\RobotController.java">RobotController.java</a>. For example, the previous page 
+	(<m><ks>robotGuiSocket</ks></m>) sends commands
+	by using a  <a href="https://spring.io/guides/gs/messaging-stomp-websocket/" target="web">
+	<bc>socket.io</bc></a>, while the following one (<m><ks>robotGuiPost</ks></m>) does use the conventional <m><ks>POST</ks></m> HTTP-verb  :
+	<br/><img src="./img/guiwebwithpost.png" alt="guiwebwithpost" width="30%" > <br/>
+	</li>
+	
+		</ol>
+
+
+<!--
+<li><h3 id="onrasp">Run the basicrobot on the RaspberryPi</h3></li>
+
+
+	<ol>
+	<li><a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html#deploy" target="lab">  
+	Deploy</a> the distribution file for the  <a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a>
+	on a RaspberryPi (address <m><ks>192.168.1.rasp</ks></m>).</li>
+	<li>Set the proper values in the 
+	<a href="../../it.unibo.qak20.basicrobot/basicrobotConfig.json" target="code">basicrobotConfig.json</a>:
+	<pre>{<ks>"type":"virtual"</ks>, "port":"8999", <ks>"ip":"192.168.1.pc"</ks>}	</pre>		
+	</li>
+	<li>Activate the basicrobot  (<m><ks>bash it.unibo.qak20.basicrobot</ks></m>)</li>
+	<li>In project <m><k>robotWeb2020</k></m>, change the configuration values in the  file
+	<a href="../src/main/resources/connQak/configurator.kt" target="code">configurator.kt</a>
+<pre>
+public static final String hostAddr   	    = <ks>"192.168.1.rasp"</ks>;   	
+public static final String port    			= "8020";
+public static final String qakdestination	= "basicrobot";
+public static final String ctxqadest 		= "ctxbasicrobot";
+</pre>		
+	
+	</li>
+	<li>Move the robot by using the Web-interface</li>
+	</ol>
+
+ 
+<li><h3 id="realrobot">Use a real robot</h3></li>
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%"><br/><center><img src="./img/mbot.png" alt="mbot" width="60%" ></center><br/> 
+</td>
+<td><br/><center><img src="./img/basicrobotproject.png" alt="basicrobotproject" width="60%" ></center><br/> </td>
+</tr>
+</table>
+
+ 
+ 
+ 
+ 
+	<ol>
+	<li>On the RaspberryPi, change the configuration values in the  file 
+	<a href="../../it.unibo.qak20.basicrobot/basicrobotConfig.json" target="code">basicrobotConfig.json</a>:
+	<pre>{"type":"realmbot", "port":"/dev/ttyUSB0", "ip":"dontcare"}	</pre>		
+	</li>
+	<li>Activate the basicrobot as before (<m><ks>bash it.unibo.qak20.basicrobot</ks></m>)</li>
+	<li>Move the robot by using the Web-interface configured as before</li>
+	</ol>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%">
+</td>
+<td></td>
+</tr>
+
+-->
+</table>
+	      	
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>
+
+<!--
+
+HUE
+https://developers.meethue.com/develop/get-started-2/  BEN FATTO
+
+
+{"devicetype":"my_hue_app#nat"}  POST
+
+[
+	{
+		"success": {
+			"username": "gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R"
+		}
+	}
+]
+
+ 
+
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights
+
+{
+	"1": {
+		"state": {
+			"on": false,
+			"bri": 1,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": true
+		},
+		"swupdate": {
+			"state": "readytoinstall",
+			"lastinstall": "2018-03-23T16:50:33"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 1",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:a3:32:03-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	},
+	"2": {
+		"state": {
+			"on": false,
+			"bri": 77,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": false
+		},
+		"swupdate": {
+			"state": "readytoinstall",
+			"lastinstall": "2018-03-22T21:03:40"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 2",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:c4:9a:8a-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	},
+	"3": {
+		"state": {
+			"on": true,
+			"bri": 0,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": false
+		},
+		"swupdate": {
+			"state": "transferring",
+			"lastinstall": "2018-03-23T15:58:39"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 3",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:c6:4f:e8-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	}
+}
+
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights/1
+...
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights/1/state
+{"on":false}  PUT
+{"on":true, "sat":254, "bri":254,"hue":10000}
+
+https://developers.meethue.com/develop/get-started-2/core-concepts/
+
+-->
+

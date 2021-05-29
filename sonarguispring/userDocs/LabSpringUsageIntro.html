@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ 
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 700px;
+    font-size: 15px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px; 
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #C0F0E0;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+	
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #E3F2FD;	
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+} 
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}     
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+	
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>LabSpringIntro</title></head>
+    
+<body>
+<div id="body">
+<h1>LabSpringIntro | Introduction to the usage of Spring Boot</h1>
+
+ 
+
+<!-- http://192.168.1.244/debug/clip.html -->
+
+<h2>Start-up</h2>
+ 
+<ol>
+<li>Connect to <a href="https://start.spring.io/">https://start.spring.io/</a> </li>
+<li>Select <tt>Gradle Project, Java</tt>, <tt><ks>Group=</ks>it.unibo</tt>, <tt><ks>Artifact=</ks>webspring.intro</tt>
+(<tt><ks>Options</ks>:Packaging=Jar, Java=8</tt>), <m><ks>Dependencies</ks></m>:
+<hr/>
+<ul>
+<li><bc>Spring Web</bc>: builds the web, including RESTful, applications using Spring MVC. Uses Apache Tomcat as the default embedded container. </li>
+<li><bc>Thymeleaf</bc>: a modern server-side Java template engine for both web and standalone environments. 
+Allows HTML to be correctly displayed in browsers and as static prototypes. </li>
+<li><bc>Spring Boot DevTools</bc>: Provides fast application restarts, LiveReload, and configurations for enhanced development experience.
+Speeds up this refresh cycle (coding a change, restarting application, and refreshing the browser to view the change).</li>
+</ul>
+<hr/> 
+ 
+ </li>
+<li>Click on <k>Generate</k></li>
+<li>Unzip the generated file <tt>webspring.intro.zip</tt> into an empty dir (e.g. <tt>C:/xxx</tt>)</li>
+<li>Open Eclipse and, in the workspace <tt>C:/xxx</tt>, do: <tt>File->Import -> Gradle -> <k>Existing Gradle Project</k> webspring.intro</tt>.<br/>
+Look at the generated class <m><ks>it.unibo.webspring.intro.Application.java</ks></m>:
+<pre>
+package it.unibo.qak.robotwebspring;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+<ks>@SpringBootApplication</ks>
+public class <k>Application</k> {
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+}
+</pre>
+<!-- <img src="./img/springboot0.png" alt="springboot0.png" width="50%"  />  -->
+<li>Run <ks>Application.java</ks></li>
+<li>Open a browser on <tt>localhost:8080</tt><br/>
+<img src="./img/springboot1.png" alt="springboot1.png" width="30%"  />
+</li>
+
+<li>
+Create the following file  <m><ks>webspring.intro\src\main\resources\templates\welcome.html</ks></m>
+<pre>
+&lt;html xmlns:th="http://www.thymeleaf.org"> 
+&lt;head>&lt;title>Welcome&lt;/title>&lt;/head>
+&lt;body>
+&lt;h1>Welcome (in templates)&lt;/h1>
+&lt;p>Welcome to &lt;b>&lt;span th:text="${arg}">Our Arg&lt;/span>&lt;/b>.&lt;/p>
+&lt;/body>
+&lt;/html>
+&lt;/pre>
+</li>
+
+<li>
+Insert in <m><ks>webspring.intro\src\main\resources\application.properties</ks></m> the sentence:
+<pre>
+spring.application.name=First Spring Application iss2020
+</pre>
+</li>
+<li>
+Create the class <m><ks>it.unibo.webspring.intro.BaseController.java</ks></m>:
+<pre>
+package it.unibo.webspring.intro;
+
+import ...
+ 
+@Controller 
+public class BaseController { 
+    @Value("${spring.application.name}")
+    String appName;
+
+  @GetMapping("/") 		 
+  public String homePage(Model model) {
+	  System.out.println("------------------- BaseController homePage " + model  );
+	  model.addAttribute("arg", appName);
+	  return "welcome";
+   } 
+    
+    @ExceptionHandler 
+    public ResponseEntity<String> handle(Exception ex) {
+    	HttpHeaders responseHeaders = new HttpHeaders();
+        return new ResponseEntity<String>(
+        		"BaseController ERROR " + ex.getMessage(), responseHeaders, HttpStatus.CREATED);
+    }
+
+}
+</pre>
+</li>
+<!--
+<li>Change the application code as follows:
+<pre>
+@SpringBootApplication
+<ks>@RestController</ks> 		
+public class Application {
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+<ks>
+    @GetMapping("/")   <kc>//REST API just return data in form of JSON or XML  because most of the REST clients are programs</kc>
+    public String entry( ) {
+    	return "Hello world from Application";
+    }</ks>
+}
+</pre>
+</li>
+-->
+<li>Run <ks>Application.java</ks> <br/>
+<img src="./img/springboot2.png" alt="springboot2.png" width="30%"  />
+</li>
+
+</ol>
+
+<!--
+We have built in avery short time a 'microservice' that can be used by programs. For example:
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<pre>
+curl http://localhost:8080
+
+<kc>//OUTPUT</kc>
+Hello world from Application
+</pre> 
+
+</td>
+<td>
+<pre><m>
+public class AClient {
+	public static void main(String[] args) {
+        try {
+            String strUrl     = "http://localhost:8080/";
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpGet request   = new HttpGet(strUrl);
+            HttpResponse response = client.execute(request);
+            String answer     = IOUtils.toString(response.getEntity().getContent(), "UTf-8");
+            System.out.println( "RESPONSE=" + answer );
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+}</m>
+<kc>//OUTPUT</kc>
+RESPONSE=Hello world from Application
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+-->
+
+
+
+
+
+
+
+<h2>Interaction with humans and with machines</h2>
+
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>Human-to-machine</h3>
+<pre>
+<bc>@Controller</bc> 
+public class HumanInterfaceController {
+  <bc> @GetMapping("/") </bc> 		 
+  public String entry(Model model) {
+	model.addAttribute("arg", appName);
+	return "gui";	<k>//see in templates</k>
+  } 
+  
+  <bc>@PostMapping( path = "/move" ) </bc> 
+  public String doMove( 
+	<bc>@RequestParam</bc> (name="move", 
+			required=false, defaultValue="h") 
+	String moveName, Model viewmodel) {<m>
+	if( robotMoves.contains(moveName) ) {
+			applicationModelRep = moveName;
+			viewmodel.addAttribute("arg", 
+				"Current Robot State:"+applicationModelRep);
+	}else {
+			viewmodel.addAttribute("arg", 
+			  "Sorry: move unknown - Current Robot State:"+applicationModelRep );
+	}</m>
+    return "guiMoves"; <kc>//see in templates</kc>
+  }	
+  
+  ...
+}
+</pre>
+</td>
+<td>
+The full code is in <a href="../src/main/java/it/unibo/webspring/intro/HumanInterfaceController.java" target="code">HumanInterfaceController.java</a>
+<h3>Usage</h3>
+Open a browser and input
+<pre>
+http://localhost:8080
+http://localhost:8080/model
+</pre>
+<div class="remark">
+<center>
+What is the <bc>model</bc>? <br/>
+See <a href="LabArchitectures.html" target="lab">LabArchitectures | From MVC to Hexagonal architectures</a>
+</center>
+</div> 
+</td>
+</tr>
+ </tbody>
+</table>
+ <br/><br/>
+ 
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" >
+<h3>Machine-to-machine</h3>
+<pre>
+<bc>@RestController</bc>  
+public class MachineInterfaceController { 
+
+  <bc>@GetMapping("/")</bc> 		 
+  public String entry(Model model) {
+     model.addAttribute("arg", appName);
+      return "gui";	<kc>//just a string, no more a view ...</kc>
+  } 
+
+  <bc>@PostMapping( path = "/move" )</bc> 
+  public String doMove( 
+	<bc>@RequestParam</bc>(name="move", 
+	       required=false, defaultValue="h") 
+	String moveName, Model viewmodel) {
+	if( robotMoves.contains(moveName) ) {	
+		<k>//NO MORE view model since no more view ...</k>
+		applicationModelRep = moveName;
+		return "guiMoves move=" + applicationModelRep;	
+	}else {
+		return "Sorry: move " + moveName + " unknown ";
+	}		
+  }	
+	...
+}
+</pre>
+</td>
+<td>
+The full code is in 
+<a href="../src/main/java/it/unibo/webspring/intro/MachineInterfaceController.java" target="code">MachineInterfaceController.java</a>
+
+<h3>Usage</h3>
+<pre>
+curl localhost:8080
+curl -d move=w localhost:8080/move
+</pre>
+
+See <a href="https://curl.haxx.se/docs/manual.html" target="web">curl tutorial </a>
+
+<br/><br/>
+Usually we will define our own code, for example a HTTP client written in Java 
+(<a href="../src/main/java/it/unibo/webspring/intro/AClient.java" target="code">AClient.java</a>)
+or in some other language.
+
+
+</td>
+</tr>
+
+ </tbody>
+</table>
+ <br/><br/>
+ 
+<h2><a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/web-reactive.html" 
+target="web">Spring WebFlux</a> (TODO)</h2>
+<ol>
+<li>Connect to <a href="https://start.spring.io/">https://start.spring.io/</a> </li>
+<li>Select <tt>Gradle Project, Java</tt>, <tt><ks>Group=</ks>it.unibo</tt>, <tt><ks>Artifact=</ks>webspringflux.intro</tt>
+(<tt><ks>Options</ks>:Packaging=Jar, Java=8</tt>), <ks>Dependencies</ks>:
+<ul>
+<li><bc>Spring Reactive Web </bc>: Build reactive web applications with Spring WebFlux and Netty.. </li>
+<li><bc>Thymeleaf</bc>: a modern server-side Java template engine for both web and standalone environments. 
+Allows HTML to be correctly displayed in browsers and as static prototypes. </li>
+<li><bc>Spring Boot DevTools</bc>: Provides fast application restarts, LiveReload, and configurations for enhanced development experience.
+Speeds up this refresh cycle (coding a change, restarting application, and refreshing the browser to view the change).</li>
+</ul>
+ 
+ 
+ </li>
+<li>Click on <k>Generate</k></li>
+
+
+See:<br/>
+<a href="https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/web-reactive.html"
+ target="web">Spring WebFlux framework</a><br/>
+<a href="https://howtodoinjava.com/spring-webflux/spring-webflux-tutorial/" target="web">Spring WebFlux Tutorial</a>
+<br/>
+<a href="https://dzone.com/articles/build-reactive-rest-apis-with-spring-webflux"  target="web">
+Build Reactive REST APIs With Spring WebFlux </a>
+
+ <br/><br/>
+ 
+ In Spring WebFlux, we call reactive APIs/functions that return monos and fluxes and your controllers will return monos and fluxes.<br/>
+ When you invoke an API that returns a mono or a flux, it will return immediately.<br/>
+ The results of the function call will be delivered to you through the mono or flux when they become available.
+
+ <br/><br/>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+ <br/><br/>
+</div>  
+
+ 
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+
+</body>
+</html>
+
+
+ 
