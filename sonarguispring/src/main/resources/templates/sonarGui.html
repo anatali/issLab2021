@@ -56,44 +56,6 @@
             <b>INFO FROM RESOURCE:</b>: <span id="infodisplay"></span>
         </div>
     </div>
-    <!--
-    <script type = "text/javascript">
-    function connectws() {
-        ws = new WebSocket('ws://localhost:8083/it-unibo-iss');
-        ws.onmessage = function(data) {
-            helloWorld(data.data);
-    }
-            setConnected(true);
-    }
-    </script>
-
-<script type = "text/javascript">
-var stompClient = null;
-
-function connect() {
-    var socket  = new SockJS('/it-unibo-iss');
-    stompClient = Stomp.over(socket);
-    //stompClient = Stomp.over('ws://localhost:8083/it-unibo-iss')
-
-    //alert("connect stompClient="+ stompClient)
-    stompClient.connect( {}, function (frame) {  //callback
-
-        console.log('Connected: ' + frame);
-        setConnected(true);
-
-        stompClient.subscribe('/topic/infodisplay', function (msg) {
-             showMsg(JSON.parse(msg.body).content);
-        });
-        //alert(send);
-        //stompClient.send("/update", {}, JSON.stringify({'name': 'test'}));
-    });
-}
-//Later, we will embed this code within app.js
-//connect()
-//
-//stompClient.send("/update", {}, JSON.stringify({'name': 'test'}));
-</script>
--->
 
 </div>
 </body>

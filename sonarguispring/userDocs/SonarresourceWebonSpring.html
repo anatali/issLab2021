@@ -215,27 +215,118 @@ In this work, we will develop a Web-based user-interface for the sonar resource 
 <center><img src="./img/robotWebTuesday26.png" alt="robotWebTuesday26" width="60%" ></center><br/> 
 -->
 <h3>The application core</h3>
+Our application-core is represented by CoAP-observable resource, defined as a qak-model. <br/><br/>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%"><a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a>
+<td style="width:40%">
+<center><img src="./img/sonarresourceAlone.PNG" alt="sonarresourceAlone" width="90%" ></center>
+<div class="remark">
+<ol>
+<li>When the resource handles a new value, it changes its CoAP-observable state with the JSON string:
+<pre>{"sonarvalue":"DISTANCE"}</pre></li>
+<li>Sometimes, the resource can autonomously change its CoAP-observable state with the JSON string:
+<pre>{"info":"INFOCONTENT"}</pre></li>
+</ol>
+</div>
 </td>
-<td></td>
+<td>
+See: <a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="web">LabIss | Sonar as resource</a>
+
+<br/><br/>
+The resource is defined/described by the qak-model: <a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a>.
+<br/>
+The (generated) description of this stand-alone system is in <a href="../../it.unibo.sonarAsResource/sonarresource.pl" target="code">sonarresource.pl</a>.
+<br/><br/>
+The resource manages (sonar-)data transmitted as a <ks>event</ks>, or as a <ks>dispatch</ks>:
+<pre>
+Event    sonarrobot : sonar( V )
+Dispatch sonarrobot : sonar( V )
+
+<kc>//Example:</kc><bc>msg(sonarrobot, dispatch, SENDER, sonarresource, sonar(20), 1)</bc>
+</pre>
+Sonar-data can be sent using one of the following protocols:
+<m>
+<ul>
+<li>TCP  (port number: <ks>8038</ks>)</li>
+<li>MQTT (topic name: <ks>sonar/data</ks>) </li>
+<li>CoAP (REST-path: <ks>ctxsonarresource/sonarresource</ks>)</li>
+</ul>
+</m>
+</td>
 </tr>
 </table>
+
+<h3>The use cases</h3>
+<div class="remark">
+: Design and build a software systenn that allow san user to:
+<ol>
+<li><ks>DataIn</ks>: send values (sonar-data) to the resource</li>
+<li><ks>ResourceObserve</ks>:observe the modification of the resource</li>
+</ol> 
+</div>
+
+After the analysis phase, we propose here following project:
+
+<ol>
+<li>Our software system will be a <k>Web-application</k>, in order to provide wide-usability. </li>
+<li>Our reference-technology will be <k>SpringBoot</k>, in order to reduce development time. </li>
+<li>Our <k>SpringBoot core-component</k> will be a class annoted with <k>@Controller</k> 
+(<a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a>) 
+</li>
+	</ul>
+</li>
+</ol>
 
 <h3>The controller for the Human-Machine interface</h3>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%"><a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a>
+<td style="width:40%"><a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a>
+<br/><br/>
+
+<h4>About STOMP</h4>
+<m>As said in
+
+<a href="https://spring.io/guides/gs/messaging-stomp-websocket/" target="code">Using WebSocket to build an interactive web application</a>:<br/><br/>
+"<i>
+WebSocket is a thin, lightweight layer above TCP. This makes it suitable for using “subprotocols” to embed messages. <br/><br/>
+In this work, we use <a href="https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol" target="code">
+STOMP (Simple (or Streaming) Text Orientated Messaging Protocol)</a> messaging with Spring to create an interactive web application. </i>"
+</m>
+<br/>
+
 </td>
-<td></td>
+<td>The controller returns a HTML page that:
+	<ul>
+	<li>includes a <em>form with a POST action</em>, in order to implement the use-case <ks>DataIn</ks> and 
+	a <em>thymeleaf field</em>, in order to implement the use-case <ks>ResourceObserve</ks> when the resource-state has
+the form: <pre>{"sonarvalue":"DISTANCE"}</pre>	
+The run-time behavior can be summarized as follows:
+<pre>Browser -> POST -> HIController -> CoAP put -> sonarresource
+sonarresource -> {"sonarvalue":"DISTANCE"} -> (observed by) HIController -> 
+  <k>does nothing</k> <m>(since the HIController modifies the model within the page returned to the Browser)</m>
+</pre>
+
+</li>
+	<li>uses the  <em>web-scokets</em> and <ks>stompClient.subscribe</ks>, 
+	in order to implement the use-case <ks>ResourceObserve</ks> when the resource-state has
+the form: <pre>{"info":"INFOCONTENT"}</pre>	
+
+The run-time behavior can be summarized as follows:
+<pre>  
+sonarresource -> {"info":"INFOCONTENT"} -> (observed by) HIController ->
+ <k>calls simpMessagingTemplate.convertAndSend(...)</k>  -> 
+ HTMLPage in Browser update field (infodisplay)
+</pre>
+
+
+</td>
 </tr>
 </table>
 
 <h3>The HTML Web-page</h3>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%"><a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a>
+<td style="width:40%"><a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a>
 </td>
 <td></td>
 </tr>
@@ -244,7 +335,7 @@ In this work, we will develop a Web-based user-interface for the sonar resource 
 <h3>The web-socket</h3>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%"><a href="../src/main/resources/static/app.js" target="code">resources/static/app.js</a>
+<td style="width:40%"><a href="../src/main/resources/static/app.js" target="code">resources/static/app.js</a>
 </td>
 <td></td>
 </tr>
@@ -254,7 +345,7 @@ In this work, we will develop a Web-based user-interface for the sonar resource 
 <h3>The external components</h3>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%"><h4>A resource observer</h4>
+<td style="width:40%"><h4>A resource observer</h4>
 <a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>
 </td>
 <td><h4>A sonar-data simulator</h4>
@@ -262,17 +353,6 @@ In this work, we will develop a Web-based user-interface for the sonar resource 
 </tr>
 </table>
 
-<ol>
-<li>The application core: <a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a></li>
-<li>The controller for the Human-Machine interface: <a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a></li>
-<li>The HTML Web-page: <a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a></li>
-<li>The web-socket <a href="../src/main/resources/static/app.js" target="code">resources/static/app.js</a></li>
-<li></li>
-
-<li>A sonar-data simulator: <a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a></li>
-<li>A resource (CoAP) observer: <a href="../../it.unibo.sonarAsResource/javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a></li>
-</ol>
-More precisely, we operate as follows:
 
 <ol>
 <li><h3 id="onpc">Workflow</h3>
@@ -338,7 +418,7 @@ public static final String ctxqadest 		= "ctxbasicrobot";
 
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%"><br/><center><img src="./img/mbot.png" alt="mbot" width="60%" ></center><br/> 
+<td style="width:40%"><br/><center><img src="./img/mbot.png" alt="mbot" width="60%" ></center><br/> 
 </td>
 <td><br/><center><img src="./img/basicrobotproject.png" alt="basicrobotproject" width="60%" ></center><br/> </td>
 </tr>
@@ -358,7 +438,7 @@ public static final String ctxqadest 		= "ctxbasicrobot";
 	</ol>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:30%">
+<td style="width:40%">
 </td>
 <td></td>
 </tr>

@@ -84,16 +84,9 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-/*
-function sendMove() {
-    stompClient.send("/app/move", {}, JSON.stringify({'name': $("#name").val()}));
-}
-*/
 
-function sendTheMove(move){
-	console.log("sendTheMove " + move);
-    stompClient.send("/app/move", {}, JSON.stringify({'name': move }));
-}
+
+
 
 function sendUpdateRequest(){
 	console.log(" sendUpdateRequest "  );
