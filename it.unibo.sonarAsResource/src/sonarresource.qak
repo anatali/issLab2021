@@ -11,10 +11,11 @@
  */ 
    
 System /* -trace */ sonarresource  
-mqttBroker "192.168.1.45" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
+//mqttBroker "192.168.1.45" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
 
  
-Event    alarm      : alarm(X)
+Event    local_appl   : job(X)
+Event    local_update : value(X)
 
 Event    sonarrobot : sonar( V )
 Dispatch sonarrobot : sonar( V )
@@ -25,29 +26,49 @@ Context ctxsonarresource ip [ host= "192.168.1.45"   port= 8028 ]
 
 QActor sonarresource context ctxsonarresource{ 
 	State s0 initial{  
-		//println("sonarresource start") 
+		//println("onarresource | start") 
 	}
 	Goto work
 	 
 	State work{
-		println("sonarresource waits ... ") 
+		println("sonarresource | waits ... ") 
 	}
-	Transition t0 whenMsg   sonarrobot -> handleSonarData
-	              whenEvent sonarrobot -> handleSonarData
+	Transition t0 whenEvent local_update -> doUpdate
+			      whenMsg   sonarrobot   -> handleSonarData
+	              whenEvent sonarrobot   -> handleSonarData
+	              
 	              
 	State handleSonarData{ 
 		printCurrentMessage
 		onMsg( sonarrobot : sonar(V) ){
-			[# val distance = payloadArg(0) #]
-			updateResource [# "{\"sonarvalue\":\"$distance\"}" #]  	//JSON rep for resource
-			//updateResource [# "{\"sonarvalue\":\"$distance\", \"info\":\"$distance\"}" #]  	 
- 			println("distance=$distance")
+			[# val Distance = payloadArg(0) #]
+			emit local_appl : job(sonarrobot($Distance))  //run the business logic
+			/* 
+			updateResource [# "{\"sonarvalue\":\"$Distance\"}" #]  	//JSON rep for resource
+			//updateResource [# "{\"sonarvalue\":\"$Distance\", \"info\":\"$Distance\"}" #]  	 
+ 			println("onarresource | distance=$Distance")
  			delay 1000 
  			//The resource changes its representation in autonomous way ...
- 			updateResource [# "{\"info\":\"$distance\"}" #]  
- 			//emit alarm : alarm(fire) //just to see what happens ...
+ 			updateResource [# "{\"info\":\"$Distance\"}" #]  
+ 			* 
+ 			*/
 		}	 	
 	} 
+	Goto work
+	
+	State doUpdate{
+		printCurrentMessage
+		onMsg( local_update : value( sonarrobot(D) ) ){
+			println("DISTANCE")
+			[# val V  = payloadArg(0) 
+			   val D  = applsupport.getSonarDistance( V ) #
+			]
+			updateResource [# "{\"sonarvalue\":\"$D\"}" #]  	//JSON rep for resource			
+		}
+		onMsg( local_update : value( led(V) ) ){
+			println("LED")
+		}
+	}
 	Goto work
 }
 
@@ -73,3 +94,49 @@ QActor sendermock context ctxsonarresource{
 	Goto work
 	
 } 
+
+QActor appl context ctxsonarresource{ 
+	State s0 initial{  
+		println("appl | start") 
+   		/*
+ 		 * LOAD APPLICATION RULES
+ 		*/ 
+		solve( consult("sysRules.pl")	 )
+ 		solve( consult("applRulesKb.pl") )
+ 		solve( led(X) )
+		//println( currentSolution )	//yes X/on oppure X/off
+		[# val x = getCurSol("X").toString() 
+ 		   println( "appl | led $x" )
+		#] 		
+	}
+	Goto waitwork
+	
+	State waitwork{
+		
+	}
+	Transition t0 whenEvent local_appl -> work
+	
+	State work{
+		printCurrentMessage
+		onMsg( local_appl : job( X ) ){
+			[#  val D  = applsupport.getSonarDistance( payloadArg(0) )
+				solve( "modifyResource($D,R)" )
+				//println( currentSolution )
+				val DoResource = getCurSol("R")
+				println( "DoResource=$DoResource" )
+				
+				solve( "modifyLed($D,20,RT)" )
+				val DoLed  = getCurSol("RT")
+			#]  
+			if[# DoResource =="ok" #] { emit local_update : value( sonarrobot($D) ) }
+			if[# DoLed      =="ok" #] { emit local_update : value( led(on) ) }
+			else { emit local_update : value( led(off) ) }
+			
+			//println("worktodo($Jobtodo)")
+		}
+	}
+	Goto waitwork
+}
+	 
+
+ 

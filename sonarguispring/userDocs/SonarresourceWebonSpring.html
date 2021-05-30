@@ -207,13 +207,16 @@ div.imagedesc{
 
 <h2 id="intro">Introduction</h2>
 
-In this work, we will develop a Web-based user-interface for the sonar resource introduced in <br/>
+In this work, we will develop a Web-based application
+for the sonar resource introduced in  
 <a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="web">LabIss | Sonar as resource</a>.
-
+with reference to the ideas promoted by the 
+<a href="../../it.unibo.sonarAsResource/userDocs/LabCleanArch.html" target="web">clean architecture</a>  
 <br/>
-<!--
-<center><img src="./img/robotWebTuesday26.png" alt="robotWebTuesday26" width="60%" ></center><br/> 
--->
+ 
+<center><img src="./img/cleanArchCone.jpg" alt="cleanArchCone" width="50%" ></center>
+
+ 
 <h3>The application core</h3>
 Our application-core is represented by CoAP-observable resource, defined as a qak-model. <br/><br/>
 <table style="width:100%" border="1">
@@ -328,6 +331,15 @@ modifyLed(D,T)    :- led(on),
 <bc>% modifyLed fails if the codition for <ks>LedChange</ks> fails and the led is on.</bc>
 </pre>
  
+ <h3>The Business Logic</h3>
+<table style="width:100%" border="1">
+<tr>
+<td style="width:40%"><a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a>
+</td>
+<td></td>
+</tr>
+</table>
+
 
 <h3>The controller for the Human-Machine interface</h3>
 <table style="width:100%" border="1">

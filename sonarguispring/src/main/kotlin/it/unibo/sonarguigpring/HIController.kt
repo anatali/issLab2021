@@ -21,11 +21,7 @@ import org.eclipse.californium.core.CoapHandler
 The HIController USES the sonarresources via CoAP
 See also it.unibo.boundaryWalk/userdocs/websocketInteraction.html
  */
-/*
- * Update the page vie socket.io when the application-resource changes.
- * Thanks to Eugenio Cerulo
- * See also https://www.baeldung.com/spring-websockets-send-message-to-user
- */
+
 
 @Controller
 class HIController {
@@ -35,6 +31,10 @@ class HIController {
     var coap    = CoapSupport("coap://192.168.1.45:8028", "ctxsonarresource/sonarresource")
     //lateinit var connQakSupport:connQakCoap
 
+    /*
+     * Update the page vie socket.io when the application-resource changes.
+     * See also https://www.baeldung.com/spring-websockets-send-message-to-user
+     */
     @Autowired
     var  simpMessagingTemplate : SimpMessagingTemplate? = null
 
