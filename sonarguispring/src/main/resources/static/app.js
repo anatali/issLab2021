@@ -69,10 +69,12 @@ function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
+        //SUBSCRIBE to STOMP topic updated by the server
         stompClient.subscribe('/topic/infodisplay', function (msg) {
              //alert(msg)
              showMsg(JSON.parse(msg.body).content);
         });
+
     });
 }
 
@@ -83,10 +85,6 @@ function disconnect() {
     setConnected(false);
     console.log("Disconnected");
 }
-
-
-
-
 
 function sendUpdateRequest(){
 	console.log(" sendUpdateRequest "  );
@@ -110,8 +108,7 @@ $(function () {
 
 
 //USED BY POST-BASED GUI
-
-$( "#sonarvalue" ).click(function() { sendRequestData( "w") });
+//$( "#sonarvalue" ).click(function() { sendRequestData( "w") });
 
 });
 

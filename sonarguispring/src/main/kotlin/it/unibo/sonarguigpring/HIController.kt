@@ -2,6 +2,7 @@ package it.unibo.sonarguigpring
 
 import com.andreapivetta.kolor.Color
 import it.unibo.actor0.sysUtil
+import kotlinx.coroutines.delay
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -28,7 +29,7 @@ class HIController {
     @Value("\${human.logo}")
     var appName: String?    = null
 
-    var coap    = CoapSupport("coap://192.168.1.45:8028", "ctxsonarresource/sonarresource")
+    var coap    = CoapSupport("coap://localhost:8028", "ctxsonarresource/sonarresource")
     //lateinit var connQakSupport:connQakCoap
 
     /*
@@ -52,36 +53,22 @@ class HIController {
     fun entry(model: Model): String {
         model.addAttribute("arg", appName )
         sysUtil.colorPrint("HIController | entry model=$model", Color.GREEN)
-        //peparePageUpdating()
         return "sonarGui"
     }
-/*
-    fun peparePageUpdating() {
-        connQakSupport.client.observe(object : CoapHandler {
-            override fun onLoad(response: CoapResponse) {
-                sysUtil.colorPrint("HIController --> CoapClient changed -> ${response.responseText}", Color.BLUE )
-                simpMessagingTemplate?.convertAndSend(
-                    WebSocketConfig.topicForClient,
-                    ResourceRep("" + HtmlUtils.htmlEscape(response.responseText))
-                )
-            }
 
-            override fun onError() {
-                println("HIController --> CoapClient error!")
-            }
-        })
-    }
-
- */
     @PostMapping( "/sonardata" )
-    fun  handleSonarValue(model : Model,
-        @RequestParam(name="sonarvalue", required=false, defaultValue="0")v : String): String{
+    fun  handleSonarValue(viewmodel : Model,
+        @RequestParam(name="sonarvalue", required=false, defaultValue="0")v : String) {
         sysUtil.colorPrint("HIController | set sonar value:$v", Color.RED)
         //connQakSupport.updateResourceWithValue(v)
         coap.updateResourceWithValue(v)
-        model.addAttribute("sonarval", v)
+        val resourceRep = coap.readResource()
+        val resRep      = ResourceRep( ""+ HtmlUtils.htmlEscape(resourceRep))
+        viewmodel.addAttribute("sonarval", "${resRep.content}")
         return "sonarGui"
     }
+
+
     /*
      * Update the page via socket.io. Thanks to Eugenio Cerulo
      * https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/MessageMapping.html

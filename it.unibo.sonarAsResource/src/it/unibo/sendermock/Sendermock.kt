@@ -22,14 +22,13 @@ class Sendermock ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						println("sendermock start")
 						emit("sonarrobot", "sonar(50)" ) 
-						forward("sonarrobot", "sonar(10)" ,"sonarresource" ) 
+						forward("applupdate", "applupdate(10)" ,"sonarresource" ) 
 					}
 				}	 
 				state("work") { //this:State
 					action { //it:State
 						delay(500) 
-						 print("VALUE>")
-									var Data = input.nextLine()  
+						 print("VALUE>"); var Data = input.nextLine()  
 						emit("sonarrobot", "sonar($Data)" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )

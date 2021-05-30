@@ -42,21 +42,27 @@
     <input type="text" id="sonarspec" name="sonarvalue" value="0">
     <input type="submit" value="Submit">
 </form>
-
+</div>
+<h3>Rules from requirements:</h3>
+    <ul>
+        <li><tt>LazyUpdate</tt>: <pre>|PREVDISTANCE - DISTANCE| > 3</pre></li>
+        <li><tt>LedChange</tt>: <pre>(DISTANCE < 30)  && (TEMP > 30)</pre>
+        The simulated value of TEMP is now <tt>35</tt>; thus the led in ON when <tt>DISTANCE < 30</tt></li>
+    </ul>
 <!--
     <button id="connect" class="btn btn-default" type="submit">Connect</button>
 -->
 
     <div style="background-color: #FAF19C">
-    <p>LAST SONAR VALUE IN RESOURCE:<b><span th:text="${sonarval}">unknown</span></b>.</p>
+    <p>LAST SONAR VALUE IN RESOURCE:<b><span th:text="${sonarval}">unknown</span></b></p>
     </div>
 
     <div style="background-color: #FAF19C">
         <div>
-            <b>INFO FROM RESOURCE:</b>: <span id="infodisplay"></span>
+            <b>INFO FROM RESOURCE:</b> <span id="infodisplay"></span>
         </div>
     </div>
 
-</div>
+
 </body>
 </html>

@@ -18,14 +18,14 @@ class WebPageHandler(val controller: HIController) : CoapHandler {
             val jsonContent = JSONObject(content)
             //if (jsonContent.has("sonarvalue")) return //sonar data are inserted in the model
             if (jsonContent.has("info")      ) {
-                /* The resource shows something new (e.g. an alarm) */
+                /* The resource shows something new  */
                 sysUtil.colorPrint(
                     "WebPageHandler | value: $content simpMessagingTemplate=${controller.simpMessagingTemplate}",
                     Color.BLUE
                 )
                 val info = ResourceRep("" + HtmlUtils.htmlEscape( jsonContent.getString("info")) + ":"+ counter++)
                 sysUtil.colorPrint("WebPageHandler | info=${info.content}", Color.BLUE)
-                controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, info)
+                //controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, info)
             }
         }catch(e:Exception){
             sysUtil.colorPrint("WebPageHandler | ERROR=${content}", Color.RED)

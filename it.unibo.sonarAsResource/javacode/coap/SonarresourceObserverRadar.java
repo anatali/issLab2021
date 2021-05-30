@@ -12,7 +12,7 @@ class DataHandler implements CoapHandler {
 	
 	protected String handleAsApplMessage(String content) {
 		System.out.println("DataHandler | observes_0: " + content  );
-		if( content.contains("created")) return "0";
+		if( ! content.contains("sonarvalue") ) return "0";
 		/*
 		//content = msg(sonar,event,sonarOnRaspCoap,none,sonar(V),N)
 		ApplMessage msg = new ApplMessage(content);
@@ -43,7 +43,7 @@ class DataHandler implements CoapHandler {
 
 public class SonarresourceObserverRadar {
 	private CoapSupport coapSupport = 
-			new CoapSupport("coap://192.168.1.45:8028","ctxsonarresource/sonarresource");
+			new CoapSupport("coap://localhost:8028","ctxsonarresource/sonarresource");
 	
 	public SonarresourceObserverRadar(){
 		radarPojo.radarSupport.setUpRadarGui();

@@ -4,7 +4,7 @@
 prevd( 0 ).
 delta( 3 ).         %% 10 is the prefixed value for LazyUpdate
 templimit( 30 ).    %% 30 is the prefixed value for temperature
-dlimit( 20 ).       %% 20 is the prefixed distance value for LedChange 
+dlimit( 30 ).       %% 20 is the prefixed distance value for LedChange 
 led( off ).         %% initial state of the Led
 
 
