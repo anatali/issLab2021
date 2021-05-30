@@ -256,68 +256,119 @@ Sonar-data can be sent using one of the following protocols:
 </tr>
 </table>
 
-<h3>The use cases</h3>
+<h3>The use cases </h3>
 <div class="remark">
-: Design and build a software systenn that allow san user to:
+Design and build a software systenn that allow an user to:
 <ol>
-<li><ks>DataIn</ks>: send values (sonar-data) to the resource</li>
-<li><ks>ResourceObserve</ks>:observe the modification of the resource</li>
-</ol> 
+<li><ks>LazyUpdate</ks>: when the resource receives a sonar value <tt>D</tt>, <k>modify</k> its CoAP-observable state 
+only when <pre>|PREVD - D| > DELTA</pre>
+where <tt>PREVD</tt> is the previous received sonar value and <tt>DELTA</tt> is a prefixed value.</li>
+<li><ks>LedChange</ks>: when the resource receives a sonar value <tt>D</tt>, <k>turn-ON</k> a led when <pre>(D &lt; DLIMIT)  && (TEMP > TEMPLIMIT)</pre> 
+where <tt>TEMP</tt> is the temperature  of Bologna and <tt>DLIMIT</tt>, <tt>TEMPLIMIT</tt>  are prefixed values;
+otherwise <k>turn-OFF</k> the led (if the led was ON).</li>
+ <li><ks>DataIn</ks>: send values (sonar-data) to the resource (for the sake of testing).</li>
+<li><ks>WorldObserve</ks>: observe the modification of the resource, the state of the led and the value of the alarm.</li>
+</ol>
 </div>
 
 After the analysis phase, we propose here following project:
 
+<h4>Requirements <ks>DataIn</ks> and <ks>WorldObserve</ks></h4>
+
 <ol>
 <li>Our software system will be a <k>Web-application</k>, in order to provide wide-usability. </li>
+<li>A proper <k>HTML page</k> will include an INPUT section (<i>requirement <ks>DataIn</ks></i>) and an
+OUTPUT section  (<i>requirement <ks>WorldObserve</ks></i>). </li>
 <li>Our reference-technology will be <k>SpringBoot</k>, in order to reduce development time. </li>
 <li>Our <k>SpringBoot core-component</k> will be a class annoted with <k>@Controller</k> 
 (<a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a>) 
 </li>
+<li>Since the led-modification is also related to
+information coming from the external world, the (asynchronous) modification of the OUTPUT section of the HTML page requires the 
+<k>web-socket technology</k>, that  under SpringBoot will involve  
+<a href="https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol" target="code"><k>STOMP</k> </a>.
 	</ul>
 </li>
 </ol>
+
+<div class="remark">
+About <a href="https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol" target="web">
+<k>STOMP</k></a>( (<i>Simple (or Streaming) Text Orientated Messaging Protocol</i>) 
+read:<br/> <a href="https://spring.io/guides/gs/messaging-stomp-websocket/" target="code">Using WebSocket to build an interactive web application</a>
+<!--we read:<br/> 
+WebSocket is a thin, lightweight layer above TCP. This makes it suitable for using “subprotocols” to embed messages. <br/><br/>-->
+</div> 
+
+
+<h4>Requirements <ks>LazyUpdate</ks> and <ks>LedChange</ks></h4>
+
+These requirements can be formally expressed by a set of Prolog rules
+(wriiten in the file <a href="../ChangeRules.pl">ChangeRules.pl</a>), that represent our knowledge
+about the changes of the resource and of the led: 
+ <pre>
+<bc>%%FACTS</bc>
+prevd( 0 ).
+delta( 3 ).         <kc>%% 10 is the prefixed value for <ks>LazyUpdate</ks></kc>
+templimit( 30 ).    <kc>%% 30 is the prefixed value for temperature</kc>
+dlimit( 20 ).       <kc>%% 20 is the prefixed distance value for <ks>LedChange</ks> </kc>
+led( off ).         <kc>%% initial state of the Led</kc>
+
+
+<bc>%%RULES</bc>
+modifyResource(D) :- delta( DELTA ), prevd( PD ), 
+                     <k>abs( PD,D ) > DELTA</k>, 	<kc>%%condition for <ks>LazyUpdate</ks></kc>
+                     assign( prevd(_), prevd(D) ).   <kc>%%assign is defined in sysRules.pl</kc>
+<bc>% modifyResource fails if the codition for <ks>LazyUpdate</ks> fails.</bc>
+
+modifyLed(D,T)    :- templimit(TL),  dlimit(DL),  
+                     <k>D &lt; DL, T > TL</k>,     <kc>%%condition for <ks>LedChange</ks></kc>             
+                     !, assign( led(_), led( on ) ).
+modifyLed(D,T)    :- led(on),
+                     assign( led(_), !, led( off ) ). 				 
+<bc>% modifyLed fails if the codition for <ks>LedChange</ks> fails and the led is on.</bc>
+</pre>
+ 
 
 <h3>The controller for the Human-Machine interface</h3>
 <table style="width:100%" border="1">
 <tr>
 <td style="width:40%"><a href="../src/main/kotlin/it/unibo/sonarguigpring/HIController.kt" target="code">HIController.kt</a>
 <br/><br/>
-
-<h4>About STOMP</h4>
-<m>As said in
-
-<a href="https://spring.io/guides/gs/messaging-stomp-websocket/" target="code">Using WebSocket to build an interactive web application</a>:<br/><br/>
-"<i>
-WebSocket is a thin, lightweight layer above TCP. This makes it suitable for using “subprotocols” to embed messages. <br/><br/>
-In this work, we use <a href="https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol" target="code">
-STOMP (Simple (or Streaming) Text Orientated Messaging Protocol)</a> messaging with Spring to create an interactive web application. </i>"
-</m>
-<br/>
+The controller returns a HTML page that:
+	<ul>
+	<li><bc>INPUT section</bc>: includes a <i>form with a POST action</i>, in order to implement the use-case <ks>DataIn</ks> </li>
+	<li><bc>OUTPUT section</bc>: includes a <i>thymeleaf field</i> (<kc>infodisplay</kc>), 
+	in order to implement the use-case <ks>WorldObserve</ks> 
+</li>
+</ul>
 
 </td>
-<td>The controller returns a HTML page that:
-	<ul>
-	<li>includes a <em>form with a POST action</em>, in order to implement the use-case <ks>DataIn</ks> and 
-	a <em>thymeleaf field</em>, in order to implement the use-case <ks>ResourceObserve</ks> when the resource-state has
-the form: <pre>{"sonarvalue":"DISTANCE"}</pre>	
+<td>
+
+<hr/>
+<ul>
+<li>
+When the content of the CoAP-observable state has the form: <pre><k>{"sonarvalue":"DISTANCE"}</k></pre>	
 The run-time behavior can be summarized as follows:
-<pre>Browser -> POST -> HIController -> CoAP put -> sonarresource
-sonarresource -> {"sonarvalue":"DISTANCE"} -> (observed by) HIController -> 
-  <k>does nothing</k> <m>(since the HIController modifies the model within the page returned to the Browser)</m>
-</pre>
+<m><pre>Browser -> POST -> HIController -> CoAP put -> sonarresource
+updates its CoAP-observable state with <kc>{"sonarvalue":"DISTANCE"}</kc> -> 
+(observed by) HIController -> <k>modifies the model</k> in the page returned to the Browser</m></pre>
+ <!--  <k>does nothing</k> <m>(since the HIController modifies the model within the page returned to the Browser)</m> -->
+
 
 </li>
-	<li>uses the  <em>web-scokets</em> and <ks>stompClient.subscribe</ks>, 
-	in order to implement the use-case <ks>ResourceObserve</ks> when the resource-state has
-the form: <pre>{"info":"INFOCONTENT"}</pre>	
-
+<li>When the content of the CoAP-observable state has the form: <pre><k>{"info":"INFOCONTENT"}</k></pre>
 The run-time behavior can be summarized as follows:
-<pre>  
-sonarresource -> {"info":"INFOCONTENT"} -> (observed by) HIController ->
- <k>calls simpMessagingTemplate.convertAndSend(...)</k>  -> 
- HTMLPage in Browser update field (infodisplay)
-</pre>
+<m><pre>sonarresource updates its CoAP-observable state with <kc>{"info":"INFOCONTENT"}</kc> -> 
+(observed by) HIController ->  calls <k>simpMessagingTemplate.convertAndSend(...)</k>  -> 
+ HTMLPage in Browser updates the field (<kc>infodisplay</kc>)
+</pre></m>
 
+ 
+
+
+</li>
+</ul>
 
 </td>
 </tr>
