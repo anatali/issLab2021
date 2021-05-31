@@ -10,7 +10,7 @@ import it.unibo.kactor.ApplMessage;
 
 class DataHandler implements CoapHandler {
 	
-	protected String handleAsApplMessage(String content) {
+	protected String handleAsApplMessage(String content) { //retrun values not used
 		System.out.println("DataHandler | observes_0: " + content  );
 		if( ! content.contains("sonarvalue") ) return "0";
 		/*
@@ -30,11 +30,13 @@ class DataHandler implements CoapHandler {
 
 	@Override public void onLoad(CoapResponse response) {
 		String content  = handleAsApplMessage(response.getResponseText());	  
-		//content= {"sonarvalue":"D" , "info":"..." }
+		//content= {"sonarvalue":"D" } or {"info":"..." }		 
 		JSONObject jsonContent = new JSONObject(content);
-		String distance        = jsonContent.getString("sonarvalue");
-		System.out.println("DataHandler | observes: " + distance );
-		radarPojo.radarSupport.update(distance, "90");
+		if( jsonContent.has("sonarvalue")) {
+			String distance        = jsonContent.getString("sonarvalue");
+			System.out.println("DataHandler | observes: " + distance );
+			radarPojo.radarSupport.update(distance, "90");
+		}
 	}					
 	@Override public void onError() {
 		System.out.println("DataHandler |  FAILED (press enter to exit)");

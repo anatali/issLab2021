@@ -58,18 +58,13 @@ QActor sonarresource context ctxsonarresource{
 	
 	State doUpdate{
 		printCurrentMessage
-		/* 
-		The sonar value does not update the CoAP-observable state, since:
-		1 ) the state of the resource is now stored in the applRulesKb
-		2 ) the sonar value just received is shown in the user GUI by changing the view-model
-		*/
+
 		onMsg( applupdate : applupdate( sonarrobot(D) ) ){	//CoAP observer is RadarGui ...
 			[#  val D  = applsupport.getSonarDistance( payloadArg(0)  ) #]
 			println(" --- doUpdate sonarrobot D=$D") 
 			updateResource [# "{\"sonarvalue\":\"$D\"}" #]  	//JSON rep for resource		
 		}
-		  
-		
+ 		
 		onMsg( applupdate : applupdate( led(V) ) ){
 			[#  val V  = applsupport.getLedValue( payloadArg(0)  ) #]
 			println(" --- doUpdate led V=$V") 

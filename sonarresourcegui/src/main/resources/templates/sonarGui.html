@@ -9,8 +9,11 @@
 Imports the SockJS and STOMP javascript libraries that will be used
 to communicate with our server through STOMP over websocket.
 We also import app.js, which contains the logic of our client application.
+
+See https://www.baeldung.com/maven-webjars
+WebJars have nothing to do with Spring
 -->
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -47,11 +50,7 @@ We also import app.js, which contains the logic of our client application.
 <div style="background-color: #D2B4DE">
 
 <h2>Sonar console (SpringBoot)</h2>
-    <!--
-    ===========================================================
-    INPUT AREA
-    ===========================================================
-    -->
+
 <h2>INPUT</h2>
 <form action="/sonardata" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
     <label for="sonarspec">Sonar value</label>
@@ -69,18 +68,12 @@ We also import app.js, which contains the logic of our client application.
     <button id="connect" class="btn btn-default" type="submit">Connect</button>
 -->
 
-    <!--
-    ===========================================================
-    OUTPUT/UPDATING AREA
-    ===========================================================
-    -->
     <div style="background-color: #FAF19C">
     <p>LAST SONAR VALUE IN RESOURCE:<b><span th:text="${sonarval}">unknown</span></b></p>
     </div>
 
     <div style="background-color: #FAF19C">
         <div>
-            <b>SONAR VALUE:</b> <span id="sonarvaldisplay"></span><br/><br/>
             <b>INFO FROM RESOURCE:</b> <span id="infodisplay"></span>
         </div>
     </div>

@@ -1,9 +1,11 @@
 var stompClient = null;
-var hostAddr = "http://localhost:8080/move";
+//alert("app.js")
 
 //SIMULA UNA FORM che invia comandi POST
+/*
 function sendRequestData( params, method) {
-    method = method || "post"; // il metodo POST � usato di default
+ var hostAddr = "http://localhost:8083/sonar";
+   method = method || "post"; // il metodo POST � usato di default
     console.log(" sendRequestData  params=" + params + " method=" + method);
     var form = document.createElement("form");
     form.setAttribute("method", method);
@@ -20,7 +22,7 @@ function sendRequestData( params, method) {
     document.body.removeChild(form);
     console.log("body children num= "+document.body.children.length );
 }
-
+*/
 
 function postJQuery(themove){
 var form = new FormData();
@@ -71,8 +73,11 @@ function connect() {
         setConnected(true);
         //SUBSCRIBE to STOMP topic updated by the server
         stompClient.subscribe('/topic/infodisplay', function (msg) {
+        //msg: {"content":"led(off):12"} or {"content":"sonarvalue(D)"}
              //alert(msg)
-             showMsg(JSON.parse(msg.body).content);
+             var jsonMsg = JSON.parse(msg.body).content;
+             if( jsonMsg.includes("led")) showMsg( jsonMsg, "infodisplay" );
+             else showMsg( jsonMsg, "sonarvaldisplay" );
         });
 
     });
@@ -91,9 +96,9 @@ function sendUpdateRequest(){
     stompClient.send("/app/update", {}, JSON.stringify({'name': 'update' }));
 }
 
-function showMsg(message) {
+function showMsg(message, outputId) {
 console.log(message );
-    $("#infodisplay").html( "<pre>"+message.replace(/\n/g,"<br/>")+"</pre>" );
+    $("#"+outputId).html( "<pre>"+message.replace(/\n/g,"<br/>")+"</pre>" );
     //$("#applmsgintable").append("<tr><td>" + message + "</td></tr>");
 }
 
@@ -113,4 +118,4 @@ $(function () {
 });
 
 
-//alert("app.js")
+

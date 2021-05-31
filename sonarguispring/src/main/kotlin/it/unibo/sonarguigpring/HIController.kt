@@ -2,7 +2,6 @@ package it.unibo.sonarguigpring
 
 import com.andreapivetta.kolor.Color
 import it.unibo.actor0.sysUtil
-import kotlinx.coroutines.delay
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -13,14 +12,13 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.util.HtmlUtils
-import org.eclipse.californium.core.CoapResponse
-import org.eclipse.californium.core.CoapHandler
-
 
 
 /*
 The HIController USES the sonarresources via CoAP
 See also it.unibo.boundaryWalk/userdocs/websocketInteraction.html
+https://spring.io/guides/gs/messaging-stomp-websocket/
+
  */
 
 
@@ -44,7 +42,7 @@ class HIController {
         sysUtil.colorPrint("HumanInterfaceController | INIT", Color.GREEN)
         //connQakSupport = connQakCoap()
         //connQakSupport.createConnection()
-        coap.observeResource( WebPageHandler(this) ) //TODO: update the HTML page via socket
+        coap.observeResource( WebPageCoapHandler(this) ) //TODO: update the HTML page via socket
     }
 
 
@@ -53,21 +51,42 @@ class HIController {
     fun entry(model: Model): String {
         model.addAttribute("arg", appName )
         sysUtil.colorPrint("HIController | entry model=$model", Color.GREEN)
+        return  "sonarGui"
+    }
+
+    @GetMapping("/sonardata")    //defines that the method handles GET requests.
+    fun entryforpost(model: Model): String {
+        model.addAttribute("arg", appName )
+        sysUtil.colorPrint("HIController | entryforpost model=$model", Color.GREEN)
         return "sonarGui"
     }
 
-    @PostMapping( "/sonardata" )
+    //curl -i -d "content=Post 33" -X POST http://localhost:8083/sonardata
+    //it is a good practice to return the location of the newly created resource in the response header.
+    @PostMapping("/sonardata")
     fun  handleSonarValue(viewmodel : Model,
-        @RequestParam(name="sonarvalue", required=false, defaultValue="0")v : String) {
+        @RequestParam(name="sonarvalue", required=false, defaultValue="0")v : String) : String{
         sysUtil.colorPrint("HIController | set sonar value:$v", Color.RED)
-        //connQakSupport.updateResourceWithValue(v)
+
         coap.updateResourceWithValue(v)
+        Thread.sleep(400);  //QUITE A LONG TIME ...
         val resourceRep = coap.readResource()
         val resRep      = ResourceRep( ""+ HtmlUtils.htmlEscape(resourceRep))
-        viewmodel.addAttribute("sonarval", "${resRep.content}")
-        return "sonarGui"
+        sysUtil.colorPrint("HIController | resRep:$resRep", Color.BLUE)
+
+         viewmodel.addAttribute("sonarval", "${resourceRep}") //resRep.content
+         return "sonarGui"
+
+        //val rep = getWebPageRep()
+        //viewmodel.addAttribute("arg", "Current Robot State:  ${rep.content});
+        //return "sonarGui"
     }
 
+    fun getWebPageRep(): ResourceRep {
+        val resourceRep: String = coap.readResource()
+        println("HIController | resourceRep=$resourceRep")
+        return ResourceRep("" + HtmlUtils.htmlEscape(resourceRep))
+    }
 
     /*
      * Update the page via socket.io. Thanks to Eugenio Cerulo
@@ -75,7 +94,7 @@ class HIController {
      * https://spring.io/guides/gs/messaging-stomp-websocket/
      * https://www.toptal.com/java/stomp-spring-boot-websocket
      */
-    @MessageMapping("/update")
+    @MessageMapping("/app/update")
     @SendTo("/topic/infodisplay")
     fun updateTheMap(@Payload message: RequestMessageOnSock): ResourceRep {
         sysUtil.colorPrint("HIController | message=$message", Color.BLUE)
