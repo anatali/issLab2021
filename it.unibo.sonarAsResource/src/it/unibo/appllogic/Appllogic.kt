@@ -52,9 +52,11 @@ class Appllogic ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, 
 								 ){forward("applupdate", "applupdate(sonarrobot($D))" ,"sonarresource" ) 
 								if(  DoLed =="ok"  
 								 ){forward("applupdate", "applupdate(led(on))" ,"sonarresource" ) 
+								emit("ledchange", "ledchange(on)" ) 
 								}
 								else
 								 {forward("applupdate", "applupdate(led(off))" ,"sonarresource" ) 
+								 emit("ledchange", "ledchange(off)" ) 
 								 }
 								}
 						}

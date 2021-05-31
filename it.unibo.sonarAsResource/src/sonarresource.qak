@@ -11,8 +11,8 @@
  */ 
    
 System /* -trace */ sonarresource  
-//mqttBroker "192.168.1.45" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
-
+//mqttBroker "localhost" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
+  
  
 Event    local_appl   : job(X)
 Dispatch applupdate   : applupdate(X)	//sent by Appl to do a change
@@ -21,6 +21,8 @@ Event    sonarrobot : sonar( V )        //emitted by a sonar (real/simulated, lo
 //Dispatch sonarrobot : sonar( V )		//removed, since an external entity can use applupdate
 //Request  sonarrobot : sonar( V )
 //Reply    replysonar : updated(V)
+
+Event    ledchange : ledchange( V )        //emitted by appllogic
 
 Context ctxsonarresource ip [ host= "localhost"   port= 8028 ]
 
@@ -114,9 +116,16 @@ QActor appllogic context ctxsonarresource{
 			println( "		appllogic | DoResource=$DoResource" )
 			println( "		appllogic | DoLed     =$DoLed" )
 			if[# DoResource =="ok" #] { //see usecase LazyUpdate
+ 			
 				forward sonarresource -m applupdate : applupdate( sonarrobot($D) )  //see state doUpdate in sonarresource
-				if[# DoLed =="ok" #] { forward sonarresource -m applupdate : applupdate( led(on) ) }
-				else { forward sonarresource -m applupdate : applupdate( led(off) ) }
+				if[# DoLed =="ok" #] { 
+					forward sonarresource -m applupdate : applupdate( led(on) )
+					emit ledchange : ledchange(on)
+				}
+				else { 
+					forward sonarresource -m applupdate : applupdate( led(off) )
+					emit ledchange : ledchange(off)
+				}
 			}
 		}
 	}
@@ -124,13 +133,13 @@ QActor appllogic context ctxsonarresource{
 }
 	 
 /*
- * rapid test
+ * Simulates the sonar (on Raspberry) 
 */ 
  
-QActor sendermock context ctxsonarresource{
+QActor sonarmock context ctxsonarresource{
 [# val input   = java.util.Scanner(System.`in`) #]
 	State s0 initial{ 
-		println("sendermock start") 
+		println("sonarmock start") 
 		emit sonarrobot : sonar(50)								//DLIMIT is 20 => led off
 		//forward sonarresource -m sonarrobot : sonar(10)		//old ...
 		forward sonarresource -m applupdate : applupdate(10)    //DLIMIT is 20 => led on
@@ -145,4 +154,32 @@ QActor sendermock context ctxsonarresource{
 	Goto work
 	
 } 
+/*
+ * Simulates the led (on Raspberry) */
+QActor ledmock context ctxsonarresource{
+	[# var Ledvalue = "off" #]
+	State s0 initial{ 
+		println("ledmock start") 
+	}
+	Goto work
+	
+	State work{ 
+		
+	}
+	Transition t0 whenEvent ledchange -> ledupdate
+	
+	State ledupdate{
+		printCurrentMessage
+		onMsg( ledchange : ledchange(V) ){
+			[# Ledvalue = payloadArg(0) #]
+		}
+		if[# Ledvalue =="on" #] {
+			println("%%%%% LED ON")		
+		}else{
+			println("%%%%% LED OFF")	
+		}
+	}
+	Goto work
+}
+
  
