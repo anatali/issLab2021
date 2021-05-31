@@ -288,7 +288,7 @@ OUTPUT section  (<i>requirement <ks>WorldObserve</ks></i>). </li>
 </li>
 <li>Since the led-modification is also related to
 information coming from the external world, the (asynchronous) modification of the OUTPUT section of the HTML page requires the 
-<k>web-socket technology</k>, that  under SpringBoot will involve  
+<k>web-socket technology</k>, that  under SpringBoot does involve  
 <a href="https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol" target="code"><k>STOMP</k> </a>.
 	</ul>
 </li>
@@ -351,7 +351,7 @@ of project <a href="../../it.unibo.sonarAsResource" target="code">it.unibo.sonar
  <center><img src="./img/applLogic.PNG" alt="applLogic" width="70%" ></center>
 
 <div class="remark">
-The <ks>appllogic</ks> actor exploits the Prolog theory <a href="../../it.unibo.sonarAsResource/applRuleskb.pl" target="code">applRuleskb.pl</a>, that represent our knowledge
+The <em>appllogic</em> actor exploits the Prolog theory <a href="../../it.unibo.sonarAsResource/applRuleskb.pl" target="code">applRuleskb.pl</a>, that represent our knowledge
 about the changes of the resource and of the led.
 </div>
 </td>
@@ -359,12 +359,15 @@ about the changes of the resource and of the led.
 <ol>
 <li>When the <em>sonarresource</em> handles a <k>sonarobot</k> event, it emits the local event <k>local_appl:job(X)</k>
 in order to activate the application logic code.</li>
-<li>The QActor <ks>appllogic</ks> handles the event <k>local_appl</k> and send the <bc>dispatch</bc> <k>applupdate</k> to the <em>sonarresource</em>
-in order to change its CoAP-observable state to keep track of the effects of the application action.<br/>
+<li>The <em>appllogic</em> actor handles the event <k>local_appl</k> and send the <bc>dispatch</bc> <k>applupdate</k> to the <em>sonarresource</em>
+in order to change its CoAP-observable state to keep track of the effects of the application action.
+<div class="remark"><m>
+Is the <em>appllogic</em> actor really necessary? Could we 'merge' its behavior in the <em>sonarresource</em>?<br/>
+<bc>PRO:</bc> ... <bc>CONS:</bc> ...</m></div>
 It also emits the event <k>ledchange</k> in order to allow a (remote) led to change its state without knowing any sender.
-<div class="remark">
+<div class="remark"><m>
 Alternatively, the led could be designed as another CoAP-observer of the resource.<br/>
-<bc>PRO:</bc> ... <bc>CONS:</bc> ...
+<bc>PRO:</bc> ... <bc>CONS:</bc> ...</m>
 </div>
 </li>
 <li>The <em>sonarresource</em> handles the dispatch <ks>applupdate</ks> by changing its CoAP-observable state.</li>
@@ -406,7 +409,7 @@ When the content of the CoAP-observable state has the form: <pre><k>{"sonarvalue
 The run-time behavior can be summarized as follows:
 <m><pre>Browser -> POST -> HIController -> CoAP put -> sonarresource
 updates its CoAP-observable state with <kc>{"sonarvalue":"DISTANCE"}</kc> -> 
-(observed by) HIController -> <k>modifies the model</k> in the page returned to the Browser</m></pre>
+(observed by) WebPageCoapHandler -> <k>modifies the model</k> in the page returned to the Browser</m></pre>
  <!--  <k>does nothing</k> <m>(since the HIController modifies the model within the page returned to the Browser)</m> -->
 
 
@@ -414,7 +417,7 @@ updates its CoAP-observable state with <kc>{"sonarvalue":"DISTANCE"}</kc> ->
 <li>When the content of the CoAP-observable state has the form: <pre><k>{"info":"INFOCONTENT"}</k></pre>
 The run-time behavior can be summarized as follows:
 <m><pre>sonarresource updates its CoAP-observable state with <kc>{"info":"INFOCONTENT"}</kc> -> 
-(observed by) HIController ->  calls <k>simpMessagingTemplate.convertAndSend(...)</k>  -> 
+(observed by) WebPageCoapHandler ->  calls <k>simpMessagingTemplate.convertAndSend(...)</k>  -> 
  HTMLPage in Browser updates the field (<kc>infodisplay</kc>)
 </pre></m>
 
