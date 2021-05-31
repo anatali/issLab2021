@@ -306,7 +306,7 @@ WebSocket is a thin, lightweight layer above TCP. This makes it suitable for usi
 <h4>Requirements <ks>LazyUpdate</ks> and <ks>LedChange</ks></h4>
 
 These requirements can be formally expressed by a set of Prolog rules
-(wriiten in the file <a href="../ChangeRules.pl">ChangeRules.pl</a>), that represent our knowledge
+(wriiten in the file <a href="../../it.unibo.sonarAsResource/applRuleskb.pl" target="code">applRuleskb.pl</a>), that represent our knowledge
 about the changes of the resource and of the led: 
  <pre>
 <bc>%%FACTS</bc>
@@ -339,23 +339,38 @@ modifyLed(D,T)    :- led(on),
 <table style="width:100%" border="1">
 <tr>
 <td style="width:40%">
-The logic of the application (i.e. the code that implements the use-cases):<br/>
-is defined by the QActor <ks>appllogic</ks><br/>
+<div class="remark">
+The code that implements the use-cases is defined as a component
+that is activated by the <em>sonarresource</em> and tells to the resource how to change its CoAP-observable state
+after an application action.
+</div>
+ 
+The application actions are defined by the QActor <ks>appllogic</ks><br/>
 <m>in model <a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a>
 of project <a href="../../it.unibo.sonarAsResource" target="code">it.unibo.sonarAsResource</a></m>
+ <center><img src="./img/applLogic.PNG" alt="applLogic" width="70%" ></center>
 
+<div class="remark">
+The <ks>appllogic</ks> actor exploits the Prolog theory <a href="../../it.unibo.sonarAsResource/applRuleskb.pl" target="code">applRuleskb.pl</a>, that represent our knowledge
+about the changes of the resource and of the led.
+</div>
 </td>
 <td>
 <ol>
-<li>When the <ks>sonarresource</ks> handles a <ks>sonarobot</ks> event, it emits the local event <ks>local_appl : job(X)</ks>
+<li>When the <em>sonarresource</em> handles a <k>sonarobot</k> event, it emits the local event <k>local_appl:job(X)</k>
 in order to activate the application logic code.</li>
-<li>The QActor <ks>appllogic</ks> handles the event <ks>local_appl</ks> and send the dispatch <ks>applupdate</ks> to the <ks>sonarresource</ks>
+<li>The QActor <ks>appllogic</ks> handles the event <k>local_appl</k> and send the <bc>dispatch</bc> <k>applupdate</k> to the <em>sonarresource</em>
 in order to change its CoAP-observable state to keep track of the effects of the application action.<br/>
-Accroding to requirements, it can also emit the event <ks>ledchange</ks> in order to change the state of the led
+It also emits the event <k>ledchange</k> in order to allow a (remote) led to change its state without knowing any sender.
+<div class="remark">
+Alternatively, the led could be designed as another CoAP-observer of the resource.<br/>
+<bc>PRO:</bc> ... <bc>CONS:</bc> ...
+</div>
 </li>
-<li>The <ks>sonarresource</ks> handles the dispatch <ks>applupdate</ks> by changing its CoAP-observable state.</li>
+<li>The <em>sonarresource</em> handles the dispatch <ks>applupdate</ks> by changing its CoAP-observable state.</li>
 <li>The state-change is observed by the <a href="../src/main/kotlin/it/unibo/sonarguigpring/WebPageCoapHandler.kt" target="code">WebPageCoapHandler.kt</a> component of the 
-Web-spring application that exploits the websocket to update the HTML pages.</li>
+Web-spring application that exploits the websocket to update the HTML pages.
+<center><img src="./img/websocket.PNG" alt="websocket" width="60%" ></center></li>
 <li>The updating information sent over the websocket is handled by an stomp subscriber activated during the <ks>connect()</ks> operation 
 defined in <a href="../src/main/resources/static/app.js" target="code">src/main/resources/static/app.js</a> (called when the HTML page is loaded).
 </li>
@@ -436,46 +451,48 @@ The run-time behavior can be summarized as follows:
 <table style="width:100%" border="1">
 <tr>
 <td style="width:40%"><h4>A resource observer</h4>
-<a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>
-</td>
+</td><a href="../../it.unibo.sonarAsResource/javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a></td>
+
 <td><h4>A sonar-data simulator</h4>
-<a href="../../it.unibo.sonarAsResource/javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a></td>
+<a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>
 </tr>
 </table>
 
 
-<ol>
-<li><h3 id="onpc">Workflow</h3>
-<!--
+ <h2 id="onpc">Workflow</h2>
+ 
 	<ol>
 	<li>Activate  the sonar resource described in 
 	<a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="code">LabIss | Sonar as resource</a> 
-	 on a PC (address <m><ks>192.168.1.pc</ks></m>).</li>
-	<li>Working in this project (<m><k>sonarguispring</k></m>), set the proper values in the configuration file
-	<a href="../src/main/resources/connQak/configurator.kt" target="code">configurator.kt</a>.
-	<br/>Now, activate the Spring application 
-	<a href="../src/main/java/sonarguispring/SonarguigpringApplication.kt">SonarguigpringApplication.kt</a> 
-	on the PC, open a browser on <m><ks>localhost:8083</ks></m> (or <m><ks>192.168.1.pc:8083</ks></m>) 
-	and send some command to the <a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a>. </li>
-	<br/><img src="./img/guiwebwithsocket.png" alt="guiwebwithsocket" width="30%" > <br/>
+	 on a PC (address <m><ks>192.168.1.xxx</ks></m>).</li>
+		
+	<li>Working in this project (<m><a href="../" target="code"><k>sonarguispring</k></m></a>), activate the Spring application 
+	<a href="../src/main/kotlin/it/unibo/sonarguigpring/SonarguigpringApplication.kt" target="code">SonarguigpringApplication.kt</a> 
+	on the PC, open a browser on <m><ks>localhost:8083</ks></m> (or <m><ks>192.168.1.xxx:8083</ks></m>) 
+	and send some sonar value to the <em>sonarresource</em> using the browser.
+	<div class="remark">
+	Observe the output on the HTML page and explain it.<br/>
+	<i>Hint: the POST handling operation <ks>handleSonarValue</ks> must return a page ...</i>
+	</div>
+ 
 
-	<li>Activate a CoAP client working as an observer of the 
-	<a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a> resource, 
-	e.g.  <a href="../../it.unibo.qak20.basicrobot/resources/connQak/actorQakCoapObserver.kt" target="code">actorQakCoapObserver.kt</a>,
-	move the <a href="../../it.unibo.qak20.basicrobot/userDocs/Qak20Basicrobot.html" target="code">basicrobot</a>
-	and notice that it shows, after a command, the same values that appears in the <tt>Resource state</tt> section of the web-page.
+	<li>Send or some sonar value to the <em>sonarresource</em> using some other program (e.g. jupyter or 
+	<a href="../../it.unibo.sonarAsResource/javacode/coap/SimulateSonarData.java" target="code">SimulateSonarData.java</a>)  
+	and notice that the UPDATE AREA of the Web Page shows the value of the sonar and of the led state.
 	</li>
 	
-	<li>Optionally, change the HTML page to be displayed, by changing the <m><ks>String htmlPage</ks></m> in 
-	<a href="../src/main/java/it/unibo\robotWeb2020\RobotController.java">RobotController.java</a>. For example, the previous page 
-	(<m><ks>robotGuiSocket</ks></m>) sends commands
-	by using a  <a href="https://spring.io/guides/gs/messaging-stomp-websocket/" target="web">
-	<bc>socket.io</bc></a>, while the following one (<m><ks>robotGuiPost</ks></m>) does use the conventional <m><ks>POST</ks></m> HTTP-verb  :
-	<br/><img src="./img/guiwebwithpost.png" alt="guiwebwithpost" width="30%" > <br/>
-	</li>
+	<li>Activate the <a href="../../it.unibo.sonarAsResource/javacode/coap/SonarresourceObserverRadar.java" target="code">SonarresourceObserverRadar.java</a>
+	and look also at the proper updating of the radarGUI.</li>
 	
-		</ol>
--->
+	<li>	<div class="remark">
+		TODO (for people working with the Raspberry) : turn ON/OFF a real led connected to a RaspberryPi.<br/><br/>
+		TODO (for people working in virtual only): extend the WebGui by allowing an user to work only if she/he owns proper permissions.<br/>
+ 
+	</div>
+	</li>
+ 	</ol>
+	 
+ 
 
 <!--
 <li><h3 id="onrasp">Run the basicrobot on the RaspberryPi</h3></li>

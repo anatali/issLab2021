@@ -28,7 +28,7 @@ class HIController {
     var appName: String?    = null
 
     var coap    = CoapSupport("coap://localhost:8028", "ctxsonarresource/sonarresource")
-    //lateinit var connQakSupport:connQakCoap
+
 
     /*
      * Update the page vie socket.io when the application-resource changes.
@@ -53,14 +53,14 @@ class HIController {
         sysUtil.colorPrint("HIController | entry model=$model", Color.GREEN)
         return  "sonarGui"
     }
-
+/*
     @GetMapping("/sonardata")    //defines that the method handles GET requests.
     fun entryforpost(model: Model): String {
         model.addAttribute("arg", appName )
         sysUtil.colorPrint("HIController | entryforpost model=$model", Color.GREEN)
         return "sonarGui"
     }
-
+*/
     //curl -i -d "content=Post 33" -X POST http://localhost:8083/sonardata
     //it is a good practice to return the location of the newly created resource in the response header.
     @PostMapping("/sonardata")
@@ -94,12 +94,13 @@ class HIController {
      * https://spring.io/guides/gs/messaging-stomp-websocket/
      * https://www.toptal.com/java/stomp-spring-boot-websocket
      */
+    /*
     @MessageMapping("/app/update")
     @SendTo("/topic/infodisplay")
     fun updateTheMap(@Payload message: RequestMessageOnSock): ResourceRep {
         sysUtil.colorPrint("HIController | message=$message", Color.BLUE)
         return ResourceRep("todo")
     }
-
+*/
 
 }
