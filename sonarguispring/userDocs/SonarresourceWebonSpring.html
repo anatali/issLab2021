@@ -335,12 +335,35 @@ modifyLed(D,T)    :- led(on),
  <hr/>
  <center><img src="./img/archfullgui.PNG" alt="archfullgui" width="70%" ></center>
  <hr/>
- <h3>The Business Logic</h3>
+ <h3>The Application Logic</h3>
 <table style="width:100%" border="1">
 <tr>
-<td style="width:40%"><a href="../src/main/resources/templates/sonarGui.html" target="code">resources/templates/sonarGui.html</a>
+<td style="width:40%">
+The logic of the application (i.e. the code that implements the use-cases):<br/>
+is defined by the QActor <ks>appllogic</ks><br/>
+<m>in model <a href="../../it.unibo.sonarAsResource/src/sonarresource.qak" target="code">sonarresource.qak</a>
+of project <a href="../../it.unibo.sonarAsResource" target="code">it.unibo.sonarAsResource</a></m>
+
 </td>
-<td></td>
+<td>
+<ol>
+<li>When the <ks>sonarresource</ks> handles a <ks>sonarobot</ks> event, it emits the local event <ks>local_appl : job(X)</ks>
+in order to activate the application logic code.</li>
+<li>The QActor <ks>appllogic</ks> handles the event <ks>local_appl</ks> and send the dispatch <ks>applupdate</ks> to the <ks>sonarresource</ks>
+in order to change its CoAP-observable state to keep track of the effects of the application action.<br/>
+Accroding to requirements, it can also emit the event <ks>ledchange</ks> in order to change the state of the led
+</li>
+<li>The <ks>sonarresource</ks> handles the dispatch <ks>applupdate</ks> by changing its CoAP-observable state.</li>
+<li>The state-change is observed by the <a href="../src/main/kotlin/it/unibo/sonarguigpring/WebPageCoapHandler.kt" target="code">WebPageCoapHandler.kt</a> component of the 
+Web-spring application that exploits the websocket to update the HTML pages.</li>
+<li>The updating information sent over the websocket is handled by an stomp subscriber activated during the <ks>connect()</ks> operation 
+defined in <a href="../src/main/resources/static/app.js" target="code">src/main/resources/static/app.js</a> (called when the HTML page is loaded).
+</li>
+</ol>
+
+
+
+</td>
 </tr>
 </table>
 
