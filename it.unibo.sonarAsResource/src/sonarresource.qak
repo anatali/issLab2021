@@ -11,9 +11,8 @@
  */ 
    
 System /* -trace */ sonarresource  
-//mqttBroker "localhost" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
-  
- 
+mqttBroker "localhost" : 1883  eventTopic "sonar/data"		//broker.hivemq.com
+   
 Event    local_appl   : job(X)
 Dispatch applupdate   : applupdate(X)	//sent by Appl to do a change
 
@@ -37,7 +36,7 @@ QActor sonarresource context ctxsonarresource{
 	}
 	Transition t0 whenMsg   applupdate   -> doUpdate
 	              whenEvent sonarrobot   -> handleSonarData
-	              
+	                
 	              
 	State handleSonarData{ 
 		//printCurrentMessage
@@ -64,13 +63,13 @@ QActor sonarresource context ctxsonarresource{
 		onMsg( applupdate : applupdate( sonarrobot(D) ) ){	//CoAP observer is RadarGui ...
 			[#  val D  = applsupport.getSonarDistance( payloadArg(0)  ) #]
 			println(" --- doUpdate sonarrobot D=$D") 
-			updateResource [# "{\"sonarvalue\":\"$D\"}" #]  	//JSON rep for resource		
+			updateResource [# "{\"sonarvalue\":\"$D\"}" #]  	//for the radarGUI ...	
 		}
  		
 		onMsg( applupdate : applupdate( led(V) ) ){
 			[#  val V  = applsupport.getLedValue( payloadArg(0)  ) #]
 			println(" --- doUpdate led V=$V") 
-			updateResource [# "{\"info\":\"led($V)\"}" #] 		//JSON rep for resource	
+			updateResource [# "{\"info\":\"led($V)\"}" #] 		//for the WebGUI ...	
 		}
 	}
 	Goto work
@@ -83,6 +82,7 @@ QActor sonarresource context ctxsonarresource{
 
 QActor appllogic context ctxsonarresource{ 
 	State s0 initial{  
+		//discardMsg On		//avoid to store msgs sent via MQTT
 		println("		appllogic | start") 
    		/*
  		 * LOAD APPLICATION RULES
@@ -138,11 +138,12 @@ QActor appllogic context ctxsonarresource{
  
 QActor sonarmock context ctxsonarresource{
 [# val input   = java.util.Scanner(System.`in`) #]
-	State s0 initial{ 
+	State s0 initial{  
+		//discardMsg On		//avoid to store msgs sent via MQTT
 		println("sonarmock start") 
 		emit sonarrobot : sonar(50)								//DLIMIT is 20 => led off
 		//forward sonarresource -m sonarrobot : sonar(10)		//old ...
-		forward sonarresource -m applupdate : applupdate(10)    //DLIMIT is 20 => led on
+		forward sonarresource -m applupdate : applupdate(sonarrobot(10))    //DLIMIT is 20 => led on
 	}
 	//Goto work		//Exclude when using the Sonar console (SpringBoot)
 	 
@@ -156,9 +157,10 @@ QActor sonarmock context ctxsonarresource{
 } 
 /*
  * Simulates the led (on Raspberry) */
-QActor ledmock context ctxsonarresource{
+QActor ledmock context ctxsonarresource{ 
 	[# var Ledvalue = "off" #]
 	State s0 initial{ 
+		//discardMsg On		//avoid to store msgs sent via MQTT
 		println("ledmock start") 
 	}
 	Goto work

@@ -1,0 +1,40 @@
+System  ledalone
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+mqttBroker "192.168.1.51" :  1883  eventTopic "sonar/data"
+ 
+Event    ledchange : ledchange( V ) 
+
+Context ctxledalone  ip [host="localhost" port=8095] 	
+
+QActor ledalone context ctxledalone {
+	State s0 initial{
+		println("ledalone START")
+		machineExec "\"sudo bash led25GpioTurnOff.sh\""
+	}
+	Goto work
+	
+	State work{
+		println("ledalone wait ...")
+	}
+	Transition t0 whenEvent ledchange -> ledupdate
+	
+	State ledupdate{
+		[# var Ledvalue = "off" #]
+		printCurrentMessage
+		onMsg( ledchange : ledchange(V) ){
+			[# Ledvalue = payloadArg(0) #]
+		}
+		if[# Ledvalue =="on" #] {
+			println("%%%%% LED ON")		
+			machineExec "\"sudo bash led25GpioTurnOn.sh\""
+		}else{
+			println("%%%%% LED OFF")	
+			machineExec "\"sudo bash led25GpioTurnOff.sh\""
+		}
+	}
+	Goto work
+}

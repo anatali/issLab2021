@@ -364,9 +364,14 @@ in order to change its CoAP-observable state to keep track of the effects of the
 <div class="remark"><m>
 Is the <em>appllogic</em> actor really necessary? Could we 'merge' its behavior in the <em>sonarresource</em>?<br/>
 <bc>PRO:</bc> ... <bc>CONS:</bc> ...</m></div>
-It also emits the event <k>ledchange</k> in order to allow a (remote) led to change its state without knowing any sender.
+It also emits the event <k>ledchange</k> in order to allow a (remote) led to change its state without knowing a-priori any sender.
 <div class="remark"><m>
-Alternatively, the led could be designed as another CoAP-observer of the resource.<br/>
+The event <k>ledchange</k> could be emitted by a distanceFilter actor put at the end of the sonar-pipe.<br/>
+<bc>PRO:</bc> ... <bc>CONS:</bc> ...</m>
+</div>
+
+<div class="remark"><m>
+Instead as an event-perceiver, the led could be designed as another CoAP-observer of the resource.<br/>
 <bc>PRO:</bc> ... <bc>CONS:</bc> ...</m>
 </div>
 </li>
@@ -488,8 +493,18 @@ The run-time behavior can be summarized as follows:
 	and look also at the proper updating of the radarGUI.</li>
 	
 	<li>	<div class="remark">
-		TODO (for people working with the Raspberry) : turn ON/OFF a real led connected to a RaspberryPi.<br/><br/>
-		TODO (for people working in virtual only): extend the WebGui by allowing an user to work only if she/he owns proper permissions.<br/>
+		TODO (for people working with the Raspberry):
+		<ul>
+		<li><ks>realLed</ks>: Turn ON/OFF a real led connected to a RaspberryPi.</li>
+		<li><ks>betterDeploy</ks>: Propose the 'better' deployment configuration.</li>
+		</ul>
+		<br/> 
+		TODO (for people working in virtual-mode only). <ul>
+		<li><ks>allowedSource</ks>: force the <em>sonarresource</em> to elaborate <k>sonarrobot</k> events emitted by <bc>some particular source</bc> only.</li>
+		<li><ks>encryptedEvents</ks>: force <em>sonarresource</em> to elaborate <bc>encrypted</bc> <k>sonarrobot</k> events .</li>
+		<li><ks>allowedUsers</ks>: allow an user to work via GUI only if she/he owns <bc>proper permissions</bc>.</li>
+		</ul>
+		<br/>
  
 	</div>
 	</li>

@@ -11,7 +11,7 @@ import java.lang.Exception
 /*
 An object of this class is registered as observer of the resource
  */
-class WebPageCoapHandler(val controller: HIController) : CoapHandler {
+    class WebPageCoapHandler(val controller: HIController) : CoapHandler {
     var counter = 0
     override fun onLoad(response: CoapResponse) {
         val content: String = response.getResponseText()

@@ -22,7 +22,7 @@ class Sonarmock ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, 
 					action { //it:State
 						println("sonarmock start")
 						emit("sonarrobot", "sonar(50)" ) 
-						forward("applupdate", "applupdate(10)" ,"sonarresource" ) 
+						forward("applupdate", "applupdate(sonarrobot(10))" ,"sonarresource" ) 
 					}
 				}	 
 				state("work") { //this:State
