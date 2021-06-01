@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 130%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>TFBO21ISS</title></head>
+    
+<body>
+
+<div class="body"> 
+
+<h1>Final task ISS-2021 Bologna: Automated-Parking</h1> 
+ 
+<h2>Automated Parking</h2> 
+
+A company intends to build an <i>automating parking service</i> by exploiting:
+
+<ul>
+<li>A software system named <em>ParkManagerService</em> that implements the required automation functions.</li>
+<li>A DDR robot working as a <em>transport trolley</em> that is intially situated in its <em>home</em> location. </li>
+<li>A <em>parking-area</em> that includes;
+	<ul>
+	<li>an <em>INDOOR</em> to enter the car in the <tt>parking-area</tt> and an <em>OUTDOOR</em> to exit form it;</li>
+	<li>a number <tt>N (N=6)</tt> of <em>parking-slots</em>;</li>
+	</ul>
+	A map of the parking area, including the positions of the fixed obstacles and of the <tt>parking-slots</tt> is available in the file
+	<a href="parkingMap.txt">parkingMap.txt</a>.
+	
+	<center><img src="tearoom20.png" alt="tearoom20.png" width="45%" height="32%"/></center>
+<li>a  <em>parking-manager</em> (an human being) that should monitor the state of the <tt>parking-area</tt> </li>
+</ul>
+
+ 
+ 
+
+<h3>User stories</h3>
+As a <bc>client</bc>:
+<ul>
+<li>I intend to use the <em>ParkServiceGUI</em> provided by the <tt>ParkManagerService</tt>  to notify my interest in <i>entering</i> 
+my auto (with licence plate <em>NUMTARGA</em>) 
+in the <tt>parking-area</tt> and to receive as answer the number <em>SLOTNUM</em> of a  free parking-slot  (<tt>1&lt;=SLOTNUM&lt;=6</tt>). 
+<tt>SLOTNUM<k>==0</k></tt> means that no free slot is available.</em>
+
+</li>
+<li>If <tt>SLOTNUM <k>>0</k></tt>, I move my car in the <tt>INDOOR</tt>, get out of the car and afterwards press a <em>CARENTER</em> button on the
+<em>ParkServiceGUI</em>. Afterwards, the <tt>transport trolley</tt> takes over my car and moves it from the <tt>INDOOR</tt> 
+to the <tt>parking-slot</tt> of the given <tt>SLOTNUM</tt>.
+I'll receive a (unique) <em>TOKENID</em> </li>
+
+<li>Later, I intend to use the <tt>ParkServiceGUI</tt> to go back for the car, by submitting a proper request with the <tt>TOKENID</tt> previously received.   
+Afterwards, the <tt>transport trolley</tt>  takes over my car and moves it from its <tt>parking-slot</tt> to the <tt>OUTDOOR</tt>.
+</li>
+ </ul>
+
+As a <bc>parking-manager</bc>:
+<ul>
+<li>I intend to be able to see the <em>current state</em> of the <em>parking</em> by using a 'private' <em>ParkServiceStatusGUI</em>.
+</li>
+</ul>
+
+
+<h3>Requirements </h3>
+
+The <tt>ParkManagerService</tt>  should perform the following tasks:
+<ul>
+ 
+<li><hr/>
+<em>acceptIN</em>: accept the request of a client to park the car if there is at least one <tt>parking-slot</tt> available.<br/>
+If  <k>SLOTNUM>0</k>:
+  <ol>
+  <li><em>informIN</em>: inform the client about the value of the <tt>SLOTNUM</tt> and of the related <tt>TOKENID</tt> ;</li> 
+  <li><em>moveToIn</em>: move the <tt>transport trolley</tt> from its current localtion to the <tt>INDOOR</tt> ;</li>
+  <li><em>moveToSlotIn</em>: move the <tt>transport trolley</tt> from the <tt>INDOOR</tt> to the <tt>SLOTNUM/parking-slot</tt>;</li>
+  <!-- <li>accept another request (<tt>acceptIN</tt> or <tt>acceptOUT</tt>). -->
+  <li><em>moveToHome</em>: if no other request is present,  move the <tt>transport trolley</tt> to its <tt>home</tt> location<br/>
+  else <em>acceptIN</em> or <em>acceptOUT</em></li> 
+  </ol>
+ </li>
+If <k>SLOTNUM==0</k>: 
+	<ul>
+	<li><em>moveToHome</em>: if no other request is present  move the <tt>transport trolley</tt> to its <tt>home</tt> location; <br/>
+	else <em>acceptIN</em> or <em>acceptOUT</em></li> 
+	</ul>
+</li>
+
+
+<li><hr/>
+<em>acceptOUT</em>: accept the request of a client to get out the car with <tt>TOKENID</tt>:
+
+	<ol>
+	<li><em>findSlot</em>: deduce the number of the parking slot (<em>CARSLOTNUM</em>) from the <tt>TOKENID</tt>;</li>
+	<li><em>moveToSlotOut</em>: move the <tt>transport trolley</tt> from its current localtion to the <tt>CARSLOTNUM/parking-slot</tt> ;</li>
+	<li><em>moveToOut</em>: move the <tt>transport trolley</tt> to the <tt>OUTDOOR</tt> ;</li>
+	<li><em>moveToHome</em>: if no other request is present  move the <tt>transport trolley</tt> to its <tt>home</tt> location; <br/>
+	else <em>acceptIN</em> or <em>acceptOUT</em></li> 
+
+	</ol> 
+</li>
+</ul>
+<h4>Using a real robot</h4>
+No further requirement.
+    
+<h4>Using the virtual robot only</h4>
+<ul>
+<li><ks>authorizeddManager</ks>: allow a manager to use the <tt>ParkServiceGUI</tt> only if she/he owns <bc>proper permissions</bc>.</li>
+ 
+</ul>
+
+
+ 
+<h2>Non functional requirements</h2>  
+<ol>
+<li>The ideal work team is composed of <bc>3 persons</bc>. Teams of 1 or 2 persons (<bc>NOT</bc> 4 or more) are also allowed. </li>
+<li>The team must present a <bc>workplan</bc> as the result of the requirement/problem analysis,
+including some significant <bc>TestPlan</bc>.</li>
+<li>The team must present the sequence of <bc>SPRINT</bc> performed, with appropriate motivations.</li>
+<li>Each <bc>SPRINT</bc> must be associated with its own 'chronicle' (see <a href="templateToFill.html" target="lab">templateToFill.html</a>) 
+that presents, in concise way, the key-points related to each phases of development.<br/>
+Hopefully, the team could also deploy the system using docker.</li>
+<li>Each team must publish and maintain a GIT-repository (referred in the <a href="templateToFill.html" target="lab">templateToFill.html</a>)
+with the code and the related documents.</li>
+ 
+<li>The team must present (in synthetic, schematic way) the <bc>specific activity of each team-component</bc>.</li>
+ 
+</ol>	
+
+
+ <h3>Guidance</h3>
+ <ul>
+<li>Il numero e le finalità degli SPRINT sono definiti dal Team di sviluppo dopo opportune interazioni con il committente.</li>
+<li>Il committente (e/o il product-owner) è disponibile ONLINE in linea di massima ogni <bc>Giovedi dalle 15 alle 18</bc> fino a fine Luglio, ma è sempre contattabile on-demand via email. </li>
+<li>Lo svolgimento del lavoro è auspicabile avvenga in diverse fasi:
+<ol>
+<li><i>Fase di analisi</i>, che termina con la definizione di una architettura logica del sistema, di modelli eseguibili e alcuni, significativi piani di testing.
+<div class="remark">
+E' raccomandato che i risultati di questa fase vengano presentati al committente (con opportuno appuntamento) prima della consegna finale del prodotto.
+</div>
+</li>
+<li><i>Fase di progetto e realizzazione</i>, che termina con il deployment del prodotto.</li>
+<li><i>Fase di discussione</i> del lavoro svolto, che potrebbe (auspicabilmente) svolgersi IN PRESENZA in LAb2.</li>
+</ol>
+
+
+</li>
+</ul>
+ <!--
+ // https://mvnrepository.com/artifact/it.unibo.alice.tuprolog/2p-core
+compile group: 'it.unibo.alice.tuprolog', name: '2p-core', version: '4.1.1'
+ -->
+</div>
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>
