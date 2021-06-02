@@ -29,13 +29,14 @@ lateinit var  owner:  String
 		//println("pathexecutil | memoCurPath msg=$msg")
 		//PROLOG version
 		/*
+ //2020 ApplMessage version
 		val ap = it.unibo.kactor.ApplMessage(msg)
 		val cc = ap.msgContent()	//a String
 		println("pathexecutil | PROLOG ap=$ap cc=$cc ")
 		val cct = Term.createTerm(cc)
 		println("pathexecutil | PROLOG ap=$ap cc=$cc cct=$cct")
 		*/
-		//2021 version
+//2021 ApplMessage version
 		val am      = ApplMessage.create(msg)
 		val content = am.msgContent
 		//println("pathexecutil | memoCurPath content=$content")	//{"path":"wwlw", "owner":"textexec"}
@@ -68,12 +69,12 @@ lateinit var  owner:  String
 	} 
 
 	suspend fun doMove(master: ActorBasicFsm, moveTodo: String ){
-		//println("pathexecutil | doMove moveTodo=$moveTodo")
+		println("pathexecutil | doMove moveTodo=$moveTodo")
 		val MoveAnsw = CallRestWithApacheHTTP.doMove(moveTodo)
 		println("pathexecutil | doMove $moveTodo MoveAnsw=$MoveAnsw")
  
 		val answJson = JSONObject( MoveAnsw ) 
-		println("pathexecutil | doMove $moveTodo answJson=$answJson")
+		//println("pathexecutil | doMove $moveTodo answJson=$answJson")
 		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
 			|| answJson.has("stepDone") ){
 			pathDone = pathDone+moveTodo
