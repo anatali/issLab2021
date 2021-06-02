@@ -196,83 +196,121 @@ div.imagedesc{
 
 <div class="body"> 
 
-<h1>Final task ISS-2021 Bologna: Automated-Parking</h1> 
+<h1>Final task ISS-2021 Bologna: Automated Car-Parking</h1> 
  
-<h2>Automated Parking</h2> 
+<h2>Automated Car-Parking</h2> 
 
-A company intends to build an <i>automating parking service</i> by exploiting:
+A company intends to build an <i>automating parking service</i> composed of a set of elements:
 
 <ul>
-<li>A software system named <em>ParkManagerService</em> that implements the required automation functions.</li>
-<li>A DDR robot working as a <em>transport trolley</em> that is intially situated in its <em>home</em> location. </li>
+<li>A software system, named <em>ParkManagerService</em>, that implements the required automation functions.</li>
+<li>A <tt>DDR</tt> robot working as a <em>transport trolley</em>, that is intially situated in its <em>home</em> location. 
+The <tt>transport trolley</tt> has the form of a square of side length <em>RD</em>.
+</li>
 <li>A <em>parking-area</em> that includes;
 	<ul>
-	<li>an <em>INDOOR</em> to enter the car in the <tt>parking-area</tt> and an <em>OUTDOOR</em> to exit form it;</li>
+	<li>an <em>INDOOR</em> to enter the car in the area. Facing the <tt>INDOOR</tt>, there is
+	a <em>INDOOR-area</em> equipped with a sensor that measures the <em>weigth</em> of the car;</li>
+	<li>an <em>OUTDOOR</em> to exit from the <tt>parking-area</tt>. Just after the <tt>OUTDOOR</tt>, there is
+	<em>OUTDOOR-area</em> equipped with a <em>outsonar</em>, used to detect the presence of a car.
+	The <tt>OUTDOOR-area</tt>, once engaded by a car, should be freed within a prefixed interval of time <em>DTFREE</em>; </li>
 	<li>a number <tt>N (N=6)</tt> of <em>parking-slots</em>;</li>
+	<li>a sensor that measures the temperature <em>TA</em> of the area;</li>
+	<li>a <em>fan</em> that should be activated when <k>TA > TMAX</k>, where <em>TMAX</em> is a prefixed value (e.g. <tt>35</tt>)</li>
 	</ul>
-	A map of the parking area, including the positions of the fixed obstacles and of the <tt>parking-slots</tt> is available in the file
-	<a href="parkingMap.txt">parkingMap.txt</a>.
-	
-	<center><img src="tearoom20.png" alt="tearoom20.png" width="45%" height="32%"/></center>
-<li>a  <em>parking-manager</em> (an human being) that should monitor the state of the <tt>parking-area</tt> </li>
+	A <em>map</em> of the parking area, represented as a grid of squares of side length <em>RD</em>, 
+	is available in the file<a href="parkingMap.txt">parkingMap.txt</a>. 
+	<center><img src="parkingareamap21.png" alt="parkingareamap21.png" width="45%" height="32%"/></center>
+	The map includes the positions of the  <tt>parking-slots</tt> (marked with the symbol <k>2</k>) 
+	and of the <em>fixed obstacles</em> in the area (marked with the symbol <k>X</k>).
+</li>	
+<li>a <em>parking-manager</em> (an human being) which supervises the state of the <tt>parking-area</tt>
+and handles critical situations<!-- by using a software system named <em>ParkMonitoringService</em> -->. </li>
 </ul>
 
- 
- 
-
+<div class="remark">
+The job of our company is to design, build and deploy the  <em>ParkManagerService</em>.
+</div>
+<!-- and the <em>ParkMonitoringService</em>.-->
 <h3>User stories</h3>
-As a <bc>client</bc>:
+As a <bc>client - parking phase</bc> :
 <ul>
-<li>I intend to use the <em>ParkServiceGUI</em> provided by the <tt>ParkManagerService</tt>  to notify my interest in <i>entering</i> 
-my auto (with licence plate <em>NUMTARGA</em>) 
-in the <tt>parking-area</tt> and to receive as answer the number <em>SLOTNUM</em> of a  free parking-slot  (<tt>1&lt;=SLOTNUM&lt;=6</tt>). 
+<li>I intend to use a <em>ParkServiceGUI</em> provided by the <tt>ParkManagerService</tt>  to notify my interest in <i>entering</i> 
+my auto in the <tt>parking-area</tt> and to receive as answer the number <em>SLOTNUM</em> of a  free parking-slot  (<tt>1&lt;=SLOTNUM&lt;=6</tt>). 
 <tt>SLOTNUM<k>==0</k></tt> means that no free slot is available.</em>
 
 </li>
-<li>If <tt>SLOTNUM <k>>0</k></tt>, I move my car in the <tt>INDOOR</tt>, get out of the car and afterwards press a <em>CARENTER</em> button on the
+<li>If <tt>SLOTNUM <k>>0</k></tt>, I move my car in front to the <tt>INDOOR</tt>, get out of the car and afterwards press a <em>CARENTER</em> button on the
 <em>ParkServiceGUI</em>. Afterwards, the <tt>transport trolley</tt> takes over my car and moves it from the <tt>INDOOR</tt> 
-to the <tt>parking-slot</tt> of the given <tt>SLOTNUM</tt>.
-I'll receive a (unique) <em>TOKENID</em> </li>
+to the selected <tt>parking-slot</tt>.
+The <tt>ParkServiceGUI</tt> will show to me a receipt that includes a (unique) <em>TOKENID</em>, 
+to be used in the <i>car pick up</i> phase.</li>
+</ul>
 
-<li>Later, I intend to use the <tt>ParkServiceGUI</tt> to go back for the car, by submitting a proper request with the <tt>TOKENID</tt> previously received.   
-Afterwards, the <tt>transport trolley</tt>  takes over my car and moves it from its <tt>parking-slot</tt> to the <tt>OUTDOOR</tt>.
+As a <bc>client - car pick up phase</bc> :
+<ul>
+<li>I intend to use the <tt>ParkServiceGUI</tt> to submit the request to pick up my car, by sending the <tt>TOKENID</tt> previously received. </li>  
+<li>Afterwards, the <tt>transport trolley</tt>  takes over my car and moves it from its <tt>parking-slot</tt> to the <tt>OUTDOOR-area</tt>.</li>
+<li>I move the car, so to free the <tt>OUTDOOR-area</tt>.
 </li>
  </ul>
 
 As a <bc>parking-manager</bc>:
 <ul>
-<li>I intend to be able to see the <em>current state</em> of the <em>parking</em> by using a 'private' <em>ParkServiceStatusGUI</em>.
+<li>I intend to use the <em>ParkServiceStatusGUI</em>  provided by the <tt>ParkManagerService</tt>
+to observe the <em>current state</em> of the <tt>parking area</tt>, including the value <tt>TA</tt> of the temperature,
+the state of the <tt>fan</tt> and the state of the <tt>transport trolley</tt> (<k>idle, working or stopped</k>).</li>
+<li>I intend to <em>stop</em> the <tt>transport trolley</tt> when <k>TA > TMAX</k>, activate the <tt>fan</tt> and 
+wait until <k>TA &lt; TMAX</k>. At this time, I stop the <tt>fan</tt> and resume the behavior of the <tt>transport trolley</tt>.
+Hopefully, the <b>start/stop</b> <ks>of the fan</ks> could also be automated by the <tt>ParkManagerService</tt>,
+while the <b>start/stop</b> <ks>of the transport trolley</ks> is always up to me.
 </li>
+
+<li>I expect that the <tt>ParkManagerService</tt> sends to me an <em>alarm</em> if it detectes that the <tt>OUTDOOR-area</tt>
+has not been cleaned within the <tt>DTFREE</tt> interval of time.</li>
 </ul>
-
-
+ 
+ 
 <h3>Requirements </h3>
 
-The <tt>ParkManagerService</tt>  should perform the following tasks:
+The <tt>ParkManagerService</tt>  should create the <tt>ParkServiceGUI</tt> (for the client) 
+and the <tt>ParkServiceStatusGUI</tt> (for the manager) and then perform the following tasks:
+
+
 <ul>
  
 <li><hr/>
-<em>acceptIN</em>: accept the request of a client to park the car if there is at least one <tt>parking-slot</tt> available.<br/>
+<em>acceptIN</em>: accept the request of a client to park the car if there is at least one <tt>parking-slot</tt> available,
+select a free slot identified with a unique <tt>SLOTNUM</tt>.<br/>
+A request of this type can be elaborated only when the <k><tt>INDOOR-area</tt> is free</k>, 
+and  the <tt>transport trolley</tt> is at <tt>home</tt> or working (<k>not stopped</k> by the manager). 
+If the <tt>INDOOR-area</tt> is already engaged by a car, the request is not immediately processed 
+(the client could simply wait or could - optionally - receive a proper notice). 
+<br/>
+  <li><em>informIN</em>: inform the client about the value of the <tt>SLOTNUM</tt>.</li> 
 If  <k>SLOTNUM>0</k>:
   <ol>
-  <li><em>informIN</em>: inform the client about the value of the <tt>SLOTNUM</tt> and of the related <tt>TOKENID</tt> ;</li> 
-  <li><em>moveToIn</em>: move the <tt>transport trolley</tt> from its current localtion to the <tt>INDOOR</tt> ;</li>
-  <li><em>moveToSlotIn</em>: move the <tt>transport trolley</tt> from the <tt>INDOOR</tt> to the <tt>SLOTNUM/parking-slot</tt>;</li>
+   <li><em>moveToIn</em>: move the <tt>transport trolley</tt> from its current localtion to the <tt>INDOOR</tt> ;</li>
+  <li><em>receipt</em>: send to the client a receipt including the value of the <tt>TOKENID</tt> ;</li> 
+  <li><em>moveToSlotIn</em>: move the <tt>transport trolley</tt> from the <tt>INDOOR</tt> to the selected <tt>parking-slot</tt>;</li>
   <!-- <li>accept another request (<tt>acceptIN</tt> or <tt>acceptOUT</tt>). -->
-  <li><em>moveToHome</em>: if no other request is present,  move the <tt>transport trolley</tt> to its <tt>home</tt> location<br/>
-  else <em>acceptIN</em> or <em>acceptOUT</em></li> 
+  <li><em>backToHome</em>: if no other request is present,  move the <tt>transport trolley</tt> to its <tt>home</tt> location,
+  else <em>acceptIN</em> or <em>acceptOUT</em>.</li> 
   </ol>
  </li>
 If <k>SLOTNUM==0</k>: 
 	<ul>
-	<li><em>moveToHome</em>: if no other request is present  move the <tt>transport trolley</tt> to its <tt>home</tt> location; <br/>
-	else <em>acceptIN</em> or <em>acceptOUT</em></li> 
+	<li><em>moveToHome</em>: if not already at home, move the <tt>transport trolley</tt> to its <tt>home</tt> location.</li> 
 	</ul>
 </li>
 
 
 <li><hr/>
-<em>acceptOUT</em>: accept the request of a client to get out the car with <tt>TOKENID</tt>:
+<em>acceptOUT</em>: accept the request of a client to get out the car with <tt>TOKENID</tt>.
+A request of this type can be elaborated only when the <k><tt>OUTDOOR-area</tt> is free</k> 
+and  the <tt>transport trolley</tt> is at <tt>home</tt> or working (<k>not stopped</k> by the manager).
+If the <tt>OUTDOOR-area</tt> is still engaged by a car, the request is not immediately processed 
+(the client could simply wait or could - optionally - receive a proper notice).
 
 	<ol>
 	<li><em>findSlot</em>: deduce the number of the parking slot (<em>CARSLOTNUM</em>) from the <tt>TOKENID</tt>;</li>
@@ -283,15 +321,26 @@ If <k>SLOTNUM==0</k>:
 
 	</ol> 
 </li>
+<li>
+<hr/>
+<em>monitor</em>: update the <tt>ParkServiceStatusGUI</tt> with the required information about the state of the system.
+</li>
+
+<li>
+<hr/>
+<em>manage</em>: accept the request of the manager to stop/resume the behavior of the  <tt>transport trolley</tt>.
+</li>
+
 </ul>
-<h4>Using a real robot</h4>
+<h4>When ssing a real robot</h4>
 No further requirement.
     
-<h4>Using the virtual robot only</h4>
+<h4>When using the virtual robot <k>only</k></h4>
 <ul>
-<li><ks>authorizeddManager</ks>: allow a manager to use the <tt>ParkServiceGUI</tt> only if she/he owns <bc>proper permissions</bc>.</li>
+<li><ks>authorize</ks>: allow a manager to use the <tt>ParkServiceStatusGUI</tt> only if she/he owns <bc>proper permissions</bc>.</li>
  
 </ul>
+
 
 
  
