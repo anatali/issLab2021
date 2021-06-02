@@ -207,22 +207,30 @@ A company intends to build an <i>automating parking service</i> composed of a se
 <li>A <tt>DDR</tt> robot working as a <em>transport trolley</em>, that is intially situated in its <em>home</em> location. 
 The <tt>transport trolley</tt> has the form of a square of side length <em>RD</em>.
 </li>
-<li>A <em>parking-area</em> that includes;
+<li>A <em>parking-area</em> is an empty room that includes;
 	<ul>
 	<li>an <em>INDOOR</em> to enter the car in the area. Facing the <tt>INDOOR</tt>, there is
-	a <em>INDOOR-area</em> equipped with a sensor that measures the <em>weigth</em> of the car;</li>
+	a <em>INDOOR-area</em> equipped with a <em>weigthsensor</em> that measures the <em>weigth</em> of the car;</li>
 	<li>an <em>OUTDOOR</em> to exit from the <tt>parking-area</tt>. Just after the <tt>OUTDOOR</tt>, there is
 	<em>OUTDOOR-area</em> equipped with a <em>outsonar</em>, used to detect the presence of a car.
 	The <tt>OUTDOOR-area</tt>, once engaded by a car, should be freed within a prefixed interval of time <em>DTFREE</em>; </li>
 	<li>a number <tt>N (N=6)</tt> of <em>parking-slots</em>;</li>
-	<li>a sensor that measures the temperature <em>TA</em> of the area;</li>
+	<li>a <em>thermometer</em> that measures the temperature <em>TA</em> of the area;</li>
 	<li>a <em>fan</em> that should be activated when <k>TA > TMAX</k>, where <em>TMAX</em> is a prefixed value (e.g. <tt>35</tt>)</li>
 	</ul>
 	A <em>map</em> of the parking area, represented as a grid of squares of side length <em>RD</em>, 
-	is available in the file<a href="parkingMap.txt">parkingMap.txt</a>. 
-	<center><img src="parkingareamap21.png" alt="parkingareamap21.png" width="45%" height="32%"/></center>
+	is available in the file <a href="parkingMap.txt" target="code">parkingMap.txt</a>:
+	<pre>
+|r, 0, 0, 0, 0, 0, X, 
+|0, 0, 2, 2, 0, 0, X, 
+|0, 0, 2, 2, 0, 0, X, 
+|0, 0, 2, 2, 0, 0, X, 
+|0, 0, 0, 0, 0, 0, X, 
+|X, X, X, X, X, X, X,	
+	</pre>. 
+	<center><img src="./img/parkingAreaZone.PNG" alt="parkingAreaZone.PNG" width="45%" height="32%"/></center>
 	The map includes the positions of the  <tt>parking-slots</tt> (marked with the symbol <k>2</k>) 
-	and of the <em>fixed obstacles</em> in the area (marked with the symbol <k>X</k>).
+	and of the <em>fixed obstacles</em> in the area (the walls marked with the symbol <k>X</k>).
 </li>	
 <li>a <em>parking-manager</em> (an human being) which supervises the state of the <tt>parking-area</tt>
 and handles critical situations<!-- by using a software system named <em>ParkMonitoringService</em> -->. </li>
@@ -332,10 +340,18 @@ If the <tt>OUTDOOR-area</tt> is still engaged by a car, the request is not immed
 </li>
 
 </ul>
-<h4>When ssing a real robot</h4>
+<h4>About the devices</h4>
+All the sensors (<tt>weigthsensor</tt>, <tt>outsonar</tt>, <tt>thermometer</tt> ) and the <tt>fan</tt> should be properly simulated
+by mock-objects or mock-actors.
+
+<h4>When using a real robot</h4>
 No further requirement.
-    
-<h4>When using the virtual robot <k>only</k></h4>
+
+<h4>When available a Raspberry and a sonar</h4>
+The <tt>outsonar</tt> could be a real device. We can simulate the presence/absence of a car.
+
+    <h4>When using <k>only</k> the virtual robot or <k>no real sonar</k> available</h4>
+Consider the new requirement:
 <ul>
 <li><ks>authorize</ks>: allow a manager to use the <tt>ParkServiceStatusGUI</tt> only if she/he owns <bc>proper permissions</bc>.</li>
  
@@ -363,6 +379,8 @@ with the code and the related documents.</li>
 
  <h3>Guidance</h3>
  <ul>
+ <li>Oltre al codice sviluppato durante il corso, il progetto <a href="../../it.unibo.qakDemo" target="code">it.unibo.qakDemo</a>
+ include codice che potrebbe risultare utile per l'applicazione finale.</li>
 <li>Il numero e le finalità degli SPRINT sono definiti dal Team di sviluppo dopo opportune interazioni con il committente.</li>
 <li>Il committente (e/o il product-owner) è disponibile ONLINE in linea di massima ogni <bc>Giovedi dalle 15 alle 18</bc> fino a fine Luglio, ma è sempre contattabile on-demand via email. </li>
 <li>Lo svolgimento del lavoro è auspicabile avvenga in diverse fasi:

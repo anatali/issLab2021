@@ -39,29 +39,35 @@ const config = {
             centerPosition: { x: 0.18, y: 0.20},
             size: { x: 0.05, y: 0.05      }
 		},
-*/
 
-/*
+
+ 
         {
             name: "obs1",
-            centerPosition: { x: 0.3, y: 0.38 }, 
-            size: { x: 0.05, y: 0.045}
+            centerPosition: { x: 0.05, y: 0.42 }, 
+            size: { x: 0.053, y: 0.041}
         },
-		*/
+
+        {
+            name: "obs2",
+            centerPosition: { x: 0.94, y: 0.42 }, 
+            size: { x: 0.053, y: 0.041}
+        },
+*/		 		 
         {
             name: "wallUp",
-            centerPosition: { x: 0.48, y: 0.97},
-            size: { x: 0.89, y: 0.01}
+            centerPosition: { x: 0.4, y: 0.97},
+            size: { x: 0.77, y: 0.01}
         },
         {
             name: "wallDown",
-            centerPosition: { x: 0.45, y: 0.01},
-            size: { x: 0.85, y: 0.01}
+            centerPosition: { x: 0.4, y: 0.01},
+            size: { x: 0.77, y: 0.01}
         },
         {
             name: "wallLeft",
-            centerPosition: { x: 0.02, y: 0.45},
-            size: { x: 0.01, y: 0.88}
+            centerPosition: { x: 0.02, y: 0.48},
+            size: { x: 0.01, y: 0.94}
         },
         {
             name: "wallRight",

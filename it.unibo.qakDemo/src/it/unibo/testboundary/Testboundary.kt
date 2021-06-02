@@ -30,9 +30,8 @@ class Testboundary ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 					action { //it:State
 						forward("start", "start(any)" ,"boundarywalker" ) 
 						delay(1000) 
-						emit("alarm", "alarm(fire)" ) 
 					}
-					 transition(edgeName="t09",targetState="endTest",cond=whenDispatch("mapDone"))
+					 transition(edgeName="t08",targetState="endTest",cond=whenDispatch("mapDone"))
 				}	 
 				state("endTest") { //this:State
 					action { //it:State

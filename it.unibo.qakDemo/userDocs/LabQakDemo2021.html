@@ -202,7 +202,7 @@ div.imagedesc{
 <tbody>	
 <tr>
 <td style="width:30%">
-<h3><a href="../src/kotlinCode/CallRestWithApacheHTTP.kt" target="code">CallRestWithApacheHTTP.kt</a> </h3> 
+<h3><a href="../support//CallRestWithApacheHTTP.kt" target="code">CallRestWithApacheHTTP.kt</a> </h3> 
 </td>
 <td>
 
@@ -220,7 +220,7 @@ response (<tt>ApplMessage</tt>) as answer</li>
 
 <tr>
  <td>
-<h3><a href="../src/kotlinCode/SonarObserver.kt" target="code">SonarObserver.kt</a>   </h3>
+<h3><a href="../support//SonarObserver.kt" target="code">SonarObserver.kt</a>   </h3>
 </td>
 <td>
 An actor of type 
@@ -228,7 +228,7 @@ An actor of type
 that handles messages (of type 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ApplMessage.kt" target="code">ApplMessage.kt (2021)</a>)
 related to the sonar  sent by the WEnv  and uses the  master 
-registered in <a href="../src/kotlinCode/pathexecutil.kt" target="code">pathexecutil.kt</a> 
+registered in <a href="../support//pathexecutil.kt" target="code">pathexecutil.kt</a> 
 to  generate an event <k>sonar : distance(D)</k> 
 that can be perceived by all the components of the system, including the master.
 </td>
@@ -236,7 +236,7 @@ that can be perceived by all the components of the system, including the master.
 
 <tr>
 <td>
-<h3><a href="../src/kotlinCode/pathexecutil.kt" target="code">pathexecutil.kt</a> </h3>
+<h3><a href="../support//pathexecutil.kt" target="code">pathexecutil.kt</a> </h3>
 </td>
 <td>
 A Kotlin object that provides the following operations:
@@ -244,13 +244,13 @@ A Kotlin object that provides the following operations:
 <li><bc>memoCurPath</bc></li>
 <li><bc>nextMove</bc></li>
 <li><bc>doMove</bc>: send a command to move the robot by using 
-<a href="../kotlinCode/CallRestWithApacheHTTP.k" target="code">CallRestWithApacheHTTP.k</a> 
+<a href="../support/CallRestWithApacheHTTP.k" target="code">CallRestWithApacheHTTP.k</a> 
 and send to the caller a dispatch (<ks>moveok|movefail</ks>) related to the answer</li>
 
 <li><bc>createSonarObserver</bc>: creates an 
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">
 IssWsHttpKotlinSupport.kt (2021)</a> on the websocket 8091 and registers to that support the
-<a href="../src/kotlinCode/SonarObserver.kt" target="code">SonarObserver.kt</a>.
+<a href="../support//SonarObserver.kt" target="code">SonarObserver.kt</a>.
 </li>
 </ul>
  </td>
@@ -261,20 +261,20 @@ IssWsHttpKotlinSupport.kt (2021)</a> on the websocket 8091 and registers to that
 <h3><a href="../src/boundarywalker.qak" target="code">boundarywalker.qak</a>  </h3>
  </td>
  <td>
-Uses  <bc>doMove</bc> of <a href="../src/kotlinCode/pathexecutil.kt" target="code">pathexecutil.kt</a>,
+Uses  <bc>doMove</bc> of <a href="../support//pathexecutil.kt" target="code">pathexecutil.kt</a>,
 builds a map of the room and handles the alarms. It activates also the
-<a href="../src/kotlinCode/SonarObserver.kt" target="code">SonarObserver.kt</a>
+<a href="../support//SonarObserver.kt" target="code">SonarObserver.kt</a>
 that will show the data emitted by WEnv.
 </td>
 </tr>
 
 
 <!--
-<h3><a href="../src/kotlinCode/walkerutil.kt" target="code">walkerutil.kt</a></h3>
+<h3><a href="../support//walkerutil.kt" target="code">walkerutil.kt</a></h3>
 An utility used by <a href="../src/pathexecutor.qak" target="code">pathexecutor.qak</a>   
 
 <h3><a href="../src/spiralwalker.qak" target="code">spiralwalker.qak</a>   </h3>
-Uses <a href="../src/kotlinCode/pathexecutil.kt" target="code">pathexecutil.kt</a>
+Uses <a href="../support//pathexecutil.kt" target="code">pathexecutil.kt</a>
 <br/>
 
 

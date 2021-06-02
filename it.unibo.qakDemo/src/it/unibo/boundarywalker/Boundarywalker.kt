@@ -19,15 +19,14 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 		
 		val mapname     = "roomBoundary"  		 
 		var NumStep     = 0
-		var Myself      = myself   
+		var Myself      = myself    
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("&&&  boundarywalker ACTIVE ...")
-						 kotlinCode.pathexecutil.register(myself)  
-						 kotlinCode.pathexecutil.createSonarObserver(scope)  
+						itunibo.planner.plannerUtil.loadRoomMap( "parkingMap"  )
+						itunibo.planner.plannerUtil.showMap(  )
 					}
-					 transition(edgeName="t00",targetState="work",cond=whenDispatch("start"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -52,13 +51,13 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 				state("doAheadMove") { //this:State
 					action { //it:State
 						delay(300) 
-						kotlinCode.pathexecutil.doMove(myself ,"p" )
+						pathexecutil.doMove(myself ,"p" )
 						updateResourceRep( "moving"  
 						)
 					}
-					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t02",targetState="stepDone",cond=whenDispatch("moveok"))
-					transition(edgeName="t03",targetState="stepFailed",cond=whenDispatch("pathfail"))
+					 transition(edgeName="t00",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t01",targetState="stepDone",cond=whenDispatch("moveok"))
+					transition(edgeName="t02",targetState="stepFailed",cond=whenDispatch("pathfail"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
@@ -76,17 +75,17 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 						)
 						if(  ! itunibo.planner.plannerUtil.atHome()  
 						 ){itunibo.planner.plannerUtil.wallFound(  )
-						kotlinCode.pathexecutil.doMove(myself ,"l" )
+						pathexecutil.doMove(myself ,"l" )
 						itunibo.planner.plannerUtil.updateMap( "l"  )
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
 						}
 						else
-						 {kotlinCode.pathexecutil.doMove(myself ,"l" )
+						 {pathexecutil.doMove(myself ,"l" )
 						 itunibo.planner.plannerUtil.updateMap( "l"  )
 						 }
 					}
-					 transition(edgeName="t04",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t05",targetState="detectBoundary",cond=whenDispatch("moveok"))
+					 transition(edgeName="t03",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t04",targetState="detectBoundary",cond=whenDispatch("moveok"))
 				}	 
 				state("boundaryFound") { //this:State
 					action { //it:State
@@ -103,11 +102,11 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 						println("$name in ${currentState.stateName} | $currentMsg")
 						println("----------------------------------------------------------------")
 					}
-					 transition(edgeName="t06",targetState="detectBoundary",cond=whenDispatchGuarded("moveok",{ ActorResourceRep == "stepFailed"  
+					 transition(edgeName="t05",targetState="detectBoundary",cond=whenDispatchGuarded("moveok",{ ActorResourceRep == "stepFailed"  
 					}))
-					transition(edgeName="t07",targetState="stepDone",cond=whenDispatchGuarded("moveok",{ ActorResourceRep == "moving"  
+					transition(edgeName="t06",targetState="stepDone",cond=whenDispatchGuarded("moveok",{ ActorResourceRep == "moving"  
 					}))
-					transition(edgeName="t08",targetState="stepFailed",cond=whenDispatch("pathfail"))
+					transition(edgeName="t07",targetState="stepFailed",cond=whenDispatch("pathfail"))
 				}	 
 				state("handleAlarmAfterStep") { //this:State
 					action { //it:State

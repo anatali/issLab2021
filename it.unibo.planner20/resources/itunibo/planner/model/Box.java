@@ -1,6 +1,6 @@
 package itunibo.planner.model;
 
-import java.io.Serializable;
+//import java.io.Serializable;
 
 public class Box implements Serializable{
 	
