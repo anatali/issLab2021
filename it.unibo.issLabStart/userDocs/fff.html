@@ -36,7 +36,7 @@ hr {
     background-color: transparent;
 }
 
-h1, h2, h3 {
+h0, h2, h3 {
     color: #242424;
     clear: left;
     font: 100% Tahoma, Helvetica, Arial, sans-serif;
@@ -221,16 +221,21 @@ The <tt>transport trolley</tt> has the form of a square of side length <em>RD</e
 	A <em>map</em> of the parking area, represented as a grid of squares of side length <em>RD</em>, 
 	is available in the file <a href="parkingMap.txt" target="code">parkingMap.txt</a>:
 	<pre>
-|r, 0, 0, 0, 0, 0, X, 
-|0, 0, 2, 2, 0, 0, X, 
-|0, 0, 2, 2, 0, 0, X, 
-|0, 0, 2, 2, 0, 0, X, 
-|0, 0, 0, 0, 0, 0, X, 
-|X, X, X, X, X, X, X,	
-	</pre>. 
-	<center><img src="./img/parkingAreaZone.PNG" alt="parkingAreaZone.PNG" width="45%" height="32%"/></center>
-	The map includes the positions of the  <tt>parking-slots</tt> (marked with the symbol <k>2</k>) 
+|r, 0, 0, 0, 0, 0, 0, X, 
+|0, 0, <k>P, P,</k> 0, 0, 0, X, 
+|0, 0, <k>P, P,</k> 0, 0, 0, X, 
+|0, 0, <k>P, P,</k> 0, 0, 0, X, 
+|0, 0, 0, 0, 0, 0, 0, X, 
+|X, X, X, X, X, X, X, X, 
+
+	</pre>
+	The map includes the positions of the  <tt>parking-slots</tt> (marked above with the symbol <k>2</k>) 
 	and of the <em>fixed obstacles</em> in the area (the walls marked with the symbol <k>X</k>).
+
+	The proper scene for the WEnv is reported in: <a href="parkingAreaConfig.js" target="code">parkingAreaConfig.js</a>
+ 
+	
+	<center><img src="./img/parkingAreaZone.PNG" alt="parkingAreaZone.PNG" width="45%" height="32%"/></center>
 </li>	
 <li>a <em>parking-manager</em> (an human being) which supervises the state of the <tt>parking-area</tt>
 and handles critical situations<!-- by using a software system named <em>ParkMonitoringService</em> -->. </li>
@@ -394,7 +399,21 @@ E' raccomandato che i risultati di questa fase vengano presentati al committente
 <li><i>Fase di discussione</i> del lavoro svolto, che potrebbe (auspicabilmente) svolgersi IN PRESENZA in LAb2.</li>
 </ol>
 
+See <a href="https://phoenixnap.com/kb/how-to-commit-changes-to-docker-image" target="web">How to Commit Changes to a Docker Image</a>
+and <a href="../../it.unibo.virtualrobotcontrol/userDocs/VirtualrobotControl.html" target="lab">LabIss2021 | A web-gui for virtual robot control</a>
+<pre>
+docker build -t virtualrobotparking:1.0 .
 
+
+
+docker run -ti -p 8090:8090 -p 8091:8091 --rm natbodocker/virtualrobotdisi:2.0 /bin/sh  <kc>//to change WEnv/WebGLScene/sceneConfig</kc>
+
+cd /home/node/WEnv/WebGLScene
+nano 
+
+sudo docker commit [CONTAINER_ID] [new_image_name]
+
+</pre>
 </li>
 </ul>
  <!--

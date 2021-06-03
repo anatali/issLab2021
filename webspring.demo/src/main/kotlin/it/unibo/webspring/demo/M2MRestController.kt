@@ -33,7 +33,7 @@ class M2MRestController {
         //RobotResource.initRobotResource() //OLD APPROACH: we want a local BasicStepRobotActorCaller
         //obsRobot    = ObserverForSendingAnswer("obsRobot", myscope, ::setAnswerForMove )
         obsRobot    = ObserverForSendingAnswerOnChannels("obsrobotch", myscope, answerMoveChannel)
-        robot       = BasicStepRobotActor("stepRobot", ownerActor= obsRobot, myscope, "wenv")
+        robot       = BasicStepRobotActor("stepRobot", ownerActor= obsRobot, myscope, "localhost")
 
         //The answer of the robot must go to the PathExecutor
         /*

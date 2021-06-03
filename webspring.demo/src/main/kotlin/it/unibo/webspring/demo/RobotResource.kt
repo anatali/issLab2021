@@ -29,7 +29,7 @@ object RobotResource {
         //TODO: define an observer that updates the HTML page
          robotCaller      = BasicStepRobotActorCaller("robot", myscope )
          if( local ){
-            robot = BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "wenv")
+            robot = BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "localhost")
          }
          sysUtil.colorPrint("RobotResource | configured localRobot=$local - ${sysUtil.curThread()} " )
     }

@@ -1,10 +1,10 @@
 const config = {
     floor: {
-        size: { x: 30, y: 24                   }
+        size: { x: 31, y: 24                   }
     },
     player: {
         //position: { x: 0.5, y: 0.5 },		//CENTER
-        position: { x: 0.12, y: 0.16 },		//INIT
+        position: { x: 0.10, y: 0.16 },		//INIT
         //position: { x: 0.8, y: 0.85 },		//END
         speed: 0.2
     },
@@ -56,13 +56,13 @@ const config = {
 */		 		 
         {
             name: "wallUp",
-            centerPosition: { x: 0.4, y: 0.97},
-            size: { x: 0.77, y: 0.01}
+            centerPosition: { x: 0.44, y: 0.97},
+            size: { x: 0.88, y: 0.01}
         },
         {
             name: "wallDown",
-            centerPosition: { x: 0.4, y: 0.01},
-            size: { x: 0.77, y: 0.01}
+            centerPosition: { x: 0.44, y: 0.01},
+            size: { x: 0.85, y: 0.01}
         },
         {
             name: "wallLeft",
@@ -71,7 +71,7 @@ const config = {
         },
         {
             name: "wallRight",
-            centerPosition: { x: 0.98, y: 0.5},
+            centerPosition: { x: 1.0, y: 0.5},
             size: { x: 0.01, y: 0.99}
         }
     ]

@@ -23,30 +23,37 @@ QActor trolley context ctxDemoplannertf21{
 [#
 //val mapname     = "roomBoundary"  		 
 //var NumStep     = 0
-//var Myself      = myself   
+var Myself      = myself   
 var CurrentPlannedMove = "" 
 #] 
 	State s0 initial {	 
+     	run itunibo.planner.plannerUtil.initAI()
 		println("&&&  trolley loads the parking map from the given file ...") 
 		run itunibo.planner.plannerUtil.loadRoomMap("parkingMap") 
 		run itunibo.planner.plannerUtil.showMap( )   
-		//run itunibo.planner.showCurrentRobotState()
-     	run itunibo.planner.plannerUtil.initAI()
+     	run itunibo.planner.plannerUtil.showCurrentRobotState()
+     	
+     	run pathexecutil.register( Myself ) 
    	}
-   	Goto moveToIndoor 
+   	Goto moveToIndoor  
 
   	State moveToIndoor{  		
-  		 run itunibo.planner.plannerUtil.planForGoal("5","0")
-   	}
-    Goto execPlannedMoves  
+  		 run itunibo.planner.plannerUtil.planForGoal("6","0")
+   	} 
+    Goto execPlannedMoves     
     
-	State execPlannedMoves{ 
+	State execPlannedMoves{   
+		delay 500
  		[#  CurrentPlannedMove = itunibo.planner.plannerUtil.getNextPlannedMove() #]
  		println("+++++++++++++++++++++++++++++++ $CurrentPlannedMove")
  	}
- 	Goto wMove if [# CurrentPlannedMove == "w" #] else turnMove
+ 	Goto doMove if [# CurrentPlannedMove.length>0 #] else end
  
- 	State wMove {  
+ 	State doMove{ 		
+ 	}
+ 	Goto wMove if [# CurrentPlannedMove == "w" #] else turnMove
+ 	
+ 	State wMove {     
  		qrun pathexecutil.doMove(myself, "p" )  
  	}
  	Transition t0 whenMsg moveok   -> stepDone   
@@ -54,99 +61,33 @@ var CurrentPlannedMove = ""
  	
  	 State stepDone{  
  	 	printCurrentMessage
- 		//updateResource [# itunibo.planner.plannerUtil.getMap() #]
- 		run itunibo.planner.plannerUtil.updateMap(  "p" )
+ 		updateResource [# itunibo.planner.plannerUtil.getMap() #]
+ 		run itunibo.planner.plannerUtil.updateMap(  "w" )
+ 		run itunibo.planner.plannerUtil.showCurrentRobotState( )
  		//updateResource [# "stepDone" # ]
- 		run itunibo.planner.plannerUtil.showMap( )   
+ 		//run itunibo.planner.plannerUtil.showMap( )   
   	} 
  	Goto execPlannedMoves
  	
  	State turnMove{
   		if [# CurrentPlannedMove == "l" || CurrentPlannedMove == "r"  #]{
   			qrun pathexecutil.doMove(myself, "$CurrentPlannedMove")
- 			run itunibo.planner.plannerUtil.updateMap( "$CurrentPlannedMove" )
   		} 
  	}   
- 	//Goto execPlannedMoves  if [# CurrentPlannedMove.length > 0 #] else end 
- 	Transition t0  whenMsg moveok   -> rotationDone
+  	Transition t0  whenMsg moveok   -> rotationDone
 
 
  	State rotationDone{
  		run itunibo.planner.plannerUtil.updateMap(  "$CurrentPlannedMove" )
- 	}
+   		run itunibo.planner.plannerUtil.showCurrentRobotState( )
+ 	} 
  	 Goto execPlannedMoves
  	
  	State end{
- 		run itunibo.planner.plannerUtil.showMap( )  
+ 		printCurrentMessage
+ 		run itunibo.planner.plannerUtil.showCurrentRobotState( )  
  	}
      
-/*     
-    State detectBoundary{     
-    	[# NumStep++ #]
-    	println("boundarywalker detectBoundary $NumStep")
-    	run itunibo.planner.plannerUtil.showCurrentRobotState()
-    	updateResource [# "detectBoundary step=$NumStep" #]
-     }  
-    Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
-  
- 	State doAheadMove{ 
- 		delay 300 //to avoid too rapid changes
-   		//[# kotlinCode.pathexecutil.doMove(myself, "p") #]
-   		//run kotlinCode.pathexecutil.doMove(Myself, "p" )  
-   		qrun pathexecutil.doMove(myself, "p" )  
-   		updateResource [# "moving" #]
-	}   
-	Transition t0   whenEvent alarm  -> handleAlarm 
-					whenMsg moveok   -> stepDone   
-					whenMsg pathfail -> stepFailed  
-	 
- 	State stepDone{  
- 		updateResource [# itunibo.planner.plannerUtil.getMap() #]
- 		run itunibo.planner.plannerUtil.updateMap(  "w" )
- 		updateResource [# "stepDone" # ]
-  	} 
-	Goto doAheadMove		//alarm perceived ?? ...
-	//Transition t0 whenTime 10     ->  doAheadMove  //give time to perceive alarms
-	//              whenEvent alarm -> handleAlarmAfterStep
-	                    
-	State stepFailed{  //has found an obstacle (a wall)
- 		//println("boundarywalker | FOUND A WALL")
- 		updateResource [# "stepFailed" # ]
- 		//[# kotlinCode.pathexecutil.waitUser("onwall_$NumStep") #] 
- 	 		if [# ! itunibo.planner.plannerUtil.atHome() #]{
-	 			run itunibo.planner.plannerUtil.wallFound() 
-		 		//updateResource [# "found a wall" #]
-		 		//[# kotlinCode.pathexecutil.doMove(myself, "l") #]
-		 		qrun pathexecutil.doMove(myself, "l")
-				run itunibo.planner.plannerUtil.updateMap(  "l" )
-				run itunibo.planner.plannerUtil.showCurrentRobotState()
-  	 		}else{
-  	 			//[# kotlinCode.pathexecutil.doMove("l",myself) #]
-  	 			qrun pathexecutil.doMove(myself, "l")
-  	 			run itunibo.planner.plannerUtil.updateMap(  "l" )
-  	 		}		 	      
- 	}   
-    Transition t0 whenEvent alarm  -> handleAlarm  //handleAlarmStepFailed
-                  whenMsg moveok   -> detectBoundary  
- 
- 
-  	
-  	State handleAlarm {
-		println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $ActorResourceRep")
-		printCurrentMessage
-		println("----------------------------------------------------------------") 		
-  	}
-  	Transition t0   whenMsg moveok  and [# ActorResourceRep == "stepFailed" #] -> detectBoundary   
-  		            whenMsg moveok  and [# ActorResourceRep == "moving" #]     -> stepDone   
-					whenMsg pathfail -> stepFailed 
-   	
-  	State handleAlarmAfterStep{
-		println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP $ActorResourceRep")
-		printCurrentMessage
-		println("----------------------------------------------------------------") 		
-  	}
-  	Goto doAheadMove
- */  	
 }	
      
 

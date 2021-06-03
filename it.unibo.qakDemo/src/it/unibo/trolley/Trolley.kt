@@ -19,28 +19,39 @@ class Trolley ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 		
 		//val mapname     = "roomBoundary"  		 
 		//var NumStep     = 0
-		//var Myself      = myself   
+		var Myself      = myself   
 		var CurrentPlannedMove = "" 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						itunibo.planner.plannerUtil.initAI(  )
 						println("&&&  trolley loads the parking map from the given file ...")
 						itunibo.planner.plannerUtil.loadRoomMap( "parkingMap"  )
 						itunibo.planner.plannerUtil.showMap(  )
-						itunibo.planner.plannerUtil.initAI(  )
+						itunibo.planner.plannerUtil.showCurrentRobotState(  )
+						pathexecutil.register( Myself  )
 					}
 					 transition( edgeName="goto",targetState="moveToIndoor", cond=doswitch() )
 				}	 
 				state("moveToIndoor") { //this:State
 					action { //it:State
-						itunibo.planner.plannerUtil.planForGoal( "5", "0"  )
+						itunibo.planner.plannerUtil.planForGoal( "6", "0"  )
 					}
 					 transition( edgeName="goto",targetState="execPlannedMoves", cond=doswitch() )
 				}	 
 				state("execPlannedMoves") { //this:State
 					action { //it:State
+						delay(500) 
 						  CurrentPlannedMove = itunibo.planner.plannerUtil.getNextPlannedMove()  
 						println("+++++++++++++++++++++++++++++++ $CurrentPlannedMove")
+					}
+					 transition( edgeName="goto",targetState="doMove", cond=doswitchGuarded({ CurrentPlannedMove.length>0  
+					}) )
+					transition( edgeName="goto",targetState="end", cond=doswitchGuarded({! ( CurrentPlannedMove.length>0  
+					) }) )
+				}	 
+				state("doMove") { //this:State
+					action { //it:State
 					}
 					 transition( edgeName="goto",targetState="wMove", cond=doswitchGuarded({ CurrentPlannedMove == "w"  
 					}) )
@@ -56,8 +67,10 @@ class Trolley ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 				state("stepDone") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
-						itunibo.planner.plannerUtil.updateMap( "p"  )
-						itunibo.planner.plannerUtil.showMap(  )
+						updateResourceRep( itunibo.planner.plannerUtil.getMap()  
+						)
+						itunibo.planner.plannerUtil.updateMap( "w"  )
+						itunibo.planner.plannerUtil.showCurrentRobotState(  )
 					}
 					 transition( edgeName="goto",targetState="execPlannedMoves", cond=doswitch() )
 				}	 
@@ -65,7 +78,6 @@ class Trolley ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 					action { //it:State
 						if(  CurrentPlannedMove == "l" || CurrentPlannedMove == "r"   
 						 ){pathexecutil.doMove(myself ,"$CurrentPlannedMove" )
-						itunibo.planner.plannerUtil.updateMap( "$CurrentPlannedMove"  )
 						}
 					}
 					 transition(edgeName="t01",targetState="rotationDone",cond=whenDispatch("moveok"))
@@ -73,12 +85,14 @@ class Trolley ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 				state("rotationDone") { //this:State
 					action { //it:State
 						itunibo.planner.plannerUtil.updateMap( "$CurrentPlannedMove"  )
+						itunibo.planner.plannerUtil.showCurrentRobotState(  )
 					}
 					 transition( edgeName="goto",targetState="execPlannedMoves", cond=doswitch() )
 				}	 
 				state("end") { //this:State
 					action { //it:State
-						itunibo.planner.plannerUtil.showMap(  )
+						println("$name in ${currentState.stateName} | $currentMsg")
+						itunibo.planner.plannerUtil.showCurrentRobotState(  )
 					}
 				}	 
 			}

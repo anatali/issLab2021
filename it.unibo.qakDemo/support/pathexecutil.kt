@@ -8,15 +8,44 @@ import alice.tuprolog.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.CoroutineScope
 import it.unibo.supports.IssWsHttpKotlinSupport
+import kotlinx.coroutines.channels.Channel
+import it.unibo.robotService.BasicStepRobotActor
+import it.unibo.robotService.ApplMsgs
+import kotlinx.coroutines.launch
  
 
 object pathexecutil{
 var pathDone = ""
+var curMove  = "unknown"	
 var curPath  = ""
+var wenvAddr = "localhost"
 lateinit var  master: ActorBasicFsm
 lateinit var  owner:  String
-
+lateinit var robot   : BasicStepRobotActor 
+//lateinit var support : IssWsHttpKotlinSupport 
+	
+	fun actionAtAnswer(MoveAnsw:String){
+		println("pathexecutil | actionAtAnswer  MoveAnsw=$MoveAnsw curMove=$curMove")
+ 
+		val answJson = JSONObject( MoveAnsw ) 
+		//println("pathexecutil | doMove $moveTodo answJson=$answJson")
+		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
+			|| answJson.has("stepDone") ){
+			pathDone = pathDone+curMove
+			master.scope.launch{ master.autoMsg("moveok","move($curMove)") }
+		}else{
+			master.scope.launch{ master.autoMsg("pathfail","pathdone($pathDone)") }
+			//println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
+		}
+		//curMove="unknown"
+	}
+	
 	fun register( actor: ActorBasicFsm ){
+		//support =  IssWsHttpKotlinSupport.getConnectionWs(actor.scope, "${wenvAddr}:8091")
+		var obsRobot  = ObserverForAnswer("obsrobot", actor.scope, ::actionAtAnswer   )
+		robot   =  it.unibo.robotService.BasicStepRobotActor("stepRobot", ownerActor=obsRobot, actor.scope, "localhost")
+
+		
 		master = actor
 	}
 
@@ -70,7 +99,18 @@ lateinit var  owner:  String
 
 	suspend fun doMove(master: ActorBasicFsm, moveTodo: String ){
 		println("pathexecutil | doMove moveTodo=$moveTodo")
-		val MoveAnsw = CallRestWithApacheHTTP.doMove(moveTodo)
+ //robot.send(ApplMsgs.stepRobot_step("appl", "350"))
+ //support.//
+		//val MoveAnsw = CallRestWithApacheHTTP.doMove(moveTodo)
+		curMove = moveTodo
+		when( curMove ){
+			"p" -> robot.send(ApplMsgs.stepRobot_step("appl", "350"))
+			"l" -> robot.send(ApplMsgs.stepRobot_l("appl"))
+			"r" -> robot.send(ApplMsgs.stepRobot_r("appl"))
+			else -> println("$curMove uknown")
+		}
+ 
+		/*
 		println("pathexecutil | doMove $moveTodo MoveAnsw=$MoveAnsw")
  
 		val answJson = JSONObject( MoveAnsw ) 
@@ -82,7 +122,7 @@ lateinit var  owner:  String
 		}else{
 			master.autoMsg("pathfail","pathdone($pathDone)")
 			//println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
-		}
+		}*/
 	}
 	
 	
