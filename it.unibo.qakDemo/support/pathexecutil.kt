@@ -1,4 +1,11 @@
- 
+ /*
+ pathexecutil.kt
+ ---------------------------------------------------------------
+ We use both the actors defined in 2021
+ (e.g. it.unibo.robotService.BasicStepRobotActor from project it.unibo.kotlinSupports)
+ and the actors defined in 2020
+ (e.g. it.unibo.kactor.ActorBasicFsm from project it.unibo.qakactor)
+ */
 
 import it.unibo.actor0.ApplMessage
 import org.json.JSONObject
@@ -22,30 +29,27 @@ var wenvAddr = "localhost"
 lateinit var  master: ActorBasicFsm
 lateinit var  owner:  String
 lateinit var robot   : BasicStepRobotActor 
-//lateinit var support : IssWsHttpKotlinSupport 
+ 
 	
 	fun actionAtAnswer(MoveAnsw:String){
 		println("pathexecutil | actionAtAnswer  MoveAnsw=$MoveAnsw curMove=$curMove")
  
 		val answJson = JSONObject( MoveAnsw ) 
-		//println("pathexecutil | doMove $moveTodo answJson=$answJson")
+		//println("pathexecutil | actionAtAnswer $MoveAnsw answJson=$answJson")
 		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
 			|| answJson.has("stepDone") ){
 			pathDone = pathDone+curMove
 			master.scope.launch{ master.autoMsg("moveok","move($curMove)") }
 		}else{
-			master.scope.launch{ master.autoMsg("pathfail","pathdone($pathDone)") }
-			//println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
+			master.scope.launch{ master.autoMsg("movefail","move($curMove)") }
 		}
-		//curMove="unknown"
+		curMove="unknown"
 	}
 	
 	fun register( actor: ActorBasicFsm ){
 		//support =  IssWsHttpKotlinSupport.getConnectionWs(actor.scope, "${wenvAddr}:8091")
 		var obsRobot  = ObserverForAnswer("obsrobot", actor.scope, ::actionAtAnswer   )
 		robot   =  it.unibo.robotService.BasicStepRobotActor("stepRobot", ownerActor=obsRobot, actor.scope, "localhost")
-
-		
 		master = actor
 	}
 

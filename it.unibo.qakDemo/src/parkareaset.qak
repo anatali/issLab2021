@@ -11,44 +11,38 @@
  
  We use also the plannerUtil included in project it.unibo.kotlinSupport. 
   */   
-System   demoplannertf21
+System  parkareaset
 
 Dispatch moveok   : move( MOVESHORT )
 
-Context ctxDemoplannertf21   ip [host="localhost" port=8052]
+Context ctxParkareaset   ip [host="localhost" port=8053]
       
 /* 
  * ------------------------------------------------------------------
  *   
  * ------------------------------------------------------------------
 */     
-QActor trolley context ctxDemoplannertf21{         
+QActor parkarea context ctxParkareaset{         
 [#
 val mapname     = "parkingMap"  		 
 var Myself      = myself   
 var CurrentPlannedMove = "" 
+var numparkslot = 1
 #] 
 	State s0 initial {	 
      	run itunibo.planner.plannerUtil.initAI()
 		println("&&&  trolley loads the parking map from the given file ...") 
 		run itunibo.planner.plannerUtil.loadRoomMap("$mapname") 
-		//Set the parking area ...
-  		//run itunibo.planner.plannerUtil.updateMapObstacleOnCurrentDirection()
 		run itunibo.planner.plannerUtil.showMap( )   
      	run itunibo.planner.plannerUtil.showCurrentRobotState()
      	
      	run pathexecutil.register( Myself ) 
    	}
-   	Goto moveToIndoor  
+   	Goto setParkingArea  
    	
    	State setParkingArea{
-   		//run itunibo.planner.plannerUtil.planForGoal("1","1")
-   		//TODO
+   		run itunibo.planner.plannerUtil.planForGoal("1","1")   		 
    	}
-
-  	State moveToIndoor{  	
-  		 run itunibo.planner.plannerUtil.planForGoal("6","0")
-   	} 
     Goto execPlannedMoves     
     
 	State execPlannedMoves{   
@@ -56,7 +50,7 @@ var CurrentPlannedMove = ""
  		[#  CurrentPlannedMove = itunibo.planner.plannerUtil.getNextPlannedMove() #]
  		println("+++++++++++++++++++++++++++++++ $CurrentPlannedMove")
  	}
- 	Goto doMove if [# CurrentPlannedMove.length>0 #] else parkthecar
+ 	Goto doMove if [# CurrentPlannedMove.length>0 #] else nextparkslot
  
  	State doMove{ 		
  	}
@@ -90,21 +84,20 @@ var CurrentPlannedMove = ""
  	} 
  	 Goto execPlannedMoves
  	
- 	State parkthecar{
+ 	State nextparkslot{
  		printCurrentMessage
+		//Set the parking slot ...
+  		run itunibo.planner.plannerUtil.updateMapObstacleOnCurrentDirection()
  		run itunibo.planner.plannerUtil.showCurrentRobotState( )  
- 		//if [# ! itunibo.planner.plannerUtil.atHome() #]{
- 		if [# ! itunibo.planner.plannerUtil.atPos(4,1) #]{
- 			//move to a parking cell (3,1)
- 			run itunibo.planner.plannerUtil.planForGoal("4","1")
- 		}else{
- 			run itunibo.planner.plannerUtil.planForGoal("0","0")
- 		}
+ 		if [# numparkslot < 3 #]{
+ 			[# numparkslot = numparkslot + 1 #]
+ 			run itunibo.planner.plannerUtil.planForGoal("$numparkslot","$numparkslot")
+ 		} 
  	}
-    Goto execPlannedMoves  if[# ! itunibo.planner.plannerUtil.atHome() #] else  end
+    Goto execPlannedMoves  if[# numparkslot < 3 #] else  end
 
 	State end{
-		println("AT HOME ...")
+		println("END ...")
 	}
 
 }	
