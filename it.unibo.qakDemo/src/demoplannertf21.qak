@@ -91,7 +91,8 @@ var CurrentPlannedMove = ""
  	 Goto execPlannedMoves
  	
  	State parkthecar{
- 		printCurrentMessage
+ 		printCurrentMessage  
+ 		
  		run itunibo.planner.plannerUtil.showCurrentRobotState( )  
  		//if [# ! itunibo.planner.plannerUtil.atHome() #]{
  		if [# ! itunibo.planner.plannerUtil.atPos(4,1) #]{
@@ -100,7 +101,7 @@ var CurrentPlannedMove = ""
  		}else{
  			run itunibo.planner.plannerUtil.planForGoal("0","0")
  		}
- 	}
+ 	} 
     Goto execPlannedMoves  if[# ! itunibo.planner.plannerUtil.atHome() #] else  end
 
 	State end{

@@ -12,21 +12,15 @@
  */  
 System -msglog boundarywalkerqak
 
-Dispatch start    : start( ARG )
- 
- 
+Dispatch start    : start( ARG ) 
 Dispatch moveok   : move( MOVESHORT )
 Dispatch pathfail : pathdone( P )
 //Dispatch movefail : move( MOVESHORT )
-Dispatch mapDone  : mapDone( FNAME )
-  
+Dispatch mapDone  : mapDone( FNAME ) 
 Event alarm     : alarm(X)
-//Event sonar     : distance(X)
+
 
 Context ctxBoundaryWalker  ip [host="localhost" port=8032]
-//Context ctxWalkerSonar     ip [host="127.0.0.1" port=8034]
- 
-//ExternalQActor  walkersonar context ctxWalkerSonar 
      
 /* 
  * ------------------------------------------------------------------
@@ -44,13 +38,13 @@ var Myself      = myself
 		//[# kotlinCode.pathexecutil.register(myself) #]
 		//[# kotlinCode.pathexecutil.createSonarObserver(scope) #] 		
 		//run itunibo.planner.plannerUtil.loadRoomMap("parkingMap") 
-		run itunibo.planner.plannerUtil.showMap( )  
    	} 
    	Transition t0 whenMsg start -> work
 
   	State work{  		  
    		[# NumStep = 0   #] 
     	run itunibo.planner.plannerUtil.initAI()
+		run itunibo.planner.plannerUtil.showCurrentRobotState()
   	}
     Goto detectBoundary  
      

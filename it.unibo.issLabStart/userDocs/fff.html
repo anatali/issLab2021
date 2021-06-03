@@ -222,13 +222,18 @@ The <tt>transport trolley</tt> has the form of a square of side length <em>RD</e
 	is available in the file <a href="parkingMap.txt" target="code">parkingMap.txt</a>:
 	<pre>
 |r, 0, 0, 0, 0, 0, 0, X, 
-|0, 0, <bc>P, P,</bc>  0, 0, 0, X, 
-|0, 0, <bc>P, P,</bc>  0, 0, 0, X, 
-|0, 0, <bc>P, P,</bc>  0, 0, 0, X, 
+|0, 0, <bc>X, X,</bc>  0, 0, 0, X, 
+|0, 0, <bc>X, X,</bc>  0, 0, 0, X, 
+|0, 0, <bc>X, X,</bc>  0, 0, 0, X, 
 |0, 0, 0, 0, 0, 0, 0, X, 
 |X, X, X, X, X, X, X, X, </pre>
-	The map includes the positions of the  <tt>parking-slots</tt> (marked above with the symbol <k>P</k>) 
-	and of the <em>fixed obstacles</em> in the area (the walls marked with the symbol <k>X</k>).
+	The map includes the positions of the  <tt>parking-slots</tt> (marked above with the symbol <k>X</k>) 
+	and of the <em>fixed obstacles</em> in the area (the walls marked with the symbol <b>X</b>).
+	<br/><br/>
+	The area marked with <k>X</k> is a sort of 'equipped area' upon which the <tt>transport trolley</tt> cannot walk.
+	Thus, to get the car in the <tt>parking-slot</tt> <ks>(2,2)</ks>, the <tt>transport trolley</tt> must
+	go in cell <ks>(1,2)</ks>.
+	<br/><br/>
 
 	The proper scene for the WEnv is reported in: <a href="parkingAreaConfig.js" target="code">parkingAreaConfig.js</a>
  
@@ -394,7 +399,8 @@ E' raccomandato che i risultati di questa fase vengano presentati al committente
 </div>
 </li>
 <li><i>Fase di progetto e realizzazione</i>, che termina con il deployment del prodotto.</li>
-<li><i>Fase di discussione</i> del lavoro svolto, che potrebbe (auspicabilmente) svolgersi IN PRESENZA in LAb2.</li>
+<li><i>Fase di discussione</i> del lavoro svolto, che potrebbe (auspicabilmente) svolgersi IN PRESENZA in LAb2.
+E' opportuno che ogni partecipante sia pronto a discutere anche sugli elaborati che ha prodotto durante il corso. </li>
 </ol>
 
 <!--

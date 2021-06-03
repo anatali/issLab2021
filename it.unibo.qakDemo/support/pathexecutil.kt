@@ -38,7 +38,7 @@ lateinit var robot   : BasicStepRobotActor
 		//println("pathexecutil | actionAtAnswer $MoveAnsw answJson=$answJson")
 		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
 			|| answJson.has("stepDone") ){
-			pathDone = pathDone+curMove
+			pathDone = pathDone+curMove			 
 			master.scope.launch{ master.autoMsg("moveok","move($curMove)") }
 		}else{
 			master.scope.launch{ master.autoMsg("movefail","move($curMove)") }
