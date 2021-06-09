@@ -1,1 +1,0 @@
-item(caoproute22,nostate,msg(stepfail,reply,basicrobot,caoproute22,stepfail(129,obstacle),329)).

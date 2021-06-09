@@ -15,7 +15,7 @@
  * ================================================================================
  */ 
   
-System -msglog basicrobot 
+System -msglog basicrobot    
 //mqttBroker "localhost" : 1883 eventTopic "unibo/polar"   
 
 Dispatch cmd       	: cmd(MOVE)     
@@ -40,7 +40,7 @@ CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter"
 QActor basicrobot context ctxbasicrobot{
 [#
   var StepTime      = 0L
-  var StartTime     = 0L    
+  var StartTime     = 0L     
   var Duration      = 0L    
 #]  
  	State s0 initial { 	  

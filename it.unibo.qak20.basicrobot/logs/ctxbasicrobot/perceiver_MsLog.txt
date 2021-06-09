@@ -1,1 +1,0 @@
-item(perceiver,s0,msg(autoStartSysMsg,dispatch,perceiver,perceiver,start,11)).

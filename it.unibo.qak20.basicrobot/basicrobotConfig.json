@@ -1,5 +1,0 @@
-{"type":"virtual", "port":"8999", "ipvirtualrobot":"192.168.1.61"}
-{"_comment": "", "type":"mockrobot", "port":"", "host":"localhost"}
-{"_comment": "", "type":"realmbot", "port":"COM6", "host":"localhost"}
-{"_comment": "", "type":"realmbot", "port":"/dev/ttyUSB0", "host":"localhost"}
-{"_comment": "", "type":"realnano", "port":"", "host":"localhost"}

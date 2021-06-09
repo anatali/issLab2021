@@ -1,2 +1,0 @@
-item(caoproute4,nostate,msg(local_sonar,event,robotsonar,none,sonar(19,sonar2),67)).
-item(caoproute4,nostate,msg(stepfail,reply,basicrobot,caoproute4,stepfail(139,obstacle),73)).

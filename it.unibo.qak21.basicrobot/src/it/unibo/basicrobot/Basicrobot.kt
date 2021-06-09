@@ -18,7 +18,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		
 		  var StepTime      = 0L
-		  var StartTime     = 0L    
+		  var StartTime     = 0L     
 		  var Duration      = 0L    
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State

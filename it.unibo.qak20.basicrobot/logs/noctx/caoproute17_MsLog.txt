@@ -1,3 +1,0 @@
-item(caoproute17,nostate,msg(local_sonar,event,robotsonar,none,sonar(21,sonar2),265)).
-item(caoproute17,nostate,msg(local_tout_basicrobot_stepPerhapsDone,event,timer_stepPerhapsDone,none,local_tout_basicrobot_stepPerhapsDone,269)).
-item(caoproute17,nostate,msg(stepdone,reply,basicrobot,caoproute17,stepdone(ok),270)).

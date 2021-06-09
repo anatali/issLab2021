@@ -1,3 +1,0 @@
-item(caoproute12,nostate,msg(local_tout_basicrobot_doStep,event,timer_doStep,none,local_tout_basicrobot_doStep,201)).
-item(caoproute12,nostate,msg(local_tout_basicrobot_stepPerhapsDone,event,timer_stepPerhapsDone,none,local_tout_basicrobot_stepPerhapsDone,204)).
-item(caoproute12,nostate,msg(stepdone,reply,basicrobot,caoproute12,stepdone(ok),205)).

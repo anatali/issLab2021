@@ -1,0 +1,441 @@
+	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>basicrobot 2021</title></head>
+    
+<body>
+<div id="top">
+<h1>LabIss2021 | generic basic robot <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+ 
+<h2>Introduction</h2>
+We define here a resource that represents a robot able to handle a set of commands. 
+<br/><br/>
+
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" ><h3 id="basicrobot">The basicrobot model</h3>
+<a href="../src/basicrobot.qak" target="code">basicrobot.qak</a>
+<br/><br/>
+The robot is defined as a qak model that
+builds its own low-level supports by looking at the configuration file 
+<a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>.
+</td>
+
+<td><h3 id="basicrobot">The configuration file</h3>
+The configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> is written by the application designer
+
+
+<pre>
+<bc>Virtual robot</bc>
+{"type":"virtual","port":"8090","ipvirtualrobot":"192.168.1.132"}
+
+<bc>Nano robot</bc>
+{"type":"realnano","port":"8020","ipvirtualrobot":"dontcare"}
+
+<bc>Mbot robot</bc>
+<kc>//Arduino connected to the PC:</kc>
+{"type":"realmbot","port":"COM6","ipvirtualrobot":"dontcare"}	
+
+<kc>//Arduino connected to the Raspberry:</kc>
+{"type":"realmbot", "port":"/dev/ttyUSB0", "ipvirtualrobot":"-"} 
+</pre>
+
+
+</td>
+ 
+</tr>
+ </tbody>
+</table>
+
+<h2>The low-level supports </h2>
+
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" ><h3 id="robotSupport">The robotSupport</h3>
+The Kotlin object
+  <a href="../resources/unibo/robot/robotSupport.kt" target="code">robotSupport.kt</a>
+reads the given configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> 
+and creates the proper low-level support for three types of 'concrete' robots:
+<ul>
+<li><bc>virtual</bc>: <br/><m>the virtual robot described in
+<a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="robot">Virtual robot 2021</a>,
+that can be launched by using the docker-compose file  
+<a href="../../it.unibo.issLabStart/Dockercompose/virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a> 
+and called by using the support described in:
+<a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="lab">IssWsHttpKotlinSupport</a>
+</m>
+<center><img src="./img/wenvscene1.png" alt="wenvscene1" width="30%" height="60%"></center>	
+</li>
+<li><bc>nano</bc>: <br/><m>the self-made robot described in 
+<a href="LabNanoRobot.html" target="robot">LabNanoRobot | The home-made basicrobot</a></m>
+<center><img src="./img/robotsUnibo.jpg" alt="robotsUnibo" width="30%" height="60%"></center>	
+</li>
+<li><bc>mbot</bc>: <br/><m>the  robot described in 
+<a href="Mbot3030.html" target="robot">Mbot3030 | The reference ddr robot</a> </m>
+<center><img src="./img/mbot.png" alt="mbot" width="30%" height="60%"></center>	
+</li>
+
+
+
+</ul>
+ 
+  
+</td>
+<td> 
+<h3 id="robotusage">A command console</h3>
+</center>	<img src="./img/consoleCoap.png" alt="consoleCoap.png" width="40%"  /></center>	
+<br/><br/>
+An utility to send commands is defined in the project 
+<a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>:
+<ul>
+<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiTcp.kt" target="code">consoleGuiTcp.kt</a></li>
+<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiMqtt.kt" target="code">consoleGuiMqtt.kt</a></li>
+<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiCoap.kt" target="code">consoleGuiCoap.kt</a></li>
+</ul>
+All these utilities inherit from
+<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code">consoleGuiSimple.kt</a></li>
+
+and make reference to the configuration object:
+<a href="../../it.unibo.qak21.robots/resources/consoles/sysConnKb.kt" target="code">sysConnKb.kt</a>
+
+<h3 id="robotusage">Commands using jupyter</h3>
+
+<a href="../../issLab2021/it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb" target="code">qakbasicrobotcallerTCP.ipynb</a>
+
+</td>
+</tr>
+
+<!--
+<tr>
+<td style="width:50%" ><h3 id="IssWsHttpKotlinSupport">Virtual robot</h3>
+The class
+  <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
+  provides a singleton (for each ip address) that defines utility operations to connect/disconnect (to the given ip address) 
+  via HTTP or a websocket, using the library  <a href="https://square.github.io/okhttp/" target="web">okhttp3</a>.
+  <br/> <br/>
+  This utility:
+  <ul>
+  <li>implements the interface <a href="../app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" target="code">IssCommSupport.kt</a>  </li>
+  <li>implements the operations defined in the interface
+  <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" target="code">IssOperations.kt</a></li>
+  <li>works as an observer of the ws-socket</li>
+  <li>is, in its turn,  observable by components that implement the interface
+   <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IUniboActor.kt" target="code">IUniboActor.kt</a></li>
+  </ul>
+ 
+
+<br/><br/>
+  
+</td>
+<td><center><img src="./img/IssWsHttpKotlinSupport.png" alt="IssWsHttpKotlinSupport" width="80%"  ></center>
+Usage example:
+<pre>
+IssWsHttpKotlinSupport.getConnectionWs(scope,"localhost:8091")
+</pre>
+
+</td>
+</tr>
+
+<tr>
+<td style="width:50%">
+ <h3>BasicStepRobotActor</h3>
+The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">AbstractRobotActor.kt</a>
+with the aim of moving the robot.
+
+<br/><br/>
+This actor 
+<ul>
+<li>has the default name <k>stepRobot</k></li>
+<li>is related to a <k>onwer</k> actor thet must be given at cretion time</li>
+<li>is able to perform both <tt>basic-moves</tt> and <tt>step-moves</tt>
+<m>A <k>step-move</k> is a forward-move with a time properly set, so that
+the distance traveled by the robot is equal to the diameter of the circle in which it is supposed to be inscribed.
+</m>
+</li>
+<li>gives a <k>endMoveMsg</k> 
+(see <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a>) 
+as answer to a <tt>basic-move</tt>
+</li>
+<li>gives as (payload) answer to a <tt>step-move</tt> 
+	<ul>
+	<li><k>stepDoneMsg</k>: if the step is done with success</li>
+	<li><k>stepFailMsg</k>: if the step cannot be completed</li>
+	</ul>
+</li>
+
+</ul>
+</td>
+<td>
+<center><img src="./img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
+ 
+<div class="remark">
+The <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
+avoids the interference among overlapping commands. In fact, it exploits the <k>msgQueueStore</k>
+to store a robot-move command while another <tt>basic-move</tt> or <tt>step-move</tt> is still in execution.
+The stored move is executed when the move in execution ends.
+</div>
+See also the discussion in
+<a href="../../it.unibo.kotlinIntro/userDocs/FirstActorRobot3021.html#DivideImpera" target="web">
+LabIss3021 |  Divide et impera?</a>
+
+</td>
+</tr>
+-->
+ </tbody>
+</table>
+
+<!--
+<h2 id="deploy">Deployment</h2>
+
+
+<ol>
+<li><h3>Create the library</h3>
+<pre>
+gradlew distJar
+
+<kc>Creates the file <ks>app-2.0.jar</ks>, renamed in <k>IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
+</li>
+
+<li><h3>Copy the library</h3>
+<pre>
+Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-2.0.jar</ks> into 
+<k>/unibolibs/IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
+</li>
+<ol>
+
+-->
+
+
+ 
+
+
+
+
+
+
+
+
+   <!--
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+ 
+
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div>
+</body>
+</html>

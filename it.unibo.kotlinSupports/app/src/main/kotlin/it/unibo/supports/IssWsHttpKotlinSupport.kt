@@ -44,13 +44,12 @@ class IssWsHttpKotlinSupport
     private var connectForWs   = true
 
     init{
-        if( wsconn )
-        wsconnect(  fun(scope, support ) {
+        if( wsconn ) wsconnect(  fun(scope, support ) {
             colorPrint("IssWsHttpKotlinSupport | wsconnect ... ${sysUtil.aboutThreads("isssupport")}")
         } )
     }
     companion object { //singleton
-        val WEnvAddr = "localhost:8091"
+        //val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
 

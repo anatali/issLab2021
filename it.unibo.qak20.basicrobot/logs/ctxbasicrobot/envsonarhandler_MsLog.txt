@@ -1,1 +1,0 @@
-item(envsonarhandler,s0,msg(autoStartSysMsg,dispatch,envsonarhandler,envsonarhandler,start,9)).

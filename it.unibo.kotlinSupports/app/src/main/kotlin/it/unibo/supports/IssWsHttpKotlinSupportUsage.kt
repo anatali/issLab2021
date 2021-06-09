@@ -42,7 +42,7 @@ object WebSocketKotlinSupportUsage {
 
         val observers = arrayOfNulls<NaiveActorKotlinObserver>(5)
         for (i in 1..1) {
-            observers[i] = NaiveActorKotlinObserver("a$i", scope)
+            observers[i] = NaiveActorKotlinObserver("observer$i", scope)
             support.registerActor(observers[i]!!)
         }
         //println("WebSocketKotlinSupportUsage | testObservers 3 ")
@@ -66,6 +66,9 @@ suspend fun testWs(scope: CoroutineScope){
     //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
     //support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
     support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
+    support.forward(MsgRobotUtil.turnLeftMsg)
+    delay(1000)
+    support.forward(MsgRobotUtil.turnRightMsg)
     //give time to see messages ...
     delay(30000)  //CREATE new threads  !!!
     support.close()
@@ -81,8 +84,8 @@ fun main() = runBlocking {
     println("==============================================")
     println("WebSocketUtilUsage | main start ${sysUtil.aboutThreads("main")}"  );
     println("==============================================")
-    //testWs(this)
-    testHttp(this)
+    testWs(this)
+    //testHttp(this)
     println("==============================================")
     println("WebSocketUtilUsage | END ${sysUtil.aboutThreads("main")}");
     println("==============================================")

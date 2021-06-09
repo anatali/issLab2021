@@ -56,7 +56,7 @@ top {
 }
 tt{
 	font-family: "Arial";
-    font-size: 90%;
+    font-size: 100%;
 	color: #006600;
 }
 em{
@@ -323,9 +323,14 @@ The class
 </td>
 <td><center><img src="./img/IssWsHttpKotlinSupport.png" alt="IssWsHttpKotlinSupport" width="80%"  ></center>
 Usage example:
-<pre>
-IssWsHttpKotlinSupport.getConnectionWs(scope,"localhost:8091")
-</pre>
+<pre><m>val support = IssWsHttpKotlinSupport.<k>createForWs</k>(scope, "localhost:8091" )
+var workAfermove: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit = { ... }
+support.wsconnect( workAfermove )
+<ks>support.forward( <tt>MsgRobotUtil.turnLeftMsg</tt> )</ks>
+
+val support = IssWsHttpKotlinSupport.<k>createForHttp</k>(scope , "localhost:8090")
+val answer  = <ks>support.sendHttp( <tt>MsgRobotUtil.turnLeftMsg</tt> ,"<bc>localhost:8090/api/move</bc>")</ks>
+</m></pre>
 
 </td>
 </tr>
