@@ -30,7 +30,7 @@ Event  endall	   : endall( ARG )
 
 Event  polar     	: polar(DISTANCE,ARG)   		//emitted for the radar
 Event  local_sonar	: sonar(DISTANCE,NAME)			//emitted by the virtual robot support
-Event  sonar     	: sonar(DISTANCE,NAME)
+Event  sonar     	: sonar(DISTANCE,NAME)			//emitted by distancefilter
  
 Context ctxbasicrobot ip [host="localhost" port=8020]  
 
@@ -62,7 +62,7 @@ QActor basicrobot context ctxbasicrobot{
  			}else{
  				println("basicrobot | WARNING: realsonar NOT FOUND")
  			}
- 		#] 
+ 		#]  
   		run unibo.robot.robotSupport.move( "l" )
 		run unibo.robot.robotSupport.move( "r" )
  		updateResource [# "stopped" #]
@@ -92,10 +92,13 @@ QActor basicrobot context ctxbasicrobot{
 		//printCurrentMessage
 		println("basicrobot | handleObstacle")	
 		//TODO run robotMbot.mbotSupport.move( "h" )
+		run unibo.robot.robotSupport.move( "h" )
 		//back to avoid obstacle again
 		//TODO run robotMbot.mbotSupport.move( "s" )
+		run unibo.robot.robotSupport.move( "s" )
 		delay 400
 		//TODO run robotMbot.mbotSupport.move( "h" )
+		run unibo.robot.robotSupport.move( "h" )
 		onMsg( obstacle  : obstacle( TARGET ) ){
 			updateResource [# "obstacle" #]
  		}
@@ -125,7 +128,7 @@ QActor basicrobot context ctxbasicrobot{
  		run unibo.robot.robotSupport.move( "h" )  //stop the robot
 		onMsg( local_sonar : sonar(D,T)){ 
 			println("basicrobot | after a step emit polar(${payloadArg(0)}, 180) ")
-			emit polar    : polar( $payloadArg(0), 180 )		//perceived via mqtt			
+			emit polar : polar( $payloadArg(0), 180 )		//perceived via mqtt			
  		}
   	}
  	Transition t0 whenTimeVar StepTime    -> stepDone  //StepTime is the worst case
@@ -185,7 +188,7 @@ QActor envsonarhandler context ctxbasicrobot{
 */
 /* 
  * 
-//Just to test that the event is emiited ...
+//Just to test that the event is emitted ...
 QActor perceiver context ctxbasicrobot{
  	State s0 initial { 	 
  		println("perceiver | START")	 		

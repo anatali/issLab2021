@@ -72,7 +72,10 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("handleObstacle") { //this:State
 					action { //it:State
 						println("basicrobot | handleObstacle")
+						unibo.robot.robotSupport.move( "h"  )
+						unibo.robot.robotSupport.move( "s"  )
 						delay(400) 
+						unibo.robot.robotSupport.move( "h"  )
 						if( checkMsgContent( Term.createTerm("obstacle(ARG)"), Term.createTerm("obstacle(TARGET)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								updateResourceRep( "obstacle"  

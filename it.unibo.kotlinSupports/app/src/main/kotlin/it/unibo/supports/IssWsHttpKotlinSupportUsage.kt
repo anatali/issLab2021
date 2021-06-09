@@ -73,7 +73,7 @@ suspend fun testWs(scope: CoroutineScope){
 }
 suspend fun testHttp(scope: CoroutineScope){
     val support = IssWsHttpKotlinSupport.createForHttp(scope , "localhost:8090")
-    val answer = support.sendHttp(MsgRobotUtil.turnLeftMsg,"localhost:8090/api/move")
+    val answer  = support.sendHttp(MsgRobotUtil.turnLeftMsg,"localhost:8090/api/move")
     println("testHttp answer=$answer")
 }
 @ExperimentalCoroutinesApi
@@ -81,8 +81,8 @@ fun main() = runBlocking {
     println("==============================================")
     println("WebSocketUtilUsage | main start ${sysUtil.aboutThreads("main")}"  );
     println("==============================================")
-    testWs(this)
-    //testHttp(this)
+    //testWs(this)
+    testHttp(this)
     println("==============================================")
     println("WebSocketUtilUsage | END ${sysUtil.aboutThreads("main")}");
     println("==============================================")
