@@ -103,6 +103,12 @@ sourceSets {
     //main.java.srcDirs += 'resources'
     //test.java.srcDirs += 'test.kt'		//test.kt is specific
 }
+
+eclipse {
+    classpath {
+        sourceSets -= [sourceSets.main, sourceSets.test]	
+    }	
+ }
  
 mainClassName = "it.unibo.ctxsonarresource.MainCtxsonarresourceKt"
  
