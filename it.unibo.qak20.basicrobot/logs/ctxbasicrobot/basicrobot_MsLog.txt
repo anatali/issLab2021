@@ -1,0 +1,6 @@
+item(basicrobot,s0,msg(autoStartSysMsg,dispatch,basicrobot,basicrobot,start,7)).
+item(basicrobot,work,msg(cmd,dispatch,console,basicrobot,cmd(r),1)).
+item(basicrobot,work,msg(cmd,dispatch,console,basicrobot,cmd(l),2)).
+item(basicrobot,work,msg(step,request,caoproute1,basicrobot,step(600),11)).
+item(basicrobot,doStep,msg(local_tout_basicrobot_doStep,event,timer_doStep,none,local_tout_basicrobot_doStep,14)).
+item(basicrobot,stepPerhapsDone,msg(local_tout_basicrobot_stepPerhapsDone,event,timer_stepPerhapsDone,none,local_tout_basicrobot_stepPerhapsDone,17)).

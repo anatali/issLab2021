@@ -44,6 +44,7 @@ class IssWsHttpKotlinSupport
     private var connectForWs   = true
 
     init{
+        if( wsconn )
         wsconnect(  fun(scope, support ) {
             colorPrint("IssWsHttpKotlinSupport | wsconnect ... ${sysUtil.aboutThreads("isssupport")}")
         } )

@@ -1,0 +1,24 @@
+version: '1.0'
+
+services:
+  basicrobot:
+    build: ./
+    image: basicrobot
+    mem_limit: 350m
+    networks:
+      unibo-network:
+        ipv4_address: "172.17.0.2"
+  console:
+    build: ./
+    image: console
+    mem_limit: 350m
+    networks:
+      unibo-network:
+        ipv4_address: "172.17.0.3"
+
+networks:
+  unibo-network:
+    name: unibo-network
+    ipam:
+      config:
+        - subnet: 172.17.0.0/16

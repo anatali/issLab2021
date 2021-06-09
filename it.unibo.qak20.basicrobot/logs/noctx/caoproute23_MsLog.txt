@@ -1,0 +1,3 @@
+item(caoproute23,nostate,msg(local_sonar,event,robotsonar,none,sonar(7,sonar2),346)).
+item(caoproute23,nostate,msg(stepdone,reply,basicrobot,caoproute23,stepdone(ok),351)).
+item(caoproute23,nostate,msg(local_tout_basicrobot_stepPerhapsDone,event,timer_stepPerhapsDone,none,local_tout_basicrobot_stepPerhapsDone,350)).

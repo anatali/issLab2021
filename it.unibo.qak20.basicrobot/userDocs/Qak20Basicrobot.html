@@ -1,0 +1,683 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+<!--
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 90%;
+}
+h4 {
+	background-color: #ffffcc;
+    font-size: 100%;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+	font-weight: bold;
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+k{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #990000;
+	 
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	 
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	 
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 90%;
+	background-color: #fcf8c7;
+	border: 1px solid blue;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}       
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}         
+    
+  -->
+</style>
+    
+<head>
+   
+<title>Qak20Basicrobot</title></head>
+    
+<body>
+<div id="top">
+<h1>Qak20Basicrobot | The basicrobot using QAkactors<font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+
+<ol>
+<li><a href="#intro">Introduction</a></li>
+ 
+<li><a href="#reqAnalysis">Requirement analysis</a></li>
+<li><a href="#problemAnalysis">Problem analysis</a></li>
+<li><a href="#logicalarch">The logical architecture</a></li>
+<li><a href="#deploy">Deployment</a></li> 
+ 
+</ol>
+ 
+<h2 id="intro">Introduction</h2>
+This work is related to the project <bc>it.unibo.qak20.basicrobot</bc> introduced in
+<a href="../../it.unibo.qak20.boudaryrobot.analysis/userDocs/RobotQakBoundary.html#logicalarch" target="lab">RobotQakBoundary.html</a> 
+(project <i>it.unibo.qak20.boudaryrobot.analysis</i>).
+
+<center><img src="./img/basicrobotlogical.png" alt="basicrobotlogical" width="30%" ></center><br/> 
+
+ 
+<h2 id="req">Requirements</h2>
+
+With reference to our previous work
+ <a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2020LabBo/blob/master/it.unibo.actorfsm/userDocs/basicrobot.html" target="web"> 	
+basicrobot | A reusable FSM actor</a>, let us introduce a more precise set of requirements:
+  
+<!-- The detailed requirements of our <a href="#problem">problem</a> are those introduced in   -->
+ <ol>
+ <li><ks>reqCmd</ks>: the 'basicrobot' must execute commands of the form <m><tt>cmd(MOVE), MOVE=w|s|r|l|h</tt></m> sent to it by means of a 
+ <bc>dispatch</bc> with <m><tt>msgId=cmd</tt></m>;</li>
+  <li><ks>reqStep</ks>: the 'basicrobot' must execute commands of the form <m><tt>step(TIME)</tt></m> sent to it by means of a 
+ <bc>request</bc> with <m><tt>msgId=step</tt></m>. It must send the answer <m><tt>stepDone</tt></m> or <m><tt>stepFail</tt></m> in case
+ of success or failure, respectively;</li>
+ <li><ks>reqSensor</ks>: the 'basicrobot' must emits events related to information gather from its sensors. In particular,
+ it must emit the event <m><tt>obstacle</tt></m> when a obstacle with some obstacle is detected;</li>
+ <li><ks>reqEnd</ks>: the 'basicrobot' must terminate its work when it receives a  <bc>dispatch</bc> with <m><tt>msgId=end</tt></m> </li> 
+ </ol>
+ 
+Let us immediately introduce a formalized specification of theses messages and events:
+ 
+<pre>
+Dispatch cmd	: cmd(MOVE)			<kc>//MOVE=w|s|r|l|h</kc>
+Dispatch end	: end(ARG)
+
+Event  obstacle    : obstacle( ARG )
+ 
+Request  step		: step( TIME )				<kc>//TIME: an INT > 0 </kc>
+Reply   stepdone	: stepdone(ARG)  
+Reply   stepfail	: stepfail(DURATION, CAUSE)	<kc>//CAUSE: reason of failure </kc>
+</pre>
+
+<h2 id="reqAnalysis">Requirement analysis</h2>
+Let us introduce a model for the 'basicrobot'  expressed as a QAkactor:
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<pre>
+Context <ks>ctxbasicrobot</ks> ip [host="localhost" port=<bc>8020</bc>]  
+ 
+QActor <k>basicrobot</k> context <ks>ctxbasicrobot</ks>{
+	State s0 initial { 	
+	...
+	}
+}
+</pre>
+
+</td>
+<td><center><img src="./img/basicrobotwithctx.png" alt="basicrobotwithctx" width="60%" ></center><br/> 
+ 
+</td>
+</tr>
+</table>
+
+<h3>Test plans</h3>
+A functional TestPlan can be introduced as a JUnit structured as follows:
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<pre><m>class testBasicrobot {
+var robot  : ActorBasic? = null
+
+<k>@Before</k>
+	fun systemSetUp() {<kc>//Activate the basicrobot</kc>
+	}
+<k>@After</k>
+	fun terminate() { println("test terminated ") }
+ 
+suspend fun <ks>testReqCmd</ks>(){ ... }
+ 
+suspend fun <ks>testReqStep</ks>(){ ... }
+ 
+suspend fun <ks>testReqSensor</ks>(){ ... }
+<k>@Test</k>
+ fun testBasicRobot(){
+	runBlocking{
+	  delay(initDelayTime)  <kc>//time for robot to start</kc>
+	  <kc>//get a reference to the basicrobot object</kc>
+	  robot = <ks>it.unibo.kactor.sysUtil.getActor</ks>("basicrobot")
+			
+	  <ks>testReqCmd()</ks>
+	  delay( 1000 )
+	  <ks>testReqStep()</ks>
+	  delay( 1000 )
+	  <ks>testReqSensor()</ks>
+			
+	  forwardToRobot( "end", "end(0)" )
+	  delay( 500 )
+	  checkResource("move(end)")
+	  if( robot != null ) robot!!.waitTermination()
+	}
+	println("testBasicRobot BYE  ")  
+ }
+}
+</m></pre>
+The full code is in <a href="../../it.unibo.qak20.basicrobot/test/testBasicrobot.kt" target="code">testBasicrobot.kt</a>, project <i>it.unibo.qak20.basicrobot</i>
+</td>
+<td><m>
+For each requirement we plan a proper functional test, based on utility functions:
+<pre>
+suspend fun <k>forwardToRobot</k>(msgId: String, payload:String){
+  if( robot != null )  <ks>MsgUtil.sendMsg</ks>( "test",msgId, payload, robot!!  )
+}
+	
+suspend fun <k>requestToRobot</k>(msgId: String, payload:String){
+  if( robot != null ){
+	val msg = <kc>MsgUtil.buildRequest</kc>("test",msgId, payload,robot!!.name)
+	<ks>MsgUtil.sendMsg</ks>( msg, robot!!  )		
+  }  
+}
+	
+fun <k>checkResource</k>(value: String){		
+  if( robot != null ){ <ks>assertTrue</ks>(robot!!.geResourceRep() == value)}  
+}</pre>
+
+<h3>Observables</h3>
+
+Any QAkactor works as a (<bc>CoAP</bc>) observable resource (with path <tt>ctxName/actorName</tt>).<br/> 
+Moreover, the current state
+of the resource can be stored as a String (in the variable <ks>ActorResourceRep</ks>), by using the operation <bc>updateResource</bc> of the
+QAkactor language.
+<br/><br/>
+Thus, our TestPlan can be based on the assumption that the actor 'basicrobot' updates  <ks>ActorResourceRep</ks>  with:
+
+<ul>
+<li><bc>"move(MOVE)"</bc> when it executes the command <tt>cmd	: cmd(<bc>MOVE</bc>)</tt>;</li>
+<li><bc>"step(TIME)"</bc> when it executes the command <tt>step	: step(<bc>TIME</bc>)</tt>;</li>
+<li><bc>"obstacle"</bc> when it hits an obstacle</li>
+</ul>  
+For example, the testReqStep can be planned as follows:
+<pre>
+suspend fun <ks>testReqStep</ks>(){ <kc>//ASSUMPTION: no obstacle</kc>
+	requestToRobot("step","step(350)")
+	delay(200)
+	checkResource("step(350)") 
+	delay(700)   
+	checkResource("stepDone")
+}
+</pre>
+Note that the TestUnit will not receive any (<tt>stepDone</tt>) answer, since it is an 'alien' that
+works by directly inserting (via <bc>requestToRobot</bc>) a message in the queue of the 'basicrobot'; thus, the QAk-infrastructure 
+has no information about the caller.  
+</m>
+</td>
+</tr>
+</table>
+
+
+
+
+ 
+
+<h2 id="problemAnalysis">Problem analysis</h2>
+ <div class="remark">
+the 'basicrobot' does not known in advance the components that will interact with it
+</div>
+
+However, a 'basicrobot' working as a QAkactor can receive messages in different ways:
+
+<ul>
+<li>on a two-way <tt>TCP</tt>-connection on the port (<bc>8020</bc>) defined in its context</li>
+<li>on the <tt>MQTT</tt> topic named <tt>unibo/qak/basicrobot</tt> (if a <bc>mqttBroker</bc> is specified in the model)</li>
+<li>via <tt>CoAP</tt> with path <tt>ctxbasicrobot/basicrobot</tt></li>
+</ul>
+
+
+<h3>Aliens</h3>
+The QAK-infrastructure takes care of managing in the proper way the interactions with external components (other QAkactors or 'aliens').
+
+<ul>
+<li>An example of an 'alien' written in Python that uses <tt>TCP</tt> is in 
+<a href="../../it.unibo.qak20.basicrobot/resources/python/basicrobotusageTCP.py" target="code">resources/python/basicrobotusageTCP.py</a> </li>
+<li>An example of an 'alien' written in Koltin that uses <tt>CoAP</tt> is in 
+<a href="../../it.unibo.qak20.basicrobot/resources/coap/actorQakCoapClient.kt" target="code">resources/coap/actortQakCoapClient.kt</a> </li>
+<li>An example of a CoAP observer in Koltin is in 
+<a href="../../it.unibo.qak20.basicrobot/resources/coap/actorQakCoapObserver.kt" target="code">resources/coap/actorQakCoapObserver.kt</a> </li>
+ 
+ 
+</ul>
+
+
+
+<h2>Project</h2> 
+ 
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:40%">
+
+<h3>The basicrobot project model</h3>
+<a href="../../it.unibo.qak20.basicrobot/src/basicrobot.qak" target="code">basicrobot.qak</a> in project <i>it.unibo.qak20.basicrobot</i>
+
+<center><img src="./img/basicrobotproject.png" alt="basicrobotproject" width="100%" ></center>
+ 
+ 
+</td>
+<td> The 'basicrobot'
+<ul>
+<li>is able to execute basic move commands, by handling a <bc>dispatch</bc> (for the elementary commands <tt>w | s | ... </tt>)
+and a <bc>request</bc> (for the command <tt>step</tt>);<br/><br/></li>
+</li>
+<li>maintains information on its current functional state in the variable <ks>ActorResourceRep</ks>;<br/><br/>   </li>
+<li>interacts with a concrete robot  by means of a (<a href="https://en.wikipedia.org/wiki/Plain_old_Java_object" target="web">POJO</a>) object 
+(<a href="../../it.unibo.qak20.basicrobot/resources/unibo/robot/robotSupport.kt" target="code">resources/unibo/robot/robotSupport.kt</a>)
+working as an adapter for devices described in the configuration file
+<a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+;<br/><br/>   </li>
+<li>is a source of <bc>obstacle events</bc>, that are generated after receiving a <bc>obstacle message</bc> by the low-level robot support
+<a href="../../it.unibo.qak20.basicrobot/resources/robotvirtual/robotSupport.kt" target="code">resourcesrobotvirtual/virtualRobotSupportQak.kt</a> 
+</li>
+</ul> 
+ 
+ </m>
+<pre></pre>
+</td>
+</tr>
+
+ 
+</table>
+
+
+
+
+
+
+</m>
+
+
+<!-- 
+<h2>Test plans</h2> 
+<table style="width:100%" border="1">
+<tr>
+<td style="width:30%">
+
+<h3>Test plan-basicrobot</h3>
+<a href="../../it.unibo.qak20.basicrobot/test/testBasicrobot.kt" target="code">testBasicrobot.kt</a> in project <i>it.unibo.qak20basicrobot</i>
+ 
+</td>
+<td> <m></m>
+<pre></pre>
+</td>
+</tr>
+
+
+</table>
+-->
+
+<h2 id="deploy">Deployment</h2> 
+
+With reference to the project <i>it.unibo.qak20.basicrobot</i>:
+<ol>
+<li>update the generated file <tt>build_ctxbasicrobot.gradle</tt> by specifying the class of the main program
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:45%">
+<pre><m>plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    <k>id 'application'</k>
+}
+...
+<k>mainClassName</k> = 'it.unibo.ctxBls.MainCtxBls<k>Kt</k>'
+
+jar {
+    println("executing jar")
+    from sourceSets.main.allSource
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
+}
+</m></pre>
+</td>
+<td><m>The generated file 
+<a href="../build_ctxbasicrobot.gradle" target="code">build_ctxbasicrobot.gradle</a>
+must be properly edit by the Application designer. 
+<br/><br/>
+<!-- The main we use for this example is in 
+<a href="../src/main/kotlin/it/unibo/qak/prodCons/mainProdConsLocal.kt" target="code">mainProdConsLocal.kt</a>
+<br/><br/>-->
+<b><bc>Note that</bc></b> the main class name must be terminated with a <bc>Kt</bc>, since kotlin code is translated in Java.
+</m> 
+</td>
+</tr>
+</tbody>	
+</table></center>
+
+</li>
+<li>execute the command
+
+<center><table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:45%">
+<pre><m>gradle <ks>-b build_ctxbasicrobot.gradle</ks> <k>distZip</k>
+</m></pre>
+</td>
+<td><m>Generates the <em>distribution file</em> is the directory <bc>build/distributions</bc> 
+<center><img src="./img/buildDir.png" alt="buildDir" width="100%" ></center>
+</m>
+</td>
+</tr>
+
+ 
+</tbody>	
+</table></center>
+</li>
+
+<li>Now:
+
+<center><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:45%"><m>
+<ol>
+<li>unzip the distribution file in some dir</li>
+<li>work in the <bc>bin</bc> directory</li>
+<li><bc>copy</bc> in this directory the files 
+
+<ul>
+<li><a href="../basicrobot.pl" target="code">basicrobot.pl</a> </li>
+<li><a href="../sysRules.pl" target="code">sysRules.pl</a> </li>
+<li><a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> </li>
+<li><a href="../Californium.properties" target="code">Californium.properties</a> </li>
+</ul>
+ 
+</ol>
+</m>
+</td>
+<td><h3>Run the system</h3>
+<m>
+On Windows: activate the system by running: <bc>it.unibo.qakintro2020.bat</bc><br/><br/>
+On Linux (Apple ?) : <bc>bash it.unibo.qakintro2020</bc>
+</m>
+</td>
+</tr>
+</tbody>	
+</table></center>
+</li>
+</ol>
+ 
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+	      	
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>
+
+<!--
+
+HUE
+https://developers.meethue.com/develop/get-started-2/  BEN FATTO
+
+
+{"devicetype":"my_hue_app#nat"}  POST
+
+[
+	{
+		"success": {
+			"username": "gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R"
+		}
+	}
+]
+
+ 
+
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights
+
+{
+	"1": {
+		"state": {
+			"on": false,
+			"bri": 1,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": true
+		},
+		"swupdate": {
+			"state": "readytoinstall",
+			"lastinstall": "2018-03-23T16:50:33"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 1",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:a3:32:03-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	},
+	"2": {
+		"state": {
+			"on": false,
+			"bri": 77,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": false
+		},
+		"swupdate": {
+			"state": "readytoinstall",
+			"lastinstall": "2018-03-22T21:03:40"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 2",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:c4:9a:8a-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	},
+	"3": {
+		"state": {
+			"on": true,
+			"bri": 0,
+			"alert": "select",
+			"mode": "homeautomation",
+			"reachable": false
+		},
+		"swupdate": {
+			"state": "transferring",
+			"lastinstall": "2018-03-23T15:58:39"
+		},
+		"type": "Dimmable light",
+		"name": "Hue white lamp 3",
+		"modelid": "LWB010",
+		"manufacturername": "Signify Netherlands B.V.",
+		"productname": "Hue white lamp",
+		"capabilities": {
+			"certified": true,
+			"control": {
+				"mindimlevel": 5000,
+				"maxlumen": 806
+			},
+			"streaming": {
+				"renderer": false,
+				"proxy": false
+			}
+		},
+		"config": {
+			"archetype": "classicbulb",
+			"function": "functional",
+			"direction": "omnidirectional"
+		},
+		"uniqueid": "00:17:88:01:02:c6:4f:e8-0b",
+		"swversion": "1.29.0_r21169",
+		"swconfigid": "FF6681C4",
+		"productid": "Philips-LWB010-1-A19DLv4"
+	}
+}
+
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights/1
+...
+/api/gxlwZsEJvsEEzcqzuqFEbZRyUddjh06Ml8uDHX6R/lights/1/state
+{"on":false}  PUT
+{"on":true, "sat":254, "bri":254,"hue":10000}
+
+https://developers.meethue.com/develop/get-started-2/core-concepts/
+
+-->
+
