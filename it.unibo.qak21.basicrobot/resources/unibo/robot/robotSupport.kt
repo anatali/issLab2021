@@ -29,7 +29,6 @@ object robotSupport{
 		
 		//read Confif.json file
 		val config = File("${configFileName}").readText(Charsets.UTF_8)
-		//println( "		--- robotSupport | config=$config" )
 		val jsonObject   = JSONObject( config )
 		val hostAddr     = jsonObject.getString("ipvirtualrobot") 
 		robotKind        = jsonObject.getString("type") 
@@ -39,7 +38,7 @@ object robotSupport{
 		when( robotKind ){		
 			//"mockrobot"  ->  { robotMock.mockrobotSupport.create(  ) }
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
-			//"realmbot"   ->  { robotMbot.mbotSupport.create( owner, robotPort  ) } //robotPort="/dev/ttyUSB0"   "COM6"
+			"realmbot"   ->  { robotMbot.mbotSupport.create( owner, robotPort  ) } //robotPort="/dev/ttyUSB0"   "COM6"
  			"realnano"   ->  { robotNano.motorscSupport.create( owner )
  				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar")
 				//Context injection  
@@ -58,11 +57,11 @@ object robotSupport{
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	fun move( cmd : String ){ //cmd = w | a | s | d | h
- 		println("robotSupport move cmd=$cmd robotKind=$robotKind" )
+ 		//println("robotSupport move cmd=$cmd robotKind=$robotKind" )
 		when( robotKind ){
 			//"mockrobot"  -> { robotMock.mockrobotSupport.move( cmd ) 					  }
 			"virtual"    -> { robotVirtual.virtualrobotSupport2021.move(  cmd ) 	  }
-			//"realmbot"   -> { robotMbot.mbotSupport.move( cmd ) 	}
+			"realmbot"   -> { robotMbot.mbotSupport.move( cmd ) 	}
  			"realnano"   -> { robotNano.motorscSupport.move( cmd)	}
 			else         -> println( "		--- robotSupport | robot unknown")
 		}		
@@ -72,8 +71,8 @@ object robotSupport{
 		when( robotKind ){
 			"mockrobot"  -> {  					                  }
 			"virtual"    -> { robotVirtual.virtualrobotSupport2021.terminate(  ) 	  }
- 			//"realmbot"   -> { /* robotMbot.mbotSupport.terminate(  ) */	}
- 			"realnano"   -> {robotNano.motorscSupport.terminate( )	}
+ 			"realmbot"   -> { /* robotMbot.mbotSupport.terminate(  ) */	}
+ 			"realnano"   -> { robotNano.motorscSupport.terminate( )	}
 			else         -> println( "		--- robotSupport | robot unknown")
 		}		
 		

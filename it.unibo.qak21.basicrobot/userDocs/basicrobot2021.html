@@ -212,6 +212,18 @@ We define here a resource that represents a robot able to handle a set of comman
 The robot is defined as a qak model that
 builds its own low-level supports by looking at the configuration file 
 <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>.
+
+<h4>Emitted events</h4>
+<m>
+<ul>
+<li>When the robot hits an obstacle, it emits the event
+ <pre>Event   obstacle   : obstacle( V )</pre>
+</li>
+<li>When the robot hits an obstacle, it emits the event
+ <pre>Event   obstacle   : obstacle( V )</pre>
+</li>
+</ul>
+</m>
 </td>
 
 <td><h3 id="basicrobot">The configuration file</h3>
@@ -314,7 +326,7 @@ a specialization for <ks>MQTT</ks> that exploits the library <tt>org.eclipse.pah
 
 <tr>
 <td>
-<h3 id="robotusage">A command console</h3>
+<h3 id="robotusage">A robot-command console</h3>
 The project 
 <a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>
 defines  a console to to send commands to the basicrobot.
@@ -346,9 +358,17 @@ a specialization for <ks>MQTT</ks>
 </ul>
 </td>
  <td>
-<h3 id="robotusage">Commands using jupyter</h3>
+<h3 id="robotusage">Moving using jupyter</h3>
 
-<a href="../../issLab2021/it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb" target="code">qakbasicrobotcallerTCP.ipynb</a>
+<ul>
+<li>
+<a href="../../it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb" target="code">qakbasicrobotcallerTCP.ipynb</a>
+</li>
+<li>
+<a href="../../it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerMQTT.ipynb" target="code">qakbasicrobotcallerMQTT.ipynb</a>
+</li>
+</ul>
+
 
 </td>
 </tr>

@@ -19,27 +19,31 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		
 		  var StepTime      = 0L
 		  var StartTime     = 0L     
-		  var Duration      = 0L    
+		  var Duration      = 0L  
+		  var RobotType     = "" 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("basicrobot | START")
 						unibo.robot.robotSupport.create(myself ,"basicrobotConfig.json" )
-						println("basicrobot | attempts to activate the sonar pipe")
+						 RobotType = unibo.robot.robotSupport.robotKind  
+						if(  RobotType != "virtual"  
+						 ){println("basicrobot | type=$RobotType attempts to activate the sonar pipe")
 						  //For real robots
-						 			var robotsonar = context!!.hasActor("realsonar")  
-						 			if( robotsonar != null ){ 
-						 				println("basicrobot | WORKING WITH SONARS") 
-						 				//ACTIVATE THE DATA SOURCE realsonar
-						 				forward("sonarstart", "sonarstart(1)" ,"realsonar" ) 				
-						 				//SET THE PIPE  
-						 				robotsonar.
-						 				subscribeLocalActor("datacleaner").
-						 				subscribeLocalActor("distancefilter").
-						 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
-						 			}else{
-						 				println("basicrobot | WARNING: realsonar NOT FOUND")
-						 			}
+							 			var robotsonar = context!!.hasActor("realsonar")  
+							 			if( robotsonar != null ){ 
+							 				println("basicrobot | WORKING WITH SONARS") 
+							 				//ACTIVATE THE DATA SOURCE realsonar
+							 				forward("sonarstart", "sonarstart(1)" ,"realsonar" ) 				
+							 				//SET THE PIPE  
+							 				robotsonar.
+							 				subscribeLocalActor("datacleaner").
+							 				subscribeLocalActor("distancefilter").
+							 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
+							 			}else{
+							 				println("basicrobot | WARNING: realsonar NOT FOUND")
+							 			}
+						}
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )
 						updateResourceRep( "stopped"  
@@ -50,6 +54,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("work") { //this:State
 					action { //it:State
+						println("basicrobot  | waiting .................. ")
 					}
 					 transition(edgeName="t10",targetState="execcmd",cond=whenDispatch("cmd"))
 					transition(edgeName="t11",targetState="doStep",cond=whenRequest("step"))
@@ -81,6 +86,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 								updateResourceRep( "obstacle"  
 								)
 						}
+						emit("info", "info(obstacledoing(w))" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -108,12 +114,9 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("stepPerhapsDone") { //this:State
 					action { //it:State
+						println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")
+						println("$name in ${currentState.stateName} | $currentMsg")
 						unibo.robot.robotSupport.move( "h"  )
-						if( checkMsgContent( Term.createTerm("sonar(DISTANCE,NAME)"), Term.createTerm("sonar(D,T)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								println("basicrobot | after a step emit polar(${payloadArg(0)}, 180) ")
-								emit("polar", "polar(${payloadArg(0)},180)" ) 
-						}
 						stateTimer = TimerActor("timer_stepPerhapsDone", 
 							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
 					}
@@ -122,7 +125,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
-						unibo.robot.robotSupport.move( "h"  )
+						println("basicrobot | stepDoneeeeeeeeeeeeeeeeeeeeeeee ")
 						updateResourceRep( "stepDone($StepTime)"  
 						)
 						answer("step", "stepdone", "stepdone(ok)"   )  
@@ -141,9 +144,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						Duration = getDuration(StartTime)
 						updateResourceRep( "stepFail($Duration)"  
 						)
-						emit("obstacle", "obstacle(unknown)" ) 
-						emit("polar", "polar(10,90)" ) 
-						answer("step", "stepfail", "stepfail($Duration,obstacle)"   )  
+						answer("step", "stepfail", "stepfail($Duration,obst)"   )  
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 

@@ -29,10 +29,11 @@ object virtualrobotSupport2021 {
 	private lateinit var hostName : String 	
 	private lateinit var support21 : IssWsHttpKotlinSupport 
 
-	var traceOn = true
+	var traceOn = false
 	
 	init{
-		println(" CREATING")
+		//println(" CREATING")
+		IssWsHttpKotlinSupport.trace = false
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,7 +59,8 @@ object virtualrobotSupport2021 {
 		val msg = translate( cmd )
 		trace("move  $msg")
 		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
-		println("		--- virtualrobotSupport2021 | answer=$answer")
+		trace("		--- virtualrobotSupport2021 | answer=$answer")
+		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt
 		val ajson = JSONObject(answer)
 		if( ajson.has("endmove") && ajson.get("endmove")=="false"){
 			owner.scope.launch{  owner.emit("obstacle","obstacle(unkown)") }

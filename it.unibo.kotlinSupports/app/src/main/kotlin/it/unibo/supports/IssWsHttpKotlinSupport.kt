@@ -52,8 +52,10 @@ class IssWsHttpKotlinSupport
         //val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
+        var trace            = false
 
         fun colorPrint(msg : String, color : Color = Color.CYAN ){
+            if( trace )
             println(Kolor.foreground("      $msg", color ) )
         }
 
