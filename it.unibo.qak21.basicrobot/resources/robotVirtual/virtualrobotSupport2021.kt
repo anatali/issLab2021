@@ -46,21 +46,26 @@ object virtualrobotSupport2021 {
             	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
             	println("		--- virtualrobotSupport2021 |  created ")	
 			 }catch( e:Exception ){
-                 println("			*** virtualrobotSupport2021 | ERROR $e")
+                 println("		--- virtualrobotSupport2021 | ERROR $e")
              }	
 	}
 	
 	fun trace( msg: String ){
-		if( traceOn )  println("			*** virtualrobotSupport2021 trace | $msg")
+		if( traceOn )  println("		--- virtualrobotSupport2021 trace | $msg")
 	}
 
     fun move(cmd: String) {	//cmd is written in application-language
 		val msg = translate( cmd )
 		trace("move  $msg")
-		support21.sendHttp(msg,"$hostName:$port/api/move")
+		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
+		println("		--- virtualrobotSupport2021 | answer=$answer")
+		val ajson = JSONObject(answer)
+		if( ajson.has("endmove") && ajson.get("endmove")=="false"){
+			owner.scope.launch{  owner.emit("obstacle","obstacle(unkown)") }
+		}
     }
     //translates application-language in cril
-        fun translate(cmd: String) : String{ //cmd is written in application-language
+    fun translate(cmd: String) : String{ //cmd is written in application-language
 		var jsonMsg = MsgRobotUtil.haltMsg //"{ 'type': 'alarm', 'arg': -1 }"
 			when( cmd ){
 				"msg(w)", "w" -> jsonMsg = MsgRobotUtil.forwardMsg  
@@ -72,7 +77,7 @@ object virtualrobotSupport2021 {
 				//"msg(z)", "z" -> not implemented
 				//"msg(x)", "x" -> not implemented
 				"msg(h)", "h" -> jsonMsg = MsgRobotUtil.haltMsg //"{ 'type': 'alarm',     'arg': 100 }"
-				else -> println("virtualrobotSupport2021 command $cmd unknown")
+				else -> println("		--- virtualrobotSupport2021 | command $cmd unknown")
 			}
  			return jsonMsg
 		}

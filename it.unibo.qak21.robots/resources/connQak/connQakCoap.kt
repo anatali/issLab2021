@@ -4,16 +4,15 @@ import org.eclipse.californium.core.CoapClient
 import org.eclipse.californium.core.coap.MediaTypeRegistry
 import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
-import consoles.ctxqadest
+ 
 
-class connQakCoap( hostIP : String,  port : String,  destName : String ) :
-										           connQakBase(hostIP, port, destName){
+class connQakCoap() : connQakBase() {
 
 lateinit var client   : CoapClient
 	
 	override fun createConnection(  ){
- 			println("connQakCoap | createConnection hostIP=${hostIP} port=${port}")
-			val url = "coap://$hostIP:$port/$ctxqadest/$destName"
+ 			println("connQakCoap | createConnection hostIP=${hostAddr} port=${port}")
+			val url = "coap://$hostAddr:$port/${ctxqakdest}/${qakdestination}"
 			client = CoapClient( url )
 			client.setTimeout( 1000L )
  			//initialCmd: to make console more reactive at the first user cmd
@@ -26,21 +25,21 @@ lateinit var client   : CoapClient
 	
 	override fun forward( msg: ApplMessage ){		
         val respPut = client.put(msg.toString(), MediaTypeRegistry.TEXT_PLAIN)
-        //println("connQakCoap | PUT forward ${d} RESPONSE CODE=  ${respPut.code}")		
+        println("connQakCoap | PUT forward ${msg} RESPONSE CODE=  ${respPut.code}")		
 	}
 	
 	override fun request( msg: ApplMessage ){
  		val respPut = client.put(msg.toString(), MediaTypeRegistry.TEXT_PLAIN)
 		if( respPut != null )
-  		System.out.println("connQakCoap | answer= ${respPut.getResponseText()}")				
+  		println("connQakCoap | answer= ${respPut.getResponseText()}")				
 	}
 	
 	override fun emit( msg: ApplMessage){
-		val url = "coap://$hostIP:$port/ctx$destName"		//TODO
+		val url = "coap://$hostAddr:$port/$ctxqakdest"		 
 		client = CoapClient( url )
         //println("PUT emit url=${url} ")		
          val respPut = client.put(msg.toString(), MediaTypeRegistry.TEXT_PLAIN)
-        //println("connQakCoap | PUT emit ${msg} RESPONSE CODE=  ${respPut.code}")		
+        println("connQakCoap | PUT emit ${msg} RESPONSE CODE=  ${respPut.code}")		
 		
 	}	
 }

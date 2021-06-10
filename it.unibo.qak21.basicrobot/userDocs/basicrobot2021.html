@@ -193,7 +193,7 @@ div.imagedesc{
     
 <body>
 <div id="top">
-<h1>LabIss2021 | generic basic robot <font size="5"></font> </h1>
+<h1>LabIss2021 | basic generic robot <font size="5"></font> </h1>
 </div>  
 
 <div class="body"> 
@@ -269,30 +269,83 @@ and called by using the support described in:
 <a href="Mbot3030.html" target="robot">Mbot3030 | The reference ddr robot</a> </m>
 <center><img src="./img/mbot.png" alt="mbot" width="30%" height="60%"></center>	
 </li>
-
-
-
 </ul>
  
   
 </td>
 <td> 
-<h3 id="robotusage">A command console</h3>
-</center>	<img src="./img/consoleCoap.png" alt="consoleCoap.png" width="40%"  /></center>	
+<h3 id="connQakbase">Supports for interaction</h3>
+The project 
+<a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>
+defines supports for interaction via <tt>TCP, HTTP, MQTT and Coap</tt>.
 <br/><br/>
-An utility to send commands is defined in the project 
-<a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>:
 <ul>
-<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiTcp.kt" target="code">consoleGuiTcp.kt</a></li>
-<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiMqtt.kt" target="code">consoleGuiMqtt.kt</a></li>
-<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiCoap.kt" target="code">consoleGuiCoap.kt</a></li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/connQakBase.kt" target="code">connQakBase.kt</a>:
+a factory class that creates protocol-specific supports by reading the information stored in
+<a href="../../it.unibo.qak21.robots/resources/connQak/configurator.kt" target="code">configurator.kt</a>.
+It defines also the set of implemented protocols:
+<pre>enum class <k>ConnectionType</k> { TCP, MQTT, COAP, HTTP }</pre>
+<hr/>
+</li>
+<m> 
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/connQakTcp.kt" target="code">connQakTcp.kt</a>:
+a specialization for <ks>TCP</ks> that exploits the library <tt>it.unibo.supports.FactoryProtocol</tt>
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/connQakCoap.kt" target="code">connQakCoap.kt</a>:
+a specialization for <ks>CoAP</ks> that exploits the library <tt>org.eclipse.californium</tt>
+
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/connQakHttp.kt" target="code">connQakHttp.kt</a>
+a specialization for <ks>HTTP</ks> that exploits the library <tt>org.apache.http.client</tt>
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/connQakMqtt.kt" target="code">connQakMqtt.kt</a>
+a specialization for <ks>MQTT</ks> that exploits the library <tt>org.eclipse.paho.client.mqttv3</tt>
+</li>
+</m>
 </ul>
-All these utilities inherit from
-<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code">consoleGuiSimple.kt</a></li>
 
-and make reference to the configuration object:
-<a href="../../it.unibo.qak21.robots/resources/consoles/sysConnKb.kt" target="code">sysConnKb.kt</a>
+<tr>
+<td style="width:50%" >
 
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td>
+<h3 id="robotusage">A command console</h3>
+The project 
+<a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>
+defines  a console to to send commands to the basicrobot.
+<br/><br/>
+<ul>
+<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code">consoleGuiSimple.kt</a>:
+a factory class that creates a console using a specific protocol of type <k>ConnectionType</k>
+as defined in <a href="../../it.unibo.qak21.robots/resources/consoles/sysConnKb.kt" target="code">sysConnKb.kt</a>
+<br/><br/>
+</center>	<img src="./img/consoleCoap.png" alt="consoleCoap.png" width="40%"  /></center>	
+
+</li>
+<!--
+<m> 
+<li><a href="../../it.unibo.qak21.robots/consoles/consoleGuiTcp.kt" target="code">consoleGuiTcp.kt</a>:
+a specialization for <ks>TCP</ks>  
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiCoap.kt" target="code">consoleGuiCoap.kt</a>:
+a specialization for <ks>CoAP</ks>  
+
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiHttp.kt" target="code">consoleGuiHttp.kt</a>
+a specialization for <ks>HTTP</ks>  
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiMqtt.kt" target="code">consoleGuiMqtt.kt</a>
+a specialization for <ks>MQTT</ks>  
+</li>
+</m>-->
+</ul>
+</td>
+ <td>
 <h3 id="robotusage">Commands using jupyter</h3>
 
 <a href="../../issLab2021/it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb" target="code">qakbasicrobotcallerTCP.ipynb</a>

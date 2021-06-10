@@ -35,7 +35,7 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 	suspend fun elabData(data : String ){
          while (true) {
  			try {
- 				var curDataFromArduino = "todo" //conn.receiveALine()
+ 				var curDataFromArduino =  conn.receiveALine()
 				//globalTimer.startTimer()  //TIMER ....
  	 			//println("   	%%% $name | getDataFromArduino received: $curDataFromArduino"    )
  				var v = curDataFromArduino.toDouble() 

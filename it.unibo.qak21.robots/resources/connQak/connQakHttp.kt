@@ -15,14 +15,13 @@ import it.unibo.kactor.ApplMessage
  * The interaction is with an instance of httpserver/server.kt
  */
 
-class connQakHttp(hostIP : String,  port : String,  destName : String ) :
-										           connQakBase(hostIP, port, destName){
+class connQakHttp( ) : connQakBase( ){
 lateinit var client   : CloseableHttpClient  
 lateinit var hostAddr : String 
 	 
  		
 	override fun createConnection(  ){
-		hostAddr =  "http://$hostIP:$port"    //"http://localhost:8080"
+		hostAddr =  "http://$hostAddr:$port"    //"http://localhost:8080"
 		println("connQakHttp | createConnection hostAddr=$")
 		client   =  HttpClientBuilder.create().build()
  	}

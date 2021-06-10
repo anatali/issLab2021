@@ -29,7 +29,7 @@ object mbotSupport{
 		try {
 			//println("   	%%% mbotSupport | initConn starts port=$port")
 			val serialConn = JSSCSerialComm(null)
-			//conn = serialConn.connect(port)	//returns a SerialPortConnSupport
+			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
 			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")						
  			robotDataSourceArduino("realsonar", owner,   conn )
 		}catch(  e : Exception) {
@@ -44,7 +44,7 @@ object mbotSupport{
     */
 	fun  move( cmd : String ){
 		//println("  	%%% mbotSupport | move cmd=$cmd ")
-		/*
+		 
 		when( cmd ){
 			"msg(w)", "w" -> conn.sendALine("w")
 			"msg(s)", "s" -> conn.sendALine("s")
@@ -57,7 +57,7 @@ object mbotSupport{
 			"msg(h)", "h" -> conn.sendALine("h")
 			else -> println("   	%%% mbotSupport | command $cmd unknown")
 		}
-		*/
+		 
 	}
 	
 	private fun sendToPython( msg : String ){

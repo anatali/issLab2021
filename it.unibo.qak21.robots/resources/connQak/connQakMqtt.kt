@@ -8,11 +8,10 @@ import it.unibo.kactor.MsgUtil
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import it.unibo.kactor.ApplMessage
 
-class connQakMqtt(hostIP : String,  port : String,  destName : String ) :
-										         connQakBase(hostIP, port, destName), MqttCallback{
+class connQakMqtt( ) : connQakBase( ), MqttCallback{
  	lateinit var client  : MqttClient
  	val clientid         = "clientmqtt"
-	val answerTopic      = "unibo/qak/$clientid"
+	val answerTopic      = mqtttopic //"unibo/qak/$clientid"
 
 	override fun messageArrived(topic: String, msg: MqttMessage) {
         //sysUtil.traceprintln("$tt ActorBasic $name |  MQTT messageArrived on "+ topic + ": "+msg.toString());
@@ -43,7 +42,7 @@ class connQakMqtt(hostIP : String,  port : String,  destName : String ) :
 	}
 	
 	override fun createConnection(  ){
-		val brokerAddr = "tcp://$hostIP:$port"
+		val brokerAddr = "tcp://$mqtthostAddr:$mqttport"
 		try {
   			//println("     %%% connQakMqtt | doing connect for $clientid to $brokerAddr "  );
 			client = MqttClient(brokerAddr , clientid )
@@ -62,15 +61,15 @@ class connQakMqtt(hostIP : String,  port : String,  destName : String ) :
 	}
 	
 	override fun forward(  msg: ApplMessage){
- 		publish(msg.toString(), "unibo/qak/$destName")		
+ 		publish(msg.toString(), mqtttopic)		
 	}
 	
 	override fun request(  msg: ApplMessage){
- 		publish(msg.toString(), "unibo/qak/$destName")
-		//The answer should be in unibo/qak/clientmqtt		
+ 		publish(msg.toString(), mqtttopic)
+		//The answer should be in ??? unibo/qak/clientmqtt		
 	}
 	
 	override fun emit( msg: ApplMessage ){
- 		publish(msg.toString(), "unibo/qak/events")		
+ 		publish(msg.toString(), mqtttopic )		
 	}	
 }
