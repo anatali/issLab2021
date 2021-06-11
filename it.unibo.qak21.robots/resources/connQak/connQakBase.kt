@@ -11,7 +11,7 @@ abstract class connQakBase() {
 lateinit var currQakConn  : connQakBase
 	
 	companion object{
-	fun create(connType: ConnectionType ) : connQakBase{
+	fun create(connType: ConnectionType) : connQakBase{
 		  showSystemInfo()
 		  when( connType ){
 				 ConnectionType.MQTT ->  {return connQakMqtt( )}  

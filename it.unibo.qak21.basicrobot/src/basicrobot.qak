@@ -15,8 +15,8 @@
  * ================================================================================
  */ 
   
-System /* -trace */ basicrobot    
-mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"   
+System  -trace  basicrobot    
+mqttBroker "localhost" : 1883 eventTopic "unibo/basicrobot"   		
 
 Dispatch cmd       	: cmd(MOVE)     
 Dispatch end       	: end(ARG)  
@@ -49,8 +49,8 @@ QActor basicrobot context ctxbasicrobot{
  		println("basicrobot | START")	
  		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
-// 		delay 1000  //give to the realsonar (if any) the time to start
         if[# RobotType != "virtual" #]{
+		// 	delay 1000  //give to the realsonar the time to start
 	 		println("basicrobot | type=$RobotType attempts to activate the sonar pipe")	
 	 		[#  //For real robots
 	 			var robotsonar = context!!.hasActor("realsonar")  
@@ -80,7 +80,7 @@ QActor basicrobot context ctxbasicrobot{
 	} 
 	Transition t1   whenMsg     cmd       -> execcmd
 					whenRequest step      -> doStep			
-					whenEvent  obstacle   -> handleObstacle  //caused by w
+					whenEvent  obstacle   -> handleObstacle  //caused by the move w
 					whenEvent sonar       -> handleSonar
 				  	whenMsg     end       -> endwork			  
 	
@@ -128,11 +128,11 @@ QActor basicrobot context ctxbasicrobot{
 		whenTimeVar StepTime  -> stepPerhapsDone	//caused by p
 		whenEvent  obstacle   -> stepFail		 
   	 
-  	/* StepTime expires but just before an obstacle is found */
+  	/* StepTime expires but also an obstacle is found */
  	State stepPerhapsDone{ 
+ 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
 		println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")  
 		printCurrentMessage
- 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
  		/* 
 		onMsg( local_sonar : sonar(D,T)){ //for the real robot
 			println("basicrobottxxxxxxxxxxxxxxxx | after a step emit polar(${payloadArg(0)}, 180) ")
@@ -144,14 +144,15 @@ QActor basicrobot context ctxbasicrobot{
 	
 	State stepDone{   
  		//run unibo.robot.robotSupport.move( "h" )  //stop the real robot already done
-		println("basicrobot | stepDoneeeeeeeeeeeeeeeeeeeeeeee ")
+		println("basicrobot | stepDone")
 		updateResource [# "stepDone($StepTime)" #]
+   		emit info : info( stepdone($StepTime) )
    		replyTo step with stepdone : stepdone(ok)
   	}
 	Goto work  
 	
 	State stepFailDetected{
-		println("basicrobot | stepFailDetected near end of step ")
+		println("basicrobot | stepFailDetecteddddddddddddddddddddddddddddddddddd near end of step ")
  		replyTo step with stepfail : stepfail($StepTime, obstacle)
     }
 	Goto work 
@@ -159,6 +160,7 @@ QActor basicrobot context ctxbasicrobot{
 	State stepFail{  
 		setDuration Duration from StartTime
  		updateResource [# "stepFail($Duration)" #]
+ 		emit info : info( stepFail($Duration) )
 		//println("basicrobot | stepFail after $Duration ")
 		//emit info : info( obstacledoing(step) )
 		//emit polar    : polar( 10, 90 )		 

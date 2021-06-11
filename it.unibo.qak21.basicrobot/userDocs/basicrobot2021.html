@@ -212,15 +212,34 @@ We define here a resource that represents a robot able to handle a set of comman
 The robot is defined as a qak model that
 builds its own low-level supports by looking at the configuration file 
 <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>.
+<m>
+<h4>Command messages</h4>
+<pre>
+Dispatch cmd       	: cmd(MOVE)     
+Dispatch end       	: end(ARG)  
+ 
+Request step       : step( TIME )	
+Reply   stepdone   : stepdone(V)  
+Reply   stepfail   : stepfail(DURATION, CAUSE)
 
-<h4>Emitted events</h4>
+</pre>
+<h4>basicrobot MQTT topics</h4>
 <m>
 <ul>
-<li>When the robot hits an obstacle, it emits the event
- <pre>Event   obstacle   : obstacle( V )</pre>
+<li><ks>unibo/basicrobot</ks>:  input topic (the basicrobots subscribes to receive commands)
 </li>
-<li>When the robot hits an obstacle, it emits the event
- <pre>Event   obstacle   : obstacle( V )</pre>
+<li><ks>unibo/qak/basicrobot</ks>:  output topic (the basicrobots publishes information)
+</li>
+</ul>
+</m>
+<h4>Emitted events</h4>
+
+<ul>
+<li><ks>Event <k>obstacle</k>:obstacle( V )</ks>: When the robot hits an obstacle 
+ 
+</li>
+<li><ks>Event <k>sonar</k>:sonar( V )</ks>: When the robot detects an obstacle 
+ 
 </li>
 </ul>
 </m>
@@ -229,7 +248,7 @@ builds its own low-level supports by looking at the configuration file
 <td><h3 id="basicrobot">The configuration file</h3>
 The configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> is written by the application designer
 
-
+<m>
 <pre>
 <bc>Virtual robot</bc>
 {"type":"virtual","port":"8090","ipvirtualrobot":"192.168.1.132"}
@@ -244,7 +263,7 @@ The configuration file <a href="../basicrobotConfig.json" target="code">basicrob
 <kc>//Arduino connected to the Raspberry:</kc>
 {"type":"realmbot", "port":"/dev/ttyUSB0", "ipvirtualrobot":"-"} 
 </pre>
-
+</m>
 
 </td>
  
@@ -258,7 +277,7 @@ The configuration file <a href="../basicrobotConfig.json" target="code">basicrob
 <tbody>	
 
 <tr>
-<td style="width:50%" ><h3 id="robotSupport">The robotSupport</h3>
+<td style="width:50%" ><h3 id="robotSupport">Supports for the robot types</h3>
 The Kotlin object
   <a href="../resources/unibo/robot/robotSupport.kt" target="code">robotSupport.kt</a>
 reads the given configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> 
@@ -318,9 +337,25 @@ a specialization for <ks>MQTT</ks> that exploits the library <tt>org.eclipse.pah
 
 <tr>
 <td style="width:50%" >
+<h3>Using the virtual robot</h3>
+On the PC (in <tt><m><k>issLab2021/it.unibo.issLabStart/Dockercompose</k></m></tt>):
+<m><pre>
+docker-compose -f virtualRobotOnly2.0.yaml up <kc>//activate the robot</kc>
 
+localhost:8090	<kc>//open the WEnv gui</kc>
+</pre></m>
 </td>
 <td>
+<h3>Using a real robot</h3>
+On the RaspberryPi (in <tt><m>/home/pi/nat/<k>it.unibo.qak21.basicrobot-1.0/bin</k></m></tt>):
+<m><pre>
+copy: <k>basicrobot.pl</k>, <k>basicrobotConfig.json</k>
+
+it.unibo.qak21.basicrobot  <kc>//activate the robot</kc>
+
+<ks>Command the ronot using a remote console</ks> 	
+</pre></m>
+
 </td>
 </tr>
 

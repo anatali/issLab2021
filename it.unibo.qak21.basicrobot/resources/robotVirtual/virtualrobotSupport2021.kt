@@ -63,7 +63,7 @@ object virtualrobotSupport2021 {
 		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt
 		val ajson = JSONObject(answer)
 		if( ajson.has("endmove") && ajson.get("endmove")=="false"){
-			owner.scope.launch{  owner.emit("obstacle","obstacle(unkown)") }
+			owner.scope.launch{  owner.emit("obstacle","obstacle(virtual)") }
 		}
     }
     //translates application-language in cril

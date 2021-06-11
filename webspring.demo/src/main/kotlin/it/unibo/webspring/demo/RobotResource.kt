@@ -27,7 +27,7 @@ object RobotResource {
          myscope    = CoroutineScope(Dispatchers.Default)
          obs        = DoNothingObserver("obs", myscope)
         //TODO: define an observer that updates the HTML page
-         robotCaller      = BasicStepRobotActorCaller("robot", myscope )
+         robotCaller = BasicStepRobotActorCaller("robot", myscope )
          if( local ){
             robot = BasicStepRobotActor("stepRobot", ownerActor=obs, myscope, "localhost")
          }
