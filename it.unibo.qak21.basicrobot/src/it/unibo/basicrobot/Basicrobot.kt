@@ -49,7 +49,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 	 			if( robotsonar != null ){ 
 						 	 				println("basicrobot | WORKING WITH SONARS") 
 						 	 				//ACTIVATE THE DATA SOURCE realsonar
-						 	 				forward("sonarstart", "sonarstart(1)" ,"realsonar" ) 				
+						 	 				forward("sonarstart", "sonarstart(1)" ,"robotsonar" ) 				
 						 	 				//SET THE PIPE  
 						 	 				robotsonar.
 						 	 				subscribeLocalActor("datacleaner").

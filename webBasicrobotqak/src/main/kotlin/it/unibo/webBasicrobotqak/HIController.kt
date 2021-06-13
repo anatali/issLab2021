@@ -4,7 +4,11 @@ import com.andreapivetta.kolor.Color
 import connQak.connQakBase
 import connQak.connQakTcp
 import it.unibo.actor0.sysUtil
+import it.unibo.basicrobot.Basicrobot
+import it.unibo.kactor.ActorBasic
 import it.unibo.kactor.MsgUtil
+import it.unibo.kactor.QakContext
+import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -27,8 +31,9 @@ class HIController {
     @Value("\${human.logo}")
     var appName: String?    = null
 
-    //var coap    = CoapSupport("coap://localhost:8028", "ctxsonarresource/sonarresource")
     lateinit var connSupport : connQakBase
+    lateinit var basicrobot  : ActorBasic
+    val scopeTorunBasicrobot = CoroutineScope(Dispatchers.Default)
 
     /*
      * Update the page vie socket.io when the application-resource changes.
@@ -40,8 +45,16 @@ class HIController {
     //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
     init{
         try{
-            connSupport = connQak.connQakBase.create( connQak.connprotocol )
-            connSupport.createConnection()
+            //connSupport = connQak.connQakBase.create( connQak.connprotocol )
+            //connSupport.createConnection()
+            scopeTorunBasicrobot.launch {
+                 QakContext.createContexts(
+                    "localhost", this, "basicrobot.pl", "sysRules.pl"
+                )
+                basicrobot = QakContext.getActor("basicrobot")!!
+                sysUtil.colorPrint("HIController | create basicrobot ${basicrobot}", Color.BLUE)
+            }
+
         }catch( e: Exception){
             sysUtil.colorPrint("HIController | Error $e", Color.RED)
         }
@@ -78,25 +91,12 @@ class HIController {
         @RequestParam(name="move", required=false, defaultValue="h")robotmove : String) : String{
         sysUtil.colorPrint("HIController | param-move:$robotmove", Color.RED)
         viewmodel.addAttribute("viewmodelarg", "${robotmove}") //resRep.content
-        connSupport.forward( MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination))
+        val cmdMsg = MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination)
+        //connSupport.forward( MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination))
+        scopeTorunBasicrobot.launch { basicrobot.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
         return "basicrobotqakGui"
-/*
-        coap.updateResourceWithValue(v)
-        Thread.sleep(400);  //QUITE A LONG TIME ...
-        val resourceRep = coap.readResource()
-        val resRep      = ResourceRep( ""+ HtmlUtils.htmlEscape(resourceRep))
-        sysUtil.colorPrint("HIController | resRep:$resRep", Color.BLUE)
-
-         viewmodel.addAttribute("sonarval", "${resourceRep}") //resRep.content
- */
 
     }
-/*
-    fun getWebPageRep(): ResourceRep {
-        val resourceRep: String = coap.readResource()
-        println("HIController | resourceRep=$resourceRep")
-        return ResourceRep("" + HtmlUtils.htmlEscape(resourceRep))
-    }
-*/
+
 
 }
