@@ -15,8 +15,8 @@
  * ================================================================================
  */ 
   
-System  -trace  basicrobot    
-mqttBroker "localhost" : 1883 eventTopic "unibo/basicrobot"   		
+System  /* -trace */ basicrobot    
+//mqttBroker "localhost" : 1883 eventTopic "unibo/basicrobot"   		
 
 Dispatch cmd       	: cmd(MOVE)     
 Dispatch end       	: end(ARG)  
@@ -68,6 +68,23 @@ QActor basicrobot context ctxbasicrobot{
 	 			}
 	 		#]  
  		}//if
+ 		else{ 
+ 			[#  var robotsonar = context!!.hasActor("robotsonar") 
+	 			if( robotsonar != null ){ 
+	 				println("basicrobot | WORKING WITH SONARS") 
+	 				//ACTIVATE THE DATA SOURCE realsonar
+	 				forward("sonarstart", "sonarstart(1)" ,"realsonar" ) 				
+	 				//SET THE PIPE  
+	 				robotsonar.
+	 				subscribeLocalActor("datacleaner").
+	 				subscribeLocalActor("distancefilter").
+	 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
+	 			}else{
+	 				println("basicrobot | WARNING: realsonar NOT FOUND")
+	 			}
+
+ 			#]
+ 		}
   		run unibo.robot.robotSupport.move( "l" )
 		run unibo.robot.robotSupport.move( "r" )
  		updateResource [# "stopped" #]

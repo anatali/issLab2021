@@ -18,7 +18,7 @@ import it.unibo.kactor.ApplMessage
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-class virtualrobotSonarSupportActor( name : String, val clientSocket : Socket ) : ActorBasic( name ) {
+class virtualrobotSonarSupportActor( name : String, val clientSocket : Socket? ) : ActorBasic( name ) {
 private var sensorObserver : Job? = null
 companion object {
 	val eventId = "sonarRobot"
@@ -40,6 +40,7 @@ companion object {
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
    fun startSensorObserver(  ) {
+	if( clientSocket != null ){
 		val inFromServer = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
 		val scope : CoroutineScope = CoroutineScope( Dispatchers.Default )
 	    sensorObserver = scope.launch {
@@ -78,7 +79,8 @@ companion object {
                 }
  				println("sensorObserver ENDS, since has received null ")
             }
-         }//startSensorObserver 
+	 }
+    }//startSensorObserver 
 
 @Override
 fun terminate(){
