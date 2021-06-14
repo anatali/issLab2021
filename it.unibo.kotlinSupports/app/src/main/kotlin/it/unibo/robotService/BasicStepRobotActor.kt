@@ -62,7 +62,7 @@ init{
             //IN ANY CASE, we DO NOT execute msgQueueStore.add(...) since the caller must change its pattern
             return
         }
-        doingStep = true;
+        doingStep = true
         timer = TimerActor("t0", this, scope )
         val m = MsgUtil.buildDispatch(name,ActorMsgs.startTimerId,
                 ActorMsgs.startTimerMsg.replace("TIME", time),"t0")
