@@ -68,7 +68,7 @@ suspend fun testWs(scope: CoroutineScope){
     support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
     support.forward(MsgRobotUtil.turnLeftMsg)
     delay(1000)
-    support.forward(MsgRobotUtil.turnRightMsg)
+    support.sendWs(MsgRobotUtil.turnRightMsg)
     //give time to see messages ...
     delay(30000)  //CREATE new threads  !!!
     support.close()

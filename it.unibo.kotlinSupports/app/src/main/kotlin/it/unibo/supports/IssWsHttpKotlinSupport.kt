@@ -52,7 +52,7 @@ class IssWsHttpKotlinSupport
         //val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
-        var trace            = false
+        var trace            = true
 
         fun colorPrint(msg : String, color : Color = Color.CYAN ){
             if( trace )
@@ -60,12 +60,14 @@ class IssWsHttpKotlinSupport
         }
 
         fun createForHttp(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
+            colorPrint("IssWsHttpKotlinSupport | wsconnect createForHttp:  ", Color.BLUE)
             if( ! activeAconnsHttp.containsKey(addr)) {
                 activeAconnsHttp.put(addr, IssWsHttpKotlinSupport(scope, addr, false))
             }
             return activeAconnsHttp.get(addr)!!
         }
         fun createForWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
+            colorPrint("IssWsHttpKotlinSupport | wsconnect createForWs:  ", Color.RED)
             if( ! activeAconnsWs.containsKey(addr)) {
                 val support = IssWsHttpKotlinSupport(scope, addr, false)
                  activeAconnsWs.put(addr,support)
@@ -134,11 +136,13 @@ class IssWsHttpKotlinSupport
 //===============================================================================
     fun wsconnect( //wsAddr : String ,
     callback: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit) : WebSocket {
+        colorPrint("IssWsHttpKotlinSupport | wsconnect: $ipaddr", Color.RED)
         workTodo = callback
         val request0 = Request.Builder()
             .url("ws://$ipaddr")
             .build()
         myWs = okHttpClient.newWebSocket(request0, this)
+        colorPrint("IssWsHttpKotlinSupport | wsconnect myWs: $myWs", Color.RED)
         return myWs
     }
 
@@ -174,7 +178,7 @@ class IssWsHttpKotlinSupport
     }
 
       fun sendWs( msgJson : String   ){
-          //colorPrint("sendWs $msgJson")
+          colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
         myWs.send(msgJson);
     }
 //========================================================================

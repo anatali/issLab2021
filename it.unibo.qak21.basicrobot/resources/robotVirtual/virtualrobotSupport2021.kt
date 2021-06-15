@@ -27,7 +27,8 @@ object virtualrobotSupport2021 {
 	lateinit var owner      : ActorBasic
 	lateinit var robotsonar	: ActorBasic
 	private lateinit var hostName : String 	
-	private lateinit var support21 : IssWsHttpKotlinSupport 
+	private lateinit var support21 : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
+	private lateinit var support21ws : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
     private val forwardlongtimeMsg = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
 
 	var traceOn = true
@@ -36,6 +37,14 @@ object virtualrobotSupport2021 {
 		//println(" CREATING")
 		IssWsHttpKotlinSupport.trace = false
 	}
+	
+val xxx : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
+     fun(scope, support ) {
+        println("WebSocketKotlinSupportUsage | xxx 1 ")
+		val obs  = NaiveActorKotlinObserver("virtualrobotSupport2021obs", scope)
+		support.registerActor( obs )
+}
+	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){
@@ -45,8 +54,14 @@ object virtualrobotSupport2021 {
             hostName         = hostNameStr
             port             = Integer.parseInt(portStr)
              try {
+				IssWsHttpKotlinSupport.trace = true
             	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
-            	println("		--- virtualrobotSupport2021 |  created ")	
+				support21ws  = IssWsHttpKotlinSupport.createForWs(owner.scope, "$hostNameStr:8091" )
+            	println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
+				support21ws.wsconnect( xxx )  //
+				support21ws.sendWs(MsgRobotUtil.turnLeftMsg)
+				  
+				//support21ws.forward(MsgRobotUtil.turnRightMsg)
 				//ACTIVATE the robotsonar as the beginning of a pipe
 				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)
 				owner.context!!.addInternalActor(robotsonar)  
@@ -61,8 +76,14 @@ object virtualrobotSupport2021 {
 	}
 
     fun move(cmd: String) {	//cmd is written in application-language
+		println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
 		val msg = translate( cmd )
 		trace("move  $msg")
+		if( cmd == "w" ){  //doing a w => aysnch
+			println("		--- virtualrobotSupport2021 |  wwwwwwwwwwwwwwwwwwwwwwwwww $support21ws")
+			support21ws.sendWs(msg)	//aysnch => no immediate answer (w could found an obstacle)
+			return
+		}
 		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
 		trace("		--- virtualrobotSupport2021 | answer=$answer")
 		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt

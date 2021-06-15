@@ -78,10 +78,10 @@ dependencies {
 
 //UNIBO
 	implementation("IssActorKotlinRobotSupport:IssActorKotlinRobotSupport:2.0")
-	implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")
+	//implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")
 	implementation("uniboInterfaces:uniboInterfaces")
 	implementation("uniboProtocolSupport:unibonoawtsupports")
-	implementation("uniboplanner20:it.unibo.planner20:1.0")
+	//implementation("uniboplanner20:it.unibo.planner20:1.0")
 	implementation("qak:it.unibo.qakactor:2.4")
 	implementation("tuprolog:2p301")
 	implementation("basicrobot:it.unibo.qak21.basicrobot:1.0")
