@@ -14,7 +14,7 @@ object  CoapObserver {
 
     private val client = CoapClient()
 	
-	private val ipaddr      = "localhost:8020"		//5683 default
+	private val ipaddr      = "192.168.1.32:8020"		//5683 default
 	private val context     = "ctxbasicrobot"
  	private val destactor   = "basicrobot"
  
