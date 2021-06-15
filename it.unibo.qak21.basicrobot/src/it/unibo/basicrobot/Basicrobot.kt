@@ -44,6 +44,22 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 							 				println("basicrobot | WARNING: realsonar NOT FOUND")
 							 			}
 						}
+						else
+						 {  var robotsonar = context!!.hasActor("robotsonar") 
+						 	 			if( robotsonar != null ){ 
+						 	 				println("basicrobot | WORKING WITH VIRTUAL SONAR") 
+						 	 				//ACTIVATE THE DATA SOURCE realsonar
+						 	 				forward("sonarstart", "sonarstart(1)" ,"robotsonar" ) 				
+						 	 				//SET THE PIPE  
+						 	 				robotsonar.
+						 	 				subscribeLocalActor("datacleaner").
+						 	 				subscribeLocalActor("distancefilter").
+						 	 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
+						 	 			}else{
+						 	 				println("basicrobot | WARNING: realsonar NOT FOUND")
+						 	 			}
+						 
+						 }
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )
 						updateResourceRep( "stopped"  
@@ -58,7 +74,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					}
 					 transition(edgeName="t10",targetState="execcmd",cond=whenDispatch("cmd"))
 					transition(edgeName="t11",targetState="doStep",cond=whenRequest("step"))
-					transition(edgeName="t12",targetState="handleObstacle",cond=whenEvent("obstacle"))
+					transition(edgeName="t12",targetState="handleObstacle",cond=whenDispatch("obstacle"))
 					transition(edgeName="t13",targetState="handleSonar",cond=whenEvent("sonar"))
 					transition(edgeName="t14",targetState="endwork",cond=whenDispatch("end"))
 				}	 
@@ -110,7 +126,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 							scope, context!!, "local_tout_basicrobot_doStep", StepTime )
 					}
 					 transition(edgeName="t05",targetState="stepPerhapsDone",cond=whenTimeout("local_tout_basicrobot_doStep"))   
-					transition(edgeName="t06",targetState="stepFail",cond=whenEvent("obstacle"))
+					transition(edgeName="t06",targetState="stepFail",cond=whenDispatch("obstacle"))
 				}	 
 				state("stepPerhapsDone") { //this:State
 					action { //it:State
@@ -121,7 +137,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
 					}
 					 transition(edgeName="t07",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_stepPerhapsDone"))   
-					transition(edgeName="t08",targetState="stepFailDetected",cond=whenEvent("obstacle"))
+					transition(edgeName="t08",targetState="stepFailDetected",cond=whenDispatch("obstacle"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State

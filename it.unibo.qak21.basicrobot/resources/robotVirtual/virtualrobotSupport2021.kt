@@ -46,6 +46,10 @@ object virtualrobotSupport2021 {
              try {
             	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
             	println("		--- virtualrobotSupport2021 |  created ")	
+				//ACTIVATE the robotsonar as the beginning of a pipe
+				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)
+				owner.context!!.addInternalActor(robotsonar)  
+			  	println("		--- virtualrobotSupport | has created the robotsonar")	
 			 }catch( e:Exception ){
                  println("		--- virtualrobotSupport2021 | ERROR $e")
              }	
