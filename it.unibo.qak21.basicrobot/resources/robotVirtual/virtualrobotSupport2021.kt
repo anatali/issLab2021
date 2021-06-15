@@ -28,8 +28,9 @@ object virtualrobotSupport2021 {
 	lateinit var robotsonar	: ActorBasic
 	private lateinit var hostName : String 	
 	private lateinit var support21 : IssWsHttpKotlinSupport 
+    private val forwardlongtimeMsg = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
 
-	var traceOn = false
+	var traceOn = true
 	
 	init{
 		//println(" CREATING")
@@ -69,12 +70,12 @@ object virtualrobotSupport2021 {
 		if( ajson.has("endmove") && ajson.get("endmove")=="false"){
 			owner.scope.launch{  owner.emit("obstacle","obstacle(virtual)") }
 		}
-    }
+    } 
     //translates application-language in cril
     fun translate(cmd: String) : String{ //cmd is written in application-language
 		var jsonMsg = MsgRobotUtil.haltMsg //"{ 'type': 'alarm', 'arg': -1 }"
 			when( cmd ){
-				"msg(w)", "w" -> jsonMsg = MsgRobotUtil.forwardMsg  
+				"msg(w)", "w" -> jsonMsg = forwardlongtimeMsg  		
 				"msg(s)", "s" -> jsonMsg = MsgRobotUtil.backwardMsg  
 				"msg(a)", "a" -> jsonMsg = MsgRobotUtil.turnLeftMsg  
 				"msg(d)", "d" -> jsonMsg = MsgRobotUtil.turnRightMsg  
@@ -82,12 +83,11 @@ object virtualrobotSupport2021 {
 				"msg(r)", "r" -> jsonMsg = MsgRobotUtil.turnRightMsg  
 				//"msg(z)", "z" -> not implemented
 				//"msg(x)", "x" -> not implemented
-				"msg(h)", "h" -> jsonMsg = MsgRobotUtil.haltMsg //"{ 'type': 'alarm',     'arg': 100 }"
+				"msg(h)", "h" -> jsonMsg = MsgRobotUtil.haltMsg //"{ 'type': 'alarm','arg': 100 }"
 				else -> println("		--- virtualrobotSupport2021 | command $cmd unknown")
 			}
  			return jsonMsg
 		}
-
 	fun terminate(){
 		robotsonar.terminate()
 	}	

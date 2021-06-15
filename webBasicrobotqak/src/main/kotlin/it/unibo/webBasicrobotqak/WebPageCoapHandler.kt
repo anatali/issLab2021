@@ -15,20 +15,24 @@ An object of this class is registered as observer of the resource
     var counter = 0
     override fun onLoad(response: CoapResponse) {
         val content: String = response.getResponseText()
-        sysUtil.colorPrint("WebPageCoapHandler | response content=$content}", Color.GREEN )
-        //response={"sonarvalue":"D"} or {"info":"somevalue"}
+        sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
+        if( content.contains("stepFail") ||
+            content.contains("stepDone") ||
+            content.contains("info")) {
+                val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
+                controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
+        }
+        /*
         try {
             val jsonContent = JSONObject(content)
-            if (jsonContent.has("sonarvalue")){
-                 return
-            }
             if (jsonContent.has("info")      ) {
                 /* The resource shows something new  */
-                //sysUtil.colorPrint("WebPageCoapHandler | value: $content simpMessagingTemplate=${controller.simpMessagingTemplate}", Color.BLUE)
-             }
+                sysUtil.colorPrint("WebPageCoapHandler | value: $content simpMessagingTemplate=${controller.simpMessagingTemplate}", Color.BLUE)
+                //controller.simpMessagingTemplate?.convertAndSend("/topic/infodisplay", infoRep)
+            }
         }catch(e:Exception){
             sysUtil.colorPrint("WebPageCoapHandler | ERROR=${content}", Color.RED)
-        }
+        }*/
     }
 
     override fun onError() {

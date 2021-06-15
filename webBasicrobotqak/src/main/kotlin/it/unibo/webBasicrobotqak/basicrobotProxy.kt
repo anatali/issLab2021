@@ -12,11 +12,11 @@ Its goal is to work as an observer
  */
 class basicrobotProxy (name : String ) : ActorBasic( name ) {
 	var answerMoveChannel = Channel<String>()
-	val resource = ResourceRep.getResourceRep()
+	//val resource = ResourceRep.getResourceRep()
 init{
 	//sysUtil.colorPrint("basicrobotProxy | ${HIController.answerMoveChannel}  ${answerChannel}", Color.GREEN)
 	//answerMoveChannel = HIController.getAnswerChannel()
-	sysUtil.colorPrint("basicrobotProxy | resource ${resource.robotanswerChannel} scope=$scope", Color.GREEN)
+	//sysUtil.colorPrint("basicrobotProxy | resource ${resource.robotanswerChannel} scope=$scope", Color.GREEN)
 
 	//HIController.setAnswerChannel(answerMoveChannel)
 }
@@ -30,12 +30,13 @@ init{
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	  suspend fun elabData( msg: ApplMessage ){
-		   sysUtil.colorPrint("basicrobotProxy | elabData:${msg} ", Color.BLUE)
+	      sysUtil.colorPrint("basicrobotProxy | elabData:${msg} ", Color.BLUE)
+	/*
 		  if( msg.isReply() ) {
 			  //sysUtil.colorPrint("basicrobotProxy | elabData:${msg} ${answerMoveChannel}", Color.BLUE)
 			  //answerMoveChannel.send( msg.toString() )
 			  //answerChannel.put( msg.toString() )
 			  sysUtil.colorPrint("basicrobotProxy | elabDataDONE ", Color.BLUE)
-		  }
+		  }*/
 	  }
 }

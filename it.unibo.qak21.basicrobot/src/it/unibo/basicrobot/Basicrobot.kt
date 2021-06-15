@@ -132,7 +132,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						unibo.robot.robotSupport.move( "h"  )
 						println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")
-						println("$name in ${currentState.stateName} | $currentMsg")
 						stateTimer = TimerActor("timer_stepPerhapsDone", 
 							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
 					}
@@ -153,12 +152,15 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						println("basicrobot | stepFailDetecteddddddddddddddddddddddddddddddddddd near end of step ")
 						answer("step", "stepfail", "stepfail($StepTime,obstacle)"   )  
+						updateResourceRep( "stepFail($Duration)"  
+						)
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 				state("stepFail") { //this:State
 					action { //it:State
 						Duration = getDuration(StartTime)
+						println("basicrobot | stepFail duration=$Duration")
 						updateResourceRep( "stepFail($Duration)"  
 						)
 						emit("info", "info(stepFail($Duration))" ) 

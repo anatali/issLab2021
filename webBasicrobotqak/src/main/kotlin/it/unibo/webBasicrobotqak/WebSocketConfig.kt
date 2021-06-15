@@ -1,4 +1,4 @@
-package it.unibo.sonarguigpring
+package it.unibo.webBasicrobotqak
 
 import com.andreapivetta.kolor.Color
 import it.unibo.actor0.sysUtil.colorPrint
@@ -40,7 +40,6 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
         /*
          Registers the /it-unibo-iss endpoint, enabling SockJS fallback options
          so that alternate transports can be used if WebSocket is not available.
-         The SockJS client will attempt to connect to stompEndpointPath (/it-unibo-iss)
           */
          registry.addEndpoint(stompEndpointPath).withSockJS()
     }

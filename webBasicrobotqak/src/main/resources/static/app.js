@@ -21,11 +21,9 @@ function connect() {
         setConnected(true);
         //SUBSCRIBE to STOMP topic updated by the server
         stompClient.subscribe('/topic/infodisplay', function (msg) {
-        //msg: {"content":"led(off):12"} or {"content":"sonarvalue(D)"}
+             //msg: {"content":"..."}
              //alert(msg)
              var jsonMsg = JSON.parse(msg.body).content;
-             //if( jsonMsg.includes("led")) showMsg( jsonMsg, "infodisplay" );
-             //else
              showMsg( jsonMsg, "infodisplay" );
         });
 
@@ -46,8 +44,8 @@ function sendUpdateRequest(){
 }
 
 function showMsg(message, outputId) {
-console.log(message );
-    $("#"+outputId).html( "<pre>"+message.replace(/\n/g,"<br/>")+"</pre>" );
+    console.log(message );
+    $("#"+outputId).html( message.replace(/\n/g,"<br/>")  );
     //$("#applmsgintable").append("<tr><td>" + message + "</td></tr>");
 }
 

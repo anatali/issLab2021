@@ -149,7 +149,7 @@ QActor basicrobot context ctxbasicrobot{
  	State stepPerhapsDone{ 
  		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
 		println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")  
-		printCurrentMessage
+		//printCurrentMessage
  		/* 
 		onMsg( local_sonar : sonar(D,T)){ //for the real robot
 			println("basicrobottxxxxxxxxxxxxxxxx | after a step emit polar(${payloadArg(0)}, 180) ")
@@ -171,11 +171,13 @@ QActor basicrobot context ctxbasicrobot{
 	State stepFailDetected{
 		println("basicrobot | stepFailDetecteddddddddddddddddddddddddddddddddddd near end of step ")
  		replyTo step with stepfail : stepfail($StepTime, obstacle)
+ 		updateResource [# "stepFail($Duration)" #]
     }
 	Goto work 
 	 
 	State stepFail{  
 		setDuration Duration from StartTime
+		println("basicrobot | stepFail duration=$Duration")
  		updateResource [# "stepFail($Duration)" #]
  		emit info : info( stepFail($Duration) )
 		//println("basicrobot | stepFail after $Duration ")

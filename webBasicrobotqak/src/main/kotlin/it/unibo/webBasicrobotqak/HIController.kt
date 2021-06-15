@@ -26,19 +26,25 @@ import org.springframework.web.util.HtmlUtils
 
  */
 
-
 @Controller
 class HIController {
     @Value("\${human.logo}")
     var appName: String?    = null
+    /*
+     * Update the page vie socket.io when the application-resource changes.
+     * See also https://www.baeldung.com/spring-websockets-send-message-to-user
+     */
+    @Autowired
+    var  simpMessagingTemplate : SimpMessagingTemplate? = null
 
+    var basicrobot               : ActorBasic? = null
     lateinit var connSupport     : connQakBase
-    lateinit var basicrobot      : ActorBasic
     lateinit var robotproxy      : ActorBasic
+    lateinit var coapsupport     : CoapSupport
     val scopeTorunBasicrobot = CoroutineScope(Dispatchers.Default)
     lateinit var basicrobotScope : CoroutineScope
     //lateinit var answerChannel  : Channel<String>
-    val resource = ResourceRep.getResourceRep()
+    //val resource = ResourceRep.getResourceRep()
 
     companion object{
         var logo = "just to test"
@@ -48,17 +54,8 @@ class HIController {
             sysUtil.colorPrint("HIController | answChannelllllllllllll: ${answChannel}", Color.BLUE)
             robotanswerChannel = answChannel
         }
-        fun xxx(){
-            sysUtil.colorPrint("HIController | xxxxxxxxxxxxxxxxxxx: ${robotanswerChannel}", Color.MAGENTA)
 
-        }
     }
-    /*
-     * Update the page vie socket.io when the application-resource changes.
-     * See also https://www.baeldung.com/spring-websockets-send-message-to-user
-     */
-    @Autowired
-    var  simpMessagingTemplate : SimpMessagingTemplate? = null
 
     //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
     init{
@@ -75,18 +72,28 @@ class HIController {
 
                 //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
                 //sysUtil.colorPrint("HIController | answerChannel: ${answerChannel}", Color.BLUE)
-                basicrobot = QakContext.getActor("basicrobot")!!
-                sysUtil.colorPrint("HIController | create basicrobot ${basicrobot}", Color.BLUE)
-                robotproxy = QakContext.getActor("basicrobotProxy")!!
-                sysUtil.colorPrint("HIController | create basicrobotProxy ${basicrobot}", Color.BLUE)
+                //basicrobot = QakContext.getActor("basicrobot")!!
+                //sysUtil.colorPrint("HIController | create basicrobot ${basicrobot}", Color.BLUE)
+                //robotproxy = QakContext.getActor("basicrobotProxy")!!
+                //sysUtil.colorPrint("HIController | create basicrobotProxy ${basicrobot}", Color.BLUE)
                 //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
-                basicrobotScope=basicrobot.scope
-                sysUtil.colorPrint("HIController | resource: ${resource.robotanswerChannel} scope=${basicrobotScope}", Color.BLUE)
-            }
+                //basicrobotScope=basicrobot.scope
+                //sysUtil.colorPrint("HIController | resource: ${resource.robotanswerChannel} scope=${basicrobotScope}", Color.BLUE)
 
+             }
         }catch( e: Exception){
             sysUtil.colorPrint("HIController | Error $e", Color.RED)
         }
+        while( basicrobot == null ){
+            Thread.sleep(500)
+            val br = QakContext.getActor("basicrobot")
+            if( br == null ){
+                sysUtil.colorPrint("HIController | waiting for basicrobot creation ...", Color.GREEN)
+            }else basicrobot = br
+        }
+        coapsupport = CoapSupport("coap://localhost:8020", "ctxbasicrobot/basicrobot")
+        coapsupport.observeResource( WebPageCoapHandler(this) )
+
         sysUtil.colorPrint("HIController | INIT", Color.GREEN)
         //connQakSupport = connQakCoap()
         //connQakSupport.createConnection()
@@ -119,34 +126,42 @@ class HIController {
     fun  doMove(viewmodel : Model,
         @RequestParam(name="move", required=false, defaultValue="h")robotmove : String) : String{
         sysUtil.colorPrint("HIController | param-move:$robotmove robotanswerChannel=${robotanswerChannel}", Color.RED)
-        xxx()
+
         viewmodel.addAttribute("viewmodelarg", "${robotmove}") //resRep.content
          //connSupport.forward( MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination))
         //sysUtil.colorPrint("HIController | xxxxxxxxx... ${answerChannel} ", Color.RED)
         if( robotmove == "p" ){
             runBlocking{
                 val reqMsg = MsgUtil.buildRequest("basicrobotproxy", "step", "step(350)", connQak.qakdestination)
-                basicrobot.autoMsg(reqMsg)
+                basicrobot!!.autoMsg(reqMsg)
                 //handle answer
                 //polling on the basicrobot ActorResourceRep since no shared channel is possible
                 //between basicrobotProxy and HIController
+                /*
                  var info = "unknown"
                  while( true ){
                      sysUtil.colorPrint("HIController | info=${info}", Color.RED)
                      if( info.contains("stepDone") ) break
                      if( info.contains("stepFail") ) break
                      delay( 350 ) //give time to change ActorResourceRep in step(T)
-                     info = basicrobot.geResourceRep()
+                     info = basicrobot!!.geResourceRep()
                  }
-                 viewmodel.addAttribute("viewmodelarg", "${info}")
+                 viewmodel.addAttribute("viewmodelarg", "${info}")*/
             }
             //sysUtil.colorPrint("HIController | returnnnnnnnn: ", Color.RED)
         }else {
             val cmdMsg = MsgUtil.buildDispatch("basicrobotproxy", "cmd", "cmd($robotmove)", connQak.qakdestination)
-            scopeTorunBasicrobot.launch { basicrobot.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
+            scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
         }
+        //When doing a POST, we do not return the HTML page
         return "basicrobotqakGui"
     }
-
-
+/*
+    @MessageMapping("/app/update")
+    @SendTo("/topic/infodisplay")
+    fun updateTheMap(@Payload message: String): ResourceRep {
+        sysUtil.colorPrint("HIController | message=$message", Color.BLUE)
+        return ResourceRep("todo")
+    }
+*/
 }

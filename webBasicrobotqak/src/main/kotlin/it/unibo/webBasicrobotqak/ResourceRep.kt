@@ -1,21 +1,11 @@
 package it.unibo.webBasicrobotqak
 
-import kotlinx.coroutines.channels.Channel
-
 class ResourceRep {
-    var robotanswerChannel = Channel<String>()
+    var content: String? = null
+        private set
 
-    companion object{
-        var myself : ResourceRep? = null
-
-        fun getResourceRep() : ResourceRep{
-            if( myself == null ){
-                myself = ResourceRep()
-            }
-            return myself!!
-        }
-
-
+    constructor() {}
+    constructor(content: String?) {
+        this.content = content
     }
-
- }
+}
