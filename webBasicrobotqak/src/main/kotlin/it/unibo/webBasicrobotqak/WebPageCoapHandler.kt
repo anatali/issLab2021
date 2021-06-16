@@ -16,23 +16,19 @@ An object of this class is registered as observer of the resource
     override fun onLoad(response: CoapResponse) {
         val content: String = response.getResponseText()
         sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
-        if( content.contains("stepFail") ||
-            content.contains("stepDone") ||
+        if( content.contains("stepDone") ||
             content.contains("info")) {
                 val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
                 controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
+        } else if( content.contains("stepFail") ){
+            val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( "stepfail" )  )
+             controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
+            sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.BLUE )
+        } else if( content.contains("obstacle") ){
+            val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( "obstacle" )  )
+            controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
         }
-        /*
-        try {
-            val jsonContent = JSONObject(content)
-            if (jsonContent.has("info")      ) {
-                /* The resource shows something new  */
-                sysUtil.colorPrint("WebPageCoapHandler | value: $content simpMessagingTemplate=${controller.simpMessagingTemplate}", Color.BLUE)
-                //controller.simpMessagingTemplate?.convertAndSend("/topic/infodisplay", infoRep)
-            }
-        }catch(e:Exception){
-            sysUtil.colorPrint("WebPageCoapHandler | ERROR=${content}", Color.RED)
-        }*/
+
     }
 
     override fun onError() {

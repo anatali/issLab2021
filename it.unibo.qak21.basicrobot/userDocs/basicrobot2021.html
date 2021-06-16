@@ -355,19 +355,18 @@ and creates the proper low-level support for three types of 'concrete' robots:
 <li><bc>virtual</bc>: <br/><m>the virtual robot described in
 <a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="robot">Virtual robot 2021</a>,
 that can be launched by using the docker-compose file  
-<a href="../../it.unibo.issLabStart/Dockercompose/virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a> 
-and called by using the support described in:
-<a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="lab">IssWsHttpKotlinSupport</a>
-</m>
-<center><img src="./img/wenvscene1.png" alt="wenvscene1" width="30%" height="60%"></center>	
+<a href="../../it.unibo.issLabStart/Dockercompose/virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a>.
+<!-- and called by using the support described in:
+<a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="lab">IssWsHttpKotlinSupport</a>-->
+<center><img src="./img/wenvscene1.png" alt="wenvscene1" width="40%" height="60%"></center>	
 </li>
 <li><bc>nano</bc>: <br/><m>the self-made robot described in 
 <a href="LabNanoRobot.html" target="robot">LabNanoRobot | The home-made basicrobot</a></m>
-<center><img src="./img/robotsUnibo.jpg" alt="robotsUnibo" width="30%" height="60%"></center>	
+<center><img src="./img/robotsUnibo.jpg" alt="robotsUnibo" width="40%" height="60%"></center>	
 </li>
 <li><bc>mbot</bc>: <br/><m>the  robot described in 
 <a href="Mbot3030.html" target="robot">Mbot3030 | The reference ddr robot</a> </m>
-<center><img src="./img/mbot.png" alt="mbot" width="30%" height="60%"></center>	
+<center><img src="./img/mbot.png" alt="mbot" width="40%"></center>	
 </li>
 </ul>
  
@@ -418,25 +417,29 @@ a specialization for <ks>MQTT</ks> that exploits the library <tt>org.eclipse.pah
 In a virtual robot:
 <ul>
 <li>a robot-move command sent in synchronous or asynchronous way, activates an action that terminates after a prefixed time;</li>
-<li>a robot-move command cannot be interrupted by another command different from <bc>halt</bc>;</li>
+<li>a robot-move command <b>cannot be interrupted</b> by another command different from <bc>halt</bc>;</li>
 <li>a robot-move command called in <i>synchronous</i> way,  produces a result that gives information on the state of the world or of the robot.</li>
-<li>a robot-move command called in <i>asynchronous</i> way, produces information that can be perceived by proper 'callbacks'.</li>
+<li>a robot-move command called in <i>asynchronous</i> way, produces information that can be perceived and handled by proper 'observers'.</li>
 </ul>
 </m>
 </div>
+<m>
 The low-level support  <a href="../resources/robotVirtual/virtualrobotSupport2021.kt" target="code">virtualrobotSupport2021.kt</a>
-interacts wuth the virtual robot by using objects of class
+interacts with the virtual robot by sending  commands expressed in the
+<a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html#cril" target="code">cril language</a> using objects of class
 <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>.
-It:
+More precisely, it:
  <br/> <br/>
-<m><ul>
+<ul>
 <li>implements <bc>backward</bc>, <bc>turnLeft</bc>, <bc>turnRight</bc>, <bc>halt </bc> by calling
-the synchronous <ks>sendHttp</ks>.  
-The answer <tt>{"endmove":"false","move":"..."}</tt> generates the event <k>obstacle:obstacle(virtual)</k>
+the <em>synchronous sendHttp</em>.  
+When the answer is <tt>{"endmove":"false","move":"..."}</tt>, the support generates the event <k>obstacle:obstacle(virtual)</k>.
+<br/><br/>
  </li>
-<li>implements <bc>forward</bc>, <bc>step</bc> by using 
-the asynchronous <ks>sendWs</ks>. The asynchronous answer is handled by
-<a href="../resources/robotVirtual/NaiveActorKotlinObserver.kt" target="code">NaiveActorKotlinObserver.kt</a>.
+<li>implements <bc>forward</bc>, <bc>step</bc> by sending the 'long move' cril command <tt>{"robotmove":"moveForward", "time": <k>1000</k>}</tt>
+using the <em>asynchronous sendWs</em>. The information produced as a consequance of move is handled by the
+<a href="../resources/robotVirtual/WsSupportObserver.kt" target="code">WsSupportObserver.kt</a>, that 
+generates the event <k>obstacle:obstacle(virtual)</k> when such information is <tt>{"collision":true,"move":"..."}</tt>.
 
 </li>
 </ul>
@@ -454,15 +457,15 @@ localhost:8090	<kc>//open the WEnv gui</kc>
 
 
 </td>
-<td>
-A real robot executes the robot-move commands by activating the motors using proper device-dependent utiilities. <br/>
+<td><m>
+A real robot executes a robot-move command by activating the motors using proper device-dependent utiilities. <br/>
 The obstacles are detected by means of a <tt>HC-SR04</tt> Distance Sensor, as introduced in
 <a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="code">LabSonarAsResource.html</a>.
-<div class="remark"><m>
+<div class="remark">
 In a real robot:
 <ul>
-<li>each robot-move command activates an 'endless' (depending on the battery charge) action, that can be always 'interrupted' (or better
-'replaced') by another move;</li>
+<li>each robot-move command activates an 'endless' (depending on the battery charge and the obstacles) action, that 
+<b>can be always replaced</b> ('interrupted') by another move;</li>
 <li>a robot-move produces effects (on the world or on the robot itself) that must be detected by sensors.</li>
 </ul>
 </m>

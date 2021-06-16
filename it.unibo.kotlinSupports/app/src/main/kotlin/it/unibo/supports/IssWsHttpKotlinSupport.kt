@@ -52,7 +52,7 @@ class IssWsHttpKotlinSupport
         //val WEnvAddr = "localhost:8091"
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
-        var trace            = true
+        var trace            = false
 
         fun colorPrint(msg : String, color : Color = Color.CYAN ){
             if( trace )
@@ -164,7 +164,7 @@ class IssWsHttpKotlinSupport
 
     fun sendHttp(msgJson : String, httpaddr : String) : String {
         val body    = msgJson.toRequestBody(JSON_MediaType)
-        colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson  ")
+        //colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson  ")
         val request = Request.Builder()
             .url( "http://$httpaddr" )
             .post(body)
@@ -178,7 +178,7 @@ class IssWsHttpKotlinSupport
     }
 
       fun sendWs( msgJson : String   ){
-          colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
+          //colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
         myWs.send(msgJson);
     }
 //========================================================================

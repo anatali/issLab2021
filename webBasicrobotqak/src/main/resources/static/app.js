@@ -18,7 +18,7 @@ function connect() {
     var socket = new SockJS('/it-unibo-iss');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        setConnected(true);
+        //setConnected(true);
         //SUBSCRIBE to STOMP topic updated by the server
         stompClient.subscribe('/topic/infodisplay', function (msg) {
              //msg: {"content":"..."}

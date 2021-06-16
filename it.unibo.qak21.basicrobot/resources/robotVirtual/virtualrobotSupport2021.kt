@@ -31,17 +31,17 @@ object virtualrobotSupport2021 {
 	private lateinit var support21ws : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
     private val forwardlongtimeMsg = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
 
-	var traceOn = true
+	var traceOn = false
 	
 	init{
-		//println(" CREATING")
+		println("virtualrobotSupport2021 | init ... ")
 		IssWsHttpKotlinSupport.trace = false
 	}
 	
-val xxx : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
+val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
      fun(scope, support ) {
-        println("WebSocketKotlinSupportUsage | xxx 1 ")
-		val obs  = NaiveActorKotlinObserver("virtualrobotSupport2021obs", scope)
+		val obs  = WsSupportObserver("wsSupportObs", scope, owner)
+        println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the IssWsHttpKotlinSupport")
 		support.registerActor( obs )
 }
 	
@@ -58,8 +58,9 @@ val xxx : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
             	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
 				support21ws  = IssWsHttpKotlinSupport.createForWs(owner.scope, "$hostNameStr:8091" )
             	println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
-				support21ws.wsconnect( xxx )  //
-				support21ws.sendWs(MsgRobotUtil.turnLeftMsg)
+				support21ws.wsconnect( doafterConn )  //
+				 
+				//support21ws.sendWs(MsgRobotUtil.turnLeftMsg)
 				  
 				//support21ws.forward(MsgRobotUtil.turnRightMsg)
 				//ACTIVATE the robotsonar as the beginning of a pipe
@@ -76,11 +77,11 @@ val xxx : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 	}
 
     fun move(cmd: String) {	//cmd is written in application-language
-		println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
+		//println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
 		val msg = translate( cmd )
 		trace("move  $msg")
 		if( cmd == "w" ){  //doing a w => aysnch
-			println("		--- virtualrobotSupport2021 |  wwwwwwwwwwwwwwwwwwwwwwwwww $support21ws")
+			//println("		--- virtualrobotSupport2021 |  wwwwwwwwwwwwwwwwwwwwwwwwww $support21ws")
 			support21ws.sendWs(msg)	//aysnch => no immediate answer (w could found an obstacle)
 			return
 		}

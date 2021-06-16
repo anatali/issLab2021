@@ -42,9 +42,7 @@ class HIController {
     lateinit var robotproxy      : ActorBasic
     lateinit var coapsupport     : CoapSupport
     val scopeTorunBasicrobot = CoroutineScope(Dispatchers.Default)
-    lateinit var basicrobotScope : CoroutineScope
-    //lateinit var answerChannel  : Channel<String>
-    //val resource = ResourceRep.getResourceRep()
+    //lateinit var basicrobotScope : CoroutineScope
 
     companion object{
         var logo = "just to test"
@@ -125,7 +123,7 @@ class HIController {
     @PostMapping("/robotmove")
     fun  doMove(viewmodel : Model,
         @RequestParam(name="move", required=false, defaultValue="h")robotmove : String) : String{
-        sysUtil.colorPrint("HIController | param-move:$robotmove robotanswerChannel=${robotanswerChannel}", Color.RED)
+        sysUtil.colorPrint("HIController | param-move:$robotmove ", Color.RED)
 
         viewmodel.addAttribute("viewmodelarg", "${robotmove}") //resRep.content
          //connSupport.forward( MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination))
