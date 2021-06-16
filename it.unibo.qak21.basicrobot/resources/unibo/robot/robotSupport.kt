@@ -39,7 +39,7 @@ object robotSupport{
 			//"mockrobot"  ->  { robotMock.mockrobotSupport.create(  ) }
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
 			"realmbot"   ->  { robotMbot.mbotSupport.create( owner, robotPort  ) } //robotPort="/dev/ttyUSB0"   "COM6"
- 			"realnano"   ->  { robotNano.motorscSupport.create( owner )
+ 			"realnano"   ->  { robotNano.nanoSupport.create( owner )
  				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar")
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  
@@ -62,7 +62,7 @@ object robotSupport{
 			//"mockrobot"  -> { robotMock.mockrobotSupport.move( cmd ) 					  }
 			"virtual"    -> { robotVirtual.virtualrobotSupport2021.move(  cmd ) 	  }
 			"realmbot"   -> { robotMbot.mbotSupport.move( cmd ) 	}
- 			"realnano"   -> { robotNano.motorscSupport.move( cmd)	}
+ 			"realnano"   -> { robotNano.nanoSupport.move( cmd)	}
 			else         -> println( "		--- robotSupport | robot unknown")
 		}		
 	}
@@ -72,7 +72,7 @@ object robotSupport{
 			"mockrobot"  -> {  					                  }
 			"virtual"    -> { robotVirtual.virtualrobotSupport2021.terminate(  ) 	  }
  			"realmbot"   -> { /* robotMbot.mbotSupport.terminate(  ) */	}
- 			"realnano"   -> { robotNano.motorscSupport.terminate( )	}
+ 			"realnano"   -> { robotNano.nanoSupport.terminate( )	}
 			else         -> println( "		--- robotSupport | robot unknown")
 		}		
 		

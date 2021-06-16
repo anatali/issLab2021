@@ -199,11 +199,43 @@ div.imagedesc{
 <div class="body"> 
  
 <h2>Introduction</h2>
-We define here a resource that represents a robot able to handle a set of commands. 
+We define here a resource that represents a robot able to handle a set of commands by using a low-level support,
+specified in a robot-configuration phase.. 
 <br/><br/>
 
 <table style="width:98%">
 <tbody>	
+
+<tr>
+<td style="width:50%">
+
+<h3>The basicrobot project</h3>
+
+
+<center><img src="./img/basicrobotproject.png" alt="basicrobotproject" width="100%" ></center>
+ 
+ 
+</td>
+<td> The <a href="../../it.unibo.qak21.basicrobot/src/basicrobot.qak" target="code">basicrobot.qak</a> (in project <i>it.unibo.qak21.basicrobot</i>):
+<ul>
+<li>is able to execute basic move commands, by handling a <bc>dispatch</bc> (for the elementary commands <tt>w | s | ... </tt>)
+and a <bc>request</bc> (for the command <tt>step</tt>);<br/><br/></li>
+</li>
+<li>is a CoAP-observable resource that maintains information on its current functional state (variable <ks>ActorResourceRep</ks>);<br/><br/>   </li>
+<li>interacts with a concrete robot  by means of a (<a href="https://en.wikipedia.org/wiki/Plain_old_Java_object" target="web">POJO</a>) object 
+(<a href="../resources/unibo/robot/robotSupport.kt" target="code">resources/unibo/robot/robotSupport.kt</a>)
+working as an adapter for devices described in the configuration file
+<a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+;<br/><br/>   </li>
+<li>is a source of <bc>obstacle events</bc>, that are generated after receiving a <bc>obstacle message</bc> by the 
+<a href="#lowlevel">low-level robot support</a> 
+</li>
+</ul> 
+ 
+ </m>
+ 
+</td>
+</tr>
 
 <tr>
 <td style="width:50%" ><h3 id="basicrobot">The basicrobot model</h3>
@@ -238,7 +270,7 @@ Reply   stepfail   : stepfail(DURATION, CAUSE)
 <li><ks>Event <k>obstacle</k>:obstacle( V )</ks>: When the robot hits an obstacle 
  
 </li>
-<li><ks>Event <k>sonar</k>:sonar( V )</ks>: When the robot detects an obstacle 
+<li><ks>Event <k>sonar</k>:sonar( V )</ks>: When the robot ... 
  
 </li>
 </ul>
@@ -265,13 +297,50 @@ The configuration file <a href="../basicrobotConfig.json" target="code">basicrob
 </pre>
 </m>
 
+<h3>The observable state</h3>
+The <a href="../src/basicrobot.qak" target="code">basicrobot.qak</a> is a CoAP observable resource
+that updates an internal observable state (<em>RObState</em>) implemented as a simple <k>String</k>.
 </td>
  
+</tr>
+
+<tr>
+<td><h3>The move commands</h3>
+<ul>
+<li><bc>halt</bc> (<ks>cmd : cmd(h)</ks>): the robot stops.	</li>
+<li><bc>step</bc> (<ks>step : step(T)</ks>): the robot moves forwards for a prefixed time <k>T</k>. 
+If the command is executed with success, it replies	with <ks>stepdone : stepdone(<k>T</k>)</ks>;
+otherwise, if it fails after the time <k>D</k> for some reason <k>C</k>,  it replies swith 
+<ks>stepfail : stepfail(<k>D</k>, <k>C</k>)</ks>.</li>
+<li><bc>forward</bc> (<ks>cmd : cmd(w)</ks>): the robot moves forwards for a prefixed time <tt>TF</tt>, being able to
+receive and execute the <bc>halt</bc> command before the end of <tt>TF</tt> and 
+to emit a <k>obstacle</k> event if it stops after the collision with an obstacle.</li>
+<li><bc>backward</bc> (<ks>cmd : cmd(s)</ks>): the robot moves backward for a prefixed time <tt>TF</tt>, being able to
+emit a <k>obstacle</k> event if it stops after the collision with an obstacle.</li>
+<li><bc>turnLeft</bc> (<ks>cmd : cmd(l)</ks>): the robot rotates on the left of <tt>90</tt> degrees.</li>
+<li><bc>turnRight</bc> (<ks>cmd : cmd(l)</ks>): the robot rotates on the right of <tt>90</tt> degrees.</li>
+ 
+</ul>
+
+</td>
+<td><h3>Behavior details</h3>
+<ul>
+<li>While executing a command <bc>step</bc>, <bc>forward</bc> or <bc>backward</bc>, the robot could hit an obstacle.
+In this case it emits the <k>obstacle</k> event and writes the string <k>obstacle</k> in the <em>RObState</em>.
+
+</li>
+<!--
+<li>All the commands sent as a dispatch are executed in synchronous way. However, since no answer is returned
+the effects of the command are show.</li>
+ -->
+</ul>
+
+</td>
 </tr>
  </tbody>
 </table>
 
-<h2>The low-level supports </h2>
+<h2 id="lowlevel">The low-level supports </h2>
 
 <table style="width:98%">
 <tbody>	
@@ -305,11 +374,18 @@ and called by using the support described in:
   
 </td>
 <td> 
-<h3 id="connQakbase">Supports for interaction</h3>
 The project 
 <a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>
-defines supports for interaction via <tt>TCP, HTTP, MQTT and Coap</tt>.
-<br/><br/>
+defines a robot-command console and supports for interaction with the 
+<a href="../src/basicrobot.qak" target="code">basicrobot.qak</a>
+ via <tt>TCP, HTTP, MQTT and Coap</tt>.
+
+<h3 id="console">A command-console</h3>
+<a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code"><bc>consoleGuiSimple.kt</bc></a>
+<center><img src="./img/consoleCoap.png" alt="consoleCoap" width="30%" height="60%"></center>	
+ 
+
+<h3 id="connQakbase">Supports for interaction</h3>
 <ul>
 <li><a href="../../it.unibo.qak21.robots/resources/connQak/connQakBase.kt" target="code">connQakBase.kt</a>:
 a factory class that creates protocol-specific supports by reading the information stored in
@@ -337,16 +413,72 @@ a specialization for <ks>MQTT</ks> that exploits the library <tt>org.eclipse.pah
 
 <tr>
 <td style="width:50%" >
-<h3>Using the virtual robot</h3>
+<h3>Robot as the virtual robot</h3>
+<div class="remark"><m>
+In a virtual robot:
+<ul>
+<li>a robot-move command sent in synchronous or asynchronous way, activates an action that terminates after a prefixed time;</li>
+<li>a robot-move command cannot be interrupted by another command different from <bc>halt</bc>;</li>
+<li>a robot-move command called in <i>synchronous</i> way,  produces a result that gives information on the state of the world or of the robot.</li>
+<li>a robot-move command called in <i>asynchronous</i> way, produces information that can be perceived by proper 'callbacks'.</li>
+</ul>
+</m>
+</div>
+The low-level support  <a href="../resources/robotVirtual/virtualrobotSupport2021.kt" target="code">virtualrobotSupport2021.kt</a>
+interacts wuth the virtual robot by using objects of class
+<a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>.
+It:
+ <br/> <br/>
+<m><ul>
+<li>implements <bc>backward</bc>, <bc>turnLeft</bc>, <bc>turnRight</bc>, <bc>halt </bc> by calling
+the synchronous <ks>sendHttp</ks>.  
+The answer <tt>{"endmove":"false","move":"..."}</tt> generates the event <k>obstacle:obstacle(virtual)</k>
+ </li>
+<li>implements <bc>forward</bc>, <bc>step</bc> by using 
+the asynchronous <ks>sendWs</ks>. The asynchronous answer is handled by
+<a href="../resources/robotVirtual/NaiveActorKotlinObserver.kt" target="code">NaiveActorKotlinObserver.kt</a>.
+
+</li>
+</ul>
+
+</m>
+<hr/>
+<h4>Usage</h4>
 On the PC (in <tt><m><k>issLab2021/it.unibo.issLabStart/Dockercompose</k></m></tt>):
 <m><pre>
 docker-compose -f virtualRobotOnly2.0.yaml up <kc>//activate the robot</kc>
 
 localhost:8090	<kc>//open the WEnv gui</kc>
 </pre></m>
+
+
+
 </td>
 <td>
-<h3>Using a real robot</h3>
+A real robot executes the robot-move commands by activating the motors using proper device-dependent utiilities. <br/>
+The obstacles are detected by means of a <tt>HC-SR04</tt> Distance Sensor, as introduced in
+<a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="code">LabSonarAsResource.html</a>.
+<div class="remark"><m>
+In a real robot:
+<ul>
+<li>each robot-move command activates an 'endless' (depending on the battery charge) action, that can be always 'interrupted' (or better
+'replaced') by another move;</li>
+<li>a robot-move produces effects (on the world or on the robot itself) that must be detected by sensors.</li>
+</ul>
+</m>
+</div>
+<h3>Robot as a real Nano robot</h3>
+The low-level  <a href="../resources/robotNano/nanoSupport.kt" target="code">nanoSupport.kt</a>
+interacts with the real Nano-robot by using the utility <a href="../resources/robotNano/Motors.c" target="code">legonanoMotors.c</a>
+and <a href="../resources/robotNano/SonarAlone.c" target="code">SonarAlone.c</a>
+
+<h3>Robot as a real Mbot robot</h3>
+The low-level   <a href="../resources/robotMbot/mbotSupport.kt" target="code">mbotSupport.kt</a>
+interacts with the real Mbot-robot by using the utility <a href="../resources/robotMbot/robotDataSourceArduino.kt" target="code">robotDataSourceArduino.kt</a>
+
+
+<hr/>
+<h4>Usage</h4>
 On the RaspberryPi (in <tt><m>/home/pi/nat/<k>it.unibo.qak21.basicrobot-1.0/bin</k></m></tt>):
 <m><pre>
 copy: <k>basicrobot.pl</k>, <k>basicrobotConfig.json</k>
