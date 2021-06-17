@@ -16,15 +16,14 @@ An object of this class is registered as observer of the resource
     override fun onLoad(response: CoapResponse) {
         val content: String = response.getResponseText()
         sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
-        if( content.contains("stepDone") ||
-            content.contains("info")) {
-                val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
-                controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
+        if( content.contains("stepDone") || content.contains("info")) {
+            val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
+            controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
         } else if( content.contains("stepFail") ){
-            val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( "stepfail" )  )
-             controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
-            sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.BLUE )
-        } else if( content.contains("obstacle") ){
+            val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
+            Thread.sleep(350)   //otherwise does not updates ... ???
+            controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
+        } else if( content.contains("obstacle") || content.contains("collision") ){
             val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( "obstacle" )  )
             controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
         }

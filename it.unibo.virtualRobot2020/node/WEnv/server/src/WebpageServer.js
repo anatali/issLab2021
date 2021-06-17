@@ -61,17 +61,20 @@ Defines how to handle POST from browser and from external controls
 //Execute a robotmove command and sends info about collision
 //Possible moveResult : true | false | halted | notallowed
 function doMove(moveTodo, duration, res){
-	console.log('$$$ WebpageServer doMove |  moveTodo=' + moveTodo + " duration=" + duration);
+	console.log('$$$ WebpageServer doMove | ' + moveTodo + " duration=" + duration + " moveHalted=" + moveHalted);
 	execMoveOnAllConnectedScenes(moveTodo, duration)
+	if( moveTodo != "alarm"){ moveStillRunning=true }
+	else { moveHalted=true }
 	setTimeout(function() { //wait for the duration before sending the answer (collision or not)
+	    console.log('$$$ WebpageServer endMove | ' + moveTodo + " duration=" + duration + " moveHalted=" + moveHalted);
         if( moveHalted ) moveResult = "halted"
         else moveResult = (target == 'notarget').toString()
         var answer       = { 'endmove' : moveResult , 'move' : moveTodo }  //JSON obj
         const answerJson = JSON.stringify(answer)
         console.log('WebpageServer | doMove  answer= ' + answerJson  );
         target           = "notarget"; 	//reset target
-        moveStillRunning = false;       //able to accept other moves
-        moveHalted       = false;       //able to halt next move
+        //moveStillRunning = false;       //able to accept other moves
+        //moveHalted       = false;       //able to halt next move
         if( res != null ){
     		res.writeHead(200, { 'Content-Type': 'text/json' });
     		res.statusCode=200
@@ -79,20 +82,26 @@ function doMove(moveTodo, duration, res){
             res.write( answerJson  );
             res.end();
         }
+        if( moveTodo != "alarm"){
+            moveStillRunning = false;       //able to accept other moves
+            moveHalted       = false;       //able to halt next move
+        }
         //IN ANY CASE: update all the controls / observers
         updateObservers(answerJson)
     }, duration);
+
+
 }
 
 
 //Updates the mirrors
 function execMoveOnAllConnectedScenes(moveTodo, moveTime){
-    console.log('$$$ WebpageServer doMove |  updates the mirrors'   );
+    //console.log('$$$ WebpageServer doMove |  updates the mirrors'   );
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime) );
 }
 //Updates the controls and the observers (Jan 2021)
 function updateObservers(msgJson){
-    console.log("WebpageServer | updates the controls: " + msgJson   );
+    //console.log("WebpageServer | updates the controls: " + msgJson   );
 	Object.keys(wssockets).forEach( key => wssockets[key].send( msgJson ) )
 }
 
@@ -103,16 +112,16 @@ Interact with clients over ws (controls that send commands or observers) Jan 202
 */
 function initWs(){
 const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) }
+console.log("       $$$ WebpageServer | initWs wsServer=" + wsServer)
 
 wsServer.on('connection', (ws) => {
   wssocketIndex++
-  console.log("$$$ WebpageServer wssocket | client connected wssocketIndex=" + wssocketIndex)
+  console.log("     $$$ WebpageServer wssocket | CLIENT CONNECTED wssocketIndex=" + wssocketIndex)
   const key      = wssocketIndex
   wssockets[key] = ws
 
   ws.on('message', msg => {
-    console.log("$$$ WebpageServer wssocket |  wssocketIndex=" +  wssocketIndex + " received: "  )
-	console.log( msg )
+    console.log("       $$$ WebpageServer wssocket | " + wssocketIndex  + " receives: " + msg )
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
 	if( moveStillRunning && moveTodo != "alarm"){
@@ -120,26 +129,26 @@ wsServer.on('connection', (ws) => {
 	    updateObservers( JSON.stringify(answer) )
 	    return
 	}
-	if( moveTodo == "alarm" ){
+	if( moveTodo == "alarm" ){  //WARNING: the alarm move could also be sent via HTTP
 	    execMoveOnAllConnectedScenes(moveTodo, duration)
 	    moveHalted = true
 	    return
 	}
-	 moveStillRunning=true
+	 //moveStillRunning=true
 	 doMove(moveTodo, duration)
   });
 
   ws.onerror = (error) => {
-	  console.log("$$$ WebpageServer wssocket | error: ${error}")
+	  console.log("     $$$ WebpageServer wssocket | error: ${error}")
 	  delete wssockets[key];
 	  wssocketIndex--
-	  console.log( "$$$ WebpageServer wssocket | disconnect wssocketIndex=" +  wssocketIndex )
+	  console.log( "        $$$ WebpageServer wssocket | disconnect wssocketIndex=" +  wssocketIndex )
   }
 
   ws.on('close', ()=>{
 	  delete wssockets[key];
 	  wssocketIndex--
-	  console.log( "$$$ WebpageServer wssocket | disconnect wssocketIndex=" +  wssocketIndex )
+	  console.log( "        $$$ WebpageServer wssocket | disconnect wssocketIndex=" +  wssocketIndex )
   })
 }); //wsServer.on('connection' ...
 }//initWs
@@ -178,6 +187,7 @@ function initSocketIOWebGLScene() {
 }//initSocketIOWebGLScene
 
 function startServer() {
+    console.log("WebpageServer  | startServer" )
     initSocketIOWebGLScene()
     initWs()
     hhtpSrv.listen(serverPort)

@@ -151,7 +151,8 @@ class HIController {
             val cmdMsg = MsgUtil.buildDispatch("basicrobotproxy", "cmd", "cmd($robotmove)", connQak.qakdestination)
             scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
         }
-        //When doing a POST, we do not return the HTML page
+        //
+        sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
         return "basicrobotqakGui"
     }
 /*

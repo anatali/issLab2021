@@ -97,7 +97,7 @@ QActor basicrobot context ctxbasicrobot{
 	} 
 	Transition t1   whenMsg     cmd       -> execcmd
 					whenRequest step      -> doStep			
-					whenMsg    obstacle   -> handleObstacle  //caused by the move w
+					whenMsg    obstacle   -> handleObstacle  //in virtualrobot caused by the move w/s
 					whenEvent sonar       -> handleSonar
 				  	whenMsg     end       -> endwork			  
 	
@@ -115,13 +115,15 @@ QActor basicrobot context ctxbasicrobot{
 		//printCurrentMessage
 		println("basicrobot | handleObstacle")	
 		run unibo.robot.robotSupport.move( "h" )
-		//back to avoid obstacle again
+		//back to avoid emission of obstacle again if moving forward !!!
+		/* 
 		run unibo.robot.robotSupport.move( "s" )
 		delay 400
 		run unibo.robot.robotSupport.move( "h" )
-		onMsg( obstacle  : obstacle( TARGET ) ){
+		*/
+		//onMsg( obstacle  : obstacle( TARGET ) ){
 			updateResource [# "obstacle" #]
- 		}
+ 		//}
  		emit info : info( obstacledoing(w) )
 	}
 	Goto work 
