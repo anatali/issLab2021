@@ -19,7 +19,7 @@ const serverPort    = 8090
 
 //STATE variables used by cmd handling on wssockets (see initWs)
 var alreadyConnected = false
-var moveStillRunning = false
+var moveStillRunning = ""
 var moveHalted       = false
 var target           = "notarget"   //the current virtual object that collides
 
@@ -50,11 +50,26 @@ Defines how to handle POST from browser and from external controls
 	    req.on('data', function (chunk) { data += chunk; }); //accumulate data sent by POST
             req.on('end', function () {	//elaborate data received
 			//{ robotmove: move, time:duration } - robotmove: turnLeft | turnRight | ...
-			console.log('POST /api/move data ' + data  );
+			console.log('POSTTTTTTTTTTTTTTTTTTTTTTTT /api/move data ' + data  );
 			var jsonData = JSON.parse(data)
      		var moveTodo = jsonData.robotmove
      		var duration = jsonData.time
-			doMove(moveTodo, duration, res) //send the answer after duration
+     		if( moveTodo=="alarm"){ //do the halt move
+ 	            execMoveOnAllConnectedScenes(moveTodo, duration)
+ 	            if( moveStillRunning.length>0 && ! moveStillRunning.includes("_Asynch")){
+ 	                console.log('$$$ WebpageServer /api/move | ' + moveTodo + " while doing " + moveStillRunning );
+                    moveHalted = true
+  	            }
+                if( res != null ){
+                    res.writeHead(200, { 'Content-Type': 'text/json' });
+                    res.statusCode=200
+                    var answer       = { 'endmove' : 'true' , 'move' : 'halt' }  //JSON obj
+                    const answerJson = JSON.stringify(answer)
+                    res.write( answerJson  );
+                    res.end();
+                }
+            }//the move os not halt
+			else doMove(moveTodo, duration, res) //send the answer after duration
   	   });
 	}); //app.post
 
@@ -63,31 +78,28 @@ Defines how to handle POST from browser and from external controls
 function doMove(moveTodo, duration, res){
 	console.log('$$$ WebpageServer doMove | ' + moveTodo + " duration=" + duration + " moveHalted=" + moveHalted);
 	execMoveOnAllConnectedScenes(moveTodo, duration)
-	if( moveTodo != "alarm"){ moveStillRunning=true }
-	else { moveHalted=true }
+	moveStillRunning=moveTodo
 	setTimeout(function() { //wait for the duration before sending the answer (collision or not)
-	    console.log('$$$ WebpageServer endMove | ' + moveTodo + " duration=" + duration + " moveHalted=" + moveHalted);
         if( moveHalted ) moveResult = "halted"
         else moveResult = (target == 'notarget').toString()
+ 	    console.log('$$$ WebpageServer endMove | ' + moveTodo +
+ 	        " duration=" + duration + " moveHalted=" + moveHalted
+ 	        + " moveResult=" + moveResult);
         var answer       = { 'endmove' : moveResult , 'move' : moveTodo }  //JSON obj
         const answerJson = JSON.stringify(answer)
         console.log('WebpageServer | doMove  answer= ' + answerJson  );
         target           = "notarget"; 	//reset target
-        //moveStillRunning = false;       //able to accept other moves
-        //moveHalted       = false;       //able to halt next move
-        if( res != null ){
-    		res.writeHead(200, { 'Content-Type': 'text/json' });
-    		res.statusCode=200
-    		//give info about nocollision to the POST sender
-            res.write( answerJson  );
-            res.end();
+        moveStillRunning = "";       //able to accept other moves
+        moveHalted       = false;       //able to halt next move
+         //IN ANY CASE: update all the controls / observers
+         updateObservers(answerJson)
+         if( res != null ){
+             res.writeHead(200, { 'Content-Type': 'text/json' });
+                res.statusCode=200
+                //give info about nocollision to the POST sender
+                res.write( answerJson  );
+                res.end();
         }
-        if( moveTodo != "alarm"){
-            moveStillRunning = false;       //able to accept other moves
-            moveHalted       = false;       //able to halt next move
-        }
-        //IN ANY CASE: update all the controls / observers
-        updateObservers(answerJson)
     }, duration);
 
 
@@ -110,6 +122,15 @@ function updateObservers(msgJson){
 Interact with clients over ws (controls that send commands or observers) Jan 2021
 -------------------------------------------------------------------------------------
 */
+/*
+Move activated in asynch mode => non answer is needed
+*/
+function doMoveAsynch(moveTodo, duration){
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
+    moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
+    execMoveOnAllConnectedScenes(moveTodo, duration)
+}
+
 function initWs(){
 const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) }
 console.log("       $$$ WebpageServer | initWs wsServer=" + wsServer)
@@ -124,18 +145,18 @@ wsServer.on('connection', (ws) => {
     console.log("       $$$ WebpageServer wssocket | " + wssocketIndex  + " receives: " + msg )
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
+	/*
 	if( moveStillRunning && moveTodo != "alarm"){
 	    const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
 	    updateObservers( JSON.stringify(answer) )
 	    return
 	}
-	if( moveTodo == "alarm" ){  //WARNING: the alarm move could also be sent via HTTP
+	if( moveStillRunning && moveTodo == "alarm" ){  //INFO: the alarm move could also be sent via HTTP
 	    execMoveOnAllConnectedScenes(moveTodo, duration)
 	    moveHalted = true
 	    return
-	}
-	 //moveStillRunning=true
-	 doMove(moveTodo, duration)
+	}*/
+	 doMoveAsynch(moveTodo, duration)
   });
 
   ws.onerror = (error) => {

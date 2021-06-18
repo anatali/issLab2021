@@ -152,7 +152,7 @@ class HIController {
             scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
         }
         //
-        sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
+        //sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
         return "basicrobotqakGui"
     }
 /*

@@ -29,7 +29,8 @@ object virtualrobotSupport2021 {
 	private lateinit var hostName : String 	
 	private lateinit var support21 : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
 	private lateinit var support21ws : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
-    private val forwardlongtimeMsg = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
+    private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
+    private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 1000}"
 
 	var traceOn = false
 	
@@ -80,9 +81,9 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 		//println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
 		val msg = translate( cmd )
 		trace("move  $msg")
-		if( cmd == "w" ){  //doing a w => aysnch
+		if( cmd == "w" || cmd == "s"){  //doing aysnch
 			//println("		--- virtualrobotSupport2021 |  wwwwwwwwwwwwwwwwwwwwwwwwww $support21ws")
-			support21ws.sendWs(msg)	//aysnch => no immediate answer (w could found an obstacle)
+			support21ws.sendWs(msg)	//aysnch => no immediate answer 
 			return
 		}
 		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
@@ -98,7 +99,7 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 		var jsonMsg = MsgRobotUtil.haltMsg //"{ 'type': 'alarm', 'arg': -1 }"
 			when( cmd ){
 				"msg(w)", "w" -> jsonMsg = forwardlongtimeMsg  		
-				"msg(s)", "s" -> jsonMsg = MsgRobotUtil.backwardMsg  
+				"msg(s)", "s" -> jsonMsg = backwardlongtimeMsg  
 				"msg(a)", "a" -> jsonMsg = MsgRobotUtil.turnLeftMsg  
 				"msg(d)", "d" -> jsonMsg = MsgRobotUtil.turnRightMsg  
 				"msg(l)", "l" -> jsonMsg = MsgRobotUtil.turnLeftMsg  

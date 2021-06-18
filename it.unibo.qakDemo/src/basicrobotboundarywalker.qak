@@ -1,0 +1,138 @@
+/*
+ */  
+System basicrobotboundarywalker
+
+Dispatch start    : start( ARG ) 
+Dispatch mapDone  : mapDone( FNAME ) 
+Event alarm     : alarm(X)
+
+
+
+Request step       : step( TIME )	
+Reply   stepdone   : stepdone(V)  
+Reply   stepfail   : stepfail(DURATION, CAUSE)
+Dispatch cmd       	: cmd(MOVE)     
+
+
+Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
+Context ctxbasicrobot ip [host="127.0.0.1" port=8020]    
+
+ExternalQActor basicrobot context ctxbasicrobot   
+/* 
+ * ------------------------------------------------------------------
+ *  basicboundarywalker 
+ * ------------------------------------------------------------------
+*/     
+QActor basicboundarywalker context ctxBasicBoundaryWalker{         
+[#
+val mapname     = "roomBoundary"  		 
+var NumStep     = 0
+var Myself      = myself    
+#] 
+	State s0 initial {	 
+		println("&&&  basicboundarywalker ACTIVE ...") 
+		//[# kotlinCode.pathexecutil.register(myself) #]
+		//[# kotlinCode.pathexecutil.createSonarObserver(scope) #] 		
+		//run itunibo.planner.plannerUtil.loadRoomMap("parkingMap") 
+   	} 
+   	Transition t0 whenMsg start -> work
+
+  	State work{  		  
+   		[# NumStep = 0   #] 
+    	run itunibo.planner.plannerUtil.initAI()
+		run itunibo.planner.plannerUtil.showCurrentRobotState()
+  	}
+    Goto detectBoundary  
+     
+    State detectBoundary{     
+    	[# NumStep++ #]
+    	println("basicboundarywalker detectBoundary $NumStep")
+    	run itunibo.planner.plannerUtil.showCurrentRobotState()
+    	updateResource [# "detectBoundary step=$NumStep" #]
+     }  
+    Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
+  
+ 	State doAheadMove{ 
+ 		delay 300 //to avoid too rapid changes
+  		request basicrobot -m step : step(350)
+   		updateResource [# "moving" #]
+	}   
+	Transition t0   whenEvent alarm      -> handleAlarm 
+					whenReply stepdone   -> stepDone   
+					whenReply stepfail   -> stepFailed  
+	  
+ 	State stepDone{  
+ 		updateResource [# itunibo.planner.plannerUtil.getMap() #]
+ 		run itunibo.planner.plannerUtil.updateMap(  "w" )
+ 		updateResource [# "stepDone" # ]
+  	} 
+	Goto doAheadMove		//alarm perceived ?? ...
+ 	                    
+	State stepFailed{  //has found an obstacle (a wall)
+ 		println("basicboundarywalker | FOUND A WALL")
+ 		delay 1500
+ 		updateResource [# "stepFailed" # ] 
+ 		//[# kotlinCode.pathexecutil.waitUser("onwall_$NumStep") #] 
+ 	 		if [# ! itunibo.planner.plannerUtil.atHome() #]{
+	 			run itunibo.planner.plannerUtil.wallFound() 
+		 		//updateResource [# "found a wall" #]
+ 		 		//qrun pathexecutil.doMove(myself, "l")
+ 		 		forward basicrobot -m cmd : cmd(l)
+				run itunibo.planner.plannerUtil.updateMap(  "l" )
+				run itunibo.planner.plannerUtil.showCurrentRobotState()
+  	 		}else{
+   	 			//qrun pathexecutil.doMove(myself, "l")
+   	 			//forward basicrobot -m cmd : cmd(l)
+  	 			//run itunibo.planner.plannerUtil.updateMap(  "l" )
+  	 		}		 	      
+ 	}   
+    //Goto detectBoundary    
+ 
+ 	State boundaryFound{
+		run itunibo.planner.plannerUtil.saveRoomMap(mapname)
+		println("robotmapper | FINAL MAP")   
+ 		run itunibo.planner.plannerUtil.showCurrentRobotState()	
+ 		//updateResource [#  itunibo.planner.plannerUtil.getMap() #]
+   		[# println(itunibo.planner.plannerUtil.showMap()) #]
+   		
+   		forward testboundary -m mapDone : mapDone(mapname)
+  	}
+  	
+  	State handleAlarm {
+		println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $ActorResourceRep")
+		printCurrentMessage
+		println("----------------------------------------------------------------") 		
+  	}
+   	
+  	State handleAlarmAfterStep{
+		println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP $ActorResourceRep")
+		printCurrentMessage
+		println("----------------------------------------------------------------") 		
+  	}
+  	Goto doAheadMove
+  	
+}	
+     
+
+    
+     
+/*
+ *  main 
+*/   
+QActor testboundary context ctxBasicBoundaryWalker{
+	[# val doboundary = true #]
+	State s0 initial{  
+	}
+	Goto boundarywalk if [# doboundary #] else endTest
+	 
+	State boundarywalk{
+		forward basicboundarywalker -m start : start(  any   )
+		  
+	}
+	Transition t0 whenMsg mapDone -> endTest //reachAPoint
+	
+	State endTest{
+		println("END OF JOB")
+	}
+				   
+ } 

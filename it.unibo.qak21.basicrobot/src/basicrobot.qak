@@ -115,19 +115,19 @@ QActor basicrobot context ctxbasicrobot{
 		//printCurrentMessage
 		println("basicrobot | handleObstacle")	
 		run unibo.robot.robotSupport.move( "h" )
-		//back to avoid emission of obstacle again if moving forward !!!
-		/* 
-		run unibo.robot.robotSupport.move( "s" )
-		delay 400
-		run unibo.robot.robotSupport.move( "h" )
-		*/
+		//back to avoid emission of obstacle again if real robot moving forward !!!
+		//if[# RobotType != "virtual" #]{	//is it better to embed this behavior in the support?
+			run unibo.robot.robotSupport.move( "s" )
+			delay 100 
+			run unibo.robot.robotSupport.move( "h" ) 
+		//}
 		//onMsg( obstacle  : obstacle( TARGET ) ){
-			updateResource [# "obstacle" #]
+			//updateResource [# "obstacle" #]
  		//}
  		emit info : info( obstacledoing(w) )
 	}
 	Goto work 
-
+ 
 	State handleSonar{
 		printCurrentMessage
 	}
@@ -158,8 +158,8 @@ QActor basicrobot context ctxbasicrobot{
 			emit polar : polar( $payloadArg(0), 90 )		//perceived via mqtt			
  		}*/
   	}
- 	Transition t0 whenTimeVar StepTime    -> stepDone  //StepTime is the first checked
- 				  whenMsg obstacle      -> stepFailDetected
+ 	Transition t0 whenTimeVar StepTime  -> stepDone  //StepTime is the first checked
+ 				  whenMsg obstacle      -> stepFail//Detected near end of step
 	
 	State stepDone{   
  		//run unibo.robot.robotSupport.move( "h" )  //stop the real robot already done
@@ -169,25 +169,29 @@ QActor basicrobot context ctxbasicrobot{
    		replyTo step with stepdone : stepdone(ok)
   	}
 	Goto work  
-	
+	/* 
 	State stepFailDetected{
 		println("basicrobot | stepFailDetecteddddddddddddddddddddddddddddddddddd near end of step ")
  		replyTo step with stepfail : stepfail($StepTime, obstacle)
  		updateResource [# "stepFail($Duration)" #]
     }
-	Goto work 
-	 
-	State stepFail{  
+	Goto handleObstacle 
+	 */
+	State stepFail{  		
 		setDuration Duration from StartTime
-		println("basicrobot | stepFail duration=$Duration")
- 		updateResource [# "stepFail($Duration)" #]
+		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
+		[# var TunedDuration = Duration;  
+			TunedDuration = Duration / 2
+		#]
+		println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
+			run unibo.robot.robotSupport.move( "s" )
+			delayVar TunedDuration 
+			run unibo.robot.robotSupport.move( "h" ) 
+ 		updateResource [# "stepFail($Duration)" #] 
  		emit info : info( stepFail($Duration) )
-		//println("basicrobot | stepFail after $Duration ")
-		//emit info : info( obstacledoing(step) )
-		//emit polar    : polar( 10, 90 )		 
  		replyTo step with stepfail : stepfail($Duration, obst)
     }
-	Goto work 
+	Goto work
 	
 	State endwork{ 
 		onMsg( end : end( V ) ){ 

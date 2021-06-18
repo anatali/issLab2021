@@ -94,8 +94,9 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						println("basicrobot | handleObstacle")
 						unibo.robot.robotSupport.move( "h"  )
-						updateResourceRep( "obstacle"  
-						)
+						unibo.robot.robotSupport.move( "s"  )
+						delay(100) 
+						unibo.robot.robotSupport.move( "h"  )
 						emit("info", "info(obstacledoing(w))" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
@@ -130,7 +131,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
 					}
 					 transition(edgeName="t07",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_stepPerhapsDone"))   
-					transition(edgeName="t08",targetState="stepFailDetected",cond=whenDispatch("obstacle"))
+					transition(edgeName="t08",targetState="stepFail",cond=whenDispatch("obstacle"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
@@ -142,19 +143,16 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
-				state("stepFailDetected") { //this:State
-					action { //it:State
-						println("basicrobot | stepFailDetecteddddddddddddddddddddddddddddddddddd near end of step ")
-						answer("step", "stepfail", "stepfail($StepTime,obstacle)"   )  
-						updateResourceRep( "stepFail($Duration)"  
-						)
-					}
-					 transition( edgeName="goto",targetState="work", cond=doswitch() )
-				}	 
 				state("stepFail") { //this:State
 					action { //it:State
 						Duration = getDuration(StartTime)
-						println("basicrobot | stepFail duration=$Duration")
+						unibo.robot.robotSupport.move( "h"  )
+						 var TunedDuration = Duration;  
+									TunedDuration = Duration / 2
+						println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
+						unibo.robot.robotSupport.move( "s"  )
+						delay(TunedDuration)
+						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "stepFail($Duration)"  
 						)
 						emit("info", "info(stepFail($Duration))" ) 
