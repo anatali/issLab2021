@@ -15,7 +15,7 @@ Dispatch cmd       	: cmd(MOVE)
 
 
 Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
-Context ctxbasicrobot ip [host="127.0.0.1" port=8020]    
+Context ctxbasicrobot ip [host="192.168.1.203" port=8020]    
 
 ExternalQActor basicrobot context ctxbasicrobot   
 /* 
@@ -40,11 +40,11 @@ var Myself      = myself
   	State work{  		  
    		[# NumStep = 0   #] 
     	run itunibo.planner.plannerUtil.initAI()
-		run itunibo.planner.plannerUtil.showCurrentRobotState()
+		run itunibo.planner.plannerUtil.showCurrentRobotState()  
 		
-		forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
+		//forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
   	}
-    //Goto detectBoundary   
+    Goto detectBoundary   
      
     State detectBoundary{     
     	[# NumStep++ #]
@@ -88,7 +88,7 @@ var Myself      = myself
   	 		delay 350			 	      
  		[# pathexecutil.waitUser("onwall_$NumStep") #] 
  	}   
-    Goto detectBoundary    
+    //Goto detectBoundary    
  
  	State boundaryFound{
 		run itunibo.planner.plannerUtil.saveRoomMap(mapname)
