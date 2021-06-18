@@ -21,6 +21,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		  var StartTime     = 0L     
 		  var Duration      = 0L  
 		  var RobotType     = "" 
+		  var CurrentMove   = "unkknown"
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -92,11 +93,13 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
-						println("basicrobot | handleObstacle")
+						println("$name in ${currentState.stateName} | $currentMsg")
 						unibo.robot.robotSupport.move( "h"  )
-						unibo.robot.robotSupport.move( "s"  )
+						if(  CurrentMove == "w" 
+						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
+						}
 						emit("info", "info(obstacledoing(w))" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )

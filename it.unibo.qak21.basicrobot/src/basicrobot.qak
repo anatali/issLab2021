@@ -44,6 +44,7 @@ QActor basicrobot context ctxbasicrobot{
   var StartTime     = 0L     
   var Duration      = 0L  
   var RobotType     = "" 
+  var CurrentMove   = "unkknown"
 #]  
  	State s0 initial { 	  
  		println("basicrobot | START")	
@@ -112,9 +113,10 @@ QActor basicrobot context ctxbasicrobot{
 	 Goto work  
 	 
 	State handleObstacle{
-		//printCurrentMessage
-		println("basicrobot | handleObstacle")	
+		printCurrentMessage
+		//println("basicrobot | handleObstacle")	
 		run unibo.robot.robotSupport.move( "h" )
+		if[# CurrentMove == "w"#]{
 		//back to avoid emission of obstacle again if real robot moving forward !!!
 		//if[# RobotType != "virtual" #]{	//is it better to embed this behavior in the support?
 			run unibo.robot.robotSupport.move( "s" )
@@ -124,6 +126,7 @@ QActor basicrobot context ctxbasicrobot{
 		//onMsg( obstacle  : obstacle( TARGET ) ){
 			//updateResource [# "obstacle" #]
  		//}
+ 		}
  		emit info : info( obstacledoing(w) )
 	}
 	Goto work 

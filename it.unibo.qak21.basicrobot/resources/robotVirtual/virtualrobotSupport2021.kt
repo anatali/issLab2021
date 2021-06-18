@@ -22,7 +22,6 @@ import it.unibo.interaction.MsgRobotUtil
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 object virtualrobotSupport2021 {
-	//private val applCmdset = setOf("w","s","a","d","z","x","r","l","h"  )
 	private var port     = 0
 	lateinit var owner      : ActorBasic
 	lateinit var robotsonar	: ActorBasic

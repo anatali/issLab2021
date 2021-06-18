@@ -324,17 +324,56 @@ emit a <k>obstacle</k> event if it stops after the collision with an obstacle.</
 
 </td>
 <td><h3>Behavior details</h3>
-<ul>
-<li>While executing a command <bc>step</bc>, <bc>forward</bc> or <bc>backward</bc>, the robot could hit an obstacle.
-In this case it emits the <k>obstacle</k> event and writes the string <k>obstacle</k> in the <em>RObState</em>.
-
+<m>
+The <a href="../src/basicrobot.qak" target="code">basicrobot.qak</a> defines, in the qak-language, a behaviour similar to
+the <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code"><ks>BasicStepRobotActor.kt</ks></a>.
+described in
+<a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html" target="lab">LabIss2021 | support for Actors based on Kotlin</a>.
+<br/><br/>
+The robot-moves are implemented by the low-level support related to robot-type selected in the configuration file
+<a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>, as described in section
+<a href="#robotSupport">Supports for the robot types</a>.
+<br/><br/>
+As a general rule we can state that:
+ <ul>
+<li>the support for the virtualrobot <k>automatically terminates</k> a <ks>forward(w)/ 	backward(s)</ks> 
+command (i.e. it <i>halts</i> the robot)  after a prefixed amount of time.
+More details are given in the section <a href="#virtualrobot">The virtual robot</a>.
 </li>
+<li>the support for a real robot <k>does not automatically terminate</k>  a <ks>w/s</ks> command.
+More details are given in the section <a href="#realrobots">The real robots</a>.</li>
+<!--
+<li>a robot-move for the virtualrobot can be executed in <k>synchronous</k> way (i.e. the caller waits for the end of the move that could be
+<i>true, false or notallowed</i>) or in
+<k>asynchronus</k> way (i.e. the caller will detected the effects of the move with proper 'observations').</li>
+
+<li>a robot-move for a real robot is executed by activating the motors in a proper way</li>
+<li>the default duration of the commands <ks>w / s</ks> is quite long, since their effective duration 
+is decided by the <a href="../src/basicrobot.qak" target="code">basicrobot</a> itself (by sending a <k>halt(h)</k> )
+or by the world (when the robot hits an obstacle).
+
+Therefore, the <ks>w / s</ks> commands for the virtualrobot are called  in asynchronous way.
+</li>
+<li>the commands <k>turnLeft   (l)</k> and <k>turnRight  (rs)</s> are executed in synchronous way, since we do not expect to hit obstacles</li>
+ 
+<li>All the commands sent as a dispatch are executed in synchronous way. However, since no answer is returned
+the effects of the command are show.</li>
+ -->
+</ul>
+
+<h4>The <a href="../src/basicrobot.qak" target="code">basicrobot</a> as CoAP-observable resource</h4>
+The <em>RObState</em> is uspdated as follows:
+ <ul>
+
+<li>with the string <ks>obstacle</ks>, when the <tt>basicrobot</tt> hits an obstacle (the robot emits also the <i>obstacle event</i>).</li>
+<li>with the string <ks>...</ks>, when the <tt>basicrobot</tt>  .</li>
 <!--
 <li>All the commands sent as a dispatch are executed in synchronous way. However, since no answer is returned
 the effects of the command are show.</li>
  -->
 </ul>
 
+</m>
 </td>
 </tr>
  </tbody>
@@ -351,22 +390,37 @@ The Kotlin object
   <a href="../resources/unibo/robot/robotSupport.kt" target="code">robotSupport.kt</a>
 reads the given configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> 
 and creates the proper low-level support for three types of 'concrete' robots:
+
 <ul>
-<li><bc>virtual</bc>: <br/><m>the virtual robot described in
+<li><hr/>
+<bc>virtual</bc>: <br/><m>the virtual robot described in
 <a href="../../it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="robot">Virtual robot 2021</a>,
 that can be launched by using the docker-compose file  
-<a href="../../it.unibo.issLabStart/Dockercompose/virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a>.
+<a href="../../it.unibo.issLabStart/Dockercompose/virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a></m>.
 <!-- and called by using the support described in:
 <a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="lab">IssWsHttpKotlinSupport</a>-->
 <center><img src="./img/wenvscene1.png" alt="wenvscene1" width="40%" height="60%"></center>	
+<br/>
+The support is: <a href="../resources/robotVirtual/virtualrobotSupport2021.kt" target="code">virtualrobotSupport2021.kt</a>
+
 </li>
-<li><bc>nano</bc>: <br/><m>the self-made robot described in 
+
+
+<li><hr/>
+<bc>nano</bc>: <br/><m>the self-made robot described in 
 <a href="LabNanoRobot.html" target="robot">LabNanoRobot | The home-made basicrobot</a></m>
 <center><img src="./img/robotsUnibo.jpg" alt="robotsUnibo" width="40%" height="60%"></center>	
+<br/>
+The support is: <a href="../resources/robotNano/nanoSupport.kt" target="code">nanoSupport.kt</a>
 </li>
-<li><bc>mbot</bc>: <br/><m>the  robot described in 
+
+
+<li><hr/>
+<bc>mbot</bc>: <br/><m>the  robot described in 
 <a href="Mbot3030.html" target="robot">Mbot3030 | The reference ddr robot</a> </m>
 <center><img src="./img/mbot.png" alt="mbot" width="40%"></center>	
+<br/>
+The support is: <a href="../resources/robotMbot/mbotSupport.kt" target="code">mbotSupport.kt</a>
 </li>
 </ul>
  
@@ -412,7 +466,7 @@ a specialization for <ks>MQTT</ks> that exploits the library <tt>org.eclipse.pah
 
 <tr>
 <td style="width:50%" >
-<h3>Robot as the virtual robot</h3>
+<h3 id="virtualrobot">The virtual robot</h3>
 <div class="remark"><m>
 In a virtual robot:
 <ul>
@@ -457,7 +511,9 @@ localhost:8090	<kc>//open the WEnv gui</kc>
 
 
 </td>
-<td><m>
+<td>
+<h3 id="realrobots">The real robots</h3>
+<m>
 A real robot executes a robot-move command by activating the motors using proper device-dependent utiilities. <br/>
 The obstacles are detected by means of a <tt>HC-SR04</tt> Distance Sensor, as introduced in
 <a href="../../it.unibo.sonarAsResource/userDocs/LabSonarAsResource.html" target="code">LabSonarAsResource.html</a>.
@@ -470,12 +526,12 @@ In a real robot:
 </ul>
 </m>
 </div>
-<h3>Robot as a real Nano robot</h3>
+<h4>The Nano robot</h4>
 The low-level  <a href="../resources/robotNano/nanoSupport.kt" target="code">nanoSupport.kt</a>
 interacts with the real Nano-robot by using the utility <a href="../resources/robotNano/Motors.c" target="code">legonanoMotors.c</a>
 and <a href="../resources/robotNano/SonarAlone.c" target="code">SonarAlone.c</a>
 
-<h3>Robot as a real Mbot robot</h3>
+<h4>The Mbot robot</h4>
 The low-level   <a href="../resources/robotMbot/mbotSupport.kt" target="code">mbotSupport.kt</a>
 interacts with the real Mbot-robot by using the utility <a href="../resources/robotMbot/robotDataSourceArduino.kt" target="code">robotDataSourceArduino.kt</a>
 

@@ -41,8 +41,10 @@ var Myself      = myself
    		[# NumStep = 0   #] 
     	run itunibo.planner.plannerUtil.initAI()
 		run itunibo.planner.plannerUtil.showCurrentRobotState()
+		
+		forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
   	}
-    Goto detectBoundary  
+    //Goto detectBoundary   
      
     State detectBoundary{     
     	[# NumStep++ #]
@@ -54,7 +56,7 @@ var Myself      = myself
   
  	State doAheadMove{ 
  		delay 300 //to avoid too rapid changes
-  		request basicrobot -m step : step(350)
+  		request basicrobot -m step : step(300)	//stepTime
    		updateResource [# "moving" #]
 	}   
 	Transition t0   whenEvent alarm      -> handleAlarm 
@@ -69,10 +71,8 @@ var Myself      = myself
 	Goto doAheadMove		//alarm perceived ?? ...
  	                    
 	State stepFailed{  //has found an obstacle (a wall)
- 		println("basicboundarywalker | FOUND A WALL")
- 		delay 1500
- 		updateResource [# "stepFailed" # ] 
- 		//[# kotlinCode.pathexecutil.waitUser("onwall_$NumStep") #] 
+ 		println("basicboundarywalker | FOUND A WALL at home=${itunibo.planner.plannerUtil.atHome()}")
+ 		updateResource [# "stepFailed" # ]  
  	 		if [# ! itunibo.planner.plannerUtil.atHome() #]{
 	 			run itunibo.planner.plannerUtil.wallFound() 
 		 		//updateResource [# "found a wall" #]
@@ -82,11 +82,13 @@ var Myself      = myself
 				run itunibo.planner.plannerUtil.showCurrentRobotState()
   	 		}else{
    	 			//qrun pathexecutil.doMove(myself, "l")
-   	 			//forward basicrobot -m cmd : cmd(l)
-  	 			//run itunibo.planner.plannerUtil.updateMap(  "l" )
-  	 		}		 	      
+   	 			forward basicrobot -m cmd : cmd(l)
+  	 			run itunibo.planner.plannerUtil.updateMap(  "l" )
+  	 		}
+  	 		delay 350			 	      
+ 		[# pathexecutil.waitUser("onwall_$NumStep") #] 
  	}   
-    //Goto detectBoundary    
+    Goto detectBoundary    
  
  	State boundaryFound{
 		run itunibo.planner.plannerUtil.saveRoomMap(mapname)

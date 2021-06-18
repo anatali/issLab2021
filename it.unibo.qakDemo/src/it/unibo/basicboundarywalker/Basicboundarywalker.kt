@@ -32,8 +32,8 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						 NumStep = 0    
 						itunibo.planner.plannerUtil.initAI(  )
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
+						forward("cmd", "cmd(w)" ,"basicrobot" ) 
 					}
-					 transition( edgeName="goto",targetState="detectBoundary", cond=doswitch() )
 				}	 
 				state("detectBoundary") { //this:State
 					action { //it:State
@@ -51,7 +51,7 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 				state("doAheadMove") { //this:State
 					action { //it:State
 						delay(300) 
-						request("step", "step(350)" ,"basicrobot" )  
+						request("step", "step(300)" ,"basicrobot" )  
 						updateResourceRep( "moving"  
 						)
 					}
@@ -71,8 +71,7 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 				}	 
 				state("stepFailed") { //this:State
 					action { //it:State
-						println("basicboundarywalker | FOUND A WALL")
-						delay(1500) 
+						println("basicboundarywalker | FOUND A WALL at home=${itunibo.planner.plannerUtil.atHome()}")
 						updateResourceRep( "stepFailed"  
 						)
 						if(  ! itunibo.planner.plannerUtil.atHome()  
@@ -81,7 +80,14 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						itunibo.planner.plannerUtil.updateMap( "l"  )
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
 						}
+						else
+						 {forward("cmd", "cmd(l)" ,"basicrobot" ) 
+						 itunibo.planner.plannerUtil.updateMap( "l"  )
+						 }
+						delay(350) 
+						 pathexecutil.waitUser("onwall_$NumStep")  
 					}
+					 transition( edgeName="goto",targetState="detectBoundary", cond=doswitch() )
 				}	 
 				state("boundaryFound") { //this:State
 					action { //it:State
