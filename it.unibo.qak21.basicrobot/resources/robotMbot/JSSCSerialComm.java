@@ -31,7 +31,7 @@ public class JSSCSerialComm {
 		    System.out.println("JSSCSerialComm: There are no serial-ports");
 		    return;
 		}else{
-			System.out.println("FOUND " + portNames.length + " serial-ports");
+			System.out.println("JSSCSerialComm FOUND " + portNames.length + " serial-ports");
 			for( int i=0; i<portNames.length;i++){
 				System.out.println("JSSCSerialComm: FOUND " + portNames[i] + " PORT");
 			}

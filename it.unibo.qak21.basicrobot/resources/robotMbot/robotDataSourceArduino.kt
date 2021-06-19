@@ -13,7 +13,7 @@ import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
-import it.unibo.supports.serial.SerialPortConnSupport
+//import it.unibo.supports.serial.SerialPortConnSupport
 
 
 class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
@@ -33,20 +33,21 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	suspend fun elabData(data : String ){
-         while (true) {
+         while ( true ) {
  			try {
  				var curDataFromArduino =  conn.receiveALine()
 				//globalTimer.startTimer()  //TIMER ....
  	 			//println("   	%%% $name | getDataFromArduino received: $curDataFromArduino"    )
- 				var v = curDataFromArduino.toDouble() 
-				//handle too fast change ?? NOT HERE
-  				var dataSonar = v.toInt();													
- 				//if( dataSonar < 350 ){ /REMOVED since USING STREAMS
- 				val event = MsgUtil.buildEvent( name,"sonarRobot","sonar( $dataSonar )")								
-  				//println("   	%%% $name | mbotSupport event: ${ event } owner=${owner.name}"   );						
-				//owner.emit(  event )
-				owner.emitLocalStreamEvent( event )
-			    
+				if( curDataFromArduino != null ){
+	 				var v = curDataFromArduino.toDouble() 
+					//handle too fast change ?? NOT HERE
+	  				var dataSonar = v.toInt();													
+	 				//if( dataSonar < 350 ){ /REMOVED since USING STREAMS
+	 				val event = MsgUtil.buildEvent( name,"sonarRobot","sonar( $dataSonar )")								
+	  				//println("   	%%% $name | mbotSupport event: ${ event } owner=${owner.name}"   );						
+					//owner.emit(  event )
+					owner.emitLocalStreamEvent( event )
+				}
  				//Oct2019 : emit the event obstacle
 /* //REMOVED WHEN USING STREAMS							
 				if( dataSonar < 7  ){ //WARNING: it generates  many events
@@ -58,7 +59,7 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 				}else obstacleEventEmitted = false												
  */
 			} catch ( e : Exception) {
- 				println("   	%%% $name | getDataFromArduino | ERROR $e   ")
+ 				//println("   	%%% $name | getDataFromArduino | ERROR $e   ")
             }
 		}//while
 	}

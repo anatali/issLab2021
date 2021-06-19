@@ -362,17 +362,18 @@ the effects of the command are show.</li>
 </ul>
 
 <h4>The <a href="../src/basicrobot.qak" target="code">basicrobot</a> as CoAP-observable resource</h4>
-The <em>RObState</em> is uspdated as follows:
+The <em>RObState</em> is uspdated with the string:
  <ul>
-
-<li>with the string <ks>obstacle</ks>, when the <tt>basicrobot</tt> hits an obstacle (the robot emits also the <i>obstacle event</i>).</li>
-<li>with the string <ks>...</ks>, when the <tt>basicrobot</tt>  .</li>
-<!--
-<li>All the commands sent as a dispatch are executed in synchronous way. However, since no answer is returned
-the effects of the command are show.</li>
- -->
+<li> <ks>basicrobot(start)</ks>, when the <tt>basicrobot</tt> is activated.</li>
+<li> <ks>moveactivated(M}</ks>, when the <tt>basicrobot</tt> has activated a non-step move <tt>M</tt>.</li>
+<li> <ks>step(ST}</ks>, when the <tt>basicrobot</tt> has activated a step with time <tt>ST</tt>.</li>
+<li> <ks>stepDone(ST}</ks>, when the <tt>basicrobot</tt> has terminated with success a step with time <tt>ST</tt>.</li>
+<li> <ks>stepFail(D}</ks>, when the <tt>basicrobot</tt> has failed a step after time <tt>D&lt;ST</tt>.</li>
+<li> <ks>obstacle(M)</ks>, when the <tt>basicrobot</tt> hits an obstacle while executing the move <tt>M</tt>.</li>
+<li> <ks>basicrobot(end)</ks>, when the <tt>basicrobot</tt> terminates.</li>
 </ul>
 
+An bbserver: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.kt</a>
 </m>
 </td>
 </tr>
@@ -597,6 +598,12 @@ a specialization for <ks>MQTT</ks>
 
 <h3 id="robotusage">Moving using a WebGui</h3>
 <a href="../../webBasicrobotqak/userDocs/webBasicrobotqak.html" target="lab">LabIss2021 | a Webgui for the basic generic robot</a> 
+
+<h3 id="robotusage">Observing</h3>
+<a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotObserver.java" target="code">basicrobotObserver.java</a>
+<br/>
+<a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotCoapObserver.kt" target="code">basicrobotCoapObserver.kt</a>
+
 </td>
 </tr>
 

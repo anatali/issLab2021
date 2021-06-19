@@ -1,6 +1,7 @@
 ##FROM java:8
 FROM openjdk:12.0.2
-
+##FROM hypriot/rpi-java
+## issLab2021\it.unibo.kotlinSupports
 ADD ./app/build/distributions/app-2.0.tar  /
 
 WORKDIR /app-2.0/bin

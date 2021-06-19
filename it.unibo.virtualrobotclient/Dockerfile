@@ -1,6 +1,7 @@
 ##FROM java:8
+## issLab2021\it.unibo.virtualrobotclient
 FROM openjdk:12.0.2
-
+##FROM hypriot/rpi-java
 ADD ./app/build/distributions/app-1.0.tar  /
 
 WORKDIR /app-1.0/bin

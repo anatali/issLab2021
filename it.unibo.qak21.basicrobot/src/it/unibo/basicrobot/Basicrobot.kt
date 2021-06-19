@@ -63,7 +63,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 }
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )
-						updateResourceRep( "stopped"  
+						updateResourceRep( "basicrobot(start)"  
 						)
 						discardMessages = false
 					}
@@ -85,7 +85,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						if( checkMsgContent( Term.createTerm("cmd(MOVE)"), Term.createTerm("cmd(MOVE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								unibo.robot.robotSupport.move( payloadArg(0)  )
-								updateResourceRep( "movedone(${payloadArg(0)})"  
+								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)
 						}
 					}
@@ -93,8 +93,9 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
 						unibo.robot.robotSupport.move( "h"  )
+						updateResourceRep( "obstacle(${CurrentMove})"  
+						)
 						if(  CurrentMove == "w" 
 						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
@@ -151,7 +152,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						Duration = getDuration(StartTime)
 						unibo.robot.robotSupport.move( "h"  )
 						 var TunedDuration = Duration;  
-									TunedDuration = Duration / 2
+									TunedDuration = Duration * 5 / 6
 						println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
 						unibo.robot.robotSupport.move( "s"  )
 						delay(TunedDuration)
@@ -168,7 +169,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						if( checkMsgContent( Term.createTerm("end(ARG)"), Term.createTerm("end(V)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								println("basicrobot | endwork")
-								updateResourceRep( "move(end)"  
+								updateResourceRep( "basicrobot(end)"  
 								)
 						}
 						emit("endall", "endall(normal)" ) 

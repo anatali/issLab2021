@@ -88,7 +88,7 @@ QActor basicrobot context ctxbasicrobot{
  		}
   		run unibo.robot.robotSupport.move( "l" )
 		run unibo.robot.robotSupport.move( "r" )
- 		updateResource [# "stopped" #]
+ 		updateResource [# "basicrobot(start)" #]
  		discardMsg Off  //WE want receive any msg
  	}
 	Goto work
@@ -105,27 +105,24 @@ QActor basicrobot context ctxbasicrobot{
 	State execcmd{
 		printCurrentMessage
 		onMsg( cmd : cmd(MOVE) ){
-  			//activate the motors 
+  			//activate the motors  
 			run unibo.robot.robotSupport.move( payloadArg(0 ) )
-			updateResource [# "movedone(${payloadArg(0)})" #]
+			updateResource [# "moveactivated(${payloadArg(0)})" #]
 		}
 	 }
 	 Goto work  
 	 
 	State handleObstacle{
-		printCurrentMessage
 		//println("basicrobot | handleObstacle")	
 		run unibo.robot.robotSupport.move( "h" )
+		//printCurrentMessage
+		updateResource [# "obstacle(${CurrentMove})" #]
 		if[# CurrentMove == "w"#]{
 		//back to avoid emission of obstacle again if real robot moving forward !!!
 		//if[# RobotType != "virtual" #]{	//is it better to embed this behavior in the support?
 			run unibo.robot.robotSupport.move( "s" )
 			delay 100 
 			run unibo.robot.robotSupport.move( "h" ) 
-		//}
-		//onMsg( obstacle  : obstacle( TARGET ) ){
-			//updateResource [# "obstacle" #]
- 		//}
  		}
  		emit info : info( obstacledoing(w) )
 	}
@@ -184,7 +181,7 @@ QActor basicrobot context ctxbasicrobot{
 		setDuration Duration from StartTime
 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
 		[# var TunedDuration = Duration;  
-			TunedDuration = Duration / 2
+			TunedDuration = Duration * 5 / 6
 		#]
 		println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
 			run unibo.robot.robotSupport.move( "s" )
@@ -199,7 +196,7 @@ QActor basicrobot context ctxbasicrobot{
 	State endwork{ 
 		onMsg( end : end( V ) ){ 
 			println("basicrobot | endwork")
-			updateResource [# "move(end)" #]	 		
+			updateResource [# "basicrobot(end)" #]	 		
 			//run utils.virtualRobotSupportQak.terminatevr( )
 		}
  		emit endall : endall(normal) 

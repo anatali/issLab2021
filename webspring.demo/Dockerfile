@@ -1,6 +1,7 @@
 ##FROM java:8
 FROM openjdk:12.0.2
-
+##FROM hypriot/rpi-java
+## issLab2021\webspringdemo
 ADD ./build/distributions/webspring.demo-1.0.1.tar  /
 ADD ./build/distributions/webspring.demo-boot-1.0.1.tar  /
 

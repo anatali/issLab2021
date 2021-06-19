@@ -11,8 +11,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import it.unibo.kactor.ActorBasicFsm
 import it.unibo.kactor.MsgUtil
-import it.unibo.supports.serial.SerialPortConnSupport
-import it.unibo.supports.serial.JSSCSerialComm
+//import it.unibo.supports.serial.SerialPortConnSupport
+//import it.unibo.supports.serial.JSSCSerialComm
 
 
 object mbotSupport{
@@ -28,10 +28,13 @@ object mbotSupport{
 	private fun initConn( port : String ){ 
 		try {
 			//println("   	%%% mbotSupport | initConn starts port=$port")
-			val serialConn = JSSCSerialComm(null)
+			val serialConn = JSSCSerialComm()
 			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
 			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")						
- 			robotDataSourceArduino("realsonar", owner,   conn )
+ 			val realsonar = robotDataSourceArduino("realsonar", owner,   conn )
+				//Context injection  
+				owner.context!!.addInternalActor(realsonar)  
+		  		println("   	%%% mbotSupport | has created the realsonar")
 		}catch(  e : Exception) {
 			println("   	%%% mbotSupport |  ERROR ${e }"   );
 		}		
@@ -43,7 +46,7 @@ object mbotSupport{
  	  by the Python application robotCmdExec that exploits GY521
     */
 	fun  move( cmd : String ){
-		//println("  	%%% mbotSupport | move cmd=$cmd ")
+		println("  	%%% mbotSupport | move cmd=$cmd ")
 		 
 		when( cmd ){
 			"msg(w)", "w" -> conn.sendALine("w")

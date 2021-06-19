@@ -3,6 +3,7 @@
 ## ----------------------------------------------------------
 ## see https://iotbytes.wordpress.com/create-your-first-docker-container-for-raspberry-pi-to-blink-an-led/
 FROM openjdk:12.0.2
+##FROM hypriot/rpi-java
 EXPOSE 8028
 ## ADD extracts the tar
 ADD ./build/distributions/*.tar /

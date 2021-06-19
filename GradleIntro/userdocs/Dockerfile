@@ -6,6 +6,11 @@
 # -------------------------------------------------------
 FROM openjdk:12.0.2
 
+##FROM hypriot/rpi-java
+
+
+#### issLab2021\GradleIntro/userdocs/Dockerfile
+
 # -------------------------------------------------------
 # COPY with local tar file auto-extraction into the image
 # -------------------------------------------------------
