@@ -7,7 +7,6 @@ Dispatch mapDone  : mapDone( FNAME )
 Event alarm     : alarm(X)
 
 
-
 Request step       : step( TIME )	
 Reply   stepdone   : stepdone(V)  
 Reply   stepfail   : stepfail(DURATION, CAUSE)

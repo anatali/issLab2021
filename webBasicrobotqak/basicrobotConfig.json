@@ -1,1 +1,2 @@
-{"type":"virtual", "port":"8090", "ipvirtualrobot":"localhost"}
+{"type":"virtual", "port":"8090", "ipvirtualrobot":"wenv"}
+{"typeforyaml":"virtual", "port":"8090", "ipvirtualrobot":"wenv"}

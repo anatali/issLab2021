@@ -12,12 +12,12 @@ plugins {
 }
 
 group = "it.unibo"
-version = "1.0.0"
+version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
 	mavenCentral()
-	jcenter() 	//required by andrea pivetta	JFrog shutdown in Februray 2021
+	jcenter() 	//required by andrea pivetta	JFrog shutdown in February 2021
 	flatDir{ dirs("../unibolibs")   }   //Our libraries
 }
 
