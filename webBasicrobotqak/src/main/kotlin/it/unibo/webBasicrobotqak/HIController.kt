@@ -1,8 +1,8 @@
 package it.unibo.webBasicrobotqak
 
 import com.andreapivetta.kolor.Color
+import connQak.ConnectionType
 import connQak.connQakBase
-import connQak.connQakTcp
 import it.unibo.actor0.sysUtil
 import it.unibo.basicrobot.Basicrobot
 import it.unibo.kactor.ActorBasic
@@ -14,13 +14,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.messaging.handler.annotation.SendTo
-import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.util.HtmlUtils
-
 
 /*
 
@@ -41,8 +36,11 @@ class HIController {
     lateinit var connSupport     : connQakBase
     lateinit var robotproxy      : ActorBasic
     lateinit var coapsupport     : CoapSupport
-    val scopeTorunBasicrobot = CoroutineScope(Dispatchers.Default)
-    //lateinit var basicrobotScope : CoroutineScope
+    val scopeTorunBasicrobot     = CoroutineScope(Dispatchers.Default)
+    //TODO: set  basicrobotAddr by using a WebGui
+    var basicrobotAddr           = "192.168.1.33" //or "localhost"
+    var basicrobotPort           = connQak.robotPort
+    lateinit var connToRobot     : connQakBase
 
     companion object{
         var logo = "just to test"
@@ -57,46 +55,53 @@ class HIController {
 
     //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
     init{
-        try{
-            //answerChannel = answerMoveChannel
-            //sysUtil.colorPrint("HIController | answerChannel: ${answerChannel}", Color.BLUE)
-            //connSupport = connQak.connQakBase.create( connQak.connprotocol )
-            //connSupport.createConnection()
-
-            scopeTorunBasicrobot.launch {
-                 QakContext.createContexts(
-                    "localhost", this, "basicrobot.pl", "sysRules.pl"
-                )
-
-                //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
+        if( basicrobotAddr == "localhost" ) {
+            try {
+                /*
+            The basicrobot is activated as a local resource
+             */
+                //answerChannel = answerMoveChannel
                 //sysUtil.colorPrint("HIController | answerChannel: ${answerChannel}", Color.BLUE)
-                //basicrobot = QakContext.getActor("basicrobot")!!
-                //sysUtil.colorPrint("HIController | create basicrobot ${basicrobot}", Color.BLUE)
-                //robotproxy = QakContext.getActor("basicrobotProxy")!!
-                //sysUtil.colorPrint("HIController | create basicrobotProxy ${basicrobot}", Color.BLUE)
-                //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
-                //basicrobotScope=basicrobot.scope
-                //sysUtil.colorPrint("HIController | resource: ${resource.robotanswerChannel} scope=${basicrobotScope}", Color.BLUE)
+                //connSupport = connQak.connQakBase.create( connQak.connprotocol )
+                //connSupport.createConnection()
 
-             }
-        }catch( e: Exception){
-            sysUtil.colorPrint("HIController | Error $e", Color.RED)
+                scopeTorunBasicrobot.launch {
+                    QakContext.createContexts(
+                        "localhost", this, "basicrobot.pl", "sysRules.pl"
+                    )
+
+                    //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
+                    //sysUtil.colorPrint("HIController | answerChannel: ${answerChannel}", Color.BLUE)
+                    //basicrobot = QakContext.getActor("basicrobot")!!
+                    //sysUtil.colorPrint("HIController | create basicrobot ${basicrobot}", Color.BLUE)
+                    //robotproxy = QakContext.getActor("basicrobotProxy")!!
+                    //sysUtil.colorPrint("HIController | create basicrobotProxy ${basicrobot}", Color.BLUE)
+                    //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
+                    //basicrobotScope=basicrobot.scope
+                    //sysUtil.colorPrint("HIController | resource: ${resource.robotanswerChannel} scope=${basicrobotScope}", Color.BLUE)
+
+                }
+            } catch (e: Exception) {
+                sysUtil.colorPrint("HIController | Error $e", Color.RED)
+            }
+            while (basicrobot == null) {
+                Thread.sleep(500)
+                val br = QakContext.getActor("basicrobot")
+                if (br == null) {
+                    sysUtil.colorPrint("HIController | waiting for basicrobot creation ...", Color.GREEN)
+                } else basicrobot = br
+            }
+        }else { //basicrobotAddr != "localhost"
+            connQak.robothostAddr = basicrobotAddr
+            connToRobot = connQakBase.create(ConnectionType.TCP)
+            connToRobot.createConnection()
         }
-        while( basicrobot == null ){
-            Thread.sleep(500)
-            val br = QakContext.getActor("basicrobot")
-            if( br == null ){
-                sysUtil.colorPrint("HIController | waiting for basicrobot creation ...", Color.GREEN)
-            }else basicrobot = br
-        }
-        coapsupport = CoapSupport("coap://localhost:8020", "ctxbasicrobot/basicrobot")
-        coapsupport.observeResource( WebPageCoapHandler(this) )
+        coapsupport =
+            CoapSupport("coap://$basicrobotAddr:$basicrobotPort", "ctxbasicrobot/basicrobot")
+        coapsupport.observeResource(WebPageCoapHandler(this))
 
         sysUtil.colorPrint("HIController | INIT", Color.GREEN)
-        //connQakSupport = connQakCoap()
-        //connQakSupport.createConnection()
-        //coap.observeResource( WebPageCoapHandler(this) ) //TODO: update the HTML page via socket
-    }
+    }//init
 
 
 
@@ -129,13 +134,14 @@ class HIController {
          //connSupport.forward( MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination))
         //sysUtil.colorPrint("HIController | xxxxxxxxx... ${answerChannel} ", Color.RED)
         if( robotmove == "p" ){
-            runBlocking{
-                val reqMsg = MsgUtil.buildRequest("basicrobotproxy", "step", "step(350)", connQak.qakdestination)
-                basicrobot!!.autoMsg(reqMsg)
-                //handle answer
-                //polling on the basicrobot ActorResourceRep since no shared channel is possible
-                //between basicrobotProxy and HIController
-                /*
+            val reqMsg = MsgUtil.buildRequest("basicrobotproxy", "step", "step(350)", connQak.qakdestination)
+            if(basicrobot !=null ) {
+                runBlocking {
+                    basicrobot!!.autoMsg(reqMsg)
+                    //handle answer
+                    //polling on the basicrobot ActorResourceRep since no shared channel is possible
+                    //between basicrobotProxy and HIController
+                    /*
                  var info = "unknown"
                  while( true ){
                      sysUtil.colorPrint("HIController | info=${info}", Color.RED)
@@ -145,11 +151,15 @@ class HIController {
                      info = basicrobot!!.geResourceRep()
                  }
                  viewmodel.addAttribute("viewmodelarg", "${info}")*/
+                }
+            }else{ //basicrobot remote
+                connToRobot.request(reqMsg)
             }
             //sysUtil.colorPrint("HIController | returnnnnnnnn: ", Color.RED)
         }else {
             val cmdMsg = MsgUtil.buildDispatch("basicrobotproxy", "cmd", "cmd($robotmove)", connQak.qakdestination)
-            scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
+            if( basicrobot !=null )  scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
+            else connToRobot.forward( cmdMsg )
         }
         //
         //sysUtil.colorPrint("HIController | return the page after move ", Color.RED)

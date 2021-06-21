@@ -13,9 +13,9 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry
 class CoapSupport(address: String, path: String) {
     private val client: CoapClient
     private lateinit var relation: CoapObserveRelation
-
-    init { //"coap://localhost:5683/" + path
+     init { //"coap://localhost:5683/" + path
         val url = "$address/$path"
+         println("CoapSupport | STARTSSSSS  url=$url  ")
         client  = CoapClient(url)
         println("CoapSupport | STARTS url=$url client=$client")
         client.setTimeout(1000L)

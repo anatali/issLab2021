@@ -13,7 +13,7 @@ plugins {
 
 group = "it.unibo"
 version = "1.0"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_1_8 //JavaVersion.VERSION_11
 
 repositories {
 	mavenCentral()
@@ -90,7 +90,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "11"
+		jvmTarget = "1.8"
 	}
 }
 

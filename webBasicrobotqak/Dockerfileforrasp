@@ -1,0 +1,32 @@
+## ----------------------------------------------------------
+## Dockerfileforrasp for webBasicrobotqak
+## This file should be copied on Rasp together with the
+## required resources and executed there
+## ----------------------------------------------------------
+FROM hypriot/rpi-java
+EXPOSE 8085
+## ON RASP
+ADD ./webBasicrobotqak-1.0.tar  /
+ADD ./webBasicrobotqak-boot-1.0.tar  /
+
+WORKDIR /webBasicrobotqak-boot-1.0/bin
+COPY ./*.pl ./
+COPY ./*.json ./
+RUN ls
+
+CMD ["bash", "webBasicrobotqak"]
+
+### gradlew build
+#### docker build -f Dockerfileforrasp -t webbasicrobotqakforrasp:1.0 .
+
+### run the image to test
+### docker run -p 8085:8085 -p 8020:8020/tcp -p 8020:8020/udp -ti --rm webbasicrobotqakforrasp:1.0 /bin/bash //to use the console
+
+## Tag the image
+## docker tag webbasicrobotqakforrasp:1.0 natbodocker/webbasicrobotqakforrasp:1.0
+
+## Register the image on DockerHub
+## docker push natbodocker/webbasicrobotqakforrasp:1.0
+
+
+

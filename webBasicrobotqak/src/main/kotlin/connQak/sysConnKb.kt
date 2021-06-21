@@ -3,7 +3,7 @@ package connQak
 val mqtthostAddr    = "localhost"	//broker.hivemq.com
 val mqttport		= "1883"
 val mqtttopic       = "unibo/basicrobot"
-val robothostAddr   = "192.168.1.203" //   172.17.0.2 "192.168.1.5" "localhost"
+var robothostAddr   = "192.168.1.33" //   172.17.0.2 "192.168.1.5" "localhost"
 val robotPort     	= "8020"
 val qakdestination 	= "basicrobot"
 val ctxqakdest      = "ctxbasicrobot"
