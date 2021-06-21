@@ -11,10 +11,12 @@ services:
     ##image: webbasicrobotqakforpc:1.0
     ports:
       - 8085:8085
+      - 8020:8020/tcp
+      - 8020:8020/udp
     depends_on:
       - wenv
 
-## docker-compose -f webbasicrobotqakonpc.yaml up
+##
 ## -------------------------------------------------------------
 ## TODO See https://docs.docker.com/compose/startup-order/
 ## Compose does not wait until a container is â€œreadyâ€� (whatever that means for your particular application)

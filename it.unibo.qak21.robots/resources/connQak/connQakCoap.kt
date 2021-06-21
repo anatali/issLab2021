@@ -25,7 +25,8 @@ lateinit var client   : CoapClient
 	
 	override fun forward( msg: ApplMessage ){		
         val respPut = client.put(msg.toString(), MediaTypeRegistry.TEXT_PLAIN)
-        println("connQakCoap | PUT forward ${msg} RESPONSE CODE=  ${respPut.code}")		
+        if( respPut != null ) println("connQakCoap | PUT forward ${msg} RESPONSE CODE=  ${respPut.code}")
+		else println("connQakCoap | PUT forward ${msg} RESPONSE null")		
 	}
 	
 	override fun request( msg: ApplMessage ){

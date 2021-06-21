@@ -55,9 +55,8 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						updateResourceRep( "moving"  
 						)
 					}
-					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t02",targetState="stepDone",cond=whenReply("stepdone"))
-					transition(edgeName="t03",targetState="stepFailed",cond=whenReply("stepfail"))
+					 transition(edgeName="t01",targetState="stepDone",cond=whenReply("stepdone"))
+					transition(edgeName="t02",targetState="stepFailed",cond=whenReply("stepfail"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
@@ -87,6 +86,7 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						delay(350) 
 						 pathexecutil.waitUser("onwall_$NumStep")  
 					}
+					 transition( edgeName="goto",targetState="detectBoundary", cond=doswitch() )
 				}	 
 				state("boundaryFound") { //this:State
 					action { //it:State
@@ -96,21 +96,6 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						 println(itunibo.planner.plannerUtil.showMap())  
 						forward("mapDone", "mapDone(mapname)" ,"testboundary" ) 
 					}
-				}	 
-				state("handleAlarm") { //this:State
-					action { //it:State
-						println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $ActorResourceRep")
-						println("$name in ${currentState.stateName} | $currentMsg")
-						println("----------------------------------------------------------------")
-					}
-				}	 
-				state("handleAlarmAfterStep") { //this:State
-					action { //it:State
-						println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP $ActorResourceRep")
-						println("$name in ${currentState.stateName} | $currentMsg")
-						println("----------------------------------------------------------------")
-					}
-					 transition( edgeName="goto",targetState="doAheadMove", cond=doswitch() )
 				}	 
 			}
 		}

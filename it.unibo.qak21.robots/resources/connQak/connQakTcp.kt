@@ -14,6 +14,7 @@ class connQakTcp(  ) : connQakBase( ){
 	}
 	
 	override fun forward( msg: ApplMessage ){
+		println("connQakTcp | forward: $msg")	
  		conn.sendALine( msg.toString()  )				
 	}
 	

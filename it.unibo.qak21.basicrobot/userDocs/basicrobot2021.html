@@ -199,8 +199,11 @@ div.imagedesc{
 <div class="body"> 
  
 <h2>Introduction</h2>
-We define here a resource that represents a robot able to handle a set of commands by using a low-level support,
-specified in a robot-configuration phase.. 
+We introduce here a component that executes robot-move commands in a <ks>'technology-independent way'</ks>, with respect
+to the nature of the robot (virtual or real).<br/>
+This goal is achieved by introducing a set of different low-level supports, and a proper <i>configuration phase</i> that
+selects the proper support for the robot-type specified in a robot-configuration file.
+
 <br/><br/>
 
 <table style="width:98%">
@@ -238,17 +241,20 @@ working as an adapter for devices described in the configuration file
 </tr>
 
 <tr>
-<td style="width:50%" ><h3 id="basicrobot">The basicrobot model</h3>
-<a href="../src/basicrobot.qak" target="code">basicrobot.qak</a>
-<br/><br/>
-The robot is defined as a qak model that
-builds its own low-level supports by looking at the configuration file 
+<td style="width:50%" ><h3 id="basicrobot">The basicrobot model <a href="../src/basicrobot.qak" target="code">basicrobot.qak</a></h3>
+
+<ul>
+<li>The robot-code is defined as a 
+<a href="../../it.unibo.qakactor/userDocs/LabQakIntro2021.html" target="lab">qak model </a>
+that builds its own low-level supports by reading the configuration file 
 <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>.
+</li>
+<li>The interaction with the robot is defined, in terms of message-passing operations, as follows:
 <m>
 <h4>Command messages</h4>
 <pre>
-Dispatch cmd       	: cmd(MOVE)     
-Dispatch end       	: end(ARG)  
+Dispatch cmd        : cmd(MOVE)     
+Dispatch end        : end(ARG)  
  
 Request step       : step( TIME )	
 Reply   stepdone   : stepdone(V)  
@@ -275,10 +281,14 @@ Reply   stepfail   : stepfail(DURATION, CAUSE)
 </li>
 </ul>
 </m>
+
+ </li>
+</ul>
+
 </td>
 
 <td><h3 id="basicrobot">The configuration file</h3>
-The configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> is written by the application designer
+The configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> is written by the application designer:
 
 <m>
 <pre>
@@ -298,8 +308,11 @@ The configuration file <a href="../basicrobotConfig.json" target="code">basicrob
 </m>
 
 <h3>The observable state</h3>
+<m>
 The <a href="../src/basicrobot.qak" target="code">basicrobot.qak</a> is a CoAP observable resource
-that updates an internal observable state (<em>RObState</em>) implemented as a simple <k>String</k>.
+that updates an internal observable state (<em>RObState</em>) implemented as a simple <k>String</k>.<br/>
+See <a href="#obsstring">The basicrobot as CoAP-observable resource</a>. 
+</m>
 </td>
  
 </tr>
@@ -361,7 +374,7 @@ the effects of the command are show.</li>
  -->
 </ul>
 
-<h4>The <a href="../src/basicrobot.qak" target="code">basicrobot</a> as CoAP-observable resource</h4>
+<h4 obsstring>The <a href="../src/basicrobot.qak" target="code">basicrobot</a> as CoAP-observable resource</h4>
 The <em>RObState</em> is uspdated with the string:
  <ul>
 <li> <ks>basicrobot(start)</ks>, when the <tt>basicrobot</tt> is activated.</li>
@@ -373,7 +386,7 @@ The <em>RObState</em> is uspdated with the string:
 <li> <ks>basicrobot(end)</ks>, when the <tt>basicrobot</tt> terminates.</li>
 </ul>
 
-An bbserver: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.kt</a>
+An observer: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.kt</a>
 </m>
 </td>
 </tr>

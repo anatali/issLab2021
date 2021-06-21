@@ -1,20 +1,19 @@
 /*
  */  
-System basicrobotboundarywalker
+System -trace basicrobotboundarywalker
 
 Dispatch start    : start( ARG ) 
 Dispatch mapDone  : mapDone( FNAME ) 
-Event alarm     : alarm(X)
+Event sonar       : sonar(X)
 
-
+Dispatch cmd       : cmd(MOVE)     
 Request step       : step( TIME )	
 Reply   stepdone   : stepdone(V)  
 Reply   stepfail   : stepfail(DURATION, CAUSE)
-Dispatch cmd       	: cmd(MOVE)     
-
+ 
 
 Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
-Context ctxbasicrobot ip [host="192.168.1.203" port=8020]    
+Context ctxbasicrobot ip [host="192.168.1.79" port=8020]    
 
 ExternalQActor basicrobot context ctxbasicrobot   
 /* 
@@ -40,8 +39,16 @@ var Myself      = myself
    		[# NumStep = 0   #] 
     	run itunibo.planner.plannerUtil.initAI()
 		run itunibo.planner.plannerUtil.showCurrentRobotState()  
-		
-		//forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
+		/* 
+		println("basicboundarywalker w  ")
+		forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
+		delay 500
+		println("basicboundarywalker l  ")
+		forward basicrobot -m cmd : cmd(l)
+		delay 500
+		println("basicboundarywalker r  ")
+		forward basicrobot -m cmd : cmd(r)
+		delay 500*/
   	}
     Goto detectBoundary   
      
@@ -58,7 +65,7 @@ var Myself      = myself
   		request basicrobot -m step : step(300)	//stepTime
    		updateResource [# "moving" #]
 	}   
-	Transition t0   whenEvent alarm      -> handleAlarm 
+	Transition t0   //whenEvent alarm      -> handleAlarm 
 					whenReply stepdone   -> stepDone   
 					whenReply stepfail   -> stepFailed  
 	  
@@ -86,8 +93,8 @@ var Myself      = myself
   	 		}
   	 		delay 350			 	      
  		[# pathexecutil.waitUser("onwall_$NumStep") #] 
- 	}   
-    //Goto detectBoundary    
+ 	}    
+    Goto detectBoundary    
  
  	State boundaryFound{
 		run itunibo.planner.plannerUtil.saveRoomMap(mapname)
@@ -98,7 +105,7 @@ var Myself      = myself
    		
    		forward testboundary -m mapDone : mapDone(mapname)
   	}
-  	
+/*  
   	State handleAlarm {
 		println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $ActorResourceRep")
 		printCurrentMessage
@@ -111,12 +118,22 @@ var Myself      = myself
 		println("----------------------------------------------------------------") 		
   	}
   	Goto doAheadMove
-  	
+ */ 	
 }	
-     
 
-    
-     
+
+QActor envsonarhandler context ctxBasicBoundaryWalker{
+ 	State s0 initial { 	 
+ 		println("envsonarhandler | START")	 		
+	}	
+	Transition t1   whenEvent sonar -> handleEnvSonar
+	
+	State handleEnvSonar{
+		printCurrentMessage
+ 	}
+	Goto s0  
+}
+
 /*
  *  main 
 */   
