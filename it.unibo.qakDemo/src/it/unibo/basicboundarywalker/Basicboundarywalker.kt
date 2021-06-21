@@ -32,8 +32,19 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						 NumStep = 0    
 						itunibo.planner.plannerUtil.initAI(  )
 						itunibo.planner.plannerUtil.showCurrentRobotState(  )
+						println("basicboundarywalker w  ")
+						forward("cmd", "cmd(w)" ,"basicrobot" ) 
+						delay(500) 
+						println("basicboundarywalker s  ")
+						forward("cmd", "cmd(s)" ,"basicrobot" ) 
+						delay(500) 
+						println("basicboundarywalker l  ")
+						forward("cmd", "cmd(l)" ,"basicrobot" ) 
+						delay(500) 
+						println("basicboundarywalker r  ")
+						forward("cmd", "cmd(r)" ,"basicrobot" ) 
+						delay(500) 
 					}
-					 transition( edgeName="goto",targetState="detectBoundary", cond=doswitch() )
 				}	 
 				state("detectBoundary") { //this:State
 					action { //it:State

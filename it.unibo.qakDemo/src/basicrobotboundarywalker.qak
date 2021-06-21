@@ -39,18 +39,21 @@ var Myself      = myself
    		[# NumStep = 0   #] 
     	run itunibo.planner.plannerUtil.initAI()
 		run itunibo.planner.plannerUtil.showCurrentRobotState()  
-		/* 
+		  
 		println("basicboundarywalker w  ")
 		forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
+		delay 500
+		println("basicboundarywalker s  ")
+		forward basicrobot -m cmd : cmd(s)  //executed in asynch way ...
 		delay 500
 		println("basicboundarywalker l  ")
 		forward basicrobot -m cmd : cmd(l)
 		delay 500
 		println("basicboundarywalker r  ")
 		forward basicrobot -m cmd : cmd(r)
-		delay 500*/
+		delay 500 
   	}
-    Goto detectBoundary   
+    //Goto detectBoundary   
      
     State detectBoundary{     
     	[# NumStep++ #]

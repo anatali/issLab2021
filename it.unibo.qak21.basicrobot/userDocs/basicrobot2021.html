@@ -511,7 +511,7 @@ generates the event <k>obstacle:obstacle(virtual)</k> when such information is <
 
 </li>
 </ul>
-
+See also the <a href="#deployvr">deploy section</a> related to the virtual robot.
 </m>
 <hr/>
 <h4>Usage</h4>
@@ -620,89 +620,119 @@ a specialization for <ks>MQTT</ks>
 </td>
 </tr>
 
-<!--
-<tr>
-<td style="width:50%" ><h3 id="IssWsHttpKotlinSupport">Virtual robot</h3>
-The class
-  <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code">IssWsHttpKotlinSupport.kt</a>
-  provides a singleton (for each ip address) that defines utility operations to connect/disconnect (to the given ip address) 
-  via HTTP or a websocket, using the library  <a href="https://square.github.io/okhttp/" target="web">okhttp3</a>.
-  <br/> <br/>
-  This utility:
-  <ul>
-  <li>implements the interface <a href="../app/src/main/kotlin/it/unibo/interaction/IssCommSupport.kt" target="code">IssCommSupport.kt</a>  </li>
-  <li>implements the operations defined in the interface
-  <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" target="code">IssOperations.kt</a></li>
-  <li>works as an observer of the ws-socket</li>
-  <li>is, in its turn,  observable by components that implement the interface
-   <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/interaction/IUniboActor.kt" target="code">IUniboActor.kt</a></li>
-  </ul>
- 
 
-<br/><br/>
-  
-</td>
-<td><center><img src="./img/IssWsHttpKotlinSupport.png" alt="IssWsHttpKotlinSupport" width="80%"  ></center>
-Usage example:
-<pre>
-IssWsHttpKotlinSupport.getConnectionWs(scope,"localhost:8091")
-</pre>
-
-</td>
-</tr>
-
-<tr>
-<td style="width:50%">
- <h3>BasicStepRobotActor</h3>
-The  class <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
-extends <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/actor0/ActorBasicKotlin.kt" target="code">AbstractRobotActor.kt</a>
-with the aim of moving the robot.
-
-<br/><br/>
-This actor 
-<ul>
-<li>has the default name <k>stepRobot</k></li>
-<li>is related to a <k>onwer</k> actor thet must be given at cretion time</li>
-<li>is able to perform both <tt>basic-moves</tt> and <tt>step-moves</tt>
-<m>A <k>step-move</k> is a forward-move with a time properly set, so that
-the distance traveled by the robot is equal to the diameter of the circle in which it is supposed to be inscribed.
-</m>
-</li>
-<li>gives a <k>endMoveMsg</k> 
-(see <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/robotService/ApplMsgs.kt" target="code"><em>ApplMsgs.kt</em></a>) 
-as answer to a <tt>basic-move</tt>
-</li>
-<li>gives as (payload) answer to a <tt>step-move</tt> 
-	<ul>
-	<li><k>stepDoneMsg</k>: if the step is done with success</li>
-	<li><k>stepFailMsg</k>: if the step cannot be completed</li>
-	</ul>
-</li>
-
-</ul>
-</td>
-<td>
-<center><img src="./img/BasicStepRobotActor.png" alt="BasicStepRobotActor" width="100%"  ></center>
- 
-<div class="remark">
-The <a href="../app/src/main/kotlin/it/unibo/robotService/BasicStepRobotActor.kt" target="code">BasicStepRobotActor.kt</a>
-avoids the interference among overlapping commands. In fact, it exploits the <k>msgQueueStore</k>
-to store a robot-move command while another <tt>basic-move</tt> or <tt>step-move</tt> is still in execution.
-The stored move is executed when the move in execution ends.
-</div>
-See also the discussion in
-<a href="../../it.unibo.kotlinIntro/userDocs/FirstActorRobot3021.html#DivideImpera" target="web">
-LabIss3021 |  Divide et impera?</a>
-
-</td>
-</tr>
--->
  </tbody>
 </table>
 
-<!--
-<h2 id="deploy">Deployment</h2>
+<h2 id="deploy">Deployment for the virtual robot</h2>
 
+ 
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3 id="deployvr">The virtual robot </h3>
+Project <a href="../../it.unibo.virtualRobot2020" target="code">it.unibo.virtualRobot2020</a>
+(updated in June 2021).<br/><br/>
+<m>
+This version of the virtual robot provides support to achieve a behaviour similar to that of a real robot.
+In particular, it:
+<ul>
+<li>accepts <k>synch-calls</k> via HTTP on port <tt>8090</tt> (POST path=<ks>/api/move</ks>) </li>
+<li>accepts <k>asynch-calls</k> via websocket on port <tt>8091</tt> </li>
+<li>for a <i><k>synch</k>-call</i>, sends the answer at the end of the move-time, with result <ks>true, false, halted, notallowed</ks></li>
+<li>for a <i><k>asynch</k>-call</i>, executes the move, without sending any answr</li>
+<li><b><i>rejects</i></b> (answer  <ks>notallowed</ks>, if the call is <i>synch</i>) a call for a move,
+ while it is still running a move activated in synch way</li>
+<li><b><i>accepts</i></b> a synch call call for a move also while it is still running a move activated in asynch way</li>
+<li>always accepts a call for <k>h</k></li>
+</ul>
+As said in a <a href="#virtualrobot">section above</a>, the <a href="../resources/robotVirtual/virtualrobotSupport2021.kt" target="code">virtualrobotSupport2021.kt</a>
+performs calls for <ks>w,s</ks> is <k>asynch</k> way, and the calls for <ks>r,l,h</ks> in <k>synch</k> way.
+
+</m>
+
+<hr/>
+<ul>
+<li><a href="../../it.unibo.virtualRobot2020/Dockerfile">Dockerfile</a>
+<pre><m>gradle  -b build2021.gradle distZip
+docker build -f Dockerfile -t virtualrobotdisi:2.0 .
+
+<kc>//check</kc>
+docker run -it --rm --name virtualrobotdisi
+    -p8090:8090/tcp -p8091:8091/tcp 	 
+    virtualrobotdisi:2.0  /bin/bash
+
+<kc>//change the scene</kc>
+docker cp sceneConfig.js 
+  &lt;inagsid>:/home/node/WEnv/WebGLScene/sceneConfig.js
+
+docker tag virtualrobotdisi:2.0 natbodocker/virtualrobotdisi:2.0
+docker push natbodocker/virtualrobotdisi:2.0
+</m></pre>
+
+
+</li>
+ 
+</ul>
+</td>
+<td>
+<h3>The basic robot </h3>
+Project <a href="../../it.unibo.qak21.basicrobot" target="code">it.unibo.qak21.basicrobot</a>: 
+<hr/>
+<ul>
+<li><a href="../../it.unibo.qak21.basicrobot/Dockerfileforrasp" target="code">Dockerfileforrasp</a> 
+<pre><m>gradle  -b build2021.gradle distZip
+docker build -t basicrobot21:1.0 .
+docker run -it --rm --name basicrobot21
+    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required by CoAP</kc>
+    <k>--privileged</k> basicrobot21  /bin/bash
+</m></pre></li>
+
+
+<h3>The basicrobot with webgui </h3>
+Project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: 
+<hr/>
+<ul>
+<li><a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a> 
+ <pre><m>gradlew build
+docker build -f Dockerfileforpc -t webbasicrobotqakforpc:1.0 .
+docker tag webbasicrobotqakforpc:1.0 natbodocker/webbasicrobotqakforpc:1.0
+docker push natbodocker/webbasicrobotqakforpc:1.0
+</m></pre></li>
+<li><a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+<pre><m>docker-compose -f webbasicrobotqakonpc.yaml up 
+</m></pre></li>
+
+</ul>
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h2 id="deploy">Deployment for the real robot</h2>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<h3>Mbot-robot</h3>
+<ul>
+<li></li>
+<li></li>
+</ul>
+</td>
+<td>
+<h3>Nano-robot</h3>
+<ul>
+<li></li>
+<li></li>
+</ul>
+</td>
+</tr>
+ </tbody>
+</table>
 
 <ol>
 <li><h3>Create the library</h3>
@@ -718,8 +748,6 @@ Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-
 <k>/unibolibs/IssActorKotlinRobotSupport-2.0.jar</k></kc></pre>
 </li>
 <ol>
-
--->
 
 
  

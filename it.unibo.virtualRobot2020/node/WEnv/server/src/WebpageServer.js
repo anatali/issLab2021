@@ -68,8 +68,19 @@ Defines how to handle POST from browser and from external controls
                     res.write( answerJson  );
                     res.end();
                 }
-            }//the move os not halt
-			else doMove(moveTodo, duration, res) //send the answer after duration
+            }//the move is not halt
+			else if( moveStillRunning && ! moveStillRunning.includes("_Asynch") ){
+			//the move DOES NOT 'interrupt' a move activated in asynch way
+	            const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
+	            updateObservers( JSON.stringify(answer) )
+                if( res != null ){
+                    res.writeHead(200, { 'Content-Type': 'text/json' });
+                    res.statusCode=200
+                    const answerJson = JSON.stringify(answer)
+                    res.write( answerJson  );
+                    res.end();
+                }
+			} else doMove(moveTodo, duration, res) //send the answer after duration
   	   });
 	}); //app.post
 
@@ -123,7 +134,7 @@ Interact with clients over ws (controls that send commands or observers) Jan 202
 -------------------------------------------------------------------------------------
 */
 /*
-Move activated in asynch mode => non answer is needed
+Move activated in asynch mode => no answer is needed
 */
 function doMoveAsynch(moveTodo, duration){
     console.log('AAAAAAAAAAAAAAAAAAAAAAAAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
@@ -145,12 +156,13 @@ wsServer.on('connection', (ws) => {
     console.log("       $$$ WebpageServer wssocket | " + wssocketIndex  + " receives: " + msg )
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
-	/*
+
 	if( moveStillRunning && moveTodo != "alarm"){
-	    const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
-	    updateObservers( JSON.stringify(answer) )
+        console.log("       $$$ WebpageServer wssocket | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running in synch way:" + moveStillRunning)
+	    //const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
+	    //updateObservers( JSON.stringify(answer) )
 	    return
-	}
+	}/*
 	if( moveStillRunning && moveTodo == "alarm" ){  //INFO: the alarm move could also be sent via HTTP
 	    execMoveOnAllConnectedScenes(moveTodo, duration)
 	    moveHalted = true
