@@ -53,11 +53,11 @@ We also import app.js, which contains the logic of our client application.
     INPUT AREA
     ===========================================================
     -->
-<h2>INPUT</h2>
-<form action="robotmove" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
-    <label for="movespec">Robot move</label>
-    <input type="text" id="movespec" name="move" value="h">
-    <input type="submit" value="domove">
+<h2>CONFIGURATION</h2>
+<form action="configure" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
+    <label for="configurespec">Robot move</label>
+    <input type="text" id="configurespec" name="move" value="localhost">
+    <input type="submit" value="set basicrobot address (the port is 8020)">
 </form>
 <hr/>
 

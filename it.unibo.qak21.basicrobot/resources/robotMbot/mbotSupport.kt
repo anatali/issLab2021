@@ -11,8 +11,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import it.unibo.kactor.ActorBasicFsm
 import it.unibo.kactor.MsgUtil
-//import it.unibo.supports.serial.SerialPortConnSupport
-//import it.unibo.supports.serial.JSSCSerialComm
+import it.unibo.supports.serial.SerialPortConnSupport
+import it.unibo.supports.serial.JSSCSerialComm
 
 
 object mbotSupport{
@@ -28,7 +28,8 @@ object mbotSupport{
 	private fun initConn( port : String ){ 
 		try {
 			//println("   	%%% mbotSupport | initConn starts port=$port")
-			val serialConn = JSSCSerialComm()
+			//val serialConn = JSSCSerialComm()
+			val serialConn = JSSCSerialComm(null)
 			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
 			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")						
  			val realsonar = robotDataSourceArduino("realsonar", owner,   conn )

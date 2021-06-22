@@ -13,7 +13,7 @@ import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
-//import it.unibo.supports.serial.SerialPortConnSupport
+import it.unibo.supports.serial.SerialPortConnSupport
 
 
 class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
@@ -24,7 +24,7 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 	}
 
 	override suspend fun actorBody(msg: ApplMessage) {
-        //println("   	%%% $name |  handles msg= $msg  ")
+        println("   	%%% $name |  handles msg= $msg conn=$conn ")
 		val vStr  = (Term.createTerm( msg.msgContent()) as Struct).getArg(0).toString()
 		//println("   	%%% $name |  handles msg= $msg  vStr=$vStr")
 		elabData( vStr )

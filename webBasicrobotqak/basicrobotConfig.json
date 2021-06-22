@@ -1,5 +1,6 @@
-{"type":"realnano", "port":"8020", "ipvirtualrobot":"-"}
-{"typeforvirtualonpc":"virtual", "port":"8090", "ipvirtualrobot":"wenv"}
+{"type":"virtual", "port":"8090", "ipvirtualrobot":"localhost"}
+{"typeforvirtualonpclocal":"virtual", "port":"8090", "ipvirtualrobot":"localhost"}
+{"typeforvirtualonpcyaml":"virtual", "port":"8090", "ipvirtualrobot":"wenv"}
 {"typeforraspnano":"realnano", "port":"8020", "ipvirtualrobot":"-"}
 {"typeforraspmbot":"realmbot", "port":"/dev/ttyUSB0", "ipvirtualrobot":"-"}
 {"typeforraspmbotpc":"realmbot", "port":"COM6", "ipvirtualrobot":"-"}

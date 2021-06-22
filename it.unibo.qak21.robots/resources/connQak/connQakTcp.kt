@@ -10,6 +10,7 @@ class connQakTcp(  ) : connQakBase( ){
 	
 	override fun createConnection( ){ //hostIP: String, port: String  
 		val fp    = FactoryProtocol(null,"TCP","connQakTcp")
+		println("connQakTcp createConnection $hostAddr:$port")
 	    conn      = fp.createClientProtocolSupport(hostAddr, port.toInt() )    
 	}
 	

@@ -38,8 +38,8 @@ class HIController {
     lateinit var coapsupport     : CoapSupport
     val scopeTorunBasicrobot     = CoroutineScope(Dispatchers.Default)
     //TODO: set  basicrobotAddr by using a WebGui
-    var basicrobotAddr           = "192.168.1.33" //or "localhost"
-    var basicrobotPort           = connQak.robotPort
+    //var basicrobotAddr           = "192.168.1.33" //or "localhost"
+    //var basicrobotPort           = connQak.robotPort
     lateinit var connToRobot     : connQakBase
 
     companion object{
@@ -54,32 +54,14 @@ class HIController {
     }
 
     //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
-    init{
-        if( basicrobotAddr == "localhost" ) {
+    fun configure(addr : String){
+        connQak.robothostAddr = addr
+        if( addr == "localhost" ) {
             try {
-                /*
-            The basicrobot is activated as a local resource
-             */
-                //answerChannel = answerMoveChannel
-                //sysUtil.colorPrint("HIController | answerChannel: ${answerChannel}", Color.BLUE)
-                //connSupport = connQak.connQakBase.create( connQak.connprotocol )
-                //connSupport.createConnection()
-
                 scopeTorunBasicrobot.launch {
                     QakContext.createContexts(
                         "localhost", this, "basicrobot.pl", "sysRules.pl"
                     )
-
-                    //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
-                    //sysUtil.colorPrint("HIController | answerChannel: ${answerChannel}", Color.BLUE)
-                    //basicrobot = QakContext.getActor("basicrobot")!!
-                    //sysUtil.colorPrint("HIController | create basicrobot ${basicrobot}", Color.BLUE)
-                    //robotproxy = QakContext.getActor("basicrobotProxy")!!
-                    //sysUtil.colorPrint("HIController | create basicrobotProxy ${basicrobot}", Color.BLUE)
-                    //answerChannel = (robotproxy as basicrobotProxy).answerMoveChannel
-                    //basicrobotScope=basicrobot.scope
-                    //sysUtil.colorPrint("HIController | resource: ${resource.robotanswerChannel} scope=${basicrobotScope}", Color.BLUE)
-
                 }
             } catch (e: Exception) {
                 sysUtil.colorPrint("HIController | Error $e", Color.RED)
@@ -92,16 +74,17 @@ class HIController {
                 } else basicrobot = br
             }
         }else { //basicrobotAddr != "localhost"
-            connQak.robothostAddr = basicrobotAddr
+            basicrobot = null
             connToRobot = connQakBase.create(ConnectionType.TCP)
             connToRobot.createConnection()
         }
         coapsupport =
-            CoapSupport("coap://$basicrobotAddr:$basicrobotPort", "ctxbasicrobot/basicrobot")
+            CoapSupport("coap://${connQak.robothostAddr}:${connQak.robotPort}",
+                "ctxbasicrobot/basicrobot")
         coapsupport.observeResource(WebPageCoapHandler(this))
 
         sysUtil.colorPrint("HIController | INIT", Color.GREEN)
-    }//init
+    }//configure
 
 
 
@@ -122,7 +105,13 @@ class HIController {
         return  "basicrobotqakGui"
     }
 
-
+    @PostMapping("/configure")
+    fun handleConfigure(viewmodel : Model,
+      @RequestParam(name="move", required=false, defaultValue="h")addr : String) : String {
+        configure(addr)
+        viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr)
+        return  "basicrobotqakGui"
+    }
     //curl -i -d "move=w" -X POST http://localhost:8085/robotmove
     //it is a good practice to return the location of the newly created resource in the response header.
     @PostMapping("/robotmove")
@@ -138,24 +127,10 @@ class HIController {
             if(basicrobot !=null ) {
                 runBlocking {
                     basicrobot!!.autoMsg(reqMsg)
-                    //handle answer
-                    //polling on the basicrobot ActorResourceRep since no shared channel is possible
-                    //between basicrobotProxy and HIController
-                    /*
-                 var info = "unknown"
-                 while( true ){
-                     sysUtil.colorPrint("HIController | info=${info}", Color.RED)
-                     if( info.contains("stepDone") ) break
-                     if( info.contains("stepFail") ) break
-                     delay( 350 ) //give time to change ActorResourceRep in step(T)
-                     info = basicrobot!!.geResourceRep()
                  }
-                 viewmodel.addAttribute("viewmodelarg", "${info}")*/
-                }
             }else{ //basicrobot remote
                 connToRobot.request(reqMsg)
             }
-            //sysUtil.colorPrint("HIController | returnnnnnnnn: ", Color.RED)
         }else {
             val cmdMsg = MsgUtil.buildDispatch("basicrobotproxy", "cmd", "cmd($robotmove)", connQak.qakdestination)
             if( basicrobot !=null )  scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
