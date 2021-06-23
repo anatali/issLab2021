@@ -11,8 +11,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import it.unibo.kactor.ActorBasicFsm
 import it.unibo.kactor.MsgUtil
-import it.unibo.supports.serial.SerialPortConnSupport
-import it.unibo.supports.serial.JSSCSerialComm
+//import it.unibo.supports.serial.SerialPortConnSupport
+//import it.unibo.supports.serial.JSSCSerialComm
 
 
 object mbotSupport{
@@ -20,24 +20,26 @@ object mbotSupport{
  	lateinit var conn    : SerialPortConnSupport
 	var dataSonar        : Int = 0 ; //Double = 0.0
  			
-	fun create( owner: ActorBasic, port : String ="/dev/ttyUSB0"  ){
+	//Called by robotSupport
+	fun create( owner: ActorBasic, port : String ="/dev/ttyUSB0"  ) : SerialPortConnSupport?{
 		this.owner = owner	//
-		initConn( port   )
-	}
-	
-	private fun initConn( port : String ){ 
-		try {
+		//initConn 
+ 		try {
 			//println("   	%%% mbotSupport | initConn starts port=$port")
-			//val serialConn = JSSCSerialComm()
-			val serialConn = JSSCSerialComm(null)
+			val serialConn = JSSCSerialComm()
+			//val serialConn = JSSCSerialComm(null)
 			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
-			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")						
+			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")
+			/*					
  			val realsonar = robotDataSourceArduino("realsonar", owner,   conn )
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  
 		  		println("   	%%% mbotSupport | has created the realsonar")
+			 */
+			return conn
 		}catch(  e : Exception) {
 			println("   	%%% mbotSupport |  ERROR ${e }"   );
+			return null;
 		}		
 	}
 	
@@ -47,7 +49,7 @@ object mbotSupport{
  	  by the Python application robotCmdExec that exploits GY521
     */
 	fun  move( cmd : String ){
-		println("  	%%% mbotSupport | move cmd=$cmd ")
+		//println("  	%%% mbotSupport | move cmd=$cmd conn=$conn")
 		 
 		when( cmd ){
 			"msg(w)", "w" -> conn.sendALine("w")

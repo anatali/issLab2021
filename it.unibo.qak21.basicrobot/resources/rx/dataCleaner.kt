@@ -15,7 +15,7 @@ val LimitHigh = 150
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     override suspend fun actorBody(msg: ApplMessage) {
-  		println("$tt $name |  msg = $msg ")		
+  		//println("$tt $name |  msg = $msg ")		
 		if( msg.msgId() != "sonarRobot" ) return //AVOID to handle other events
   		elabData( msg )
  	}
@@ -25,7 +25,7 @@ val LimitHigh = 150
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	  suspend fun elabData( msg: ApplMessage ){ //OPTIMISTIC		 
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
-  		println("$tt $name |  data = $data ")		
+  		//println("$tt $name |  data = $data ")		
 		val Distance = Integer.parseInt( data ) 
  		if( Distance > LimitLow && Distance < LimitHigh ){
 			emitLocalStreamEvent( msg ) //propagate

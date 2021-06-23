@@ -17,6 +17,7 @@ import it.unibo.kactor.ActorBasicFsm
 import org.json.JSONObject
 import java.io.File
 import it.unibo.kactor.MsgUtil
+import robotMbot.robotDataSourceArduino
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,9 +39,18 @@ object robotSupport{
 		when( robotKind ){		
 			//"mockrobot"  ->  { robotMock.mockrobotSupport.create(  ) }
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
-			"realmbot"   ->  { robotMbot.mbotSupport.create( owner, robotPort  ) } //robotPort="/dev/ttyUSB0"   "COM6"
- 			"realnano"   ->  { robotNano.nanoSupport.create( owner )
- 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar")
+			"realmbot"   ->  {
+				val conn      = robotMbot.mbotSupport.create( owner, robotPort  ) //robotPort="/dev/ttyUSB0"   "COM6"
+				if( conn != null ){
+					val realsonar = robotDataSourceArduino("realsonar", owner,   conn )
+					//Context injection  
+					owner.context!!.addInternalActor(realsonar)  
+                    println("		--- robotSupport | has created the realsonar for mobot")
+				}		
+			} 
+ 			"realnano"   ->  {
+				robotNano.nanoSupport.create( owner )
+ 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  
   				println("		--- robotSupport | has created the realsonar")

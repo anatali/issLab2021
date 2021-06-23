@@ -76,8 +76,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					 transition(edgeName="t10",targetState="execcmd",cond=whenDispatch("cmd"))
 					transition(edgeName="t11",targetState="doStep",cond=whenRequest("step"))
 					transition(edgeName="t12",targetState="handleObstacle",cond=whenDispatch("obstacle"))
-					transition(edgeName="t13",targetState="handleSonar",cond=whenEvent("sonar"))
-					transition(edgeName="t14",targetState="endwork",cond=whenDispatch("end"))
+					transition(edgeName="t13",targetState="endwork",cond=whenDispatch("end"))
 				}	 
 				state("execcmd") { //this:State
 					action { //it:State
@@ -118,32 +117,25 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 									StepTime = payloadArg(0).toLong() 	 
 								updateResourceRep( "step(${StepTime})"  
 								)
-								unibo.robot.robotSupport.move( "w"  )
-								StartTime = getCurrentTime()
 						}
+						StartTime = getCurrentTime()
+						println("basicrobot | doStep StepTime =$StepTime StartTime=$StartTime")
+						unibo.robot.robotSupport.move( "w"  )
 						stateTimer = TimerActor("timer_doStep", 
 							scope, context!!, "local_tout_basicrobot_doStep", StepTime )
 					}
-					 transition(edgeName="t05",targetState="stepPerhapsDone",cond=whenTimeout("local_tout_basicrobot_doStep"))   
-					transition(edgeName="t06",targetState="stepFail",cond=whenDispatch("obstacle"))
-				}	 
-				state("stepPerhapsDone") { //this:State
-					action { //it:State
-						unibo.robot.robotSupport.move( "h"  )
-						println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")
-						stateTimer = TimerActor("timer_stepPerhapsDone", 
-							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
-					}
-					 transition(edgeName="t07",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_stepPerhapsDone"))   
-					transition(edgeName="t08",targetState="stepFail",cond=whenDispatch("obstacle"))
+					 transition(edgeName="t04",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_doStep"))   
+					transition(edgeName="t05",targetState="stepFail",cond=whenDispatch("obstacle"))
+					transition(edgeName="t06",targetState="execcmd",cond=whenDispatch("cmd"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
+						unibo.robot.robotSupport.move( "h"  )
 						println("basicrobot | stepDone")
 						updateResourceRep( "stepDone($StepTime)"  
 						)
-						emit("info", "info(stepdone($StepTime))" ) 
 						answer("step", "stepdone", "stepdone(ok)"   )  
+						println("basicrobot | stepDone reply done")
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -175,6 +167,16 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						emit("endall", "endall(normal)" ) 
 						terminate(1)
 					}
+				}	 
+				state("stepPerhapsDone") { //this:State
+					action { //it:State
+						unibo.robot.robotSupport.move( "h"  )
+						println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")
+						stateTimer = TimerActor("timer_stepPerhapsDone", 
+							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
+					}
+					 transition(edgeName="t07",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_stepPerhapsDone"))   
+					transition(edgeName="t08",targetState="stepFail",cond=whenDispatch("obstacle"))
 				}	 
 			}
 		}

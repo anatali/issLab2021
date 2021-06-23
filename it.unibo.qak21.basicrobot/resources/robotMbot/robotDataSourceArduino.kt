@@ -13,9 +13,11 @@ import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
-import it.unibo.supports.serial.SerialPortConnSupport
+//import it.unibo.supports.serial.SerialPortConnSupport
 
 
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 					val conn : SerialPortConnSupport) : ActorBasic(name, owner.scope){		
 	init{
@@ -23,21 +25,23 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 		//println("   	%%% $name |  starts conn=$conn")	 
 	}
 
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 	override suspend fun actorBody(msg: ApplMessage) {
-        println("   	%%% $name |  handles msg= $msg conn=$conn ")
-		val vStr  = (Term.createTerm( msg.msgContent()) as Struct).getArg(0).toString()
+        println("   	%%% $name |  handles msg= $msg conn=$conn owner=$owner")
+		//val vStr  = (Term.createTerm( msg.msgContent()) as Struct).getArg(0).toString()
 		//println("   	%%% $name |  handles msg= $msg  vStr=$vStr")
-		elabData( vStr )
+		readData(   )
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-	suspend fun elabData(data : String ){
+	suspend fun readData(  ){
          while ( true ) {
  			try {
  				var curDataFromArduino =  conn.receiveALine()
 				//globalTimer.startTimer()  //TIMER ....
- 	 			//println("   	%%% $name | getDataFromArduino received: $curDataFromArduino"    )
+ 	 			//println("   	%%% $name | readData: $curDataFromArduino"    )
 				if( curDataFromArduino != null ){
 	 				var v = curDataFromArduino.toDouble() 
 					//handle too fast change ?? NOT HERE
@@ -45,8 +49,7 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 	 				//if( dataSonar < 350 ){ /REMOVED since USING STREAMS
 	 				val event = MsgUtil.buildEvent( name,"sonarRobot","sonar( $dataSonar )")								
 	  				//println("   	%%% $name | mbotSupport event: ${ event } owner=${owner.name}"   );						
-					//owner.emit(  event )
-					owner.emitLocalStreamEvent( event )
+					emitLocalStreamEvent( event )
 				}
  				//Oct2019 : emit the event obstacle
 /* //REMOVED WHEN USING STREAMS							

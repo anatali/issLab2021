@@ -17,10 +17,12 @@ class connQakTcp(  ) : connQakBase( ){
 	}
 	
 	override fun forward( msg: ApplMessage ){
- 		conn.sendALine( msg.toString()  )				
+		println("connQakTcp | forward= $msg")
+		conn.sendALine( msg.toString()  )
 	}
 	
 	override fun request( msg: ApplMessage ){
+		println("connQakTcp | request= $msg")
  		conn.sendALine( msg.toString()  )
 		//Acquire the answer	
 		val answer = conn.receiveALine()

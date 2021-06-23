@@ -99,7 +99,7 @@ QActor basicrobot context ctxbasicrobot{
 	Transition t1   whenMsg     cmd       -> execcmd
 					whenRequest step      -> doStep			
 					whenMsg    obstacle   -> handleObstacle  //in virtualrobot caused by the move w/s
-					whenEvent sonar       -> handleSonar
+					//whenEvent sonar       -> handleSonar
 				  	whenMsg     end       -> endwork			  
 	
 	State execcmd{
@@ -138,35 +138,24 @@ QActor basicrobot context ctxbasicrobot{
 		onMsg( step : step( T ) ){  
 			[#	StepTime = payloadArg(0).toLong() 	#]  
 			updateResource [# "step(${StepTime})" #]
-			//println("basicrobot | doStep StepTime =$StepTime ")
- 			run unibo.robot.robotSupport.move( "w" )  //moves a real robot forever
- 			memoCurrentTime StartTime  
-		}  
+  		}  
+        memoCurrentTime StartTime  
+        println("basicrobot | doStep StepTime =$StepTime StartTime=$StartTime")        
+        run unibo.robot.robotSupport.move( "w" )  //moves a real robot forever
 	}  
 	Transition t0 
-		whenTimeVar StepTime  -> stepPerhapsDone	//caused by p
-		whenMsg  obstacle     -> stepFail		 
+		whenTimeVar StepTime  -> stepDone //stepPerhapsDone	//caused by p
+		whenMsg  obstacle     -> stepFail		
+        whenMsg     cmd       -> execcmd
   	 
-  	/* StepTime expires but also an obstacle is found */
- 	State stepPerhapsDone{ 
- 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
-		println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")  
-		//printCurrentMessage
- 		/* 
-		onMsg( local_sonar : sonar(D,T)){ //for the real robot
-			println("basicrobottxxxxxxxxxxxxxxxx | after a step emit polar(${payloadArg(0)}, 180) ")
-			emit polar : polar( $payloadArg(0), 90 )		//perceived via mqtt			
- 		}*/
-  	}
- 	Transition t0 whenTimeVar StepTime  -> stepDone  //StepTime is the first checked
- 				  whenMsg obstacle      -> stepFail//Detected near end of step
 	
 	State stepDone{   
- 		//run unibo.robot.robotSupport.move( "h" )  //stop the real robot already done
+ 		run unibo.robot.robotSupport.move( "h" )  //stop the real robot already done
 		println("basicrobot | stepDone")
 		updateResource [# "stepDone($StepTime)" #]
-   		emit info : info( stepdone($StepTime) )
+   		//emit info : info( stepdone($StepTime) )
    		replyTo step with stepdone : stepdone(ok)
+		println("basicrobot | stepDone reply done")
   	}
 	Goto work  
 	/* 
@@ -201,24 +190,41 @@ QActor basicrobot context ctxbasicrobot{
 		}
  		emit endall : endall(normal) 
  		terminate 1
-	}    
+	}   
+	
+	
+  	/* StepTime expires but also an obstacle is found */
+ 	State stepPerhapsDone{ 
+ 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
+		println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")  
+		//printCurrentMessage
+ 		/* 
+		onMsg( local_sonar : sonar(D,T)){ //for the real robot
+			println("basicrobottxxxxxxxxxxxxxxxx | after a step emit polar(${payloadArg(0)}, 180) ")
+			emit polar : polar( $payloadArg(0), 90 )		//perceived via mqtt			
+ 		}*/
+  	}
+ 	Transition t0 whenTimeVar StepTime  -> stepDone  //StepTime is the first checked
+ 				  whenMsg obstacle      -> stepFail   //Detected near end of step
+	 
 }
-/* 
+
 QActor envsonarhandler context ctxbasicrobot{
  	State s0 initial { 	 
  		println("envsonarhandler | START")	 		
 	}	
-	Transition t1   whenEvent local_sonar -> handleEnvSonar
+	Transition t1   whenEvent sonar -> handleEnvSonar
 	
 	State handleEnvSonar{
-		onMsg( local_sonar : sonar(D,T)){ 
-			println("envsonarhandler | emit polar(${payloadArg(0)}, 180) ")
-			emit polar : polar( $payloadArg(0), 180 )		//perceived via mqtt
-		}
+		printCurrentMessage
+		/* 
+		onMsg( sonar : sonar(D,T)){ 
+			println("envsonarhandler | sonar(${payloadArg(0)}) ")
+		}*/
 	}
-	Goto s0  
+	Transition t1 whenEvent sonar -> handleEnvSonar  
 }
- */ 
+
 /* 
  * 
 //Just to test that the event is emitted ...

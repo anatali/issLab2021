@@ -110,7 +110,7 @@ eclipse {
 mainClassName = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
 
 jar {
-    println("executing jar")
+    println("building jar")
     from sourceSets.main.allSource
     manifest {
         attributes 'Main-Class': "$mainClassName"

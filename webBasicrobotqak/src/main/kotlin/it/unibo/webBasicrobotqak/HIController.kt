@@ -112,6 +112,8 @@ class HIController {
         viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr)
         return  "basicrobotqakGui"
     }
+
+
     //curl -i -d "move=w" -X POST http://localhost:8085/robotmove
     //it is a good practice to return the location of the newly created resource in the response header.
     @PostMapping("/robotmove")
