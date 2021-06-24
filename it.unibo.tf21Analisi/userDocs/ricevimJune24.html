@@ -1,0 +1,311 @@
+	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>tf21RicevimJun24</title></head>
+    
+<body>
+<div id="top">
+<h1>LabIss2021 | tf21 Ricevimento Jun24 <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+ 
+ 
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<h3>Uno sguardo di insieme ai requsiti SENZA CANBIARE NOMI</h3>
+</center>	<img src="./img/tf21Area.PNG" alt="tf21Area.PNG" width="60%"  /></center>
+</tr>
+ 
+ <tr>
+ <h3>Quello che ci dice il committente sulle entità citate</h3>
+ </center>	<img src="./img/tf21Code.PNG" alt="tf21Code.PNG" width="60%"  /></center>
+</tr>
+
+<tr>
+<h3>Una possibile architettura logica di riferimento</h3>
+</center>	<img src="./img/tf21LogigArch0.PNG" alt="tf21LogigArch0.PNG" width="60%"  /></center>
+</tr>
+ </tbody>
+</table>
+
+
+
+
+<h2>Dal linguaggio naturale a modelli eseguiili</h2>
+<table style="width:98%">
+<tbody>	
+<tr>
+ 
+<pre>
+/*
+ * <k>tf21analisi_0.qak</k>
+ * <ks>PRIMO MODELLO DELLA ANALISI DEL PROBLEMA</ks>
+ * ------------------------------------------------------------------
+ * <bc>GOALS: 
+ *       1) definire l'architettura logica
+ *       2) impostare dei piani di testing automatizzato
+ *       3) discutere su come pianificare il lavoro</bc>
+ * 
+ * ASSUMPTIONS:
+ *   INDOOR  : cell (6,0)
+ *   OUTDOOR : cell (6,4)
+ * 	- one client 
+ *  - one free pakingslot : cell(3,2)	SLOTNUM=5
+ *  - temperature under TMAX
+ */
+
+</pre> 
+ </tr>
+ 
+ <tr>
+ <pre> 
+ /* 
+ * BEHAVIOR:
+ *  client  using parkingservicegui | send request reqenter 
+                                      receives the reply enter(SLOTNUM)
+ *  parkingmanagerservice  	        | if INDOOR is free  
+ *                                           handles reqenter              			(<ks>acceptIN</ks> )
+                                             send the reply enter(5)	  			(<ks>informIN</ks> )
+ *                                           <bc>PROBLEM: define a representation for the SLOTNUM</bc>
+ *                                           returns to HOME (if not already there)
+ *                                    else 
+                                             send the reply enter(0)
+ *                                           returns to HOME (if not already there) (<ks>moveToHome</ks>)
+ *  client using parkingservicegui  | moves the car to INDOOR, press the CARENTER button (send request carenter)
+ *                                    receives the reply receipt(TOKENID)			(<ks>receipt</ks>)
+ *                                    <bc>PROBLEM: define a representation for the TOKENID</bc>
+ *  parkingmanagerservice           | handles carenter - send the reply enter(COUNTER-5)                           
+ *                                    moves the car to the free pakingslot num=5	(<ks>moveToSlotIn</ks>)
+ * 									  returns to HOME						        (<ks>backToHome</ks>)
+ *  client using parkingservicegui  | goto the OUTDOOR  (perhaps, but he/she could be also elsewhere... )
+ *                                    send dispatch (???) pickup(1000-5)
+ *                                    <bc>PROBLEM dispatch or request?</bc>  <k>The client could just see the OUTDOOR opening, but ... </k>                            
+ *  parkingmanagerservice           | if OUTDOOR is free 							(<ks>acceptOUT</ks>)
+ *                                          moves the car from pakingslot (32) to OUTDOOR    (<ks>findSlot, moveToSlotOut,moveToOut</ks>)
+ *                                          returns to HOME			     (<ks>moveToHome</ks>)
+ *                                    else
+ *                                          if( OUTDOOR not released within DTFREE) 
+ *                                                  send alarm to the parking-manager 
+ *                                                  <bc>PERHAPS it is time to send a message to the client ...</bc>
+ * 
+ *  client                          | removes the car from the OUTDOOR
+ *  parkingmanagerservice           | ...
+ *  
+ */
+ </pre>
+  
+</tr>
+ <tr>
+ <h3>Un MODELLO per cominciare il processo di produzione</h3>
+ </center>	<img src="./img/tf21LogigArchModel0.PNG" alt="tf21LogigArchModel0.PNG" width="60%"  /></center>
+ 
+</tr>
+
+<tr>
+<h3>Rendiamo le anostra analisi <i>'comprensibile anche alla macchina'</i> ... </h3>
+  <a href="../src/tf21analisi_0.qak" target="code">tf21analisi_0.qak</a>
+</tr>
+
+ </tbody>
+</table>
+
+ 	      	
+<br/><br/> 	
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:60%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div>
+</body>
+</html>

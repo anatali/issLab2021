@@ -1,0 +1,158 @@
+/*
+ * tf21analisi_0.qak
+ * PRIMO MODELLO DELLA ANALISI DEL PROBLEMA
+ * ------------------------------------------------------------------
+ * GOALS: 
+ *       1) definire l'architettura logica
+ *       2) impostare dei piani di testing automatizzato
+ *       3) discutere su come pianificare il lavoro
+ * 
+ * ASSUMPTIONS:
+ *   INDOOR  : cell (6,0)
+ *   OUTDOOR : cell (6,4)
+ * 	- one client 
+ *  - one free pakingslot : cell(3,2)	SLOTNUM=5
+ *  - temperature under TMAX
+ */
+ 
+ /* 
+ * BEHAVIOR:
+ * 	client  using parkingservicegui | send request reqenter 
+                                      receives the reply enter(SLOTNUM)
+ *  parkingmanagerservice  	        | if INDOOR is free  
+ *                                           handles reqenter              			(acceptIN )
+                                             send the reply enter(5)	  			(informIN )
+ *                                           PROBLEM: define a representation for the SLOTNUM
+ *                                           returns to HOME (if not already there)
+ *                                    else 
+                                             send the reply enter(0)
+ *                                           returns to HOME (if not already there) (moveToHome)
+ *  client using parkingservicegui  | moves the car to INDOOR, press the CARENTER button (send request carenter)
+ *                                    receives the reply receipt(TOKENID)			(receipt)
+ *                                    PROBLEM: define a representation for the TOKENID
+ *  parkingmanagerservice           | handles carenter - send the reply enter(COUNTER-5)                           
+ *                                    moves the car to the free pakingslot num=5	(moveToSlotIn)
+ * 									  returns to HOME						        (backToHome)
+ *  client using parkingservicegui  | goto the OUTDOOR  (perhaps, but he/she could be also elsewhere... )
+ *                                    send dispatch (???) pickup(1000-5)
+ *                                    PROBLEM dispatch or request? The client could just see the OUTDOOR opening, but ...                               
+ *  parkingmanagerservice           | if OUTDOOR is free 							(acceptOUT)
+ *                                          moves the car from pakingslot (32) to OUTDOOR    (findSlot, moveToSlotOut,moveToOut)
+ *                                          returns to HOME								     (moveToHome)
+ *                                    else
+ *                                          if( OUTDOOR not released within DTFREE) 
+ *                                                  send alarm to the parking-manager 
+ *                                                  PERHAPS it is time to send a message to the client ...
+ * 
+ *  client                          | removes the car from the OUTDOOR
+ *  parkingmanagerservice           | ...
+ *  
+ */
+System carparking
+
+Request reqenter : reqenter(X)
+Reply   enter    : enter(SLOTNUM)
+
+Request carenter : carenter(SLOTNUM)
+Reply   receipt  : receipt(TOKENID)
+
+Dispatch pickup :  pickup(TOKENID)
+
+
+
+
+Context ctxcarparking ip[host="localhost" port=8002]
+
+
+/*
+ * Used at the monent as a clientmock ...
+ */
+QActor parkingservicegui context  ctxcarparking{
+	[# var SLOTNUM = 0  #]
+	State s0 initial{
+		println("	parkingservicegui (client mock)  STARTS")
+	}
+	Goto requestToenter
+	
+	State requestToenter{
+		println("	client requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(bob)
+	}
+	Transition t0 
+	      whenTime 1000 -> retraylater   //I have no time to lose ... BUT what about the parkingmanagerservice?
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto retraylater  if [# SLOTNUM==0 #] else movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		printCurrentMessage
+	}
+	  
+	
+	State retraylater{
+		println("	client will retry later")
+	}
+	
+}
+ 
+QActor parkingmanagerservice context  ctxcarparking{
+	//PROBLEM : represent the state of the parking area
+	[# var indoorfree = true #]
+	State s0 initial{
+		println("parkingmanagerservice STARTS")
+	}
+	Goto work
+	
+	State work{
+		println("parkingmanagerservice waiting ...")
+	}
+	Transition t0 whenRequest reqenter -> handleEnterRequest
+	              whenRequest carenter -> enterthecar
+	
+	State handleEnterRequest{
+		printCurrentMessage		
+		println("parkingmanagerservice reply to reqenter ")
+		replyTo reqenter with enter : enter(5)
+	}
+	Goto work
+	
+	State enterthecar{
+		printCurrentMessage		
+		println("parkingmanagerservice reply to enterthecar ")
+ 		onMsg( carenter : carenter(SLOT)){
+			[# var SLOTNUM = payloadArg(0 ).toInt()  #]
+			replyTo carenter with receipt : receipt($SLOTNUM)
+			println("parkingmanagerservice moves the car to SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	
+}
+
+QActor parkingservicestatusgui context  ctxcarparking{
+	State s0 initial{
+		println("parkingservicestatusgui STARTS")
+	}
+}
+
+QActor trolley context  ctxcarparking{
+	State s0 initial{
+		println("trolley STARTS")
+	}
+}
+
+/* ======================================================================== */
+
+ 
