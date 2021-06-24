@@ -56,16 +56,14 @@ Reply   enter    : enter(SLOTNUM)
 Request carenter : carenter(SLOTNUM)
 Reply   receipt  : receipt(TOKENID)
 
+//????
 Dispatch pickup :  pickup(TOKENID)
-
-
-
 
 Context ctxcarparking ip[host="localhost" port=8002]
 
 
 /*
- * Used at the monent as a clientmock ...
+ * Used at the moment as a clientmock ...
  */
 QActor parkingservicegui context  ctxcarparking{
 	[# var SLOTNUM = 0  #]
@@ -99,6 +97,7 @@ QActor parkingservicegui context  ctxcarparking{
 	
 	State afterreceipt{
 		printCurrentMessage
+		//....
 	}
 	  
 	
@@ -110,7 +109,17 @@ QActor parkingservicegui context  ctxcarparking{
  
 QActor parkingmanagerservice context  ctxcarparking{
 	//PROBLEM : represent the state of the parking area
-	[# var indoorfree = true #]
+	//NAIVE SOLUTION modo bruttino ... 
+	//A COSA SERVE the state of the parking area ??? => 
+	//   PER RAGIONARE SULLO STATO DEL MONDO E PER DELINEARE QUALCHE TESPLAN
+	/*
+	 * TESTPLAN0:  
+	 * 	reqenter con indoorfree=false => reply enter:enter(0)
+	 *  reqenter con indoorfree=true  => reply enter:enter(N) con (N > 0) and slotStateFree(N) and robotStopped=false  
+
+	 */
+	[#  
+	#]
 	State s0 initial{
 		println("parkingmanagerservice STARTS")
 	}
@@ -119,13 +128,29 @@ QActor parkingmanagerservice context  ctxcarparking{
 	State work{
 		println("parkingmanagerservice waiting ...")
 	}
-	Transition t0 whenRequest reqenter -> handleEnterRequest
+	Transition t0 whenRequest reqenter -> handleEnterRequest //handles reqenter (acceptIN )
 	              whenRequest carenter -> enterthecar
 	
 	State handleEnterRequest{
-		printCurrentMessage		
+		[# var Tester = false #]
+		printCurrentMessage		 
 		println("parkingmanagerservice reply to reqenter ")
-		replyTo reqenter with enter : enter(5)
+		/* TODO: 
+		 * if INDOOR is free  
+ *              PROBLEM: define a representation for the SLOTNUM
+		 */  
+		//if  [# utils.ParkingAreaKb2.indoorfree && utils.ParkingAreaKb2.slotStateFree[4] #]{ 
+		if[# Tester  #]{
+			//[# utils.ParkingAreaKb2.slotStateFree[4] = false #]
+			replyTo reqenter with enter : enter(5)  //send the reply enter(5)	(informIN )
+			updateResource [# "reply( enter(4) )" #] 
+		}
+		 else{ 
+			replyTo reqenter with enter : enter(0)
+			updateResource [# "reply( enter(0) )" #]
+		}	 	
+		//TODO: returns to HOME (if not already there) COME FACCIO A SAPERE DOVE il trolley SI TROVA? => uso la mappa
+		//TOOD: come faccio a sapere che ho inviato  la risposta enter(0)?
 	}
 	Goto work
 	

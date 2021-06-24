@@ -16,10 +16,49 @@ class Parkingmanagerservice ( name: String, scope: CoroutineScope  ) : ActorBasi
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("parkingmanagerservice STARTS")
+					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
+				}	 
+				state("work") { //this:State
+					action { //it:State
+						println("parkingmanagerservice waiting ...")
+					}
+					 transition(edgeName="t03",targetState="handleEnterRequest",cond=whenRequest("reqenter"))
+					transition(edgeName="t04",targetState="enterthecar",cond=whenRequest("carenter"))
+				}	 
+				state("handleEnterRequest") { //this:State
+					action { //it:State
+						 var Tester = false  
+						println("$name in ${currentState.stateName} | $currentMsg")
+						println("parkingmanagerservice reply to reqenter ")
+						if(  Tester   
+						 ){answer("reqenter", "enter", "enter(5)"   )  
+						updateResourceRep( "reply( enter(4) )"  
+						)
+						}
+						else
+						 {answer("reqenter", "enter", "enter(0)"   )  
+						 updateResourceRep( "reply( enter(0) )"  
+						 )
+						 }
+					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
+				}	 
+				state("enterthecar") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						println("parkingmanagerservice reply to enterthecar ")
+						if( checkMsgContent( Term.createTerm("carenter(SLOTNUM)"), Term.createTerm("carenter(SLOT)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 var SLOTNUM = payloadArg(0 ).toInt()   
+								answer("carenter", "receipt", "receipt($SLOTNUM)"   )  
+								println("parkingmanagerservice moves the car to SLOTNUM = $SLOTNUM ")
+						}
 					}
 				}	 
 			}
