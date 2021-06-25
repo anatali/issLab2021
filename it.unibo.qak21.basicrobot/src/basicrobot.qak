@@ -15,7 +15,7 @@
  * ================================================================================
  */ 
   
-System  -trace  basicrobot    
+System  -trace  basicrobot          
 //mqttBroker "localhost" : 1883 eventTopic "unibo/basicrobot"   		
 
 Dispatch cmd       	: cmd(MOVE)     
@@ -46,7 +46,7 @@ QActor basicrobot context ctxbasicrobot{
   var RobotType     = "" 
   var CurrentMove   = "unkknown"
 #]  
- 	State s0 initial { 	  
+ 	State s0 initial { 	      
  		println("basicrobot | START")	
  		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
