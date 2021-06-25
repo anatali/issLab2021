@@ -37,7 +37,7 @@ var curSonarDistance	= 0
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	  suspend fun elabData( msg: ApplMessage ){ //msg( "sonarRobor, event, EMITTER, none, sonar(D), N")	  	    
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
-   		//println("$tt $name |  data = $data ")
+   		println("$tt $name |  data = $data ")
 		val Distance = Integer.parseInt( data ) 
  		if( Distance < LimitDistance && ! obstacleFound ){ //avoid to emit a stream of obstacle events
 	 		//val m1 = MsgUtil.buildEvent(name, "obstacle", "obstacle($Distance)")
@@ -57,7 +57,7 @@ var curSonarDistance	= 0
 				//println("$tt $name |  $Distance")
 				curSonarDistance = Distance
 		 	 	val m0 = MsgUtil.buildEvent(name, "sonar", "sonar($Distance)")
-		 	 	emit( m0 )			
+		 	 	//emit( m0 )			
 			}
   		}
    	}

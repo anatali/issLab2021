@@ -564,61 +564,6 @@ it.unibo.qak21.basicrobot  <kc>//activate the robot</kc>
 </td>
 </tr>
 
-<tr>
-<td>
-<h3 id="robotusage">Moving using the console</h3>
-The project 
-<a href="../../it.unibo.qak21.robots" target="code"><bc>it.unibo.qak21.robots</bc></a>
-defines  a console to to send commands to the basicrobot.
-<br/><br/>
-<ul>
-<li><a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code">consoleGuiSimple.kt</a>:
-a factory class that creates a console using a specific protocol of type <k>ConnectionType</k>
-as defined in <a href="../../it.unibo.qak21.robots/resources/consoles/sysConnKb.kt" target="code">sysConnKb.kt</a>
-<br/><br/>
-</center>	<img src="./img/consoleCoap.png" alt="consoleCoap.png" width="40%"  /></center>	
-
-</li>
-<!--
-<m> 
-<li><a href="../../it.unibo.qak21.robots/consoles/consoleGuiTcp.kt" target="code">consoleGuiTcp.kt</a>:
-a specialization for <ks>TCP</ks>  
-</li>
-<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiCoap.kt" target="code">consoleGuiCoap.kt</a>:
-a specialization for <ks>CoAP</ks>  
-
-</li>
-<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiHttp.kt" target="code">consoleGuiHttp.kt</a>
-a specialization for <ks>HTTP</ks>  
-</li>
-<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiMqtt.kt" target="code">consoleGuiMqtt.kt</a>
-a specialization for <ks>MQTT</ks>  
-</li>
-</m>-->
-</ul>
-</td>
- <td>
-<h3 id="robotusage">Moving using jupyter</h3>
-
-<ul>
-<li>
-<a href="../../it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb" target="code">qakbasicrobotcallerTCP.ipynb</a>
-</li>
-<li>
-<a href="../../it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerMQTT.ipynb" target="code">qakbasicrobotcallerMQTT.ipynb</a>
-</li>
-</ul>
-
-<h3 id="robotusage">Moving using a WebGui</h3>
-<a href="../../webBasicrobotqak/userDocs/webBasicrobotqak.html" target="lab">LabIss2021 | a Webgui for the basic generic robot</a> 
-
-<h3 id="robotusage">Observing</h3>
-<a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotObserver.java" target="code">basicrobotObserver.java</a>
-<br/>
-<a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotCoapObserver.kt" target="code">basicrobotCoapObserver.kt</a>
-
-</td>
-</tr>
 
 
  </tbody>
@@ -665,8 +610,8 @@ docker run -it --rm --name virtualrobotdisi
     virtualrobotdisi:2.0  /bin/bash
 
 <kc>//change the scene</kc>
-docker cp sceneConfig.js 
-  &lt;inagsid>:/home/node/WEnv/WebGLScene/sceneConfig.js
+docker <k>cp</k> <ks>sceneConfig.js</ks> 
+  <k>CONTAINERID</k>:/home/node/WEnv/WebGLScene/sceneConfig.js
 
 docker tag virtualrobotdisi:2.0 natbodocker/virtualrobotdisi:2.0
 docker push natbodocker/virtualrobotdisi:2.0
@@ -678,17 +623,22 @@ docker push natbodocker/virtualrobotdisi:2.0
 </ul>
 </td>
 <td>
-<h3>The basic robot </h3>
+<h3>The basic robot using the virtual robot </h3>
 Project <a href="../../it.unibo.qak21.basicrobot" target="code">it.unibo.qak21.basicrobot</a>: 
 <hr/>
 <ul>
-<li><a href="../../it.unibo.qak21.basicrobot/Dockerfileforrasp" target="code">Dockerfileforrasp</a> 
-<pre><m>gradle  -b build2021.gradle distZip
-docker build -t basicrobot21:1.0 .
-docker run -it --rm --name basicrobot21
-    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required by CoAP</kc>
-    <k>--privileged</k> basicrobot21  /bin/bash
+<li>On PC for virtual robot: <a href="../Dockerfile" target="code">Dockerfile</a> 
+<pre><m>gradle  -b build2021.gradle distZip <kc/>//generate the tar</kc>
+docker build -t basicrobot21:1.0 
+docker run -it --rm --name basicrobot21 
+    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
+    basicrobot21  
+    <ks>/bin/bash</ks> <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
+<kc>//Otherwise: copy the file <a href="../basicrobotConfigForDockeronPC.json" target="code">basicrobotConfigForDockeronPC.json</a> into the container:</kc>
+docker <k>cp</k> <ks>basicrobotConfigForDockeronPC.json</ks> 
+  <k>CONTAINERID</k>:/it.unibo.qak21.basicrobot-1.0/bin/<ks>basicrobotConfig.json</ks>
 </m></pre></li>
+ 
 
 
 <h3>The basicrobot with webgui </h3>
@@ -712,28 +662,123 @@ docker push natbodocker/webbasicrobotqakforpc:1.0
 </table>
 
 <h2 id="deploy">Deployment for the real robot</h2>
-
+ 
 <table style="width:98%">
 <tbody>	
 <tr>
 <td style="width:50%" >
+
+<h3>Deployment on Raspberry</h3>
+<pre>
+<kc>1 - copy the distZip into Raspberry
+2 - unzip  
+3 - cd <ks>/it.unibo.qak21.basicrobot-1.0/bin</ks>
+4 - copy here:
+  <a href="../basicrobot.pl" target="code">basicrobot.pl</a>,
+  <a href="../sysRules.pl" target="code">bsysRules.pl</a>,
+  <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> <kc>//See the proper version in the row below</kc>
+5 - bash<ks>it.unibo.qak21.basicrobot</ks>
+</kc>
+</pre>
+ 
+</td>
+<td>
+<h3>Deployment with docker</h3>
+On Raspberry for real robot: <a href="../Dockerfileforrasp" target="code">Dockerfileforrasp</a> 
+<pre><m>gradle  -b build2021.gradle distZip <kc/>//generate the tar</kc>
+docker build -t basicrobot21:1.0 .
+docker run -it --rm --name basicrobot21
+    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
+    <k>--privileged</k> basicrobot21  
+    <ks>/bin/bash</ks> <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
+	
+</m></pre>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%" >
 <h3>Mbot-robot</h3>
 <ul>
-<li></li>
+<li><a href="../basicrobotConfigForMbot.json" target="code">basicrobotConfigForMbot.json</a></li>
 <li></li>
 </ul>
 </td>
 <td>
 <h3>Nano-robot</h3>
 <ul>
-<li></li>
+<li><a href="../basicrobotConfigForNano.json" target="code">basicrobotConfigForNano.json</a></li>
 <li></li>
 </ul>
 </td>
 </tr>
+
  </tbody>
 </table>
 
+<h2>Usage</h2>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%">
+<h3 id="robotusage">Moving using the console</h3>
+This project (and also the project 
+<a href="../../it.unibo.qak21.robots" target="code">it.unibo.qak21.robots</a>)
+defines  a console to to send commands to the basicrobot.
+<br/><br/> 
+<ul>
+<li><a href="../usage/consoles/consoleGuiSimple.kt" target="code">consoleGuiSimple.kt</a>:
+a factory class that creates a console using a specific protocol of type <k>ConnectionType</k>
+as defined in <a href="../usage/connQak/sysConnKb.kt" target="code">sysConnKb.kt</a>
+<br/><br/>
+</center>	<img src="./img/consoleCoap.png" alt="consoleCoap.png" width="40%"  /></center>	
+
+</li>
+<!--
+<m> 
+<li><a href="../../it.unibo.qak21.robots/consoles/consoleGuiTcp.kt" target="code">consoleGuiTcp.kt</a>:
+a specialization for <ks>TCP</ks>  
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiCoap.kt" target="code">consoleGuiCoap.kt</a>:
+a specialization for <ks>CoAP</ks>  
+
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiHttp.kt" target="code">consoleGuiHttp.kt</a>
+a specialization for <ks>HTTP</ks>  
+</li>
+<li><a href="../../it.unibo.qak21.robots/resources/connQak/consoleGuiMqtt.kt" target="code">consoleGuiMqtt.kt</a>
+a specialization for <ks>MQTT</ks>  
+</li>
+</m>-->
+</ul>
+</td>
+ <td>
+<h3 id="robotusage">Moving using jupyter</h3>
+
+<ul>
+<li>
+<a href="../../it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb" target="code">qakbasicrobotcallerTCP.ipynb</a>
+</li>
+<li>
+<a href="../../it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerMQTT.ipynb" target="code">qakbasicrobotcallerMQTT.ipynb</a>
+</li>
+</ul>
+
+<h3 id="robotusage">Moving using a WebGui</h3>
+<a href="../../webBasicrobotqak/userDocs/webBasicrobotqak.html" target="lab">LabIss2021 | a Webgui for the basic generic robot</a> 
+
+<h3 id="robotusage">Observing</h3>
+<a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotObserver.java" target="code">basicrobotObserver.java</a>
+<br/>
+<a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotCoapObserver.kt" target="code">basicrobotCoapObserver.kt</a>
+
+</td>
+</tr>
+
+ </tbody>
+</table>
+
+<!--
 <ol>
 <li><h3>Create the library</h3>
 <pre>
@@ -749,7 +794,7 @@ Copy from <ks>it.unibo.kotlinSupports/app/build/libs/IssActorKotlinRobotSupport-
 </li>
 <ol>
 
-
+-->
  
 
 

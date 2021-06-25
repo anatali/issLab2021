@@ -15,8 +15,9 @@ COPY ./*.json ./
 CMD ["bash", "it.unibo.qak21.basicrobot"]
 
 ##  docker build -t basicrobot21 . 
+##  docker run -it --rm --name basicrobot21 -p8020:8020/tcp basicrobot21  /bin/bash
 ##  docker cp basicrobotConfigForDockeronPC.json CONTAINERID:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
-##  docker cp basicrobotConfigForDockeronPC.json 275f04cc0bf9:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
+##  docker cp basicrobotConfigForDockeronPC.json 21c2bf1024e2:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
 ##  SAVE THE CONTAINER
  
  

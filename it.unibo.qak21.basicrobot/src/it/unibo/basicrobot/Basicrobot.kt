@@ -61,10 +61,11 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 	 			}
 						 
 						 }
-						unibo.robot.robotSupport.move( "l"  )
-						unibo.robot.robotSupport.move( "r"  )
 						updateResourceRep( "basicrobot(start)"  
 						)
+						delay(1000) 
+						unibo.robot.robotSupport.move( "l"  )
+						unibo.robot.robotSupport.move( "r"  )
 						discardMessages = false
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
@@ -83,7 +84,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("cmd(MOVE)"), Term.createTerm("cmd(MOVE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								unibo.robot.robotSupport.move( payloadArg(0)  )
+								unibo.robot.robotSupport.move( "${payloadArg(0)}"  )
 								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)
 						}
@@ -95,7 +96,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
-						if(  CurrentMove == "w" 
+						if(  CurrentMove == "w"  
 						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )

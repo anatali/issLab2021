@@ -13,7 +13,7 @@ import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
-import it.unibo.supports.serial.SerialPortConnSupport
+//import it.unibo.supports.serial.SerialPortConnSupport
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi

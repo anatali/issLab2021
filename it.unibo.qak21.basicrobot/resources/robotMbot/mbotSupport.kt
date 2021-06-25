@@ -11,13 +11,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import it.unibo.kactor.ActorBasicFsm
 import it.unibo.kactor.MsgUtil
-import it.unibo.supports.serial.SerialPortConnSupport
-import it.unibo.supports.serial.JSSCSerialComm
+//import it.unibo.supports.serial.SerialPortConnSupport
+//import it.unibo.supports.serial.JSSCSerialComm
 
 
 object mbotSupport{
 	lateinit var owner   : ActorBasic
- 	lateinit var conn    : SerialPortConnSupport
+ 	var conn             : SerialPortConnSupport? = null
 	var dataSonar        : Int = 0 ; //Double = 0.0
  			
 	//Called by robotSupport
@@ -26,15 +26,10 @@ object mbotSupport{
 		//initConn 
  		try {
 			//println("   	%%% mbotSupport | initConn starts port=$port")
- 			val serialConn = JSSCSerialComm(null)
+ 			val serialConn = JSSCSerialComm()
+			//val serialConn = JSSCSerialComm(null)
 			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
 			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")
-			/*					
- 			val realsonar = robotDataSourceArduino("realsonar", owner,   conn )
-				//Context injection  
-				owner.context!!.addInternalActor(realsonar)  
-		  		println("   	%%% mbotSupport | has created the realsonar")
-			 */
 			return conn
 		}catch(  e : Exception) {
 			println("   	%%% mbotSupport |  ERROR ${e }"   );
@@ -49,18 +44,19 @@ object mbotSupport{
     */
 	fun  move( cmd : String ){
 		//println("  	%%% mbotSupport | move cmd=$cmd conn=$conn")
-		 
-		when( cmd ){
-			"msg(w)", "w" -> conn.sendALine("w")
-			"msg(s)", "s" -> conn.sendALine("s")
-			"msg(a)", "a" -> conn.sendALine("a")
-			"msg(d)", "d" -> conn.sendALine("d")
-			"msg(l)", "l" -> conn.sendALine("l")  
-			"msg(r)", "r" -> conn.sendALine("r")  
-			"msg(z)", "z" -> conn.sendALine("z")  
-			"msg(x)", "x" -> conn.sendALine("x")  
-			"msg(h)", "h" -> conn.sendALine("h")
-			else -> println("   	%%% mbotSupport | command $cmd unknown")
+		if( conn != null ) {
+			when( cmd ){
+				"msg(w)", "w" -> conn!!.sendALine("w")
+				"msg(s)", "s" -> conn!!.sendALine("s")
+				"msg(a)", "a" -> conn!!.sendALine("a")
+				"msg(d)", "d" -> conn!!.sendALine("d")
+				"msg(l)", "l" -> conn!!.sendALine("l")  
+				"msg(r)", "r" -> conn!!.sendALine("r")  
+				"msg(z)", "z" -> conn!!.sendALine("z")  
+				"msg(x)", "x" -> conn!!.sendALine("x")  
+				"msg(h)", "h" -> conn!!.sendALine("h")
+				else -> println("   	%%% mbotSupport | command $cmd unknown")
+			}
 		}
 		 
 	}

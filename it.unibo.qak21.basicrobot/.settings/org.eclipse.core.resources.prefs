@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
+encoding//resources/robotMbot/ISerialPortConnection.kt=UTF-8
+encoding//resources/robotMbot/ISerialPortInteraction.kt=UTF-8
+encoding//resources/robotMbot/JSSCSerialComm.kt=UTF-8
 encoding/basicrobotqak.yaml=UTF-8
