@@ -118,8 +118,6 @@ QActor parkingmanagerservice context  ctxcarparking{
 	 *  reqenter con indoorfree=true  => reply enter:enter(N) con (N > 0) and slotStateFree(N) and robotStopped=false  
 
 	 */
-	[#  
-	#]
 	State s0 initial{
 		println("parkingmanagerservice STARTS")
 	}
