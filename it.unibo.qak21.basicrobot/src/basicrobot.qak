@@ -135,7 +135,7 @@ QActor basicrobot context ctxbasicrobot{
 	Goto work
 		
    	State doStep{ 
- 		//printCurrentMessage  
+ 		printCurrentMessage  
 		onMsg( step : step( T ) ){  
 			[#	StepTime = payloadArg(0).toLong() 	#]  
 			updateResource [# "step(${StepTime})" #]
@@ -147,7 +147,7 @@ QActor basicrobot context ctxbasicrobot{
 	Transition t0 
 		whenTimeVar StepTime  -> stepDone //stepPerhapsDone	//caused by p
 		whenMsg  obstacle     -> stepFail		
-        whenMsg     cmd       -> execcmd
+        //whenMsg     cmd       -> execcmd
   	 
 	
 	State stepDone{   
@@ -178,7 +178,7 @@ QActor basicrobot context ctxbasicrobot{
 			delayVar TunedDuration 
 			run unibo.robot.robotSupport.move( "h" ) 
  		updateResource [# "stepFail($Duration)" #] 
- 		emit info : info( stepFail($Duration) )
+ 		//emit info : info( stepFail($Duration) )
  		replyTo step with stepfail : stepfail($Duration, obst)
     }
 	Goto work

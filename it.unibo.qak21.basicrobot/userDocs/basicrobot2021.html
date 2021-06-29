@@ -686,10 +686,10 @@ docker push natbodocker/webbasicrobotqakforpc:1.0
 <h3>Deployment with docker</h3>
 On Raspberry for real robot: <a href="../Dockerfileforrasp" target="code">Dockerfileforrasp</a> 
 <pre><m>gradle  -b build2021.gradle distZip <kc/>//generate the tar</kc>
-docker build -t basicrobot21:1.0 .
+docker build -f DockerfileforraspMbot -t basicrobot21raspmbot:1.0 .
 docker run -it --rm --name basicrobot21
     -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
-    <k>--privileged</k> basicrobot21  
+    <k>--privileged</k> basicrobot21raspmbot:1.0 
     <ks>/bin/bash</ks> <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
 	
 </m></pre>
@@ -700,7 +700,26 @@ docker run -it --rm --name basicrobot21
 <td style="width:50%" >
 <h3>Mbot-robot</h3>
 <ul>
-<li><a href="../basicrobotConfigForMbot.json" target="code">basicrobotConfigForMbot.json</a></li>
+<li><a href="../basicrobotConfigForMbot.json" target="code">basicrobotConfigForMbot.json</a>
+<pre>
+pi@192.168.1.16: debug3: send packet: type 80 //???
+
+</pre>
+https://www.baeldung.com/kotlin/measure-elapsed-time
+<br/>
+https://levelup.gitconnected.com/8-ways-to-measure-execution-time-in-c-c-48634458d0f9
+<br/>
+systemctl start docker.service
+<br/><br/>
+
+docker start 49f729198c58 (container_name)
+docker exec -it 49f729198c58 /bin/bash -c "mycommand"
+
+<br/><br/>
+uname -a<br/>
+Linux 4ef9b200e277 4.19.97-v7+ #1294 SMP Thu Jan 30 13:15:58 GMT 2020 armv7l GNU/Linux
+
+</li>
 <li></li>
 </ul>
 </td>

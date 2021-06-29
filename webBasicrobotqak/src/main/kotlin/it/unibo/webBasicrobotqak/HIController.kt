@@ -37,9 +37,6 @@ class HIController {
     lateinit var robotproxy      : ActorBasic
     lateinit var coapsupport     : CoapSupport
     val scopeTorunBasicrobot     = CoroutineScope(Dispatchers.Default)
-    //TODO: set  basicrobotAddr by using a WebGui
-    //var basicrobotAddr           = "192.168.1.33" //or "localhost"
-    //var basicrobotPort           = connQak.robotPort
     lateinit var connToRobot     : connQakBase
 
     companion object{
@@ -83,7 +80,7 @@ class HIController {
                 "ctxbasicrobot/basicrobot")
         coapsupport.observeResource(WebPageCoapHandler(this))
 
-        sysUtil.colorPrint("HIController | INIT", Color.GREEN)
+        sysUtil.colorPrint("HIController | INIT $simpMessagingTemplate", Color.GREEN)
     }//configure
 
 
@@ -129,17 +126,17 @@ class HIController {
             if(basicrobot !=null ) {
                 runBlocking {
                     basicrobot!!.autoMsg(reqMsg)
-                 }
+                }
             }else{ //basicrobot remote
                 connToRobot.request(reqMsg)
             }
-        }else {
+        }else { //normal move
             val cmdMsg = MsgUtil.buildDispatch("basicrobotproxy", "cmd", "cmd($robotmove)", connQak.qakdestination)
             if( basicrobot !=null )  scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
             else connToRobot.forward( cmdMsg )
         }
         //
-        //sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
+        sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
         return "basicrobotqakGui"
     }
 /*

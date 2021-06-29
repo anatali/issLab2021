@@ -1,0 +1,55 @@
+## ----------------------------------------------------------
+## Dockerfileforrasp for it.unibo.qak21.basicrobot
+## This file should be copied on Rasp together with the
+## required resources and executed there
+## ----------------------------------------------------------
+## rpi-alpine 
+  
+FROM hypriot/rpi-java
+EXPOSE 8020
+## ADD extracts the tar
+ADD ./it.unibo.qak21.basicrobot-1.0.tar /
+WORKDIR /it.unibo.qak21.basicrobot-1.0/bin
+COPY ./*.pl ./
+COPY ./*.json ./
+COPY ./*.c ./
+
+RUN sudo apt-get update
+RUN sudo apt-get install -y gcc      
+	##curl gcc git-core
+RUN sudo apt-get install libc6-dev
+
+RUN gcc  sleepcrono.c  -std=gnu11 -o  sleepcrono
+
+CMD ["bash", "it.unibo.qak21.basicrobot"]
+
+##  gradle  -b build2021.gradle distZip
+##  docker build -f DockerfileforraspMbot -t basicrobot21raspmbot:1.0 . 
+##  docker run -it --rm --name basicrobot21raspmbot -p8020:8020/tcp -p8020:8020/udp --privileged basicrobot21raspmbot:1.0  /bin/bash
+##  docker cp basicrobotConfigForDockeronPC.json 21c2bf1024e2:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
+##  docker cp it.unibo.qak21.basicrobot-1.0.jar 995017aaeaed:/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qak21.basicrobot-1.0.jar
+##  docker cp basicrobotConfig.json 995017aaeaed:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
+##  docker cp it.unibo.qakactor-2.4.jar 995017aaeaed:/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qakactor-2.4.jar
+##  docker cp linuxCrono.c 4f68a817afb4:/it.unibo.qak21.basicrobot-1.0/bin/linuxCrono.c
+
+
+## https://hub.docker.com/r/arm32v7/python/
+## docker run -d -p 80:80 hypriot/rpi-busybox-httpd		##works, but ???
+
+
+## COPY ./*.py ./
+
+## FOR alpine ##############################
+## RUN apk update && \
+## apk upgrade && \
+## apk add bash && \
+## rm -rf /var/cache/apk/*
+
+ 
+## RUN apt-get update -y
+## RUN apt-get install -y wiringpi
+## RUN sudo apt-get install -y python
+
+## sudo apt-get install glibc  ##for threads
+## <stdio.h> not found
+## sudo apt install --reinstall build-essential 

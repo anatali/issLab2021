@@ -18,6 +18,12 @@ import org.json.JSONObject
 import java.io.File
 import it.unibo.kactor.MsgUtil
 import robotMbot.robotDataSourceArduino
+
+//For testcrono
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,8 +31,34 @@ object robotSupport{
 	lateinit var robotKind  :  String
 	var endPipehandler      :  ActorBasic? = null 
 	
+	
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
+	fun testCrono(owner: ActorBasic){
+		println( "		--- robotSupport | testcronooooooooooooooooooooooooooooooooooooooooo" )
+		//Runtime.getRuntime().exec("sudo ./linuxCrono") //ADDED June 21 to check the time measurement
+		//val cronotester = robotNano.cronoViewerActor("cronotester" )
+		//owner.context!!.addInternalActor(cronotester)
+		    try{
+				val p      = Runtime.getRuntime().exec("sudo ./sleepcrono")
+				val reader = BufferedReader(  InputStreamReader(p.getInputStream() ))
+		println(" startReaddddddddddddddddddddddddddddddd ")
+ 		GlobalScope.launch{	 
+		while( true ){
+				var data = reader.readLine()
+				println("crono data = $data"   )
+			if( data == null ) break 
+ 		}
+		}
+			}catch( e : Exception){
+				println(" WARNING:  does not find sleepcrono")
+			}
+
+	}
+	
 	fun create( owner: ActorBasic, configFileName: String, endPipe: ActorBasic? = null ){
 		endPipehandler      =  endPipe
+		
 		
 		//read Confif.json file
 		val config = File("${configFileName}").readText(Charsets.UTF_8)
@@ -40,6 +72,8 @@ object robotSupport{
 			//"mockrobot"  ->  { robotMock.mockrobotSupport.create(  ) }
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
 			"realmbot"   ->  {
+				testCrono(owner)
+				
 				val conn      = robotMbot.mbotSupport.create( owner, robotPort  ) //robotPort="/dev/ttyUSB0"   "COM6"
 				if( conn != null ){
 					val realsonar = robotDataSourceArduino("realsonar", owner,   conn )
@@ -49,6 +83,8 @@ object robotSupport{
 				}		
 			} 
  			"realnano"   ->  {
+				testCrono(owner)
+				
 				robotNano.nanoSupport.create( owner )
  				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")
 				//Context injection  

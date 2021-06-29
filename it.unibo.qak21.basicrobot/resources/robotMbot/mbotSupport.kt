@@ -25,17 +25,22 @@ object mbotSupport{
 		this.owner = owner	//
 		//initConn 
  		try {
+ 
 			//println("   	%%% mbotSupport | initConn starts port=$port")
  			val serialConn = JSSCSerialComm()
 			//val serialConn = JSSCSerialComm(null)
 			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
 			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")
+			
+			
 			return conn
 		}catch(  e : Exception) {
 			println("   	%%% mbotSupport |  ERROR ${e }"   );
 			return null;
 		}		
 	}
+	
+ 
 	
 	/*
  	 Aug 2019

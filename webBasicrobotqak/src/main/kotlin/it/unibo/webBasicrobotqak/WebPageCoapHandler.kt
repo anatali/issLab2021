@@ -15,13 +15,16 @@ An object of this class is registered as observer of the resource
     var counter = 0
     override fun onLoad(response: CoapResponse) {
         val content: String = response.getResponseText()
-        sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
+        //sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
         if( content.contains("stepDone") || content.contains("info")) {
             val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
+            Thread.sleep(400)   //otherwise updates before page return
+            sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
             controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
         } else if( content.contains("stepFail") ){
             val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( content )  )
-            Thread.sleep(350)   //otherwise does not updates ... ???
+            Thread.sleep(400)   //otherwise updates before page return
+            sysUtil.colorPrint("WebPageCoapHandler | content=$content", Color.LIGHT_MAGENTA )
             controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
         } else if( content.contains("obstacle") || content.contains("collision") ){
             val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( "obstacle" )  )

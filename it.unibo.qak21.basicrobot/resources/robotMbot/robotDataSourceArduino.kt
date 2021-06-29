@@ -13,6 +13,7 @@ import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
+import kotlinx.coroutines.GlobalScope
 //import it.unibo.supports.serial.SerialPortConnSupport
 
 
@@ -21,22 +22,26 @@ import alice.tuprolog.Struct
 class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 					val conn : SerialPortConnSupport) : ActorBasic(name, owner.scope){		
 	init{
+		println("   	%%% $name |  starts conn=$conn")	 
 		scope.launch{  autoMsg("start","start(1)") }
-		//println("   	%%% $name |  starts conn=$conn")	 
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	override suspend fun actorBody(msg: ApplMessage) {
-        println("   	%%% $name |  handles msg= $msg conn=$conn owner=$owner")
+	//perceives also the event sonar emitted by distancefilter
+        //println("   	%%% $name |  handles msg= $msg conn=$conn owner=$owner")
 		//val vStr  = (Term.createTerm( msg.msgContent()) as Struct).getArg(0).toString()
 		//println("   	%%% $name |  handles msg= $msg  vStr=$vStr")
+	if(msg.msgId() == "start" )
 		readData(   )
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	suspend fun readData(  ){
+	owner.scope.launch{
+         println("   	%%% $name |  readData ...")
          while ( true ) {
  			try {
  				var curDataFromArduino =  conn.receiveALine()
@@ -62,9 +67,10 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 				}else obstacleEventEmitted = false												
  */
 			} catch ( e : Exception) {
- 				//println("   	%%% $name | getDataFromArduino | ERROR $e   ")
+ 				println("   	%%% $name | getDataFromArduino | ERROR $e   ")
             }
 		}//while
+	}
 	}
 	
  

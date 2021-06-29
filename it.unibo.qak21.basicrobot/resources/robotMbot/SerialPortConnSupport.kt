@@ -8,26 +8,34 @@ import jssc.SerialPortException
 import okhttp3.internal.notifyAll
 import java.lang.Exception
 import java.util.ArrayList
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+ 
 
-class SerialPortConnSupport(private val serialPort: SerialPort?) : ISerialPortInteraction, SerialPortEventListener {
-    private var list: MutableList<String>? = null
-    private var curString = ""
-    protected fun init() {
+class SerialPortConnSupport( val serialPort: SerialPort ) : ISerialPortInteraction, SerialPortEventListener {
+    //private lateinit var list: MutableList<String>
+    private var curString   = ""
+	private val dataChannel = Channel<String>(5)
+	
+    init {
+		println("SerialPortConnSupport init serialPort=$serialPort"  )
         try {
-            serialPort!!.addEventListener(this, SerialPort.MASK_RXCHAR)
-            list = ArrayList()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            //list = mutableListOf<String>()
+            serialPort.addEventListener(this, SerialPort.MASK_RXCHAR)
+         } catch (e: Exception) {
+            println("SerialPortConnSupport ERROR=$e"  );
         }
     }
 
     @Throws(Exception::class)
     override fun sendALine(msg: String) {
         //msg = msg+"\n";
-        //System.out.println("SerialPortConnSupport sendALine ... " + msg);
+        //println("SerialPortConnSupport sendALine ... " + msg);
         serialPort!!.writeBytes(msg.toByteArray())
-
-        //		System.out.println("SerialPortConnSupport has sent   " + msg);
+        //println("SerialPortConnSupport has sent   " + msg);
     }
 
     //EXTENSION for mBot
@@ -47,18 +55,18 @@ class SerialPortConnSupport(private val serialPort: SerialPort?) : ISerialPortIn
         sendALine(msg)
     }
 
-    @Synchronized
-    @Throws(Exception::class)
-    override fun receiveALine(): String {
-// 		System.out.println(" SerialPortConnSupport receiveALine   " );
-        var result = "no data"
-        while (list!!.size == 0) {
-// 			println("list empty. I'll wait" );
-            //wait()
-        }
-        result = list!!.removeAt(0)
-        //		System.out.println(" SerialPortConnSupport receiveALine  result= " + result);
-        return result
+    //@Synchronized
+    //@Throws(Exception::class)
+    override  fun receiveALine(): String {
+		var result = "0"
+		runBlocking  {
+	  		//println("SerialPortConnSupport receiveALine   " );	        
+			//GlobalScope.launch{
+				result = dataChannel.receive()
+				//println(" receiveALine result=$result ")
+			//} 
+		}//runBlocking	    
+		return result
     }
 
     @Throws(Exception::class)
@@ -72,34 +80,30 @@ class SerialPortConnSupport(private val serialPort: SerialPort?) : ISerialPortIn
     override fun serialEvent(event: SerialPortEvent) {
         if (event.isRXCHAR && event.eventValue > 0) {
             try {
-                var data = serialPort!!.readString(event.eventValue)
+                var data = serialPort.readString(event.eventValue)
                 val ds = data.split("\n".toRegex()).toTypedArray()
                 data = if (ds.size > 0) ds[0] else return
-                //println("SerialPortConnSupport serialEvent ... " + data );                                           
+                //println("SerialPortConnSupport serialEvent data=" + data );                                           
 //	            this.notifyTheObservers(data);  //an observer can see the received data as it is
-                updateLines(
-                    """
-    $data
-    
-    """.trimIndent()
-                )
+                updateLines( "$data".trimIndent() )
             } catch (ex: SerialPortException) {
-                println("Error in receiving string from COM-port: $ex")
+                println("Error in receiving string from Arduino: $ex")
             }
         }
     }
 
-    @Synchronized
+    //@Synchronized
     protected fun updateLines(data: String) {
-        //System.out.println("SerialPortConnSupport updateLines ... " + data.endsWith("\n") );    
+        //println("SerialPortConnSupport updateLines $data ${data.endsWith("\n")} "  );    
         if (data.length > 0) {
             curString = curString + data
-            if (data.endsWith("\n")) {
-                //System.out.println("updateLines curString= " +  curString + " / " + curString.length());
-                list!!.add(curString)
-                //this.notifyAll()
-                curString = ""
-            }
+            //if (data.endsWith("\n")) {
+                //println("updateLines curString= " +  curString + " / " + curString.length());
+ 				runBlocking{
+					dataChannel.send(curString)
+					curString = ""
+				}               
+           // }
         }
     }
 
@@ -110,7 +114,5 @@ class SerialPortConnSupport(private val serialPort: SerialPort?) : ISerialPortIn
         const val CR_ASCII = 13
     }
 
-    init {
-        init()
-    }
+
 }

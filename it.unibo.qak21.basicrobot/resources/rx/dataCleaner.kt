@@ -12,6 +12,9 @@ import alice.tuprolog.Struct
 class dataCleaner (name : String ) : ActorBasic( name ) {
 val LimitLow  = 2	
 val LimitHigh = 150
+	init{
+		println("dataCleaner STARTS | LimitLow=$LimitLow LimitHigh=$LimitHigh")
+	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     override suspend fun actorBody(msg: ApplMessage) {
