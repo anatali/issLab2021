@@ -5,19 +5,19 @@
 #endif
 
 //#include "pch.h"
-#include <chrono>
-#include <thread>
+//#include <chrono>
+//#include <thread>
 #include <stdio.h>
 #include <time.h>
 
 //g++  cronoLinux.c  -o  cronoLinux
-		using namespace std::this_thread; // sleep_for, sleep_until
-		using namespace std::chrono;     // nanoseconds, system_clock, seconds
+//using namespace std::this_thread; // sleep_for, sleep_until
+//using namespace std::chrono;     // nanoseconds, system_clock, seconds
 //gcc  cronoLinux.c  -std=c11 -o  cronoLinux 
 
-int cronoLinux(int msec) {
+int cronoLinux(double delay) {
 	//std::cout << "crono \n";
-	printf("START CLOCKS_PER_SEC=%d %d\n", CLOCKS_PER_SEC, msec);
+	printf("START CLOCKS_PER_SEC=%d delay=%f\n", CLOCKS_PER_SEC, delay);
 
 	// Start measuring time
 	clock_t start = clock();
@@ -26,7 +26,7 @@ int cronoLinux(int msec) {
 	
 	//sleep_until(system_clock::now() + seconds(1));
 	
-	std::this_thread::sleep_for(std::chrono::milliseconds( msec  ));
+	//std::this_thread::sleep_for(std::chrono::milliseconds( delay  ));
 	
 	/*
 	double sum = 0;
@@ -38,20 +38,21 @@ int cronoLinux(int msec) {
 	}
 	*/
 
+	usleep( delay );
+	
 	// Stop measuring time and calculate the elapsed time
 	printf("STOP  \n" );
 	clock_t end = clock();	//CPU time on Linux, wall time on Windows
 	
-	double elapsed = double(end - start) / CLOCKS_PER_SEC  ; //    / CLOCKS_PER_SEC
-
-	printf("Time measured: %.6f seconds vs. %d msec\n", elapsed, msec);
+	int delta = ( end -  start) ;
+	 
+	double elapsed = (double)delta  ; //    / CLOCKS_PER_SEC
+	printf("Time measured: %.6f seconds delay=%f \n", elapsed, delay);
 
 	return 0;
 }
 
-int main()
-{
-//for (int i = 0; i < 5; i++) {
- 	cronoLinux(350);
-//}
+int main(){
+//for (int i = 1; i <= 3; i++) {cronoLinux(i*0.5);}
+cronoLinux( 350000 );
 }

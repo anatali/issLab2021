@@ -1,6 +1,6 @@
 /*
  */  
-System -trace basicrobotboundarywalker
+System /* -trace */ basicrobotboundarywalker
 
 Dispatch start    : start( ARG ) 
 Dispatch mapDone  : mapDone( FNAME ) 
@@ -11,9 +11,8 @@ Request step       : step( TIME )
 Reply   stepdone   : stepdone(V)  
 Reply   stepfail   : stepfail(DURATION, CAUSE)
  
-
 Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
-Context ctxbasicrobot ip [host="192.168.1.79" port=8020]    
+Context ctxbasicrobot ip [host="192.168.1.22" port=8020]    
 
 ExternalQActor basicrobot context ctxbasicrobot   
 /* 
@@ -45,15 +44,17 @@ var Myself      = myself
 		delay 500
 		println("basicboundarywalker s  ")
 		forward basicrobot -m cmd : cmd(s)  //executed in asynch way ...
-		delay 500
+		/* delay 500
 		println("basicboundarywalker l  ")
 		forward basicrobot -m cmd : cmd(l)
 		delay 500
 		println("basicboundarywalker r  ")
-		forward basicrobot -m cmd : cmd(r)
+		forward basicrobot -m cmd : cmd(r)*/
 		delay 500 
+		forward basicrobot -m cmd : cmd(h)
+		[# pathexecutil.waitUser("starting") #]
   	}
-    //Goto detectBoundary   
+    Goto detectBoundary   
      
     State detectBoundary{     
     	[# NumStep++ #]
@@ -62,10 +63,10 @@ var Myself      = myself
     	updateResource [# "detectBoundary step=$NumStep" #]
      }  
     Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
-  
+   
  	State doAheadMove{ 
  		delay 300 //to avoid too rapid changes
-  		request basicrobot -m step : step(300)	//stepTime
+  		request basicrobot -m step : step(330)	//stepTime
    		updateResource [# "moving" #]
 	}   
 	Transition t0   //whenEvent alarm      -> handleAlarm 
@@ -108,20 +109,7 @@ var Myself      = myself
    		
    		forward testboundary -m mapDone : mapDone(mapname)
   	}
-/*  
-  	State handleAlarm {
-		println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $ActorResourceRep")
-		printCurrentMessage
-		println("----------------------------------------------------------------") 		
-  	}
-   	
-  	State handleAlarmAfterStep{
-		println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP $ActorResourceRep")
-		printCurrentMessage
-		println("----------------------------------------------------------------") 		
-  	}
-  	Goto doAheadMove
- */ 	
+	
 }	
 
 

@@ -1,0 +1,78 @@
+## ----------------------------------------------------------
+## DockerfileforraspMbotBuildOnpc for it.unibo.qak21.basicrobot
+## ----------------------------------------------------------
+## rpi-alpine 
+  
+FROM hypriot/rpi-java
+EXPOSE 8020
+## ADD extracts the tar
+ADD ../build/distributions/it.unibo.qak21.basicrobot-1.0.tar /
+WORKDIR /it.unibo.qak21.basicrobot-1.0/bin
+COPY ./*.pl ./
+COPY ./*.json ./
+## COPY ./*.c ./
+COPY ../resources/robotMbot/*.c ./
+COPY ../resources/robotMbot/*.sh ./
+
+ 
+
+## Questo è quello che riassume meglio. Ma NON VA (exit0)
+## FROM https://www.jesusamieiro.com/failed-to-fetch-http-ftp-debian-org-debian-dists-jessie-updates-main-404-not-found/
+## RUN sudo cp -p /etc/apt/sources.list ./yyy.txt
+## RUN printf "deb http://security.debian.org/ jessie/updates main\ndeb-src http://security.debian.org/ jessie/updates main\ndeb http://archive.debian.org/debian/ jessie-backports main\ndeb-src http://archive.debian.org/debian/ jessie-backports main\ndeb http://archive.debian.org/debian/ jessie main contrib non-free\ndeb-src http://archive.debian.org/debian/ jessie main contrib non-free\n" > /etc/apt/sources.list
+## RUN echo "Acquire::Check-Valid-Until false;" | sudo tee -a /etc/apt/apt.conf.d/10-nocheckvalid
+
+RUN sudo apt-get update; exit 0
+
+RUN sudo apt-get install -y gcc      
+RUN sudo apt-get install libc6-dev
+RUN sudo apt-get -y install nano
+ 
+## RUN gcc  sleepcrono.c  -std=gnu11 -o  sleepcrono
+RUN gcc  cronoLinux.c  -std=gnu11 -o  cronoLinux
+
+CMD ["bash", "it.unibo.qak21.basicrobot"]
+
+##  gradle  -b build2021.gradle build
+##  docker build -f DockerfileforraspMbotBuildOnpc -t imageforarm:1.1 . 
+##  docker run -it --rm --name imageforarm -p8020:8020/tcp -p8020:8020/udp --privileged natbodocker/imageforarm:1.1  /bin/bash
+##  docker run -it --rm --name basicrobot21mbot -p8020:8020/tcp -p8020:8020/udp --privileged natbodocker/basicrobot21mbot:1.1  /bin/bash
+##  docker cp basicrobotConfigForDockeronPC.json 21c2bf1024e2:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
+##  docker cp it.unibo.qak21.basicrobot-1.0.jar 995017aaeaed:/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qak21.basicrobot-1.0.jar
+##  docker cp it.unibo.qak21.basicrobot-1.0.jar 07c1b3175cf4:/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qak21.basicrobot-1.0.jar
+##  docker cp basicrobotConfig.json 995017aaeaed:/it.unibo.qak21.basicrobot-1.0/bin/basicrobotConfig.json
+##  docker cp it.unibo.qakactor-2.4.jar 995017aaeaed:/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qakactor-2.4.jar
+##  docker cp cronoLinux.c 0bedc1e86b65:/it.unibo.qak21.basicrobot-1.0/bin/cronoLinux.c
+##  docker cp basicrobot.pl 0bedc1e86b65:/it.unibo.qak21.basicrobot-1.0/bin/cronoLinux.c
+
+##  SAVE THE CONTAINER  CONTAINERID
+##  docker commit  ed1207ced4c1
+##  TAG the image IMAGEID
+##  docker tag  2719901539ff basicrobot21mbot:1.1
+
+##  docker tag imageforarm:1.1 natbodocker/imageforarm:1.1
+##  docker push natbodocker/imageforarm:1.1
+##  docker-compose -f basicrobotMbot.yaml up
+##  docker-compose -f basicrobotMbot.yaml run mbot /bin/bash
+
+## https://hub.docker.com/r/arm32v7/python/
+## docker run -d -p 80:80 hypriot/rpi-busybox-httpd		##works, but ???
+
+
+##  docker run -it --rm --name imageforarm -p8020:8020/tcp -p8020:8020/udp --privileged cc6fffde7c74  /bin/bash
+
+
+## FOR alpine ##############################
+## RUN apk update && \
+## apk upgrade && \
+## apk add bash && \
+## rm -rf /var/cache/apk/*
+
+ 
+## RUN apt-get update -y
+## RUN apt-get install -y wiringpi
+## RUN sudo apt-get install -y python
+
+## sudo apt-get install glibc  ##for threads
+## <stdio.h> not found
+## sudo apt install --reinstall build-essential 

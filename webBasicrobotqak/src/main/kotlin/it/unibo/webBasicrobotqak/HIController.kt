@@ -4,10 +4,7 @@ import com.andreapivetta.kolor.Color
 import connQak.ConnectionType
 import connQak.connQakBase
 import it.unibo.actor0.sysUtil
-import it.unibo.basicrobot.Basicrobot
-import it.unibo.kactor.ActorBasic
 import it.unibo.kactor.MsgUtil
-import it.unibo.kactor.QakContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import org.springframework.beans.factory.annotation.Value
@@ -32,13 +29,12 @@ class HIController {
     @Autowired
     var  simpMessagingTemplate : SimpMessagingTemplate? = null
 
-    var basicrobot               : ActorBasic? = null
-    lateinit var connSupport     : connQakBase
-    lateinit var robotproxy      : ActorBasic
+    //lateinit var connSupport     : connQakBase
     lateinit var coapsupport     : CoapSupport
-    val scopeTorunBasicrobot     = CoroutineScope(Dispatchers.Default)
     lateinit var connToRobot     : connQakBase
-
+    val channel      = Channel<String>()
+    val coapObserver = WebPageCoapHandler(this, null)
+    var moveresult="done"
     companion object{
         var logo = "just to test"
         //var answerMoveChannel  = Channel<String>()
@@ -53,7 +49,7 @@ class HIController {
     //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
     fun configure(addr : String){
         connQak.robothostAddr = addr
-        if( addr == "localhost" ) {
+        if( addr == "localhost" ) {/*
             try {
                 scopeTorunBasicrobot.launch {
                     QakContext.createContexts(
@@ -69,16 +65,16 @@ class HIController {
                 if (br == null) {
                     sysUtil.colorPrint("HIController | waiting for basicrobot creation ...", Color.GREEN)
                 } else basicrobot = br
-            }
+            }*/
         }else { //basicrobotAddr != "localhost"
-            basicrobot = null
+            //basicrobot = null
             connToRobot = connQakBase.create(ConnectionType.TCP)
             connToRobot.createConnection()
         }
         coapsupport =
             CoapSupport("coap://${connQak.robothostAddr}:${connQak.robotPort}",
                 "ctxbasicrobot/basicrobot")
-        coapsupport.observeResource(WebPageCoapHandler(this))
+        coapsupport.observeResource( coapObserver ) //WebPageCoapHandler(this, channel)
 
         sysUtil.colorPrint("HIController | INIT $simpMessagingTemplate", Color.GREEN)
     }//configure
@@ -105,8 +101,13 @@ class HIController {
     @PostMapping("/configure")
     fun handleConfigure(viewmodel : Model,
       @RequestParam(name="move", required=false, defaultValue="h")addr : String) : String {
-        configure(addr)
-        viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr)
+        if( addr!="localhost"){
+            configure(addr)
+            viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr)
+        }else{
+            viewmodel.addAttribute("viewmodelarg", "localhost not allowed")
+        }
+
         return  "basicrobotqakGui"
     }
 
@@ -118,25 +119,33 @@ class HIController {
         @RequestParam(name="move", required=false, defaultValue="h")robotmove : String) : String{
         sysUtil.colorPrint("HIController | param-move:$robotmove ", Color.RED)
 
-        viewmodel.addAttribute("viewmodelarg", "${robotmove}") //resRep.content
+         //viewmodel.addAttribute("viewmodelarg", "${robotmove}") //resRep.content
          //connSupport.forward( MsgUtil.buildDispatch("webgui", "cmd", "cmd($robotmove)", connQak.qakdestination))
         //sysUtil.colorPrint("HIController | xxxxxxxxx... ${answerChannel} ", Color.RED)
         if( robotmove == "p" ){
             val reqMsg = MsgUtil.buildRequest("basicrobotproxy", "step", "step(350)", connQak.qakdestination)
-            if(basicrobot !=null ) {
-                runBlocking {
-                    basicrobot!!.autoMsg(reqMsg)
-                }
-            }else{ //basicrobot remote
-                connToRobot.request(reqMsg)
+            /*
+            Set the channel in coapObserver, so to receive the answer, to be shown on the page
+             */
+            coapObserver.channel = channel
+            connToRobot.request(reqMsg)
+            sysUtil.colorPrint("HIController | waits on channel ", Color.BLUE)
+            runBlocking{
+                moveresult = channel.receive()
+                sysUtil.colorPrint("HIController | receives $moveresult", Color.BLUE)
+                //Reset the channel in coapObserver, so to allow normal updating
+                coapObserver.channel = null
             }
         }else { //normal move
-            val cmdMsg = MsgUtil.buildDispatch("basicrobotproxy", "cmd", "cmd($robotmove)", connQak.qakdestination)
-            if( basicrobot !=null )  scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
-            else connToRobot.forward( cmdMsg )
+            val cmdMsg = MsgUtil.buildDispatch("hicontroller", "cmd", "cmd($robotmove)", connQak.qakdestination)
+            //if( basicrobot !=null )  scopeTorunBasicrobot.launch { basicrobot!!.autoMsg(cmdMsg) }    //basicrobot.actor.send(cmdMsg)
+            //else
+                connToRobot.forward( cmdMsg )
         }
         //
-        sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
+        viewmodel.addAttribute("viewmodelarg", "${robotmove}:${moveresult}")
+        moveresult = "done"
+        //sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
         return "basicrobotqakGui"
     }
 /*

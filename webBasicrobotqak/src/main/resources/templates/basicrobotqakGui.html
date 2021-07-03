@@ -55,9 +55,10 @@ We also import app.js, which contains the logic of our client application.
     -->
 <h2>CONFIGURATION</h2>
 <form action="configure" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
-    <label for="configurespec">Robot move</label>
-    <input type="text" id="configurespec" name="move" value="localhost">
+    <label for="configurespec">address</label>
+    <input type="text" id="configurespec" name="move" value="...">
     <input type="submit" value="set basicrobot address (the port is 8020)">
+    <p>PLEASE, activate a basicrobot</p>
 </form>
 <hr/>
 
@@ -92,7 +93,7 @@ We also import app.js, which contains the logic of our client application.
     ===========================================================
     -->
     <div style="background-color: #FAF19C">
-        <p>LAST MOVE (from viewmodel): <b><span style="color:blue" th:text="${viewmodelarg}">Our App</span></b></p>
+        <p>LAST MOVE OF THIS CONSOLE: <b><span style="color:blue" th:text="${viewmodelarg}">Our App</span></b></p>
     </div>
 
     <div style="background-color: #FAF19C">

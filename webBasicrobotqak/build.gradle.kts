@@ -84,7 +84,7 @@ dependencies {
 	//implementation("uniboplanner20:it.unibo.planner20:1.0")
 	implementation("qak:it.unibo.qakactor:2.4")
 	implementation("tuprolog:2p301")
-	implementation("basicrobot:it.unibo.qak21.basicrobot:1.0")
+	//implementation("basicrobot:it.unibo.qak21.basicrobot:1.0")
 }
 
 tasks.withType<KotlinCompile> {

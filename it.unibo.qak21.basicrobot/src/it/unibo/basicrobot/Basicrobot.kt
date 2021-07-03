@@ -121,7 +121,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 								)
 						}
 						StartTime = getCurrentTime()
-						println("basicrobot | doStep StepTime =$StepTime StartTime=$StartTime")
+						println("basicrobot | doStep StepTime =$StepTime ")
 						unibo.robot.robotSupport.move( "w"  )
 						stateTimer = TimerActor("timer_doStep", 
 							scope, context!!, "local_tout_basicrobot_doStep", StepTime )
@@ -136,7 +136,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						updateResourceRep( "stepDone($StepTime)"  
 						)
 						answer("step", "stepdone", "stepdone(ok)"   )  
-						println("basicrobot | stepDone reply done")
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 

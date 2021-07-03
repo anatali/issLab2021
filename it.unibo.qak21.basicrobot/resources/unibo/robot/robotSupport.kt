@@ -40,7 +40,7 @@ object robotSupport{
 		//val cronotester = robotNano.cronoViewerActor("cronotester" )
 		//owner.context!!.addInternalActor(cronotester)
 		    try{
-				val p      = Runtime.getRuntime().exec("sudo ./sleepcrono")
+				val p      = Runtime.getRuntime().exec("sudo ./cronoLinux")
 				val reader = BufferedReader(  InputStreamReader(p.getInputStream() ))
 		println(" startReaddddddddddddddddddddddddddddddd ")
  		GlobalScope.launch{	 
@@ -72,18 +72,18 @@ object robotSupport{
 			//"mockrobot"  ->  { robotMock.mockrobotSupport.create(  ) }
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
 			"realmbot"   ->  {
-				testCrono(owner)
+				//testCrono(owner)
 				
 				val conn      = robotMbot.mbotSupport.create( owner, robotPort  ) //robotPort="/dev/ttyUSB0"   "COM6"
 				if( conn != null ){
 					val realsonar = robotDataSourceArduino("realsonar", owner,   conn )
 					//Context injection  
 					owner.context!!.addInternalActor(realsonar)  
-                    println("		--- robotSupport | has created the realsonar for mobot")
+                    println("		--- robotSupport | has created the realsonar for mobotttttttttt")
 				}		
 			} 
  			"realnano"   ->  {
-				testCrono(owner)
+				//testCrono(owner)
 				
 				robotNano.nanoSupport.create( owner )
  				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")

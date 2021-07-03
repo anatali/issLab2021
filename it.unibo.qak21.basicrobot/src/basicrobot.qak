@@ -15,7 +15,7 @@
  * ================================================================================
  */ 
   
-System  -trace  basicrobot          
+System  /* -trace */ basicrobot          
 //mqttBroker "localhost" : 1883 eventTopic "unibo/basicrobot"   		
 
 Dispatch cmd       	: cmd(MOVE)     
@@ -141,7 +141,7 @@ QActor basicrobot context ctxbasicrobot{
 			updateResource [# "step(${StepTime})" #]
   		}  
         memoCurrentTime StartTime  
-        println("basicrobot | doStep StepTime =$StepTime StartTime=$StartTime")        
+        println("basicrobot | doStep StepTime =$StepTime ")        
         run unibo.robot.robotSupport.move( "w" )  //moves a real robot forever
 	}  
 	Transition t0 
@@ -156,7 +156,7 @@ QActor basicrobot context ctxbasicrobot{
 		updateResource [# "stepDone($StepTime)" #]
    		//emit info : info( stepdone($StepTime) )
    		replyTo step with stepdone : stepdone(ok)
-		println("basicrobot | stepDone reply done")
+		//println("basicrobot | stepDone reply done")
   	}
 	Goto work  
 	/* 

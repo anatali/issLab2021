@@ -31,8 +31,6 @@ object mbotSupport{
 			//val serialConn = JSSCSerialComm(null)
 			conn = serialConn.connect(port)	//returns a SerialPortConnSupport
 			println("   	%%% mbotSupport |  initConn port=$port conn= $conn")
-			
-			
 			return conn
 		}catch(  e : Exception) {
 			println("   	%%% mbotSupport |  ERROR ${e }"   );

@@ -34,11 +34,12 @@ class JSSCSerialComm {
 
 	fun connect(commPort: String) : SerialPortConnSupport? { 
 		println("JSSCSerialComm: CONNECT TO " + commPort + " ports num=" + portNames!!.size)
-		val commPortName = commPort.replace("'", "")
+		var commPortName = commPort.replace("'", "")
 		//var serialPort = null
 		for (i in portNames.indices) {
 			if (portNames[i].equals(commPortName)) {
-				System.out.println("JSSCSerialComm: CONNECTING TO " + portNames[i])
+			    //commPortName = portNames[i]
+				println("JSSCSerialComm: CONNECTING TO $commPortName"  )
 				serialPort = SerialPort(commPortName)
 				serialPort.openPort()
 				serialPort.setParams(

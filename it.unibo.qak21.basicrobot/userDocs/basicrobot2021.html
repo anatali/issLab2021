@@ -449,7 +449,7 @@ defines a robot-command console and supports for interaction with the
 
 <h3 id="console">A command-console</h3>
 <a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code"><bc>consoleGuiSimple.kt</bc></a>
-<center><img src="./img/consoleCoap.png" alt="consoleCoap" width="30%" height="60%"></center>	
+<center><img src="./img/consoleCoap.png" alt="consoleCoap" width="30%" ></center>	
  
 
 <h3 id="connQakbase">Supports for interaction</h3>
@@ -600,11 +600,11 @@ performs calls for <ks>w,s</ks> is <k>asynch</k> way, and the calls for <ks>r,l,
 
 <hr/>
 <ul>
-<li><a href="../../it.unibo.virtualRobot2020/Dockerfile">Dockerfile</a>
+<li><a href="../../it.unibo.virtualRobot2020/Dockerfile" target="code">Dockerfile</a>
 <pre><m>gradle  -b build2021.gradle distZip
 docker build -f Dockerfile -t virtualrobotdisi:2.0 .
 
-<kc>//check</kc>
+<kc>//run to check</kc>
 docker run -it --rm --name virtualrobotdisi
     -p8090:8090/tcp -p8091:8091/tcp 	 
     virtualrobotdisi:2.0  /bin/bash
@@ -612,7 +612,12 @@ docker run -it --rm --name virtualrobotdisi
 <kc>//change the scene</kc>
 docker <k>cp</k> <ks>sceneConfig.js</ks> 
   <k>CONTAINERID</k>:/home/node/WEnv/WebGLScene/sceneConfig.js
+<kc>//Save the cotainer</kc>
+docker commit  CONTAINERID
+<kc>TAG the new image IMAGEID</kc>
+docker tag  IMAGEID IMGNAME:X.Y
 
+<kc>//Tag and register the image</kc>
 docker tag virtualrobotdisi:2.0 natbodocker/virtualrobotdisi:2.0
 docker push natbodocker/virtualrobotdisi:2.0
 </m></pre>
@@ -627,31 +632,64 @@ docker push natbodocker/virtualrobotdisi:2.0
 Project <a href="../../it.unibo.qak21.basicrobot" target="code">it.unibo.qak21.basicrobot</a>: 
 <hr/>
 <ul>
-<li>On PC for virtual robot: <a href="../Dockerfile" target="code">Dockerfile</a> 
-<pre><m>gradle  -b build2021.gradle distZip <kc/>//generate the tar</kc>
-docker build -t basicrobot21:1.0 
-docker run -it --rm --name basicrobot21 
+<li>On PC for virtual robot: <a href="../DockerfileforpcVirtual " target="code">DockerfileforpcVirtual </a> 
+<pre><m>gradle  -b build2021.gradle build <kc/>//generate the tar</kc>
+<kc/>//generate the image</kc>
+docker build -f <a href="../DockerfileforpcVirtual " target="code">DockerfileforpcVirtual </a> -t basicrobot21virtual:1.0 .	
+<kc/>//run the image</kc>
+docker run -it --rm --name basicrobot21virtual 
     -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
-    basicrobot21  
-    <ks>/bin/bash</ks> <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
+    basicrobot21virtual  
+    <ks>/bin/bash</ks> <kc/>//Optional, to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
 <kc>//Otherwise: copy the file <a href="../basicrobotConfigForDockeronPC.json" target="code">basicrobotConfigForDockeronPC.json</a> into the container:</kc>
 docker <k>cp</k> <ks>basicrobotConfigForDockeronPC.json</ks> 
   <k>CONTAINERID</k>:/it.unibo.qak21.basicrobot-1.0/bin/<ks>basicrobotConfig.json</ks>
+<kc>//Save the cotainer</kc>
+docker commit  CONTAINERID
+<kc>TAG the new image IMAGEID</kc>
+docker tag  IMAGEID IMGNAME:X.Y
+
+<kc>//Tag and register the image</kc>
+docker tag basicrobot21virtual:1.0 natbodocker/basicrobot21virtual:1.0
+docker push natbodocker/basicrobot21virtual:1.0
+</m></pre> 
+
+<h4>Prepare and run with docker-compose</h4>
+The <a href="../DockerfileforpcVirtual " target="code">DockerfileforpcVirtual</a>  must reference to the virtual 
+robot running in the <k>wenv</k>:
+<pre><m>{"type":"virtual", "port":"8090", "ipvirtualrobot":<k>"wenv"</k>}</m></pre>
+Use <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a>
+<pre><m>docker-compose -f basicrobotVirtual.yaml up
 </m></pre></li>
  
 
 
-<h3>The basicrobot with webgui </h3>
-Project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: 
+<h3>The webgui for the basicrobot</h3>
+The project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: does introduce a WebGui application in Spring
+that connects with a basicrobot at the address specified by the user. <br/>
+
+<center><img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="40%"></center>
+
+
 <hr/>
 <ul>
-<li><a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a> 
+<li>The <a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a>  creates the image for
+the WebGui:
  <pre><m>gradlew build
-docker build -f Dockerfileforpc -t webbasicrobotqakforpc:1.0 .
-docker tag webbasicrobotqakforpc:1.0 natbodocker/webbasicrobotqakforpc:1.0
-docker push natbodocker/webbasicrobotqakforpc:1.0
+docker build -f Dockerfileforpc -t webbasicrobotqakforpc:1.1 .
+<!--
+docker run -it --rm --name webbasicrobotqakforpc 
+    -p8090:8090 -p8091:8091
+	-p8085:8085
+    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
+    webbasicrobotqakforpc:1.0  
+    <ks>/bin/bash</ks> <kc/>//Optional, to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
+-->
+docker tag webbasicrobotqakforpc:1.1 natbodocker/webbasicrobotqakforpc:1.1
+docker push natbodocker/webbasicrobotqakforpc:1.1
 </m></pre></li>
-<li><a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+<li>The  <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+creates the virtual robot and the WebGui:
 <pre><m>docker-compose -f webbasicrobotqakonpc.yaml up 
 </m></pre></li>
 
@@ -661,12 +699,52 @@ docker push natbodocker/webbasicrobotqakforpc:1.0
  </tbody>
 </table>
 
+<h3>Using the basicrobot that uses the virtual robot </h3>
+
+<ol>
+<li>Activate the virtualrobot and the basicrobot:
+<pre>docker-compose -f <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a> up</pre> </li>
+<li>Activate the WegGui and use a browser:
+<pre>docker-compose -f <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+localhost:8085</pre><center>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+<center> <img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="80%"></center>
+</td>
+<td>The WebGui acts as a command-console for the basicrobot and as an observer of the basicrobot itself, as a coap-resource.
+</td>
+</tr>
+ </tbody>
+</table>
+
+
+
+</li>
+<li>Activate another observer: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.kt</a></li>
+<li>Activate an application: <a href="../../it.unibo.qakDemo/src/basicrobotboundarywalker.qak(O" target="code">basicrobotboundarywalker.qak</a>
+and look at the <ks>INFO FROM RESOURCE</ks> section of the WebGui.
+</li></ol>
+
+
 <h2 id="deploy">Deployment for the real robot</h2>
  
 <table style="width:98%">
 <tbody>	
 <tr>
 <td style="width:50%" >
+<h3>The basic robot using the real robot</h3>
+Instead of using the 
+<a href="../basicrobotConfigForDockeronPC.json" target="code">configuration file for the virtual robot</a>,
+we must use the proper configuration file for our real robot:
+
+<h4>Mbot-robot</h4>
+ 
+<li><a href="../basicrobotConfigForMbot.json" target="code">basicrobotConfigForMbot.json</a></li>
+<h4>Nano-robot</h4>
+ 
+<li><a href="../basicrobotConfigForNano.json" target="code">basicrobotConfigForNano.json</a></li>
 
 <h3>Deployment on Raspberry</h3>
 <pre>
@@ -676,26 +754,73 @@ docker push natbodocker/webbasicrobotqakforpc:1.0
 4 - copy here:
   <a href="../basicrobot.pl" target="code">basicrobot.pl</a>,
   <a href="../sysRules.pl" target="code">bsysRules.pl</a>,
-  <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> <kc>//See the proper version in the row below</kc>
-5 - bash<ks>it.unibo.qak21.basicrobot</ks>
+  <a href="../basicrobotConfigForMbot.json" target="code">CONFIGURATION.json</a> <kc>//See the proper version (above)</kc>
+5 - bash <ks>it.unibo.qak21.basicrobot</ks>
 </kc>
 </pre>
- 
+
 </td>
 <td>
-<h3>Deployment with docker</h3>
-On Raspberry for real robot: <a href="../Dockerfileforrasp" target="code">Dockerfileforrasp</a> 
-<pre><m>gradle  -b build2021.gradle distZip <kc/>//generate the tar</kc>
-docker build -f DockerfileforraspMbot -t basicrobot21raspmbot:1.0 .
-docker run -it --rm --name basicrobot21
-    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
-    <k>--privileged</k> basicrobot21raspmbot:1.0 
-    <ks>/bin/bash</ks> <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
-	
-</m></pre>
+<h3>Deployment with docker </h3>
+With reference to the project <a href="../" target="code">it.unibo.qak21.basicrobot</a>:
+<ol>
+<li>Create the distribution :	 
+<pre><m>gradle  -b build2021.gradle build</m></pre></li>
+
+<li>Create the image (including <ks>gcc</ks> and <ks>nano</ks>) 
+with (on PC)  <m><a href="../DockerfileforraspMbotBuildOnpc" target="code">DockerfileforraspMbotBuildOnpc</a></m>
+
+or with (on Rasp) <m><a href="../DockerfileforraspMbot" target="code">DockerfileforraspMbot</a></m>: 
+<pre><m>docker build -f DockerfileforraspMbotBuildOnpc -t imageforarm:1.1 .
+docker build -f DockerfileforraspMbot -t imageforarm:1.2 .</m></pre></li>
+
+<li>Run using docker (just to test the image):
+<pre><m>sudo dockerd &       <kc>//start the docker daemon, if needed </kc>
+docker run -it --rm --name basicrobot21mbot 
+        -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
+        <k>--privileged</k> imageforarm:1.2  
+        <ks>/bin/bash</ks>  <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
+<kc>//WARNING: <a href="../../it.unibo.qakactor/src/main/kotlin/TimerActor.kt" target="code">TimerActor.kt</a> without <k>delay</k></kc>.</m></pre>
+ 
+</li>
+<li>Tag and register the image:
+<pre><m>docker tag imageforarm:1.2 natbodocker/imageforarm:1.2 
+<kc>Register the image</kc>
+docker push natbodocker/imageforarm:1.2</m></pre></li>
+
+<li>(Optional) Update the image by copying a file: 
+<m><pre>docker cp FILE CONTAINERID:/it.unibo.qak21.basicrobot-1.0/DIR/FILE
+<kc>Examples:</kc>
+docker cp it.unibo.qak21.basicrobot-1.0.jar <k>9600429b3a64</k>:
+/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qak21.basicrobot-1.0.jar
+docker cp it.unibo.qakactor-2.4.jar <k>9600429b3a64</k>:
+/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qakactor-2.4.jar
+
+<kc>//Save the cotainer</kc>
+docker commit  CONTAINERID
+<kc>TAG the new image IMAGEID</kc>
+docker tag  IMAGEID IMGNAME:X.Y
+</pre></m>
+ 
+</li>
+
+
+<li>Run using <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a>:
+<m><pre>docker-compose -f basicrobotMbot.yaml up <ks>/bin/bash</ks>
+
+docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin/bash</ks>  
+<kc>//WARNING: we connect with the basicrobot but we lose the connection with Arduino</kc>
+</pre></m>
+</li>
+
+
+
+</ol>
+ 
 </td>
 </tr>
 
+<!--
 <tr>
 <td style="width:50%" >
 <h3>Mbot-robot</h3>
@@ -731,9 +856,18 @@ Linux 4ef9b200e277 4.19.97-v7+ #1294 SMP Thu Jan 30 13:15:58 GMT 2020 armv7l GNU
 </ul>
 </td>
 </tr>
-
+-->
  </tbody>
 </table>
+
+<h3>Workflow for the real robot</h3>
+
+<ol>
+<li>docker-compose -f   </li>
+<li></li>
+<li></li>
+
+</ol>
 
 <h2>Usage</h2>
 <table style="width:98%">
@@ -741,8 +875,8 @@ Linux 4ef9b200e277 4.19.97-v7+ #1294 SMP Thu Jan 30 13:15:58 GMT 2020 armv7l GNU
 <tr>
 <td style="width:50%">
 <h3 id="robotusage">Moving using the console</h3>
-This project (and also the project 
-<a href="../../it.unibo.qak21.robots" target="code">it.unibo.qak21.robots</a>)
+This project <m>(and also the project 
+<a href="../../it.unibo.qak21.robots" target="code">it.unibo.qak21.robots</a>)</m>
 defines  a console to to send commands to the basicrobot.
 <br/><br/> 
 <ul>

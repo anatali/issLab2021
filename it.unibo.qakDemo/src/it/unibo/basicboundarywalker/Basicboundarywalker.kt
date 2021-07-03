@@ -38,13 +38,10 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						println("basicboundarywalker s  ")
 						forward("cmd", "cmd(s)" ,"basicrobot" ) 
 						delay(500) 
-						println("basicboundarywalker l  ")
-						forward("cmd", "cmd(l)" ,"basicrobot" ) 
-						delay(500) 
-						println("basicboundarywalker r  ")
-						forward("cmd", "cmd(r)" ,"basicrobot" ) 
-						delay(500) 
+						forward("cmd", "cmd(h)" ,"basicrobot" ) 
+						 pathexecutil.waitUser("starting")  
 					}
+					 transition( edgeName="goto",targetState="detectBoundary", cond=doswitch() )
 				}	 
 				state("detectBoundary") { //this:State
 					action { //it:State
@@ -62,7 +59,7 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 				state("doAheadMove") { //this:State
 					action { //it:State
 						delay(300) 
-						request("step", "step(300)" ,"basicrobot" )  
+						request("step", "step(330)" ,"basicrobot" )  
 						updateResourceRep( "moving"  
 						)
 					}
