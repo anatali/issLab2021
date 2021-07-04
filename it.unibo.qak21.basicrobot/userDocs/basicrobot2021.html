@@ -518,8 +518,9 @@ See also the <a href="#deployvr">deploy section</a> related to the virtual robot
 On the PC (in <tt><m><k>issLab2021/it.unibo.issLabStart/Dockercompose</k></m></tt>):
 <m><pre>
 docker-compose -f virtualRobotOnly2.0.yaml up <kc>//activate the robot</kc>
-
 localhost:8090	<kc>//open the WEnv gui</kc>
+
+curl -d "{\"robotmove\":\"turnRight\", \"time\": 300}" -X POST  192.168.1.22:8090/api/move
 </pre></m>
 
 
@@ -553,13 +554,13 @@ interacts with the real Mbot-robot by using the utility <a href="../resources/ro
 <hr/>
 <h4>Usage</h4>
 On the RaspberryPi (in <tt><m>/home/pi/nat/<k>it.unibo.qak21.basicrobot-1.0/bin</k></m></tt>):
-<m><pre>
+<pre>
 copy: <k>basicrobot.pl</k>, <k>basicrobotConfig.json</k>
 
 it.unibo.qak21.basicrobot  <kc>//activate the robot</kc>
 
 <ks>Command the ronot using a remote console</ks> 	
-</pre></m>
+</pre> 
 
 </td>
 </tr>
@@ -805,7 +806,9 @@ docker tag  IMAGEID IMGNAME:X.Y
 </li>
 
 
-<li>Run using <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a>:
+<li>
+<h4>Prepare and run with docker-compose</h4>
+Run using <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a>:
 <m><pre>docker-compose -f basicrobotMbot.yaml up <ks>/bin/bash</ks>
 
 docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin/bash</ks>  

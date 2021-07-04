@@ -163,18 +163,23 @@ class IssWsHttpKotlinSupport
 //-----------------------------------------------------------------
 
     fun sendHttp(msgJson : String, httpaddr : String) : String {
-        val body    = msgJson.toRequestBody(JSON_MediaType)
-        //colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson  ")
-        val request = Request.Builder()
-            .url( "http://$httpaddr" )
-            .post(body)
-            .build()
-        val response = okHttpClient.newCall(request).execute()
-        //val response = client.newCall(request).execute()
-        //colorPrint("IssWsHttpKotlinSupport | post response=$response ")
-        val answer  =  response.body!!.string()
-        //colorPrint("IssWsHttpKotlinSupport | post answer=$answer ")
-        return answer
+        try {
+            val body = msgJson.toRequestBody(JSON_MediaType)
+            colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson to $httpaddr ")
+            val request = Request.Builder()
+                .url("http://$httpaddr")
+                .post(body)
+                .build()
+            val response = okHttpClient.newCall(request).execute()
+            //val response = client.newCall(request).execute()
+            //colorPrint("IssWsHttpKotlinSupport | post response=$response ")
+            val answer = response.body!!.string()
+            //colorPrint("IssWsHttpKotlinSupport | post answer=$answer ")
+            return answer
+        }catch(e:Exception){
+            println("IssWsHttpKotlinSupport | ERROR $e ")
+            return "{\"endmove\":\"connerror\"}"
+        }
     }
 
       fun sendWs( msgJson : String   ){
