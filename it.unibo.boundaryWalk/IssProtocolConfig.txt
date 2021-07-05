@@ -1,5 +1,5 @@
+spec( protocol( "HTTP" ), url( "http://192.168.1.5:8090/api/move" ) ).
 spec( protocol( "WS" ), url( "localHost:8091" ) ).
-spec( protocol( "HTTP" ), url( "http://localHost:8090/api/move" ) ).
 
 
 #TAKES THE FIRST LINE ONLY

@@ -50,15 +50,16 @@ Defines how to handle POST from browser and from external controls
 	    req.on('data', function (chunk) { data += chunk; }); //accumulate data sent by POST
             req.on('end', function () {	//elaborate data received
 			//{ robotmove: move, time:duration } - robotmove: turnLeft | turnRight | ...
-			console.log('POSTTTTTTTTTTTTTTTTTTTTTTTT /api/move data ' + data  );
+			console.log('POSTTT /api/move data ' + data  );
 			var jsonData = JSON.parse(data)
      		var moveTodo = jsonData.robotmove
      		var duration = jsonData.time
      		if( moveTodo=="alarm"){ //do the halt move
  	            execMoveOnAllConnectedScenes(moveTodo, duration)
- 	            if( moveStillRunning.length>0 && ! moveStillRunning.includes("_Asynch")){
+ 	            if( moveStillRunning.length>0 && moveStillRunning.includes("_Asynch")){
  	                console.log('$$$ WebpageServer /api/move | ' + moveTodo + " while doing " + moveStillRunning );
-                    moveHalted = true
+ 	                moveStillRunning = ""
+                    //moveHalted       = true
   	            }
                 if( res != null ){
                     res.writeHead(200, { 'Content-Type': 'text/json' });
@@ -69,7 +70,7 @@ Defines how to handle POST from browser and from external controls
                     res.end();
                 }
             }//the move is not halt
-			else if( moveStillRunning && ! moveStillRunning.includes("_Asynch") ){
+			else if( moveStillRunning.length>0 && ! moveStillRunning.includes("_Asynch") ){
 			//the move DOES NOT 'interrupt' a move activated in asynch way
 	            const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
 	            updateObservers( JSON.stringify(answer) )
@@ -137,8 +138,9 @@ Interact with clients over ws (controls that send commands or observers) Jan 202
 Move activated in asynch mode => no answer is needed
 */
 function doMoveAsynch(moveTodo, duration){
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
-    moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
+    console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
+    if( moveTodo!="alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
+    else{ moveStillRunning = "" }
     execMoveOnAllConnectedScenes(moveTodo, duration)
 }
 
@@ -157,18 +159,14 @@ wsServer.on('connection', (ws) => {
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
 
-	if( moveStillRunning && moveTodo != "alarm"){
-        console.log("       $$$ WebpageServer wssocket | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running in synch way:" + moveStillRunning)
-	    //const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
-	    //updateObservers( JSON.stringify(answer) )
+	if( moveStillRunning.length>0 && moveTodo != "alarm"){
+        console.log("       $$$ WebpageServer wssocket | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running:" + moveStillRunning)
 	    return
-	}/*
-	if( moveStillRunning && moveTodo == "alarm" ){  //INFO: the alarm move could also be sent via HTTP
+	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
 	    execMoveOnAllConnectedScenes(moveTodo, duration)
-	    moveHalted = true
+	    moveStillRunning = ""
 	    return
-	}*/
-	 doMoveAsynch(moveTodo, duration)
+	}else doMoveAsynch(moveTodo, duration)
   });
 
   ws.onerror = (error) => {

@@ -61,16 +61,30 @@ object WebSocketKotlinSupportUsage {
 }
 
 suspend fun testWs(scope: CoroutineScope){
+    println("WebSocketUtilUsage | testWs"  );
     val support = IssWsHttpKotlinSupport.createForWs(scope, "localhost:8091" )
     //val ws      =
     //support.connect( "localhost:8091", WebSocketKotlinSupportUsage.workToDo)
     //support.wsconnect(  WebSocketKotlinSupportUsage.workToDo)
-    support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
-    support.forward(MsgRobotUtil.turnLeftMsg)
+    //support.wsconnect(WebSocketKotlinSupportUsage.testObservers)
+    println("WebSocketUtilUsage | testWs $support"  )
+ //   support.forward(MsgRobotUtil.haltMsg)
+    support.forward(MsgRobotUtil.haltMsg)
+
+    support.forward(MsgRobotUtil.forwardMsg)
     delay(1000)
-    support.sendWs(MsgRobotUtil.turnRightMsg)
+    support.forward(MsgRobotUtil.haltMsg)
+
+     support.sendWs(MsgRobotUtil.turnRightMsg)
+     //give time to see messages ...
+     delay(500)  //CREATE new threads  !!!
+     support.forward(MsgRobotUtil.haltMsg)
+
+     support.sendWs(MsgRobotUtil.turnLeftMsg)
     //give time to see messages ...
-    delay(30000)  //CREATE new threads  !!!
+    delay(500)  //CREATE new threads  !!!
+    support.forward(MsgRobotUtil.haltMsg)
+
     support.close()
 
 }
@@ -79,13 +93,19 @@ suspend fun testHttp(scope: CoroutineScope){
     val answer  = support.sendHttp(MsgRobotUtil.turnLeftMsg,"localhost:8090/api/move")
     println("testHttp answer=$answer")
 }
+suspend fun haltHttp(scope: CoroutineScope){
+    val support = IssWsHttpKotlinSupport.createForHttp(scope , "localhost:8090")
+    val answer  = support.sendHttp(MsgRobotUtil.haltMsg,"localhost:8090/api/move")
+    println("haltHttp answer=$answer")
+}
 @ExperimentalCoroutinesApi
 fun main() = runBlocking {
     println("==============================================")
     println("WebSocketUtilUsage | main start ${sysUtil.aboutThreads("main")}"  );
     println("==============================================")
-    testWs(this)
     //testHttp(this)
+    //haltHttp(this)
+    testWs(this)
     println("==============================================")
     println("WebSocketUtilUsage | END ${sysUtil.aboutThreads("main")}");
     println("==============================================")

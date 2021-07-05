@@ -2,7 +2,7 @@ version: '3'
 services:
   wenv:
     image: docker.io/natbodocker/virtualrobotdisi:2.0
-    ## image: virtualrobotdisi:1.0
+    ## image: virtualrobotdisi:2.0
     ports:
       - 8090:8090
       - 8091:8091
@@ -18,5 +18,6 @@ services:
 ## -------------------------------------------------------------
 ## See https://docs.docker.com/compose/startup-order/
 ## -------------------------------------------------------------
+## docker-compose -f basicrobotVirtual.yaml up
 ## docker-compose run --service-ports wenv
 ## docker-compose run --service-ports robot  ATTIVA ANCHE wenv

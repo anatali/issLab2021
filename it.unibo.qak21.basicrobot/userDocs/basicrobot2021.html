@@ -517,10 +517,13 @@ See also the <a href="#deployvr">deploy section</a> related to the virtual robot
 <h4>Usage</h4>
 On the PC (in <tt><m><k>issLab2021/it.unibo.issLabStart/Dockercompose</k></m></tt>):
 <m><pre>
+docker run -it --rm --name vr -p8090:8090 virtualrobotdisi:2.0
+
 docker-compose -f virtualRobotOnly2.0.yaml up <kc>//activate the robot</kc>
 localhost:8090	<kc>//open the WEnv gui</kc>
 
-curl -d "{\"robotmove\":\"turnRight\", \"time\": 300}" -X POST  192.168.1.22:8090/api/move
+curl -d "{\"robotmove\":\"turnRight\", \"time\": 300}" 
+  -X POST  192.168.1.22:8090/api/move
 </pre></m>
 
 
@@ -602,8 +605,7 @@ performs calls for <ks>w,s</ks> is <k>asynch</k> way, and the calls for <ks>r,l,
 <hr/>
 <ul>
 <li><a href="../../it.unibo.virtualRobot2020/Dockerfile" target="code">Dockerfile</a>
-<pre><m>gradle  -b build2021.gradle distZip
-docker build -f Dockerfile -t virtualrobotdisi:2.0 .
+<pre><m>docker build -f Dockerfile -t virtualrobotdisi:2.0 .
 
 <kc>//run to check</kc>
 docker run -it --rm --name virtualrobotdisi
@@ -785,9 +787,9 @@ docker run -it --rm --name basicrobot21mbot
  
 </li>
 <li>Tag and register the image:
-<pre><m>docker tag imageforarm:1.2 natbodocker/imageforarm:1.2 
+<pre><m>docker tag imageforarm:1.1 natbodocker/imageforarm:1.1 
 <kc>Register the image</kc>
-docker push natbodocker/imageforarm:1.2</m></pre></li>
+docker push natbodocker/imageforarm:1.1</m></pre></li>
 
 <li>(Optional) Update the image by copying a file: 
 <m><pre>docker cp FILE CONTAINERID:/it.unibo.qak21.basicrobot-1.0/DIR/FILE
@@ -809,7 +811,7 @@ docker tag  IMAGEID IMGNAME:X.Y
 <li>
 <h4>Prepare and run with docker-compose</h4>
 Run using <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a>:
-<m><pre>docker-compose -f basicrobotMbot.yaml up <ks>/bin/bash</ks>
+<m><pre>docker-compose -f basicrobotMbot.yaml up  
 
 docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin/bash</ks>  
 <kc>//WARNING: we connect with the basicrobot but we lose the connection with Arduino</kc>

@@ -35,7 +35,7 @@ class connQakMqtt( ) : connQakBase( ), MqttCallback{
 		message.setPayload(msg.toByteArray())
 		try {
 			println("mqtt publish $msg on $topic")
-			client.publish(topic, message)
+			client.publish(topic, message) 
 		} catch (e:Exception) {
 			println("       %%% connQakMqtt | publish ERROR $e topic=$topic msg=$msg"  )
  		}

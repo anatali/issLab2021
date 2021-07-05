@@ -41,10 +41,10 @@ class IssWsHttpKotlinSupport
     val okHttpClient           = OkHttpClient()
     val actorobservers         = Vector<IUniboActor>()
     private var opened         = false
-    private var connectForWs   = true
+    //private var connectForWs   = false
 
     init{
-        if( wsconn ) wsconnect(  fun(scope, support ) {
+        if( wsconn ) myWs = wsconnect(  fun(scope, support ) {
             colorPrint("IssWsHttpKotlinSupport | wsconnect ... ${sysUtil.aboutThreads("isssupport")}")
         } )
     }
@@ -53,6 +53,7 @@ class IssWsHttpKotlinSupport
         val activeAconnsHttp = HashMap<String,IssWsHttpKotlinSupport>()
         val activeAconnsWs   = HashMap<String,IssWsHttpKotlinSupport>()
         var trace            = false
+        var connectForWs     = false
 
         fun colorPrint(msg : String, color : Color = Color.CYAN ){
             if( trace )
@@ -67,12 +68,12 @@ class IssWsHttpKotlinSupport
             return activeAconnsHttp.get(addr)!!
         }
         fun createForWs(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
-            colorPrint("IssWsHttpKotlinSupport | wsconnect createForWs:  ", Color.RED)
             if( ! activeAconnsWs.containsKey(addr)) {
-                val support = IssWsHttpKotlinSupport(scope, addr, false)
-                 activeAconnsWs.put(addr,support)
-                colorPrint("CREATE A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
+                val support = IssWsHttpKotlinSupport(scope, addr, true)
+                activeAconnsWs.put(addr,support)
+                colorPrint("CREATED A NEW IssWsHttpKotlinSupport for $addr ${sysUtil.aboutThreads("isssupport")}")
             }
+            connectForWs = true
             return activeAconnsWs.get(addr)!!
         }
 
@@ -136,13 +137,13 @@ class IssWsHttpKotlinSupport
 //===============================================================================
     fun wsconnect( //wsAddr : String ,
     callback: (CoroutineScope, IssWsHttpKotlinSupport) -> Unit) : WebSocket {
-        colorPrint("IssWsHttpKotlinSupport | wsconnect: $ipaddr", Color.RED)
+        //colorPrint("IssWsHttpKotlinSupport | wsconnect: $ipaddr", Color.RED)
         workTodo = callback
         val request0 = Request.Builder()
             .url("ws://$ipaddr")
             .build()
-        myWs = okHttpClient.newWebSocket(request0, this)
-        colorPrint("IssWsHttpKotlinSupport | wsconnect myWs: $myWs", Color.RED)
+        val myWs = okHttpClient.newWebSocket(request0, this)
+        colorPrint("IssWsHttpKotlinSupport | wsconnect myWs: $myWs", Color.BLUE)
         return myWs
     }
 
@@ -183,7 +184,7 @@ class IssWsHttpKotlinSupport
     }
 
       fun sendWs( msgJson : String   ){
-          //colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
+          colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
         myWs.send(msgJson);
     }
 //========================================================================
