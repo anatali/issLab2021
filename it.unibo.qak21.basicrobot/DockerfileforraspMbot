@@ -4,6 +4,7 @@
 ## ----------------------------------------------------------
   
 FROM hypriot/rpi-java
+FROM hypriot/wiringpi
 EXPOSE 8020
 ## ADD extracts the tar
 ADD ./it.unibo.qak21.basicrobot-1.0.tar /
@@ -18,6 +19,7 @@ RUN sudo apt-get update; exit 0
 RUN sudo apt-get install -y gcc      
 RUN sudo apt-get install libc6-dev
 RUN sudo apt-get -y install nano
+RUN sudo apt-get -y install wiringpi
  
 RUN gcc  cronoLinux.c  -std=gnu11 -o  cronoLinux
 

@@ -1,30 +1,22 @@
-#include <iostream>
 #include <wiringPi.h>
-#include <fstream>
-#include <cmath>
 #include <unistd.h>
+#include<stdio.h>
 
-//#define TRUE 1
-//Wiring Pi numbers for radar with stepper
-#define TRIG 0  //4
-#define ECHO 2  //5
 
-using namespace std;
 /*
  * in the directory: of SonarAlone.c:
 1)  [ sudo ../../pi-blaster/pi-blaster ] if servo
 2)  g++  SonarAlone.c -l wiringPi -o  SonarAlone
     gcc SonarAlone.c -std=gnu11 -l wiringPi -o  SonarAlone
-    
-sudo ./SonarAlone
-In nat/servosonar:
-sudo java -jar   SonarAloneP2PMain.jar
-sudo python radar.py
+    sudo ./SonarAlone
  */
- 
- /*
- Simply remove #include <iostream> and using namespace std;, and replace cout << endl; with putchar('\n');..
- */
+
+//#define TRUE 1
+//Wiring Pi numbers for radar with stepper
+#define TRIG 0  //4
+#define ECHO 2  //5
+//using namespace std;
+
 void setup() {
 	wiringPiSetup();
 	pinMode(TRIG, OUTPUT);
@@ -56,12 +48,14 @@ int getCM() {
 }
 
 int main(void) {
-	int cm ;	
- 	setup();
-	while(1) {
-		cm = getCM();
-		cout <<  cm <<   endl;
-		delay(300);
-	}
-	return 0;
+        int cm ;
+        setup();
+        while(1) {
+                cm = getCM();
+                //cout <<  cm; //<<   endl;
+                printf("%d", cm);
+                putchar('\n');
+                delay(300);
+        }
+        return 0;
 }
