@@ -680,14 +680,7 @@ that connects with a basicrobot at the address specified by the user. <br/>
 the WebGui:
  <pre><m>gradlew build
 docker build -f Dockerfileforpc -t webbasicrobotqakforpc:1.1 .
-<!--
-docker run -it --rm --name webbasicrobotqakforpc 
-    -p8090:8090 -p8091:8091
-	-p8085:8085
-    -p8020:8020/tcp -p8020:8020/udp 	<kc/>//udp required for CoAP</kc>
-    webbasicrobotqakforpc:1.0  
-    <ks>/bin/bash</ks> <kc/>//Optional, to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
--->
+
 docker tag webbasicrobotqakforpc:1.1 natbodocker/webbasicrobotqakforpc:1.1
 docker push natbodocker/webbasicrobotqakforpc:1.1
 </m></pre></li>
@@ -701,35 +694,48 @@ creates the virtual robot and the WebGui:
 </tr>
  </tbody>
 </table>
+<h3>Using the virtualrobot alone on a PC (address <tt>IPPC</tt>)</h3>
+<m>
+<ol>
+<li>Activate the virtualrobot alone :
+<pre>docker-compose -f <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a> up <ks>wenv</ks></pre> </li>
 
-<h3>Using the basicrobot that uses the virtual robot </h3>
+<li>Send POST-HTTP commands
+<pre>curl -d "{\"robotmove\":\"turnRight\", \"time\": 300}" -X POST  <ks>IPPC</ks>:8090/api/move
+<hr/>
+val support = <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><bc>IssWsHttpKotlinSupport</bc></a>.<k>createForHttp</k>(scope, "<ks>IPPC</ks>:<k>8090</k>" )
+val answer  = support.sendHttp(MsgRobotUtil.turnLeftMsg,"localhost:8090/api/move")
+</pre>
+</li>
 
+<li>Send commands using websockets
+<pre>val support = <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><bc>IssWsHttpKotlinSupport</bc></a>.<k>createForWs</k>(scope, "<ks>IPPC</ks>:<k>8091</k>" )
+support.forward(MsgRobotUtil.haltMsg)
+support.forward(MsgRobotUtil.forwardMsg)
+delay(1000)
+support.forward(MsgRobotUtil.haltMsg)
+support.sendWs(MsgRobotUtil.turnRightMsg)
+</pre>
+</li>
+</ol>
+The <a href="../../it.unibo.kotlinSupports/app/src/main/kotlin/it/unibo/supports/IssWsHttpKotlinSupport.kt" target="code"><bc>IssWsHttpKotlinSupport.kt</bc></a> 
+has been introduced in 
+
+<a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="web">ActorWithKotlinSupport.html</a>
+
+</m>
+
+<h3>Using the basicrobot that uses the virtualrobot </h3>
+<m>
 <ol>
 <li>Activate the virtualrobot and the basicrobot:
 <pre>docker-compose -f <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a> up</pre> </li>
-<li>Activate the WegGui and use a browser:
-<pre>docker-compose -f <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
-localhost:8085</pre><center>
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
-<center> <img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="80%"></center>
-</td>
-<td>The WebGui acts as a command-console for the basicrobot and as an observer of the basicrobot itself, as a coap-resource.
-</td>
-</tr>
- </tbody>
-</table>
-
-
-
-</li>
+<li><a href="#robotusage">Use a command console</a></li>
 <li>Activate another observer: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.kt</a></li>
 <li>Activate an application: <a href="../../it.unibo.qakDemo/src/basicrobotboundarywalker.qak(O" target="code">basicrobotboundarywalker.qak</a>
 and look at the <ks>INFO FROM RESOURCE</ks> section of the WebGui.
 </li></ol>
-
+</m>
 
 <h2 id="deploy">Deployment for the real robot</h2>
  
@@ -824,57 +830,84 @@ docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin
  
 </td>
 </tr>
-
-<!--
-<tr>
-<td style="width:50%" >
-<h3>Mbot-robot</h3>
-<ul>
-<li><a href="../basicrobotConfigForMbot.json" target="code">basicrobotConfigForMbot.json</a>
-<pre>
-pi@192.168.1.16: debug3: send packet: type 80 //???
-
-</pre>
-https://www.baeldung.com/kotlin/measure-elapsed-time
-<br/>
-https://levelup.gitconnected.com/8-ways-to-measure-execution-time-in-c-c-48634458d0f9
-<br/>
-systemctl start docker.service
-<br/><br/>
-
-docker start 49f729198c58 (container_name)
-docker exec -it 49f729198c58 /bin/bash -c "mycommand"
-
-<br/><br/>
-uname -a<br/>
-Linux 4ef9b200e277 4.19.97-v7+ #1294 SMP Thu Jan 30 13:15:58 GMT 2020 armv7l GNU/Linux
-
-</li>
-<li></li>
-</ul>
-</td>
-<td>
-<h3>Nano-robot</h3>
-<ul>
-<li><a href="../basicrobotConfigForNano.json" target="code">basicrobotConfigForNano.json</a></li>
-<li></li>
-</ul>
-</td>
-</tr>
--->
+ 
+ 
  </tbody>
 </table>
 
-<h3>Workflow for the real robot</h3>
-
+<h3>Using the basicrobot on Raspberry that uses the virtual robot on PC </h3>
+<m>
+<ul>
+<li>
+<k>On the PC (address <tt>IPPC</tt>)</k><br/>
 <ol>
-<li>docker-compose -f   </li>
-<li></li>
-<li></li>
-
+<li>Activate the virtualrobot and the basicrobot:
+<pre>docker-compose -f <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a> up</pre> 
+</li>
 </ol>
+</li>
+<li>
+<k>On the Raspberry</k><br/>
+<ol>
+<li>Activate the basicrobot with <ks>/bin/bash</ks>:
+<pre>docker-compose -f <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a> run --service-ports mbot <ks>/bin/bash</ks>
+</pre> 
+</li>
+<li>Change the <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
 
-<h2>Usage</h2>
+<pre>nano basicrobotConfig.json
+{"type":"virtual", "port":"8090", "ipvirtualrobot":"<tt>IPPC</tt>"}
+</pre>
+
+<li>Run the basicrobot
+<pre>bash it.unibo.qak21.basicrobot</pre>
+</li>
+<li><a href="#robotusage">Use a command console</a></li>
+</ol>
+</li>
+</ul>
+</m>
+
+
+<h3>Using the basicrobot on Raspberry that uses the real robot MBOT</h3>
+<m>
+<ol>
+<li>Activate the basicrobot with <ks>/bin/bash</ks>:
+<pre>docker-compose -f <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a> run --service-ports mbot <ks>/bin/bash</ks>
+</pre> 
+</li>
+<li>Change the <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+
+<pre>nano basicrobotConfig.json
+{<ks>"type":"realmbot", "port":"/dev/ttyUSB0"</ks>, "ipvirtualrobot":"dontcare"}
+</pre>
+
+<li>Run the basicrobot
+<pre>bash it.unibo.qak21.basicrobot</pre>
+</li>
+<li><a href="#robotusage">Use a command console</a></li>
+</ol>
+</m>
+<h3>Using the basicrobot on Raspberry that uses the real robot NANO</h3>
+<m>
+<ol>
+<li>Activate the basicrobot with <ks>/bin/bash</ks>:
+<pre>docker-compose -f <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a> run --service-ports mbot <ks>/bin/bash</ks>
+</pre> 
+</li>
+<li>Change the <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+
+<pre>nano basicrobotConfig.json
+{<ks>"type":"realnano", "port":"8020"</ks>, "ipvirtualrobot":"dontcare"}
+</pre>
+
+<li>Run the basicrobot
+<pre>bash it.unibo.qak21.basicrobot</pre>
+</li>
+<li><a href="#robotusage">Use a command console</a></li>
+</ol> 
+</m>
+<h2>Using a command console</h2>
 <table style="width:98%">
 <tbody>	
 <tr>
@@ -922,9 +955,25 @@ a specialization for <ks>MQTT</ks>
 </li>
 </ul>
 
-<h3 id="robotusage">Moving using a WebGui</h3>
+<h3 id="usingwebgui">Moving using a WebGui</h3>
+<li>Activate the WegGui and use a browser:
+<pre>docker-compose -f <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+localhost:8085</pre><center>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%" >
+<center> <img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="100%"></center>
+</td>
+<td>The WebGui acts as a command-console for the basicrobot and as an observer of the basicrobot itself, as a coap-resource.
+</td>
+</tr>
+ </tbody>
+</table>
+</li>
+<!--
 <a href="../../webBasicrobotqak/userDocs/webBasicrobotqak.html" target="lab">LabIss2021 | a Webgui for the basic generic robot</a> 
-
+-->
 <h3 id="robotusage">Observing</h3>
 <a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotObserver.java" target="code">basicrobotObserver.java</a>
 <br/>
