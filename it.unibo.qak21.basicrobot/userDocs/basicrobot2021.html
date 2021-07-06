@@ -703,33 +703,16 @@ creates the virtual robot and the WebGui:
 </table>
 
 <h3>Using the basicrobot that uses the virtual robot </h3>
-
+<m>
 <ol>
 <li>Activate the virtualrobot and the basicrobot:
 <pre>docker-compose -f <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a> up</pre> </li>
-<li>Activate the WegGui and use a browser:
-<pre>docker-compose -f <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
-localhost:8085</pre><center>
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
-<center> <img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="80%"></center>
-</td>
-<td>The WebGui acts as a command-console for the basicrobot and as an observer of the basicrobot itself, as a coap-resource.
-</td>
-</tr>
- </tbody>
-</table>
-
-
-
-</li>
+<li><a href="#robotusage">Use a command console</a></li>
 <li>Activate another observer: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.kt</a></li>
 <li>Activate an application: <a href="../../it.unibo.qakDemo/src/basicrobotboundarywalker.qak(O" target="code">basicrobotboundarywalker.qak</a>
 and look at the <ks>INFO FROM RESOURCE</ks> section of the WebGui.
 </li></ol>
-
+</m>
 
 <h2 id="deploy">Deployment for the real robot</h2>
  
@@ -865,16 +848,77 @@ Linux 4ef9b200e277 4.19.97-v7+ #1294 SMP Thu Jan 30 13:15:58 GMT 2020 armv7l GNU
  </tbody>
 </table>
 
-<h3>Workflow for the real robot</h3>
-
+<h3>Using the basicrobot on Raspberry that uses the virtual robot on PC </h3>
+<m>
+<ul>
+<li>
+<k>On the PC (address <tt>IPPC</tt>)</k><br/>
 <ol>
-<li>docker-compose -f   </li>
-<li></li>
-<li></li>
-
+<li>Activate the virtualrobot and the basicrobot:
+<pre>docker-compose -f <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a> up</pre> 
+</li>
 </ol>
+</li>
+<li>
+<k>On the Raspberry</k><br/>
+<ol>
+<li>Activate the basicrobot with <ks>/bin/bash</ks>:
+<pre>docker-compose -f <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a> run --service-ports mbot <ks>/bin/bash</ks>
+</pre> 
+</li>
+<li>Change the <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
 
-<h2>Usage</h2>
+<pre>{"type":"virtual", "port":"8090", "ipvirtualrobot":"<tt>IPPC</tt>"}
+{"_comment": "", "type":"realmbot", "port":"/dev/ttyUSB0", "ipvirtualrobot":"dontcare"}
+</pre>
+
+<li>Run the basicrobot
+<pre>bash it.unibo.basicrobot</pre>
+</li>
+<li><a href="#robotusage">Use a command console</a></li>
+</ol>
+</li>
+</ul>
+</m>
+
+
+<h3>Using the basicrobot on Raspberry that uses the real robot MBOT</h3>
+<m>
+<ol>
+<li>Activate the basicrobot with <ks>/bin/bash</ks>:
+<pre>docker-compose -f <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a> run --service-ports mbot <ks>/bin/bash</ks>
+</pre> 
+</li>
+<li>Change the <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+
+<pre>{<ks>"type":"realmbot", "port":"/dev/ttyUSB0"</ks>, "ipvirtualrobot":"dontcare"}
+</pre>
+
+<li>Run the basicrobot
+<pre>bash it.unibo.basicrobot</pre>
+</li>
+<li><a href="#robotusage">Use a command console</a></li>
+</ol>
+</m>
+<h3>Using the basicrobot on Raspberry that uses the real robot NANO</h3>
+<m>
+<ol>
+<li>Activate the basicrobot with <ks>/bin/bash</ks>:
+<pre>docker-compose -f <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a> run --service-ports mbot <ks>/bin/bash</ks>
+</pre> 
+</li>
+<li>Change the <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
+
+<pre>{<ks>"type":"realnano", "port":"8020"</ks>, "ipvirtualrobot":"dontcare"}
+</pre>
+
+<li>Run the basicrobot
+<pre>bash it.unibo.basicrobot</pre>
+</li>
+<li><a href="#robotusage">Use a command console</a></li>
+</ol> 
+</m>
+<h2>Using a command console</h2>
 <table style="width:98%">
 <tbody>	
 <tr>
@@ -922,9 +966,25 @@ a specialization for <ks>MQTT</ks>
 </li>
 </ul>
 
-<h3 id="robotusage">Moving using a WebGui</h3>
+<h3 id="usingwebgui">Moving using a WebGui</h3>
+<li>Activate the WegGui and use a browser:
+<pre>docker-compose -f <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+localhost:8085</pre><center>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%" >
+<center> <img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="100%"></center>
+</td>
+<td>The WebGui acts as a command-console for the basicrobot and as an observer of the basicrobot itself, as a coap-resource.
+</td>
+</tr>
+ </tbody>
+</table>
+</li>
+<!--
 <a href="../../webBasicrobotqak/userDocs/webBasicrobotqak.html" target="lab">LabIss2021 | a Webgui for the basic generic robot</a> 
-
+-->
 <h3 id="robotusage">Observing</h3>
 <a href="../../it.unibo.qak21.robots/resources/basicrobotObservers/basicrobotObserver.java" target="code">basicrobotObserver.java</a>
 <br/>
