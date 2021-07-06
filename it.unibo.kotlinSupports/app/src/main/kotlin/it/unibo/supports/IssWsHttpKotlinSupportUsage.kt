@@ -6,7 +6,7 @@ import it.unibo.interaction.MsgRobotUtil
 import kotlinx.coroutines.*
 
 @ExperimentalCoroutinesApi
-object WebSocketKotlinSupportUsage {
+object IssWsHttpKotlinSupportUsage {
 
     //ENTRY after connection
     val workToDo : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =  fun(scope, support ){
