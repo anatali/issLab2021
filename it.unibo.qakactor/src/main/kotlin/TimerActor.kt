@@ -20,9 +20,15 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
         //scope.launch{ autoMsg("start", "start") }
 
         //Refactored July 2021, in order to avoid the usage of delay(tout)
-        val ownerName = ev.replace("local_tout_","").replace("_doStep","")
-        myactor       = QakContext.getActor(ownerName)!!
-        start()
+        var ownerName = ev.replace("local_tout_","")
+        ownerName     =  ownerName.substringBefore("_") // .replace("_doStep","")
+        try{
+            myactor       = QakContext.getActor(ownerName)!!
+            start()
+        }catch(e:Exception){
+            println("WARNING: TimerActor time=$tout does not find its owner:${ownerName}")
+        }
+
     }
 
     override fun run(){

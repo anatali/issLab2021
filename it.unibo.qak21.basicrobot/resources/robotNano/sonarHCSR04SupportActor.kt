@@ -12,11 +12,14 @@ import it.unibo.kactor.ApplMessage
 /* 
  Emits the event sonarRobot : sonar( V )
  */
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	lateinit var reader : BufferedReader
 	 
 	init{
-		println("$tt $name | CREATING")		
+		println("$tt $name | CREATING")
+		scope.launch{ autoMsg("sonarstart","go") }
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi

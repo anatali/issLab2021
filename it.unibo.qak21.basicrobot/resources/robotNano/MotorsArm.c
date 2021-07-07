@@ -20,8 +20,8 @@ int rotStepTime  = 58;
 
 
 /*
-g++  Motors.c -l wiringPi -o  Motors
-gcc  Motors.c -std=gnu11 -l wiringPi -o  Motors
+g++  MotorsArm.c -l wiringPi -o  Motors
+gcc  MotorsArm.c -std=gnu11 -l wiringPi -o  Motors
  */
 void h(){
 	digitalWrite(inp1m1, LOW);

@@ -790,7 +790,7 @@ docker run -it --rm --name basicrobot21mbot
         <k>--privileged</k> imageforarm:1.2  
         <ks>/bin/bash</ks>  <kc/>//Optional to update <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a></kc>
 <kc>//WARNING: <a href="../../it.unibo.qakactor/src/main/kotlin/TimerActor.kt" target="code">TimerActor.kt</a> without <k>delay</k></kc>.</m></pre>
- 
+
 </li>
 <li>Tag and register the image:
 <pre><m>docker tag imageforarm:1.1 natbodocker/imageforarm:1.1 
@@ -820,7 +820,7 @@ Run using <a href="../basicrobotMbot.yaml" target="code">basicrobotMbot.yaml</a>
 <m><pre>docker-compose -f basicrobotMbot.yaml up  
 
 docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin/bash</ks>  
-<kc>//WARNING: we connect with the basicrobot but we lose the connection with Arduino</kc>
+<!-- <kc>//WARNING: we connect with the basicrobot but we lose the connection with Arduino</kc> -->
 </pre></m>
 </li>
 

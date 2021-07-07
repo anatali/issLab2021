@@ -83,9 +83,7 @@ object robotSupport{
 				}		
 			} 
  			"realnano"   ->  {
-				//testCrono(owner)
-				
-				robotNano.nanoSupport.create( owner )
+ 				robotNano.nanoSupport.create( owner )
  				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  

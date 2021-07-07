@@ -7,7 +7,7 @@
  * in the directory: of SonarAlone.c:
 1)  [ sudo ../../pi-blaster/pi-blaster ] if servo
 2)  g++  SonarAlone.c -l wiringPi -o  SonarAlone
-    gcc SonarAlone.c -std=gnu11 -l wiringPi -o  SonarAlone
+    gcc SonarArm.c -std=gnu11 -l wiringPi -o  SonarAlone
     sudo ./SonarAlone
  */
 
