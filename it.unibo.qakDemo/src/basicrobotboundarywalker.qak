@@ -12,7 +12,7 @@ Reply   stepdone   : stepdone(V)
 Reply   stepfail   : stepfail(DURATION, CAUSE)
  
 Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
-Context ctxbasicrobot ip [host="192.168.1.22" port=8020]    
+Context ctxbasicrobot ip [host="192.168.1.7" port=8020]    
 
 ExternalQActor basicrobot context ctxbasicrobot   
 /* 
@@ -42,6 +42,7 @@ var Myself      = myself
 		println("basicboundarywalker w  ")
 		forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
 		delay 500
+		forward basicrobot -m cmd : cmd(h)
 		println("basicboundarywalker s  ")
 		forward basicrobot -m cmd : cmd(s)  //executed in asynch way ...
 		/* delay 500

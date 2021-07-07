@@ -88,9 +88,13 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
 		trace("		--- virtualrobotSupport2021 | answer=$answer")
 		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt
-		val ajson = JSONObject(answer)
-		if( ajson.has("endmove") && ajson.get("endmove")=="false"){
-			owner.scope.launch{  owner.emit("obstacle","obstacle(virtual)") }
+		try{
+			val ajson = JSONObject(answer)
+			if( ajson.has("endmove") && ajson.get("endmove")=="false"){
+				owner.scope.launch{  owner.emit("obstacle","obstacle(virtual)") }
+			}
+		}catch(e: Exception){
+			println("		--- virtualrobotSupport2021 |  move answer JSON ERROR $answer")
 		}
     } 
     //translates application-language in cril

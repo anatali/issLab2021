@@ -35,6 +35,7 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						println("basicboundarywalker w  ")
 						forward("cmd", "cmd(w)" ,"basicrobot" ) 
 						delay(500) 
+						forward("cmd", "cmd(h)" ,"basicrobot" ) 
 						println("basicboundarywalker s  ")
 						forward("cmd", "cmd(s)" ,"basicrobot" ) 
 						delay(500) 

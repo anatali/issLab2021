@@ -5,7 +5,7 @@ services:
     ports:
       - 8020:8020/tcp
       - 8020:8020/udp
-	privileged: true
+    privileged: true
 
-## docker-compose -f basicrobotMbot.yaml run --service-ports mbot /bin/bash  CONNETTO MA PERDO Arduino
+## docker-compose -f basicrobotMbot.yaml run --service-ports mbot /bin/bash  
 
