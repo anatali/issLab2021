@@ -231,6 +231,7 @@ selects the proper support for the robot-type specified in a robot-configuration
 </td>
 <td> 
 The <a href="../../it.unibo.qak21.basicrobot/src/basicrobot.qak" target="code">basicrobot.qak</a> (in project <i>it.unibo.qak21.basicrobot</i>):
+<br/><br/>
 <ul>
 <li>is able to execute basic move commands, by handling a <bc>dispatch</bc> (for the elementary commands <tt>w | s | ... </tt>)
 and a <bc>request</bc> (for the command <tt>step</tt>);<br/><br/></li>
@@ -241,9 +242,11 @@ and a <bc>request</bc> (for the command <tt>step</tt>);<br/><br/></li>
 working as an adapter for devices described in the configuration file
 <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a>
 ;<br/><br/>   </li>
+<!--
 <li>is a source of <bc>obstacle events</bc>, that are generated after receiving a <bc>obstacle message</bc> by the 
 <a href="#lowlevel">low-level robot support</a> 
 </li>
+-->
 </ul> 
  
  </m>
@@ -411,7 +414,7 @@ that can be launched by using the docker-compose file
 <a href="../../it.unibo.issLabStart/Dockercompose/virtualRobotOnly2.0.yaml" target="code">virtualRobotOnly2.0.yaml</a></m>.
 <!-- and called by using the support described in:
 <a href="../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport" target="lab">IssWsHttpKotlinSupport</a>-->
-<center><img src="./img/wenvscene1.png" alt="wenvscene1" width="40%" height="60%"></center>	
+<center><img src="./img/wenvscene1.png" alt="wenvscene1" width="60%"></center>	
 <br/>
 The support is: <a href="../resources/robotVirtual/virtualrobotSupport2021.kt" target="code">virtualrobotSupport2021.kt</a>
 
@@ -421,7 +424,7 @@ The support is: <a href="../resources/robotVirtual/virtualrobotSupport2021.kt" t
 <li><hr/>
 <bc>nano</bc>: <br/><m>the self-made robot described in 
 <a href="LabNanoRobot.html" target="robot">LabNanoRobot | The home-made basicrobot</a></m>
-<center><img src="./img/robotsUnibo.jpg" alt="robotsUnibo" width="40%" height="60%"></center>	
+<center><img src="./img/robotSkeleton.png" alt="robotSkeleton.png" width="60%"></center>	
 <br/>
 The support is: <a href="../resources/robotNano/nanoSupport.kt" target="code">nanoSupport.kt</a>
 </li>
@@ -430,7 +433,7 @@ The support is: <a href="../resources/robotNano/nanoSupport.kt" target="code">na
 <li><hr/>
 <bc>mbot</bc>: <br/><m>the  robot described in 
 <a href="Mbot3030.html" target="robot">Mbot3030 | The reference ddr robot</a> </m>
-<center><img src="./img/mbot.png" alt="mbot" width="40%"></center>	
+<center><img src="./img/mbot.png" alt="mbot" width="60%"></center>	
 <br/>
 The support is: <a href="../resources/robotMbot/mbotSupport.kt" target="code">mbotSupport.kt</a>
 </li>
@@ -502,7 +505,7 @@ the <em>synchronous sendHttp</em>.
 When the answer is <tt>{"endmove":"false","move":"..."}</tt>, the support generates the event <k>obstacle:obstacle(virtual)</k>.
 <br/><br/>
  </li>
-<li>implements <bc>forward</bc>, <bc>step</bc> by sending the 'long move' cril command <tt>{"robotmove":"moveForward", "time": <k>1000</k>}</tt>
+<li>implements <bc>forward</bc> (<bc>backward</bc>) by sending the 'long move' cril command <tt>{"robotmove":"moveForward", "time": <k>1000</k>}</tt>
 using the <em>asynchronous sendWs</em>. The information produced as a consequance of move is handled by the
 <a href="../resources/robotVirtual/WsSupportObserver.kt" target="code">WsSupportObserver.kt</a>, that 
 generates the event <k>obstacle:obstacle(virtual)</k> when such information is <tt>{"collision":true,"move":"..."}</tt>.

@@ -101,7 +101,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
 						}
-						emit("info", "info(obstacledoing(w))" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -166,16 +165,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						emit("endall", "endall(normal)" ) 
 						terminate(1)
 					}
-				}	 
-				state("stepPerhapsDone") { //this:State
-					action { //it:State
-						unibo.robot.robotSupport.move( "h"  )
-						println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")
-						stateTimer = TimerActor("timer_stepPerhapsDone", 
-							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
-					}
-					 transition(edgeName="t06",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_stepPerhapsDone"))   
-					transition(edgeName="t07",targetState="stepFail",cond=whenDispatch("obstacle"))
 				}	 
 			}
 		}
