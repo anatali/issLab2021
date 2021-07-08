@@ -223,11 +223,14 @@ selects the proper support for the robot-type specified in a robot-configuration
 <h3>The basicrobot project</h3>
 
 
-<center><img src="./img/basicrobotproject.png" alt="basicrobotproject" width="100%" ></center>
+<center><img src="./img/basicrobotComponent.png" alt="basicrobotComponent" width="80%" ></center>
+ 
+<hr/>
  
  
 </td>
-<td> The <a href="../../it.unibo.qak21.basicrobot/src/basicrobot.qak" target="code">basicrobot.qak</a> (in project <i>it.unibo.qak21.basicrobot</i>):
+<td> 
+The <a href="../../it.unibo.qak21.basicrobot/src/basicrobot.qak" target="code">basicrobot.qak</a> (in project <i>it.unibo.qak21.basicrobot</i>):
 <ul>
 <li>is able to execute basic move commands, by handling a <bc>dispatch</bc> (for the elementary commands <tt>w | s | ... </tt>)
 and a <bc>request</bc> (for the command <tt>step</tt>);<br/><br/></li>
@@ -296,6 +299,9 @@ Reply   stepfail   : stepfail(DURATION, CAUSE)
 </td>
 
 <td><h3 id="basicrobot">The configuration file</h3>
+
+<center><img src="./img/basicrobotproject.png" alt="basicrobotproject" width="60%" ></center>
+
 The configuration file <a href="../basicrobotConfig.json" target="code">basicrobotConfig.json</a> is written by the application designer:
 
 <m>
@@ -363,23 +369,7 @@ More details are given in the section <a href="#virtualrobot">The virtual robot<
 </li>
 <li>the support for a real robot <k>does not automatically terminate</k>  a <ks>w/s</ks> command.
 More details are given in the section <a href="#realrobots">The real robots</a>.</li>
-<!--
-<li>a robot-move for the virtualrobot can be executed in <k>synchronous</k> way (i.e. the caller waits for the end of the move that could be
-<i>true, false or notallowed</i>) or in
-<k>asynchronus</k> way (i.e. the caller will detected the effects of the move with proper 'observations').</li>
 
-<li>a robot-move for a real robot is executed by activating the motors in a proper way</li>
-<li>the default duration of the commands <ks>w / s</ks> is quite long, since their effective duration 
-is decided by the <a href="../src/basicrobot.qak" target="code">basicrobot</a> itself (by sending a <k>halt(h)</k> )
-or by the world (when the robot hits an obstacle).
-
-Therefore, the <ks>w / s</ks> commands for the virtualrobot are called  in asynchronous way.
-</li>
-<li>the commands <k>turnLeft   (l)</k> and <k>turnRight  (rs)</s> are executed in synchronous way, since we do not expect to hit obstacles</li>
- 
-<li>All the commands sent as a dispatch are executed in synchronous way. However, since no answer is returned
-the effects of the command are show.</li>
- -->
 </ul>
 
 <h4 obsstring>The <a href="../src/basicrobot.qak" target="code">basicrobot</a> as CoAP-observable resource</h4>
