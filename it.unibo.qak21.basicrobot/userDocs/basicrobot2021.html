@@ -589,7 +589,10 @@ it.unibo.qak21.basicrobot  <kc>//activate the robot</kc>
 <tbody>	
 <tr>
 <td style="width:50%" >
+<center><img src="./img/virtualrobotdocker.png" alt="virtualrobotdocker" width="80%" ></center>	
+
 <h3 id="deployvr">The virtual robot </h3>
+
 Project <a href="../../it.unibo.virtualRobot2020" target="code">it.unibo.virtualRobot2020</a>
 (updated in June 2021).<br/><br/>
 <m>
@@ -639,6 +642,8 @@ docker push natbodocker/virtualrobotdisi:2.0
 </ul>
 </td>
 <td>
+<center><img src="./img/basicrobotdocker.png" alt="basicrobotdocker" width="80%" ></center>
+
 <h3>The basic robot using the virtual robot </h3>
 Project <a href="../../it.unibo.qak21.basicrobot" target="code">it.unibo.qak21.basicrobot</a>: 
 <hr/>
@@ -666,6 +671,10 @@ docker push natbodocker/basicrobot21virtual:1.0
 </m></pre> 
 
 <h4>Prepare and run with docker-compose</h4>
+
+<center><img src="./img/basicvirtualrobotdocker.png" alt="basicvirtualrobotdocker" width="98%" ></center>	
+<br/> 
+
 The <a href="../DockerfileforpcVirtual " target="code">DockerfileforpcVirtual</a>  must reference to the virtual 
 robot running in the <k>wenv</k>:
 <pre><m>{"type":"virtual", "port":"8090", "ipvirtualrobot":<k>"wenv"</k>}</m></pre>
@@ -675,14 +684,22 @@ Use <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a>
  
 
 
-<h3>The webgui for the basicrobot</h3>
+ </tbody>
+</table>
+
+<h3>A webgui for the basicrobot</h3>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
 The project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: does introduce a WebGui application in Spring
 that connects with a basicrobot at the address specified by the user. <br/>
 
-<center><img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="40%"></center>
+<center><img src="./img/webguibasicrobot.png" alt="webguibasicrobot" width="90%"></center>
 
-
-<hr/>
+</td>
+<td>
 <ul>
 <li>The <a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a>  creates the image for
 the WebGui:
@@ -702,6 +719,7 @@ creates the virtual robot and the WebGui:
 </tr>
  </tbody>
 </table>
+
 <h3>Using the virtualrobot alone on a PC (address <tt>IPPC</tt>)</h3>
 <m>
 <ol>
