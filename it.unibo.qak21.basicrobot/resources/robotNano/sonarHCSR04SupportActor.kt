@@ -24,7 +24,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     override suspend fun actorBody(msg : ApplMessage){
- 		println("$tt $name | received  $msg "  )
+ 		//println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "sonarstart"){
 			println("$tt $name | STARTING")
 			try{
@@ -53,7 +53,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 							val event = MsgUtil.buildEvent( name,"sonarRobot",m1)
 							//emit( event )
 							emitLocalStreamEvent( event )		//not propagated to remote actors
-							println("$tt $name |  ${counter++}: $event "   )
+							//println("$tt $name |  ${counter++}: $event "   )
 						}
 					}catch(e: Exception){}
 				}
