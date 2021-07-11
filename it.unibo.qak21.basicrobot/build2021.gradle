@@ -107,7 +107,7 @@ eclipse {
     }	
  }
  
-mainClassName = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
+mainClassName ='it.unibo.ctxbasicrobot.MainCtxbasicrobotKt' //'robotNano.SonarHCSR04SupportActorKt'  
 
 jar {
     println("building jar")

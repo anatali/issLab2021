@@ -12,7 +12,7 @@ Reply   stepdone   : stepdone(V)
 Reply   stepfail   : stepfail(DURATION, CAUSE)
  
 Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
-Context ctxbasicrobot ip [host="192.168.1.7" port=8020]    
+Context ctxbasicrobot ip [host="192.168.1.9" port=8020]    
 
 ExternalQActor basicrobot context ctxbasicrobot   
 /* 

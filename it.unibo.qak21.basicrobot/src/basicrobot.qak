@@ -43,9 +43,9 @@ QActor basicrobot context ctxbasicrobot{
  		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
         if[# RobotType != "virtual" #]{
-		// 	delay 1000  //give to the realsonar the time to start
 	 		println("basicrobot | type=$RobotType attempts to activate the sonar pipe")	
 	 		[#  //For real robots
+			    //delay( 1500 ) //give to the realsonar the time to start
 	 			var robotsonar = context!!.hasActor("realsonar")  
 	 			if( robotsonar != null ){ 
 	 				println("basicrobot | WORKING WITH SONARS") 
@@ -60,8 +60,8 @@ QActor basicrobot context ctxbasicrobot{
 	 				println("basicrobot | WARNING: realsonar NOT FOUND")
 	 			}
 	 		#]  
- 		}//if
- 		else{ 
+ 		} 
+ 		else{ //virtual
  			[#  var robotsonar = context!!.hasActor("robotsonar") 
 	 			if( robotsonar != null ){ 
 	 				println("basicrobot | WORKING WITH VIRTUAL SONAR") 

@@ -31,6 +31,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						if(  RobotType != "virtual"  
 						 ){println("basicrobot | type=$RobotType attempts to activate the sonar pipe")
 						  //For real robots
+									    //delay( 1500 ) //give to the realsonar the time to start
 							 			var robotsonar = context!!.hasActor("realsonar")  
 							 			if( robotsonar != null ){ 
 							 				println("basicrobot | WORKING WITH SONARS") 

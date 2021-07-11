@@ -18,8 +18,8 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	lateinit var reader : BufferedReader
 	 
 	init{
-		println("$tt $name | CREATING")
-		scope.launch{ autoMsg("sonarstart","go") }
+		println("$tt $name | CREATING without starting")
+		//forward("sonarstart", "sonarstart(1)" ,"realsonar" ) -- sent by basicrobot		 
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,7 +44,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 		GlobalScope.launch{	//to allow message handling
 		while( true ){
 				var data = reader.readLine()
-				//println("sonarHCSR04Support data = $data"   )
+				//println("sonarHCSR04SupportActor data = $data"   )
 				if( data != null ){
 					try{
 						val v = data.toInt()

@@ -84,10 +84,10 @@ object robotSupport{
 			} 
  			"realnano"   ->  {
  				robotNano.nanoSupport.create( owner )
- 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")
+ 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar")
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  
-  				println("		--- robotSupport | has created the realsonar")
+  				println("		--- robotSupport | has created the realsonar for nano")
 			}
  			else -> println( "		--- robotSupport | robot $robotKind unknown" )
  		}

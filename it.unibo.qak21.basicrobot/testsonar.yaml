@@ -1,0 +1,13 @@
+version: '3'
+services:
+  sonar:
+    image: docker.io/natbodocker/testsonararm:1.0
+    ports:
+      - 8020:8020/tcp
+      - 8020:8020/udp
+    privileged: true
+
+## docker-compose -f testsonar.yaml run --service-ports sonar /bin/bash  
+## docker cp it.unibo.qak21.basicrobot-1.0.jar 85804d3b7ef9:/it.unibo.qak21.basicrobot-1.0/lib/it.unibo.qak21.basicrobot-1.0.jar
+## docker cp cronoLinux.c 85804d3b7ef9:/it.unibo.qak21.basicrobot-1.0/bin/cronoLinux.c
+
