@@ -70,7 +70,7 @@ class TestPlan0 {
 	
 	
   
-	//@Test
+	@Test
 	fun testl(){
  		println("test1 ........................")
 		//Send a command and look at the result
@@ -103,7 +103,7 @@ class TestPlan0 {
 		assertEquals( result, "moveactivated(r)")
 	}
 	
-	@Test
+	//@Test
 	fun testpNoobstacle(){
  		println("testp ........................")
 		//Send a command and look at the result
