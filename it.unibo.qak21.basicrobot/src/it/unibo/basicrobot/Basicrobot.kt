@@ -100,8 +100,9 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
 						if(  CurrentMove == "w"  
-						 ){unibo.robot.robotSupport.move( "s"  )
-						delay(100) 
+						 ){ CurrentMove = "s"  
+						unibo.robot.robotSupport.move( "s"  )
+						 CurrentMove = "h"  
 						unibo.robot.robotSupport.move( "h"  )
 						}
 					}

@@ -16,6 +16,7 @@ import it.unibo.kactor.ActorBasic
 import it.unibo.kactor.MsgUtil
 import org.junit.AfterClass
 import it.unibo.kactor.sysUtil
+import it.unibo.kactor.ApplMessage
  
  
 class TestPlan0 {
@@ -142,31 +143,51 @@ class TestPlan0 {
 	}
 	
 	
+	fun sendAndObserve( obschannel: Channel<String>, move: ApplMessage ) : String{
+ 		var result  = ""		
+		runBlocking{ 
+			MsgUtil.sendMsg(move, myactor!!)
+			//WE OBSERVE AFTER  THAT THE COMMAND IS SENT (in asynch way ...)
+			result = obschannel.receive()
+			println("+++++++++  sendAndObserve RESULT=$result")			
+		}
+		return result
+	}
+	@Test
 	fun goAheadUntilObstacle(){
+		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
 		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
 		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
 		//the command w has the duration of 1000 msec
-		var result  = ""
+		val obsanswer = Channel<String>()
+		CoapObserverForTesting.addObserver("obsgoahead","basicrobot",obsanswer )
+		var result  = sendAndObserve(obsanswer,cmdw)
+		//Observing moveactivated(w) is of poor interest.
+		while( ! result.contains("obstacle")   ){
+			result  = sendAndObserve(obsanswer,cmdw)
+		}
+		assertEquals( result, "obstacle(w)")
+		//println("+++++++++  NOW RESULT=$result")
+		/*
 		runBlocking{ 
 			val obsanswer = Channel<String>()
 			CoapObserverForTesting.addObserver("obsgoahead","basicrobot",obsanswer )
 			MsgUtil.sendMsg(cmdw, myactor!!)
 			result = obsanswer.receive()
+			println("+++++++++  goAhead RESULT=$result")			
 			while( ! result.contains("obstacle")   ){
-				println("+++++++++  goAhead RESULT=$result")			
 				delay(1500)
 				MsgUtil.sendMsg(cmdw, myactor!!)
 				result = obsanswer.receive()
+				println("+++++++++  goAhead RESULT=$result")			
 			}
+			result = obsanswer.receive()
+			println("+++++++++  goAhead AFTER OBSTACLE RESULT=$result")			
 			CoapObserverForTesting.removeObserver()
 			//assertEquals( result, "obstacle(unkknown)")
-		}		
+		}	*/	
 	}
 	
-	@Test
-	fun testAlongWall(){
-		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
-		goAheadUntilObstacle()
-	}
+ 
 		
 }

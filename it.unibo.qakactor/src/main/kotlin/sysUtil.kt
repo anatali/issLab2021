@@ -295,6 +295,7 @@ object sysUtil{
 				val input = BufferedReader(InputStreamReader(System.`in`))
 				val startTime = System.currentTimeMillis()
 				while (System.currentTimeMillis() - startTime < tout && !input.ready() ) { }
+				println("")
   			} catch (e: java.lang.Exception) {
 				e.printStackTrace()
 			}
