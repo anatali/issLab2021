@@ -37,13 +37,13 @@ object virtualrobotSupport2021 {
 		println("virtualrobotSupport2021 | init ... ")
 		IssWsHttpKotlinSupport.trace = false
 	}
-	
+/*	
 val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
      fun(scope, support ) {
 		val obs  = WsSupportObserver("wsSupportObs", scope, owner)
         println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the IssWsHttpKotlinSupport")
 		support.registerActor( obs )
-}
+}*/
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,10 +58,10 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
             	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
 				support21ws  = IssWsHttpKotlinSupport.createForWs(owner.scope, "$hostNameStr:8091" )
             	println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
-				support21ws.wsconnect( doafterConn )  //
-				 
-				//support21ws.sendWs(MsgRobotUtil.turnLeftMsg)
-				  
+				//support21ws.wsconnect( doafterConn )  //ALREADY DONE BY createForWs
+            	val obs  = WsSupportObserver("wsSupportObs", owner.scope, owner)
+              	support21ws.registerActor( obs )				 
+				//support21ws.sendWs(MsgRobotUtil.turnLeftMsg)				  
 				//support21ws.forward(MsgRobotUtil.turnRightMsg)
 				//ACTIVATE the robotsonar as the beginning of a pipe
 				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)

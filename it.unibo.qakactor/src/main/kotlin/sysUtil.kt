@@ -1,13 +1,18 @@
 package it.unibo.kactor
-import alice.tuprolog.*
+import alice.tuprolog.Prolog
+import alice.tuprolog.Struct
+import alice.tuprolog.Term
+import alice.tuprolog.Theory
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.newSingleThreadContext
-import java.io.FileInputStream
-import java.lang.reflect.Constructor
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
+
 
 /*
 ECLIPSE KOTLIN
@@ -284,4 +289,14 @@ object sysUtil{
 		if( logMsgs ) File("$userDirectory/$dir/$fname").appendText("${msg}\n")
 	}
 
+	fun waitUser(prompt: String, tout: Long = 2000   ) {
+			try {
+				print(">>>  $prompt (tout=$tout) >>>  ")
+				val input = BufferedReader(InputStreamReader(System.`in`))
+				val startTime = System.currentTimeMillis()
+				while (System.currentTimeMillis() - startTime < tout && !input.ready() ) { }
+  			} catch (e: java.lang.Exception) {
+				e.printStackTrace()
+			}
+	}
 }//sysUtil

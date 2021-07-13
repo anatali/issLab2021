@@ -86,6 +86,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						if( checkMsgContent( Term.createTerm("cmd(MOVE)"), Term.createTerm("cmd(MOVE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								unibo.robot.robotSupport.move( "${payloadArg(0)}"  )
+								 CurrentMove =  "${payloadArg(0)}"  
 								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)
 						}
@@ -95,6 +96,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("handleObstacle") { //this:State
 					action { //it:State
 						unibo.robot.robotSupport.move( "h"  )
+						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee $CurrentMove")
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
 						if(  CurrentMove == "w"  

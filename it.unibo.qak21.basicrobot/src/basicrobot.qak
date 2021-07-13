@@ -99,14 +99,15 @@ QActor basicrobot context ctxbasicrobot{
 		onMsg( cmd : cmd(MOVE) ){
   			//activate the motors  
 			run unibo.robot.robotSupport.move( "${payloadArg(0)}" )
+			[# CurrentMove =  "${payloadArg(0)}" #] 
 			updateResource [# "moveactivated(${payloadArg(0)})" #]
 		}
 	 }
 	 Goto work  
 	 
 	State handleObstacle{
-		//println("basicrobot | handleObstacle")	
 		run unibo.robot.robotSupport.move( "h" )
+		println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee $CurrentMove")	
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
 		if[# CurrentMove == "w" #]{

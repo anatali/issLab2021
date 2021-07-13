@@ -15,10 +15,6 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
 
     lateinit var myactor : ActorBasic
     init{
-        //println("TimerActor CREATED ${ev} time=$tout")
-        //this.context = ctx
-        //scope.launch{ autoMsg("start", "start") }
-
         //Refactored July 2021, in order to avoid the usage of delay(tout)
         var ownerName = ev.replace("local_tout_","")
         ownerName     =  ownerName.substringBefore("_") // .replace("_doStep","")
@@ -44,9 +40,9 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
                 myactor.actor.send(msgEv)
             }
             //MsgUtil.sendMsg("timer",ev,ev,"basicrobot", null)
-            println("TimerActor $name has EMITTED :${ev} ")
+            //println("TimerActor $name has EMITTED :${ev} ")
         }else{
-            println("TimerActor $name ENDS without emitting since terminated after: $Duration")
+            //println("TimerActor $name ENDS without emitting since terminated after: $Duration")
         }
     }
 
@@ -88,7 +84,7 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
     }
     fun endTimer(){
         Duration = System.currentTimeMillis() - starttime
-        println("TimerActor $name TERMINATED duration=$Duration")
+        //println("TimerActor $name TERMINATED duration=$Duration")
         terminated = true;
     }
 
