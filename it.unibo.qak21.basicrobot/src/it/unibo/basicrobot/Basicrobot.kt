@@ -102,6 +102,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						if(  CurrentMove == "w"  
 						 ){ CurrentMove = "s"  
 						unibo.robot.robotSupport.move( "s"  )
+						delay(100) 
 						 CurrentMove = "h"  
 						unibo.robot.robotSupport.move( "h"  )
 						}
