@@ -61,7 +61,7 @@ class IssWsHttpKotlinSupport
         }
 
         fun createForHttp(scope: CoroutineScope, addr: String) : IssWsHttpKotlinSupport{
-            colorPrint("IssWsHttpKotlinSupport | wsconnect createForHttp:  ", Color.BLUE)
+            colorPrint("IssWsHttpKotlinSupport |  createForHttp:  ", Color.BLUE)
             if( ! activeAconnsHttp.containsKey(addr)) {
                 activeAconnsHttp.put(addr, IssWsHttpKotlinSupport(scope, addr, false))
             }
@@ -166,7 +166,7 @@ class IssWsHttpKotlinSupport
     fun sendHttp(msgJson : String, httpaddr : String) : String {
         try {
             val body = msgJson.toRequestBody(JSON_MediaType)
-            colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson to $httpaddr ")
+            //colorPrint("IssWsHttpKotlinSupport | sendHttp msgJson=$msgJson to $httpaddr ")
             val request = Request.Builder()
                 .url("http://$httpaddr")
                 .post(body)
