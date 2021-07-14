@@ -196,6 +196,19 @@ div.imagedesc{
 <h1>LabIss2021 | basic generic robot <font size="5"></font> </h1>
 </div>  
 
+ 
+<ol>
+<li><a href="#intro">Introduction to the basicrobot project</a></li>
+<li><a href="#testing">The testing</a></li>
+<li><a href="#lowlevel">The low-level supports</a></li>
+
+<li><a href="#deployvirtual">Deployment for the virtual robot</a></li>
+<li><a href="#deployreal">Deployment for the real robot</a></li>
+<li><a href="#webgui">A webgui for the basicrobot</a></li>
+<li><a href="#console">Using a command console</a></li>
+
+
+</ol>
 <!--
 <hr/> 
  <a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.qak21.basicrobot/userDocs/basicrobot2021.html" target="web">
@@ -206,7 +219,7 @@ LabIss2021 | basic generic robot: Using the basicrobot that uses the virtualrobo
 <hr/> 
 -->
 
-<h2>Introduction</h2>
+<h2 id="intro">Introduction to the basicrobot project</h2>
 We introduce here a component that executes robot-move commands in a <ks>'technology-independent way'</ks>, with respect
 to the nature of the robot (virtual or real).<br/>
 This goal is achieved by introducing a set of different low-level supports, and a proper <i>configuration phase</i> that
@@ -394,6 +407,21 @@ An observer: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.k
  </tbody>
 </table>
 
+<h2 id="testing">The testing</h2>
+The definition of a Testing unit is useful not only for debugging puroposes, but also for a better understanding of the behaviour.
+
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:50%" ><h3 id="robotSupport">Supports for the robot types</h3>
+</td>
+<td>
+</td>
+</tr>
+ </tbody>
+</table>
+
 <h2 id="lowlevel">The low-level supports </h2>
 
 <table style="width:98%">
@@ -448,7 +476,7 @@ defines a robot-command console and supports for interaction with the
 <a href="../src/basicrobot.qak" target="code">basicrobot.qak</a>
  via <tt>TCP, HTTP, MQTT and Coap</tt>.
 
-<h3 id="console">A command-console</h3>
+<h3 id="cmdconsole">A command-console</h3>
 <a href="../../it.unibo.qak21.robots/resources/consoles/consoleGuiSimple.kt" target="code"><bc>consoleGuiSimple.kt</bc></a>
 <center><img src="./img/consoleCoap.png" alt="consoleCoap" width="30%" ></center>	
  
@@ -574,7 +602,9 @@ it.unibo.qak21.basicrobot  <kc>//activate the robot</kc>
  </tbody>
 </table>
 
-<h2 id="deploy">Deployment for the virtual robot</h2>
+
+
+<h2 id="deployvirtual">Deployment for the virtual robot</h2>
 
  
 
@@ -680,38 +710,6 @@ Use <a href="../basicrobotVirtual.yaml" target="code">basicrobotVirtual.yaml</a>
  </tbody>
 </table>
 
-<h3>A webgui for the basicrobot</h3>
-
-<table style="width:98%">
-<tbody>	
-<tr>
-<td style="width:50%" >
-The project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: does introduce a WebGui application in Spring
-that connects with a basicrobot at the address specified by the user. <br/>
-
-<center><img src="./img/webguibasicrobot.PNG" alt="webguibasicrobot" width="90%"></center>
-
-</td>
-<td>
-<ul>
-<li>The <a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a>  creates the image for
-the WebGui:
- <pre><m>gradlew build
-docker build -f Dockerfileforpc -t webbasicrobotqakforpc:1.1 .
-
-docker tag webbasicrobotqakforpc:1.1 natbodocker/webbasicrobotqakforpc:1.1
-docker push natbodocker/webbasicrobotqakforpc:1.1
-</m></pre></li>
-<li>The  <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
-creates the virtual robot and the WebGui:
-<pre><m>docker-compose -f webbasicrobotqakonpc.yaml up 
-</m></pre></li>
-
-</ul>
-</td>
-</tr>
- </tbody>
-</table>
 
 <h3>Using the virtualrobot alone on a PC (address <tt>IPPC</tt>)</h3>
 <m>
@@ -756,7 +754,7 @@ and look at the <ks>INFO FROM RESOURCE</ks> section of the WebGui.
 </li></ol>
 </m>
 
-<h2 id="deploy">Deployment for the real robot</h2>
+<h2 id="deployreal">Deployment for the real robot</h2>
  
 <table style="width:98%">
 <tbody>	
@@ -926,7 +924,43 @@ docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin
 <li><a href="#robotusage">Use a command console</a></li>
 </ol> 
 </m>
-<h2>Using a command console</h2>
+
+
+<h2 id="webgui">A webgui for the basicrobot</h2>
+
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+The project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: does introduce a WebGui application in Spring
+that connects with a basicrobot at the address specified by the user. <br/>
+
+<center><img src="./img/webguibasicrobot.PNG" alt="webguibasicrobot" width="90%"></center>
+
+</td>
+<td>
+<ul>
+<li>The <a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a>  creates the image for
+the WebGui:
+ <pre><m>gradlew build
+docker build -f Dockerfileforpc -t webbasicrobotqakforpc:1.1 .
+
+docker tag webbasicrobotqakforpc:1.1 natbodocker/webbasicrobotqakforpc:1.1
+docker push natbodocker/webbasicrobotqakforpc:1.1
+</m></pre></li>
+<li>The  <a href="../../webBasicrobotqak/webbasicrobotqakonpc.yaml" target="code">webbasicrobotqakonpc.yaml</a> 
+creates the virtual robot and the WebGui:
+<pre><m>docker-compose -f webbasicrobotqakonpc.yaml up 
+</m></pre></li>
+
+</ul>
+</td>
+</tr>
+ </tbody>
+</table>
+
+
+<h2 id="console">Using a command console</h2>
 <table style="width:98%">
 <tbody>	
 <tr>

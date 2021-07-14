@@ -41,9 +41,8 @@ class TestPlan0 {
 					println("+++++++++ waiting for system startup ...")
 					delay(500)
 					myactor=QakContext.getActor("basicrobot")
-				}
-				
-				delay(3000)	//Give time to move
+				}				
+				delay(3000)	//Give time to move lr
 				channel.send("starttesting")
 			}
 		 
@@ -133,7 +132,8 @@ class TestPlan0 {
 		var result  = ""
 		runBlocking{
 			val obsanswer = Channel<String>()
-			CoapObserverForTesting.addObserver("obsfortesting","basicrobot",obsanswer,"obstacle")
+			//WARNING: the virtual robot emits obstacle(unkknown)
+			CoapObserverForTesting.addObserver("obsfortesting","basicrobot",obsanswer,"obstacle(w)")
 			MsgUtil.sendMsg(request, myactor!!)
 			result = obsanswer.receive()
 			println("+++++++++  testpWithobstacle RESULT=$result")
@@ -145,28 +145,44 @@ class TestPlan0 {
 	
 	fun sendAndObserve( obschannel: Channel<String>, move: ApplMessage ) : String{
  		var result  = ""		
-		runBlocking{ 
-			MsgUtil.sendMsg(move, myactor!!)
+		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
+		runBlocking{
+			delay(500) //Give time to the observer to begin ...
+ 			MsgUtil.sendMsg(move, myactor!!)
 			//WE OBSERVE AFTER  THAT THE COMMAND IS SENT (in asynch way ...)
 			result = obschannel.receive()
-			println("+++++++++  sendAndObserve RESULT=$result")			
+			println("+++++++++  sendAndObserve RESULT=$result for move=$move")			
+		    //The command w has the duration of 1000 msec
+			//Observing moveactivated(w) BEFORE 1000 msec is misleading ...
+		    if( ! result.contains("obstacle(w)") &&
+				  move.msgContent() == "cmd(w)" || move.msgContent() == "cmd(s)" ){
+				 delay(1100)
+			} 
+		    MsgUtil.sendMsg(cmdh, myactor!!)	//otherwise the virtualrobot does not execute next		
+			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
 		}
 		return result
 	}
-	@Test
-	fun goAheadUntilObstacle(){
+	 
+	fun goAheadUntilObstacle()  { 
 		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
 		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
 		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
-		//the command w has the duration of 1000 msec
 		val obsanswer = Channel<String>()
-		CoapObserverForTesting.addObserver("obsgoahead","basicrobot",obsanswer )
+		CoapObserverForTesting.addObserver("obshead","basicrobot",obsanswer,"obstacle(w)" )
+		 
 		var result  = sendAndObserve(obsanswer,cmdw)
-		//Observing moveactivated(w) is of poor interest.
-		if( ! result.contains("obstacle")   ){
+ 		println("1111111111111111111111111111111111111111111111111 $result")
+ 		if(  ! result.contains("obstacle(w)")   ){ 
+			//sysUtil.waitUser("next step ...", 60000)
 			result  = sendAndObserve(obsanswer,cmdw)
-		}
-		//assertEquals( result, "obstacle(w)")
+			//result = goAheadUntilObstacle()
+ 		} //else{		
+			println("ooooooooooooooooooooooooo ${result.contains("obstacle")}")
+			assertEquals( result, "obstacle(w)")
+			
+	 
+		//return result
 		//println("+++++++++  NOW RESULT=$result")
 		/*
 		runBlocking{ 
@@ -188,6 +204,9 @@ class TestPlan0 {
 		}	*/	
 	}
 	
- 
+ @Test
+ fun untilObstacle(){
+	  goAheadUntilObstacle()
+ }
 		
 }

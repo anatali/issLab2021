@@ -58,9 +58,9 @@ abstract class  ActorBasic(  name:         String,
     
     init{                                   //Coap Jan2020
  		createMsglogFile()					//APR2020 : an Actor could have no context
-        isObservable = true
-        logo    = "       ActorBasic(Resource) $name "
-        ActorResourceRep = "$logo | created  " 		
+        isObservable     = true
+        logo             = "       ActorBasic(Resource) $name "
+        ActorResourceRep = "$logo | created  "
     }
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi

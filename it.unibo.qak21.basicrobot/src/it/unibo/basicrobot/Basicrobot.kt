@@ -62,8 +62,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 	 			}
 						 
 						 }
-						updateResourceRep( "basicrobot(start)"  
-						)
+						unibo.robot.robotSupport.move( "h"  )
 						delay(1000) 
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )
@@ -87,8 +86,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								unibo.robot.robotSupport.move( "${payloadArg(0)}"  )
 								 CurrentMove =  "${payloadArg(0)}"  
-								updateResourceRep( "moveactivated(${payloadArg(0)})"  
-								)
 						}
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
@@ -97,13 +94,17 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						unibo.robot.robotSupport.move( "h"  )
 						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee $CurrentMove")
-						updateResourceRep( "obstacle(${CurrentMove})"  
-						)
+						if( checkMsgContent( Term.createTerm("obstacle(ARG)"), Term.createTerm("obstacle(T)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+									val TargetObs = payloadArg(0)  	 
+								if(  TargetObs == "w"  
+								 ){updateResourceRep( "obstacle(${CurrentMove})"  
+								)
+								}
+						}
 						if(  CurrentMove == "w"  
-						 ){ CurrentMove = "s"  
-						unibo.robot.robotSupport.move( "s"  )
+						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
-						 CurrentMove = "h"  
 						unibo.robot.robotSupport.move( "h"  )
 						}
 					}
