@@ -21,7 +21,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		  var StartTime     = 0L     
 		  var Duration      = 0L  
 		  var RobotType     = "" 
-		  var CurrentMove   = "unkknown"
+		  var CurrentMove   = "moveUnknown"
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -86,26 +86,31 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								unibo.robot.robotSupport.move( "${payloadArg(0)}"  )
 								 CurrentMove =  "${payloadArg(0)}"  
+								if(  CurrentMove != "h"  
+								 ){updateResourceRep( "moveactivated($CurrentMove)"  
+								)
+								}
 						}
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
+						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")
+						println("$name in ${currentState.stateName} | $currentMsg")
+						if(  CurrentMove == "w"  
+						 ){unibo.robot.robotSupport.move( "h"  )
+						unibo.robot.robotSupport.move( "s"  )
+						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
-						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee $CurrentMove")
 						if( checkMsgContent( Term.createTerm("obstacle(ARG)"), Term.createTerm("obstacle(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 									val TargetObs = payloadArg(0)  	 
-								if(  TargetObs == "w"  
-								 ){updateResourceRep( "obstacle(${CurrentMove})"  
+								if(  TargetObs == "5"  
+								 ){updateResourceRep( "obstacle(w)"  
 								)
 								}
 						}
-						if(  CurrentMove == "w"  
-						 ){unibo.robot.robotSupport.move( "s"  )
-						delay(100) 
-						unibo.robot.robotSupport.move( "h"  )
 						}
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )

@@ -36,7 +36,7 @@ QActor basicrobot context ctxbasicrobot{
   var StartTime     = 0L     
   var Duration      = 0L  
   var RobotType     = "" 
-  var CurrentMove   = "unkknown"
+  var CurrentMove   = "moveUnknown"
 #]  
  	State s0 initial { 	      
  		println("basicrobot | START")	
@@ -101,31 +101,33 @@ QActor basicrobot context ctxbasicrobot{
   			//activate the motors  
 			run unibo.robot.robotSupport.move( "${payloadArg(0)}" )
 			[# CurrentMove =  "${payloadArg(0)}" #] 
-			//if [# CurrentMove != "h" #] { updateResource [# "moveactivated($CurrentMove)" #] }
+			if [# CurrentMove != "h" #] { updateResource [# "moveactivated($CurrentMove)" #] }
 		}
 	 }
 	 Goto work  
 	 
-	State handleObstacle{
-		run unibo.robot.robotSupport.move( "h" )
-		println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee $CurrentMove")	
-		//printCurrentMessage
-		onMsg( obstacle : obstacle( T ) ){ 
-			[#	val TargetObs = payloadArg(0)  	#]
-			if[# TargetObs == "w" #]{
-				updateResource [# "obstacle(${CurrentMove})" #]
-			}
-		}
-		
+	State handleObstacle{ 
+		println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")	
+		printCurrentMessage
+			//msg(obstacle,dispatch,distancefilter,basicrobot,obstacle(5),18)
 		if[# CurrentMove == "w" #]{
-			//back to avoid emission of obstacle again if real robot moving forward !!!
-			//if[# RobotType != "virtual" #]{	//is it better to embed this behavior in the support?
-			//[# CurrentMove = "s" #]
+		    run unibo.robot.robotSupport.move( "h" )
 			run unibo.robot.robotSupport.move( "s" ) 
-			delay 100 
-			//[# CurrentMove = "h" #]
+			delay 100 //loose the control ...
 			run unibo.robot.robotSupport.move( "h" ) 
- 		}
+			/*
+			 * collision Json      : emitted by the virtualrobot 
+			 * obstacle(virtual)   : emitted by the virtualrobotSupport2021 when endmove=false
+			 * obstacle(5)         : emitted by the distanceFilter
+			 * obstacle(w)         : emitted by the basicrobot
+			 */
+			onMsg( obstacle : obstacle( T ) ){ 
+				[#	val TargetObs = payloadArg(0)  	#]
+				if[# TargetObs == "5" #]{
+					updateResource [# "obstacle(w)" #]
+				}
+			}
+		}  
  		
 	}
 	Goto work 

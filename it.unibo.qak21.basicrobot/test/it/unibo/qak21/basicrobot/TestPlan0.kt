@@ -17,6 +17,7 @@ import it.unibo.kactor.MsgUtil
 import org.junit.AfterClass
 import it.unibo.kactor.sysUtil
 import it.unibo.kactor.ApplMessage
+import org.junit.After
  
  
 class TestPlan0 {
@@ -24,7 +25,8 @@ class TestPlan0 {
 	companion object{
 		val channel               = Channel<String>()
 		var systemStarted         = false
-		var myactor : ActorBasic? = null
+		var myactor   : ActorBasic? = null
+		var obsanswer : Channel<String>? = null
 
 		@JvmStatic
         @BeforeClass
@@ -51,7 +53,7 @@ class TestPlan0 {
 	@JvmStatic
     @AfterClass
 	fun terminate() {
-		println("terminate")
+		println("terminate the testing")
 	}
 		
 	}//object
@@ -65,7 +67,17 @@ class TestPlan0 {
 			    println("+++++++++ checkSystemStarted resumed ")
 			}			
 		}
+		runBlocking{
+			println("+++++++++ BEFOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+			obsanswer = Channel<String>()
+  		}		
  	}
+	
+	@After
+	fun removeObs(){
+		println("+++++++++ AFTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+		CoapObserverForTesting.removeObserver()		
+	}
 	
 	
   
@@ -75,12 +87,11 @@ class TestPlan0 {
 		//Send a command and look at the result
 		var result  = ""
 		runBlocking{
-			val obsanswer = Channel<String>()
-			CoapObserverForTesting.addObserver("obsr", "basicrobot",obsanswer,"moveactivated")
+			//val obsanswer = Channel<String>()
+			CoapObserverForTesting.addObserver("obsr", "basicrobot",obsanswer!!,"moveactivated")
 			MsgUtil.sendMsg("cmd","cmd(l)",myactor!!)
-			result = obsanswer.receive()
+			result = obsanswer!!.receive()
 			println("+++++++++ testl RESULT=$result")
-			CoapObserverForTesting.removeObserver()
 		}
 		assertEquals( result, "moveactivated(l)")
 	}
@@ -101,6 +112,53 @@ class TestPlan0 {
 		}
 		assertEquals( result, "moveactivated(r)")
 	}
+	
+	
+	
+	fun sendAndObserve( obschannel: Channel<String>, move: ApplMessage ) : String{
+ 		var result  = ""		
+		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
+		runBlocking{
+			//delay(500) //Give time to the observer to begin ...
+ 			MsgUtil.sendMsg(move, myactor!!)
+			//WE OBSERVE AFTER  THAT THE COMMAND IS SENT (in asynch way ...)
+			result = obschannel.receive()
+			println("+++++++++  sendAndObserve RESULT=$result for move=$move")			
+		    //The command w has the duration of 1000 msec
+			//Observing moveactivated(w) BEFORE 1000 msec is misleading ...
+		    if( ! result.contains("obstacle(w)") &&
+				  move.msgContent() == "cmd(w)" || move.msgContent() == "cmd(s)" ){
+				 delay(1500)
+			} 
+		    MsgUtil.sendMsg(cmdh, myactor!!)	//otherwise the virtualrobot does not execute next		
+			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
+		}
+		return result
+	}
+	
+	@Test
+	fun goAheadUntilObstacle()  { 
+		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
+		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
+		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
+		//val obsanswer = Channel<String>()
+		CoapObserverForTesting.addObserver("obstest","basicrobot",obsanswer!!,"obstacle(w)" )
+		 
+		var result  = sendAndObserve(obsanswer!!,cmdw)
+ 		//println("1111111111111111111111111111111111111111111111111 $result")
+ 		while(  result.contains("no")   ){ 
+			//sysUtil.waitUser("next step ...", 60000)
+			result  = sendAndObserve(obsanswer!!,cmdw)
+            println("2222222222222222222222222222222222222222222222 $result")
+ 		}  
+		//println("ooooooooooooooooooooooooo ${result.contains("obstacle")}")
+		CoapObserverForTesting.removeObserver()
+		assertEquals( result, "obstacle(w)")
+	}
+	
+ 
+
+	
 	
 	//@Test
 	fun testpNoobstacle(){
@@ -141,72 +199,5 @@ class TestPlan0 {
 		}
 		assertEquals( result, "obstacle(unkknown)")
 	}
-	
-	
-	fun sendAndObserve( obschannel: Channel<String>, move: ApplMessage ) : String{
- 		var result  = ""		
-		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
-		runBlocking{
-			delay(500) //Give time to the observer to begin ...
- 			MsgUtil.sendMsg(move, myactor!!)
-			//WE OBSERVE AFTER  THAT THE COMMAND IS SENT (in asynch way ...)
-			result = obschannel.receive()
-			println("+++++++++  sendAndObserve RESULT=$result for move=$move")			
-		    //The command w has the duration of 1000 msec
-			//Observing moveactivated(w) BEFORE 1000 msec is misleading ...
-		    if( ! result.contains("obstacle(w)") &&
-				  move.msgContent() == "cmd(w)" || move.msgContent() == "cmd(s)" ){
-				 delay(1100)
-			} 
-		    MsgUtil.sendMsg(cmdh, myactor!!)	//otherwise the virtualrobot does not execute next		
-			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
-		}
-		return result
-	}
-	 
-	fun goAheadUntilObstacle()  { 
-		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
-		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
-		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
-		val obsanswer = Channel<String>()
-		CoapObserverForTesting.addObserver("obshead","basicrobot",obsanswer,"obstacle(w)" )
-		 
-		var result  = sendAndObserve(obsanswer,cmdw)
- 		println("1111111111111111111111111111111111111111111111111 $result")
- 		if(  ! result.contains("obstacle(w)")   ){ 
-			//sysUtil.waitUser("next step ...", 60000)
-			result  = sendAndObserve(obsanswer,cmdw)
-			//result = goAheadUntilObstacle()
- 		} //else{		
-			println("ooooooooooooooooooooooooo ${result.contains("obstacle")}")
-			assertEquals( result, "obstacle(w)")
 			
-	 
-		//return result
-		//println("+++++++++  NOW RESULT=$result")
-		/*
-		runBlocking{ 
-			val obsanswer = Channel<String>()
-			CoapObserverForTesting.addObserver("obsgoahead","basicrobot",obsanswer )
-			MsgUtil.sendMsg(cmdw, myactor!!)
-			result = obsanswer.receive()
-			println("+++++++++  goAhead RESULT=$result")			
-			while( ! result.contains("obstacle")   ){
-				delay(1500)
-				MsgUtil.sendMsg(cmdw, myactor!!)
-				result = obsanswer.receive()
-				println("+++++++++  goAhead RESULT=$result")			
-			}
-			result = obsanswer.receive()
-			println("+++++++++  goAhead AFTER OBSTACLE RESULT=$result")			
-			CoapObserverForTesting.removeObserver()
-			//assertEquals( result, "obstacle(unkknown)")
-		}	*/	
-	}
-	
- @Test
- fun untilObstacle(){
-	  goAheadUntilObstacle()
- }
-		
 }
