@@ -22,7 +22,6 @@ class CoapObserverForTesting(val name: String      = "obs",
        client.uri = uriStr	   
    }
 	
-   //fun addObserver(name: String, observed : String, channel : Channel<String>, expected:String?=null ){
    fun addObserver(  channel : Channel<String>, expected:String?=null ){
 	   /*
 	   val uriStr = "coap://localhost:8020/ctxbasicrobot/$observed"   

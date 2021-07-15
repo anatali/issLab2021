@@ -106,15 +106,16 @@ QActor basicrobot context ctxbasicrobot{
 	 }
 	 Goto work  
 	 
-	State handleObstacle{ 
+	State handleObstacle{   
+	    run unibo.robot.robotSupport.move( "h" )
 		println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")	
 		printCurrentMessage
 			//msg(obstacle,dispatch,distancefilter,basicrobot,obstacle(5),18)
 		if[# CurrentMove == "w" #]{
-		    run unibo.robot.robotSupport.move( "h" )
-			run unibo.robot.robotSupport.move( "s" ) 
+			  
+ 			run unibo.robot.robotSupport.move( "s" ) 
 			delay 100 //loose the control ...
-			run unibo.robot.robotSupport.move( "h" ) 
+			run unibo.robot.robotSupport.move( "h" ) 	 		    	
 			/*
 			 * collision Json      : emitted by the virtualrobot 
 			 * obstacle(virtual)   : emitted by the virtualrobotSupport2021 when endmove=false
@@ -126,12 +127,22 @@ QActor basicrobot context ctxbasicrobot{
 				if[# TargetObs == "5" #]{
 					updateResource [# "obstacle(w)" #]
 				}
-			}
-		}  
- 		
+			} 
+		}else{ //CurrentMove != "w"
+			updateResource [# "spurious" #]
+		}  		
 	}
 	Goto work 
  
+    State backstep{
+		    delay 1500 //give time to the tester to manage the update
+		    println("basicrobot | bakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")	
+			run unibo.robot.robotSupport.move( "s" ) 
+			delay 100 //loose the control ...
+			run unibo.robot.robotSupport.move( "h" ) 			    	
+    }
+    Goto work 
+    
 	State handleSonar{
 		printCurrentMessage
 	}

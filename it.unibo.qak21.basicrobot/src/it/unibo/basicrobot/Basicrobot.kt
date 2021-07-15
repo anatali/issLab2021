@@ -96,11 +96,11 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
+						unibo.robot.robotSupport.move( "h"  )
 						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if(  CurrentMove == "w"  
-						 ){unibo.robot.robotSupport.move( "h"  )
-						unibo.robot.robotSupport.move( "s"  )
+						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
 						if( checkMsgContent( Term.createTerm("obstacle(ARG)"), Term.createTerm("obstacle(T)"), 
@@ -112,6 +112,20 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 								}
 						}
 						}
+						else
+						 {updateResourceRep( "spurious"  
+						 )
+						 }
+					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
+				}	 
+				state("backstep") { //this:State
+					action { //it:State
+						delay(1500) 
+						println("basicrobot | bakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+						unibo.robot.robotSupport.move( "s"  )
+						delay(100) 
+						unibo.robot.robotSupport.move( "h"  )
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 

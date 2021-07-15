@@ -44,7 +44,7 @@ class TestPlan0 {
 					delay(500)
 					myactor=QakContext.getActor("basicrobot")
 				}				
-				//delay(2000)	//Give time to move lr
+				//delay(1000)	//Give time to move lr
 				channelSyncStart.send("starttesting")
 				testingObserver = CoapObserverForTesting()
 			}		 
@@ -71,16 +71,17 @@ class TestPlan0 {
 		runBlocking{
 			println("+++++++++ BEFOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 			channelForObserver = Channel<String>()
+			
   		}		
  	}
 	
 	@After
 	fun removeObs(){
 		println("+++++++++ AFTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
-		testingObserver!!.removeObserver()		
+		testingObserver!!.removeObserver()
 	}
    
-	@Test
+	//@Test
 	fun testrotationmoves(){
  		println("+++++++++ testrotationmoves ")
 		//Send a command and look at the result
@@ -120,7 +121,7 @@ class TestPlan0 {
 		return result
 	}
 	
-	//@Test
+	@Test
 	fun goAheadUntilObstacle()  { 
 		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
 		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
