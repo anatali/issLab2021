@@ -23,17 +23,17 @@ import org.junit.After
 class TestPlan0 {
 		
 	companion object{
-		val channel               = Channel<String>()
 		var systemStarted         = false
-		var myactor   : ActorBasic? = null
-		var obsanswer : Channel<String>? = null
+		val channelSyncStart      = Channel<String>()
+		var channelForObserver    : Channel<String>? = null
+		var testingObserver       : CoapObserverForTesting? = null
+		var myactor               : ActorBasic? = null
 
 		@JvmStatic
         @BeforeClass
 		//@Target([AnnotationTarget.FUNCTION]) annotation class BeforeClass
 		//@Throws(InterruptedException::class, UnknownHostException::class, IOException::class)
 		fun init() {
-			println("init")
 			GlobalScope.launch{
 				it.unibo.ctxbasicrobot.main() //keep the control
 			}
@@ -44,91 +44,75 @@ class TestPlan0 {
 					delay(500)
 					myactor=QakContext.getActor("basicrobot")
 				}				
-				delay(3000)	//Give time to move lr
-				channel.send("starttesting")
-			}
-		 
+				//delay(2000)	//Give time to move lr
+				channelSyncStart.send("starttesting")
+				testingObserver = CoapObserverForTesting()
+			}		 
 		}//init
 		
-	@JvmStatic
-    @AfterClass
-	fun terminate() {
-		println("terminate the testing")
-	}
+		@JvmStatic
+	    @AfterClass
+		fun terminate() {
+			println("terminate the testing")
+		}
 		
-	}//object
+	}//companion object
 	
 	@Before
 	fun checkSystemStarted()  {
+	    println("+++++++++ checkSystemStarted ... ")
 		if( ! systemStarted ) {
 			runBlocking{
-				channel.receive()
+				channelSyncStart.receive()
 				systemStarted = true
 			    println("+++++++++ checkSystemStarted resumed ")
 			}			
 		}
 		runBlocking{
 			println("+++++++++ BEFOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-			obsanswer = Channel<String>()
+			channelForObserver = Channel<String>()
   		}		
  	}
 	
 	@After
 	fun removeObs(){
 		println("+++++++++ AFTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
-		CoapObserverForTesting.removeObserver()		
+		testingObserver!!.removeObserver()		
 	}
-	
-	
-  
-	//@Test
-	fun testl(){
- 		println("+++++++++ testl ")
+   
+	@Test
+	fun testrotationmoves(){
+ 		println("+++++++++ testrotationmoves ")
 		//Send a command and look at the result
 		var result  = ""
 		runBlocking{
-			//val obsanswer = Channel<String>()
-			CoapObserverForTesting.addObserver("obsr", "basicrobot",obsanswer!!,"moveactivated")
+ 			testingObserver!!.addObserver( channelForObserver!!,"moveactivated")
+			
 			MsgUtil.sendMsg("cmd","cmd(l)",myactor!!)
-			result = obsanswer!!.receive()
-			println("+++++++++ testl RESULT=$result")
-		}
-		assertEquals( result, "moveactivated(l)")
-	}
-
-	//@Test
-	fun testr(){
- 		println("+++++++++  testr ")
-		//Send a command and look at the result
-		val cmd = MsgUtil.buildDispatch("tester", "cmd", "cmd(r)", "basicrobot")
-		var result  = ""
-		runBlocking{
-			val obsanswer = Channel<String>()
-			CoapObserverForTesting.addObserver("obsr", "basicrobot",obsanswer,"moveactivated")
+			result = channelForObserver!!.receive()
+			println("+++++++++ testrotationmoves l RESULT=$result")
+			assertEquals( result, "moveactivated(l)")
+			
+		    val cmd = MsgUtil.buildDispatch("tester", "cmd", "cmd(r)", "basicrobot")
 			MsgUtil.sendMsg(cmd, myactor!!)
-			result = obsanswer.receive()
-			println("+++++++++ testr RESULT=$result")
-			CoapObserverForTesting.removeObserver()
-		}
-		assertEquals( result, "moveactivated(r)")
+			result = channelForObserver!!.receive()
+			println("+++++++++ testrotationmoves r RESULT=$result")
+			assertEquals( result, "moveactivated(r)")			
+		}	
 	}
-	
-	
-	
+ 	
 	fun sendAndObserve( obschannel: Channel<String>, move: ApplMessage ) : String{
  		var result  = ""		
 		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
 		runBlocking{
-			//delay(500) //Give time to the observer to begin ...
  			MsgUtil.sendMsg(move, myactor!!)
-			//WE OBSERVE AFTER  THAT THE COMMAND IS SENT (in asynch way ...)
 			result = obschannel.receive()
 			println("+++++++++  sendAndObserve RESULT=$result for move=$move")			
 		    //The command w has the duration of 1000 msec
 			//Observing moveactivated(w) BEFORE 1000 msec is misleading ...
 		    if( ! result.contains("obstacle(w)") &&
-				  move.msgContent() == "cmd(w)" || move.msgContent() == "cmd(s)" ){
-				 delay(1500)
+				 move.msgContent() == "cmd(w)" || move.msgContent() == "cmd(s)" ){
+				 delay(1100)
 			} 
 		    MsgUtil.sendMsg(cmdh, myactor!!)	//otherwise the virtualrobot does not execute next		
 			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
@@ -136,68 +120,24 @@ class TestPlan0 {
 		return result
 	}
 	
-	@Test
+	//@Test
 	fun goAheadUntilObstacle()  { 
 		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
 		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
 		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
-		//val obsanswer = Channel<String>()
-		CoapObserverForTesting.addObserver("obstest","basicrobot",obsanswer!!,"obstacle(w)" )
+		testingObserver!!.addObserver( channelForObserver!!,"obstacle(w)" )
 		 
-		var result  = sendAndObserve(obsanswer!!,cmdw)
+		var result  = sendAndObserve(channelForObserver!!,cmdw)
  		//println("1111111111111111111111111111111111111111111111111 $result")
  		while(  result.contains("no")   ){ 
 			//sysUtil.waitUser("next step ...", 60000)
-			result  = sendAndObserve(obsanswer!!,cmdw)
+			result  = sendAndObserve(channelForObserver!!,cmdw)
             println("2222222222222222222222222222222222222222222222 $result")
  		}  
 		//println("ooooooooooooooooooooooooo ${result.contains("obstacle")}")
-		CoapObserverForTesting.removeObserver()
+		//testingObserver!!.removeObserver()
 		assertEquals( result, "obstacle(w)")
 	}
 	
- 
-
-	
-	
-	//@Test
-	fun testpNoobstacle(){
-		sysUtil.waitUser("PLEASE, put the robot at HOME" )  
- 		println(" +++++++++ testpNoobstacle")
-		//Send a command and look at the result
-		val request = MsgUtil.buildRequest("tester", "step", "step(500)", "basicrobot")
-		var result  = ""
-		runBlocking{
-			val obsanswer = Channel<String>()
-			CoapObserverForTesting.addObserver("obsfortesting","basicrobot",obsanswer,"stepDone")
-			MsgUtil.sendMsg(request, myactor!!)
-			result = obsanswer.receive()
-			println("+++++++++  testpNoobstacle RESULT=$result")
-			CoapObserverForTesting.removeObserver()
-		}
-		assertEquals( result, "stepDone(500)")
-	}
-	
-/*
- The usage of sysUtil.waitUser should be AVOIDED
- */
-	//@Test
-	fun testpWithobstacle(){
- 		println(" +++++++++ testpWithobstacle")
-		sysUtil.waitUser("PLEASE, put the robot near to an OBSTACLE", 10000)		
-		//Send a command and look at the result
-		val request = MsgUtil.buildRequest("tester", "step", "step(500)", "basicrobot")
-		var result  = ""
-		runBlocking{
-			val obsanswer = Channel<String>()
-			//WARNING: the virtual robot emits obstacle(unkknown)
-			CoapObserverForTesting.addObserver("obsfortesting","basicrobot",obsanswer,"obstacle(w)")
-			MsgUtil.sendMsg(request, myactor!!)
-			result = obsanswer.receive()
-			println("+++++++++  testpWithobstacle RESULT=$result")
-			CoapObserverForTesting.removeObserver()
-		}
-		assertEquals( result, "obstacle(unkknown)")
-	}
-			
+ 			
 }

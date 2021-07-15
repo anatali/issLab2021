@@ -32,7 +32,7 @@ CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter"
  
 QActor basicrobot context ctxbasicrobot{
 [#
-  var StepTime      = 0L
+  var StepTime      = 0L 
   var StartTime     = 0L     
   var Duration      = 0L  
   var RobotType     = "" 

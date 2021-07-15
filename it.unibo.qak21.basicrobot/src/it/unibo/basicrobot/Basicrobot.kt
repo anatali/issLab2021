@@ -17,7 +17,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		
-		  var StepTime      = 0L
+		  var StepTime      = 0L 
 		  var StartTime     = 0L     
 		  var Duration      = 0L  
 		  var RobotType     = "" 

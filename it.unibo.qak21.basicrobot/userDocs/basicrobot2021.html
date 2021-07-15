@@ -408,19 +408,167 @@ An observer: <a href="../resources/CoapObserver.kt" target="code">CoapObserver.k
 </table>
 
 <h2 id="testing">The testing</h2>
-The definition of a Testing unit is useful not only for debugging puroposes, but also for a better understanding of the behaviour.
+<h3>Reasoning about testing</h3>
+ 
+<ol>
+<li>We could have <em>unit testing</em> at the bottom, by checking small pieces of code,
+ to ensure that the individual parts of a program work properly on their own. Next,
+<em>Integration testing</em> shuld ensure that an entire, integrated system meets a set of requirements. 
+It is performed in an integrated hardware and software environment to ensure that the entire system functions properly.  </li>
+<li><em>Non-distributed</em> tests are run on a single computer and normally do not interact with other computers.
+Instead, <em>Distributed testing</em> means that a test consists of several parts and each of them is performed on a separate computer.
+</li>
+<li>Generally speaking, we want to induce some <em>activity in the system</em> and then check <bc>assertions on the state</bc> 
+of a single component or of a set of components.</li>
 
+<li>To make assentions on the state of a component implies that such a state must be <bc>observable</bc> and  
+<bc>'stable'</bc> (a concept that should be better defined).  
+</li>
+
+<li>A <k>POJO component</k> could be made observable by introducing proper methods. To be observable, a <k>'pure' actor</k> should
+be able to answer to proper request messages. Otherwise, an actor could automatically update <em>external observers</em> 
+(either POJO or actors themselves) properly registered to it.</li>
+<li>Since every qak actor is a CoAP-observable resource, we will exploit this property to define some Testing Plan for our
+<a href="../src/basicrobot.qak" target="code">basicrobot</a>.</li>
+</ol>
+
+<h3>An example of a 'naive' TestPlan</h3>
+Let us suppose to test that our <a href="../src/basicrobot.qak" target="code">basicrobot</a> executes in the rigth way the rotation moves.
+To achieve ths goal, we will perform the following actions:
+<br/><br/>
+<ol>
+<li>Activate a system composed of the <a href="../src/basicrobot.qak" target="code">basicrobot</a> that moves a virtual or a real robot.</li>
+<li>Add to our <a href="../src/basicrobot.qak" target="code">basicrobot</a> a proper observer, e.g. a POJO <ks>testingObserver</ks> of class
+<a href="../test/it/unibo/qak21/basicrobot/CoapObserverForTesting.kt" target="code">CoapObserverForTesting.kt</a>.
+<li>Send to the <a href="../src/basicrobot.qak" target="code">basicrobot</a> the dispatch <tt>cmd:cmd(l)</tt> and check that
+<ks>testingObserver</ks> has been CoAP-updated with the string <tt>moveactivated(l)</tt>. We do the same with  <tt>cmd:cmd(r).</tt> 
+</li>
+ </ol>
+ 
+<h3>Qak-Testing problem analysis</h3>
+ 
+<div class="remark">
+In oder to achive our gaols with an automated testing tool (e.g. JUnit), we must solve the following problems:
+<ol>
+<li><em>StartingProblem</em>: Activate the system.
+</li>
+<li><em>ReferenceProblem</em>: Get a reference to the <a href="../src/basicrobot.qak" target="code">basicrobot</a>, so to
+add to it the <ks>testingObserver</ks>. Since this activity can be done only when the <a href="../src/basicrobot.qak" target="code">basicrobot</a>
+component has been created, we have also a <em>ReferenceSynchProblem</em>.
+</li>
+<li><em>ObsSynchProblem</em>:  Synchronize the behaviour of our tester unit with the <ks>testingObserver</ks>.</li>
+<li><em>RedoProblem</em>:  Assure that another test is performed in a 'clean' state, without be influenced by the effects of the prevoius actions.</li> 
+</ol>
+</div>
+
+<h4>Possible solutions for the start up</h4>
+<ol>
+<li><em>StartingProblem</em>: we can simply invoke <tt>it.unibo.ctxbasicrobot.main()</tt>
+</li>
+<li><em>ReferenceSynchProblem</em>: polling solution invoke <tt>QakContext.getActor("basicrobot")</tt> until it returns a non-null value</li>
+<li><em>ReferenceProblem</em>:  solved when <tt>QakContext.getActor("basicrobot")</tt> returns a non-null value.
+</li>
+</ol>
+
+All these problems could be solved in a Testing start-up phase by exploiting the 
+<a href="https://www.baeldung.com/junit-before-beforeclass-beforeeach-beforeall" target="web">@BeforeClass annotation</a>.
+
+<h4>Possible solutions for the behavior</h4>
+<ol>
+<li><em>ObsSynchProblem</em>:  we could activate the <ks>testingObserver</ks> by giving to it a kotlin Channel, e.g. <tt>channelForObserver : Channel<String></tt>.</li>
+<li><em>RedoProblem</em>:  We could move the Testing start-up phase into a method annotated with a simple
+<a href="https://www.baeldung.com/junit-before-beforeclass-beforeeach-beforeall" target="web">@Before</a>, but it could
+be quite costly in time.
+As an alternative, we could put the robot into a prefixed state at the end of each testing method.
+Otherwise we could perform a single (not 'naive') test into a Tester.
+
+</li> 
+</ol>
+
+As an example, see <a href="../test/it/unibo/qak21/basicrobot/TestPlan0.kt" target="code">TestPlan0.kt</a>, that includes
+also the following (not 'naive') test case 
+
+<h3>Test <tt>goAheadUntilObstacle</tt></h3>
+We want to move a ahead a robot by sending to it the command <tt>cmd:cmd(w)</tt> util it hits an obstacle.
+<!--
+The definition of a Testing unit is useful not only for debugging puroposes, but also for a better understanding 
+of the behaviour of the basicrobot and of the sorrounding system.
+<br/><br/>
+In <a href="https://www.perfecto.io/resources/types-of-testing">Different Types of Testing in Software</a> we find that
+the most common testing types are:
+
+Accessibility testing
+Acceptance testing
+Black box testing
+End to end testing
+Functional testing
+Interactive testing
+Integration testing
+Load testing
+Non functional testing
+Performance testing
+Regression testing
+Sanity testing
+Security testing
+Single user performance testing
+Smoke testing
+Stress testing
+Unit testing
+White-box testing
+And many more...
+
+ <br/>
+ Moreover, there are 3 ways we can do testing. 
+<ul>
+<li>Manual testing is the most hands-on type of testing and is employed by every team at some point. Of course, in 
+today’s fast-paced software development lifecycle, manual testing is tough to scale.
+</li>
+<li>Automated testing uses test scripts and specialized tools to automate the process of software testing.
+</li>
+<li>Continuous testing goes even further, applying the principles of automated testing in a scaled, 
+continuous manner to achieve the most reliable test coverage for an enterprise. 
+ 
+</li>
+
+</ul>
+<h3>Distributed Testing - Basic Concepts</h3>
+<br/>
+https://support.smartbear.com/testcomplete/docs/testing-with/deprecated/distributed/basic-concepts.html
+<br/>
+
+<h3>Testing Distributed Systems: Case Studies from the Pros</h3>
+Since it’s impossible to come up with a universal answer for testing distributed systems,
+<br/>
+https://codingsans.com/blog/testing-distributed-systems
+
+-->
+
+<!--
+<br/><br/>
 <table style="width:98%">
 <tbody>	
 
 <tr>
-<td style="width:50%" ><h3 id="robotSupport">Supports for the robot types</h3>
+<td style="width:50%" ><h3 id="testingbefore">Preparation: <ks>@BeforeClass</ks></h3>
+
+channelSyncStart <br/>
+channelForObserver
 </td>
-<td>
+<td><h3 id="testingafter">Termination: <ks>@AfterClass</ks></h3>
 </td>
 </tr>
+
+<tr>
+<td><h3 id="testinginteraction">Observer </h3>
+CoapObserverForTesting
+</td>
+<td><h3 id="testingexample">Example: testleftmove() </h3>
+</td>
+</tr>
+
  </tbody>
 </table>
+-->
 
 <h2 id="lowlevel">The low-level supports </h2>
 

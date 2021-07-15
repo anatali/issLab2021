@@ -7,14 +7,27 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.eclipse.californium.core.coap.CoAP
 
-object CoapObserverForTesting {
-   private val client  = CoapClient()
+class CoapObserverForTesting(val name: String      = "obs",
+							 val context: String   = "ctxbasicrobot",
+							 val observed : String = "basicrobot",
+							 val port: String      = "8020") {
+   //private val client  = CoapClient()
    private var handler : CoapHandler? = null
+    private lateinit var client : CoapClient
 	
-   fun addObserver(name: String, observed : String, channel : Channel<String>, expected:String?=null ){
+   init{
+ 	   client     = CoapClient()
+	   val uriStr = "coap://localhost:$port/$context/$observed"   
+	   println("	%%%%%% $name | START uriStr: $uriStr"  )
+       client.uri = uriStr	   
+   }
+	
+   //fun addObserver(name: String, observed : String, channel : Channel<String>, expected:String?=null ){
+   fun addObserver(  channel : Channel<String>, expected:String?=null ){
+	   /*
 	   val uriStr = "coap://localhost:8020/ctxbasicrobot/$observed"   
 	   println("	%%%%%% $name | START uriStr: $uriStr expected=$expected")
-       client.uri = uriStr
+       client.uri = uriStr*/
        client.observe( object : CoapHandler {
             override fun onLoad(response: CoapResponse) {
 				val content = response.responseText
@@ -35,9 +48,10 @@ object CoapObserverForTesting {
         })		
 	}		 
 
-	fun removeObserver(  ){
+   fun removeObserver(  ){
 	    println("	%%%%%%  CoapObserverForTesting | TERMINATE")
 		//client.delete()
-	}
+   }	
+
 		
 }
