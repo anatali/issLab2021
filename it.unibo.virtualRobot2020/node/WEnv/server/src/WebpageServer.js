@@ -55,7 +55,8 @@ Defines how to handle POST from browser and from external controls
      		var moveTodo = jsonData.robotmove
      		var duration = jsonData.time
      		if( moveTodo=="alarm"){ //do the halt move
- 	            execMoveOnAllConnectedScenes(moveTodo, duration)
+ 	            //execMoveOnAllConnectedScenes(moveTodo, duration) //JULY2021
+ 	            Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, duration) );
  	            if( moveStillRunning.length>0 && moveStillRunning.includes("_Asynch")){
  	                console.log('$$$ WebpageServer /api/move | ' + moveTodo + " while doing " + moveStillRunning );
  	                moveStillRunning = ""

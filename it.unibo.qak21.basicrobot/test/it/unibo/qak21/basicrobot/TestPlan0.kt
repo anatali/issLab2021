@@ -80,7 +80,7 @@ class TestPlan0 {
 		println("+++++++++ AFTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
 		testingObserver!!.removeObserver()
 	}
-   
+    
 	//@Test
 	fun testrotationmoves(){
  		println("+++++++++ testrotationmoves ")
@@ -121,7 +121,7 @@ class TestPlan0 {
 		return result
 	}
 	
-	@Test
+	@Test 
 	fun goAheadUntilObstacle()  { 
 		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
 		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")

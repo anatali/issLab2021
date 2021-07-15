@@ -112,10 +112,11 @@ QActor basicrobot context ctxbasicrobot{
 		printCurrentMessage
 			//msg(obstacle,dispatch,distancefilter,basicrobot,obstacle(5),18)
 		if[# CurrentMove == "w" #]{
-			  
+			run unibo.robot.robotSupport.move( "h" )   
  			run unibo.robot.robotSupport.move( "s" ) 
 			delay 100 //loose the control ...
-			run unibo.robot.robotSupport.move( "h" ) 	 		    	
+			run unibo.robot.robotSupport.move( "h" ) 
+			delay 200	 		    	
 			/*
 			 * collision Json      : emitted by the virtualrobot 
 			 * obstacle(virtual)   : emitted by the virtualrobotSupport2021 when endmove=false

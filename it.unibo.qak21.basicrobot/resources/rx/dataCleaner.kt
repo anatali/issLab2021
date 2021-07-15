@@ -18,8 +18,12 @@ val LimitHigh = 150
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     override suspend fun actorBody(msg: ApplMessage) {
-  		//println("$tt $name |  msg = $msg ")		
-		if( msg.msgId() != "sonarRobot" ) return //AVOID to handle other events
+  		println("$tt $name | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  msg = $msg ")
+	    if( msg.msgContent().contains("virtual") ){
+			emitLocalStreamEvent( msg )	//NO DISTANCE here
+			return
+		}
+		if( msg.msgId() != "sonarRobot"   ) return //AVOID to handle other events
   		elabData( msg )
  	}
 

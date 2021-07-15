@@ -100,9 +100,11 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if(  CurrentMove == "w"  
-						 ){unibo.robot.robotSupport.move( "s"  )
+						 ){unibo.robot.robotSupport.move( "h"  )
+						unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
+						delay(200) 
 						if( checkMsgContent( Term.createTerm("obstacle(ARG)"), Term.createTerm("obstacle(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 									val TargetObs = payloadArg(0)  	 
