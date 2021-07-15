@@ -52,13 +52,14 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 	 				println("basicrobot | WORKING WITH VIRTUAL SONAR") 
 						 	 				//ACTIVATE THE DATA SOURCE realsonar
 						 	 				forward("sonarstart", "sonarstart(1)" ,"robotsonar" ) 				
-						 	 				//SET THE PIPE  
+						 	 				//WE DO NOT SET THE PIPE, since we don't have sonar data  to clean
+						 	 				/* 
 						 	 				robotsonar.
 						 	 				subscribeLocalActor("datacleaner").
 						 	 				subscribeLocalActor("distancefilter").
-						 	 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
+						 	 				subscribeLocalActor("basicrobot")		*/
 						 	 			}else{
-						 	 				println("basicrobot | WARNING: realsonar NOT FOUND")
+						 	 				println("basicrobot | WARNING: robotsonar NOT FOUND")
 						 	 			}
 						 
 						 }
@@ -100,11 +101,9 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if(  CurrentMove == "w"  
-						 ){unibo.robot.robotSupport.move( "h"  )
-						unibo.robot.robotSupport.move( "s"  )
+						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
-						delay(200) 
 						if( checkMsgContent( Term.createTerm("obstacle(ARG)"), Term.createTerm("obstacle(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 									val TargetObs = payloadArg(0)  	 
@@ -114,10 +113,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 								}
 						}
 						}
-						else
-						 {updateResourceRep( "spurious"  
-						 )
-						 }
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
