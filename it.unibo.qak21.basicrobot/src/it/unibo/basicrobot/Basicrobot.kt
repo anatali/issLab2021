@@ -111,16 +111,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
-				state("backstep") { //this:State
-					action { //it:State
-						delay(1500) 
-						println("basicrobot | bakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-						unibo.robot.robotSupport.move( "s"  )
-						delay(100) 
-						unibo.robot.robotSupport.move( "h"  )
-					}
-					 transition( edgeName="goto",targetState="work", cond=doswitch() )
-				}	 
 				state("handleSonar") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")

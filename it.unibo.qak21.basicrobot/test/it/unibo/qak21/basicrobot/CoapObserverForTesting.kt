@@ -13,13 +13,13 @@ class CoapObserverForTesting(val name: String      = "testingobs",
 							 val port: String      = "8020") {
    //private val client  = CoapClient()
    private var handler : CoapHandler? = null
-    private lateinit var client : CoapClient
+   private var client : CoapClient?  = null
 	
    fun setup(){
  	   client     = CoapClient()
 	   val uriStr = "coap://localhost:$port/$context/$observed"   
 	   println("	%%%%%% $name | START uriStr: $uriStr"  )
-       client.uri = uriStr	   
+       client!!.uri = uriStr	   
    }
 	
    fun addObserver(  channel : Channel<String>, expected:String?=null ){
@@ -28,7 +28,7 @@ class CoapObserverForTesting(val name: String      = "testingobs",
 	   println("	%%%%%% $name | START uriStr: $uriStr expected=$expected")
        client.uri = uriStr*/
 	   setup()
-       client.observe( object : CoapHandler {
+       client!!.observe( object : CoapHandler {
             override fun onLoad(response: CoapResponse) {
 				val content = response.responseText
                 println("	%%%%%% $name | content=$content  expected=$expected RESP-CODE=${response.code} " )
@@ -48,7 +48,7 @@ class CoapObserverForTesting(val name: String      = "testingobs",
 	}		 
 
    fun removeObserver(  ){
-		client.delete()
+		client = null
  	    println("	%%%%%%  CoapObserverForTesting | TERMINATE")
   }	
 

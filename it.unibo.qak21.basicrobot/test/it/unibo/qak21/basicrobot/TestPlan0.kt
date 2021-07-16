@@ -59,7 +59,7 @@ class TestPlan0 {
 	
 	@Before
 	fun checkSystemStarted()  {
-	    println("+++++++++ checkSystemStarted ... ")
+	    println("+++++++++ BEFOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ")
 		if( ! systemStarted ) {
 			runBlocking{
 				channelSyncStart.receive()
@@ -67,6 +67,7 @@ class TestPlan0 {
 			    println("+++++++++ checkSystemStarted resumed ")
 			}			
 		}
+		runBlocking{ delay(300) } //Put some interval between tests
   	}
 	
 	@After
@@ -75,50 +76,59 @@ class TestPlan0 {
 		testingObserver!!.removeObserver()
 	}
     
-	//@Test
+	@Test
 	fun testrotationmoves(){
  		println("+++++++++ testrotationmoves ")
 		//Send a command and look at the result
 		var result  = ""
 		runBlocking{
- 			val channelForObserver = Channel<String>()
-			testingObserver!!.addObserver( channelForObserver!!,"moveactivated")
+ 			val channelForObserverL = Channel<String>()
+			testingObserver!!.addObserver( channelForObserverL,"moveactivated(l)")
 			
 			MsgUtil.sendMsg("cmd","cmd(l)",myactor!!)
-			result = channelForObserver!!.receive()
+			result = channelForObserverL.receive()
 			println("+++++++++ testrotationmoves l RESULT=$result")
 			assertEquals( result, "moveactivated(l)")
+			testingObserver!!.removeObserver()
+			delay(200)			//
 			
+			val channelForObserverR = Channel<String>()
+			testingObserver!!.addObserver( channelForObserverR,"moveactivated(r)")
 		    val cmd = MsgUtil.buildDispatch("tester", "cmd", "cmd(r)", "basicrobot")
 			MsgUtil.sendMsg(cmd, myactor!!)
-			result = channelForObserver!!.receive()
+			result = channelForObserverR.receive()
 			println("+++++++++ testrotationmoves r RESULT=$result")
-			assertEquals( result, "moveactivated(r)")			
+			delay(200)			//
+			assertEquals( result, "moveactivated(r)")
 		}	
 	}
- 	
-	fun sendAndObserve( obschannel: Channel<String>, move: ApplMessage ) : String{
- 		var result  = ""		
-		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
-		runBlocking{
- 			MsgUtil.sendMsg(move, myactor!!)
-			result = obschannel.receive()
-			println("+++++++++  sendAndObserve RESULT=$result for move=$move")			
-		    //The command w has the duration of 2500 msec and ALWAYS generates a collision ...
- 			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
-		}
-		return result
-	}
-	
+ 
 	@Test 
 	fun goAheadUntilObstacle()  {
+ 		println("+++++++++ goAheadUntilObstacle ")
 		val channelForObserver = Channel<String>()
 		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
 		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
-		testingObserver!!.addObserver( channelForObserver!!,"obstacle(w)" )		 
-		var result  = sendAndObserve(channelForObserver!!,cmdw)
- 		assertEquals( result, "obstacle(w)")
+		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
+		
+		testingObserver!!.addObserver( channelForObserver,"obstacle(w)" )
+		
+		runBlocking{
+ 		    var result  = ""		
+ 			MsgUtil.sendMsg(cmdw, myactor!!)
+			result = channelForObserver.receive()
+			println("+++++++++  sendAndObserve RESULT=$result for cmd=$cmdw")			
+		    //The command w has the duration of 2500 msec and ALWAYS generates a collision ...
+		    MsgUtil.sendMsg(cmdh, myactor!!)
+ 			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
+			delay( 500 ) //give time to compensate before closing the test
+ 		    assertEquals( result, "obstacle(w)")
+		}		 
 	}
 	
- 			
+    @Test
+    fun dummy(){
+		println("+++++++++ dummy ")
+		 assertEquals( "1", "1")
+	}
 }

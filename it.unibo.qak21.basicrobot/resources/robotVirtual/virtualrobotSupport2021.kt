@@ -33,7 +33,7 @@ object virtualrobotSupport2021 {
 	//We set here a duration long enough to assure the raising of a 'collision' in the working room
 	//Moreover, we assume that the robot backwards for a shorter time
     private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\",  \"time\": 2500}"
-    private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 300}"
+    private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 1000}"
 
 	var traceOn = false
 	
