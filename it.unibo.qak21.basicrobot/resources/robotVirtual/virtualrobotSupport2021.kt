@@ -28,8 +28,12 @@ object virtualrobotSupport2021 {
 	private lateinit var hostName : String 	
 	private lateinit var support21 : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
 	private lateinit var support21ws : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
-    private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
-    private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 1000}"
+	
+	//WARNING: the virtualrobot REQUIRES that a move has a limited duration
+	//We set here a duration long enough to assure the raising of a 'collision' in the working room
+	//Moreover, we assume that the robot backwards for a shorter time
+    private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\",  \"time\": 2500}"
+    private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 300}"
 
 	var traceOn = false
 	
@@ -90,9 +94,9 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt
 		try{
 			val ajson = JSONObject(answer)
-			if( ajson.has("endmove") && ajson.get("endmove")=="false"){
-				owner.scope.launch{  owner.emit("obstacle","obstacle(virtual)") }
-			}
+			if( ajson.has("endmove") && ajson.get("endmove")=="false" && cmd != "l" && cmd != "r" ){
+				owner.scope.launch{  owner.emit("obstacle","obstacle($cmd)") }
+			} 
 		}catch(e: Exception){
 			println("		--- virtualrobotSupport2021 |  move answer JSON ERROR $answer")
 		}

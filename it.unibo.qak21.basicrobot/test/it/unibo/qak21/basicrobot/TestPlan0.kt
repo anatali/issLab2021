@@ -25,7 +25,6 @@ class TestPlan0 {
 	companion object{
 		var systemStarted         = false
 		val channelSyncStart      = Channel<String>()
-		var channelForObserver    : Channel<String>? = null
 		var testingObserver       : CoapObserverForTesting? = null
 		var myactor               : ActorBasic? = null
 
@@ -68,12 +67,7 @@ class TestPlan0 {
 			    println("+++++++++ checkSystemStarted resumed ")
 			}			
 		}
-		runBlocking{
-			println("+++++++++ BEFOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-			channelForObserver = Channel<String>()
-			
-  		}		
- 	}
+  	}
 	
 	@After
 	fun removeObs(){
@@ -87,7 +81,8 @@ class TestPlan0 {
 		//Send a command and look at the result
 		var result  = ""
 		runBlocking{
- 			testingObserver!!.addObserver( channelForObserver!!,"moveactivated")
+ 			val channelForObserver = Channel<String>()
+			testingObserver!!.addObserver( channelForObserver!!,"moveactivated")
 			
 			MsgUtil.sendMsg("cmd","cmd(l)",myactor!!)
 			result = channelForObserver!!.receive()
@@ -109,35 +104,20 @@ class TestPlan0 {
  			MsgUtil.sendMsg(move, myactor!!)
 			result = obschannel.receive()
 			println("+++++++++  sendAndObserve RESULT=$result for move=$move")			
-		    //The command w has the duration of 1000 msec
-			//Observing moveactivated(w) BEFORE 1000 msec is misleading ...
-		    if( ! result.contains("obstacle(w)") &&
-				 move.msgContent() == "cmd(w)" || move.msgContent() == "cmd(s)" ){
-				 delay(1100)
-			} 
-		    MsgUtil.sendMsg(cmdh, myactor!!)	//otherwise the virtualrobot does not execute next		
-			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
+		    //The command w has the duration of 2500 msec and ALWAYS generates a collision ...
+ 			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
 		}
 		return result
 	}
 	
 	@Test 
-	fun goAheadUntilObstacle()  { 
+	fun goAheadUntilObstacle()  {
+		val channelForObserver = Channel<String>()
 		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
-		//val request = MsgUtil.buildRequest("test", "step", "step(500)", "basicrobot")
 		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
-		testingObserver!!.addObserver( channelForObserver!!,"obstacle(w)" )
-		 
+		testingObserver!!.addObserver( channelForObserver!!,"obstacle(w)" )		 
 		var result  = sendAndObserve(channelForObserver!!,cmdw)
- 		//println("1111111111111111111111111111111111111111111111111 $result")
- 		while(  result.contains("no")   ){ 
-			//sysUtil.waitUser("next step ...", 60000)
-			result  = sendAndObserve(channelForObserver!!,cmdw)
-            println("2222222222222222222222222222222222222222222222 $result")
- 		}  
-		//println("ooooooooooooooooooooooooo ${result.contains("obstacle")}")
-		//testingObserver!!.removeObserver()
-		assertEquals( result, "obstacle(w)")
+ 		assertEquals( result, "obstacle(w)")
 	}
 	
  			

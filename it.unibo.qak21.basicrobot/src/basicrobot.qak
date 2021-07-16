@@ -26,7 +26,7 @@ Event  sonar       : sonar(DISTANCE,NAME)	//emitted by distancefilter
  
 Context ctxbasicrobot ip [host="localhost" port=8020]  
 
-CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"
+CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"  //NOT used with the virtualrobot
 CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter"
  
 QActor basicrobot context ctxbasicrobot{
@@ -113,26 +113,21 @@ QActor basicrobot context ctxbasicrobot{
 		printCurrentMessage
 			//msg(obstacle,dispatch,distancefilter,basicrobot,obstacle(5),18)
 		if[# CurrentMove == "w" #]{
-			//run unibo.robot.robotSupport.move( "h" )   
- 			run unibo.robot.robotSupport.move( "s" ) 
-			delay 100 //loose the control ...
-			run unibo.robot.robotSupport.move( "h" ) 
-			//delay 200	 		    	
-			/*
+ 			/*
 			 * collision Json      : emitted by the virtualrobot 
 			 * obstacle(virtual)   : emitted by the virtualrobotSupport2021 when endmove=false
 			 * obstacle(5)         : emitted by the distanceFilter
 			 * obstacle(w)         : emitted by the basicrobot
-			 */
-			onMsg( obstacle : obstacle( T ) ){ 
-				[#	val TargetObs = payloadArg(0)  	#]
-				if[# TargetObs == "5" #]{
-					updateResource [# "obstacle(w)" #]
-				}
-			} 
-		}//else{ //CurrentMove != "w"
-			//updateResource [# "spurious" #]
-		//}  		
+			 */ 
+			updateResource [# "obstacle(w)" #]
+			
+			println("COMPENSATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+			run unibo.robot.robotSupport.move( "s" ) 
+			delay 100 //loose the control ...
+			run unibo.robot.robotSupport.move( "h" ) 
+		
+ 		 
+		} 		
 	}
 	Goto work 
  
