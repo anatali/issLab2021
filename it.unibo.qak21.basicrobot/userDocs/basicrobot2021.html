@@ -820,7 +820,7 @@ Project <a href="../../it.unibo.qak21.basicrobot" target="code">it.unibo.qak21.b
 <hr/>
 <ul>
 <li>On PC for virtual robot: <a href="../DockerfileforpcVirtual " target="code">DockerfileforpcVirtual </a> 
-<pre><m>gradle  -b build2021.gradle build <kc/>//generate the tar</kc>
+<pre><m>gradle  -b build2021.gradle build <ks>-x test</ks> <kc/>//avoid tests, generate the tar</kc>
 <kc/>//generate the image</kc>
 docker build -f <a href="../DockerfileforpcVirtual " target="code">DockerfileforpcVirtual </a> -t basicrobot21virtual:1.0 .	
 <kc/>//run the image</kc>

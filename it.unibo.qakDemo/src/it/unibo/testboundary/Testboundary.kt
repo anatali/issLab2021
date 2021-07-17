@@ -34,7 +34,7 @@ class Testboundary ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 				}	 
 				state("endTest") { //this:State
 					action { //it:State
-						println("END OF JOB")
+						println("testboundary | END OF JOB")
 					}
 				}	 
 			}

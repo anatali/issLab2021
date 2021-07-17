@@ -11,7 +11,7 @@ Request step       : step( TIME )
 Reply   stepdone   : stepdone(V)  
 Reply   stepfail   : stepfail(DURATION, CAUSE)
   
-Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
+Context ctxbundarywalker  ip [host="localhost" port=8022]
 Context ctxbasicrobot ip [host="127.0.0.1" port=8020]    
 
 ExternalQActor basicrobot context ctxbasicrobot   
@@ -20,7 +20,7 @@ ExternalQActor basicrobot context ctxbasicrobot
  *  basicboundarywalker 
  * ------------------------------------------------------------------
 */     
-QActor basicboundarywalker context ctxBasicBoundaryWalker{         
+QActor basicboundarywalker context ctxbundarywalker{         
 [#
 val mapname     = "roomBoundary"  		 
 var NumStep     = 0
@@ -53,51 +53,46 @@ var Myself      = myself
 		forward basicrobot -m cmd : cmd(r)*/
 		delay 500 
 		forward basicrobot -m cmd : cmd(h)
-		[# pathexecutil.waitUser("starting") #]
+		//[# pathexecutil.waitUser("starting") #]
   	}
     Goto detectBoundary   
      
     State detectBoundary{     
     	[# NumStep++ #]
     	println("basicboundarywalker detectBoundary $NumStep")
-    	run itunibo.planner.plannerUtil.showCurrentRobotState()
-    	updateResource [# "detectBoundary step=$NumStep" #]
+    	//run itunibo.planner.plannerUtil.showCurrentRobotState()
+    	//updateResource [# "detectBoundary step=$NumStep" #]
      }  
     Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
    
  	State doAheadMove{ 
  		delay 300 //to avoid too rapid changes
   		request basicrobot -m step : step(330)	//stepTime
-   		updateResource [# "moving" #]
-	}   
-	Transition t0   //whenEvent alarm      -> handleAlarm 
-					whenReply stepdone   -> stepDone   
+ 	}   
+	Transition t0   whenReply stepdone   -> stepDone   
 					whenReply stepfail   -> stepFailed  
 	  
  	State stepDone{  
- 		updateResource [# itunibo.planner.plannerUtil.getMap() #]
+ 		//updateResource [# itunibo.planner.plannerUtil.getMap() #]
  		run itunibo.planner.plannerUtil.updateMap(  "w" )
- 		updateResource [# "stepDone" # ]
+ 		//updateResource [# "stepDone" # ]
   	} 
 	Goto doAheadMove		//alarm perceived ?? ...
  	                    
 	State stepFailed{  //has found an obstacle (a wall)
  		println("basicboundarywalker | FOUND A WALL at home=${itunibo.planner.plannerUtil.atHome()}")
- 		updateResource [# "stepFailed" # ]  
+ 			//updateResource [# "stepFailed" # ]  
  	 		if [# ! itunibo.planner.plannerUtil.atHome() #]{
 	 			run itunibo.planner.plannerUtil.wallFound() 
-		 		//updateResource [# "found a wall" #]
- 		 		//qrun pathexecutil.doMove(myself, "l")
+		 		updateResource [# "found a wall" #]
  		 		forward basicrobot -m cmd : cmd(l)
 				run itunibo.planner.plannerUtil.updateMap(  "l" )
-				run itunibo.planner.plannerUtil.showCurrentRobotState()
+				//run itunibo.planner.plannerUtil.showCurrentRobotState()
   	 		}else{
-   	 			//qrun pathexecutil.doMove(myself, "l")
    	 			forward basicrobot -m cmd : cmd(l)
   	 			run itunibo.planner.plannerUtil.updateMap(  "l" )
   	 		}
   	 		delay 350			 	      
- 		[# pathexecutil.waitUser("onwall_$NumStep") #] 
  	}    
     Goto detectBoundary    
  
@@ -105,16 +100,16 @@ var Myself      = myself
 		run itunibo.planner.plannerUtil.saveRoomMap(mapname)
 		println("robotmapper | FINAL MAP")   
  		run itunibo.planner.plannerUtil.showCurrentRobotState()	
- 		//updateResource [#  itunibo.planner.plannerUtil.getMap() #]
-   		[# println(itunibo.planner.plannerUtil.showMap()) #]
-   		
+   		[# println(itunibo.planner.plannerUtil.showMap()) #]   	
+   		updateResource [#  "mapdone-${itunibo.planner.plannerUtil.getMap()}" #]	
+   		//updateResource [#  "${itunibo.planner.plannerUtil.getMap()}" #]	
    		forward testboundary -m mapDone : mapDone(mapname)
   	}
 	
-}	
+}//basicboundarywalker	
 
 
-QActor envsonarhandler context ctxBasicBoundaryWalker{
+QActor envsonarhandler context ctxbundarywalker{
  	State s0 initial { 	 
  		println("envsonarhandler | START")	 		
 	}	
@@ -129,20 +124,19 @@ QActor envsonarhandler context ctxBasicBoundaryWalker{
 /*
  *  main 
 */   
-QActor testboundary context ctxBasicBoundaryWalker{
+QActor testboundary context ctxbundarywalker{
 	[# val doboundary = true #]
 	State s0 initial{  
 	}
 	Goto boundarywalk if [# doboundary #] else endTest
 	 
 	State boundarywalk{
-		forward basicboundarywalker -m start : start(  any   )
-		  
+		forward basicboundarywalker -m start : start(  any   )		  
 	}
-	Transition t0 whenMsg mapDone -> endTest //reachAPoint
+	Transition t0 whenMsg mapDone -> endTest  
 	
 	State endTest{
-		println("END OF JOB")
+ 		println("testboundary | END OF JOB")
 	}
 				   
  } 
