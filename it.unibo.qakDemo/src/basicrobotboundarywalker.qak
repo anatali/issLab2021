@@ -10,7 +10,7 @@ Dispatch cmd       : cmd(MOVE)
 Request step       : step( TIME )	
 Reply   stepdone   : stepdone(V)  
 Reply   stepfail   : stepfail(DURATION, CAUSE)
- 
+  
 Context ctxBasicBoundaryWalker  ip [host="localhost" port=8022]
 Context ctxbasicrobot ip [host="127.0.0.1" port=8020]    
 

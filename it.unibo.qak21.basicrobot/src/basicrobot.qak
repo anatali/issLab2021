@@ -121,11 +121,13 @@ QActor basicrobot context ctxbasicrobot{
 			 */ 
 			updateResource [# "obstacle(w)" #]
 			//delay 300
+			
 			println("COMPENSATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 			run unibo.robot.robotSupport.move( "s" ) 
 			delay 100 //loose the control ...
 			run unibo.robot.robotSupport.move( "h" ) 
 		
+			//delay 1000	//give time
  		 
 		} 		
 	}

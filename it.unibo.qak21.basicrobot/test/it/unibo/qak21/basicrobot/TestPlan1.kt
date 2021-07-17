@@ -20,7 +20,7 @@ import it.unibo.kactor.ApplMessage
 import org.junit.After
  
  
-class TestPlan0 {
+class TestPlan1 {
 		
 	companion object{
 		var testingObserver   : CoapObserverForTesting ? = null
@@ -76,53 +76,36 @@ class TestPlan0 {
 		println("+++++++++ AFTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR  ${testingObserver!!.name}")
 		testingObserver!!.terminate()
 		testingObserver = null
-		runBlocking{
-			delay(1000)
-		}
- 	}
-    
-	@Test
-	fun testrotationmoves(){
- 		println("+++++++++ testrotationmoves ")
-		//Send a command and look at the result
-		var result  = ""
-		runBlocking{
- 			val channelForObserver = Channel<String>()
- 			testingObserver!!.addObserver( channelForObserver,"moveactivated")
- 			MsgUtil.sendMsg("cmd","cmd(l)",myactor!!)
-			result = channelForObserver.receive()
-			println("+++++++++ testrotationmoves l RESULT=$result")
-			assertEquals( result, "moveactivated(l)")
-			delay(200)			//		 
-			
-		    val cmd = MsgUtil.buildDispatch("tester", "cmd", "cmd(r)", "basicrobot")
-			MsgUtil.sendMsg(cmd, myactor!!)
-			result = channelForObserver.receive()
-			println("+++++++++ testrotationmoves r RESULT=$result")
-			assertEquals( result, "moveactivated(r)")
-		}	
-	} 
- 
-	@Test 
-	fun goAheadUntilObstacle()  {
-		println("+++++++++ goAheadUntilObstacle ")
-		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
-		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
-		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
-		
-		runBlocking{
-			val channelForObserver = Channel<String>()
-			testingObserver!!.addObserver( channelForObserver,"obstacle(w)" )
-		    var result  = ""		
- 			MsgUtil.sendMsg(cmdw, myactor!!)
-			result = channelForObserver.receive()
-			println("+++++++++  goAheadUntilObstacle RESULT=$result for cmd=$cmdw")			
-		    //The command w has the duration of 2500 msec and ALWAYS generates a collision ...
-		    MsgUtil.sendMsg(cmdh, myactor!!)
- 			//if basicrobot enters in state handleObstacle, it executes s,h, but without updating 
-			delay( 500 ) //give time to compensate before closing the test
- 		    assertEquals( result, "obstacle(w)")
-		}		  
+
 	}
-	
- }
+    
+ 	
+    @Test
+    fun stepUntilObstacle(){
+		println("+++++++++ stepUntilObstacle ")
+		val stepRequest = MsgUtil.buildRequest("tester", "step", "step(350)", "basicrobot")
+ 		val channelForObserver = Channel<String>()		
+		//val testingObserver    = CoapObserverForTesting("obsstep")
+		testingObserver!!.addObserver( channelForObserver,"step" )
+		
+		runBlocking{ 
+ 		    var result  = ""
+			while( true ){
+				MsgUtil.sendMsg(stepRequest, myactor!!)
+				result = channelForObserver.receive()
+				if( result == "step(350)") {
+					result = channelForObserver.receive()
+				}
+				println("+++++++++  stepUntilObstacle RESULT=$result for $stepRequest")
+	 			if( result.contains("stepFail")) break
+				delay(300)  //just to slow down a bit and allow to do a backstep...
+			}
+			//After a stepFail, the basicrobot has hit an obstacle and
+			//performs a back step (that avoid the repetition of obstacle events)
+  		    assertTrue( result.contains("stepFail("))
+ 			//MsgUtil.sendMsg("cmd","cmd(l)",myactor!!) //just to change the state ...
+		}		 
+		
+		  
+	}
+}
