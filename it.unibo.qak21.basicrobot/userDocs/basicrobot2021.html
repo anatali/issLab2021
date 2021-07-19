@@ -920,7 +920,7 @@ we must use the proper configuration file for our real robot:
  
 <li><a href="../basicrobotConfigForNano.json" target="code">basicrobotConfigForNano.json</a></li>
 
-<h3>Deployment on Raspberry</h3>
+<h3>Deployment <bc>mbot</bc> on Raspberry</h3>
 <pre>
 <kc>1 - copy the distZip into Raspberry
 2 - unzip  
@@ -931,6 +931,28 @@ we must use the proper configuration file for our real robot:
   <a href="../basicrobotConfigForMbot.json" target="code">CONFIGURATION.json</a> <kc>//See the proper version (above)</kc>
 5 - bash <ks>it.unibo.qak21.basicrobot</ks>
 </kc>
+</pre>
+
+<h3>Deployment <bc>nano</bc> on Raspberry</h3>
+<pre>
+1 - copy the <ks>distZip</ks> into Raspberry 
+2 - unzip  
+3 - cd <ks>/it.unibo.qak21.basicrobot-1.0/bin</ks>
+4 - copy here:
+  <a href="../basicrobot.pl" target="code">basicrobot.pl</a>,
+  <a href="../sysRules.pl" target="code">bsysRules.pl</a>,
+  <a href="../basicrobotConfigForMbot.json" target="code">CONFIGURATION.json</a> <kc>//See the proper version (above)</kc>
+
+5 - <ks>Copy and compile for Motors</ks>   
+  copy <a href="../resources/robotNano/MotorsArm.c" target="code">MotorsArm.c</a>
+  <k>COMPILE:</k>g++  MotorsArm.c -l wiringPi -o  <k>Motors</k>
+
+6 - <ks>Copy and compile for Sonar</ks>   
+  copy <a href="../resources/robotNano/SonarArm.c" target="code">SonarArm.c</a>
+  <k>COMPILE:</k>g++  SonarArm.c -l wiringPi -o  <k>SonarAlone</k>
+   
+7 - bash <ks>it.unibo.qak21.basicrobot</ks>
+ 
 </pre>
 
 </td>
