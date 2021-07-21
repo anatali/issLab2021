@@ -54,6 +54,7 @@ var Myself      = myself
 		delay 500 
 		forward basicrobot -m cmd : cmd(h)
 		//[# pathexecutil.waitUser("starting") #]
+		[# sysUtil.waitUser("starting ", 100000) #]
   	}
     Goto detectBoundary   
      

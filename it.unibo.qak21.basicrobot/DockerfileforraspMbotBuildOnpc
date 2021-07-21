@@ -21,6 +21,14 @@ RUN sudo apt-get install -y gcc
 RUN sudo apt-get install libc6-dev
 RUN sudo apt-get -y install nano
 
+#### FOR webcam ( todo ) --- that works on port 8080 -----  
+#### RUN sudo apt-get install git
+#### RUN sudo apt-get install cmake libjpeg8-dev
+#### RUN cd mjpg-streamer/mjpg-streamer-experimental
+#### RUN make all
+#### RUN make install
+#### RUN bash start.sh &
+
 ## ---------------------------------------------------
 ## multistage-build/ (just to recal that is exists ...)
 ## ---------------------------------------------------
@@ -31,12 +39,12 @@ RUN sudo apt-get -y install wiringpi
 ## Compile  
 RUN gcc MotorsArm.c -std=gnu11 -l wiringPi -o  Motors
 RUN gcc SonarArm.c  -std=gnu11 -l wiringPi -o  SonarAlone
-
+RUN sudo bash webCam.sh &
 
 CMD ["bash", "it.unibo.qak21.basicrobot"]
 
 ## docker build -f DockerfileforraspMbotBuildOnpc -t imageforarm:1.1 .
-## docker run -it --rm --name basicrobot21mbot  -p8020:8020/tcp -p8020:8020/udp --privileged imageforarm:1.1 /bin/bash
+## docker run -it --rm --name basicrobot21mbot  -p8020:8020/tcp -p8020:8020/udp -p8080:8080 --privileged imageforarm:1.1 /bin/bash
 ## docker tag imageforarm:1.1 natbodocker/imageforarm:1.1 
 ## docker push natbodocker/imageforarm:1.1
  

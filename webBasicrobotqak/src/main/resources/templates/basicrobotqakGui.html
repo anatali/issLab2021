@@ -106,15 +106,15 @@ We also import app.js, which contains the logic of our client application.
 </div>
 
 <script type="text/javascript">
-		 var url = "192.168.1.7:8090" //window.location.host;   //TO BE CHANGED: FOR WEB CAM
+		 var url = "192.168.1.33:8080" //window.location.host;   //TO BE CHANGED: FOR WEB CAM
  	     var len = url.length;
 	     var n   = url.indexOf(":");
 	     var j   = url.substring(n+1,len);
 		 var ip = "http://" + url + "/?action=stream";
 		 //document.getElementById("ipaddr").innerHTML  = ip;
-		 //alert("ip="+ip); //ip=http://192.168.1.7:8090/?action=stream
+		 alert("ip="+ip); //ip=http://192.168.1.40:8080/?action=stream
 	     document.getElementById("img_src").src = ip;
-	</script>
+</script>
 
 <hr/>
 

@@ -18,7 +18,7 @@ val LimitHigh = 150
 	    if( msg.msgId() == "local_obstacleVirtual" ){
 			//Already perceived by the distance_filter too
 		}else{
-  		    println("$tt $name | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  msg = $msg ")
+  		    //println("$tt $name | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  msg = $msg ")
 			if( msg.msgId() == "sonarRobot"   )  elabSonarData( msg ) //AVOID to handle other events
   			
 		} 
@@ -29,7 +29,7 @@ val LimitHigh = 150
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 	  suspend fun elabSonarData( msg: ApplMessage ){ //OPTIMISTIC		 
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
-  		println("$tt $name |  elabData data = $data ")		
+  		//println("$tt $name |  elabData data = $data ")		
 		val Distance = Integer.parseInt( data ) 
  		if( Distance > LimitLow && Distance < LimitHigh ){
 			emitLocalStreamEvent( msg ) //propagate

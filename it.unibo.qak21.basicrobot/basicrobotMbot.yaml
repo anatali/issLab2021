@@ -5,6 +5,7 @@ services:
     ports:
       - 8020:8020/tcp
       - 8020:8020/udp
+      - 8080:8080 
     privileged: true
 
 ## docker-compose -f basicrobotMbot.yaml run --service-ports mbot /bin/bash  

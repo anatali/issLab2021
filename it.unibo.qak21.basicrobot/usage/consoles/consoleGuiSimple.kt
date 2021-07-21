@@ -39,7 +39,7 @@ val buttonLabels = arrayOf("e","w", "s", "l", "r", "z", "x", "b", "p", "h")
     	  var move = arg as String
 		  println("consoleGuiSimple | update move=$move")
 		  if( move == "p" ){
-			  val msg = MsgUtil.buildRequest("console", "step", "step(400)", connQak.qakdestination )
+			  val msg = MsgUtil.buildRequest("console", "step", "step(600)", connQak.qakdestination )
 			  connQakSupport.request( msg )
 		  } 
 		  else if( move == "e" ){

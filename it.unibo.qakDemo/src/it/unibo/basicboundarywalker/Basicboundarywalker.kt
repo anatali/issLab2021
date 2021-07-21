@@ -40,6 +40,7 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 						forward("cmd", "cmd(s)" ,"basicrobot" ) 
 						delay(500) 
 						forward("cmd", "cmd(h)" ,"basicrobot" ) 
+						 sysUtil.waitUser("starting ", 100000)  
 					}
 					 transition( edgeName="goto",targetState="detectBoundary", cond=doswitch() )
 				}	 
