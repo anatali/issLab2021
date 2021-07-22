@@ -40,6 +40,7 @@ QActor basicrobot context ctxbasicrobot{
  	State s0 initial { 	      
  		println("basicrobot | START")	
  		//[# sysUtil.trace = true #]		//Equivalent to the -trace flag
+ 		[# sysUtil.waitUser("hello", 3000) #]
  		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
         if[# RobotType != "virtual" #]{
@@ -80,10 +81,16 @@ QActor basicrobot context ctxbasicrobot{
  			#]
  		}
  		//updateResource [# "basicrobot(start)" #]
-    	run unibo.robot.robotSupport.move( "h" )
+    	run unibo.robot.robotSupport.move( "h" )	//DEFENSIVE
  		delay 1000
-   		run unibo.robot.robotSupport.move( "l" )
-		run unibo.robot.robotSupport.move( "r" )
+   		run unibo.robot.robotSupport.move( "w" )
+ 		delay 400
+    	run unibo.robot.robotSupport.move( "h" )
+    	run unibo.robot.robotSupport.move( "s" )
+ 		delay 400
+    	run unibo.robot.robotSupport.move( "h" )
+   		//run unibo.robot.robotSupport.move( "l" )
+		//run unibo.robot.robotSupport.move( "r" )
  		discardMsg Off  //WE want receive any msg
  	}
 	Goto work

@@ -26,6 +26,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("s0") { //this:State
 					action { //it:State
 						println("basicrobot | START")
+						 sysUtil.waitUser("hello", 3000)  
 						unibo.robot.robotSupport.create(myself ,"basicrobotConfig.json" )
 						 RobotType = unibo.robot.robotSupport.robotKind  
 						if(  RobotType != "virtual"  
@@ -65,8 +66,12 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 }
 						unibo.robot.robotSupport.move( "h"  )
 						delay(1000) 
-						unibo.robot.robotSupport.move( "l"  )
-						unibo.robot.robotSupport.move( "r"  )
+						unibo.robot.robotSupport.move( "w"  )
+						delay(400) 
+						unibo.robot.robotSupport.move( "h"  )
+						unibo.robot.robotSupport.move( "s"  )
+						delay(400) 
+						unibo.robot.robotSupport.move( "h"  )
 						discardMessages = false
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )

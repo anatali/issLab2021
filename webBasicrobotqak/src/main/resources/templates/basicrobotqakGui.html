@@ -31,6 +31,8 @@ We also import app.js, which contains the logic of our client application.
     connect()   //defined in app.js
   </script>
 
+
+
 </head>
 
 <body>
@@ -48,7 +50,24 @@ We also import app.js, which contains the logic of our client application.
 <h2>Basicrobot console </h2>
 </div>
 (SpringBoot, HTML POST)
+<p>basicrobotaddr:
+<span id="basicrobotaddr" th:text="${robotAddr}">unknown</span>
+</p>
 
+<script type="text/javascript">
+         var robotaddr = document.getElementById("basicrobotaddr").innerHTML
+         console.log("robotaddr ... "+robotaddr.length)
+         if(  robotaddr.length > 2 ) {
+             var url = robotaddr+":8080"  // FOR WEB CAM
+             var len = url.length;
+             var n   = url.indexOf(":");
+             var j   = url.substring(n+1,len);
+             var ip = "http://" + url + "/?action=stream";
+              //alert("ip="+ip); //ip=http://192.168.1.72:8080/?action=stream
+            console.log("xxxx"+document.getElementById("img_src"))
+            document.getElementById("img_src").src = ip;
+        }
+</script>
 <!--
     ===========================================================
     INPUT AREA
@@ -60,7 +79,7 @@ We also import app.js, which contains the logic of our client application.
     <input type="text" id="configurespec" name="move" value="...">
     <input type="submit" value="set basicrobot address (the port is 8020)">
 </form>
-<p id="ipaddr">PLEASE, activate a basicrobot</p>
+<p>PLEASE, activate a basicrobot</p>
 
 <hr/>
 
@@ -93,9 +112,11 @@ We also import app.js, which contains the logic of our client application.
         <td>
             <!-- <h4>Web cam on Rasp</h4> -->
             <div id="content" align="left" color="yellow">
-                <img src=""  id="img_src" alt=""  width="320" height="240"><br/>
+                <img src="" id="img_src" alt=""  width="320" height="240"><br/>
             </div>
-
+<script type="text/javascript">
+    if( ip.length>0) document.getElementById("img_src").src = ip;
+</script>
         </td>
     </tr>
     </table>
@@ -107,7 +128,7 @@ We also import app.js, which contains the logic of our client application.
     ===========================================================
     -->
     <div style="background-color: #FAF19C">
-        <p>LAST MOVE OF THIS CONSOLE: <b><span style="color:blue" id="moveinfo" th:text="${viewmodelarg}">Our App</span></b></p>
+        <p>LAST MOVE OF THIS CONSOLE: <b><span style="color:blue" th:text="${viewmodelarg}">Our App</span></b></p>
     </div>
 
     <div style="background-color: #FAF19C">
@@ -116,23 +137,5 @@ We also import app.js, which contains the logic of our client application.
 
 
 <hr/>
-<script type="text/javascript">
-            //setAddr()   //defined in app.js
-        //var v = document.getElementById("ipaddr")
-        //alert(v)
-        //function connectCam(){
-         var addr = document.getElementById("moveinfo").innerHTML
-         var v    = addr.split("=")
-         console.log("ADDR ....... "+v[1])
-		 var url = v[1]+":8080"  // FOR WEB CAM
- 	     var len = url.length;
-	     var n   = url.indexOf(":");
-	     var j   = url.substring(n+1,len);
-		 var ip = "http://" + url + "/?action=stream";
-		 //document.getElementById("ipaddr").innerHTML  = ip;
-		 //alert("ip="+ip); //ip=http://192.168.1.72:8080/?action=stream
-	     document.getElementById("img_src").src = ip;
-	    //}
-</script>
 </body>
 </html>

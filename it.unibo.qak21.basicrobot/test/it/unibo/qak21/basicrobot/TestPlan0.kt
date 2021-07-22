@@ -104,9 +104,9 @@ class TestPlan0 {
 	} 
  
 	@Test 
-	fun goAheadUntilObstacle()  {
+	fun goAheadUntilObstacle()  { 
 		println("+++++++++ goAheadUntilObstacle ")
-		sysUtil.waitUser("PLEASE, put the robot at HOME", 1000 )
+		sysUtil.waitUser("PLEASE, put the robot at HOME", 30000 )
 		val cmdw = MsgUtil.buildDispatch("tester", "cmd", "cmd(w)", "basicrobot")
 		val cmdh = MsgUtil.buildDispatch("tester", "cmd", "cmd(h)", "basicrobot")
 		
@@ -114,7 +114,7 @@ class TestPlan0 {
 			val channelForObserver = Channel<String>()
 			testingObserver!!.addObserver( channelForObserver,"obstacle(w)" )
 		    var result  = ""		
- 			MsgUtil.sendMsg(cmdw, myactor!!)
+ 			MsgUtil.sendMsg(cmdw, myactor!!) 
 			result = channelForObserver.receive()
 			println("+++++++++  goAheadUntilObstacle RESULT=$result for cmd=$cmdw")			
 		    //The command w has the duration of 2500 msec and ALWAYS generates a collision ...

@@ -32,6 +32,7 @@ class HIController {
     //lateinit var connSupport     : connQakBase
     lateinit var coapsupport     : CoapSupport
     lateinit var connToRobot     : connQakBase
+    lateinit var robotAddr       : String
     val channel      = Channel<String>()
     val coapObserver = WebPageCoapHandler(this, null)
     var moveresult="done"
@@ -49,6 +50,7 @@ class HIController {
     //var ws         = IssWsHttpJavaSupport.createForWs ("localhost:8083")
     fun configure(addr : String){
         connQak.robothostAddr = addr
+        robotAddr             = addr
         if( addr == "localhost" ) {/*
             try {
                 scopeTorunBasicrobot.launch {
@@ -94,6 +96,7 @@ class HIController {
         @RequestParam(name="move", required=false, defaultValue="h")robotmove : String
     ): String {
         viewmodel.addAttribute("viewmodelarg", robotmove)
+        viewmodel.addAttribute("robotAddr",  robotAddr) //always ...
         sysUtil.colorPrint("HIController | doMoveOnGet=$robotmove", Color.RED)
         return  "basicrobotqakGui"
     }
@@ -103,8 +106,8 @@ class HIController {
       @RequestParam(name="move", required=false, defaultValue="h")addr : String) : String {
         if( addr!="localhost"){
             configure(addr)
-
             viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr)
+            viewmodel.addAttribute("robotAddr",  robotAddr)
         }else{
             viewmodel.addAttribute("viewmodelarg", "localhost not allowed")
         }
@@ -145,6 +148,7 @@ class HIController {
         }
         //
         viewmodel.addAttribute("viewmodelarg", "${robotmove}:${moveresult}")
+        viewmodel.addAttribute("robotAddr",  robotAddr) //always ...
         moveresult = "done"
         //sysUtil.colorPrint("HIController | return the page after move ", Color.RED)
         return "basicrobotqakGui"
