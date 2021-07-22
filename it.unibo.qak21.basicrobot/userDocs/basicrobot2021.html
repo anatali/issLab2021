@@ -1101,22 +1101,36 @@ docker-compose -f basicrobotMbot.yaml run <ks>--service-ports</ks> mbot <ks>/bin
 <table style="width:98%">
 <tbody>	
 <tr>
-<td style="width:50%" >
+<td style="width:55%" >
 The project <a href="../../webBasicrobotqak" target="code">webBasicrobotqak</a>: does introduce a WebGui application in Spring
 that connects with a basicrobot at the address specified by the user. <br/>
 
-<center><img src="./img/webguiwithcam.PNG" alt="webguiwithcam" width="90%"></center>
+<center><img src="./img/webguiwithcam.PNG" alt="webguiwithcam" width="70%"></center>
+ 
+<ul>
+<li>Launch the WebCam: 
+see <a href="../../it.unibo.raspIntro2020/userDocs/LabRaspiIntro.html#mjpg" target="code">LabRaspiIntro.html:Install mjpg-streamer</a>
+<pre>
+<a href="../src/resources/robotMbot/webcam.sh" target="code">webcam.sh &</a> 
+<m>/usr/local/bin/mjpg_streamer -i "input_uvc.so -r 1280x720 -d /dev/video0 -f 30" -o "output_http.so -p 8080 -w /usr/local/share/mjpg-streamer/www"</m>
+</pre>
+
+</li>
+</ul>
  
 </td>
 <td>
+<center><img src="./img/webguiArch.PNG" alt="webguiArch" width="90%"></center>
+
 <ul>
+<!--
 <li>Launch the WebCam: see <a href="../../it.unibo.raspIntro2020/userDocs/LabRaspiIntro.html#mjpg" target="code">LabRaspiIntro.html:Install mjpg-streamer</a>
 <pre>
 <a href="../src/resources/robotMbot/webcam.sh" target="code">webcam.sh &</a> 
 <m>/usr/local/bin/mjpg_streamer -i "input_uvc.so -r 1280x720 -d /dev/video0 -f 30" -o "output_http.so -p 8080 -w /usr/local/share/mjpg-streamer/www"</m>
 </pre>
- 
 </li>
+-->
 <li>The <a href="../../webBasicrobotqak/Dockerfileforpc" target="code">Dockerfileforpc</a>  creates the image for
 the WebGui:
  <pre><m>gradlew build

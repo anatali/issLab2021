@@ -26,9 +26,14 @@ We also import app.js, which contains the logic of our client application.
       //document.getElementById("myIp").innerHTML   = ip;
       //document.getElementById("raspIp").innerHTML = "192.168.1.5";
     }
-
     //myIp()
-    connect()   //defined in app.js
+/*
+-------------------------------------------------------------------
+/it-unibo-iss
+/topic/infodisplay
+-------------------------------------------------------------------
+*/
+    connectWs()   //defined in app.js
   </script>
 
 
@@ -55,17 +60,16 @@ We also import app.js, which contains the logic of our client application.
 </p>
 
 <script type="text/javascript">
+         var robotip =""
          var robotaddr = document.getElementById("basicrobotaddr").innerHTML
-         console.log("robotaddr ... "+robotaddr.length)
+         console.log("robotaddr ... "+robotaddr )
          if(  robotaddr.length > 2 ) {
              var url = robotaddr+":8080"  // FOR WEB CAM
              var len = url.length;
              var n   = url.indexOf(":");
              var j   = url.substring(n+1,len);
-             var ip = "http://" + url + "/?action=stream";
-              //alert("ip="+ip); //ip=http://192.168.1.72:8080/?action=stream
-            console.log("xxxx"+document.getElementById("img_src"))
-            document.getElementById("img_src").src = ip;
+             robotip = "http://" + url + "/?action=stream";
+             //alert("robotip="+robotip); //robotip=http://192.168.1.72:8080/?action=stream
         }
 </script>
 <!--
@@ -115,7 +119,7 @@ We also import app.js, which contains the logic of our client application.
                 <img src="" id="img_src" alt=""  width="320" height="240"><br/>
             </div>
 <script type="text/javascript">
-    if( ip.length>0) document.getElementById("img_src").src = ip;
+    if( robotip.length>0) document.getElementById("img_src").src = robotip;
 </script>
         </td>
     </tr>

@@ -20,7 +20,14 @@ function setAddr(){
     alert("setAddr " + v)
 }
 
-function connect() {
+/*
+SockJS is a JavaScript library (for browsers) that provides a WebSocket-like object.
+SockJS gives you a coherent, cross-browser, Javascript API which creates a low latency,
+full duplex, cross-domain communication channel between the browser and the web server,
+with WebSockets or without.
+This necessitates the use of a server, which this is one version of, for Node.js.
+*/
+function connectWs() {
     var socket = new SockJS('/it-unibo-iss');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
