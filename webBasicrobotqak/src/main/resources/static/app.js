@@ -1,6 +1,7 @@
 var stompClient = null;
 //alert("app.js")
 
+
 function setConnected(connected) {
 console.log(" %%% app setConnected:" + connected );
     $("#connect").prop("disabled", connected);
@@ -14,15 +15,19 @@ console.log(" %%% app setConnected:" + connected );
     $("#greetings").html("");
 }
 
+function setAddr(){
+    var v = document.getElementById("infodisplay")
+    alert("setAddr " + v)
+}
+
 function connect() {
     var socket = new SockJS('/it-unibo-iss');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        //setConnected(true);
+        //alert('connect to socket ' + frame)
         //SUBSCRIBE to STOMP topic updated by the server
         stompClient.subscribe('/topic/infodisplay', function (msg) {
              //msg: {"content":"..."}
-             //alert(msg)
              var jsonMsg = JSON.parse(msg.body).content;
              showMsg( jsonMsg, "infodisplay" );
         });

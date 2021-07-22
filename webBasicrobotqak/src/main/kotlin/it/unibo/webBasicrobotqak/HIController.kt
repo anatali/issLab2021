@@ -103,6 +103,7 @@ class HIController {
       @RequestParam(name="move", required=false, defaultValue="h")addr : String) : String {
         if( addr!="localhost"){
             configure(addr)
+
             viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr)
         }else{
             viewmodel.addAttribute("viewmodelarg", "localhost not allowed")
