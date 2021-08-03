@@ -37,7 +37,7 @@ QActor basicrobot context ctxbasicrobot{
   var RobotType     = "" 
   var CurrentMove   = "moveUnknown"
 #]  
- 	State s0 initial { 	      
+ 	State s0 initial { 	       
  		println("basicrobot | START")	
  		//[# sysUtil.trace = true #]		//Equivalent to the -trace flag
  		[# sysUtil.waitUser("hello", 3000) #]

@@ -399,9 +399,34 @@ E' raccomandato che i risultati di questa fase vengano presentati al committente
 </div>
 </li>
 <li><i>Fase di progetto e realizzazione</i>, che termina con il deployment del prodotto.</li>
+
+<li>
+
+</li>
 <li><i>Fase di discussione</i> del lavoro svolto, che potrebbe (auspicabilmente) svolgersi IN PRESENZA in LAb2.
 E' opportuno che ogni partecipante sia pronto a discutere anche sugli elaborati che ha prodotto durante il corso. </li>
 </ol>
+
+<div>
+<k>AL TERMINE DEL LAVORO:</k>
+<pre>
+1) Porre il sistema in uno stato con 
+       <ks>0 &lt; nfree &lt; 6 </ks> slot liberi e <ks>0 &lt; nbusy &lt; 6</ks>  slot occupati.
+2) Ipotizzare che la temperatura sia e permanga ok, il fan spento, 
+   INDOOR e OUTDOOR libere
+3) Simulare che il sistema riceva, a distanza di 2 sec l'una dall'altra:
+	a) una enterrequest 
+        b) una carenter
+	c) una pickup request
+4) Definire le variazioni di stato che il <k>SISTEMA REALIZZATO</k> effettua.
+Ad esempio:
+  Il sistema risponde al client al punto a) e poi inizia una <ks>acceptin</ks> al punto b).
+  In questa fase, il cliente vede ... mentre il manager vede ...
+  Quando arriva c) ...
+
+5) Indicare la strategia seguita per poter automatizzare un test di questo tipo 
+</pre>
+</div>
 
 <!--
 See <a href="https://phoenixnap.com/kb/how-to-commit-changes-to-docker-image" target="web">How to Commit Changes to a Docker Image</a>
