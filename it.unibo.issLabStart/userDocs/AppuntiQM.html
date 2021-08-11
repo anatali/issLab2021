@@ -244,8 +244,14 @@ http://docs.mathjax.org/en/latest/basic/mathematics.html
 <br/>
 <em>orthonormal set</em>: un insieme di vettori unitari che sono mutualmente ortogonali.
 
-<br/> <br/>
+<br/> 
 <em>tensor product</em> \( \vdue{a}{b} \otimes \vdue{c}{d} = \vquattro{ac}{ad}{bc}{bd}  \) <br/> <br/>
+
+<hr/>
+\( a\ket{01} + b\ket{11} = a\ket{0} \otimes \ket{1} + b\ket{1} \otimes \ket{1} = 
+{\color{blue} a\ket{0} \ket{1} + b\ket{1} \ket{1} } = 
+\vdue{a}{0} \otimes \duno +  \vdue{0}{b} \otimes \duno 
+= \vquattro{0}{a}{0}{0} + \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b}  \)
 
 <h4>Orthonormal basis</h4>
 \( B =  \{ \ket{b_m} \}  &sube; H  \) <em>Hilbert space</em> \(2^n\) &nbsp; &nbsp;
@@ -254,18 +260,49 @@ http://docs.mathjax.org/en/latest/basic/mathematics.html
 Ogni \( \ket{&psi;} &isin; H  \) si può scriver come: \( \ket{&psi;} = \sum_{b_n&isin;B}  {\color{r}&psi;_n} \ket{b_n}  \) 
 <em>coefficienti</em> di \(\ket{&psi;}\) rispetto alla base
 <br/><br/>
+<em>Computational basis (n=1)</em>:
+\( \ket{0} = \begin{pmatrix}1 \\ 0  \end{pmatrix}  \) &nbsp; &nbsp;
+\( \ket{1} = \begin{pmatrix}0 \\ 1  \end{pmatrix}  \) &nbsp; &nbsp;
+<br/>
+\( \braket{0|0} = \begin{pmatrix}1 & 0  \end{pmatrix} \begin{pmatrix}1 \\ 0  \end{pmatrix} = 1 \) &nbsp; &nbsp;
+\( \braket{0|1} = \begin{pmatrix}1 & 0  \end{pmatrix} \begin{pmatrix}0 \\ 1  \end{pmatrix} = 0 \) &nbsp; &nbsp;
+\( \braket{1|0} = \begin{pmatrix}0 & 1  \end{pmatrix} \begin{pmatrix}1 \\ 0  \end{pmatrix} = 0 \) &nbsp; &nbsp;
+\( \braket{1|1} = \begin{pmatrix}0 & 1  \end{pmatrix} \begin{pmatrix}0 \\ 1  \end{pmatrix} = 1 \) &nbsp; &nbsp;
+
+<br/><br/><em>Computational basis (n=2)</em>:
 \( \ket{00} = \begin{pmatrix}1 \\ 0 \\ 0 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
 \( \ket{01} = \begin{pmatrix}0 \\ 1 \\ 0 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
 \( \ket{10} = \begin{pmatrix}0 \\ 0 \\ 1 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
 \( \ket{11} = \begin{pmatrix}0 \\ 0 \\ 0 \\ 1\end{pmatrix}  \) &nbsp; &nbsp;
 <br/>
-\( a\ket{01} + b\ket{11} =  \vquattro{0}{a}{0}{0} +  \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b} \) 
-<br/>
-\( a\ket{01} + b\ket{11} = a\ket{0} \otimes \ket{1} + b\ket{1} \otimes \ket{1} = 
-{\color{blue} a\ket{0} \ket{1} + b\ket{1} \ket{1} } = 
-\vdue{a}{0} \otimes \duno +  \vdue{0}{b} \otimes \duno 
-= \vquattro{0}{a}{0}{0} + \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b}  \)
 
+<br/><br/>
+
+\( a\ket{01} + b\ket{11} =  \vquattro{0}{a}{0}{0} +  \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b} 
+\) 
+
+<br/><br/><em>Hadamart basis</em>: 
+\( \ket{+} = \frac{1}{\sqrt 2} \left( \ket{0} + \ket{1} \right)  \) &nbsp; &nbsp;
+\( \ket{-} = \frac{1}{\sqrt 2} \left( \ket{0} - \ket{1} \right)  \)
+<br/>
+\( 
+\braket{+|-} = \frac{1}{\sqrt 2} \left( {\color{red}\bra{0} + \bra{1}} \right) . \frac{1}{\sqrt 2} \left( \ket{0} - \ket{1} \right) =
+ \frac{1}{2} \left(  \bra{0} + \bra{1}  \right) .  \left( \ket{0} - \ket{1} \right) =
+ \frac{1}{2} \left( \braket{0|0} + \braket{1|0} + \braket{1|0} - \braket{1|1} \right) =
+  \frac{1}{2} \left( 1 + 0 + 0 -1 \right) = 0
+\) 
+<br/>
+\( 
+\braket{+|+}=  \frac{1}{\sqrt 2} \left( {\color{red}\bra{0} + \bra{1}} \right) . \frac{1}{\sqrt 2} \left( \ket{0} + \ket{1} \right) =
+\frac{1}{2} \left( \braket{0|0} + \braket{1|0} + \braket{0|1} + \braket{1|1} \right) =
+  \frac{1}{2} \left( 1 + 0 + 0 +1 \right) = 1		
+\) &nbsp; &nbsp; norma al quadrato
+<br/>
+\( 
+\braket{-|-}=  \frac{1}{\sqrt 2} \left( {\color{red}\bra{0} - \bra{1}} \right) . \frac{1}{\sqrt 2} \left( \ket{0} - \ket{1} \right) =
+\frac{1}{2} \left( \braket{0|0} - \braket{1|0} - \braket{0|1} + \braket{1|1} \right) =
+  \frac{1}{2} \left( 1 - 0 - 0 +1 \right) = 1		
+\) &nbsp; &nbsp; norma al quadrato
 
 
 <h4>Example</h4>
@@ -277,6 +314,7 @@ Ogni \( \ket{&psi;} &isin; H  \) si può scriver come: \( \ket{&psi;} = \sum_{b_
 \frac{-i}{\sqrt{6}}
 \) 
 <br/>
+
 \( \braket{{&psi;}|{&phi;}} = 
 \left( \sqrt{\frac{2}{3}} \ket{01} + \frac{i}{\sqrt 3} \ket{11}  \right)  
 \left( \sqrt{\frac{1}{2}} \ket{10} + \sqrt{\frac{1}{2}} \ket{11} \right)   =
