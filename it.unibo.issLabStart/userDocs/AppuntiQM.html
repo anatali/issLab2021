@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>    
+ 
+
+<script>
+window.MathJax = {
+  loader: {load: ['[tex]/braket']},
+  tex: {packages: {'[+]': ['braket']}}
+};
+window.MathJax = {
+  loader: {load: ['[tex]/color']},
+  tex: {packages: {'[+]': ['color']}}
+};
+</script>
+<head>
+   
+<title>QMAppunti 2021</title></head>
+    
+<body>
+<div id="top">
+<h1>Appunti <font size="5"></font> </h1>
+</div>  
+
+<h3>Notazioni (see <a href="http://docs.mathjax.org/en/latest/basic/mathematics.html" target="web">Writing Mathematics for MathJax</a>)</h3>
+<!--
+https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference
+http://docs.mathjax.org/en/latest/basic/mathematics.html
+-->
+<ins class="cmath">
+\(
+   \def\RR{{\bf R}}
+   \def\bold#1{{\bf #1}}
+   \def\vdue#1#2{{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}}
+   \def\vduedual#1#2{{\begin{pmatrix} #1^* & #2^* \end{pmatrix}}}
+    \def\vquattro#1#2#3#4{{\begin{pmatrix} #1 \\ #2 \\ #3 \\ #4\end{pmatrix}}}
+   \def\Cg { 9.81 \ \mathrm{m\!\cdot\!s\small{^{-2}}} }    
+   \def\mnot{ {\begin{pmatrix}0 &1 \\1 & 0\end{pmatrix}  }}
+   \def\dzero{ {\begin{pmatrix}1 \\ 0\end{pmatrix}  }}
+   \def\duno{ {\begin{pmatrix}0 \\ 1\end{pmatrix}  }}
+\)
+</ins>
+
+<h4>Notazioni di Dirac</h4>
+\( \ket{0} = \begin{pmatrix}1 \\ 0\end{pmatrix}  \)  &nbsp; &nbsp;
+\( \ket{1} = \begin{pmatrix}0 \\ 1\end{pmatrix}  \)  <br/>
+\( \vdue{a}{b} = a\dzero + b\duno = a\ket{0} + b\ket{1}\) 
+
+<h4>Definizioni</h4>
+
+\( v=\vdue{v_1}{v_2}\) &nbsp; &nbsp; \(w=\vdue{w_1}{w_2} \)  <br/>
+<em>inner product</em> &nbsp; &nbsp;\( p=v.w = \vdue{v_1}{v_2} . \vdue{w_1}{w_2} = { \color{red} \braket{v|w} }= \vduedual{v_1}{v_2}  \vdue{w_1}{w_2} = \sum_{i=1}^n v_i^*w_i \) 
+&nbsp; &nbsp;<em>ortogonali</em>: due vettori che hanno inner product=0.
+<br/><br/>
+<em>Euclidean norm</em>:
+\( || &psi; || = \sqrt{ \braket{ {&psi;}|{&psi;}} } \) &nbsp; &nbsp; <em>Unitary vector</em>: vettore che ha norma=1 &nbsp; &nbsp;<br/>
+<br/>
+<em>orthonormal set</em>: un insieme di vettori unitari che sono mutualmente ortogonali.
+
+<br/> <br/>
+<em>tensor product</em> \( \vdue{a}{b} \otimes \vdue{c}{d} = \vquattro{ac}{ad}{bc}{bd}  \) <br/> <br/>
+
+<h4>Orthonormal basis</h4>
+\( B =  \{ \ket{b_m} \}  &sube; H  \) <em>Hilbert space</em> \(2^n\) &nbsp; &nbsp;
+<em>base ortonormale</em> se: \( \braket{b_n | b_m}  =  &delta;_{n,m} &nbsp;  \) <em>Kroneker delta function</em> &nbsp; &nbsp; \( \forall{ b_n , b_m } &isin; B\)
+<br/><br/>
+Ogni \( \ket{&psi;} &isin; H  \) si può scriver come: \( \ket{&psi;} = \sum_{b_n&isin;B}  {\color{r}&psi;_n} \ket{b_n}  \) 
+<em>coefficienti</em> di \(\ket{&psi;}\) rispetto alla base
+<br/><br/>
+\( \ket{00} = \begin{pmatrix}1 \\ 0 \\ 0 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
+\( \ket{01} = \begin{pmatrix}0 \\ 1 \\ 0 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
+\( \ket{10} = \begin{pmatrix}0 \\ 0 \\ 1 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
+\( \ket{11} = \begin{pmatrix}0 \\ 0 \\ 0 \\ 1\end{pmatrix}  \) &nbsp; &nbsp;
+<br/>
+\( a\ket{01} + b\ket{11} =  \vquattro{0}{a}{0}{0} +  \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b} \) 
+<br/>
+\( a\ket{01} + b\ket{11} = a\ket{0} \otimes \ket{1} + b\ket{1} \otimes \ket{1} = 
+{\color{blue} a\ket{0} \ket{1} + b\ket{1} \ket{1} } = 
+\vdue{a}{0} \otimes \duno +  \vdue{0}{b} \otimes \duno 
+= \vquattro{0}{a}{0}{0} + \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b}  \)
+
+
+
+<h4>Example</h4>
+\( \ket{&psi;} =   \sqrt{\frac{2}{3}} \ket{01} + \frac{i}{\sqrt 3} \ket{11}  \)  &nbsp; &nbsp;
+\( \ket{&phi;} =   \sqrt{\frac{1}{2}} \ket{10} + \sqrt{\frac{1}{2}} \ket{11}  \) 
+<br/><br/>
+\( \braket{{&psi;}|{&phi;}} = \begin{pmatrix}0 & \sqrt{\frac{2}{3}} &0 & \frac{-i}{\sqrt 3}  \end{pmatrix} 
+\vquattro{0}{0}{\sqrt{\frac{1}{2}}}{\sqrt{\frac{1}{2}}}  = 0*0+\sqrt{\frac{1}{2}}*0+0*\sqrt{\frac{1}{2}}+\frac{-i}{\sqrt 3}*\sqrt{\frac{1}{2}}=
+\frac{-i}{\sqrt{6}}
+\) 
+<br/>
+\( \braket{{&psi;}|{&phi;}} = 
+\left( \sqrt{\frac{2}{3}} \ket{01} + \frac{i}{\sqrt 3} \ket{11}  \right)  
+\left( \sqrt{\frac{1}{2}} \ket{10} + \sqrt{\frac{1}{2}} \ket{11} \right)   =
+\sqrt{\frac{2}{3}} \sqrt{\frac{1}{2}} \braket{01|10} + \sqrt{\frac{2}{3}} \sqrt{\frac{1}{2}} \braket{01|11}+
+\frac{-i}{\sqrt{3}} \sqrt{\frac{1}{2}} \braket{11|10} + \frac{-i}{\sqrt{3}} \sqrt{\frac{1}{2}} \braket{11|11}=
+0+0+0+\frac{-i}{\sqrt{6}}
+\)
+
+<hr/>
+ 
+<br/>
+<!--
+$$\muno$$
+$$\begin{pmatrix}1 \\ 0 \end{pmatrix}$$
+$$ \Cg{} $$
+$$ \bold{math} $$
+$$\left(\begin{bmatrix} 1 \cr 3 \end{bmatrix} - \begin{bmatrix} 2 \cr 2 \end{bmatrix} \right) \cdot \begin{bmatrix} 4 \cr 4 \end{bmatrix}  =0$$
+
+<p>
+  When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+  \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+  
+  $$\begin{pmatrix}0 &1\\\ 1 & 0\end{pmatrix}$$
+</p>
+-->
+
+<h3>Rovelli</h3>
+Modello 2021: SpaziTempo + CampiQauntistici
+
+Campo? Equazioni di Maxwell = versione matematica delle linee di Farady (campo-em)
+CampoQuantistico (Dirac) particella = eccitazione quantificata di un campo
+Ci sono una quindicina di campi le cui eccitazioni sono elettroni, quark, muoni, neutrini ,bosone di Higgs,..).
+I fotoni sono i quanti del campo-em.
+Elettroni e fotoni non seguono traitteittorie ma 'compaiono' nello SapzioTempo quando interagiscono con 'qualcosa'.
+Non vi è modo di prevedere con certezza DOVE e QUANDO.
+
+Per calcolare la probabilità che un elettrone in A riappaia in B occorre considerare TUTTI i possibili 'percorsi' da A a B.
+La QM sono le RELAZIONI che danno origine all'idea di oggetto.  Un oggetto è un PROCESSO MONOTONO, cioè che si ripete uguale a se stesso per un pò.
+Esempio dell'onda cone 'entità' (pg. 119).
+Le proprietà delle 'cose' si manifestano in modo granulare ai 'bordi' del processo, quando c'è interazione.
+
+A livello quantistico (Penrose pg. 304) cioè non classico, le equazioni non descrivono quello che accade in un sistema fisico,
+ma solo come un sistema fisico possa influenzare un altro sistema fisico.
+
+<h3>Penrose</h3>
+Nell'esperimento dello specchio semi-argentato (pg. 328) non possiamo sapere DOVE si trova il fotone.
+Possiamo sapere quale sarebbe la probabilità di trovare il fotone in un punto se si collocasse un rilevatore in quel punto
+grazie alla funzione d'onda <ks>Ψ</ks> (pg. 313) che ne descrive lo stato quantico (pg. 291) in forma di 
+<a href="https://it.wikipedia.org/wiki/Equazione_di_Schr%C3%B6dinger" target="web">equazione di Shrödinger</a> (pg.291).
+<br/><br/>
+<h4>Equazione di Shrödinger</h4>
+
+L'equazione di Shrödinger fornisce l'evoluzione temporale dello stato quantico in modo deterministico (pg. 291).
+ha come incognita la funzione d'onda <ks>Ψ</ks>, introdotta basandosi sull'ipotesi di de Broglie dell'onda di materia. 
+<hr/>
+ Riprendendo concetti tratti della teoria della relatività ristretta, de Broglie ricavò la relazione: 
+<ks>λ=h/p</ks> dove <ks>p</ks> è la quantità di moto della particella considerata e <ks>λ</ks>  prende il nome di lunghezza d'onda di de Broglie.
+<hr/>
+L'equazione di Shrödinger è una equazione differenziale le cui soluzioni, le funzioni d'onda, restituiscono i numeri quantici cruciali 
+per la risoluzione della struttura atomica di un elemento. <br/>
+L'equazione di Schrödinger è inoltre in grado di descrivere l'evoluzione di una particella libera, 
+rappresentando l'analogo della seconda legge di Newton <tt>F=ma</tt> in meccanica classica, utilizzata per ricavare una predizione sulla traiettoria 
+che un dato sistema seguirà date certe condizioni iniziali.
+<b>Va sottolineato tuttavia che in ambito quantistico il concetto classico di traiettoria perde significato</b>. <br/>
+Sebbene questa teoria, chiamata dall'autore <i>meccanica ondulatoria</i>, possa sembrare un'interpretazione diversa dalla 
+meccanica matriciale di Heisenberg, Born e Jordan, Schrödinger dimostrò che i due procedimenti matematici sono equivalenti.
+</br/> 
+Secondo l'interpretazione di Copenaghen, il modulo quadro della funzione d'onda è legato alla probabilità di trovare 
+una particella in una determinata regione spaziale.
+<br/><br/>
+ 
+Un fotone di frequenza  v che si muove verso una fenditura (pg. 318) ha una funzione d'onda che si compone 
+(via analisi armonica pg. 315) di stati di quantità di moto in diverse direzioni.
+<br/><br/>
+Lo stato quantico di un intero sistema è rappresentato da un singolo punto (vettore di stato) <k>|ψ></k> nello spazio vettoriale di Hilber (pg.331)
+<br/><br/>
+La misurazione completa di una posizione di una particella, richiderebbe che fossimo in grado di localizzare la particella OVUNQUE nell'uiniverso.
+Un tipo elementare di misurazione è quella per la quale ci poniamo una domanda con risposta SI/NO (pg. 337)
+Il risultati si trova in una di due regioni ortogonali dello spazio di Hilbert per cui:
+<pre>
+|ψ> = |ψs> + |ψn>
+</pre>
+Dopo la misurazione lo stato SALTA. Esempio della misura dello spin pg. 339.	
+
+<h3>Feynmann</h3>
+Per le interazione elettroni-fotoni valgono le seguenti leggi (p. 102):
+1) se qualcosa si può verificare in modi aòternativi, le probabilità vanno sommate
+2) se un fenomeno si presenta come una successioni di passi, si devono moltiplicare le probabilità di ciascu passo/evento
+
+In tutti i fenomenti in cui intervengono luce ed elettroni ci sono 3 eventi elementari (pg. 110):
+1) un fotone si propaga da un punto A ad un altro B (si spiega l'ottica meno la polarizzazione e l'interazione con la materia - pg.116).
+L'ampiezza di probabilità viene denotata con F(A-B)
+2) un elettrone si propaga da un punto A ad un altro B. L'ampiezza di probabilità viene denotata con E(A-B)
+3) un elettrone emette od assorbe un fotone. L'ampiezza di probabilità viene denotata con j (circa -0.1, rotazione di 1/10 e mezzo giro).
+
+Un fotone può viaggiare e velocità inferiori a c (pg. 115)
+Ogni particalla ha una ampiezza di probabilità di muoversi all'indietro nel tempo e dunque possiede una antiparticella.
+I fotoni coincidono con le proprie antiparticelle.
+
+<br/><br/> 	
+
+<h3>Riferimenti</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=CGKOvT5E4ZY" target="web">FORMULA DI EULERO con dimostrazione</a></li>
+<li></li>
+<li></li>
+</ul>
+
+
+</div>  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div>
+</body>
+</html>

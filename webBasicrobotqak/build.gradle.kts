@@ -18,7 +18,8 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8 //JavaVersion.VERSION_11
 repositories {
 	mavenCentral()
 	jcenter() 	//required by andrea pivetta	JFrog shutdown in February 2021
-	flatDir{ dirs("../unibolibs")   }   //Our libraries
+	//flatDir{ dirs("../unibolibs")   }   //Our libraries
+	flatDir {   dirs ("C:/Didattica2021/issLab2021/unibolibs")	 }
 }
 
 dependencies {
