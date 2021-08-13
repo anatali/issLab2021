@@ -212,7 +212,11 @@ window.MathJax = {
 <h3>Notazioni (see <a href="http://docs.mathjax.org/en/latest/basic/mathematics.html" target="web">Writing Mathematics for MathJax</a>)</h3>
 <!--
 https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference
-http://docs.mathjax.org/en/latest/basic/mathematics.html
+http://docs.mathjax.org/en/latest/basic/mathematics.html  
+https://www.youtube.com/watch?v=FCmH4MqbFGs           VIDEO sui prodotti
+https://keisan.casio.com/exec/system/15051976583459   CALCULATOR
+https://www.youmath.it/ym-tools-calcolatore-automatico/algebra-lineare.html
+https://www.youmath.it/ym-tools-calcolatore-automatico/calcolatrice.html
 -->
 <ins class="cmath">
 \(
@@ -220,31 +224,86 @@ http://docs.mathjax.org/en/latest/basic/mathematics.html
    \def\bold#1{{\bf #1}}
    \def\vdue#1#2{{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}}
    \def\vduedual#1#2{{\begin{pmatrix} #1^* & #2^* \end{pmatrix}}}
-    \def\vquattro#1#2#3#4{{\begin{pmatrix} #1 \\ #2 \\ #3 \\ #4\end{pmatrix}}}
+   \def\vduerow#1#2{{\begin{pmatrix} #1 & #2 \end{pmatrix}}}
+   \def\vquattro#1#2#3#4{{\begin{pmatrix} #1 \\ #2 \\ #3 \\ #4\end{pmatrix}}}
    \def\Cg { 9.81 \ \mathrm{m\!\cdot\!s\small{^{-2}}} }    
    \def\mnot{ {\begin{pmatrix}0 &1 \\1 & 0\end{pmatrix}  }}
    \def\dzero{ {\begin{pmatrix}1 \\ 0\end{pmatrix}  }}
-   \def\duno{ {\begin{pmatrix}0 \\ 1\end{pmatrix}  }}
+   \def\dzerocj{ {\begin{pmatrix}1 & 0\end{pmatrix}  }}
+   \def\duno{ {\begin{pmatrix}0 \\ 1\end{pmatrix}  }}   
+   \def\dunocj{ {\begin{pmatrix}0 & 1\end{pmatrix}  }}   
 \)
 </ins>
 
 <h4>Notazioni di Dirac</h4>
-\( \ket{0} = \begin{pmatrix}1 \\ 0\end{pmatrix}  \)  &nbsp; &nbsp;
-\( \ket{1} = \begin{pmatrix}0 \\ 1\end{pmatrix}  \)  <br/>
-\( \vdue{a}{b} = a\dzero + b\duno = a\ket{0} + b\ket{1}\) 
+<em>Column vectors</em>: &nbsp; &nbsp; \( \ket{0} = \begin{pmatrix}1 \\ 0\end{pmatrix}  \)  &nbsp; &nbsp;
+\( \ket{1} = \begin{pmatrix}0 \\ 1\end{pmatrix}  \)  &nbsp; &nbsp;
+<em>Dual vectors:</em>&nbsp; &nbsp;
+\( { \color{blue}\bra{0}} = \dzerocj  \)  &nbsp; &nbsp;
+\( { \color{blue}\bra{1}} = \dunocj  \)  &nbsp; &nbsp;
+<i>Hermitian conjugate</i> of the column matrix
+
+<hr/>
+\( \vdue{a}{b} = a\dzero + b\duno = a\ket{0} + b\ket{1}\) <br/>
+\( \braket{0|0} = \dzerocj . \dzero = 1 \) &nbsp; &nbsp;
+\( \braket{1|1} = \dunocj . \duno = 1 \)   &nbsp; &nbsp;
+\( \braket{0|1} = \dzerocj . \duno = 0 \)  &nbsp; &nbsp;
+\( \braket{1|0} = \dunocj . \dzero = 0 \)  &nbsp; &nbsp;
 
 <h4>Definizioni</h4>
-
 \( v=\vdue{v_1}{v_2}\) &nbsp; &nbsp; \(w=\vdue{w_1}{w_2} \)  <br/>
-<em>inner product</em> &nbsp; &nbsp;\( p=v.w = \vdue{v_1}{v_2} . \vdue{w_1}{w_2} = { \color{red} \braket{v|w} }= \vduedual{v_1}{v_2}  \vdue{w_1}{w_2} = \sum_{i=1}^n v_i^*w_i \) 
-&nbsp; &nbsp;<em>ortogonali</em>: due vettori che hanno inner product=0.
+<em>inner product</em> &nbsp; &nbsp;\( p=v.w = \vdue{v_1}{v_2} . \vdue{w_1}{w_2} ={ \color{red}v^&dagger;}.w \) &nbsp; &nbsp; 
+<i>Hermitian/conjugate transpose</i> or <em>adjoint</em>  &nbsp; &nbsp;  <bc>Definzione analitica</bc><br/>
+
+\( v^&dagger;.w  = \vduedual{v_1}{v_2}  \vdue{w_1}{w_2} = { \color{red} \braket{v|w} } = \sum_{i=1}^n v_i^*w_i \) 
+&nbsp; &nbsp;<em>ortogonali</em>: due vettori che hanno inner product=0 (\( v^&dagger;.w=0 ) \).
 <br/><br/>
 <em>Euclidean norm</em>:
-\( || &psi; || = \sqrt{ \braket{ {&psi;}|{&psi;}} } \) &nbsp; &nbsp; <em>Unitary vector</em>: vettore che ha norma=1 &nbsp; &nbsp;<br/>
-<br/>
+\( || v || = (v^&dagger;.v)^\frac{1}{2}= \sqrt{ \braket{ v|v} } \) &nbsp; &nbsp; <em>Unitary vector</em>: vettore che ha norma=1 &nbsp; &nbsp; 
 <em>orthonormal set</em>: un insieme di vettori unitari che sono mutualmente ortogonali.
+<br/><br/>
+ <center>
+ <table style="width:95%">
+<tbody>	
+<tr>
+<td style="width:25%" >
+ <center> <img src="./img/qm/unitCircle.PNG" alt="unitCircle" width="100%"></center> 
+</td>
+<td>
+\( a = \vdue{ 1/\sqrt{2}}{ 1/\sqrt{2}} \) &nbsp;    θ = π/4 &nbsp; &nbsp; &nbsp;  
+\( b = \vdue{ -1/\sqrt{2}}{ 1/\sqrt{2}} \) &nbsp;   θ = 3π/4 &nbsp; &nbsp; &nbsp;  
+\( c = \vdue{ -1/\sqrt{2}}{ -1/\sqrt{2}} \) &nbsp;   θ = 5π/4 &nbsp; &nbsp; &nbsp;  
+\( d = \vdue{ 1/\sqrt{2}}{ -1/\sqrt{2}} \) &nbsp;   θ = 7π/4 &nbsp; &nbsp; &nbsp;  
+<hr/><m>
+<!-- https://www.youmath.it/ym-tools-calcolatore-automatico/algebra-lineare/prodotto-scalare-online.html -->
+\( \braket{a|a} = \vduerow{ 1/\sqrt{2}} { 1/\sqrt{2} }  \vdue{ 1/\sqrt{2}}{ 1/\sqrt{2}} = 1  \) &nbsp; &nbsp; &nbsp;  <br/>
+\( \braket{a|b} = \vduerow{ 1/\sqrt{2}} { 1/\sqrt{2} }  \vdue{ -1/\sqrt{2}}{ 1/\sqrt{2}} = 0 = {\color{blue}|a| |b| cos(π/2)} \) 
+&nbsp; &nbsp;  <bc>Definzione geometrica</bc>  \( cos(α) = \frac{\braket{a|b}}{|a| |b|} \)<br/> 
+\( cos(β) = \frac{\braket{a|x}}{1*1} = \vduerow{ 1/\sqrt{2}} { 1/\sqrt{2} }  \vdue{ -1}{ 0} = - 1 / \sqrt{2}  = -0.707106...= {\color{blue} cos(135°)}
+\)  
+<br/>
+\( \braket{a|c} = \vduerow{ 1/\sqrt{2}} { 1/\sqrt{2} }  \vdue{ -1/\sqrt{2}}{ -1/\sqrt{2}} = -1\) &nbsp; &nbsp; &nbsp;  
+\( \braket{c|d} = \vduerow{ -1/\sqrt{2}} { -1/\sqrt{2} }  \vdue{ 1/\sqrt{2}}{ -1/\sqrt{2}} = 0\) &nbsp; &nbsp; &nbsp;  
+</m>
+</td>
+</tr>
+ </tbody>
+</table>
+</center> 
 
-<br/> 
+<br/> <br/> 
+<em>outer product</em> \( v \otimes w =  v.w^&dagger;  = { \color{red} \ket{v} \bra{w}} = 
+\vdue{v_1}{v_2}  \vduedual{w_1}{w_2} =
+\begin{pmatrix}v_1w_1^* & v_1w_2^* \\ v_2w_1^* & v_2w_2^* \end{pmatrix} =
+ \) 
+ <br/> 
+ \( v^&dagger; v = \vduedual{v_1}{v_2}  \vdue{v_1}{v_2}  = \begin{pmatrix}v_1^*v_1 & v_1^*v_2 \\ v_2^*v_2 & v_2^*v_2 \end{pmatrix}  \) 
+ <br/> <br/>
+
+
+ 
+
+
 <em>tensor product</em> \( \vdue{a}{b} \otimes \vdue{c}{d} = \vquattro{ac}{ad}{bc}{bd}  \) <br/> <br/>
 
 <hr/>
@@ -275,7 +334,9 @@ Ogni \( \ket{&psi;} &isin; H  \) si può scriver come: \( \ket{&psi;} = \sum_{b_
 \( \ket{10} = \begin{pmatrix}0 \\ 0 \\ 1 \\ 0\end{pmatrix}  \) &nbsp; &nbsp;
 \( \ket{11} = \begin{pmatrix}0 \\ 0 \\ 0 \\ 1\end{pmatrix}  \) &nbsp; &nbsp;
 <br/>
-
+\( \braket{00|00} = \begin{pmatrix}1 & 0 & 0 & 0 \end{pmatrix} \begin{pmatrix}1 \\ 0 \\ 0 \\ 0 \end{pmatrix} = 1 \) &nbsp; &nbsp;
+\( \braket{00|01} = \begin{pmatrix}1 & 0 & 0 & 0 \end{pmatrix} \begin{pmatrix}0 \\ 1 \\ 0 \\ 0 \end{pmatrix} = 0 \) &nbsp; &nbsp;
+...
 <br/><br/>
 
 \( a\ket{01} + b\ket{11} =  \vquattro{0}{a}{0}{0} +  \vquattro{0}{0}{0}{b} =  \vquattro{0}{a}{0}{b} 
