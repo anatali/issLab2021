@@ -344,7 +344,41 @@ d_1 = -id_2 \text{  o anche } d_2= id_1 \text{  da cui, se poniamo d_1=1 si ha l
 \text{ e anche: }  \begin{pmatrix}1.5 & -0.5i \\ 0.5i & 1.5\end{pmatrix} \vdue{1}{-i} = {\color{red}1}*\vdue{1}{-i}\)
 </m>
 
-
+<h4>Functions as vectors</h4>
+<!-- https://www.wolframalpha.com/examples/mathematics/plotting-and-graphics/ -->
+Una funzione può essere descritta 
+<ul>
+<li>(in modo approssimato) per punti:  \( f(x) \cong \vquattro{f(x_1) \sqrt{δx}}{f(x_2)\sqrt{δx}}{f(x_3)\sqrt{δx}}{\dots} \) 
+che porta a definire \( \bbox[5px,border:2px solid red]{ \ket{f(x)} = \vquattro{f(x_1) \sqrt{δx}}{f(x_2)\sqrt{δx}}{f(x_3)\sqrt{δx}}{\dots} } \)
+</li>
+<li>come espansione (ad esempio la <i>serie di Fourier</i>) in qualche <bc>complete orthonormal basis set</bc>  
+\(  {\color{blue}\psi_n(x)} \):  \( \bbox[lime]{ f(x) = \sum_n c_n \psi_n(x) } \) 
+che porta a definire \( \bbox[5px,border:2px solid red]{ \ket{f(x)} = \vquattro{c_1}{c_2}{c_3}{\dots} } \)<br/>
+Essendo \( \psi_n(x) \) una funzione, possiamo scrivere anche (omettendo x): \(  \ket{f} = \sum_n c_n \ket{\psi_n} \)<br/>
+Se premoltiplichiamo per \( \bra{\psi_m} \) otteniamo (grazie alle basi ortonormali) il valore di un coefficiente: 
+\( \braket{\psi_m | f} = \sum_n c_n \braket{\psi_m | \psi_n} {\color{blue}= c_m}  \)
+<br/>
+Dunque:\(  \ket{f} = \sum_n c_n \ket{\psi_n} = \sum_n \ket{\psi_n} c_n \) &nbsp; &nbsp;  since \( c_n \) is a number, that can be moved.
+But since \( c_n=\braket{\psi_n | f} \) we obtain: \( \bbox[lime]{ \ket{f} = \sum_n \ket{\psi_n} \braket{\psi_n | f} }\)
+<br/><br/>
+Ora pensiamo che l'insieme dei numeri rappresentati da  \( \ket{f} \) denota lo <em>state vector</em> di un sistema QM,
+mentre \( \bra{f} \) denota l'Hermitian adjoint (<em>dual vector</em>) dello stato. 
+In QM uno <i>state vector</i> può rappresentare:
+<ul>
+<li>lo stato quantomeccanico del sistema (cioè la funzione d'onda \( \psi(x)\))</li>
+<li>un qualche stato in cui il sistema si trova (ad esempio uno degli stati-base \( \psi_n(x)\)) </li>
+</ul>
+Il simobolo \( \ket{0} \) è un modo per denotare (ad esempio) 
+<i>lo stato in cui l'elettrone ha la più bassa  energia possibile in un oscillatore armonico con energia potenziale \( 0.375x^2\).</i>
+</li>
+</ul>
+ <br/> 
+Insofar functions are represented as vectors, then <bc>linear operators can be represented by matrices</bc>.
+<br/>
+<em>linear transformation</em> \(  \hat{A}(a+b) = \hat{A}(a) + \hat{A}(b)  \text{ and } \hat{A}(c \cdot a) = c \cdot \hat{A}(a) \)
+<br/>
+ \( \bbox[yellow]{ \ket{g} = \hat{A} \ket{f} } \text{ In general, operators do not commute: } 
+ \hat{A}\hat{B} \ket{f} \neq  \hat{B}\hat{A} \ket{f} \)
 <hr/> 
 <em>outer product</em> \( v \otimes w =  v.w^&dagger;  = { \color{red} \ket{v} \bra{w}} = 
 \vdue{v_1}{v_2}  \vduedual{w_1}{w_2} =
