@@ -234,7 +234,7 @@ https://www.wolframalpha.com/examples/mathematics/algebra/   WOLFRAM
    \def\dzerocj{ {\begin{pmatrix}1 & 0\end{pmatrix}  }}
    \def\duno{ {\begin{pmatrix}0 \\ 1\end{pmatrix}  }}   
    \def\dunocj{ {\begin{pmatrix}0 & 1\end{pmatrix}  }}   
-   \def\sbeam{ \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} }
+   \def\sbeam{ {\color{purple} \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} } }
 \)
 </ins>
 
@@ -534,9 +534,9 @@ cioè valgono le seguenti relazioni (che si desumono da leggi fisiche):<br/>
 </li>
 <li>
 Una matrice che può descrivere un 50-50 optical beamsplitter può essere:
-\( \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} \) oppure 
+\( {\color{purple}\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} } \) oppure 
 \( \frac{1}{\sqrt{2}}\begin{pmatrix} i & 1  \\ 1 & i\end{pmatrix} \) .<br/>
-Infatti: \( \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} 
+Infatti: \( \sbeam 
             \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & -i  \\ -i & 1\end{pmatrix} = 
 			\frac{1}{2} \begin{pmatrix} 1-i^2 & -i+i  \\ i-i & -i^2+1\end{pmatrix}=
 			\frac{1}{2} \begin{pmatrix}  2 & 0  \\ 0 & 2\end{pmatrix} \)
@@ -615,6 +615,38 @@ fotone in R2 sarà nulla.</m>
  </tbody>
 </table>
 
+
+<h4>QM Postulates</h4>
+<ol>
+<li><em>State space</em>: The state of a system is described by a <bc>unit vector</bc> in a Hilbert space H </li>
+<li><em>Evolution</em>:The time evolution of a closed quantum system is described by a <bc>unitary operator</bc>.<br/>
+<m>That is, for any evolution of the closed system (i.e. it does not interact with its environment), 
+there exists a unitary operator U such that, if the initial
+state of the system is \( \ket{\psi_1}\), then after the evolution the state will be \( \psi_2 = U \ket{\psi_1}\) </li>
+<li><em>Composition</em>: When two physical systems are trated as one combined system,the state of the
+combined system is the <bc>tensor product space</bc> \( H_1 \otimes H_2 \) of the state spaces \( H_1 \text{,} H_2 \)
+of the component systems.<br/>
+<m>That is,if the first system is in state \( \ket{\psi_1}\) and the second system is in state \( \ket{\psi_2}\),
+then the state of the combined system is \( {\color{fuchsia}\ket{\psi_1} \otimes \ket{\psi_1}} \) </li>
+<li><em>Measurement</em>: <m>The evolution of the state of a system during a measurement is <bc>not unitary</bc>.
+If a system with state \( \sum_{i} α_i \) is provided as input to a measurement apparatus, 
+then it will output label i with probability \( | α_i|^2 \).</m><br/>
+For a given orthonormal basis {\( B=\ket{φ_i} \)} of a state space \( H_A \) for a system A, it is possible to perform
+a Von Neumann measurement on system \( H_A \) with respect to the basis B that, given a state
+\( {\color{blue} \ket{\psi}= \sum_{i} α_i \ket{φ_i} } \)
+outputs label i with probability \( | α_i|^2 \) and <bc>leaves the system</bc> in state \( {\color{fuchsia}\ket{φ_i}} \) .
+ </li>
+<li><em>Global phases</em> <bc>have no pyhsical significance</bc>.<br/>
+For the state \( {\color{blue} \ket{ψ} = \sum_{i} α_i \ket{φ_i} } \), \(  α_i = \bra{φ_i} \ket{ψ} = \braket{φ_i  | ψ } \) 
+and thus \( |α_i|^2 = α_i^*α_i = \braket{ψ | φ_i} \braket{φ_i  | ψ } \). 
+Now consider, immediately before a measurement, the state \( {\color{red} e^{i θ} } \ket{ψ} = \sum_{i} α_ie^{i θ} \ket{φ_i} \) .
+The result <i>i</i> will occur with probability \( α_i^*e^{-i θ} α_ie^{i θ} = α_i^*α_i = |α_i|^2\).
+Thus the statistics of any measurement we could perform on the state \( {\color{fuchsia} e^{i θ}\ket{ψ} } \) are the same
+as thet would for the state \( \ket{ψ} \).
+
+</li>
+
+</ol>
 <hr/>
  
 <br/>
