@@ -234,6 +234,7 @@ https://www.wolframalpha.com/examples/mathematics/algebra/   WOLFRAM
    \def\dzerocj{ {\begin{pmatrix}1 & 0\end{pmatrix}  }}
    \def\duno{ {\begin{pmatrix}0 \\ 1\end{pmatrix}  }}   
    \def\dunocj{ {\begin{pmatrix}0 & 1\end{pmatrix}  }}   
+   \def\sbeam{ \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} }
 \)
 </ins>
 
@@ -343,7 +344,14 @@ d_1 = -id_2 \text{  o anche } d_2= id_1 \text{  da cui, se poniamo d_1=1 si ha l
 \( \text{Verifica: } \begin{pmatrix}1.5 & -0.5i \\ 0.5i & 1.5\end{pmatrix} \vdue{1}{i} = {\color{red}2}*\vdue{1}{i} 
 \text{ e anche: }  \begin{pmatrix}1.5 & -0.5i \\ 0.5i & 1.5\end{pmatrix} \vdue{1}{-i} = {\color{red}1}*\vdue{1}{-i}\)
 </m>
+<br/><br/>
+<em>Matrice Invertibile</em> \( \hat{U}\)</em>: \( \hat{U}\hat{U}^{-1}=I\)
+<br/><br/>
+<em>Matrice unitaria</em> \( \hat{U}\)</em>: \( \hat{U}^&dagger;  \hat{U} = \hat{U}\hat{U}^&dagger;=I\) il che implica:
+\( \hat{U}\) è unitaria se è invertibile e la sua inversa \( \hat{U}^{-1}\) è uguale alla sua coniugata trasposta
+\( \hat{U}^{-1} = \hat{U}^&dagger;\)
 
+ 
 <h4>Functions as vectors</h4>
 <!-- https://www.wolframalpha.com/examples/mathematics/plotting-and-graphics/ -->
 Una funzione può essere descritta 
@@ -355,7 +363,7 @@ che porta a definire \( \bbox[5px,border:2px solid red]{ \ket{f(x)} = \vquattro{
 \(  {\color{blue}\psi_n(x)} \):  \( \bbox[lime]{ f(x) = \sum_n c_n \psi_n(x) } \) 
 che porta a definire \( \bbox[5px,border:2px solid red]{ \ket{f(x)} = \vquattro{c_1}{c_2}{c_3}{\dots} } \)<br/>
 Essendo \( \psi_n(x) \) una funzione, possiamo scrivere anche (omettendo x): \(  \ket{f} = \sum_n c_n \ket{\psi_n} \)<br/>
-Se premoltiplichiamo per \( \bra{\psi_m} \) otteniamo (grazie alle basi ortonormali) il valore di un coefficiente: 
+Se pre-moltiplichiamo per \( \bra{\psi_m} \) otteniamo (grazie alle basi ortonormali) il valore di un coefficiente: 
 \( \braket{\psi_m | f} = \sum_n c_n \braket{\psi_m | \psi_n} {\color{blue}= c_m}  \)
 <br/>
 Dunque:\(  \ket{f} = \sum_n c_n \ket{\psi_n} = \sum_n \ket{\psi_n} c_n \) &nbsp; &nbsp;  since \( c_n \) is a number, that can be moved.
@@ -368,7 +376,7 @@ In QM uno <i>state vector</i> può rappresentare:
 <li>lo stato quantomeccanico del sistema (cioè la funzione d'onda \( \psi(x)\))</li>
 <li>un qualche stato in cui il sistema si trova (ad esempio uno degli stati-base \( \psi_n(x)\)) </li>
 </ul>
-Il simobolo \( \ket{0} \) è un modo per denotare (ad esempio) 
+Un simbolo come \( \ket{0} \) è un modo per denotare (ad esempio) 
 <i>lo stato in cui l'elettrone ha la più bassa  energia possibile in un oscillatore armonico con energia potenziale \( 0.375x^2\).</i>
 </li>
 </ul>
@@ -379,8 +387,13 @@ Insofar functions are represented as vectors, then <bc>linear operators can be r
 <br/>
  \( \bbox[yellow]{ \ket{g} = \hat{A} \ket{f} } \text{ In general, operators do not commute: } 
  \hat{A}\hat{B} \ket{f} \neq  \hat{B}\hat{A} \ket{f} \)
+
+
+
 <hr/> 
-<em>outer product</em> \( v \otimes w =  v.w^&dagger;  = { \color{red} \ket{v} \bra{w}} = 
+\( \ket{f} = \sum_n \ket{\psi_n} \braket{\psi_n | f} &rarr;  \ket{f} = \sum_n (\ket{\psi_n} \bra{\psi_n}) \ket{f} \)
+<br/>
+<em>outer product</em> \( v \otimes w =  v.w^&dagger;  = { \color{red} \ket{v} \bra{w}} =  
 \vdue{v_1}{v_2}  \vduedual{w_1}{w_2} =
 \begin{pmatrix}v_1w_1^* & v_1w_2^* \\ v_2w_1^* & v_2w_2^* \end{pmatrix} 
  \) 
@@ -389,8 +402,8 @@ Insofar functions are represented as vectors, then <bc>linear operators can be r
  <br/> <br/>
 
 
- 
 
+ 
 
 <em>tensor product</em> \( \vdue{a}{b} \otimes \vdue{c}{d} = \vquattro{ac}{ad}{bc}{bd}  \) <br/> <br/>
 
@@ -471,6 +484,136 @@ Ogni \( \ket{&psi;} &isin; H  \) si può scriver come: \( \ket{&psi;} = \sum_{b_
 \frac{-i}{\sqrt{3}} \sqrt{\frac{1}{2}} \braket{11|10} + \frac{-i}{\sqrt{3}} \sqrt{\frac{1}{2}} \braket{11|11}=
 0+0+0+\frac{-i}{\sqrt{6}}
 \)
+
+
+<h4>Beam splitter</h4> 
+<!-- https://it.wikipedia.org/wiki/Beam_splitter 
+https://www.geogebra.org/  https://www.geogebra.org/about?lang=it
+https://www.youtube.com/watch?v=5Sb7-RNSsPg  Alain Aspect video on beam splitter
+-->
+ 
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:30%" >
+<center> <img src="./img/qm/beamsplitter0.PNG" alt="beamsplitter0" width="100%"></center>
+
+</td>
+<td>Appare chiaro che il modulo della freccina dopo ciascuna delle due uscite debba
+essere uguale a \( 1/\sqrt{2} \text{ in modo che le proabilità siano al 50%:} 1/2+1/2 \).
+<hr/>
+Notiamo che la conservazione della probabilità è violata nel caso in cui vi
+siano <i>due cammini indistinguibili</i> che portano il fotone a entrare in ciascuno dei due ingressi
+(left e bottom)
+<center> <img src="./img/qm/beamsplitter1.PNG" alt="beamsplitter1" width="30%"></center>
+Ma, se si tiene conto anche della regola della riflessione, la probabilità è conservata:
+</td>
+</tr>
+<td>
+<center> <img src="./img/qm/beamsplitter2.PNG" alt="beamsplitter2" width="100%"></center>
+</td>
+<td>Per conservare la probabilità occorre tenere conto anche della regola della riflessione.<br/>
+Electric fields \( E_1 \) and \( E_2 \) enter input ports 1 and 2, respectively. 
+Let us denote as T, R the transmission and reflection coefficients for the beam splitter. They are complex
+number, e.g. \( T=|T|e^{jθ} R=|R|e^{jφ} \)<br/>
+Let us denote with 
+\( E_{u1} \) and \( E_{u2} \) the electric fields for the two outputs (<i>Uscita1</i> and <i>Uscita2</i>, respectively).<br/>
+<ul>
+<li>Field \( E_1 \) evolves as \( E_1 &rarr;  T \cdot E_{u1} + R \cdot E_{u2} \) </li>
+<li>Field \( E_2 \) evolves as \( E_2 &rarr;  R \cdot E_{u1} + T \cdot E_{u2} \) </li>
+<li>Possiamo anche dire che:
+ \( E_{u1} =  T \cdot E_2 + R \cdot E_1  \) e che \( E_{u2} = T \cdot E_1 + R \cdot E_2 \), cioè:
+ 
+\( \vdue{E_{u1}}{E_{u2}}=\begin{pmatrix}R & T  \\ T & R\end{pmatrix} \vdue{E_1}{E_2} \).
+Let us denote \( S= \begin{pmatrix}R & T  \\ T & R\end{pmatrix}\)  
+</li>
+<li>A lossless device implies that the transformation matrix \(\hat{S} \)  is unitary:
+\( \begin{pmatrix}R & T  \\ T & R\end{pmatrix} \begin{pmatrix}R^* & T^*  \\ T^* & R^*\end{pmatrix} = \mdueident \)
+cioè valgono le seguenti relazioni (che si desumono da leggi fisiche):<br/>
+\( \left\{ \begin{array}{c}  RR^*+TT^*=1  \\  TR^*+RT^*=0  \\ RT^*+TR^*=0  \\  TT^*+RR*=1  \end{array} \right. \)
+</li>
+<li>
+Una matrice che può descrivere un 50-50 optical beamsplitter può essere:
+\( \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} \) oppure 
+\( \frac{1}{\sqrt{2}}\begin{pmatrix} i & 1  \\ 1 & i\end{pmatrix} \) .<br/>
+Infatti: \( \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} 
+            \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & -i  \\ -i & 1\end{pmatrix} = 
+			\frac{1}{2} \begin{pmatrix} 1-i^2 & -i+i  \\ i-i & -i^2+1\end{pmatrix}=
+			\frac{1}{2} \begin{pmatrix}  2 & 0  \\ 0 & 2\end{pmatrix} \)
+</li>
+<!--<li>The transformation matrix is then given by \( \hat{B} = \begin{pmatrix}T & R  \\ R & T \end{pmatrix} 
+\text{ so that &rarr;} \vdue{E_1}{E_2} \text{ &rarr; } B \vdue{E_{u1}}{E_{u2}} \text{ i.e. } \vdue{E_{u1}}{E_{u2}} = \hat{B}^{-1} \vdue{E_1}{E_2} \).
+ <br/>The inverse of B requires that 
+\( \begin{pmatrix}T & R  \\ R & T \end{pmatrix} \begin{pmatrix}x_1 & x_2  \\ x_3 & x_4 \end{pmatrix} = \mdueident \)
+i.e. \( \left\{ \begin{array}{c} Tx_1+Rx_3=1  \\  Tx_2+Rx_4=0 \\ Rx_1+Tx_3=0 \\ Rx_2+Tx_4=1  \end{array} \right. \)
+
+</li>
+<li>A lossless device implies that the transformation matrix \(\hat{B} \)  is unitary:
+\( \begin{pmatrix}T & R  \\ R & T \end{pmatrix} \begin{pmatrix}T^* & R^*  \\ R^* & T^* \end{pmatrix}  
+= \begin{pmatrix}1 & 0  \\  0 & 1 \end{pmatrix} \text{ che produce:} 
+\left\{ \begin{array}{c} |T|^2+|R|^2=1 \\  R^*T+RT^*=0  \end{array} \right. \)
+</li>-->
+
+</ul>
+
+
+E questo avviene indipendentemente dalla fase relativa delle due freccine in ingresso:<br/>
+<center> <img src="./img/qm/beamsplitter3.PNG" alt="beamsplitter3" width="30%"></center>
+<br/>
+In fisica quantistica si dice che le quantità osservabili devono essere espresse da operatori unitari,
+ossia dice che si conservano la probabilità in uscita per ogni possibile scelta dei vettori di ingresso (normalizzati)..
+</td>
+</tr>
+
+
+<tr>
+<td><center> <img src="./img/qm/beamsplitter4.PNG" alt="beamsplitter4" width="100%"></center>
+</td>
+<td>
+Un beam causa una <bc>superposition</bc> di possibili stati (fotone trasmesso = \( \ket{0}\)e fotone riflesso = \( \ket{1}\)):<br/>
+\( α_0 \ket{0} +  α_1 \ket{1} = α_0 \vdue{1}{0} +  α_1 \vdue{0}{1} = \vdue{α_0}{α_1}\)<br/>
+Quando un fotone che entra in <i>Sorgente</i>  passa per il beam splitter, lo stato diventa:
+\( \hat{S} \cdot \ket{0} = \sbeam \vdue{1}{0} =  { \color{blue}\frac{1}{\sqrt{2}} \vdue{1}{i} } = 
+\frac{1}{\sqrt{2}} \ket{0} + \frac{i}{\sqrt{2}} \ket{1} \) e dunque si può misurare su un path con probabilità 
+\( |\frac{1}{\sqrt{2}}|^2 = \frac{1}{2}\)  e sull'altro path con probabilità 
+\( |\frac{i}{\sqrt{2}}|^2 = \frac{1}{2}\). Il secondo beam splitter dimezza ulteriormente le probabilità e
+il risultato appare in accordo con l’intuizione classica.
+</td>
+</tr>
+
+<tr>
+<td><center> <img src="./img/qm/beamsplitter5.PNG" alt="beamsplitter5" width="100%"></center>
+</td>
+<td>
+In questo esperimento vi sono due cammini possibili per ciascuno dei due rivelatori R1 ed R2 . Si assume che
+l’apparato sia costruito in modo da essere completamente simmetrico, in modo tale che tutti i
+cammini che vanno dalla sorgente a ciascuno dei due rivelatori abbiano la stessa lunghezza. 
+<br/>
+Al secondo beam splitter \( B_2 \) arriva ora un fotone (non osservato) il cui stato è descritto da 
+\( { \color{blue}\frac{1}{\sqrt{2}} \vdue{1}{i} } \).
+Dunque il nuovo vettore di stato sarà:
+\( \sbeam\frac{1}{\sqrt{2}} \vdue{1}{i}  = \vdue{0}{i} = 0 \ket{0} + i \ket{1}  \)
+cioè il fotone si trova sul secondo path con probabilità  \( |i|^2 = 1\).
+<br/>
+Il secondo beam splitter \( B_2 \) ha causato una <bc>interferenza</bc> tra i due cammini in superposition .
+<br/>
+Si veda <a href="https://www.geogebra.org/m/NvbZqpuA">Mach Zehnder interferometer</a> on 
+<a href="https://www.geogebra.org/">geogebra</a>.
+<br/><br/>
+
+
+<m>
+Fisicamente, secondo la tecnica di Feynmann, non viene prodotto nei fasori associati ai cammini nessuno sfasamento dovuto alla lunghezza del
+cammino. Si conta allora il numero delle riflessioni esterne, dalla quale risulta che i fasori associati ai
+due cammini S-R1 saranno in fase, sommandosi costruttivamente mentre quelli associati ai due
+cammini S-R2 saranno in controfase, sommandosi distruttivamente, perciò la probabilità di rivelare il
+fotone in R2 sarà nulla.</m>
+</td>
+</tr>
+
+
+ </tbody>
+</table>
 
 <hr/>
  
