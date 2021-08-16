@@ -350,8 +350,25 @@ d_1 = -id_2 \text{  o anche } d_2= id_1 \text{  da cui, se poniamo d_1=1 si ha l
 <em>Matrice unitaria</em> \( \hat{U}\)</em>: \( \hat{U}^&dagger;  \hat{U} = \hat{U}\hat{U}^&dagger;=I\) il che implica:
 \( \hat{U}\) è unitaria se è invertibile e la sua inversa \( \hat{U}^{-1}\) è uguale alla sua coniugata trasposta
 \( \hat{U}^{-1} = \hat{U}^&dagger;\)
+<br/><br/>
+<hr/>
+<br/>
+<em>Linear operator</em> su un vector space H: una trasformazione lineare \( T: H &rarr; H\) che mappa vettori in H 
+in altri vettori in H.
 
- 
+<br/><br/>
+<em>Unitary operator</em>: operatore U tale che \( U^&dagger; = U^{-1} \)
+
+<br/><br/>
+<em>Hermitean (self-adjoint) operator</em>: operatore T in un Hilbert space H tale che  \( T^&dagger; = T \)
+
+<br/><br/>
+<em>Projector</em>: operatore P in un Hilbert space H tale che \( P^2 = P \)
+
+<br/><br/>
+<em>Orthogonal projector</em>: projector P in un Hilbert space H tale che \( P^&dagger; = P \)
+
+
 <h4>Functions as vectors</h4>
 <!-- https://www.wolframalpha.com/examples/mathematics/plotting-and-graphics/ -->
 Una funzione può essere descritta 
@@ -632,7 +649,7 @@ then the state of the combined system is \( {\color{fuchsia}\ket{\psi_1} \otimes
 If a system with state \( \sum_{i} α_i \) is provided as input to a measurement apparatus, 
 then it will output label i with probability \( | α_i|^2 \).</m><br/>
 For a given orthonormal basis {\( B=\ket{φ_i} \)} of a state space \( H_A \) for a system A, it is possible to perform
-a Von Neumann measurement on system \( H_A \) with respect to the basis B that, given a state
+a Von Neumann (or <bc>complete</bc>) measurement on system \( H_A \) with respect to the basis B that, given a state
 \( {\color{blue} \ket{\psi}= \sum_{i} α_i \ket{φ_i} } \)
 outputs label i with probability \( | α_i|^2 \) and <bc>leaves the system</bc> in state \( {\color{fuchsia}\ket{φ_i}} \) .
  </li>
