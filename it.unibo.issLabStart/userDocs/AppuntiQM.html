@@ -609,8 +609,85 @@ Ogni \( \ket{&psi;} &isin; H  \) si può scriver come: \( \ket{&psi;} = \sum_{b_
 0+0+0+\frac{-i}{\sqrt{6}}
 \)
 
+<h3>Qubit</h3> 
+<!--
+https://www.filoweb.it/magazine/60-Dal-Bit-A-Qbit
+https://www.mecbar.com/quantum_base.html
+https://medium.com/visionari/quantum-computing-prova-un-computer-quantico-direttamente-da-casa-dfc3c05e794d
+https://medium.com/quantum-untangled/visualizing-quantum-logic-gates-part-1-515bb7b58916
+-->
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:30%" >
+<center> <img src="./img/qm/sferablochcoord.PNG" alt="sferablochcoord.PNG" width="60%"></center> 
 
-<h4>Beam splitter</h4> 
+ <center> <img src="./img/qm/sferabloch.PNG" alt="sferabloch.PNG" width="100%"></center> 
+
+</td>
+<td>
+<!-- Geometrical representation of a qubit in spherical coordinates.   -->
+<br/><br/>
+\( \ket{ψ} = α\ket{0} + β\ket{1}\) 
+<br/><br/>
+	<ul>
+	<li>A qubit can be in a superposition of the two basis states.</li>
+	<li>A measurement irreversibly alters the original qubit state. When we want to observe or measure its
+value, it collapses into one of the two orthogonal states</li>
+<li>\( |α|^2 \) gives the probability to obtain \( \ket{0} \), while \( |β|^2 \) gives the probability to obtain \( \ket{1} \) </li>
+<li>The state of a qubit is often represented geometrically by the Bloch sphere.
+<center> <img src="./img/qm/sferabloch01.PNG" alt="sferabloch01.PNG" width="30%"></li>
+<li>\( x=sinθ cosφ \text{ , } y=sinθ sinφ  \text{ , } z=cosθ\)</li>
+
+
+</center> 
+ 
+
+</li>
+	</ul>
+
+<!--
+	<table style="width:98%">
+	<tbody>	
+	<tr>
+	<td style="width:33%" >
+	  
+	</td>
+	<td style="width:33%">
+ 	 
+	</td>
+	</tr>
+
+	<tr>
+	<td style="width:33%"	>
+	 
+	</td>
+	<td></td>
+	</tr>
+	 </tbody>
+	</table>
+	-->
+</td>
+</tr>
+
+<tr>
+<td>
+<center> <img src="./img/qm/gateX.PNG" alt="gateX.PNG" width="100%"></center> 
+ 
+</td>
+<td>	
+
+<br/>
+The Pauli-X gate flips the superposition state. 
+The output on the Bloch sphere is the input vector rotated 180º about the x-axis 
+<center> <img src="./img/qm/gateXOnBloch.PNG" alt="gateXOnBloch.PNG" width="40%"></center>  
+
+</td>
+</tr>
+ </tbody>
+</table>
+
+<h3>Beam splitter</h3> 
 <!-- https://it.wikipedia.org/wiki/Beam_splitter 
 https://www.geogebra.org/  https://www.geogebra.org/about?lang=it
 https://www.youtube.com/watch?v=5Sb7-RNSsPg  Alain Aspect video on beam splitter
@@ -698,7 +775,7 @@ Un beam causa una <bc>superposition</bc> di possibili stati (fotone trasmesso = 
 \( α_0 \ket{0} +  α_1 \ket{1} = α_0 \vdue{1}{0} +  α_1 \vdue{0}{1} = \vdue{α_0}{α_1}\)<br/>
 Quando un fotone che entra in <i>Sorgente</i>  passa per il beam splitter, lo stato diventa:
 \( \hat{S} \cdot \ket{0} = \sbeam \vdue{1}{0} =  { \color{blue}\frac{1}{\sqrt{2}} \vdue{1}{i} } = 
-\frac{1}{\sqrt{2}} \ket{0} + \frac{i}{\sqrt{2}} \ket{1} \) e dunque si può misurare su un path con probabilità 
+\frac{1}{\sqrt{2}} \ket{0} + \frac{i}{\sqrt{2}} \ketp{1} \) e dunque si può misurare su un path con probabilità 
 \( |\frac{1}{\sqrt{2}}|^2 = \frac{1}{2}\)  e sull'altro path con probabilità 
 \( |\frac{i}{\sqrt{2}}|^2 = \frac{1}{2}\). Il secondo beam splitter dimezza ulteriormente le probabilità e
 il risultato appare in accordo con l’intuizione classica.
@@ -725,6 +802,8 @@ Si veda <a href="https://www.geogebra.org/m/NvbZqpuA">Mach Zehnder interferomete
 <a href="https://www.geogebra.org/">geogebra</a>.
 <br/><br/>
 
+<center> <img src="./img/qm/beamsplitterBloch.PNG" alt="beamsplitterBloch" width="100%"></center>
+ 
 
 <m>
 Fisicamente, secondo la tecnica di Feynmann, non viene prodotto nei fasori associati ai cammini nessuno sfasamento dovuto alla lunghezza del
