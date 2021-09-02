@@ -238,8 +238,12 @@ https://www.wolframalpha.com/examples/mathematics/algebra/   WOLFRAM
    \def\sbeam{ {\color{purple} \frac{1}{\sqrt{2}}\begin{pmatrix} 1 & i  \\ i & 1\end{pmatrix} } }
    \def\frdue{ \frac{1}{\sqrt{2}} }
 
-   \def\hdp{\frac{1}{\sqrt 2} \left( \ket{0} + \ket{1} \right)} 
-   \def\hdm{\frac{1}{\sqrt 2} \left( \ket{0} - \ket{1} \right)} 
+   \def\hdp{\frac{1}{\sqrt 2} \left( \ket{0} + \ket{1} \right)}  <!-- Hadamart \+> -->
+   \def\hdm{\frac{1}{\sqrt 2} \left( \ket{0} - \ket{1} \right)}  <!-- Hadamart \-> -->
+   \def\gatei{\begin{pmatrix} 1 & 0 \\ 0 & 1\end{pmatrix}  }
+   \def\gatex{\begin{pmatrix} 0 & 1 \\ 1 & 0\end{pmatrix}  }
+   \def\gatey{\begin{pmatrix} 0 & -i \\ i & 0\end{pmatrix}  }
+   \def\gatez{\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}  }
 \)
 </ins>
 
@@ -382,6 +386,7 @@ da cui
 
 <hr>
 <m>
+coordinate punto \( D = (\frdue, \frdue)\)<br/>
 	rotate (counterclockwise) <bc>u</bc> of 45 (π/4) degrees: 
 	\( \begin{pmatrix}\frdue & -\frdue \\ \frdue & \frdue\end{pmatrix} \vdue{\frdue}{\frdue}=\vdue{0}{1}\)  punto E
 </m>
@@ -403,10 +408,10 @@ https://www.wolframalpha.com/input/?i=projection+matrix
 </td>
 <td>
 
-\( \hat{M1}v =\mquattro{\frac{1}{2}}{\frac{1}{2}}{\frac{1}{2}}{\frac{1}{2}}  \vdue{ 0 } { 1 }= \vdue{ \frac{1}{2}} {\frac{1}{2}} \)
-&nbsp;&nbsp;  punto K 
+\( \hat{M1} \cdot v =\mquattro{\frac{1}{2}}{\frac{1}{2}}{\frac{1}{2}}{\frac{1}{2}}  \vdue{ 0 } { 1 }= \vdue{ \frac{1}{2}} {\frac{1}{2}} \)
+&nbsp;&nbsp;  punto K  \(  |k| =  \)
 <br/>
-\( \hat{M2}v =\mquattro{\frac{1}{2}}{-\frac{1}{2}}{-\frac{1}{2}}{\frac{1}{2}}  \vdue{ 0 } { 1  }= \vdue{ -\frac{1}{2}} {\frac{1}{2}}\)
+\( \hat{M2} \cdot v =\mquattro{\frac{1}{2}}{-\frac{1}{2}}{-\frac{1}{2}}{\frac{1}{2}}  \vdue{ 0 } { 1  }= \vdue{ -\frac{1}{2}} {\frac{1}{2}}\)
 &nbsp;&nbsp; punto M 
 <hr/>
 <!--
@@ -677,7 +682,7 @@ value, it collapses into one of the two orthogonal states</li>
  
 </td>
 <td>	
-\( σ_x=\)
+\( σ_x= \gatex \)
 <br/>
 The Pauli-X gate flips the superposition state. 
 The output on the Bloch sphere is the input vector rotated 180º about the x-axis 

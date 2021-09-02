@@ -11,7 +11,7 @@
   
 System  /*  -trace */ basicrobot          
 //mqttBroker "localhost" : 1883 eventTopic "unibo/basicrobot"   		
-
+  
 Dispatch cmd       	: cmd(MOVE)     
 Dispatch end       	: end(ARG)  
  

@@ -81,7 +81,7 @@ class TestPlan0 {
 		}
  	}
     
-	@Test
+	//@Test
 	fun testrotationmoves(){
  		println("+++++++++ testrotationmoves ")
 		//Send a command and look at the result
