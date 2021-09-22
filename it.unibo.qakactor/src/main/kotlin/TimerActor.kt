@@ -40,7 +40,7 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
                 myactor.actor.send(msgEv)
             }
             //MsgUtil.sendMsg("timer",ev,ev,"basicrobot", null)
-            println("TimerActor $name has EMITTED :${ev} ")
+            //println("TimerActor $name has EMITTED :${ev} ")
         }else{
             //println("TimerActor $name ENDS without emitting since terminated after: $Duration")
         }

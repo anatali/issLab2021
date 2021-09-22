@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream
 import java.io.FileOutputStream
 import java.io.ObjectInputStream
 import java.io.FileInputStream
+//it.unibo.planner20-1.0
 import itunibo.planner.model.RobotState
 import itunibo.planner.model.Functions
 import itunibo.planner.model.RobotState.Direction
@@ -82,7 +83,7 @@ object plannerUtil {
     @Throws(Exception::class)
     @JvmStatic
 	fun doPlan(): List<Action>? {
-		println("plannerUtil doPlan  " )
+		//println("plannerUtil doPlan  " )
 		
 		if( ! currentGoalApplicable ){
 			println("plannerUtil doPlan cannot go into an obstacle")
@@ -91,11 +92,9 @@ object plannerUtil {
 		} 
 		
         val searchAgent: SearchAgent
-        println("plannerUtil doPlan newProblem (A) $curGoal" );
+        //println("plannerUtil doPlan newProblem (A) $curGoal" );
 		val problem = Problem(robotState, Functions(), Functions(), curGoal, Functions())
-		
-		
-        println("plannerUtil doPlan newProblem (A) search " );
+        //println("plannerUtil doPlan newProblem (A) search " );
         searchAgent = SearchAgent(problem, search!!)
         actions  = searchAgent.actions
 		
