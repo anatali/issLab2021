@@ -1,0 +1,116 @@
+.. contents:: Overview
+   :depth: 3
+
+.. role:: red 
+
+.. role:: blue
+
+.. role:: remark
+
+===================
+Il documento 
+===================
+
+Il documento ``template2021.html`` costituisce un punto di riferimento ma è
+'process agnostic', cioè non indica il processo di sviluppo che adottiamo
+per costruirlo.
+Possiamo certo :red:`ANALIZZARE` il sistema nella sua interezza, ma non
+subito per 'progettarlo'.
+
+======================================
+L'analisi dei requisiti
+======================================
+:remark:`L'analisi dei requisiti mira definire/chiarire COSA il committente intende.`
+
+Occorre fare una analisi del testo che precisi in modo non ambiguo
+il significato dei termini usati e le informazioni non esplicitamente espresse.
+La costruzione di un *dizionario* espresso in linguaggio naturale è utile ma non risolutiva, 
+in quanto ancora affetta da ambiguità se non da incoeranza e inconsistenza.
+Occorre esprimere le informazioni in modo **comprensible alla macchina**.
+A tal fine sono utili i linguaggi che permettono di definire :red:`modelli`.
+
+Le :blue:`domande` da porre al committente mirano a chiarire:
+
+-  la natura delle entità, cioè se dal punto di vista software, 
+   una entità è (modellabile come un) 
+   oggetto (POJO), un servizio, un processo, un attore
+
+- se le varie entità devono essere distribuite su diversi nodi computazionali
+
+- i vincoli tecnologici, cioè se il committente propone già qualche specifica tecnologia 
+  o qualche specifico supporto per una data entità
+
+- le interazioni (a procedure-call, a messaggi, sincrone, asincrone) tra le diverse entità 
+
+Al termine della analisi dei requsiti può essere definito 
+un modello delle entità e delle loro interazioni, cioè
+può essere costruita una prima :red:`architetture logica` del sistema.
+
+
+======================================
+L'analisi del problema
+======================================
+L'analisi del problema mira a:
+
+:remark:`definire/chiarire le problematiche implicate dai requisiti.`
+
+:remark:`fornire informazioni utili sui costi/tempi/risorse necessari per lo sviluppo.`
+
+L'analisi del problemna :red:`NON IMPLICA ancora alcuna progettazione`,
+ma mira a fornire un quadro delle possibili soluzioni tecnologighe
+individuando quelle più utili per il superamento delle problematiche poste dai requisiti.
+La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro
+della indagine - ricordiamo che siamo in un :blue:`processo iterativo a spirale` )
+
+----------------------
+Architettura logica
+----------------------
+
+Il risultato della analsi può essere sintetizzato nella definizione di una 
+:red:`architettura logica` (che specializza/esetende quella scaturita dai requsiti )
+che definisce la NATURA (oggetti, processi, servizi, attori, database, etc.) 
+dei MACRO-COMPONENTI del sistema e della loro interazione, 
+NON COME SOLUZIONE DI PROGETTO, ma come VINCOLI IMPLICATI dal problema.
+
+:remark:`Il risultato della analisi del problema dovrebbe essere condiviso tra tutti gli analisti.`
+ 
+
+L'analista potrebbe/dovrebbe dare uno sguardo complessivo al problema,
+cercando anche di organizzare tutte le funzionalità per importanza, e come queste
+funzionalità debbano essere  distribuite tra i vari MACRO-componenti.
+
+---------------------- 
+Sviluppo incrementale
+----------------------
+
+Un approccio INCREMENTALE (in stile SCRUM, ma non solo) è utile per 
+aggredire la complessità del problema e per
+mettere in luce in primis LE COSE
+PIU' IMPORTANTI e PIU' CRITICHE senza perdersi in dettagli che possono distogliere
+l'attenzione per formarsi un quadro generale di riferimento.
+
+I vari SPRINT dovrebbero effettuare uno ZOOMING entro MACRO-COMPOMENTI
+innescando un processo ITERATIVO di analisi, progetto , sviluppo e testing di
+quel componente o del SOTTOSISTEMA  che lo sprint vuole costruire.
+Per questo può essere opportuno impostare ogni sprint come un 'sottoprogetto'
+con sua propria spiegazione e teasting. Lo sprint n+ dovrebbe partire dai
+risultati dello sprint n e preparare un subsystem (funzionante) 
+che sarà l'input dello sprint n+2.
+
+======================================
+Uso di modelli
+======================================
+L'uso dei modelli è utile (per non dire indispensabile) PER CONCENTRARE
+l'attenzione SUGLI ASPETTI RITENUTI SALIENTI (tenendo conto anche
+dei tempi, delle tecnologie disponibili  e dei costi):
+
+L'architettura logica esrpessa mediante un modello eseguibile può essere il riferimento per la impostazione di
+PIANI di testing (unit, integration, functional, acceptance) espressi in MODO
+NON discorsivo (formale), comprensibile a una macchina. 
+
+Per questo noi abbiamo perseguito l'idea di modelli eseguibili, sviluppando
+una meta-modello in modo custom, visto che si trova ancora
+nulla di questo tipo in rete.
+
+
+  

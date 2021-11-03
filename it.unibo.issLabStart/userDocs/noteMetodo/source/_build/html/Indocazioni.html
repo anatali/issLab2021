@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Il documento &#8212; issMetodologia 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">issMetodologia 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Il documento</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="contents topic" id="overview">
+<p class="topic-title">Overview</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#il-documento" id="id1">Il documento</a></p></li>
+<li><p><a class="reference internal" href="#l-analisi-dei-requisiti" id="id2">L’analisi dei requisiti</a></p></li>
+<li><p><a class="reference internal" href="#l-analisi-del-problema" id="id3">L’analisi del problema</a></p>
+<ul>
+<li><p><a class="reference internal" href="#architettura-logica" id="id4">Architettura logica</a></p></li>
+<li><p><a class="reference internal" href="#sviluppo-incrementale" id="id5">Sviluppo incrementale</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#uso-di-modelli" id="id6">Uso di modelli</a></p></li>
+</ul>
+</div>
+<section id="il-documento">
+<h1><a class="toc-backref" href="#id1">Il documento</a><a class="headerlink" href="#il-documento" title="Permalink to this headline">¶</a></h1>
+<p>Il documento <code class="docutils literal notranslate"><span class="pre">template2021.html</span></code> costituisce un punto di riferimento ma è
+‘process agnostic’, cioè non indica il processo di sviluppo che adottiamo
+per costruirlo.
+Possiamo certo <span class="red">ANALIZZARE</span> il sistema nella sua interezza, ma non
+subito per ‘progettarlo’.</p>
+</section>
+<section id="l-analisi-dei-requisiti">
+<h1><a class="toc-backref" href="#id2">L’analisi dei requisiti</a><a class="headerlink" href="#l-analisi-dei-requisiti" title="Permalink to this headline">¶</a></h1>
+<p><span class="remark">L’analisi dei requisiti mira definire/chiarire COSA il committente intende.</span></p>
+<p>Occorre fare una analisi del testo che precisi in modo non ambiguo
+il significato dei termini usati e le informazioni non esplicitamente espresse.
+La costruzione di un <em>dizionario</em> espresso in linguaggio naturale è utile ma non risolutiva,
+in quanto ancora affetta da ambiguità se non da incoeranza e inconsistenza.
+Occorre esprimere le informazioni in modo <strong>comprensible alla macchina</strong>.
+A tal fine sono utili i linguaggi che permettono di definire <span class="red">modelli</span>.</p>
+<p>Le <span class="blue">domande</span> da porre al committente mirano a chiarire:</p>
+<ul class="simple">
+<li><p>la natura delle entità, cioè se dal punto di vista software,
+una entità è (modellabile come un)
+oggetto (POJO), un servizio, un processo, un attore</p></li>
+<li><p>se le varie entità devono essere distribuite su diversi nodi computazionali</p></li>
+<li><p>i vincoli tecnologici, cioè se il committente propone già qualche specifica tecnologia
+o qualche specifico supporto per una data entità</p></li>
+<li><p>le interazioni (a procedure-call, a messaggi, sincrone, asincrone) tra le diverse entità</p></li>
+</ul>
+<p>Al termine della analisi dei requsiti può essere definito
+un modello delle entità e delle loro interazioni, cioè
+può essere costruita una prima <span class="red">architetture logica</span> del sistema.</p>
+</section>
+<section id="l-analisi-del-problema">
+<h1><a class="toc-backref" href="#id3">L’analisi del problema</a><a class="headerlink" href="#l-analisi-del-problema" title="Permalink to this headline">¶</a></h1>
+<p>L’analisi del problema mira a:</p>
+<p><span class="remark">definire/chiarire le problematiche implicate dai requisiti.</span></p>
+<p><span class="remark">fornire informazioni utili sui costi/tempi/risorse necessari per lo sviluppo.</span></p>
+<p>L’analisi del problemna <span class="red">NON IMPLICA ancora alcuna progettazione</span>,
+ma mira a fornire un quadro delle possibili soluzioni tecnologighe
+individuando quelle più utili per il superamento delle problematiche poste dai requisiti.
+La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro
+della indagine - ricordiamo che siamo in un <span class="blue">processo iterativo a spirale</span> )</p>
+<section id="architettura-logica">
+<h2><a class="toc-backref" href="#id4">Architettura logica</a><a class="headerlink" href="#architettura-logica" title="Permalink to this headline">¶</a></h2>
+<p>Il risultato della analsi può essere sintetizzato nella definizione di una
+<span class="red">architettura logica</span> (che specializza/esetende quella scaturita dai requsiti )
+che definisce la NATURA (oggetti, processi, servizi, attori, database, etc.)
+dei MACRO-COMPONENTI del sistema e della loro interazione,
+NON COME SOLUZIONE DI PROGETTO, ma come VINCOLI IMPLICATI dal problema.</p>
+<p><span class="remark">Il risultato della analisi del problema dovrebbe essere condiviso tra tutti gli analisti.</span></p>
+<p>L’analista potrebbe/dovrebbe dare uno sguardo complessivo al problema,
+cercando anche di organizzare tutte le funzionalità per importanza, e come queste
+funzionalità debbano essere  distribuite tra i vari MACRO-componenti.</p>
+</section>
+<section id="sviluppo-incrementale">
+<h2><a class="toc-backref" href="#id5">Sviluppo incrementale</a><a class="headerlink" href="#sviluppo-incrementale" title="Permalink to this headline">¶</a></h2>
+<p>Un approccio INCREMENTALE (in stile SCRUM, ma non solo) è utile per
+aggredire la complessità del problema e per
+mettere in luce in primis LE COSE
+PIU’ IMPORTANTI e PIU’ CRITICHE senza perdersi in dettagli che possono distogliere
+l’attenzione per formarsi un quadro generale di riferimento.</p>
+<p>I vari SPRINT dovrebbero effettuare uno ZOOMING entro MACRO-COMPOMENTI
+innescando un processo ITERATIVO di analisi, progetto , sviluppo e testing di
+quel componente o del SOTTOSISTEMA  che lo sprint vuole costruire.
+Per questo può essere opportuno impostare ogni sprint come un ‘sottoprogetto’
+con sua propria spiegazione e teasting. Lo sprint n+ dovrebbe partire dai
+risultati dello sprint n e preparare un subsystem (funzionante)
+che sarà l’input dello sprint n+2.</p>
+</section>
+</section>
+<section id="uso-di-modelli">
+<h1><a class="toc-backref" href="#id6">Uso di modelli</a><a class="headerlink" href="#uso-di-modelli" title="Permalink to this headline">¶</a></h1>
+<p>L’uso dei modelli è utile (per non dire indispensabile) PER CONCENTRARE
+l’attenzione SUGLI ASPETTI RITENUTI SALIENTI (tenendo conto anche
+dei tempi, delle tecnologie disponibili  e dei costi):</p>
+<p>L’architettura logica esrpessa mediante un modello eseguibile può essere il riferimento per la impostazione di
+PIANI di testing (unit, integration, functional, acceptance) espressi in MODO
+NON discorsivo (formale), comprensibile a una macchina.</p>
+<p>Per questo noi abbiamo perseguito l’idea di modelli eseguibili, sviluppando
+una meta-modello in modo custom, visto che si trova ancora
+nulla di questo tipo in rete.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Il documento</a></li>
+<li><a class="reference internal" href="#l-analisi-dei-requisiti">L’analisi dei requisiti</a></li>
+<li><a class="reference internal" href="#l-analisi-del-problema">L’analisi del problema</a><ul>
+<li><a class="reference internal" href="#architettura-logica">Architettura logica</a></li>
+<li><a class="reference internal" href="#sviluppo-incrementale">Sviluppo incrementale</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uso-di-modelli">Uso di modelli</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Indocazioni.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">issMetodologia 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Il documento</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+    </div>
+  </body>
+</html>

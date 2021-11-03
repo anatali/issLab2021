@@ -1,0 +1,17 @@
+body {
+    background-color: rgb(255,255,255);
+  }
+  .blue {
+    color: blue; 
+  }
+
+  .red {
+    color:red;
+  }
+  .remark{
+    background-color: #E3F2FD;
+      border: 1.5px solid #d5f2ed;
+      padding: 10px;
+      margin: 10px;
+    border-radius: 25px;
+  }
