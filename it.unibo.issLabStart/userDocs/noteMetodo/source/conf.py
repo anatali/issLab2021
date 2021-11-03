@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'issMetodologia'
+project = 'issMetodo'
 copyright = '2021, Antonio Natali'
 author = 'Antonio Natali'
 
@@ -47,7 +47,7 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'basic' #'alabaster'
+html_theme =  'alabaster' #  'basic'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -56,4 +56,4 @@ html_static_path = ['_static']
 
 # add custom files that are stored in _static
 html_css_files = ['custom.css']
-# html_js_files  = ['custom.js']
+# html_js_files  = ['custom.js'] 
