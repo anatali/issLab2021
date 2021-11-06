@@ -339,9 +339,19 @@ L'architettura logica dovrebbe essere largamente condivisa tra tutti gli analist
 Si parla di actor (termine usato anche nei requisiti) ma non si spiega nulla in proposito
 Nella figura si usano simboli grafici non spiegati. A questo punto non è solo la 'macchina' a non capire, ma nemmeno un lettore umano
 L'idea di uno Status Actor è sicuramente una idea progettuale: non scaturisce certo nè dai requisiti nè dal problema in sè
-Frasi del tipo: "Status sends a message to Planner the message READY [TOKENID, current position, destination]. Status contains a ParkInQueue for managing cars in the parking phase, a SlotList for parked cars, and a ParkOutQueue for cars in the collection phase".sono una 'intenzione di progetto'. E' importante capire che non servono a molto se non sono 'formalizzate'. Per questo noi abbiamo introdotto modelli eseguibili, anche per non dover ricorrere a diagrammi di sequenza come quelli forniti ma che possono introdurre incomprensioni tra esseri umani, in quanto di origine UML e quindi object-oriented
-Gli Usecase e TestPlan indicati possono essere utili come commenti da inserire in una o più TestUnits
+Frasi del tipo: "Status sends a message to Planner the message READY [TOKENID, current position, destination]. 
+Status contains a ParkInQueue for managing cars in the parking phase, a SlotList for parked cars, 
+and a ParkOutQueue for cars in the collection phase".sono una 'intenzione di progetto'. 
+
+E' importante capire che non servono a molto se non sono 'formalizzate'. 
+Per questo noi abbiamo introdotto modelli eseguibili, anche per non dover ricorrere a diagrammi di sequenza 
+come quelli forniti ma che possono introdurre incomprensioni tra esseri umani, 
+in quanto di origine UML e quindi object-oriented.
+
+Gli Usecase e TestPlan indicati possono essere utili come commenti da inserire in una o più TestUnits.
+
 L'analisi del problema serve per capire quali sono le maggiori problematiche da affrontare, le tecnologie da usare e le risorse (umane e temporali) necessarie.  Inoltre gettano le basi per impostare il primo sprint di sviluppo e quindi per costruire un prio 'prototipo' funzionante del sistema da estendere poi in modo incrementale con gli sprint succesivi dopo una opportuna sprint-review con il committente
+
 Ritengo dunque necessario:
 Costruire subito un repository GIT del progetto
 Definire un primo modello del sistema come risultato della analisi del problema (e non del progetto della soluzione)

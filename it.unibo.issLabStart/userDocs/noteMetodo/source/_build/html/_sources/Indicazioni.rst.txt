@@ -38,8 +38,19 @@ il significato dei termini usati e le informazioni non esplicitamente espresse.
 La costruzione di un *dizionario*  in linguaggio naturale è utile ma non risolutiva, 
 in quanto esprime informazione ancora affetta da ambiguità se non da incoeranza e inconsistenza.
 
-Occorre esprimere le informazioni in modo **comprensible alla macchina**.
-A tal fine sono utili i linguaggi che permettono di definire :red:`modelli`.
+Dunque, le informazioni date in linguaggio naturale servono solo in una fase preliminare
+dei lavori. 
+Occorre esprimere le informazioni in modo 'formale', cioè in modo 
+**comprensible alla macchina**.
+
+
+A tal fine sono utili i linguaggi che permettono di definire :red:`modelli`
+capaci di catturare gli aspetti essenziali, lasciando sullo sfondo dettagli 
+anche importanti, ma non rilevanti nelle prime fasi.
+
+Gli *Usecases* possono essere utili come linea-guida per definire una o più `TestUnits` funzionali.
+Le specifiche degli *Usecases* espresse in linguaggio naturali possono essere inserite
+come commenti in tali `TestUnits`.
 
 Le :blue:`domande` da porre al committente mirano a chiarire:
 
@@ -54,9 +65,10 @@ Le :blue:`domande` da porre al committente mirano a chiarire:
 
 - le interazioni (a procedure-call, a messaggi, sincrone, asincrone) tra le diverse entità 
 
-Al termine della analisi dei requsiti può essere definito 
-un modello delle entità e delle loro interazioni, cioè
-può essere costruita una prima :red:`architetture logica` del sistema.
+Al termine della analisi dei requisiti dovrebbe essere definito 
+un modello del sistema che mette in lune i macro-componenti 
+(entità) e le loro interazioni, cioè
+una prima :red:`architetture logica` del sistema.
 
 
 ---------------------------
@@ -72,7 +84,16 @@ L'analisi del problema :red:`NON IMPLICA ancora alcuna progettazione`,
 ma mira a fornire un quadro delle possibili soluzioni tecnologighe
 individuando quelle più utili per il superamento delle problematiche poste dai requisiti.
 La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro
-della indagine - ricordiamo che siamo in un :blue:`processo iterativo a spirale` )
+della indagine - ricordiamo che siamo in un :blue:`processo iterativo a spirale` ).
+
+L'analisi del problema serve per capire quali sono le maggiori problematiche 
+da affrontare, le tecnologie da usare e le risorse (umane e temporali) necessarie.  
+Inoltre gettano le basi per impostare il primo sprint di sviluppo e quindi per 
+costruire un prio 'prototipo' funzionante del sistema da estendere poi in modo 
+incrementale con gli sprint succesivi dopo una opportuna sprint-review con 
+il committente
+
+
 
 +++++++++++++++++++++++++
 Architettura logica
@@ -130,4 +151,12 @@ Come già previsto da UML, è opportuno definire modelli come risultato delle
 fasi di analisi dei requsiti, analisi del problema e progetto.
 
 
-  
+
+======================================
+Passi operativi
+======================================
+#. Costruire un repository GIT del progetto
+#. Definire un primo modello del sistema come risultato della analisi del problema (e non del progetto della soluzione)
+#. Includere nel documento di analisi gli appropriati riferimenti al modello
+#. Definire qualche testplan significativo (cioè legato ai casi di uso) basato sul modello
+

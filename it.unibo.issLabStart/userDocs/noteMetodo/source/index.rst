@@ -10,6 +10,7 @@ issMetodo
    :maxdepth: 3
    :caption: Contents:
       Indicazioni
+      Domande
 
 
 Indices and tables
