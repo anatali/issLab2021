@@ -55,5 +55,13 @@ html_theme =  'alabaster' #  'basic'
 html_static_path = ['_static']
 
 # add custom files that are stored in _static
-html_css_files = ['custom.css']
+# html_css_files = ['custom.css']
 # html_js_files  = ['custom.js'] 
+
+html_theme_options = {
+    'logo': 'logo-unibo.gif',
+    'logo_name': 'True',
+    'page_width': '90%',
+} 
+
+## https://alabaster.readthedocs.io/en/latest/customization.html#basics

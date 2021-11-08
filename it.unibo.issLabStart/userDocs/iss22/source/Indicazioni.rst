@@ -129,9 +129,10 @@ Lo sprint :math:`n+1` dovrebbe partire dai
 risultati dello sprint :math:`n` e preparare un sottosistema (funzionante) 
 che sarà l'input dello sprint :math:`n+2`.
 
-======================================
+------------------------------------------
 Uso di modelli
-======================================
+------------------------------------------
+
 L'uso dei modelli è utile (per non dire indispensabile) PER CONCENTRARE
 l'attenzione SUGLI ASPETTI RITENUTI SALIENTI (tenendo conto anche
 dei tempi, delle tecnologie disponibili  e dei costi):
@@ -149,9 +150,9 @@ fasi di analisi dei requsiti, analisi del problema e progetto.
 
 
 
-======================================
+------------------------------------------
 Passi operativi
-======================================
+------------------------------------------
 #. Costruire un repository GIT del progetto
 #. Definire un primo modello del sistema come risultato della analisi del problema (e non del progetto della soluzione)
 #. Includere nel documento di analisi gli appropriati riferimenti al modello
