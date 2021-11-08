@@ -161,13 +161,19 @@ Ha dipendenze minime, richiedendo solo un compilatore C++ sul proprio sistema di
 Shellinabox
 +++++++++++++++++++++++++++++++++
 
+`Shellinabox <https://github.com/shellinabox/shellinabox>`_ 
+utilizza la tecnologia ``AJAX`` per fornire l'aspetto di una shell nativa tramite un browser web. 
+Il demone  ``shellinaboxd`` implementa un server web che ascolta sulla porta specificata 
+(il defualt è ``4200``). 
+Il server web pubblica uno o più servizi che verranno visualizzati in un  emulatore ``VT100`` 
+implementato come applicazione web ``AJAX``. 
+
 Shellinabox è incluso in molte distribuzioni Linux tramite repository predefiniti.
-Per impostazione predefinita, shellinaboxd è in ascolto sulla porta TCP `4200` su localhost.
-Per motivi di sicurezza, è bene cambiare questa porta predefinita (ad esempio 6754) 
+Per motivi di sicurezza, è bene cambiare la porta predefinita (ad esempio in 6754) 
 per rendere difficile a chiunque raggiungere la casella SSH. 
 
 Durante l'installazione viene creato automaticamente un nuovo certificato SSL autofirmato in 
-`/var/lib/shellinabox` per utilizzare il protocollo `HTTPS`.
+``/var/lib/shellinabox`` per utilizzare il protocollo `HTTPS`.
 
 .. code::
         
