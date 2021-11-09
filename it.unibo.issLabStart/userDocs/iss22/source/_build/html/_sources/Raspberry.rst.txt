@@ -9,7 +9,7 @@
 RaspberryPi
 ======================================
 
-:remark:`Costa poco e si fa (e si impara) molto.`
+:remark:`Costa poco e permette di fare (e di imparare) molto.`
 
 Riportiamo alcuni appunti per rendere più agevole l'attivazione e l'uso del RaspberryPi. 
 Il modello di riferimento è il ``RaspberryPi 3 B+`` ma possono essere usati anche anche modelli
