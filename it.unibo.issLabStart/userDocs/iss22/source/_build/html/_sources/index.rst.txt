@@ -12,7 +12,8 @@ iss22
    CostruzioneSoftware 
    Tecnologie 
    AttoriQak 
-   Raspberry
+   RaspberryPi
+   RaspberrySoftware
    Robots
    Applicazioni
    Indicazioni

@@ -6,7 +6,7 @@
  
 
 ======================================
-RaspberryPi
+RaspberrySoftware
 ======================================
 
 :remark:`Costa poco e permette di fare (e di imparare) molto.`
@@ -120,6 +120,9 @@ GIT
 +++++++++++++++++++++++++++++++++
  Node ed Express
 +++++++++++++++++++++++++++++++++
+Node.js è un runtime system open source multipiattaforma orientato agli eventi per l'esecuzione di codice JavaScript, 
+costruita sul motore JavaScript V8 di Google Chrome. 
+Molti dei suoi moduli base sono scritti in JavaScript, e gli sviluppatori possono scrivere nuovi moduli in JavaScript.
 
 .. code::
 
@@ -144,7 +147,11 @@ GIT
 +++++++++++++++++++++++++++++++++
  Samba
 +++++++++++++++++++++++++++++++++
+Samba consente la condivisione di file e stampe tra computer che eseguono Microsoft Windows e computer che eseguono Unix. 
 
+.. code::
+
+    sudo apt install -y samba
 
 +++++++++++++++++++++++++++++++++
 cmake
@@ -156,6 +163,26 @@ Ha dipendenze minime, richiedendo solo un compilatore C++ sul proprio sistema di
 .. code::
 
     sudo apt-get install cmake
+
++++++++++++++++++++++++++++++++++
+aiocoap
++++++++++++++++++++++++++++++++++
+Il package ``aiocoap`` è un'implementazione di ``CoAP`` (*Constrained Application Protocol*).
+È scritto in Python 3 utilizzando i suoi metodi ``asyncio`` nativi per facilitare le operazioni simultanee 
+mantenendo un'interfaccia facile da usare.
+
+
+.. code::
+
+    pip install aiocoap
+
+.. https://aiocoap.readthedocs.io/en/latest/
+.. wget https://aiocoap.readthedocs.io/en/latest/aiocoap-0.3.tar.gz
+ .. tar xvzf aiocoap-0.3.tar.gz
+.. cd aiocoap-0.3
+.. sudo ./setup.py install
+
+Si veda anche `Copper for Chrome (Cu4Cr) CoAP user-agent <https://github.com/mkovatsc/Copper4Cr>`_
 
 +++++++++++++++++++++++++++++++++
 Shellinabox
@@ -334,6 +361,46 @@ L'ultima versione non sembra facilmente caricabile.
     Necessita scaricare         #da: https://github.com/opencv/opencv/tree/master/data/haarcascades
 
 
+------------------
+Docker
+------------------
+
+.. code::
+
+    Installazione
+
+        sudo curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+        sudo chmod +x /tmp/get-docker.sh
+        sudo sh /tmp/get-docker.sh
+
+    Aggiunta permessi per eseguire comandi
+        sudo usermod -aG docker pi 
+            reboot !!!
+        
+        
+        sudo dockerd &     #daemon runs with default configuration
+        docker version	   #20.10.6
+        docker info
+
+    Test
+
+        docker run hello-world 
+
+------------------
+Docker-compose
+------------------
+
+.. code::
+
+    Installazione dipendenze
+        sudo apt-get install -y libffi-dev libssl-dev
+        sudo apt-get install -y python3 python3-pip
+        sudo apt-get remove python-configparser 
+
+    Installazione docker-compose
+        sudo pip3 install docker-compose   
+
+     
 ------------------
 Comandi utili
 ------------------
