@@ -9,22 +9,13 @@
 RaspberryPi
 ======================================
 
-.. csv-table::  
-   :align: left
-   :header: "Hardware Model B+", "WiringPi"
-   :widths: 40, 60
-   :width: 100%
+.. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png 
 
-   ".. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png 
-    :width: 80%", ".. code::
-
-      Alimentazione richiesta: 5V e 2.5Amps.
-
-      Installazione libreria di accesso GPIO:
-         
-         sudo apt-get install wiringpi
-   "
-
+- Alimentazione richiesta: 5V e 2.5Amps.
+- Installazione libreria di accesso GPIO:    
+         ``sudo apt-get install wiringpi``
+- Installazione package RPi.GPIO per il controllo dei GPIO:
+         ``pip install RPi.GPIO``
 
 ------------------
 wiringpi
@@ -35,29 +26,22 @@ e configurare i pin GPIO.
 
 .. code::
 
-    sudo apt-get install wiringpi
+   sudo apt-get install wiringpi
 
-    gpio -v
+   gpio -v
         Raspberry Pi Details:
         Type: Model B+, Revision: 02, Memory: 512MB, Maker: Sony
         * Device tree is enabled.
         * This Raspberry Pi supports user-level GPIO access.
 
-    Esempi:
+   Esempi di uso:
         gpio unexportall
         gpio export 25 out
         gpio export 1 out
         gpio write 25 0
         gpio write 1 0
 
-.. csv-table::  
-   :align: left
-   :header: "Hardware", "GPIO"
-   :widths: 30, 60
-   :width: 100%
-
-   "``gpio readall``", ".. code::
-
+   gpio readall
       +-----+-----+---------+------+---+---Pi B+--+---+------+---------+-----+-----+
       | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
       +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
@@ -84,18 +68,43 @@ e configurare i pin GPIO.
       +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
       | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
       +-----+-----+---------+------+---+---Pi B+--+---+------+---------+-----+-----+
-      "
-       
+
+BCM sta per: *Broadcom SOC channel*.   
+
+------------------
+Comandi utili
+------------------
+Richiamiamo alcuni comandi di uso frequente
+
+.. csv-table::  
+    :align: left
+    :header: "Azione", "Comando"
+    :widths: 60, 40
+    :width: 100%
+
+    "Elenco dei package installati", ``apt list --installed``
+    "Aggiorna l'elenco dei package  disponibili e le loro versioni", ``sudo apt-get update -y``
+    "Installa  le versioni più recenti dei packages ", ``sudo apt-get upgrade  -y``
+    "Cerca reti wireless", ``sudo iwlist wlan0``
+    "Visualizza processi", "``ps -fA`` o  ``ps -fA | grep <name>``"
+    "Termina un processo", ``sudo kill -s KILL <process number>``
+    "Visualizza la configurazione delle interfacce di rete", ``cat /etc/network/interfaces``
+
+
 ---------------------------------
 Primi programmi
 ---------------------------------
 
-Colleghiamo l'anodo (gambo lungo, +) di un LED al GPIO pin25 
-(fisico 35) e il catodo (gambo corto, -) a GND.
++++++++++++++++++++++++++++++++++++++++++
+Usiamo un LED
++++++++++++++++++++++++++++++++++++++++++
 
-+++++++++++++++++++++++++++++++++++++++++
+Colleghiamo l'anodo (gambo lungo, +) di un LED al GPIO pin BCM25 
+(fisico 22) e il catodo (gambo corto, -) a GND (fisico 20).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Accediamo il led usando shell script
-+++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In un file ``led25OnOff.sh`` scriviamo:
 
@@ -122,9 +131,9 @@ In un file ``led25OnOff.sh`` scriviamo:
 
 Uso: ``sudo bash led25OnOff.sh``
 
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Accediamo il led usando gpio
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In un file ``led25Gpio.sh`` scriviamo:
 
@@ -141,9 +150,9 @@ In un file ``led25Gpio.sh`` scriviamo:
 
 Uso: ``bash led25Gpio.sh`` 
 
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Accediamo il led usando Python
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In un file ``ledPython25.py`` scriviamo:
 
@@ -171,11 +180,155 @@ In un file ``ledPython25.py`` scriviamo:
 
 Uso: ``python ledPython25.py``
 
++++++++++++++++++++++++++++++++++++++++++
+Usiamo un SONAR HC-SR04 
++++++++++++++++++++++++++++++++++++++++++
+
+Il sensore è composto da un trasmettitore ad ultrasuoni e un ricevitore, 
+ha una portata da ``2 a 400 cm`` e una precisione della misurazione di ``+/- 0,5 cm``.
+La velocità del suono è di ``343,3 m/s`` o ``34330 cm/s``.
+
+Colleghiamo il nostro  *UltraSonic Distance Measure Module Range Sensor*
+come segue:
+
+.. code::
+
+   - VCC : pin fisico 4 (+5v)
+   - GND : pin fisico 6 (GND)
+   - TRIG: pin fisico 11 (WPI 0, BCM 17)
+   - ECHO: pin fisico 13 (WPI 2, BCM 27)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Attiviamo il sonar usando Python
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+   # File: sonar.py
+   import RPi.GPIO as GPIO
+   import time
+
+   GPIO.setmode(GPIO.BCM)
+   GPIO.setwarnings(False)
+   TRIG = 17
+   ECHO = 27
+   
+   GPIO.setup(TRIG,GPIO.OUT)  
+   GPIO.setup(ECHO,GPIO.IN)
+   
+   GPIO.output(TRIG, False)   #TRIG parte LOW
+   print ('Waiting a few seconds for the sensor to settle')
+   time.sleep(2)
+
+   while True:
+      GPIO.output(TRIG, True)    #invia impulsoTRIG
+      time.sleep(0.00001)
+      GPIO.output(TRIG, False)
+
+      #attendi che ECHO parta e memorizza tempo
+      while GPIO.input(ECHO)==0:
+         pulse_start = time.time()
+      
+      # register the last timestamp at which the receiver detects the signal. 
+      while GPIO.input(ECHO)==1:
+         pulse_end = time.time()
+      
+      pulse_duration = pulse_end - pulse_start
+      distance = pulse_duration * 17165   #distance = vt/2
+      distance = round(distance, 1)
+      #print ('Distance:',distance,'cm')
+      print ( distance )
+      sys.stdout.flush()   #Importante!
+   #GPIO.cleanup()
+
+Questo codice visualizza sul dispositivo standard di output l'informazione sulla distanza rilevata.
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Attiviamo il sonar usando C
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Definiamo un programma analogo a precedente, ma scritto in linguaggio C++, che invia sul dispositivo standard di output 
+il valore della distanza rilevata dal Sonar.
+
+Si veda: `SonarAlone.c <./_static/code/SonarAlone.c>`_
+
+.. code::
+
+   #Compilazione
+      g++  SonarAlone.c -l wiringPi -o  SonarAlone
+   #Esecuzione
+      ./SonarAlone
+
+
++++++++++++++++++++++++++++++++++++++++++
+Accendiamo LED se qualcosa si avvicina 
++++++++++++++++++++++++++++++++++++++++++
+Consideriamo il seguente requisito:
+
+:remark:`Accendere il LED se il SONAR rileva una distanza inferiore a un limite prefissato.`
+
+Si tratta di realizzare una prima semplice catena *input-elaborazione-output*.
+
+I dati emessi dal sonar sullo dispositivo standard di uscita possono essere acquisiti
+da un altro programma attraverso il meccansimo delle pipe di Linux/Unix.
+
+Definiamo quindi un semplice programma Python che legge da standard input e scrivere quanto 
+letto su standard output.
+
+.. code::
+
+   #File: ReadInput.py
+   import sys
+   for line in sys.stdin:
+      print(line)
+
+Testiamo il programma facendo visualizzare il programma stesso:
+
+.. code::
+
+   cat ReadInput.py | python ReadInput.py
+
+A questo punto ridiregiamo i dati generati dal sonar al nostro programma: 
+
+.. code::
+
+      python sonar.py | python ReadInput.py
+   oppure:
+      ./SonarAlone | python ReadInput.py
+
+A questo punto modifichiamo il programma che riceve i dati di ingresso in modo
+da attivare/disattivare il LED:
+
+.. code::
+
+   #File: LedControl.py
+   import sys
+   import RPi.GPIO as GPIO 
+
+   GPIO.setmode(GPIO.BCM)
+   GPIO.setup(25,GPIO.OUT)
+
+   for line in sys.stdin:
+      print(line)
+      v = float(line)
+      if v <= 10 :
+         GPIO.output(25,GPIO.HIGH)
+      else:
+         GPIO.output(25,GPIO.LOW)
+
+
+Concateniamo i programmi:
+
+.. code::
+
+   python sonar.py | python LedControl.py 
+
 
 
 .. Mettte le immagini fianco a fianco
 .. .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png
 ..   :width: 20%
 .. .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png
-..   :width: 20%  
+..   :width: 20%   ``
 

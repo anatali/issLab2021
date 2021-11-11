@@ -102,6 +102,7 @@ Java
 +++++++++++++++++++++++++++++++++
 
 .. code::
+    
     sudo apt install openjdk-8-jdk openjdk-8-jre
     update-alternatives --config java
     java -version
@@ -114,6 +115,7 @@ GIT
 +++++++++++++++++++++++++++++++++
 
 .. code::	
+    
     sudo apt-get install git
     git --version 	    #git version 2.20.1
 
@@ -400,22 +402,4 @@ Docker-compose
     Installazione docker-compose
         sudo pip3 install docker-compose   
 
-     
-------------------
-Comandi utili
-------------------
-Richiamiamo alcuni comandi di uso frequente
 
-.. csv-table::  
-    :align: left
-    :header: "Azione", "Comando"
-    :widths: 60, 40
-    :width: 100%
-
-    "Elenco dei package installati", ``apt list --installed``
-    "Aggiorna l'elenco dei package  disponibili e le loro versioni", ``sudo apt-get update -y``
-    "Installa  le versioni più recenti dei packages ", ``sudo apt-get upgrade  -y``
-    "Cerca reti wireless", ``sudo iwlist wlan0``
-    "Visualizza processi", "``ps -fA`` o  ``ps -fA | grep <name>``"
-    "Termina un processo", ``sudo kill -s KILL <process number>``
-    "Visualizza la configurazione delle interfacce di rete", ``cat /etc/network/interfaces``
