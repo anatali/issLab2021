@@ -7,7 +7,6 @@
 .. `` 
 
 
-
 ======================================
 Architetture
 ======================================
@@ -30,13 +29,15 @@ Da questi testi leggiamo:
 - :blue:`Why` is more important than :blue:`how`. (**Second law** of Software Architecture) (FSA pg. 18)
 
 - The architecture for a software system arises from the combinations of requriments and additional concerns 
-  (Auditability, Performance, Security, Legality, Scalability ...) each protected by fitness functions 
+  (Auditability, Security, Legality, Scalability ...
+  :blue:`-ilities` si veda `List of system quality attributes <https://en.wikipedia.org/wiki/List_of_system_quality_attributes>`_)
+  each protected by fitness functions 
 
 - All architecture become iterative becuase of :blue:`unknown of unknowns` (FSA pg. 14). 
   What we need today is an :blue:`Evolutionary Architecture`. (FSA pg. 15).
 
-- An *Evolutionary Architecture* supports guided, incremental changes across multiple dimensions including -ilities
-  (si veda `List of system quality attributes <https://en.wikipedia.org/wiki/List_of_system_quality_attributes>`_)
+- An *Evolutionary Architecture* supports guided, incremental changes across multiple dimensions, including -ilities
+  
 
 
 Altrove (ad esempio in *Building Evolutionary Architectures* - ``ISBN : 9781492043454`` ) leggiamo:
@@ -45,7 +46,7 @@ Altrove (ad esempio in *Building Evolutionary Architectures* - ``ISBN : 97814920
 
 - The *Continuos Delivery* and *DevOps* movements added a new factor in the dynamic equilibrium.  
 
-- To build evolvable software systems, architets must think :blue:`beyond just the technical` architecture.
+- :remark:`To build evolvable software systems, architets must think beyond just the technical architecture.`
 
 --------------------------------------
 Architetture preliminari
