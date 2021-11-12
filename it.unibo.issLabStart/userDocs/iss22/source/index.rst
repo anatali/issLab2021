@@ -10,7 +10,9 @@ iss22
    :maxdepth: 1 
 
    CostruzioneSoftware 
+   Strumenti per lo sviluppo
    Tecnologie 
+   Architetture
    AttoriQak 
    RaspberryPi
    RaspberrySoftware

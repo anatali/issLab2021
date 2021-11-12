@@ -11,7 +11,8 @@ body {
   .remark{
     background-color: #E3F2FD;
       border: 1.5px solid #d5f2ed;
-      padding: 10px;
-      margin: 10px;
+      padding: 0px;
+      margin: 0px;
+      line-height: 1.4;
     border-radius: 25px;
   }

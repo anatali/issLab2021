@@ -61,7 +61,7 @@ html_static_path = ['_static']
 html_theme_options = {
     'logo': 'logo-unibo.gif',
     'logo_name': 'True',
-    'page_width': '90%',
+    'page_width': '98%',
 } 
 
 ## https://alabaster.readthedocs.io/en/latest/customization.html#basics
