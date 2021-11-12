@@ -118,9 +118,10 @@ Architetture per applicazioni
 
 
 
---------------------------------------
+-----------------------------------------
 L'Architettura Esagonale (Port-Adapter)
--------------------------------------- 
+-----------------------------------------
+
 Il concetto di `Hexagonal Architecture <https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)>`_ 
 è stato introdotto nel 2005 da Alistair Cockburn come un contributo
 ad evitare ben note 'trappole strutturali' nella progettazione ad oggetti, come ad esempio
@@ -157,32 +158,99 @@ segna anche l'origine delle *architetture a microservizi*. In sintesi, questo ap
 La Clean Architecture
 -------------------------------------- 
 
-
-
 Proposta nel 2012 da `Robert C. Martin <https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html>`_
 specializza l'archiotettura esagonale fornendo ulteriori dettagli sui componenti, che sono presentati
 in anelli concentrici.
 
-.. image:: ./_static/img/Architectures/cleanArch.jpg
-   :width: 70% 
+.. csv-table::  
+    :align: center
+    :widths: 50,50
+    :width: 100% 
+
+    .. image:: ./_static/img/Architectures/cleanArch.jpg,.. image:: ./_static/img/Architectures/cleanArchCone.jpg 
+
 
 Gli adapter e le interfacce sono relegate negli anelli più esterni, mentre le parti centrali sono riservate
 alle entità e ai casi d'uso.
 
-Viene imposto il vincolo che sono sempre gli anelli esterni a dover dipendere da quelli interni e mai viceversa,
-evocando quindi il principio della `inversione delle dipendenze <https://en.wikipedia.org/wiki/Dependency_inversion_principle>`_
-che stabilisce quanto segue:
+:remark:`Viene imposto il vincolo che sono sempre gli anelli esterni a dover dipendere da quelli interni e mai viceversa.`
 
-- I componenti software di alto livello :red:`non devono mai dipendere` da componenti di livello più basso.
+.. list-table:: 
+   :widths: 50,50
+   :width: 100%
+
+   * - :blue:`Entità`
+        - Rappresenta un oggetto del :blue:`dominio applicativo`.
+        - Può essere un oggetto aziendale con metodi oppure un insieme di strutture dati e funzioni. 
+        - Realizza logica applicativa di tipo generale.
+        - 
+     - :blue:`Use Cases`
+        - Rappresentano le :blue:`azioni applicative specifiche`.
+        - Non sono influenzate da infrastrutture (ad es. database).
+        - Non sanno chi li attiva e a chi/come inviare i risultati,
+          ma usano interfacce.
+        - Possono generare eccezioni a livello business.
+   * - :blue:`Controllers`
+        - Sono anche detti :blue:`Interface Adapters`.
+        - Recuperano e memorizzano dati implementando le interfacce richieste dagli use-cases.
+        - Convertono i dati (fornendo presentatori, visualizzazioni)
+     - :blue:`External Interfaces`
+        - Incorporano drivers e :blue:`frameworks`  che fungono da collante.
+        - Usano le infrastrutture che si ritengono più appropriate.
+        - 
+        - 
+
+--------------------------------------
+Vincoli sulle dipendenze
+--------------------------------------
+
+La figura che segue illustra come i Controllers e i Presenters comunicano con gli Uses Cases
+del livello superiore.
+
+.. image:: ./_static/img/Architectures/cleanArchControllerAdUseCases.png
+   :align: center
+
+Il flusso di controllo si origina dal Controller per passare poi allo UseCase e al Presenter.
+Lo scopo del Presenter è di separare i casi d'uso dal formato dell'interfaccia utente.
+
+Per evitare la dipendenza dello UseCase dal Presenter
+(cioè per rispettare il vincolo che sono sempre gli anelli esterni  a dover dipendere da quelli interni e mai viceversa), 
+si possono usare due tecniche principali:
+
+- Ricorrendo al principio della `inversione delle dipendenze <https://en.wikipedia.org/wiki/Dependency_inversion_principle>`_
+- Usando il pattern mediator.
+
+++++++++++++++++++++++++++++++++++++
+Inversione delle dipendenze
+++++++++++++++++++++++++++++++++++++
+Il principio della `inversione delle dipendenze <https://en.wikipedia.org/wiki/Dependency_inversion_principle>`_
+stabilisce quanto segue:
+
+- :remark:`I componenti di alto livello non devono dipendere da componenti di livello più basso.`
 - :remark:`Le astrazioni non devono dipendere dai dettagli`.
+  
   Sono i dettagli (ad esempio le implementazioni concrete) che devono dipendere dalle astrazioni.
 
-
+ 
 +++++++++++++++++++++++++++++++++++++ 
-I principi SOLID
+Il pattern mediator
 +++++++++++++++++++++++++++++++++++++
+Nel `mediator pattern <https://en.wikipedia.org/wiki/Mediator_pattern>`_  due oggetti delegano la loro interazione a un terzo oggetto (il mediatore)
+invece di interagire direttamente.
+
+.. image:: ./_static/img/Architectures/meditorSequence.png
+   :width: 50%
+   :align: center
+
+-------------------------------------- 
+I principi SOLID
+--------------------------------------
 
 Questo tipo di architettura vuole anche promuovere i principi 
 `SOLID <https://it.wikipedia.org/wiki/SOLID>`_ per la progettazione/costruzione pulita del software.
 
 Si veda `Clean Architecture by Uncle Bob: Summary and review <https://clevercoder.net/2018/09/08/clean-architecture-summary-review>`_.  
+
+
+  
+

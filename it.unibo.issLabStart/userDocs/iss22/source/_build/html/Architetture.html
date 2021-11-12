@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>Architetture &#8212; iss22 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -36,24 +36,27 @@
   <div class="contents topic" id="overview">
 <p class="topic-title">Overview</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#architetture" id="id1">Architetture</a></p>
+<li><p><a class="reference internal" href="#architetture" id="id3">Architetture</a></p>
 <ul>
-<li><p><a class="reference internal" href="#architetture-preliminari" id="id2">Architetture preliminari</a></p></li>
-<li><p><a class="reference internal" href="#architetture-monolitiche" id="id3">Architetture monolitiche</a></p></li>
-<li><p><a class="reference internal" href="#architetture-distribuite" id="id4">Architetture distribuite</a></p></li>
-<li><p><a class="reference internal" href="#architetture-per-applicazioni" id="id5">Architetture per applicazioni</a></p></li>
-<li><p><a class="reference internal" href="#l-architettura-esagonale-port-adapter" id="id6">L’Architettura Esagonale (Port-Adapter)</a></p></li>
-<li><p><a class="reference internal" href="#la-clean-architecture" id="id7">La Clean Architecture</a></p>
+<li><p><a class="reference internal" href="#architetture-preliminari" id="id4">Architetture preliminari</a></p></li>
+<li><p><a class="reference internal" href="#architetture-monolitiche" id="id5">Architetture monolitiche</a></p></li>
+<li><p><a class="reference internal" href="#architetture-distribuite" id="id6">Architetture distribuite</a></p></li>
+<li><p><a class="reference internal" href="#architetture-per-applicazioni" id="id7">Architetture per applicazioni</a></p></li>
+<li><p><a class="reference internal" href="#l-architettura-esagonale-port-adapter" id="id8">L’Architettura Esagonale (Port-Adapter)</a></p></li>
+<li><p><a class="reference internal" href="#la-clean-architecture" id="id9">La Clean Architecture</a></p></li>
+<li><p><a class="reference internal" href="#vincoli-sulle-dipendenze" id="id10">Vincoli sulle dipendenze</a></p>
 <ul>
-<li><p><a class="reference internal" href="#i-principi-solid" id="id8">I principi SOLID</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id11">Inversione delle dipendenze</a></p></li>
+<li><p><a class="reference internal" href="#il-pattern-mediator" id="id12">Il pattern mediator</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#i-principi-solid" id="id13">I principi SOLID</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <section id="architetture">
-<h1><a class="toc-backref" href="#id1">Architetture</a><a class="headerlink" href="#architetture" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id3">Architetture</a><a class="headerlink" href="#architetture" title="Permalink to this headline">¶</a></h1>
 <table class="colwidths-given docutils align-left" style="width: 100%">
 <colgroup>
 <col style="width: 60%" />
@@ -89,7 +92,7 @@ What we need today is an <span class="blue">Evolutionary Architecture</span>. (F
 <li><p>To build evolvable software systems, architets must think <span class="blue">beyond just the technical</span> architecture.</p></li>
 </ul>
 <section id="architetture-preliminari">
-<h2><a class="toc-backref" href="#id2">Architetture preliminari</a><a class="headerlink" href="#architetture-preliminari" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Architetture preliminari</a><a class="headerlink" href="#architetture-preliminari" title="Permalink to this headline">¶</a></h2>
 <table class="colwidths-given docutils align-left" style="width: 100%">
 <colgroup>
 <col style="width: 50%" />
@@ -111,7 +114,7 @@ What we need today is an <span class="blue">Evolutionary Architecture</span>. (F
 </table>
 </section>
 <section id="architetture-monolitiche">
-<h2><a class="toc-backref" href="#id3">Architetture monolitiche</a><a class="headerlink" href="#architetture-monolitiche" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Architetture monolitiche</a><a class="headerlink" href="#architetture-monolitiche" title="Permalink to this headline">¶</a></h2>
 <table class="colwidths-given docutils align-left" style="width: 100%">
 <colgroup>
 <col style="width: 33%" />
@@ -141,7 +144,7 @@ What we need today is an <span class="blue">Evolutionary Architecture</span>. (F
 </table>
 </section>
 <section id="architetture-distribuite">
-<h2><a class="toc-backref" href="#id4">Architetture distribuite</a><a class="headerlink" href="#architetture-distribuite" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Architetture distribuite</a><a class="headerlink" href="#architetture-distribuite" title="Permalink to this headline">¶</a></h2>
 <table class="colwidths-given docutils align-left" style="width: 100%">
 <colgroup>
 <col style="width: 33%" />
@@ -191,7 +194,7 @@ What we need today is an <span class="blue">Evolutionary Architecture</span>. (F
 <p>A queste aggiungiamo le seguenti:</p>
 </section>
 <section id="architetture-per-applicazioni">
-<h2><a class="toc-backref" href="#id5">Architetture per applicazioni</a><a class="headerlink" href="#architetture-per-applicazioni" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Architetture per applicazioni</a><a class="headerlink" href="#architetture-per-applicazioni" title="Permalink to this headline">¶</a></h2>
 <table class="colwidths-given docutils align-left" style="width: 100%">
 <colgroup>
 <col style="width: 33%" />
@@ -217,7 +220,7 @@ What we need today is an <span class="blue">Evolutionary Architecture</span>. (F
 </table>
 </section>
 <section id="l-architettura-esagonale-port-adapter">
-<h2><a class="toc-backref" href="#id6">L’Architettura Esagonale (Port-Adapter)</a><a class="headerlink" href="#l-architettura-esagonale-port-adapter" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">L’Architettura Esagonale (Port-Adapter)</a><a class="headerlink" href="#l-architettura-esagonale-port-adapter" title="Permalink to this headline">¶</a></h2>
 <p>Il concetto di <a class="reference external" href="https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)">Hexagonal Architecture</a>
 è stato introdotto nel 2005 da Alistair Cockburn come un contributo
 ad evitare ben note ‘trappole strutturali’ nella progettazione ad oggetti, come ad esempio
@@ -244,27 +247,114 @@ e/o database e di essere egualmente attivabile da utenti umani, programmi, test 
 <a class="reference internal image-reference" href="_images/hexlinear.PNG"><img alt="_images/hexlinear.PNG" src="_images/hexlinear.PNG" style="width: 80%;" /></a>
 </section>
 <section id="la-clean-architecture">
-<h2><a class="toc-backref" href="#id7">La Clean Architecture</a><a class="headerlink" href="#la-clean-architecture" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">La Clean Architecture</a><a class="headerlink" href="#la-clean-architecture" title="Permalink to this headline">¶</a></h2>
 <p>Proposta nel 2012 da <a class="reference external" href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Robert C. Martin</a>
 specializza l’archiotettura esagonale fornendo ulteriori dettagli sui componenti, che sono presentati
 in anelli concentrici.</p>
-<a class="reference internal image-reference" href="_images/cleanArch.jpg"><img alt="_images/cleanArch.jpg" src="_images/cleanArch.jpg" style="width: 70%;" /></a>
+<table class="colwidths-given docutils align-center" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><img alt="_images/cleanArch.jpg" src="_images/cleanArch.jpg" />
+</td>
+<td><img alt="_images/cleanArchCone.jpg" src="_images/cleanArchCone.jpg" />
+</td>
+</tr>
+</tbody>
+</table>
 <p>Gli adapter e le interfacce sono relegate negli anelli più esterni, mentre le parti centrali sono riservate
 alle entità e ai casi d’uso.</p>
-<p>Viene imposto il vincolo che sono sempre gli anelli esterni a dover dipendere da quelli interni e mai viceversa,
-evocando quindi il principio della <a class="reference external" href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">inversione delle dipendenze</a>
-che stabilisce quanto segue:</p>
-<ul class="simple">
-<li><p>I componenti software di alto livello <span class="red">non devono mai dipendere</span> da componenti di livello più basso.</p></li>
-<li><p><span class="remark">Le astrazioni non devono dipendere dai dettagli</span>.
-Sono i dettagli (ad esempio le implementazioni concrete) che devono dipendere dalle astrazioni.</p></li>
+<p><span class="remark">Viene imposto il vincolo che sono sempre gli anelli esterni a dover dipendere da quelli interni e mai viceversa.</span></p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><dl class="simple">
+<dt><span class="blue">Entità</span></dt><dd><ul class="simple">
+<li><p>Rappresenta un oggetto del <span class="blue">dominio applicativo</span>.</p></li>
+<li><p>Può essere un oggetto aziendale con metodi oppure un insieme di strutture dati e funzioni.</p></li>
+<li><p>Realizza logica applicativa di tipo generale.</p></li>
+<li></li>
 </ul>
+</dd>
+</dl>
+</td>
+<td><dl class="simple">
+<dt><span class="blue">Use Cases</span></dt><dd><ul class="simple">
+<li><p>Rappresentano le <span class="blue">azioni applicative specifiche</span>.</p></li>
+<li><p>Non sono influenzate da infrastrutture (ad es. database).</p></li>
+<li><p>Non sanno chi li attiva e a chi/come inviare i risultati,
+ma usano interfacce.</p></li>
+<li><p>Possono generare eccezioni a livello business.</p></li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><dl class="simple">
+<dt><span class="blue">Controllers</span></dt><dd><ul class="simple">
+<li><p>Sono anche detti <span class="blue">Interface Adapters</span>.</p></li>
+<li><p>Recuperano e memorizzano dati implementando le interfacce richieste dagli use-cases.</p></li>
+<li><p>Convertono i dati (fornendo presentatori, visualizzazioni)</p></li>
+</ul>
+</dd>
+</dl>
+</td>
+<td><dl class="simple">
+<dt><span class="blue">External Interfaces</span></dt><dd><ul class="simple">
+<li><p>Incorporano drivers e <span class="blue">frameworks</span>  che fungono da collante.</p></li>
+<li><p>Usano le infrastrutture che si ritengono più appropriate.</p></li>
+<li></li>
+<li></li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vincoli-sulle-dipendenze">
+<h2><a class="toc-backref" href="#id10">Vincoli sulle dipendenze</a><a class="headerlink" href="#vincoli-sulle-dipendenze" title="Permalink to this headline">¶</a></h2>
+<p>La figura che segue illustra come i Controllers e i Presenters comunicano con gli Uses Cases
+del livello superiore.</p>
+<img alt="_images/cleanArchControllerAdUseCases.png" class="align-center" src="_images/cleanArchControllerAdUseCases.png" />
+<p>Il flusso di controllo si origina dal Controller per passare poi allo UseCase e al Presenter.
+Lo scopo del Presenter è di separare i casi d’uso dal formato dell’interfaccia utente.</p>
+<p>Per evitare la dipendenza dello UseCase dal Presenter
+(cioè per rispettare il vincolo che sono sempre gli anelli esterni  a dover dipendere da quelli interni e mai viceversa),
+si possono usare due tecniche principali:</p>
+<ul class="simple">
+<li><p>Ricorrendo al principio della <a class="reference external" href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">inversione delle dipendenze</a></p></li>
+<li><p>Usando il pattern mediator.</p></li>
+</ul>
+<section id="id1">
+<h3><a class="toc-backref" href="#id11">Inversione delle dipendenze</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Il principio della <a class="reference external" href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">inversione delle dipendenze</a>
+stabilisce quanto segue:</p>
+<ul>
+<li><p><span class="remark">I componenti di alto livello non devono dipendere da componenti di livello più basso.</span></p></li>
+<li><p><span class="remark">Le astrazioni non devono dipendere dai dettagli</span>.</p>
+<p>Sono i dettagli (ad esempio le implementazioni concrete) che devono dipendere dalle astrazioni.</p>
+</li>
+</ul>
+</section>
+<section id="il-pattern-mediator">
+<h3><a class="toc-backref" href="#id12">Il pattern mediator</a><a class="headerlink" href="#il-pattern-mediator" title="Permalink to this headline">¶</a></h3>
+<p>Nel <a class="reference external" href="https://en.wikipedia.org/wiki/Mediator_pattern">mediator pattern</a>  due oggetti delegano la loro interazione a un terzo oggetto (il mediatore)
+invece di interagire direttamente.</p>
+<a class="reference internal image-reference" href="_images/meditorSequence.png"><img alt="_images/meditorSequence.png" class="align-center" src="_images/meditorSequence.png" style="width: 50%;" /></a>
+</section>
+</section>
 <section id="i-principi-solid">
-<h3><a class="toc-backref" href="#id8">I principi SOLID</a><a class="headerlink" href="#i-principi-solid" title="Permalink to this headline">¶</a></h3>
+<h2><a class="toc-backref" href="#id13">I principi SOLID</a><a class="headerlink" href="#i-principi-solid" title="Permalink to this headline">¶</a></h2>
 <p>Questo tipo di architettura vuole anche promuovere i principi
 <a class="reference external" href="https://it.wikipedia.org/wiki/SOLID">SOLID</a> per la progettazione/costruzione pulita del software.</p>
 <p>Si veda <a class="reference external" href="https://clevercoder.net/2018/09/08/clean-architecture-summary-review">Clean Architecture by Uncle Bob: Summary and review</a>.</p>
-</section>
 </section>
 </section>
 
@@ -319,7 +409,7 @@ Sono i dettagli (ad esempio le implementazioni concrete) che devono dipendere da
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -341,7 +431,7 @@ Sono i dettagli (ad esempio le implementazioni concrete) che devono dipendere da
       &copy;2021, Antonio Natali.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
