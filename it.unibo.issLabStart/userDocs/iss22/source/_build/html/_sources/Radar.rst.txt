@@ -1,0 +1,25 @@
+.. contents:: Overview
+   :depth: 4
+.. role:: red 
+.. role:: blue 
+.. role:: remark
+
+.. `` 
+    
+======================================
+Requisiti
+======================================
+
+Si desidera costruire un'applicazione software capace di: 
+
+- (requisito :blue:`radarGui`:) mostrare le distanze rilevate da un sensore ``HC-SR04`` su un display a forma di radar 
+  
+.. image:: ./_static/img/Radar/radarDisplay.png
+
+- (requisito :blue:`ledAlarm`:) accendere un LED se la distanza rilevata è inferiore a valore limite prefissato
+
+======================================
+Analisi dei Requisiti
+======================================
+
+Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:

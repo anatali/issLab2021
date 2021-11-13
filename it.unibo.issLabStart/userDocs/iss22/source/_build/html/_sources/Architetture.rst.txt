@@ -11,14 +11,17 @@
 Architetture
 ======================================
 
+.. list-table:: 
+   :widths: 70,30
+   :width: 100%
 
-.. csv-table::  
-    :align: left
-    :widths: 60, 40
-    :width: 100%
+   * - Nel testo ``FSA - ISBN-10 : 1492043451`` vengono presentati diversi tipi di Architetture Sosftware." 
+     - .. image:: ./_static/img/Architectures/softwareArch.webp
+         :width: 80%
 
-    "Nel testo  (``FSA - ISBN-10 : 1492043451``)  vengono presentati diversi tipi di Architetture Sosftware.",.. image:: ./_static/img/Architectures/softwareArch.webp
-    "Nel testo  (``CA  - ISBN-10 : 0134494164``)  approfondisce il ruolo delle architetture nel processo di produzione del software.",.. image:: ./_static/img/Architectures/cleanArchBook.jpg
+   * - Il testo  ``CA  - ISBN-10 : 0134494164``  approfondisce il ruolo delle architetture nel processo di produzione del software."
+     - .. image:: ./_static/img/Architectures/cleanArchBook.jpg
+        :width: 80%
   
 Da questi testi leggiamo:
 
