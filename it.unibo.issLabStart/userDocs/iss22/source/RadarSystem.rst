@@ -59,14 +59,16 @@ Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
        Il supporto è realizzato dal progetto *it.unibo.java.radar*.
    * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
        definibile in modo configurabile dall'utente finale?
-     - L'utente finale deve essere in grado di specificare in un 'file di configuraizone' il valore di questa distanza.
+     - L'utente finale deve essere in grado di specificare in un 'file di configurazione' il valore di questa distanza.
+   * - Dove deve risiedere il file di configurazione?
+     - Per agevolare l'utente finale, è bene che il file di configurazione risieda sul PC.
 
 Dai requisiti possiamo asserire che:
 
-- si tratta di realizzare il software per un sistema distribuito costituito da due nodi di elaborazione:
+- si tratta di realizzare il software per un *sistema distribuito* costituito da due nodi di elaborazione:
   un RaspbeddyPi e un PC convenzionale;
-- i due nodi di elaborazione devono potersi scambiare informazione via rete, usando supporti WIFI;
-- i due nodi di elaborazione devono essere 'programmati' usando tecnologie software diverse.
+- i due nodi di elaborazione devono potersi *scambiare informazione via rete*, usando supporti WIFI;
+- i due nodi di elaborazione devono essere 'programmati' usando *tecnologie software diverse*.
 
 In sintesi:
 
@@ -171,8 +173,6 @@ Ma ecco sorgere un'altra problematica:
        
        Un colloquio con il committente esclude (per motivi di costo) la possibilità di introdurre un terzo
        nodo di elaborazione. 
-   * - Dove deve risiedere il file di configurazione?
-     - Per agevolare l'utente finale, è bene che il file di configurazione risieda sul PC.
 
 Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul RaspberryPi o sul PC.
 
