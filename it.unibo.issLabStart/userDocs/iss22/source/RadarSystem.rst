@@ -233,7 +233,15 @@ che definisce operazioni attivabili con chiamate di procedura o come un
    * - Analizzando il software disponibile, possiamo dire che:
      
        -  il ``Sonar`` è un ente attivo che scrive dati su un dispositivo standard di output
-       -  il ``Led`` è un oggetto  
+       -  il ``Led`` è un oggetto  che implementa l'interfaccia
+          
+          .. code::  
+
+             interface ILed {
+                  void turnOn()
+                  void turnOff()
+                  boolean isOn()
+             }
        -  il ``radarSupport`` è un oggetto singleton che può essere usato invocando il metodo ``update``
  
 Se anche il ``RadarDisplay`` fosse sul RaspberryPi, il ``Controller`` potrebbe essere definito come segue:
@@ -250,7 +258,7 @@ che può operare sul PC o sul RaspberryPi (un terzo nodo è escluso).
 
 - Nel caso operi sul PC, lo schema precedente non va più bene, 
   perchè il ``Controller`` deve poter interagire via rete con il ``Sonar``e con il ``Led``.
-  Inoltre, il ``Sonar``e il ``Led`` devono essere 'embedded' in qualche altro componente
+  Inoltre, il ``Sonar``e il ``Led`` devono essere :blue:`embedded` in qualche altro componente
   capace di ricevere/trasmettere messaggi.
 
 - Nel caso operi sul RaspberryPi, lo schema precedente non va più bene, 
@@ -299,6 +307,122 @@ Il ``Controller`` potrebbe essere ora definito come segue:
 Il comportamento degli altri disposivi è una conseguenza logica di questo.
 
   
+--------------------------------------
+Progettazione
+--------------------------------------
+
+Partendo dall'analisi top-down, impostiamo un componente (che denominiamo al momento genericamente :blue:`enabler`) 
+capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
+metodi di un oggetto 'embedded' locale.
+
+.. list-table::
+   :width: 100%
+   :widths: 70,30
+
+   * - L'idea è che l'`enabler` dovrebbe svolgere rispetto all'oggetto embedded una funzione analoga alle tute  
+       in stile 'IronMan', in modo da costruire un microservizio.
+     -  .. image:: ./_static/img/Radar/TutaVolo.jpg 
+           :width: 100%
+
+Ad esempio, con riferimento al ``Led``, l'`enabler` dovrebbe comportarsi come segue:
+
+.. code::
+
+  led : ILed 
+  while True :
+    attendi un messaggio di comando
+    analizza il contenuto del comando ed esegui  
+       led.turnOn()
+          oppure
+       led.turnOff()
+
+TODO: 
+
+- enabler come server Python o come server Java
+- Led come classe Python o  Java
+
+.. code::
+
+   //From C:\Didattica2018Work\iss2020LabBo\it.unibo.qak.radar2020\resources\sonarRadarOnTcp
+   package sonarRadarOnTcp
+   /*
+   radarGuiAsTcpServer.kt
+   ------------------------------------------------------------------------------------------
+   A scheme for a radarGui that works as a TCP server
+   The structure of the code arises from the technology-support (socket in java.net libray)
+   ------------------------------------------------------------------------------------------
+   */ 
+   import it.unibo.kactor.MsgUtil
+   import java.net.ServerSocket
+   import it.unibo.`is`.interfaces.protocols.IConnInteraction  //WARNING !!! 
+   import lowLevelComms.tcpConnSupport
+   import highLevelComms.hlComm
+
+   var hlServerCommSupport : hlComm?  =  null
+
+   fun serverStartUp( port:Int ){
+      println("server | init ...  ")
+      val serverSocket    = lowLevelComms.tecnoSupport.connectAsReceiver( port )
+      val conn            = waitForConn( serverSocket )
+      hlServerCommSupport = hlComm( conn )
+   }
+
+   fun waitForConn( serverSocket : ServerSocket ) : IConnInteraction{
+      val socket       = lowLevelComms.tecnoSupport.acceptAConnection(serverSocket)
+      println("server | new connection set  ")
+      return tcpConnSupport( socket )
+   }
+
+   fun serverWork(){
+      println("server | waits for message ...")
+      val msg = hlServerCommSupport!!.receive()
+      println("server | received: $msg" )
+   }
+
+   fun main() {
+      println("server | BEGIN")
+      serverStartUp( 8010 )
+      serverWork()
+      println("server | END")
+   }
+
+   //CLIENT
+
+   package sonarRadarOnTcp
+   /*
+   robotSonarAsTcpClient.kt
+   */ 
+   import java.net.Socket
+   import java.net.ServerSocket
+   import it.unibo.kactor.ApplMessage
+   import it.unibo.kactor.MsgUtil
+   import it.unibo.`is`.interfaces.protocols.IConnInteraction  //WARNING !!! 
+   import lowLevelComms.tcpConnSupport
+   import highLevelComms.hlComm
+
+   var hlCommSupport : hlComm? =  null
+
+   fun lowLevelConnect( host:String, port:Int ) : IConnInteraction{
+      val socket  = lowLevelComms.tecnoSupport.connectAsClient(host,port)
+      return tcpConnSupport( socket )
+   }
+
+   fun clientStartUp(){
+      val conn = lowLevelConnect("localhost", 8010 )
+      hlCommSupport = hlComm( conn )
+   }
+
+   fun clientWork(){
+      println("client | sending ... ")
+      hlCommSupport!!.forward("sonar","polar","polar(40,0)","radargui")
+   }
+
+   fun main() {
+      println("client | BEGIN")
+      clientStartUp()
+      clientWork()
+      println("client | END")
+   }
 
 
 

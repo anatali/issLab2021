@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>RadarSystem &#8212; iss22 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -57,6 +57,7 @@
 </li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#progettazione" id="id12">Progettazione</a></p></li>
 </ul>
 </li>
 </ul>
@@ -286,9 +287,17 @@ che definisce operazioni attivabili con chiamate di procedura o come un
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Analizzando il software disponibile, possiamo dire che:</p>
-<ul class="simple">
+<ul>
 <li><p>il <code class="docutils literal notranslate"><span class="pre">Sonar</span></code> è un ente attivo che scrive dati su un dispositivo standard di output</p></li>
-<li><p>il <code class="docutils literal notranslate"><span class="pre">Led</span></code> è un oggetto</p></li>
+<li><p>il <code class="docutils literal notranslate"><span class="pre">Led</span></code> è un oggetto  che implementa l’interfaccia</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interface</span> <span class="n">ILed</span> <span class="p">{</span>
+     <span class="n">void</span> <span class="n">turnOn</span><span class="p">()</span>
+     <span class="n">void</span> <span class="n">turnOff</span><span class="p">()</span>
+     <span class="n">boolean</span> <span class="n">isOn</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
 <li><p>il <code class="docutils literal notranslate"><span class="pre">radarSupport</span></code> è un oggetto singleton che può essere usato invocando il metodo <code class="docutils literal notranslate"><span class="pre">update</span></code></p></li>
 </ul>
 </td>
@@ -307,7 +316,7 @@ che può operare sul PC o sul RaspberryPi (un terzo nodo è escluso).</p>
 <ul class="simple">
 <li><p>Nel caso operi sul PC, lo schema precedente non va più bene,
 perchè il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> deve poter interagire via rete con il <code class="docutils literal notranslate"><span class="pre">Sonar``e</span> <span class="pre">con</span> <span class="pre">il</span> <span class="pre">``Led</span></code>.
-Inoltre, il <code class="docutils literal notranslate"><span class="pre">Sonar``e</span> <span class="pre">il</span> <span class="pre">``Led</span></code> devono essere ‘embedded’ in qualche altro componente
+Inoltre, il <code class="docutils literal notranslate"><span class="pre">Sonar``e</span> <span class="pre">il</span> <span class="pre">``Led</span></code> devono essere <span class="blue">embedded</span> in qualche altro componente
 capace di ricevere/trasmettere messaggi.</p></li>
 <li><p>Nel caso operi sul RaspberryPi, lo schema precedente non va più bene,
 perchè il <code class="docutils literal notranslate"><span class="pre">Controller</span></code>  deve poter interagire via rete con il <code class="docutils literal notranslate"><span class="pre">RadarDisplay</span></code>.
@@ -351,6 +360,122 @@ funzionali attraverso opportune elaborazioni delle informazioni ricevute e trame
 <p>Il comportamento degli altri disposivi è una conseguenza logica di questo.</p>
 </section>
 </section>
+</section>
+<section id="progettazione">
+<h2><a class="toc-backref" href="#id12">Progettazione</a><a class="headerlink" href="#progettazione" title="Permalink to this headline">¶</a></h2>
+<p>Partendo dall’analisi top-down, impostiamo un componente (che denominiamo al momento genericamente <span class="blue">enabler</span>)
+capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di
+metodi di un oggetto ‘embedded’ locale.</p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>L’idea è che l’<cite>enabler</cite> dovrebbe svolgere rispetto all’oggetto embedded una funzione analoga alle tute
+in stile ‘IronMan’, in modo da costruire un microservizio.</p></td>
+<td><a class="reference internal image-reference" href="_images/TutaVolo.jpg"><img alt="_images/TutaVolo.jpg" src="_images/TutaVolo.jpg" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Ad esempio, con riferimento al <code class="docutils literal notranslate"><span class="pre">Led</span></code>, l’<cite>enabler</cite> dovrebbe comportarsi come segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">led</span> <span class="p">:</span> <span class="n">ILed</span>
+<span class="k">while</span> <span class="kc">True</span> <span class="p">:</span>
+  <span class="n">attendi</span> <span class="n">un</span> <span class="n">messaggio</span> <span class="n">di</span> <span class="n">comando</span>
+  <span class="n">analizza</span> <span class="n">il</span> <span class="n">contenuto</span> <span class="k">del</span> <span class="n">comando</span> <span class="n">ed</span> <span class="n">esegui</span>
+     <span class="n">led</span><span class="o">.</span><span class="n">turnOn</span><span class="p">()</span>
+        <span class="n">oppure</span>
+     <span class="n">led</span><span class="o">.</span><span class="n">turnOff</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>TODO:</p>
+<ul class="simple">
+<li><p>enabler come server Python o come server Java</p></li>
+<li><p>Led come classe Python o  Java</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>//From C:\Didattica2018Work\iss2020LabBo\it.unibo.qak.radar2020\resources\sonarRadarOnTcp
+package sonarRadarOnTcp
+/*
+radarGuiAsTcpServer.kt
+------------------------------------------------------------------------------------------
+A scheme for a radarGui that works as a TCP server
+The structure of the code arises from the technology-support (socket in java.net libray)
+------------------------------------------------------------------------------------------
+*/
+import it.unibo.kactor.MsgUtil
+import java.net.ServerSocket
+import it.unibo.`is`.interfaces.protocols.IConnInteraction  //WARNING !!!
+import lowLevelComms.tcpConnSupport
+import highLevelComms.hlComm
+
+var hlServerCommSupport : hlComm?  =  null
+
+fun serverStartUp( port:Int ){
+   println(&quot;server | init ...  &quot;)
+   val serverSocket    = lowLevelComms.tecnoSupport.connectAsReceiver( port )
+   val conn            = waitForConn( serverSocket )
+   hlServerCommSupport = hlComm( conn )
+}
+
+fun waitForConn( serverSocket : ServerSocket ) : IConnInteraction{
+   val socket       = lowLevelComms.tecnoSupport.acceptAConnection(serverSocket)
+   println(&quot;server | new connection set  &quot;)
+   return tcpConnSupport( socket )
+}
+
+fun serverWork(){
+   println(&quot;server | waits for message ...&quot;)
+   val msg = hlServerCommSupport!!.receive()
+   println(&quot;server | received: $msg&quot; )
+}
+
+fun main() {
+   println(&quot;server | BEGIN&quot;)
+   serverStartUp( 8010 )
+   serverWork()
+   println(&quot;server | END&quot;)
+}
+
+//CLIENT
+
+package sonarRadarOnTcp
+/*
+robotSonarAsTcpClient.kt
+*/
+import java.net.Socket
+import java.net.ServerSocket
+import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.MsgUtil
+import it.unibo.`is`.interfaces.protocols.IConnInteraction  //WARNING !!!
+import lowLevelComms.tcpConnSupport
+import highLevelComms.hlComm
+
+var hlCommSupport : hlComm? =  null
+
+fun lowLevelConnect( host:String, port:Int ) : IConnInteraction{
+   val socket  = lowLevelComms.tecnoSupport.connectAsClient(host,port)
+   return tcpConnSupport( socket )
+}
+
+fun clientStartUp(){
+   val conn = lowLevelConnect(&quot;localhost&quot;, 8010 )
+   hlCommSupport = hlComm( conn )
+}
+
+fun clientWork(){
+   println(&quot;client | sending ... &quot;)
+   hlCommSupport!!.forward(&quot;sonar&quot;,&quot;polar&quot;,&quot;polar(40,0)&quot;,&quot;radargui&quot;)
+}
+
+fun main() {
+   println(&quot;client | BEGIN&quot;)
+   clientStartUp()
+   clientWork()
+   println(&quot;client | END&quot;)
+}
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -406,7 +531,7 @@ funzionali attraverso opportune elaborazioni delle informazioni ricevute e trame
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -428,7 +553,7 @@ funzionali attraverso opportune elaborazioni delle informazioni ricevute e trame
       &copy;2021, Antonio Natali.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
