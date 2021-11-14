@@ -20,7 +20,7 @@ Requisiti
 Si desidera costruire un'applicazione software capace di: 
 
 - (requisito :blue:`radarGui`:) mostrare le distanze rilevate da un sensore ``HC-SR04`` connesso a un RaspberryPi 
-  su un display a forma di radar connesso a un PC
+  su un display (``RadarDisplay``) a forma di radar connesso a un PC
   
 .. image:: ./_static/img/Radar/radarDisplay.png
    :align: center
@@ -188,3 +188,118 @@ Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul Rasp
 ++++++++++++++++++++++++++++++++++++++
 Un approccio top-down
 ++++++++++++++++++++++++++++++++++++++
+
+Nell'impostare l'analisi del problema posto dai requisiti, partiamo ora considerando il sistema nel suo
+complesso e non dai singoli dispositivi (di input/output).
+
+Questo 'ribaltamento' di impostazione ci induce a focalizzare l'attenzione su tre dimensioni fondamentali:
+
+- la :blue:`struttura` del sistema, cioè di quali parti è composto;
+- la :blue:`connessione/interazione` tra le parti del sistema in modo da formare un 'tutto' con precise proprietà
+  non (completamente) riducibili a quelle delle singole parti;
+- il :blue:`comportamento` (autonomo o indotto) di ogni singola parte in modo che siano assicurate le interazioni
+  volute.
+
+Un modo per considerare in modo unitario queste tre dimensioni è quello di impostare l':blue:`architettura`
+del sistema, cerando di dare risposta a un insieme di domande fondamentali:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quali componenti?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Quali componenti fanno sicuramente parte del sistema, considerando i requisiti? 
+
+.. list-table::
+   :width: 100%
+
+   * - Il sistema deve possedere parti software capaci di gestire il :blue:`Sonar`, il :blue:`RadarDisplay` e il :blue:`Led`.
+       Questi componenti rappresentano dispositivi di input/ouput ovvero sensori ed attuatori. 
+       Ma un dispostivo di I/O non dovrebbe mai includere codice relativo alla logica applicativa.
+       
+       Dunque la nostra analisi ci induce a introdurre un altro componente, che denominiamo  :blue:`Controller`, 
+       con l'idea i dispositivi di I/O possano  essere riusati, senza varuazioni, per fomare molti sistemi diversi 
+       modificando in modo opportuno solo il ``Controller``.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Oggetti o enti attivi?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Considerando (il software relativo a) ciascun componente, questo può/deve essere visto come un :blue:`oggetto` 
+che definisce operazioni attivabili con chiamate di procedura o come un 
+:blue:`ente attivo` capace di comportamento autonomo?
+
+.. list-table::
+   :width: 100%
+
+   * - Analizzando il software disponibile, possiamo dire che:
+     
+       -  il ``Sonar`` è un ente attivo che scrive dati su un dispositivo standard di output
+       -  il ``Led`` è un oggetto  
+       -  il ``radarSupport`` è un oggetto singleton che può essere usato invocando il metodo ``update``
+ 
+Se anche il ``RadarDisplay`` fosse sul RaspberryPi, il ``Controller`` potrebbe essere definito come segue:
+
+.. code::
+
+  while True :
+    d = Sonar.getDistance()
+    radarSupport.update( s,90 )       
+    if( d <  DLIMIT )  then Led.turnOn() else Led.TurnOff()
+
+Da un punto di vista logico, il ``Controller`` è un ente attivo 
+che può operare sul PC o sul RaspberryPi (un terzo nodo è escluso).
+
+- Nel caso operi sul PC, lo schema precedente non va più bene, 
+  perchè il ``Controller`` deve poter interagire via rete con il ``Sonar``e con il ``Led``.
+  Inoltre, il ``Sonar``e il ``Led`` devono essere 'embedded' in qualche altro componente
+  capace di ricevere/trasmettere messaggi.
+
+- Nel caso operi sul RaspberryPi, lo schema precedente non va più bene, 
+  perchè il ``Controller``  deve poter interagire via rete con il ``RadarDisplay``. 
+  In questo caso il  ``RadarDisplay`` si presenta come un ente attivo capace di ricevere/trasmetter messaggi 
+  utilizzando poi ``radarSupport`` per visualizzare l'informazione ricevuta dal ``Controller``.
+  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quali interazioni?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Come punto saliente della analisi condotta fino a questo punto possiamo affermare che:
+
+:remark:`Il problema ci induce a parlare di interazioni basate su messaggi.`
+
+.. list-table::
+   :width: 100%
+
+   * - Di fronte alla necessità di progettare e realizzare *sistemi software distribuiti*, 
+       la programmazione ad oggetti comincia a mostrare i suoi limiti 
+       e si richiede un ampliamento dello spazio concettuale di riferimento.
+
+       A questo riguardo, può essere opportuno affrontare il passaggio :blue:`dagli oggetti agli attori` come
+       passaggio preliminare per il passaggio *da sistemi concentrati a sistemi distribuiti*. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quali comportamenti?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il comportamento di ciascun componente ha ora l'obiettivo principale di :blue:`realizzare le interazioni` che
+permettono alle 'parti'  di agire in modo da formare un 'tutto' (il sistema) capace di soddifare i requisiti
+funzionali attraverso opportune elaborazioni delle informazioni ricevute e tramesse tra i componenti stessi.
+
+Il ``Controller`` potrebbe essere ora definito come segue:
+
+.. code::
+
+  while True :
+    chiedi al Sonar o ricevi dal Sonar un valore d 
+    invia il valore d al RadarDisplay in modo che lo visualizzi
+    if( d <  DLIMIT ) then
+       invia al Led un comando di accensione 
+    else invia al Led un comando di spegnimento
+
+Il comportamento degli altri disposivi è una conseguenza logica di questo.
+
+  
+
+
+
+
