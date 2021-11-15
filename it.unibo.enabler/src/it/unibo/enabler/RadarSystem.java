@@ -1,24 +1,19 @@
 package it.unibo.enabler;
 
 public class RadarSystem {
-	
-	private Controller cntrl;
-	private TcpEnabler rge;
-	private TcpEnabler le;
-	
+ 	
 	public void setup() throws Exception {
-		le    = new LedEnabler(8010);
-		rge   = new RadarGuiEnabler(8012);
-		cntrl = new Controller( rge, le );
-		le.start();
-		rge.start();		
-		cntrl.start();
+		IEnabler le     = new LedEnabler(8010);
+		IEnabler rge    = new RadarGuiEnabler(8012);
+		IEnabler se     = new SonarEnabler(8014);
+		
+		Controller ctrl = new Controller( rge, le, se );
+		
+		IEnabler ce     = new ControllerEnabler( 8016, ctrl );
 	}
 	
 	public static void main( String[] args) throws Exception {
 		new RadarSystem().setup();
-		Thread.sleep(3000);
-		System.out.println("BYE  ");
 	}
 
 }

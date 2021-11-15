@@ -8,12 +8,13 @@ public abstract class TcpEnabler extends Thread implements IEnabler {
 private IConnInteraction connSupport;
 private ServerSocket serversock;
 private int port;
-private String name;
+protected String name;
 
 	public TcpEnabler( String name, int port ) throws Exception {
 		this.name      = name;
 		this.port      = port;
 		serversock     = new ServerSocket( port );
+		this.start();
 	}
 	
 	public int getPort() { return port; }
@@ -47,7 +48,7 @@ private String name;
 	 * Attende la richiesta di UNA SOLA connessione (da parte del Controller)
 	 */
 	private IConnInteraction waitConn( ServerSocket serverSocket ) throws Exception{ 
-		System.out.println(name + " | waitConn on socket: " + serverSocket);
+		//System.out.println(name + " | waitConn on socket: " + serverSocket);
 		int timeOut = 600000;  //msecs
 		serverSocket.setSoTimeout(timeOut);
 		Socket sock = serverSocket.accept();	

@@ -11,8 +11,8 @@ public class MultiCalls {
  	}
 	
 	public void work() throws Exception {
-		EnablerClient c1_led   = new EnablerClient( "localhost", le);
-		EnablerClient c2_led   = new EnablerClient( "localhost", le);
+		EnablerClient c1_led   = new EnablerClient( "localhost", le.getPort());
+		EnablerClient c2_led   = new EnablerClient( "localhost", le.getPort());
 		c1_led.forward("on from c1");
 		//Thread.sleep(1000);
 		c2_led.forward("off from c2");
