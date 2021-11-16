@@ -297,7 +297,7 @@ A questo punto ridiregiamo i dati generati dal sonar al nostro programma:
    oppure:
       ./SonarAlone | python ReadInput.py
 
-A questo punto modifichiamo il programma che riceve i dati di ingresso in modo
+Ora modifichiamo il programma che riceve i dati di ingresso in modo
 da attivare/disattivare il LED:
 
 .. code::

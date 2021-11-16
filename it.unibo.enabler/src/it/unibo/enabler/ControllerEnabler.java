@@ -11,7 +11,9 @@ private Controller ctrl ;
 	@Override
 	protected void elaborate(String distance) {
 		System.out.println(name + " | distance=" + distance);
-		ctrl.doWork( distance );
+		if( distance != null ) {
+			ctrl.doWork( distance );
+		}
 	}
 	
 

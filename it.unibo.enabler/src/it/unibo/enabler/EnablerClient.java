@@ -7,7 +7,7 @@ public class EnablerClient {
 	private IConnInteraction connSupport;
 
 	public EnablerClient( String host, int port ) throws Exception {
-		//System.out.println( "EnablerClient | port=" + e.getPort() );	 
+		System.out.println( "EnablerClient | host= " + host + " port=" + port );	 
 		Socket socket =  new Socket( host, port );	
 		connSupport   =  new TcpConnSupport( socket );
 		//System.out.println( "EnablerClient | connSupport  " + connSupport );	 

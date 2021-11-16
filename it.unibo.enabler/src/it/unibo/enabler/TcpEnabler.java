@@ -14,6 +14,7 @@ protected String name;
 		this.name      = name;
 		this.port      = port;
 		serversock     = new ServerSocket( port );
+		System.out.println(name + " | CREATED on port=" + port);	 
 		this.start();
 	}
 	
@@ -61,7 +62,8 @@ protected String name;
 				//System.out.println(name + " | waits for message on ...");
 			    String msg = connSupport.receiveALine();
 				//System.out.println(name + " | received:" + msg );
-				elaborate( msg );
+			    if( msg == null ) connSupport.closeConnection();
+			    else elaborate( msg );
 			}
 		}catch( Exception e) {
 			

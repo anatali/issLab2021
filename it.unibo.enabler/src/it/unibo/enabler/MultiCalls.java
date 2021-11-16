@@ -5,7 +5,7 @@ public class MultiCalls {
  	private TcpEnabler le;
 	
 	public void setup() throws Exception {
-		le    = new LedEnabler(8010);
+		le    = new LedEnabler(8010, true);
  		le.start();
  		work();
  	}

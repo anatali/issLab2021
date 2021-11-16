@@ -3,14 +3,16 @@ package it.unibo.enabler;
 public class RadarSystem {
  	
 	public void setup() throws Exception {
-		IEnabler le     = new LedEnabler(8010);
-		IEnabler rge    = new RadarGuiEnabler(8012);
-		IEnabler se     = new SonarEnabler(8014);
+		IEnabler le,se,rge;
+		if( ! DeviceEnablerActivator.simulation ) {
+			 le  = new LedEnabler(DeviceEnablerActivator.ledEnablerPort,     DeviceEnablerActivator.simulation);
+			 se  = new SonarEnabler(DeviceEnablerActivator.sonarEnablerPort, DeviceEnablerActivator.simulation);		 
+		}
+		rge  = new RadarGuiEnabler( DeviceEnablerActivator.radarGuiEnablerPort );
 		
-		Controller ctrl = new Controller( rge, le, se );
-		
-		IEnabler ce     = new ControllerEnabler( 8016, ctrl );
-	}
+		//Controller ctrl = 
+				new Controller( );
+ 	}
 	
 	public static void main( String[] args) throws Exception {
 		new RadarSystem().setup();

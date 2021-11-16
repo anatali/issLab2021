@@ -19,9 +19,11 @@ import it.unibo.bls.interfaces.ILed;
 public class SonarEnabler extends TcpEnabler{
 
 private EnablerClient c_caller;
+private boolean simulated = true;
 
-	public SonarEnabler(int port) throws Exception {
+	public SonarEnabler(int port, boolean simulated) throws Exception {
 		super("sonarEnabler",port);
+		this.simulated = simulated;
 	}
 
 
@@ -33,20 +35,34 @@ private EnablerClient c_caller;
 			//{"host":"localhost", "port":"8016"}
 			String host = jsonObj.getString("host");
 			String port = jsonObj.getString("port");
-			c_caller    = new EnablerClient( host, Integer.getInteger(port).intValue() );
+			System.out.println("sonarEnabler | elaborate host="+host+ " port=" + port);
+			int p       = Integer.parseInt(port);
+			c_caller    = new EnablerClient( host, p );
+			System.out.println("sonarEnabler | elaborate c_caller to port:" + p);
 			new Thread() {
 				public void run() {
-					getValueAndSend();
+					if( simulated ) getValueSimulatedAndSend();
+					else getValueAndSend();
 				}
 			}.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+ 			System.out.println("sonarEnabler | ERROR " + e.getMessage() );
 		}		 
 	}
 	
+	protected void getValueSimulatedAndSend() {
+		for( int i = 1; i<=8; i++) {
+			int v = 10*i;
+			try {
+				if( c_caller != null ) c_caller.forward(""+v);
+				Thread.sleep(1000);
+			} catch (Exception e) {
+ 				System.out.println("sonarEnabler | getValueAndSend ERROR " + e.getMessage() );
+			}			
+		} 		
+	}
 	
 	protected void getValueAndSend() {
-		/*
 		try {
 			Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
 	        BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
@@ -63,18 +79,7 @@ private EnablerClient c_caller;
 		     }//while
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	  
-		*/      
-		 
-		for( int i = 1; i<=8; i++) {
-			int v = 10*i;
-			try {
-				c_caller.forward(""+v);
-			} catch (Exception e) {
- 				e.printStackTrace();
-			}			
-		} 
-		
+		}	  		
 	}
 
 	

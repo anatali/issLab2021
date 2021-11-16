@@ -6,10 +6,10 @@ import it.unibo.bls.interfaces.ILed;
 public class LedEnabler extends TcpEnabler{
 private ILed led ;
 
-	public LedEnabler(int port) throws Exception {
+	public LedEnabler(int port, boolean simulated ) throws Exception {
 		super("ledEnabler",port);
-		//led = new LedMock();
-		led = new LedConcrete();
+		if( simulated ) led = new LedMock();
+		else led = new LedConcrete();
 	}
 
 
