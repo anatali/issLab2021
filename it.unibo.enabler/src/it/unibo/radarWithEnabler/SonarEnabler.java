@@ -1,32 +1,23 @@
-package it.unibo.enabler;
+package it.unibo.radarWithEnabler;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 import org.json.JSONObject;
-
-import it.unibo.bls.devices.LedConcrete;
-import it.unibo.bls.devices.LedMock;
-import it.unibo.bls.devices.SonarConcrete;
-import it.unibo.bls.interfaces.ILed;
+import it.unibo.enabler.ApplMessageHandler;
+import it.unibo.enabler.TcpClient;
+import it.unibo.enabler.TcpEnabler;
 
 /*
- *  
- * Un Thread che emette dati verso il Controller (dispatch)
- * Un Thread che pubblica dati (event)
- * Un ?? che fornisce dati a richiesta a un Controller remoto (request-response)
+ * Gestisce i messaggi ricevuti dall'enabler
+ * Il primo messaggio include host e port su cui inviare i dati del sonar
+ * realizzando una sorta di request-response
  */
-
-public class SonarEnabler extends TcpEnabler{
-
-private EnablerClient c_caller;
-private boolean simulated = true;
-
-	public SonarEnabler(int port, boolean simulated) throws Exception {
-		super("sonarEnabler",port);
+class SonarMsgHandler extends ApplMessageHandler{
+	private TcpClient c_caller; 	//
+	private boolean simulated = true;
+	
+	public SonarMsgHandler(boolean simulated) {
 		this.simulated = simulated;
 	}
-
-
 	@Override
 	protected void elaborate(String message) {
 		System.out.println("sonarEnabler | elaborate " + message);
@@ -37,12 +28,12 @@ private boolean simulated = true;
 			String port = jsonObj.getString("port");
 			System.out.println("sonarEnabler | elaborate host="+host+ " port=" + port);
 			int p       = Integer.parseInt(port);
-			c_caller    = new EnablerClient( host, p );
+			c_caller    = new TcpClient( host, p, null );
 			System.out.println("sonarEnabler | elaborate c_caller to port:" + p);
 			new Thread() {
 				public void run() {
-					if( simulated ) getValueSimulatedAndSend();
-					else getValueAndSend();
+					if( simulated ) sendSimulatedValue();
+					else sendRealValue();
 				}
 			}.start();
 		} catch (Exception e) {
@@ -50,7 +41,7 @@ private boolean simulated = true;
 		}		 
 	}
 	
-	protected void getValueSimulatedAndSend() {
+	protected void sendSimulatedValue() {
 		for( int i = 1; i<=8; i++) {
 			int v = 10*i;
 			try {
@@ -62,7 +53,7 @@ private boolean simulated = true;
 		} 		
 	}
 	
-	protected void getValueAndSend() {
+	protected void sendRealValue() {
 		try {
 			Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
 	        BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
@@ -80,7 +71,13 @@ private boolean simulated = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	  		
-	}
+	}	
+}
+public class SonarEnabler extends TcpEnabler{
+private static final boolean simulated = true;
 
+	public SonarEnabler(int port, boolean simulated) throws Exception {
+		super("sonarEnabler",port, new SonarMsgHandler(SonarEnabler.simulated) );
+	}
 	
 }

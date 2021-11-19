@@ -1,10 +1,12 @@
-package it.unibo.enabler;
+package it.unibo.radarWithEnabler;
 
 import java.net.Socket;
+
+import it.unibo.enabler.TcpConnSupport;
 import it.unibo.is.interfaces.protocols.IConnInteraction;
 
 public class EnablerClient {
-	private IConnInteraction connSupport;
+	private Interaction2021 connSupport;
 
 	public EnablerClient( String host, int port ) throws Exception {
 		System.out.println( "EnablerClient | host= " + host + " port=" + port );	 

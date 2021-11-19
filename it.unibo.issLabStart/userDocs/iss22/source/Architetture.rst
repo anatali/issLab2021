@@ -202,7 +202,7 @@ alle entità e ai casi d'uso.
         - Incorporano drivers e :blue:`frameworks`  che fungono da collante.
         - Usano le infrastrutture che si ritengono più appropriate.
         - 
-        - 
+
 
 --------------------------------------
 Vincoli sulle dipendenze

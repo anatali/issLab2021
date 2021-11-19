@@ -1,18 +1,20 @@
-package it.unibo.enabler;
+package it.unibo.radarWithEnabler;
+
+import it.unibo.enabler.TcpClient;
+import it.unibo.enabler.TcpEnabler;
 
 public class MultiCalls {
 	
  	private TcpEnabler le;
 	
 	public void setup() throws Exception {
-		le    = new LedEnabler(8010, true);
- 		le.start();
+		new LedEnabler(8010, true);
  		work();
  	}
 	
 	public void work() throws Exception {
-		EnablerClient c1_led   = new EnablerClient( "localhost", le.getPort());
-		EnablerClient c2_led   = new EnablerClient( "localhost", le.getPort());
+		TcpClient c1_led   = new TcpClient( "localhost", 8010, null);
+		TcpClient c2_led   = new TcpClient( "localhost", 8010, null);
 		c1_led.forward("on from c1");
 		//Thread.sleep(1000);
 		c2_led.forward("off from c2");

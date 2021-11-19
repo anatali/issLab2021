@@ -1,19 +1,27 @@
-package it.unibo.enabler;
+package it.unibo.radarWithEnabler;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+
+import it.unibo.enabler.TcpClient;
  
 
 public class Controller{
 	public final int DLIMIT = 15;	
-	private EnablerClient c_led,c_radarGui,c_sonar ;
+	private TcpClient c_led,c_radarGui,c_sonar ;
 	 
 	public Controller(   )  {
 		try {
-	 		c_led         = new EnablerClient( DeviceEnablerActivator.hostAddr, DeviceEnablerActivator.ledEnablerPort);
-			c_sonar       = new EnablerClient( DeviceEnablerActivator.hostAddr, DeviceEnablerActivator.sonarEnablerPort);	
-			c_radarGui    = new EnablerClient( "localhost", DeviceEnablerActivator.radarGuiEnablerPort);
+			/*
+			 * Il Controller gestisce i dsipositivi realizzando la business logic
+			 */
+	 		c_led         = new TcpClient( DeviceEnablerActivator.hostAddr, DeviceEnablerActivator.ledEnablerPort, null);
+			c_sonar       = new TcpClient( DeviceEnablerActivator.hostAddr, DeviceEnablerActivator.sonarEnablerPort, null);	
+			c_radarGui    = new TcpClient( "localhost", DeviceEnablerActivator.radarGuiEnablerPort, null);
 			
+			/*
+			 * Al Controller del RadarSystem invia messaggi il sonar
+			 */
 			new ControllerEnabler(DeviceEnablerActivator.controllerEnablerPort, this);
 			
 			String myIp = findMyIp();

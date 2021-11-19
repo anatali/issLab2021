@@ -1,19 +1,19 @@
 package it.unibo.enabler;
-
 import java.net.ServerSocket;
-import it.unibo.is.interfaces.protocols.IConnInteraction;
 import java.net.Socket;
 
-public abstract class TcpEnabler extends Thread implements IEnabler {
-private IConnInteraction connSupport;
-private ServerSocket serversock;
+public  class TcpEnabler extends Thread  {
 private int port;
+private int count = 1;
+private ApplMessageHandler handler;
+
 protected String name;
 
-	public TcpEnabler( String name, int port ) throws Exception {
-		this.name      = name;
+	public TcpEnabler( String name, int port, ApplMessageHandler handler ) throws Exception {
+		this.name      = name;	//name is inherited from Thread
 		this.port      = port;
-		serversock     = new ServerSocket( port );
+		this.handler   = handler;
+		
 		System.out.println(name + " | CREATED on port=" + port);	 
 		this.start();
 	}
@@ -23,18 +23,28 @@ protected String name;
 	@Override
 	public void run() {
 		try {
+			ServerSocket serversock     = new ServerSocket( port );
 			while( true ) {
 				System.out.println(name + " | waits on port=" + port);	 
-				connSupport    = waitConn( serversock );
-				//work();
-				//Attivare work in un nuovo Thread? Se si ci sono molti 'padroni'
-				activateWork( connSupport );
+				Interaction2021 conn  = waitConn( serversock );
+				handler.setConn(conn);
+				new TcpMessageHandler( name+count++, conn, handler);
+				//activateWork( connSupport );
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 	}
 	
+	private Interaction2021 waitConn( ServerSocket serverSocket ) throws Exception{ 
+ 		int timeOut = 600000;  //msecs
+		serverSocket.setSoTimeout(timeOut);
+		Socket sock = serverSocket.accept();	
+		//System.out.println(name + " | waitConn has created socket: " + sock);
+		return new TcpConnSupport(sock) ;
+	}
+
+/*	
 	protected void activateWork(IConnInteraction connSupport) {
 		new Thread() {
 			public void run() {
@@ -45,17 +55,6 @@ protected String name;
 	
 	protected abstract void elaborate( String message );
 	
-	/*
-	 * Attende la richiesta di UNA SOLA connessione (da parte del Controller)
-	 */
-	private IConnInteraction waitConn( ServerSocket serverSocket ) throws Exception{ 
-		//System.out.println(name + " | waitConn on socket: " + serverSocket);
-		int timeOut = 600000;  //msecs
-		serverSocket.setSoTimeout(timeOut);
-		Socket sock = serverSocket.accept();	
-		return new TcpConnSupport(sock) ;
-	}
-		
 	private void work(IConnInteraction connSupport) {
 		try {
 			while( true ) {
@@ -68,6 +67,8 @@ protected String name;
 		}catch( Exception e) {
 			
 		}
-	}
+	}*/	
+		
+
  	
 }

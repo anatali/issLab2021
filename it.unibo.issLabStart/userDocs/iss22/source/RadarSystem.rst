@@ -311,11 +311,22 @@ Il comportamento degli altri disposivi è una conseguenza logica di questo.
 Progettazione
 --------------------------------------
 
-Partendo dall'analisi top-down, impostiamo un componente (che denominiamo al momento genericamente :blue:`enabler`) 
+L'analisi top-down ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
+e necessario dotare uno o più di essi della capacità di inviare e ricevere messaggi via rete.
+
+Questa necessità segnala un :red:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
+
+Iniziamo dunque il nostro progetto cernado di colmare questo gap con la introduzione di un nuovo componente riusabile.
+
++++++++++++++++++++++++++++++++++++++++
+Abilitatori per il message-passing
++++++++++++++++++++++++++++++++++++++++
+
+Impostiamo un componente (che denominiamo al momento genericamente :blue:`enabler`) 
 capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
 metodi di un oggetto 'embedded' locale.
 
-.. list-table::
+.. .. list-table::
    :width: 100%
    :widths: 70,30
 
@@ -324,106 +335,60 @@ metodi di un oggetto 'embedded' locale.
      -  .. image:: ./_static/img/Radar/TutaVolo.jpg 
            :width: 100%
 
-Ad esempio, con riferimento al ``Led``, l'`enabler` dovrebbe comportarsi come segue:
+Ad esempio, con riferimento al ``Led``, l'*enabler* dovrebbe comportarsi come segue:
 
 .. code::
+
+  public interface ILed {
+    public void turnOn();
+    public void turnOff();
+    public boolean getState();
+  }
 
   led : ILed 
   while True :
     attendi un messaggio di comando
     analizza il contenuto del comando ed esegui  
-       led.turnOn()
-          oppure
-       led.turnOff()
+       led.turnOn()  oppure led.turnOff()
 
-TODO: 
+L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare 
+un qualche prototcollo di comunicazione. Le scelte possibili sono oggi numerose:
 
-- enabler come server Python o come server Java
-- Led come classe Python o  Java
+- TCP
+- UDP 
+- HTTP
+- CoaP 
+- MQTT
 
-.. code::
-
-   //From C:\Didattica2018Work\iss2020LabBo\it.unibo.qak.radar2020\resources\sonarRadarOnTcp
-   package sonarRadarOnTcp
-   /*
-   radarGuiAsTcpServer.kt
-   ------------------------------------------------------------------------------------------
-   A scheme for a radarGui that works as a TCP server
-   The structure of the code arises from the technology-support (socket in java.net libray)
-   ------------------------------------------------------------------------------------------
-   */ 
-   import it.unibo.kactor.MsgUtil
-   import java.net.ServerSocket
-   import it.unibo.`is`.interfaces.protocols.IConnInteraction  //WARNING !!! 
-   import lowLevelComms.tcpConnSupport
-   import highLevelComms.hlComm
-
-   var hlServerCommSupport : hlComm?  =  null
-
-   fun serverStartUp( port:Int ){
-      println("server | init ...  ")
-      val serverSocket    = lowLevelComms.tecnoSupport.connectAsReceiver( port )
-      val conn            = waitForConn( serverSocket )
-      hlServerCommSupport = hlComm( conn )
-   }
-
-   fun waitForConn( serverSocket : ServerSocket ) : IConnInteraction{
-      val socket       = lowLevelComms.tecnoSupport.acceptAConnection(serverSocket)
-      println("server | new connection set  ")
-      return tcpConnSupport( socket )
-   }
-
-   fun serverWork(){
-      println("server | waits for message ...")
-      val msg = hlServerCommSupport!!.receive()
-      println("server | received: $msg" )
-   }
-
-   fun main() {
-      println("server | BEGIN")
-      serverStartUp( 8010 )
-      serverWork()
-      println("server | END")
-   }
-
-   //CLIENT
-
-   package sonarRadarOnTcp
-   /*
-   robotSonarAsTcpClient.kt
-   */ 
-   import java.net.Socket
-   import java.net.ServerSocket
-   import it.unibo.kactor.ApplMessage
-   import it.unibo.kactor.MsgUtil
-   import it.unibo.`is`.interfaces.protocols.IConnInteraction  //WARNING !!! 
-   import lowLevelComms.tcpConnSupport
-   import highLevelComms.hlComm
-
-   var hlCommSupport : hlComm? =  null
-
-   fun lowLevelConnect( host:String, port:Int ) : IConnInteraction{
-      val socket  = lowLevelComms.tecnoSupport.connectAsClient(host,port)
-      return tcpConnSupport( socket )
-   }
-
-   fun clientStartUp(){
-      val conn = lowLevelConnect("localhost", 8010 )
-      hlCommSupport = hlComm( conn )
-   }
-
-   fun clientWork(){
-      println("client | sending ... ")
-      hlCommSupport!!.forward("sonar","polar","polar(40,0)","radargui")
-   }
-
-   fun main() {
-      println("client | BEGIN")
-      clientStartUp()
-      clientWork()
-      println("client | END")
-   }
+ 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TCPEnabler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per interagire via TCP con un componente software abbiamo bisogno di un client e di un sever.
+
+Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
+(diciamo ``P``) ed attendere messaggi  di connessione su ``P``.
+
+Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
+Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
+
+Definiamo dunque in Java due classi:
+
+- per il server, la classe  ``TcpEnabler``: apre una ``ServerSocket`` 
+  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
+  sulla  connessione stabilita attraverso la ``ServerSocket``.
+  Questo handler si occupa di ricevere i messaggi e di invocare il metodo ``void elaborate( String message )``
+  di un oggetto di classe ``ApplMessageHandler`` ricevuto al momento della creazione.
+  
+- per il client, la classe  ``TcpClient``   che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
+  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
+  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
+
+ 
+
+  
 
 
