@@ -20,7 +20,6 @@ iss22
    Applicazioni
    RadarSystem
    Indicazioni
-   Domande
    ColloquioFinale
  
 
