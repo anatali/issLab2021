@@ -1,9 +1,8 @@
 package it.unibo.radarWithEnabler;
 
 import java.net.Socket;
-
 import it.unibo.enabler.TcpConnSupport;
-import it.unibo.is.interfaces.protocols.IConnInteraction;
+ 
 
 public class EnablerClient {
 	private Interaction2021 connSupport;

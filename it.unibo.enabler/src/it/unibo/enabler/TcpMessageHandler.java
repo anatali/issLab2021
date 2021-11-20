@@ -1,7 +1,7 @@
 package it.unibo.enabler;
  
 /*
- * Ente attivo per la ricezione di messaggi su una connessione IConnInteraction
+ * Ente attivo per la ricezione di messaggi su una connessione Interaction2021
  */
 public   class TcpMessageHandler {
 

@@ -2,14 +2,18 @@ package it.unibo.enabler;
 
 
 class NaiveServerMsgHandler extends ApplMessageHandler{
-	protected void elaborate(String msg) {
+	protected void elaborate(String msg)   {
 		System.out.println("NaiveServerMsgHandler | " + msg );
-		this.conn.forward("Some answer from NaiveServerMsgHandler");
+		try {
+			this.conn.forward("Some answer from NaiveServerMsgHandler");
+		} catch (Exception e) {
+ 			e.printStackTrace();
+		}
 	}
 }
 
 class NaiveClientMsgHandler extends ApplMessageHandler{
-	protected void elaborate(String msg) {
+	protected void elaborate(String msg)    {
 		System.out.println("NaiveClientMsgHandler | " + msg );
 		
 	}
@@ -29,3 +33,4 @@ public class TcpEnablerTest {
 		new TcpEnablerTest().doWork();
 	}
 }
+

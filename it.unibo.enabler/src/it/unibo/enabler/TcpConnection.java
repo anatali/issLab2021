@@ -9,11 +9,13 @@ import java.io.OutputStream;
 import java.net.Socket;
  
 
-public class TcpConnSupport implements Interaction2021{
+public class TcpConnection implements Interaction2021{
 private DataOutputStream outputChannel;
 private BufferedReader inputChannel;
+private Socket socket;
 
-	public TcpConnSupport( Socket socket  ) throws Exception {
+	public TcpConnection( Socket socket  ) throws Exception {
+		this.socket                    = socket;
 		OutputStream outStream 	       = socket.getOutputStream();
 		InputStream inStream  	       = socket.getInputStream();
 		outputChannel                  =  new DataOutputStream(outStream);
@@ -47,6 +49,12 @@ private BufferedReader inputChannel;
 	}
 
 	@Override
-	public void close() {}
+	public void close() { 
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

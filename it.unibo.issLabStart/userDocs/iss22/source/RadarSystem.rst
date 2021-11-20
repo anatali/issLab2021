@@ -367,15 +367,54 @@ un qualche prototcollo di comunicazione. Le scelte possibili sono oggi numerose:
 TCPEnabler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Per interagire via TCP con un componente software abbiamo bisogno di un client e di un sever.
+Per interagire via TCP con un componente software abbiamo bisogno di un client e di un server.
 
 Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
-(diciamo ``P``) ed attendere messaggi  di connessione su ``P``.
+(diciamo ``P``) ed attende messaggi  di connessione su ``P``.
 
 Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
 Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
 
+Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
+il server può anche dover inviare messaggi ai client, quando  vi è una interazione di tipo
+request-response. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
+
+Per agevolare la costruzione di componenti software capaci di agire come emettitori e ricevitori di messaggi introduciamo
+una interfaccia e alcune classi di supporto:
+
+- ``interface Interaction2021``: definisce il contratto di un oggetto che rappresenta una connessione punto su cui si possono
+  inviare o ricevere messaggi: Il metodo di invio è denominato ``forward`` per ricordare che si tatta di una trasmissione
+  di tipo :blue:`fire-and-forget`.
+
+.. code::
+
+  interface Interaction2021  {	 
+    public void forward(  String msg ) throws Exception;
+    public String receiveMsg(  )  throws Exception;
+    public void close( )  throws Exception;
+  }
+
+- ``class TcpConnSupport implements Interaction2021``: implementa l'interfaccia  utilizzando la socket
+  specificata nel costruttore, utilizzando opportuni stream Java costruiti su take socket.
+
+- ``class ApplMessageHandler``:  classe astratta che definisce il metodo abstract ``elaborate( String message )``
+  che opportune classi applicative devono implementare con la logica di business relativa alla gestione dei messaggi. 
+  Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
+  utilizzare per l'invio di messaggi
+
+- ``class TcpMessageHandler``:  oggetto dotato di un Thread interno che si occupa di
+  ricevere messaggi su una data connessione ``Interaction2021``, delegandone la gestione a un dato 
+  ``ApplMessageHandler``
+- 
+
+ 
+
+.. code::
+
 Definiamo dunque in Java due classi:
+
+.. La classe ``TcpEnabler`` abilita alla ricezione di connessioni TCP delegando all'``ApplMessageHandler`` ricevuto nel costruttore
+   il compito di gestire i messaggi inviati da una client su quella conessione.
 
 - per il server, la classe  ``TcpEnabler``: apre una ``ServerSocket`` 
   e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client

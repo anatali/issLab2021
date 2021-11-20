@@ -7,7 +7,7 @@ public class TcpClient {
 
 	public TcpClient( String host, int port, ApplMessageHandler handler ) throws Exception {
 		Socket socket =  new Socket( host, port );	
-		connSupport   =  new TcpConnSupport( socket );
+		connSupport   =  new TcpConnection( socket );
 		if( handler != null ) activateInput(handler);
 		
 	}

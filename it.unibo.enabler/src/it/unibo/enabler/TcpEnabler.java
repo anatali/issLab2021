@@ -7,6 +7,10 @@ private int port;
 private int count = 1;
 private ApplMessageHandler handler;
 
+/*
+ * Abilita alla ricezione di connessioni TCP delegando all'ApplMessageHandler ricevuto nel costruttore
+ * il compito di gestire i messaggi inviati da una client su quella conessione
+ */
 protected String name;
 
 	public TcpEnabler( String name, int port, ApplMessageHandler handler ) throws Exception {
@@ -27,7 +31,7 @@ protected String name;
 			while( true ) {
 				System.out.println(name + " | waits on port=" + port);	 
 				Interaction2021 conn  = waitConn( serversock );
-				handler.setConn(conn);
+				handler.setConn(conn);  //Injection
 				new TcpMessageHandler( name+count++, conn, handler);
 				//activateWork( connSupport );
 			}
@@ -41,7 +45,7 @@ protected String name;
 		serverSocket.setSoTimeout(timeOut);
 		Socket sock = serverSocket.accept();	
 		//System.out.println(name + " | waitConn has created socket: " + sock);
-		return new TcpConnSupport(sock) ;
+		return new TcpConnection(sock) ;
 	}
 
 /*	
