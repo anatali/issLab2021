@@ -1,29 +1,47 @@
 package it.unibo.enablerCleanArch.adapters;
+
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.LedConcrete;
-import it.unibo.enablerCleanArch.domain.LedMock;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.TcpClient;
 
 /*
- * Adapter per led remoto
+ * Adapter (working as a client) for an output device 
  */
-public class LedAdapter implements ILed{
-private ILed led;
+public class LedAdapter implements ILed {
+private Interaction2021 conn;
+private boolean ledStateMirror = false;
 
-	public LedAdapter(ILed led) {
-		if( RadarSystemConfig.ledRemote)  {
-			//led = LedMock.create();
-		}else {
-			this.led = led;
+	public LedAdapter(   ) {
+		try {
+			conn = TcpClient.connect( RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort);
+		} catch (Exception e) {
+ 			e.printStackTrace();
 		}
+ 	}
+	@Override
+	public void turnOn() { 
+		try {
+			conn.forward("on");
+			ledStateMirror = false;
+		} catch (Exception e) {
+	 		e.printStackTrace();
+		}  
 	}
-	@Override
-	public void turnOn() { led.turnOn(); }
 
 	@Override
-	public void turnOff() { led.turnOff(); }
+	public void turnOff() {   
+		try {
+			conn.forward("on");
+			ledStateMirror = true;
+		} catch (Exception e) {
+	 		e.printStackTrace();
+		}  		
+	}
 
 	@Override
-	public boolean getState() { return led.getState(); }
+	public boolean getState() {   
+		return ledStateMirror;
+	}
 
 }

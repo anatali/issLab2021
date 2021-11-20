@@ -31,7 +31,7 @@ protected String name;
 			while( true ) {
 				System.out.println(name + " | waits on port=" + port);	 
 				Interaction2021 conn  = waitConn( serversock );
-				handler.setConn(conn);  //Injection
+				if( handler != null ) handler.setConn(conn);  //Injection
 				new TcpMessageHandler( name+count++, conn, handler);
 				//activateWork( connSupport );
 			}

@@ -18,7 +18,17 @@ public class DeviceFactory {
 		}else { 
 			return SonarConcrete.create();
 		}
-		
+	}
+	
+	//We do not have mock for RadarGui
+	public static IRadarGui createRadarGui() {
+		return RadarGui.create();
+		/*
+		if( RadarSystemConfig.RadarGuieRemote)  {
+			return RadarGui.create();
+		}else { 
+			return RadarGui.create();
+		}	*/	
 	}
 	
 }

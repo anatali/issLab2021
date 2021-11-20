@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.adapters.LedAdapter;
-import it.unibo.enablerCleanArch.adapters.RadarAdapter;
+import it.unibo.enablerCleanArch.adapters.RadarGuiAdapter;
 import it.unibo.enablerCleanArch.adapters.SonarAdapter;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
@@ -12,15 +12,16 @@ public class RadarSystemMain {
  
 
 	public void setup() throws Exception {
-		ILed led            = DeviceFactory.createLed();
-		ISonar sonar        = DeviceFactory.createSonar();
+ 		
+		//Input
+		ISonar sonar     = RadarSystemConfig.SonareRemote    ? new SonarAdapter()      : DeviceFactory.createSonar();
+
+		//Output
+		ILed led         = RadarSystemConfig.ledRemote       ? new LedAdapter( )       : DeviceFactory.createLed();
+		IRadarGui radar  = RadarSystemConfig.RadarGuieRemote ? new RadarGuiAdapter(  ) : DeviceFactory.createRadarGui();
 		
-		ILed ledAdapter     = new LedAdapter( led );
-		ISonar sonarAdapter = new SonarAdapter( sonar );
-		
-		IRadar radarAdapter = new RadarAdapter();
-		 
-		Controller.activate(ledAdapter, sonarAdapter, radarAdapter);
+		//Control
+		Controller.activate(led, sonar, radar);
 	} 
 
 	public static void main( String[] args) throws Exception {

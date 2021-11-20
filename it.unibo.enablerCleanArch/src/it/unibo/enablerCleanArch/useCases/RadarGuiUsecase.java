@@ -7,7 +7,7 @@ public class RadarGuiUsecase {
 private static boolean started = false;
 
  
-	public static void doUseCase( IRadar radar, int d ) {
+	public static void doUseCase( IRadarGui radar, int d ) {
 		/*
 		if( ! started ) {
  			started = true;
