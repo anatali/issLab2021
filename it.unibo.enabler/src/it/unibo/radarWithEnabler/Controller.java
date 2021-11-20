@@ -13,14 +13,16 @@ public class Controller{
 	public Controller(   )  {
 		try {
 			/*
-			 * Il Controller gestisce i dsipositivi realizzando la business logic
+			 * Il Controller realizzan la business logic
+			 * Quindi deve poter comunicare con  i dipositivi
 			 */
 	 		c_led         = new TcpClient( DeviceEnablerActivator.hostAddr, DeviceEnablerActivator.ledEnablerPort, null);
 			c_sonar       = new TcpClient( DeviceEnablerActivator.hostAddr, DeviceEnablerActivator.sonarEnablerPort, null);	
 			c_radarGui    = new TcpClient( "localhost", DeviceEnablerActivator.radarGuiEnablerPort, null);
 			
 			/*
-			 * Al Controller del RadarSystem invia messaggi il sonar
+			 * C'è bisogno di un enabler anche per il Controller del RadarSystem 
+			 * in quanto il Controller (su PC) deve ricevere  messaggi inviati dal  sonar (su Rasp)
 			 */
 			new ControllerEnabler(DeviceEnablerActivator.controllerEnablerPort, this);
 			

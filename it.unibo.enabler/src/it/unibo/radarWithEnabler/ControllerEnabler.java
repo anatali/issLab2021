@@ -3,6 +3,9 @@ package it.unibo.radarWithEnabler;
 import it.unibo.enabler.ApplMessageHandler;
 import it.unibo.enabler.TcpEnabler;
 
+/*
+ * Elabora i messaggi inviati al Controller
+ */
 class ControllerMsgHandler extends ApplMessageHandler{
 	private Controller ctrl ;
 	

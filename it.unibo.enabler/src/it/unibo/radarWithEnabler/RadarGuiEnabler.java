@@ -8,7 +8,7 @@ import radarPojo.radarSupport;
 class RadarGuiEnablerClientMsgHandler extends ApplMessageHandler{
 
 	public RadarGuiEnablerClientMsgHandler() {
-		radarSupport .setUpRadarGui();
+		radarSupport.setUpRadarGui();
 	}
 	
 	@Override
