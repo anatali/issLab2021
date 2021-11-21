@@ -14,9 +14,11 @@ private static int sonarVal = 90;
 	private  void activate() {
 		new Thread() {
 			public void run() {
+				try { Thread.sleep(4500);//for starting the gui ...
+				} catch (InterruptedException e) { e.printStackTrace(); }   
 				while( true ) {
 					sonarVal--;
-					if( sonarVal <= 0 ) break;
+					if( sonarVal < 0 ) break;
 					delay(100);
 				}//
 				System.out.println("SonarMock | ENDS");

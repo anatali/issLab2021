@@ -67,7 +67,7 @@ eclipse {
  }
  
 
-mainClassName = 'it.unibo.enabler.DeviceEnablerActivator'
+mainClassName = 'it.unibo.enablerCleanArch.main.DeviceEnablerActivator'
 
 jar {
     println("building jar ...")

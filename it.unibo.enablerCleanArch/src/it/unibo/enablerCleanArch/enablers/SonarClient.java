@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
+import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 
 public class SonarClient {
 	private Interaction2021 conn;
@@ -26,19 +27,21 @@ public class SonarClient {
 		try {
 			Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
 	        BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-	        int numData           = 5;
+	        int numData           = 1;   //valore basso perchè bastano i ritardi di rete
 	        int dataCounter       = 1;
 	        
 	        while( true ){
 		        String data = reader.readLine();
 		        dataCounter++;
 		        if( dataCounter % numData == 0 ) { //every numData ...
-			        System.out.println("sonarEnabler | data=" + data );
+			        //System.out.println("SonarClient | data=" + data );
+		        	int v = Integer.parseInt(data);
+		        	if( v < LedAlarmUsecase.DLIMIT ) System.out.println("SonarClient | ALARM !!!! " + data );
 			        conn.forward( data );
 		        }
 		     }//while
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println( "SonarClient |  ERROR " + e.getMessage());
 		}	  		
 	}	
 	

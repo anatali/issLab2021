@@ -23,15 +23,15 @@ private Socket socket;
 	}
 	
 	@Override
-	public void forward(String msg)   {
+	public void forward(String msg)  throws Exception {
 		//System.out.println( "TcpConnSupport | sendALine  on " + outputChannel);	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
 			//System.out.println( "TcpConnSupport | has sent   " + msg );	 
 		} catch (IOException e) {
-			System.out.println( "TcpConnSupport | sendALine ERROR " + e.getMessage());	 
-			 
+			//System.out.println( "TcpConnection | sendALine ERROR " + e.getMessage());	 
+			throw e;
 		}	
 	}
 
@@ -43,7 +43,7 @@ private Socket socket;
 			String	line = inputChannel.readLine() ; //blocking =>
  			return line;		
 		} catch ( Exception e   ) {
-	 		System.out.println( "TcpConnSupport | receiveMsg ERROR  " + e.getMessage() );	
+	 		System.out.println( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
 	 		return null;
 		}		
 	}
@@ -53,7 +53,7 @@ private Socket socket;
 		try {
 			socket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println( "TcpConnection | close ERROR " + e.getMessage());	
 		}
 	}
 

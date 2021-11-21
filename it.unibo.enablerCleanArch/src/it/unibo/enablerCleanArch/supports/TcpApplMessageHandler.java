@@ -3,18 +3,12 @@ package it.unibo.enablerCleanArch.supports;
 /*
  * Ente attivo per la ricezione di messaggi su una connessione Interaction2021
  */
-public class TcpMessageHandler {
-
-	//private Interaction2021 conn;
-	//protected String name  ;
-	
-	public TcpMessageHandler( ApplMessageHandler handler ) {
-		//this.name = handler.getName();
-		//this.conn = handler.getConn(conn);
-		startUp(handler);
+public class TcpApplMessageHandler {
+  	
+	public TcpApplMessageHandler( ApplMessageHandler handler ) {
+ 		startUp(handler);
 	}
-	
-	
+ 	
 	private void startUp( ApplMessageHandler handler ) {
 		new Thread() {
 			public void run() {
@@ -25,9 +19,11 @@ public class TcpMessageHandler {
 					while( true ) {
 						//System.out.println(name + " | waits for message on ...");
 					    String msg = conn.receiveMsg();
-						System.out.println(name + " | received:" + msg );
-					    if( msg == null ) conn.close();
-					    handler.elaborate( msg );
+						//System.out.println(name + " | received:" + msg );
+					    if( msg == null ) {
+					    	conn.close();
+					    	break;
+					    } else{ handler.elaborate( msg ); }
 					}
 				}catch( Exception e) {
 					System.out.println(name + " | ERROR:" + e.getMessage() );

@@ -1,57 +1,34 @@
 package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.LedConcrete;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArch.supports.TcpClient;
-import it.unibo.enablerCleanArch.supports.TcpConnection;
-
-/*
- * 
-
-class LedMsgHandler extends ApplMessageHandler{
-	private ILed led ;
-	
-	public LedMsgHandler(boolean simulated) {
-		if( simulated ) led = new LedMock();
-		else led = new LedConcrete();		
-	}
-	
-	@Override
-	protected void elaborate(String message) {
-		//System.out.println("LedMsgHandler | elaborate " + message);
-		if( message.equals("on") ) led.turnOn();
-		else if( message.equals("off") ) led.turnOff();
-	}
-
-}	 */
+import it.unibo.enablerCleanArch.supports.TcpServer;
+ 
+ 
 
 /*
  * Deve inviare messaggi TCP
  */
-public class LedServer  implements ILed{
-private Interaction2021 conn;
+public class LedServer extends ApplMessageHandler  {
+ILed led = LedConcrete.create();
 
 	public LedServer(  int port  )   {
-		 try {
-			 //conn = TcpClient.connect(host,  port);
-			 
-		 }catch( Exception e) {
-			 
-		 }
+		super("LedServer");
+		try {
+ 			new TcpServer( name+"Server", port,  this );
+		} catch (Exception e) {
+ 			e.printStackTrace();
+		} 	
 	}
-
-	@Override
-	public void turnOn() {
-		 //conn.forward("on");		
+	
+	@Override		//from ApplMessageHandler
+	public void elaborate(String message) {
+ 		System.out.println(name+" | elaborate:" + message);
+ 		if( message.equals("on")) led.turnOn();
+ 		else if( message.equals("off") ) led.turnOff();
 	}
-
-	@Override
-	public void turnOff() {
-	}
-
-	@Override
-	public boolean getState() {
-		 
-		return false;
-	}
+ 
 }

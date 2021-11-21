@@ -21,7 +21,7 @@ public class TcpServer {
 			 		Interaction2021 conn = new TcpConnection(sock);
 			 		applHandler.setConn(conn);
 			 		//Create a message handler on the connection
-			 		new TcpMessageHandler( applHandler );			 		
+			 		new TcpApplMessageHandler( applHandler );			 		
 				}//while
 			  }catch (Exception e) {
 				  e.printStackTrace();
