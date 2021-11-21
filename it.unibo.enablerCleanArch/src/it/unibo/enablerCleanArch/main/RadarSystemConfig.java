@@ -25,8 +25,9 @@ public class RadarSystemConfig {
 	public static  int controllerPort    = 8016;
  	
 	public static int serverTimeOut       =  600000;  //10 minuti
-	public static int applStartdelay      =  5000;    // 
+	public static int applStartdelay      =  5000;     
 
+	public static int DLIMIT              =  15;     
 	
 	public static void setTheConfiguration(  ) {
  		String resourceName = "./RadarSystemConfig.json";
@@ -60,6 +61,8 @@ public class RadarSystemConfig {
 	        controllerPort   = object.getInt("controllerPort");		
 	        
 	        applStartdelay   = object.getInt("applStartdelay");	
+	        
+	        DLIMIT           = object.getInt("DLIMIT");	
 	        
 		} catch (FileNotFoundException e) {
  			e.printStackTrace();

@@ -1,5 +1,5 @@
 .. contents:: Overview
-   :depth: 4
+   :depth: 5
 .. role:: red 
 .. role:: blue 
 .. role:: remark
@@ -60,15 +60,13 @@ Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
    * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
        definibile in modo configurabile dall'utente finale?
      - L'utente finale deve essere in grado di specificare in un 'file di configurazione' il valore di questa distanza.
-   * - Dove deve risiedere il file di configurazione?
-     - Per agevolare l'utente finale, è bene che il file di configurazione risieda sul PC.
-
+ 
 Dai requisiti possiamo asserire che:
 
-- si tratta di realizzare il software per un *sistema distribuito* costituito da due nodi di elaborazione:
+- si tratta di realizzare il software per un :blue:`sistema distribuito` costituito da due nodi di elaborazione:
   un RaspbeddyPi e un PC convenzionale;
-- i due nodi di elaborazione devono potersi *scambiare informazione via rete*, usando supporti WIFI;
-- i due nodi di elaborazione devono essere 'programmati' usando *tecnologie software diverse*.
+- i due nodi di elaborazione devono potersi :blue:`scambiare informazione via rete`, usando supporti WIFI;
+- i due nodi di elaborazione devono essere 'programmati' usando :blue:`tecnologie software diverse`.
 
 In sintesi:
 
@@ -86,7 +84,7 @@ visualizzato sulla GUI.
 
 Tuttavia questo modo di procedere non è automatizzabile, in quanto richiede 
 la presenza di un operatore umano. Nel seguito cercheremo di organizzare le cose in modo
-da permettere Test automatizzati.
+da permettere :blue:`Test automatizzati`.
 
 --------------------------------------
 Analisi del problema
@@ -116,29 +114,32 @@ Un approccio bottom-up
 Il sistema pone le seguenti :blue:`problematiche`:
 
 .. list-table::
-   :widths: 40,60
+   :widths: 30,70
    :width: 100%
 
    * - Gestione del sensore ``HC-SR04``.
      - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
-       ``SonarAlone.c`` (project it.unibo.rasp2021)
+       ``SonarAlone.c`` (progetto *it.unibo.rasp2021*)
    * - Gestione del display  .
      - A questo fine è disponibile il POJO realizato da  ``radarPojo.jar`` 
    * - Gestione del LED.
      - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
-       ``LedControl.py`` (project ...)
+       ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh``.
    * - Quale assemblaggio?
      - .. image:: ./_static/img/Radar/RobotSonarStarting.png
             :width: 100%
-   
+       Occorre capire come i dati del sonar generati sul Raspberry possano raggiungere il PC ed essere usati per
+       aggiornare la ``RadarGui`` e per accendere/spegnere il ``Led``.
+
 La necessità di integrare i componenti disponibili *fa sorgere altre problematiche*:
 
    - incapsulare i componenti disponibli entro altri componenti capaci di interagire via rete
-   - capire dove sia più opportuno inserire la 'businnss logic': estendendo il sonar o ``radarSupport``?
-     Oppure introducendo un terzo componente?
-   - capire quale forma di interazione sia più opportuna: diretta o mediata
+   - capire dove sia più opportuno inserire la 'businnss logic'. 
+     E' opportuno pensare di estendendo il sonar o ``radarSupport``?
+     Oppure è meglio introdurre un terzo componente?
+   - capire quale forma di interazione sia più opportuna: diretta o mediata, sincrona o asincrona, etc.
 
-Focalizzando l'attenzione sulla interazione sonar-radarSupport possiamo rappresentare la situazione come segue:
+Focalizzando l'attenzione sulla interazione *sonar-radar* possiamo rappresentare la situazione come segue:
 
 .. list-table::
    :widths: 30,70
@@ -181,9 +182,12 @@ Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul Rasp
    :width: 100%
 
    * - ``Controller`` sul RaspberryPi.
-     - Pro  
+     - Si avrebbe una maggior reattività nella accensione del Led in caso di allarme. Inoltre ...
+       
    * - ``Controller`` sul PC.
-     - Pro   
+     - Si avrebbe più facilità nel modificare la logica applicativa,
+       lasciando al Raspberry solo la responsabilità di gestire dispositivi. Inoltre ...
+       
 
 ++++++++++++++++++++++++++++++++++++++
 Un approccio top-down
@@ -220,9 +224,10 @@ Quali componenti fanno sicuramente parte del sistema, considerando i requisiti?
        con l'idea i dispositivi di I/O possano  essere riusati, senza varuazioni, per fomare molti sistemi diversi 
        modificando in modo opportuno solo il ``Controller``.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Oggetti o enti attivi?
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 Considerando (il software relativo a) ciascun componente, questo può/deve essere visto come un :blue:`oggetto` 
 che definisce operazioni attivabili con chiamate di procedura o come un 
 :blue:`ente attivo` capace di comportamento autonomo?
@@ -256,14 +261,14 @@ Se anche il ``RadarDisplay`` fosse sul RaspberryPi, il ``Controller`` potrebbe e
 Da un punto di vista logico, il ``Controller`` è un ente attivo 
 che può operare sul PC o sul RaspberryPi (un terzo nodo è escluso).
 
-- Nel caso operi sul PC, lo schema precedente non va più bene, 
+- Nel caso il ``Controller`` operi sul PC, lo schema precedente non va più bene, 
   perchè il ``Controller`` deve poter interagire via rete con il ``Sonar``e con il ``Led``.
   Inoltre, il ``Sonar``e il ``Led`` devono essere :blue:`embedded` in qualche altro componente
   capace di ricevere/trasmettere messaggi.
 
-- Nel caso operi sul RaspberryPi, lo schema precedente non va più bene, 
+- Nel caso il ``Controller`` operi sul RaspberryPi, lo schema precedente non va più bene, 
   perchè il ``Controller``  deve poter interagire via rete con il ``RadarDisplay``. 
-  In questo caso il  ``RadarDisplay`` si presenta come un ente attivo capace di ricevere/trasmetter messaggi 
+  In questo caso il  ``RadarDisplay`` si presenta logicamente come un ente attivo capace di ricevere/trasmetter messaggi 
   utilizzando poi ``radarSupport`` per visualizzare l'informazione ricevuta dal ``Controller``.
   
 
@@ -280,10 +285,13 @@ Come punto saliente della analisi condotta fino a questo punto possiamo affermar
 
    * - Di fronte alla necessità di progettare e realizzare *sistemi software distribuiti*, 
        la programmazione ad oggetti comincia a mostrare i suoi limiti 
-       e si richiede un ampliamento dello spazio concettuale di riferimento.
+       e si richiede un :blue:`ampliamento dello spazio concettuale di riferimento`.
 
        A questo riguardo, può essere opportuno affrontare il passaggio :blue:`dagli oggetti agli attori` come
        passaggio preliminare per il passaggio *da sistemi concentrati a sistemi distribuiti*. 
+
+       Affronteremo più avanti questo passaggio, dopo avere cercato di realizzare il sistema impostando
+       ancora un sistema ad oggetti che utilizzano opportuni protocolli di comunicazione.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Quali comportamenti?
@@ -300,7 +308,7 @@ Il ``Controller`` potrebbe essere ora definito come segue:
   while True :
     chiedi al Sonar o ricevi dal Sonar un valore d 
     invia il valore d al RadarDisplay in modo che lo visualizzi
-    if( d <  DLIMIT ) then
+    if( d <  DLIMIT ) 
        invia al Led un comando di accensione 
     else invia al Led un comando di spegnimento
 
@@ -314,9 +322,9 @@ Progettazione
 L'analisi top-down ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
 e necessario dotare uno o più di essi della capacità di inviare e ricevere messaggi via rete.
 
-Questa necessità segnala un :red:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
+Questa necessità segnala un :blue:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
 
-Iniziamo dunque il nostro progetto cernado di colmare questo gap con la introduzione di un nuovo componente riusabile.
+Iniziamo dunque il nostro progetto cercando di colmare questo gap con la introduzione di un nuovo componente riusabile.
 
 +++++++++++++++++++++++++++++++++++++++
 Abilitatori per il message-passing
@@ -375,16 +383,8 @@ Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``
 Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
 Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
 
-Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
-il server può anche dover inviare messaggi ai client, quando  vi è una interazione di tipo
-request-response. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
-
-Per agevolare la costruzione di componenti software capaci di agire come emettitori e ricevitori di messaggi introduciamo
-una interfaccia e alcune classi di supporto:
-
-- ``interface Interaction2021``: definisce il contratto di un oggetto che rappresenta una connessione punto su cui si possono
-  inviare o ricevere messaggi: Il metodo di invio è denominato ``forward`` per ricordare che si tatta di una trasmissione
-  di tipo :blue:`fire-and-forget`.
+Questa connessione è rapprentata nella infrastruttura software che ci aggingiamo a definire da un oggetto di 
+classe ``TcpConnection`` che  implementa l'interfaccia  ``Interaction2021`` così definita:
 
 .. code::
 
@@ -394,22 +394,52 @@ una interfaccia e alcune classi di supporto:
     public void close( )  throws Exception;
   }
 
-- ``class TcpConnSupport implements Interaction2021``: implementa l'interfaccia  utilizzando la socket
-  specificata nel costruttore, utilizzando opportuni stream Java costruiti su take socket.
+Il metodo di invio è denominato ``forward`` per rendere più evidente il fatto che si tatta di una trasmissione 
+di tipo :blue:`fire-and-forget`.
+
+La classe ``TcpConnection`` implementa questa interfaccia  utilizzando la ``java.net.Socket``
+specificata nel costruttore, utilizzando opportuni Stream Java (forniti da ``java.io``) costruiti su take socket.
+ 
+Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
+il server può anche dover inviare messaggi ai client, quando  si richiede una interazione di tipo
+:blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
+
+Per agevolare la costruzione di componenti software capaci di agire sia come come emettitori sia come ricevitori di messaggi 
+su una connessione di tipo ``Interaction2021``, introduciamo alcune classi di supporto:
+
+- ``class TcpMessageHandler``:  oggetto dotato di un Thread interno che si occupa di
+  ricevere messaggi su una data connessione ``Interaction2021``, delegandone la gestione a un oggetto dato, di tipo 
+  ``ApplMessageHandler``.
 
 - ``class ApplMessageHandler``:  classe astratta che definisce il metodo abstract ``elaborate( String message )``
-  che opportune classi applicative devono implementare con la logica di business relativa alla gestione dei messaggi. 
+  che opportune classi applicative devono implementare per realizzare la voluta  gestione dei messaggi. 
   Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
   utilizzare per l'invio di messaggi
 
-- ``class TcpMessageHandler``:  oggetto dotato di un Thread interno che si occupa di
-  ricevere messaggi su una data connessione ``Interaction2021``, delegandone la gestione a un dato 
-  ``ApplMessageHandler``
-- 
 
+Queste classi servono per poter definire supporti capaci di realizzare un server e un client, delegando la logica
+applicativa ad opportuni oggetti definiti dall'application designer. 
+
+- ``class TcpEnabler``: realizza il server che apre una ``ServerSocket`` 
+  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
+  sulla  connessione stabilita attraverso la ``ServerSocket``.
+  Al momento della creazione, l'application designer specifica nel costruttore l'handler 
+  di tipo ``ApplMessageHandler`` per la gestione di messaggi a livello applicativo
+  che il server passa a una nuova istanza di ``TcpMessageHandler`` dopo avervi 'iniettato' la connessione.
  
+- ``class TcpClient``: realizza un client che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
+  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
+  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
+
+
+ Una procedura di testing può spiegare meglio di molte parole il funzionamento di questa infrastruttura:
+ 
+  
 
 .. code::
+
+
+  
 
 Definiamo dunque in Java due classi:
 

@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch.enablers;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
@@ -36,7 +37,7 @@ public class SonarClient {
 		        if( dataCounter % numData == 0 ) { //every numData ...
 			        //System.out.println("SonarClient | data=" + data );
 		        	int v = Integer.parseInt(data);
-		        	if( v < LedAlarmUsecase.DLIMIT ) System.out.println("SonarClient | ALARM !!!! " + data );
+		        	if( v < RadarSystemConfig.DLIMIT ) System.out.println("SonarClient | ALARM !!!! " + data );
 			        conn.forward( data );
 		        }
 		     }//while
