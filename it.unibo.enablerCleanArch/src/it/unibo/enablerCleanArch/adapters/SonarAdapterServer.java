@@ -47,7 +47,7 @@ private int curVal       = -1;
 		this.notify();
 	}
 	
-	public synchronized void waitForUpdatedVal() {
+	private synchronized void waitForUpdatedVal() {
 		try {
 			while( curVal < 0 ) wait();
  		} catch (InterruptedException e) {

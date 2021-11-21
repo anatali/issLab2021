@@ -11,6 +11,7 @@ import org.json.JSONTokener;
 public class RadarSystemConfig {
 	public static  boolean simulation           = true;
 	
+	public static  boolean ControllerRemote     = false;
 	public static  boolean LedRemote            = false;			
 	public static  boolean SonareRemote         = false;			
 	public static  boolean RadarGuieRemote      = false;			
@@ -44,6 +45,8 @@ public class RadarSystemConfig {
 	        JSONObject object   = new JSONObject(tokener);
 	 		
 	        simulation       = object.getBoolean("simulation");
+	        
+	        ControllerRemote = object.getBoolean("ControllerRemote");
 	        LedRemote        = object.getBoolean("LedRemote");
 	        SonareRemote     = object.getBoolean("SonareRemote");
 	        RadarGuieRemote  = object.getBoolean("RadarGuieRemote");

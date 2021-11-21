@@ -3,7 +3,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class SonarConcrete implements ISonar{
-private String data = "";
+private int curVal       = -1;
 
 	public static ISonar create() {
 		SonarConcrete sonar = new SonarConcrete();
@@ -21,25 +21,40 @@ private String data = "";
 	            int numData           = 5;
 	            int dataCounter       = 1;
 		        while( true ){
-			        data = reader.readLine();
+			        String data = reader.readLine();
 			        dataCounter++;
 			        if( dataCounter % numData == 0 ) { //every numData ...
 				        System.out.println("SonarConcrete | data=" + data );
-				        //c_caller.forward( data );
+				    int d = Integer.parseInt(data);
+				    setVal(d);
 			        }
 		        }//while
         	}catch( Exception e) {
-        		e.printStackTrace();
+        		System.out.println("SonarConcrete | activate ERROR " + e.getMessage() );
         	}
         }//run        
 	  }.start();
 		
 	}
+	
+	synchronized void setVal(int d){
+		curVal = d;
+		this.notify();
+	}
 
 	@Override
 	public int getVal() {
-		int v = Integer.parseInt(data);
+		waitForUpdatedVal();
+ 		int v  = curVal;
+ 		curVal = -1;
 		return v;
 	}
 
+	private synchronized void waitForUpdatedVal() {
+		try {
+			while( curVal < 0 ) wait();
+ 		} catch (InterruptedException e) {
+ 			System.out.println("SonarConcrete | waitForUpdatedVal ERROR " + e.getMessage() );
+		}		
+	}
 }
