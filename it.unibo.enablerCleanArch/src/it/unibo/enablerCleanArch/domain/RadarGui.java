@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch.domain;
 import radarPojo.radarSupport;
 
 public class RadarGui implements IRadarGui{
+private String curDistance = "0";
 
 	//Factory method
 	public static IRadarGui create(){
@@ -14,7 +15,14 @@ public class RadarGui implements IRadarGui{
 	}
 	@Override
 	public void update(String distance, String angle) {	 
+		curDistance =  distance;
 		radarSupport.update(distance,angle);
+	}
+	
+	//ADDED for testing
+	//-------------------------------------------------
+	public int getCurDistance() {
+		return Integer.parseInt(curDistance);
 	}
 
 }

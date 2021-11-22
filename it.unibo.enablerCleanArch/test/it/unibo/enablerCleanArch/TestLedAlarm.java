@@ -2,9 +2,9 @@ package it.unibo.enablerCleanArch;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import org.junit.*;
-
+import it.unibo.enablerCleanArch.domain.RadarGui;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.main.RadarSystemMain;
 
 public class TestLedAlarm {
@@ -15,8 +15,8 @@ private RadarSystemMain sys;
 		try {
 			sys = new RadarSystemMain();
 			sys.setup();
-			//wait until the system is started. TODO: do it better
-			delay(3000);
+			RadarSystemConfig.simulation = true;    //we must work with mock devices (local or remote)		
+			//mock devices are 'almost identical' to concrete devices 
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
  		}
@@ -25,18 +25,31 @@ private RadarSystemMain sys;
 	@After
 	public void resetAll() {
 		System.out.println("resetAll");
+		
 	}	
 	
 	//@Test 
-	public void testLedAlone() {
+	public void testLedStartup() {
 		System.out.println("testLedAlone");
+		assertTrue( ! sys.getLed().getState() );
 	}
 	
 	@Test 
 	public void testLedAlarm() {
 		System.out.println("testLedAlarm");
-		sys.dowork();
-		delay(10000);//give time the system to work. TODO: do it better
+		
+		int nearDistance = RadarSystemConfig.DLIMIT-5;
+		sys.oneShotSonarForTesting(nearDistance);
+		delay(1000);//give time the system to work. TODO: do it better
+		//System.out.println("Led should be on: current state= "+sys.getLed().getState());
+		RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
+	    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == nearDistance);
+	    
+	    int farDistance = RadarSystemConfig.DLIMIT + 30;
+		sys.oneShotSonarForTesting( farDistance );
+		delay(1000);//give time the system to work. TODO: do it better
+		//System.out.println("Led should be off: current state= "+sys.getLed().getState());
+	    assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == farDistance );
 	}	
 	
 	

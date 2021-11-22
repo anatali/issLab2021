@@ -60,5 +60,13 @@ private boolean produced  = false;
 				e.printStackTrace();
 		}		
 	}
+	
+	//ADDED for testing
+	//-------------------------------------------------
+	
+	public void oneShot( int d ) {
+		curVal = d;
+		setVal();
+	}
 
 }

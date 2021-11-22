@@ -7,22 +7,24 @@ import it.unibo.enablerCleanArch.domain.*;
 
  
 public class RadarSystemMain {
-private ISonar sonar = null;
+private ISonar sonar    = null;
+private ILed led        = null;
+private IRadarGui radar = null;
 
 	public void setup() throws Exception {
 		RadarSystemConfig.setTheConfiguration(   );
 		
 		//Control
 		if( RadarSystemConfig.ControllerRemote ) {
-			DeviceFactory.createRadarGui();			
+			radar =  DeviceFactory.createRadarGui();			
 			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
 		}else {
 			//Input
-			sonar            = RadarSystemConfig.SonareRemote   ? new SonarAdapterServer("sonarAdapterServer") : DeviceFactory.createSonar();
+			sonar  = RadarSystemConfig.SonareRemote   ? new SonarAdapterServer("sonarAdapterServer") : DeviceFactory.createSonar();
 			//Output
-			ILed led         = RadarSystemConfig.LedRemote       ? new LedAdapterClient( ) : DeviceFactory.createLed();
+			led    = RadarSystemConfig.LedRemote       ? new LedAdapterClient( ) : DeviceFactory.createLed();
 			//IRadarGui radar  = RadarSystemConfig.RadarGuieRemote ? new RadarGuiAdapterClient(  ) : DeviceFactory.createRadarGui();
-			IRadarGui radar  = DeviceFactory.createRadarGui();	
+			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);
   		}
 	} 
@@ -31,6 +33,21 @@ private ISonar sonar = null;
 		if( sonar != null ) sonar.activate();
 	}
 
+	//ADDED for testing
+	//-------------------------------------------------
+	public ILed getLed() {
+		return led;
+	}
+	public IRadarGui getRadarGui() {
+		return radar;
+	}
+	public void oneShotSonarForTesting( int distance ) {
+		if( sonar != null ) {
+			SonarMock sonarForTesting = (SonarMock) sonar;
+			sonarForTesting.oneShot( distance );
+		}
+	}
+	
 	public static void main( String[] args) throws Exception {
 		RadarSystemMain sys = new RadarSystemMain();
 		sys.setup();
