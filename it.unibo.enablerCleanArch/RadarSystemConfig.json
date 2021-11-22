@@ -1,10 +1,10 @@
 {
 "simulation"       : "true",
-"ControllerRemote" : "false",
-"LedRemote"        : "false",
-"SonareRemote"     : "false",
+"ControllerRemote" : "true",
+"LedRemote"        : "true",
+"SonareRemote"     : "true",
 "RadarGuieRemote"  : "false",
-"pcHostAddr"       : "192.168.1.6",
+"pcHostAddr"       : "192.168.1.132",
 "raspHostAddr"     : "192.168.1.183",
 "radarGuiPort"     : "8014",
 "ledPort"          : "8010",
@@ -13,5 +13,6 @@
 "serverTimeOut"    : "600000",
 "applStartdelay"   : "5000",
 "sonarDelay"       : "100",
-"DLIMIT"           : "15"
+"DLIMIT"           : "15",
+"testing"          : "false"
 }

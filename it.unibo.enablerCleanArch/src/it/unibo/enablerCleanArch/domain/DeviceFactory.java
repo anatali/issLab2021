@@ -5,30 +5,26 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 public class DeviceFactory {
 
 	public static ILed createLed() {
+		System.out.println("DeviceFactory | createLed simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
-			return LedMock.create();
+			return LedAbstract.createLedMock();
 		}else {
-			return LedConcrete.create();
+			return LedAbstract.createLedConcrete();
 		}
 	}
 	
 	public static ISonar createSonar() {
+		System.out.println("DeviceFactory | createSonar simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
-			return SonarMock.create();
+			return SonarAbstract.createSonarMock();
 		}else { 
-			return SonarConcrete.create();
+			return SonarAbstract.createSonarConcrete();
 		}
 	}
 	
 	//We do not have mock for RadarGui
 	public static IRadarGui createRadarGui() {
 		return RadarGui.create();
-		/*
-		if( RadarSystemConfig.RadarGuieRemote)  {
-			return RadarGui.create();
-		}else { 
-			return RadarGui.create();
-		}	*/	
 	}
 	
 }

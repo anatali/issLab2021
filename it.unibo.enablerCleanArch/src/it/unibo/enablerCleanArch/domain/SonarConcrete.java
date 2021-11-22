@@ -2,63 +2,32 @@ package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class SonarConcrete implements ISonar{
-private int curVal       = -1;
-private boolean stopped  = false;
-
-	public static ISonar create() {
-		SonarConcrete sonar = new SonarConcrete();
-		sonar.activate();
-		return sonar;
-	}
-	 
-	public void deactivate() {
-		stopped = true;
-	}	 
-	public  void activate() {
-	  stopped = false;
-	  new Thread() {
-         public void run() {
-        	try {
-	    		Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
-	            BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-	            int numData           = 5;
-	            int dataCounter       = 1;
-		        while( ! stopped ){
-			        String data = reader.readLine();
-			        dataCounter++;
-			        if( dataCounter % numData == 0 ) { //every numData ...
-				        System.out.println("SonarConcrete | data=" + data );
-				        int d = Integer.parseInt(data);
-				        setVal(d);
-			        }
-		        }//while
-        	}catch( Exception e) {
-        		System.out.println("SonarConcrete | activate ERROR " + e.getMessage() );
-        	}
-        }//run        
-	  }.start();
-		
-	}
+public class SonarConcrete extends SonarAbstract implements ISonar{
+	private int numData           = 5; 
+	private int dataCounter       = 1;
+	private  BufferedReader reader ;
 	
-	synchronized void setVal(int d){
-		curVal = d;
-		this.notify();
-	}
-
 	@Override
-	public int getVal() {
-		waitForUpdatedVal();
- 		int v  = curVal;
- 		curVal = -1;
-		return v;
-	}
-
-	private synchronized void waitForUpdatedVal() {
+	protected void sonarSetUp() {
+		curVal = 0;		
 		try {
-			while( curVal < 0 ) wait();
- 		} catch (InterruptedException e) {
- 			System.out.println("SonarConcrete | waitForUpdatedVal ERROR " + e.getMessage() );
-		}		
+			Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
+	        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+       	}catch( Exception e) {
+    		System.out.println("SonarConcrete | activate ERROR " + e.getMessage() );
+    	}
 	}
-}
+	protected void sonarBehavior() {
+         try {
+ 			String data = reader.readLine();
+			dataCounter++;
+			if( dataCounter % numData == 0 ) { //every numData ...
+				System.out.println("SonarConcrete | data=" + data );
+				curVal = Integer.parseInt(data);
+				if( curVal < 100 ) setVal( );   //inutile inviare dati che non si possono visualizzare
+			 }
+        }catch( Exception e) {
+        		System.out.println("SonarConcrete | ERROR " + e.getMessage() );
+        }
+ 	}
+ }

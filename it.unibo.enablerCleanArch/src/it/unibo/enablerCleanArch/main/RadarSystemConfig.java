@@ -3,13 +3,15 @@ package it.unibo.enablerCleanArch.main;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 public class RadarSystemConfig {
 	public static  boolean simulation           = true;
 	
-	public static  boolean ControllerRemote     = false;
+	public static  boolean ControllerRemote     = true;
 	public static  boolean LedRemote            = false;			
 	public static  boolean SonareRemote         = false;			
 	public static  boolean RadarGuieRemote      = false;			
@@ -25,9 +27,11 @@ public class RadarSystemConfig {
 	public static int serverTimeOut       =  600000;  //10 minuti
 	public static int applStartdelay      =  5000;     
 
-	public static int sonarDelay          =  500;  
-	
+	public static int sonarDelay          =  100;     
 	public static int DLIMIT              =  15;     
+
+	public static boolean testing         = false;			
+
 	
 	public static void setTheConfiguration(  ) {
  		String resourceName = "./RadarSystemConfig.json";
@@ -60,12 +64,11 @@ public class RadarSystemConfig {
 	        sonarPort        = object.getInt("sonarPort");
 	        controllerPort   = object.getInt("controllerPort");		
 	        
-	        applStartdelay   = object.getInt("applStartdelay");		        
+	        applStartdelay   = object.getInt("applStartdelay");	
+	        
 	        sonarDelay       = object.getInt("sonarDelay");	
-	        
 	        DLIMIT           = object.getInt("DLIMIT");	
-	        
-	        
+	        testing          = object.getBoolean("testing");
 	        
 		} catch (FileNotFoundException e) {
  			e.printStackTrace();

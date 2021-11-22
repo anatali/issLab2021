@@ -11,7 +11,7 @@ import it.unibo.enablerCleanArch.enablers.*;
  * TODO: creare un file di configurazione o di properties
  */
 
-public class DeviceEnablerActivator {
+public class RadarSystemMainOnRasp {
   	
 	public static void main( String[] args) throws Exception {
  		RadarSystemConfig.setTheConfiguration(   );
@@ -25,11 +25,11 @@ public class DeviceEnablerActivator {
 			Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
 			new SonarClient( RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort );
 		}else { //Controller on Rasp
-			System.out.println("Controller on Rasp");
+			System.out.println("Controller on Rasp sonar=" + sonar);
  			IRadarGui radar =  new RadarGuiClient(  ); 
 			//Control
 			Controller.activate( led, sonar, radar );
-			
+			if( sonar != null ) sonar.activate();
 		}
  		
 		

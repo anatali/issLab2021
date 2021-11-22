@@ -5,18 +5,20 @@ import static org.junit.Assert.fail;
 import org.junit.*;
 import it.unibo.enablerCleanArch.domain.RadarGui;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.main.RadarSystemMain;
+import it.unibo.enablerCleanArch.main.RadarSystemMainOnPc;
 
 public class TestLedAlarm {
-private RadarSystemMain sys;
+private RadarSystemMainOnPc sys;
 	@Before
 	public void setUp() {
 		System.out.println("setUp");
 		try {
-			sys = new RadarSystemMain();
+			sys = new RadarSystemMainOnPc();
 			sys.setup();
-			RadarSystemConfig.simulation = true;    //we must work with mock devices (local or remote)		
+			RadarSystemConfig.testing = true;    //we must work with mock devices (local or remote)		
 			//mock devices are 'almost identical' to concrete devices 
+			sys.dowork();   //the sonar does not start if RadarSystemConfig.testing
+			delay(5000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
  		}
@@ -24,8 +26,7 @@ private RadarSystemMain sys;
 	
 	@After
 	public void resetAll() {
-		System.out.println("resetAll");
-		
+		System.out.println("resetAll");		
 	}	
 	
 	//@Test 

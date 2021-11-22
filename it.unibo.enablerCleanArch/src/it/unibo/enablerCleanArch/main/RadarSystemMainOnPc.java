@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.adapters.SonarAdapterServer;
 import it.unibo.enablerCleanArch.domain.*;
 
  
-public class RadarSystemMain {
+public class RadarSystemMainOnPc {
 private ISonar sonar    = null;
 private ILed led        = null;
 private IRadarGui radar = null;
@@ -41,6 +41,8 @@ private IRadarGui radar = null;
 	public IRadarGui getRadarGui() {
 		return radar;
 	}
+	
+	//La TestUnit decide di attivare il sistema
 	public void oneShotSonarForTesting( int distance ) {
 		if( sonar != null ) {
 			SonarMock sonarForTesting = (SonarMock) sonar;
@@ -49,7 +51,7 @@ private IRadarGui radar = null;
 	}
 	
 	public static void main( String[] args) throws Exception {
-		RadarSystemMain sys = new RadarSystemMain();
+		RadarSystemMainOnPc sys = new RadarSystemMainOnPc();
 		sys.setup();
 		sys.dowork();
 	}

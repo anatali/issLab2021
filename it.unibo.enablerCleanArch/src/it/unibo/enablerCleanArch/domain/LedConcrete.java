@@ -2,43 +2,34 @@ package it.unibo.enablerCleanArch.domain;
 
 import java.io.IOException;
 
-public class LedConcrete implements ILed{
+public class LedConcrete extends LedAbstract implements ILed{
 private Runtime rt      = Runtime.getRuntime();
-protected boolean state = false;
-
-//Factory method
-public static ILed create(){
-	return new LedConcrete();
-}
-@Override
-public void turnOn(){
-	try {
-		state = true;
-		rt.exec( "sudo bash led25GpioTurnOn.sh" );
-		showState();
-	} catch (IOException e) {
-		e.printStackTrace();
+ 
+	@Override
+	protected void ledSetUp() {
+		 turnOff();
 	}
-}
-@Override
-public void turnOff() {
-	try {
-		state = false;
-		rt.exec( "sudo bash led25GpioTurnOff.sh" );
-		showState();
-	} catch (IOException e) {
-		e.printStackTrace();
+	
+	@Override
+	public void turnOn(){
+		try {
+			super.turnOn();
+			rt.exec( "sudo bash led25GpioTurnOn.sh" );
+		} catch (IOException e) {
+			System.out.println("LedConcrete | ERROR " +  e.getMessage());
+		}
 	}
+	@Override
+	public void turnOff() {
+		try {
+			super.turnOff();
+			rt.exec( "sudo bash led25GpioTurnOff.sh" );
+		} catch (IOException e) {
+			System.out.println("LedConcrete | ERROR " +  e.getMessage());
+		}
+	}
+ 
 
-}
-@Override
-public boolean getState(){
-	return state;
-}
-
-private void showState(){
-	System.out.println("Led state=" + state);
-}
 
 
 }

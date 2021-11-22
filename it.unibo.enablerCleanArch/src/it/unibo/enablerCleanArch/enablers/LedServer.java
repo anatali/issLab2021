@@ -1,10 +1,8 @@
 package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.LedConcrete;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.domain.LedAbstract;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
-import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
  
@@ -13,7 +11,7 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  * Deve inviare messaggi TCP
  */
 public class LedServer extends ApplMessageHandler  {
-ILed led = LedConcrete.create();
+ILed led = LedAbstract.createLedConcrete();
 
 	public LedServer(  int port  )   {
 		super("LedServer");
