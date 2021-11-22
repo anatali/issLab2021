@@ -23,6 +23,9 @@ private int curVal       = -1;
 		}
  	}
 
+	public void deactivate() {}	 //from ISonar
+	public  void activate() {}   //from ISonar
+
 	@Override  //from ISonar - called by the Controller
 	public int getVal() {  
 		waitForUpdatedVal();

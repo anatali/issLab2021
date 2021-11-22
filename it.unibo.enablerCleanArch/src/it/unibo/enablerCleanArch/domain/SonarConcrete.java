@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 
 public class SonarConcrete implements ISonar{
 private int curVal       = -1;
+private boolean stopped  = false;
 
 	public static ISonar create() {
 		SonarConcrete sonar = new SonarConcrete();
@@ -11,8 +12,11 @@ private int curVal       = -1;
 		return sonar;
 	}
 	 
-	 
-	private  void activate() {
+	public void deactivate() {
+		stopped = true;
+	}	 
+	public  void activate() {
+	  stopped = false;
 	  new Thread() {
          public void run() {
         	try {
@@ -20,13 +24,13 @@ private int curVal       = -1;
 	            BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
 	            int numData           = 5;
 	            int dataCounter       = 1;
-		        while( true ){
+		        while( ! stopped ){
 			        String data = reader.readLine();
 			        dataCounter++;
 			        if( dataCounter % numData == 0 ) { //every numData ...
 				        System.out.println("SonarConcrete | data=" + data );
-				    int d = Integer.parseInt(data);
-				    setVal(d);
+				        int d = Integer.parseInt(data);
+				        setVal(d);
 			        }
 		        }//while
         	}catch( Exception e) {

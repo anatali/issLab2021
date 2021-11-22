@@ -152,6 +152,9 @@ Focalizzando l'attenzione sulla interazione *sonar-radar* possiamo rappresentare
       -   .. image:: ./_static/img/Radar/srrIntegrate2.png
             :width: 100%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quale 'collante'?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il meditore potrebbe anche fungere da componente capace di realizzare la logica applicativa. 
 Ma è giusto/opportuno procedere i questo modo?
@@ -293,6 +296,18 @@ Come punto saliente della analisi condotta fino a questo punto possiamo affermar
        Affronteremo più avanti questo passaggio, dopo avere cercato di realizzare il sistema impostando
        ancora un sistema ad oggetti che utilizzano opportuni protocolli di comunicazione.
 
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Sincrone o asincrone?
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Dirette o mediate?
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Quali comportamenti?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -314,7 +329,15 @@ Il ``Controller`` potrebbe essere ora definito come segue:
 
 Il comportamento degli altri disposivi è una conseguenza logica di questo.
 
-  
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Message-driven o state-based?
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quale architettura?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 --------------------------------------
 Progettazione
 --------------------------------------
