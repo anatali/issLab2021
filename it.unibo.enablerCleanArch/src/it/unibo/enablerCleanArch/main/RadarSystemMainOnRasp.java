@@ -18,21 +18,19 @@ public class RadarSystemMainOnRasp {
 				
 		ISonar sonar = DeviceFactory.createSonar();
 		ILed   led   = DeviceFactory.createLed();
-		
-		
+				
 		if( RadarSystemConfig.ControllerRemote ) {  //Controller on PC
- 			new LedServer(  RadarSystemConfig.ledPort );
+ 			new LedServer( "LedServer", RadarSystemConfig.ledPort );
 			Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
-			new SonarClient( RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort );
+			new SonarClient( "SonarClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort );
 		}else { //Controller on Rasp
 			System.out.println("Controller on Rasp sonar=" + sonar);
- 			IRadarGui radar =  new RadarGuiClient(  ); 
-			//Control
+ 			IRadarGui radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
+ 			//Control
 			Controller.activate( led, sonar, radar );
-			if( sonar != null ) sonar.activate();
-		}
+ 		}
+		if( sonar != null ) sonar.activate();
  		
-		
 	}
 
 }

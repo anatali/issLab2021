@@ -1,43 +1,43 @@
 package it.unibo.enablerCleanArch.adapters;
 
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 
 /*
- * Adapter (working as a client) for an output device 
+ * Adapter for an output device 
  */
-public class LedAdapterClient implements ILed {
-private Interaction2021 conn;
+public class LedAdapterClient extends EnablerAsClient implements ILed {
 private boolean ledStateMirror = false;
 
-	public LedAdapterClient(   ) {
-		try {
-			conn = TcpClient.connect( RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort);
-		} catch (Exception e) {
-			System.out.println( "LedAdapterClient |  ERROR " + e.getMessage());
-		}
+	public LedAdapterClient( String name, String host, int port  ) {
+		super(name,host,port);
+	}
+	
+	protected Interaction2021 setProtocolClient( String host, int port  ) throws Exception{
+ 		return TcpClient.connect( host,port );
  	}
+	
 	@Override
 	public void turnOn() { 
-		try {
-			conn.forward("on");
+ 		try {
+			sendValueOnConnection( "on" );
 			ledStateMirror = true;
 		} catch (Exception e) {
-			System.out.println( "LedAdapterClient |  ERROR " + e.getMessage());
-		}  
-	}
+ 			e.printStackTrace();
+		}
+ 	}
 
 	@Override
 	public void turnOff() {   
-		try {
-			conn.forward("off");
+ 		try {
+			sendValueOnConnection( "off" );
 			ledStateMirror = false;
 		} catch (Exception e) {
-			System.out.println( "LedAdapterClient |  ERROR " + e.getMessage());
-		}  		
-	}
+ 			e.printStackTrace();
+		}
+ 	}
 
 	@Override
 	public boolean getState() {   

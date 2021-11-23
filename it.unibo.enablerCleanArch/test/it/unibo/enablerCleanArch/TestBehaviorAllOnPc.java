@@ -7,17 +7,25 @@ import it.unibo.enablerCleanArch.domain.RadarGui;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.main.RadarSystemMainOnPc;
 
-public class TestLedAlarm {
+public class TestBehaviorAllOnPc {
 private RadarSystemMainOnPc sys;
 	@Before
 	public void setUp() {
 		System.out.println("setUp");
 		try {
 			sys = new RadarSystemMainOnPc();
-			sys.setup();
-			RadarSystemConfig.testing = true;    //we must work with mock devices (local or remote)		
+			//Set system configuration (we don't read RadarSystemConfig.json)
+			RadarSystemConfig.simulation 		= true;    
+			//we must do testing work with mock devices (local or remote) ???
 			//mock devices are 'almost identical' to concrete devices 
-			sys.dowork();   //the sonar does not start if RadarSystemConfig.testing
+			RadarSystemConfig.testing    		= true;    		
+			RadarSystemConfig.ControllerRemote	= false;    		
+			RadarSystemConfig.LedRemote  		= false;    		
+			RadarSystemConfig.SonareRemote  	= false;    		
+			RadarSystemConfig.RadarGuieRemote  	= false;    	
+			RadarSystemConfig.pcHostAddr        = "localhost";
+			sys.setup();
+			//sys.activateSonar();   //the sonar does not start if RadarSystemConfig.testing
 			delay(5000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
@@ -29,14 +37,9 @@ private RadarSystemMainOnPc sys;
 		System.out.println("resetAll");		
 	}	
 	
-	//@Test 
-	public void testLedStartup() {
-		System.out.println("testLedAlone");
-		assertTrue( ! sys.getLed().getState() );
-	}
 	
 	@Test 
-	public void testLedAlarm() {
+	public void testLedAlarmAndRadarGui() {
 		System.out.println("testLedAlarm");
 		
 		int nearDistance = RadarSystemConfig.DLIMIT-5;

@@ -2,48 +2,55 @@ package it.unibo.enablerCleanArch.enablers;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
-import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
+ 
 
-public class SonarClient {
-	private Interaction2021 conn;
+public class SonarClient extends EnablerAsClient{
+    private int numData           = 1;   //valore basso perchè bastano i ritardi di rete
+    private int dataCounter       = 1;
+	private boolean goon          = true;
 	
-	public SonarClient( String host, int port ) {
-		try {
-			conn = TcpClient.connect(host,  port);
-			new Thread() {
-				public void run() {
-					sendRealValue();
-				}
-			}.start();
-		} catch (Exception e) {
- 			e.printStackTrace();
-		}
+	public SonarClient( String name, String host, int port ) {
+		super( name,  host,  port );
+		doWork();
 	}
-	
-	protected void sendRealValue() {
+	 
+	@Override
+	protected Interaction2021 setProtocolClient( String host, int port  ) throws Exception {
+		return TcpClient.connect(host,  port);
+	}
+
+	protected void doWork() {
 		try {
 			Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
 	        BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-	        int numData           = 1;   //valore basso perchè bastano i ritardi di rete
-	        int dataCounter       = 1;
-	        
-	        while( true ){
+			new Thread() {
+				public void run() {
+					try {
+						generateAndSendValues( reader );
+					}catch ( Exception e) {
+						System.out.println( "SonarClient |  GEN ERROR " + e.getMessage());
+						goon = false;
+					}
+				}
+			}.start();
+		} catch (Exception e) {
+			System.out.println( "SonarClient |  SYSTEM ERROR " + e.getMessage());			 
+		}	  		
+	}
+ 	
+	protected void generateAndSendValues( BufferedReader reader ) throws Exception{
+  	        while( goon ){
 		        String data = reader.readLine();
 		        dataCounter++;
 		        if( dataCounter % numData == 0 ) { //every numData ...
-			        //System.out.println("SonarClient | data=" + data );
-		        	int v = Integer.parseInt(data);
-		        	if( v < RadarSystemConfig.DLIMIT ) System.out.println("SonarClient | ALARM !!!! " + data );
-			        conn.forward( data );
+			        System.out.println("SonarClient | data=" + data );
+ 			        sendValueOnConnection(data);
 		        }
-		     }//while
-		} catch (Exception e) {
-			System.out.println( "SonarClient |  ERROR " + e.getMessage());
-		}	  		
-	}	
+		   }//while  		
+	}
+
+
 	
 }

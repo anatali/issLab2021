@@ -22,10 +22,10 @@ public class SonarConcrete extends SonarAbstract implements ISonar{
  			String data = reader.readLine();
 			dataCounter++;
 			if( dataCounter % numData == 0 ) { //every numData ...
-				System.out.println("SonarConcrete | data=" + data );
 				curVal = Integer.parseInt(data);
-				if( curVal < 100 ) setVal( );   //inutile inviare dati che non si possono visualizzare
-			 }
+ 				System.out.println("SonarConcrete | data=" + data );
+				setVal( );    
+ 			 }
         }catch( Exception e) {
         		System.out.println("SonarConcrete | ERROR " + e.getMessage() );
         }

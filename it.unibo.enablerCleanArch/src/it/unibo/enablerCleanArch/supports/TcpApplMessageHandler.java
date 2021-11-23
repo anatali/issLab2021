@@ -19,7 +19,7 @@ public class TcpApplMessageHandler {
 					while( true ) {
 						//System.out.println(name + " | waits for message on ...");
 					    String msg = conn.receiveMsg();
-						//System.out.println(name + " | received:" + msg );
+						System.out.println(name + " | received:" + msg );
 					    if( msg == null ) {
 					    	conn.close();
 					    	break;

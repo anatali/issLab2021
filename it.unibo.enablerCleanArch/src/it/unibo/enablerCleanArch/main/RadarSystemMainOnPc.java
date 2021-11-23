@@ -11,25 +11,26 @@ private ISonar sonar    = null;
 private ILed led        = null;
 private IRadarGui radar = null;
 
-	public void setup() throws Exception {
-		RadarSystemConfig.setTheConfiguration(   );
-		
+	public void setup() throws Exception {			
 		//Control
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
 			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
-		}else {
+		}else { //Controller locale (al Pc)
 			//Input
-			sonar  = RadarSystemConfig.SonareRemote   ? new SonarAdapterServer("sonarAdapterServer") : DeviceFactory.createSonar();
+			sonar  = RadarSystemConfig.SonareRemote   
+					? new SonarAdapterServer("sonarAdapterServer", RadarSystemConfig.sonarPort) 
+					: DeviceFactory.createSonar();
 			//Output
-			led    = RadarSystemConfig.LedRemote       ? new LedAdapterClient( ) : DeviceFactory.createLed();
-			//IRadarGui radar  = RadarSystemConfig.RadarGuieRemote ? new RadarGuiAdapterClient(  ) : DeviceFactory.createRadarGui();
+			led    = RadarSystemConfig.LedRemote   
+					? new LedAdapterClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort  ) 
+					: DeviceFactory.createLed();
 			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);
   		}
 	} 
 	
-	public void dowork() {
+	public void activateSonar() {
 		if( sonar != null ) sonar.activate();
 	}
 
@@ -38,6 +39,10 @@ private IRadarGui radar = null;
 	public ILed getLed() {
 		return led;
 	}
+	public ISonar getSonar() {
+		return sonar;
+	}
+
 	public IRadarGui getRadarGui() {
 		return radar;
 	}
@@ -52,7 +57,8 @@ private IRadarGui radar = null;
 	
 	public static void main( String[] args) throws Exception {
 		RadarSystemMainOnPc sys = new RadarSystemMainOnPc();
+		RadarSystemConfig.setTheConfiguration(   );  //reads the file RadarSystemConfig.json
 		sys.setup();
-		sys.dowork();
+		sys.activateSonar();
 	}
 }

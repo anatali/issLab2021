@@ -20,7 +20,7 @@ public abstract class SonarAbstract implements ISonar{
 	@Override
 	public void activate() {
 		sonarSetUp();
-		if( RadarSystemConfig.testing )  return;
+		//if( RadarSystemConfig.testing )  return;
 		
 		System.out.println("Sonar | STARTS");
 		stopped = false;
@@ -50,7 +50,6 @@ public abstract class SonarAbstract implements ISonar{
 	@Override
 	public  int getVal() {
 		waitForUpdatedVal();
-		delay(800);		//simulate network delay
 		return curVal;
 	}
 

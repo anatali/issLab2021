@@ -1,7 +1,6 @@
 package it.unibo.enablerCleanArch.adapters;
-
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
@@ -11,18 +10,18 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  */
  
 
-public class SonarAdapterServer extends ApplMessageHandler implements ISonar{
+public class SonarAdapterServer extends EnablerAsServer implements ISonar{
 private int curVal       = -1;
 
-	public SonarAdapterServer( String name ) {
-		super(name);
-		try {
- 			new TcpServer( name+"Server", RadarSystemConfig.sonarPort,  this );
-		} catch (Exception e) {
-			System.out.println( name + " | ERROR " + e.getMessage() );
-		}
+	public SonarAdapterServer( String name, int port ) {
+		super(name, port);
  	}
 
+	@Override	//from EnablerAsServer
+ 	public void setProtocolServer(int port, ApplMessageHandler enabler) throws Exception{
+  		new TcpServer( name+"Server", port,  this );
+ 	}	
+	
 	public void deactivate() {}	 //from ISonar
 	public  void activate() {}   //from ISonar
 
@@ -34,7 +33,7 @@ private int curVal       = -1;
 		return v;
 	}
 	
- 	@Override  //from RequestHandler - called by the TcpApplMessageHandler created by the TcpServer
+ 	@Override  //from ApplMessageHandler
 	public void elaborate(String message) {
 		try {
 			System.out.println( name + " | elaborate " + message);
@@ -57,7 +56,5 @@ private int curVal       = -1;
 			e.printStackTrace();
 		}		
 	}
-	
-
-
+ 
 }

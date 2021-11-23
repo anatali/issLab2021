@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch.supports;
 /*
  * 
  */
-public abstract class ApplMessageHandler { //implements ApplMessageHandler
+public abstract class ApplMessageHandler {  
 protected Interaction2021 conn;		//Injected
 protected String name;
 

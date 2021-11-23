@@ -73,7 +73,7 @@ In sintesi:
 :remark:`Si tratta di realizzare un sistema software distribuito ed eterogeno`
 
 +++++++++++++++++++++++++++++++++++++
-Piano di testing
+Piano di testing (funzionale)
 +++++++++++++++++++++++++++++++++++++  
 
 .. Requisito :blue:`ledAlarm`:
@@ -257,8 +257,8 @@ Se anche il ``RadarDisplay`` fosse sul RaspberryPi, il ``Controller`` potrebbe e
 .. code::
 
   while True :
-    d = Sonar.getDistance()
-    radarSupport.update( s,90 )       
+    d = Sonar.getVal()
+    radarSupport.update( d,90 )       
     if( d <  DLIMIT )  then Led.turnOn() else Led.TurnOff()
 
 Da un punto di vista logico, il ``Controller`` è un ente attivo 
@@ -321,13 +321,12 @@ Il ``Controller`` potrebbe essere ora definito come segue:
 .. code::
 
   while True :
-    chiedi al Sonar o ricevi dal Sonar un valore d 
-    invia il valore d al RadarDisplay in modo che lo visualizzi
-    if( d <  DLIMIT ) 
-       invia al Led un comando di accensione 
+    invia al Sonar la richiesta di un valore d 
+    invia d al RadarDisplay in modo che lo visualizzi
+    if( d <  DLIMIT ) invia al Led un comando di accensione 
     else invia al Led un comando di spegnimento
 
-Il comportamento degli altri disposivi è una conseguenza logica di questo.
+Il comportamento dei disposivi è una conseguenza logica di questo.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Message-driven o state-based?
@@ -342,31 +341,26 @@ Quale architettura?
 Progettazione
 --------------------------------------
 
-L'analisi top-down ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
+L'analisi ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
 e necessario dotare uno o più di essi della capacità di inviare e ricevere messaggi via rete.
 
 Questa necessità segnala un :blue:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
-
 Iniziamo dunque il nostro progetto cercando di colmare questo gap con la introduzione di un nuovo componente riusabile.
 
+Anche in questo caso possiamo seguire un approccio bottom-up oppure un approccio top-down.
+
 +++++++++++++++++++++++++++++++++++++++
-Abilitatori per il message-passing
+Approccio bottom-up
 +++++++++++++++++++++++++++++++++++++++
 
-Impostiamo un componente (che denominiamo al momento genericamente :blue:`enabler`) 
+Partiamo selezionando un protocollo di comunicazione (ad esempio TCP) e rendiamo i componenti del sistema
+capaci di trasmettere-ricevere messaggi con questo protocollo, che assume il ruolo di 'collante' tra le parti.
+
+A tal fine possaimo impostare un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
 capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
-metodi di un oggetto 'embedded' locale.
+metodi di un altro oggetto 'embedded' locale, costituito dal componente iniziale incapace di interagire via rete.
 
-.. .. list-table::
-   :width: 100%
-   :widths: 70,30
-
-   * - L'idea è che l'`enabler` dovrebbe svolgere rispetto all'oggetto embedded una funzione analoga alle tute  
-       in stile 'IronMan', in modo da costruire un microservizio.
-     -  .. image:: ./_static/img/Radar/TutaVolo.jpg 
-           :width: 100%
-
-Ad esempio, con riferimento al ``Led``, l'*enabler* dovrebbe comportarsi come segue:
+Ad esempio, con riferimento al ``Led``, l'*enabler* (che denominiamo ``LedServer``) dovrebbe comportarsi come segue:
 
 .. code::
 
@@ -390,6 +384,67 @@ un qualche prototcollo di comunicazione. Le scelte possibili sono oggi numerose:
 - HTTP
 - CoaP 
 - MQTT
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Enabler per ricezione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+  public abstract class EnablerAsServer extends ApplMessageHandler{
+    public EnablerAsServer(String name) {
+      super(name);
+    }
+    public abstract void setProtocolServer(ApplMessageHandler handler);   //activates a server that
+    public abstract void elaborate(String message);
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Enabler per trasmissione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+  public abstract class EnablerAsClient {
+  private Interaction2021 conn; 
+  protected String name ;	
+
+    public EnablerAsClient( String name, String host, int port ) {
+      try {
+        this.name = name;
+        conn = setProtocolClient(host,  port);
+      } catch (Exception e) {
+        System.out.println( name+"  |  ERROR " + e.getMessage());		}
+    }
+    
+    protected abstract Interaction2021 setProtocolClient( String host, int port  ) throws Exception;
+    
+    protected void sendValueOnConnection( String val ) {
+      try {
+        conn.forward(val);
+      } catch (Exception e) {
+        System.out.println( name+" |  ERROR " + e.getMessage());
+      }
+    }
+    
+    public Interaction2021 getConn() {
+      return conn;
+    }
+  }  
+
+Un 'piano di testing' può spiegare meglio di molte parole il funzionamento della infrastruttura che abbiamo in mente,
+astraendo dallo specifico protocollo.
+
+
+
+
++++++++++++++++++++++++++++++++++++++++
+Approccio top-down
++++++++++++++++++++++++++++++++++++++++
+Partiamo dalla architettura logica definita dall'analisi del problema e 
+
+ 
+
 
  
 
@@ -455,8 +510,7 @@ applicativa ad opportuni oggetti definiti dall'application designer.
   Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
 
 
- Una procedura di testing può spiegare meglio di molte parole il funzionamento di questa infrastruttura:
- 
+  
   
 
 .. code::
