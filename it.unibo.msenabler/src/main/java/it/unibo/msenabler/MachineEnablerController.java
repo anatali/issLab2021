@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MachineEnablerController {
     @PostMapping( "/elaborate" )
     public String elaborate( @RequestParam(name="request") String  msg )  {
-        return ("Going to alaborate:" + msg);
+         return ("Going to alaborate:" + msg);
     }
 }
 //curl -d request="todo" localhost:8081/elaborate

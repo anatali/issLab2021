@@ -22,3 +22,21 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+task runCore(type: JavaExec) {
+	group = 'Execution' // <-- change the name as per your need
+	description = 'Run the business logic'
+	classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+	main = "it.unibo.enablerCleanArch.main.RadarSystemMainOnPc"
+	standardInput = System.in
+	//args "arg1", "arg2"
+}
+
+task runGui(type: JavaExec) {
+	group = 'Execution' // <-- change the name as per your need
+	description = 'Run the service server'
+	classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+	main = "it.unibo.msenabler.MsenablerApplication"
+	standardInput = System.in
+	//args "arg1", "arg2"
+}

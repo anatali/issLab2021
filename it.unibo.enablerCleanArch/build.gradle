@@ -63,17 +63,34 @@ sourceSets {
 eclipse {
     classpath {
         sourceSets -= [sourceSets.main, sourceSets.test]	
-    }	
+    }		
  }
  
 
 mainClassName = 'it.unibo.enablerCleanArch.main.RadarSystemMainOnRasp'
+//mainClassName = 'it.unibo.enablerCleanArch.main.RadarSystemMainOnPc'
 
 jar {
     println("building jar ...")
-    from sourceSets.main.allSource
+    from sourceSets.main.allSource	
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }
 }
 
+/*
+distZip {
+    into(project.name) {
+        from '.'
+        include 'config/RadarSystemConfig.json'
+    }
+} 
+*/
+distributions {
+    main {
+        //distributionBaseName = 'xxx'
+        contents {
+            from './RadarSystemConfig.json'
+        }
+    }
+}

@@ -5,7 +5,7 @@
 "SonareRemote"     : "true",
 "RadarGuieRemote"  : "false",
 "pcHostAddr"       : "192.168.1.6",
-"raspHostAddr"     : "192.168.1.10",
+"raspHostAddr"     : "192.168.1.12",
 "radarGuiPort"     : "8014",
 "ledPort"          : "8010",
 "sonarPort"        : "8012",

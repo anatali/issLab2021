@@ -15,6 +15,7 @@ private int curVal       = -1;
 
 	public SonarAdapterServer( String name, int port ) {
 		super(name, port);
+		System.out.println(name+" |  STARTS on" + port);
  	}
 
 	@Override	//from EnablerAsServer

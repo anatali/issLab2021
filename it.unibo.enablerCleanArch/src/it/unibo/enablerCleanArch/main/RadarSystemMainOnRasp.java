@@ -16,13 +16,14 @@ public class RadarSystemMainOnRasp {
 	public static void main( String[] args) throws Exception {
  		RadarSystemConfig.setTheConfiguration(   );
 				
-		ISonar sonar = DeviceFactory.createSonar();
-		ILed   led   = DeviceFactory.createLed();
+		ISonar sonar    = DeviceFactory.createSonar();
+		ILed   led      = DeviceFactory.createLed();
 				
 		if( RadarSystemConfig.ControllerRemote ) {  //Controller on PC
  			new LedServer( "LedServer", RadarSystemConfig.ledPort );
 			Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
 			new SonarClient( "SonarClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort );
+			new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
 		}else { //Controller on Rasp
 			System.out.println("Controller on Rasp sonar=" + sonar);
  			IRadarGui radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 

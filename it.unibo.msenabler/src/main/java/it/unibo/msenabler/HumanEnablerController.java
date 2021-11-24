@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HumanEnablerController {
 
-    @Value("${spring.application.name}")
+    @Value("${unibo.application.name}")
     String appName;
 
     @GetMapping("/")

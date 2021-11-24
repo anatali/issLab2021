@@ -13,6 +13,7 @@ private boolean ledStateMirror = false;
 
 	public LedAdapterClient( String name, String host, int port  ) {
 		super(name,host,port);
+		System.out.println(name+" |  STARTS for " + host +":"+port);
 	}
 	
 	protected Interaction2021 setProtocolClient( String host, int port  ) throws Exception{

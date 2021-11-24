@@ -34,22 +34,24 @@ public class RadarSystemConfig {
 
 	
 	public static void setTheConfiguration(  ) {
- 		String resourceName = "./RadarSystemConfig.json";
- 		/*
- 		System.out.println(""+ mainclass);
-        InputStream is      = mainclass.getResourceAsStream(resourceName);
-        if (is == null) {
-            throw new NullPointerException("RadarSystemConfig | Cannot find resource file " + resourceName);
-        }
-        */
-         
- 
+		FileInputStream fis = null;
+ 		System.out.println("setTheConfiguration" ); 
+ 		try {
+			String resourceName = "../RadarSystemConfig.json";	
+			//Nella distribuzione il file è in una dir che include la bin  
+			fis                 = new FileInputStream(new File(resourceName));
+ 		} catch (FileNotFoundException e) {
+ 			//System.out.println("setTheConfiguration configuration file not found yet" );
+		}
 		try {
-			FileInputStream fis = new FileInputStream(new File(resourceName));
+			if(  fis == null ) {
+				 String resourceName = "./RadarSystemConfig.json";
+				 fis = new FileInputStream(new File(resourceName));
+			}
 	        JSONTokener tokener = new JSONTokener(fis);
 	        JSONObject object   = new JSONObject(tokener);
 	 		
-	        simulation       = object.getBoolean("simulation");
+	        simulation          = object.getBoolean("simulation");
 	        
 	        ControllerRemote = object.getBoolean("ControllerRemote");
 	        LedRemote        = object.getBoolean("LedRemote");
@@ -71,7 +73,7 @@ public class RadarSystemConfig {
 	        testing          = object.getBoolean("testing");
 	        
 		} catch (FileNotFoundException e) {
- 			e.printStackTrace();
+ 			System.out.println("setTheConfiguration ERROR " + e.getMessage() );
 		}
 
 	}	
