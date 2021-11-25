@@ -6,22 +6,40 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
- 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 
 public class Resource extends CoapResource {
 
-//public static String path = "robot/sonar";
+
 private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 
-	public Resource( String name ) {
+	public Resource( String name ) throws Exception{
 		super(name);
-		setObservable(true);
-		System.out.println("Resource " + name + " | created  " );
+ 		LOGGER.info("Resource " + name + " | created  ");
+		//LOGGER.warn("Resource " + name + " | created  ");
+ 		setObservable(true);
+	}
+
+	private void experimentProperties() throws Exception {
+		FileInputStream propFile = new FileInputStream( "log4j.properties");
+		Properties p             = new Properties(System.getProperties());
+		p.load(propFile);
+
+		System.out.println("++++++++++++++++++++++ " + p.getProperty("log4j.defaultInitOverride"));
+		//About loggin:
+		// 	https://sematext.com/blog/slf4j-tutorial/
+		//	https://examples.javacodegeeks.com/enterprise-java/slf4j/slf4j-tutorial-beginners/
+		//  https://www.tutorialspoint.com/slf4j/slf4j_overview.htm
+		//Logger log = LoggerFactory.getLogger(Resource.class);
 	}
 	
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		System.out.println("Resource " + getName() + " | handleGET from:" + exchange.getSourceAddress() + " arg:" + exchange.getRequestText()  );
+		System.out.println("Resource " + getName() +
+				" | handleGET from:" + exchange.getSourceAddress() + " arg:" + exchange.getRequestText() +
+		        " lastMsg = " + lastMsg );
 		exchange.respond( lastMsg );
 	}
 
@@ -77,7 +95,7 @@ private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
  
 	private static CoapServer server = new CoapServer();
 
-	public static void createCoapResource(String path){
+	public static void createCoapResource(String path) throws Exception {
 		String[] items = path.split("/");
 		Resource root  = new Resource(items[0]);
 		CoapResource r = root;
@@ -104,13 +122,19 @@ private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 		String path = "robot/sonar";
 		Resource.createCoapResource(path);
 		CoapSupport support = new CoapSupport("coap://localhost:5683", path);
-		support.updateResource("msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)");
-//		support.updateResource("44");
+
+		//support.updateResource("msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)");
+
+		for( int i =1; i<=5; i++) {
+			support.updateResource(""+10*i);
+			Thread.sleep(1000);
+		}
 		
 		String v = support.readResource();
 		System.out.println("v=" + v);
+		//support.updateResource("");
 		
-		Resource.stopServer();
+		//Resource.stopServer();
 	}
 
 }

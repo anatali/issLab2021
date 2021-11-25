@@ -1,0 +1,12 @@
+openapi: "3.0.3"
+info:
+  title: msenabler
+  version: "1.0"
+servers:
+  - url: https://it.unibo
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: OK

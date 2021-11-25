@@ -9,7 +9,7 @@ import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.elements.exception.ConnectorException;
 
-
+/*
 class MyHandler implements CoapHandler {
 	public MyHandler ( ) {		 
 	}
@@ -21,7 +21,7 @@ class MyHandler implements CoapHandler {
 		System.err.println("MyHandler  |  FAILED (press enter to exit)");
 	}
 }
-
+*/
 public class CoapSupport {
 private CoapClient client;
 private CoapObserveRelation relation = null;
@@ -35,7 +35,6 @@ private CoapObserveRelation relation = null;
 	//public CoapSupport( String address ) {  this(address, Resource.path); }
 	
 	public String readResource(   ) throws ConnectorException, IOException {
-		 
 		CoapResponse respGet = client.get( );
 		//System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
 		return respGet.getResponseText();

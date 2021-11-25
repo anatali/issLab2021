@@ -6,52 +6,53 @@ import alice.tuprolog.Term;
 
 public class RadarGuiCoap {
 private CoapSupport coapSupport;
-private Boolean polling = false;
+private Boolean polling = true;
 
-	public RadarGuiCoap(   ) throws Exception {
-		//createCoapResource();
-		radarPojo.radarSupport.setUpRadarGui();
-		System.out.println("RadarGuiCoap STARTED ");
-		delay( 2000 ); //give time to show the GUI 
-		coapSupport = new CoapSupport("coap://localhost:5683", "robot/sonar");
-		if( polling ) doJobPolling(); 
-		else coapSupport.observeResource( new DistanceHandler() );
-	}
 
-	/*
-	private void  createCoapResource(){
-		CoapServer server = new CoapServer();
-		server.add( 
-				new Resource("robot").add(
-					new Resource("sonar") )  //robot/sonar
-		);
-		server.start();		
-	}
- */
-	
-	private void doJobPolling() throws Exception {
-		while( true ) {
-			 String msg  = coapSupport.readResource();
-			 ApplMessage m = new ApplMessage( msg );
-			 //System.out.println("doJobPolling " + m.msgContent());	//sonar(d)
-			 String distance = ((Struct) Term.createTerm(m.msgContent())).getArg(0).toString();
-			 radarPojo.radarSupport.update(distance,"90");		
- 			 delay( 500 );
-		}
+	public RadarGuiCoap( boolean polling  ) throws Exception {
+		this.polling = polling;
+
+ 		IRadarGui radar = RadarGui.create();
+
+		String path = "robot/sonar";
+		Resource.createCoapResource(path);
+		coapSupport = new CoapSupport("coap://localhost:5683", path);
+
+		if( polling ) doJobPolling(radar);
+		else coapSupport.observeResource( new DistanceHandler(radar) );
+
 	}
 	
- 
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
- 			e.printStackTrace();
-		}
+	private void doJobPolling(IRadarGui radar) throws Exception {
+		new Thread(){
+			public void run(){
+				while( true ) {
+					try {
+						String msg = coapSupport.readResource();
+						DistanceHandler.showDataOnGui(msg, radar);
+						Thread.sleep(500);
+					}catch( Exception e){
+						break;
+					}
+				}
+			}
+		}.start();
 	}
+	
+ 	public CoapSupport getCoapSupport(){
+		return coapSupport;
+	}
+
 
 	public static void main(String[] args) throws Exception{
-		//RadarGuiCoap appl = 
-				new RadarGuiCoap();		 
-  	}
+		RadarGuiCoap appl = new RadarGuiCoap( true );
+
+		//simulateData()
+		for( int i =1; i<=9; i++) {
+			Thread.sleep(1000);
+			appl.getCoapSupport().updateResource(""+10*i);
+		}
+
+	}
 
 }

@@ -35,8 +35,11 @@ dependencies {
 //COAP
  	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
 	implementation group: 'org.eclipse.californium', name: 'californium-core', version: '3.0.0'
-	//LOG4j   //required by Californium
-	//implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+	//LOG4j   //required by Californium - facade or abstraction for various logging frameworks
+    //implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+
+    //implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
+    //implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
 	implementation 'org.slf4j:slf4j-simple:1.7.30'
 	//See https://www.bswen.com/2021/01/others-java-log-error1.html
 
