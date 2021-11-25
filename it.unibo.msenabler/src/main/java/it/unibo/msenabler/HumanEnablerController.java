@@ -8,17 +8,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import it.unibo.enablerCleanArch.main.*;
 
 @Controller
 public class HumanEnablerController {
 
     @Value("${unibo.application.name}")
-    String appName;
+    String appName; 
 
     @GetMapping("/")
-    public String homePage(Model model) {
-        System.out.println(
-                "------------------- BaseController homePage " + model  );
+    public String welcomePage(Model model) {
+        System.out.println("HumanEnablerController welcomePage" + model  );
+        RadarSystemMainOnPc sys = new RadarSystemMainOnPc();
+        RadarSystemConfig.setTheConfiguration(   );
+        try{
+            sys.setup();
+        }catch(Exception e) {
+            model.addAttribute("arg", "ERROR " + e.getMessage());
+            return "welcome";
+        }
         model.addAttribute("arg", appName);
         return "welcome";
     }
@@ -30,4 +38,5 @@ public class HumanEnablerController {
                 "BaseController ERROR " + ex.getMessage(),
                 responseHeaders, HttpStatus.CREATED);
     }
+
 }

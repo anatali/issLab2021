@@ -389,15 +389,55 @@ un qualche prototcollo di comunicazione. Le scelte possibili sono oggi numerose:
 Enabler per ricezione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Si tratta di definire un server che l'application designer può specializzare 
+con riferimento a un preciso protocollo e a un metodo di elaborazione dei messaggi ricevuti.
+
 .. code::
 
   public abstract class EnablerAsServer extends ApplMessageHandler{
-    public EnablerAsServer(String name) {
+    public EnablerAsServer(String name, int port) {
       super(name);
-    }
-    public abstract void setProtocolServer(ApplMessageHandler handler);   //activates a server that
+      setProtocolServer( port, this );
+    }	
+    public abstract void setProtocolServer(int port, ApplMessageHandler handler);    	
+    @Override
     public abstract void elaborate(String message);
   }
+
+La classe ``ApplMessageHandler`` è una classe astratta che definisce il metodo  ``abstract void elaborate( String message )``
+che opportune classi applicative devono implementare per realizzare la voluta  gestione dei messaggi. 
+Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
+utilizzare per l'invio di messaggi
+
+Un esempio di specializzazione relativo a Led :
+
+.. code::
+
+  public class LedServer extends ApplMessageHandler  {
+  ILed led = LedAbstract.createLedConcrete();
+
+    public LedServer(  int port  )   {
+      super("LedServer");
+      setProtocolServer(port,this);	
+    }
+    
+    public void setProtocolServer(int port, ApplMessageHandler enabler) {
+      try {
+        new TcpServer( name+"Server", port,  this );
+      } catch (Exception e) {
+        e.printStackTrace();
+      } 			
+    }
+    
+    @Override		//from ApplMessageHandler
+    public void elaborate(String message) {
+      System.out.println(name+" | elaborate:" + message);
+      if( message.equals("on")) led.turnOn();
+      else if( message.equals("off") ) led.turnOff();
+    }
+  
+  }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Enabler per trasmissione
@@ -513,7 +553,7 @@ applicativa ad opportuni oggetti definiti dall'application designer.
   
   
 
-.. code::
+
 
 
   
@@ -537,4 +577,12 @@ Definiamo dunque in Java due classi:
 
   
 
+--------------------------------------
+Deployment
+--------------------------------------
 
+.. code::
+
+  gradle build jar -x test
+
+Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contiene la directory bin  
