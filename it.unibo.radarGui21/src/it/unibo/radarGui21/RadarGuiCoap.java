@@ -54,5 +54,6 @@ private Boolean polling = true;
 		}
 
 	}
-
+//curl http://curl.haxx.se/docs/httpscripting.html
+//curl http://curl.haxx.se/docs/httpscripting.html
 }

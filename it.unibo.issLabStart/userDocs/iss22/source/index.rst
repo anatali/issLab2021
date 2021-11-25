@@ -18,6 +18,7 @@ iss22
    RaspberrySoftware
    Robots
    Applicazioni
+   RadarGuiCoap
    RadarSystem
    Indicazioni
    ColloquioFinale

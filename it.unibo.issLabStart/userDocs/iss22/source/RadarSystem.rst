@@ -19,14 +19,14 @@ Requisiti
 
 Si desidera costruire un'applicazione software capace di: 
 
-- (requisito :blue:`radarGui`:) mostrare le distanze rilevate da un sensore ``HC-SR04`` connesso a un RaspberryPi 
+- (requisito :blue:`radarGui`) mostrare le distanze rilevate da un sensore ``HC-SR04`` connesso a un RaspberryPi 
   su un display (``RadarDisplay``) a forma di radar connesso a un PC
   
 .. image:: ./_static/img/Radar/radarDisplay.png
    :align: center
    :width: 20%
    
-- (requisito :blue:`ledAlarm`:) accendere un LED se la distanza rilevata è inferiore a un valore limite prefissato
+- (requisito :blue:`ledAlarm`) accendere un LED se la distanza rilevata è inferiore a un valore limite prefissato
   denominato ``DLIMIT``.
 
 --------------------------------------
@@ -121,7 +121,7 @@ Il sistema pone le seguenti :blue:`problematiche`:
      - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
        ``SonarAlone.c`` (progetto *it.unibo.rasp2021*)
    * - Gestione del display  .
-     - A questo fine è disponibile il POJO realizato da  ``radarPojo.jar`` 
+     - A questo fine è disponibile il POJO realizzato da  ``radarPojo.jar`` 
    * - Gestione del LED.
      - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
        ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh``.
@@ -133,11 +133,10 @@ Il sistema pone le seguenti :blue:`problematiche`:
 
 La necessità di integrare i componenti disponibili *fa sorgere altre problematiche*:
 
-   - incapsulare i componenti disponibli entro altri componenti capaci di interagire via rete
-   - capire dove sia più opportuno inserire la 'businnss logic'. 
-     E' opportuno pensare di estendendo il sonar o ``radarSupport``?
-     Oppure è meglio introdurre un terzo componente?
-   - capire quale forma di interazione sia più opportuna: diretta o mediata, sincrona o asincrona, etc.
+   #. è opportuno incapsulare i componenti disponibli entro altri componenti capaci di interagire via rete?
+   #. dove è più opportuno inserire la 'businenss logic'? In un oggetto che estende il sonar o il ``radarSupport``?
+      Oppure è meglio introdurre un terzo componente?
+   #. quale forma di interazione è più opportuna? diretta/mediata, sincrona/asincrona?.
 
 Focalizzando l'attenzione sulla interazione *sonar-radar* possiamo rappresentare la situazione come segue:
 
