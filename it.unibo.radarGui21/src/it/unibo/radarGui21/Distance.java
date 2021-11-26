@@ -11,6 +11,7 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -40,9 +41,17 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 	@Override
 	public void handleGET(CoapExchange exchange) {
 		String p = exchange.getQueryParameter("value");
-		//String p = ""+exchange.getRequestPayload().length;
+		String p1 = ""+exchange.getRequestOptions().getUriQueryString();
+		//List<String> uriQueries = exchange.advanced().getRequest().getOptions().getUriQuery();
+		List<String> uriQueries = exchange.getRequestOptions().getUriQuery();
+ 	      for (String query:uriQueries) {
+	          if (query.startsWith("value")) {
+	            int n = Integer.parseInt(query.split("=")[1]);
+	    		System.out.println("query n="+n);
+	          }
+	        }
 		System.out.println("Distance " + getName() +
-				" | handleGET from:" + exchange.getSourceAddress() + " p=" + p + " arg:" + exchange.getRequestText() +
+				" | handleGET from:" + exchange.getSourceAddress() + " p=" + p1 + " arg:" + exchange.getRequestText() +
 		        " lastMsg = " + lastMsg );
 		Resource parent = this.getParent() ;
 		//exchange.respond( lastMsg + " parent-uri=" + parent.getURI());
@@ -99,19 +108,21 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 	}
 
 
-	public static void testNaive(String uri ) throws  Exception {
-		CoapClient client      = new CoapClient( "coap://localhost:5683/"+ uri +"?value=10");
-/*
+	public static void testNaive(  ) throws  Exception {
+		 String uri          = "devices/output/sonar/distance";
+		//CoapClient client  = new CoapClient( "coap://localhost:5683/"+ uri +"?value=10");
+ 
 		CoapClient client = new CoapClient.Builder("localhost", 5683)
  				.path( uri )
-				.query("value=0")
-				.create();*/
+				.query("value=20")
+				.create(); 
+		
 		String v1              = client.get().getResponseText();
 		System.out.println("v1=" + v1);
 
 		new DistanceResourceObserver( "localhost:5683", uri) ;
 
-		for( int i =1; i<=5; i++) {
+		for( int i =1; i<=3; i++) {
  			String updateMsg  = ""+10*i;
 			//String updateMsg  = "msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)" ;
 			CoapResponse resp = client.put(updateMsg, MediaTypeRegistry.TEXT_PLAIN);
@@ -158,8 +169,8 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 		String uri            = "devices/output/sonar/distance";
 
 
-		Distance.testNaive(uri);
-		Distance.testWithSupport(uri);
+		Distance.testNaive( );
+		//Distance.testWithSupport(uri);
 
 	}
 
