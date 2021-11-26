@@ -12,15 +12,18 @@ private Boolean polling = true;
 	public RadarGuiCoap( boolean polling  ) throws Exception {
 		this.polling = polling;
 
- 		IRadarGui radar = RadarGui.create();
-
+ 		//IRadarGui radar = RadarGui.create();
+/*
 		String path = "robot/sonar";
-		Resource.createCoapResource(path);
+		Distance.createCoapResource(path);
 		coapSupport = new CoapSupport("coap://localhost:5683", path);
 
+		 
 		if( polling ) doJobPolling(radar);
-		else coapSupport.observeResource( new DistanceHandler(radar) );
-
+		//else coapSupport.observeResource( new DistanceHandler(radar) );
+		
+		new DistanceResourceObserver( "localhost", path) ;
+ */
 	}
 	
 	private void doJobPolling(IRadarGui radar) throws Exception {
@@ -45,7 +48,7 @@ private Boolean polling = true;
 
 
 	public static void main(String[] args) throws Exception{
-		RadarGuiCoap appl = new RadarGuiCoap( true );
+		RadarGuiCoap appl = new RadarGuiCoap( false );
 
 		//simulateData()
 		for( int i =1; i<=9; i++) {

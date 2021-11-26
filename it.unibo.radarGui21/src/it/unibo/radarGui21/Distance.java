@@ -2,23 +2,24 @@ package it.unibo.radarGui21;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED;
+
+import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResource;
-import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import java.io.FileInputStream;
 import java.util.Properties;
 
 
-public class Resource extends CoapResource {
+public class Distance extends CoapResource {
 
 
-private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
+private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 
-	public Resource( String name ) throws Exception{
+	public Distance( String name )  {
 		super(name);
- 		LOGGER.info("Resource " + name + " | created  ");
-		//LOGGER.warn("Resource " + name + " | created  ");
+ 		LOGGER.info("Distance " + name + " | created  ");
+		//LOGGER.warn("Distance " + name + " | created  ");
  		setObservable(true);
 	}
 
@@ -32,12 +33,12 @@ private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 		// 	https://sematext.com/blog/slf4j-tutorial/
 		//	https://examples.javacodegeeks.com/enterprise-java/slf4j/slf4j-tutorial-beginners/
 		//  https://www.tutorialspoint.com/slf4j/slf4j_overview.htm
-		//Logger log = LoggerFactory.getLogger(Resource.class);
+		//Logger log = LoggerFactory.getLogger(Distance.class);
 	}
 	
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		System.out.println("Resource " + getName() +
+		System.out.println("Distance " + getName() +
 				" | handleGET from:" + exchange.getSourceAddress() + " arg:" + exchange.getRequestText() +
 		        " lastMsg = " + lastMsg );
 		exchange.respond( lastMsg );
@@ -72,7 +73,7 @@ private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 	@Override
 	public void handlePUT(CoapExchange exchange) {
 		String arg = exchange.getRequestText() ;		
-		System.out.println("Resource " + getName() + " | PUT arg=" + arg + " from " + exchange.getRequestCode() );
+		System.out.println("Distance " + getName() + " | PUT arg=" + arg + " from " + exchange.getRequestCode() );
 		lastMsg = arg;
  		changed();	// notify all CoAp observers		
     	/*
@@ -93,48 +94,38 @@ private String lastMsg    = "msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 	}
 	
  
-	private static CoapServer server = new CoapServer();
-
-	public static void createCoapResource(String path) throws Exception {
-		String[] items = path.split("/");
-		Resource root  = new Resource(items[0]);
-		CoapResource r = root;
-		for( int i=1; i < items.length; i++) {
-			r = r.add( new Resource(items[i]) );			
-		}
-		server.add( r );   
-		server.start();	
-	}
-	
-	public static void stopServer() {
-		server.stop();
-	}
 	
 	public static void main(String[] args) throws  Exception {
-		/*
-		CoapServer server = new CoapServer();
-		server.add( 
-				new Resource("robot").add(
-					new Resource("sonar") )  //robot/sonar
-		);
-		server.start();
-		*/
-		String path = "robot/sonar";
-		Resource.createCoapResource(path);
+		CoapApplServer.init();
+		String path      = "sonar/distance";
+		CoapResource dr  = new Distance("distance");
+		CoapApplServer.addCoapResource( dr, null );
 		CoapSupport support = new CoapSupport("coap://localhost:5683", path);
 
+		//new DistanceResourceObserver( "localhost", path) ;
+		
 		//support.updateResource("msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)");
-
+/* 
 		for( int i =1; i<=5; i++) {
 			support.updateResource(""+10*i);
 			Thread.sleep(1000);
 		}
-		
+*/ 		
 		String v = support.readResource();
 		System.out.println("v=" + v);
-		//support.updateResource("");
+	 
+		 
+		String path1      = "sonar/values";
+		CoapResource dr1  = new Distance("values");
+		CoapApplServer.addCoapResource( dr1, null );
+		//CoapSupport support1 = new CoapSupport("coap://localhost:5683", path1);
+		String url =  "coap://localhost:5683/"+ path1;
+		CoapClient client = new CoapClient( url );
+		String v1 = client.get().getResponseText();
+		System.out.println("v1=" + v1);
+		 
 		
-		//Resource.stopServer();
+		CoapApplServer.getResource("");
 	}
 
 }

@@ -27,7 +27,7 @@ private CoapClient client;
 private CoapObserveRelation relation = null;
 
 	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
-		String url = address + "/" + path;
+		String url = address + "/"+ path;
 		client = new CoapClient( url );
 		System.out.println("CoapSupport | STARTS url=" +  url ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 
@@ -36,7 +36,12 @@ private CoapObserveRelation relation = null;
 	
 	public String readResource(   ) throws ConnectorException, IOException {
 		CoapResponse respGet = client.get( );
-		//System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
+		System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
+		return respGet.getResponseText();
+	}
+	public String readResource( String path  ) throws ConnectorException, IOException {
+		CoapResponse respGet = client.get( );
+		System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
 		return respGet.getResponseText();
 	}
 
@@ -57,14 +62,16 @@ private CoapObserveRelation relation = null;
 	
 	public void test() {
 		try {
-			updateResource("23");
+			//updateResource("23");
+			String s = readResource(   );
 		}catch(Exception e) {
 			System.out.println(" | test ERROR " + e.getMessage() );
 		}
 	}
 	
 	public static void main(String[] args) {
-		CoapSupport cs = new CoapSupport("coap://localhost:5683","robot/sonar");
+		CoapApplServer.init();
+		CoapSupport cs = new CoapSupport("coap://localhost:5683","sonar/distance");
 		cs.test();		
 	}
 	

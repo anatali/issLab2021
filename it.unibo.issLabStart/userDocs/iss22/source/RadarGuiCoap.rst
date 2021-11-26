@@ -35,3 +35,14 @@ Vogliamo costruire un sistema software capace di:
 #. Costruiamo una applicazione RadarGuiCoap che osserva le variazioni di stato della risorsa e modifica il RadarDisplay
 #. Costruiamo radarGui rendendo accessibile RadarGuiCoap via rete con SpringBoot / HTTP in modo RESTFUL 
 #. Facciamo il deployment su docker rendendo accessibile sia la risorsa sia la radarGui
+
+--------------------------------------------
+La distanza come risorsa CoAP
+--------------------------------------------
+
+Viene definita come observable e quindi può avere molti observers che sono invocati in modo automatico quando
+la risorsa cambia il suo valore (verbo ``PUT``).
+
+
+
+
