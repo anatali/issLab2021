@@ -8,6 +8,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.core.server.resources.Resource;
 
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -38,10 +39,14 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 	
 	@Override
 	public void handleGET(CoapExchange exchange) {
+		String p = exchange.getQueryParameter("value");
+		//String p = ""+exchange.getRequestPayload().length;
 		System.out.println("Distance " + getName() +
-				" | handleGET from:" + exchange.getSourceAddress() + " arg:" + exchange.getRequestText() +
+				" | handleGET from:" + exchange.getSourceAddress() + " p=" + p + " arg:" + exchange.getRequestText() +
 		        " lastMsg = " + lastMsg );
-		exchange.respond( lastMsg );
+		Resource parent = this.getParent() ;
+		//exchange.respond( lastMsg + " parent-uri=" + parent.getURI());
+		exchange.respond( lastMsg  );
 	}
 
 /*
@@ -95,7 +100,12 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 
 
 	public static void testNaive(String uri ) throws  Exception {
-		CoapClient client      = new CoapClient( "coap://localhost:5683/"+ uri );
+		CoapClient client      = new CoapClient( "coap://localhost:5683/"+ uri +"?value=10");
+/*
+		CoapClient client = new CoapClient.Builder("localhost", 5683)
+ 				.path( uri )
+				.query("value=0")
+				.create();*/
 		String v1              = client.get().getResponseText();
 		System.out.println("v1=" + v1);
 
@@ -142,7 +152,7 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 		/*
 		Create distance as the resource of a sonar output-device
 		 */
-		CoapResource sonarDistance  = new CoapResource("sonar").add( new Distance("distance") );
+		CoapResource sonarDistance  = new OutputDevice("sonar", "HC-SR04", 90).add( new Distance("distance") );
 		CoapApplServer.addCoapResource( sonarDistance, "/devices/output"  );
 
 		String uri            = "devices/output/sonar/distance";

@@ -39,9 +39,12 @@ private CoapObserveRelation relation = null;
 		System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
 		return respGet.getResponseText();
 	}
+
+
+
 	public String readResource( String path  ) throws ConnectorException, IOException {
 		CoapResponse respGet = client.get( );
-		System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
+		System.out.println("CoapSupport | readResource with path RESPONSE CODE: " + respGet.getCode());
 		return respGet.getResponseText();
 	}
 
