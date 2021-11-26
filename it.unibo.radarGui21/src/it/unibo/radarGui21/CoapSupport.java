@@ -52,29 +52,14 @@ private CoapObserveRelation relation = null;
 		relation = client.observe( handler );
 	}
 
-	public boolean updateResource( String msg ) throws ConnectorException, IOException {
+	public void updateResource( String msg ) throws ConnectorException, IOException {
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
 //			if( resp != null ) System.out.println("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());	
 //			else System.out.println("CoapSupport | updateResource FAILURE: "  );
-		return resp != null;
 	}
 	
 	
-	public void test() {
-		try {
-			//updateResource("23");
-			String s = readResource(   );
-		}catch(Exception e) {
-			System.out.println(" | test ERROR " + e.getMessage() );
-		}
-	}
-	
-	public static void main(String[] args) {
-		CoapApplServer.init();
-		CoapSupport cs = new CoapSupport("coap://localhost:5683","sonar/distance");
-		cs.test();		
-	}
-	
+
 }
 /*
 Log4j by default looks for a file called log4j.properties or log4j.xml on the classpath

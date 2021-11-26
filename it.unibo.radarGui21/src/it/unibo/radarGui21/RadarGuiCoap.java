@@ -1,8 +1,5 @@
 package it.unibo.radarGui21;
-import org.eclipse.californium.core.CoapServer;
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
- 
+
 
 public class RadarGuiCoap {
 private CoapSupport coapSupport;
@@ -32,7 +29,7 @@ private Boolean polling = true;
 				while( true ) {
 					try {
 						String msg = coapSupport.readResource();
-						DistanceHandler.showDataOnGui(msg, radar);
+						DistanceHandlerWithRadarGui.showDataOnGui(msg, radar);
 						Thread.sleep(500);
 					}catch( Exception e){
 						break;

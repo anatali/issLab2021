@@ -9,7 +9,7 @@ import org.eclipse.californium.core.observe.ObserveRelation;
 public class DistanceResourceObserver implements CoapHandler{
   	
 	public DistanceResourceObserver(String address, String path) { //"coap://localhost:5683/" + path
-		String url = address + "/" + path;
+		String url        = address + "/" + path;
 		CoapClient client = new CoapClient( url );
 		System.out.println("DistanceResourceObserver | STARTS url=" +  url ); //+ " client=" + client );
 		client.setTimeout( 1000L );	

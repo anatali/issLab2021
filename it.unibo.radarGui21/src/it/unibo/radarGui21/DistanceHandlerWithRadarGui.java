@@ -6,7 +6,7 @@ import org.eclipse.californium.core.CoapResponse;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 
-public class DistanceHandler implements CoapHandler {
+public class DistanceHandlerWithRadarGui implements CoapHandler {
 	private IRadarGui radar;
 
 	public static void showDataOnGui(String msg, IRadarGui radar){
@@ -20,8 +20,8 @@ public class DistanceHandler implements CoapHandler {
 		}
 
 	}
-	public DistanceHandler(IRadarGui radar){
-		this.radar = radar;
+	public DistanceHandlerWithRadarGui( ){
+		this.radar = new RadarGui();
 	}
 	@Override
 	public void onLoad(CoapResponse response) {

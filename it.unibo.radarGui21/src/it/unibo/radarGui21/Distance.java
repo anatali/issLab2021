@@ -5,15 +5,15 @@ import static org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+
 import java.io.FileInputStream;
 import java.util.Properties;
 
 
 public class Distance extends CoapResource {
-
-
 private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(00),0)";
 
 	public Distance( String name )  {
@@ -64,7 +64,7 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
  * PUT method is idempotent. Use PUT when you want to modify 
  * RFC-2616 clearly mention that PUT method requests for the enclosed entity 
  * be stored under the supplied Request-URI. 
- * If the Request-URI refers to an already existing resource – 
+ * If the Request-URI refers to an already existing resource ï¿½ 
  * an update operation will happen, otherwise create operation should happen 
  * if Request-URI is a valid resource URI 
  * (assuming client is allowed to determine resource identifier).	
@@ -73,7 +73,7 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 	@Override
 	public void handlePUT(CoapExchange exchange) {
 		String arg = exchange.getRequestText() ;		
-		System.out.println("Distance " + getName() + " | PUT arg=" + arg + " from " + exchange.getRequestCode() );
+		System.out.println(getName() + " | arg=" + arg + " from " + exchange.getRequestCode() );
 		lastMsg = arg;
  		changed();	// notify all CoAp observers		
     	/*
@@ -92,40 +92,65 @@ private String lastMsg    = "0"; //"msg(sonar,event,sonarOnRaspCoap,none,sonar(0
 		delete();
 		exchange.respond(DELETED);
 	}
-	
- 
-	
-	public static void main(String[] args) throws  Exception {
-		CoapApplServer.init();
-		String path      = "sonar/distance";
-		CoapResource dr  = new Distance("distance");
-		CoapApplServer.addCoapResource( dr, null );
-		CoapSupport support = new CoapSupport("coap://localhost:5683", path);
 
-		//new DistanceResourceObserver( "localhost", path) ;
-		
-		//support.updateResource("msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)");
-/* 
-		for( int i =1; i<=5; i++) {
-			support.updateResource(""+10*i);
-			Thread.sleep(1000);
-		}
-*/ 		
-		String v = support.readResource();
-		System.out.println("v=" + v);
-	 
-		 
-		String path1      = "sonar/values";
-		CoapResource dr1  = new Distance("values");
-		CoapApplServer.addCoapResource( dr1, null );
-		//CoapSupport support1 = new CoapSupport("coap://localhost:5683", path1);
-		String url =  "coap://localhost:5683/"+ path1;
-		CoapClient client = new CoapClient( url );
-		String v1 = client.get().getResponseText();
+
+	public static void testNaive(String uri ) throws  Exception {
+		CoapClient client      = new CoapClient( "coap://localhost:5683/"+ uri );
+		String v1              = client.get().getResponseText();
 		System.out.println("v1=" + v1);
-		 
-		
-		CoapApplServer.getResource("");
+
+		new DistanceResourceObserver( "localhost:5683", uri) ;
+
+		for( int i =1; i<=5; i++) {
+ 			String updateMsg  = ""+10*i;
+			//String updateMsg  = "msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)" ;
+			CoapResponse resp = client.put(updateMsg, MediaTypeRegistry.TEXT_PLAIN);
+			if( resp != null ) System.out.println("updateResource RESPONSE CODE: " + resp.getCode());
+			else System.out.println("updateResource FAILURE "  );
+			Thread.sleep(500);
+		}
+
+		System.out.println("current distance=" + client.get().getResponseText());
+
+	}
+
+	public static void testWithSupport( String resourceUri ) throws  Exception {
+		CoapSupport support    = new CoapSupport("coap://localhost:5683", resourceUri);
+		String vs              = support.readResource();
+		int    v               = Integer.parseInt(vs);
+		System.out.println("v=" + v);
+
+		support.observeResource( new DistanceHandlerWithRadarGui( ) );
+
+		Thread.sleep(1500);  //Give time of the DistanceHandlerWithRadarGui to start with RadarGui
+
+		for( int i =1; i<=5; i++) {
+			Thread.sleep(500);
+			String updateMsg  = "" + (v+5*i);
+			//String updateMsg  = "msg(sonar,event,sonarOnRaspCoap,none,sonar(10),1)" ;
+			support.updateResource(updateMsg);
+		}
+
+		support.removeObserve();
+ 	}
+		public static void main(String[] args) throws  Exception {
+		/*
+		Create the CoapApplServer
+		 */
+		CoapApplServer.init();
+
+		/*
+		Create distance as the resource of a sonar output-device
+		 */
+		CoapResource sonarDistance  = new CoapResource("sonar").add( new Distance("distance") );
+		CoapApplServer.addCoapResource( sonarDistance, "/devices/output"  );
+
+		String uri            = "devices/output/sonar/distance";
+
+
+		Distance.testNaive(uri);
+		Distance.testWithSupport(uri);
+
 	}
 
 }
