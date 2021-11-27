@@ -376,13 +376,72 @@ Ad esempio, con riferimento al ``Led``, l'*enabler* (che denominiamo ``LedServer
        led.turnOn()  oppure led.turnOff()
 
 L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare 
-un qualche prototcollo di comunicazione. Le scelte possibili sono oggi numerose:
+un qualche prototcollo di comunicazione. 
 
-- TCP
-- UDP 
-- HTTP
-- CoaP 
-- MQTT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TCPServer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per interagire via TCP con un componente software abbiamo bisogno di un client e di un server.
+
+Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
+(diciamo ``P``) ed attende messaggi  di connessione su ``P``.
+
+Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
+Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
+
+Questa connessione è rappresentata nella infrastruttura software che ci aggingiamo a definire da un oggetto di 
+classe ``TcpConnection`` che  implementa l'interfaccia  ``Interaction2021`` così definita:
+
+.. code::
+
+  interface Interaction2021  {	 
+    public void forward(  String msg ) throws Exception;
+    public String receiveMsg(  )  throws Exception;
+    public void close( )  throws Exception;
+  }
+
+Il metodo di invio è denominato ``forward`` per rendere più evidente il fatto che si tatta di una trasmissione 
+di tipo :blue:`fire-and-forget`.
+
+La classe ``TcpConnection`` implementa questa interfaccia  utilizzando la ``java.net.Socket``
+specificata nel costruttore, utilizzando opportuni Stream Java (forniti da ``java.io``) costruiti su take socket.
+ 
+Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
+il server può anche dover inviare messaggi ai client, quando  si richiede una interazione di tipo
+:blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
+
+Per agevolare la costruzione di componenti software capaci di agire sia come come emettitori sia come ricevitori di messaggi 
+su una connessione di tipo ``Interaction2021``, introduciamo alcune classi di supporto:
+
+- ``class TcpMessageHandler``:  oggetto dotato di un Thread interno che si occupa di
+  ricevere messaggi su una data connessione ``Interaction2021``, delegandone la gestione a un oggetto dato, di tipo 
+  ``ApplMessageHandler``.
+
+- ``class ApplMessageHandler``:  classe astratta che definisce il metodo abstract ``elaborate( String message )``
+  che opportune classi applicative devono implementare per realizzare la voluta  gestione dei messaggi. 
+  Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
+  utilizzare per l'invio di messaggi
+
+
+Queste classi servono per poter definire supporti capaci di realizzare un server e un client, delegando la logica
+applicativa ad opportuni oggetti definiti dall'application designer. 
+
+- ``class TcpEnabler``: realizza il server che apre una ``ServerSocket`` 
+  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
+  sulla  connessione stabilita attraverso la ``ServerSocket``.
+  Al momento della creazione, l'application designer specifica nel costruttore l'handler 
+  di tipo ``ApplMessageHandler`` per la gestione di messaggi a livello applicativo
+  che il server passa a una nuova istanza di ``TcpMessageHandler`` dopo avervi 'iniettato' la connessione.
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TCP Client
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+- ``class TcpClient``: realizza un client che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
+  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
+  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Enabler per ricezione
@@ -475,153 +534,6 @@ Un 'piano di testing' può spiegare meglio di molte parole il funzionamento dell
 astraendo dallo specifico protocollo.
 
 
-
-
-+++++++++++++++++++++++++++++++++++++++
-Approccio top-down
-+++++++++++++++++++++++++++++++++++++++
-Partiamo dalla architettura logica definita dall'analisi del problema.
-
-
-- Il ``Controller`` usa i disposiitivi mediante le loro interfacce (``ISonar``, ``ILed``, ``IRadarGui``) indipendentemente dal fatto
-  che essi siano locali o remoti.
-- Nel caso il sonar sia remoto, l'oggetto che implementa ``ISonar`` deve essere 'di tipo server', cioè un oggetto attivo 
-  che riceve i dati via rete e li rende disponibili al ``Controller`` con il metodo ``getVal()``.
-- Nel caso il led sia remoto, l'oggetto che implementa ``ILed`` deve essere 'di tipo client', cioè un oggetto   
-  che trasmette via rete i comandi (``turnOn``, ``turnOff``) del ``Controller`` .
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Adapter di tipo server: il caso del sonar
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-La classe astratta ``EnablerAsServer`` fattorizza le proprietà di tutti gli abilitatori 'di tipo server'. 
-
-.. code:: java
-  public abstract class EnablerAsServer extends ApplMessageHandler{
-      public EnablerAsServer(String name, int port) {
-        super(name);
-        //Invoca il metodo che inizializza il server e il supporto al protocollo da utilizzare
-        try {
-          setProtocolServer( port  );
-        } catch (Exception e) { System.out.println(name+" ERROR " + e.getMessage() ); } 			
-      }
-
-      public abstract void setProtocolServer( int port ) throws Exception; 
-	    @Override //from ApplMessageHandler
-      //Questo metodo deve essere definito dall'Application designer per gestire i messaggi ricevuti
-	    public abstract void elaborate(String message);
-  }
-
-Ad esempio, nel caso del sonar, definiamo un adapter che estende ``EnablerAsServer`` realizzando al contempo
-l'interfaccia ``ISonar``.
-
-Il metodo *setProtocolServer* deve attivare un server passandogli :blue:`this` in modo
-che il server possa invocare il metodo *elaborate* per ogni dato ricevuto.
-L'elaborazione del dato consiste nel renderlo disponibile al ``Controller`` che ha invocato una *getVal* bloccante.
-
-.. code:: java
-
-  public class SonarAdapterServer extends EnablerAsServer implements ISonar{
-    public SonarAdapterServer( String name, int port ) { ... }
-      @Override	//from EnablerAsServer
-      public void setProtocolServer( int port ) throws Exception{
-        //Attiva il server sulla port usando un certo protocollo (ad es. TCP)
-        //Alla ricezione dei dati del sonar, il server chiama il metodo elaborate
-      }	 
-
-      @Override  //from ApplMessageHandler
-      public void elaborate(String message) {
-        //Elabora il valore corrente del sonar ricevuto dal server
-        //rendendolo disponibile a chi ha invocato il metodo getVal di ISonar
-      }
-
-      //METODI DI ISonar 
-      @Override
-      public void activate(){ ... }
-      public void deactivate(){ ... }
-      public int getVal(){ ... }
-      public boolean isActive(){ ... }
-
-
-  }
-
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Adapter di tipo client: il caso del led
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
- 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-TCPEnabler
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Per interagire via TCP con un componente software abbiamo bisogno di un client e di un server.
-
-Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
-(diciamo ``P``) ed attende messaggi  di connessione su ``P``.
-
-Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
-Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
-
-Questa connessione è rapprentata nella infrastruttura software che ci aggingiamo a definire da un oggetto di 
-classe ``TcpConnection`` che  implementa l'interfaccia  ``Interaction2021`` così definita:
-
-.. code::
-
-  interface Interaction2021  {	 
-    public void forward(  String msg ) throws Exception;
-    public String receiveMsg(  )  throws Exception;
-    public void close( )  throws Exception;
-  }
-
-Il metodo di invio è denominato ``forward`` per rendere più evidente il fatto che si tatta di una trasmissione 
-di tipo :blue:`fire-and-forget`.
-
-La classe ``TcpConnection`` implementa questa interfaccia  utilizzando la ``java.net.Socket``
-specificata nel costruttore, utilizzando opportuni Stream Java (forniti da ``java.io``) costruiti su take socket.
- 
-Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
-il server può anche dover inviare messaggi ai client, quando  si richiede una interazione di tipo
-:blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
-
-Per agevolare la costruzione di componenti software capaci di agire sia come come emettitori sia come ricevitori di messaggi 
-su una connessione di tipo ``Interaction2021``, introduciamo alcune classi di supporto:
-
-- ``class TcpMessageHandler``:  oggetto dotato di un Thread interno che si occupa di
-  ricevere messaggi su una data connessione ``Interaction2021``, delegandone la gestione a un oggetto dato, di tipo 
-  ``ApplMessageHandler``.
-
-- ``class ApplMessageHandler``:  classe astratta che definisce il metodo abstract ``elaborate( String message )``
-  che opportune classi applicative devono implementare per realizzare la voluta  gestione dei messaggi. 
-  Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
-  utilizzare per l'invio di messaggi
-
-
-Queste classi servono per poter definire supporti capaci di realizzare un server e un client, delegando la logica
-applicativa ad opportuni oggetti definiti dall'application designer. 
-
-- ``class TcpEnabler``: realizza il server che apre una ``ServerSocket`` 
-  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
-  sulla  connessione stabilita attraverso la ``ServerSocket``.
-  Al momento della creazione, l'application designer specifica nel costruttore l'handler 
-  di tipo ``ApplMessageHandler`` per la gestione di messaggi a livello applicativo
-  che il server passa a una nuova istanza di ``TcpMessageHandler`` dopo avervi 'iniettato' la connessione.
- 
-- ``class TcpClient``: realizza un client che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
-  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
-  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
-
-
-  
-  
-
-
-
-
-  
-
 Definiamo dunque in Java due classi:
 
 .. La classe ``TcpEnabler`` abilita alla ricezione di connessioni TCP delegando all'``ApplMessageHandler`` ricevuto nel costruttore
@@ -641,12 +553,26 @@ Definiamo dunque in Java due classi:
 
   
 
---------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Deployment
---------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: 
 
   gradle build jar -x test
 
 Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contiene la directory bin  
+
+
+
++++++++++++++++++++++++++++++++++++++++
+Approccio top down
++++++++++++++++++++++++++++++++++++++++ 
+
+
+Si veda :doc:`ApproccioTopdown`.
+
+
+
+  
+

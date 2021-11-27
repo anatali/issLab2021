@@ -4,10 +4,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
-
 public class TcpServer {
-	
-	
+
 	public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
 		new Thread() {
 			public void run() {
