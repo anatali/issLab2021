@@ -16,7 +16,7 @@ private IRadarGui radar = null;
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
 			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
-		}else { //Controller locale (al Pc)
+		}else { //Controller locale (al PC)
 			//Input
 			sonar  = RadarSystemConfig.SonareRemote   
 					? new SonarAdapterServer("sonarAdapterServer", RadarSystemConfig.sonarPort) 

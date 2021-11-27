@@ -1,7 +1,6 @@
 package it.unibo.enablerCleanArch.adapters;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
-import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
 
@@ -19,13 +18,18 @@ private int curVal       = -1;
  	}
 
 	@Override	//from EnablerAsServer
- 	public void setProtocolServer(int port, ApplMessageHandler enabler) throws Exception{
+ 	public void setProtocolServer( int port ) throws Exception{
   		new TcpServer( name+"Server", port,  this );
  	}	
 	
 	public void deactivate() {}	 //from ISonar
 	public  void activate() {}   //from ISonar
 
+	@Override //from ISonar
+	public boolean isActive() {
+ 		return true;
+	}
+	
 	@Override  //from ISonar - called by the Controller
 	public int getVal() {  
 		waitForUpdatedVal();
@@ -47,7 +51,7 @@ private int curVal       = -1;
 
 	synchronized void setVal(int d){
 		curVal = d;
-		this.notify();
+		this.notify();	//activates callers of  waitForUpdatedVal
 	}
 	
 	private synchronized void waitForUpdatedVal() {
@@ -57,5 +61,7 @@ private int curVal       = -1;
 			e.printStackTrace();
 		}		
 	}
+
+
  
 }

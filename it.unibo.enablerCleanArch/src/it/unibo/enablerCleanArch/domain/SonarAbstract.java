@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+ 
 
 public abstract class SonarAbstract implements ISonar{
 	protected  static int curVal = 0;
@@ -18,18 +18,23 @@ public abstract class SonarAbstract implements ISonar{
 	protected abstract void sonarBehavior() ;
 
 	@Override
+	public boolean isActive() {
+		return ! stopped;
+	}
+	
+	@Override
 	public void activate() {
 		sonarSetUp();
 		//if( RadarSystemConfig.testing )  return;
 		
-		System.out.println("Sonar | STARTS");
+		System.out.println("		Sonar | STARTS");
 		stopped = false;
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
 					sonarBehavior();
 				}
-				System.out.println("Sonar | ENDS");
+				System.out.println("		Sonar | ENDS");
 		    }
 		}.start();
 	}

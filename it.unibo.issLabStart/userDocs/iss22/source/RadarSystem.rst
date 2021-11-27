@@ -45,7 +45,7 @@ Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
      - Si, viene reso disponibile il supporto  ``radarPojo.jar`` scritto in JAVA che fornisce un oggetto
        di classe ``radarSupport`` capace di creare una GUI in 'stile radar' e di visualizzare dati su di essa:
 
-       .. code::
+       .. code:: java
 
          public class radarSupport {
          private  static RadarControl radarControl;
@@ -242,7 +242,7 @@ che definisce operazioni attivabili con chiamate di procedura o come un
        -  il ``Sonar`` è un ente attivo che scrive dati su un dispositivo standard di output
        -  il ``Led`` è un oggetto  che implementa l'interfaccia
           
-          .. code::  
+          .. code::  java
 
              interface ILed {
                   void turnOn()
@@ -253,7 +253,7 @@ che definisce operazioni attivabili con chiamate di procedura o come un
  
 Se anche il ``RadarDisplay`` fosse sul RaspberryPi, il ``Controller`` potrebbe essere definito come segue:
 
-.. code::
+.. code:: java
 
   while True :
     d = Sonar.getVal()
@@ -317,7 +317,7 @@ funzionali attraverso opportune elaborazioni delle informazioni ricevute e trame
 
 Il ``Controller`` potrebbe essere ora definito come segue:
 
-.. code::
+.. code:: java
 
   while True :
     invia al Sonar la richiesta di un valore d 
@@ -361,7 +361,7 @@ metodi di un altro oggetto 'embedded' locale, costituito dal componente iniziale
 
 Ad esempio, con riferimento al ``Led``, l'*enabler* (che denominiamo ``LedServer``) dovrebbe comportarsi come segue:
 
-.. code::
+.. code:: java
 
   public interface ILed {
     public void turnOn();
@@ -391,7 +391,7 @@ Enabler per ricezione
 Si tratta di definire un server che l'application designer può specializzare 
 con riferimento a un preciso protocollo e a un metodo di elaborazione dei messaggi ricevuti.
 
-.. code::
+.. code:: java
 
   public abstract class EnablerAsServer extends ApplMessageHandler{
     public EnablerAsServer(String name, int port) {
@@ -410,7 +410,7 @@ utilizzare per l'invio di messaggi
 
 Un esempio di specializzazione relativo a Led :
 
-.. code::
+.. code:: java
 
   public class LedServer extends ApplMessageHandler  {
   ILed led = LedAbstract.createLedConcrete();
@@ -442,7 +442,7 @@ Un esempio di specializzazione relativo a Led :
 Enabler per trasmissione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-.. code::
+.. code:: java
 
   public abstract class EnablerAsClient {
   private Interaction2021 conn; 
@@ -480,10 +480,75 @@ astraendo dallo specifico protocollo.
 +++++++++++++++++++++++++++++++++++++++
 Approccio top-down
 +++++++++++++++++++++++++++++++++++++++
-Partiamo dalla architettura logica definita dall'analisi del problema e 
+Partiamo dalla architettura logica definita dall'analisi del problema.
+
+
+- Il ``Controller`` usa i disposiitivi mediante le loro interfacce (``ISonar``, ``ILed``, ``IRadarGui``) indipendentemente dal fatto
+  che essi siano locali o remoti.
+- Nel caso il sonar sia remoto, l'oggetto che implementa ``ISonar`` deve essere 'di tipo server', cioè un oggetto attivo 
+  che riceve i dati via rete e li rende disponibili al ``Controller`` con il metodo ``getVal()``.
+- Nel caso il led sia remoto, l'oggetto che implementa ``ILed`` deve essere 'di tipo client', cioè un oggetto   
+  che trasmette via rete i comandi (``turnOn``, ``turnOff``) del ``Controller`` .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Adapter di tipo server: il caso del sonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La classe astratta ``EnablerAsServer`` fattorizza le proprietà di tutti gli abilitatori 'di tipo server'. 
+
+.. code:: java
+  public abstract class EnablerAsServer extends ApplMessageHandler{
+      public EnablerAsServer(String name, int port) {
+        super(name);
+        //Invoca il metodo che inizializza il server e il supporto al protocollo da utilizzare
+        try {
+          setProtocolServer( port  );
+        } catch (Exception e) { System.out.println(name+" ERROR " + e.getMessage() ); } 			
+      }
+
+      public abstract void setProtocolServer( int port ) throws Exception; 
+	    @Override //from ApplMessageHandler
+      //Questo metodo deve essere definito dall'Application designer per gestire i messaggi ricevuti
+	    public abstract void elaborate(String message);
+  }
+
+Ad esempio, nel caso del sonar, definiamo un adapter che estende ``EnablerAsServer`` realizzando al contempo
+l'interfaccia ``ISonar``.
+
+Il metodo *setProtocolServer* deve attivare un server passandogli :blue:`this` in modo
+che il server possa invocare il metodo *elaborate* per ogni dato ricevuto.
+L'elaborazione del dato consiste nel renderlo disponibile al ``Controller`` che ha invocato una *getVal* bloccante.
+
+.. code:: java
+
+  public class SonarAdapterServer extends EnablerAsServer implements ISonar{
+    public SonarAdapterServer( String name, int port ) { ... }
+      @Override	//from EnablerAsServer
+      public void setProtocolServer( int port ) throws Exception{
+        //Attiva il server sulla port usando un certo protocollo (ad es. TCP)
+        //Alla ricezione dei dati del sonar, il server chiama il metodo elaborate
+      }	 
+
+      @Override  //from ApplMessageHandler
+      public void elaborate(String message) {
+        //Elabora il valore corrente del sonar ricevuto dal server
+        //rendendolo disponibile a chi ha invocato il metodo getVal di ISonar
+      }
+
+      //METODI DI ISonar 
+      @Override
+      public void activate(){ ... }
+      public void deactivate(){ ... }
+      public int getVal(){ ... }
+      public boolean isActive(){ ... }
+
+
+  }
 
  
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Adapter di tipo client: il caso del led
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
  
 
@@ -580,7 +645,7 @@ Definiamo dunque in Java due classi:
 Deployment
 --------------------------------------
 
-.. code::
+.. code:: 
 
   gradle build jar -x test
 

@@ -2,7 +2,6 @@ package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.LedAbstract;
-import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
  
@@ -16,7 +15,7 @@ ILed led = LedAbstract.createLedConcrete(); //Calls a factory method
 		super(name, port );
  	}	
 	@Override
- 	public void setProtocolServer(int port, ApplMessageHandler enabler) throws Exception{
+ 	public void setProtocolServer(int port ) throws Exception{
   		new TcpServer( name+"Server", port,  this );
  	}	
 	@Override		//from ApplMessageHandler
