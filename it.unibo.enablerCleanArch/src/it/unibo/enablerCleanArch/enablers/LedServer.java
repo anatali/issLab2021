@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.LedAbstract;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
  
@@ -10,9 +11,14 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  * Deve inviare messaggi TCP
  */
 public class LedServer extends EnablerAsServer  {
-ILed led = LedAbstract.createLedConcrete(); //Calls a factory method
+ILed led;
 	public LedServer( String name,  int port  )   {
 		super(name, port );
+		if( ! RadarSystemConfig.simulation) {
+			led = LedAbstract.createLedConcrete(); //Calls a factory method
+		}else {
+			led = LedAbstract.createLedMock();
+		}
  	}	
 	@Override
  	public void setProtocolServer(int port ) throws Exception{

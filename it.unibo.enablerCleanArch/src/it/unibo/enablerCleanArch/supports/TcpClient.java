@@ -11,7 +11,7 @@ public class TcpClient {
 				Interaction2021 conn    =  new TcpConnection( socket );
 				return conn;
 			}catch(Exception e) {
-				System.out.println("Another attempt to connect with host:" + host);
+				System.out.println("Another attempt to connect with host:" + host + " port=" + port);
 				Thread.sleep(500);
 			}
 		}//for

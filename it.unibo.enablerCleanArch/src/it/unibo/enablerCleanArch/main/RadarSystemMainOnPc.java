@@ -12,6 +12,7 @@ private ILed led        = null;
 private IRadarGui radar = null;
 
 	public void setup() throws Exception {			
+		RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
 		//Control
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
@@ -57,7 +58,6 @@ private IRadarGui radar = null;
 	
 	public static void main( String[] args) throws Exception {
 		RadarSystemMainOnPc sys = new RadarSystemMainOnPc();
-		RadarSystemConfig.setTheConfiguration(   );  //reads the file RadarSystemConfig.json
 		sys.setup();
 		sys.activateSonar();
 	}

@@ -2,6 +2,11 @@ package it.unibo.enablerCleanArch.enablers;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import it.unibo.enablerCleanArch.domain.ISonar;
+import it.unibo.enablerCleanArch.domain.SonarConcrete;
+import it.unibo.enablerCleanArch.domain.SonarMock;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
  
@@ -23,8 +28,10 @@ public class SonarClient extends EnablerAsClient{
 
 	protected void doWork() {
 		try {
-			Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
-	        BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+			if( ! RadarSystemConfig.simulation) {
+				/*
+				Process p             = Runtime.getRuntime().exec("sudo ./SonarAlone");
+		        BufferedReader reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
 			new Thread() {
 				public void run() {
 					try {
@@ -34,7 +41,18 @@ public class SonarClient extends EnablerAsClient{
 						goon = false;
 					}
 				}
-			}.start();
+			}.start();*/
+				ISonar sonar = new SonarConcrete();
+				sonar.activate();
+			}else {//devices simulated
+				ISonar sonar = new SonarMock();
+				sonar.activate();
+	 	        while( sonar.isActive() ){
+			        String data = ""+sonar.getVal();
+			        sendValueOnConnection(data);
+ 			   }//while  		
+			}
+
 		} catch (Exception e) {
 			System.out.println( "SonarClient |  SYSTEM ERROR " + e.getMessage());			 
 		}	  		

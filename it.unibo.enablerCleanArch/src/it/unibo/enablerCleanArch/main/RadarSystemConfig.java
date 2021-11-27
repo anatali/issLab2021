@@ -32,12 +32,15 @@ public class RadarSystemConfig {
 
 	public static boolean testing         = false;			
 
-	
 	public static void setTheConfiguration(  ) {
+		setTheConfiguration("../RadarSystemConfig.json");
+	}
+	
+	public static void setTheConfiguration( String resourceName ) {
 		FileInputStream fis = null;
- 		System.out.println("setTheConfiguration" ); 
+ 		System.out.println("setTheConfiguration " + resourceName ); 
  		try {
-			String resourceName = "../RadarSystemConfig.json";	
+			//String resourceName = "../RadarSystemConfig.json";	
 			//Nella distribuzione il file è in una dir che include la bin  
 			fis                 = new FileInputStream(new File(resourceName));
  		} catch (FileNotFoundException e) {
@@ -45,7 +48,7 @@ public class RadarSystemConfig {
 		}
 		try {
 			if(  fis == null ) {
-				 String resourceName = "./RadarSystemConfig.json";
+				 //String resourceName = "./RadarSystemConfig.json";
 				 fis = new FileInputStream(new File(resourceName));
 			}
 	        JSONTokener tokener = new JSONTokener(fis);

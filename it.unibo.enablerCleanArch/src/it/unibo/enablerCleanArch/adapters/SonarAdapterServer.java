@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.adapters;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.supports.TcpServer;
+import it.unibo.enablerCleanArch.supports.coap.CoapInputObserver;
  
 
 /*
@@ -19,7 +20,8 @@ private int curVal       = -1;
 
 	@Override	//from EnablerAsServer
  	public void setProtocolServer( int port ) throws Exception{
-  		new TcpServer( name+"Server", port,  this );
+  		//new TcpServer( name+"Server", port,  this );
+		new CoapInputObserver( name+"Server", port,  this );
  	}	
 	
 	public void deactivate() {}	 //from ISonar

@@ -7,6 +7,7 @@ private Runtime rt      = Runtime.getRuntime();
  
 	@Override
 	protected void ledSetUp() {
+		 System.out.println("LedConcrete | SETUPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP "  );
 		 turnOff();
 	}
 	
