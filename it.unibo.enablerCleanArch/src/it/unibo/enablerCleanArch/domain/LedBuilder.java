@@ -1,7 +1,13 @@
 package it.unibo.enablerCleanArch.domain;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public abstract class LedAbstract implements ILed{
+public abstract class LedBuilder implements ILed{
 	protected boolean state = false;	
+	
+	public static ILed create() {
+		if( RadarSystemConfig.simulation ) return createLedMock();
+		else return createLedConcrete();
+	}
 	
 	public static ILed createLedMock() {
 		return new LedMock();

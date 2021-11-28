@@ -1,11 +1,17 @@
 package it.unibo.enablerCleanArch.domain;
 
- 
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
 public abstract class SonarBuilder implements ISonar{
 	protected  static int curVal = 0;
 	protected boolean stopped    = false;
 	protected boolean produced   = false;
+	
+	public static ISonar create() {
+		if( RadarSystemConfig.simulation )  return createSonarMock();
+		else  return createSonarConcrete();
+		
+	}
 
 	public static ISonar createSonarMock() {
 		return new SonarMock();

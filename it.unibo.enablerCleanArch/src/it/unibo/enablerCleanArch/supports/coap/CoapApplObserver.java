@@ -1,8 +1,6 @@
 package it.unibo.enablerCleanArch.supports.coap;
-
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
-
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 
 public class CoapApplObserver implements CoapHandler{

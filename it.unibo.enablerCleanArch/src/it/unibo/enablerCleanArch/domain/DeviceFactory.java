@@ -7,9 +7,9 @@ public class DeviceFactory {
 	public static ILed createLed() {
 		System.out.println("DeviceFactory | createLed simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
-			return LedAbstract.createLedMock();
+			return LedBuilder.createLedMock();
 		}else {
-			return LedAbstract.createLedConcrete();
+			return LedBuilder.createLedConcrete();
 		}
 	}
 	

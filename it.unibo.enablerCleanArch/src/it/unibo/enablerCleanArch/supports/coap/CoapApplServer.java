@@ -35,7 +35,7 @@ public class CoapApplServer {
 			String curUri   = curRes.getURI();
 			//System.out.println("CoapApplServer | getResource curUri:"+curUri);
 			if( curUri.equals(uri) ){
-				System.out.println("CoapApplServer | getResource finds "+ curRes );
+				System.out.println("CoapApplServer | getResource finds "+ curRes + " for " + curUri);
 				return  curRes;
 			}
 		}

@@ -4,14 +4,18 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
 
+enum deviceType{
+	input, output
+}
 public abstract class CoapDeviceResource extends CoapResource {
 
-	public CoapDeviceResource(String name)  {
+	public CoapDeviceResource(String name, deviceType dtype)  {
 		super(name);
 		setObservable(true); 
  		CoapApplServer.init();
-		CoapApplServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
- 		LOGGER.info("CoapDeviceInputResource " + name + " | created  ");
+ 		if( dtype==deviceType.input ) CoapApplServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
+ 		else if( dtype==deviceType.output )  CoapApplServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
+ 		//LOGGER.info("CoapDeviceResource " + name + " | created  ");
 	}
  
  	

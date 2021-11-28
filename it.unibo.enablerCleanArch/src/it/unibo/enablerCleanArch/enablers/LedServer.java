@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.LedAbstract;
+import it.unibo.enablerCleanArch.domain.LedBuilder;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
@@ -15,9 +15,9 @@ ILed led;
 	public LedServer( String name,  int port  )   {
 		super(name, port );
 		if( ! RadarSystemConfig.simulation) {
-			led = LedAbstract.createLedConcrete(); //Calls a factory method
+			led = LedBuilder.createLedConcrete(); //Calls a factory method
 		}else {
-			led = LedAbstract.createLedMock();
+			led = LedBuilder.createLedMock();
 		}
  	}	
 	@Override

@@ -11,7 +11,7 @@
 "sonarPort"        : "8012",
 "controllerPort"   : "8016",
 "serverTimeOut"    : "600000",
-"applStartdelay"   : "5000",
+"applStartdelay"   : "3000",
 "sonarDelay"       : "100",
 "DLIMIT"           : "15",
 "testing"          : "false"

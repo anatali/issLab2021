@@ -12,9 +12,8 @@ private ISonar sonar;
 private String curVal = "-1";
 
 	public CoapSonarResource( String name  ) {  
-		super( name )  ;
-		if( RadarSystemConfig.simulation )  sonar = SonarBuilder.createSonarMock();
-		else sonar = SonarBuilder.createSonarConcrete();
+		super( name, deviceType.input )  ;
+		sonar = SonarBuilder.create();
 		getSonarValues();
 		System.out.println( getName() + " |  CREATED"   );	
  	}
@@ -46,7 +45,7 @@ private String curVal = "-1";
 		}
 		
 		protected void elaborateAndNotify(int arg) {
- 			//System.out.println( getName() + " |  elaborateAndNotify:" + arg  );		
+ 			System.out.println( getName() + " |  elaborateAndNotify:" + arg  );		
 			curVal= ""+arg;
 			changed();	// notify all CoAp observers
 		}

@@ -29,7 +29,8 @@ public class SonarMessageHandler extends ApplMessageHandler{
 			String distance = ((Struct) Term.createTerm(m.msgContent())).getArg(0).toString();
 			radar.update(distance, "0");
 		}catch( Exception e ){ //Otherwise we handle simple integers
-			radar.update(msg, "0");
+			if( msg.length() > 0 ) radar.update(msg, "0");
+			else System.out.println("showDataOnGui ERRORRRRRRRRRR: empty String");
 		}
 
 	}
