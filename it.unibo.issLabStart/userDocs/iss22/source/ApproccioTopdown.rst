@@ -19,10 +19,12 @@ Partiamo dalla architettura logica definita dall'analisi del problema.
   che trasmette via rete i comandi (``turnOn``, ``turnOff``) del ``Controller`` .
 
 
-
 --------------------------------------
+La problematica della interazione
+--------------------------------------
+++++++++++++++++++++++++++
 Tipi di protocollo
---------------------------------------
+++++++++++++++++++++++++++
 
 La interazione tra un cient e un server può avvenire utilizzando diversi tipi di protocollo, che possiamo
 diviedere in due categorie:
@@ -47,9 +49,9 @@ In questo modo:
 - si contribuisce alla definizione di un ``modello`` implementabile con linguaggi di programmazione diversi e quindi utilizzabile
   in diversi contesti applicativi.
 
---------------------------------------
+++++++++++++++++++++++++++
 Tipi di messaggio
---------------------------------------
+++++++++++++++++++++++++++
 
 I messaggi scambiati verranno logicamente suddivisi in tre categorie:
 
@@ -60,9 +62,9 @@ I messaggi scambiati verranno logicamente suddivisi in tre categorie:
   :blue:`response/reply` logicamente correlata alla richiesta;
 - :blue:`event`: un messaggio inviato a chiunque sia in grado di elaborarlo.
 
---------------------------------------
+++++++++++++++++++++++++++
 Interaction2021
---------------------------------------
+++++++++++++++++++++++++++
 
 Una connessione punto-a-punto sarà rappresentata da un oggetto che implements la seguente interfaccia, che permette di
 inviare/ricevere messaggi astraendo dallo specifico protocollo:
@@ -84,9 +86,9 @@ i linguaggi di programmazione.
 Non viene definito un tipo (Java)  ``Message`` perchè si vuole permettere la interazione tra client e server
 scritti in linguaggi diversi.
 
---------------------------------------
+++++++++++++++++++++++++++
 Messaggi di livello applicativo
---------------------------------------
+++++++++++++++++++++++++++
 
 Ovviamente componenti scritti in linguaggi diversi potrenno comprendersi solo condividendo il modo di
 interpretazione delle stringhe.
@@ -106,8 +108,12 @@ che rappresentano i messaggi di livello applicativo:
   - SEQNUM: numero di sequenza del messaggio
 
 --------------------------------------
-Adapter di tipo server  
+Architettura adapter-port
 --------------------------------------
+
+++++++++++++++++++++++++++
+Adapter di tipo server  
+++++++++++++++++++++++++++
 La classe astratta ``EnablerAsServer`` fattorizza le proprietà di tutti gli abilitatori 'di tipo server'. 
 
 .. code:: Java
@@ -146,9 +152,9 @@ Le istanze di questa classe ricevono per *injection* (col metodo ``setConn``)
 una connessione di tipo ``Interaction2021`` che l'application designer 
 potrà utilizzare  nel metodo *elaborate* per l'invio di messaggi *ack/reply*.
 
---------------------------------------
+++++++++++++++++++++++++++
 Adapter  di tipo client
---------------------------------------
+++++++++++++++++++++++++++
 
 La classe astratta ``EnablerAsClient`` fattorizza le proprietà di tutti gli abilitatori 'di tipo client'. 
   
@@ -177,9 +183,9 @@ La classe astratta ``EnablerAsClient`` fattorizza le proprietà di tutti gli abi
       }
   }  
 
---------------------------------------
+++++++++++++++++++++++++++
 Il caso del sonar
---------------------------------------
+++++++++++++++++++++++++++
 
 Ad esempio, nel caso del sonar, definiamo un adapter che estende ``EnablerAsServer`` realizzando al contempo
 l'interfaccia ``ISonar``.
@@ -214,10 +220,57 @@ L'elaborazione del dato consiste nel renderlo disponibile al ``Controller`` che 
 
  
 
---------------------------------------
+++++++++++++++++++++++++++
 Il caso del led
---------------------------------------
+++++++++++++++++++++++++++
 
 Ad esempio, nel caso del Led, definiamo un adapter che estende ``EnablerAsClient`` realizzando al contempo
 l'interfaccia ``ILed``.
 
+-------------------------------------------
+Dagli oggetti alle risorse
+-------------------------------------------
+
+- Gli oggetti passivi non hanno proprietà utili per la progettazione e costruzione di sistemi distributi.
+- L'uso dei protocolli di comunicazione e di oggetti 'attivi' con Thread permette di colmare la lacuna
+  (l'abstraction gap) ma richiede tempo e sposta l'attenzione del progettista su aspetti infrastrutturali,
+  distraendolo dalle problematiche applicative.
+- Lo sforzo di costruire infrastrutture di supporto alla comuncazione può essere ridotto
+  cercando di costruire elementi riusabili in più applicazioni o veri e propri :blue:`framework`.
+- Una volta comprese le problematiche ricorrenti, si può introdurre una nuova astrazione come elemento 
+  di riferimento per la organizzazione di sistemi distribuiti. Un primo esempio è il concetto di :blue:`risorsa RESTful`
+    (REpresentational State Transfer).
+
+.. http://personale.unimore.it/rubrica/contenutiad/mmamei/2020/55811/N0/N0/9999
+
+++++++++++++++++++++++++++
+Risorse CoAP
+++++++++++++++++++++++++++
+
+In questa sezione faremo riferimento al concetto di :blue:`CoapResource` che rappresenta un ente computazionale
+(logicamente attivo) cui è possibile inviare (utilizzando il protocollo  :blue:`CoAP`)  diversi tipi di richieste REST 
+cui corrispondono i seguenti metodi:
+
+- handleGET( ... )
+- handlePOST( ... )
+- handlePUT( ... )
+- handleDELETE( ... )
+
+
+Nella inplementazione *org.eclipse.californium.core* che useremo,
+ciascun metodo ha una implementazione di default che risponde con il codice :blue:`4.05 (Method Not Allowed)`.
+Inoltre ciascun metodo si presenta in due forme: 
+
+- con parametro :blue:`Exchange`: usato internamente da *californium*;
+- con parametro  :blue:`CoAPExchange`: usato dagli sviluppatori
+  perchè "*provides a save and user-friendlier API that can be used to respond to a request*".
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LedResource
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SonarResource
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+See ``CoapSonarResource`` for testing.

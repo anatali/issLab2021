@@ -6,26 +6,12 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
  
-
-/*
-class MyHandler implements CoapHandler {
-	public MyHandler ( ) {		 
-	}
-	@Override public void onLoad(CoapResponse response) {
-		String content = response.getResponseText();
-		System.out.println("MyHandler | NOTIFICATION: " + content);
- 	}					
-	@Override public void onError() {
-		System.err.println("MyHandler  |  FAILED (press enter to exit)");
-	}
-}
-*/
 public class CoapSupport {
 private CoapClient client;
 private CoapObserveRelation relation = null;
 
 	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
-		String url = address + "/"+ path;
+		String url = "coap://"+address + ":5683/"+ path;
 		client = new CoapClient( url );
 		System.out.println("CoapSupport | STARTS client url=" +  url ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 
@@ -51,9 +37,9 @@ private CoapObserveRelation relation = null;
 	}
 
 	public void updateResource( String msg ) throws  Exception {
-		System.out.println("	CoapSupport | updateResource msg: " + msg);
+		//System.out.println("	CoapSupport | updateResource msg: " + msg);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		System.out.println("	CoapSupport | updateResource resp: " + resp );
+		//System.out.println("	CoapSupport | updateResource resp: " + resp.getCode() );
 	}
 	
 	

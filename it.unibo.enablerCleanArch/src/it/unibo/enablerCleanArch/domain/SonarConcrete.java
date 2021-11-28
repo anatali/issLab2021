@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class SonarConcrete extends SonarAbstract implements ISonar{
+public class SonarConcrete extends SonarBuilder implements ISonar{
 	private int numData           = 5; 
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;

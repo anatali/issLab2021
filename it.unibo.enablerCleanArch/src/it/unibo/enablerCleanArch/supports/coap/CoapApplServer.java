@@ -45,7 +45,7 @@ public class CoapApplServer {
        	root.add( resource );
 	}
 	public static void addCoapResource( CoapResource resource, String fatherUri  )   {
-		Resource res = getResource(fatherUri);
+		Resource res = getResource("/"+fatherUri);
 		if( res != null ) res.add( resource );
 	}
 	public static void addOutputResource( CoapResource resource   )   {

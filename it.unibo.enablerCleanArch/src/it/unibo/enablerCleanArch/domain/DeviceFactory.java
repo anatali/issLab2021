@@ -16,9 +16,9 @@ public class DeviceFactory {
 	public static ISonar createSonar() {
 		System.out.println("DeviceFactory | createSonar simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
-			return SonarAbstract.createSonarMock();
+			return SonarBuilder.createSonarMock();
 		}else { 
-			return SonarAbstract.createSonarConcrete();
+			return SonarBuilder.createSonarConcrete();
 		}
 	}
 	

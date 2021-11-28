@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
  
 
-public abstract class SonarAbstract implements ISonar{
+public abstract class SonarBuilder implements ISonar{
 	protected  static int curVal = 0;
 	protected boolean stopped    = false;
 	protected boolean produced   = false;
@@ -38,9 +38,7 @@ public abstract class SonarAbstract implements ISonar{
 		    }
 		}.start();
 	}
-
-	
-	
+ 	
 	@Override
 	public void deactivate() {
 		stopped = true;

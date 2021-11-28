@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public class SonarMock extends SonarAbstract implements ISonar{
+public class SonarMock extends SonarBuilder implements ISonar{
   
 	@Override
 	protected void sonarSetUp() {
