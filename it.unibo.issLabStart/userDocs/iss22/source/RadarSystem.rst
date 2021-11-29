@@ -187,7 +187,7 @@ Quale 'collante'?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Seguendo il principio che la responsabilità di realizzare gli use-cases applicativi non deve essere attribuita
-al software di gestione dei disposivi di I/O, la nostra analisi ci induce a sostenere
+al software di gestione dei dispositivi di I/O, la nostra analisi ci induce a sostenere
 l'opportunità di introdurre un nuovo componente, che possiamo denominare ``Controller``), che abbia la
 :blue:`responabilità di realizzare la logica applicativa`.
 
@@ -231,7 +231,7 @@ In questa fase, possiamo diviedere i protocolli di comunicazioni più diffusi in
 - protocolli :blue:`punto-a-punto` che stabiliscono un *canale bidirezionale* tra compoenenti di solito
   denominati client e  server. Esempi di questo tipo sono ``UDP, TCP, HTTP, CoAP, Bluetooth``.
 - protocolli :blue:`publish-subscribe` che si avvalgono di un mediatore (broker) tra client e server. Esempio
-  di questo tipo di protocollo è sono ``MQTT`` che viene supportato da broker come ``Mosquitto e RabbitMQ``. 
+  di questo tipo di protocollo è ``MQTT`` che viene supportato da broker come ``Mosquitto e RabbitMQ``. 
 
 
 
@@ -240,13 +240,11 @@ Al momento abbiamo conoscenze che ci permettono di utilizzare protocolli come TC
 e siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
 
 Seguiamo dunque l'idea delle **comunicazioni dirette** facendo riferimento al protocollo TCP
-(più affidabile di UDP e base di HTTP) e passiamo a una fase di progettazione che
-renda i componenti del sistema capaci di trasmettere-ricevere messaggi con il protocollo
-TCP, che assume quindi il ruolo di 'collante' tra le parti.
+(più affidabile di UDP e base di HTTP)  che assume quindi il ruolo di 'collante' principale tra le parti.
 
-+++++++++++++++++++++++++++++++++++++
-Analisi delle interazioni con TCP
-+++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+Analisi delle interazioni (basate su TCP)
++++++++++++++++++++++++++++++++++++++++++++++++++
 A questo punto è necessario approfondire l'analisi delle problematiche che si pongono quando si voglia 
 far comunicare due componenti software con un protocollo di comunicazione punto-a-punto come TCP.
 Ovviamente in questa fase non ci interessano tanto i dettagli tecnici di come opera il protocollo,
@@ -279,18 +277,18 @@ risulta necessario dotarli della capacità di inviare e ricevere messaggi via re
 
 Questa necessità segnala un :blue:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
 
-Coma analisti, osserviamo anche dire che un *gap* relativo alle comunicazioni di rete si presenta in modo sistematico
-in tutti i sistemi distribuiti. Sarebbe dunque opportuno cercare di colmare questo *gap* in modo non episodico,
+Coma analisti, osserviamo anche che un *gap* relativo alle comunicazioni di rete **si presenta in modo sistematico
+in tutti i sistemi distribuiti**. Sarebbe dunque opportuno cercare di colmare questo *gap* in modo non episodico,
 introducendo :blue:`componenti riusabili` che possano 'sopravvivere' alla applicazione che stiamo costruendo
 per poter essere impiegati in futuro in altre applicazioni distribuite.
 
-Astraendo dallo specifico protocollo, osserviamo che tutti i protocolli punto-a-punto come TCP, UDP, Bluetoooth, etc.
+Astraendo dallo specifico protocollo, osserviamo che tutti i principali protocolli punto-a-punto 
 sono in grado di stabilire una :blue:`connessione` stabile sulla quale inviare e ricevere messaggi.
 
 Questo concetto può essere realizzato da un oggetto che rende disponibile opprtuni metodi, come quelli definiti
 nella seguente interfaccia:
 
-.. code::
+.. code:: Java
 
   interface Interaction2021  {	 
     public void forward(  String msg ) throws Exception;
@@ -299,13 +297,15 @@ nella seguente interfaccia:
   }
 
 Il metodo di trasmissione è denominato ``forward`` per rendere più evidente il fatto che pensiamo ad un modo di operare 
-:blue:`fire-and-forget`. La stringa restituita dal metodo ``receiveMsg`` può rappresentare una risposta a un messaggio
-inviato in precedenza con ``forward``.
+:blue:`fire-and-forget`. 
 
 L'informazione scambiata è rappresenta da una ``String`` che è un tipo di dato presente in tutti
 i linguaggi di programmazione.
 Non viene introdotto un tipo (non-primitivo) diverso (ad esempio ``Message``) perchè non si vuole staibilire 
 il vincolo che gli end-points della connessione siano componenti codificati nello medesimo linguaggio di programmazione
+
+La ``String`` restituita dal metodo ``receiveMsg`` può rappresentare una risposta a un messaggio
+inviato in precedenza con ``forward``.
 
 Ovviamente la definizione di questa interfaccia potrà essere estesa e modificata in futuro, ad esempio nella fase di
 progettazione, ma rappresenta una forte indicazione dell'analista di pensare alla costruzione di componenti
@@ -315,11 +315,140 @@ software che possano ridurre il costo delle applicazioni future.
 Progettazione
 --------------------------------------
 
+Iniziamo il nostro progetto definendo alcuni supporti di base per definire componenti lato client a lato server.
+Proseguiremo poi definendo componenti (dentominati genericamente :blue:`enabler`)  capaci di abilitare altri componenti alle comunicazioni con TCP 
 
 
-A tal fine possiamo impostare un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
++++++++++++++++++++++++++++++++++++++++++++++
+Supporti per TCP
++++++++++++++++++++++++++++++++++++++++++++++
+
+Introduciamo classi che permettano di istanziare oggetti di supporto lato client e lato server.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TCPClient
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mediante la classe ``TcpClient``: possiamo istanziare oggetti che stabilisccono una connessione 
+su un data coppia ``IP, Port``. L'oggetto ``Interaction2021`` restiruito dal metodo static 
+``connect`` potrà essere usato per inviare-ricevere messaggi.
+
+.. code:: Java
+
+  public class TcpClient {
+	 public static Interaction2021 connect(String host, int port ) throws Exception {
+   ...
+   }
+
+Alla semplicità del supporto lato client si contrappone una maggior complessità lato server, in quanto
+occorre:
+
+- permettere di stabilire (in generale) connenessioni con più client;
+- fare in modo che si stabilisca una diversa connessione con ciascun client;
+- fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
+  codice applicativo 
+
+Per raggoungere questi obiettivi, introduciamo un insieme di supporti che permettano al server di
+porre in esecuzione codice applicativo  rapprsentato da oggetti costruiti come specializzazioni
+di una classe astratta ``ApplMessageHandler``:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ApplMessageHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. code:: Java
+
+  public abstract class ApplMessageHandler {  
+    ...
+    public abstract void elaborate( String message ) ;
+    public void setConn( Interaction2021 conn) { ... }
+  }
+
+La classe astratta  ``ApplMessageHandler``:  definisce il metodo abstract ``elaborate( String message )``
+che le classi applicative devono implementare per realizzare la voluta  gestione dei messaggi.
+
+Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* 
+può utilizzare per l'invio di messaggi sulla connessione.
+Questa connessione sarà fornita ad ``ApplMessageHandler`` dai supporti di più basso livello che ora
+introdurremo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TcpConnection
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La classe ``TcpConnection`` costituisce una implementazione della interfaccia ``Interaction2021``
+e quindi realizza i metodi di supporto per la ricezione e la trasmissione di
+messaggi applicativi sulla connessione fornita da una ``Socket``.
+
+.. code:: Java
+
+  public class TcpConnection implements Interaction2021{
+    ...
+  public TcpConnection( Socket socket  ) throws Exception { ... }
+    @Override
+	  public void forward(String msg)  throws Exception { ... }
+    @Override
+	  public String receiveMsg()  { ... }
+    @Override
+	   public void close() { ... }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TcpMessageHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mediante la classe ``TcpMessageHandler`` possiamo creare un
+oggetto (dotato di un Thread interno) che si occupa di ricevere messaggi su una data connessione 
+``Interaction2021``, delegandone la gestione a un oggetto dato, di tipo  ``ApplMessageHandler``.
+
+.. code:: Java
+
+  public class TcpApplMessageHandler {
+  public TcpApplMessageHandler( ApplMessageHandler handler ) { ... }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TCP Server
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mediante la classe ``TcpServer`` possiamo istanziare oggetti che realizzano un server TCP che
+apre una ``ServerSocket`` e gesticse la richiesta di connessione da parte di un client
+creando un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client.
+
+.. code:: Java
+
+	public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
+		new Thread() {
+			public void run() {
+		      try {
+			    ServerSocket serversock = new ServerSocket( port );
+			    serversock.setSoTimeout( ... );
+				while( true ) {
+					//Accept a connection				 
+			 		Socket sock          = serversock.accept();	
+			 		Interaction2021 conn = new TcpConnection(sock);
+			 		applHandler.setConn(conn);
+			 		//Create a message handler on the connection
+			 		new TcpApplMessageHandler( applHandler );			 		
+				}//while
+			  }catch (Exception e) {	...   }	
+			}
+		}.start();
+	}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Unit testing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Esempio di uso
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+TODO
+
++++++++++++++++++++++++++++++++++++++++++++++
+Gli enablers
++++++++++++++++++++++++++++++++++++++++++++++
+
+un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
 capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
-metodi di un altro oggetto 'embedded' locale, costituito dal componente iniziale incapace di interagire via rete.
+metodi di un altro oggetto 'embedded' locale, incapace di interagire via rete.
 
 Ad esempio, con riferimento al ``Led``, il componente di base dovrebbe implementare una interfaccia ome quella che segue:
 
@@ -332,13 +461,14 @@ Ad esempio, con riferimento al ``Led``, il componente di base dovrebbe implement
   }
 
 
+
 L'*enabler* relativo al Led (che denominiamo ``LedServer``) dovrebbe comportarsi come segue:
 
 .. code:: java
 
   led : ILed 
   while True :
-    attendi un messaggio di comando per il Led
+    attendi un messaggio di comando per un Led
     analizza il contenuto del comando ed esegui  
        led.turnOn()  oppure led.turnOff()
 
@@ -393,12 +523,6 @@ applicativa ad opportuni oggetti definiti dall'application designer.
   di tipo ``ApplMessageHandler`` per la gestione di messaggi a livello applicativo
   che il server passa a una nuova istanza di ``TcpMessageHandler`` dopo avervi 'iniettato' la connessione.
  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-TCP Client
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-- ``class TcpClient``: realizza un client che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
-  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
-  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
 
 
 
@@ -512,9 +636,9 @@ Definiamo dunque in Java due classi:
 
   
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------
 Deployment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------
 
 .. code:: 
 
@@ -522,11 +646,15 @@ Deployment
 
 Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contiene la directory bin  
 
++++++++++++++++++++++++++++++++++++++++++
+Test funzionale
++++++++++++++++++++++++++++++++++++++++++
 
 
-+++++++++++++++++++++++++++++++++++++++
-Approccio top down
-+++++++++++++++++++++++++++++++++++++++ 
+
+-------------------------------------
+Un approccio top down
+-------------------------------------
 
 
 Si veda :doc:`ApproccioTopdown`.
