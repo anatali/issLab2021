@@ -45,7 +45,7 @@ private String curVal = "-1";
 		}
 		
 		protected void elaborateAndNotify(int arg) {
- 			System.out.println( getName() + " |  elaborateAndNotify:" + arg  );		
+ 			//System.out.println( getName() + " |  elaborateAndNotify:" + arg  );		
 			curVal= ""+arg;
 			changed();	// notify all CoAp observers
 		}

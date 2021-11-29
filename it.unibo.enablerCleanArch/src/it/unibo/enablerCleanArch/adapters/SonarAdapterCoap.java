@@ -7,6 +7,7 @@ import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 
 /*
  * Adapter Coap for the sonar
+ * PROLISSO: può fare tutto un observer
  */
  
 

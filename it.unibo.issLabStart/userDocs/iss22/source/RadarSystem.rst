@@ -1,16 +1,18 @@
-.. contents:: Overview
+affrontiama.. contents:: Overview
    :depth: 5
 .. role:: red 
 .. role:: blue 
 .. role:: remark
 
-.. `` 
+.. ``  https://bashtage.github.io/sphinx-material/rst-cheatsheet/rst-cheatsheet.html
 
 ======================================
 RadarSystem
 ======================================
-Tetendo conto dal nostro motto 
-:remark:`Non c’è codice senza progetto. Non c’è progetto senza analisi del problema. Non c’è problema senza requisiti`
+Tetendo conto dal nostro motto: 
+
+:remark:`non c’è codice senza progetto, progetto senza analisi del problema, problema senza requisiti`
+
 impostiamo un processo di produzione del software partendo da un insieme di requisiti.
 
 --------------------------------------
@@ -36,7 +38,7 @@ Analisi dei Requisiti
 Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
 
 .. list-table:: 
-   :widths: 40,60
+   :widths: 50,50
    :width: 100%
 
    * - Il LED può/deve essere connesso allo stesso RaspberryPi del sonar? 
@@ -47,14 +49,16 @@ Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
 
        .. code:: java
 
-         public class radarSupport {
-         private  static RadarControl radarControl;
-           public static void setUpRadarGui( ) {
-             radarControl = new RadarControl( null ); }
- 	        public static void update(String d,String theta){
-		       radarControl.update( d, theta );
-	        }
-         }    
+        public class radarSupport {
+        private static RadarControl rc;
+        public static void setUpRadarGui( ){
+          rc=...
+        }
+        public static void update(String d,
+                                  String dir){
+		      rc.update( d, dir );
+        }
+        }    
 
        Il supporto è realizzato dal progetto *it.unibo.java.radar*.
    * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
@@ -63,12 +67,13 @@ Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
  
 Dai requisiti possiamo asserire che:
 
-- si tratta di realizzare il software per un :blue:`sistema distribuito` costituito da due nodi di elaborazione:
-  un RaspbeddyPi e un PC convenzionale;
-- i due nodi di elaborazione devono potersi :blue:`scambiare informazione via rete`, usando supporti WIFI;
-- i due nodi di elaborazione devono essere 'programmati' usando :blue:`tecnologie software diverse`.
+- si tratta di realizzare il software per un **sistema distribuito** costituito da due nodi di elaborazione:
+  un RaspberryPi e un PC convenzionale;
+- i due nodi di elaborazione devono potersi  `scambiare informazione via rete`, usando supporti WIFI;
+- i due nodi di elaborazione devono essere 'programmati' usando **tecnologie software diverse**.
 
 In sintesi:
+
 
 :remark:`Si tratta di realizzare un sistema software distribuito ed eterogeno`
 
@@ -79,7 +84,7 @@ Piano di testing (funzionale)
 .. Requisito :blue:`ledAlarm`:
 
 Un test funzionale consiste nel porre un ostacolo davanti al Sonar
-prima a una distanza ``D > DLIMIT`` e poi a una distanza ``D < DLIMIT`` e osservare il valore
+prima a una distanza ``D>DLIMIT`` e poi a una distanza ``D<DLIMIT`` e osservare il valore
 visualizzato sulla GUI.
 
 Tuttavia questo modo di procedere non è automatizzabile, in quanto richiede 
@@ -90,39 +95,51 @@ da permettere :blue:`Test automatizzati`.
 Analisi del problema
 --------------------------------------
 
-Per analizzare le problematiche implicite nei requisiti, possiamo seguire due diversi approcci:
+Per analizzare le problematiche implicite nei requisiti, dobbiamo porre molta attenzione a non confondere 
+l'analisi **del problema** con l'analisi **di come pensiamo di risolvere** il problema.
 
-- approccio :blue:`bottom-up`: partiamo da quello che abbiamo a disposizione e 'assembliamo le parti dispoibili'
-  in modo da costruire un sistema che soddisfa i requisiti funzionali;
-- approccio :blue:`top-down`: partiamo analizzando le proprietà che il sistema deve 'logicamente' avere per soddisfare i  
-  requisiti funzionali senza legarci a priori ad alcun specifico componente e/o tecmologia.
+Due sono gli approcci principali possibili:
+
+- approccio :blue:`bottom-up`: partiamo da quello che abbiamo a disposizione e analizziamo i problemi che
+  sorgono per 'assemblare le parti disponibili' in modo da costruire un sistema che soddisfi i requisiti funzionali;
+- approccio :blue:`top-down`: partiamo analizzando le proprietà che il sistema deve 'logicamente' avere 
+  senza legarci a priori ad alcun specifico componente e/o tecnologia e poi evidenziamo le
+  problematiche che sorgono per soddisfare i requisiti funzionali e per utilizzare (se si pone il caso) 
+  componenti forniti dal committente o dalla nostra azienda e/o framework e infrastrutture disponibili sul mercato 
+  (con una evidente propensione  all'open-source e al free software).
 
 E' molto probabile che la maggior marte delle persone sia propensa a seguire (almeno inizialmente) un
-approccio bottom-up, essendo l'approccio top-down meno riconducibile a enti che sia possibile usare 
-concretamente come punto di partenza per 'sintetizzare una soluzione'. 
+approccio bottom-up, essendo l'approccio top-down meno legato a enti concretamente usabili come 
+'building blocks'. 
 
-Osserviamo però che :blue:`compito della analisi` non è quello di trovare una soluzione, ma quello di porre in luce 
-le problematiche poste dai requisiti (il :red:`cosa` si deve fare) e capire con quali risorse 
+Osserviamo però che il compito della analisi del problema non è quello di trovare subito una soluzione, 
+ma quello di porre in luce le problematiche in gioco (il :blue:`cosa` si deve fare) e capire con quali risorse 
 (tempo, persone, denaro, etc. )  queste problematiche debbano/possano essere affrontate e risolte.
-Sarà compito deo progettisti quello di trovare il modo (il :red:`come`) pervenore ad una soliuzione 'ottimale'
+Sarà compito deo progettisti quello di trovare il modo (il :blue:`come`) pervenore ad una soliuzione 'ottimale'
 date le risorse a disposizione.
+
+Anticipiamo subito che il nsotro approccio di riferimento sarà di tipo top-down, per motivi che si dovrebbero
+chirarire durante il percorso che cominciamo adesso seguendo, al momento, un tipico modo di procedere bottom-up.
+
+Sarà proprio rendendoci conto dei limiti di questo modo di procedere che acquisiremo (se non l'abbiamo già)
+il convicimento che conviene chiarire bene il :blue:`cosa` prima di affrontare il :blue:`come`.
 
 ++++++++++++++++++++++++++++++++++++++
 Un approccio bottom-up
 ++++++++++++++++++++++++++++++++++++++
 
-Il sistema pone le seguenti :blue:`problematiche`:
+La costruzione del sistema pone le seguenti :blue:`problematiche`:
 
 .. list-table::
-   :widths: 30,70
+   :widths: 40,60
    :width: 100%
 
    * - Gestione del sensore ``HC-SR04``.
      - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
        ``SonarAlone.c`` (progetto *it.unibo.rasp2021*)
-   * - Gestione del display  .
+   * - Realizzazione del ``RadarDisplay``.
      - A questo fine è disponibile il POJO realizzato da  ``radarPojo.jar`` 
-   * - Gestione del LED.
+   * - Gestione del Led.
      - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
        ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh``.
    * - Quale assemblaggio?
@@ -138,16 +155,26 @@ La necessità di integrare i componenti disponibili *fa sorgere altre problemati
       Oppure è meglio introdurre un terzo componente?
    #. quale forma di interazione è più opportuna? diretta/mediata, sincrona/asincrona?.
 
-Focalizzando l'attenzione sulla interazione *sonar-radar* possiamo rappresentare la situazione come segue:
+Focalizzando l'attenzione sul requisito :blue:`RadarGui` e quindi sulla interazione *sonar-radar* 
+(per il Led valgono considerazioni analoghe)
+possiamo rappresentare la situazione come segue:
 
 .. list-table::
-   :widths: 30,70
+   :widths: 40,60
    :width: 100%
 
-   *  - Comunicazione diretta:
+   *  - Comunicazione diretta
+        
+        Le nuovolette in figura rappresentano gli strati di software che dovrebbero permettere ai dati generati dal Sonar 
+        di raggiungere il ``RadarDisplay``.
+
       -   .. image:: ./_static/img/Radar/srrIntegrate1.png
             :width: 100%
-   *  - Comunicazione mediata:
+   *  - Comunicazione mediata
+
+        Il meditore potrebbe anche fungere da componente capace di realizzare la logica applicativa. 
+        Ma è giusto/opportuno procedere i questo modo?
+
       -   .. image:: ./_static/img/Radar/srrIntegrate2.png
             :width: 100%
 
@@ -155,11 +182,9 @@ Focalizzando l'attenzione sulla interazione *sonar-radar* possiamo rappresentare
 Quale 'collante'?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il meditore potrebbe anche fungere da componente capace di realizzare la logica applicativa. 
-Ma è giusto/opportuno procedere i questo modo?
-
-Seguendo un punto di vista logico e il principio :red:`xxx` possiamo sostenre, come analisti del problema,
-l'opportunità di introdurre un componente (``Controller``), diverso dai dispositivi, che abbia la
+Seguendo il principio che la responsabilità di realizzare gli use-cases applicativi non deve essere attribuita
+al software di gestione dei disposivi di I/O, la nostra analisi ci induce a sostenere
+l'opportunità di introdurre un nuovo componente, che possiamo denominare ``Controller``), che abbia la
 :blue:`responabilità di realizzare la logica applicativa`.
 
 Ma ecco sorgere un'altra problematica:
@@ -170,12 +195,11 @@ Ma ecco sorgere un'altra problematica:
  
    * - Distribuzione.
      - Il ``Controller`` deve ricevere in ingresso i dati del sensore ``HC-SR04``, elaborarli e  
-       inviare comendi al LED e dati alla RADAR-GUI.
+       inviare comendi al Led e dati al  ``RadarDisplay``.
        
-       Il ``Controller`` puo risiedere su RaspberryPi, sul PC o su un terzo nodo. 
-       
-       Un colloquio con il committente esclude (per motivi di costo) la possibilità di introdurre un terzo
-       nodo di elaborazione. 
+      Il ``Controller`` puo risiedere su RaspberryPi, sul PC o su un terzo nodo. 
+      Tuttavia, un colloquio con il committente ha escluso (per motivi di costo) la possibilità di introdurre un altro
+      nodo di elaborazione. 
 
 Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul RaspberryPi o sul PC.
 
@@ -191,150 +215,43 @@ Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul Rasp
        lasciando al Raspberry solo la responsabilità di gestire dispositivi. Inoltre ...
        
 
-++++++++++++++++++++++++++++++++++++++
-Un approccio top-down
-++++++++++++++++++++++++++++++++++++++
+Queste considerazioni ci inducono a riflettere sul tipo di architettura che scaturisce 
+da queste prime analisi del problema.
 
-Nell'impostare l'analisi del problema posto dai requisiti, partiamo ora considerando il sistema nel suo
-complesso e non dai singoli dispositivi (di input/output).
+Al momento abbiamo conoscenze che ci permettono di utilizzare protocolli come TCP/UDP e HTTP
+e siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
 
-Questo 'ribaltamento' di impostazione ci induce a focalizzare l'attenzione su tre dimensioni fondamentali:
+Seguiamo dunque l'idea delle **comunicazioni dirette** facendo riferimento al protocollo TCP
+(più affidabile di UDP e base di HTTP) e passiamo a una fase di progettazione che
+renda i componenti del sistema capaci di trasmettere-ricevere messaggi con il protocollo
+TCP, che assume quindi il ruolo di 'collante' tra le parti.
 
-- la :blue:`struttura` del sistema, cioè di quali parti è composto;
-- la :blue:`connessione/interazione` tra le parti del sistema in modo da formare un 'tutto' con precise proprietà
-  non (completamente) riducibili a quelle delle singole parti;
-- il :blue:`comportamento` (autonomo o indotto) di ogni singola parte in modo che siano assicurate le interazioni
-  volute.
++++++++++++++++++++++++++++++++++++++
+Analisi delle interazioni con TCP
++++++++++++++++++++++++++++++++++++++
+A questo punto è necessario approfondire l'analisi delle problematiche che si pongono quando si voglia 
+far comunicare due componenti software con un protocollo di comunicazione punto-a-punto come TCP.
+Ovviamente in questa fase non ci interessano tanto i dettagli tecnici di come opera il protocollo,
+quanto le ripercussioni dell'uso del protocollo sulla architettura del sistema.
 
-Un modo per considerare in modo unitario queste tre dimensioni è quello di impostare l':blue:`architettura`
-del sistema, cerando di dare risposta a un insieme di domande fondamentali:
+Le nostre conoscenze ci inducono a dire che nel sistema dovremo avere componenti capaci
+di operare come un client-TCP e componenti capacai di operare come un server-TCP.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Quali componenti?
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Quali componenti fanno sicuramente parte del sistema, considerando i requisiti? 
 
-.. list-table::
-   :width: 100%
+Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
+(diciamo ``P``) ed attende messaggi  di connessione su ``P``.
 
-   * - Il sistema deve possedere parti software capaci di gestire il :blue:`Sonar`, il :blue:`RadarDisplay` e il :blue:`Led`.
-       Questi componenti rappresentano dispositivi di input/ouput ovvero sensori ed attuatori. 
-       Ma un dispostivo di I/O non dovrebbe mai includere codice relativo alla logica applicativa.
-       
-       Dunque la nostra analisi ci induce a introdurre un altro componente, che denominiamo  :blue:`Controller`, 
-       con l'idea i dispositivi di I/O possano  essere riusati, senza varuazioni, per fomare molti sistemi diversi 
-       modificando in modo opportuno solo il ``Controller``.
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Oggetti o enti attivi?
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-Considerando (il software relativo a) ciascun componente, questo può/deve essere visto come un :blue:`oggetto` 
-che definisce operazioni attivabili con chiamate di procedura o come un 
-:blue:`ente attivo` capace di comportamento autonomo?
-
-.. list-table::
-   :width: 100%
-
-   * - Analizzando il software disponibile, possiamo dire che:
-     
-       -  il ``Sonar`` è un ente attivo che scrive dati su un dispositivo standard di output
-       -  il ``Led`` è un oggetto  che implementa l'interfaccia
-          
-          .. code::  java
-
-             interface ILed {
-                  void turnOn()
-                  void turnOff()
-                  boolean isOn()
-             }
-       -  il ``radarSupport`` è un oggetto singleton che può essere usato invocando il metodo ``update``
+Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
+Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
  
-Se anche il ``RadarDisplay`` fosse sul RaspberryPi, il ``Controller`` potrebbe essere definito come segue:
-
-.. code:: java
-
-  while True :
-    d = Sonar.getVal()
-    radarSupport.update( d,90 )       
-    if( d <  DLIMIT )  then Led.turnOn() else Led.TurnOff()
-
-Da un punto di vista logico, il ``Controller`` è un ente attivo 
-che può operare sul PC o sul RaspberryPi (un terzo nodo è escluso).
-
-- Nel caso il ``Controller`` operi sul PC, lo schema precedente non va più bene, 
-  perchè il ``Controller`` deve poter interagire via rete con il ``Sonar``e con il ``Led``.
-  Inoltre, il ``Sonar``e il ``Led`` devono essere :blue:`embedded` in qualche altro componente
-  capace di ricevere/trasmettere messaggi.
-
-- Nel caso il ``Controller`` operi sul RaspberryPi, lo schema precedente non va più bene, 
-  perchè il ``Controller``  deve poter interagire via rete con il ``RadarDisplay``. 
-  In questo caso il  ``RadarDisplay`` si presenta logicamente come un ente attivo capace di ricevere/trasmetter messaggi 
-  utilizzando poi ``radarSupport`` per visualizzare l'informazione ricevuta dal ``Controller``.
-  
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Quali interazioni?
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Come punto saliente della analisi condotta fino a questo punto possiamo affermare che:
-
-:remark:`Il problema ci induce a parlare di interazioni basate su messaggi.`
-
-.. list-table::
-   :width: 100%
-
-   * - Di fronte alla necessità di progettare e realizzare *sistemi software distribuiti*, 
-       la programmazione ad oggetti comincia a mostrare i suoi limiti 
-       e si richiede un :blue:`ampliamento dello spazio concettuale di riferimento`.
-
-       A questo riguardo, può essere opportuno affrontare il passaggio :blue:`dagli oggetti agli attori` come
-       passaggio preliminare per il passaggio *da sistemi concentrati a sistemi distribuiti*. 
-
-       Affronteremo più avanti questo passaggio, dopo avere cercato di realizzare il sistema impostando
-       ancora un sistema ad oggetti che utilizzano opportuni protocolli di comunicazione.
+Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
+il server può anche dover inviare messaggi ai client, quando  si richiede una interazione di tipo
+:blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
 
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Sincrone o asincrone?
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Dirette o mediate?
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Quali comportamenti?
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Il comportamento di ciascun componente ha ora l'obiettivo principale di :blue:`realizzare le interazioni` che
-permettono alle 'parti'  di agire in modo da formare un 'tutto' (il sistema) capace di soddifare i requisiti
-funzionali attraverso opportune elaborazioni delle informazioni ricevute e tramesse tra i componenti stessi.
-
-Il ``Controller`` potrebbe essere ora definito come segue:
-
-.. code:: java
-
-  while True :
-    invia al Sonar la richiesta di un valore d 
-    invia d al RadarDisplay in modo che lo visualizzi
-    if( d <  DLIMIT ) invia al Led un comando di accensione 
-    else invia al Led un comando di spegnimento
-
-Il comportamento dei disposivi è una conseguenza logica di questo.
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Message-driven o state-based?
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-
-++++++++++++++++++++++++++++++++++++++
-Quale architettura?
-++++++++++++++++++++++++++++++++++++++
 
 --------------------------------------
 Progettazione

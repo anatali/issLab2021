@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 /*
  * Adapter for an output device 
  */
-public class LedAdapterCoap   implements ILed {
+public class LedAdapterCoap implements ILed {
 private boolean ledStateMirror = false;
 //private CoapClient client;
 private CoapSupport cps;

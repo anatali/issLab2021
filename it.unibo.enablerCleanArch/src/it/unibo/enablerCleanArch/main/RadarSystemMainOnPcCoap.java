@@ -1,14 +1,10 @@
 package it.unibo.enablerCleanArch.main;
-
-import it.unibo.enablerCleanArch.adapters.LedAdapterClient;
 import it.unibo.enablerCleanArch.adapters.LedAdapterCoap;
 import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterCoap;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterServer;
+import it.unibo.enablerCleanArch.adapters.SonarAdapterCoapObserver;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
- 
 public class RadarSystemMainOnPcCoap {
 private ISonar sonar    = null;
 private ILed led        = null;
@@ -23,7 +19,7 @@ private IRadarGui radar = null;
 		}else { //Controller locale (al PC)
 			//Input
 			sonar  = RadarSystemConfig.SonareRemote   
-					? new SonarAdapterCoap("localhost", CoapApplServer.inputDeviceUri+"/sonar") 	//:5683 lo sa CoapSupport
+					? new SonarAdapterCoapObserver("localhost", CoapApplServer.inputDeviceUri+"/sonar") 	//:5683 lo sa CoapSupport
 					: DeviceFactory.createSonar();
 			//Output
 			led    = RadarSystemConfig.LedRemote   

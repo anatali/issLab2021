@@ -39,7 +39,7 @@ private CoapObserveRelation relation = null;
 	public void updateResource( String msg ) throws  Exception {
 		//System.out.println("	CoapSupport | updateResource msg: " + msg);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		//System.out.println("	CoapSupport | updateResource resp: " + resp.getCode() );
+		System.out.println("	CoapSupport | updateResource resp: " + resp.getCode() );
 	}
 	
 	

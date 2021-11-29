@@ -18,8 +18,10 @@ public class CoapLedResource extends CoapDeviceResource {
 
 	@Override
 	protected void elaboratePut(String req) {
-		if( req == "on") led.turnOn();
-		else if( req == "off") led.turnOff();		
+		//System.out.println( getName() + " |  before elaboratePut req:" + req + " led:" + led.getState()  );
+		if( req.equals( "on") ) led.turnOn();
+		else if( req.equals("off") ) led.turnOff();		
+		//System.out.println( getName() + " |  after elaboratePut :" + led.getState()  );
 	}  
 
 }
