@@ -1,4 +1,4 @@
-affrontiama.. contents:: Overview
+.. contents:: Overview
    :depth: 5
 .. role:: red 
 .. role:: blue 
@@ -160,24 +160,28 @@ Focalizzando l'attenzione sul requisito :blue:`RadarGui` e quindi sulla interazi
 possiamo rappresentare la situazione come segue:
 
 .. list-table::
-   :widths: 40,60
+   :widths: 50,50
    :width: 100%
 
-   *  - Comunicazione diretta
+   *  - :blue:`Comunicazione diretta`
         
-        Le nuovolette in figura rappresentano gli strati di software che dovrebbero permettere ai dati generati dal Sonar 
-        di raggiungere il ``RadarDisplay``.
+        Le 'nuovolette' in figura rappresentano gli strati di software che permettono ai dati generati dal Sonar 
+        di eseere ricevuti dal ``RadarDisplay``.
 
       -   .. image:: ./_static/img/Radar/srrIntegrate1.png
             :width: 100%
-   *  - Comunicazione mediata
+   *  - :blue:`Comunicazione mediata`
 
-        Il meditore potrebbe anche fungere da componente capace di realizzare la logica applicativa. 
-        Ma è giusto/opportuno procedere i questo modo?
+        Richiede la presenza di un :blue:`componente mediatore (broker)`, di solito realizzato da terze parti 
+        come servizio disponibile in rete. Un generatore di dati (come il Sonar) pubblica informazione  
+        su una :blue:`topic` del broker; tale informazione
+        che potrebbe essere ricevuta ('osservata') da uno o più ricevitori (come il RadarDisplay) che si iscrivono 
+        a quella *topic*.  
 
       -   .. image:: ./_static/img/Radar/srrIntegrate2.png
             :width: 100%
-
+          
+          TODO: Modificare la figura
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Quale 'collante'?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -187,24 +191,22 @@ al software di gestione dei disposivi di I/O, la nostra analisi ci induce a sost
 l'opportunità di introdurre un nuovo componente, che possiamo denominare ``Controller``), che abbia la
 :blue:`responabilità di realizzare la logica applicativa`.
 
-Ma ecco sorgere un'altra problematica:
+Ma ecco sorgere un'altra problematica legata alla distribuzione:
 
-.. list-table::
-   :widths: 40,60
-   :width: 100%
- 
-   * - Distribuzione.
-     - Il ``Controller`` deve ricevere in ingresso i dati del sensore ``HC-SR04``, elaborarli e  
-       inviare comendi al Led e dati al  ``RadarDisplay``.
+-  Il ``Controller`` deve ricevere in ingresso i dati del sensore ``HC-SR04``, elaborarli e  
+   inviare comandi al Led e dati al  ``RadarDisplay``.
        
-      Il ``Controller`` puo risiedere su RaspberryPi, sul PC o su un terzo nodo. 
-      Tuttavia, un colloquio con il committente ha escluso (per motivi di costo) la possibilità di introdurre un altro
-      nodo di elaborazione. 
+- Il ``Controller`` può risiedere su RaspberryPi, sul PC o su un terzo nodo. 
+  Tuttavia, un colloquio con il committente ha escluso (per motivi di costo) la possibilità di introdurre un altro
+  nodo di elaborazione. 
 
-Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul RaspberryPi o sul PC.
+- La presenza di un broker in forme di comunicazioni mediata  potrebbe indurci ad attribuire responsabiliotà
+  applicative al mediatore. Ma è giusto/opportuno procedere i questo modo?
+
+Dunque si tratta di analizzare dove sia meglio allocare il ``Controller`` :
 
 .. list-table::
-   :widths: 40,60
+   :widths: 30,70
    :width: 100%
 
    * - ``Controller`` sul RaspberryPi.
@@ -213,10 +215,26 @@ Dunque si tratta di analizzare se sia meglio allocare il ``Controller`` sul Rasp
    * - ``Controller`` sul PC.
      - Si avrebbe più facilità nel modificare la logica applicativa,
        lasciando al Raspberry solo la responsabilità di gestire dispositivi. Inoltre ...
-       
+   * - ``Controller`` sul broker.
+     - Al momento escludiamo questa possibilità, riservandoci di riprendere il problema quando esamineremo
+       architetture distribuite 'space-based'.
 
-Queste considerazioni ci inducono a riflettere sul tipo di architettura che scaturisce 
-da queste prime analisi del problema.
+Queste considerazioni ci inducono a riflettere sul :blue:`tipo di protocollo` da scegliere per le comunicazioni via rete
+e sul :blue:`tipo di architettura` che   scaturisce da questa scelta.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Tipi di protocollo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In questa fase, possiamo diviedere i protocolli di comunicazioni più diffusi in due macro-categorie:
+
+- protocolli :blue:`punto-a-punto` che stabiliscono un *canale bidirezionale* tra compoenenti di solito
+  denominati client e  server. Esempi di questo tipo sono ``UDP, TCP, HTTP, CoAP, Bluetooth``.
+- protocolli :blue:`publish-subscribe` che si avvalgono di un mediatore (broker) tra client e server. Esempio
+  di questo tipo di protocollo è sono ``MQTT`` che viene supportato da broker come ``Mosquitto e RabbitMQ``. 
+
+
+
 
 Al momento abbiamo conoscenze che ci permettono di utilizzare protocolli come TCP/UDP e HTTP
 e siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
@@ -234,49 +252,76 @@ far comunicare due componenti software con un protocollo di comunicazione punto-
 Ovviamente in questa fase non ci interessano tanto i dettagli tecnici di come opera il protocollo,
 quanto le ripercussioni dell'uso del protocollo sulla architettura del sistema.
 
-Le nostre conoscenze ci inducono a dire che nel sistema dovremo avere componenti capaci
-di operare come un client-TCP e componenti capacai di operare come un server-TCP.
+A questo riguardo possiamo dire che nel sistema dovremo avere componenti capaci
+di operare come un `client-TCP` e componenti capacai di operare come un `server-TCP`.
 
+.. list-table::
+  :widths: 15,85
+  :width: 100%
 
+  * - Server
+    - Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
+      (diciamo ``P``) ed attende messaggi  di connessione su ``P``.
 
-Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
-(diciamo ``P``) ed attende messaggi  di connessione su ``P``.
+  * - Client
+    - Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
+      Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
 
-Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
-Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
- 
 Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
-il server può anche dover inviare messaggi ai client, quando  si richiede una interazione di tipo
+il server può anche dover inviare messaggi ai client, ad esempio quando  si richiede una interazione di tipo
 :blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L'idea di connessione: l'interfaccia ``Interaction2021``
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L'analisi bottom-up sull'uso del protocollo TCP  ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
+risulta necessario dotarli della capacità di inviare e ricevere messaggi via rete.
 
+Questa necessità segnala un :blue:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
 
+Coma analisti, osserviamo anche dire che un *gap* relativo alle comunicazioni di rete si presenta in modo sistematico
+in tutti i sistemi distribuiti. Sarebbe dunque opportuno cercare di colmare questo *gap* in modo non episodico,
+introducendo :blue:`componenti riusabili` che possano 'sopravvivere' alla applicazione che stiamo costruendo
+per poter essere impiegati in futuro in altre applicazioni distribuite.
 
+Astraendo dallo specifico protocollo, osserviamo che tutti i protocolli punto-a-punto come TCP, UDP, Bluetoooth, etc.
+sono in grado di stabilire una :blue:`connessione` stabile sulla quale inviare e ricevere messaggi.
+
+Questo concetto può essere realizzato da un oggetto che rende disponibile opprtuni metodi, come quelli definiti
+nella seguente interfaccia:
+
+.. code::
+
+  interface Interaction2021  {	 
+    public void forward(  String msg ) throws Exception;
+    public String receiveMsg(  )  throws Exception;
+    public void close( )  throws Exception;
+  }
+
+Il metodo di trasmissione è denominato ``forward`` per rendere più evidente il fatto che pensiamo ad un modo di operare 
+:blue:`fire-and-forget`. La stringa restituita dal metodo ``receiveMsg`` può rappresentare una risposta a un messaggio
+inviato in precedenza con ``forward``.
+
+L'informazione scambiata è rappresenta da una ``String`` che è un tipo di dato presente in tutti
+i linguaggi di programmazione.
+Non viene introdotto un tipo (non-primitivo) diverso (ad esempio ``Message``) perchè non si vuole staibilire 
+il vincolo che gli end-points della connessione siano componenti codificati nello medesimo linguaggio di programmazione
+
+Ovviamente la definizione di questa interfaccia potrà essere estesa e modificata in futuro, ad esempio nella fase di
+progettazione, ma rappresenta una forte indicazione dell'analista di pensare alla costruzione di componenti
+software che possano ridurre il costo delle applicazioni future.
 
 --------------------------------------
 Progettazione
 --------------------------------------
 
-L'analisi ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
-e necessario dotare uno o più di essi della capacità di inviare e ricevere messaggi via rete.
 
-Questa necessità segnala un :blue:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
-Iniziamo dunque il nostro progetto cercando di colmare questo gap con la introduzione di un nuovo componente riusabile.
 
-Anche in questo caso possiamo seguire un approccio bottom-up oppure un approccio top-down.
-
-+++++++++++++++++++++++++++++++++++++++
-Approccio bottom-up
-+++++++++++++++++++++++++++++++++++++++
-
-Partiamo selezionando un protocollo di comunicazione (ad esempio TCP) e rendiamo i componenti del sistema
-capaci di trasmettere-ricevere messaggi con questo protocollo, che assume il ruolo di 'collante' tra le parti.
-
-A tal fine possaimo impostare un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
+A tal fine possiamo impostare un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
 capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
 metodi di un altro oggetto 'embedded' locale, costituito dal componente iniziale incapace di interagire via rete.
 
-Ad esempio, con riferimento al ``Led``, l'*enabler* (che denominiamo ``LedServer``) dovrebbe comportarsi come segue:
+Ad esempio, con riferimento al ``Led``, il componente di base dovrebbe implementare una interfaccia ome quella che segue:
 
 .. code:: java
 
@@ -286,26 +331,23 @@ Ad esempio, con riferimento al ``Led``, l'*enabler* (che denominiamo ``LedServer
     public boolean getState();
   }
 
+
+L'*enabler* relativo al Led (che denominiamo ``LedServer``) dovrebbe comportarsi come segue:
+
+.. code:: java
+
   led : ILed 
   while True :
-    attendi un messaggio di comando
+    attendi un messaggio di comando per il Led
     analizza il contenuto del comando ed esegui  
        led.turnOn()  oppure led.turnOff()
 
-L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare 
-un qualche prototcollo di comunicazione. 
+.. L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare  un qualche prototcollo di comunicazione. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++
 TCPServer
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++
 
-Per interagire via TCP con un componente software abbiamo bisogno di un client e di un server.
-
-Il server opera su un nodo con indirizzo IP noto (diciamo ``IPS``) , apre una ``ServerSocket`` su una  porta 
-(diciamo ``P``) ed attende messaggi  di connessione su ``P``.
-
-Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
-Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
 
 Questa connessione è rappresentata nella infrastruttura software che ci aggingiamo a definire da un oggetto di 
 classe ``TcpConnection`` che  implementa l'interfaccia  ``Interaction2021`` così definita:
