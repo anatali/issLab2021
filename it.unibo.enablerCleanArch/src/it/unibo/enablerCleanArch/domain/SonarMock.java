@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public class SonarMock extends SonarBuilder implements ISonar{
+public class SonarMock extends SonarModel implements ISonar{
   
 	@Override
 	protected void sonarSetUp() {
@@ -10,7 +10,7 @@ public class SonarMock extends SonarBuilder implements ISonar{
 	}
 	
 	@Override
-	protected void sonarBehavior() {
+	protected void sonarProduce() {
 		curVal--;
 		//System.out.println("SonarMock | curVal="+curVal);
 		if( curVal < 0 ) stopped = true;

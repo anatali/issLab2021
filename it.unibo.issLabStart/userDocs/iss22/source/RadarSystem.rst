@@ -233,14 +233,11 @@ In questa fase, possiamo diviedere i protocolli di comunicazioni più diffusi in
 - protocolli :blue:`publish-subscribe` che si avvalgono di un mediatore (broker) tra client e server. Esempio
   di questo tipo di protocollo è ``MQTT`` che viene supportato da broker come ``Mosquitto e RabbitMQ``. 
 
-
-
-
-Al momento abbiamo conoscenze che ci permettono di utilizzare protocolli come TCP/UDP e HTTP
-e siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
+Al momento dovremmo avere conoscenze su come usare protocolli quali TCP/UDP e HTTP
+ma siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
 
 Seguiamo dunque l'idea delle **comunicazioni dirette** facendo riferimento al protocollo TCP
-(più affidabile di UDP e base di HTTP)  che assume quindi il ruolo di 'collante' principale tra le parti.
+(più affidabile di UDP e supporto di base per HTTP)  che assume quindi il ruolo di 'collante' principale tra le parti.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
 Analisi delle interazioni (basate su TCP)
@@ -315,8 +312,217 @@ software che possano ridurre il costo delle applicazioni future.
 Progettazione
 --------------------------------------
 
-Iniziamo il nostro progetto definendo alcuni supporti di base per definire componenti lato client a lato server.
-Proseguiremo poi definendo componenti (dentominati genericamente :blue:`enabler`)  capaci di abilitare altri componenti alle comunicazioni con TCP 
+Iniziamo il nostro progetto con questo piano di lavoro:
+
+#. definizione dei componenti software legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
+#. definizione di alcuni supporti di base per componenti lato client a lato server;
+#. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare i componenti-base 
+  alle comunicazioni via rete (con TCP).
+
++++++++++++++++++++++++++++++++++++++++++++++
+Componenti per i dispositivi di I/O
++++++++++++++++++++++++++++++++++++++++++++++
+
+E' buona pratica impostare la definzione di un componente partendo dalla specifica delle funzionalità
+che esso offre.
+
+Per il ``RadarDisplay`` abbiamo già visto che è disponibile un oggetto singleton che fornisce due metodi:
+
+       .. code:: java
+
+        public class radarSupport {
+        private static RadarControl rc;
+        public static void setUpRadarGui( ){
+          rc=...
+        }
+        public static void update(String d,
+                                  String dir){
+		      rc.update( d, dir );
+        }
+        }   
+
+ 
+
+Per il Sonar e il Led, introduciamo le seguenti interfacce:
+
+.. list-table::
+  :widths: 50, 50
+  :width: 100%
+
+  * -  Sonar
+    -  Led
+   
+  * -  
+      
+       .. code:: java
+
+        public interface ISonar {
+          public void activate();		 
+          public void deactivate();
+          public int getVal();	
+          public boolean isActive();
+        }
+    -  
+       .. code:: java
+
+         public interface ILed {
+          public void turnOn();
+          public void turnOff();
+          public boolean getState();
+        }
+   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dispositivi, DeviceFactory e file di configurazione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per agevolare la messa a punto di una applicazione, conviene spesso introdurre Mock-objects, cioè
+dispositivi simulati che riproducono il comportamento degli oggetti reali in modo controllato.
+
+Inoltre, per facilitare la costruzione di dispositivi senza dover denotare in modo esplicito le classi
+di implementazione, conviene introdurre una factory:
+
+.. code:: java
+
+  public class DeviceFactory {
+    public static ILed createLed() { ... }
+    public static ISonar createSonar() { ... }
+    public static IRadarGui createRadarGui() {
+  }
+
+Ciasun metodo di ``DeviceFactory`` restitusce una istanza di dispositivo reale o Mock in accordo alle specifiche
+contenute in un file di Configurazione (``RadarSystemConfig.json``) scritto in JSon:
+
+.. code:: java
+
+  {
+  "simulation"       : "true",
+   ...
+  "DLIMIT"           : "15",
+  }
+
+Si noti che questo file contiene anche la specifica di ``DLIMIT`` come richiesto in fase di analisi dei requisiti.
+
+Questo file di configurazione viene letto dal metodo *setTheConfiguration* di un singleton Java ``RadarSystemConfig``
+che inizializza variabili static accessibili all'applicazione:
+
+.. code:: java
+
+  public class RadarSystemConfig {
+    public static boolean simulation = true;  //overridden by setTheConfiguration
+    ...
+    public static void setTheConfiguration( String resourceName ) { ... }
+
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dispositivi reali e Mock
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per essere certi che un dispositivo Mock possa essere un sostituto efficace di un dispositivo reale,
+introduciamo per ogni dispositivo una classe astratta comune alle due tipologie, che funga anche da factory.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il Led
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+.. code:: java
+
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il Sonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+La classe astratta introduce due metodi :blue:`abstract`,  uno per specificare il modo di inizializzare il sonar 
+(metodo ``sonarSetUp``) e uno per specificare il modo di produzione dei dati (metodo ``sonarProduce``).
+Inolttre definisce due metodi ``create`` che costitusicono factory-methods per un sonar Mock e un sonar reale.
+
+      
+.. code:: java
+
+  abstract class SonarModel implements ISonar{
+  protected  static int curVal = 0;     //valore corrente prodotto dal sonar
+  protected boolean stopped = false;    //quando true, il sonar si ferma
+
+    protected abstract void sonarSetUp() ;		 
+    protected abstract void sonarProduce() ;
+
+    @Override
+	  public void activate() {
+  		sonarSetUp();
+  		stopped = false;
+		  new Thread() {
+			  public void run() {
+				  while( ! stopped  ) { sonarProduce(); }
+		    }
+		  }.start();
+    }
+    @Override
+    public void deactivate() { stopped = true; }
+    @Override
+	  public int getVal() {
+    	waitForUpdatedVal();
+		  return curVal;
+    }
+    @Override
+	  public boolean isActive() { return ! stopped; }
+
+    //Factory ,methods
+    public static ISonar createSonarMock() { ... }
+    public static ISonar createSonarConcrete() { ... }
+    
+    //Metodi 
+    protected boolean produced   = false;   //synch var
+    private synchronized void waitForUpdatedVal() {
+     	while( ! produced ) wait();
+ 			produced = false;
+    }
+    protected synchronized void setVal( ){
+    		produced = true;
+		    notify();   //riattiva il Thread in attesa su getVal
+   }
+
+
+
+  }
+
+Un Sonar reale come quello indicato dal committente, è un dispositivo attivo, che produce in modo autonomo,
+con una certa frequenza, una sequenza di valori interi di distanza sul dispositivo standard di output.
+
+Un Mock-sonar deve quindi essere dotato di un Thread interno per la produzione di valori; 
+alla produzione di un nuovo valore di distanza deve aggiornare il valore corrente letto (``curVal``) 
+e riattivare l'eventuale Thread in attesa di esso su ``getVal``.
+
+
+Un sonar Mock che produce valori da ``90`` a ``0`` può quindi ora essere definito come segue:
+
+.. code:: java
+
+  public class SonarMock extends SonarModel implements ISonar{
+
+    @Override
+    protected void sonarSetUp() {  curVal = 90;		}
+    
+    @Override
+    protected void sonarBehavior() {
+      curVal--;
+      if( curVal < 0 ) stopped = true;
+      setVal(   );  //inherited
+      delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
+    }
+  
+  }
+
+Si noti che RadarSystemConfig.sonarDelay
+
+
+
+
+
+
+
+
+
 
 
 +++++++++++++++++++++++++++++++++++++++++++++

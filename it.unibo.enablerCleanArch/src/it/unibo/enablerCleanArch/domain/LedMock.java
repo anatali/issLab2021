@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
-public class LedMock extends LedBuilder implements ILed{
+public class LedMock extends LedModel implements ILed{
 
  
 	@Override

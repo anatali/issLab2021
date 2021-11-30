@@ -2,15 +2,14 @@ package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public abstract class SonarBuilder implements ISonar{
+public abstract class SonarModel implements ISonar{
 	protected  static int curVal = 0;
 	protected boolean stopped    = false;
 	protected boolean produced   = false;
 	
 	public static ISonar create() {
 		if( RadarSystemConfig.simulation )  return createSonarMock();
-		else  return createSonarConcrete();
-		
+		else  return createSonarConcrete();		
 	}
 
 	public static ISonar createSonarMock() {
@@ -21,7 +20,7 @@ public abstract class SonarBuilder implements ISonar{
 	}	
 	
 	protected abstract void sonarSetUp() ;
-	protected abstract void sonarBehavior() ;
+	protected abstract void sonarProduce() ;
 
 	@Override
 	public boolean isActive() {
@@ -38,7 +37,7 @@ public abstract class SonarBuilder implements ISonar{
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
-					sonarBehavior();
+					sonarProduce();
 				}
 				System.out.println("		Sonar | ENDS");
 		    }

@@ -3,7 +3,7 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.server.resources.Resource;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.domain.SonarBuilder;
+import it.unibo.enablerCleanArch.domain.SonarModel;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 
@@ -13,7 +13,7 @@ private String curVal = "-1";
 
 	public CoapSonarResource( String name  ) {  
 		super( name, deviceType.input )  ;
-		sonar = SonarBuilder.create();
+		sonar = SonarModel.create();
 		getSonarValues();
 		System.out.println( getName() + " |  CREATED"   );	
  	}

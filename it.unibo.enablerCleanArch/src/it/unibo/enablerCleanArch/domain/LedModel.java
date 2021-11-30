@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public abstract class LedBuilder implements ILed{
+public abstract class LedModel implements ILed{
 	protected boolean state = false;	
 	
 	public static ILed create() {

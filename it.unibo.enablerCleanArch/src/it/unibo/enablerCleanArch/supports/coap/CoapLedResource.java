@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.LedBuilder;
+import it.unibo.enablerCleanArch.domain.LedModel;
  
 
 public class CoapLedResource extends CoapDeviceResource {
@@ -8,7 +8,7 @@ public class CoapLedResource extends CoapDeviceResource {
 	
 	public CoapLedResource(String name) {
 		super(name,deviceType.output);
-		led = LedBuilder.create();
+		led = LedModel.create();
  	}
 
 	@Override

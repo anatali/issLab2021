@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
 import java.io.IOException;
 
-public class LedConcrete extends LedBuilder implements ILed{
+public class LedConcrete extends LedModel implements ILed{
 private Runtime rt      = Runtime.getRuntime();
  
 	@Override
