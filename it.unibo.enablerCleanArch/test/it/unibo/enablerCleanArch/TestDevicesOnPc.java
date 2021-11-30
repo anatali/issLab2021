@@ -26,9 +26,10 @@ private RadarSystemMainOnPc sys;
 			RadarSystemConfig.SonareRemote  	= false;    		
 			RadarSystemConfig.RadarGuieRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
+			
 			sys.setup();
 			//sys.dowork();   //the sonar does not start if RadarSystemConfig.testing
-			//delay(2000);
+			delay(1000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
  		}
@@ -40,6 +41,20 @@ private RadarSystemMainOnPc sys;
 	}	
 	
 	@Test 
+	public void testLed() {
+		System.out.println("testLed");
+		assertTrue( ! sys.getLed().getState() );
+		
+		sys.getLed().turnOn();
+		assertTrue(  sys.getLed().getState() );
+		
+		sys.getLed().turnOff();
+		assertTrue(  ! sys.getLed().getState() );
+		
+		delay(1000);
+	}	
+	
+	//@Test 
 	public void testDevices() {
 		System.out.println("testDevices");
 		assertTrue( ! sys.getLed().getState() );
@@ -49,15 +64,21 @@ private RadarSystemMainOnPc sys;
 		
 		sys.getLed().turnOff();
 		assertTrue(  ! sys.getLed().getState() );
-		
+/*		
 		ISonar sonar = sys.getSonar();
 		int simulatedTargetDistance = 15;
 		sys.oneShotSonarForTesting(simulatedTargetDistance);
 		int d = sonar.getVal();
 		System.out.println("sonar getVal=" + d);
 		assertTrue(  d == simulatedTargetDistance );
- 
+ */
 	}
 	
- 
+	private void delay( int dt ) {
+		try {
+			Thread.sleep(dt);
+		} catch (InterruptedException e) {
+				e.printStackTrace();
+		}		
+	}
 }

@@ -326,23 +326,6 @@ Componenti per i dispositivi di I/O
 E' buona pratica impostare la definzione di un componente partendo dalla specifica delle funzionalità
 che esso offre.
 
-Per il ``RadarDisplay`` abbiamo già visto che è disponibile un oggetto singleton che fornisce due metodi:
-
-       .. code:: java
-
-        public class radarSupport {
-        private static RadarControl rc;
-        public static void setUpRadarGui( ){
-          rc=...
-        }
-        public static void update(String d,
-                                  String dir){
-		      rc.update( d, dir );
-        }
-        }   
-
- 
-
 Per il Sonar e il Led, introduciamo le seguenti interfacce:
 
 .. list-table::
@@ -373,14 +356,14 @@ Per il Sonar e il Led, introduciamo le seguenti interfacce:
    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Dispositivi, DeviceFactory e file di configurazione
+Dispositivi reali e Mock, DeviceFactory e file di configurazione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Per agevolare la messa a punto di una applicazione, conviene spesso introdurre Mock-objects, cioè
-dispositivi simulati che riproducono il comportamento degli oggetti reali in modo controllato.
+dispositivi simulati che riproducono il comportamento dei dispositivi reali in modo controllato.
 
 Inoltre, per facilitare la costruzione di dispositivi senza dover denotare in modo esplicito le classi
-di implementazione, conviene introdurre una factory:
+di implementazione, conviene introdurre una Factory:
 
 .. code:: java
 
@@ -404,20 +387,23 @@ contenute in un file di Configurazione (``RadarSystemConfig.json``) scritto in J
 Si noti che questo file contiene anche la specifica di ``DLIMIT`` come richiesto in fase di analisi dei requisiti.
 
 Questo file di configurazione viene letto dal metodo *setTheConfiguration* di un singleton Java ``RadarSystemConfig``
-che inizializza variabili static accessibili all'applicazione:
+che inizializza variabili ``static`` accessibili all'applicazione:
 
-.. code:: java
+.. code::  java
 
   public class RadarSystemConfig {
     public static boolean simulation = true;  //overridden by setTheConfiguration
     ...
-    public static void setTheConfiguration( String resourceName ) { ... }
+    public static void setTheConfiguration( String resourceName ) { 
+      ... 
+      fis = new FileInputStream(new File(resourceName));
+	    JSONTokener tokener = new JSONTokener(fis);
+	    JSONObject object   = new JSONObject(tokener);
 
+      simulation = object.getBoolean("simulation");
+      ...
+    }
   }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Dispositivi reali e Mock
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Per essere certi che un dispositivo Mock possa essere un sostituto efficace di un dispositivo reale,
 introduciamo per ogni dispositivo una classe astratta comune alle due tipologie, che funga anche da factory.
@@ -425,17 +411,154 @@ introduciamo per ogni dispositivo una classe astratta comune alle due tipologie,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Led
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+Un Led è un dispositivo di output che può essere modellato e gestito in modo semplice.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+La classe astratta LedModel
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+La classe astratta relativa al Led introduce un metodo :blue:`abstract` denominato ``ledActivate``
+cui è demandata la responsabilità di accendere/spegnare il Led.
+
 .. code:: java
 
- 
+  public abstract class LedModel implements ILed{
+    private boolean state = false;	
+
+    //Factory methods    
+    public static ILed create() {
+      ILed led;
+      if( RadarSystemConfig.simulation ) led = createLedMock();
+      else led = createLedConcrete();
+      led.turnOff();      //Il led iniziale è spento
+    }
+    public static ILed createLedMock() { return new LedMock();  }
+    public static ILed createLedConcrete() { return new LedConcrete();     }	
+    
+    //Abstract methods
+    protected abstract void ledActivate( boolean val);
+    
+    protected void setState( boolean val ) { 
+      state = val; ledActivate( val ); 
+    }
+    @Override
+    public void turnOn(){ setState( true ); }
+    @Override
+    public void turnOff() { setState( false ); }
+    @Override
+    public boolean getState(){  return state;  }
+  }
+
+La variabile locale booleana ``state`` viene posta a ``true`` quando il led è acceso.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il LedMock
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+In pratica il LedModel è già un LedMock, in quanto tiene traccia dello stato corrente nella variabile
+``state``. 
+
+Tuttavia può essere opportuno ridefinrire ``ledActivate`` in modo da rendere visibile 
+sullo standard output lo stato del Led . 
+
+Una implementazione più user-friendly potrebbe 
+introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia acceso o spento.
+
+.. code:: java
+
+  public class LedMock extends LedModel implements ILed{
+    @Override
+    protected void ledActivate(boolean val) {	 showState(); }
+
+    protected void showState(){ System.out.println("LedMock state=" + getState() ); }
+  }
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il LedConcrete
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Il componente che realizza la gestione di un Led concreto, conesso a un RaspberryPi si può avvalere
+del software reso disponibile dal committente:
+
+.. code:: java
+
+  public class LedConcrete extends LedModel implements ILed{
+  private Runtime rt  = Runtime.getRuntime();    
+    @Override
+    protected void ledActivate(boolean val) {
+      try {
+        if( val ) rt.exec( "sudo bash led25GpioTurnOn.sh" );
+        else rt.exec( "sudo bash led25GpioTurnOff.sh" );
+      } catch (IOException e) { ... }
+    }
+  }
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Testing del dispositivo Led
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Un test automatizzato di tipo unit-testing sul Led può essere espresso usando JUnit come segue:
+
+.. code-block:: java
+
+  public class TestLed {
+    @Before
+    public void up(){ System.out.println("up");	}
+    @After
+    public void down(){ System.out.println("down"); }	
+    @Test 
+    public void testLedMock() {
+      RadarSystemConfig.simulation = true; 
+      
+      ILed led = DeviceFactory.createLed();
+      assertTrue( ! led.getState() );
+      
+      led.turnOn();
+      assertTrue(  led.getState() );
+      
+      led.turnOff();
+      assertTrue(  ! led.getState() );		
+    }	
+  }
+
+Un test sul LedConcrete ha la stessa struttura del test sul LedMock, ma bisogna avere l'avvertenza
+di eseguirlo sul RaspberryPi. Eseguendo il test sul PC non vengono segnalati errori (in quanto
+il Led 'funziona' da un punto di vista logico) ma compaiono messaggi del tipo:
+
+.. code-block::
+
+  LedConcrete | ERROR Cannot run program "sudo": ...  
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il Sonar
+Il Sonar 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-La classe astratta introduce due metodi :blue:`abstract`,  uno per specificare il modo di inizializzare il sonar 
+Un Sonar è un dispositivo di input che deve fornire dati quando richiesto dalla applicazione.
+
+Il software fornito dal committente per l'uso di un Sonar reale ``HC-SR04`` ci fornisce
+un componente attivo, che produce in modo autonomo,
+con una certa frequenza, una sequenza di valori interi di distanza sul dispositivo standard di output.
+
+La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo passivo
+(come un dispositivo di output) in quanto occorre affrontare un tipico problema produttore-consumatore.
+AL momento seguiremo un approccio tipico della programmazione concorrente basato su memoria comune
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+La classe astratta SonarModel
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+La classe astratta relativa al Sonar introduce due metodi :blue:`abstract`,  uno per specificare il modo di inizializzare il sonar 
 (metodo ``sonarSetUp``) e uno per specificare il modo di produzione dei dati (metodo ``sonarProduce``).
-Inolttre definisce due metodi ``create`` che costitusicono factory-methods per un sonar Mock e un sonar reale.
+Inoltre, estesa definisce due metodi ``create`` che costitusicono factory-methods per un sonar Mock e un sonar reale.
 
       
 .. code:: java
@@ -444,85 +567,150 @@ Inolttre definisce due metodi ``create`` che costitusicono factory-methods per u
   protected  static int curVal = 0;     //valore corrente prodotto dal sonar
   protected boolean stopped = false;    //quando true, il sonar si ferma
 
-    protected abstract void sonarSetUp() ;		 
-    protected abstract void sonarProduce() ;
+    //Factory methods
+    public static ISonar create() {
+		  if( RadarSystemConfig.simulation )  return createSonarMock(); 
+      else  return createSonarConcrete();		
+	  }
+    public static ISonar createSonarMock() { return new SonarMock(); }
+    public static ISonar createSonarConcrete() { return new SonarConcrete(); }
 
-    @Override
-	  public void activate() {
-  		sonarSetUp();
-  		stopped = false;
-		  new Thread() {
-			  public void run() {
-				  while( ! stopped  ) { sonarProduce(); }
-		    }
-		  }.start();
-    }
+
+Il Sonar viene modellato come un processo produttore di dati sulla variabile locale ``curVal``
+che risulta attivo quando la variabile locale ``stopped`` risulta ``true``. Di qui le seguenti
+definizioni:
+
+.. code:: java
+
     @Override
     public void deactivate() { stopped = true; }
     @Override
-	  public int getVal() {
-    	waitForUpdatedVal();
-		  return curVal;
-    }
-    @Override
 	  public boolean isActive() { return ! stopped; }
 
-    //Factory ,methods
-    public static ISonar createSonarMock() { ... }
-    public static ISonar createSonarConcrete() { ... }
-    
-    //Metodi 
+
+Il codice realativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
+che dovrà essere definito in modo diverso da un SonarMork e un SonarConcrete, così come il
+metodo di inizializzazione ``sonarSetUp``:
+
+.. code:: java
+
+    //Abstract methods
+    protected abstract void sonarSetUp() ;		 
+    protected abstract void sonarProduce() ;
+
+
+Con queste premesse, il metodo ``activate`` può essere impostato in modo da inizializzare il Sonar
+e attivare un Thread interno di produzione di dati:
+
+.. code:: java
+
+    @Override
+    public void activate() {
+      sonarSetUp();
+      stopped = false;
+      new Thread() {
+        public void run() {
+          while( ! stopped  ) { sonarProduce(); }
+        }
+      }.start();
+    }
+
+La parte applicativa che funge da consumatore dei dati prodotti dal Sonar dovrà invocare il metodo
+``getVal`` che viene definito in modo da bloccare il chiamante se il Sonar è in 'fase di produzione'
+riattivandolo non appena il dato è stato prodotto:  
+
+.. code:: java
+
     protected boolean produced   = false;   //synch var
+
+    @Override
+	  public int getVal() {   //non può essere qualificato synchronized perchè violerebbe l'interfaccia
+    	waitForUpdatedVal();
+		  return curVal;
+    }   
+    
     private synchronized void waitForUpdatedVal() {
      	while( ! produced ) wait();
  			produced = false;
     }
+
     protected synchronized void setVal( ){
     		produced = true;
 		    notify();   //riattiva il Thread in attesa su getVal
    }
-
-
-
   }
 
-Un Sonar reale come quello indicato dal committente, è un dispositivo attivo, che produce in modo autonomo,
-con una certa frequenza, una sequenza di valori interi di distanza sul dispositivo standard di output.
-
-Un Mock-sonar deve quindi essere dotato di un Thread interno per la produzione di valori; 
-alla produzione di un nuovo valore di distanza deve aggiornare il valore corrente letto (``curVal``) 
-e riattivare l'eventuale Thread in attesa di esso su ``getVal``.
 
 
-Un sonar Mock che produce valori da ``90`` a ``0`` può quindi ora essere definito come segue:
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il SonarMock
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Un Mock-sonar che produce valori da ``90`` a ``0`` può quindi ora essere definito come segue.
 
 .. code:: java
-
   public class SonarMock extends SonarModel implements ISonar{
-
     @Override
-    protected void sonarSetUp() {  curVal = 90;		}
-    
+    protected void sonarSetUp(){  curVal = 90;  }
     @Override
-    protected void sonarBehavior() {
+    protected void sonarProduce() {
       curVal--;
-      if( curVal < 0 ) stopped = true;
-      setVal(   );  //inherited
+      if( curVal == 0 ) stopped = true;
+      setVal(   );    //produce
       delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
     }
-  
-  }
+  }  
 
-Si noti che RadarSystemConfig.sonarDelay
+Si noti che RadarSystemConfig.sonarDelay ...
 
+.. alla produzione di un nuovo valore di distanza deve aggiornare il valore corrente letto (``curVal``)  e riattivare l'eventuale Thread in attesa di esso su ``getVal``.
 
-
-
-
+ 
 
 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il SonarConcrete
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Testing del dispositivo Sonar
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il RadarDisplay
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+Per il ``RadarDisplay`` abbiamo già visto che è disponibile un oggetto singleton che fornisce due metodi:
+
+       .. code:: java
+
+        public class radarSupport {
+        private static RadarControl rc;
+        public static void setUpRadarGui( ){
+          rc=...
+        }
+        public static void update(String d, String dir){
+          rc.update( d, dir );
+        }
+        }   
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Il sistema simulato su PC
++++++++++++++++++++++++++++++++++++++++++++++
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il Controller
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Testing del sistema simulato 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -648,9 +836,9 @@ Esempio di uso
 
 TODO
 
-+++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Gli enablers
-+++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
 capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
@@ -680,9 +868,9 @@ L'*enabler* relativo al Led (che denominiamo ``LedServer``) dovrebbe comportarsi
 
 .. L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare  un qualche prototcollo di comunicazione. 
 
-++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TCPServer
-++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 Questa connessione è rappresentata nella infrastruttura software che ci aggingiamo a definire da un oggetto di 
@@ -839,12 +1027,15 @@ Definiamo dunque in Java due classi:
   Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
 
  
++++++++++++++++++++++++++++++++++++++++++++++
+Il sistema distribuito
++++++++++++++++++++++++++++++++++++++++++++++
 
-  
+ 
 
--------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Deployment
--------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: 
 
@@ -852,9 +1043,9 @@ Deployment
 
 Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contiene la directory bin  
 
-+++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Test funzionale
-+++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 

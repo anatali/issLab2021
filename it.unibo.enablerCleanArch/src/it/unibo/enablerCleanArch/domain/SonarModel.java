@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 public abstract class SonarModel implements ISonar{
 	protected  static int curVal = 0;
 	protected boolean stopped    = false;
-	protected boolean produced   = false;
+	private boolean produced   = false;
 	
 	public static ISonar create() {
 		if( RadarSystemConfig.simulation )  return createSonarMock();

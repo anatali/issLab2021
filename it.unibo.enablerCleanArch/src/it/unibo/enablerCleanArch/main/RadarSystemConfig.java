@@ -3,8 +3,6 @@ package it.unibo.enablerCleanArch.main;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -38,7 +36,8 @@ public class RadarSystemConfig {
 	
 	public static void setTheConfiguration( String resourceName ) {
 		FileInputStream fis = null;
- 		System.out.println("setTheConfiguration " + resourceName ); 
+		/*
+ 		System.out.println("setTheConfiguration "  + resourceName); 
  		try {
 			//String resourceName = "../RadarSystemConfig.json";	
 			//Nella distribuzione il file è in una dir che include la bin  
@@ -46,10 +45,10 @@ public class RadarSystemConfig {
  		} catch (FileNotFoundException e) {
  			//System.out.println("setTheConfiguration configuration file not found yet" );
 		}
+		*/
 		try {
 			if(  fis == null ) {
-				 //String resourceName = "./RadarSystemConfig.json";
-				 fis = new FileInputStream(new File(resourceName));
+ 				 fis = new FileInputStream(new File(resourceName));
 			}
 	        JSONTokener tokener = new JSONTokener(fis);
 	        JSONObject object   = new JSONObject(tokener);

@@ -3,34 +3,15 @@ package it.unibo.enablerCleanArch.domain;
 import java.io.IOException;
 
 public class LedConcrete extends LedModel implements ILed{
-private Runtime rt      = Runtime.getRuntime();
- 
+private Runtime rt  = Runtime.getRuntime();
+ 	
 	@Override
-	protected void ledSetUp() {
-		 System.out.println("LedConcrete | SETUPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP "  );
-		 turnOff();
-	}
-	
-	@Override
-	public void turnOn(){
+	protected void ledActivate(boolean val) {
 		try {
-			super.turnOn();
-			rt.exec( "sudo bash led25GpioTurnOn.sh" );
+			if( val ) rt.exec( "sudo bash led25GpioTurnOn.sh" );
+			else rt.exec( "sudo bash led25GpioTurnOff.sh" );
 		} catch (IOException e) {
 			System.out.println("LedConcrete | ERROR " +  e.getMessage());
 		}
 	}
-	@Override
-	public void turnOff() {
-		try {
-			super.turnOff();
-			rt.exec( "sudo bash led25GpioTurnOff.sh" );
-		} catch (IOException e) {
-			System.out.println("LedConcrete | ERROR " +  e.getMessage());
-		}
-	}
- 
-
-
-
 }

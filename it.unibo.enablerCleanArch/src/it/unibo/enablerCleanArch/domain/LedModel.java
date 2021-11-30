@@ -2,11 +2,14 @@ package it.unibo.enablerCleanArch.domain;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
 public abstract class LedModel implements ILed{
-	protected boolean state = false;	
+	private boolean state = false;	
 	
 	public static ILed create() {
-		if( RadarSystemConfig.simulation ) return createLedMock();
-		else return createLedConcrete();
+		ILed led ; 
+		if( RadarSystemConfig.simulation ) led = createLedMock();
+		else led = createLedConcrete();
+		led.turnOff();		//initial state
+		return led;
 	}
 	
 	public static ILed createLedMock() {
@@ -16,25 +19,24 @@ public abstract class LedModel implements ILed{
 		return new LedConcrete();
 	}	
 	
-	protected abstract void ledSetUp() ;
+	protected abstract void ledActivate( boolean val);
 	
-	
+	protected void setState( boolean val ) {
+		state = val;
+		ledActivate( val );
+	}
+		
 	@Override
 	public void turnOn(){
-		state = true;
-		showState();
+		setState( true );
 	}
 	@Override
 	public void turnOff() {
-		state = false;
-		showState();
+		setState(  false );		
 	}
 	@Override
 	public boolean getState(){
 		return state;
 	}
-
-	private void showState(){
-		System.out.println("Led state=" + state);
-	}	
+	
 }
