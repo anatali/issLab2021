@@ -78,12 +78,6 @@ public abstract class SonarModel implements ISonar{
 		}		
 	}
 
-	//ADDED for testing
-	//-------------------------------------------------
-	
-	public void oneShot( int d ) {
-		curVal = d;
-		setVal();
-	}	
+ 
 	
 }

@@ -24,7 +24,7 @@ Si desidera costruire un'applicazione software capace di:
 - (requisito :blue:`radarGui`) mostrare le distanze rilevate da un sensore ``HC-SR04`` connesso a un RaspberryPi 
   su un display (``RadarDisplay``) a forma di radar connesso a un PC
   
-.. image:: ./_static/img/Radar/radarDisplay.png
+.. image:: ./_static/img/Radar/radarDisplay.png 
    :align: center
    :width: 20%
    
@@ -75,7 +75,7 @@ Dai requisiti possiamo asserire che:
 In sintesi:
 
 
-:remark:`Si tratta di realizzare un sistema software distribuito ed eterogeno`
+:remark:`Si tratta di realizzare un sistema software distribuito ed eterogeneo`
 
 +++++++++++++++++++++++++++++++++++++
 Piano di testing (funzionale)
@@ -102,27 +102,29 @@ Due sono gli approcci principali possibili:
 
 - approccio :blue:`bottom-up`: partiamo da quello che abbiamo a disposizione e analizziamo i problemi che
   sorgono per 'assemblare le parti disponibili' in modo da costruire un sistema che soddisfi i requisiti funzionali;
-- approccio :blue:`top-down`: partiamo analizzando le proprietà che il sistema deve 'logicamente' avere 
-  senza legarci a priori ad alcun specifico componente e/o tecnologia e poi evidenziamo le
-  problematiche che sorgono per soddisfare i requisiti funzionali e per utilizzare (se si pone il caso) 
-  componenti forniti dal committente o dalla nostra azienda e/o framework e infrastrutture disponibili sul mercato 
-  (con una evidente propensione  all'open-source e al free software).
+- approccio :blue:`top-down`: partiamo analizzando le proprietà che il sistema deve 'logicamente' avere,
+  senza legarci a priori ad alcun specifico componente e/o tecnologia. Successivamente, evidenziamo le
+  problematiche che sorgono sia per soddisfare i requisiti funzionali sia per utilizzare (se si pone il caso) 
+  componenti forniti dal committente o dalla nostra azienda, considerndo anche framework e infrastrutture 
+  disponibili sul mercato (con una evidente propensione  all'open-source e al free software).
 
 E' molto probabile che la maggior marte delle persone sia propensa a seguire (almeno inizialmente) un
-approccio bottom-up, essendo l'approccio top-down meno legato a enti concretamente usabili come 
+approccio bottom-up, essendo l'approccio top-down meno legato a enti subito concretamente usabili come 
 'building blocks'. 
 
-Osserviamo però che il compito della analisi del problema non è quello di trovare subito una soluzione, 
+Osserviamo però che il compito della analisi del problema non è quello di trovare una soluzione, 
 ma quello di porre in luce le problematiche in gioco (il :blue:`cosa` si deve fare) e capire con quali risorse 
 (tempo, persone, denaro, etc. )  queste problematiche debbano/possano essere affrontate e risolte.
-Sarà compito deo progettisti quello di trovare il modo (il :blue:`come`) pervenore ad una soliuzione 'ottimale'
-date le risorse a disposizione.
+Sarà compito dei progettisti quello di trovare il modo (il :blue:`come`) pervenire ad una soluzione 'ottimale'
+date le premesse dell'analisi e le risorse a disposizione.
 
-Anticipiamo subito che il nsotro approccio di riferimento sarà di tipo top-down, per motivi che si dovrebbero
-chirarire durante il percorso che cominciamo adesso seguendo, al momento, un tipico modo di procedere bottom-up.
+Anticipiamo subito che il nostro approccio di riferimento sarà di tipo top-down, per motivi che si dovrebbero
+rusulara chiari durante il percorso che cominciamo adesso seguendo, al momento, un tipico modo di procedere bottom-up.
 
-Sarà proprio rendendoci conto dei limiti di questo modo di procedere che acquisiremo (se non l'abbiamo già)
-il convicimento che conviene chiarire bene il :blue:`cosa` prima di affrontare il :blue:`come`.
+Sarà proprio rendendoci conto dei limiti di approcci bottom-up che acquisiremo (se non l'abbiamo già)
+il convincimento che conviene chiarire bene il :blue:`cosa` prima di affrontare il :blue:`come` e che anche
+il *come* può essere convenientemente affrontato ritardando o incapsulando il più possibile dettagli legati 
+alle tecnologie utilizzate.
 
 ++++++++++++++++++++++++++++++++++++++
 Un approccio bottom-up
@@ -145,6 +147,7 @@ La costruzione del sistema pone le seguenti :blue:`problematiche`:
    * - Quale assemblaggio?
      - .. image:: ./_static/img/Radar/RobotSonarStarting.png
             :width: 100%
+
        Occorre capire come i dati del sonar generati sul Raspberry possano raggiungere il PC ed essere usati per
        aggiornare la ``RadarGui`` e per accendere/spegnere il ``Led``.
 
@@ -317,7 +320,7 @@ Iniziamo il nostro progetto con questo piano di lavoro:
 #. definizione dei componenti software legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
 #. definizione di alcuni supporti di base per componenti lato client a lato server;
 #. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare i componenti-base 
-  alle comunicazioni via rete (con TCP).
+   alle comunicazioni via rete (con TCP).
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Componenti per i dispositivi di I/O
@@ -381,7 +384,7 @@ contenute in un file di Configurazione (``RadarSystemConfig.json``) scritto in J
   {
   "simulation"       : "true",
    ...
-  "DLIMIT"           : "15",
+  "DLIMIT"           : "15"
   }
 
 Si noti che questo file contiene anche la specifica di ``DLIMIT`` come richiesto in fase di analisi dei requisiti.
@@ -479,7 +482,7 @@ introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia 
 Il LedConcrete
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il componente che realizza la gestione di un Led concreto, conesso a un RaspberryPi si può avvalere
+Il componente che realizza la gestione di un Led concreto, conesso a un RaspberryPi, si può avvalere
 del software reso disponibile dal committente:
 
 .. code:: java
@@ -624,30 +627,28 @@ riattivandolo non appena il dato è stato prodotto:
     protected boolean produced   = false;   //synch var
 
     @Override
-	  public int getVal() {   //non può essere qualificato synchronized perchè violerebbe l'interfaccia
-    	waitForUpdatedVal();
-		  return curVal;
-    }   
-    
+    public int getVal() {   //non synchronized perchè violerebbe l'interfaccia
+      waitForUpdatedVal();
+      return curVal;
+    }       
     private synchronized void waitForUpdatedVal() {
-     	while( ! produced ) wait();
- 			produced = false;
+      while( ! produced ) wait();
+      produced = false;
     }
-
     protected synchronized void setVal( ){
-    		produced = true;
-		    notify();   //riattiva il Thread in attesa su getVal
-   }
+      produced = true;
+      notify();   //riattiva il Thread in attesa su getVal
+    }
   }
-
 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il SonarMock
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Un Mock-sonar che produce valori da ``90`` a ``0`` può quindi ora essere definito come segue.
+Un Mock-sonar che produce valori da ``90`` a ``0`` può quindi ora essere definito come segue:
 
 .. code:: java
+
   public class SonarMock extends SonarModel implements ISonar{
     @Override
     protected void sonarSetUp(){  curVal = 90;  }
@@ -656,13 +657,22 @@ Un Mock-sonar che produce valori da ``90`` a ``0`` può quindi ora essere defini
       curVal--;
       if( curVal == 0 ) stopped = true;
       setVal(   );    //produce
-      delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
+      delay(RadarSystemConfig.sonarDelay);  //rallenta il rate di generazione 
     }
   }  
 
-Si noti che RadarSystemConfig.sonarDelay ...
+Si noti che viene definito un nuovo parametro di configurazioe ``sonarDelay`` relativo al rallentamento
+della frequenza di generazione dei dati.
 
-.. alla produzione di un nuovo valore di distanza deve aggiornare il valore corrente letto (``curVal``)  e riattivare l'eventuale Thread in attesa di esso su ``getVal``.
+.. code:: java
+
+  {
+  "simulation"       : "true",
+   ...
+  "DLIMIT"           : "15",
+  sonarDelay         : "100"
+  }
+
 
  
 
@@ -671,10 +681,82 @@ Si noti che RadarSystemConfig.sonarDelay ...
 Il SonarConcrete
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+Il componente che realizza la gestione di un Sonar concreto, conesso a un RaspberryPi,
+si può avvalere del programma ``SonarAlone.c`` fornito dal committente;
+per ridurre la frequenza di produzione, il metodo ereditato ``setVal``, che sblocca un
+consumatore di livello  applicativo, viene invocato ogni  ``numData`` 
+valori emessi sul dispositivo standard di output.
+
+
+.. code:: java
+
+  public class SonarConcrete extends SonarModel implements ISonar{
+  private int numData           = 5; 
+  private int dataCounter       = 1;
+  private  BufferedReader reader ;
+	
+  @Override
+  protected void sonarSetUp() {
+    curVal = 0;		
+    try {
+      Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
+      reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+    }catch( Exception e) { ... 	}
+  }
+  protected void sonarProduce() {
+    try {
+      String data = reader.readLine();
+      dataCounter++;
+      if( dataCounter % numData == 0 ) { //every numData ...
+        curVal = Integer.parseInt(data);
+        setVal( );    
+      }
+    }catch( Exception e) { ...       }
+  }
+  }
+
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Testing del dispositivo Sonar
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Il testig di un sonar riguarda due apsetti distinti:
+
+#. il test sul corretto funzionamento del dispositivo in quanto tale:  posto di fronte ad esso
+   un ostacolo a distanza :math:`D`, deve emetta dati pari a  :math:`D \pm \epsilon`.
+#. il testo sul corretto funzionamento del componente software responsabile della trasformazione del dispositivo
+   in un produttore di dati consumabili da un altro componente.
+
+Ovviamente qui ci dobbiamo occupare della seconda parte, supponendo che la prima sia soddisfatta. A tal fine
+possiamo procedere come segue:
+
+- per il *LedMock*, possiamo conoscere la sequenza di valori emeessi e controllare che  un consumatore
+  riceva i valori nella gusta sequenza invocando il metodo ``getVal``
+- per il *LedConcrete*, poniamo uno schermo a distanza prefissata ``D`` e controlliamo un consumatore
+  riceva valori ``D + E`` invocando il metodo ``getVal``
+
+
+Una test-unit automatizzata per il SonarMock può essere quindi definita in JUnit come segue:
+
+.. code:: java
+
+	@Test 
+	public void testSonarMock() {
+    RadarSystemConfig.simulation = true;
+    RadarSystemConfig.sonarDelay = 10; //quite fast generation...
+		
+    ISonar sonar = DeviceFactory.createSonar();
+    sonar.activate();
+    int v0 = sonar.getVal(); //first val consumed
+    while( sonar.isActive() ) {
+      int d = sonar.getVal(); //blocking!
+      int vexpected = v0-1; //each val is the previous-1
+      assertTrue( d == vexpected );
+      v0 = d; 
+    }
+  }
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il RadarDisplay

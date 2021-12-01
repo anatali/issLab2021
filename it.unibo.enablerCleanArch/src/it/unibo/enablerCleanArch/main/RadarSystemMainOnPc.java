@@ -50,14 +50,14 @@ private IRadarGui radar = null;
 	public IRadarGui getRadarGui() {
 		return radar;
 	}
-	
+	/*
 	//La TestUnit decide di attivare il sistema
 	public void oneShotSonarForTesting( int distance ) {
 		if( sonar != null ) {
 			SonarMock sonarForTesting = (SonarMock) sonar;
 			sonarForTesting.oneShot( distance );
 		}
-	}
+	}*/
 	
 	public static void main( String[] args) throws Exception {
 		RadarSystemMainOnPc sys = new RadarSystemMainOnPc();

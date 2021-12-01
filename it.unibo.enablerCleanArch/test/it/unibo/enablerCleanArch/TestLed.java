@@ -10,13 +10,13 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 public class TestLed {
  
 	@Before
-	public void setUp() {
-		System.out.println("setUp");
+	public void up() {
+		System.out.println("up");
 	}
 	
 	@After
-	public void setDown() {
-		System.out.println("setDown");		
+	public void down() {
+		System.out.println("down");		
 	}	
 	
 	@Test 
