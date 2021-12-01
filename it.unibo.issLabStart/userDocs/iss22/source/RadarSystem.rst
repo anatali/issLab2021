@@ -149,7 +149,7 @@ La costruzione del sistema pone le seguenti :blue:`problematiche`:
             :width: 100%
 
        Occorre capire come i dati del sonar generati sul Raspberry possano raggiungere il PC ed essere usati per
-       aggiornare la ``RadarGui`` e per accendere/spegnere il ``Led``.
+       aggiornare il ``RadarDisplay`` e per accendere/spegnere il ``Led``.
 
 La necessità di integrare i componenti disponibili *fa sorgere altre problematiche*:
 
@@ -186,24 +186,27 @@ possiamo rappresentare la situazione come segue:
           
           TODO: Modificare la figura
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Quale 'collante'?
+Chi realizza la logica applicativa?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Seguendo il principio che la responsabilità di realizzare gli use-cases applicativi non deve essere attribuita
-al software di gestione dei dispositivi di I/O, la nostra analisi ci induce a sostenere
+Seguendo il principio di singola responsabilità (e un pò di buon senso) la realizzazione degli use-cases 
+applicativi non deve essere attribuita
+al software di gestione dei dispositivi di I/O.
+
+Dunque, la nostra analisi ci induce a sostenere
 l'opportunità di introdurre un nuovo componente, che possiamo denominare ``Controller``), che abbia la
 :blue:`responabilità di realizzare la logica applicativa`.
 
-Ma ecco sorgere un'altra problematica legata alla distribuzione:
+Il ``Controller`` deve ricevere in ingresso i dati del sensore ``HC-SR04``, elaborarli e  
+inviare comandi al Led e dati al  ``RadarDisplay``.
 
--  Il ``Controller`` deve ricevere in ingresso i dati del sensore ``HC-SR04``, elaborarli e  
-   inviare comandi al Led e dati al  ``RadarDisplay``.
+Ma ecco sorgere un'altra problematica legata alla distribuzione:
        
 - Il ``Controller`` può risiedere su RaspberryPi, sul PC o su un terzo nodo. 
   Tuttavia, un colloquio con il committente ha escluso (per motivi di costo) la possibilità di introdurre un altro
   nodo di elaborazione. 
 
-- La presenza di un broker in forme di comunicazioni mediata  potrebbe indurci ad attribuire responsabiliotà
+- La presenza di un broker in forme di comunicazione mediata  potrebbe indurci ad attribuire responsabiliotà
   applicative al mediatore. Ma è giusto/opportuno procedere i questo modo?
 
 Dunque si tratta di analizzare dove sia meglio allocare il ``Controller`` :
@@ -222,33 +225,42 @@ Dunque si tratta di analizzare dove sia meglio allocare il ``Controller`` :
      - Al momento escludiamo questa possibilità, riservandoci di riprendere il problema quando esamineremo
        architetture distribuite 'space-based'.
 
-Queste considerazioni ci inducono a riflettere sul :blue:`tipo di protocollo` da scegliere per le comunicazioni via rete
-e sul :blue:`tipo di architettura` che   scaturisce da questa scelta.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quale 'collante'? I protocolli di comunicazione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Tipi di protocollo
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dovendo realizzare un sistema distribuito (ed eterogeno), i componenti del sistema devono poter scambiare 
+informazione (in modo che possano capirsi).
+
+Per ottenere questo scopo, sono stati sviluppati numerosi protocolli che,
+avvalendosi di una appropriata infrastruttura di rete,  permettono lo scambio di informazione
+tra componenti che diventano la parti costituenti di un sistema proprio grazie al 'collante' 
+offerto dal protocollo.
+
+Poichè protcolli diversi inducono a concepire sistemi organizzati in modo diverso, è opportuno
+riflettere sul :blue:`tipo di protocollo` che è possibile scegliere 
+e sul :blue:`tipo di architettura` che  scaturisce da questa scelta.
 
 In questa fase, possiamo diviedere i protocolli di comunicazioni più diffusi in due macro-categorie:
 
 - protocolli :blue:`punto-a-punto` che stabiliscono un *canale bidirezionale* tra compoenenti di solito
   denominati client e  server. Esempi di questo tipo sono ``UDP, TCP, HTTP, CoAP, Bluetooth``.
 - protocolli :blue:`publish-subscribe` che si avvalgono di un mediatore (broker) tra client e server. Esempio
-  di questo tipo di protocollo è ``MQTT`` che viene supportato da broker come ``Mosquitto e RabbitMQ``. 
+  di questo tipo di protocollo è ``MQTT`` che viene supportato da broker come ``Mosquitto, RabbitMQ, HiveMq``, etc. 
 
 Al momento dovremmo avere conoscenze su come usare protocolli quali TCP/UDP e HTTP
 ma siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
 
 Seguiamo dunque l'idea delle **comunicazioni dirette** facendo riferimento al protocollo TCP
-(più affidabile di UDP e supporto di base per HTTP)  che assume quindi il ruolo di 'collante' principale tra le parti.
+(più affidabile di UDP e supporto di base per HTTP)  che assume quindi al monento il ruolo di 'collante' 
+principale tra le parti.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
-Analisi delle interazioni (basate su TCP)
+Considerazioni architetturali
 +++++++++++++++++++++++++++++++++++++++++++++++++
-A questo punto è necessario approfondire l'analisi delle problematiche che si pongono quando si voglia 
-far comunicare due componenti software con un protocollo di comunicazione punto-a-punto come TCP.
-Ovviamente in questa fase non ci interessano tanto i dettagli tecnici di come opera il protocollo,
-quanto le ripercussioni dell'uso del protocollo sulla architettura del sistema.
+Per approfondire l'analisi delle problematiche che si pongono quando si voglia 
+far comunicare due componenti software con TCP, non ci interessano tanto i dettagli tecnici di come opera 
+il protocollo, quanto le ripercussioni sulla architettura del sistema.
 
 A questo riguardo possiamo dire che nel sistema dovremo avere componenti capaci
 di operare come un `client-TCP` e componenti capacai di operare come un `server-TCP`.
@@ -272,20 +284,18 @@ il server può anche dover inviare messaggi ai client, ad esempio quando  si ric
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'idea di connessione: l'interfaccia ``Interaction2021``
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-L'analisi bottom-up sull'uso del protocollo TCP  ha evidenziato che, volendo riusare i componenti software resi disponibile dal commitente,
-risulta necessario dotarli della capacità di inviare e ricevere messaggi via rete.
+La necessità di  inviare e ricevere messaggi via rete segnala un :blue:`gap`  tra il livello tecnologico 
+dei componenti software resi disponibili dal committente e le necessità del problema.
 
-Questa necessità segnala un :blue:`gap`  tra il livello tecnologico di partenza e le necessità del problema.
-
-Coma analisti, osserviamo anche che un *gap* relativo alle comunicazioni di rete **si presenta in modo sistematico
-in tutti i sistemi distribuiti**. Sarebbe dunque opportuno cercare di colmare questo *gap* in modo non episodico,
-introducendo :blue:`componenti riusabili` che possano 'sopravvivere' alla applicazione che stiamo costruendo
+Coma analisti, osserviamo che un *gap* relativo alle comunicazioni di rete **si può presentare in modo sistematico
+in tutte le applicazioni distribuite**. Sarebbe dunque opportuno cercare di colmare questo *gap* in modo non episodico,
+introducendo :blue:`componenti riusabili` che possano 'sopravvivere' all'applicazione che stiamo costruendo
 per poter essere impiegati in futuro in altre applicazioni distribuite.
 
 Astraendo dallo specifico protocollo, osserviamo che tutti i principali protocolli punto-a-punto 
 sono in grado di stabilire una :blue:`connessione` stabile sulla quale inviare e ricevere messaggi.
 
-Questo concetto può essere realizzato da un oggetto che rende disponibile opprtuni metodi, come quelli definiti
+Questo concetto può essere realizzato da un oggetto che rende disponibile opportuni metodi, come quelli definiti
 nella seguente interfaccia:
 
 .. code:: Java
@@ -297,7 +307,7 @@ nella seguente interfaccia:
   }
 
 Il metodo di trasmissione è denominato ``forward`` per rendere più evidente il fatto che pensiamo ad un modo di operare 
-:blue:`fire-and-forget`. 
+:blue:`'fire-and-forget'`. 
 
 L'informazione scambiata è rappresenta da una ``String`` che è un tipo di dato presente in tutti
 i linguaggi di programmazione.
@@ -307,20 +317,26 @@ il vincolo che gli end-points della connessione siano componenti codificati nell
 La ``String`` restituita dal metodo ``receiveMsg`` può rappresentare una risposta a un messaggio
 inviato in precedenza con ``forward``.
 
-Ovviamente la definizione di questa interfaccia potrà essere estesa e modificata in futuro, ad esempio nella fase di
-progettazione, ma rappresenta una forte indicazione dell'analista di pensare alla costruzione di componenti
-software che possano ridurre il costo delle applicazioni future.
+Ovviamente la definizione di questa interfaccia potrà essere estesa e modificata in futuro, 
+a partire dall fase di progettazione, ma rappresenta una forte indicazione dell'analista di 
+pensare alla costruzione di componenti software che possano ridurre il costo delle applicazioni future.
 
 --------------------------------------
 Progettazione
 --------------------------------------
 
-Iniziamo il nostro progetto con questo piano di lavoro:
+Iniziamo il nostro progetto con un piano di lavoro.
+
++++++++++++++++++++++++++++++++++++++++++++++
+Piano di lavoro (per approccio bottom-up)
++++++++++++++++++++++++++++++++++++++++++++++
 
 #. definizione dei componenti software legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
-#. definizione di alcuni supporti di base per componenti lato client a lato server;
-#. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare i componenti-base 
-   alle comunicazioni via rete (con TCP).
+#. definizione di alcuni supporti di base TCP per componenti lato client a lato server, con l'obiettivo di
+   formare un insieme riusabile anche in applicazioni future;
+#. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare  
+   alle comunicazioni TCP i componenti-base forniti dal committente.
+#. assemblaggio dei componenti `enabler` per formare il sistema distribuito.
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Componenti per i dispositivi di I/O
@@ -328,6 +344,17 @@ Componenti per i dispositivi di I/O
 
 E' buona pratica impostare la definzione di un componente partendo dalla specifica delle funzionalità
 che esso offre.
+
+Quando i dispostivi sono pensati come oggetti convenzionnli (POJO), è buona norma specificare
+quate funzionalità mediante la definizione di interfacce in modo da: 
+
+- definire il :blue:`contratto d'uso` di un ogeetto;
+- poter ragionare sulla :blue:`architettura logica` del sistema senza occuparci dei dettagli 
+  sull'implementazione dei componenti.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Le interfacce ILed e ISonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Per il Sonar e il Led, introduciamo le seguenti interfacce:
 
@@ -357,6 +384,38 @@ Per il Sonar e il Led, introduciamo le seguenti interfacce:
           public boolean getState();
         }
    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La logica del Controller
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Poichè l'analisi ha evidenziato l'opportunità di incapsulare la logica applicativa entro un componente
+ad-hoc (il ``Controller``), possiamo ora esprimere il funzionamento del ``Controller`` come segue:
+
+.. code:: java
+
+  ISonar sonar;
+  ILed   led;
+  ...
+  while( sonar.isactive() ){
+    int v = sonar.getVal(); //Acquisizione di un dato dal sonar
+    if( v < DLIMIT )        //Elaborazione del dato
+      Led.turnOn() else Led.turnOff  //Gestione del Led
+    radarSupport.update( v, "90")    //Visualizzazione su RadarDisplay
+    
+  }
+
+Questo pseudo-codice viene scritto con l'ipotesi che il Controller sia allocato sul PC,
+e che quindi possa accedere direttamente al supporto fornito dal committente per il ``RadarDisplay``.
+
+Per il Led e il Sonar sarà nessaria una implementazione basata sugli `enabler` che abbiamo pianificato di costruire,
+ma la struttura del codice del ``Controller`` sarà sempre quella indicata.
+
+La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
+
+il ``Controller`` deve accedere al Sonar come dispositivo di input e al Led e al RadarDisplay come dispositvi di output.
+ 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Dispositivi reali e Mock, DeviceFactory e file di configurazione

@@ -8,3 +8,8 @@
        in stile 'IronMan', in modo da costruire un microservizio.
      -  .. image:: ./_static/img/Radar/TutaVolo.jpg 
            :width: 100%
+
+Notiamo anche che possiamo specificare subito un piano di testing automatizzabile supponendo che
+il sonar emetta un valore costante di distanza, inferiore o superiore a DLIMIT. Nel primo caso
+dovreno verificare che il Led sia acceso e nel secondo che sia spento.
+Torneremo su questo punto più avanti.
