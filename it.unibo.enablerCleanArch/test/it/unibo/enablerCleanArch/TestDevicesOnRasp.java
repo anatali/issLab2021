@@ -25,7 +25,7 @@ private RadarSystemMainOnPc sys;
 			RadarSystemConfig.RadarGuieRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
 			RadarSystemConfig.raspHostAddr	    = "192.168.1.10";
-			sys.setup();
+			sys.build();
 			delay(3000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );

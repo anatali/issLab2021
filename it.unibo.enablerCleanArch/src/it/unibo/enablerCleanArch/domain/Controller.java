@@ -8,16 +8,16 @@ import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
  */
 public class Controller {
 	
-	public static void activate( ILed led, ISonar sonar,IRadarGui radar) {
+	public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
 		System.out.println("Controller | activate"  );
 		new Thread() {
 			public void run() { 
 				try {
 					System.out.println("Controller | STARTS"  );
-					while( true ) {
-						int d = sonar.getVal(); //ricevo dato dal sonar come message emitter. Bloccante?
+					while( sonar.isActive() ) {
+						int d = sonar.getVal(); //bloccante
 						System.out.println("Controller | sonar data=" + d);
-						if( d == -1 ) break;
+						//if( d == -1 ) break;
 						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
 						RadarGuiUsecase.doUseCase( radar,d  );	//Richiede comunicazione via rete
 						//Thread.sleep(1000);   //Rimuovere se sonar.getVal è bloccante
@@ -30,6 +30,4 @@ public class Controller {
 		}.start();
 		
 	}
- 
-
-}
+ }

@@ -2,11 +2,11 @@ package it.unibo.enablerCleanArch.domain;
 
 import radarPojo.radarSupport;
 
-public class RadarGui implements IRadarGui{
+public class RadarGui implements IRadarDisplay{
 private String curDistance = "0";
 private static boolean created = false; //singleton
 	//Factory method
-	public static IRadarGui create(){
+	public static IRadarDisplay create(){
 		return new RadarGui();
 	}
 	

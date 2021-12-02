@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.SonarMock;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public class TestSonar {
+public class TestSonarMock {
 	@Before
 	public void up() {
 		System.out.println("up");
@@ -22,7 +22,8 @@ public class TestSonar {
 	public void testSonarMock() {
 		RadarSystemConfig.simulation = true;
 		RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
-		
+		int delta = 1;
+				
 		ISonar sonar = DeviceFactory.createSonar();
 		sonar.activate();
 		
@@ -31,7 +32,7 @@ public class TestSonar {
 		while( sonar.isActive() ) {
 			int d = sonar.getVal();
 	 		//System.out.println("sonar getVal=" + d);
-			int vexpected = v0-1;
+			int vexpected = v0-delta;
 			assertTrue(  d == vexpected );
 			v0 = d;
 		}

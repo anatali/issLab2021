@@ -1,9 +1,9 @@
 package it.unibo.enablerCleanArch.enablers;
-import it.unibo.enablerCleanArch.domain.IRadarGui;
+import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 
-public class RadarGuiClient extends EnablerAsClient implements IRadarGui {
+public class RadarGuiClient extends EnablerAsClient implements IRadarDisplay {
  
 	public RadarGuiClient( String name, String host, int port ) {
 		super( name, host, port );

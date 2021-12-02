@@ -13,3 +13,79 @@ Notiamo anche che possiamo specificare subito un piano di testing automatizzabil
 il sonar emetta un valore costante di distanza, inferiore o superiore a DLIMIT. Nel primo caso
 dovreno verificare che il Led sia acceso e nel secondo che sia spento.
 Torneremo su questo punto più avanti.
+
+
+  * -        
+      .. code:: java
+
+          interface ISonar {
+          public void activate();		 
+          public void deactivate();
+          public int getVal();	
+          public boolean isActive();
+          }
+    -  
+      .. code:: java
+
+          interface ILed {
+          public void turnOn();
+          public void turnOff();
+          public boolean getState();
+          }
+
+     - 
+      .. code:: java
+
+          interface IRadarDisplay {
+	          public void update(
+              String d, String a);
+          }
+
+
+E' buona pratica impostare la definzione di un componente partendo dalla specifica delle funzionalità
+che esso offre.
+
+Quando i dispostivi sono pensati come oggetti convenzionnli (POJO), è buona norma specificare
+quate funzionalità mediante la definizione di interfacce in modo da: 
+
+- definire il :blue:`contratto d'uso` di un ogeetto;
+- poter ragionare sulla :blue:`architettura logica` del sistema senza occuparci dei dettagli 
+  sull'implementazione dei componenti.
+
+
+
+Questo pseudo-codice viene scritto con l'ipotesi che il Controller sia allocato sul PC,
+e che quindi possa accedere direttamente al supporto fornito dal committente per il ``RadarDisplay``.
+
+Per il Led e il Sonar sarà nessaria una implementazione basata sugli `enabler` che abbiamo pianificato di costruire,
+ma la struttura del codice del ``Controller`` sarà sempre quella indicata.
+
+La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
+
+TODO
+
+il ``Controller`` deve accedere al Sonar come dispositivo di input e al Led e al RadarDisplay 
+come dispositvi di output.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il RadarDisplay
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+Per il ``RadarDisplay`` abbiamo già visto che è disponibile un oggetto singleton che fornisce due metodi:
+
+       .. code:: java
+
+        public class radarSupport {
+        private static RadarControl rc;
+        public static void setUpRadarGui( ){
+          rc=...
+        }
+        public static void update(String d, String dir){
+          rc.update( d, dir );
+        }
+        }   
+
+
+Prima di procedere con dispositivi reali e con il RaspberryPi, è conveniente realizzare una versione
+del sistema che utilizza dispositivi simulati, dappprima tutti locali al Controller e poi distribuiti
+su diverse Java virtual machines.

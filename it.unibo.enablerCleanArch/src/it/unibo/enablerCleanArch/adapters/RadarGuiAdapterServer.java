@@ -3,13 +3,13 @@ package it.unibo.enablerCleanArch.adapters;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import it.unibo.enablerCleanArch.domain.IRadarGui;
+import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.RadarGui;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.TcpServer;
 
 public class RadarGuiAdapterServer extends ApplMessageHandler  {
-private IRadarGui radar = RadarGui.create();
+private IRadarDisplay radar = RadarGui.create();
 
 	public RadarGuiAdapterServer( int port  ) {
 		super("RadarGuiAdapterServer");

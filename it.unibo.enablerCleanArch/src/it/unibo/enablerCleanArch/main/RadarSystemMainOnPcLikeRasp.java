@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.Controller;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.IRadarGui;
+import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.*;
 
@@ -26,7 +26,7 @@ public class RadarSystemMainOnPcLikeRasp {
 			//new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
 		}else { //Controller on Rasp
 			System.out.println("Controller on PcLikeRasp sonar=" + sonar);
- 			IRadarGui radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
+ 			IRadarDisplay radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
  			//Control
 			Controller.activate( led, sonar, radar );
  		}

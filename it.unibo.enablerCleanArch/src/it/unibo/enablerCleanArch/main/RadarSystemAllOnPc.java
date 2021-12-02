@@ -1,17 +1,21 @@
 package it.unibo.enablerCleanArch.main;
-import it.unibo.enablerCleanArch.adapters.LedAdapterCoap;
-import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterCoapObserver;
-import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
-public class RadarSystemMainOnPcCoap {
-private ISonar sonar    = null;
-private ILed led        = null;
+import it.unibo.enablerCleanArch.adapters.LedAdapterClient;
+import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
+import it.unibo.enablerCleanArch.adapters.SonarAdapterServer;
+import it.unibo.enablerCleanArch.domain.*;
+
+ 
+public class RadarSystemAllOnPc {
+private ISonar sonar        = null;
+private ILed led            = null;
 private IRadarDisplay radar = null;
 
-	public void setup() throws Exception {			
-		RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
+	public void setup( String configFile ) throws Exception {
+		RadarSystemConfig.setTheConfiguration( configFile );
+	}
+	public void build() throws Exception {			
+		//RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
 		//Control
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
@@ -19,11 +23,11 @@ private IRadarDisplay radar = null;
 		}else { //Controller locale (al PC)
 			//Input
 			sonar  = RadarSystemConfig.SonareRemote   
-					? new SonarAdapterCoapObserver("localhost", CoapApplServer.inputDeviceUri+"/sonar") 	//:5683 lo sa CoapSupport
+					? new SonarAdapterServer("sonarAdapterServer", RadarSystemConfig.sonarPort) 
 					: DeviceFactory.createSonar();
 			//Output
 			led    = RadarSystemConfig.LedRemote   
-					? new LedAdapterCoap( "localhost", CoapApplServer.outputDeviceUri+"/led" ) 
+					? new LedAdapterClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort  ) 
 					: DeviceFactory.createLed();
 			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);
@@ -46,18 +50,12 @@ private IRadarDisplay radar = null;
 	public IRadarDisplay getRadarGui() {
 		return radar;
 	}
-	/*
-	//La TestUnit decide di attivare il sistema
-	public void oneShotSonarForTesting( int distance ) {
-		if( sonar != null ) {
-			SonarMock sonarForTesting = (SonarMock) sonar;
-			sonarForTesting.oneShot( distance );
-		}
-	}
-	*/
+
+	
 	public static void main( String[] args) throws Exception {
-		RadarSystemMainOnPcCoap sys = new RadarSystemMainOnPcCoap();
-		sys.setup();
+		RadarSystemAllOnPc sys = new RadarSystemAllOnPc();
+		sys.setup("RadarSystemConfigAllOnPc.json");
+		sys.build();
 		sys.activateSonar();
 	}
 }

@@ -3,12 +3,12 @@ package it.unibo.enablerCleanArch.supports.coap;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.IRadarGui;
+import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.RadarGui;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
  
 public class SonarMessageHandler extends ApplMessageHandler{
-	private IRadarGui radar;
+	private IRadarDisplay radar;
 
 	public SonarMessageHandler(String name) {
 		super(name);

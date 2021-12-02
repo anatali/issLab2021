@@ -3,17 +3,18 @@ package it.unibo.enablerCleanArch;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.*;
-import it.unibo.enablerCleanArch.domain.RadarGui;
+import it.unibo.enablerCleanArch.main.RadarSystemAllOnPc;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.main.RadarSystemMainOnPc;
+
 
 public class TestBehaviorAllOnPc {
-private RadarSystemMainOnPc sys;
+private RadarSystemAllOnPc sys;
 	@Before
 	public void setUp() {
 		System.out.println("setUp");
 		try {
-			sys = new RadarSystemMainOnPc();
+			//sys = new RadarSystemMainOnPc();
+			sys = new RadarSystemAllOnPc();
 			//Set system configuration (we don't read RadarSystemConfig.json)
 			RadarSystemConfig.simulation 		= true;    
 			//we must do testing work with mock devices (local or remote) ???
@@ -24,7 +25,7 @@ private RadarSystemMainOnPc sys;
 			RadarSystemConfig.SonareRemote  	= false;    		
 			RadarSystemConfig.RadarGuieRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
-			sys.setup();
+			sys.build();
 			//sys.activateSonar();   //the sonar does not start if RadarSystemConfig.testing
 			delay(5000);
 		} catch (Exception e) {

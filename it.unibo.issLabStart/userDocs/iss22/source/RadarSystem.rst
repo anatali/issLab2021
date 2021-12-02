@@ -3,6 +3,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
+ 
 
 .. ``  https://bashtage.github.io/sphinx-material/rst-cheatsheet/rst-cheatsheet.html
 
@@ -51,12 +52,40 @@ di partenza per la :blue:`forward traceability`.
 User stories
 +++++++++++++++++++++++++++++++++++++
 
+Una user story che esprime il funzionamento atteso del sistema, catturando tutti i requisiti può essere
+così espressa:
+
+.. epigraph:: 
+  
+   :blue:`User story US1`: come utente mi aspetto che il Led si accenda se pongo un ostacolo a distanza ``d<DILIMT`` 
+   dal Sonar e che il Led si spenga non appena porto l'ostacolo ad una  distanza ``d>DILIMT``.
+   In ogni caso posso vedere illuminarsi un punto sul ``RadarDisplay`` a distanza ``d`` 
+   dal centro lungo   una  retta che forma un angolo :math:`\theta` 
+   rispetto all'asse orizzontale del display.
+
+   
+
++++++++++++++++++++++++++++++++++++++
+Piano di testing (funzionale)
++++++++++++++++++++++++++++++++++++++  
+
+La user-story precedente suggerisce anche un possibile test funzionale per la verifica del 
+comportamento del software da sviluppare.
+
+.. Un possibile test funzionale consiste nel porre un ostacolo davanti al Sonar
+   prima a una distanza ``D>DLIMIT`` e poi a una distanza ``D<DLIMIT`` e osservare il valore
+   visualizzato sulla GUI e lo stato del Led.
+
+Tuttavia questo modo di procedere non è automatizzabile, in quanto richiede 
+la presenza di un operatore umano. Nel seguito cercheremo di organizzare le cose in modo
+da permettere :blue:`Test automatizzati`.
+
 
 +++++++++++++++++++++++++++++++++++++
 Glossario
 +++++++++++++++++++++++++++++++++++++
-La redazione di un glossario è utile per pervenire alla definizione di Costumer requirements (:blue:`C-requirements`) 
-chiari e possibilmente non ambigui. 
+La redazione di un glossario è utile per pervenire alla definizione di *Costumer requirements* 
+(:blue:`C-requirements`) chiari e possibilmente non ambigui. 
 Il nostro glossario, la cui redazione lasciamo al lettore, dovrà includere i termini 
 *Sensore, Led, RadarDisplay* che corrispondono ad altrettanti :blue:`componenti` del sistema.
 
@@ -69,10 +98,6 @@ Dal punto di vista della 'macchina', l'unico modo per relazionarsi con un ente m
 
 Poniamo dunque al committente anche domande da questo punto di vista, e altre domande volte 
 a chiarire bene la natura del sistema da realizzare.
-
-
-
-
 
 +++++++++++++++++++++++++++++++++++++
 Domande al committente
@@ -121,20 +146,6 @@ In sintesi:
 
 :remark:`Si tratta di realizzare un sistema software distribuito ed eterogeneo`
 
-+++++++++++++++++++++++++++++++++++++
-Piano di testing (funzionale)
-+++++++++++++++++++++++++++++++++++++  
-
-Dai requsiti possiamo ricavare subito un insieme di test di verifica dei comportamenti che il software da
-sviluppare dovrà avere.
-
-Un possibile test funzionale consiste nel porre un ostacolo davanti al Sonar
-prima a una distanza ``D>DLIMIT`` e poi a una distanza ``D<DLIMIT`` e osservare il valore
-visualizzato sulla GUI e lo stato del Led.
-
-Tuttavia questo modo di procedere non è automatizzabile, in quanto richiede 
-la presenza di un operatore umano. Nel seguito cercheremo di organizzare le cose in modo
-da permettere :blue:`Test automatizzati`.
 
 --------------------------------------
 Analisi del problema
@@ -377,13 +388,13 @@ Importanti prodotti, al termine della fase di analisi dei requisiti e del proble
 -  la proposta di un :blue:`piano di lavoro` per lo sviluppo del sistema.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Architettura logica
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Architettura logica come modello di riferimento
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 L'architettura logica di un sistema costituisce un :blue:`modello del sistema` ispirato dai requisiti funzionali 
 e dalle forze in gioco nel dominio applicativo o nella specifica applicazione e mira ad identificare 
-i macro sottosistemi in cui il **problema stesso** suggerisce di articolare il sistema risolvente. 
+i macro-sottosistemi in cui il **problema stesso** suggerisce di articolare il sistema risolvente. 
 
 L'architettura logica è il più possibile **indipendente da ogni ipotesi sull'ambiente di implementazione**.
 
@@ -402,29 +413,148 @@ Un modo per *valutare la qualità* di una architettura logica e la *coerenza con
   quale è la motivazione della loro mancanza? Siamo di fronte a una dimenticanza 
   o vi sono ragioni reali per non includere questi elementi?
 
-Nel caso dell'applicazione in esame, l'architettura logica del sistema è piuttosto semplice:
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Architettura logica ad oggetti
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il componente ``Controller`` deve accedere (come consumatore) al Sonar 
-come dispositivo produttore di dati e inviare comandi al Led e al RadarDisplay come dispositvi di output.
+Se astraiamo dalla distribuzione (supponendo ad esempio che tutto il sistema possa
+essere supportato sul RaspberryPi), l'architettura logica del sistema risulta
+riconducibile a un classico schema :blue:` read-eval-print` in cui:  
 
-Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
-sole porre in luce la relazione logica tra i componenti individuati dall'analisi del problema.
+.. epigraph:: 
+
+  Il componente ``Controller`` deve leggere dati dal Sonar 
+  come dispositivo di input e inviare comandi al Led e al RadarDisplay 
+  come dispositvi di output.
+
+Per rendere comprensibile questa architettura anche alla 'macchina' senza entrare in dettagli
+implementativi, possiamo introdurre opportuni :blue:`modelli` dei componenti utlizzando qualche linguaggio
+di programmazione.
+
+Nel caso di Java, il costrutto interface può essere usato per denotare un componente catturandone
+come aspetto essenziale le funzionalità che esso deve offrire e una sorta di :blue:`contratto` 
+sull’uso del componente.
+
+Introduciamo dunque i nostri primi modelli di componenti definendo interfacce Java per il *Led,
+il Sonar e il RadarDisplay*.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Le interfacce ILed, ISonar e IRadarDisplay
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+.. list-table::
+  :widths: 32, 32, 36
+  :width: 100%
+
+  * -  Sonar
+    -  Led
+    -  RadarDisplay
+  * -        
+      .. code:: java
+
+       interface ISonar {
+         void activate();		 
+         void deactivate();
+         int getVal();	
+         boolean isActive();
+       }
+    -        
+      .. code:: java
+
+        interface ILed {
+          void turnOn();
+          void turnOff();
+          boolean getState();
+        }
+    -        
+      .. code:: java     
+
+        interface IRadarDisplay{
+          void update(
+           String d, String a);
+        }  
+
+La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
+
+.. code::
+
+  ISonar <--  Controller --> ILed  
+                         --> IRadarDisplay
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La logica del Controller
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. Poichè l'analisi ha evidenziato l'opportunità di incapsulare la logica applicativa entro un componente
+  ad-hoc (il ``Controller``), 
+
+A questo punto possiamo anche esprimere il funzionamento del ``Controller`` come segue:
+
+.. code:: java
+
+  ISonar        sonar;
+  ILed          led;
+  IRadarDisplay radar;
+  ...
+  while( sonar.isactive() ){
+    int v = sonar.getVal(); //Acquisizione di un dato dal sonar
+    if( v < DLIMIT )        //Elaborazione del dato
+      Led.turnOn() else Led.turnOff  //Gestione del Led
+    radar.update( v, "90")    //Visualizzazione su RadarDisplay
+  }
+
+.. Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
+   solo porre in luce la relazione logica tra i componenti individuati dall'analisi del problema.
 
 Il :blue:`come` avviene l'interazione tra le parti relativa alla acqusizione dei dati e all'invio dei comandi
 non è specificato al momento. 
-
-L'analista però evidenzia quanto segue:
+Come analisti del problema possiamo però evidenziare quanto segue:
 
 #. l'uso della memoria comune come strumento di comunicazione va evitato, per  
    ottenere la flessibità di poter eseguire ciascun componente su un diverso nodo di elaborazione; 
-#. il ``Controller`` può acqusire i dati in due modi diversi:
+#. il ``Controller`` può acquisire i dati in due modi diversi:
   #. inviando una richieste al Sonar, che gli fornisce un dato come risposta
-  #. il Sonar pubblica i dati prodotti su un broker accessibile al ``Controller`` 
+  #. il Sonar non lavora come 'produttore a richiesta' ma pubblica dati su un broker 
+     accessibile al ``Controller``.
 
-Poichè abbiamo in precedenza esluso forme di interazione publish-subscribe, escludiamo al momento
-il caso 2.1. Dunque sappiamo :blue:`cosa` fare e non fare: 
-in particolare, l'interazione Controller-Sonar sarà basata su una interazione punto-a-punto utilizzando
-il protocollo TCP.  Il :blue:`come` realizzare questa interazione sarà compito del progettista.
+Poichè abbiamo in precedenza escluso forme di interazione *publish-subscribe*, abbiamo al momento
+ipotizzato il caso 2.1. 
+
+Questo modello sembra portare intrinsecamente in sè l'idea di una classica applicazione   
+ad oggetti che deve essere eseguita su un singolo elaboratore (o una singola Java virtual machine).
+Ma forse non è proprio così.
+
+.. Dunque sappiamo :blue:`cosa` fare e non fare: 
+    in particolare, l'interazione Controller-Sonar sarà basata su una interazione punto-a-punto utilizzando
+    il protocollo TCP.  Il :blue:`come` realizzare questa interazione sarà compito del progettista.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dagli oggetti alla distribuzione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il fatto di avere espresso il ``Controller`` con riferimento a interfacce e non ad oggetti concreti, 
+significa che il progettista si può avvalere di appropriati :blue:`design pattern` per 
+implememtare i componenti in modo che possano scambiare informazione via rete.
+
+A questo fine possiamo introdurre, come analisti, l'idea di un nuovo tipo di ente,
+denominato :blue:`enabler`, che ha come scopo quello di incapsulare software 'convenzionale' utile e 
+testato ma non adatto alla distribuzione (che possiamo denominare :blue:`core-code`) 
+all'interno di un involucro che funga da una sorta di  'membrana' capace di ricevere e 
+trasmettere informazione.
+
+Ad esempio, il ``Controller`` su PC utilizzerà un TCP-server con iterfaccia ``ISonar`` che riceverà i dati 
+dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getVal``.
+Inoltre utilizzera un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
+sul Raspberry.
+
+Questa idea di :blue:`enabler` sembra dunque promettente come strumento per un passaggio graduale
+e sistematico dalla programmazione tradizionale ad oggetti alla programmazione distribuita.
+
+Di fatto stiamo delienando la nascita di un :blue:`nuovo paradigma di programmazione` che troverà
+più avanti un suo pieno sviluppo con i concetti di :blue:`attore` di :blue:`microservizio`. 
+
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Piano di lavoro
@@ -433,17 +563,24 @@ Piano di lavoro
 Trattandosi di uno sviluppo di tipo bottm-up, il piano di lavoro parte dallo sviluppo dei componenti,
 seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistema che soddisfa i requisiti.
 
-Poichè il nostro obiettivo è anche quello di riusare codice fornito dal committente, ma non predisposto
-alla distribuzione, possiamo pensare di procedere come segue:
+Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito dal committente, possiamo pensare di procedere come segue:
 
-#. definizione dei componenti software legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
-#. definizione di alcuni supporti di base TCP per componenti lato client a lato server, con l'obiettivo di
+#. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
+#. definizione di alcuni supporti TCP per componenti lato client a lato server, con l'obiettivo di
    formare un insieme riusabile anche in applicazioni future; 
 #. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare  
-   alle comunicazioni TCP i componenti-base forniti dal committente.
+   alle comunicazioni TCP i componenti-base;
 #. assemblaggio dei componenti `enabler` per formare il sistema distribuito.
 
-Il punto 2 non è indispensabile, ma, come detto, può essere un elemento strategico a livello aziendale.
+Il punto 2 relativo ai supporti non è indispensabile, ma, come detto, può costituire un elemento strategico 
+a livello aziendale.
+
+.. Il punto 3 sugli :blue:`enabler` nasce dall'idea di incapsulare software 'convenzionale' utile e 
+   testato (che possiamo denominare :blue:`core-code`) all'interno di un involucro capace di ricevere e inviare 
+    informazione, che funga da una sorta di 'membrana cellulare'.
+
+..  Ad esempio, il software capace di accendere un Led fornito dal committente è un file bash che
+    un opportuno :blue:`enabler` può porre in esecuzione ricevendo un comando dal ``Controller``.
 
 
 --------------------------------------
@@ -452,7 +589,7 @@ Progettazione e sviluppo incrementale
 
 Iniziamo il nostro progetto affrontando il primo punto del piano di lavoro proposto dall'analisi.
 
-Usando la terminologia :blue:`SCRUM, impostiamo il primo :blue:`SPRINT` dello sviluppo, al termine del  quale
+Usando la terminologia :blue:`SCRUM`, impostiamo il primo :blue:`SPRINT` dello sviluppo, al termine del  quale
 la prevista :blue:`Srint Review` farà il punto della situazione con il committente e getterà le basi per
 il passo successivo, che potrà coincidere o meno con quello pianificato nell'analisi.
 
@@ -462,79 +599,8 @@ il passo successivo, che potrà coincidere o meno con quello pianificato nell'an
 Componenti per i dispositivi di I/O
 +++++++++++++++++++++++++++++++++++++++++++++
 
-E' buona pratica impostare la definzione di un componente partendo dalla specifica delle funzionalità
-che esso offre.
-
-Quando i dispostivi sono pensati come oggetti convenzionnli (POJO), è buona norma specificare
-quate funzionalità mediante la definizione di interfacce in modo da: 
-
-- definire il :blue:`contratto d'uso` di un ogeetto;
-- poter ragionare sulla :blue:`architettura logica` del sistema senza occuparci dei dettagli 
-  sull'implementazione dei componenti.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Le interfacce ILed e ISonar
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Per il Sonar e il Led, introduciamo le seguenti interfacce:
-
-.. list-table::
-  :widths: 50, 50
-  :width: 100%
-
-  * -  Sonar
-    -  Led
-   
-  * -  
-      
-       .. code:: java
-
-        public interface ISonar {
-          public void activate();		 
-          public void deactivate();
-          public int getVal();	
-          public boolean isActive();
-        }
-    -  
-       .. code:: java
-
-         public interface ILed {
-          public void turnOn();
-          public void turnOff();
-          public boolean getState();
-        }
-   
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-La logica del Controller
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-Poichè l'analisi ha evidenziato l'opportunità di incapsulare la logica applicativa entro un componente
-ad-hoc (il ``Controller``), possiamo ora esprimere il funzionamento del ``Controller`` come segue:
-
-.. code:: java
-
-  ISonar sonar;
-  ILed   led;
-  ...
-  while( sonar.isactive() ){
-    int v = sonar.getVal(); //Acquisizione di un dato dal sonar
-    if( v < DLIMIT )        //Elaborazione del dato
-      Led.turnOn() else Led.turnOff  //Gestione del Led
-    radarSupport.update( v, "90")    //Visualizzazione su RadarDisplay
-    
-  }
-
-Questo pseudo-codice viene scritto con l'ipotesi che il Controller sia allocato sul PC,
-e che quindi possa accedere direttamente al supporto fornito dal committente per il ``RadarDisplay``.
-
-Per il Led e il Sonar sarà nessaria una implementazione basata sugli `enabler` che abbiamo pianificato di costruire,
-ma la struttura del codice del ``Controller`` sarà sempre quella indicata.
-
-La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
-
-il ``Controller`` deve accedere al Sonar come dispositivo di input e al Led e al RadarDisplay come dispositvi di output.
- 
+Il primo :blue:`SPRINT` di questo nostro sviluppo bottom-up consiste nel realizzare componenti-base 
+per i dispositivi di I/O, partendo dalle interfacce introdotte nella analisi. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -588,7 +654,8 @@ che inizializza variabili ``static`` accessibili all'applicazione:
   }
 
 Per essere certi che un dispositivo Mock possa essere un sostituto efficace di un dispositivo reale,
-introduciamo per ogni dispositivo una classe astratta comune alle due tipologie, che funga anche da factory.
+introduciamo per ogni dispositivo una **classe astratta** comune alle due tipologie, 
+che funga anche da factory.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Led
@@ -615,8 +682,8 @@ cui è demandata la responsabilità di accendere/spegnare il Led.
       else led = createLedConcrete();
       led.turnOff();      //Il led iniziale è spento
     }
-    public static ILed createLedMock() { return new LedMock();  }
-    public static ILed createLedConcrete() { return new LedConcrete();     }	
+    public static ILed createLedMock(){return new LedMock();  }
+    public static ILed createLedConcrete(){return new LedConcrete();}	
     
     //Abstract methods
     protected abstract void ledActivate( boolean val);
@@ -632,7 +699,7 @@ cui è demandata la responsabilità di accendere/spegnare il Led.
     public boolean getState(){  return state;  }
   }
 
-La variabile locale booleana ``state`` viene posta a ``true`` quando il led è acceso.
+La variabile locale booleana ``state`` viene posta a ``true`` quando il Led è acceso.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il LedMock
@@ -641,11 +708,9 @@ Il LedMock
 In pratica il LedModel è già un LedMock, in quanto tiene traccia dello stato corrente nella variabile
 ``state``. 
 
-Tuttavia può essere opportuno ridefinrire ``ledActivate`` in modo da rendere visibile 
+Tuttavia può essere opportuno ridefinire ``ledActivate`` in modo da rendere visibile 
 sullo standard output lo stato del Led . 
 
-Una implementazione più user-friendly potrebbe 
-introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia acceso o spento.
 
 .. code:: java
 
@@ -653,9 +718,14 @@ introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia 
     @Override
     protected void ledActivate(boolean val) {	 showState(); }
 
-    protected void showState(){ System.out.println("LedMock state=" + getState() ); }
+    protected void showState(){ 
+      System.out.println("LedMock state=" + getState() ); 
+    }
   }
 
+
+Una implementazione più user-friendly potrebbe 
+introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia acceso o spento.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il LedConcrete
@@ -725,13 +795,13 @@ Il Sonar
 
 Un Sonar è un dispositivo di input che deve fornire dati quando richiesto dalla applicazione.
 
-Il software fornito dal committente per l'uso di un Sonar reale ``HC-SR04`` ci fornisce
-un componente attivo, che produce in modo autonomo,
-con una certa frequenza, una sequenza di valori interi di distanza sul dispositivo standard di output.
+Il software fornito dal committente per l'uso di un Sonar reale ``HC-SR04`` introduce
+logicamente un componente attivo, che produce in modo autonomo sul dispositivo standard di output,
+con una certa frequenza, una sequenza di valori interi di distanza.
 
 La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo passivo
 (come un dispositivo di output) in quanto occorre affrontare un tipico problema produttore-consumatore.
-AL momento seguiremo un approccio tipico della programmazione concorrente basato su memoria comune
+Al momento seguiremo un approccio tipico della programmazione concorrente, basato su memoria comune
 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -740,7 +810,7 @@ La classe astratta SonarModel
 
 La classe astratta relativa al Sonar introduce due metodi :blue:`abstract`,  uno per specificare il modo di inizializzare il sonar 
 (metodo ``sonarSetUp``) e uno per specificare il modo di produzione dei dati (metodo ``sonarProduce``).
-Inoltre, estesa definisce due metodi ``create`` che costitusicono factory-methods per un sonar Mock e un sonar reale.
+Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods per un sonar Mock e un sonar reale.
 
       
 .. code:: java
@@ -751,27 +821,27 @@ Inoltre, estesa definisce due metodi ``create`` che costitusicono factory-method
 
     //Factory methods
     public static ISonar create() {
-		  if( RadarSystemConfig.simulation )  return createSonarMock(); 
+      if( RadarSystemConfig.simulation )  return createSonarMock(); 
       else  return createSonarConcrete();		
-	  }
+    }
     public static ISonar createSonarMock() { return new SonarMock(); }
     public static ISonar createSonarConcrete() { return new SonarConcrete(); }
 
 
-Il Sonar viene modellato come un processo produttore di dati sulla variabile locale ``curVal``
-che risulta attivo quando la variabile locale ``stopped`` risulta ``true``. Di qui le seguenti
-definizioni:
+Il Sonar viene modellato come un processo produttore di dati sulla variabile locale ``curVal``.
+Il processo risulta attivo quando la variabile locale ``stopped`` è ``true``. 
+Di qui le seguenti definizioni:
 
 .. code:: java
 
     @Override
     public void deactivate() { stopped = true; }
     @Override
-	  public boolean isActive() { return ! stopped; }
+    public boolean isActive() { return ! stopped; }
 
 
 Il codice realativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
-che dovrà essere definito in modo diverso da un SonarMork e un SonarConcrete, così come il
+che dovrà essere definito in modo diverso da un ``SonarMock`` e un ``SonarConcrete``, così come il
 metodo di inizializzazione ``sonarSetUp``:
 
 .. code:: java
@@ -798,12 +868,12 @@ e attivare un Thread interno di produzione di dati:
     }
 
 La parte applicativa che funge da consumatore dei dati prodotti dal Sonar dovrà invocare il metodo
-``getVal`` che viene definito in modo da bloccare il chiamante se il Sonar è in 'fase di produzione'
+``getVal`` che viene definito in modo da bloccare il chiamante se il Sonar è in 'fase di produzione',
 riattivandolo non appena il dato è stato prodotto:  
 
 .. code:: java
 
-    protected boolean produced   = false;   //synch var
+    protected boolean produced = false;   //synch var
 
     @Override
     public int getVal() {   //non synchronized perchè violerebbe l'interfaccia
@@ -824,7 +894,7 @@ riattivandolo non appena il dato è stato prodotto:
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il SonarMock
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Un Mock-sonar che produce valori da ``90`` a ``0`` può quindi ora essere definito come segue:
+Un Mock-sonar che produce valori di distanza da ``90`` a ``0`` può quindi ora essere definito come segue:
 
 .. code:: java
 
@@ -899,79 +969,199 @@ valori emessi sul dispositivo standard di output.
 Testing del dispositivo Sonar
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il testig di un sonar riguarda due apsetti distinti:
+Il testig di un sonar riguarda due aspetti distinti:
 
-#. il test sul corretto funzionamento del dispositivo in quanto tale:  posto di fronte ad esso
-   un ostacolo a distanza :math:`D`, deve emetta dati pari a  :math:`D \pm \epsilon`.
-#. il testo sul corretto funzionamento del componente software responsabile della trasformazione del dispositivo
+#. il test sul corretto funzionamento del dispositivo in quanto tale. Supponendo di porre
+   di fronte al Sonar un ostacolo a distanza :math:`D`, il Sonar deve emettere dati di valore
+   :math:`D \pm \epsilon`.
+#. il test sul corretto funzionamento del componente software responsabile della trasformazione del dispositivo
    in un produttore di dati consumabili da un altro componente.
 
 Ovviamente qui ci dobbiamo occupare della seconda parte, supponendo che la prima sia soddisfatta. A tal fine
 possiamo procedere come segue:
 
-- per il *LedMock*, possiamo conoscere la sequenza di valori emeessi e controllare che  un consumatore
-  riceva i valori nella gusta sequenza invocando il metodo ``getVal``
-- per il *LedConcrete*, poniamo uno schermo a distanza prefissata ``D`` e controlliamo un consumatore
-  riceva valori ``D + E`` invocando il metodo ``getVal``
+- per il *LedMock*, noi controlliamo la sequenza di valori emeessi e quindi possiamo
+  verificare che  un consumatore riceva dal metodo ``getVal``i valori nella giusta sequenza;
+- per il *LedConcrete*, poniamo uno schermo a distanza prefissata :math:`D`  e verifichiamo che
+  un consumatore riceva dal  metodo ``getVal`` valori :math:`D \pm \epsilon`.
 
-
-Una test-unit automatizzata per il SonarMock può essere quindi definita in JUnit come segue:
+Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in JUnit come segue:
 
 .. code:: java
 
-	@Test 
-	public void testSonarMock() {
+  @Test 
+  public void testSonarMock() {
     RadarSystemConfig.simulation = true;
     RadarSystemConfig.sonarDelay = 10; //quite fast generation...
-		
+		int delta = 1;
+
     ISonar sonar = DeviceFactory.createSonar();
     sonar.activate();
-    int v0 = sonar.getVal(); //first val consumed
+    int v0 = sonar.getVal();    //first val consumed
     while( sonar.isActive() ) {
-      int d = sonar.getVal(); //blocking!
-      int vexpected = v0-1; //each val is the previous-1
+      int d = sonar.getVal();   //blocking!
+      int vexpected = v0-delta; //each val is the previous-delta
       assertTrue( d == vexpected );
       v0 = d; 
     }
   }
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il RadarDisplay
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-Per il ``RadarDisplay`` abbiamo già visto che è disponibile un oggetto singleton che fornisce due metodi:
-
-       .. code:: java
-
-        public class radarSupport {
-        private static RadarControl rc;
-        public static void setUpRadarGui( ){
-          rc=...
-        }
-        public static void update(String d, String dir){
-          rc.update( d, dir );
-        }
-        }   
-
-
-
-
-
-
-+++++++++++++++++++++++++++++++++++++++++++++
-Il sistema simulato su PC
-+++++++++++++++++++++++++++++++++++++++++++++
+Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :math:`delta=\epsilon` 
+di varianza sulla distanza-base.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Controller
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
+Il componente che realizza la logica applicativa può essere definito partendo dal modello introdotto
+nella fase di analisi, attivando un Thread che realizza lo schema read-eval-print 
+con l'avvertenza però di realizzare ciascun requisito con un componente specifico:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Testing del sistema simulato 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. code:: java
+
+  public class Controller {
+    
+    public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
+      System.out.println("Controller | activate"  );
+      new Thread() {
+        public void run() { 
+          try {
+            while( sonar.isActive() ) {
+              int d = sonar.getVal();  
+              LedAlarmUsecase.doUseCase( led,  d  );   
+              RadarGuiUsecase.doUseCase( radar,d  );	 
+            }
+          } catch (Exception e) { ...  }					
+        }
+      }.start();
+    }
+  } 
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+LedAlarmUsecase
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+.. code:: java
+
+  public class LedAlarmUsecase {
+    public static void doUseCase(ILed led, int d) {
+      try {
+        if( d <  RadarSystemConfig.DLIMIT ) led.turnOn(); else  led.turnOff();
+      } catch (Exception e) { ... }					
+    }
+  } 
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+RadarGuiUsecase
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+.. code:: java
+
+ 	public class RadarGuiUsecase {
+    public static void doUseCase( IRadarDisplay radar, int d ) {
+		  radar.update(""+d, "90");
+    }	 
+  }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il sistema simulato su PC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il sistema viene dapprima costruito secnodo le specifiche contenuto nel file di configurazione e 
+successivamente attivato facendo partire il Sonar.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Fase di setup
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+.. code:: java
+
+  public class RadarSystemMainOnPc {
+  private ISonar sonar        = null;
+  private ILed led            = null;
+  private IRadarDisplay radar = null;
+
+    ...
+    public static void main( String[] args) throws Exception {
+      RadarSystemMainOnPc sys = new RadarSystemMainOnPc();
+      sys.setup( "RadarSystemConfigPcControllerAndGui.json" );
+      sys.build();
+      sys.activateSonar();
+    }  
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il file di configurazione
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
+.. code:: java
+
+  {
+  "simulation"       : "true",
+  "ControllerRemote" : "false",
+  "LedRemote"        : "false",
+  "SonareRemote"     : "false",
+  "RadarGuieRemote"  : "false",
+  "pcHostAddr"       : "localhost",
+  "raspHostAddr"     : "192.168.1.12",
+  "radarGuiPort"     : "8014",
+  "ledPort"          : "8010",
+  "sonarPort"        : "8012",
+  "controllerPort"   : "8016",
+  "serverTimeOut"    : "600000",
+  "applStartdelay"   : "3000",
+  "sonarDelay"       : "100",
+  "DLIMIT"           : "15",
+  "testing"          : "false"
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Fase di costruzione del sistema
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+  
+.. code:: java
+
+  public class RadarSystemMainOnPc {
+    ...
+	public void build() throws Exception {			
+		//Dispositivi di Input
+		sonar  = DeviceFactory.createSonar();
+		//Dispositivi di Output
+		led    = DeviceFactory.createLed();
+		radar  = DeviceFactory.createRadarGui();	
+		//Controller 
+		Controller.activate(led, sonar, radar);
+	} 
+    
+    public void activateSonar() {
+      if( sonar != null ) sonar.activate();
+    }
+
+    public static void main( String[] args) throws Exception { ... }
+  }
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Utilità per il testing
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
+
+.. code:: java
+
+  public class RadarSystemMainOnPc {
+    ... 
+    public ILed getLed() {
+      return led;
+    }
+    public ISonar getSonar() {
+      return sonar;
+    }
+    public IRadarDisplay getRadarGui() {
+      return radar;
+    }
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Testing del sistema simulato su PC
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+.. code:: java
+
 
 
 +++++++++++++++++++++++++++++++++++++++++++++
