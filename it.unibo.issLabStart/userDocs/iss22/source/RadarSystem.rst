@@ -48,6 +48,11 @@ Poichè il testo dei requisiti fornisce già un nome per ciascun requisito, si h
 di partenza per la :blue:`forward traceability`.
 
 +++++++++++++++++++++++++++++++++++++
+User stories
++++++++++++++++++++++++++++++++++++++
+
+
++++++++++++++++++++++++++++++++++++++
 Glossario
 +++++++++++++++++++++++++++++++++++++
 La redazione di un glossario è utile per pervenire alla definizione di Costumer requirements (:blue:`C-requirements`) 
@@ -64,6 +69,9 @@ Dal punto di vista della 'macchina', l'unico modo per relazionarsi con un ente m
 
 Poniamo dunque al committente anche domande da questo punto di vista, e altre domande volte 
 a chiarire bene la natura del sistema da realizzare.
+
+
+
 
 
 +++++++++++++++++++++++++++++++++++++
@@ -156,11 +164,11 @@ Sarà compito dei progettisti quello di trovare il modo (il :blue:`come`) perven
 date le premesse dell'analisi e le risorse a disposizione.
 
 Anticipiamo subito che il nostro approccio di riferimento sarà di tipo top-down, per motivi che si dovrebbero
-rusulara chiari durante il percorso che cominciamo adesso seguendo, al momento, un tipico modo di procedere bottom-up.
+risultare chiari durante il percorso che ora iniziamo seguendo, al momento, un tipico modo di procedere bottom-up.
 
 Sarà proprio rendendoci conto dei limiti di approcci bottom-up che acquisiremo (se non l'abbiamo già)
 il convincimento che conviene chiarire bene il :blue:`cosa` prima di affrontare il :blue:`come` e che anche
-il *come* può essere convenientemente affrontato ritardando o incapsulando il più possibile dettagli legati 
+il :blue:`come` può essere convenientemente affrontato ritardando o incapsulando il più possibile dettagli legati 
 alle tecnologie utilizzate.
 
 ++++++++++++++++++++++++++++++++++++++
@@ -226,9 +234,8 @@ possiamo rappresentare la situazione come segue:
 Chi realizza la logica applicativa?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Seguendo il principio di singola responsabilità (e un pò di buon senso) la realizzazione degli use-cases 
-applicativi non deve essere attribuita
-al software di gestione dei dispositivi di I/O.
+Seguendo il :blue:`principio di singola responsabilità` (e un pò di buon senso) la realizzazione degli use-cases 
+applicativi non deve essere attribuita al software di gestione dei dispositivi di I/O.
 
 Dunque, la nostra analisi ci induce a sostenere
 l'opportunità di introdurre un nuovo componente, che possiamo denominare ``Controller``), che abbia la
