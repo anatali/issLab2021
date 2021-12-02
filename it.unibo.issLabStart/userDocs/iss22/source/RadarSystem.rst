@@ -34,20 +34,57 @@ Si desidera costruire un'applicazione software capace di:
 --------------------------------------
 Analisi dei Requisiti
 --------------------------------------
+Iniziamo anallizzando il testo, cercando di chiarire con il committente il signifcato dei termini in esso presenti.
+Questa comunicazione a livello umano è fondamentale per formulare requisiti che siano:
 
-Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
+- Chiari, Corretti, Completi, Concisi
+- Non ambigui, consistenti
+- Tracciabili, Realizzabili, Collaudabili
+
++++++++++++++++++++++++++++++++++++++
+Tracciabilità
++++++++++++++++++++++++++++++++++++++
+Poichè il testo dei requisiti fornisce già un nome per ciascun requisito, si ha già un solido punto
+di partenza per la :blue:`forward traceability`.
+
++++++++++++++++++++++++++++++++++++++
+Glossario
++++++++++++++++++++++++++++++++++++++
+La redazione di un glossario è utile per pervenire alla definizione di Costumer requirements (:blue:`C-requirements`) 
+chiari e possibilmente non ambigui. 
+Il nostro glossario, la cui redazione lasciamo al lettore, dovrà includere i termini 
+*Sensore, Led, RadarDisplay* che corrispondono ad altrettanti :blue:`componenti` del sistema.
+
+In questa sede però, la nostra attenzione si rivolge alla possibilità/necessità di esprimere
+i requisiti ponendoci dal punto di vista dell'elaboratore, che (fortunatamente?!) non comprende
+il linguaggio naturale.
+
+Dal punto di vista della 'macchina', l'unico modo per relazionarsi con un ente menzionato nel glossario 
+è avere del software che lo rappresenta.
+
+Poniamo dunque al committente anche domande da questo punto di vista, e altre domande volte 
+a chiarire bene la natura del sistema da realizzare.
+
+
++++++++++++++++++++++++++++++++++++++
+Domande al committente
++++++++++++++++++++++++++++++++++++++
+
 
 .. list-table:: 
-   :widths: 50,50
-   :width: 100%
+  :widths: 50,50
+  :width: 100%
 
-   * - Il LED può/deve essere connesso allo stesso RaspberryPi del sonar? 
-     - Al momento si. In futuro però il LED potrebbe essere connesso a un diverso nodo di elaborazione.
-   * - Il committente fornisce qualche libreria per la costruzione del display ?
-     - Si, viene reso disponibile il supporto  ``radarPojo.jar`` scritto in JAVA che fornisce un oggetto
-       di classe ``radarSupport`` capace di creare una GUI in 'stile radar' e di visualizzare dati su di essa:
+  * - Il committente fornisce software relativo al Led ?
+    - Si, ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh`` (progetto *it.unibo.rasp2021*)
+  * - Il committente fornisce software per il Sonar ?
+    - Si, ``SonarAlone.c`` (progetto *it.unibo.rasp2021*)
+  * - Il committente fornisce qualche libreria per la costruzione del RadarDisplay ?
+    - Si, viene reso disponibile (progetto *it.unibo.java.radar*)  il supporto  ``radarPojo.jar`` 
+      che fornisce un singleton JAVA ``radarSupport`` capace di creare una GUI in 'stile radar' 
+      e di visualizzare dati su di essa:
 
-       .. code:: java
+      .. code:: java
 
         public class radarSupport {
         private static RadarControl rc;
@@ -55,15 +92,15 @@ Iniziamo ponendo al customer una serie di domande e riportiamone le risposte:
           rc=...
         }
         public static void update(String d,
-                                  String dir){
-		      rc.update( d, dir );
+              String dir){rc.update(d,dir);
         }
         }    
-
-       Il supporto è realizzato dal progetto *it.unibo.java.radar*.
-   * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
-       definibile in modo configurabile dall'utente finale?
-     - L'utente finale deve essere in grado di specificare in un 'file di configurazione' il valore di questa distanza.
+  * - Il LED può/deve essere connesso allo stesso RaspberryPi del sonar? 
+    - Al momento si. In futuro però il LED potrebbe essere connesso a un diverso nodo di elaborazione.
+  * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
+      definibile in modo configurabile dall'utente finale?
+    - L'utente finale deve essere in grado di specificare in un 'file di configurazione' 
+      il valore di questa distanza.
  
 Dai requisiti possiamo asserire che:
 
@@ -74,18 +111,18 @@ Dai requisiti possiamo asserire che:
 
 In sintesi:
 
-
 :remark:`Si tratta di realizzare un sistema software distribuito ed eterogeneo`
 
 +++++++++++++++++++++++++++++++++++++
 Piano di testing (funzionale)
 +++++++++++++++++++++++++++++++++++++  
 
-.. Requisito :blue:`ledAlarm`:
+Dai requsiti possiamo ricavare subito un insieme di test di verifica dei comportamenti che il software da
+sviluppare dovrà avere.
 
-Un test funzionale consiste nel porre un ostacolo davanti al Sonar
+Un possibile test funzionale consiste nel porre un ostacolo davanti al Sonar
 prima a una distanza ``D>DLIMIT`` e poi a una distanza ``D<DLIMIT`` e osservare il valore
-visualizzato sulla GUI.
+visualizzato sulla GUI e lo stato del Led.
 
 Tuttavia questo modo di procedere non è automatizzabile, in quanto richiede 
 la presenza di un operatore umano. Nel seguito cercheremo di organizzare le cose in modo
@@ -311,7 +348,7 @@ Il metodo di trasmissione è denominato ``forward`` per rendere più evidente il
 
 L'informazione scambiata è rappresenta da una ``String`` che è un tipo di dato presente in tutti
 i linguaggi di programmazione.
-Non viene introdotto un tipo (non-primitivo) diverso (ad esempio ``Message``) perchè non si vuole staibilire 
+Non viene introdotto un tipo  diverso (ad esempio ``Message``) perchè non si vuole stabilire 
 il vincolo che gli end-points della connessione siano componenti codificati nello medesimo linguaggio di programmazione
 
 La ``String`` restituita dal metodo ``receiveMsg`` può rappresentare una risposta a un messaggio
@@ -321,22 +358,98 @@ Ovviamente la definizione di questa interfaccia potrà essere estesa e modificat
 a partire dall fase di progettazione, ma rappresenta una forte indicazione dell'analista di 
 pensare alla costruzione di componenti software che possano ridurre il costo delle applicazioni future.
 
---------------------------------------
-Progettazione
---------------------------------------
-
-Iniziamo il nostro progetto con un piano di lavoro.
 
 +++++++++++++++++++++++++++++++++++++++++++++
-Piano di lavoro (per approccio bottom-up)
+Prodotti della analisi
 +++++++++++++++++++++++++++++++++++++++++++++
+
+Importanti prodotti, al termine della fase di analisi dei requisiti e del problema sono:
+
+-  la definizione di una :blue:`architettura logica` di riferimento che tiene conto dei vincoli posti 
+   dai requisiti e dal problema che ne consegue;
+-  la proposta di un :blue:`piano di lavoro` per lo sviluppo del sistema.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Architettura logica
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'architettura logica di un sistema costituisce un :blue:`modello del sistema` ispirato dai requisiti funzionali 
+e dalle forze in gioco nel dominio applicativo o nella specifica applicazione e mira ad identificare 
+i macro sottosistemi in cui il **problema stesso** suggerisce di articolare il sistema risolvente. 
+
+L'architettura logica è il più possibile **indipendente da ogni ipotesi sull'ambiente di implementazione**.
+
+Un modo per *valutare la qualità* di una architettura logica e la *coerenza con i requisiti* 
+è dare risposta a opportune domande, come le seguenti:
+
+- E' possibile addentrarsi nei dettagli dell'architettura procedendo :blue:`incrementalmente` 
+  a livelli di astrazione via via descrescenti (con tecniche di raffinamento e :blue:`zooming`) 
+  o siamo di fornte a un ammasso non organizzato di parti?
+- Le dipendenze tra le parti sono state impostate a livello logico o riflettono (erroneamente) 
+  una *visione implementativa*?
+- Se nel modello compaiono entità denotate da **termini non definiti** nel glossario costruito 
+  dall'analista dei requisiti, quale è la motivazione della loro presenza? 
+  Sono elementi realmente necessari o siamo di fronte ad una prematura anticipazione di elementi di progettazione?
+- Se nel modello **non compaiono** entità corrispondenti a termini definiti nel glossario, 
+  quale è la motivazione della loro mancanza? Siamo di fronte a una dimenticanza 
+  o vi sono ragioni reali per non includere questi elementi?
+
+Nel caso dell'applicazione in esame, l'architettura logica del sistema è piuttosto semplice:
+
+Il componente ``Controller`` deve accedere (come consumatore) al Sonar 
+come dispositivo produttore di dati e inviare comandi al Led e al RadarDisplay come dispositvi di output.
+
+Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
+sole porre in luce la relazione logica tra i componenti individuati dall'analisi del problema.
+
+Il :blue:`come` avviene l'interazione tra le parti relativa alla acqusizione dei dati e all'invio dei comandi
+non è specificato al momento. 
+
+L'analista però evidenzia quanto segue:
+
+#. l'uso della memoria comune come strumento di comunicazione va evitato, per  
+   ottenere la flessibità di poter eseguire ciascun componente su un diverso nodo di elaborazione; 
+#. il ``Controller`` può acqusire i dati in due modi diversi:
+  #. inviando una richieste al Sonar, che gli fornisce un dato come risposta
+  #. il Sonar pubblica i dati prodotti su un broker accessibile al ``Controller`` 
+
+Poichè abbiamo in precedenza esluso forme di interazione publish-subscribe, escludiamo al momento
+il caso 2.1. Dunque sappiamo :blue:`cosa` fare e non fare: 
+in particolare, l'interazione Controller-Sonar sarà basata su una interazione punto-a-punto utilizzando
+il protocollo TCP.  Il :blue:`come` realizzare questa interazione sarà compito del progettista.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Piano di lavoro
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Trattandosi di uno sviluppo di tipo bottm-up, il piano di lavoro parte dallo sviluppo dei componenti,
+seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistema che soddisfa i requisiti.
+
+Poichè il nostro obiettivo è anche quello di riusare codice fornito dal committente, ma non predisposto
+alla distribuzione, possiamo pensare di procedere come segue:
 
 #. definizione dei componenti software legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
 #. definizione di alcuni supporti di base TCP per componenti lato client a lato server, con l'obiettivo di
-   formare un insieme riusabile anche in applicazioni future;
+   formare un insieme riusabile anche in applicazioni future; 
 #. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare  
    alle comunicazioni TCP i componenti-base forniti dal committente.
 #. assemblaggio dei componenti `enabler` per formare il sistema distribuito.
+
+Il punto 2 non è indispensabile, ma, come detto, può essere un elemento strategico a livello aziendale.
+
+
+--------------------------------------
+Progettazione e sviluppo incrementale
+--------------------------------------
+
+Iniziamo il nostro progetto affrontando il primo punto del piano di lavoro proposto dall'analisi.
+
+Usando la terminologia :blue:`SCRUM, impostiamo il primo :blue:`SPRINT` dello sviluppo, al termine del  quale
+la prevista :blue:`Srint Review` farà il punto della situazione con il committente e getterà le basi per
+il passo successivo, che potrà coincidere o meno con quello pianificato nell'analisi.
+
+
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Componenti per i dispositivi di I/O
@@ -1169,7 +1282,7 @@ Definiamo dunque in Java due classi:
 
  
 +++++++++++++++++++++++++++++++++++++++++++++
-Il sistema distribuito
+Il sistema reale distribuito
 +++++++++++++++++++++++++++++++++++++++++++++
 
  
