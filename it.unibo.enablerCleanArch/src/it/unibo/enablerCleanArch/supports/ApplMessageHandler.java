@@ -16,7 +16,7 @@ protected String name;
 	
 	/* Used in case of reply */
 	public void setConn( Interaction2021 conn) {
-		System.out.println("ApplMessageHandler | setConn:" + conn);
+		Colors.out("ApplMessageHandler | setConn:" + conn, Colors.BLUE);
 		this.conn = conn;
 	}
 	

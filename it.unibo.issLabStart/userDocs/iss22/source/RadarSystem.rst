@@ -336,6 +336,8 @@ Inizialmente il server opera come ricevitore di messaggi e il client come emetti
 il server può anche dover inviare messaggi ai client, ad esempio quando  si richiede una interazione di tipo
 :blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'idea di connessione: l'interfaccia ``Interaction2021``
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -352,6 +354,8 @@ sono in grado di stabilire una :blue:`connessione` stabile sulla quale inviare e
 
 Questo concetto può essere realizzato da un oggetto che rende disponibile opportuni metodi, come quelli definiti
 nella seguente interfaccia:
+
+.. _conn2021: 
 
 .. code:: Java
 
@@ -543,9 +547,9 @@ testato ma non adatto alla distribuzione (che possiamo denominare :blue:`core-co
 all'interno di un involucro che funga da una sorta di  'membrana' capace di ricevere e 
 trasmettere informazione.
 
-Ad esempio, il ``Controller`` su PC utilizzerà un TCP-server con iterfaccia ``ISonar`` che riceverà i dati 
+Ad esempio, il ``Controller`` su PC utilizzerà un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
 dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getVal``.
-Inoltre utilizzera un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
+Inoltre utilizzerà un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
 sul Raspberry.
 
 Questa idea di :blue:`enabler` sembra dunque promettente come strumento per un passaggio graduale
@@ -1168,14 +1172,15 @@ Testing del sistema simulato su PC
 Supporti per TCP
 +++++++++++++++++++++++++++++++++++++++++++++
 
-Introduciamo classi che permettano di istanziare oggetti di supporto lato client e lato server.
+Introduciamo classi di supporto per TCP lato client e lato server.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TCPClient
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Mediante la classe ``TcpClient``: possiamo istanziare oggetti che stabilisccono una connessione 
-su un data coppia ``IP, Port``. L'oggetto ``Interaction2021`` restiruito dal metodo static 
-``connect`` potrà essere usato per inviare-ricevere messaggi.
+Mediante la classe ``TcpClient`` possiamo istanziare oggetti che stabilisccono una connessione 
+su un data coppia ``IP, Port``. Il metodo  static ``connect`` restiruisce un oggetto 
+che implementa l'interfaccia  :ref:`Interaction2021<conn2021>`  
+e che potrà essere usato per inviare-ricevere messaggi.
 
 .. code:: Java
 
@@ -1190,15 +1195,18 @@ occorre:
 - permettere di stabilire (in generale) connenessioni con più client;
 - fare in modo che si stabilisca una diversa connessione con ciascun client;
 - fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
-  codice applicativo 
+  codice applicativo.
 
-Per raggoungere questi obiettivi, introduciamo un insieme di supporti che permettano al server di
-porre in esecuzione codice applicativo  rapprsentato da oggetti costruiti come specializzazioni
+Per raggiungere questi obiettivi, introduciamo un insieme di supporti che permettano al server di
+porre in esecuzione codice applicativo  rappresentato da oggetti costruiti come specializzazioni
 di una classe astratta ``ApplMessageHandler``:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ApplMessageHandler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. _msgh: 
+
 .. code:: Java
 
   public abstract class ApplMessageHandler {  
@@ -1207,18 +1215,21 @@ ApplMessageHandler
     public void setConn( Interaction2021 conn) { ... }
   }
 
-La classe astratta  ``ApplMessageHandler``:  definisce il metodo abstract ``elaborate( String message )``
+La classe astratta  ``ApplMessageHandler``  definisce il metodo abstract ``elaborate( String message )``
 che le classi applicative devono implementare per realizzare la voluta  gestione dei messaggi.
 
-Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* 
-può utilizzare per l'invio di messaggi sulla connessione.
+Questa classe può ricevere per *injection* (metodo ``setConn``) una connessione 
+di tipo :ref:`Interaction2021<conn2021>` che il metodo *elaborate* 
+può utilizzare per l'invio di messaggi (di risposta) sulla connessione.
+
 Questa connessione sarà fornita ad ``ApplMessageHandler`` dai supporti di più basso livello che ora
 introdurremo.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TcpConnection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-La classe ``TcpConnection`` costituisce una implementazione della interfaccia ``Interaction2021``
+La classe ``TcpConnection`` costituisce una implementazione della interfaccia 
+:ref:`Interaction2021<conn2021>`
 e quindi realizza i metodi di supporto per la ricezione e la trasmissione di
 messaggi applicativi sulla connessione fornita da una ``Socket``.
 
@@ -1228,18 +1239,21 @@ messaggi applicativi sulla connessione fornita da una ``Socket``.
     ...
   public TcpConnection( Socket socket  ) throws Exception { ... }
     @Override
-	  public void forward(String msg)  throws Exception { ... }
+    public void forward(String msg)  throws Exception { ... }
     @Override
-	  public String receiveMsg()  { ... }
+    public String receiveMsg()  { ... }
     @Override
-	   public void close() { ... }
+    public void close() { ... }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TcpMessageHandler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Mediante la classe ``TcpMessageHandler`` possiamo creare un
 oggetto (dotato di un Thread interno) che si occupa di ricevere messaggi su una data connessione 
-``Interaction2021``, delegandone la gestione a un oggetto dato, di tipo  ``ApplMessageHandler``.
+:ref:`Interaction2021<conn2021>`, delegandone la gestione a un oggetto dato, 
+di tipo  :ref:`ApplMessageHandler<msgh>`.
+
+.. _tcpmsgh: 
 
 .. code:: Java
 
@@ -1251,34 +1265,39 @@ oggetto (dotato di un Thread interno) che si occupa di ricevere messaggi su una 
 TCP Server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Mediante la classe ``TcpServer`` possiamo istanziare oggetti che realizzano un server TCP che
-apre una ``ServerSocket`` e gesticse la richiesta di connessione da parte di un client
-creando un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client.
+apre una ``ServerSocket`` e gestisce la richiesta di connessione da parte di un client
+creando un oggetto di classe :ref:`TcpMessageHandler<tcpmsgh>`
+adibito alla ricezione dei messaggi inviati dai client.
 
 .. code:: Java
 
-	public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
-		new Thread() {
-			public void run() {
-		      try {
-			    ServerSocket serversock = new ServerSocket( port );
-			    serversock.setSoTimeout( ... );
-				while( true ) {
-					//Accept a connection				 
-			 		Socket sock          = serversock.accept();	
-			 		Interaction2021 conn = new TcpConnection(sock);
-			 		applHandler.setConn(conn);
-			 		//Create a message handler on the connection
-			 		new TcpApplMessageHandler( applHandler );			 		
-				}//while
-			  }catch (Exception e) {	...   }	
-			}
-		}.start();
+  public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
+   new Thread() {
+    public void run() {
+    try {
+      ServerSocket serversock = new ServerSocket( port );
+      serversock.setSoTimeout( ... );
+      while( true ) {
+        //Accept a connection				 
+        Socket sock          = serversock.accept();	
+        Interaction2021 conn = new TcpConnection(sock);
+        applHandler.setConn(conn);
+        //Create a message handler on the connection
+        new TcpApplMessageHandler( applHandler );			 		
+      }//while
+    }catch (Exception e) {	...   }	
+    }
+   }.start();
 	}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Unit testing
+Una TestUnit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Una TestUnit può essere utile sia come esempio d'uso dei suppporti, sia per chiarire le
+interazioni client-server.
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1287,87 +1306,18 @@ Esempio di uso
 
 TODO
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++
 Gli enablers
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++
 
-un nuovo tipo di oggetto (che denominiamo al momento genericamente :blue:`enabler`) 
-capace di ricevere-trasmettere messaggi vie rete e di ricondurre i messaggi ricevuti alla esecuzione di 
-metodi di un altro oggetto 'embedded' locale, incapace di interagire via rete.
-
-Ad esempio, con riferimento al ``Led``, il componente di base dovrebbe implementare una interfaccia ome quella che segue:
-
-.. code:: java
-
-  public interface ILed {
-    public void turnOn();
-    public void turnOff();
-    public boolean getState();
-  }
+ 
 
 
 
-L'*enabler* relativo al Led (che denominiamo ``LedServer``) dovrebbe comportarsi come segue:
-
-.. code:: java
-
-  led : ILed 
-  while True :
-    attendi un messaggio di comando per un Led
-    analizza il contenuto del comando ed esegui  
-       led.turnOn()  oppure led.turnOff()
 
 .. L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare  un qualche prototcollo di comunicazione. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-TCPServer
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-Questa connessione è rappresentata nella infrastruttura software che ci aggingiamo a definire da un oggetto di 
-classe ``TcpConnection`` che  implementa l'interfaccia  ``Interaction2021`` così definita:
-
-.. code::
-
-  interface Interaction2021  {	 
-    public void forward(  String msg ) throws Exception;
-    public String receiveMsg(  )  throws Exception;
-    public void close( )  throws Exception;
-  }
-
-Il metodo di invio è denominato ``forward`` per rendere più evidente il fatto che si tatta di una trasmissione 
-di tipo :blue:`fire-and-forget`.
-
-La classe ``TcpConnection`` implementa questa interfaccia  utilizzando la ``java.net.Socket``
-specificata nel costruttore, utilizzando opportuni Stream Java (forniti da ``java.io``) costruiti su take socket.
- 
-Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
-il server può anche dover inviare messaggi ai client, quando  si richiede una interazione di tipo
-:blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
-
-Per agevolare la costruzione di componenti software capaci di agire sia come come emettitori sia come ricevitori di messaggi 
-su una connessione di tipo ``Interaction2021``, introduciamo alcune classi di supporto:
-
-- ``class TcpMessageHandler``:  oggetto dotato di un Thread interno che si occupa di
-  ricevere messaggi su una data connessione ``Interaction2021``, delegandone la gestione a un oggetto dato, di tipo 
-  ``ApplMessageHandler``.
-
-- ``class ApplMessageHandler``:  classe astratta che definisce il metodo abstract ``elaborate( String message )``
-  che opportune classi applicative devono implementare per realizzare la voluta  gestione dei messaggi. 
-  Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
-  utilizzare per l'invio di messaggi
-
-
-Queste classi servono per poter definire supporti capaci di realizzare un server e un client, delegando la logica
-applicativa ad opportuni oggetti definiti dall'application designer. 
-
-- ``class TcpEnabler``: realizza il server che apre una ``ServerSocket`` 
-  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
-  sulla  connessione stabilita attraverso la ``ServerSocket``.
-  Al momento della creazione, l'application designer specifica nel costruttore l'handler 
-  di tipo ``ApplMessageHandler`` per la gestione di messaggi a livello applicativo
-  che il server passa a una nuova istanza di ``TcpMessageHandler`` dopo avervi 'iniettato' la connessione.
- 
+  
 
 
 
@@ -1390,17 +1340,16 @@ con riferimento a un preciso protocollo e a un metodo di elaborazione dei messag
     public abstract void elaborate(String message);
   }
 
-La classe ``ApplMessageHandler`` è una classe astratta che definisce il metodo  ``abstract void elaborate( String message )``
-che opportune classi applicative devono implementare per realizzare la voluta  gestione dei messaggi. 
-Questa classe riceve per *injection* una connessione di tipo ``Interaction2021`` che il metodo *elaborate* può
-utilizzare per l'invio di messaggi
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Enabler per il Led
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Un esempio di specializzazione relativo a Led :
 
 .. code:: java
 
   public class LedServer extends ApplMessageHandler  {
-  ILed led = LedAbstract.createLedConcrete();
+  ILed led = DeviceFactory.createLed();
 
     public LedServer(  int port  )   {
       super("LedServer");
@@ -1410,14 +1359,11 @@ Un esempio di specializzazione relativo a Led :
     public void setProtocolServer(int port, ApplMessageHandler enabler) {
       try {
         new TcpServer( name+"Server", port,  this );
-      } catch (Exception e) {
-        e.printStackTrace();
-      } 			
+      } catch (Exception e) { ... } 			
     }
     
     @Override		//from ApplMessageHandler
     public void elaborate(String message) {
-      System.out.println(name+" | elaborate:" + message);
       if( message.equals("on")) led.turnOn();
       else if( message.equals("off") ) led.turnOff();
     }
