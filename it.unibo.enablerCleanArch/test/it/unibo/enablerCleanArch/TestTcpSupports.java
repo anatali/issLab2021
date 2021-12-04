@@ -2,11 +2,9 @@ package it.unibo.enablerCleanArch;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
@@ -43,9 +41,12 @@ private static int count = 1;
  * and waits for the answer
  */
 class ClientForTest{
-	public void doWork(String name) {
+	public static boolean withserver = true;
+	
+	public void doWork( String name, int nattempts ) {
 		try {
-			Interaction2021 conn  = TcpClient.connect("locahost", TestTcpSupports.testPort);
+			Interaction2021 conn  = TcpClient.connect("localhost", TestTcpSupports.testPort,nattempts);
+			//System.out.println(name + " | conn: " +conn );	
 			String request = "hello from" + name;
 			conn.forward(request);
 			String answer = conn.receiveMsg();
@@ -53,50 +54,66 @@ class ClientForTest{
 			assertTrue( answer.equals("answerTo_"+ request));
 		} catch (Exception e) {
 			System.out.println(name + " | ERROR " + e.getMessage());	
-			fail();
+			if( withserver ) fail();
 		}
 	}
 }
 
 public class TestTcpSupports {
 private TcpServer server;
-public static final int testPort = 8111; 
+public static final int testPort = 8112; 
 
 
-	@Before
+	//@Before
 	public void up() {
-		System.out.println("up");
-		//Create a server	
-		server = new TcpServer("tcpTestServer",testPort, NaiveHandler.create());
 	}
 	
 	@After
 	public void down() {
-		//System.out.println("down");	
 		if( server != null ) server.deactivate();
 	}	
 	
+	protected void startTheServer(String name) {
+		server = new TcpServer(name,testPort, NaiveHandler.create());
+		server.activate();		
+	}
 	
-	//@Test 
+	@Test 
+	public void testClientNoServer() {
+		System.out.println("testClientNoServer");
+		ClientForTest.withserver = false;
+		//Start the server later 
+		/*
+		new Thread() {
+			public void run() {
+				System.out.println("testClientNoServer run");
+				delay(5000);
+				System.out.println("testClientNoServer starts the server");
+				startTheServer("serverLate");			
+			}
+		}.start();*/
+		new ClientForTest().doWork("clientNoServer",3 );	
+	}
+	
+	
+	@Test 
 	public void testSingleClient() {
-		server.activate();
+		startTheServer("oneClientServer");
 		System.out.println("tesSingleClient");
 		//Create a connection
-		new ClientForTest().doWork("client1");
-		//delay(3000);
+		new ClientForTest().doWork("client1",10 );		
 		System.out.println("tesSingleClient BYE");
 	}
 	
 	
 	@Test 
 	public void testManyClients() {
-		server.activate();
+		startTheServer("manyClientsServer");
 		System.out.println("testManyClients");
 		//Create a connection
-		new ClientForTest().doWork("client1");
-		new ClientForTest().doWork("client2");
-		new ClientForTest().doWork("client3");
-		//delay(3000);
+		new ClientForTest().doWork("client1",10);
+		new ClientForTest().doWork("client2",1);
+		new ClientForTest().doWork("client3",1);
 		System.out.println("testManyClients BYE");
 	}	
 	

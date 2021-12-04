@@ -29,8 +29,6 @@ private  ApplMessageHandler handler ;
 			Colors.out("TcpApplMessageHandler | BYE"   );
 		}catch( Exception e) {
 			Colors.outerr("TcpApplMessageHandler | ERROR:" + e.getMessage()  );
-		}
-		
+		}	
 	}
- 
 }

@@ -11,7 +11,7 @@ public class RadarGuiClient extends EnablerAsClient implements IRadarDisplay {
 
 	@Override
 	protected Interaction2021 setProtocolClient(String host, int port) throws Exception {
-		return TcpClient.connect( host, port);
+		return TcpClient.connect( host, port, 10);
 	}
 	
 	@Override  //from IRadarGui

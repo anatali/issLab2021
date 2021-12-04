@@ -6,7 +6,7 @@ import java.net.Socket;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 public class TcpServer extends Thread{
-//private Thread executor;
+ 
 private boolean stopped = true;
 private ApplMessageHandler applHandler;
 private int port;
@@ -19,7 +19,6 @@ private ServerSocket serversock;
 	      try {
 		    serversock = new ServerSocket( port );
 		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
-		    //activate();
 	     }catch (Exception e) { 
 	    	 Colors.outerr(getName() + " | ERROR: " + e.getMessage());
 	     }
@@ -28,10 +27,12 @@ private ServerSocket serversock;
 	@Override
 	public void run() {
 	      try {
+		  	//Colors.out(getName() + " | STARTING ... "  );
 			while( ! stopped ) {
 				//Accept a connection				 
-				Colors.out(getName() + " | waits on server port=" + port);	 
+				Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock, Colors.GREEN);	 
 		 		Socket sock          = serversock.accept();	
+				Colors.out(getName() + " | accepted sock " + sock, Colors.GREEN  );	 
 		 		Interaction2021 conn = new TcpConnection(sock);
 		 		applHandler.setConn(conn);
 		 		//Create a message handler on the connection
@@ -54,7 +55,7 @@ private ServerSocket serversock;
 			stopped = true;
 			serversock.close();
 		} catch (IOException e) {
-			System.out.println(getName() + " | ERROR: " + e.getMessage());	 
+			Colors.outerr(getName() + " | deactivate ERROR: " + e.getMessage());	 
 		}
 	}
 	

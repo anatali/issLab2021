@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.*;
+import it.unibo.enablerCleanArch.domain.RadarGui;
 import it.unibo.enablerCleanArch.main.RadarSystemAllOnPc;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
@@ -41,15 +42,15 @@ private RadarSystemAllOnPc sys;
 	
 	@Test 
 	public void testLedAlarmAndRadarGui() {
-		System.out.println("testLedAlarm");
-/*		
+		System.out.println("testLedAlarmAndRadarGui");
+ 		
 		int nearDistance = RadarSystemConfig.DLIMIT-5;
-		sys.oneShotSonarForTesting(nearDistance);
+		//sys.oneShotSonarForTesting(nearDistance);
 		delay(1000);//give time the system to work. TODO: do it better
 		//System.out.println("Led should be on: current state= "+sys.getLed().getState());
 		RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
 	    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == nearDistance);
-	    
+	    /*
 	    int farDistance = RadarSystemConfig.DLIMIT + 30;
 		sys.oneShotSonarForTesting( farDistance );
 		delay(1000);//give time the system to work. TODO: do it better

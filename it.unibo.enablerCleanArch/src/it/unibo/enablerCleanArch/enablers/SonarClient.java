@@ -23,7 +23,7 @@ public class SonarClient extends EnablerAsClient{
 	 
 	@Override
 	protected Interaction2021 setProtocolClient( String host, int port  ) throws Exception {
-		return TcpClient.connect(host,  port);
+		return TcpClient.connect(host,  port, 10);
 		//Coap: attivo un SonarObserver che implementa getVal
 	}
 
