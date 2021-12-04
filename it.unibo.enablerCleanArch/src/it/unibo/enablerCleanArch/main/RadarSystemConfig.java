@@ -27,6 +27,8 @@ public class RadarSystemConfig {
 
 	public static int sonarDelay          =  100;     
 	public static int DLIMIT              =  15;     
+	public static int testingDistance     =  DLIMIT - 2;     
+    
 
 	public static boolean testing         = false;			
 

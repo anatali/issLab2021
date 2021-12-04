@@ -27,8 +27,7 @@ private RadarSystemAllOnPc sys;
 			RadarSystemConfig.RadarGuieRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
 			sys.build();
-			//sys.activateSonar();   //the sonar does not start if RadarSystemConfig.testing
-			delay(5000);
+			//delay(5000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
  		}
@@ -41,24 +40,28 @@ private RadarSystemAllOnPc sys;
 	
 	
 	@Test 
-	public void testLedAlarmAndRadarGui() {
-		System.out.println("testLedAlarmAndRadarGui");
- 		
-		int nearDistance = RadarSystemConfig.DLIMIT-5;
-		//sys.oneShotSonarForTesting(nearDistance);
-		delay(1000);//give time the system to work. TODO: do it better
-		//System.out.println("Led should be on: current state= "+sys.getLed().getState());
+	public void testFarDistance() {
+		System.out.println("testFarDistance");
+		//Obstacle far
+ 		RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT +20;
+		sys.activateSonar();   //il sonar produce un solo valore
+		while( sys.getSonar().isActive() ) delay(10);   //give time the system to work 
 		RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
-	    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == nearDistance);
-	    /*
-	    int farDistance = RadarSystemConfig.DLIMIT + 30;
-		sys.oneShotSonarForTesting( farDistance );
-		delay(1000);//give time the system to work. TODO: do it better
-		//System.out.println("Led should be off: current state= "+sys.getLed().getState());
-	    assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == farDistance );
-	    */
+	    assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance );
+	    delay(2000) ; //give time to look at the display
 	}	
 	
+	@Test 
+	public void testNearDistance() {
+		System.out.println("testNearDistance");
+		//Obstacle near
+		RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT - 1;
+		sys.activateSonar();   //il sonar produce un solo valore
+		while( sys.getSonar().isActive() ) delay(10); 	//give time the system to work 
+		RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
+	    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance);
+	    delay(2000) ; //give time to look at the display
+	}	
 	
 	private void delay( int dt ) {
 		try {

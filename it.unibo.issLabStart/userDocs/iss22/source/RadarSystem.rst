@@ -907,15 +907,25 @@ Un Mock-sonar che produce valori di distanza da ``90`` a ``0`` può quindi ora e
     protected void sonarSetUp(){  curVal = 90;  }
     @Override
     protected void sonarProduce() {
-      curVal--;
-      if( curVal == 0 ) stopped = true;
-      setVal(   );    //produce
-      delay(RadarSystemConfig.sonarDelay);  //rallenta il rate di generazione 
+      if( RadarSystemConfig.testing ) {
+        curVal = RadarSystemConfig.testingDistance;
+        stopped = true;  //one shot
+      }else {
+        curVal--;
+        stopped = ( curVal == 0 );
+        setVal(   );    //produce
+        delay(RadarSystemConfig.sonarDelay);  //rallenta il rate di generazione 
     }
   }  
 
-Si noti che viene definito un nuovo parametro di configurazioe ``sonarDelay`` relativo al rallentamento
-della frequenza di generazione dei dati.
+Si noti che: 
+
+- viene definito un nuovo parametro di configurazioe ``testing`` che, quando ``true`` denota che
+  il sonar sta lavorando in una fase di testing, per cui produce un solo valore dato fal
+  parametro ``testingDistance``;
+- viene definito un nuovo parametro di configurazioe ``sonarDelay`` relativo al rallentamento
+  della frequenza di generazione dei dati.
+ 
 
 .. code:: java
 
@@ -923,7 +933,9 @@ della frequenza di generazione dei dati.
   "simulation"       : "true",
    ...
   "DLIMIT"           : "15",
-  sonarDelay         : "100"
+  "testing"          : "false"
+  "testingDistance"  : "10",
+  "sonarDelay"       : "100"
   }
 
 
@@ -1165,8 +1177,6 @@ Inseriamo nel main program  metodi che restitusicono un riferimento ai component
 Testing del sistema simulato su PC
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il testing
-
 La testUnit introduce un metodo di setup per definire i parametri di configurazione 
 (in modo da non dipendere da files esterni) e per costruire il sistema.
 
@@ -1180,41 +1190,40 @@ La testUnit introduce un metodo di setup per definire i parametri di configurazi
       try {
         sys = new RadarSystemAllOnPc();
         //Set system configuration (we don't use RadarSystemConfig.json)
-        RadarSystemConfig.simulation 		    = true;    
-        RadarSystemConfig.testing    		    = true;    		
-        RadarSystemConfig.ControllerRemote	= false;    		
-        RadarSystemConfig.LedRemote  		    = false;    		
-        RadarSystemConfig.SonareRemote  	  = false;    		
-        RadarSystemConfig.RadarGuieRemote  	= false;    	
+        RadarSystemConfig.simulation        = true;    
+        RadarSystemConfig.testing           = true;    		
+        RadarSystemConfig.ControllerRemote  = false;    		
+        RadarSystemConfig.LedRemote         = false;    		
+        RadarSystemConfig.SonareRemote      = false;    		
+        RadarSystemConfig.RadarGuieRemote   = false;    	
         RadarSystemConfig.pcHostAddr        = "localhost";
         sys.build();
-        //sys.activateSonar();   //the sonar does not start if RadarSystemConfig.testing
-        delay(5000);
       } catch (Exception e) {
         fail("setup ERROR " + e.getMessage() );
       }
     }
   
-    
-    @Test 
-    public void testLedAlarmAndRadarGui() {
-      System.out.println("testLedAlarm");
-  /*		
-      int nearDistance = RadarSystemConfig.DLIMIT-5;
-      sys.oneShotSonarForTesting(nearDistance);
-      delay(1000);//give time the system to work. TODO: do it better
-      //System.out.println("Led should be on: current state= "+sys.getLed().getState());
-      RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
-        assertTrue(  sys.getLed().getState() && radar.getCurDistance() == nearDistance);
-        
-        int farDistance = RadarSystemConfig.DLIMIT + 30;
-      sys.oneShotSonarForTesting( farDistance );
-      delay(1000);//give time the system to work. TODO: do it better
-      //System.out.println("Led should be off: current state= "+sys.getLed().getState());
-        assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == farDistance );
-        */
-    }	
+  @Test 
+  public void testFarDistance() {
+    //Simaulate obstacle far
+    RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT +20;
+    sys.activateSonar();   //il sonar produce un solo valore
+    while( sys.getSonar().isActive() ) delay(10);   //give time the system to work 
+    RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
+    assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance );
+    delay(2000) ; //give time to look at the display
+  }	
 
+  @Test 
+  public void testNearDistance() {
+    //Simaulate obstacle near
+    RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT - 1;
+    sys.activateSonar();   //il sonar produce un solo valore
+    while( sys.getSonar().isActive() ) delay(10); 	//give time the system to work 
+    RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
+    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance);
+    delay(2000) ; //give time to look at the display
+  }
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Supporti per TCP

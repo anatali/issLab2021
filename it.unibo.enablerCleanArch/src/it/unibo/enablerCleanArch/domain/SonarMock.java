@@ -11,9 +11,14 @@ public class SonarMock extends SonarModel implements ISonar{
 	
 	@Override
 	protected void sonarProduce() {
-		curVal--;
-		//System.out.println("SonarMock | curVal="+curVal);
-		if( curVal < 0 ) stopped = true;
+		if( RadarSystemConfig.testing ) {
+			curVal = RadarSystemConfig.testingDistance;
+			stopped = true;  //one shot
+		}else {
+			curVal--;
+			//System.out.println("SonarMock | curVal="+curVal);
+			stopped = ( curVal == 0 );
+		}
 		setVal(   ); 
 		delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
  	}
