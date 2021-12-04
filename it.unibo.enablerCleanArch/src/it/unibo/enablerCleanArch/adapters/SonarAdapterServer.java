@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.adapters;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
+import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
  
@@ -15,7 +16,7 @@ private int curVal       = -1;
 
 	public SonarAdapterServer( String name, int port ) {
 		super(name, port);
-		System.out.println(name+" |  STARTS on" + port);
+		Colors.out(name+" |  STARTS on" + port);
  	}
 
 	@Override	//from EnablerAsServer
@@ -26,9 +27,10 @@ private int curVal       = -1;
 
 		//new CoapInputObserver( name+"Server", port,  this );
  	}	
-	
-	public void deactivate() {}	 //from ISonar
-	public  void activate() {}   //from ISonar
+	@Override  //from ISonar
+	public void deactivate() {}	
+	@Override  //from ISonar
+	public  void activate() {}    
 
 	@Override //from ISonar
 	public boolean isActive() {

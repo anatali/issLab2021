@@ -533,9 +533,9 @@ Ma forse non è proprio così.
     in particolare, l'interazione Controller-Sonar sarà basata su una interazione punto-a-punto utilizzando
     il protocollo TCP.  Il :blue:`come` realizzare questa interazione sarà compito del progettista.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Dagli oggetti alla distribuzione
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dagli oggetti alla distribuzione: gli enablers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il fatto di avere espresso il ``Controller`` con riferimento a interfacce e non ad oggetti concreti, 
 significa che il progettista si può avvalere di appropriati :blue:`design pattern` per 
@@ -1025,18 +1025,18 @@ Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in J
 Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :math:`delta=\epsilon` 
 di varianza sulla distanza-base.
 
+.. _controller: 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Controller
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
 Il componente che realizza la logica applicativa può essere definito partendo dal modello introdotto
-nella fase di analisi, attivando un Thread che realizza lo schema read-eval-print 
-con l'avvertenza però di realizzare ciascun requisito con un componente specifico:
+nella fase di analisi, attivando un Thread che realizza lo schema *read-eval-print*.
+Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
 
 .. code:: java
 
   public class Controller {
-    
     public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
       System.out.println("Controller | activate"  );
       new Thread() {
@@ -1575,22 +1575,38 @@ Test con molti clienti
 Gli enablers
 +++++++++++++++++++++++++++++++++++++++++++++
 
+L'analisi del problema ha posto in evidenza la opportunità/necessità,
+di introdurre nel sistema degli :blue:`enabler`, che hanno lo scopo quello di incapsulare 
+:blue:`core-code` all'interno di una sorta di un ente capace di ricevere e trasmettere informazione.
+
+All'interno di un processo di sviulppo bottom-up, in cui abbiamo selezionato il procollo TCP come
+la tecnologia di riferimento per ricevere e trasmettere informazione, risulta naturale pensare a 
+due tipi di enabler: uno per ricevere (diciamo un 'server') e uno per trasmettere (diciamo un 'client').
  
+Nel quadro di una architettura port-adapter, ponendo il ``Controller`` su PC, 
+questi, senza modificare il codice introdotto in :ref:`Controller<controller>`:
 
+- accederà al Sonar attraverso un adpater-enabler 'tipo server' che implementa l'interfaccia ``ISonar``; 
+- mentre accederà al Led utilizzando un adpater-enabler 'tipo client'  che implementa l'interfaccia ``ILed``  
+ 
+Dualmente, sul Raspberry dovremo porre:
+- un enabler 'tipo server' per il Led, per ricevere i comandi di accensione/spegnimento;
+- un enabler 'tipo client' per il Sonar per inviare i dati, 
+  ma amche un enabler 'tipo server' per ricevere i comandi di
+  attivazione/deattivazione e la richiesta ``isActive``.
 
-
-
-.. L'invio e la ricezione di messaggi via rete richiede l'uso di componenti *infrastrutturali* capaci di realizzare  un qualche prototcollo di comunicazione. 
-
-  
-
+Avendo anche la consapevolezza che questa parte di lavoro potrebbe farci pervenire alla
+costruzione di supporti risuabili,
+cercheremo di impostare il progetto degli enabler in modo da dipendere 'il meno possibile'
+dalla tecnologia di base per la comunicazione (protocollo) tra componenti software
+distribuiti.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Enabler per ricezione
+Enabler astratto per ricezione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Si tratta di definire un server che l'application designer può specializzare 
+Iniziamo con il definire un server astratto che dovrà essere specializzato
 con riferimento a un preciso protocollo e a un metodo di elaborazione dei messaggi ricevuti.
 
 .. code:: java
@@ -1605,15 +1621,114 @@ con riferimento a un preciso protocollo e a un metodo di elaborazione dei messag
     public abstract void elaborate(String message);
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Enabler per il Led
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Enabler astratto per trasmissione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Un esempio di specializzazione relativo a Led :
+All'enabler astratto per ricevere informazione, affianchiamo suibito un enabler astratto per trasmettere.
 
 .. code:: java
 
-  public class LedServer extends ApplMessageHandler  {
+  public abstract class EnablerAsClient {
+  private Interaction2021 conn; 
+  protected String name ;	
+    public EnablerAsClient( String name, String host, int port ) {
+      try {
+        this.name = name;
+        conn = setProtocolClient(host,  port);
+      } catch (Exception e) {...}
+    }
+
+    protected abstract Interaction2021 setProtocolClient( 
+                             String host, int port  ) throws Exception;
+    
+    protected void sendValueOnConnection( String val ) {
+      try {
+        conn.forward(val);
+      } catch (Exception e) {...}
+    }  
+    public Interaction2021 getConn() {
+      return conn;
+    }
+  }  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Gli Enabler per il Sonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Adapter-Enabler di ricezione per il Sonar (lato PC)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.. code:: java
+
+  public class SonarAdapterServer extends EnablerAsServer implements ISonar{
+  private int curVal  = -1;
+
+	public SonarAdapterServer( String name, int port ) {
+		super(name, port);
+ 	}
+	@Override	//from EnablerAsServer
+ 	public void setProtocolServer( int port ) throws Exception{
+  		new TcpServer( name+"Server", port,  this );
+	}	
+  @Override  //from ISonar
+	public void deactivate() {}	  
+  @Override  //from ISonar
+  public  void activate() {}   
+	@Override //from ISonar
+	public boolean isActive() {
+ 		return true;
+	}
+	@Override  //from ISonar - called by the Controller
+	public int getVal() {  
+		waitForUpdatedVal();
+ 		int v  = curVal;
+ 		curVal = -1;
+		return v;
+	}
+
+ 	@Override  //from ApplMessageHandler
+	public void elaborate(String message) {
+		try {
+			int p  = Integer.parseInt(message);
+			setVal(p);			 
+		} catch (Exception e) { ... }		 
+	}
+	synchronized void setVal(int d){
+		curVal = d;
+		this.notify();	//activates callers of waitForUpdatedVal
+	}
+	private synchronized void waitForUpdatedVal() {
+		try {
+			while( curVal < 0 ) wait();
+ 		} catch (InterruptedException e) { ...	}		
+	}
+}
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Enabler di trasmissione per il Sonar (lato Raspberry)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Gli Enabler per il Led
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Enabler-adapter di trasmissione per il Led (lato PC)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Enabler di ricezione per il Led (lato Raspberry)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+ 
+
+.. code:: java
+
+  public class LedAdapterClient extends EnablerAsClient  {
   ILed led = DeviceFactory.createLed();
 
     public LedServer(  int port  )   {
@@ -1636,38 +1751,11 @@ Un esempio di specializzazione relativo a Led :
   }
 
 
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Enabler per trasmissione
+Testing degli enabler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-.. code:: java
-
-  public abstract class EnablerAsClient {
-  private Interaction2021 conn; 
-  protected String name ;	
-
-    public EnablerAsClient( String name, String host, int port ) {
-      try {
-        this.name = name;
-        conn = setProtocolClient(host,  port);
-      } catch (Exception e) {
-        System.out.println( name+"  |  ERROR " + e.getMessage());		}
-    }
-    
-    protected abstract Interaction2021 setProtocolClient( String host, int port  ) throws Exception;
-    
-    protected void sendValueOnConnection( String val ) {
-      try {
-        conn.forward(val);
-      } catch (Exception e) {
-        System.out.println( name+" |  ERROR " + e.getMessage());
-      }
-    }
-    
-    public Interaction2021 getConn() {
-      return conn;
-    }
-  }  
 
 Un 'piano di testing' può spiegare meglio di molte parole il funzionamento della infrastruttura che abbiamo in mente,
 astraendo dallo specifico protocollo.
