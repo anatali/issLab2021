@@ -1,4 +1,5 @@
 package it.unibo.enablerCleanArch.adapters;
+import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.TcpServer;
@@ -9,10 +10,10 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  */
  
 
-public class SonarAdapterServer extends EnablerAsServer  { //extends ApplMessageHandler che ha conn
-private SonarProxy sonarProxy;
+public class SonarEnablerAsServer extends EnablerAsServer  { //EnablerAsServer extends ApplMessageHandler che ha conn
+private ISonar sonarProxy;
  
-	public SonarAdapterServer( String name,  int port, SonarProxy sonarProxy) throws Exception {
+	public SonarEnablerAsServer( String name,  int port, ISonar sonarProxy) throws Exception {
 		super(name, port);
 		Colors.out(name+" |  STARTS on " + port);
 		this.sonarProxy = sonarProxy;
@@ -33,7 +34,10 @@ private SonarProxy sonarProxy;
 		try {
 			//System.out.println( name + " | elaborate " + message);
 			int p  = Integer.parseInt(message);
-			sonarProxy.update( p );
+			//sonarProxy.update( p );
+			/*
+			 * setVal del SonarAdapter
+			 */
 		} catch (Exception e) {
 			Colors.outerr( name + " | ERROR " + e.getMessage() );
 		}		 
@@ -42,48 +46,12 @@ private SonarProxy sonarProxy;
  	
  	public void sendCommandToClient( String msg ) {
  		try {
- 			Colors.out(name+" |  sendCommandToClient   " + msg + " conn=" + conn);
+ 			//Colors.out(name+" |  sendCommandToClient   " + msg + " conn=" + conn);
 			if( conn != null ) conn.forward(msg);
 		} catch (Exception e) {
 			Colors.outerr( name + " | ERROR " + e.getMessage() );
 		}
  	}
  	
- 	
-	/*
-	@Override  //from ISonar
-	public void deactivate() {}	
-	@Override  //from ISonar
-	public  void activate() {}    
-
-	@Override //from ISonar
-	public boolean isActive() {
- 		return true;
-	}
-	
-	@Override  //from ISonar - called by the Controller
-	public int getVal() {  
-		waitForUpdatedVal();
- 		int v  = curVal;
- 		curVal = -1;
-		return v;
-	}
-	*/
-
-/*
-	synchronized void setVal(int d){
-		curVal = d;
-		this.notify();	//activates callers of  waitForUpdatedVal
-	}
-	
-	private synchronized void waitForUpdatedVal() {
-		try {
-			while( curVal < 0 ) wait();
- 		} catch (InterruptedException e) {
- 			Colors.outerr(name + " | ERROR " + e.getMessage());
-		}		
-	}
-*/
-
- 
+ 	 
 }

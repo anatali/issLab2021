@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.enablers;
 
-import it.unibo.enablerCleanArch.adapters.SonarProxy;
+import it.unibo.enablerCleanArch.adapters.SonarAdapterTcp;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
@@ -9,10 +9,10 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
  
 
-public class SonarClient extends EnablerAsClient{
+public class SonarEnablerAsClient extends EnablerAsClient{
 	private ISonar sonar ;
 	
-	public SonarClient( String name, String host, int port, ISonar sonar ) {
+	public SonarEnablerAsClient( String name, String host, int port, ISonar sonar ) {
 		super( name,  host,  port );
 		this.sonar = sonar;
 		Colors.out(name + " | created "   );
@@ -58,7 +58,10 @@ public class SonarClient extends EnablerAsClient{
 						Colors.out( "SonarClient | receives " + cmd );
 						if( cmd.equals("activate")) {
 							sonar.activate();
-							doClientOutWork();
+							//doClientOutWork();
+						}else if( cmd.equals("getVal")) {
+							String data = ""+sonar.getVal();
+							sendValueOnConnection(data);
 						}
 						else if( cmd.equals("deactivate")) {
 							sonar.deactivate();
@@ -83,19 +86,19 @@ public class SonarClient extends EnablerAsClient{
 		
 		ISonar sonar = DeviceFactory.createSonar();
 		
-		SonarProxy sonarProxy  = new SonarProxy("sonarProxy","localhost",RadarSystemConfig.sonarPort );
+		SonarAdapterTcp sonarProxy  = new SonarAdapterTcp("sonarAdapter","localhost",RadarSystemConfig.sonarPort );
 
 		//SonarClient sonarClient = 
-				new SonarClient("sonarClient", "localhost",RadarSystemConfig.sonarPort, sonar);
+				new SonarEnablerAsClient("sonarClient", "localhost",RadarSystemConfig.sonarPort, sonar);
 
 		sonarProxy.activate();
 		
 		for( int i=1; i<=5; i++) {
 			int v = sonarProxy.getVal();
 			Thread.sleep(500);
-			System.out.println("sonarValueFromProxy="+v);
+			System.out.println("sonarValueFromAdapter="+v);
 		}
-		
+		sonarProxy.deactivate();
 	}
 }
 

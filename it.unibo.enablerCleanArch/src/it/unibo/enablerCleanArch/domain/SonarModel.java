@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 
 public abstract class SonarModel implements ISonar{
 	protected  int curVal = 0;
-	protected boolean stopped    = false;
+	protected boolean stopped  = false;
 	private boolean produced   = false;
 	
 	public static ISonar create() {
@@ -47,9 +47,9 @@ public abstract class SonarModel implements ISonar{
  	
 	@Override
 	public void deactivate() {
+		Colors.out("Sonar | deactivate");
 		stopped = true;
 	}
-
 
 	protected synchronized void valueUpdated( ){
 		produced = true;

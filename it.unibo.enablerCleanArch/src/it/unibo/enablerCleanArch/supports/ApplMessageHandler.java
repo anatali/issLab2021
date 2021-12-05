@@ -14,7 +14,7 @@ protected String name;
  
 	public abstract void elaborate( String message ) ;
 	
-	/* Used in case of reply */
+	/* Used in case of reply Called by the server at a new connection*/
 	public void setConn( Interaction2021 conn) {
 		Colors.out("ApplMessageHandler | setConn:" + conn, Colors.BLUE);
 		this.conn = conn;

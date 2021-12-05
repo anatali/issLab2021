@@ -1293,10 +1293,12 @@ ApplMessageHandler
   public abstract class ApplMessageHandler {  
   protected Interaction2021 conn;		//Injected by setConn
   protected String name;
-
+    public ApplMessageHandler( String name ) { this.name = name; }
     ...
     public abstract void elaborate( String message ) ;
+    
     public void setConn( Interaction2021 conn) { ... }
+    public Interaction2021 getConn(  ) {  return conn;  }
   }
 
 La classe astratta  ``ApplMessageHandler``  definisce il metodo abstract ``elaborate( String message )``
