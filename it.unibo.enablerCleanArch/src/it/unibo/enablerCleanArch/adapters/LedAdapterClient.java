@@ -16,7 +16,7 @@ private boolean ledStateMirror = false;
 		System.out.println(name+" |  STARTS for " + host +":"+port);
 	}
 	
-	protected Interaction2021 setProtocolClient( String host, int port  ) throws Exception{
+	protected Interaction2021 setConnection( String host, int port  ) throws Exception{
  		return TcpClient.connect( host,port,10 );
  	}
 	

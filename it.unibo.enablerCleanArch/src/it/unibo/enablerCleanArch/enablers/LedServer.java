@@ -21,7 +21,7 @@ ILed led;
 		}
  	}	
 	@Override
- 	public void setProtocolServer(int port ) throws Exception{
+ 	public void setServerSupport(int port ) throws Exception{
   		new TcpServer( name+"Server", port,  this );
  	}	
 	@Override		//from ApplMessageHandler

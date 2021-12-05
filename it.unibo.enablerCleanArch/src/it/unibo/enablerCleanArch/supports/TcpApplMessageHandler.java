@@ -20,7 +20,7 @@ private  ApplMessageHandler handler ;
 			while( true ) {
 				//System.out.println(name + " | waits for message on ...");
 			    String msg = conn.receiveMsg();
-			    Colors.out("TcpApplMessageHandler | received:" + msg );
+			    //Colors.out("TcpApplMessageHandler | received:" + msg );
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;

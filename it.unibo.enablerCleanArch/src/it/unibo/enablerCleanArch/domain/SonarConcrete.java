@@ -24,7 +24,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			if( dataCounter % numData == 0 ) { //every numData ...
 				curVal = Integer.parseInt(data);
  				System.out.println("SonarConcrete | data=" + data );
-				setVal( );    
+				valueUpdated( );    
  			 }
         }catch( Exception e) {
         		System.out.println("SonarConcrete | ERROR " + e.getMessage() );

@@ -1,9 +1,10 @@
 package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public abstract class SonarModel implements ISonar{
-	protected  static int curVal = 0;
+	protected  int curVal = 0;
 	protected boolean stopped    = false;
 	private boolean produced   = false;
 	
@@ -13,9 +14,11 @@ public abstract class SonarModel implements ISonar{
 	}
 
 	public static ISonar createSonarMock() {
+		Colors.out("createSonarMock");
 		return new SonarMock();
 	}	
 	public static ISonar createSonarConcrete() {
+		Colors.out("createSonarConcrete");
 		return new SonarConcrete();
 	}	
 	
@@ -30,16 +33,14 @@ public abstract class SonarModel implements ISonar{
 	@Override
 	public void activate() {
 		sonarSetUp();
-		//if( RadarSystemConfig.testing )  return;
-		
-		System.out.println("		Sonar | STARTS");
+		Colors.out("Sonar | activate");
 		stopped = false;
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
 					sonarProduce();
 				}
-				System.out.println("		Sonar | ENDS");
+				Colors.out("Sonar | ENDS");
 		    }
 		}.start();
 	}
@@ -50,7 +51,7 @@ public abstract class SonarModel implements ISonar{
 	}
 
 
-	protected synchronized void setVal( ){
+	protected synchronized void valueUpdated( ){
 		produced = true;
 		this.notify();
 	}

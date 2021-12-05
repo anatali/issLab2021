@@ -7,6 +7,7 @@ public class SonarMock extends SonarModel implements ISonar{
 	@Override
 	protected void sonarSetUp() {
 		curVal = 90;		
+		System.out.println("SonarMock | sonarSetUp curVal="+curVal);
 	}
 	
 	@Override
@@ -16,10 +17,10 @@ public class SonarMock extends SonarModel implements ISonar{
 			stopped = true;  //one shot
 		}else {
 			curVal--;
-			//System.out.println("SonarMock | curVal="+curVal);
+			//System.out.println("SonarMock | sonarProduce curVal="+curVal);
 			stopped = ( curVal == 0 );
 		}
-		setVal(   ); 
+		valueUpdated(   ); 
 		delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
  	}
  

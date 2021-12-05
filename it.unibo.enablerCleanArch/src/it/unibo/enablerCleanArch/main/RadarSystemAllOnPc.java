@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.adapters.LedAdapterClient;
 import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
 import it.unibo.enablerCleanArch.adapters.SonarAdapterServer;
+import it.unibo.enablerCleanArch.adapters.SonarProxy;
 import it.unibo.enablerCleanArch.domain.*;
 
  
@@ -23,7 +24,7 @@ private IRadarDisplay radar = null;
 		}else { //Controller locale (al PC)
 			//Input
 			sonar  = RadarSystemConfig.SonareRemote   
-					? new SonarAdapterServer("sonarAdapterServer", RadarSystemConfig.sonarPort) 
+					? new SonarProxy("sonarAdapterServer", RadarSystemConfig.raspHostAddr, RadarSystemConfig.sonarPort)   
 					: DeviceFactory.createSonar();
 			//Output
 			led    = RadarSystemConfig.LedRemote   
