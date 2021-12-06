@@ -220,20 +220,37 @@ Dispositivi di input e di output
 
 Concettualmente, il Sonar è un dispositivo di input e il Led e il RadarDisplay sono dispositivi di output.
 
-In generale per utilizzare un dispositivo di output è sufficiente invocare una procedura, mentre
+In generale, nella programmazione ad oggetti, 
+per utilizzare un dispositivo di output è sufficiente invocare un metodo, mentre
 l'uso di un dispositivo di input presenta due modalità principali:
 
-- si invoca una operazione 'bloccante' (ad esempio ``read()``) che fornisce un dato non appena disponibile.
+- il componente interessato ai dati prodotti dal dispostivo di input, ne invoca un metodo
+- *'bloccante'* (ad esempio ``read()``) che fornisce un dato non appena disponibile.
   Questo modo di procedere prende anche il nome di :blue:`interazione a polling`;
-- si realizza il dispositivo di input come un oggetto :blue:`osservabile` che invoca un metodo di
-  invio di dati (quando disponibili) a tutti i componenti che sono stati in precedenza registrati 
-  presso di lui  come *osservatori*.
+- il componente consumatore dei dati si relaziona con dispostivo di input seccondo 
+  il  :blue:`pattern observer`.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il pattern observer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Nella programmazione ad oggetti, un componente  :blue:`osservabile` invoca un metodo di
+invio di dati (quando disponibili) a tutti i componenti che sono stati in precedenza registrati 
+presso di lui  come *osservatori*. Un componente può essere registarto come osservatore solo
+se implementa il metodo di invio dati (di solito denominato ``update``).
+
+La registrazione di un *observer* presso un *observable*
+può essere fatta dall'*observer* stesso o, preferibilmente, da un configuratore di sistema.
+In questo secondo caso nessuno dei due componenti ha alcun riferimento staticamente definito all'altro.
+  
+Una 'variante' del pattern observer è costituita dalla possibilità che un dispositivo di input
+possa 'pubblicare' i propri dati su una risorsa esterna osservabile. 
+Torneremo su questa variante più avanti.
 
 Notiamo che software disponibile per il Sonar opera come produttore di dati, ma non offre operazioni
-per la registrazione di osservatori.
-
-Un componente interessato ai dati del Sonar deve fare in modo che il proprio dispositivo di input
-sia il dispositivo di output del sonar e poi utilizzare la ``read()``.
+per la registrazione di osservatori; un componente interessato ai dati del Sonar deve fare in modo 
+che il proprio dispositivo di input
+sia il dispositivo di output del Sonar e poi utilizzare una operazione come la ``read()``.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Dai dispositivi al sistema
@@ -269,6 +286,7 @@ Focalizzando l'attenzione sul requisito :blue:`RadarGui` e quindi sulla interazi
             :width: 100%
           
           TODO: Modificare la figura
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Chi realizza la logica applicativa?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1033,7 +1051,7 @@ Ovviamente qui ci dobbiamo occupare della seconda parte, supponendo che la prima
 possiamo procedere come segue:
 
 - per il *LedMock*, noi controlliamo la sequenza di valori emeessi e quindi possiamo
-  verificare che  un consumatore riceva dal metodo ``getVal``i valori nella giusta sequenza;
+  verificare che  un consumatore riceva dal metodo ``getVal`` i valori nella giusta sequenza;
 - per il *LedConcrete*, poniamo uno schermo a distanza prefissata :math:`D`  e verifichiamo che
   un consumatore riceva dal  metodo ``getVal`` valori :math:`D \pm \epsilon`.
 
@@ -1060,6 +1078,38 @@ Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in J
 
 Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :math:`delta=\epsilon` 
 di varianza sulla distanza-base.
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il Sonar come dispositivo observable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Volendo impostare il Sonar come un dispositivo osservabile 
+ntroduciamo un nuovo contratto, che elimina il metodo `getVal`:
+
+.. code:: java
+
+  interface ISonarObservable  {
+    void register( IObserver obs );		 
+    void unregister( IObserver obs );
+    public void activate();		 
+    public void deactivate();
+    public boolean isActive();
+  }
+
+  interface IObserver{
+    public void update( int value );
+  }
+
+Nel quadro di un programma ad
+oggetti convenzionale, avvalerci del :blue:`pattern decorator` e 
+
+.. code:: java
+
+  public abstract class SonarModelObservable extends Observable implements ISonarObservable{
+
+  public class SonarMockObservable extends SonarModelObservable {
+
 
 .. _controller: 
 
@@ -1107,9 +1157,9 @@ RadarGuiUsecase
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 .. code:: java
 
- 	public class RadarGuiUsecase {
+  public class RadarGuiUsecase {
     public static void doUseCase( IRadarDisplay radar, int d ) {
-		  radar.update(""+d, "90");
+      radar.update(""+d, "90");
     }	 
   }
 
