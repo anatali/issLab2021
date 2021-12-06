@@ -1,21 +1,45 @@
 package it.unibo.enablerCleanArch.enablers;
+
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
-
-public abstract class EnablerAsServer {
-	protected String name;
-	
-	public EnablerAsServer(String name, int port, ApplMessageHandler handler) {
-		try {
-			this.name = name;
-			setServerSupport( port,handler  );
-		} catch (Exception e) {
-			Colors.outerr(name+" ERROR " + e.getMessage() );
-		} 			
-	}	
-    public abstract void setServerSupport( int port, ApplMessageHandler handler ) throws Exception; 
-    
- 	//@Override  //from ApplMessageHandler
-	//public abstract void elaborate(String message) ;
+import it.unibo.enablerCleanArch.supports.TcpServer;
  
+/*
+ * Attiva un server relativo al protocollo specificato
+ * lasciando la gestione dei messaggi inviati dai client alle classi specializzate
+ * che si possono avvalere del metodo sendCommandToClient 
+ * per inviare comandi e/o risposte a un client
+ */
+ 
+public abstract class EnablerAsServer extends ApplMessageHandler   { 
+protected ApplMessageHandler handler;
+  
+	public EnablerAsServer( String name, int port, ProtocolType protocol ) throws Exception {
+		super( name );
+		setServerSupport( port, this, protocol);
+		Colors.out(name+" |  STARTED  "  );
+	}
+
+
+ 	protected void setServerSupport( int port, ApplMessageHandler handler, ProtocolType protocol ) throws Exception{
+		this.handler = handler;
+		if( protocol == ProtocolType.tcp ) {
+			TcpServer server = new TcpServer( "ServerTcp", port,  handler );
+			server.activate();
+		}else if( protocol == ProtocolType.coap ) {
+			//Coap: attivo un SonarObserver che implementa getVal (NO: lo deve fare il Controller!)
+	  		//che riceve this (un ApplMessageHandler)  di cui chiama  elaborate( msg )
+			//new CoapInputObserver( name+"Server", port,  this );			 
+		}
+ 	}	
+ 		 
+ 	public void sendCommandToClient( String msg ) {
+ 		try {
+ 			//Colors.out(name+" |  sendCommandToClient   " + msg + " conn=" + conn);
+			if( handler.getConn()  != null ) handler.getConn().forward(msg);
+		} catch (Exception e) {
+			Colors.outerr( name + " | ERROR " + e.getMessage() );
+		}
+ 	}
+  	 
 }

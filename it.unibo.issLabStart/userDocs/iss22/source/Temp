@@ -92,3 +92,24 @@ Per il ``RadarDisplay`` abbiamo già visto che è disponibile un oggetto singlet
 Prima di procedere con dispositivi reali e con il RaspberryPi, è conveniente realizzare una versione
 del sistema che utilizza dispositivi simulati, dappprima tutti locali al Controller e poi distribuiti
 su diverse Java virtual machines.
+
+
+Un 'piano di testing' può spiegare meglio di molte parole il funzionamento della infrastruttura che abbiamo in mente,
+astraendo dallo specifico protocollo.
+
+
+
+Definiamo dunque in Java due classi:
+
+.. La classe ``TcpEnabler`` abilita alla ricezione di connessioni TCP delegando all'``ApplMessageHandler`` ricevuto nel costruttore
+   il compito di gestire i messaggi inviati da una client su quella conessione.
+
+- per il server, la classe  ``TcpEnabler``: apre una ``ServerSocket`` 
+  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
+  sulla  connessione stabilita attraverso la ``ServerSocket``.
+  Questo handler si occupa di ricevere i messaggi e di invocare il metodo ``void elaborate( String message )``
+  di un oggetto di classe ``ApplMessageHandler`` ricevuto al momento della creazione.
+  
+- per il client, la classe  ``TcpClient``   che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
+  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
+  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.

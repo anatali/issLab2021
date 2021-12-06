@@ -22,11 +22,11 @@ public class RadarSystemMainOnPcLikeRasp {
 		if( RadarSystemConfig.ControllerRemote ) {  //Controller on PC
  			new LedServer( "LedServer", RadarSystemConfig.ledPort );
 			//Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
-			new SonarEnablerAsClient( "SonarClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort, sonar );
+			new SonarEnablerAsClient( "SonarClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort, ProtocolType.tcp, sonar );
 			//new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
 		}else { //Controller on Rasp
 			System.out.println("Controller on PcLikeRasp sonar=" + sonar);
- 			IRadarDisplay radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort ); 
+ 			IRadarDisplay radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort, ProtocolType.tcp ); 
  			//Control
 			Controller.activate( led, sonar, radar );
  		}

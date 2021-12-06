@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.adapters;
 
 import it.unibo.enablerCleanArch.domain.ISonar;
+import it.unibo.enablerCleanArch.main.ProtocolType;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
 
@@ -15,13 +16,22 @@ private boolean produced = false;
 		super( name );
 		try {
 			this.name = name;
-			sonarEnablerAsServer = new SonarEnablerAsServer("SonarEnablerAsServer",port,this);			 
+			sonarEnablerAsServer = new SonarEnablerAsServer("SonarEnablerAsServer" );	
+			sonarEnablerAsServer.setServerSupport(port, this, ProtocolType.tcp);
 		} catch (Exception e) {
 			Colors.outerr(name + " |  ERROR " + e.getMessage() );
 		}
  	}
+	//From ApplMessageHandler
+	@Override
+	public void elaborate(String message) {  //receive a distance value after the request in getVal
+		Colors.out(name + " |  elaborate " + message );
+		lastSonarVal = Integer.parseInt( message );
+		valueUpdated( );
+	}
+
 	
- 	
+	//From ISonar
 	@Override
 	public void deactivate() {
 		Colors.out(name + " | deactivate");
@@ -61,12 +71,6 @@ private boolean produced = false;
 		return stopped;
 	}
 
-	@Override
-	public void elaborate(String message) {  //receive a distance value after the request in getVal
-		Colors.out(name + " |  elaborate " + message );
-		lastSonarVal = Integer.parseInt( message );
-		valueUpdated( );
-	}
 	protected synchronized void valueUpdated( ){
 		produced = true;
 		this.notify();

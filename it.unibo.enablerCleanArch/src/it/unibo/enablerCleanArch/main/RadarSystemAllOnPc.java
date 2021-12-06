@@ -2,9 +2,9 @@ package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.adapters.LedAdapterClient;
 import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterTcp;
-import it.unibo.enablerCleanArch.adapters.SonarEnablerAsServer;
+import it.unibo.enablerCleanArch.adapters.SonarAdapterEnablerAsServer;
 import it.unibo.enablerCleanArch.domain.*;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
 
  
 public class RadarSystemAllOnPc {
@@ -24,11 +24,11 @@ private IRadarDisplay radar = null;
 		}else { //Controller locale (al PC)
 			//Input
 			sonar  = RadarSystemConfig.SonareRemote   
-					? new SonarAdapterTcp("sonarAdapterServer", RadarSystemConfig.raspHostAddr, RadarSystemConfig.sonarPort)   
+					? new SonarAdapterEnablerAsServer("sonarAdapterServer",  RadarSystemConfig.sonarPort, ProtocolType.tcp)   
 					: DeviceFactory.createSonar();
 			//Output
 			led    = RadarSystemConfig.LedRemote   
-					? new LedAdapterClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort  ) 
+					? new LedAdapterClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort, ProtocolType.tcp  ) 
 					: DeviceFactory.createLed();
 			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);

@@ -17,7 +17,7 @@ private ServerSocket serversock;
 	      try {
 	  		this.port        = port;
 			this.applHandler = applHandler;
-		    serversock = new ServerSocket( port );
+		    serversock       = new ServerSocket( port );
 		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
 	     }catch (Exception e) { 
 	    	 Colors.outerr(getName() + " | costruct ERROR: " + e.getMessage());

@@ -11,20 +11,18 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
 /*
  * Deve inviare messaggi TCP
  */
-public class LedServer extends EnablerAsServer  {
+public class LedServer  { //implements EnablerAsServer 
 ILed led;
 	public LedServer( String name,  int port  )   {
-		super(name, port, null ); //TODO
+		//super(name, port, null ); //TODO
 		if( ! RadarSystemConfig.simulation) {
 			led = LedModel.createLedConcrete(); //Calls a factory method
 		}else {
 			led = LedModel.createLedMock();
 		}
  	}	
-	@Override
- 	public void setServerSupport(int port,ApplMessageHandler handler ) throws Exception{
-  		//new TcpServer( name+"Server", port,  this );
- 	}	
+	 
+	 
 	
 	/*
 	@Override		//from ApplMessageHandler

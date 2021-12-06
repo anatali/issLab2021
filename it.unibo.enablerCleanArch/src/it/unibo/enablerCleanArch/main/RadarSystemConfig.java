@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+
 public class RadarSystemConfig {
 	public static  boolean simulation           = true;
 	
@@ -31,6 +33,8 @@ public class RadarSystemConfig {
     
 
 	public static boolean testing         = false;			
+	
+	public static ProtocolType protcolType = ProtocolType.tcp;
 
 	public static void setTheConfiguration(  ) {
 		setTheConfiguration("../RadarSystemConfig.json");

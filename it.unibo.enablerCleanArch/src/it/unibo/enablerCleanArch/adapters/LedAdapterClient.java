@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.adapters;
 
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 
@@ -11,15 +12,15 @@ import it.unibo.enablerCleanArch.supports.TcpClient;
 public class LedAdapterClient extends EnablerAsClient implements ILed {
 private boolean ledStateMirror = false;
 
-	public LedAdapterClient( String name, String host, int port  ) {
-		super(name,host,port);
+	public LedAdapterClient( String name, String host, int port, ProtocolType protocol  ) {
+		super(name,host,port, protocol);
 		System.out.println(name+" |  STARTS for " + host +":"+port);
 	}
-	
+/*	
 	protected Interaction2021 setConnection( String host, int port  ) throws Exception{
  		return TcpClient.connect( host,port,10 );
  	}
-	
+*/	
 	@Override
 	public void turnOn() { 
  		try {
@@ -43,6 +44,11 @@ private boolean ledStateMirror = false;
 	@Override
 	public boolean getState() {   
 		return ledStateMirror;
+	}
+	@Override
+	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

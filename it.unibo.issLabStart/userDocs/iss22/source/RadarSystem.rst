@@ -423,7 +423,7 @@ Architettura logica ad oggetti
 
 Se astraiamo dalla distribuzione (supponendo ad esempio che tutto il sistema possa
 essere supportato sul RaspberryPi), l'architettura logica del sistema risulta
-riconducibile a un classico schema :blue:` read-eval-print` in cui:  
+riconducibile a un classico schema :blue:`read-eval-print` in cui:  
 
 .. epigraph:: 
 
@@ -481,10 +481,13 @@ Le interfacce ILed, ISonar e IRadarDisplay
 
 La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
 
-.. code::
 
-  ISonar <--  Controller --> ILed  
-                         --> IRadarDisplay
+ 
+.. image:: ./_static/img/Radar/ArchLogicaOOP.PNG
+   :align: center
+   :width: 50%
+
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 La logica del Controller
@@ -546,6 +549,11 @@ denominato :blue:`enabler`, che ha come scopo quello di incapsulare software 'co
 testato ma non adatto alla distribuzione (che possiamo denominare :blue:`core-code`) 
 all'interno di un involucro che funga da una sorta di  'membrana' capace di ricevere e 
 trasmettere informazione.
+
+.. image:: ./_static/img/Radar/ArchLogicaOOPEnablers.PNG 
+   :align: center
+   :width: 50%
+
 
 Ad esempio, il ``Controller`` su PC utilizzerà un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
 dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getVal``.
@@ -1603,12 +1611,10 @@ questi, senza modificare il codice introdotto in :ref:`Controller<controller>`:
 Dualmente, sul Raspberry dovremo porre:
 
 - un enabler *tipo server* per il Led, per ricevere i comandi di accensione/spegnimento;
-- un enabler *tipo client* per il Sonar, per inviare i dati, 
-  ma amche un enabler *tipo server* per ricevere i comandi di
-  attivazione/deattivazione e la richiesta ``isActive``.
+- un enabler *tipo client* per il Sonar, per inviare dati e per ricevere comandi dal server.
 
 Avendo anche la consapevolezza che questa parte di lavoro potrebbe farci pervenire alla
-costruzione di :blue:`supporti risuabili`,
+costruzione di :blue:`supporti riusabili`,
 cercheremo di impostare il progetto degli enabler in modo da dipendere 'il meno possibile'
 dalla tecnologia di base per la comunicazione (protocollo) tra componenti software
 distribuiti.
@@ -1618,21 +1624,44 @@ distribuiti.
 Enabler astratto per ricezione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Iniziamo con il definire un server astratto che dovrà essere specializzato
-con riferimento a un qualche supporto di comunicazione e a un metodo di elaborazione 
-dei messaggi ricevuti.
+Iniziamo con il definire un server astratto che crea il supporto di comunicazione 
+relativo al protocollo specificato e demanda la gestione dei messaggi inviati da un client
+alle classi specializzate.
 
+.. image:: ./_static/img/Radar/EnablerAsServer.PNG
+   :align: center
+   :width: 40%
+ 
 .. code:: java
 
   public abstract class EnablerAsServer extends ApplMessageHandler{
-    public EnablerAsServer(String name, int port) {
+  protected ApplMessageHandler handler;
+    public EnablerAsServer(String name, int port, ProtocolType protocol) {
       super(name);
-      setServerSupport( port, this );
+      setServerSupport( port, this, protocol );
     }	
-    public abstract void setServerSupport(int port, ApplMessageHandler handler);    	
-    @Override
-    public abstract void elaborate(String message);
+    protected void setServerSupport( int port, ApplMessageHandler handler, 
+          ProtocolType protocol ) throws Exception{
+      this.handler = handler;
+      if( protocol == ProtocolType.tcp ) {
+        TcpServer server = new TcpServer( "ServerTcp", port,  handler );
+        server.activate();
+      }else if( protocol == ProtocolType.coap ) {
+        ...
+      }
+    }	 
   }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Tipi di protocollo supportati
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La classe ``ProtocolType`` enumera i protocolli utlizzabili dagli enablers.  
+
+.. code:: java
+
+  public enum ProtocolType {  tcp, coap }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Enabler astratto per trasmissione
@@ -1648,21 +1677,28 @@ All'enabler-ricevitore, affianchiamo suibito un enabler astratto per trasmettere
     public EnablerAsClient( String name, String host, int port ) {
       try {
         this.name = name;
-        conn = setConnection(host,  port);
+        startHandlerMessagesFromServer(conn);
       } catch (Exception e) {...}
     }
 
-    protected abstract Interaction2021 setConnection( 
-                             String host, int port  ) throws Exception;
+    protected void startHandlerMessagesFromServer( Interaction2021 conn) {
+      new Thread() {
+        public void run() {
+          try {
+            handleMessagesFromServer(conn);
+          } catch (Exception e) { ...	}				
+          }
+      }.start();
+    }
+
+    protected abstract void handleMessagesFromServer( Interaction2021 conn ) throws Exception;
     
     protected void sendValueOnConnection( String val ) {
       try {
         conn.forward(val);
       } catch (Exception e) {...}
     }  
-    public Interaction2021 getConn() {
-      return conn;
-    }
+    public Interaction2021 getConn() { return conn; }
   }  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1672,73 +1708,71 @@ Gli Enabler per il Sonar
 Abbiamo già anticipato che, nel caso il Controller sia su PC, il Sonar richiede:
 
 - su PC: un adapter-enabler *tipo server* che implementa l'interfaccia ``ISonar`` per ricevere dati;
-- su RaspberryPi: un enabler *tipo client* per inviare dati e un un enabler *tipo server* per ricevere comandi.
+- su RaspberryPi: un enabler *tipo client* per inviare dati e per ricevere comandi.
 
-Al monento come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
+Al monento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Adapter-Enabler come server di ricezione  
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+.. image:: ./_static/img/Radar/EnablersAndAdapters.PNG
+   :align: center
+   :width: 40% 
 
-L'adapter di ricezione *tipo server* per il Sonar specifica come supporto il :ref:`TcpServer<tcpsupportServer>`.
-
-.. code:: java
-
-  public class SonarAdapterServer extends EnablerAsServer implements ISonar{
-  private int curVal  = -1;
-  private SonarModel sonarProxy ;
-
-	public SonarAdapterServer( String name, int port ) {
-		super(name, port);
- 	}
-	@Override	//from EnablerAsServer
- 	public void setServerSupport( int port ) throws Exception{
-  		new TcpServer( name+"Server", port,  this );
-      sonarProxy = 
-	}	
-
-Per quanto riguarda elaborazione dei dati ricevuti, l'enabler si comporta come il SonarModel
+L'adapter di ricezione *tipo server* per il Sonar specializza EnablerAsServer 
+definendo il metodo ``elaborate`` sui messaggi inivati da un client:
 
 .. code:: java
 
+  public class SonarAdapterEnablerAsServer 
+                  extends EnablerAsServer implements ISonar{
+  private int lastSonarVal = 0;		 
+  private boolean stopped  = true;	//mirror value
+  private boolean produced = false;
 
-	@Override  //from ISonar - called by the Controller
+  public SonarAdapterServer( String name, int port, ProtocolType protocol ) {
+    super(name, port, protocol);
+  }
+  @Override  //from ApplMessageHandler
+  public void elaborate(String message) {
+    lastSonarVal = Integer.parseInt( message );
+    valueUpdated( );  //riattiva processi in attesa su getVal
+  } 
+  protected synchronized void valueUpdated( ){
+    produced = true;
+    this.notify();
+	}
+
+Inoltre l'enabler funge anche come adapter, (re)implementando i metodi di  ``ISonar`` in modo
+da interagire con l'enabler-client remoto:
+
+
+.. code:: java
+
+	@Override
+	public void activate() {
+		sendCommandToClient("activate");
+		stopped = false;
+	}
+	@Override
+	public void deactivate() {
+		sendCommandToClient("deactivate");
+		stopped = true;
+	}
+  
+	@Override   
 	public int getVal() {  
+		sendCommandToClient("getVal");
 		waitForUpdatedVal();
- 		int v  = curVal;
- 		curVal = -1;
-		return v;
+		return lastSonarVal;
 	}
 
- 	@Override  //from ApplMessageHandler
-	public void elaborate(String message) {
-		try {
-			int p  = Integer.parseInt(message);
-			setVal(p);			 
-		} catch (Exception e) { ... }		 
-	}
-	synchronized void setVal(int d){
-		curVal = d;
-		this.notify();	//activates callers of waitForUpdatedVal
-	}
 	private synchronized void waitForUpdatedVal() {
 		try {
-			while( curVal < 0 ) wait();
+      while( ! produced ) wait();
+      produced = false;
  		} catch (InterruptedException e) { ...	}		
-	}
-
-Infine rimangono i metodi per inviare comandi al Sonar remoto:
-
-.. code:: java
-
-  @Override  //from ISonar
-	public void deactivate() {}	  
-  @Override  //from ISonar
-  public  void activate() {}   
-	@Override //from ISonar
-	public boolean isActive() {
- 		return true;
 	}
 }
 
@@ -1746,6 +1780,33 @@ Infine rimangono i metodi per inviare comandi al Sonar remoto:
 Adapter-Enabler come client di trasmissione 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+.. code:: java
+
+  public class SonarEnablerAsClient extends EnablerAsClient{
+  private ISonar sonar ;
+	
+    public SonarEnablerAsClient( 
+        String name, String host, int port, ProtocolType protocol, ISonar sonar ) {
+      super( name,  host,  port, protocol );
+      this.sonar = sonar;
+    }
+
+    public void handleMessagesFromServer( Interaction2021 conn ) throws Exception {
+      while( true ) {
+        String cmd = conn.receiveMsg();
+        if( cmd.equals("activate")) {
+          sonar.activate();
+         }else if( cmd.equals("getVal")) {
+            String data = ""+sonar.getVal();
+            sendValueOnConnection(data);
+        }
+        else if( cmd.equals("deactivate")) {
+          sonar.deactivate();
+          break;
+        }
+      }
+	  }
+  }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Gli Enabler per il Led
@@ -1794,24 +1855,6 @@ Testing degli enabler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-Un 'piano di testing' può spiegare meglio di molte parole il funzionamento della infrastruttura che abbiamo in mente,
-astraendo dallo specifico protocollo.
-
-
-Definiamo dunque in Java due classi:
-
-.. La classe ``TcpEnabler`` abilita alla ricezione di connessioni TCP delegando all'``ApplMessageHandler`` ricevuto nel costruttore
-   il compito di gestire i messaggi inviati da una client su quella conessione.
-
-- per il server, la classe  ``TcpEnabler``: apre una ``ServerSocket`` 
-  e crea ad un oggetto di classe ``TcpMessageHandler`` adibito alla ricezione dei messaggi inviati dai client
-  sulla  connessione stabilita attraverso la ``ServerSocket``.
-  Questo handler si occupa di ricevere i messaggi e di invocare il metodo ``void elaborate( String message )``
-  di un oggetto di classe ``ApplMessageHandler`` ricevuto al momento della creazione.
-  
-- per il client, la classe  ``TcpClient``   che stabilisce una connessione su un data coppia ``IP, Port`` e fornisce
-  il metodo ``void forward( String msg ) `` per inviare messaggi sulla connessione.
-  Un oggetto di questo tipo permette anche la ricezione di messaggi 'di replica' inviati dal server.
 
  
 +++++++++++++++++++++++++++++++++++++++++++++
