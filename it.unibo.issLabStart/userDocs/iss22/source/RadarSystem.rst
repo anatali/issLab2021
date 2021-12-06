@@ -193,13 +193,13 @@ La costruzione del sistema pone le seguenti :blue:`problematiche`:
    :width: 100%
 
    * - Gestione del sensore ``HC-SR04``.
-     - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
-       ``SonarAlone.c`` (progetto *it.unibo.rasp2021*)
+     - Il software fornito dal committente (``SonarAlone.c``) rende disponibile un generatore di dati
+       sul dispositivo standard di output.  
    * - Realizzazione del ``RadarDisplay``.
      - A questo fine è disponibile il POJO realizzato da  ``radarPojo.jar`` 
    * - Gestione del Led.
-     - A questo fine la software house dispone già di codice riutilizzabile, ad esempio 
-       ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh``.
+     - Il software fornito dal committente (``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh``) fornisce codice
+       di basso livello per accendere e spegnere il Led.
    * - Quale assemblaggio?
      - .. image:: ./_static/img/Radar/RobotSonarStarting.png
             :width: 100%
@@ -214,9 +214,37 @@ La necessità di integrare i componenti disponibili *fa sorgere altre problemati
       Oppure è meglio introdurre un terzo componente?
    #. quale forma di interazione è più opportuna? diretta/mediata, sincrona/asincrona?.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dispositivi di input e di output 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Concettualmente, il Sonar è un dispositivo di input e il Led e il RadarDisplay sono dispositivi di output.
+
+In generale per utilizzare un dispositivo di output è sufficiente invocare una procedura, mentre
+l'uso di un dispositivo di input presenta due modalità principali:
+
+- si invoca una operazione 'bloccante' (ad esempio ``read()``) che fornisce un dato non appena disponibile.
+  Questo modo di procedere prende anche il nome di :blue:`interazione a polling`;
+- si realizza il dispositivo di input come un oggetto :blue:`osservabile` che invoca un metodo di
+  invio di dati (quando disponibili) a tutti i componenti che sono stati in precedenza registrati 
+  presso di lui  come *osservatori*.
+
+Notiamo che software disponibile per il Sonar opera come produttore di dati, ma non offre operazioni
+per la registrazione di osservatori.
+
+Un componente interessato ai dati del Sonar deve fare in modo che il proprio dispositivo di input
+sia il dispositivo di output del sonar e poi utilizzare la ``read()``.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dai dispositivi al sistema
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per costruire un sistema partendo dai dispositivi, occorre capire come l'informazione fornita
+dal dispositivo di input Sonar possa essere elaborata in modo da fluire nel modo voluto
+ai dispositivi di output.
+
 Focalizzando l'attenzione sul requisito :blue:`RadarGui` e quindi sulla interazione *sonar-radar* 
-(per il Led valgono considerazioni analoghe)
-possiamo rappresentare la situazione come segue:
+(per il Led valgono considerazioni analoghe) possiamo rappresentare la situazione come segue:
 
 .. list-table::
    :widths: 50,50
@@ -224,7 +252,7 @@ possiamo rappresentare la situazione come segue:
 
    *  - :blue:`Comunicazione diretta`
         
-        Le 'nuovolette' in figura rappresentano gli strati di software che permettono ai dati generati dal Sonar 
+        Le 'nuvolette' in figura rappresentano gli strati di software che permettono ai dati generati dal Sonar 
         di eseere ricevuti dal ``RadarDisplay``.
 
       -   .. image:: ./_static/img/Radar/srrIntegrate1.png
@@ -1629,7 +1657,7 @@ relativo al protocollo specificato e demanda la gestione dei messaggi inviati da
 alle classi specializzate.
 
 .. image:: ./_static/img/Radar/EnablerAsServer.PNG
-   :align: center
+   :align: center 
    :width: 40%
  
 .. code:: java
