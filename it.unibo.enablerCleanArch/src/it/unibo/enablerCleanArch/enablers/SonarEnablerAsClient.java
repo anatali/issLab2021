@@ -6,8 +6,7 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
- 
- 
+  
 
 public class SonarEnablerAsClient extends EnablerAsClient{
 	private ISonar sonar ;
@@ -15,7 +14,6 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 	public SonarEnablerAsClient( String name, String host, int port, ProtocolType protocol, ISonar sonar ) {
 		super( name,  host,  port, protocol );
 		this.sonar = sonar;
-		Colors.out(name + " | created "   );
 	}
 	
 	public void handleMessagesFromServer( Interaction2021 conn ) throws Exception {
@@ -25,7 +23,6 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 			//Colors.out( name + " | receives " + cmd );
 			if( cmd.equals("activate")) {
 				sonar.activate();
-				//doClientOutWork();
 			}else if( cmd.equals("getVal")) {
 				String data = ""+sonar.getVal();
 				sendValueOnConnection(data);
@@ -37,6 +34,10 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 		}
 	}
 	
+	
+	/*
+	 * A rapid test ...
+	 */
 	public static void main( String[] args) throws Exception {
 		RadarSystemConfig.simulation = true;
 		RadarSystemConfig.sonarPort  = 8011;
@@ -45,12 +46,10 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 		
 		ISonar sonar = DeviceFactory.createSonar();
 		
-		//SonarAdapterTcp sonarAdapter  = new SonarAdapterTcp("sonarAdapter","localhost",RadarSystemConfig.sonarPort );
-		SonarAdapterEnablerAsServer sonarAdapter  = 
+ 		SonarAdapterEnablerAsServer sonarAdapter  = 
 				new SonarAdapterEnablerAsServer("sonarAdapter",RadarSystemConfig.sonarPort, ProtocolType.tcp );
 
-		//SonarClient sonarClient = 
-		new SonarEnablerAsClient(
+ 		new SonarEnablerAsClient(
 				"SonarEnablerAsClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp, sonar);
 
 		sonarAdapter.activate();
@@ -65,44 +64,5 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 	}
 }
 
-
-/*
- * 	@Override
-	protected Interaction2021 setConnection( String host, int port  ) throws Exception {
-		Interaction2021 conn = TcpClient.connect(host,  port, 10);
-		handleMessagesFromServer( conn );
-		//Colors.out(name + " |  setConnection "  + conn );
-		return conn;
-		//Coap: attivo un SonarObserver che implementa getVal
-	}
-
-//Thread che attende messaggi di comando dal server
-protected void handleMessagesFromServer( Interaction2021 conn) {
-	new Thread() {
-		public void run() {
-			try {
-				while( true ) {
-					//Colors.out(name + " | handleMessagesFromServer  wait for data ... "   );
-					String cmd = conn.receiveMsg();
-					//Colors.out( name + " | receives " + cmd );
-					if( cmd.equals("activate")) {
-						sonar.activate();
-						//doClientOutWork();
-					}else if( cmd.equals("getVal")) {
-						String data = ""+sonar.getVal();
-						sendValueOnConnection(data);
-					}
-					else if( cmd.equals("deactivate")) {
-						sonar.deactivate();
-						break;
-					}
-				}
-				Colors.out(name + " | handleMessagesFromServer  BYE "   );
-			} catch (Exception e) {
-				Colors.outerr( "SonarClient | handleMessagesFromServer  ERROR " + e.getMessage());
-			}				
-		}
-	}.start();
-}
-*/
+ 
 

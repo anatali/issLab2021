@@ -948,6 +948,7 @@ riattivandolo non appena il dato è stato prodotto:
     }
   }
 
+.. _SonarMock:
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il SonarMock
@@ -1123,16 +1124,14 @@ da notificare tutti gli observer registrati.
   public void unregister( IObserver obs ) { deleteObserver( obs );  }    
   }
 
-Il nuovo mock object relativo al Sonar sarà del tutto simile al precedente, ma 
-adesso come specializzazione di ``SonarObservableModel``.
+Il nuovo mock object relativo al Sonar sarà del tutto simile al precedente :ref:`SonarMock<SonarMock>`, 
+ma adesso come specializzazione di ``SonarObservableModel``.
 
 .. code:: java
 
-  public class SonarMockObservable extends SonarObservableModel {
-    ...
-  }
+  public class SonarMockObservable extends SonarObservableModel {   ...  }
 
-Si veda :ref:`SonarMock<>`
+.. Si veda :ref:`SonarMock<SonarMock>`
 
 .. _controller: 
 
@@ -1466,7 +1465,7 @@ di tipo  :ref:`ApplMessageHandler<msgh>`.
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Il server come oggetto attivo
+Il TCPserver come oggetto attivo
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
  
 Mediante la classe ``TcpServer`` possiamo istanziare oggetti che realizzano un server TCP che
@@ -1747,9 +1746,7 @@ alle classi specializzate.
       if( protocol == ProtocolType.tcp ) {
         TcpServer server = new TcpServer( "ServerTcp", port,  handler );
         server.activate();
-      }else if( protocol == ProtocolType.coap ) {
-        ...
-      }
+      }else if( protocol == ProtocolType.coap ) { ... }
     }	 
   }
 
@@ -1768,18 +1765,27 @@ La classe ``ProtocolType`` enumera i protocolli utlizzabili dagli enablers.
 Enabler astratto per trasmissione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All'enabler-ricevitore, affianchiamo suibito un enabler astratto per trasmettere informazione.
+All'enabler-ricevitore, affianchiamo suibito un enabler astratto per trasmettere informazione,
+che delega a classi specializzate la definizione del metodo ``handleMessagesFromServer`` per
+gestire i messaggi ricevuti dal server.
 
 .. code:: java
 
   public abstract class EnablerAsClient {
   private Interaction2021 conn; 
   protected String name ;	
-    public EnablerAsClient( String name, String host, int port ) {
+    public EnablerAsClient( String name,String host,int port ProtocolType protocol) {
       try {
         this.name = name;
+        setConnection(host,  port, protocol);
         startHandlerMessagesFromServer(conn);
       } catch (Exception e) {...}
+    }
+
+    protected void setConnection(String host,int port,ProtocolType protocol) throws Exception{
+      if( protocol == ProtocolType.tcp) {
+        conn = TcpClient.connect(host,  port, 10);
+      }else if( protocol == ProtocolType.coap ) { ...	}
     }
 
     protected void startHandlerMessagesFromServer( Interaction2021 conn) {
@@ -1792,7 +1798,7 @@ All'enabler-ricevitore, affianchiamo suibito un enabler astratto per trasmettere
       }.start();
     }
 
-    protected abstract void handleMessagesFromServer( Interaction2021 conn ) throws Exception;
+    protected abstract void handleMessagesFromServer(Interaction2021 conn) throws Exception;
     
     protected void sendValueOnConnection( String val ) {
       try {
@@ -1811,10 +1817,10 @@ Abbiamo già anticipato che, nel caso il Controller sia su PC, il Sonar richiede
 - su PC: un adapter-enabler *tipo server* che implementa l'interfaccia ``ISonar`` per ricevere dati;
 - su RaspberryPi: un enabler *tipo client* per inviare dati e per ricevere comandi.
 
-Al monento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
+Al momento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Adapter-Enabler come server di ricezione  
+Adapter-Enabler come server di ricezione per il Sonar 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. image:: ./_static/img/Radar/EnablersAndAdapters.PNG
@@ -1851,34 +1857,31 @@ da interagire con l'enabler-client remoto:
 
 .. code:: java
 
-	@Override
-	public void activate() {
-		sendCommandToClient("activate");
-		stopped = false;
-	}
-	@Override
-	public void deactivate() {
-		sendCommandToClient("deactivate");
-		stopped = true;
-	}
-  
-	@Override   
-	public int getVal() {  
-		sendCommandToClient("getVal");
-		waitForUpdatedVal();
-		return lastSonarVal;
-	}
-
-	private synchronized void waitForUpdatedVal() {
-		try {
+  @Override
+  public void activate() {
+    sendCommandToClient("activate");
+    stopped = false;
+  }
+  @Override
+  public void deactivate() {
+    sendCommandToClient("deactivate");
+    stopped = true;
+  }
+  @Override   
+  public int getVal() {  
+    sendCommandToClient("getVal");
+    waitForUpdatedVal();
+    return lastSonarVal;
+  }
+  private synchronized void waitForUpdatedVal() {
+    try {
       while( ! produced ) wait();
       produced = false;
- 		} catch (InterruptedException e) { ...	}		
-	}
-}
+    }catch (InterruptedException e) { ...	}		
+  }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Adapter-Enabler come client di trasmissione 
+Enabler come client di trasmissione per il Sonar
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. code:: java
@@ -1905,29 +1908,66 @@ Adapter-Enabler come client di trasmissione
           sonar.deactivate();
           break;
         }
-      }
-	  }
+      }//while
+    }
   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Gli Enabler per il Led
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Enabler-adapter di trasmissione per il Led (lato PC)
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Abbiamo già anticipato che, nel caso il Controller sia su PC, il Led richiede:
+
+- su PC: un adapter-enabler *tipo client* che implementa l'interfaccia ``ILed`` per trasmetter comandi;
+- su RaspberryPi: un enabler *tipo server* per ricevere comandi.
+
+Al momento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
 
 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Adapter-Enabler come client di trasmissione per il Led
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.. code:: java
+
+  public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
+  public LedAdapterEnablerAsClient(String name,String host,int port,ProtocolType protocol){
+    super(name,host,port, protocol);
+  }
+  @Override
+  public void turnOn() { 
+    try {
+      sendValueOnConnection( "on" );
+      ledStateMirror = true;
+    } catch (Exception e) {...}
+  }
+  @Override
+  public void turnOff() {   
+    try {
+      sendValueOnConnection( "off" );
+      ledStateMirror = false;
+    } catch (Exception e) { ... }
+  }
+  @Override
+  public boolean getState() { return ledStateMirror;	}	
+  @Override
+  protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
+    while( true ) {
+      String msg = conn.receiveMsg();  //bòlocking
+      System.out.println(name+" |  I should be never here .... " + msg   );		
+    }
+  }
+  }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Enabler di ricezione per il Led (lato Raspberry)
+Enabler di ricezione per il Led 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
  
 
 .. code:: java
 
-  public class LedAdapterClient extends EnablerAsClient  {
+  public class LedEnablerAsServer extends EnablerAsServer  {
   ILed led = DeviceFactory.createLed();
 
     public LedServer(  int port  )   {

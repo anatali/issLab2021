@@ -13,18 +13,24 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  
 public abstract class EnablerAsServer extends ApplMessageHandler   { 
 protected ApplMessageHandler handler;
-  
-	public EnablerAsServer( String name, int port, ProtocolType protocol ) throws Exception {
+protected ProtocolType protocol;
+protected TcpServer server;
+
+	public EnablerAsServer( String name, int port, ProtocolType protocol )   {
 		super( name );
-		setServerSupport( port, this, protocol);
-		Colors.out(name+" |  STARTED  "  );
+		try {
+			this.protocol = protocol;
+			setServerSupport( port, this );
+			Colors.out(name+" |  STARTED  on port=" + port );
+		} catch (Exception e) {
+			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );
+		}
 	}
 
-
- 	protected void setServerSupport( int port, ApplMessageHandler handler, ProtocolType protocol ) throws Exception{
+ 	protected void setServerSupport( int port, ApplMessageHandler handler  ) throws Exception{
 		this.handler = handler;
 		if( protocol == ProtocolType.tcp ) {
-			TcpServer server = new TcpServer( "ServerTcp", port,  handler );
+			server = new TcpServer( "ServerTcp_"+name, port,  handler );
 			server.activate();
 		}else if( protocol == ProtocolType.coap ) {
 			//Coap: attivo un SonarObserver che implementa getVal (NO: lo deve fare il Controller!)
@@ -40,6 +46,14 @@ protected ApplMessageHandler handler;
 		} catch (Exception e) {
 			Colors.outerr( name + " | ERROR " + e.getMessage() );
 		}
+ 	}
+ 	
+ 	public void deactivate() {
+ 		//Colors.out(name+" |  DEACTIVATE  "  );
+		if( protocol == ProtocolType.tcp ) {
+			server.deactivate();
+		}else if( protocol == ProtocolType.coap ) {
+		}		
  	}
   	 
 }

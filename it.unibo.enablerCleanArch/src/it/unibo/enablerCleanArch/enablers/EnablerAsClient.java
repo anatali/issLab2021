@@ -12,7 +12,7 @@ protected String name ;
 		try {
 			this.name = name;
 			setConnection(host,  port, protocol);
-			Colors.out(name+"  | STARTED conn=" + conn);
+			//Colors.out(name+"  | STARTED conn=" + conn);
 		} catch (Exception e) {
 			Colors.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
@@ -34,7 +34,7 @@ protected String name ;
 				try {
 					handleMessagesFromServer(conn);
 				} catch (Exception e) {
-					Colors.outerr( "SonarClient | handleMessagesFromServer  ERROR " + e.getMessage());
+					Colors.outerr( name + " | handleMessagesFromServer  ERROR " + e.getMessage());
 				}				
 			}
 		}.start();

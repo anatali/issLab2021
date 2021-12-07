@@ -19,9 +19,8 @@ private int lastSonarVal = 0;
 private boolean stopped  = true;	//mirror value
 private boolean produced = false;
  
-	public SonarAdapterEnablerAsServer( String name, int port, ProtocolType protocol ) throws Exception {
+	public SonarAdapterEnablerAsServer( String name, int port, ProtocolType protocol )   {
 		super( name, port, protocol );
- 		Colors.out(name+" |  STARTED  "  );
 	}
  
 	//From ApplMessageHandler
@@ -36,17 +35,19 @@ private boolean produced = false;
 	//From ISonar
 	@Override
 	public void deactivate() {
-		Colors.out(name + " | deactivate");
+		Colors.out(name + " | deactivate by sending a command to the client");
 		sendCommandToClient("deactivate"); 
 		stopped = true;
-	}
+	} 
 
 	@Override
 	public void activate() {
-		sendCommandToClient("activate");
 		stopped = false;
+		sendCommandToClient("activate");
 	}
  
+ 
+	
 	@Override
 	public  int getVal() {
 		sendCommandToClient("getVal");
@@ -65,7 +66,7 @@ private boolean produced = false;
 
 	@Override
 	public boolean isActive() { 
-		return stopped;
+ 		return ! stopped;
 	}
 
 	protected synchronized void valueUpdated( ){

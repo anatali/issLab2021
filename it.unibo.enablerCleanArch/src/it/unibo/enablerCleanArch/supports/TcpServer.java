@@ -32,14 +32,14 @@ private ServerSocket serversock;
 				//Accept a connection				 
 				Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock, Colors.GREEN);	 
 		 		Socket sock          = serversock.accept();	
-				Colors.out(getName() + " | accepted sock " + sock + " handler=" + applHandler, Colors.GREEN  );	 
+				//Colors.out(getName() + " | accepted sock " + sock + " handler=" + applHandler, Colors.GREEN  );	 
 		 		Interaction2021 conn = new TcpConnection(sock);
 		 		applHandler.setConn(conn);
 		 		//Create a message handler on the connection
 		 		new TcpApplMessageHandler( applHandler );			 		
 			}//while
-		  }catch (Exception e) {
-			  Colors.outerr(getName() + " | run ERROR: " + e.getMessage());		 
+		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
+			  Colors.out(getName() + " | probably socker closed: " + e.getMessage(), Colors.GREEN);		 
 		  }
 	}
 	
@@ -52,6 +52,7 @@ private ServerSocket serversock;
  
 	public void deactivate() {
 		try {
+			Colors.out(getName()+" |  DEACTIVATE serversock=" +  serversock);
 			stopped = true;
 			serversock.close();
 		} catch (IOException e) {

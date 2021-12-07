@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.main;
 
-import it.unibo.enablerCleanArch.adapters.LedAdapterClient;
+import it.unibo.enablerCleanArch.adapters.LedAdapterEnablerAsClient;
 import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
 import it.unibo.enablerCleanArch.adapters.SonarAdapterEnablerAsServer;
 import it.unibo.enablerCleanArch.domain.*;
@@ -28,7 +28,7 @@ private IRadarDisplay radar = null;
 					: DeviceFactory.createSonar();
 			//Output
 			led    = RadarSystemConfig.LedRemote   
-					? new LedAdapterClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort, ProtocolType.tcp  ) 
+					? new LedAdapterEnablerAsClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort, ProtocolType.tcp  ) 
 					: DeviceFactory.createLed();
 			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);
