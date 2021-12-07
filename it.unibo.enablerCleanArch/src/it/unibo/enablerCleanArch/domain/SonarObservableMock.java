@@ -1,12 +1,12 @@
 package it.unibo.enablerCleanArch.domain;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
-public class SonarMockObservable extends SonarModelObservable {
+public class SonarObservableMock extends SonarObservableModel {
 
 	@Override
 	protected void sonarSetUp() {
 		curVal = 90;		
-		System.out.println("SonarMock | sonarSetUp curVal="+curVal);
+		System.out.println("SonarMockObservable | sonarSetUp curVal="+curVal);
 	}
 
 	@Override
@@ -16,14 +16,11 @@ public class SonarMockObservable extends SonarModelObservable {
 			stopped = true;  //one shot
 		}else {
 			curVal--;
-			//System.out.println("SonarMock | sonarProduce curVal="+curVal);
+			//System.out.println("SonarMockObservable | sonarProduce curVal="+curVal);
 			stopped = ( curVal == 0 );
 		}
- 		delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
+		valueUpdated(   ); 
+ 		delay(RadarSystemConfig.sonarDelay);  //avoid too fast generation 
 	}
-
- 	
- 
- 
  
 }

@@ -240,8 +240,8 @@ presso di lui  come *osservatori*. Un componente può essere registarto come oss
 se implementa il metodo di invio dati (di solito denominato ``update``).
 
 La registrazione di un *observer* presso un *observable*
-può essere fatta dall'*observer* stesso o, preferibilmente, da un configuratore di sistema.
-In questo secondo caso nessuno dei due componenti ha alcun riferimento staticamente definito all'altro.
+può essere fatta dall'*observer* stesso o, preferibilmente, da un :blue:`configuratore` del sistema:
+in questo modo nessuno dei due componenti avrebbe alcun riferimento staticamente definito all'altro.
   
 Una 'variante' del pattern observer è costituita dalla possibilità che un dispositivo di input
 possa 'pubblicare' i propri dati su una risorsa esterna osservabile. 
@@ -1084,32 +1084,55 @@ di varianza sulla distanza-base.
 Il Sonar come dispositivo observable
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Volendo impostare il Sonar come un dispositivo osservabile 
-ntroduciamo un nuovo contratto, che elimina il metodo `getVal`:
+Volendo impostare il Sonar come un dispositivo osservabile, 
+introduciamo un nuovo contratto, che esetende il precedente:
 
 .. code:: java
 
-  interface ISonarObservable  {
+  interface ISonarObservable  extends ISonar{
     void register( IObserver obs );		 
     void unregister( IObserver obs );
-    public void activate();		 
-    public void deactivate();
-    public boolean isActive();
   }
 
-  interface IObserver{
+  interface IObserver extends java.util.Observer{
     public void update( int value );
   }
 
 Nel quadro di un programma ad
-oggetti convenzionale, avvalerci del :blue:`pattern decorator` e 
+oggetti convenzionale, possiamo avvalerci del :blue:`pattern decorator`  per aggiungere al Sonar
+le funzionalità di osservabilità.
+
+Per quanto riguarda il modello del Sonar, occorre aggiornare il metodo ``valueUpdated`` in modo 
+da notificare tutti gli observer registrati.
 
 .. code:: java
 
-  public abstract class SonarModelObservable extends Observable implements ISonarObservable{
+  public abstract class SonarObservableModel extends SonarModel implements ISonarObservable{
+    ...
+    @Override
+    protected synchronized void valueUpdated( ){
+      super.valueUpdated();
+      setChanged();  
+      notifyObservers(curVal);
+    }
 
-  public class SonarMockObservable extends SonarModelObservable {
+  //From ISonarObservable	
+  @Override
+  public void register( IObserver obs ) { addObserver( obs ); }
+  @Override
+  public void unregister( IObserver obs ) { deleteObserver( obs );  }    
+  }
 
+Il nuovo mock object relativo al Sonar sarà del tutto simile al precedente, ma 
+adesso come specializzazione di ``SonarObservableModel``.
+
+.. code:: java
+
+  public class SonarMockObservable extends SonarObservableModel {
+    ...
+  }
+
+Si veda :ref:`SonarMock<>`
 
 .. _controller: 
 

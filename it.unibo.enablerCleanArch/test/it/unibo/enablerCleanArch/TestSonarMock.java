@@ -2,9 +2,7 @@ package it.unibo.enablerCleanArch;
 import static org.junit.Assert.assertTrue;
 import org.junit.*;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
-import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.domain.SonarMock;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
 public class TestSonarMock {

@@ -35,7 +35,6 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 				break;
 			}
 		}
-		
 	}
 	
 	public static void main( String[] args) throws Exception {

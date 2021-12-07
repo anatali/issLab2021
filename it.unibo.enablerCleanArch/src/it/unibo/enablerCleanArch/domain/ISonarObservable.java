@@ -1,10 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
-public interface ISonarObservable  {
+public interface ISonarObservable  extends ISonar{
 	  void register( IObserver obs );
 	  void unregister( IObserver obs );
-		public void activate();		 
-		public void deactivate();
-		//public int getVal();			//no more
-		public boolean isActive();
 }

@@ -1,9 +1,11 @@
 package it.unibo.enablerCleanArch.domain;
 
+import java.util.Observable;
+
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 
-public abstract class SonarModel implements ISonar{
+public abstract class SonarModel extends Observable implements ISonar{
 	protected  int curVal = 0;
 	protected boolean stopped  = false;
 	private boolean produced   = false;
@@ -33,14 +35,14 @@ public abstract class SonarModel implements ISonar{
 	@Override
 	public void activate() {
 		sonarSetUp();
-		Colors.out("Sonar | activate");
+		Colors.out("SonarModel | activate", Colors.GREEN);
 		stopped = false;
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
 					sonarProduce();
 				}
-				Colors.out("Sonar | ENDS");
+				Colors.out("SonarModel | ENDS", Colors.GREEN);
 		    }
 		}.start();
 	}
@@ -62,7 +64,7 @@ public abstract class SonarModel implements ISonar{
 		return curVal;
 	}
 
-	private synchronized void waitForUpdatedVal() {
+	protected synchronized void waitForUpdatedVal() {
 		try {
  			while( ! produced ) wait();
  			produced = false;

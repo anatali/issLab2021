@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
  * There is no more getVal
  * The observers are called when a new value is produced
  */
-public abstract class SonarModelObservable extends Observable implements ISonarObservable{
+public abstract class SonarModelObservableOld extends Observable implements ISonarObservable{
 	protected  int curVal = 0;
 	protected boolean stopped  = false;
 

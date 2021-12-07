@@ -21,6 +21,15 @@ public class DeviceFactory {
 			return SonarModel.createSonarConcrete();
 		}
 	}
+	public static ISonarObservable createSonarObservable() {
+		System.out.println("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
+		if( RadarSystemConfig.simulation)  {
+			return SonarObservableModel.createSonarObservableMock();
+		}else { 
+			return null;
+		}
+		
+	}
 	
 	//We do not have mock for RadarGui
 	public static IRadarDisplay createRadarGui() {
