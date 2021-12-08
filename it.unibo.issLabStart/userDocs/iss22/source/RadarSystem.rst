@@ -575,6 +575,7 @@ Come analisti del problema possiamo però evidenziare quanto segue:
 #. l'uso della memoria comune come strumento di comunicazione va evitato, per  
    ottenere la flessibità di poter eseguire ciascun componente su un diverso nodo di elaborazione; 
 #. il ``Controller`` può acquisire i dati in due modi diversi:
+
   #. inviando una richieste al Sonar, che gli fornisce un dato come risposta
   #. il Sonar non lavora come 'produttore a richiesta' ma pubblica dati su un broker 
      accessibile al ``Controller``.
@@ -1378,6 +1379,7 @@ e che potrà essere usato per inviare-ricevere messaggi.
       throw new Exception("Unable to connect to host:" + host);
     }
   }
+
 Si noti che il client fa un certo numero di tentativi prima di segnalare la impossibilità di connessione.
 
 .. _tcpsupportServer:
@@ -1827,9 +1829,9 @@ Abbiamo già anticipato che, nel caso il Controller sia su PC, il Sonar richiede
 
 Al momento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Adapter-Enabler come server di ricezione per il Sonar 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. image:: ./_static/img/Radar/EnablersAndAdapters.PNG
    :align: center
@@ -1932,9 +1934,9 @@ Abbiamo già anticipato che, nel caso il Controller sia su PC, il Led richiede:
 Al momento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Adapter-Enabler come client di trasmissione per il Led
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. code:: java
 

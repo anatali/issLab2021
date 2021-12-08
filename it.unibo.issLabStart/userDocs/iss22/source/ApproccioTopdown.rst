@@ -196,9 +196,9 @@ Tipi di componenti
  
 
 
---------------------------------------
+=================================================
 La problematica della interazione
---------------------------------------
+=================================================
 ++++++++++++++++++++++++++
 Tipi di protocollo
 ++++++++++++++++++++++++++
@@ -272,9 +272,9 @@ i linguaggi di programmazione.
 Non viene definito un tipo (Java)  ``Message`` perchè si vuole permettere la interazione tra client e server
 scritti in linguaggi diversi.
 
-++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++
 Messaggi di livello applicativo
-++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++
 
 Ovviamente componenti scritti in linguaggi diversi potrenno comprendersi solo condividendo il modo di
 interpretazione delle stringhe.
@@ -293,9 +293,9 @@ che rappresentano i messaggi di livello applicativo:
   - RECEIVER:  nome del componente chi riceve il messaggio 
   - SEQNUM: numero di sequenza del messaggio
 
---------------------------------------
+===========================================
 Architettura adapter-port
---------------------------------------
+===========================================
 
 .. image:: ./_static/img/Architectures/cleanArch.jpg
   :align: center
@@ -419,9 +419,9 @@ Il caso del led
 Ad esempio, nel caso del Led, definiamo un adapter che estende ``EnablerAsClient`` realizzando al contempo
 l'interfaccia ``ILed``.
 
--------------------------------------------
+===========================================
 Dagli oggetti alle risorse
--------------------------------------------
+===========================================
 
 - Gli oggetti passivi non hanno proprietà utili per la progettazione e costruzione di sistemi distributi.
 - L'uso dei protocolli di comunicazione e di oggetti 'attivi' con Thread permette di colmare la lacuna
