@@ -1,7 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
 import java.util.Observable;
-
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 

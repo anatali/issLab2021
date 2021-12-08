@@ -1,4 +1,5 @@
 package it.unibo.enablerCleanArch.adapters;
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -27,8 +28,15 @@ private boolean produced = false;
 	@Override
 	public void elaborate(String message) {  //receive a distance value after the request in getVal
 		Colors.out(name + " |  elaborate " + message );
-		lastSonarVal = Integer.parseInt( message );
-		valueUpdated( );
+		try {
+			lastSonarVal = Integer.parseInt( message );
+			valueUpdated( );	//to resume caller of getVal
+		}catch( Exception e) {	//Added after TcpContextserver
+			//msg(distance,dispatch,main,sonar,36,1) 
+			ApplMessage msg = new ApplMessage( message );
+			lastSonarVal    = Integer.parseInt( msg.msgContent() );
+			valueUpdated( );	//to resume caller of getVal
+		}
 	}
 
 	

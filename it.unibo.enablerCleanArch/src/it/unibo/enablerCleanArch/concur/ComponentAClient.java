@@ -1,6 +1,5 @@
 package it.unibo.enablerCleanArch.concur;
 
-import android.net.wifi.WifiConfiguration.Protocol;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Interaction2021;

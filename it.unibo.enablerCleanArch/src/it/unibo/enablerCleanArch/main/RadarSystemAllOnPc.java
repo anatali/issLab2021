@@ -16,8 +16,7 @@ private IRadarDisplay radar = null;
 		RadarSystemConfig.setTheConfiguration( configFile );
 	}
 	public void build() throws Exception {			
-		//RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
-		//Control
+ 		//Control
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
 			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );

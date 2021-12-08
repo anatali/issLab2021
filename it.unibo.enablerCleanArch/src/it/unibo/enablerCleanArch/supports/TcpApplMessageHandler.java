@@ -6,7 +6,8 @@ package it.unibo.enablerCleanArch.supports;
 public class TcpApplMessageHandler extends Thread{
 private  ApplMessageHandler handler ;
 
-	public TcpApplMessageHandler( ApplMessageHandler handler ) {
+
+	public TcpApplMessageHandler(  ApplMessageHandler handler ) {
 		this.handler = handler;
  		this.start();
 	}
@@ -16,19 +17,19 @@ private  ApplMessageHandler handler ;
 		String name          = handler.getName();
 		Interaction2021 conn = handler.getConn() ;
 		try {
-			Colors.out("TcpApplMessageHandler | STARTS with handler:" + name );
+			Colors.out(name + " | STARTS  "  );
 			while( true ) {
-				//System.out.println(name + " | waits for message on ...");
+				//Colors.out(name + " | waits for message on ...");
 			    String msg = conn.receiveMsg();
-			    //Colors.out("TcpApplMessageHandler | received:" + msg );
+			    //Colors.out(name + "  | received:" + msg );
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;
 			    } else{ handler.elaborate( msg ); }
 			}
-			Colors.out("TcpApplMessageHandler | BYE"   );
+			Colors.out(name + " | BYE"   );
 		}catch( Exception e) {
-			Colors.outerr("TcpApplMessageHandler | ERROR:" + e.getMessage()  );
+			Colors.outerr( name + "  | ERROR:" + e.getMessage()  );
 		}	
 	}
 }

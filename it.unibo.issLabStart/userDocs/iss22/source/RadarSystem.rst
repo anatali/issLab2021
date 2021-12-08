@@ -1319,12 +1319,17 @@ La testUnit introduce un metodo di setup per definire i parametri di configurazi
         fail("setup ERROR " + e.getMessage() );
       }
     }
-  
+
+Come anticipato in fase di analisi dei requisiti, impostiamo un test nel caso in cui  
+il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce un valore ``d<DLIMIT``.
+
+.. code:: java
+
   @Test 
   public void testFarDistance() {
     //Simaulate obstacle far
     RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT +20;
-    sys.activateSonar();   //il sonar produce un solo valore
+    sys.activateSonar();   //il sonar produce un valore costante d>DLIMIT
     while( sys.getSonar().isActive() ) delay(10);   //give time the system to work 
     RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
     assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance );
@@ -1335,7 +1340,7 @@ La testUnit introduce un metodo di setup per definire i parametri di configurazi
   public void testNearDistance() {
     //Simaulate obstacle near
     RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT - 1;
-    sys.activateSonar();   //il sonar produce un solo valore
+    sys.activateSonar();   //il sonar produce un solo valore costante d<DLIMIT
     while( sys.getSonar().isActive() ) delay(10); 	//give time the system to work 
     RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
     assertTrue(  sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance);
@@ -1978,19 +1983,13 @@ Enabler di ricezione per il Led
 .. code:: java
 
   public class LedEnablerAsServer extends EnablerAsServer  {
-  ILed led = DeviceFactory.createLed();
+  ILed led ;
 
-    public LedServer(  int port  )   {
-      super("LedServer");
-      setProtocolServer(port,this);	
+    public LedServer(  String name,  int port, ProtocolType protocol, ILed led  )   {
+      super(name, port, protocol );
+      this.led = led;	
     }
-    
-    public void setProtocolServer(int port, ApplMessageHandler enabler) {
-      try {
-        new TcpServer( name+"Server", port,  this );
-      } catch (Exception e) { ... } 			
-    }
-    
+ 
     @Override		//from ApplMessageHandler
     public void elaborate(String message) {
       if( message.equals("on")) led.turnOn();
