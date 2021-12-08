@@ -289,5 +289,13 @@ di ``EnablerAsClient``:
 
 
 
-  
+=========================================
+Problemi ancora aperti  
+=========================================
 
+- Un handler lento o che si blocca rallenta o blocca la gestione dei messaggi da parte del
+  ``SysMessageHandler`` e quindi del ``TcpContextServer``
+- Nel caso di componenti con stato utlizzabili da più clients, vi possono essere problemi
+  di concorrenza.
+
+  L'esempio ``EnablerCounterAsClient`` 
