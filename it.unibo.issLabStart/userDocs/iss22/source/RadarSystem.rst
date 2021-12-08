@@ -2029,9 +2029,9 @@ Test funzionale
 
 
 
-+++++++++++++++++++++++++++++++++++++++++++++
+==================================================
 Il concetto di contesto
-+++++++++++++++++++++++++++++++++++++++++++++
+==================================================
 
 Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su una propria porta.
 
@@ -2044,9 +2044,9 @@ Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace
 *enabler-server* è destinato un messaggio, per poi invocarne l'appropriato ``ApplMessageHandler``
 definito dall'application designer.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 Struttura (standard) dei messaggi applicativi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 
 Introduciamo dunque una  estensione sulla struttura dei messaggi, che ci fornirà d'ora in poi anche uno 
 :blue:`standard` sulla struttura delle informazioni scambiate via rete:
@@ -2119,9 +2119,9 @@ nel modo descritto. La classe si avvale del supporto del TuProlog.
     public String toString() { ... }
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 Il TcpContextServer
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 
 Quando una stringa di forma ``msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )`` viene ricevuta
 dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (``SysMessageHandler``)
@@ -2139,9 +2139,9 @@ di esso.
     }
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 Il gestore di sistema dei messaggi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 
  .. code:: java
 
@@ -2163,9 +2163,9 @@ Il gestore di sistema dei messaggi
     }
   }
  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 Un esempio
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------------------------
 
  .. code:: java
    
@@ -2202,9 +2202,9 @@ Un esempio
   }
 
 
--------------------------------------
+==================================
 Un approccio top down
--------------------------------------
+==================================
 
 
 Si veda :doc:`ApproccioTopdown`.
