@@ -4,9 +4,9 @@ import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
-public class ComponentAClient  extends EnablerAsClient{
+public class ACallerClient  extends EnablerAsClient{
 
-	public ComponentAClient(String name, String host, int port ) {
+	public ACallerClient(String name, String host, int port ) {
 		super(name, host, port, ProtocolType.tcp);
 	}
 
