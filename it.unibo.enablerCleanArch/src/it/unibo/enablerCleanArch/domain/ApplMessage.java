@@ -65,5 +65,12 @@ public class ApplMessage {
     public boolean isReply(){
         return msgType == ApplMessageType.reply.toString();
     }   
+    
+    public String toString() {
+    	return "msg($msgId,$msgType,$msgSender,$msgReceiver,$msgContent,$msgNum)"
+    			.replace("$msgId",msgId).replace("$msgType",msgType)
+    			.replace("$msgSender",msgSender).replace("$msgReceiver",msgReceiver)
+    			.replace("$msgContent",msgContent).replace("$msgNum",""+msgNum);
+    }
 
 }

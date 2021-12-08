@@ -142,9 +142,13 @@ Dai requisiti possiamo asserire che:
 - i due nodi di elaborazione devono potersi  `scambiare informazione via rete`, usando supporti WIFI;
 - i due nodi di elaborazione devono essere 'programmati' usando **tecnologie software diverse**.
 
-In sintesi:
++++++++++++++++++++++++++++++++++++++
+In sintesi
++++++++++++++++++++++++++++++++++++++
 
 :remark:`Si tratta di realizzare un sistema software distribuito ed eterogeneo`
+
+Il sistema comprende un dispositivo di input (il Sonar) e due dispositivi di output (il Led e il RadarDisplay)
 
 
 --------------------------------------
@@ -206,6 +210,9 @@ La costruzione del sistema pone le seguenti :blue:`problematiche`:
 
        Occorre capire come i dati del sonar generati sul Raspberry possano raggiungere il PC ed essere usati per
        aggiornare il ``RadarDisplay`` e per accendere/spegnere il ``Led``.
+
+ 
+
 
 La necessità di integrare i componenti disponibili *fa sorgere altre problematiche*:
 
@@ -534,6 +541,7 @@ La :blue:`architettura logica` suggerita dal problema è rappresentabile con la 
    :width: 50%
 
  
+:remark:`Non vi sono situazioni di uso concorrente di risorse.`
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 La logica del Controller
@@ -1996,7 +2004,6 @@ Testing degli enabler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
  
 +++++++++++++++++++++++++++++++++++++++++++++
 Il sistema reale distribuito
@@ -2018,6 +2025,179 @@ Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contien
 Test funzionale
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Il concetto di contesto
++++++++++++++++++++++++++++++++++++++++++++++
+
+Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su una propria porta.
+
+Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
+computazionale. Questo server (che denominiamo ``TcpContextServer``) 
+verrebbe a costituire una sorta di ``Facade`` comune a tutti gli *enabler-server*
+attivati nello stesso :blue:`contesto` rappresentato da quel  nodo.
+
+Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace di sapere per quale
+*enabler-server* è destinato un messaggio, per poi invocarne l'appropriato ``ApplMessageHandler``
+definito dall'application designer.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Struttura (standard) dei messaggi applicativi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Introduciamo dunque una  estensione sulla struttura dei messaggi, che ci fornirà d'ora in poi anche uno 
+:blue:`standard` sulla struttura delle informazioni scambiate via rete:
+
+ .. code:: java
+
+    msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+
+  - MSGID:    identificativo del messaggio
+  - MSGTYPE:  tipo del message (Dispatch, Invitation,Request,Reply,Event)  
+  - SENDER:   nome del componente che invia il messaggio
+  - CONTENT:  contenuto applicativo del messaggio (detto anche payload)
+  - RECEIVER: nome del componente chi riceve il messaggio 
+  - SEQNUM:   numero di sequenza del messaggio
+
+I messaggi scambiati verranno logicamente suddivisi in diverse categorie:
+
+.. list-table:: 
+  :widths: 70,30
+  :width: 100%
+
+  * - - :blue:`dispatch`: un messaggio inviato a un preciso destinatario senza attesa  di una risposta 
+        (in modo detto anche  `fire-and-forget`);
+      - :blue:`invitation`: un messaggio inviato a un preciso destinatario aspettandosi un 'ack' da parte di questi;
+      - :blue:`request`: un messaggio inviato a un preciso destinatario aspettandosi da parte di questi una 
+        :blue:`response/reply` logicamente correlata alla richiesta;
+      - :blue:`event`: un messaggio inviato a chiunque sia in grado di elaborarlo.
+
+    - .. image:: ./_static/img/Architectures/legendMessages.PNG
+        :align: center
+        :width: 80%
+
+
+La classe ``ApplMessage`` fornisce metodi per la costruzione e la gestione di messaggi organizzati
+nel modo descritto. La classe si avvale del supporto del TuProlog.
+
+ .. code:: java
+
+  enum ApplMessageType{
+      event, dispatch, request, reply, invitation
+  }   
+  public class ApplMessage {
+    protected String msgId       = "";
+    protected String msgType     = null;
+    protected String msgSender   = "";
+    protected String msgReceiver = "";
+    protected String msgContent  = "";
+    protected int msgNum         = 0;
+
+    public ApplMessage( String MSGID, String MSGTYPE,  
+          String SENDER, String RECEIVER, String CONTENT, String SEQNUM ) {
+      ...
+    }
+
+    public ApplMessage( String msg ) {
+      Struct msgStruct = (Struct) Term.createTerm(msg);
+      setFields(msgStruct);
+    }  
+
+    public String msgId() {   return msgId; }
+    public String msgType() { return msgType; }
+    public String msgSender() { return msgSender; }
+    public String msgReceiver() { return msgReceiver;  }
+    public String msgContent() { return msgContent;  }
+    public String msgNum() { return "" + msgNum; }
+
+    public boolean isEvent(){ 
+      return msgType == ApplMessageType.event.toString(); }
+    ...
+    public String toString() { ... }
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il TcpContextServer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Quando una stringa di forma ``msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )`` viene ricevuta
+dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (``SysMessageHandler``)
+capace di invocare l'``ApplMessageHandler`` relativo al componente destinatario registrato presso
+di esso.
+
+ .. code:: java
+
+  public class TcpContextServer extends TcpServer{
+    public TcpContextServer(String name, int port ) {
+      super(name, port, new SysMessageHandler("sysHandler"));
+    }   
+    public SysMessageHandler getHandler() {
+      return (SysMessageHandler) applHandler;
+    }
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il gestore di sistema dei messaggi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ .. code:: java
+
+  public class SysMessageHandler extends ApplMessageHandler{
+  private HashMap<String,ApplMessageHandler> handlerMap = 
+    new HashMap<String,ApplMessageHandler>();
+
+    public SysMessageHandler(String name) { super(name); }
+
+    @Override
+    public void elaborate(String message) {
+      ApplMessage msg = new ApplMessage(message);
+      ApplMessageHandler h = handlerMap.get(msg.msgReceiver());
+      if( h != null ) h.elaborate(message);
+    }
+    
+    public void registerHandler(String name, ApplMessageHandler h) {
+      handlerMap.put(name, h);
+    }
+  }
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Un esempio
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ .. code:: java
+   
+    public class ComponentAClient  extends EnablerAsClient{
+      public ComponentAClient(String name, String host, int port ) {
+        super(name, host, port, ProtocolType.tcp);
+      }
+      @Override
+      protected void handleMessagesFromServer(
+          Interaction2021 conn) throws Exception { }
+    }
+
+   public class TcpContextServerMain {
+    public static void main( String[] args) throws Exception {
+      int port = 7070;
+      TcpContextServer server=new TcpContextServer("TcpApplServer", port);
+      SysMessageHandler h    = server.getHandler();
+      
+      ApplMessageHandler  naiveH = new NaiveApplHandler("naiveH");
+      h.registerHandler("componentA",naiveH);
+      h.registerHandler("componentB",naiveH);
+      
+      server.activate();
+      
+      ComponentAClient client = 
+          new ComponentAClient("client","localhost",port);
+      ApplMessage msg1        = 
+          new ApplMessage("msg(m1,dispatch,main,componentA,hello1,1)");
+      ApplMessage msg2        = 
+          new ApplMessage("msg(m1,dispatch,main,componentB,hello2,2)");
+      client.getConn().forward(msg1.toString());
+      client.getConn().forward(msg2.toString());
+    }
+  }
 
 
 -------------------------------------

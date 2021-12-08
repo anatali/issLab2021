@@ -8,9 +8,9 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 public class TcpServer extends Thread{
  
 private boolean stopped = true;
-private ApplMessageHandler applHandler;
 private int port;
 private ServerSocket serversock;
+protected ApplMessageHandler applHandler;
 
 	public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
 		super(name);
