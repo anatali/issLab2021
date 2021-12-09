@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.TcpServer;
  
 /*
- * Attiva un server relativo al protocollo specificato
+ * Attiva un server relativo al protocollo specificato (se non null)
  * lasciando la gestione dei messaggi inviati dai client alle classi specializzate
  * che si possono avvalere del metodo sendCommandToClient 
  * per inviare comandi e/o risposte a un client
@@ -14,30 +14,32 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
 public abstract class EnablerAsServer extends ApplMessageHandler   { 
 protected ApplMessageHandler handler;
 protected ProtocolType protocol;
-protected TcpServer server;
+protected TcpServer serverTcp;
 
 	public EnablerAsServer( String name, int port, ProtocolType protocol )   {
 		super( name );
 		try {
 			this.protocol = protocol;
-			setServerSupport( port, this );
-			Colors.out(name+" |  STARTED  on port=" + port );
+			handler       = this;
+			if( protocol != null ) {
+				setServerSupport( port, protocol  );
+				Colors.out(name+" |  STARTED  on port=" + port + " protocol=" + protocol);
+			}else Colors.out(name+" |  CREATED as ApplMessageHandler"  );
 		} catch (Exception e) {
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );
 		}
 	}
 
- 	protected void setServerSupport( int port, ApplMessageHandler handler  ) throws Exception{
-		this.handler = handler;
+ 	protected void setServerSupport( int port, ProtocolType protocol  ) throws Exception{
 		if( protocol == ProtocolType.tcp ) {
-			server = new TcpServer( "ServerTcp_"+name, port,  handler );
-			server.activate();
+			serverTcp = new TcpServer( "ServerTcp_"+name, port,  handler );
+			serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
 			//Coap: attivo un SonarObserver che implementa getVal (NO: lo deve fare il Controller!)
 	  		//che riceve this (un ApplMessageHandler)  di cui chiama  elaborate( msg )
 			//new CoapInputObserver( name+"Server", port,  this );			 
 		}
- 	}	
+	}	
  		 
  	public void sendCommandToClient( String msg ) {
  		try {
@@ -51,7 +53,7 @@ protected TcpServer server;
  	public void deactivate() {
  		//Colors.out(name+" |  DEACTIVATE  "  );
 		if( protocol == ProtocolType.tcp ) {
-			server.deactivate();
+			serverTcp.deactivate();
 		}else if( protocol == ProtocolType.coap ) {
 		}		
  	}

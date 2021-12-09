@@ -36,27 +36,49 @@ Iniziamo con il definire un server astratto che crea il supporto di comunicazion
 relativo al protocollo specificato e demanda la gestione dei messaggi inviati da un client
 alle classi specializzate.
 
+
 .. image:: ./_static/img/Radar/EnablerAsServer.PNG
    :align: center 
-   :width: 40%
+   :width: 60%
  
 .. code:: java
 
   public abstract class EnablerAsServer extends ApplMessageHandler{
   protected ApplMessageHandler handler;
+  protected ProtocolType protocol;
+  protected TcpServer serverTcp;
     public EnablerAsServer(String name, int port, ProtocolType protocol) {
       super(name);
-      setServerSupport( port, this, protocol );
+      try {
+        this.protocol = protocol;
+        handler       = this;
+        if( protocol != null ) setServerSupport( port, this, protocol );
+      }catch (Exception e) { ... }
     }	
-    protected void setServerSupport( int port, ApplMessageHandler handler, 
-          ProtocolType protocol ) throws Exception{
-      this.handler = handler;
+    protected void setServerSupport( 
+                    int port, ProtocolType protocol ) throws Exception{
       if( protocol == ProtocolType.tcp ) {
-        TcpServer server = new TcpServer( "ServerTcp", port,  handler );
-        server.activate();
+        serverTcp = new TcpServer( "ServerTcp", port,  handler );
+        serverTcp.activate();
       }else if( protocol == ProtocolType.coap ) { ... }
     }	 
+    public void sendCommandToClient( String msg ) {
+      try {
+        if( handler.getConn()  != null ) handler.getConn().forward(msg);
+      } catch (Exception e) {... }
+    }
+    public void deactivate() {
+      if( protocol == ProtocolType.tcp ) {
+        serverTcp.deactivate();
+      }else if( protocol == ProtocolType.coap ) { ...	}		
+    }   
   }
+
+Notiamo che nel caso ``protocol==null``, non viene creato alcun supporto.
+Questo caso sarà applicato più avanti: si veda  :doc:`ContextServer`.
+
+
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Tipi di protocollo supportati

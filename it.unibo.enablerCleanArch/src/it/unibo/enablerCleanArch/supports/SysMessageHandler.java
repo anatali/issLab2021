@@ -16,7 +16,7 @@ private HashMap<String,ApplMessageHandler> handlerMap = new HashMap<String,ApplM
 		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 		ApplMessage msg      = new ApplMessage(message);
 		ApplMessageHandler h = handlerMap.get(msg.msgReceiver());
-		Colors.out(name+" | dispatch elaborate msg=" + msg + " to " + h );
+		Colors.out(name+" | redirect " + msg + " to " + h.name, Colors.GREEN  );
 		if( h != null ) h.elaborate(message);
 	}
 	

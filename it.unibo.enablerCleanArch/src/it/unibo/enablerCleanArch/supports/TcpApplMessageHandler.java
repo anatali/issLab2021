@@ -17,7 +17,7 @@ private  ApplMessageHandler handler ;
 		String name          = handler.getName();
 		Interaction2021 conn = handler.getConn() ;
 		try {
-			Colors.out(name + " | STARTS  "  );
+			//Colors.out(name + " | TcpApplMessageHandler STARTS  "  );
 			while( true ) {
 				//Colors.out(name + " | waits for message on ...");
 			    String msg = conn.receiveMsg();

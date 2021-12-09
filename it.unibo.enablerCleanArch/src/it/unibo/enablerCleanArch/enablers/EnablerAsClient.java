@@ -42,7 +42,7 @@ protected String name ;
 	
 	protected abstract void handleMessagesFromServer( Interaction2021 conn ) throws Exception;
 	
-	protected void sendValueOnConnection( String val ) throws Exception{
+	public void sendValueOnConnection( String val ) throws Exception{
 		//Colors.out( name+"  | sendValueOnConnection " + val  );
 		conn.forward(val);
 	}

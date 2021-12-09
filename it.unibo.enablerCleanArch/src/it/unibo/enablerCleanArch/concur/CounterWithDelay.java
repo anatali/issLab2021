@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.concur;
 
 import it.unibo.enablerCleanArch.supports.Colors;
 
-public class Counter {
+public class CounterWithDelay {
 private int n = 2;
 	public void inc() { n = n + 1; }
 	public void dec(int dt) {

@@ -148,21 +148,29 @@ Il gestore di sistema dei messaggi
       handlerMap.remove( name );
     }
   }
+
+.. image:: ./_static/img/Architectures/ContextServer.PNG
+   :align: center 
+   :width: 80%
  
+
 -------------------------------------------------------
 Un esempio
 -------------------------------------------------------
 
 Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema su PC che abbia tre componenti:
+
 - un Sonar di classe ``SonarAdapterEnablerAsServer`` che riceve valori di distanza inviati via rete
 - un Led  di classe ``LedEnablerAsServer`` che riceve comandi di accensione-spegnimento inviati via rete
-- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca opportuni metodi del Sonar e del Led
+- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un ``SysMessageHandler``) 
+  il metodo ``elaborate`` del Sonar e del Led.
 
-Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe ApplMessageHandler
-che definisce il metodo di elaborazione dei messaggi di livello applicativo che dovrà essere posto 
-in esecuzione dal ``TcpContextServer``.
+Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe ``ApplMessageHandler``
+che definisce il metodo ``elaborate`` per l'elaborazione dei messaggi a livello applicativo. 
+Inoltre essi non attivano alcun server se il tipo di protocollo
+specificato nel costruttore è ``null``.
 
-
+ 
 ++++++++++++++++++++++++++++++++++++++++++
 Struttura del programma 
 ++++++++++++++++++++++++++++++++++++++++++
@@ -199,10 +207,14 @@ I messaggi per aggiornare il Sonar e per comandare il Led sono definiti di tipo 
  .. code:: java
 
   //Definizione dei Messaggi
-  ApplMessage fardistance  = new ApplMessage("msg( distance, dispatch, main, sonar, 36, 0 )");
-  ApplMessage neardistance = new ApplMessage("msg( distance, dispatch, main, sonar, 10, 1 )");
-  ApplMessage turnOnLed    = new ApplMessage("msg( turn, dispatch, main, led, on, 2 )");
-  ApplMessage turnOffLed   = new ApplMessage("msg( turn, dispatch, main, led, off, 3 )");
+  ApplMessage fardistance  = 
+    new ApplMessage("msg( distance, dispatch, main, sonar, 36, 0 )");
+  ApplMessage neardistance = 
+    new ApplMessage("msg( distance, dispatch, main, sonar, 10, 1 )");
+  ApplMessage turnOnLed    = 
+    new ApplMessage("msg( turn, dispatch, main, led, on, 2 )");
+  ApplMessage turnOffLed   = 
+    new ApplMessage("msg( turn, dispatch, main, led, off, 3 )");
 
 
 ++++++++++++++++++++++++++++++++++++++++++
@@ -214,32 +226,36 @@ Il metodo di configurazione definisce i parametri e crea i componenti:
  .. code:: java
 
   public void configureTheSystem() {
-		RadarSystemConfig.simulation        = true;    
-		RadarSystemConfig.testing           = true;    		
-		RadarSystemConfig.ControllerRemote  = false;    		
-		RadarSystemConfig.LedRemote         = false;    		
-		RadarSystemConfig.SonareRemote      = false;    		
-		RadarSystemConfig.RadarGuieRemote   = false;    	
-		RadarSystemConfig.pcHostAddr        = "localhost";
-		RadarSystemConfig.ledPort	          = 8010;		
-		RadarSystemConfig.sonarPort         = 8012;		
-		RadarSystemConfig.ctxServerPort     = 8048;
-		
+    RadarSystemConfig.simulation        = true;    
+    RadarSystemConfig.testing           = true;    		
+    RadarSystemConfig.ControllerRemote  = false;    		
+    RadarSystemConfig.LedRemote         = false;    		
+    RadarSystemConfig.SonareRemote      = false;    		
+    RadarSystemConfig.RadarGuieRemote   = false;    	
+    RadarSystemConfig.pcHostAddr        = "localhost";
+    RadarSystemConfig.ctxServerPort     = 8048;
+
+    int ledPort	       = 0;	//dont'care			
+    int sonarPort      = 0;	//dont'care		
+    
+    ProtocolType prtcl                  = null;
     //Creazione del server di contesto
-		contextServer  = new TcpContextServer("TcpApplServer", RadarSystemConfig.ctxServerPort);
+    contextServer  = 
+      new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
 		
     //Creazione del sonar
-		sonar = new SonarAdapterEnablerAsServer("sonar",  RadarSystemConfig.sonarPort, ProtocolType.tcp);
+    sonar = 
+      new SonarAdapterEnablerAsServer("sonar", sonarPort,prtcl);
 		
     //Creazione del Led
     ILed led = DeviceFactory.createLed();		
-		LedEnablerAsServer ledServer = 
-				new LedEnablerAsServer(  "led", RadarSystemConfig.ledPort, ProtocolType.tcp, led  );
+    LedEnablerAsServer ledServer = 
+      new LedEnablerAsServer("led", ledPort,prtcl,led);
  		
     //Registrazione dei componenti presso il server
-		contextServer.addComponent("sonar",(ApplMessageHandler) sonar);
-		contextServer.addComponent("led",ledServer);	
-	}
+    contextServer.addComponent("sonar",(ApplMessageHandler) sonar);
+    contextServer.addComponent("led",ledServer);	
+  }
 
 ++++++++++++++++++++++++++++++++++++++++++
 Esecuzione
@@ -252,22 +268,23 @@ dapprima messaggi che riguardano il Sonar e successivamente messaggi che riguard
 
 .. code:: java
  
- 	public void execute() throws Exception{
-		contextServer.activate();
-		ACallerClient client = new ACallerClient("client","localhost",RadarSystemConfig.ctxServerPort);
-		conn = client.getConn();
-		simulateDistance( true );
-		simulateDistance( false );
- 	}
+  public void execute() throws Exception{
+    contextServer.activate();
+    ACallerClient client = 
+      new ACallerClient("client","localhost", RadarSystemConfig.ctxServerPort);
+    conn = client.getConn();
+    simulateDistance( true );
+    simulateDistance( false );
+  }
 	
-	protected void simulateDistance( boolean far ) throws Exception {
-		if( far ) conn.forward( fardistance.toString() );  
-		else  conn.forward( neardistance.toString() );  
-		// client --> contextServer --> sonar.valueUpdated( ) --> produced=true
-		int v = sonar.getVal();
-		if( v < RadarSystemConfig.DLIMIT ) conn.forward(turnOnLed.toString());  
-		else conn.forward(turnOffLed.toString());  		
-	}
+  protected void simulateDistance( boolean far ) throws Exception {
+    if( far ) conn.forward( fardistance.toString() );  
+    else  conn.forward( neardistance.toString() );  
+    //client-->contextServer-->sonar.valueUpdated()-->produced=true
+    int v = sonar.getVal();
+    if( v < RadarSystemConfig.DLIMIT ) conn.forward(turnOnLed.toString());  
+    else conn.forward(turnOffLed.toString());  		
+  }
 
 
 ++++++++++++++++++++++++++++++++++++++++++
@@ -283,10 +300,11 @@ di ``EnablerAsClient``:
       super(name, host, port, ProtocolType.tcp);
     }
     @Override
-    protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {}
+    protected void handleMessagesFromServer(Interaction2021 conn) 
+                                                throws Exception {}
   }
 
-
+ 
 
 
 =========================================
@@ -298,4 +316,17 @@ Problemi ancora aperti
 - Nel caso di componenti con stato utlizzabili da più clients, vi possono essere problemi
   di concorrenza.
 
-  L'esempio ``EnablerCounterAsClient`` 
+  L'esempio:
+
+  - ``SharedCounterExampleMain`` 
+  - ``CounterWithDelay``
+  - ``EnablerCounter``
+  - ``CounterClient``
+  - ``msg( dec, dispatch, main, counter, dec(10), 1 )``
+
+
+.. image:: ./_static/img/Radar/CounterWithDelay.PNG
+   :align: center  
+   :width: 60%
+
+ 

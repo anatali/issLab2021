@@ -30,20 +30,22 @@ private Interaction2021 conn;
 		RadarSystemConfig.SonareRemote  	= false;    		
 		RadarSystemConfig.RadarGuieRemote  	= false;    	
 		RadarSystemConfig.pcHostAddr        = "localhost";
-		RadarSystemConfig.ledPort			= 8010;		
-		RadarSystemConfig.sonarPort			= 8012;		
 		RadarSystemConfig.ctxServerPort     = 8048;
+
+		int ledPort	       = 0;	//dont'care	
+		int sonarPort      = 0;	//dont'care		
 		
+		ProtocolType protocol               = null;
 		//Creazione del server di contesto
 		contextServer  = new TcpContextServer("TcpApplServer", RadarSystemConfig.ctxServerPort);
 		
 		//Creazione del sonar
-		sonar = new SonarAdapterEnablerAsServer("sonar",  RadarSystemConfig.sonarPort, ProtocolType.tcp);
+		sonar = new SonarAdapterEnablerAsServer("sonar",  sonarPort, protocol);
 		
 		//Creazione del led
 		ILed led = DeviceFactory.createLed();		
 		LedEnablerAsServer ledServer = 
-				new LedEnablerAsServer(  "led", RadarSystemConfig.ledPort, ProtocolType.tcp, led  );
+				new LedEnablerAsServer(  "led", ledPort, protocol, led  );
  		
 		//Registrazione dei componenti presso il server
 		contextServer.addComponent("sonar",(ApplMessageHandler) sonar);
@@ -53,7 +55,7 @@ private Interaction2021 conn;
 	
 	public void execute() throws Exception{
 		contextServer.activate();
-		ACallerClient client = new ACallerClient("client","localhost",RadarSystemConfig.ctxServerPort);
+		ACallerClient client = new ACallerClient("client","localhost", RadarSystemConfig.ctxServerPort);
 		conn = client.getConn();
 		simulateDistance( true );
 		simulateDistance( false );

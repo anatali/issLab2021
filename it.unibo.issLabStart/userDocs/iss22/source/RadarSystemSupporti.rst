@@ -209,8 +209,15 @@ con l':ref:`ApplMessageHandler<msgh>` ricevuto al momento della costruzione del 
       new TcpApplMessageHandler( applHandler );			 		
     }//while
   }catch (Exception e) {...}
- 
 
+L'architettura del sistema in seguito a due chiamate da parte di due client diversi, può essere 
+rappresentata come nella figura che segue:
+
+.. image:: ./_static/img/Architectures/ServerAndConnections.png 
+   :align: center
+   :width: 80%
+ 
+Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Una TestUnit
@@ -289,11 +296,11 @@ Un semplice client di testing viene definito in modo che (metodo ``doWork``) il 
 .. code:: Java
 
   class ClientForTest{
-  public static boolean withserver = true;  //per fare un test di client senza server
-    public void doWork(String name, int nattempts) {
+  public static boolean withserver=true; //per test di client senza server
+    public void doWork(String name, int ntimes) {
       try {
         Interaction2021 conn  = 
-          TcpClient.connect("localhost", TestTcpSupports.testPort, nattempts); //1
+          TcpClient.connect("localhost",TestTcpSupports.testPort,ntimes);//1
         String request = "hello from" + name;
         conn.forward(request);              //2
         String answer = conn.receiveMsg();  //3

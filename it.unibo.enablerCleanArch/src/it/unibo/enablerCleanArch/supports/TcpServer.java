@@ -30,9 +30,9 @@ protected ApplMessageHandler applHandler;
 		  	//Colors.out(getName() + " | STARTING ... "  );
 			while( ! stopped ) {
 				//Accept a connection				 
-				Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock, Colors.GREEN);	 
+				//Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock, Colors.GREEN);	 
 		 		Socket sock          = serversock.accept();	
-				//Colors.out(getName() + " | accepted sock " + sock + " handler=" + applHandler, Colors.GREEN  );	 
+				Colors.out(getName() + " | accept connection  handler=" + applHandler.name, Colors.GREEN  );	 
 		 		Interaction2021 conn = new TcpConnection(sock);
 		 		applHandler.setConn(conn);
 		 		//Create a message handler on the connection

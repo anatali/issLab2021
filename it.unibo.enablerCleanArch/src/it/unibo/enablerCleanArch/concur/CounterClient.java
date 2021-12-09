@@ -4,16 +4,16 @@ import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
-public class EnablerCounterAsClient extends EnablerAsClient{
+public class CounterClient extends EnablerAsClient{
 
-	public EnablerCounterAsClient(String name, String host, int port ) {
+	public CounterClient(String name, String host, int port ) {
 		super(name, host, port, ProtocolType.tcp);
 	}
 
 	@Override
 	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
 	}
-
+/*
 	public static void main( String[] args) throws Exception {
 		EnablerCounterAsServer server  = new EnablerCounterAsServer("serverCounter");
 		EnablerCounterAsClient client1 = new EnablerCounterAsClient(
@@ -27,4 +27,5 @@ public class EnablerCounterAsClient extends EnablerAsClient{
 		
  
 	}
+	*/
 }
