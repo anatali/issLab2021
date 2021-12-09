@@ -152,7 +152,12 @@ Il gestore di sistema dei messaggi
 .. image:: ./_static/img/Architectures/ContextServer.PNG
    :align: center 
    :width: 80%
- 
+
+
+:remark:`I componenti acquisiscono la capacità di interazione dal contesto`
+
+:remark:`I componenti si riducono a gestori di messaggi`
+
 
 -------------------------------------------------------
 Un esempio
