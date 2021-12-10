@@ -11,28 +11,42 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  * per inviare comandi e/o risposte a un client
  */
  
-public abstract class EnablerAsServer extends ApplMessageHandler   { 
-protected ApplMessageHandler handler;
+public abstract class EnablerAsServer extends ApplMessageHandler   {  
+private static int count=1;
+//protected ApplMessageHandler handler;
 protected ProtocolType protocol;
 protected TcpServer serverTcp;
+//protected String name = "noName";
+//protected String handlerClassName;
 
-	public EnablerAsServer( String name, int port, ProtocolType protocol )   {
-		super( name );
+private static boolean created = false;	
+
+public EnablerAsServer(  )   {
+	if( ! created ) Colors.out(name+" | CREATED as ApplMessageHandler"  );
+	//name = "eas_"+count++;
+}
+
+	public EnablerAsServer( String name, int port, ProtocolType protocol, ApplMessageHandler handler )   { //, String handlerClassName
+		super(name);
 		try {
-			this.protocol = protocol;
-			handler       = this;
+			this.name     			= name;
+			this.protocol 			= protocol;
+			//this.handlerClassName 	= handlerClassName;
+			//handler       = this;
 			if( protocol != null ) {
-				setServerSupport( port, protocol  );
+				setServerSupport( port, protocol, handler  );
 				Colors.out(name+" |  STARTED  on port=" + port + " protocol=" + protocol);
 			}else Colors.out(name+" |  CREATED as ApplMessageHandler"  );
+			created = true;
 		} catch (Exception e) {
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );
 		}
 	}
 
- 	protected void setServerSupport( int port, ProtocolType protocol  ) throws Exception{
+ 	protected void setServerSupport( int port, ProtocolType protocol,ApplMessageHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp ) {
-			serverTcp = new TcpServer( "ServerTcp_"+name, port,  handler );
+			//serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  this.getClass().getName(), this );
+			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 			serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
 			//Coap: attivo un SonarObserver che implementa getVal (NO: lo deve fare il Controller!)
@@ -41,15 +55,7 @@ protected TcpServer serverTcp;
 		}
 	}	
  		 
- 	public void sendCommandToClient( String msg ) {
- 		try {
- 			//Colors.out(name+" |  sendCommandToClient   " + msg + " conn=" + conn);
-			if( handler.getConn()  != null ) handler.getConn().forward(msg);
-		} catch (Exception e) {
-			Colors.outerr( name + " | ERROR " + e.getMessage() );
-		}
- 	}
- 	
+   	
  	public void deactivate() {
  		//Colors.out(name+" |  DEACTIVATE  "  );
 		if( protocol == ProtocolType.tcp ) {

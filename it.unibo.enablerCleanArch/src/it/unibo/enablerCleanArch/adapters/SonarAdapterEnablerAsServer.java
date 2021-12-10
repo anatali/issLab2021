@@ -3,7 +3,9 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
 
  
 
@@ -20,8 +22,11 @@ private int lastSonarVal = 0;
 private boolean stopped  = true;	//mirror value
 private boolean produced = false;
  
-	public SonarAdapterEnablerAsServer( String name, int port, ProtocolType protocol )   {
-		super( name, port, protocol );
+	public SonarAdapterEnablerAsServer() {
+		super();
+	}
+	public SonarAdapterEnablerAsServer( String name, int port, ProtocolType protocol, ApplMessageHandler userDefHandler  )   {
+		super( name, port, protocol, userDefHandler );
 	}
  
 	//From ApplMessageHandler
@@ -39,26 +44,31 @@ private boolean produced = false;
 		}
 	}
 
+	@Override
+	public void elaborate(String message, Interaction2021 conn) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	//From ISonar
 	@Override
 	public void deactivate() {
 		Colors.out(name + " | deactivate by sending a command to the client");
-		sendCommandToClient("deactivate"); 
+		//sendCommandToClient("deactivate"); 
 		stopped = true;
 	} 
 
 	@Override
 	public void activate() {
 		stopped = false;
-		sendCommandToClient("activate");
+		//sendCommandToClient("activate");
 	}
  
  
 	
 	@Override
 	public  int getVal() {
-		sendCommandToClient("getVal");
+		//sendCommandToClient("getVal");
 		waitForUpdatedVal();
 		return lastSonarVal;
 	}
@@ -81,6 +91,7 @@ private boolean produced = false;
 		produced = true;
 		this.notify();
 	}
+
  	
  	 
 }

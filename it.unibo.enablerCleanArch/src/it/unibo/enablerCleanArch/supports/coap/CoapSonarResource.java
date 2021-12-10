@@ -60,9 +60,9 @@ private String curVal = "-1";
 	//CoapApplObserver obs = 
 		new CoapApplObserver( "localhost", 
 			CoapApplServer.inputDeviceUri+"/sonar" ,
-			new SonarMessageHandler( "cmh") );
+			new SonarMessageHandler( null ) );	//TODO
  	//USAGE
-	String uri      = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
+	String uri = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
 	System.out.println("uri= " + uri );
 	CoapSupport cps = new CoapSupport("localhost", uri );
  	

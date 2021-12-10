@@ -17,11 +17,11 @@ private  ApplMessageHandler handler ;
 		String name          = handler.getName();
 		Interaction2021 conn = handler.getConn() ;
 		try {
-			//Colors.out(name + " | TcpApplMessageHandler STARTS  "  );
+			Colors.out(name + " | TcpApplMessageHandler STARTS  "  );
 			while( true ) {
 				//Colors.out(name + " | waits for message on ...");
 			    String msg = conn.receiveMsg();
-			    //Colors.out(name + "  | received:" + msg );
+			    Colors.out(name + "  | received:" + msg );
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;

@@ -17,7 +17,7 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  */
 class NaiveHandler extends ApplMessageHandler {
 private static int count = 1;
-
+/*
 	static NaiveHandler create() {
 		return new NaiveHandler( "nh"+count++);
 	}
@@ -25,6 +25,9 @@ private static int count = 1;
 	private NaiveHandler(String name) {
 		super(name);
 	}
+	public NaiveHandler(Interaction2021 conn) {
+		super(conn);
+	}*/
 
 	public void elaborate( String message ) {
 		System.out.println(name+" | elaborates: "+message);
@@ -74,7 +77,7 @@ public static final int testPort = 8112;
 	}	
 	
 	protected void startTheServer(String name) {
-		server = new TcpServer(name,testPort, NaiveHandler.create());
+		server = new TcpServer(name,testPort, "it.unibo.enablerCleanArch.NaiveHandler" );
 		server.activate();		
 	}
 	

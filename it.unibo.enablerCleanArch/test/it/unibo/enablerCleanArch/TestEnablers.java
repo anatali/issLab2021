@@ -69,7 +69,7 @@ public class TestEnablers {
 	}	
 	
 	
-	//@Test 
+	@Test 
 	public void testTheLed() {
 		ledClient.turnOn();
 		delay(500);
@@ -79,7 +79,7 @@ public class TestEnablers {
 		assertTrue( ! ledClient.getState() );
 	}
 	
-	@Test 
+	//@Test 
 	public void testEnablers() {
 		
 		//Simulo il Controller

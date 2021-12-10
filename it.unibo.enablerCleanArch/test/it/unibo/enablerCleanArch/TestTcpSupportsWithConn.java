@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 import it.unibo.enablerCleanArch.supports.TcpServer;
@@ -26,8 +25,8 @@ class ClientForTestWithConn{
 	public void doWork( String name, int nattempts ) {
 		try {
 			Interaction2021 conn  = TcpClient.connect("localhost", TestTcpSupportsWithConn.testPort,nattempts);
-			System.out.println(name + " | conn: " +conn );	
-			String request = "hello from" + name;
+			String request = "hello_from_" + name;
+			System.out.println(name + " | forward the request=" + request + " on conn:" + conn);	 
 			conn.forward(request);
 			String answer = conn.receiveMsg();
 			System.out.println(name + " | receives the answer: " +answer );	
@@ -58,24 +57,18 @@ public static final int testPort = 8112;
 		server.activate();		
 	}
 	
- 
-	
-	
-	@Test 
+	//@Test 
 	public void testSingleClient() {
 		startTheServer("oneClientServer");
-		System.out.println("tesSingleClient");
-		//Create a connection
+ 		//Create a connection
 		new ClientForTestWithConn().doWork("client1",10 );		
 		System.out.println("tesSingleClient BYE");
 	}
 	
 	
-	//@Test 
+	@Test 
 	public void testManyClients() {
 		startTheServer("manyClientsServer");
-		System.out.println("testManyClients");
-		//Create a connection
 		new ClientForTestWithConn().doWork("client1",10);
 		new ClientForTestWithConn().doWork("client2",1);
 		new ClientForTestWithConn().doWork("client3",1);

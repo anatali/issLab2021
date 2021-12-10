@@ -20,7 +20,7 @@ public class RadarSystemMainOnRasp {
 		ILed   led      = DeviceFactory.createLed();
 				
 		if( RadarSystemConfig.ControllerRemote ) {  //Controller on PC
- 			new LedEnablerAsServer( "LedServer", RadarSystemConfig.ledPort, ProtocolType.tcp, led );
+ 			new LedEnablerAsServerHandler( "LedServer", RadarSystemConfig.ledPort, ProtocolType.tcp, led );
 			Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
 			new SonarEnablerAsClient( "SonarClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.sonarPort, ProtocolType.tcp, sonar );
 			new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort, ProtocolType.tcp ); 

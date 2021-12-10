@@ -14,14 +14,14 @@ public class TcpServer extends Thread{
 private boolean stopped = true;
 private int port;
 private ServerSocket serversock;
-protected ApplMessageHandler applHandler;
+protected ApplMessageHandler userDefHandler;
 protected String name;
 
 protected Class  applHandlerClass;
 
 protected HashMap<String,ApplMessageHandler> handlerMap = new HashMap<String,ApplMessageHandler>();
 protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,ApplMessage>();
-
+/*
 	public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
 		super(name);
 	      try {
@@ -34,14 +34,16 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 	    	 Colors.outerr(getName() + " | costruct ERROR: " + e.getMessage());
 	     }
 	}
-	
-	public TcpServer( String name, int port, String className   ) {
+*/	
+	//public TcpServer( String name, int port, String className    ) {
+	public TcpServer( String name, int port,  ApplMessageHandler userDefHandler   ) {
 		super(name);
 	      try {
 	  		this.port             = port;
-	  		Colors.out(getName() + " | costruct port " + port );
-	  		this.applHandlerClass = Class.forName(className);
-	  		Colors.out(getName() + " | costruct applHandlerClass " + applHandlerClass );
+	  		this.userDefHandler   = userDefHandler;
+	  		//Colors.out(getName() + " | costruct port " + port );
+	  		//this.applHandlerClass = Class.forName(className);
+	  		Colors.out(getName() + " | costructor port=" + port +" applHandlerClass=" + applHandlerClass  );
 			this.name             = getName();
 		    serversock            = new ServerSocket( port );
 		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
@@ -56,20 +58,27 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 		  	//Colors.out(getName() + " | STARTING ... "  );
 			while( ! stopped ) {
 				//Accept a connection				 
-				Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock, Colors.GREEN);	 
+				//Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock );	 
 		 		Socket sock          = serversock.accept();	
-				Colors.out(getName() + " | accept connection  handler=" + applHandler , Colors.GREEN  );	 
+				Colors.out(getName() + " | accepted connection  handler class=" + applHandlerClass.getName()   );	 
 		 		Interaction2021 conn = new TcpConnection(sock);
-		 		//applHandler.setConn(conn);
-		 		Constructor c = applHandlerClass.getConstructor( it.unibo.enablerCleanArch.supports.Interaction2021.class  );
-		 		ApplMessageHandler applHandle = (ApplMessageHandler) c.newInstance(conn);
-				Colors.out(getName() + " | applHandle=" + applHandle , Colors.RED  );	 
+		 		//Constructor c = applHandlerClass.getConstructor( it.unibo.enablerCleanArch.supports.Interaction2021.class  );
+		 		/*
+		 		//Class[] parameterType = null;
+		 		Constructor c = applHandlerClass.getConstructor(   );
+		 		ApplMessageHandler applHandle = (ApplMessageHandler) c.newInstance();
+		 		//Devo creare nuova istanza per memorizzare conn ma non devo perdere il rif a ILed 
+		 		 * 
+		 		 */
+		 		SysMessageHandler hanlerWithConn = new SysMessageHandler(userDefHandler, conn);
+		 		//hanlerWithConn.setConn(conn);
+				//Colors.out(getName() + " | applHandle=" + applHandle  );	 
 
 		 		//Create a message handler on the connection
-		 		new TcpApplMessageHandler( applHandle );			 		
+		 		new TcpApplMessageHandler( hanlerWithConn );			 		
 			}//while
 		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
-			  Colors.out(getName() + " | probably socker closed: " + e.getMessage(), Colors.GREEN);		 
+			  Colors.out(getName() + " | probably socket closed: " + e.getMessage(), Colors.GREEN);		 
 		  }
 	}
 	

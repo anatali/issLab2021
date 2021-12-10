@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.enablers.LedEnablerAsServer;
+import it.unibo.enablerCleanArch.enablers.LedEnablerAsServerHandler;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
@@ -44,8 +44,8 @@ private Interaction2021 conn;
 		
 		//Creazione del led
 		ILed led = DeviceFactory.createLed();		
-		LedEnablerAsServer ledServer = 
-				new LedEnablerAsServer(  "led", ledPort, protocol, led  );
+		LedEnablerAsServerHandler ledServer = 
+				new LedEnablerAsServerHandler(  "led", ledPort, protocol, led  );
  		
 		//Registrazione dei componenti presso il server
 		contextServer.addComponent("sonar",(ApplMessageHandler) sonar);

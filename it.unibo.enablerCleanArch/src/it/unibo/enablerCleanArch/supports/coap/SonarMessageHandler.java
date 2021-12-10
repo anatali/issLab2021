@@ -6,21 +6,31 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.RadarGui;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 public class SonarMessageHandler extends ApplMessageHandler{
 	private IRadarDisplay radar;
-
+/*
 	public SonarMessageHandler(String name) {
 		super(name);
 		radar = new RadarGui();
  	}
 
+	public SonarMessageHandler(Interaction2021 conn) {
+		super(conn);
+	}
+*/	
 	@Override
 	public void elaborate(String message) {
 		System.out.println(name + " | elaborate " + message );
 		showDataOnGui( message );
 	}
 	
+	@Override
+	public void elaborate(String message, Interaction2021 conn) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public  void showDataOnGui( String msg ){
 		try {  //Normally we handle structured message strings
@@ -34,6 +44,8 @@ public class SonarMessageHandler extends ApplMessageHandler{
 		}
 
 	}
+
+
 
 
 }

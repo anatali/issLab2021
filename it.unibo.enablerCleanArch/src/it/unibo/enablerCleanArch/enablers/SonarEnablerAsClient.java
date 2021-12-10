@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.adapters.SonarAdapterEnablerAsServer;
+import it.unibo.enablerCleanArch.concur.NaiveApplHandler;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
@@ -47,7 +48,7 @@ public class SonarEnablerAsClient extends EnablerAsClient{
 		ISonar sonar = DeviceFactory.createSonar();
 		
  		SonarAdapterEnablerAsServer sonarAdapter  = 
-				new SonarAdapterEnablerAsServer("sonarAdapter",RadarSystemConfig.sonarPort, ProtocolType.tcp );
+				new SonarAdapterEnablerAsServer("sonarAdapter",RadarSystemConfig.sonarPort, ProtocolType.tcp, new NaiveApplHandler("nah") );
 
  		new SonarEnablerAsClient(
 				"SonarEnablerAsClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp, sonar);

@@ -3,26 +3,35 @@ package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 /*
  * Deve inviare messaggi TCP
  */
-public class LedEnablerAsServer  extends EnablerAsServer {  
-ILed led;   
+public class LedEnablerAsServerHandler extends ApplMessageHandler  { 
 
-	public LedEnablerAsServer() {
-		super();
-	}
-	public LedEnablerAsServer( String name,  int port, ProtocolType protocol, ILed led, ApplMessageHandler userDefHandler   )   {
-		super(name, port, protocol,userDefHandler);  
+
+//extends EnablerAsServer
+ILed led;   
+/*
+	public LedEnablerAsServerHandler( String name,  int port, ProtocolType protocol, ILed led, String handlerClassName  )   {
+		super(name, port, protocol, handlerClassName );  
 		this.led = led;
  	}
-	
+*/
+
+public LedEnablerAsServerHandler( ) {
+	super();
+}
+
+public LedEnablerAsServerHandler(ILed led, Interaction2021 conn) {
+	super(conn);
+	this.led = led;
+}
+
 	@Override		//from ApplMessageHandler
 	public void elaborate(String message) {
- 		System.out.println(name+" | elaborate:" + message + " led=" + led);
+ 		System.out.println(name+" | elaborate:" + message);
  		if( message.equals("on")) led.turnOn();
  		else if( message.equals("off") ) led.turnOff();
  		//Added after  TcpContextServer
@@ -31,14 +40,6 @@ ILed led;
  			if( msg.msgContent().equals("on")) led.turnOn();
  			else if( msg.msgContent().equals("off")) led.turnOff();
  		}catch( Exception e) {
- 			Colors.outerr(name+" | elaborate ERROR=" + e.getMessage() );
  		}
 	}
-	@Override
-	public void elaborate(String message, Interaction2021 conn) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-
 }
