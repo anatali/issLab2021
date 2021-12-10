@@ -36,8 +36,13 @@ ILed led;
 	}
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(name+" | elaborate:" + message + " led=" + led + " conn:" + conn);
+		elaborate(message);
+		try {
+			conn.forward("LedState="+led.getState() );
+		} catch (Exception e) {
+ 			e.printStackTrace();
+		}
 	}
 	
 

@@ -47,7 +47,12 @@ protected String name ;
 		Colors.out( name+"  | sendValueOnConnection " + val + " conn=" + conn);
 		conn.forward(val);
 	}
-	
+	public void sendRequestOnConnection( String val ) throws Exception{
+		Colors.out( name+"  | sendRequestOnConnection " + val + " conn=" + conn);
+		conn.forward(val);
+		//String answer = conn.receiveMsg();
+		//Colors.out( name+"  | sendRequestOnConnection answer=" + answer  );
+	}	
 	public Interaction2021 getConn() {
 		return conn;
 	}

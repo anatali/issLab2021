@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
  * 
  */
 public abstract class ApplMessageHandler {  
-private static int count = 1;
+	protected static int count = 1;
 protected Interaction2021 conn;		//Injected
 protected String name;
  

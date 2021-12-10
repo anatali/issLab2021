@@ -43,7 +43,7 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 	  		this.userDefHandler   = userDefHandler;
 	  		//Colors.out(getName() + " | costruct port " + port );
 	  		//this.applHandlerClass = Class.forName(className);
-	  		Colors.out(getName() + " | costructor port=" + port +" applHandlerClass=" + applHandlerClass  );
+	  		Colors.out(getName() + " | costructor port=" + port  ); //+" applHandlerClass=" + applHandlerClass 
 			this.name             = getName();
 		    serversock            = new ServerSocket( port );
 		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
@@ -60,7 +60,7 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 				//Accept a connection				 
 				//Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock );	 
 		 		Socket sock          = serversock.accept();	
-				Colors.out(getName() + " | accepted connection  handler class=" + applHandlerClass.getName()   );	 
+				Colors.out(getName() + " | accepted connection  handler class="   ); //+ applHandlerClass.getName() 
 		 		Interaction2021 conn = new TcpConnection(sock);
 		 		//Constructor c = applHandlerClass.getConstructor( it.unibo.enablerCleanArch.supports.Interaction2021.class  );
 		 		/*
@@ -70,12 +70,12 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 		 		//Devo creare nuova istanza per memorizzare conn ma non devo perdere il rif a ILed 
 		 		 * 
 		 		 */
-		 		SysMessageHandler hanlerWithConn = new SysMessageHandler(userDefHandler, conn);
+		 		SysMessageHandler handlerWithConn = new SysMessageHandler(userDefHandler, conn);
 		 		//hanlerWithConn.setConn(conn);
 				//Colors.out(getName() + " | applHandle=" + applHandle  );	 
 
 		 		//Create a message handler on the connection
-		 		new TcpApplMessageHandler( hanlerWithConn );			 		
+		 		new TcpApplMessageHandler( handlerWithConn, conn );			 		
 			}//while
 		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
 			  Colors.out(getName() + " | probably socket closed: " + e.getMessage(), Colors.GREEN);		 

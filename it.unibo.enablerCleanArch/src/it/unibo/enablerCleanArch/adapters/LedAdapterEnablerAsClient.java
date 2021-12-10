@@ -1,5 +1,7 @@
 package it.unibo.enablerCleanArch.adapters;
 
+import it.unibo.enablerCleanArch.concur.LedApplHandler;
+import it.unibo.enablerCleanArch.concur.NaiveApplHandler;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
@@ -23,7 +25,7 @@ private boolean ledStateMirror = false;
 	@Override
 	public void turnOn() { 
  		try {
-			sendValueOnConnection( "on" );
+ 			sendRequestOnConnection( "on" );
 			ledStateMirror = true;
 		} catch (Exception e) {
 			System.out.println(name+" |  turnOn ERROR " + e.getMessage() );
@@ -33,7 +35,7 @@ private boolean ledStateMirror = false;
 	@Override
 	public void turnOff() {   
  		try {
-			sendValueOnConnection( "off" );
+ 			sendRequestOnConnection( "off" );
 			ledStateMirror = false;
 		} catch (Exception e) {
 			System.out.println(name+" |  turnOff ERROR " + e.getMessage() );
@@ -48,8 +50,8 @@ private boolean ledStateMirror = false;
 	@Override
 	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
 		while( true ) {
-			String msg = conn.receiveMsg();  //bòlocking
-			System.out.println(name+" |  I should be never here .... " + msg   );		
+			String msg = conn.receiveMsg();  //blocking
+			System.out.println(name+" |  answer=" + msg   );		
 		}
 	}
 
@@ -64,14 +66,17 @@ private boolean ledStateMirror = false;
 		
 		ILed led = DeviceFactory.createLed();
 		
-		new LedEnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, ProtocolType.tcp, led );
+		new LedEnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
+				ProtocolType.tcp, led, new LedApplHandler("ledH") );
 
-		ILed ledClient = new LedAdapterEnablerAsClient(
-				"LedAdapterEnablerAsClient", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
+		ILed ledClient1 = new LedAdapterEnablerAsClient(
+				"client1", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
+		ILed ledClient2 = new LedAdapterEnablerAsClient(
+				"client2", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
 			
-		ledClient.turnOn();
+		ledClient1.turnOn();		 
 		Thread.sleep(500);
-		ledClient.turnOff();
+		ledClient2.turnOff();
 		Thread.sleep(500);
 		/*	 */
 		System.exit(0);
