@@ -4,14 +4,16 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 
 public class SharedCounterExampleMain  {
-private int serverPort = 7171;
-private String resourceName = "counter";
+private int serverPort      = 7171;
+private String resourceName = "counterHandler";
+private String delay        = "200";
 
-private ApplMessage msg1 = new ApplMessage("msg( dec, dispatch, main, counter, dec(10), 1 )");
-private ApplMessage msg2 = new ApplMessage("msg( dec, dispatch, main, counter, dec(0), 1 )");
-
+private ApplMessage msg1 = new ApplMessage(
+		"msg( dec, request, main, DEST, dec(DELAY), 1 )"
+		.replace("DEST", resourceName).replace("DELAY", delay));
+ 
 	public void configure(  ) {
-		TcpContextServer contextServer  = new TcpContextServer("TcpApplServer", serverPort);
+		TcpContextServer contextServer  = new TcpContextServer("TcpContextServer", serverPort);
 		CounterHandler counter          = new CounterHandler(resourceName);
 		contextServer.addComponent(counter.getName(),counter);	
 		contextServer.activate();   
@@ -20,10 +22,8 @@ private ApplMessage msg2 = new ApplMessage("msg( dec, dispatch, main, counter, d
 	public void execute() throws Exception {
  		CounterClient client1 = new CounterClient("client1","localhost",serverPort);
 		CounterClient client2 = new CounterClient("client2","localhost",serverPort);
-		client1.sendValueOnConnection(msg1.toString());
+		client1.sendValueOnConnection(msg1.toString()); //TODO: msg-related operators
 		client2.sendValueOnConnection(msg1.toString());		
-		client1.sendValueOnConnection(msg2.toString());
-		client2.sendValueOnConnection(msg2.toString());		
 	}
 
  
@@ -31,6 +31,6 @@ private ApplMessage msg2 = new ApplMessage("msg( dec, dispatch, main, counter, d
 		SharedCounterExampleMain sys = new SharedCounterExampleMain();
 		sys.configure();
 		sys.execute();
- 
+		Thread.sleep(1000);
 	}
 }

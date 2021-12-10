@@ -19,7 +19,7 @@ protected String name ;
 	
 	protected void setConnection( String host, int port, ProtocolType protocol  ) throws Exception {
 		if( protocol == ProtocolType.tcp) {
-			conn = TcpClient.connect(host,  port, 10);
+			conn = TcpClient.connect(host,  port, 10); //10 = num of attempts
 			startHandlerMessagesFromServer( conn );
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
@@ -32,6 +32,7 @@ protected String name ;
 		new Thread() {
 			public void run() {
 				try {
+					Colors.out(name + " |  startHandlerMessagesFromServer "  + conn, Colors.RED );
 					handleMessagesFromServer(conn);
 				} catch (Exception e) {
 					Colors.outerr( name + " | handleMessagesFromServer  ERROR " + e.getMessage());
@@ -43,7 +44,7 @@ protected String name ;
 	protected abstract void handleMessagesFromServer( Interaction2021 conn ) throws Exception;
 	
 	public void sendValueOnConnection( String val ) throws Exception{
-		//Colors.out( name+"  | sendValueOnConnection " + val  );
+		Colors.out( name+"  | sendValueOnConnection " + val + " conn=" + conn);
 		conn.forward(val);
 	}
 	

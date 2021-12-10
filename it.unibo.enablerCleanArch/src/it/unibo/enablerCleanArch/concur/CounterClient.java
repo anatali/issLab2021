@@ -12,20 +12,7 @@ public class CounterClient extends EnablerAsClient{
 
 	@Override
 	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
+		String answer = conn.receiveMsg();
+		System.out.println(name + " | answer="+answer);
 	}
-/*
-	public static void main( String[] args) throws Exception {
-		EnablerCounterAsServer server  = new EnablerCounterAsServer("serverCounter");
-		EnablerCounterAsClient client1 = new EnablerCounterAsClient(
-						"client1","localhost",EnablerCounterAsServer.port);
-		EnablerCounterAsClient client2 = new EnablerCounterAsClient(
-				"client2","localhost",EnablerCounterAsServer.port);
-		
-		 
-		client1.sendValueOnConnection("dec(0)");
-		client2.sendValueOnConnection("dec(0)");
-		
- 
-	}
-	*/
 }

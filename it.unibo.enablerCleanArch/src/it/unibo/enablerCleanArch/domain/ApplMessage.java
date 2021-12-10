@@ -2,6 +2,8 @@ package it.unibo.enablerCleanArch.domain;
 
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
+import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 enum ApplMessageType{
     event, dispatch, request, reply, invitation
@@ -14,6 +16,8 @@ public class ApplMessage {
     protected String msgReceiver = "";
     protected String msgContent  = "";
     protected int msgNum         = 0;
+    
+    protected Interaction2021 conn;		//not null for request
 	
 	public ApplMessage( 
 			String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM ) {
@@ -25,7 +29,13 @@ public class ApplMessage {
         msgNum = Integer.parseInt(SEQNUM);		
 	}
 	
-	
+	public void setConn( Interaction2021 conn ) {
+		if( isRequest() ) this.conn = conn;
+		else Colors.out("WARNING: setting conn in a non-request message");
+	}
+	public Interaction2021 getConn(   ) {
+		return conn;
+	}	
 	
     public ApplMessage( String msg ) {
         //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
@@ -51,19 +61,19 @@ public class ApplMessage {
     
     
     public boolean isEvent(){
-        return msgType == ApplMessageType.event.toString();
+        return msgType.equals( ApplMessageType.event.toString() );
     }
     public boolean isDispatch(){
-        return msgType == ApplMessageType.dispatch.toString();
+        return msgType.equals( ApplMessageType.dispatch.toString() );
     }
     public boolean isRequest(){
-        return msgType == ApplMessageType.request.toString();
+        return msgType.equals( ApplMessageType.request.toString() );
     }
     public boolean isInvitation(){
-        return msgType == ApplMessageType.invitation.toString();
+        return msgType.equals( ApplMessageType.invitation.toString() );
     }
     public boolean isReply(){
-        return msgType == ApplMessageType.reply.toString();
+        return msgType.equals( ApplMessageType.reply.toString() );
     }   
     
     public String toString() {

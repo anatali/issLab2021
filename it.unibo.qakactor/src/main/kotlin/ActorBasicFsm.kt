@@ -202,7 +202,10 @@ abstract class ActorBasicFsm(  qafsmname:  String,
         sysUtil.traceprintln("$tt ActorBasicFsmmmm $name | handleCurrentMessage in ${currentState.stateName} msg=${msg.msgId()} memo=$memo")
         if (nextState is State) {
             currentMsg   = msg
-            if( currentMsg.isRequest() ){ requestMap.put(currentMsg.msgId(), currentMsg) }  //Request
+            if( currentMsg.isRequest() ){
+				//Dec2021: currentMsg.msgId() + currentMsg.msgReceiver() MEGLIO !
+				//Chi fa requestMap.remove? Il metodo answer in ActorBasic
+				requestMap.put(currentMsg.msgId(), currentMsg) }  //Request
             var msgBody = currentMsg.msgContent()
             val endTheTimer = currentMsg.msgId() != "local_noMsg" &&
                             ( ! msgBody.startsWith("local_tout_")

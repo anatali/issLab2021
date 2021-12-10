@@ -271,12 +271,12 @@ Messaging
         sendMessageToActor( m, destName, reqMsg.conn )
     }//answer
 
-
+/*
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun replyreq( reqId: String, reqestmsgId : String, msg: String) {
         //println(" $tt ActorBasic $name | replyreq $reqId related to request:$reqestmsgId content=$msg  ")
-        val reqMsg = requestMap.get(reqestmsgId)
+        val reqMsg = requestMap.get(reqestmsgId)		//WHY NOT remove?
         if( reqMsg == null ){
             println("$tt ActorBasic $name | WARNING: replyreq to $reqestmsgId INCONSISTENT: no request found ")
             return
@@ -285,7 +285,8 @@ Messaging
         val m = MsgUtil.buildReplyReq(name, reqId, msg, destName)
         sendMessageToActor( m, destName, reqMsg.conn )
     }
-
+*/
+	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun emit( ctx: QakContext, event : ApplMessage ) {  //used by NodeProxy
