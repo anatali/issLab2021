@@ -19,7 +19,10 @@ public class RadarSystemMainOnRasp {
 				
 		ISonar sonar    = DeviceFactory.createSonar();
 		ILed   led      = DeviceFactory.createLed();
-				
+		
+		
+		//TODO: create the servers
+/*				
 		if( RadarSystemConfig.ControllerRemote ) {  //Controller on PC
  			new LedEnablerAsServerHandler( "LedServer", RadarSystemConfig.ledPort, ProtocolType.tcp, led );
 			Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
@@ -32,7 +35,7 @@ public class RadarSystemMainOnRasp {
 			Controller.activate( led, sonar, radar );
  		}
 		if( sonar != null ) sonar.activate();
- 		
+ */		
 	}
 
 }

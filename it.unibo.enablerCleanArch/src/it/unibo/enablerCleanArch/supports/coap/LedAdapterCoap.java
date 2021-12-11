@@ -1,7 +1,6 @@
-package it.unibo.enablerCleanArch.adapters;
+package it.unibo.enablerCleanArch.supports.coap;
  
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 
 /*
  * Adapter for an output device 

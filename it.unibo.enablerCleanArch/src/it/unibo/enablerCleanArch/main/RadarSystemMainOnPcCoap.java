@@ -1,10 +1,6 @@
 package it.unibo.enablerCleanArch.main;
-import it.unibo.enablerCleanArch.adapters.LedAdapterCoap;
-import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterCoapObserver;
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-
+ 
 public class RadarSystemMainOnPcCoap {
 private ISonar sonar    = null;
 private ILed led        = null;
@@ -12,7 +8,9 @@ private IRadarDisplay radar = null;
 
 	public void setup() throws Exception {			
 		RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
-		//Control
+		//Control 
+		//TODO ???
+		/*
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
 			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
@@ -27,7 +25,7 @@ private IRadarDisplay radar = null;
 					: DeviceFactory.createLed();
 			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);
-  		}
+  		}*/
 	} 
 	
 	public void activateSonar() {

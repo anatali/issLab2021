@@ -1,10 +1,6 @@
 package it.unibo.enablerCleanArch.supports.coap;
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.server.resources.Resource;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.SonarModel;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 
 public class CoapSonarResource extends CoapDeviceResource {  
@@ -51,44 +47,7 @@ private String curVal = "-1";
 		}
 
 	 
-	public static void main(String[] args) throws  Exception {
-	//CONFIGURATION
-	RadarSystemConfig.simulation = true;
- 	//CoapApplServer.init();  //(SINGLETON) lo fa la risorsa creata
-	//Create sonar resource
-	Resource sonarRes = new CoapSonarResource("sonar") ;  //  
-	//CoapApplObserver obs = 
-		new CoapApplObserver( "localhost", 
-			CoapApplServer.inputDeviceUri+"/sonar" ,
-			new SonarMessageHandler( null ) );	//TODO
- 	//USAGE
-	String uri = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
-	System.out.println("uri= " + uri );
-	CoapSupport cps = new CoapSupport("localhost", uri );
- 	
  
-	for( int i= 1; i<=5; i++) {
-		String vs = cps.readResource();		//invia GET	
-		System.out.println("vs=" + vs );
-		Thread.sleep(800);
-	}
-	
-	Thread.sleep(500);
- 
-	cps.updateResource("stop");
-
-	//Altro modo per leggere i dati
-	CoapClient client  = new CoapClient( "coap://localhost:5683/"+ uri ); //+"?value=10"
-	CoapResponse answer = client.get();
-	System.out.println("answer=" + answer.getCode() );
-	System.out.println("valore finale=" + answer.getResponseText() );
- 
-
-	String vs = cps.readResource();		//invia GET	
-	System.out.println("\nvs final=" + vs );
- 
-	}
-
 }
  	/*
 	protected void elaborate(String arg) {

@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.concur;
+package it.unibo.enablerCleanArch.supports;
 
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;

@@ -1,7 +1,7 @@
-package it.unibo.enablerCleanArch.adapters;
+package it.unibo.enablerCleanArch.supports.coap;
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
-import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
+import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
  
  
 
@@ -11,7 +11,7 @@ import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
  */
  
 
-public class SonarAdapterCoap extends ApplMessageHandler implements ISonar{
+public class SonarAdapterCoap extends ApplMsgHandler implements ISonar{
 private int curVal       = -1;
 
 	public SonarAdapterCoap( String hostAddr, String resourceName   ) {
@@ -40,7 +40,7 @@ private int curVal       = -1;
 	}
 	
  	@Override  //from ApplMessageHandler
-	public void elaborate(String message) {
+	public void elaborate(String message, Interaction2021 conn) {
 		try {
 			System.out.println( name + " | elaborate " + message);
 			if( message.length() == 0 ) return;

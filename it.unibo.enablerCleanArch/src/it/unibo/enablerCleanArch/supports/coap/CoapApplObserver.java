@@ -1,12 +1,13 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
-import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
+import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public class CoapApplObserver implements CoapHandler{
-	protected ApplMessageHandler applHandler;
+	protected ApplMsgHandler applHandler;
 	
-	public CoapApplObserver(String hostAddr, String resourceUri, ApplMessageHandler applHandler) {
+	public CoapApplObserver(String hostAddr, String resourceUri, ApplMsgHandler applHandler) {
 		this.applHandler = applHandler;
 		//Creato da SonarAdapterCoap che specializza un EnablerAsServer
 		//Usa CoapSupport per creare un client/observer verso una CoapSonareResource su port
@@ -20,8 +21,8 @@ public class CoapApplObserver implements CoapHandler{
 
 	@Override
 	public void onLoad(CoapResponse response) {
-		System.out.println("CoapApplObserver | response " +  response.getResponseText() );
-		applHandler.elaborate(response.getResponseText());
+		//Colors.out("CoapApplObserver | response " +  response.getResponseText() );
+		applHandler.elaborate(response.getResponseText(), null);
 	}
 
 	@Override

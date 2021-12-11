@@ -10,9 +10,5 @@ public class CounterClient extends EnablerAsClient{
 		super(name, host, port, ProtocolType.tcp);
 	}
 
-	@Override
-	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
-		String answer = conn.receiveMsg();
-		System.out.println(name + " | answer="+answer);
-	}
+ 
 }

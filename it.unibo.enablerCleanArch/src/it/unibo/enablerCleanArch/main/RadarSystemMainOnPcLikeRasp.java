@@ -8,8 +8,6 @@ import it.unibo.enablerCleanArch.enablers.*;
 import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
 
 /*
- * Main program for the RapberryPi and real devices
- * TODO: creare un file di configurazione o di properties
  */
 
 public class RadarSystemMainOnPcLikeRasp {
@@ -19,7 +17,9 @@ public class RadarSystemMainOnPcLikeRasp {
 				
 		ISonar sonar    = DeviceFactory.createSonar();
 		ILed   led      = DeviceFactory.createLed();
-				
+		
+		//TODO ???
+/*				
 		if( RadarSystemConfig.ControllerRemote ) {  //Controller on PC
  			new LedEnablerAsServer( "LedServer", RadarSystemConfig.ledPort, ProtocolType.tcp, led );
 			//Thread.sleep(RadarSystemConfig.applStartdelay);  //Give time to start the application  on the PC
@@ -32,7 +32,7 @@ public class RadarSystemMainOnPcLikeRasp {
 			Controller.activate( led, sonar, radar );
  		}
 		//if( sonar != null ) sonar.activate();
- 		
+*/ 		
 	}
 
 }

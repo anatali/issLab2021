@@ -1,6 +1,5 @@
 package it.unibo.enablerCleanArch.supports;
 
-import it.unibo.enablerCleanArch.concur.ACallerClient;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;

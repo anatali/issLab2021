@@ -1,8 +1,7 @@
-package it.unibo.enablerCleanArch.adapters;
+package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
  
 
 /*
