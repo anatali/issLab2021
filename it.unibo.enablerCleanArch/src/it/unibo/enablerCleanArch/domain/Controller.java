@@ -16,10 +16,9 @@ public class Controller {
 					System.out.println("Controller | STARTS"  );
 					while( sonar.isActive() ) {
 						int d = sonar.getVal(); //bloccante
-						System.out.println("Controller | sonar data=" + d);
-						//if( d == -1 ) break;
-						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
-						RadarGuiUsecase.doUseCase( radar,d  );	//Richiede comunicazione via rete
+ 						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
+						RadarGuiUsecase.doUseCase( radar,d  );	 
+						System.out.println("sonar data=" + d + " ledState=" + led.getState());
 						//Thread.sleep(1000);   //Rimuovere se sonar.getVal è bloccante
 					}
 					System.out.println("Controller | BYE"  );

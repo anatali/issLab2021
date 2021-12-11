@@ -4,7 +4,7 @@ import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
-import it.unibo.enablerCleanArch.domain.RadarGui;
+import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  

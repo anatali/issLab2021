@@ -16,13 +16,12 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 	@Override 
 	public void run() {
 		String name          = handler.getName();
-		//Interaction2021 conn = handler.getConn() ;
 		try {
 			Colors.out(name + " | TcpApplMessageHandler STARTS  conn=" + conn );
 			while( true ) {
 				//Colors.out(name + " | waits for message  ...");
 			    String msg = conn.receiveMsg();
-			    Colors.out(name + "  | received:" + msg );
+			    //Colors.out(name + "  | TcpApplMessageHandler received:" + msg );
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;

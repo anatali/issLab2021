@@ -20,7 +20,6 @@ protected String name ;
 	protected void setConnection( String host, int port, ProtocolType protocol  ) throws Exception {
 		if( protocol == ProtocolType.tcp) {
 			conn = TcpClient.connect(host,  port, 10); //10 = num of attempts
-			//startHandlerMessagesFromServer( conn );
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
 			//Coap: attivo un SonarObserver che implementa getVal
@@ -28,7 +27,7 @@ protected String name ;
 	}
   	
 	public void sendCommandOnConnection( String val )  {
-		Colors.out( name+"  | sendCommandOnConnection " + val + " conn=" + conn, Colors.GREEN);
+		//Colors.out( name+"  | sendCommandOnConnection " + val + " conn=" + conn, Colors.GREEN);
 		try {
 			conn.forward(val);
 		} catch (Exception e) {
@@ -36,7 +35,7 @@ protected String name ;
 		}
 	}
 	public String sendRequestOnConnection( String val )  {
-		Colors.out( name+"  | sendRequestOnConnection " + val ); //+ " conn=" + conn
+		//Colors.out( name+"  | sendRequestOnConnection " + val + " conn=" + conn, Colors.GREEN);
 		try {
 			conn.forward(val);
 			String answer = conn.receiveMsg();

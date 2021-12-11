@@ -59,7 +59,7 @@ public abstract class SonarModel extends Observable implements ISonar{
 
 	@Override
 	public  int getVal() {
-		Colors.out("SonarModel | getVal curVal="+curVal, Colors.ANSI_PURPLE);
+		//Colors.out("SonarModel | getVal curVal="+curVal, Colors.ANSI_PURPLE);
 		waitForUpdatedVal();
 		return curVal;
 	}

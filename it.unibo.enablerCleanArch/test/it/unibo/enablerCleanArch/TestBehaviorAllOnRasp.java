@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.*;
-import it.unibo.enablerCleanArch.domain.RadarGui;
+import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.main.RadarSystemMainOnPc;
 

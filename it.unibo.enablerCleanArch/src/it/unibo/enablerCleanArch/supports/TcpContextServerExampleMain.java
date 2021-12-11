@@ -4,7 +4,9 @@ import it.unibo.enablerCleanArch.concur.ACallerClient;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.RadarGuiClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
+import it.unibo.enablerCleanArch.enablers.devices.RadarApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
@@ -17,7 +19,10 @@ private ApplMessage turnOnLed    = new ApplMessage("msg( turn, dispatch, main, l
 private ApplMessage turnOffLed   = new ApplMessage("msg( turn, dispatch, main, led, off, 3 )");
 
 private ApplMessage sonarActivate= new ApplMessage("msg( sonarcmd, dispatch, main, sonar, activate, 4 )");
-private ApplMessage getSonarval  = new ApplMessage("msg( sonarcmd, request, main, sonar, getVal, 5 )");
+private ApplMessage getSonarval  = new ApplMessage("msg( sonarcmd, request,  main, sonar, getVal,   5 )");
+private ApplMessage getLedState  = new ApplMessage("msg( ledcmd,   request,  main, led,   getState, 6 )");
+
+private ApplMessage radarUpdate  = new ApplMessage("msg( update, request,  main, radar, DISTANCE, 7 )");
 
 private Interaction2021 conn; 
 
@@ -30,59 +35,72 @@ private Interaction2021 conn;
 		RadarSystemConfig.RadarGuieRemote  	= false;    	
 		RadarSystemConfig.pcHostAddr        = "localhost";
 		RadarSystemConfig.ctxServerPort     = 8048;
-		RadarSystemConfig.sonarDelay        = 50;
-
-		int ledPort	       = 0;	//dont'care	
-		int sonarPort      = 0;	//dont'care		
+		RadarSystemConfig.sonarDelay        = 1500;
 		
-		ProtocolType protocol               = null;
+
 		//Creazione del server di contesto
 		ContextMsgHandler ctxH = new ContextMsgHandler("ctxH");
-		contextServer          = new TcpServer("TcpContxtServer", RadarSystemConfig.ctxServerPort, ctxH);
-		
-		//Creazione del sonar
-		//sonar = new EnablerAsServer("sonar",  sonarPort, protocol);
-		
-		//Creazione del led
-		//ILed led = DeviceFactory.createLed();		
-		//LedEnablerAsServerHandler ledServer = new LedEnablerAsServerHandler(  "led", ledPort, protocol, led  );
+		contextServer          = new TcpServer("TcpContextServer", RadarSystemConfig.ctxServerPort, ctxH);
  		
-		//Registrazione dei componenti presso il server handler		
+		//Registrazione dei componenti presso il contesto	
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH");
 		IApplMsgHandler ledHandler   = new LedApplHandler("ledH");
+		IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
+		
 		ctxH.addComponent("sonar", sonarHandler);
 		ctxH.addComponent("led",   ledHandler);	
+		ctxH.addComponent("radar", radarHandler);	
 	}
 	
 	
 	public void execute() throws Exception{
 		contextServer.activate();
-		ACallerClient client = new ACallerClient("client","localhost", RadarSystemConfig.ctxServerPort);
-		conn = client.getConn();
-		simulateDistance( client, true );
-		//simulateDistance( false );
+//		simulateDistance(   );
+		simulateController();
  	}
 	
-	protected void simulateDistance( ACallerClient client, boolean far ) throws Exception {
-		if( far ) conn.forward( fardistance.toString() );  
-		else  conn.forward( neardistance.toString() );  
-		// client --> contextServer --> sonar.valueUpdated( ) --> produced=true
-		//int v = sonar.getVal();
-		client.sendRequestOnConnection(sonarActivate.toString());
-		String answer = client.sendRequestOnConnection(getSonarval.toString());
-		System.out.println("simulateDistance sonar value = " + answer);
-		/*
-		System.out.println("simulateDistance sonar value = " + v);
-		if( v < RadarSystemConfig.DLIMIT ) conn.forward(turnOnLed.toString());  
-		else conn.forward(turnOffLed.toString());  		*/
+	/*
+	 * Metodo che usa conn in modo diretto: da evitare
+	 */
+	protected void simulateDistance(   ) throws Exception {
+		ACallerClient serverCaller = new ACallerClient("client","localhost", RadarSystemConfig.ctxServerPort);
+		conn = serverCaller.getConn();
+		 conn.forward( fardistance.toString() );  
+		 conn.forward( neardistance.toString() );  
 	}
 	
-	public static void main( String[] args) throws Exception {
+	protected void simulateController(    )  {
+		// client --> contextServer --> sonar.valueUpdated( ) --> produced=true
+
+		RadarSystemConfig.sonarDelay        = 50;
+		RadarSystemConfig.DLIMIT            = 40;
 		
+		ACallerClient sonarCaller  = new ACallerClient("sonarCaller", "localhost",  RadarSystemConfig.ctxServerPort);
+		ACallerClient ledCaller    = new ACallerClient("ledCaller",   "localhost",  RadarSystemConfig.ctxServerPort);
+		RadarGuiClient radarCaller = new RadarGuiClient("radarCaller","localhost",  RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
+		
+		sonarCaller.sendCommandOnConnection(sonarActivate.toString());
+		for( int i=1; i<= 10; i++) {
+			String answer = sonarCaller.sendRequestOnConnection(getSonarval.toString());
+			//System.out.println("simulateController sonar answer = " + answer);
+	 		int v = Integer.parseInt(answer);
+			//System.out.println("simulateController sonar value = " + v);
+	 		radarCaller.sendCommandOnConnection(radarUpdate.toString().replace("DISTANCE",answer));
+			if( v < RadarSystemConfig.DLIMIT ) 
+				ledCaller.sendCommandOnConnection(turnOnLed.toString());
+			else ledCaller.sendCommandOnConnection(turnOffLed.toString());  
+			String ledState = ledCaller.sendRequestOnConnection(getLedState.toString());
+			System.out.println("simulateController ledState=" + ledState + " for distance=" + v);
+			Colors.delay(500);
+		}
+	}
+	
+	
+	
+	public static void main( String[] args) throws Exception {		
 		TcpContextServerExampleMain sys = new TcpContextServerExampleMain();
 		sys.configureTheSystem();
-		sys.execute();
-		
+		sys.execute();		
 	}
 
 }

@@ -3,14 +3,12 @@ package it.unibo.enablerCleanArch.enablers.devices;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.supports.Interaction2021;
-
-
+import it.unibo.enablerCleanArch.supports.Colors;
+ 
 /*
  * Adapter for the output device  Led
  */
 public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
-private boolean ledStateMirror = false;
 
 	public LedAdapterEnablerAsClient( String name, String host, int port, ProtocolType protocol  ) {
 		super(name,host,port, protocol);
@@ -21,7 +19,6 @@ private boolean ledStateMirror = false;
 	public void turnOn() { 
  		try {
  			sendCommandOnConnection( "on" );
-			ledStateMirror = true;
 		} catch (Exception e) {
 			System.out.println(name+" |  turnOn ERROR " + e.getMessage() );
 		}
@@ -31,7 +28,6 @@ private boolean ledStateMirror = false;
 	public void turnOff() {   
  		try {
  			sendCommandOnConnection( "off" );
-			ledStateMirror = false;
 		} catch (Exception e) {
 			System.out.println(name+" |  turnOff ERROR " + e.getMessage() );
 		}
@@ -39,18 +35,10 @@ private boolean ledStateMirror = false;
 
 	@Override
 	public boolean getState() {   
-		return ledStateMirror;
+		String answer = sendRequestOnConnection( "getState" );
+		//Colors.out(name+" |  getState answer " + answer );
+		return answer.equals("true");
 	}
-
-	/*
-	@Override
-	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
-		while( true ) {
-			String msg = conn.receiveMsg();  //blocking
-			System.out.println(name+" |  answer=" + msg   );		
-		}
-	}
-*/
  
 	
 }

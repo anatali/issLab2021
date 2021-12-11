@@ -21,8 +21,6 @@ protected String name;
 	      try {
 	  		this.port             = port;
 	  		this.userDefHandler   = userDefHandler;
-	  		//Colors.out(getName() + " | costruct port " + port );
-	  		//this.applHandlerClass = Class.forName(className);
 	  		Colors.out(getName() + " | costructor port=" + port  ); //+" applHandlerClass=" + applHandlerClass 
 			this.name             = getName();
 		    serversock            = new ServerSocket( port );
@@ -40,20 +38,8 @@ protected String name;
 				//Accept a connection				 
 				//Colors.out(getName() + " | waits on server port=" + port + " serversock=" + serversock );	 
 		 		Socket sock          = serversock.accept();	
-				Colors.out(getName() + " | accepted connection  handler class="   ); //+ applHandlerClass.getName() 
+				//Colors.out(getName() + " | accepted connection  "   );  
 		 		Interaction2021 conn = new TcpConnection(sock);
-		 		//Constructor c = applHandlerClass.getConstructor( it.unibo.enablerCleanArch.supports.Interaction2021.class  );
-		 		/*
-		 		//Class[] parameterType = null;
-		 		Constructor c = applHandlerClass.getConstructor(   );
-		 		ApplMessageHandler applHandle = (ApplMessageHandler) c.newInstance();
-		 		//Devo creare nuova istanza per memorizzare conn ma non devo perdere il rif a ILed 
-		 		 * 
-		 		 */
-		 		//SysMessageHandler handlerWithConn = new SysMessageHandler(userDefHandler, conn);
-		 		//hanlerWithConn.setConn(conn);
-				//Colors.out(getName() + " | applHandle=" + applHandle  );	 
-
 		 		//Create a message handler on the connection
 		 		new TcpApplMessageHandler( userDefHandler, conn );			 		
 			}//while
@@ -78,22 +64,5 @@ protected String name;
 			Colors.outerr(getName() + " | deactivate ERROR: " + e.getMessage());	 
 		}
 	}
-/*	
-	public void answer( String reqId,  String reqestmsgId, String caller, String  msg) {
-		ApplMessage reqMsg = requestMap.remove( reqId+caller );  //Messaggio di richiesta
-		Colors.out(name + " | answer finds:" + reqMsg);
-		if( reqMsg == null ){
-			Colors.outerr("INCONSISTENT: no request found");
-		}else {
-			String destName      = reqMsg.msgSender();
-			ApplMessage replyMsg = new ApplMessage(reqMsg.msgId(), "reply", reqMsg.msgSender(), destName, msg, "1");
-			Colors.out(name + " | answer replyMsg:" + replyMsg);
-			Interaction2021 connToCaller = reqMsg.getConn();
-			Colors.out(name + " | answer connToCaller:" + connToCaller, Colors.RED);
-			try {
-				connToCaller.forward( replyMsg.toString() );
-			} catch (Exception e) {Colors.outerr("replyreq ERROR " + e.getMessage());	}
-		}
-	}
-*/
+ 
 }

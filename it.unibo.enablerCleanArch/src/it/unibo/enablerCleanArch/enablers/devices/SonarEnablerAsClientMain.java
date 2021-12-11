@@ -17,12 +17,12 @@ public class SonarEnablerAsClientMain  {
 		RadarSystemConfig.sonarDelay = 500;
 		RadarSystemConfig.testing    = false;
 		 
-		ISonar sonar = DeviceFactory.createSonar();
+		//ISonar sonar = DeviceFactory.createSonar();
 		
 		EnablerAsServer sonarServer  = 
 				new EnablerAsServer("SonarAdapterEnablerAsServer",RadarSystemConfig.sonarPort, ProtocolType.tcp, new SonarApplHandler("sonarH") );
 
-		SonarEnablerAsClient sonarEnablerAsClient = new SonarEnablerAsClient(
+		ISonar sonarEnablerAsClient = new SonarEnablerAsClient(
 				"sonarEnablerAsClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp );
 
 		sonarServer.activate();

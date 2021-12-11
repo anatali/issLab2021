@@ -32,6 +32,14 @@ public class Colors {
 	public static void outm( String m, String color ) {		 
 		System.out.println(   BACKGROUND + color + m + ANSI_RESET);
 	}
+	
+	public static  void delay( int dt ) {
+		try {
+			Thread.sleep(dt);
+		} catch (InterruptedException e) {
+				e.printStackTrace();
+		}		
+	}
 
 }
 

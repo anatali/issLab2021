@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.enablers.devices;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 public class LedApplHandler extends ApplMsgHandler {
@@ -13,10 +14,10 @@ ILed led;
 	
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		System.out.println(name + " | elaborate " + message + " conn=" + conn);
+		//Colors.out(name + " | elaborate " + message + " conn=" + conn);
  		if( message.equals("on")) led.turnOn();
- 		else if( message.equals("off") ) led.turnOff();		
- 		sendMsgToClient("LedState="+led.getState(), conn );
+ 		else if( message.equals("off") ) led.turnOff();	
+ 		else if( message.equals("getState") ) sendMsgToClient(""+led.getState(), conn );
 	}
 
 }

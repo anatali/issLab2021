@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.*;
-import it.unibo.enablerCleanArch.domain.RadarGui;
+import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.main.RadarSystemAllOnPc;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
@@ -46,7 +46,7 @@ private RadarSystemAllOnPc sys;
  		RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT +20;
 		sys.activateSonar();   //il sonar produce un solo valore
 		while( sys.getSonar().isActive() ) delay(10);   //give time the system to work 
-		RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
+		RadarDisplay radar = (RadarDisplay) sys.getRadarGui();	//cast just for testing ...
 	    assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance );
 	    delay(2000) ; //give time to look at the display
 	}	
@@ -58,7 +58,7 @@ private RadarSystemAllOnPc sys;
 		RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT - 1;
 		sys.activateSonar();   //il sonar produce un solo valore
 		while( sys.getSonar().isActive() ) delay(10); 	//give time the system to work 
-		RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
+		RadarDisplay radar = (RadarDisplay) sys.getRadarGui();	//cast just for testing ...
 	    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance);
 	    delay(2000) ; //give time to look at the display
 	}	

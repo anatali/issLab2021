@@ -1,10 +1,13 @@
 package it.unibo.enablerCleanArch.main;
 
-import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterEnablerAsServer;
+
 import it.unibo.enablerCleanArch.domain.*;
+import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.devices.LedAdapterEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
+import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
+import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
 
  
 public class RadarSystemAllOnPc {
@@ -15,23 +18,39 @@ private IRadarDisplay radar = null;
 	public void setup( String configFile ) throws Exception {
 		RadarSystemConfig.setTheConfiguration( configFile );
 	}
+	
+	protected ISonar simulateSonarRemote() {
+		//new EnablerAsServer("sonarAdapterServer",  RadarSystemConfig.sonarPort, ProtocolType.tcp) ;
+		//EnablerAsServer sonarServer  = 
+				new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, ProtocolType.tcp, new SonarApplHandler("sonarH") );
+		ISonar sonarClient = 
+				new SonarEnablerAsClient("sonarClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp );
+		return sonarClient;
+	}
+	protected ILed simulateLedRemote() {
+		//new LedAdapterEnablerAsClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort, ProtocolType.tcp  );
+		new EnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
+				ProtocolType.tcp,  new LedApplHandler("ledH") );
+		ILed ledClient = new LedAdapterEnablerAsClient(
+				"ledClient", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
+		return ledClient;
+		
+	}
 	public void build() throws Exception {			
  		//Control
+		/*
 		if( RadarSystemConfig.ControllerRemote ) {
 			radar =  DeviceFactory.createRadarGui();			
 			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
-		}else { //Controller locale (al PC)
+		}else { 
+			*/
+			//Controller locale (al PC)
 			//Input
-			sonar  = RadarSystemConfig.SonareRemote   
-					? new SonarAdapterEnablerAsServer("sonarAdapterServer",  RadarSystemConfig.sonarPort, ProtocolType.tcp)   
-					: DeviceFactory.createSonar();
+			sonar  = RadarSystemConfig.SonareRemote ? simulateSonarRemote() : DeviceFactory.createSonar();
 			//Output
-			led    = RadarSystemConfig.LedRemote   
-					? new LedAdapterEnablerAsClient( "LedAdapterClient", RadarSystemConfig.raspHostAddr, RadarSystemConfig.ledPort, ProtocolType.tcp  ) 
-					: DeviceFactory.createLed();
+			led    = RadarSystemConfig.LedRemote ? simulateLedRemote() : DeviceFactory.createLed();
 			radar  = DeviceFactory.createRadarGui();	
-			Controller.activate(led, sonar, radar);
-  		}
+			Controller.activate(led, sonar, radar); 		
 	} 
 	
 	public void activateSonar() {

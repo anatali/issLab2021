@@ -2,15 +2,15 @@ package it.unibo.enablerCleanArch.domain;
 
 import radarPojo.radarSupport;
 
-public class RadarGui implements IRadarDisplay{
+public class RadarDisplay implements IRadarDisplay{
 private String curDistance = "0";
 private static boolean created = false; //singleton
 	//Factory method
 	public static IRadarDisplay create(){
-		return new RadarGui();
+		return new RadarDisplay();
 	}
 	
-	public RadarGui() {
+	public RadarDisplay() {
 		if( ! created ) {
 			radarSupport.setUpRadarGui();
 			created = true;

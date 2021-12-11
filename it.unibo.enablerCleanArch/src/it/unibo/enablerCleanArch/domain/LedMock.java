@@ -4,10 +4,10 @@ public class LedMock extends LedModel implements ILed{
 
 	@Override
 	protected void ledActivate(boolean val) {	
-		showState();
+		//showState();
 	}
 
 	protected void showState(){
-		System.out.println("LedMock state=" + getState() );
+		System.out.println("LedMock inititial state=" + getState() );
 	}
-}
+} 

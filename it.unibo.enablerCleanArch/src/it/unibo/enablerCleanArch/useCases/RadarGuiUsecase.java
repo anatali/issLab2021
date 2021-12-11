@@ -4,7 +4,7 @@ import it.unibo.enablerCleanArch.domain.*;
 public class RadarGuiUsecase {
   
 	public static void doUseCase( IRadarDisplay radar, int d ) {
-		System.out.println("RadarGuiUsecase | sonar data=" + d);
+		//System.out.println("RadarGuiUsecase | sonar data=" + d);
 		radar.update(""+d, "90");
   	}	
  

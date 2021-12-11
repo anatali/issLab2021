@@ -16,10 +16,9 @@ ISonar sonar;
   			
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
- 				Colors.out(name+ " | elaborate " + message, Colors.ANSI_YELLOW);
+ 				//Colors.out(name+ " | elaborate " + message, Colors.ANSI_YELLOW);
  				if( message.equals("getVal")) {
  					String vs = ""+sonar.getVal();
- 					Colors.out(name+ " | elaborate getVal vs=" + vs, Colors.ANSI_YELLOW);
  					this.sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
  					sonar.activate();

@@ -20,9 +20,12 @@ public class LedAdapterEnablerAsClientMain  {
 		ILed ledClient2 = new LedAdapterEnablerAsClient(
 				"client2", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
 			
-		ledClient1.turnOn();		 
+		ledClient1.turnOn();	
+		//boolean ledState = ledClient1.getState();
+		System.out.println("ledState=" + ledClient1.getState());
 		Thread.sleep(500);
 		ledClient2.turnOff();
+		System.out.println("ledState=" + ledClient2.getState());
 		Thread.sleep(500);
 		/*	 */
 		System.exit(0);
