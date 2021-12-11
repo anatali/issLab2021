@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.concur;
 
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.supports.Interaction2021;
+ 
 
 public class ACallerClient  extends EnablerAsClient{
 
@@ -10,8 +10,6 @@ public class ACallerClient  extends EnablerAsClient{
 		super(name, host, port, ProtocolType.tcp);
 	}
 
-	@Override
-	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
-	}
+ 
 
 }

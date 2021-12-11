@@ -20,39 +20,32 @@ protected String name ;
 	protected void setConnection( String host, int port, ProtocolType protocol  ) throws Exception {
 		if( protocol == ProtocolType.tcp) {
 			conn = TcpClient.connect(host,  port, 10); //10 = num of attempts
-			startHandlerMessagesFromServer( conn );
+			//startHandlerMessagesFromServer( conn );
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
 			//Coap: attivo un SonarObserver che implementa getVal
 		}
 	}
-	
-		
-	protected void startHandlerMessagesFromServer( Interaction2021 conn) {
-		new Thread() {
-			public void run() {
-				try {
-					Colors.out(name + " |  startHandlerMessagesFromServer "  + conn, Colors.RED );
-					handleMessagesFromServer(conn);
-				} catch (Exception e) {
-					Colors.outerr( name + " | handleMessagesFromServer  ERROR " + e.getMessage());
-				}				
-			}
-		}.start();
+  	
+	public void sendCommandOnConnection( String val )  {
+		Colors.out( name+"  | sendCommandOnConnection " + val + " conn=" + conn, Colors.GREEN);
+		try {
+			conn.forward(val);
+		} catch (Exception e) {
+			Colors.outerr( name+"  | sendCommandOnConnection ERROR=" + e.getMessage()  );
+		}
 	}
-	
-	protected abstract void handleMessagesFromServer( Interaction2021 conn ) throws Exception;
-	
-	public void sendValueOnConnection( String val ) throws Exception{
-		Colors.out( name+"  | sendValueOnConnection " + val + " conn=" + conn);
-		conn.forward(val);
-	}
-	public void sendRequestOnConnection( String val ) throws Exception{
-		Colors.out( name+"  | sendRequestOnConnection " + val + " conn=" + conn);
-		conn.forward(val);
-		//String answer = conn.receiveMsg();
-		//Colors.out( name+"  | sendRequestOnConnection answer=" + answer  );
-	}	
+	public String sendRequestOnConnection( String val )  {
+		Colors.out( name+"  | sendRequestOnConnection " + val ); //+ " conn=" + conn
+		try {
+			conn.forward(val);
+			String answer = conn.receiveMsg();
+			return answer;
+		} catch (Exception e) {
+			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
+			return null;
+		}
+ 	}	
 	public Interaction2021 getConn() {
 		return conn;
 	}

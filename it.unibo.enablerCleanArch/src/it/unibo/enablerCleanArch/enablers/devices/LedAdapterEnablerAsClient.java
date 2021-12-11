@@ -1,13 +1,8 @@
-package it.unibo.enablerCleanArch.adapters;
+package it.unibo.enablerCleanArch.enablers.devices;
 
-import it.unibo.enablerCleanArch.concur.LedApplHandler;
-import it.unibo.enablerCleanArch.concur.NaiveApplHandler;
-import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
-import it.unibo.enablerCleanArch.enablers.LedEnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 
@@ -25,7 +20,7 @@ private boolean ledStateMirror = false;
 	@Override
 	public void turnOn() { 
  		try {
- 			sendRequestOnConnection( "on" );
+ 			sendCommandOnConnection( "on" );
 			ledStateMirror = true;
 		} catch (Exception e) {
 			System.out.println(name+" |  turnOn ERROR " + e.getMessage() );
@@ -35,7 +30,7 @@ private boolean ledStateMirror = false;
 	@Override
 	public void turnOff() {   
  		try {
- 			sendRequestOnConnection( "off" );
+ 			sendCommandOnConnection( "off" );
 			ledStateMirror = false;
 		} catch (Exception e) {
 			System.out.println(name+" |  turnOff ERROR " + e.getMessage() );
@@ -46,7 +41,8 @@ private boolean ledStateMirror = false;
 	public boolean getState() {   
 		return ledStateMirror;
 	}
-	
+
+	/*
 	@Override
 	protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
 		while( true ) {
@@ -54,32 +50,7 @@ private boolean ledStateMirror = false;
 			System.out.println(name+" |  answer=" + msg   );		
 		}
 	}
-
-	
-	/*
-	 * A rapid test ...
-	 */
-	public static void main( String[] args) throws Exception {
-		RadarSystemConfig.simulation = true;
-		RadarSystemConfig.ledPort    = 8015;
- 		RadarSystemConfig.testing    = false;
-		
-		ILed led = DeviceFactory.createLed();
-		
-		new LedEnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
-				ProtocolType.tcp, led, new LedApplHandler("ledH") );
-
-		ILed ledClient1 = new LedAdapterEnablerAsClient(
-				"client1", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
-		ILed ledClient2 = new LedAdapterEnablerAsClient(
-				"client2", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
-			
-		ledClient1.turnOn();		 
-		Thread.sleep(500);
-		ledClient2.turnOff();
-		Thread.sleep(500);
-		/*	 */
-		System.exit(0);
-	}
+*/
+ 
 	
 }

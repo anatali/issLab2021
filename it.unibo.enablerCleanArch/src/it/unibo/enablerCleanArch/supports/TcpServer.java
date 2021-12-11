@@ -14,29 +14,9 @@ public class TcpServer extends Thread{
 private boolean stopped = true;
 private int port;
 private ServerSocket serversock;
-protected ApplMessageHandler userDefHandler;
+protected IApplMsgHandler userDefHandler;
 protected String name;
-
-protected Class  applHandlerClass;
-
-protected HashMap<String,ApplMessageHandler> handlerMap = new HashMap<String,ApplMessageHandler>();
-protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,ApplMessage>();
-/*
-	public TcpServer( String name, int port, ApplMessageHandler applHandler  ) {
-		super(name);
-	      try {
-	  		this.port        = port;
-			this.applHandler = applHandler;
-			this.name        = getName();
-		    serversock       = new ServerSocket( port );
-		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
-	     }catch (Exception e) { 
-	    	 Colors.outerr(getName() + " | costruct ERROR: " + e.getMessage());
-	     }
-	}
-*/	
-	//public TcpServer( String name, int port, String className    ) {
-	public TcpServer( String name, int port,  ApplMessageHandler userDefHandler   ) {
+ 	public TcpServer( String name, int port,  IApplMsgHandler userDefHandler   ) {
 		super(name);
 	      try {
 	  		this.port             = port;
@@ -70,12 +50,12 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 		 		//Devo creare nuova istanza per memorizzare conn ma non devo perdere il rif a ILed 
 		 		 * 
 		 		 */
-		 		SysMessageHandler handlerWithConn = new SysMessageHandler(userDefHandler, conn);
+		 		//SysMessageHandler handlerWithConn = new SysMessageHandler(userDefHandler, conn);
 		 		//hanlerWithConn.setConn(conn);
 				//Colors.out(getName() + " | applHandle=" + applHandle  );	 
 
 		 		//Create a message handler on the connection
-		 		new TcpApplMessageHandler( handlerWithConn, conn );			 		
+		 		new TcpApplMessageHandler( userDefHandler, conn );			 		
 			}//while
 		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
 			  Colors.out(getName() + " | probably socket closed: " + e.getMessage(), Colors.GREEN);		 
@@ -98,7 +78,7 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 			Colors.outerr(getName() + " | deactivate ERROR: " + e.getMessage());	 
 		}
 	}
-	
+/*	
 	public void answer( String reqId,  String reqestmsgId, String caller, String  msg) {
 		ApplMessage reqMsg = requestMap.remove( reqId+caller );  //Messaggio di richiesta
 		Colors.out(name + " | answer finds:" + reqMsg);
@@ -115,5 +95,5 @@ protected HashMap<String,ApplMessage>    requestMap     = new HashMap<String,App
 			} catch (Exception e) {Colors.outerr("replyreq ERROR " + e.getMessage());	}
 		}
 	}
-
+*/
 }

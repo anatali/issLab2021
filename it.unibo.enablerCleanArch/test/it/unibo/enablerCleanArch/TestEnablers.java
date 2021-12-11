@@ -5,15 +5,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import it.unibo.enablerCleanArch.adapters.LedAdapterEnablerAsClient;
-import it.unibo.enablerCleanArch.adapters.SonarAdapterEnablerAsServer;
-import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.enablers.LedEnablerAsServer;
+import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.SonarEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.LedAdapterEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
+import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
+import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 
@@ -28,9 +27,11 @@ import it.unibo.enablerCleanArch.supports.Colors;
  */
 public class TestEnablers {
 	
-	private SonarAdapterEnablerAsServer sonarAdapterServer;
-	private LedEnablerAsServer ledServer;
-	private ILed ledClient;
+	private EnablerAsServer ledServer;
+	private EnablerAsServer sonarServer;
+	
+ 	private ILed ledClient;
+	private ISonar sonarClient;
 	
 	@Before
 	public void setup() {
@@ -40,23 +41,25 @@ public class TestEnablers {
 		RadarSystemConfig.sonarDelay = 100;
  		RadarSystemConfig.testing    = false;
 
- 		ISonar sonar = DeviceFactory.createSonar();
-		ILed led     = DeviceFactory.createLed();
+ 		//ISonar sonar = DeviceFactory.createSonar();
+		//ILed led     = DeviceFactory.createLed();
 		
 		/*
 		 * Prima simulo la partenza dei server
 		 */
 		//Server su PC 
- 		sonarAdapterServer = new SonarAdapterEnablerAsServer("SonarAdapterEnablerAsServer",RadarSystemConfig.sonarPort, ProtocolType.tcp );
+ 		sonarServer = new EnablerAsServer(
+ 				"SonarAdapterEnablerAsServer",RadarSystemConfig.sonarPort,ProtocolType.tcp, new SonarApplHandler("sonarH") );
  		//Server su Rasp 
- 		ledServer          = new LedEnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, ProtocolType.tcp, led );
+ 		ledServer          = new EnablerAsServer(
+ 				"LedEnablerAsServer",RadarSystemConfig.ledPort,ProtocolType.tcp, new LedApplHandler("ledH")  );
 
  		//Client su PC
  		ledClient = new LedAdapterEnablerAsClient(
 				"LedAdapterEnablerAsClient", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
  		//Client su Rasp  		
- 		new SonarEnablerAsClient(
-				"SonarEnablerAsClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp, sonar);
+ 		sonarClient = new SonarEnablerAsClient(
+				"SonarEnablerAsClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp );
 		
 
 	}
@@ -65,11 +68,11 @@ public class TestEnablers {
 	public void down() {
 		//System.out.println("down");		
 		ledServer.deactivate();
-		sonarAdapterServer.deactivate();
+		sonarServer.deactivate();
 	}	
 	
 	
-	@Test 
+	//@Test 
 	public void testTheLed() {
 		ledClient.turnOn();
 		delay(500);
@@ -79,18 +82,17 @@ public class TestEnablers {
 		assertTrue( ! ledClient.getState() );
 	}
 	
-	//@Test 
+	@Test 
 	public void testEnablers() {
 		
 		//Simulo il Controller
-		sonarAdapterServer.activate();
-		delay(500);
+		sonarServer.activate();
+		delay(500);		
+		System.out.println("testEnablers " + sonarClient.isActive());
 		
-		System.out.println("testEnablers " + sonarAdapterServer.isActive());
 		
-		
-		while( sonarAdapterServer.isActive() ) {
-			int v = sonarAdapterServer.getVal();
+		while( sonarClient.isActive() ) {
+			int v = sonarClient.getVal();
 			Colors.out("Controller-simulated getVal="+v, Colors.GREEN);
 			delay(500);
 			if( v < RadarSystemConfig.DLIMIT ) ledClient.turnOn();

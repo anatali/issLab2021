@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import it.unibo.enablerCleanArch.enablers.NaiveApplHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 import it.unibo.enablerCleanArch.supports.TcpServer;
@@ -53,7 +55,7 @@ public static final int testPort = 8112;
 	}	
 	
 	protected void startTheServer(String name) {
-		server = new TcpServer(name, testPort, "it.unibo.enablerCleanArch.MyHandler");
+		server = new TcpServer(name, testPort, new NaiveApplHandler("naiveH") );
 		server.activate();		
 	}
 	

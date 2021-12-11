@@ -8,30 +8,18 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
  * Decorator
  */
 public class TcpContextServer extends TcpServer{
-//private static SysMessageHandler sysMsgHandler;
-
-	public TcpContextServer(String name, int port, ApplMessageHandler handler ) {
+	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>();
+	protected HashMap<String,ApplMessage>    requestMap  = new HashMap<String,ApplMessage>();
+	
+	public TcpContextServer(String name, int port, IApplMsgHandler handler) { //, IApplMsgHandler handler
 		super(name, port, handler);
-		//sysMsgHandler = new SysMessageHandler("sysMsgHandler");
-		//sysMsgHandler = (SysMessageHandler) this.applHandler;
  	}
-	/*		
-	public static SysMessageHandler getSysHandler() {
-		return (SysMessageHandler) sysMsgHandler;
-	}
 
-	public  SysMessageHandler getHandler() {
-		return (SysMessageHandler) this.applHandler;  //inherited
-	}	
-*/	
-	public void addComponent( String name, ApplMessageHandler h) {
-		//sysMsgHandler.registerHandler(name,h);
+	public void addComponent( String name, IApplMsgHandler h) {
 		handlerMap.put(name, h);
 	}
 	public void removeComponent( String name ) {
-		//sysMsgHandler.unregisterHandler(name );
 		handlerMap.remove( name );
 	}
 
-	
 }

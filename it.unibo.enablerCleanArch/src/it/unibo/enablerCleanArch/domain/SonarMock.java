@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public class SonarMock extends SonarModel implements ISonar{
   
@@ -17,7 +18,7 @@ public class SonarMock extends SonarModel implements ISonar{
 			stopped = true;  //one shot
 		}else {
 			curVal--;
-			//System.out.println("SonarMock | sonarProduce curVal="+curVal);
+			//Colors.out("SonarMock | sonarProduce curVal="+curVal, Colors.ANSI_PURPLE);
 			stopped = ( curVal == 0 );
 		}
 		valueUpdated(   ); 

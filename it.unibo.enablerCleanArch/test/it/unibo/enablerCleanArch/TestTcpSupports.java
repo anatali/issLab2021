@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import it.unibo.enablerCleanArch.supports.ApplMessageHandler;
+import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
 import it.unibo.enablerCleanArch.supports.TcpServer;
@@ -15,27 +15,14 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  * Handler of messages received by the client on a connection
  * with the server
  */
-class NaiveHandler extends ApplMessageHandler {
-private static int count = 1;
-/*
-	static NaiveHandler create() {
-		return new NaiveHandler( "nh"+count++);
-	}
-	
-	private NaiveHandler(String name) {
+class NaiveHandler extends ApplMsgHandler {
+	public NaiveHandler(String name) {
 		super(name);
-	}
-	public NaiveHandler(Interaction2021 conn) {
-		super(conn);
-	}*/
-
-	public void elaborate( String message ) {
+  	}
+	@Override
+	public void elaborate(String message, Interaction2021 conn) {
 		System.out.println(name+" | elaborates: "+message);
-		try {
-			conn.forward("answerTo_"+message);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		sendMsgToClient("answerTo_"+message, conn);	
 	}
 }
 
@@ -44,13 +31,12 @@ private static int count = 1;
  * and waits for the answer
  */
 class ClientForTest{
-	public static boolean withserver = true;
-	
-	public void doWork( String name, int nattempts ) {
+ 	
+	public void doWork( String name, int nattempts, boolean withserver ) {
 		try {
 			Interaction2021 conn  = TcpClient.connect("localhost", TestTcpSupports.testPort,nattempts);
 			//System.out.println(name + " | conn: " +conn );	
-			String request = "hello from" + name;
+			String request = "hello_from_" + name;
 			conn.forward(request);
 			String answer = conn.receiveMsg();
 			System.out.println(name + " | receives the answer: " +answer );	
@@ -77,25 +63,15 @@ public static final int testPort = 8112;
 	}	
 	
 	protected void startTheServer(String name) {
-		server = new TcpServer(name,testPort, "it.unibo.enablerCleanArch.NaiveHandler" );
+		server = new TcpServer(name,testPort, new NaiveHandler("naiveH") );
 		server.activate();		
 	}
 	
 	@Test 
 	public void testClientNoServer() {
 		System.out.println("testClientNoServer");
-		ClientForTest.withserver = false;
-		//Start the server later 
-		/*
-		new Thread() {
-			public void run() {
-				System.out.println("testClientNoServer run");
-				delay(5000);
-				System.out.println("testClientNoServer starts the server");
-				startTheServer("serverLate");			
-			}
-		}.start();*/
-		new ClientForTest().doWork("clientNoServer",3 );	
+		boolean withserver = false;
+		new ClientForTest().doWork("clientNoServer",2,withserver );	
 	}
 	
 	
@@ -104,19 +80,20 @@ public static final int testPort = 8112;
 		startTheServer("oneClientServer");
 		System.out.println("tesSingleClient");
 		//Create a connection
-		new ClientForTest().doWork("client1",10 );		
+		boolean withserver = true;
+		new ClientForTest().doWork("client1",10,withserver );		
 		System.out.println("tesSingleClient BYE");
 	}
-	
 	
 	@Test 
 	public void testManyClients() {
 		startTheServer("manyClientsServer");
 		System.out.println("testManyClients");
 		//Create a connection
-		new ClientForTest().doWork("client1",10);
-		new ClientForTest().doWork("client2",1);
-		new ClientForTest().doWork("client3",1);
+		boolean withserver = true;
+		new ClientForTest().doWork("client1",10,withserver );
+		new ClientForTest().doWork("client2",1,withserver);
+		new ClientForTest().doWork("client3",1,withserver);
 		System.out.println("testManyClients BYE");
 	}	
 	

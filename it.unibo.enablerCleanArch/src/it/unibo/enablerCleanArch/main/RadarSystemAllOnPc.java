@@ -1,10 +1,10 @@
 package it.unibo.enablerCleanArch.main;
 
-import it.unibo.enablerCleanArch.adapters.LedAdapterEnablerAsClient;
 import it.unibo.enablerCleanArch.adapters.RadarGuiAdapterServer;
 import it.unibo.enablerCleanArch.adapters.SonarAdapterEnablerAsServer;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.devices.LedAdapterEnablerAsClient;
 
  
 public class RadarSystemAllOnPc {

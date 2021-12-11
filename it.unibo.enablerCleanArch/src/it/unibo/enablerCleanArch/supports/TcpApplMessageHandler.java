@@ -4,10 +4,10 @@ package it.unibo.enablerCleanArch.supports;
  * Ente attivo per la ricezione di messaggi su una connessione Interaction2021
  */
 public class TcpApplMessageHandler extends Thread{
-private  ApplMessageHandler handler ;
+private  IApplMsgHandler handler ;
 private Interaction2021 conn;
 
-public TcpApplMessageHandler(  ApplMessageHandler handler, Interaction2021 conn ) {
+public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 		this.handler = handler;
 		this.conn    = conn;
  		this.start();
