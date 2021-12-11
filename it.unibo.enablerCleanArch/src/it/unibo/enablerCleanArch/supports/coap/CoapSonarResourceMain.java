@@ -16,8 +16,8 @@ public class CoapSonarResourceMain   {
 	
 	//CoapApplObserver obs = 	
 		new CoapApplObserver( "localhost", 
-			CoapApplServer.inputDeviceUri+"/"+sonarRes.getName() ,
-			new SonarMessageHandler( "sonarH" ) 
+				CoapApplServer.inputDeviceUri+"/"+sonarRes.getName() ,
+			    new SonarMessageHandler( "sonarH" ) 
 		);	
 			
  	//USAGE
