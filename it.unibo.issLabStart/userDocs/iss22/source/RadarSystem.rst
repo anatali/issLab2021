@@ -232,7 +232,7 @@ per utilizzare un dispositivo di output è sufficiente invocare un metodo, mentr
 l'uso di un dispositivo di input presenta due modalità principali:
 
 - il componente interessato ai dati prodotti dal dispostivo di input, ne invoca un metodo
-- *'bloccante'* (ad esempio ``read()``) che fornisce un dato non appena disponibile.
+  *'bloccante'* (ad esempio ``read()``) che fornisce un dato non appena disponibile.
   Questo modo di procedere prende anche il nome di :blue:`interazione a polling`;
 - il componente consumatore dei dati si relaziona con dispostivo di input seccondo 
   il  :blue:`pattern observer`.  

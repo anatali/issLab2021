@@ -12,9 +12,9 @@ public abstract class CoapDeviceResource extends CoapResource {
 	public CoapDeviceResource(String name, DeviceType dtype)  {
 		super(name);
 		setObservable(true); 
- 		CoapApplServer.init();
- 		if( dtype==DeviceType.input ) CoapApplServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
- 		else if( dtype==DeviceType.output )  CoapApplServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
+		CoapApplServer coapServer = CoapApplServer.getServer(); //SINGLETION
+ 		if( dtype==DeviceType.input )        coapServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
+ 		else if( dtype==DeviceType.output )  coapServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
  		//LOGGER.info("CoapDeviceResource " + name + " | created  ");
 	}
  

@@ -2,30 +2,30 @@ package it.unibo.enablerCleanArch.supports.coap;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
+
 import it.unibo.enablerCleanArch.supports.Colors;
 
-public class CoapApplServer extends CoapServer{
+public class CoapApplServer {
 	
-	//private static CoapServer server = new CoapServer();
-	private static CoapResource root      = new CoapResource("devices");
-	private static CoapApplServer server  = null;
+	private static CoapServer server = new CoapServer();
+	private static CoapResource root = new CoapResource("devices");
+	private static boolean started = false;
 	
 	public final static String outputDeviceUri = "devices/output";
 	public final static String inputDeviceUri  = "devices/input";
 	
-	public static CoapApplServer getServer() {
-		if( server == null ) server = new CoapApplServer();
-		return server;
-	}
-	
-	public CoapApplServer(){
-		root.add(new CoapResource("output"));
-		root.add(new CoapResource("input"));
-		add( root );
-		start();
+	public static void init() {
+		if( ! started ) {		//SINGLETON
+			started = true;
+			server.start();
+			root.add(new CoapResource("output"));
+			root.add(new CoapResource("input"));
+			server.add( root );
+		}
 	}
 	
 	public static Resource getResource( String uri ) {
@@ -43,25 +43,25 @@ public class CoapApplServer extends CoapServer{
 		}
  		return null;
 	}
-	public  void addCoapResourceAtRoot( CoapResource resource   ){
+	public static void addCoapResourceAtRoot( CoapResource resource   ){
 		Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
        	root.add( resource );
 	}
-	public  void addCoapResource( CoapResource resource, String fatherUri  )   {
+	public static void addCoapResource( CoapResource resource, String fatherUri  )   {
 		Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
 		Resource res = getResource("/"+fatherUri);
 		if( res != null ) res.add( resource );
 	}
-	public  void addOutputResource( CoapResource resource   )   {
+	public static void addOutputResource( CoapResource resource   )   {
 		Resource outputDevice = getResource( "/"+outputDeviceUri );
 		if( outputDevice != null )  outputDevice.add(resource);
 	}
-	public  void addInputResource( CoapResource resource   )   {
+	public static void addInputResource( CoapResource resource   )   {
 		Resource inputDevice = getResource( "/"+inputDeviceUri );
 		if( inputDevice != null ) inputDevice.add(resource);
 	}
-	public  void stopServer() {
-		stop();
+	public static void stopServer() {
+		server.stop();
 	}
 
 }

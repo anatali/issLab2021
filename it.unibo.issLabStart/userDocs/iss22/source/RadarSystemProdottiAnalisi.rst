@@ -44,20 +44,35 @@ riconducibile a un classico schema :blue:`read-eval-print` in cui:
 
 .. epigraph:: 
 
-  Il componente ``Controller`` deve leggere dati dal Sonar 
-  come dispositivo di input e inviare comandi al Led e al RadarDisplay 
+  Il componente ``Controller`` deve leggere dati dal ``Sonar`` 
+  come dispositivo di input e inviare comandi al ``Led`` e al ``RadarDisplay`` 
   come dispositvi di output.
 
+:remark:`Il sistema presenta quattro componenti: tre dispositivi e un Controller che li gestisce`
+
 Per rendere comprensibile questa architettura anche alla 'macchina' senza entrare in dettagli
-implementativi, possiamo introdurre opportuni :blue:`modelli` dei componenti utlizzando qualche linguaggio
+implementativi, possiamo introdurre opportuni :blue:`modelli dei componenti` utlizzando qualche linguaggio
 di programmazione.
 
 Nel caso di Java, il costrutto interface può essere usato per denotare un componente catturandone
 come aspetto essenziale le funzionalità che esso deve offrire e una sorta di :blue:`contratto` 
 sull’uso del componente.
 
-Introduciamo dunque i nostri primi modelli di componenti definendo interfacce Java per il *Led,
-il Sonar e il RadarDisplay*.
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Modello del dominio
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+I modelli iniziali dei componenti descritti da interfacce Java per il *Led,
+il Sonar e il RadarDisplay* costuiscono il nostro :blue:`modello del dominio`. 
+Ispirandoci agli schemi port-adapter_ e clean-architecture_:
+
+:remark:`il modello del dominio sarà al centro della architettura del sistema`
+
+
+.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
+
+.. _clean-architecture:  https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+
+.. _microservizio: https://en.wikipedia.org/wiki/Microservices
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Le interfacce ILed, ISonar e IRadarDisplay
@@ -174,18 +189,29 @@ trasmettere informazione.
    :width: 50%
 
 
-Ad esempio, il ``Controller`` su PC utilizzerà un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
+Ad esempio, il ``Controller`` su PC potrebbe utilizzare un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
 dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getVal``.
 Inoltre utilizzerà un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
 sul Raspberry.
 
-Questa idea di :blue:`enabler` sembra dunque promettente come strumento per un passaggio graduale
+Tuttavia, per limitare il traffico di rete, è inutile inviare i dati del sonar anche quando non
+sono richiesti dal sever, per cui, come analisti, riteniamo opportuno sul PC venga definito, ad uso
+del  ``Controller`` due TCP-client, uno per il Led e uno per il Sonar che invieranno a due
+TCP-server complementari sul RaspberryPi 
+
+- messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
+- messaggi interpretabili cone :blue:`richieste` (ad esempio ``getVal``, ``getState``)
+
+ TODO: nuova figura
+
+L'idea di :blue:`enabler` sembra dunque promettente come strumento per un passaggio graduale
 e sistematico dalla programmazione tradizionale ad oggetti alla programmazione distribuita.
 
-Di fatto stiamo delienando la nascita di un :blue:`nuovo paradigma di programmazione` che troverà
-più avanti un suo pieno sviluppo con i concetti di :blue:`attore` di :blue:`microservizio`. 
-
+Sono i primi passi relativi a un 
  
+:remark:`nuovo paradigma di programmazione`
+
+che troverà più avanti un suo pieno sviluppo con i concetti di :blue:`attore` e di microservizio_.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Piano di lavoro

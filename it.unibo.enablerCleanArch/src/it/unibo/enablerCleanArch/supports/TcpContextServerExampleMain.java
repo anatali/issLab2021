@@ -10,8 +10,8 @@ import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
 public class TcpContextServerExampleMain {
-private TcpServer contextServer;
-private ISonar sonar;
+private TcpContextServer contextServer;
+//private ISonar sonar;
 private ApplMessage fardistance  = new ApplMessage("msg( distance, dispatch, main, sonar, 36, 0 )");
 private ApplMessage neardistance = new ApplMessage("msg( distance, dispatch, main, sonar, 10, 1 )");
 private ApplMessage turnOnLed    = new ApplMessage("msg( turn, dispatch, main, led, on, 2 )");
@@ -38,17 +38,20 @@ private Interaction2021 conn;
 		
 
 		//Creazione del server di contesto
-		ContextMsgHandler ctxH = new ContextMsgHandler("ctxH");
-		contextServer          = new TcpServer("TcpContextServer", RadarSystemConfig.ctxServerPort, ctxH);
- 		
+		//ContextMsgHandler ctxH = new ContextMsgHandler("ctxH");
+		contextServer          = //new TcpServer("TcpContextServer", RadarSystemConfig.ctxServerPort, ctxH);
+				new TcpContextServer("TcpContextServer", RadarSystemConfig.ctxServerPort );
 		//Registrazione dei componenti presso il contesto	
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH");
 		IApplMsgHandler ledHandler   = new LedApplHandler("ledH");
 		IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
 		
-		ctxH.addComponent("sonar", sonarHandler);
-		ctxH.addComponent("led",   ledHandler);	
-		ctxH.addComponent("radar", radarHandler);	
+//		ctxH.addComponent("sonar", sonarHandler);
+//		ctxH.addComponent("led",   ledHandler);	
+//		ctxH.addComponent("radar", radarHandler);	
+		contextServer.addComponent("sonar", sonarHandler);
+		contextServer.addComponent("led",   ledHandler);	
+		contextServer.addComponent("radar", radarHandler);	
 	}
 	
 	

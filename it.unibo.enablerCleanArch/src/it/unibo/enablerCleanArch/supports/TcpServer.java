@@ -1,25 +1,21 @@
 package it.unibo.enablerCleanArch.supports;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-
-import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 public class TcpServer extends Thread{
- 
-private boolean stopped = true;
-private int port;
+//private int port;
 private ServerSocket serversock;
 protected IApplMsgHandler userDefHandler;
 protected String name;
+protected boolean stopped = true;
+
  	public TcpServer( String name, int port,  IApplMsgHandler userDefHandler   ) {
 		super(name);
 	      try {
-	  		this.port             = port;
+	  		//this.port             = port;
 	  		this.userDefHandler   = userDefHandler;
 	  		Colors.out(getName() + " | costructor port=" + port  ); //+" applHandlerClass=" + applHandlerClass 
 			this.name             = getName();

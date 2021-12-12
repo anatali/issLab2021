@@ -1,6 +1,5 @@
 package it.unibo.enablerCleanArch.supports;
 
-import it.unibo.enablerCleanArch.supports.coap.CoapDeviceResource;
 
 /*
  * 
