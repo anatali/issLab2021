@@ -7,8 +7,8 @@ public class CoapSonarResource extends CoapDeviceResource {
 private ISonar sonar; 
 private String curVal = "-1";
 
-	public CoapSonarResource( String name  ) {  
-		super( name, deviceType.input )  ;
+	public CoapSonarResource( String name, DeviceType devtype  ) {  
+		super( name, devtype )  ;
 		sonar = SonarModel.create();
 		getSonarValues();
 		System.out.println( getName() + " |  CREATED"   );	
@@ -49,22 +49,7 @@ private String curVal = "-1";
 	 
  
 }
- 	/*
-	protected void elaborate(String arg) {
-		//System.out.println(getName() + " | elaborate arg=" + arg );
-		try {
-			JSONObject jsonObj = new JSONObject( arg );
-			String model = jsonObj.getString("model");
-			int    limit = jsonObj.getInt("limit");
-			//System.out.println(getName() + " | moodel=" + model + " limit="+limit+" from " + exchange.getRequestCode() );
-			this.model    = model;
-			limitDistance = limit;
-		}catch( Exception e) {
-			limitDistance = Integer.parseInt(arg);
-		}
-		handler.elaborate(arg);
-	}
-	*/	
+ 
 
 
  

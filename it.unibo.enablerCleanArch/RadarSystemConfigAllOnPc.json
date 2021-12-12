@@ -10,6 +10,7 @@
 "ledPort"          : "8010",
 "sonarPort"        : "8012",
 "controllerPort"   : "8016",
+"protocolType"     : "coap",
 "serverTimeOut"    : "600000",
 "applStartdelay"   : "3000",
 "sonarDelay"       : "100",

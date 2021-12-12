@@ -81,6 +81,9 @@ public class RadarSystemConfig {
 	        DLIMIT           = object.getInt("DLIMIT");	
 	        testing          = object.getBoolean("testing");
 	        
+	        protcolType      = object.getString("protocolType").equals("tcp") 
+	        		                  ? ProtocolType.tcp : ProtocolType.coap;
+	        
 		} catch (FileNotFoundException e) {
  			System.out.println("setTheConfiguration ERROR " + e.getMessage() );
 		}

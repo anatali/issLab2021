@@ -1,9 +1,11 @@
 package it.unibo.enablerCleanArch.supports;
 
+import it.unibo.enablerCleanArch.supports.coap.CoapDeviceResource;
+
 /*
  * 
  */
-public abstract class ApplMsgHandler implements IApplMsgHandler {  
+public abstract class ApplMsgHandler  implements IApplMsgHandler {  
 protected String name;
    
  	public ApplMsgHandler( String name  ) {  

@@ -1,16 +1,16 @@
-package it.unibo.enablerCleanArch.supports.coap;
+package it.unibo.enablerCleanArch.enablers.devices;
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.LedModel;
- 
+import it.unibo.enablerCleanArch.supports.ApplMsgHandlerCoap;
+import it.unibo.enablerCleanArch.supports.coap.DeviceType;
 
-public class CoapLedResource extends CoapDeviceResource {
-	private ILed led; 
+public class LedApplHandlerCoap extends ApplMsgHandlerCoap {
+ILed led;
+
+	public LedApplHandlerCoap(String name) {
+		super(name, DeviceType.output);
+		led = it.unibo.enablerCleanArch.domain.LedModel.createLedMock();
+	}
 	
-	public CoapLedResource(String name, DeviceType devtype) {
-		super(name,devtype);
-		led = LedModel.create();
- 	}
-
 	@Override
 	protected String elaborateGet(String req) {
  		return ""+led.getState();
@@ -23,5 +23,6 @@ public class CoapLedResource extends CoapDeviceResource {
 		else if( req.equals("off") ) led.turnOff();		
 		//System.out.println( getName() + " |  after elaboratePut :" + led.getState()  );
 	}  
+ 
 
 }

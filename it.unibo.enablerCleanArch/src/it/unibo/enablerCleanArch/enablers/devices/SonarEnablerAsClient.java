@@ -31,7 +31,7 @@ public class SonarEnablerAsClient extends EnablerAsClient implements ISonar{
 	@Override
 	public boolean isActive() {
 		String answer = sendRequestOnConnection("isActive");
-		Colors.out( name + " | isActive answer=" + answer, Colors.ANSI_PURPLE);
+		Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
 		return answer.equals( "true" );
 	}
  

@@ -2,27 +2,27 @@ package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
+import it.unibo.enablerCleanArch.supports.Colors;
+
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
 
-enum deviceType{
-	input, output
-}
+
 public abstract class CoapDeviceResource extends CoapResource {
 
-	public CoapDeviceResource(String name, deviceType dtype)  {
+	public CoapDeviceResource(String name, DeviceType dtype)  {
 		super(name);
 		setObservable(true); 
  		CoapApplServer.init();
- 		if( dtype==deviceType.input ) CoapApplServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
- 		else if( dtype==deviceType.output )  CoapApplServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
+ 		if( dtype==DeviceType.input ) CoapApplServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
+ 		else if( dtype==DeviceType.output )  CoapApplServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
  		//LOGGER.info("CoapDeviceResource " + name + " | created  ");
 	}
  
  	
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		//System.out.println(getName() + " | handleGET arg=" + exchange.getRequestText() );
-  		String answer = elaborateGet( exchange.getRequestText() );
+		Colors.out(getName() + " | handleGET arg=" + exchange.getRequestText() + " param=" + exchange.getQueryParameter("q"));
+  		String answer = elaborateGet( exchange.getQueryParameter("q") );
   		exchange.respond(answer);
 	}
 

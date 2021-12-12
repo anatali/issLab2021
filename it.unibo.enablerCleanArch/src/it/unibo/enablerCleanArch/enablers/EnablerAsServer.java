@@ -36,6 +36,7 @@ protected TcpServer serverTcp;
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 			serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
+			//handler è una risorsa coap che aggiungo a CoapApplServer
 			//Coap: attivo un SonarObserver che implementa getVal (NO: lo deve fare il Controller!)
 	  		//che riceve this (un ApplMessageHandler)  di cui chiama  elaborate( msg )
 			//new CoapInputObserver( name+"Server", port,  this );			 

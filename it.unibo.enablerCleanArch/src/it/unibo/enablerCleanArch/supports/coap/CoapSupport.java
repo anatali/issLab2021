@@ -11,23 +11,26 @@ import it.unibo.enablerCleanArch.supports.Colors;
 public class CoapSupport {
 private CoapClient client;
 private CoapObserveRelation relation = null;
+private String url;
 
 	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
-		String url = "coap://"+address + ":5683/"+ path;
+		url = "coap://"+address + ":5683/"+ path;
 		client = new CoapClient( url );
-		Colors.out("CoapSupport | STARTS client url=" +  url ); //+ " client=" + client );
+		Colors.out("CoapSupport | STARTS client url=" +  url  ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 
 	}
  	
 	public String readResource(   ) throws  Exception {
 		CoapResponse respGet = client.get( );
-		Colors.out("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
+		Colors.out("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode() );		
 		return respGet.getResponseText();
 	}
 
-	public String readResource( String path  ) throws  Exception {
-		CoapResponse respGet = client.get( );
-		Colors.out("CoapSupport | readResource with path RESPONSE CODE: " + respGet.getCode());
+	public String readResource( String query  ) throws  Exception {
+		CoapClient myclient = new CoapClient( url+"?q="+query );
+		CoapResponse respGet = myclient.get( );
+		Colors.out("CoapSupport | readResource query=" + query 
+				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText());
 		return respGet.getResponseText();
 	}
 
@@ -41,10 +44,8 @@ private CoapObserveRelation relation = null;
 	public void updateResource( String msg ) throws  Exception {
 		//Colors.out("	CoapSupport | updateResource msg: " + msg);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		Colors.out("CoapSupport | updateResource " + msg + " resp=" + resp.getCode(), Colors.ANSI_PURPLE );
+		Colors.out("CoapSupport | updateResource " + msg + " resp=" + resp.getCode()  );
 	}
-	
-	
 
 }
 /*

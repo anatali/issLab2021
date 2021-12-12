@@ -12,7 +12,7 @@ public class CoapSonarResourceMain   {
 	RadarSystemConfig.sonarDelay = 100;
 	
 	//Create sonar resource
-	Resource sonarRes = new CoapSonarResource("sonar") ;  //  
+	Resource sonarRes = new CoapSonarResource("sonar", DeviceType.input) ;  //  
 	
 	//CoapApplObserver obs = 	
 		new CoapApplObserver( "localhost", 

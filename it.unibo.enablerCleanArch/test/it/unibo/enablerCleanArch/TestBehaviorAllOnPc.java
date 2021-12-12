@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.*;
 import it.unibo.enablerCleanArch.domain.RadarDisplay;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemAllOnPc;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
@@ -26,6 +27,7 @@ private RadarSystemAllOnPc sys;
 			RadarSystemConfig.SonareRemote  	= false;    		
 			RadarSystemConfig.RadarGuieRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
+			RadarSystemConfig.protcolType       = ProtocolType.tcp;
 			sys.build();
 			//delay(5000);
 		} catch (Exception e) {

@@ -7,6 +7,8 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
 
+import it.unibo.enablerCleanArch.supports.Colors;
+
 public class CoapApplServer {
 	
 	private static CoapServer server = new CoapServer();
@@ -35,16 +37,18 @@ public class CoapApplServer {
 			String curUri   = curRes.getURI();
 			//System.out.println("CoapApplServer | getResource curUri:"+curUri);
 			if( curUri.equals(uri) ){
-				System.out.println("CoapApplServer | getResource finds "+ curRes + " for " + curUri);
+				Colors.out("CoapApplServer | getResource finds "+ curRes.getName() + " for " + curUri, Colors.ANSI_YELLOW);
 				return  curRes;
 			}
 		}
  		return null;
 	}
-	public static void addCoapResourceAtRoot( CoapResource resource   )   {
+	public static void addCoapResourceAtRoot( CoapResource resource   ){
+		Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
        	root.add( resource );
 	}
 	public static void addCoapResource( CoapResource resource, String fatherUri  )   {
+		Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
 		Resource res = getResource("/"+fatherUri);
 		if( res != null ) res.add( resource );
 	}
