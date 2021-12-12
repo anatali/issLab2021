@@ -1,12 +1,12 @@
 package it.unibo.enablerCleanArch.enablers.devices;
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.supports.ApplMsgHandlerCoap;
+import it.unibo.enablerCleanArch.supports.coap.CoapDeviceResource;
 import it.unibo.enablerCleanArch.supports.coap.DeviceType;
 
-public class LedApplHandlerCoap extends ApplMsgHandlerCoap {
+public class LedResourceCoap extends CoapDeviceResource {
 ILed led;
 
-	public LedApplHandlerCoap(String name) {
+	public LedResourceCoap(String name) {
 		super(name, DeviceType.output);
 		led = it.unibo.enablerCleanArch.domain.LedModel.createLedMock();
 	}
@@ -23,6 +23,4 @@ ILed led;
 		else if( req.equals("off") ) led.turnOff();		
 		//System.out.println( getName() + " |  after elaboratePut :" + led.getState()  );
 	}  
- 
-
 }

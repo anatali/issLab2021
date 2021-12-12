@@ -10,7 +10,7 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
  * per inviare comandi e/o risposte a un client
  */
  
-public class EnablerAsServer   {  //implements IApplMessageHandler 
+public class EnablerAsServer   {  
 private static int count=1;
 protected String name;
 protected ProtocolType protocol;
@@ -24,7 +24,6 @@ protected TcpServer serverTcp;
 				setServerSupport( port, protocol, handler  );
 				Colors.out(name+" |  STARTED  on port=" + port + " protocol=" + protocol);
 			}else Colors.out(name+" |  CREATED no protocol"  );
-			//created = true;
 		} catch (Exception e) {
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );
 		}
@@ -36,16 +35,11 @@ protected TcpServer serverTcp;
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 			serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
-			//handler è una risorsa coap che aggiungo a CoapApplServer
-			//Coap: attivo un SonarObserver che implementa getVal (NO: lo deve fare il Controller!)
-	  		//che riceve this (un ApplMessageHandler)  di cui chiama  elaborate( msg )
-			//new CoapInputObserver( name+"Server", port,  this );			 
+			//
 		}
 	}	
  	
-  		 
-	 
-	public String getName() {
+ 	public String getName() {
  		return name;
 	}
  	public void  activate() {

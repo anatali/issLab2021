@@ -22,7 +22,7 @@ private ProtocolType protocol = ProtocolType.tcp;	//could be overwritten
 	
 	protected ISonar simulateSonarRemote() {
 		//EnablerAsServer sonarServer  = 
-				new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, protocol, new SonarApplHandler("sonarH") );
+		new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, protocol, new SonarApplHandler("sonarH") );
 		ISonar sonarClient = 
 				new SonarEnablerAsClient("sonarClient", "localhost",RadarSystemConfig.sonarPort, protocol );
 		return sonarClient;

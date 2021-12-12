@@ -1,16 +1,15 @@
 package it.unibo.enablerCleanArch.enablers.devices;
 
- 
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.supports.ApplMsgHandlerCoap;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.coap.CoapDeviceResource;
 import it.unibo.enablerCleanArch.supports.coap.DeviceType;
 
-public class SonarApplHandlerCoap extends ApplMsgHandlerCoap  {
+public class SonarResourceCoap extends CoapDeviceResource  {
 ISonar sonar;
 private String curVal = "-1";
 
-		public SonarApplHandlerCoap(String name) {
+		public SonarResourceCoap(String name) {
 			super(name, DeviceType.input);
 			sonar = it.unibo.enablerCleanArch.domain.SonarModel.createSonarMock();
 			//getSonarValues();
