@@ -55,25 +55,25 @@ public class TestSonarObservableMock {
 		System.out.println("down");		
 	}	
 	
-	//@Test 
+	@Test 
 	public void testSingleshotSonarObservableMock() {
  		RadarSystemConfig.testing = true;
 		//RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
 //		int delta = 1;
 				
 		ISonarObservable sonar = DeviceFactory.createSonarObservable();
-		IObserver obs1 = new SonarObserverFortesting("obs1",true) ;
+		IObserver obs1         = new SonarObserverFortesting("obs1",true) ;
 		//sonar.register( obs1 );	//add an observer
 		sonar.activate();
 		sonar.register( obs1 );	//add an observer
 		sonar.register( new SonarObserverFortesting("obs2",true) );	//add an observer
 		
-		int v0 = sonar.getDistance();
+		int v0 = sonar.getDistance().getVal();
  		System.out.println("testSingleshotSonarObservableMock v0=" + v0);
  		assertTrue(  v0 == RadarSystemConfig.testingDistance );
 	}
 	
-	@Test 
+	//@Test 
 	public void testSonarObservableMock() {
 		RadarSystemConfig.testing    = false;
  		RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
@@ -86,10 +86,10 @@ public class TestSonarObservableMock {
 		sonar.register( obs1 );	//add an observer
 		sonar.register( obs2 );	//add an observer
 		
-		int v0 = sonar.getDistance();
+		int v0 = sonar.getDistance().getVal();
  		System.out.println("testSonarObservableMock v0=" + v0);
 		while( sonar.isActive() ) {
-			int d = sonar.getDistance();
+			int d = sonar.getDistance().getVal();
 	 		//System.out.println("sonar getVal=" + d);
 			int vexpected = v0-delta;
 			if( d == 50 ) sonar.unregister( obs2 );

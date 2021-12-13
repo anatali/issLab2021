@@ -1,11 +1,12 @@
 package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public class DeviceFactory {
 
 	public static ILed createLed() {
-		//System.out.println("DeviceFactory | createLed simulated="+RadarSystemConfig.simulation);
+		//Colors.out("DeviceFactory | createLed simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
 			return LedModel.createLedMock();
 		}else {
@@ -14,7 +15,7 @@ public class DeviceFactory {
 	}
 	
 	public static ISonar createSonar() {
-		//System.out.println("DeviceFactory | createSonar simulated="+RadarSystemConfig.simulation);
+		//Colors.out("DeviceFactory | createSonar simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
 			return SonarModel.createSonarMock();
 		}else { 
@@ -22,7 +23,7 @@ public class DeviceFactory {
 		}
 	}
 	public static ISonarObservable createSonarObservable() {
-		System.out.println("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
+		Colors.out("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
 			return new SonarObservableMock();
 		}else { 

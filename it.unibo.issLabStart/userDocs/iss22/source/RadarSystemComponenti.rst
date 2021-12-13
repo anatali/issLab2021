@@ -201,8 +201,8 @@ Il software fornito dal committente per l'uso di un Sonar reale ``HC-SR04`` intr
 logicamente un componente attivo, che produce in modo autonomo sul dispositivo standard di output,
 con una certa frequenza, una sequenza di valori interi di distanza.
 
-La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo passivo
-(come un dispositivo di output) in quanto occorre affrontare un classico problema produttore-consumatore.
+La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo di output
+in quanto occorre affrontare un classico problema produttore-consumatore.
 Al momento seguiremo un approccio tipico della programmazione concorrente, basato su memoria comune
 
 
@@ -216,21 +216,26 @@ Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods 
 
 .. code:: java
 
-  abstract class SonarModel implements ISonar{
-  protected  static int curVal = 0;     //valore corrente prodotto dal sonar
-  protected boolean stopped = false;    //quando true, il sonar si ferma
+  public abstract class SonarModel implements ISonar{
+   protected boolean stopped = false;    //quando true, il sonar si ferma
+   protected  IDistance curVal ;
 
     //Factory methods
     public static ISonar create() {
       if( RadarSystemConfig.simulation )  return createSonarMock(); 
       else  return createSonarConcrete();		
     }
+
+    protected SonarModel() {  //hidden costructor, to force setup
+      sonarSetUp();
+    }
+
     public static ISonar createSonarMock() { return new SonarMock(); }
     public static ISonar createSonarConcrete() { return new SonarConcrete(); }
 
 
-Il Sonar viene modellato come un processo produttore di dati sulla variabile locale ``curVal``.
-Il processo risulta attivo quando la variabile locale ``stopped`` è ``true``. 
+Il Sonar viene modellato come un processo produttore di dati che risulta attivo 
+quando la variabile locale ``stopped`` è ``true``. 
 Di qui le seguenti definizioni:
 
 .. code:: java
@@ -239,7 +244,6 @@ Di qui le seguenti definizioni:
     public void deactivate() { stopped = true; }
     @Override
     public boolean isActive() { return ! stopped; }
-
 
 Il codice realativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
 che dovrà essere definito in modo diverso da un ``SonarMock`` e un ``SonarConcrete``, così come il
@@ -252,14 +256,13 @@ metodo di inizializzazione ``sonarSetUp``:
     protected abstract void sonarProduce() ;
 
 
-Con queste premesse, il metodo ``activate`` può essere impostato in modo da inizializzare il Sonar
+Con queste premesse, il metodo ``activate`` deve inizializzare il Sonar
 e attivare un Thread interno di produzione di dati:
 
 .. code:: java
 
     @Override
     public void activate() {
-      sonarSetUp();
       stopped = false;
       new Thread() {
         public void run() {
@@ -269,7 +272,7 @@ e attivare un Thread interno di produzione di dati:
     }
 
 La parte applicativa che funge da consumatore dei dati prodotti dal Sonar dovrà invocare il metodo
-``getVal`` che viene definito in modo da bloccare il chiamante se il Sonar è in 'fase di produzione',
+``geDistance`` che viene definito in modo da bloccare il chiamante se il Sonar è in 'fase di produzione',
 riattivandolo non appena il dato è stato prodotto:  
 
 .. code:: java
@@ -277,7 +280,7 @@ riattivandolo non appena il dato è stato prodotto:
     protected boolean produced = false;   //synch var
 
     @Override
-    public int getVal() {   //non synchronized perchè violerebbe l'interfaccia
+    public IDistance getDistance() {   //non synchronized perchè violerebbe l'interfaccia
       waitForUpdatedVal();
       return curVal;
     }       
@@ -287,7 +290,7 @@ riattivandolo non appena il dato è stato prodotto:
     }
     synchronized void valueUpdated( ){
       produced = true;
-      notify();   //riattiva il Thread in attesa su getVal
+      notify();   //riattiva il Thread in attesa su getDistance
     }
   }
 
@@ -302,15 +305,15 @@ Un Mock-sonar che produce valori di distanza da ``90`` a ``0`` può quindi ora e
 
   public class SonarMock extends SonarModel implements ISonar{
     @Override
-    protected void sonarSetUp(){  curVal = 90;  }
+    protected void sonarSetUp(){  curVal = new Distance(90);  }
     @Override
     protected void sonarProduce() {
       if( RadarSystemConfig.testing ) {
-        curVal = RadarSystemConfig.testingDistance;
+        curVal.setVal( RadarSystemConfig.testingDistance );
         stopped = true;  //one shot
       }else {
-        curVal--;
-        stopped = ( curVal == 0 );
+        curVal.setVal( curVal.getVal() - 1 ) ;
+        stopped = ( curVal.getVal() == 0 );
     }
     valueUpdated(   ); 
     Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
@@ -321,7 +324,7 @@ Si noti che:
 - viene definito un nuovo parametro di configurazioe ``testing`` che, quando ``true`` denota che
   il sonar sta lavorando in una fase di testing, per cui produce un solo valore dato dal
   parametro ``testingDistance``;
-- viene definito un nuovo parametro di configurazioe ``sonarDelay`` relativo al rallentamento
+- viene definito un nuovo parametro di configurazine ``sonarDelay`` per un rallentamento
   della frequenza di generazione dei dati.
  
 .. code:: java
@@ -335,6 +338,18 @@ Si noti che:
   "sonarDelay"       : "100"
   }
 
+- viene definita una classe che implementa ``IDistance``.
+
+.. code:: java
+
+  public class Distance implements IDistance{
+  private int v;
+    public Distance(int d) { v=d;	}
+    @Override
+    public void setVal(int d) {	v = d;	}
+    @Override
+    public int getVal() { return v; }
+  }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il SonarConcrete
@@ -355,7 +370,7 @@ valori emessi sul dispositivo standard di output.
 	
   @Override
   protected void sonarSetUp() {
-    curVal = 0;		
+    curVal.setVal( 0 );		
     try {
       Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
       reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
@@ -366,7 +381,7 @@ valori emessi sul dispositivo standard di output.
       String data = reader.readLine();
       dataCounter++;
       if( dataCounter % numData == 0 ) { //every numData ...
-        curVal = Integer.parseInt(data);
+        curVal.setVal( Integer.parseInt(data) );
         valueUpdated( );    
       }
     }catch( Exception e) { ... }
@@ -378,7 +393,7 @@ valori emessi sul dispositivo standard di output.
 Testing del dispositivo Sonar
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il testig di un sonar riguarda due aspetti distinti:
+Il testing di un sonar riguarda due aspetti distinti:
 
 #. il test sul corretto funzionamento del dispositivo in quanto tale. Supponendo di porre
    di fronte al Sonar un ostacolo a distanza :math:`D`, il Sonar deve emettere dati di valore
@@ -406,9 +421,9 @@ Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in J
 
     ISonar sonar = DeviceFactory.createSonar();
     sonar.activate();
-    int v0 = sonar.getVal();    //first val consumed
+    int v0 = sonar.getDistance().getVal();   //first val consumed
     while( sonar.isActive() ) {
-      int d = sonar.getVal();   //blocking!
+      int d = sonar.getDistance().getVal();   //blocking!
       int vexpectedMin = v0-delta;
       int vexpectedMax = v0+delta;
       assertTrue(  d <= vexpectedMax && d >= vexpectedMin );
@@ -420,9 +435,9 @@ Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :ma
 di varianza sulla distanza-base.
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Il Sonar come dispositivo observable
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il Sonar come dispositivo osservabile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Volendo impostare il Sonar come un dispositivo osservabile, 
 introduciamo un nuovo contratto, che esetende il precedente:
@@ -442,47 +457,50 @@ Nel quadro di un programma ad oggetti convenzionale, un ``ISonarObservable``  è
 con la capacità di registrare osservatori e di invocare, ad ogni aggiornamento del valore
 di distanza, il metodo ``update`` di tutti gli osservatori registrati.
 
-Per aggiungere al Sonar le funzionalità di osservabilità,  possiamo avvalerci del :blue:`pattern decorator`.
-https://it.wikipedia.org/wiki/Decorator
-.. code:: java
+Per aggiungere al Sonar le funzionalità di osservabilità,  possiamo avvalerci del pattern decorator_
+trasformando oggetti di tipo ``SonarState`` in oggetti osservabili:
 
-public abstract class SonarObservableModel extends SonarModel implements ISonarObservable{
-...}
-
-Poichè in Java 
-
- 
-
-Per quanto riguarda il modello del Sonar, occorre aggiornare il metodo ``valueUpdated`` in modo 
-da notificare tutti gli observer registrati.
+.. _decorator: https://it.wikipedia.org/wiki/Decorator
 
 .. code:: java
 
-  public abstract class SonarObservableModel 
-           extends SonarModel implements ISonarObservable{
-    ...
+  public class DistanceObservable extends Observable implements IDistance{
+  private IDistance d;
+
+  public DistanceObservable( IDistance d ) { this.d=d; }
     @Override
-    protected synchronized void valueUpdated( ){
-      super.valueUpdated();
-      setChanged();  
-      notifyObservers(curVal);
+    public void setVal( int v ) {
+      d.setVal( v );  //change the decorated object
+      setChanged();  //IMPORTANT
+      notifyObservers( v );		
     }
-
-  //From ISonarObservable	
-  @Override
-  public void register( IObserver obs ) { addObserver( obs ); }
-  @Override
-  public void unregister( IObserver obs ) { deleteObserver( obs );  }    
+    @Override
+    public int getVal() { return d.getVal(); }
   }
 
-Il nuovo mock object relativo al Sonar sarà del tutto simile al precedente :ref:`SonarMock<SonarMock>`, 
-ma adesso come specializzazione di ``SonarObservableModel``.
+
+Il ``SonarObservableMock`` sarà una specializzazione del precedente :ref:`SonarMock<SonarMock>`, 
+che ridefinisce 
+il ``sonarSetUp`` creando un oggetto di tipo ``DistanceObservable``
+e che implementa i metodi di registrazione ridiregendoli allo stato osservabile.
 
 .. code:: java
 
-  public class SonarMockObservable extends SonarObservableModel { ... }
-
-.. Si veda :ref:`SonarMock<SonarMock>`
+  public class SonarObservableMock extends SonarMock implements ISonarObservable  {
+    @Override
+    protected void sonarSetUp() { 
+      super.sonarSetUp();
+      curVal = new DistanceObservable( myCurVal );  //wraps the original state
+    }
+    @Override
+    public void register(IObserver obs) {
+        ((DistanceObservable)curVal).addObserver(obs);		
+    }
+    @Override
+    public void unregister(IObserver obs) {
+      ((DistanceObservable)curVal).deleteObserver(obs);		
+    }
+  }
 
 
 
