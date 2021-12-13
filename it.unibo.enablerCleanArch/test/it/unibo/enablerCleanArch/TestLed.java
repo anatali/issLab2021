@@ -5,6 +5,7 @@ import org.junit.*;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 
 public class TestLed {
@@ -31,11 +32,15 @@ public class TestLed {
  		led.turnOn();
 		assertTrue(  led.getState() );
 		
+		Utils.delay(1000);		//to see the ledgui
+		
  		led.turnOff();
-		assertTrue(  ! led.getState() );		
+		assertTrue(  ! led.getState() );	
+		
+		Utils.delay(1000);		//to see the ledgui
 	}	
 	
-	@Test 
+	//@Test 
 	public void testLedConcrete() {
 		
 		System.out.println("testLedConcrete");
@@ -51,11 +56,5 @@ public class TestLed {
 		assertTrue(  ! led.getState() );		
 	}		
 	
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
-				e.printStackTrace();
-		}		
-	}
+ 
 }

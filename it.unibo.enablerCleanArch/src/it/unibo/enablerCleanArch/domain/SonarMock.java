@@ -2,27 +2,36 @@ package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMock extends SonarModel implements ISonar{
+	protected  ISonarState curVal ;
   
 	@Override
 	protected void sonarSetUp() {
-		curVal = 90;		
-		System.out.println("SonarMock | sonarSetUp curVal="+curVal);
+		curVal = new SonarState(90);		
+		Colors.out("SonarMock | sonarSetUp curVal="+curVal);
 	}
 	
 	@Override
+	public int getVal() {
+		//Colors.out("SonarMock | getVal curVal="+curVal, Colors.ANSI_PURPLE);
+		waitForUpdatedVal();
+		return curVal.getVal();
+	}
+
+	@Override
 	protected void sonarProduce() {
 		if( RadarSystemConfig.testing ) {
-			curVal = RadarSystemConfig.testingDistance;
+			curVal.setVal(  RadarSystemConfig.testingDistance );
 			stopped = true;  //one shot
 		}else {
-			curVal--;
+			curVal.setVal( curVal.getVal() - 1 );
 			//Colors.out("SonarMock | sonarProduce curVal="+curVal, Colors.ANSI_PURPLE);
-			stopped = ( curVal == 0 );
+			stopped = ( curVal.getVal() == 0 );
 		}
 		valueUpdated(   ); 
-		delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
+		Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
  	}
  
 }

@@ -1,5 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public abstract class LedModel implements ILed{
 	private boolean state = false;	
@@ -13,7 +14,8 @@ public abstract class LedModel implements ILed{
 	}
 	
 	public static ILed createLedMock() {
-		return new LedMock();
+		//return new LedMock();
+		return LedMockWithGui.createLed();
 	}
 	public static ILed createLedConcrete() {
 		return new LedConcrete();
@@ -23,7 +25,7 @@ public abstract class LedModel implements ILed{
 	
 	protected void setState( boolean val ) {
 		state = val;
-		ledActivate( val );
+		ledActivate( state );
 	}
 		
 	@Override

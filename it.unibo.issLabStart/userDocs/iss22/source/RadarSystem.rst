@@ -292,7 +292,7 @@ Focalizzando l'attenzione sul requisito :blue:`RadarGui` e quindi sulla interazi
       -   .. image:: ./_static/img/Radar/srrIntegrate2.png
             :width: 100%
           
-          TODO: Modificare la figura
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Chi realizza la logica applicativa?

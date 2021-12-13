@@ -14,7 +14,7 @@ Per agevolare la messa a punto di una applicazione, conviene spesso introdurre M
 dispositivi simulati che riproducono il comportamento dei dispositivi reali in modo controllato.
 
 Inoltre, per facilitare la costruzione di dispositivi senza dover denotare in modo esplicito le classi
-di implementazione, conviene introdurre una Factory:
+di implementazione, conviene introdurre una **Factory**:
 
 .. code:: java
 
@@ -58,7 +58,7 @@ che inizializza variabili ``static`` accessibili all'applicazione:
 
 Per essere certi che un dispositivo Mock possa essere un sostituto efficace di un dispositivo reale,
 introduciamo per ogni dispositivo una **classe astratta** comune alle due tipologie, 
-che funga anche da factory.
+che funga anche da Factory.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Led
@@ -92,7 +92,8 @@ cui è demandata la responsabilità di accendere/spegnare il Led.
     protected abstract void ledActivate( boolean val);
     
     protected void setState( boolean val ) { 
-      state = val; ledActivate( val ); 
+      state = val; 
+      ledActivate( state ); 
     }
     @Override
     public void turnOn(){ setState( true ); }
@@ -108,12 +109,13 @@ La variabile locale booleana ``state`` viene posta a ``true`` quando il Led è a
 Il LedMock
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-In pratica il LedModel è già un LedMock, in quanto tiene traccia dello stato corrente nella variabile
+In pratica il ``LedModel`` è già un ``LedMock``, in quanto tiene traccia dello stato corrente nella variabile
 ``state``. 
 
-Tuttavia può essere opportuno ridefinire ``ledActivate`` in modo da rendere visibile 
-sullo standard output lo stato del Led . 
-
+Poichè il metodo ``ledActivate`` ha la responsabilità di definire il codice specifico per
+accedendere/spegenre il Led, a livello di Mock possiamo rendere visibile lo stato del Led
+sullo standard output. 
+ 
 
 .. code:: java
 
@@ -173,13 +175,15 @@ Un test automatizzato di tipo unit-testing sul Led può essere espresso usando J
       
       led.turnOn();
       assertTrue(  led.getState() );
-      
+      Utils.delay(1000);		//to see the ledgui
+
       led.turnOff();
-      assertTrue(  ! led.getState() );		
+      assertTrue(  ! led.getState() );	
+      Utils.delay(1000);		//to see the ledgui	
     }	
   }
 
-Un test sul LedConcrete ha la stessa struttura del test sul LedMock, ma bisogna avere l'avvertenza
+Un test sul ``LedConcrete`` ha la stessa struttura del test sul ``LedMock``, ma bisogna avere l'avvertenza
 di eseguirlo sul RaspberryPi. Eseguendo il test sul PC non vengono segnalati errori (in quanto
 il Led 'funziona' da un punto di vista logico) ma compaiono messaggi del tipo:
 
@@ -199,7 +203,7 @@ logicamente un componente attivo, che produce in modo autonomo sul dispositivo s
 con una certa frequenza, una sequenza di valori interi di distanza.
 
 La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo passivo
-(come un dispositivo di output) in quanto occorre affrontare un tipico problema produttore-consumatore.
+(come un dispositivo di output) in quanto occorre affrontare un classico problema produttore-consumatore.
 Al momento seguiremo un approccio tipico della programmazione concorrente, basato su memoria comune
 
 
@@ -211,7 +215,6 @@ La classe astratta relativa al Sonar introduce due metodi :blue:`abstract`,  uno
 (metodo ``sonarSetUp``) e uno per specificare il modo di produzione dei dati (metodo ``sonarProduce``).
 Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods per un sonar Mock e un sonar reale.
 
-      
 .. code:: java
 
   abstract class SonarModel implements ISonar{
@@ -283,7 +286,7 @@ riattivandolo non appena il dato è stato prodotto:
       while( ! produced ) wait();
       produced = false;
     }
-    protected synchronized void setVal( ){
+    synchronized void valueUpdated( ){
       produced = true;
       notify();   //riattiva il Thread in attesa su getVal
     }
@@ -309,20 +312,19 @@ Un Mock-sonar che produce valori di distanza da ``90`` a ``0`` può quindi ora e
       }else {
         curVal--;
         stopped = ( curVal == 0 );
-        setVal(   );    //produce
-        delay(RadarSystemConfig.sonarDelay);  //rallenta il rate di generazione 
     }
+    valueUpdated(   ); 
+    Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
   }  
 
 Si noti che: 
 
 - viene definito un nuovo parametro di configurazioe ``testing`` che, quando ``true`` denota che
-  il sonar sta lavorando in una fase di testing, per cui produce un solo valore dato fal
+  il sonar sta lavorando in una fase di testing, per cui produce un solo valore dato dal
   parametro ``testingDistance``;
 - viene definito un nuovo parametro di configurazioe ``sonarDelay`` relativo al rallentamento
   della frequenza di generazione dei dati.
  
-
 .. code:: java
 
   {
@@ -335,19 +337,15 @@ Si noti che:
   }
 
 
- 
-
-
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il SonarConcrete
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Il componente che realizza la gestione di un Sonar concreto, conesso a un RaspberryPi,
-si può avvalere del programma ``SonarAlone.c`` fornito dal committente;
-per ridurre la frequenza di produzione, il metodo ereditato ``setVal``, che sblocca un
+si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
+Per ridurre la frequenza di produzione, il metodo ereditato ``valueUpdated``, che sblocca un
 consumatore di livello  applicativo, viene invocato ogni  ``numData`` 
 valori emessi sul dispositivo standard di output.
-
 
 .. code:: java
 
@@ -370,9 +368,9 @@ valori emessi sul dispositivo standard di output.
       dataCounter++;
       if( dataCounter % numData == 0 ) { //every numData ...
         curVal = Integer.parseInt(data);
-        setVal( );    
+        valueUpdated( );    
       }
-    }catch( Exception e) { ...       }
+    }catch( Exception e) { ... }
   }
   }
 
@@ -405,15 +403,16 @@ Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in J
   public void testSonarMock() {
     RadarSystemConfig.simulation = true;
     RadarSystemConfig.sonarDelay = 10; //quite fast generation...
-		int delta = 1;
+    int delta = 1;
 
     ISonar sonar = DeviceFactory.createSonar();
     sonar.activate();
     int v0 = sonar.getVal();    //first val consumed
     while( sonar.isActive() ) {
       int d = sonar.getVal();   //blocking!
-      int vexpected = v0-delta; //each val is the previous-delta
-      assertTrue( d == vexpected );
+      int vexpectedMin = v0-delta;
+      int vexpectedMax = v0+delta;
+      assertTrue(  d <= vexpectedMax && d >= vexpectedMin );
       v0 = d; 
     }
   }
@@ -440,16 +439,28 @@ introduciamo un nuovo contratto, che esetende il precedente:
     public void update( int value );
   }
 
-Nel quadro di un programma ad
-oggetti convenzionale, possiamo avvalerci del :blue:`pattern decorator`  per aggiungere al Sonar
-le funzionalità di osservabilità.
+Nel quadro di un programma ad oggetti convenzionale, un ``ISonarObservable``  è un ``ISonar`` 
+con la capacità di registrare osservatori e di invocare, ad ogni aggiornamento del valore
+di distanza, il metodo ``update`` di tutti gli osservatori registrati.
+
+Per aggiungere al Sonar le funzionalità di osservabilità,  possiamo avvalerci del :blue:`pattern decorator`.
+https://it.wikipedia.org/wiki/Decorator
+.. code:: java
+
+public abstract class SonarObservableModel extends SonarModel implements ISonarObservable{
+...}
+
+Poichè in Java 
+
+ 
 
 Per quanto riguarda il modello del Sonar, occorre aggiornare il metodo ``valueUpdated`` in modo 
 da notificare tutti gli observer registrati.
 
 .. code:: java
 
-  public abstract class SonarObservableModel extends SonarModel implements ISonarObservable{
+  public abstract class SonarObservableModel 
+           extends SonarModel implements ISonarObservable{
     ...
     @Override
     protected synchronized void valueUpdated( ){
@@ -470,9 +481,11 @@ ma adesso come specializzazione di ``SonarObservableModel``.
 
 .. code:: java
 
-  public class SonarMockObservable extends SonarObservableModel {   ...  }
+  public class SonarMockObservable extends SonarObservableModel { ... }
 
 .. Si veda :ref:`SonarMock<SonarMock>`
+
+
 
 .. _controller: 
 

@@ -24,7 +24,7 @@ public class DeviceFactory {
 	public static ISonarObservable createSonarObservable() {
 		System.out.println("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
-			return SonarObservableModel.createSonarObservableMock();
+			return new SonarObservableMock();
 		}else { 
 			return null;
 		}

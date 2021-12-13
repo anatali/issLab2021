@@ -1,3 +1,11 @@
+.. _proxy-pattern: https://it.wikipedia.org/wiki/Proxy_pattern
+
+.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
+
+.. _clean-architecture:  https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+
+.. _microservizio: https://en.wikipedia.org/wiki/Microservices
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Prodotti della analisi
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -68,11 +76,7 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 :remark:`il modello del dominio sarà al centro della architettura del sistema`
 
 
-.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
-
-.. _clean-architecture:  https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-
-.. _microservizio: https://en.wikipedia.org/wiki/Microservices
+:remark:`il software relativo dominio sarà scritto in un package dedicato`
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Le interfacce ILed, ISonar e IRadarDisplay
@@ -191,25 +195,30 @@ trasmettere informazione.
 
 Ad esempio, il ``Controller`` su PC potrebbe utilizzare un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
 dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getVal``.
-Inoltre utilizzerà un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
+Inoltre  potrebbe utilizzare un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
 sul Raspberry.
 
 Tuttavia, per limitare il traffico di rete, è inutile inviare i dati del sonar anche quando non
-sono richiesti dal sever, per cui, come analisti, riteniamo opportuno sul PC venga definito, ad uso
-del  ``Controller`` due TCP-client, uno per il Led e uno per il Sonar che invieranno a due
-TCP-server complementari sul RaspberryPi 
+sono richiesti dal sever, per cui, come analisti, riteniamo opportuno che sul PC vengano definiti, ad uso
+del  ``Controller``, due enabler *tipo-client*, uno per il Led e uno per il Sonar che interagiranno cone due
+enabler *tipo-server* complementari posti sul RaspberryPi, inviando:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
 - messaggi interpretabili cone :blue:`richieste` (ad esempio ``getVal``, ``getState``)
 
- TODO: nuova figura
+.. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
+   :align: center
+   :width: 50%
+ 
+Notiamo che gli *enabler tipo-client* sono anche una forma di proxy-pattern_.
+
+
 
 L'idea di :blue:`enabler` sembra dunque promettente come strumento per un passaggio graduale
 e sistematico dalla programmazione tradizionale ad oggetti alla programmazione distribuita.
-
-Sono i primi passi relativi a un 
+Siamo di fornte ai primi passi relativi a un 
  
-:remark:`nuovo paradigma di programmazione`
+:remark:`nuovo paradigma di programmazione per sistemi distribuiti`
 
 che troverà più avanti un suo pieno sviluppo con i concetti di :blue:`attore` e di microservizio_.
 
@@ -225,9 +234,9 @@ Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito
 #. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
 #. definizione di alcuni supporti TCP per componenti lato client a lato server, con l'obiettivo di
    formare un insieme riusabile anche in applicazioni future; 
-#. definizione componenti (denominati genericamente :blue:`enabler`)  capaci di abilitare  
-   alle comunicazioni TCP i componenti-base;
-#. assemblaggio dei componenti `enabler` per formare il sistema distribuito.
+#. definizione di componenti  :blue:`enabler`  capaci di abilitare  
+   alle comunicazioni TCP (o mediante altri tipi di protocollo) i componenti-base;
+#. assemblaggio dei componenti  per formare il sistema distribuito.
 
 Il punto 2 relativo ai supporti non è indispensabile, ma, come detto, può costituire un elemento strategico 
 a livello aziendale.
@@ -238,4 +247,6 @@ a livello aziendale.
 
 ..  Ad esempio, il software capace di accendere un Led fornito dal committente è un file bash che
     un opportuno :blue:`enabler` può porre in esecuzione ricevendo un comando dal ``Controller``.
- 
+
+
+.. ----> RadarSystemComponenti

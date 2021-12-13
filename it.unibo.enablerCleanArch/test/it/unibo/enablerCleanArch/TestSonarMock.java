@@ -26,15 +26,15 @@ public class TestSonarMock {
 		sonar.activate();
 		
 		int v0 = sonar.getVal();
- 		System.out.println("sonar v0=" + v0);
+ 		System.out.println("sonar initial value=" + v0);
 		while( sonar.isActive() ) {
 			int d = sonar.getVal();
 	 		//System.out.println("sonar getVal=" + d);
-			int vexpected = v0-delta;
-			assertTrue(  d == vexpected );
+			int vexpectedMin = v0-delta;
+			int vexpectedMax = v0+delta;
+			assertTrue(  d <= vexpectedMax && d >= vexpectedMin );
 			v0 = d;
-		}
-		
+		}		
 	}
 	
  

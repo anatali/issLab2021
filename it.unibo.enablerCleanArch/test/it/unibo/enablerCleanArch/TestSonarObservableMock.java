@@ -20,7 +20,7 @@ class SonarObserverFortesting implements IObserver{
 	}
 	@Override
 	public void update(Observable source, Object data) {
-		 //Colors.out( name + " | data=" + data ); //+ " from " + source	
+		 Colors.out( name + " | data=" + data ); //+ " from " + source	
 		 int v = Integer.parseInt(data.toString());
 		 update( v );
 	}
@@ -55,16 +55,18 @@ public class TestSonarObservableMock {
 		System.out.println("down");		
 	}	
 	
-	@Test 
+	//@Test 
 	public void testSingleshotSonarObservableMock() {
  		RadarSystemConfig.testing = true;
 		//RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
-		int delta = 1;
+//		int delta = 1;
 				
 		ISonarObservable sonar = DeviceFactory.createSonarObservable();
-		sonar.register( new SonarObserverFortesting("obs1",true) );	//add an observer
-		sonar.register( new SonarObserverFortesting("obs2",true) );	//add an observer
+		IObserver obs1 = new SonarObserverFortesting("obs1",true) ;
+		//sonar.register( obs1 );	//add an observer
 		sonar.activate();
+		sonar.register( obs1 );	//add an observer
+		sonar.register( new SonarObserverFortesting("obs2",true) );	//add an observer
 		
 		int v0 = sonar.getVal();
  		System.out.println("testSingleshotSonarObservableMock v0=" + v0);
@@ -78,11 +80,11 @@ public class TestSonarObservableMock {
 		int delta = 1;
 				
 		ISonarObservable sonar = DeviceFactory.createSonarObservable();
+		sonar.activate();
 		IObserver obs1          = new SonarObserverFortesting("obs1",false);
 		IObserver obs2          = new SonarObserverFortesting("obs2",false);
 		sonar.register( obs1 );	//add an observer
 		sonar.register( obs2 );	//add an observer
-		sonar.activate();
 		
 		int v0 = sonar.getVal();
  		System.out.println("testSonarObservableMock v0=" + v0);
