@@ -32,7 +32,7 @@ private int curVal       = -1;
 	}
 	
 	@Override  //from ISonar - called by the Controller
-	public int getVal() {  
+	public int getDistance() {  
 		waitForUpdatedVal();
  		int v  = curVal;
  		curVal = -1;

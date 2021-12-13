@@ -18,7 +18,7 @@ ISonar sonar;
 			public void elaborate(String message, Interaction2021 conn) {
  				//Colors.out(name+ " | elaborate " + message, Colors.ANSI_YELLOW);
  				if( message.equals("getVal")) {
- 					String vs = ""+sonar.getVal();
+ 					String vs = ""+sonar.getDistance();
  					this.sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
  					sonar.activate();

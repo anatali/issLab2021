@@ -25,10 +25,10 @@ public class TestSonarMock {
 		ISonar sonar = DeviceFactory.createSonar();
 		sonar.activate();
 		
-		int v0 = sonar.getVal();
+		int v0 = sonar.getDistance().getVal();
  		System.out.println("sonar initial value=" + v0);
 		while( sonar.isActive() ) {
-			int d = sonar.getVal();
+			int d = sonar.getDistance().getVal();
 	 		//System.out.println("sonar getVal=" + d);
 			int vexpectedMin = v0-delta;
 			int vexpectedMax = v0+delta;

@@ -22,7 +22,7 @@ public class SonarEnablerAsClient extends EnablerAsClient implements ISonar{
 	}
 
 	@Override
-	public int getVal() {
+	public int getDistance() {
 		Colors.out( name + " | getVal ", Colors.ANSI_PURPLE);
 		String answer = sendRequestOnConnection("getVal");
 		return Integer.parseInt(answer);

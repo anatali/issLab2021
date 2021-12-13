@@ -115,12 +115,12 @@ Domande al committente
   * - Il committente fornisce qualche libreria per la costruzione del RadarDisplay ?
     - Si, viene reso disponibile (progetto *it.unibo.java.radar*)  il supporto  ``radarPojo.jar`` 
       che fornisce un singleton JAVA ``radarSupport`` capace di creare una GUI in 'stile radar' 
-      e di visualizzare dati su di essa:
+      e di visualizzare su di essa un valore di distanza intero fornito come ``String``:
 
       .. code:: java
 
         public class radarSupport {
-        private static RadarControl rc;
+        private static RadarControl rc;  
         public static void setUpRadarGui( ){
           rc=...
         }

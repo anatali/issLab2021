@@ -30,7 +30,7 @@ public class SonarEnablerAsClientMain  {
 		
 		System.out.println("Controller-simulated doing getVal ..." );
 		for( int i=1; i<=5; i++) {
-			int v = sonarEnablerAsClient.getVal();
+			int v = sonarEnablerAsClient.getDistance();
 			Thread.sleep(100);
 			System.out.println("Controller-simulated getVal="+v);
 		}

@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
-public class SonarState implements ISonarState{
+public class SonarState implements IDistance{
 private int v;
 
 	public SonarState(int d) {

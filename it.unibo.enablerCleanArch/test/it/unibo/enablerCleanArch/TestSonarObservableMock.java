@@ -68,7 +68,7 @@ public class TestSonarObservableMock {
 		sonar.register( obs1 );	//add an observer
 		sonar.register( new SonarObserverFortesting("obs2",true) );	//add an observer
 		
-		int v0 = sonar.getVal();
+		int v0 = sonar.getDistance();
  		System.out.println("testSingleshotSonarObservableMock v0=" + v0);
  		assertTrue(  v0 == RadarSystemConfig.testingDistance );
 	}
@@ -86,10 +86,10 @@ public class TestSonarObservableMock {
 		sonar.register( obs1 );	//add an observer
 		sonar.register( obs2 );	//add an observer
 		
-		int v0 = sonar.getVal();
+		int v0 = sonar.getDistance();
  		System.out.println("testSonarObservableMock v0=" + v0);
 		while( sonar.isActive() ) {
-			int d = sonar.getVal();
+			int d = sonar.getDistance();
 	 		//System.out.println("sonar getVal=" + d);
 			int vexpected = v0-delta;
 			if( d == 50 ) sonar.unregister( obs2 );

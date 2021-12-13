@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMock extends SonarModel implements ISonar{
-	protected  ISonarState curVal ;
+	protected  IDistance curVal ;
   
 	@Override
 	protected void sonarSetUp() {
@@ -14,10 +14,10 @@ public class SonarMock extends SonarModel implements ISonar{
 	}
 	
 	@Override
-	public int getVal() {
+	public IDistance getDistance() {
 		//Colors.out("SonarMock | getVal curVal="+curVal, Colors.ANSI_PURPLE);
 		waitForUpdatedVal();
-		return curVal.getVal();
+		return curVal;
 	}
 
 	@Override

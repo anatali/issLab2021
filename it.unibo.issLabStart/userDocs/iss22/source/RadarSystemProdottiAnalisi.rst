@@ -12,9 +12,9 @@ Prodotti della analisi
 
 Importanti prodotti, al termine della fase di analisi dei requisiti e del problema sono:
 
--  la definizione di una :blue:`architettura logica` di riferimento che tiene conto dei vincoli posti 
-   dai requisiti e dal problema che ne consegue;
--  la proposta di un :blue:`piano di lavoro` per lo sviluppo del sistema.
+- la definizione di una :blue:`architettura logica` di riferimento che tiene conto dei vincoli posti 
+  dai requisiti e dal problema che ne consegue;
+- la proposta di un :blue:`piano di lavoro` per lo sviluppo del sistema.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +43,7 @@ Un modo per *valutare la qualità* di una architettura logica e la *coerenza con
   o vi sono ragioni reali per non includere questi elementi?
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Architettura logica ad oggetti
+Architettura ad oggetti
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Se astraiamo dalla distribuzione (supponendo ad esempio che tutto il sistema possa
@@ -67,7 +67,7 @@ come aspetto essenziale le funzionalità che esso deve offrire e una sorta di :b
 sull’uso del componente.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Modello del dominio
+Modello ad oggetti del dominio
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 I modelli iniziali dei componenti descritti da interfacce Java per il *Led,
 il Sonar e il RadarDisplay* costuiscono il nostro :blue:`modello del dominio`. 
@@ -75,45 +75,75 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 
 :remark:`il modello del dominio sarà al centro della architettura del sistema`
 
-
 :remark:`il software relativo dominio sarà scritto in un package dedicato`
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Le interfacce ILed, ISonar e IRadarDisplay
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Le interfacce ILed e IRadarDisplay
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 .. list-table::
-  :widths: 32, 32, 36
+  :widths: 50, 50
   :width: 100%
 
-  * -  Sonar
-    -  Led
+  * -  Led
     -  RadarDisplay
   * -        
       .. code:: java
 
-       interface ISonar {
-         void activate();		 
-         void deactivate();
-         int getVal();	
-         boolean isActive();
-       }
-    -        
-      .. code:: java
-
-        interface ILed {
-          void turnOn();
-          void turnOff();
-          boolean getState();
+        public interface ILed {
+          public void turnOn();
+          public void turnOff();
+          public boolean getState();
         }
     -        
       .. code:: java     
 
-        interface IRadarDisplay{
-          void update(
-           String d, String a);
+        public interface IRadarDisplay{
+          public void update(String d, String a);
         }  
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Le interfacce IDistance e ISonar
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+.. list-table::
+  :widths: 50, 50 
+  :width: 100%
+
+  * -  Sonar State
+    -  Sonar
+
+  * -        
+      .. code:: java
+
+       public interface IDistance {
+        public void setVal( int d );
+        public int getVal(   );
+       }
+    -        
+      .. code:: java
+
+       public interface ISonar {
+         public void activate();		 
+         public void deactivate();
+         public ISonarDistance getDistance();	
+         public boolean isActive();
+       }
+
+In quanto generatore di dati, ``ISonar`` offre metodi per attivare/disattaivare il dispositivo e il
+metodo ``getVal`` per fornire il valore corrente di distanza misurata. 
+
+La interfaccia ``ISonarDistance`` è introdotta per reppresentare il concetto di distanza, in modo
+da non ridurre quato concetto a un tipo predefinito, come ``int``.
+
+Notiamo che, invece, per il Led abbiamo 'ridotto' il concetto di stato del Led al 
+tipo predefinito  ``boolean``. Questa diverso modo di procedere avrà conseguenze, che verranno
+poste meglio in luce in seguito.
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Architettura logica del sistema
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
 
@@ -142,10 +172,10 @@ A questo punto possiamo anche esprimere il funzionamento del ``Controller`` come
   IRadarDisplay radar;
   ...
   while( sonar.isactive() ){
-    int v = sonar.getVal(); //Acquisizione di un dato dal sonar
-    if( v < DLIMIT )        //Elaborazione del dato
+    IDistance d = sonar.getDistance(); //Acquisizione di un dato dal sonar
+    if( d.getVal()) < DLIMIT )        //Elaborazione del dato
       Led.turnOn() else Led.turnOff  //Gestione del Led
-    radar.update( v, "90")    //Visualizzazione su RadarDisplay
+    radar.update( ""+d.getVal(), "90")    //Visualizzazione su RadarDisplay
   }
 
 .. Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
@@ -185,18 +215,18 @@ implememtare i componenti in modo che possano scambiare informazione via rete.
 A questo fine possiamo introdurre, come analisti, l'idea di un nuovo tipo di ente,
 denominato :blue:`enabler`, che ha come scopo quello di incapsulare software 'convenzionale' utile e 
 testato ma non adatto alla distribuzione (che possiamo denominare :blue:`core-code`) 
-all'interno di un involucro che funga da una sorta di  'membrana' capace di ricevere e 
-trasmettere informazione.
+all'interno di un involucro capace di ricevere e trasmettere informazione.
+
+Ad esempio, il ``Controller`` su PC potrebbe utilizzare un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
+dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getDistance``.
+Inoltre  potrebbe utilizzare un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
+sul Raspberry.
+
 
 .. image:: ./_static/img/Radar/ArchLogicaOOPEnablers.PNG 
    :align: center
    :width: 50%
 
-
-Ad esempio, il ``Controller`` su PC potrebbe utilizzare un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
-dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getVal``.
-Inoltre  potrebbe utilizzare un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
-sul Raspberry.
 
 Tuttavia, per limitare il traffico di rete, è inutile inviare i dati del sonar anche quando non
 sono richiesti dal sever, per cui, come analisti, riteniamo opportuno che sul PC vengano definiti, ad uso
@@ -210,7 +240,7 @@ enabler *tipo-server* complementari posti sul RaspberryPi, inviando:
    :align: center
    :width: 50%
  
-Notiamo che gli *enabler tipo-client* sono anche una forma di proxy-pattern_.
+Notiamo che gli *enabler tipo-client* sono  una forma di proxy-pattern_.
 
 
 

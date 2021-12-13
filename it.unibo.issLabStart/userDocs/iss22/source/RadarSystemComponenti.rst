@@ -48,9 +48,8 @@ che inizializza variabili ``static`` accessibili all'applicazione:
     public static void setTheConfiguration( String resourceName ) { 
       ... 
       fis = new FileInputStream(new File(resourceName));
-	    JSONTokener tokener = new JSONTokener(fis);
-	    JSONObject object   = new JSONObject(tokener);
-
+      JSONTokener tokener = new JSONTokener(fis);
+      JSONObject object   = new JSONObject(tokener);
       simulation = object.getBoolean("simulation");
       ...
     }

@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
-public interface ISonarState {
+public interface IDistance {
 	public void setVal( int d );
 	public int getVal(   );
 }

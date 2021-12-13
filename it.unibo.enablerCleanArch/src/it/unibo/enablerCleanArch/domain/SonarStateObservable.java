@@ -4,7 +4,7 @@ import java.util.Observable;
 
 import it.unibo.enablerCleanArch.supports.Colors;
 
-public class SonarStateObservable extends Observable implements ISonarState{
+public class SonarStateObservable extends Observable implements IDistance{
 private int v;
 
 	public SonarStateObservable(int d) {

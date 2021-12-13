@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import it.unibo.enablerCleanArch.supports.Colors;
 
 public class SonarConcrete extends SonarModel implements ISonar{
-	protected  ISonarState curVal ;
+	protected  IDistance curVal ;
 	private int numData           = 5; 
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;
@@ -21,8 +21,8 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	}
 	
 	@Override
-	public int getVal() {
- 		return curVal.getVal();
+	public IDistance getDistance() {
+ 		return curVal ;
 	}
 	
 	protected void sonarProduce() {
