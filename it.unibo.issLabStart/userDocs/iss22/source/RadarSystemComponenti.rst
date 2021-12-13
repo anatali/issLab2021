@@ -522,7 +522,7 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
         public void run() { 
           try {
             while( sonar.isActive() ) {
-              int d = sonar.getVal();  
+              IDistance d = sonar.getDistance().getVal();  
               LedAlarmUsecase.doUseCase( led,  d  );   
               RadarGuiUsecase.doUseCase( radar,d  );	 
             }
@@ -538,9 +538,9 @@ LedAlarmUsecase
 .. code:: java
 
   public class LedAlarmUsecase {
-    public static void doUseCase(ILed led, int d) {
+    public static void doUseCase(ILed led, IDistance d) {
       try {
-        if( d <  RadarSystemConfig.DLIMIT ) led.turnOn(); else  led.turnOff();
+        if( d.getVal() <  RadarSystemConfig.DLIMIT ) led.turnOn(); else  led.turnOff();
       } catch (Exception e) { ... }					
     }
   } 
@@ -551,8 +551,8 @@ RadarGuiUsecase
 .. code:: java
 
   public class RadarGuiUsecase {
-    public static void doUseCase( IRadarDisplay radar, int d ) {
-      radar.update(""+d, "90");
+    public static void doUseCase( IRadarDisplay radar, IDistance d ) {
+      radar.update(""+d.getVal(), "90");
     }	 
   }
 
