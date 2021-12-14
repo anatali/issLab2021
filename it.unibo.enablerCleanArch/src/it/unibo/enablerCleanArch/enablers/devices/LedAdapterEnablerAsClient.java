@@ -12,7 +12,7 @@ public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
 
 	public LedAdapterEnablerAsClient( String name, String host, int port, ProtocolType protocol  ) {
 		super(name,host,port, protocol);
-		System.out.println(name+" |  STARTS for " + host +":"+port);
+		Colors.out(name+" |  STARTS for " + host +":"+port);
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
  		try {
  			sendCommandOnConnection( "on" );
 		} catch (Exception e) {
-			System.out.println(name+" |  turnOn ERROR " + e.getMessage() );
+			Colors.outerr(name+" |  turnOn ERROR " + e.getMessage() );
 		}
  	}
 
@@ -29,7 +29,7 @@ public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
  		try {
  			sendCommandOnConnection( "off" );
 		} catch (Exception e) {
-			System.out.println(name+" |  turnOff ERROR " + e.getMessage() );
+			Colors.outerr(name+" |  turnOff ERROR " + e.getMessage() );
 		}
  	}
 
@@ -39,6 +39,4 @@ public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
 		//Colors.out(name+" |  getState answer " + answer );
 		return answer.equals("true");
 	}
- 
-	
 }

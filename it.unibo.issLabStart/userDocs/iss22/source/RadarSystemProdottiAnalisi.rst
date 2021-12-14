@@ -1,4 +1,4 @@
-.. _proxy-pattern: https://it.wikipedia.org/wiki/Proxy_pattern
+.. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
 
 .. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
 
@@ -212,15 +212,21 @@ Il fatto di avere espresso il ``Controller`` con riferimento a interfacce e non 
 significa che il progettista si può avvalere di appropriati :blue:`design pattern` per 
 implememtare i componenti in modo che possano scambiare informazione via rete.
 
-A questo fine possiamo introdurre, come analisti, l'idea di un nuovo tipo di ente,
-denominato :blue:`enabler`, che ha come scopo quello di incapsulare software 'convenzionale' utile e 
-testato ma non adatto alla distribuzione (che possiamo denominare :blue:`core-code`) 
+Traendo ispirazione dal  pattern-proxy_, possiamo evidenziare, come analisti, la necessità
+di introdurre un nuovo tipo di ente, che denominiamo :blue:`enabler`, 
+che ha come scopo quello di incapsulare software 'convenzionale' utile e 
+testato ma non adatto alla distribuzione (che denominiamo :blue:`core-code`) 
 all'interno di un involucro capace di ricevere e trasmettere informazione.
 
-Ad esempio, il ``Controller`` su PC potrebbe utilizzare un TCP-server con interfaccia ``ISonar`` che riceverà i dati 
-dal Sonar posto sul Raspberry, rendendoli disponibili con il metodo ``getDistance``.
-Inoltre  potrebbe utilizzare un TCP-client con interfaccia ``ILed`` che trasmetterà i comandi al Led 
-sul Raspberry.
+Nel caso specifico,  supponendo che il Controller sia allocato sul PC; abbiamo bisogno
+
+- di un enabler per il `core-code` del Sonar
+- di un enabler per il `core-code` del Led
+
+Ad esempio, il ``Controller`` su PC potrebbe utilizzare un proxy tipo-server con interfaccia 
+``ISonar`` che riceverà i dati da un enabler tipo-client del Sonar posto sul Raspberry.
+Inoltre, il ``Controller`` potrebbe utilizzare come proxy verso il Led un TCP-client 
+con interfaccia ``ILed`` che trasmetterà i comandi a un enabler tipo-server del Led sul Raspberry.
 
 
 .. image:: ./_static/img/Radar/ArchLogicaOOPEnablers.PNG 
@@ -230,7 +236,7 @@ sul Raspberry.
 
 Tuttavia, per limitare il traffico di rete, è inutile inviare i dati del sonar anche quando non
 sono richiesti dal sever, per cui, come analisti, riteniamo opportuno che sul PC vengano definiti, ad uso
-del  ``Controller``, due enabler *tipo-client*, uno per il Led e uno per il Sonar che interagiranno cone due
+del  ``Controller``, due *proxy*, uno per il Led e uno per il Sonar, che interagiranno cone due
 enabler *tipo-server* complementari posti sul RaspberryPi, inviando:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
@@ -240,12 +246,9 @@ enabler *tipo-server* complementari posti sul RaspberryPi, inviando:
    :align: center
    :width: 50%
  
-Notiamo che gli *enabler tipo-client* sono  una forma di proxy-pattern_.
-
-
-
-L'idea di :blue:`enabler` sembra dunque promettente come strumento per un passaggio graduale
-e sistematico dalla programmazione tradizionale ad oggetti alla programmazione distribuita.
+L'idea di :blue:`enabler`, affiancata all'idea di *proxy*, sembra dunque promettente 
+per un passaggio graduale e sistematico dalla programmazione tradizionale ad oggetti 
+alla programmazione distribuita.
 Siamo di fornte ai primi passi relativi a un 
  
 :remark:`nuovo paradigma di programmazione per sistemi distribuiti`
@@ -261,11 +264,12 @@ seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistem
 
 Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito dal committente, possiamo pensare di procedere come segue:
 
-#. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
+#. definizione dei oggetti software di base (:blue:`core-code`) legati ai dispositivi di I/O 
+  (Sonar, RadarDisplay e Led);
 #. definizione di alcuni supporti TCP per componenti lato client a lato server, con l'obiettivo di
    formare un insieme riusabile anche in applicazioni future; 
 #. definizione di componenti  :blue:`enabler`  capaci di abilitare  
-   alle comunicazioni TCP (o mediante altri tipi di protocollo) i componenti-base;
+   alle comunicazioni (via TCP o mediante altri tipi di protocollo) i componenti-base;
 #. assemblaggio dei componenti  per formare il sistema distribuito.
 
 Il punto 2 relativo ai supporti non è indispensabile, ma, come detto, può costituire un elemento strategico 

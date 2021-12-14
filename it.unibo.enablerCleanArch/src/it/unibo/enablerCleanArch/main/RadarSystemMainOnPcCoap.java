@@ -1,5 +1,10 @@
 package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.*;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.coap.LedAdapterCoap;
+import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoap;
+import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoapObserver;
  
 public class RadarSystemMainOnPcCoap {
 private ISonar sonar    = null;
@@ -7,7 +12,7 @@ private ILed led        = null;
 private IRadarDisplay radar = null;
 
 	public void setup() throws Exception {			
-		RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
+		//RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
 		//Control 
 		//TODO ???
 		/*
@@ -26,6 +31,13 @@ private IRadarDisplay radar = null;
 			radar  = DeviceFactory.createRadarGui();	
 			Controller.activate(led, sonar, radar);
   		}*/
+		
+		RadarSystemConfig.protcolType = ProtocolType.coap;
+		//Controller locale (al PC)
+		//sonar = new SonarAdapterCoapObserver("localhost", CoapApplServer.inputDeviceUri+"/sonar");
+		sonar = new SonarAdapterCoap("localhost", CoapApplServer.inputDeviceUri+"/sonar");
+		led   = new LedAdapterCoap( "localhost", CoapApplServer.outputDeviceUri+"/led" ) ;
+		
 	} 
 	
 	public void activateSonar() {

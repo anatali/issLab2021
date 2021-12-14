@@ -362,10 +362,15 @@ Test con molti clienti
 .. .. code:: Java
 .. oneClientServer | ERROR: Socket operation on nonsocket: configureBlocking
  
++++++++++++++++++++++++++++++++++++++++++++++
+Supporti per altri protocolli
++++++++++++++++++++++++++++++++++++++++++++++
 
+Udp, Bluetooth  ``unibonoawtsupports.jar``
  
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La libreria ``unibonoawtsupports.jar``
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   
 

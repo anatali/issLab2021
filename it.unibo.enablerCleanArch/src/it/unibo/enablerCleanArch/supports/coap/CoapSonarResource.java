@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.SonarModel;
+import it.unibo.enablerCleanArch.supports.Colors;
  
 
 public class CoapSonarResource extends CoapDeviceResource {  
@@ -11,7 +12,7 @@ private String curVal = "-1";
 		super( name, devtype )  ;
 		sonar = SonarModel.create();
 		getSonarValues();
-		System.out.println( getName() + " |  CREATED"   );	
+		Colors.out( getName() + " |  CREATED", Colors.RED   );	
  	}
 	
 	private void getSonarValues() {
@@ -29,25 +30,22 @@ private String curVal = "-1";
 	 // CoapDeviceResource
 		@Override
 		protected String elaborateGet(String req) {
-			//System.out.println( getName() + " |  elaborateGet:" + req  );		
+			Colors.out( getName() + " |  elaborateGet:" + req  );		
 			return  curVal;
 		}
 
 		@Override
 		protected void elaboratePut(String arg) {
- 			//System.out.println( getName() + " |  elaboratePut:" + arg  );		
+			Colors.out( getName() + " |  elaboratePut:" + arg  );		
 			if( arg.equals("stop")) sonar.deactivate(); 	
  			changed();	// notify all CoAp observers
 		}
 		
 		protected void elaborateAndNotify(int arg) {
- 			//System.out.println( getName() + " |  elaborateAndNotify:" + arg  );		
+			Colors.out( getName() + " |  elaborateAndNotify:" + arg  );		
 			curVal= ""+arg;
 			changed();	// notify all CoAp observers
 		}
-
-	 
- 
 }
  
 

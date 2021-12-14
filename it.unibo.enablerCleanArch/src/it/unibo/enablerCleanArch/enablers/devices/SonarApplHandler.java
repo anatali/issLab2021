@@ -29,7 +29,4 @@ ISonar sonar;
  					this.sendMsgToClient(sonarState, conn);
  				}
  			}
-
- 			
-		
 }

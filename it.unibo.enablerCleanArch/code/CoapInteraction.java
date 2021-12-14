@@ -9,6 +9,11 @@ public class CoapInteraction implements  Interaction2021  {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public String request(String msg) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public String receiveMsg() throws Exception {

@@ -1,9 +1,7 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-
 import it.unibo.enablerCleanArch.supports.Colors;
-
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
 
 

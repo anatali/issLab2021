@@ -98,12 +98,5 @@ public static final int testPort = 8112;
 	}	
 	
 
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
-				e.printStackTrace();
-		}		
-	}
 	
 }

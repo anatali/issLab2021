@@ -2,38 +2,43 @@
 Gli enablers
 +++++++++++++++++++++++++++++++++++++++++++++
 
-L'analisi del problema ha posto in evidenza la opportunità/necessità,
+L'analisi del problema ha posto in evidenza la opportunità/necessità, 
 di introdurre nel sistema degli :blue:`enabler`, che hanno lo scopo di incapsulare 
 :blue:`core-code` all'interno di un component capace di ricevere e trasmettere informazione.
 
 Nell'ambito di un processo di sviulppo bottom-up, in cui abbiamo selezionato il procollo TCP come
 tecnologia di riferimento per le comunicazioni, risulta naturale pensare a 
-due tipi di enabler: uno per ricevere (diciamo un *server*) e uno per trasmettere (diciamo un *client*).
+un enabler *tipo-server* capace di ricevere richieste di connessione da client remoti (normalmente
+dei proxy).
+
+.. due tipi di enabler: uno per ricevere (diciamo un enabler *tipo-server*) e uno per trasmettere (diciamo un enabler *tipo-client*).
  
-Nel quadro di una architettura port-adapter, ponendo il ``Controller`` su PC, 
-questi, senza modificare il codice introdotto in :ref:`Controller<controller>`:
+Come suggerito nell'analisi, ponendo il ``Controller`` su PC, 
+potremo procedere senza modificare il codice introdotto in :ref:`Controller<controller>`
+impostando una architettura come quella rappresentata in figura:
 
-- accederà al Sonar attraverso un adapter-enabler *tipo server* che implementa l'interfaccia ``ISonar``; 
-- accederà al Led utilizzando un adapter-enabler *tipo client*  che implementa l'interfaccia ``ILed``  
-  
-Dualmente, sul Raspberry dovremo porre:
+.. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
+   :align: center
+   :width: 50%
 
-- un enabler *tipo server* per il Led, per ricevere i comandi di accensione/spegnimento;
-- un enabler *tipo client* per il Sonar, per inviare dati e per ricevere comandi dal server.
+Ricordando la proposta delle architetture port-adapter_,  decidiamo, come progettisti,
+di impostare lo sviluppo del software del sistema con riferimento ad una architettura a livelli
+rappresentata come segue:
 
-Avendo anche la consapevolezza che questa parte di lavoro potrebbe farci pervenire alla
-costruzione di :blue:`supporti riusabili`,
-cercheremo di impostare il progetto degli enabler in modo da dipendere 'il meno possibile'
-dalla tecnologia di base per la comunicazione (protocollo) tra componenti software
-distribuiti.
+
+.. image:: ./_static/img/Architectures/cleanArchCone.jpg 
+   :align: center
+   :width: 50%
+
+ 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Enabler astratto per ricezione
+Enabler tipo-server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Iniziamo con il definire un server astratto che crea il supporto di comunicazione 
-relativo al protocollo specificato e demanda la gestione dei messaggi inviati da un client
+relativo al protocollo specificato e demanda la gestione dei messaggi  in input
 alle classi specializzate.
 
 
@@ -43,34 +48,34 @@ alle classi specializzate.
  
 .. code:: java
 
-  public abstract class EnablerAsServer extends ApplMessageHandler{
-  protected ApplMessageHandler handler;
-  protected ProtocolType protocol;
+  public class EnablerAsServer{
+    protected ProtocolType protocol;
   protected TcpServer serverTcp;
-    public EnablerAsServer(String name, int port, ProtocolType protocol) {
+    public EnablerAsServer(String name, int port, 
+                       ProtocolType protocol, IApplMsgHandler handler ) {
       super(name);
       try {
         this.protocol = protocol;
-        handler       = this;
-        if( protocol != null ) setServerSupport( port, this, protocol );
+        if( protocol != null ) setServerSupport( port, protocol, handler );
       }catch (Exception e) { ... }
     }	
     protected void setServerSupport( 
-                    int port, ProtocolType protocol ) throws Exception{
+                    int port, ProtocolType protocol,IApplMsgHandler handler ) throws Exception{
       if( protocol == ProtocolType.tcp ) {
-        serverTcp = new TcpServer( "ServerTcp", port,  handler );
-        serverTcp.activate();
-      }else if( protocol == ProtocolType.coap ) { ... }
+        serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );        
+      }else if( protocol == ProtocolType.udp ) { ... 
+      }else if( protocol == ProtocolType.coap ) { //DO nothing: we use a CoapServer 
+      }
     }	 
-    public void sendCommandToClient( String msg ) {
-      try {
-        if( handler.getConn()  != null ) handler.getConn().forward(msg);
-      } catch (Exception e) {... }
-    }
-    public void deactivate() {
+    public void activate() {
+      if( protocol == ProtocolType.tcp ) {
+        serverTcp.activate();
+      }else  ...	
+    }   
+  public void deactivate() {
       if( protocol == ProtocolType.tcp ) {
         serverTcp.deactivate();
-      }else if( protocol == ProtocolType.coap ) { ...	}		
+      }else ...
     }   
   }
 
@@ -88,53 +93,62 @@ La classe ``ProtocolType`` enumera i protocolli utlizzabili dagli enablers.
 
 .. code:: java
 
-  public enum ProtocolType {  tcp, coap }
+  public enum ProtocolType {  tcp, udp, coap }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Enabler astratto per trasmissione
+Enabler per trasmissione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All'enabler-ricevitore, affianchiamo suibito un enabler astratto per trasmettere informazione,
-che delega a classi specializzate la definizione del metodo ``handleMessagesFromServer`` per
-gestire i messaggi ricevuti dal server.
+All'enabler-ricevitore, affianchiamo suibito un enabler  per trasmettere informazione,
+
+.. che delega a classi specializzate la definizione del metodo ``handleMessagesFromServer`` per gestire i messaggi ricevuti dal server.
 
 .. code:: java
 
   public abstract class EnablerAsClient {
   private Interaction2021 conn; 
   protected String name ;	
-    public EnablerAsClient( String name,String host,int port ProtocolType protocol) {
+  protected CoapSupport coapSupport;
+    public EnablerAsClient( String name, String host, int port, ProtocolType protocol ) {
       try {
         this.name = name;
+        this.protocol = protocol;        
         setConnection(host,  port, protocol);
-        startHandlerMessagesFromServer(conn);
       } catch (Exception e) {...}
     }
 
-    protected void setConnection(String host,int port,ProtocolType protocol) throws Exception{
+    protected void setConnection(
+          String host,int port,ProtocolType protocol) throws Exception{
       if( protocol == ProtocolType.tcp) {
         conn = TcpClient.connect(host,  port, 10);
-      }else if( protocol == ProtocolType.coap ) { ...	}
+      }else if( protocol == ProtocolType.coap ) {
+        coapSupport = new CoapSupport(host, name );	
+      }
     }
-
-    protected void startHandlerMessagesFromServer( Interaction2021 conn) {
-      new Thread() {
-        public void run() {
-          try {
-            handleMessagesFromServer(conn);
-          } catch (Exception e) { ...	}				
-          }
-      }.start();
-    }
-
-    protected abstract void handleMessagesFromServer(Interaction2021 conn) throws Exception;
-    
-    protected void sendValueOnConnection( String val ) {
+     
+    protected void sendCommandOnConnection( String cmd ) {
       try {
-        conn.forward(val);
+        if( protocol == ProtocolType.tcp) {
+        conn.forward(cmd);
+      }else if( protocol == ProtocolType.coap) {
+        coapSupport.updateResource(cmd);
+      }
       } catch (Exception e) {...}
     }  
+
+    public String sendRequestOnConnection( String request )  {
+    	try {
+        if( protocol == ProtocolType.tcp) {
+        conn.forward(request);
+        String answer = conn.receiveMsg();
+        return answer;
+      }else if( protocol == ProtocolType.coap) {
+        String answer = coapSupport.readResource(request);
+        return answer;
+      }else return null;
+      }catch (Exception e) { ... }
+    }
     public Interaction2021 getConn() { return conn; }
   }  
 
