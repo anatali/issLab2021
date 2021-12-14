@@ -1,4 +1,6 @@
 package it.unibo.enablerCleanArch.enablers.devices;
+import it.unibo.enablerCleanArch.domain.Distance;
+import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -22,10 +24,10 @@ public class SonarEnablerAsClient extends EnablerAsClient implements ISonar{
 	}
 
 	@Override
-	public int getDistance() {
+	public IDistance getDistance() {
 		Colors.out( name + " | getVal ", Colors.ANSI_PURPLE);
 		String answer = sendRequestOnConnection("getVal");
-		return Integer.parseInt(answer);
+		return new Distance( Integer.parseInt(answer) );
 	}
 
 	@Override

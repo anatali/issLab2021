@@ -13,7 +13,7 @@ public class SonarMessageHandler extends ApplMsgHandler{
 	private IRadarDisplay radar;	
 	public SonarMessageHandler(String name) {
 		super(name);
-		radar = RadarDisplay.create();
+		radar = RadarDisplay.getRadarDisplay();
 	}
 
 	@Override

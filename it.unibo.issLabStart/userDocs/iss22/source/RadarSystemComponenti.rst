@@ -486,21 +486,81 @@ e che implementa i metodi di registrazione ridiregendoli allo stato osservabile.
 
 .. code:: java
 
-  public class SonarObservableMock extends SonarMock implements ISonarObservable  {
+  public class SonarObservableMock 
+            extends SonarMock implements ISonarObservable  {
     @Override
     protected void sonarSetUp() { 
       super.sonarSetUp();
-      curVal = new DistanceObservable( myCurVal );  //wraps the original state
+      curVal = new DistanceObservable(myCurVal);//wraps the original state
     }
     @Override
     public void register(IObserver obs) {
-        ((DistanceObservable)curVal).addObserver(obs);		
+        ((DistanceObservable)curVal).addObserver(obs);		 
     }
     @Override
     public void unregister(IObserver obs) {
       ((DistanceObservable)curVal).deleteObserver(obs);		
     }
   }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Testing del sonar osservabile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il testing sul ``SonarObservableMock`` viene qui impostato nel modo che segue:
+
+- si regola il Sonar in modo che produca un valore costante definito in ``RadarSystemConfig.testingDistance``
+- si introduce (almeno) un observer che controlla che il dato osservato sia quello emesso
+
+.. code:: java
+
+  @Test 
+  public void testSingleshotSonarObservableMock() {
+    RadarSystemConfig.testing = true;
+    ISonarObservable sonar = DeviceFactory.createSonarObservable();
+    IObserver obs1         = new SonarObserverFortesting("obs1",true) ;
+    sonar.register( obs1 );	//add then observer
+    sonar.activate();
+    int v0 = sonar.getDistance().getVal();
+    assertTrue(  v0 == RadarSystemConfig.testingDistance );
+  }
+
+L'*obserer* viene impostato in modo da controllare anche dati emessi da un sonar reale
+che opera con ostacolo fisso posto davanti ad esso, alla distanza prefissata.
+
+.. code:: java
+
+  class SonarObserverFortesting implements IObserver{
+  private String name;
+  private boolean oneShot = false;
+  private int v0          = -1;
+  private int delta       =  1;
+	
+  public SonarObserverFortesting(String name, boolean oneShot) {
+    this.name    = name;
+    this.oneShot = oneShot;
+  }
+  @Override  //from java.util.Observer
+  public void update(Observable source, Object data) {
+    int v = Integer.parseInt(data.toString());
+    update( v );
+  }
+  @Override //from IObserver
+  public void update(int value) {
+    if(oneShot) {
+      assertTrue(  value == RadarSystemConfig.testingDistance );	
+    }else {
+      if( v0 == -1 ) {//set the first value observed
+        v0 = value;
+      }else {
+        int vexpectedMin = v0-delta;
+        int vexpectedMax = v0+delta;
+        assertTrue(  value <= vexpectedMax && value >= vexpectedMin );
+        v0 = value;			 
+      }
+    }
+  }
+  }//SonarObserverFortesting
 
 
 
@@ -522,9 +582,9 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
         public void run() { 
           try {
             while( sonar.isActive() ) {
-              IDistance d = sonar.getDistance().getVal();  
-              LedAlarmUsecase.doUseCase( led,  d  );   
+              IDistance d = sonar.getDistance();  
               RadarGuiUsecase.doUseCase( radar,d  );	 
+              LedAlarmUsecase.doUseCase( led,  d  );   
             }
           } catch (Exception e) { ...  }					
         }
@@ -540,7 +600,8 @@ LedAlarmUsecase
   public class LedAlarmUsecase {
     public static void doUseCase(ILed led, IDistance d) {
       try {
-        if( d.getVal() <  RadarSystemConfig.DLIMIT ) led.turnOn(); else  led.turnOff();
+        if( d.getVal() <  RadarSystemConfig.DLIMIT ) led.turnOn(); 
+        else  led.turnOff();
       } catch (Exception e) { ... }					
     }
   } 
@@ -561,7 +622,7 @@ RadarGuiUsecase
 Il sistema simulato su PC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il sistema viene dapprima costruito secondo le specifiche contenuto nel file di configurazione e 
+Il sistema viene dapprima costruito secondo le specifiche contenute nel file di configurazione e 
 successivamente attivato facendo partire il Sonar.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -630,6 +691,8 @@ Fase di costruzione del sistema
     public static void main( String[] args) throws Exception { ... }
   }
 
+Una unità di testing può automatizzare l'esecuzione di questo sistema ed 
+effettuare controlli sul suo funzionamento.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Utilità per il testing
@@ -641,15 +704,8 @@ Inseriamo nel main program  metodi che restitusicono un riferimento ai component
 
   public class RadarSystemMainOnPc {
     ... 
-    public ILed getLed() {
-      return led;
-    }
-    public ISonar getSonar() {
-      return sonar;
-    }
-    public IRadarDisplay getRadarGui() {
-      return radar;
-    }
+    public ILed getLed() { return led; }
+    public ISonar getSonar() { return sonar; }
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -689,24 +745,22 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
 
   @Test 
   public void testFarDistance() {
-    //Simaulate obstacle far
-    RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT +20;
-    sys.activateSonar();   //il sonar produce un valore costante d>DLIMIT
-    while( sys.getSonar().isActive() ) delay(10);   //give time the system to work 
-    RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
-    assertTrue( ! sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance );
-    delay(2000) ; //give time to look at the display
+    RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT + 20;
+    testTheDistance( false );
   }	
-
   @Test 
   public void testNearDistance() {
-    //Simaulate obstacle near
     RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT - 1;
-    sys.activateSonar();   //il sonar produce un solo valore costante d<DLIMIT
-    while( sys.getSonar().isActive() ) delay(10); 	//give time the system to work 
-    RadarGui radar = (RadarGui) sys.getRadarGui();	//cast just for testing ...
-    assertTrue(  sys.getLed().getState() && radar.getCurDistance() == RadarSystemConfig.testingDistance);
-    delay(2000) ; //give time to look at the display
+    testTheDistance( true );
+  }
+   
+  protected void testTheDistance( boolean ledStateExpected ) {
+    RadarDisplay radar = RadarDisplay.getRadarDisplay();  //singleton
+    sys.activateSonar();   //il sonar produce un solo valore
+    while( sys.getSonar().isActive() ) Utils.delay(10); //give time to work 
+      assertTrue(  sys.getLed().getState() == ledStateExpected
+        && radar.getCurDistance() == RadarSystemConfig.testingDistance);
+    Utils.delay(1000) ; //give time to look at the display		
   }
 
   

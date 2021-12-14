@@ -12,7 +12,7 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 
 public class SonarAdapterCoap extends ApplMsgHandler implements ISonar{
-private int curVal       = -1;
+private IDistance curVal = null;
 
 	public SonarAdapterCoap( String hostAddr, String resourceName   ) {
 		super("SonarAdapterCoap");
@@ -32,10 +32,10 @@ private int curVal       = -1;
 	}
 	
 	@Override  //from ISonar - called by the Controller
-	public int getDistance() {  
+	public IDistance getDistance() {  
 		waitForUpdatedVal();
- 		int v  = curVal;
- 		curVal = -1;
+ 		IDistance v  = curVal ;
+ 		curVal = null;
 		return v;
 	}
 	
@@ -52,13 +52,13 @@ private int curVal       = -1;
 	}
 
 	synchronized void setVal(int d){
-		curVal = d;
+		curVal = new Distance(d);
 		this.notify();	//activates callers of  waitForUpdatedVal
 	}
 	
 	private synchronized void waitForUpdatedVal() {
 		try {
-			while( curVal < 0 ) wait();
+			while( curVal == null ) wait();
  		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}		

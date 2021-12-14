@@ -92,7 +92,7 @@ public class TestEnablers {
 		
 		
 		while( sonarClient.isActive() ) {
-			int v = sonarClient.getDistance();
+			int v = sonarClient.getDistance().getVal();
 			Colors.out("Controller-simulated getVal="+v, Colors.GREEN);
 			delay(500);
 			if( v < RadarSystemConfig.DLIMIT ) ledClient.turnOn();

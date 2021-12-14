@@ -34,7 +34,7 @@ public class DeviceFactory {
 	
 	//We do not have mock for RadarGui
 	public static IRadarDisplay createRadarGui() {
-		return RadarDisplay.create();
+		return RadarDisplay.getRadarDisplay();
 	}
 	
 }

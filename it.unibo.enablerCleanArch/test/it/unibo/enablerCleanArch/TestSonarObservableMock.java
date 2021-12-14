@@ -35,8 +35,9 @@ class SonarObserverFortesting implements IObserver{
  				Colors.out( name + "| v0=" + v0);
  			 }else {
  				Colors.out( name + "| value=" + value );  
- 				int vexpected = v0-delta;
- 				assertTrue(  value == vexpected );
+  				int vexpectedMin = v0-delta;
+ 				int vexpectedMax = v0+delta;
+ 				assertTrue(  value <= vexpectedMax && value >= vexpectedMin );
  				v0 = value;			 
  			 }
  		 }
@@ -63,9 +64,8 @@ public class TestSonarObservableMock {
 				
 		ISonarObservable sonar = DeviceFactory.createSonarObservable();
 		IObserver obs1         = new SonarObserverFortesting("obs1",true) ;
-		//sonar.register( obs1 );	//add an observer
-		sonar.activate();
 		sonar.register( obs1 );	//add an observer
+		sonar.activate();
 		sonar.register( new SonarObserverFortesting("obs2",true) );	//add an observer
 		
 		int v0 = sonar.getDistance().getVal();

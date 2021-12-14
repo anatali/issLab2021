@@ -56,7 +56,7 @@ private RadarSystemMainOnPc sys;
 		//sys.oneShotSonarForTesting(simulatedTargetDistance);
 		//sonar.activate();
 		//delay(1000);
-		int d = sonar.getDistance();
+		int d = sonar.getDistance().getVal();
 		System.out.println("sonar getVal=" + d);
 		assertTrue(  d > 0  );
  

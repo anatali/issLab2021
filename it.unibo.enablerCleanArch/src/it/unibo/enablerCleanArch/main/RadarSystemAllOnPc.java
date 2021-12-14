@@ -36,13 +36,6 @@ private ProtocolType protocol = ProtocolType.tcp;	//could be overwritten
 		
 	}
 	public void build() throws Exception {			
- 		//Control
-		/*
-		if( RadarSystemConfig.ControllerRemote ) {
-			radar =  DeviceFactory.createRadarGui();			
-			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
-		}else { 
-			*/
 			//Controller locale (al PC)
 			//Input
 			sonar  = RadarSystemConfig.SonareRemote ? simulateSonarRemote() : DeviceFactory.createSonar();
@@ -64,10 +57,7 @@ private ProtocolType protocol = ProtocolType.tcp;	//could be overwritten
 	public ISonar getSonar() {
 		return sonar;
 	}
-
-	public IRadarDisplay getRadarGui() {
-		return radar;
-	}
+ 
 
 	
 	public static void main( String[] args) throws Exception {

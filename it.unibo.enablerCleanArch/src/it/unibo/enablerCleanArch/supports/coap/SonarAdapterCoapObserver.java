@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.domain.*;
  * Adapter Coap for the sonar
  */
 public class SonarAdapterCoapObserver implements ISonar, CoapHandler{
-private int curVal       = -1;
+private IDistance curVal = null;
 
 	public SonarAdapterCoapObserver( String hostAddr, String resourceUri   ) {
 		
@@ -42,10 +42,10 @@ private int curVal       = -1;
 	}
 	
 	@Override   //called by the Controller
-	public int getDistance() {  
+	public IDistance getDistance() {  
 		waitForUpdatedVal();
- 		int v  = curVal;
- 		curVal = -1;
+ 		IDistance v  = curVal;
+ 		curVal = null;
 		return v;
 	}
 	
@@ -61,13 +61,13 @@ private int curVal       = -1;
 	}
 
 	synchronized void setVal(int d){
-		curVal = d;
+		curVal = new Distance( d );
 		this.notify();	//activates callers of  waitForUpdatedVal
 	}
 	
 	private synchronized void waitForUpdatedVal() {
 		try {
-			while( curVal < 0 ) wait();
+			while( curVal == null ) wait();
  		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}		

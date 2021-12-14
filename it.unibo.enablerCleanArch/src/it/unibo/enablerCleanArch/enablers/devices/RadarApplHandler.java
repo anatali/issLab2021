@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.enablers.devices;
  
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
+import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
@@ -9,7 +10,7 @@ IRadarDisplay radar;
 
 	public RadarApplHandler(String name) {
 		super(name);
-		radar = it.unibo.enablerCleanArch.domain.RadarDisplay.create();
+		radar = RadarDisplay.getRadarDisplay(); 
 	}
 	
  	@Override

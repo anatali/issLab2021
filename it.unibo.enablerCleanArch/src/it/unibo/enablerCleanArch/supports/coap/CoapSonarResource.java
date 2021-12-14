@@ -19,7 +19,7 @@ private String curVal = "-1";
 			public void run() {
 				sonar.activate();
 				while( sonar.isActive() ) {
-					int v = sonar.getDistance();
+					int v = sonar.getDistance().getVal();
 					elaborateAndNotify(  v );
 				}
 			}

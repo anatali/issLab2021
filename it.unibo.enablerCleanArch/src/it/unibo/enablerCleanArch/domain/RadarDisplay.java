@@ -1,24 +1,25 @@
 package it.unibo.enablerCleanArch.domain;
 
+import it.unibo.enablerCleanArch.supports.Colors;
 import radarPojo.radarSupport;
 
 public class RadarDisplay implements IRadarDisplay{
 private String curDistance = "0";
-private static boolean created = false; //singleton
+private static RadarDisplay display = null; //singleton
 	//Factory method
-	public static IRadarDisplay create(){
-		return new RadarDisplay();
+	public static RadarDisplay getRadarDisplay(){
+		if( display == null ) {
+			display = new RadarDisplay();
+		}
+		return display;			
 	}
 	
-	public RadarDisplay() {
-		if( ! created ) {
-			radarSupport.setUpRadarGui();
-			created = true;
-		}
-		 
-	}
+	protected RadarDisplay() {
+ 		radarSupport.setUpRadarGui();
+ 	}
 	@Override
 	public void update(String distance, String angle) {	 
+		Colors.out("RadarDisplay | update distance="+distance);
 		curDistance =  distance;
 		radarSupport.update(distance,angle);
 	}
@@ -26,6 +27,7 @@ private static boolean created = false; //singleton
 	//ADDED for testing
 	//-------------------------------------------------
 	public int getCurDistance() {
+		Colors.out("RadarDisplay | getCurDistance="+curDistance);
 		return Integer.parseInt(curDistance);
 	}
 
