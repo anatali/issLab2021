@@ -32,13 +32,13 @@ class NaiveHandler extends ApplMsgHandler {
  */
 class ClientForTest{
  	
-	public void doWork( String name, int nattempts, boolean withserver ) {
+	public void doWork( String name, int ntimes, boolean withserver ) {
 		try {
-			Interaction2021 conn  = TcpClient.connect("localhost", TestTcpSupports.testPort,nattempts);
+			Interaction2021 conn  = TcpClient.connect("localhost", TestTcpSupports.testPort,ntimes);
 			//System.out.println(name + " | conn: " +conn );	
 			String request = "hello_from_" + name;
-			conn.forward(request);
-			String answer = conn.receiveMsg();
+			conn.forward(request);				//2
+			String answer = conn.receiveMsg();	//3
 			System.out.println(name + " | receives the answer: " +answer );	
 			assertTrue( answer.equals("answerTo_"+ request));
 		} catch (Exception e) {
@@ -70,8 +70,9 @@ public static final int testPort = 8112;
 	@Test 
 	public void testClientNoServer() {
 		System.out.println("testClientNoServer");
+		int numAttempts = 3;
 		boolean withserver = false;
-		new ClientForTest().doWork("clientNoServer",2,withserver );	
+		new ClientForTest().doWork("clientNoServer",numAttempts,withserver );	
 	}
 	
 	
@@ -98,12 +99,6 @@ public static final int testPort = 8112;
 	}	
 	
 
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
-				e.printStackTrace();
-		}		
-	}
+ 
 	
 }

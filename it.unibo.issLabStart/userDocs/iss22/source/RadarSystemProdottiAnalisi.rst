@@ -262,7 +262,7 @@ seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistem
 Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito dal committente, possiamo pensare di procedere come segue:
 
 #. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
-#. definizione di alcuni supporti TCP per componenti lato client a lato server, con l'obiettivo di
+#. definizione di alcuni supporti TCP per componenti lato client e lato server, con l'obiettivo di
    formare un insieme riusabile anche in applicazioni future; 
 #. definizione di componenti  :blue:`enabler`  capaci di abilitare  
    alle comunicazioni TCP (o mediante altri tipi di protocollo) i componenti-base;
