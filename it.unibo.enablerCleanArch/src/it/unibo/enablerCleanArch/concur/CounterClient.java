@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
 public class CounterClient extends EnablerAsClient{
 
 	public CounterClient(String name, String host, int port ) {
-		super(name, host, port, ProtocolType.tcp);
+		super(name, host, ""+port, ProtocolType.tcp);
 	}
 
  

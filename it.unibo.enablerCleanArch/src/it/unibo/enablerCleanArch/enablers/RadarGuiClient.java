@@ -4,8 +4,8 @@ import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 
 public class RadarGuiClient extends EnablerAsClient implements IRadarDisplay {
  
-	public RadarGuiClient( String name, String host, int port, ProtocolType protocol ) {
-		super( name, host, port,protocol );
+	public RadarGuiClient( String name, String host, String entry, ProtocolType protocol ) {
+		super( name, host, entry,protocol );
  	}
 
 	@Override  //from IRadarDisplay

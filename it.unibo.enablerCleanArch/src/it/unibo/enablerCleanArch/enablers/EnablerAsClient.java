@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClient;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 
 
@@ -11,22 +12,24 @@ protected String name ;		//could be a uri
 protected ProtocolType protocol ;
 //protected CoapSupport coapSupport;
  
-	public EnablerAsClient( String name, String host, int port, ProtocolType protocol ) {
+	public EnablerAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		try {
 			this.name     = name;
-			this.protocol = protocol;
-			setConnection(host,  port, protocol);
+			this.protocol = protocol;			 
+			setConnection(host,  entry, protocol);
 			Colors.out(name+"  | STARTED conn=" + conn, Colors.GREEN);
 		} catch (Exception e) {
 			Colors.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
 	
-	protected void setConnection( String host, int port, ProtocolType protocol  ) throws Exception {
+	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
 		if( protocol == ProtocolType.tcp) {
+			int port = Integer.parseInt(entry);
 			conn = TcpClient.connect(host,  port, 10); //10 = num of attempts
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
-			conn = new CoapSupport(host, name );
+			//name = uri
+			conn = new CoapSupport(host,  entry); //CoapApplServer.inputDeviceUri+"/led"
 		}
 	}
   	
@@ -47,7 +50,7 @@ protected ProtocolType protocol ;
 		}
 	}
 	public String sendRequestOnConnection( String request )  {
-		Colors.out( name+"  | sendRequestOnConnection " + request + " conn=" + conn, Colors.GREEN);
+		Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn, Colors.GREEN);
 		try {
 			/*
 			if( protocol == ProtocolType.tcp) {

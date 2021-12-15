@@ -12,14 +12,17 @@ ISonar sonar;
 		public SonarApplHandler(String name) {
 			super(name);
 			sonar = it.unibo.enablerCleanArch.domain.SonarModel.createSonarMock();
+			sonar.activate();
 	 	}
   			
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
- 				//Colors.out(name+ " | elaborate " + message, Colors.ANSI_YELLOW);
- 				if( message.equals("getVal")) {
- 					String vs = ""+sonar.getDistance();
- 					this.sendMsgToClient(vs, conn);
+ 				Colors.out(name+ " | elaborate " + message, Colors.ANSI_YELLOW);
+ 				if( message.equals("getDistance")) {
+ 	 				Colors.out(name+ " | elaborate getDistance="  , Colors.ANSI_YELLOW);
+					String vs = ""+sonar.getDistance().getVal();
+ 	 				Colors.out(name+ " | elaborate vs=" + vs, Colors.ANSI_YELLOW);
+					this.sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
  					sonar.activate();
  				}else if( message.equals("activate")) {

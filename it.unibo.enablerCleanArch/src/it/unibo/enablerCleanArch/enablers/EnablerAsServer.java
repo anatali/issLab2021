@@ -23,7 +23,7 @@ protected TcpServer serverTcp;
 			this.protocol 			= protocol;
  			if( protocol != null ) {
 				setServerSupport( port, protocol, handler  );
-				Colors.out(name+" |  STARTED  on port=" + port + " protocol=" + protocol);
+				Colors.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol);
 			}else Colors.out(name+" |  CREATED no protocol"  );
 		} catch (Exception e) {
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );

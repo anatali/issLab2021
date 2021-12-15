@@ -4,10 +4,10 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedAdapterEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedResourceCoap;
 import it.unibo.enablerCleanArch.enablers.devices.SonarResourceCoap;
-import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
  
@@ -27,14 +27,14 @@ private ProtocolType protocol = ProtocolType.coap;	//could be overwritten
 		SonarResourceCoap sonarResource = new SonarResourceCoap("sonar");
 		//new EnablerAsServer("SonarCoap",RadarSystemConfig.sonarPort, protocol, sonarResource );
 		String sonarUri    = CoapApplServer.inputDeviceUri+"/"+sonarResource.getName();
-		ISonar sonarClient = new SonarEnablerAsClient(sonarUri, "localhost",RadarSystemConfig.sonarPort, protocol );
+		ISonar sonarClient = new SonarProxyAsClient(sonarUri, "localhost",""+RadarSystemConfig.sonarPort, protocol );
 		return sonarClient;
 	}
 	protected ILed simulateLedRemote() {
 		LedResourceCoap ledResource =  new LedResourceCoap("led");
 		//new EnablerAsServer("LedCoap",RadarSystemConfig.ledPort, protocol,  ledResource);
 		String ledUri  = CoapApplServer.outputDeviceUri+"/"+ledResource.getName();
-		ILed ledClient = new LedAdapterEnablerAsClient(ledUri, "localhost",RadarSystemConfig.ledPort, protocol);
+		ILed ledClient = new LedProxyAsClient(ledUri, "localhost",""+RadarSystemConfig.ledPort, protocol);
 		return ledClient;
 		
 	}

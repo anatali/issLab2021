@@ -99,9 +99,6 @@ public static final int testPort = 8112;
 	}	
 	
 
-<<<<<<< HEAD
  
-=======
->>>>>>> ec913d676d3c6be52d27167764322c465fae8efe
 	
 }

@@ -14,6 +14,7 @@ protected String name;
    		
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
+ 			Colors.out(name + " | sendMsgToClient " + message);
 			conn.forward( message );
 		} catch (Exception e) {
  			Colors.outerr(name + " | ERROR " + e.getMessage());;

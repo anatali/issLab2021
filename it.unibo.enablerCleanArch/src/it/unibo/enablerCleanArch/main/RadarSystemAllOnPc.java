@@ -4,10 +4,10 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedAdapterEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 
  
 public class RadarSystemAllOnPc {
@@ -24,14 +24,14 @@ private ProtocolType protocol = ProtocolType.tcp;	//could be overwritten
 		//EnablerAsServer sonarServer  = 
 		new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, protocol, new SonarApplHandler("sonarH") );
 		ISonar sonarClient = 
-				new SonarEnablerAsClient("sonarClient", "localhost",RadarSystemConfig.sonarPort, protocol );
+				new SonarProxyAsClient("sonarClient", "localhost",""+RadarSystemConfig.sonarPort, protocol );
 		return sonarClient;
 	}
 	protected ILed simulateLedRemote() {
 		new EnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
 				protocol,  new LedApplHandler("ledH") );
-		ILed ledClient = new LedAdapterEnablerAsClient(
-				"ledClient", "localhost",RadarSystemConfig.ledPort, protocol);
+		ILed ledClient = new LedProxyAsClient(
+				"ledClient", "localhost",""+RadarSystemConfig.ledPort, protocol);
 		return ledClient;
 		
 	}

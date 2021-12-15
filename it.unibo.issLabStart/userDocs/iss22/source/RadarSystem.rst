@@ -7,6 +7,16 @@
 
 .. ``  https://bashtage.github.io/sphinx-material/rst-cheatsheet/rst-cheatsheet.html
 
+.. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
+
+.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
+
+.. _clean-architecture:  https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+
+.. _microservizio: https://en.wikipedia.org/wiki/Microservices
+
+.. _pattern-decorator: https://it.wikipedia.org/wiki/Decorator
+
 ======================================
 RadarSystem
 ======================================

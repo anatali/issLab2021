@@ -28,9 +28,9 @@ private Socket socket;
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
-			//System.out.println( "TcpConnSupport | has sent   " + msg );	 
+			//Colors.out( "TcpConnSupport | has sent   " + msg );	 
 		} catch (IOException e) {
-			//System.out.println( "TcpConnection | sendALine ERROR " + e.getMessage());	 
+			//Colors.outerr( "TcpConnection | sendALine ERROR " + e.getMessage());	 
 			throw e;
 		}	
 	}
@@ -49,7 +49,7 @@ private Socket socket;
 			String	line = inputChannel.readLine() ; //blocking =>
  			return line;		
 		} catch ( Exception e   ) {
-	 		System.out.println( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
+			Colors.outerr( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
 	 		return null;
 		}		
 	}
@@ -59,7 +59,7 @@ private Socket socket;
 		try {
 			socket.close();
 		} catch (IOException e) {
-			System.out.println( "TcpConnection | close ERROR " + e.getMessage());	
+			Colors.outerr( "TcpConnection | close ERROR " + e.getMessage());	
 		}
 	}
 

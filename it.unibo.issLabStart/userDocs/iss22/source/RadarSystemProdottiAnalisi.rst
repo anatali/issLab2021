@@ -1,10 +1,4 @@
-.. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
 
-.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
-
-.. _clean-architecture:  https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-
-.. _microservizio: https://en.wikipedia.org/wiki/Microservices
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Prodotti della analisi
@@ -212,7 +206,25 @@ Il fatto di avere espresso il ``Controller`` con riferimento a interfacce e non 
 significa che il progettista si può avvalere di appropriati :blue:`design pattern` per 
 implememtare i componenti in modo che possano scambiare informazione via rete.
 
-Traendo ispirazione dal  pattern-proxy_, possiamo evidenziare, come analisti, la necessità
+
+
+- Il **Proxy** può essere utilizzato per accedere ad un un oggetto complesso tramite un oggetto semplice
+  o quando si desidera  nascondere il fatto che si sta chiamando un servizio remoto.
+
+- Il **Decorator** è anche chiamato **'Smart Proxy'** e viene utilizzato quando si desidera aggiungere funzionalità 
+  a un oggetto, senza usare l'ereditarietà.  
+
+- L'**Adapter** viene utilizzato quando si desidera mappare un oggetto con una certa
+  interfaccia su un altro oggetto che ha un ruolo funzionale simile, ma  interfaccia diversa.
+
+- Il **Bridge** è molto simile a Adapter, ma definisce sia l'interfaccia 
+  che l'implementazione sottostante.  
+
+- La **Facade** è un'interfaccia di livello superiore (più semplice) per un sottosistema 
+  di una o più classi.  
+
+
+Traendo ispirazione dal  pattern-decorator_, possiamo evidenziare, come analisti, la necessità
 di introdurre un nuovo tipo di ente, che denominiamo :blue:`enabler`, 
 che ha come scopo quello di incapsulare software 'convenzionale' utile e 
 testato ma non adatto alla distribuzione (che denominiamo :blue:`core-code`) 
@@ -223,13 +235,13 @@ Nel caso specifico,  supponendo che il Controller sia allocato sul PC; abbiamo b
 - di un enabler per il `core-code` del Sonar
 - di un enabler per il `core-code` del Led
 
-Ad esempio, il ``Controller`` su PC potrebbe utilizzare un proxy tipo-server con interfaccia 
-``ISonar`` che riceverà i dati da un enabler tipo-client del Sonar posto sul Raspberry.
-Inoltre, il ``Controller`` potrebbe utilizzare come proxy verso il Led un TCP-client 
-con interfaccia ``ILed`` che trasmetterà i comandi a un enabler tipo-server del Led sul Raspberry.
+Ad esempio, il ``Controller`` su PC potrebbe utilizzare un *proxy tipo-server* con interfaccia 
+``ISonar`` che riceverà i dati da un *enabler tipo-client* del Sonar posto sul Raspberry.
+Inoltre, il ``Controller`` potrebbe utilizzare un *proxy tipo-client*  
+con interfaccia ``ILed`` che trasmetterà i comandi a un *enabler tipo-server* del Led sul Raspberry.
 
 
-.. image:: ./_static/img/Radar/ArchLogicaOOPEnablers.PNG 
+.. image:: ./_static/img/Radar/ArchLogicaOOPEnablers.PNG   
    :align: center
    :width: 50%
 
@@ -237,7 +249,7 @@ con interfaccia ``ILed`` che trasmetterà i comandi a un enabler tipo-server del
 Tuttavia, per limitare il traffico di rete, è inutile inviare i dati del sonar anche quando non
 sono richiesti dal sever, per cui, come analisti, riteniamo opportuno che sul PC vengano definiti, ad uso
 del  ``Controller``, due *proxy*, uno per il Led e uno per il Sonar, che interagiranno cone due
-enabler *tipo-server* complementari posti sul RaspberryPi, inviando:
+*enabler tipo-server* complementari posti sul RaspberryPi, inviando:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
 - messaggi interpretabili cone :blue:`richieste` (ad esempio ``getVal``, ``getState``)
@@ -246,7 +258,7 @@ enabler *tipo-server* complementari posti sul RaspberryPi, inviando:
    :align: center
    :width: 50%
  
-L'idea di :blue:`enabler`, affiancata all'idea di *proxy*, sembra dunque promettente 
+L'idea di :blue:`enabler`, unitamente all'idea di *proxy*, sembra dunque promettente 
 per un passaggio graduale e sistematico dalla programmazione tradizionale ad oggetti 
 alla programmazione distribuita.
 Siamo di fornte ai primi passi relativi a un 

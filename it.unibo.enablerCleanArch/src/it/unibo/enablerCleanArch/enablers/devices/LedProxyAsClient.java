@@ -8,11 +8,10 @@ import it.unibo.enablerCleanArch.supports.Colors;
 /*
  * Adapter for the output device  Led
  */
-public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
+public class LedProxyAsClient extends EnablerAsClient implements ILed {
 
-	public LedAdapterEnablerAsClient( String name, String host, int port, ProtocolType protocol  ) {
-		super(name,host,port, protocol);
-		Colors.out(name+" |  STARTS for " + host +":"+port);
+	public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
+		super(name,host,entry, protocol);
 	}
 
 	@Override

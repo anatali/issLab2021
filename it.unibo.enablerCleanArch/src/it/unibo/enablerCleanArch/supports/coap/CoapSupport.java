@@ -28,12 +28,12 @@ private String url;
 	}
 
 	public String readResource( String query  ) throws  Exception {
-		CoapClient myclient = new CoapClient( url+"?q="+query );
-		CoapResponse respGet = myclient.get( );
+		CoapClient myclient  = new CoapClient( url+"?q="+query );
+		CoapResponse respGet = myclient.get(  );
 		Colors.out("CoapSupport | readResource query=" + query 
 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 		return respGet.getResponseText();
-	}
+ 	}
 
 	public void removeObserve() {
 		relation.proactiveCancel();	
@@ -62,7 +62,7 @@ private String url;
 	
 	@Override
 	public String request(String query) throws Exception {
- 		 return readResource(   );
+ 		 return readResource(  query  );
 	}
 
 	@Override

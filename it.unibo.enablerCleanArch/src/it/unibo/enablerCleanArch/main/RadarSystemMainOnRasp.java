@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.*;
-import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 
 /*
  * Main program for the RapberryPi and real devices

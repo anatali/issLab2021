@@ -5,13 +5,12 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Colors;
+ 
 
-  
-
-public class SonarEnablerAsClient extends EnablerAsClient implements ISonar{
+public class SonarProxyAsClient extends EnablerAsClient implements ISonar{
  	
-	public SonarEnablerAsClient( String name, String host, int port, ProtocolType protocol ) {
-		super( name,  host,  port, protocol );
+	public SonarProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
+		super( name,  host,  entry, protocol );
  	}
  	@Override
 	public void activate() {
@@ -25,9 +24,9 @@ public class SonarEnablerAsClient extends EnablerAsClient implements ISonar{
 
 	@Override
 	public IDistance getDistance() {
-		Colors.out( name + " | getVal ", Colors.ANSI_PURPLE);
-		String answer = sendRequestOnConnection("getVal");
-		Colors.out( name + " | getVal answer="+answer, Colors.ANSI_PURPLE);
+		Colors.out( name + " | getDistance ", Colors.ANSI_PURPLE);
+		String answer = sendRequestOnConnection("getDistance");
+		Colors.out( name + " | getDistance answer="+answer, Colors.ANSI_PURPLE);
 		return new Distance( Integer.parseInt(answer) );
 	}
 

@@ -9,10 +9,10 @@ import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedAdapterEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -42,6 +42,7 @@ public class TestEnablers {
 		RadarSystemConfig.sonarDelay = 100;
  		RadarSystemConfig.testing    = false;
 
+ 		ProtocolType protocol        = ProtocolType.tcp;
  		//ISonar sonar = DeviceFactory.createSonar();
 		//ILed led     = DeviceFactory.createLed();
 		
@@ -50,17 +51,17 @@ public class TestEnablers {
 		 */
 		//Server su PC 
  		sonarServer = new EnablerAsServer(
- 				"sonarServer",RadarSystemConfig.sonarPort,ProtocolType.tcp, new SonarApplHandler("sonarH") );
+ 				"sonarServer",RadarSystemConfig.sonarPort,protocol, new SonarApplHandler("sonarH") );
  		//Server su Rasp 
  		ledServer   = new EnablerAsServer(
- 				"ledServer",RadarSystemConfig.ledPort,ProtocolType.tcp, new LedApplHandler("ledH")  );
+ 				"ledServer",RadarSystemConfig.ledPort,protocol, new LedApplHandler("ledH")  );
 
  		//Client su PC
- 		ledClient = new LedAdapterEnablerAsClient(
-				"ledClient", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
+ 		ledClient = new LedProxyAsClient(
+				"ledClient", "localhost",""+RadarSystemConfig.ledPort, protocol );
  		//Client su Rasp  		
- 		sonarClient = new SonarEnablerAsClient(
-				"sonarClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp );
+ 		sonarClient = new SonarProxyAsClient(
+				"sonarClient", "localhost",""+RadarSystemConfig.sonarPort, protocol );
 		
 
 	}

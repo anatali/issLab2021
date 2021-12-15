@@ -65,7 +65,8 @@ private Interaction2021 conn;
 	 * Metodo che usa conn in modo diretto: da evitare
 	 */
 	protected void simulateDistance(   ) throws Exception {
-		ACallerClient serverCaller = new ACallerClient("client","localhost", RadarSystemConfig.ctxServerPort);
+		ACallerClient serverCaller = 
+				new ACallerClient("client","localhost", ""+RadarSystemConfig.ctxServerPort);
 		conn = serverCaller.getConn();
 		 conn.forward( fardistance.toString() );  
 		 conn.forward( neardistance.toString() );  
@@ -77,9 +78,12 @@ private Interaction2021 conn;
 		RadarSystemConfig.sonarDelay        = 50;
 		RadarSystemConfig.DLIMIT            = 40;
 		
-		ACallerClient sonarCaller  = new ACallerClient("sonarCaller", "localhost",  RadarSystemConfig.ctxServerPort);
-		ACallerClient ledCaller    = new ACallerClient("ledCaller",   "localhost",  RadarSystemConfig.ctxServerPort);
-		RadarGuiClient radarCaller = new RadarGuiClient("radarCaller","localhost",  RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
+		ACallerClient sonarCaller  = 
+				new ACallerClient("sonarCaller", "localhost",  ""+RadarSystemConfig.ctxServerPort);
+		ACallerClient ledCaller    = 
+				new ACallerClient("ledCaller",   "localhost",  ""+RadarSystemConfig.ctxServerPort);
+		RadarGuiClient radarCaller = 
+				new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
 		
 		sonarCaller.sendCommandOnConnection(sonarActivate.toString());
 		for( int i=1; i<= 10; i++) {

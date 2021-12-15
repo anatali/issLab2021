@@ -6,8 +6,8 @@ import it.unibo.enablerCleanArch.enablers.ProtocolType;
 
 public class ACallerClient  extends EnablerAsClient{
 
-	public ACallerClient(String name, String host, int port ) {
-		super(name, host, port, ProtocolType.tcp);
+	public ACallerClient(String name, String host, String entry ) {
+		super(name, host, entry, ProtocolType.tcp);
 	}
 
  

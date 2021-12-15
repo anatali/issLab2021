@@ -27,7 +27,8 @@ public class RadarSystemMainOnPcLikeRaspCoap {
 			System.out.println("Controller on PcLikeRasp  "  );
 			ISonar sonar    = DeviceFactory.createSonar();
 			ILed   led      = DeviceFactory.createLed();
- 			IRadarDisplay radar =  new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, RadarSystemConfig.radarGuiPort, ProtocolType.tcp ); 
+ 			IRadarDisplay radar =  
+ 					new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, ""+RadarSystemConfig.radarGuiPort, ProtocolType.tcp ); 
  			//Control
 			Controller.activate( led, sonar, radar );
  		}
