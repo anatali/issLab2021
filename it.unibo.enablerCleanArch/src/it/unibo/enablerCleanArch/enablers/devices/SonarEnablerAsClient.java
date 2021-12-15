@@ -27,6 +27,7 @@ public class SonarEnablerAsClient extends EnablerAsClient implements ISonar{
 	public IDistance getDistance() {
 		Colors.out( name + " | getVal ", Colors.ANSI_PURPLE);
 		String answer = sendRequestOnConnection("getVal");
+		Colors.out( name + " | getVal answer="+answer, Colors.ANSI_PURPLE);
 		return new Distance( Integer.parseInt(answer) );
 	}
 

@@ -15,6 +15,7 @@ import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarEnablerAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 /*
  * Simulo un Controller su PC che usa
@@ -49,17 +50,17 @@ public class TestEnablers {
 		 */
 		//Server su PC 
  		sonarServer = new EnablerAsServer(
- 				"SonarAdapterEnablerAsServer",RadarSystemConfig.sonarPort,ProtocolType.tcp, new SonarApplHandler("sonarH") );
+ 				"sonarServer",RadarSystemConfig.sonarPort,ProtocolType.tcp, new SonarApplHandler("sonarH") );
  		//Server su Rasp 
- 		ledServer          = new EnablerAsServer(
- 				"LedEnablerAsServer",RadarSystemConfig.ledPort,ProtocolType.tcp, new LedApplHandler("ledH")  );
+ 		ledServer   = new EnablerAsServer(
+ 				"ledServer",RadarSystemConfig.ledPort,ProtocolType.tcp, new LedApplHandler("ledH")  );
 
  		//Client su PC
  		ledClient = new LedAdapterEnablerAsClient(
-				"LedAdapterEnablerAsClient", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
+				"ledClient", "localhost",RadarSystemConfig.ledPort, ProtocolType.tcp );
  		//Client su Rasp  		
  		sonarClient = new SonarEnablerAsClient(
-				"SonarEnablerAsClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp );
+				"sonarClient", "localhost",RadarSystemConfig.sonarPort, ProtocolType.tcp );
 		
 
 	}
@@ -75,10 +76,10 @@ public class TestEnablers {
 	//@Test 
 	public void testTheLed() {
 		ledClient.turnOn();
-		delay(500);
+		Utils.delay(500);
 		assertTrue( ledClient.getState() );
 		ledClient.turnOff();		
-		delay(500);
+		Utils.delay(500);
 		assertTrue( ! ledClient.getState() );
 	}
 	
@@ -87,14 +88,14 @@ public class TestEnablers {
 		
 		//Simulo il Controller
 		sonarServer.activate();
-		delay(500);		
+		Utils.delay(500);		
 		System.out.println("testEnablers " + sonarClient.isActive());
 		
 		
 		while( sonarClient.isActive() ) {
 			int v = sonarClient.getDistance().getVal();
 			Colors.out("Controller-simulated getVal="+v, Colors.GREEN);
-			delay(500);
+			Utils.delay(500);
 			if( v < RadarSystemConfig.DLIMIT ) ledClient.turnOn();
 			else ledClient.turnOff();
 		}
@@ -103,11 +104,5 @@ public class TestEnablers {
 		
 	}
 	
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
-				e.printStackTrace();
-		}		
-	}	
+
 }

@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpServer;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
  
 /*
  * Attiva un server relativo al protocollo specificato (se non null)
@@ -33,9 +34,9 @@ protected TcpServer serverTcp;
 		if( protocol == ProtocolType.tcp ) {
 			//serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  this.getClass().getName(), this );
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
-			serverTcp.activate();
+			//serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
-			//
+			CoapApplServer.getServer();	//Dove sono le risorse? handler (SonarApplHandler, ... )
 		}
 	}	
  	
@@ -43,6 +44,10 @@ protected TcpServer serverTcp;
  		return name;
 	}
  	public void  activate() {
+		if( protocol == ProtocolType.tcp ) {
+			serverTcp.activate();
+		}else if( protocol == ProtocolType.coap ) {
+		}		
  		
  	}
  	public boolean isActive() {

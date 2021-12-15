@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import it.unibo.enablerCleanArch.domain.*;
+import it.unibo.enablerCleanArch.supports.Colors;
  
 
 /*
@@ -9,13 +10,14 @@ import it.unibo.enablerCleanArch.domain.*;
  */
 public class SonarAdapterCoapObserver implements ISonar, CoapHandler{
 private IDistance curVal = null;
+private CoapSupport cps ;
 
 	public SonarAdapterCoapObserver( String hostAddr, String resourceUri   ) {
 		
- 		System.out.println("SonarAdapterCoapObserver |  STARTS  "  );
+ 		System.out.println("SonarAdapterCoapObserver |  STARTS  " + resourceUri );
  		//Attivo un Observer che implementa ISonar (per il Controller)
- 		System.out.println("SonarAdapterCoapObserver | resourceUri= " + resourceUri );
-		CoapSupport cps = new CoapSupport(hostAddr, resourceUri );
+ 		cps = new CoapSupport(hostAddr, resourceUri );
+		Colors.out("SonarAdapterCoapObserver |  cps  " + cps );
 		cps.observeResource(this);		
  	}
 
@@ -28,13 +30,26 @@ private IDistance curVal = null;
 
 	@Override
 	public void onError() {
-		System.out.println("SonarAdapterCoapObserver | ERROR " );	
+		System.out.println("SonarAdapterCoapObserver | onError ERROR " );	
 	}
 	
 	//from ISonar
 	
-	public void deactivate() {}	 
-	public  void activate() {}    
+	public void deactivate() { 
+		try {
+			cps.updateResource( "deactivate" );
+		} catch (Exception e) {
+			Colors.outerr("SonarAdapterCoapObserver | deactivate ERROR " + e.getMessage());
+		}
+	}	 
+	public  void activate() {
+		try {
+			cps.updateResource( "activate" );
+		} catch (Exception e) {
+			Colors.outerr("SonarAdapterCoapObserver | activate ERROR " + e.getMessage());
+		}		
+		
+	}    
 
 	@Override //from ISonar
 	public boolean isActive() {

@@ -35,6 +35,12 @@ private Socket socket;
 		}	
 	}
 
+	@Override
+	public String request(String msg)  throws Exception {
+		forward(  msg );
+		String answer = receiveMsg();
+		return answer;
+	}
  
 	@Override
 	public String receiveMsg()  {
