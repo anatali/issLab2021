@@ -1,14 +1,18 @@
 package it.unibo.enablerCleanArch.domain;
  
- 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 
 public abstract class SonarModel  implements ISonar{ //extends Observable
-	protected  IDistance curVal ;
+public final static int queueSize = 10;
+//	protected  IDistance curVal ;
 	
 	protected boolean stopped  = false;
-	private boolean produced   = false;
+//	private boolean produced   = false;
+	
+	private BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
 	
 	public static ISonar create() {
 		if( RadarSystemConfig.simulation )  return createSonarMock();
@@ -28,7 +32,8 @@ public abstract class SonarModel  implements ISonar{ //extends Observable
 		sonarSetUp();
 	}
 	protected abstract void sonarSetUp() ;
-	protected abstract void sonarProduce() ;
+	//protected abstract void sonarProduce() ;
+	protected abstract void sonarProduce(BlockingQueue<IDistance> queue) ;
 
 	@Override
 	public boolean isActive() {
@@ -38,8 +43,15 @@ public abstract class SonarModel  implements ISonar{ //extends Observable
 	@Override
 	public IDistance getDistance() {
 		//Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
-		waitForUpdatedVal();
-		return curVal;
+		//waitForUpdatedVal();		
+		IDistance curVal;
+		try {
+			curVal = blockingQueue.take();
+			return curVal;
+		} catch (InterruptedException e) {
+			Colors.outerr("SonarMock | ERROR:"+e.getMessage());
+			return null;
+		}	
 	}
 	
 	@Override
@@ -49,7 +61,7 @@ public abstract class SonarModel  implements ISonar{ //extends Observable
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
-					sonarProduce();
+					sonarProduce( blockingQueue );
 				}
 				Colors.out("SonarModel | ENDS", Colors.GREEN);
 		    }
@@ -62,6 +74,7 @@ public abstract class SonarModel  implements ISonar{ //extends Observable
 		stopped = true;
 	}
 
+	/*
 	protected synchronized void valueUpdated( ){
 		produced = true;
 		this.notify();
@@ -74,5 +87,5 @@ public abstract class SonarModel  implements ISonar{ //extends Observable
  		} catch (InterruptedException e) {
  			System.out.println("Sonar | waitForUpdatedVal ERROR " + e.getMessage() );
 		}		
-	}
+	}*/
 }

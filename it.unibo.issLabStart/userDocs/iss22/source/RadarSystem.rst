@@ -253,7 +253,7 @@ Il pattern observer
 
 Nella programmazione ad oggetti, un componente  :blue:`osservabile` invoca un metodo di
 invio di dati (quando disponibili) a tutti i componenti che sono stati in precedenza registrati 
-presso di lui  come *osservatori*. Un componente può essere registarto come osservatore solo
+presso di lui  come *osservatori*. Un componente può essere registrato come osservatore solo
 se implementa il metodo di invio dati (di solito denominato ``update``).
 
 La registrazione di un *observer* presso un *observable*
@@ -324,7 +324,7 @@ Ma ecco sorgere un'altra problematica legata alla distribuzione:
   Tuttavia, un colloquio con il committente ha escluso (per motivi di costo) la possibilità di introdurre un altro
   nodo di elaborazione. 
 
-- La presenza di un broker in forme di comunicazione mediata  potrebbe indurci ad attribuire responsabiliotà
+- La presenza di un broker in forme di comunicazione mediata  potrebbe indurci ad attribuire responsabilità
   applicative al mediatore. Ma è giusto/opportuno procedere i questo modo?
 
 Dunque si tratta di analizzare dove sia meglio allocare il ``Controller`` :
@@ -424,6 +424,7 @@ nella seguente interfaccia:
 
   interface Interaction2021  {	 
     public void forward(  String msg ) throws Exception;
+    public String request(  String msg ) throws Exception;
     public String receiveMsg(  )  throws Exception;
     public void close( )  throws Exception;
   }

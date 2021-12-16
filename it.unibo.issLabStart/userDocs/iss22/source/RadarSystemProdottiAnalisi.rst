@@ -181,14 +181,14 @@ Come analisti del problema possiamo però evidenziare quanto segue:
 
 #. l'uso della memoria comune come strumento di comunicazione va evitato, per  
    ottenere la flessibità di poter eseguire ciascun componente su un diverso nodo di elaborazione; 
-#. il ``Controller`` può acquisire i dati in due modi diversi:
+#. il ``Controller`` può acquisire i dati del Sonar in  modi diversi:
 
-  #. inviando una richieste al Sonar, che gli fornisce un dato come risposta
-  #. il Sonar non lavora come 'produttore a richiesta' ma pubblica dati su un broker 
-     accessibile al ``Controller``.
+  #. inviando una richieste al Sonar, che gli fornisce un dato come risposta;
+  #. agendo come un componente *observer* di un Sonar *observable*;
+  #. agendo com un *subscriber* su una *topic* di un broker su cui il Sonar pubblica i suoi dati.
 
-Poichè abbiamo in precedenza escluso forme di interazione *publish-subscribe*, abbiamo al momento
-ipotizzato il caso 2.1. 
+Poichè abbiamo in precedenza escluso forme di interazione *publish-subscribe*, ci concentrimao al momento
+sui caso 2.1 e 2.2. 
 
 Questo modello sembra portare intrinsecamente in sè l'idea di una classica applicazione   
 ad oggetti che deve essere eseguita su un singolo elaboratore (o una singola Java virtual machine).
@@ -246,9 +246,10 @@ con interfaccia ``ILed`` che trasmetterà i comandi a un *enabler tipo-server* d
    :width: 50%
 
 
-Tuttavia, per limitare il traffico di rete, è inutile inviare i dati del sonar anche quando non
-sono richiesti dal sever, per cui, come analisti, riteniamo opportuno che sul PC vengano definiti, ad uso
-del  ``Controller``, due *proxy*, uno per il Led e uno per il Sonar, che interagiranno cone due
+Tuttavia, come analisti, riteniamo opportuno  limitare il traffico di rete, 
+evitando di inviare i dati del sonar anche quando non
+sono richiesti dal sever.  Per cui, una architettura migliore è porre sul PC, ad uso
+del ``Controller``, due  *proxy tipo-client*, uno per il Led e uno per il Sonar, che interagiranno cone due
 *enabler tipo-server* complementari posti sul RaspberryPi, inviando:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
@@ -276,14 +277,8 @@ seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistem
 
 Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito dal committente, possiamo pensare di procedere come segue:
 
-<<<<<<< HEAD
 #. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
 #. definizione di alcuni supporti TCP per componenti lato client e lato server, con l'obiettivo di
-=======
-#. definizione dei oggetti software di base (:blue:`core-code`) legati ai dispositivi di I/O 
-  (Sonar, RadarDisplay e Led);
-#. definizione di alcuni supporti TCP per componenti lato client a lato server, con l'obiettivo di
->>>>>>> ec913d676d3c6be52d27167764322c465fae8efe
    formare un insieme riusabile anche in applicazioni future; 
 #. definizione di componenti  :blue:`enabler`  capaci di abilitare  
    alle comunicazioni (via TCP o mediante altri tipi di protocollo) i componenti-base;

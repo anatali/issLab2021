@@ -19,6 +19,7 @@ public class TestSonarMock {
 	@Test 
 	public void testSonarMock() {
 		RadarSystemConfig.simulation = true;
+		RadarSystemConfig.testing    = false;
 		RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
 		int delta = 1;
 				
@@ -27,9 +28,10 @@ public class TestSonarMock {
 		
 		int v0 = sonar.getDistance().getVal();
  		System.out.println("sonar initial value=" + v0);
+ 		
 		while( sonar.isActive() ) {
 			int d = sonar.getDistance().getVal();
-	 		//System.out.println("sonar getVal=" + d);
+	 		System.out.println("sonar getVal=" + d);
 			int vexpectedMin = v0-delta;
 			int vexpectedMax = v0+delta;
 			assertTrue(  d <= vexpectedMax && d >= vexpectedMin );

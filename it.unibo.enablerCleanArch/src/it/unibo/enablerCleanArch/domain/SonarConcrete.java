@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.concurrent.BlockingQueue;
 
 import it.unibo.enablerCleanArch.supports.Colors;
 
@@ -25,6 +26,22 @@ public class SonarConcrete extends SonarModel implements ISonar{
  		return curVal ;
 	}
 	
+	@Override
+	protected void sonarProduce(BlockingQueue<IDistance> queue) {
+        try {
+			String data = reader.readLine();
+			dataCounter++;
+			if( dataCounter % numData == 0 ) { //every numData ...
+				//curVal.setVal( Integer.parseInt(data) );
+				Colors.out("SonarConcrete | data=" + data );
+				queue.add( new Distance(data) );
+			 }
+       }catch( Exception e) {
+       	Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
+       }
+		
+	}
+/*	
 	protected void sonarProduce() {
          try {
  			String data = reader.readLine();
@@ -37,6 +54,6 @@ public class SonarConcrete extends SonarModel implements ISonar{
         }catch( Exception e) {
         	Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
         }
- 	}
+ 	}*/
 
  }

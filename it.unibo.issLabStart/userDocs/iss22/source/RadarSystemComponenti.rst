@@ -198,12 +198,12 @@ Il Sonar
 Un Sonar è un dispositivo di input che deve fornire dati quando richiesto dalla applicazione.
 
 Il software fornito dal committente per l'uso di un Sonar reale ``HC-SR04`` introduce
-logicamente un componente attivo, che produce in modo autonomo sul dispositivo standard di output,
-con una certa frequenza, una sequenza di valori interi di distanza.
+logicamente un componente attivo, che produce sul dispositivo standard di output,
+con una certa frequenza, una sequenza di valori (interi) di distanza.
 
 La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo di output
 in quanto occorre affrontare un classico problema produttore-consumatore.
-Al momento seguiremo un approccio tipico della programmazione concorrente, basato su memoria comune
+Al momento seguiremo un approccio tipico della programmazione concorrente, basato su memoria comune.
 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -404,10 +404,10 @@ Il testing di un sonar riguarda due aspetti distinti:
 Ovviamente qui ci dobbiamo occupare della seconda parte, supponendo che la prima sia soddisfatta. A tal fine
 possiamo procedere come segue:
 
-- per il *LedMock*, noi controlliamo la sequenza di valori emeessi e quindi possiamo
-  verificare che  un consumatore riceva dal metodo ``getVal`` i valori nella giusta sequenza;
+- per il *LedMock*, poichè siamo noi a generare la sequenza di valori, possiamo
+  verificare che  un consumatore riceva dal metodo ``getDistance`` i valori nella giusta sequenza;
 - per il *LedConcrete*, poniamo uno schermo a distanza prefissata :math:`D`  e verifichiamo che
-  un consumatore riceva dal  metodo ``getVal`` valori :math:`D \pm \epsilon`.
+  un consumatore riceva dal  metodo ``getDistance`` valori :math:`D \pm \epsilon`.
 
 Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in JUnit come segue:
 
@@ -435,9 +435,9 @@ Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :ma
 di varianza sulla distanza-base.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il Sonar come dispositivo osservabile
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Volendo impostare il Sonar come un dispositivo osservabile, 
 introduciamo un nuovo contratto, che esetende il precedente:
@@ -460,7 +460,7 @@ di distanza, il metodo ``update`` di tutti gli osservatori registrati.
 Per aggiungere al Sonar le funzionalità di osservabilità,  possiamo avvalerci del pattern decorator_
 trasformando oggetti di tipo ``SonarState`` in oggetti osservabili:
 
-.. _decorator: https://it.wikipedia.org/wiki/Decorator
+
 
 .. code:: java
 
@@ -503,9 +503,9 @@ e che implementa i metodi di registrazione ridiregendoli allo stato osservabile.
     }
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Testing del sonar osservabile
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Il testing sul ``SonarObservableMock`` viene qui impostato nel modo che segue:
 
