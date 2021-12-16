@@ -24,17 +24,17 @@ L'architettura logica è il più possibile **indipendente da ogni ipotesi sull'a
 Un modo per *valutare la qualità* di una architettura logica e la *coerenza con i requisiti* 
 è dare risposta a opportune domande, come le seguenti:
 
-- E' possibile addentrarsi nei dettagli dell'architettura procedendo :blue:`incrementalmente` 
-  a livelli di astrazione via via descrescenti (con tecniche di raffinamento e :blue:`zooming`) 
-  o siamo di fornte a un ammasso non organizzato di parti?
-- Le dipendenze tra le parti sono state impostate a livello logico o riflettono (erroneamente) 
-  una *visione implementativa*?
 - Se nel modello compaiono entità denotate da **termini non definiti** nel glossario costruito 
   dall'analista dei requisiti, quale è la motivazione della loro presenza? 
   Sono elementi realmente necessari o siamo di fronte ad una prematura anticipazione di elementi di progettazione?
 - Se nel modello **non compaiono** entità corrispondenti a termini definiti nel glossario, 
   quale è la motivazione della loro mancanza? Siamo di fronte a una dimenticanza 
   o vi sono ragioni reali per non includere questi elementi?
+- Le dipendenze tra le parti sono state impostate a livello logico o riflettono (erroneamente) 
+  una *visione implementativa*?
+- E' possibile addentrarsi nei dettagli dell'architettura procedendo :blue:`incrementalmente` 
+  a livelli di astrazione via via descrescenti (con tecniche di raffinamento e :blue:`zooming`) 
+  o siamo di fornte a un ammasso non organizzato di parti?
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Architettura ad oggetti
@@ -50,10 +50,10 @@ riconducibile a un classico schema :blue:`read-eval-print` in cui:
   come dispositivo di input e inviare comandi al ``Led`` e al ``RadarDisplay`` 
   come dispositvi di output.
 
-:remark:`Il sistema presenta quattro componenti: tre dispositivi e un Controller che li gestisce`
+:remark:`Il sistema presenta quattro componenti: tre Dispositivi di I/O e un Controller che li gestisce`
 
 Per rendere comprensibile questa architettura anche alla 'macchina' senza entrare in dettagli
-implementativi, possiamo introdurre opportuni :blue:`modelli dei componenti` utlizzando qualche linguaggio
+implementativi, possiamo introdurre opportuni :blue:`modelli dei componenti` utlizzando un linguaggio
 di programmazione.
 
 Nel caso di Java, il costrutto interface può essere usato per denotare un componente catturandone
@@ -69,7 +69,7 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 
 :remark:`il modello del dominio sarà al centro della architettura del sistema`
 
-:remark:`il software relativo dominio sarà scritto in un package dedicato`
+:remark:`il software relativo dominio sarà scritto in un package dedicato (xxx.domain)`
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Le interfacce ILed e IRadarDisplay
@@ -104,7 +104,7 @@ Le interfacce IDistance e ISonar
   :widths: 50, 50 
   :width: 100%
 
-  * -  Sonar State
+  * -  Distance
     -  Sonar
 
   * -        
@@ -120,28 +120,25 @@ Le interfacce IDistance e ISonar
        public interface ISonar {
          public void activate();		 
          public void deactivate();
-         public ISonarDistance getDistance();	
+         public IDistance getDistance();	
          public boolean isActive();
        }
 
-In quanto generatore di dati, ``ISonar`` offre metodi per attivare/disattaivare il dispositivo e il
-metodo ``getVal`` per fornire il valore corrente di distanza misurata. 
+In quanto dispositivo-generatore di dati, ``ISonar`` offre metodi per attivare/disattivare il dispositivo e il
+metodo ``getDistance`` per fornire il valore corrente di distanza misurata. 
 
-La interfaccia ``ISonarDistance`` è introdotta per reppresentare il concetto di distanza, in modo
-da non ridurre quato concetto a un tipo predefinito, come ``int``.
+La interfaccia ``IDistance`` è introdotta per reppresentare il concetto di distanza, in modo
+da non appiattire questo concetto su un tipo predefinito, come ``int``.
 
 Notiamo che, invece, per il Led abbiamo 'ridotto' il concetto di stato del Led al 
-tipo predefinito  ``boolean``. Questa diverso modo di procedere avrà conseguenze, che verranno
+tipo predefinito  ``boolean``. Questa diverso modo di procedere potrebbe avere conseguenze, che verranno
 poste meglio in luce in seguito.
-
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Architettura logica del sistema
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
-
-
  
 .. image:: ./_static/img/Radar/ArchLogicaOOP.PNG
    :align: center
@@ -157,7 +154,7 @@ La logica del Controller
 .. Poichè l'analisi ha evidenziato l'opportunità di incapsulare la logica applicativa entro un componente
   ad-hoc (il ``Controller``), 
 
-A questo punto possiamo anche esprimere il funzionamento del ``Controller`` come segue:
+A questo punto possiamo anche esprimere il funzionamento logico del ``Controller`` come segue:
 
 .. code:: java
 
@@ -167,9 +164,9 @@ A questo punto possiamo anche esprimere il funzionamento del ``Controller`` come
   ...
   while( sonar.isactive() ){
     IDistance d = sonar.getDistance(); //Acquisizione di un dato dal sonar
-    if( d.getVal()) < DLIMIT )        //Elaborazione del dato
+    if( d.getDistance().getVal()) < DLIMIT )        //Elaborazione del dato
       Led.turnOn() else Led.turnOff  //Gestione del Led
-    radar.update( ""+d.getVal(), "90")    //Visualizzazione su RadarDisplay
+    radar.update( ""+d.getDistance().getVal(), "90")    //Visualizzazione su RadarDisplay
   }
 
 .. Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
@@ -177,18 +174,15 @@ A questo punto possiamo anche esprimere il funzionamento del ``Controller`` come
 
 Il :blue:`come` avviene l'interazione tra le parti relativa alla acqusizione dei dati e all'invio dei comandi
 non è specificato al momento. 
-Come analisti del problema possiamo però evidenziare quanto segue:
+Come analisti del problema possiamo però evidenziare che il ``Controller`` 
+può acquisire i dati del Sonar in  modi diversi:
 
-#. l'uso della memoria comune come strumento di comunicazione va evitato, per  
-   ottenere la flessibità di poter eseguire ciascun componente su un diverso nodo di elaborazione; 
-#. il ``Controller`` può acquisire i dati del Sonar in  modi diversi:
-
-  #. inviando una richieste al Sonar, che gli fornisce un dato come risposta;
+  #. inviando una richiesa al Sonar, che gli fornisce un dato come risposta;
   #. agendo come un componente *observer* di un Sonar *observable*;
   #. agendo com un *subscriber* su una *topic* di un broker su cui il Sonar pubblica i suoi dati.
 
 Poichè abbiamo in precedenza escluso forme di interazione *publish-subscribe*, ci concentrimao al momento
-sui caso 2.1 e 2.2. 
+sui casi 2.1 e 2.2. 
 
 Questo modello sembra portare intrinsecamente in sè l'idea di una classica applicazione   
 ad oggetti che deve essere eseguita su un singolo elaboratore (o una singola Java virtual machine).
@@ -204,14 +198,12 @@ Dagli oggetti alla distribuzione: gli enablers
 
 Il fatto di avere espresso il ``Controller`` con riferimento a interfacce e non ad oggetti concreti, 
 significa che il progettista si può avvalere di appropriati :blue:`design pattern` per 
-implememtare i componenti in modo che possano scambiare informazione via rete.
-
-
+implementare i componenti in modo che possano scambiare informazione via rete.
 
 - Il **Proxy** può essere utilizzato per accedere ad un un oggetto complesso tramite un oggetto semplice
   o quando si desidera  nascondere il fatto che si sta chiamando un servizio remoto.
 
-- Il **Decorator** è anche chiamato **'Smart Proxy'** e viene utilizzato quando si desidera aggiungere funzionalità 
+- Il **Decorator** (anche chiamato **'Smart Proxy'**) viene utilizzato quando si desidera aggiungere funzionalità 
   a un oggetto, senza usare l'ereditarietà.  
 
 - L'**Adapter** viene utilizzato quando si desidera mappare un oggetto con una certa
@@ -246,19 +238,27 @@ con interfaccia ``ILed`` che trasmetterà i comandi a un *enabler tipo-server* d
    :width: 50%
 
 
-Tuttavia, come analisti, riteniamo opportuno  limitare il traffico di rete, 
+Tuttavia, come analisti, riteniamo sia opportuno  limitare il traffico di rete, 
 evitando di inviare i dati del sonar anche quando non
 sono richiesti dal sever.  Per cui, una architettura migliore è porre sul PC, ad uso
 del ``Controller``, due  *proxy tipo-client*, uno per il Led e uno per il Sonar, che interagiranno cone due
 *enabler tipo-server* complementari posti sul RaspberryPi, inviando:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
-- messaggi interpretabili cone :blue:`richieste` (ad esempio ``getVal``, ``getState``)
+- messaggi interpretabili cone :blue:`richieste` (ad esempio ``getDistance``, ``getState``)
 
 .. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
    :align: center
    :width: 50%
- 
+
+Notiamo che questo schema architettrurale è valido anche nel caso in cui il Sonar sia 
+un dispositivo-observable:
+
+.. image:: ./_static/img/Radar/ArchLogicaOOPSonarObservable.PNG 
+   :align: center
+   :width: 50%
+
+
 L'idea di :blue:`enabler`, unitamente all'idea di *proxy*, sembra dunque promettente 
 per un passaggio graduale e sistematico dalla programmazione tradizionale ad oggetti 
 alla programmazione distribuita.

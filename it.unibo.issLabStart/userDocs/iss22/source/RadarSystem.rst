@@ -395,10 +395,29 @@ di operare come un `client-TCP` e componenti capacai di operare come un `server-
     - Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
       Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
 
-Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
-il server può anche dover inviare messaggi ai client, ad esempio quando  si richiede una interazione di tipo
-:blue:`request-response`. In tal caso, il client deve essere anche capace di agire come ricevitore di messaggi.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Tipi di interazione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Inizialmente il server opera come ricevitore di messaggi e il client come emettitore. Ma su una connessione TCP,
+il server può anche inviare messaggi ai client.
+Conviene dunque introdurre una terminologia per le interazioni a scambio di messggi:
+
+- :blue:`fire-and-forget`: il messaggio è inviato con l'aspettativa che sia ricevuto ed elaborato, ma senza
+  alcuna attesa di informazione da parte del server;
+- :blue:`request-ack`: il messaggio è inviato con l'aspettativa di ricevere indicazione dell'avvenuta ricezione 
+  (un acknowledgement) da parte del server;
+- :blue:`request-response`: il messaggio è inviato con l'aspettativa di ricevere una risposta, di livello
+  applicativo e pertinente al messaggio, da parte del server.
+
+
+In caso di *request*, il cliente potrebbe bloccarsi in attesa della *risposta/ack* o potrebbe
+anche proseguire le sue attività, con l'intento di ricevere ed elaborare la *risposta/ack* in un secondo momento.
+In questo secono caso si parla di :blue:`comunicazione asincrona`.
+
+In ogni caso, la possibilità che il server possa inviare messaggi al client, imnplica che il client 
+debba essere anche capace di agire come ricevitore di messaggi.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -429,8 +448,10 @@ nella seguente interfaccia:
     public void close( )  throws Exception;
   }
 
-Il metodo di trasmissione è denominato ``forward`` per rendere più evidente il fatto che pensiamo ad un modo di operare 
-:blue:`'fire-and-forget'`. 
+Il metodo ``forward`` è un metodo di trasmissione :blue:`'fire-and-forget'`, mentre il metodo ``request`` denota 
+l'invio di informazione cui deve corrispondere una *ack* o una *response* da parte del server.
+Concettualmente, un server che invia una *response/ack* sulla connessione con un client effettua una operazione
+di :blue:`reply` che assimiliamo alla *forward* di un messaggio con appropriato contenuto informativo. 
 
 L'informazione scambiata è rappresenta da una ``String`` che è un tipo di dato presente in tutti
 i linguaggi di programmazione.

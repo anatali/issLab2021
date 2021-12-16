@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 
 
-public class RadarGuiClient extends EnablerAsClient implements IRadarDisplay {
+public class RadarGuiClient extends ProxyAsClient implements IRadarDisplay {
  
 	public RadarGuiClient( String name, String host, String entry, ProtocolType protocol ) {
 		super( name, host, entry,protocol );

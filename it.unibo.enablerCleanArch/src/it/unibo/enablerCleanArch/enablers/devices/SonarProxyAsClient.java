@@ -2,12 +2,12 @@ package it.unibo.enablerCleanArch.enablers.devices;
 import it.unibo.enablerCleanArch.domain.Distance;
 import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Colors;
  
 
-public class SonarProxyAsClient extends EnablerAsClient implements ISonar{
+public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  	
 	public SonarProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		super( name,  host,  entry, protocol );

@@ -1,14 +1,14 @@
 package it.unibo.enablerCleanArch.enablers.devices;
 
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.enablers.EnablerAsClient;
+import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Colors;
  
 /*
  * Adapter for the output device  Led
  */
-public class LedProxyAsClient extends EnablerAsClient implements ILed {
+public class LedProxyAsClient extends ProxyAsClient implements ILed {
 
 	public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
 		super(name,host,entry, protocol);
