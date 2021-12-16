@@ -20,16 +20,16 @@ class SonarObserverFortesting implements IObserver{
 	}
 	@Override
 	public void update(Observable source, Object data) {
-		 Colors.out( name + " | data=" + data ); //+ " from " + source	
-		 int v = Integer.parseInt(data.toString());
-		 update( v );
+		 //Colors.out( name + " | update data=" + data ); //+ " from " + source	
+		 update( data.toString() );
 	}
 
 	@Override
-	public void update(int value) {
+	public void update(String vs) {
  		 if(oneShot) {
- 			 assertTrue(  value == RadarSystemConfig.testingDistance );	
+ 			 assertTrue(  vs.equals( ""+RadarSystemConfig.testingDistance) );	
  		 }else {
+ 			 int value = Integer.parseInt(vs);
  			 if( v0 == -1 ) {	//set the first value observed
  				v0 = value;
  				Colors.out( name + "| v0=" + v0);
@@ -44,7 +44,7 @@ class SonarObserverFortesting implements IObserver{
 	}
 	
 }
-public class TestSonarObservableMock {
+public class TestSonarMockObservable {
 	@Before
 	public void up() {
 		RadarSystemConfig.simulation      = true;
@@ -56,12 +56,10 @@ public class TestSonarObservableMock {
 		System.out.println("down");		
 	}	
 	
-	@Test 
+	//@Test 
 	public void testSingleshotSonarObservableMock() {
  		RadarSystemConfig.testing = true;
-		//RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
-//		int delta = 1;
-				
+			
 		ISonarObservable sonar = DeviceFactory.createSonarObservable();
 		IObserver obs1         = new SonarObserverFortesting("obs1",true) ;
 		sonar.register( obs1 );	//add an observer
@@ -73,21 +71,24 @@ public class TestSonarObservableMock {
  		assertTrue(  v0 == RadarSystemConfig.testingDistance );
 	}
 	
-	//@Test 
+	@Test 
 	public void testSonarObservableMock() {
 		RadarSystemConfig.testing    = false;
  		RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
 		int delta = 1;
 				
 		ISonarObservable sonar = DeviceFactory.createSonarObservable();
-		sonar.activate();
+		
 		IObserver obs1          = new SonarObserverFortesting("obs1",false);
 		IObserver obs2          = new SonarObserverFortesting("obs2",false);
+		
 		sonar.register( obs1 );	//add an observer
 		sonar.register( obs2 );	//add an observer
-		
+
+		sonar.activate();
+
 		int v0 = sonar.getDistance().getVal();
- 		System.out.println("testSonarObservableMock v0=" + v0);
+ 		//System.out.println("testSonarObservableMock v0=" + v0);
 		while( sonar.isActive() ) {
 			int d = sonar.getDistance().getVal();
 	 		//System.out.println("sonar getVal=" + d);

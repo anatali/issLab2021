@@ -25,7 +25,7 @@ public class DeviceFactory {
 	public static ISonarObservable createSonarObservable() {
 		Colors.out("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
-			return new SonarObservableMock();
+			return new SonarMockObservable();
 		}else { 
 			return null;
 		}

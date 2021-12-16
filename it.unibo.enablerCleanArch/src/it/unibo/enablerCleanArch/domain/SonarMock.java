@@ -8,20 +8,26 @@ import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMock extends SonarModel implements ISonar{
 protected  IDistance curVal ;  
+private int delta = 1;
 	@Override
 	protected void sonarSetUp() {
 		curVal = new Distance(90);		
 		Colors.out("SonarMock | sonarSetUp curVal="+curVal);
+	}
+	
+	protected void updateDistance( int d) {
+		curVal = new Distance( d );
 	}
 
 	@Override
 	protected void sonarProduce(BlockingQueue<IDistance> queue) {
 		try {
 		    if( RadarSystemConfig.testing ) {
-			      queue.put( new Distance( RadarSystemConfig.testingDistance ) );
-			      stopped = true;  //one shot
+		    	 updateDistance( RadarSystemConfig.testingDistance );
+			     queue.put( curVal );
+			     stopped = true;  //one shot
 			}else {
-				curVal = new Distance(  curVal.getVal() - 1 );
+				updateDistance( curVal.getVal() - delta );
 			    queue.put( curVal );
 			    if( queue.size() > (SonarModel.queueSize * 8 / 10) ) Colors.out("SonarMock | queue size="+queue.size());
 	 		    stopped = ( curVal.getVal() == 0 );

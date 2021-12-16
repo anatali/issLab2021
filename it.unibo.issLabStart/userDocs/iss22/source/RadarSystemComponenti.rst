@@ -21,11 +21,11 @@ di implementazione, conviene introdurre una **Factory**:
   public class DeviceFactory {
     public static ILed createLed() { ... }
     public static ISonar createSonar() { ... }
-    public static IRadarGui createRadarGui() {
+    public static IRadarGui createRadarGui() { ... }
   }
 
 Ciasun metodo di ``DeviceFactory`` restitusce una istanza di dispositivo reale o Mock in accordo alle specifiche
-contenute in un file di Configurazione (``RadarSystemConfig.json``) scritto in JSon:
+contenute in un file di Configurazione (``RadarSystemConfig.json``) che qui ipotizziamo scritto in JSon:
 
 .. code:: java
 
@@ -57,20 +57,21 @@ che inizializza variabili ``static`` accessibili all'applicazione:
 
 Per essere certi che un dispositivo Mock possa essere un sostituto efficace di un dispositivo reale,
 introduciamo per ogni dispositivo una **classe astratta** comune alle due tipologie, 
-che funga anche da Factory.
+che funga anche da Factory specifica per quel tipo di dispositivo.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Led
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-Un Led è un dispositivo di output che può essere modellato e gestito in modo semplice.
+Un Led è un dispositivo di output che può essere modellato e gestito realizzando i meotdi di
+ILed come *getter/setter* di uno stato interno.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La classe astratta LedModel
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 La classe astratta relativa al Led introduce un metodo :blue:`abstract` denominato ``ledActivate``
-cui è demandata la responsabilità di accendere/spegnare il Led.
+cui è demandata la responsabilità di accendere/spegnere il Led.
 
 .. code:: java
 
@@ -82,7 +83,7 @@ cui è demandata la responsabilità di accendere/spegnare il Led.
       ILed led;
       if( RadarSystemConfig.simulation ) led = createLedMock();
       else led = createLedConcrete();
-      led.turnOff();      //Il led iniziale è spento
+      led.turnOff();  //Il led  è inizialmente spento
     }
     public static ILed createLedMock(){return new LedMock();  }
     public static ILed createLedConcrete(){return new LedConcrete();}	
@@ -127,9 +128,9 @@ sullo standard output.
     }
   }
 
-
 Una implementazione più user-friendly potrebbe 
 introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia acceso o spento.
+A questo scopo introduciamo anche la classe ``LedMockWithGui``.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il LedConcrete
@@ -217,8 +218,10 @@ Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods 
 .. code:: java
 
   public abstract class SonarModel implements ISonar{
-   protected boolean stopped = false;    //quando true, il sonar si ferma
-   protected  IDistance curVal ;
+    protected boolean stopped = false;    //quando true, il sonar si ferma
+    public final static int queueSize = 10;
+    private BlockingQueue<IDistance> blockingQueue = 
+        new LinkedBlockingDeque<IDistance>(queueSize);
 
     //Factory methods
     public static ISonar create() {
@@ -234,16 +237,9 @@ Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods 
     public static ISonar createSonarConcrete() { return new SonarConcrete(); }
 
 
-Il Sonar viene modellato come un processo produttore di dati che risulta attivo 
-quando la variabile locale ``stopped`` è ``true``. 
-Di qui le seguenti definizioni:
-
-.. code:: java
-
-    @Override
-    public void deactivate() { stopped = true; }
-    @Override
-    public boolean isActive() { return ! stopped; }
+Il Sonar viene modellato come un processo che produce dati su un oggetto di tipo 
+**java.util.concurrent.BlockingQueue** bounded che fornisce anche un valido strumento per
+la sincronizzazione con i consumatori.
 
 Il codice realativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
 che dovrà essere definito in modo diverso da un ``SonarMock`` e un ``SonarConcrete``, così come il
@@ -253,8 +249,18 @@ metodo di inizializzazione ``sonarSetUp``:
 
     //Abstract methods
     protected abstract void sonarSetUp() ;		 
-    protected abstract void sonarProduce() ;
+    protected abstract void sonarProduce(BlockingQueue<IDistance> queue) 
 
+
+Il processo di produzione risulta attivo  quando la variabile locale ``stopped`` è ``true``. 
+Di qui le seguenti definizioni:
+
+.. code:: java
+
+    @Override
+    public void deactivate() { stopped = true; }
+    @Override
+    public boolean isActive() { return ! stopped; }
 
 Con queste premesse, il metodo ``activate`` deve inizializzare il Sonar
 e attivare un Thread interno di produzione di dati:
@@ -277,21 +283,15 @@ riattivandolo non appena il dato è stato prodotto:
 
 .. code:: java
 
-    protected boolean produced = false;   //synch var
-
     @Override
-    public IDistance getDistance() {   //non synchronized perchè violerebbe l'interfaccia
-      waitForUpdatedVal();
-      return curVal;
-    }       
-    private synchronized void waitForUpdatedVal() {
-      while( ! produced ) wait();
-      produced = false;
-    }
-    synchronized void valueUpdated( ){
-      produced = true;
-      notify();   //riattiva il Thread in attesa su getDistance
-    }
+    public IDistance getDistance() {   
+      try {
+        IDistance curVal = blockingQueue.take();
+        return curVal;
+      } catch (InterruptedException e) {
+        ...
+        return null;
+      }	
   }
 
 .. _SonarMock:
@@ -304,27 +304,31 @@ Un Mock-sonar che produce valori di distanza da ``90`` a ``0`` può quindi ora e
 .. code:: java
 
   public class SonarMock extends SonarModel implements ISonar{
+  protected  IDistance curVal ;  
+  private int delta = 1;
     @Override
     protected void sonarSetUp(){  curVal = new Distance(90);  }
+
+	  protected void updateDistance( int d) { curVal.setVal(d); }    //NO: side effects on queue
     @Override
     protected void sonarProduce() {
       if( RadarSystemConfig.testing ) {
         curVal.setVal( RadarSystemConfig.testingDistance );
         stopped = true;  //one shot
       }else {
-        curVal.setVal( curVal.getVal() - 1 ) ;
+        updateDistance( curVal.getVal() - delta );
+        queue.put( curVal );
         stopped = ( curVal.getVal() == 0 );
+        Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
     }
-    valueUpdated(   ); 
-    Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation 
   }  
 
 Si noti che: 
 
-- viene definito un nuovo parametro di configurazioe ``testing`` che, quando ``true`` denota che
+- viene definito un nuovo parametro di configurazione ``testing`` che, quando ``true`` denota che
   il sonar sta lavorando in una fase di testing, per cui produce un solo valore dato dal
   parametro ``testingDistance``;
-- viene definito un nuovo parametro di configurazine ``sonarDelay`` per un rallentamento
+- viene definito un nuovo parametro di configurazione ``sonarDelay`` per un rallentamento
   della frequenza di generazione dei dati.
  
 .. code:: java
@@ -357,9 +361,9 @@ Il SonarConcrete
 
 Il componente che realizza la gestione di un Sonar concreto, conesso a un RaspberryPi,
 si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
-Per ridurre la frequenza di produzione, il metodo ereditato ``valueUpdated``, che sblocca un
-consumatore di livello  applicativo, viene invocato ogni  ``numData`` 
-valori emessi sul dispositivo standard di output.
+
+Per ridurre la frequenza di produzione, la inserzione nella coda 
+avviene solo dopo ogni  ``numData`` valori emessi sul dispositivo standard di output.
 
 .. code:: java
 
@@ -381,8 +385,7 @@ valori emessi sul dispositivo standard di output.
       String data = reader.readLine();
       dataCounter++;
       if( dataCounter % numData == 0 ) { //every numData ...
-        curVal.setVal( Integer.parseInt(data) );
-        valueUpdated( );    
+        queue.put( new Distance(data) );      
       }
     }catch( Exception e) { ... }
   }
@@ -504,7 +507,7 @@ e che implementa i metodi di registrazione ridiregendoli allo stato osservabile.
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Testing del sonar osservabile
+Testing del Sonar osservabile
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Il testing sul ``SonarObservableMock`` viene qui impostato nel modo che segue:

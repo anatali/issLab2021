@@ -44,9 +44,8 @@ public final static int queueSize = 10;
 	public IDistance getDistance() {
 		//Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
 		//waitForUpdatedVal();		
-		IDistance curVal;
 		try {
-			curVal = blockingQueue.take();
+			IDistance curVal = blockingQueue.take();
 			return curVal;
 		} catch (InterruptedException e) {
 			Colors.outerr("SonarMock | ERROR:"+e.getMessage());

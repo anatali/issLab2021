@@ -34,7 +34,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			if( dataCounter % numData == 0 ) { //every numData ...
 				//curVal.setVal( Integer.parseInt(data) );
 				Colors.out("SonarConcrete | data=" + data );
-				queue.add( new Distance(data) );
+				queue.put( new Distance(data) );
 			 }
        }catch( Exception e) {
        	Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
