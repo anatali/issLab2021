@@ -41,7 +41,11 @@ private Socket socket;
 		String answer = receiveMsg();
 		return answer;
 	}
- 
+	
+	@Override
+	public void reply(String reqid) throws Exception {
+	} 
+	
 	@Override
 	public String receiveMsg()  {
  		try {
@@ -62,5 +66,7 @@ private Socket socket;
 			Colors.outerr( "TcpConnection | close ERROR " + e.getMessage());	
 		}
 	}
+
+
 
 }

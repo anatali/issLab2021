@@ -64,12 +64,19 @@ private String url;
 	public String request(String query) throws Exception {
  		 return readResource(  query  );
 	}
+	@Override
+	public void reply(String reqid) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}	
 
 	@Override
 	public void close() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }
 /*
