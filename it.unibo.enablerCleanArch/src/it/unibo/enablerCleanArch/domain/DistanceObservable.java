@@ -14,13 +14,14 @@ private IDistance d;
 		setChanged();
 	    notifyObservers( ""+d.getVal() );		
 	}
+	/*
 	@Override
 	public void setVal( int v ) {
 		d.setVal( v );
 		//Colors.out("DistanceObservable setVal="+v);
 		setChanged();
 	    notifyObservers( ""+v );		
-	}
+	}*/
 	@Override
 	public int getVal() { return d.getVal(); }
 }

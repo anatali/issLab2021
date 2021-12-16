@@ -201,6 +201,8 @@ Un Sonar è un dispositivo di input che deve fornire dati quando richiesto dalla
 Il software fornito dal committente per l'uso di un Sonar reale ``HC-SR04`` introduce
 logicamente un componente attivo, che produce sul dispositivo standard di output,
 con una certa frequenza, una sequenza di valori (interi) di distanza.
+Nella nostra analisi, invece, il Sonar è un dispositivo produttore di dati di tipo IDistance_.
+
 
 La modellazione di un componente produttore di dati è più complicata di quella di un dispositivo di output
 in quanto occorre affrontare un classico problema produttore-consumatore.
@@ -215,7 +217,7 @@ La classe astratta relativa al Sonar introduce due metodi :blue:`abstract`,  uno
 (metodo ``sonarSetUp``) e uno per specificare il modo di produzione dei dati (metodo ``sonarProduce``).
 Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods per un sonar Mock e un sonar reale.
 
-.. code:: java
+.. code:: java 
 
   public abstract class SonarModel implements ISonar{
     protected boolean stopped = false;    //quando true, il sonar si ferma
@@ -238,10 +240,19 @@ Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods 
 
 
 Il Sonar viene modellato come un processo che produce dati su un oggetto di tipo 
-**java.util.concurrent.BlockingQueue** bounded che fornisce anche un valido strumento per
+``java.util.concurrent.BlockingQueue`` (bounded) che fornisce anche un valido strumento per
 la sincronizzazione con i consumatori.
+Il tipo di dato degli elementi della coda potrebbe essere:
 
-Il codice realativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
+#. **int**: è il tipo di dato prodotto dal core-code del Sonar;
+#. **String**: è la rappresentazione di un valore non meglio determinato;
+#. **IDistance**: è il tipo di dato prodotto dal Sonar a livello logico.
+
+Poichè i consumtori si aspettano valori di distanza, siamo qui indotti ad optare per la terza opzione
+**IDistance**. Tuttavia, motivi di efficienza potrebbero farci optare per la prima e 
+motivi di flessibilità e di interoperabilità per la seconda.
+
+Il codice relativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
 che dovrà essere definito in modo diverso da un ``SonarMock`` e un ``SonarConcrete``, così come il
 metodo di inizializzazione ``sonarSetUp``:
 
@@ -442,8 +453,30 @@ di varianza sulla distanza-base.
 Il Sonar come dispositivo osservabile
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Volendo impostare il Sonar come un dispositivo osservabile, 
-introduciamo un nuovo contratto, che esetende il precedente:
+
+Il Sonar sviluppato fino a questo punto è un processo produttore che rende disponibili valori 
+di distamza attraverso il metodo ``getDistance`` che nasconde al suo interno una coda per sincronizzare 
+i processi che effettuano richieste con il processo di produzione del  ``core-code HC-SR04``.
+
+Un Sonar osservabile può essere pensato tale in due modi:
+
+- come una risorsa che modifica uno stato interno ad ogni passo di produzione del *core-code HC-SR04* 
+  e che invia agli observer una notifica ad ogni cambiamento di stato;
+- come ad un processo che aggiorna un oggetto :blue:`distanza corrente` implemenmtato come una
+  :blue:`risorsa osservabile`.
+
+Come nel caso del tipo dei dati della coda interna, il tipo di dato 
+notificato agli observer potrebbe essere:
+
+- **int**: è il tipo di dato prodotto dal *core-code HC-SR04*;
+- **String**: è la rappresentazione di un valore non meglio determinato;
+- **IDistance**: è il tipo di dato prodotto dal Sonar a livello logico.
+
+Poichè gli observer potrebbero essere non locali e scritti in linguaggi diversi da Java, optiamo qui
+per notificare dati in forma di String, in modo da permettere interoperabilità. 
+
+In ogni caso, volendo impostare il Sonar come un dispositivo osservabile, 
+introduciamo un nuovo contratto, che estende il precedente:
 
 .. code:: java
 
@@ -459,6 +492,8 @@ introduciamo un nuovo contratto, che esetende il precedente:
 Nel quadro di un programma ad oggetti convenzionale, un ``ISonarObservable``  è un ``ISonar`` 
 con la capacità di registrare osservatori e di invocare, ad ogni aggiornamento del valore
 di distanza, il metodo ``update`` di tutti gli osservatori registrati.
+
+
 
 Per aggiungere al Sonar le funzionalità di osservabilità,  possiamo avvalerci del pattern decorator_
 trasformando oggetti di tipo ``SonarState`` in oggetti osservabili:

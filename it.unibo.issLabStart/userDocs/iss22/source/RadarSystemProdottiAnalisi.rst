@@ -97,6 +97,9 @@ Le interfacce ILed e IRadarDisplay
           public void update(String d, String a);
         }  
 
+
+.. _IDistance:
+
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Le interfacce IDistance e ISonar
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -111,8 +114,8 @@ Le interfacce IDistance e ISonar
       .. code:: java
 
        public interface IDistance {
-        public void setVal( int d );
         public int getVal(   );
+        public String toString(   );
        }
     -        
       .. code:: java
@@ -128,7 +131,10 @@ In quanto dispositivo-generatore di dati, ``ISonar`` offre metodi per attivare/d
 metodo ``getDistance`` per fornire il valore corrente di distanza misurata. 
 
 La interfaccia ``IDistance`` è introdotta per reppresentare il concetto di distanza, in modo
-da non appiattire questo concetto su un tipo predefinito, come ``int``.
+da non appiattire questo concetto su un tipo predefinito, come ``int``. Notiamo che, come per 
+tutti i valori numerici, non vi sono metodi per modificare una distanza,
+ma solo metodi per fornirne una rappresentazione in termini di tipi primitivi.
+
 
 Notiamo che, invece, per il Led abbiamo 'ridotto' il concetto di stato del Led al 
 tipo predefinito  ``boolean``. Questa diverso modo di procedere potrebbe avere conseguenze, che verranno
