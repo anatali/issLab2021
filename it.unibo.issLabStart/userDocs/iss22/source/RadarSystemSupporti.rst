@@ -261,7 +261,7 @@ rappresentata come nella figura che segue:
    :align: center
    :width: 80%
  
-Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi. 
+:remark:`Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi.` 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
