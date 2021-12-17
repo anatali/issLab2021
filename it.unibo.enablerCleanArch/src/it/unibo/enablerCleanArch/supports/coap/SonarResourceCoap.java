@@ -1,9 +1,7 @@
-package it.unibo.enablerCleanArch.enablers.devices;
+package it.unibo.enablerCleanArch.supports.coap;
 
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.supports.Colors;
-import it.unibo.enablerCleanArch.supports.coap.CoapDeviceResource;
-import it.unibo.enablerCleanArch.supports.coap.DeviceType;
 
 public class SonarResourceCoap extends CoapDeviceResource  {
 ISonar sonar;

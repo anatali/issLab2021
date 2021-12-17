@@ -24,11 +24,11 @@ private Socket socket;
 	
 	@Override
 	public void forward(String msg)  throws Exception {
-		//System.out.println( "TcpConnSupport | sendALine  on " + outputChannel);	 
+		Colors.out( "TcpConnSupport | sendALine  " + msg + " on " + outputChannel, Colors.ANSI_YELLOW );	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
-			//Colors.out( "TcpConnSupport | has sent   " + msg );	 
+			Colors.out( "TcpConnSupport | has sent   " + msg, Colors.ANSI_YELLOW );	 
 		} catch (IOException e) {
 			//Colors.outerr( "TcpConnection | sendALine ERROR " + e.getMessage());	 
 			throw e;

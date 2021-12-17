@@ -29,7 +29,7 @@ private RadarSystemAllOnPc sys;
 			RadarSystemConfig.RadarGuieRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
 			RadarSystemConfig.protcolType       = ProtocolType.tcp;
-			sys.build();
+			sys.buildAndRun(RadarSystemConfig.protcolType);
 			Utils.delay(2000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );

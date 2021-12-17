@@ -45,6 +45,7 @@ protected TcpServer serverTcp;
 	}
  	public void  activate() {
 		if( protocol == ProtocolType.tcp ) {
+	 		Colors.out(name+" |  ACTIVATE", Colors.ANSI_PURPLE  );
 			serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
 		}		

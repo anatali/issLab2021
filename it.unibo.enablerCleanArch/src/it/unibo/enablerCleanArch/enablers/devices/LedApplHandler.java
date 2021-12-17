@@ -7,9 +7,9 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
 public class LedApplHandler extends ApplMsgHandler {
 ILed led;
 
-	public LedApplHandler(String name) {
+	public LedApplHandler(String name, ILed led) {
 		super(name);
-		led = it.unibo.enablerCleanArch.domain.LedModel.createLedMock();
+		this.led = led;
 	}
 	
  	@Override

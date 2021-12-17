@@ -2,13 +2,14 @@
 Gli enablers
 +++++++++++++++++++++++++++++++++++++++++++++
 
-L'analisi del problema ha posto in evidenza la opportunità/necessità, 
-di introdurre nel sistema degli :blue:`enabler`, che hanno lo scopo di incapsulare 
-:blue:`core-code` all'interno di un component capace di ricevere e trasmettere informazione.
+L'analisi del problema ha posto in evidenza la opportunità/necessità,
+di introdurre nel sistema degli :blue:`enabler`, che hanno lo scopo di fornire funzionalità
+di ricezione/trasmissione di informazione su rete a un nucleo di 
+*core-code* incapsulato al proprio interno.
 
-Nell'ambito di un processo di sviulppo bottom-up, in cui abbiamo selezionato il procollo TCP come
-tecnologia di riferimento per le comunicazioni, risulta naturale pensare a 
-un enabler *tipo-server* capace di ricevere richieste di connessione da client remoti (normalmente
+Nell'ambito di un processo di sviluppo bottom-up, in cui abbiamo selezionato il procollo TCP come
+tecnologia di riferimento per le comunicazioni, risulta naturale pensare subito a 
+un enabler *tipo-server* capace di ricevere richieste  da parte di client remoti (normalmente
 dei proxy).
 
 .. due tipi di enabler: uno per ricevere (diciamo un enabler *tipo-server*) e uno per trasmettere (diciamo un enabler *tipo-client*).
@@ -37,10 +38,8 @@ rappresentata come segue:
 Enabler tipo-server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Iniziamo con il definire un server astratto che crea il supporto di comunicazione 
-relativo al protocollo specificato e demanda la gestione dei messaggi  in input
-alle classi specializzate.
-
+Iniziamo con il definire un enabler *tipo-server* che demanda la gestione dei messaggi ricevuti in input
+ad oggetti di una classe definita dall'Application-designer.
 
 .. image:: ./_static/img/Radar/EnablerAsServer.PNG
    :align: center 
@@ -49,22 +48,26 @@ alle classi specializzate.
 .. code:: java
 
   public class EnablerAsServer{
+    private static int count=1;
+    protected String name;
     protected ProtocolType protocol;
-  protected TcpServer serverTcp;
+    protected TcpServer serverTcp;
+
     public EnablerAsServer(String name, int port, 
                        ProtocolType protocol, IApplMsgHandler handler ) {
-      super(name);
-      try {
-        this.protocol = protocol;
-        if( protocol != null ) setServerSupport( port, protocol, handler );
+    try {
+      this.name     			= name;
+      this.protocol 			= protocol;
+      if( protocol != null ) setServerSupport( port, protocol, handler );
       }catch (Exception e) { ... }
     }	
     protected void setServerSupport( 
-                    int port, ProtocolType protocol,IApplMsgHandler handler ) throws Exception{
+          int port, ProtocolType protocol,IApplMsgHandler handler) throws Exception{
       if( protocol == ProtocolType.tcp ) {
-        serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );        
+          serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port, handler );        
       }else if( protocol == ProtocolType.udp ) { ... 
-      }else if( protocol == ProtocolType.coap ) { //DO nothing: we use a CoapServer 
+      }else if( protocol == ProtocolType.coap ) { 
+          CoapApplServer.getServer(); 
       }
     }	 
     public void activate() {
@@ -79,9 +82,11 @@ alle classi specializzate.
     }   
   }
 
-Notiamo che nel caso ``protocol==null``, non viene creato alcun supporto.
-Questo caso sarà applicato più avanti: si veda  :doc:`ContextServer`.
+Notiamo che:
 
+- nel caso ``protocol==null``, non viene creato alcun supporto. 
+  Questo caso sarà applicato più avanti, nella sezione  :doc:`ContextServer`.
+- si fornisce anche un supporto per il protocollo CoAP_, di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
  
 
@@ -93,264 +98,189 @@ La classe ``ProtocolType`` enumera i protocolli utlizzabili dagli enablers.
 
 .. code:: java
 
-  public enum ProtocolType {  tcp, udp, coap }
+  public enum ProtocolType {  tcp, udp, coap, ... }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Enabler per trasmissione
+Un Proxy tipo-client
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All'enabler-ricevitore, affianchiamo suibito un enabler  per trasmettere informazione,
-
-.. che delega a classi specializzate la definizione del metodo ``handleMessagesFromServer`` per gestire i messaggi ricevuti dal server.
+Per realizzare interazioni con un  *enabler tipo-server* che opera su certo **host** e su 
+una certa porta, introduciamo la classe ``ProxyAsClient``
+che riceve nel costruttore l'host a cui connettersi e la porta espressa da una *String* denominata ``entry``:
 
 .. code:: java
 
-  public abstract class EnablerAsClient {
-  private Interaction2021 conn; 
-  protected String name ;	
-  protected CoapSupport coapSupport;
-    public EnablerAsClient( 
-          String name, String host, int port, ProtocolType protocol ) {
+  public class ProxyAsClient {
+    private Interaction2021 conn; 
+    protected String name ;		//could be a uri
+    protected ProtocolType protocol ;
+
+    public ProxyAsClient( 
+          String name, String host, String entry, ProtocolType protocol ) {
       try {
-        this.name = name;
+        this.name     = name;
         this.protocol = protocol;        
-        setConnection(host,  port, protocol);
+        setConnection(host, entry, protocol);
       } catch (Exception e) {...}
     }
+
+Il fatto di denotare la porta del server con una *String* invece che con un *int* ci darà
+la possibilità di gestire comunicazioni basate sia  su TCP/UDP sia su CoAP; in questo secondo
+caso il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`.
+
+.. code:: java
 
     protected void setConnection(
-          String host,int port,ProtocolType protocol) throws Exception{
+          String host,String entry,ProtocolType protocol) throws Exception{
       if( protocol == ProtocolType.tcp) {
-        conn = TcpClient.connect(host,  port, 10);
+        conn = TcpClient.connect(host,  Integer.parseInt(entry), 10);
       }else if( protocol == ProtocolType.coap ) {
-        coapSupport = new CoapSupport(host, name );	
+        conn = new CoapSupport(host, entry );	
       }
     }
-     
-    protected void sendCommandOnConnection( String cmd ) {
-      try {
-        if( protocol == ProtocolType.tcp) {
-        conn.forward(cmd);
-      }else if( protocol == ProtocolType.coap) {
-        coapSupport.updateResource(cmd);
-      }
-      } catch (Exception e) {...}
-    }  
 
-    public String sendRequestOnConnection( String request )  {
-    	try {
-        if( protocol == ProtocolType.tcp) {
-        conn.forward(request);
-        String answer = conn.receiveMsg();
-        return answer;
-      }else if( protocol == ProtocolType.coap) {
-        String answer = coapSupport.readResource(request);
-        return answer;
-      }else return null;
-      }catch (Exception e) { ... }
-    }
     public Interaction2021 getConn() { return conn; }
-  }  
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Gli Enabler per il Sonar
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Notiamo che, nel caso di CoAP, il metodo ``setConnection`` che stabilisce la connessione 
+con l' *enabler tipo-server*, si avvale di un supporto (che definiremo più avanti) ``CoapSupport`` 
+che restituisce un oggetto di tipo ``Interaction2021`` come nel caso di TCP/UDP.
 
-Abbiamo già anticipato che, nel caso il Controller sia su PC, il Sonar richiede:
+Il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* un metodo per inviare *request*
+con attesa di response/ack:
 
-- su PC: un adapter-enabler *tipo server* che implementa l'interfaccia ``ISonar`` per ricevere dati;
-- su RaspberryPi: un enabler *tipo client* per inviare dati e per ricevere comandi.
+.. code:: java    
 
-Al momento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Adapter-Enabler come server di ricezione per il Sonar 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-.. image:: ./_static/img/Radar/EnablersAndAdapters.PNG
-   :align: center
-   :width: 40% 
-
-L'adapter di ricezione *tipo server* per il Sonar specializza EnablerAsServer 
-definendo il metodo ``elaborate`` sui messaggi inivati da un client:
-
-.. code:: java
-
-  public class SonarAdapterEnablerAsServer 
-                  extends EnablerAsServer implements ISonar{
-  private int lastSonarVal = 0;		 
-  private boolean stopped  = true;	//mirror value
-  private boolean produced = false;
-
-  public SonarAdapterServer( String name, int port, ProtocolType protocol ) {
-    super(name, port, protocol);
-  }
-  @Override  //from ApplMessageHandler
-  public void elaborate(String message) {
-    lastSonarVal = Integer.parseInt( message );
-    valueUpdated( );  //riattiva processi in attesa su getVal
-  } 
-  protected synchronized void valueUpdated( ){
-    produced = true;
-    this.notify();
-	}
-
-Inoltre l'enabler funge anche come adapter, (re)implementando i metodi di  ``ISonar`` in modo
-da interagire con l'enabler-client remoto:
-
-
-.. code:: java
-
-  @Override
-  public void activate() {
-    sendCommandToClient("activate");
-    stopped = false;
-  }
-  @Override
-  public void deactivate() {
-    sendCommandToClient("deactivate");
-    stopped = true;
-  }
-  @Override   
-  public int getVal() {  
-    sendCommandToClient("getVal");
-    waitForUpdatedVal();
-    return lastSonarVal;
-  }
-  private synchronized void waitForUpdatedVal() {
+  protected void sendCommandOnConnection( String cmd ) {
     try {
-      while( ! produced ) wait();
-      produced = false;
-    }catch (InterruptedException e) { ...	}		
-  }
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Enabler come client di trasmissione per il Sonar
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-.. code:: java
-
-  public class SonarEnablerAsClient extends EnablerAsClient{
-  private ISonar sonar ;
-	
-    public SonarEnablerAsClient( 
-        String name,String host,int port,ProtocolType protocol,ISonar sonar ){
-      super( name,  host,  port, protocol );
-      this.sonar = sonar;
-    }
-
-    public void handleMessagesFromServer(
-            Interaction2021 conn) throws Exception{
-      while( true ) {
-        String cmd = conn.receiveMsg();
-        if( cmd.equals("activate")) {
-          sonar.activate();
-         }else if( cmd.equals("getVal")) {
-            String data = ""+sonar.getVal();
-            sendValueOnConnection(data);
-        }
-        else if( cmd.equals("deactivate")) {
-          sonar.deactivate();
-          break;
-        }
-      }//while
-    }
-  }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Gli Enabler per il Led
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Abbiamo già anticipato che, nel caso il Controller sia su PC, il Led richiede:
-
-- su PC: un adapter-enabler *tipo client* che implementa l'interfaccia ``ILed`` per trasmetter comandi;
-- su RaspberryPi: un enabler *tipo server* per ricevere comandi.
-
-Al momento, come supporti di comunicazione useremo quanto sviluppato come :ref:`Supporti TCP<tcpsupport>`.
-
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Adapter-Enabler come client di trasmissione per il Led
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-.. code:: java
-
-  public class LedAdapterEnablerAsClient 
-            extends EnablerAsClient implements ILed{
-  public LedAdapterEnablerAsClient(
-        String name,String host,int port,ProtocolType protocol){
-    super(name,host,port, protocol);
-  }
-  @Override
-  public void turnOn() { 
-    try {
-      sendValueOnConnection( "on" );
-      ledStateMirror = true;
+      conn.forward(cmd);
     } catch (Exception e) {...}
-  }
-  @Override
-  public void turnOff() {   
+  }  
+  public String sendRequestOnConnection( String request )  {
     try {
-      sendValueOnConnection( "off" );
-      ledStateMirror = false;
-    } catch (Exception e) { ... }
-  }
-  @Override
-  public boolean getState() { return ledStateMirror;	}	
-  @Override
-  protected void handleMessagesFromServer(
-          Interaction2021 conn) throws Exception {
-    while( true ) {
-      String msg = conn.receiveMsg();  //bòlocking
-      System.out.println(name+" |  I should be never here .... " + msg   );		
-    }
-  }
+      String answer = conn.request(request);
+      return answer;
+    }catch (Exception e) { ...; return null;}
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Enabler di ricezione per il Led 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+:remark:`Il ProxyAsClient così definito realizza request-response sincrone`
 
- 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Enabler e proxy per il Sonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table::
+  :widths: 30,70
+  :width: 100%
+
+  * - .. image::  ./_static/img/Radar/EnablerAsServerSonar.PNG
+         :align: center 
+         :width: 60%
+    - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
+      applicativo  di tipo ``IApplMsgHandler`` che elabora:
+
+      - i comandi: ridirigendoli al sonar locale 
+      - le richieste:  ridirigendole al sonar locale e inviando la risposta al client 
 
 .. code:: java
 
-  public class LedEnablerAsServer extends EnablerAsServer  {
-  ILed led ;
-
-    public LedServer(String name,int port,ProtocolType protocol,ILed led){
-      super(name, port, protocol );
-      this.led = led;	
+  public class SonarApplHandler extends ApplMsgHandler  {
+  ISonar sonar;
+    public SonarApplHandler(String name, ISonar sonar) {
+      super(name);
+      this.sonar=sonar;
     }
- 
-    @Override		//from ApplMessageHandler
-    public void elaborate(String message) {
-      if( message.equals("on")) led.turnOn();
-      else if( message.equals("off") ) led.turnOff();
+    @Override
+    public void elaborate(String message, Interaction2021 conn) {
+      if( message.equals("getDistance")) {
+        String vs = ""+sonar.getDistance().getVal();
+        sendMsgToClient(vs, conn);
+      }else if( message.equals("activate")) {
+        sonar.activate();
+      }else if( message.equals("activate")) {
+        sonar.deactivate();
+      }else if( message.equals("isActive")) {
+        String sonarState = ""+sonar.isActive();
+        sendMsgToClient(sonarState, conn);
+      }
     }
+  }
   
+.. list-table::
+  :widths: 30,70
+  :width: 100%
+
+  * - .. image::  ./_static/img/Radar/SonarProxyAsClient.PNG
+         :align: center 
+         :width: 70%
+    - Il '*proxy tipo client* per il Sonar è una specializzazione di  ``ProxyAsClient`` che implementa i 
+      metodi di ``ISonar`` inviando dispatch o request all'*enabler tipo server* sulla connessione:
+
+.. code:: java
+
+  public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
+    public SonarProxyAsClient( 
+         String name, String host, String entry, ProtocolType protocol ) {
+    super( name,  host,  entry, protocol );
+    }
+    @Override
+    public void activate() { sendCommandOnConnection("activate"); }
+    @Override
+    public void deactivate() { sendCommandOnConnection("deactivate"); }
+    @Override
+    public IDistance getDistance() {
+      String answer = sendRequestOnConnection("getDistance");
+      return new Distance( Integer.parseInt(answer) );
+    }
+    @Override
+    public boolean isActive() {
+      String answer = sendRequestOnConnection("isActive");
+      return answer.equals( "true" );
+    }
   }
 
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Enabler e proxy per il Led
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sono del tutto simili a quanto visto per i sonar.
+ 
 
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Testing degli enabler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Una TestUnit relativa agli enablers può essere definita in modo da:
-
-- Simulare un Controller su PC che usa
-     -  un SonarAdapterEnablerAsServer sulla porta 8013
-     - un LedAdapterEnablerAsClient 
-- Simulare un RaspberryPi che usa
-      - un SonarEnablerAsClient 
-      - un LedEnablerAsServer sulla porta 8015
-
+ 
 
 .. code::  java
 
-  
+		@Before
+	  public void setup() {
+      RadarSystemConfig.simulation = true;
+      RadarSystemConfig.ledPort    = 8015;
+      RadarSystemConfig.sonarPort  = 8011;
+      RadarSystemConfig.sonarDelay = 100;
+      RadarSystemConfig.testing    = false;
+
+    sonar 	= DeviceFactory.createSonar();
+		led     = DeviceFactory.createLed();
+		
+		//I server
+ 		sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,protocol, new SonarApplHandler("sonarH", sonar) );
+ 		ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort,  protocol, new LedApplHandler("ledH", led)  );
+		
+    //I client
+		String sonarUri   = CoapApplServer.inputDeviceUri+"/sonar";
+		String entrySonar = protocol==ProtocolType.coap ? sonarUri : ""+RadarSystemConfig.sonarPort;
+ 		sonarClient = new SonarProxyAsClient("sonarClient", "localhost",entrySonar, protocol );
+		
+		String ledUri     = CoapApplServer.outputDeviceUri+"/led";
+		String entryLed   = protocol==ProtocolType.coap ? ledUri : ""+RadarSystemConfig.ledPort;
+		ledClient = new LedProxyAsClient("ledClient", "localhost", entryLed, protocol );	
+	}
 
  
  

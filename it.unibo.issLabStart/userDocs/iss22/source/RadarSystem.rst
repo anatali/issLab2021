@@ -17,6 +17,8 @@
 
 .. _pattern-decorator: https://it.wikipedia.org/wiki/Decorator
 
+.. _CoAP: https://coap.technology/
+
 ======================================
 RadarSystem
 ======================================
@@ -404,13 +406,12 @@ Inizialmente il server opera come ricevitore di messaggi e il client come emetti
 il server può anche inviare messaggi ai client.
 Conviene dunque introdurre una terminologia per le interazioni a scambio di messggi:
 
-- :blue:`fire-and-forget`: il messaggio è inviato con l'aspettativa che sia ricevuto ed elaborato, ma senza
+- :blue:`fire-and-forget`: il messaggio (che chiamiamo anche :blue:`dispatch`) è inviato con l'aspettativa che sia ricevuto ed elaborato, ma senza
   alcuna attesa di informazione da parte del server;
 - :blue:`request-ack`: il messaggio è inviato con l'aspettativa di ricevere indicazione dell'avvenuta ricezione 
   (un acknowledgement) da parte del server;
 - :blue:`request-response`: il messaggio è inviato con l'aspettativa di ricevere una risposta, di livello
   applicativo e pertinente al messaggio, da parte del server.
-
 
 In caso di *request*, il cliente potrebbe bloccarsi in attesa della *risposta/ack* o potrebbe
 anche proseguire le sue attività, con l'intento di ricevere ed elaborare la *risposta/ack* in un secondo momento.

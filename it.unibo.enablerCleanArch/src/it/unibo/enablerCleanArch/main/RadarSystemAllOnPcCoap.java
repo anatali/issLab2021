@@ -6,9 +6,9 @@ import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedResourceCoap;
-import it.unibo.enablerCleanArch.enablers.devices.SonarResourceCoap;
 import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 
  
 public class RadarSystemAllOnPcCoap {

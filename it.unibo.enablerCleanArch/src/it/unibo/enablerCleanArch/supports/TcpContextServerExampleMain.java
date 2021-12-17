@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.supports;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ISonar;
+import it.unibo.enablerCleanArch.domain.SonarModel;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.RadarGuiClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
@@ -24,6 +25,7 @@ private ApplMessage getLedState  = new ApplMessage("msg( ledcmd,   request,  mai
 private ApplMessage radarUpdate  = new ApplMessage("msg( update, request,  main, radar, DISTANCE, 7 )");
 
 private Interaction2021 conn; 
+private ISonar sonar;
 
 	public void configureTheSystem() {
 		RadarSystemConfig.simulation 		= true;    
@@ -41,8 +43,9 @@ private Interaction2021 conn;
 		//ContextMsgHandler ctxH = new ContextMsgHandler("ctxH");
 		contextServer          = //new TcpServer("TcpContextServer", RadarSystemConfig.ctxServerPort, ctxH);
 				new TcpContextServer("TcpContextServer", RadarSystemConfig.ctxServerPort );
+		sonar = SonarModel.create();
 		//Registrazione dei componenti presso il contesto	
-		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH");
+		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
 		IApplMsgHandler ledHandler   = new LedApplHandler("ledH");
 		IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
 		
@@ -56,6 +59,7 @@ private Interaction2021 conn;
 	
 	
 	public void execute() throws Exception{
+		sonar.activate();
 		contextServer.activate();
 //		simulateDistance(   );
 		simulateController();
