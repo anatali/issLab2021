@@ -3,32 +3,23 @@ package it.unibo.enablerCleanArch.domain;
 import it.unibo.enablerCleanArch.supports.Colors;
 
 public class SonarMockObservable extends SonarMock implements ISonarObservable  {
-	DistanceObservable observableDistance; 
+	private IDistanceMeasured observableDistance  ;
 	@Override
-	protected void sonarSetUp() { 
+	protected void sonarSetUp() {
 		super.sonarSetUp();
-		//observableDistance = this.curVal;
-		observableDistance = new DistanceObservable( curVal );		
-		//Colors.out("SonarMockObservable | sonarSetUp curVal="+curVal.getVal());
-	}
-	
+		observableDistance = new DistanceMeasured( );		
+		observableDistance.setVal(curVal);
+		//Colors.out("SonarMockObservable | sonarSetUp curVal="+curVal, Colors.ANSI_PURPLE);
+	} 	
 	@Override  //from SonarMock
 	protected void updateDistance( int d ) {
-		super.updateDistance(d);
-//		DistanceObservable dobs = new DistanceObservable( new Distance( d ) );
-//		dobs.setVal(d);
-//		curVal = dobs;
-		observableDistance.setVal(d);    //Nella coda ci va curVal che cambia
-		//TODO: fare un consumatore della coda (controller like)
+		super.updateDistance(d);	//pone curVal nella coda
+		observableDistance.setVal( curVal );    //notifies the observers 
 	}
 
  	@Override
 	public void register(IObserver obs) {
-		try {
-			observableDistance.addObserver(obs);		
-		}catch(Exception e) {
-			Colors.outerr("SonarMockObservable | register ERROR="+e.getMessage());
-		}
+		observableDistance.addObserver(obs);		
 	}
 
 	@Override

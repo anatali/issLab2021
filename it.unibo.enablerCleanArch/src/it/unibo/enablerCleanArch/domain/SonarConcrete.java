@@ -26,34 +26,27 @@ public class SonarConcrete extends SonarModel implements ISonar{
  		return curVal ;
 	}
 	
+	protected void updateDistance( int d ) {
+		try {
+			curVal = new Distance( d );
+			blockingQueue.put( curVal );
+		} catch (InterruptedException e) {
+			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
+		}
+	}	
 	@Override
-	protected void sonarProduce(BlockingQueue<IDistance> queue) {
+	protected void sonarProduce( ) {
         try {
 			String data = reader.readLine();
 			dataCounter++;
 			if( dataCounter % numData == 0 ) { //every numData ...
-				//curVal.setVal( Integer.parseInt(data) );
-				Colors.out("SonarConcrete | data=" + data );
-				queue.put( new Distance(data) );
+ 				Colors.out("SonarConcrete | data=" + data );
+ 				updateDistance( Integer.parseInt(data));
 			 }
        }catch( Exception e) {
        	Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
-       }
-		
+       }		
 	}
-/*	
-	protected void sonarProduce() {
-         try {
- 			String data = reader.readLine();
-			dataCounter++;
-			if( dataCounter % numData == 0 ) { //every numData ...
-				curVal.setVal( Integer.parseInt(data) );
- 				Colors.out("SonarConcrete | data=" + data );
-				valueUpdated( );    
- 			 }
-        }catch( Exception e) {
-        	Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
-        }
- 	}*/
+ 
 
  }

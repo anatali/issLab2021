@@ -133,7 +133,8 @@ metodo ``getDistance`` per fornire il valore corrente di distanza misurata.
 La interfaccia ``IDistance`` è introdotta per reppresentare il concetto di distanza, in modo
 da non appiattire questo concetto su un tipo predefinito, come ``int``. Notiamo che, come per 
 tutti i valori numerici, non vi sono metodi per modificare una distanza,
-ma solo metodi per fornirne una rappresentazione in termini di tipi primitivi.
+ma solo metodi per fornirne una rappresentazione in termini di tipi primitivi, tra cui mettiamo in evidenza 
+il metodo che fornisce una rappresentazione in termini di **String**.
 
 
 Notiamo che, invece, per il Led abbiamo 'ridotto' il concetto di stato del Led al 

@@ -7,12 +7,10 @@ import it.unibo.enablerCleanArch.supports.Colors;
 
 public abstract class SonarModel  implements ISonar{ //extends Observable
 public final static int queueSize = 10;
-//	protected  IDistance curVal ;
 	
 	protected boolean stopped  = false;
-//	private boolean produced   = false;
 	
-	private BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
+	protected BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
 	
 	public static ISonar create() {
 		if( RadarSystemConfig.simulation )  return createSonarMock();
@@ -28,12 +26,12 @@ public final static int queueSize = 10;
 		return new SonarConcrete();
 	}	
 	
-	protected SonarModel() {
+	protected SonarModel() {//hidden costructor, to force setup
 		sonarSetUp();
 	}
 	protected abstract void sonarSetUp() ;
 	//protected abstract void sonarProduce() ;
-	protected abstract void sonarProduce(BlockingQueue<IDistance> queue) ;
+	protected abstract void sonarProduce() ;
 
 	@Override
 	public boolean isActive() {
@@ -43,7 +41,6 @@ public final static int queueSize = 10;
 	@Override
 	public IDistance getDistance() {
 		//Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
-		//waitForUpdatedVal();		
 		try {
 			IDistance curVal = blockingQueue.take();
 			return curVal;
@@ -60,7 +57,7 @@ public final static int queueSize = 10;
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
-					sonarProduce( blockingQueue );
+					sonarProduce(  );
 				}
 				Colors.out("SonarModel | ENDS", Colors.GREEN);
 		    }
@@ -73,18 +70,23 @@ public final static int queueSize = 10;
 		stopped = true;
 	}
 
-	/*
-	protected synchronized void valueUpdated( ){
-		produced = true;
-		this.notify();
-	}
-
-	protected synchronized void waitForUpdatedVal() {
-		try {
- 			while( ! produced ) wait();
- 			produced = false;
- 		} catch (InterruptedException e) {
- 			System.out.println("Sonar | waitForUpdatedVal ERROR " + e.getMessage() );
-		}		
-	}*/
 }
+
+
+
+/*
+//OLD before queue....
+ 
+protected synchronized void valueUpdated( ){
+	produced = true;
+	this.notify();
+}
+
+protected synchronized void waitForUpdatedVal() {
+	try {
+			while( ! produced ) wait();
+			produced = false;
+		} catch (InterruptedException e) {
+			System.out.println("Sonar | waitForUpdatedVal ERROR " + e.getMessage() );
+	}		
+}*/

@@ -4,12 +4,12 @@
 Supporti per TCP
 +++++++++++++++++++++++++++++++++++++++++++++
 
-Il nostro piano di lavoro prevded la definizione di supporti TCP lato client 
+Il nostro piano di lavoro prevede la definizione di supporti TCP lato client 
 e lato server, con l’obiettivo di formare un insieme riusabile anche in applicazioni future.
 
 Abbiamo detto che la creazione di questi supporti non è indispensabile, ma può costituire un 
-elemento strategico a livello aziendale, per evitare di ricotruire ogni volta le risorse che
-permettono ai componenti del sistema di scambiare informazioni via rete.
+elemento strategico a livello aziendale, per evitare di rifare ogni volta il codice
+che permette di scambiare informazioni via rete.
 
 Inizieremo focalizzando l'attenzione sul protocollo TCP, per verificare poi, al termine
 del lavoro, la possibilità di estendere anche ad altri protocolli i supporti creati.
@@ -150,7 +150,7 @@ Il TCPserver come oggetto attivo
  
 .. Mediante la classe ``TcpServer`` possiamo istanziare oggetti che realizzano un server TCP che apre una ``ServerSocket`` e gestisce la richiesta di connessione da parte dei clienti.
 
-Il ``TcpServer`` viene definito come un Thread che defisce  metodi per essere attivato e disattivato
+Il ``TcpServer`` viene definito come un Thread che definisce  metodi per essere attivato e disattivato
 e il metodo ``run`` che ne specifica il funzionamento.
 
 .. riceve un :ref:`ApplMessageHandler<msgh>` come oggetto di  'callback' che contiene la logica di gestione dei messaggi applicativi ricevuti dai client che si connetteranno.
@@ -236,7 +236,7 @@ nel costruttore.
 .. code:: Java
 
   public class TcpApplMessageHandler extends Thread{
-  public TcpApplMessageHandler(IApplMsgHandler handler, Interaction2021 conn) { 
+  public TcpApplMessageHandler(IApplMsgHandler handler,Interaction2021 conn){ 
     @Override
     public void run() {
       ...

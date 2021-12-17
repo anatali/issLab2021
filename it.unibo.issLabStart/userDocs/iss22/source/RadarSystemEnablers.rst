@@ -110,7 +110,8 @@ All'enabler-ricevitore, affianchiamo suibito un enabler  per trasmettere informa
   private Interaction2021 conn; 
   protected String name ;	
   protected CoapSupport coapSupport;
-    public EnablerAsClient( String name, String host, int port, ProtocolType protocol ) {
+    public EnablerAsClient( 
+          String name, String host, int port, ProtocolType protocol ) {
       try {
         this.name = name;
         this.protocol = protocol;        
@@ -234,12 +235,13 @@ Enabler come client di trasmissione per il Sonar
   private ISonar sonar ;
 	
     public SonarEnablerAsClient( 
-        String name, String host, int port, ProtocolType protocol, ISonar sonar ) {
+        String name,String host,int port,ProtocolType protocol,ISonar sonar ){
       super( name,  host,  port, protocol );
       this.sonar = sonar;
     }
 
-    public void handleMessagesFromServer( Interaction2021 conn ) throws Exception {
+    public void handleMessagesFromServer(
+            Interaction2021 conn) throws Exception{
       while( true ) {
         String cmd = conn.receiveMsg();
         if( cmd.equals("activate")) {
@@ -274,8 +276,10 @@ Adapter-Enabler come client di trasmissione per il Led
 
 .. code:: java
 
-  public class LedAdapterEnablerAsClient extends EnablerAsClient implements ILed {
-  public LedAdapterEnablerAsClient(String name,String host,int port,ProtocolType protocol){
+  public class LedAdapterEnablerAsClient 
+            extends EnablerAsClient implements ILed{
+  public LedAdapterEnablerAsClient(
+        String name,String host,int port,ProtocolType protocol){
     super(name,host,port, protocol);
   }
   @Override
@@ -295,7 +299,8 @@ Adapter-Enabler come client di trasmissione per il Led
   @Override
   public boolean getState() { return ledStateMirror;	}	
   @Override
-  protected void handleMessagesFromServer(Interaction2021 conn) throws Exception {
+  protected void handleMessagesFromServer(
+          Interaction2021 conn) throws Exception {
     while( true ) {
       String msg = conn.receiveMsg();  //bòlocking
       System.out.println(name+" |  I should be never here .... " + msg   );		
@@ -314,7 +319,7 @@ Enabler di ricezione per il Led
   public class LedEnablerAsServer extends EnablerAsServer  {
   ILed led ;
 
-    public LedServer(  String name,  int port, ProtocolType protocol, ILed led  )   {
+    public LedServer(String name,int port,ProtocolType protocol,ILed led){
       super(name, port, protocol );
       this.led = led;	
     }
