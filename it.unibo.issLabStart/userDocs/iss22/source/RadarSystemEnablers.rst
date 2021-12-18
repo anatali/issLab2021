@@ -38,7 +38,7 @@ rappresentata come segue:
 Enabler tipo-server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Iniziamo con il definire un enabler *tipo-server* che demanda la gestione dei messaggi ricevuti in input
+Iniziamo con il definire un enabler *tipo-server* che demanda la gestione dei messaggi ricevuti 
 ad oggetti di una classe definita dall'Application-designer.
 
 .. image:: ./_static/img/Radar/EnablerAsServer.PNG
@@ -50,10 +50,10 @@ ad oggetti di una classe definita dall'Application-designer.
   public class EnablerAsServer{
     private static int count=1;
     protected String name;
-    protected ProtocolType protocol;
+    protected ProtocolType protocol; 
     protected TcpServer serverTcp;
 
-    public EnablerAsServer(String name, int port, 
+    public EnablerAsServer(String name, int port,  
                        ProtocolType protocol, IApplMsgHandler handler ) {
     try {
       this.name     			= name;
@@ -61,8 +61,8 @@ ad oggetti di una classe definita dall'Application-designer.
       if( protocol != null ) setServerSupport( port, protocol, handler );
       }catch (Exception e) { ... }
     }	
-    protected void setServerSupport( 
-          int port, ProtocolType protocol,IApplMsgHandler handler) throws Exception{
+    protected void setServerSupport(int port,ProtocolType protocol,
+                      IApplMsgHandler handler) throws Exception{
       if( protocol == ProtocolType.tcp ) {
           serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port, handler );        
       }else if( protocol == ProtocolType.udp ) { ... 
@@ -88,7 +88,6 @@ Notiamo che:
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContextServer`.
 - si fornisce anche un supporto per il protocollo CoAP_, di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
- 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Tipi di protocollo supportati
@@ -102,13 +101,18 @@ La classe ``ProtocolType`` enumera i protocolli utlizzabili dagli enablers.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Un Proxy tipo-client
+Proxy tipo-client 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Per realizzare interazioni con un  *enabler tipo-server* che opera su certo **host** e su 
 una certa porta, introduciamo la classe ``ProxyAsClient``
 che riceve nel costruttore l'host a cui connettersi e la porta espressa da una *String* denominata ``entry``:
 
+.. image:: ./_static/img/Radar/ProxyAsClient.PNG
+   :align: center 
+   :width: 40%
+
+    
 .. code:: java
 
   public class ProxyAsClient {
@@ -127,7 +131,7 @@ che riceve nel costruttore l'host a cui connettersi e la porta espressa da una *
 
 Il fatto di denotare la porta del server con una *String* invece che con un *int* ci darà
 la possibilità di gestire comunicazioni basate sia  su TCP/UDP sia su CoAP; in questo secondo
-caso il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`.
+, il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`.
 
 .. code:: java
 
@@ -169,13 +173,21 @@ con attesa di response/ack:
 Enabler e proxy per il Sonar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+.. image::  ./_static/img/Radar/EnablerProxySonar.PNG
+         :align: center 
+         :width: 60%
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Enabler per il Sonar
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 .. list-table::
   :widths: 30,70
   :width: 100%
 
   * - .. image::  ./_static/img/Radar/EnablerAsServerSonar.PNG
          :align: center 
-         :width: 60%
+         :width: 80%
     - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
       applicativo  di tipo ``IApplMsgHandler`` che elabora:
 
@@ -205,7 +217,11 @@ Enabler e proxy per il Sonar
       }
     }
   }
-  
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Proxy per il Sonar
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 .. list-table::
   :widths: 30,70
   :width: 100%
@@ -245,7 +261,13 @@ Enabler e proxy per il Sonar
 Enabler e proxy per il Led
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Sono del tutto simili a quanto visto per i sonar.
+.. image::  ./_static/img/Radar/EnablerProxyLed.PNG
+         :align: center 
+         :width: 60%
+
+L'enabler server per il Led usa un gestore di messaggi ``LedApplHandler`` che riceve comandi
+e richieste da un ``LedProxyAsClient``. 
+Entrambe queste classi sono simili a quanto visto per i sonar.
  
 
  
@@ -253,34 +275,77 @@ Sono del tutto simili a quanto visto per i sonar.
 Testing degli enabler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- 
+La configurazione crea gli elementi della architettura di figura:
+
+.. image::  ./_static/img/Radar/TestEnablers.PNG
+         :align: center 
+         :width: 50%
+
 
 .. code::  java
 
-		@Before
-	  public void setup() {
+    @Before
+    public void setup() {
       RadarSystemConfig.simulation = true;
       RadarSystemConfig.ledPort    = 8015;
       RadarSystemConfig.sonarPort  = 8011;
       RadarSystemConfig.sonarDelay = 100;
       RadarSystemConfig.testing    = false;
 
-    sonar 	= DeviceFactory.createSonar();
-		led     = DeviceFactory.createLed();
+    sonar = DeviceFactory.createSonar();
+    led   = DeviceFactory.createLed();
+    host  = "localhot";
 		
-		//I server
- 		sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,protocol, new SonarApplHandler("sonarH", sonar) );
- 		ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort,  protocol, new LedApplHandler("ledH", led)  );
+    //I server
+    sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort, 
+                              protocol,new SonarApplHandler("sonarH", sonar));
+    ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort,   
+                              protocol,new LedApplHandler("ledH", led)  );
 		
     //I client
-		String sonarUri   = CoapApplServer.inputDeviceUri+"/sonar";
-		String entrySonar = protocol==ProtocolType.coap ? sonarUri : ""+RadarSystemConfig.sonarPort;
- 		sonarClient = new SonarProxyAsClient("sonarClient", "localhost",entrySonar, protocol );
+    String sonarUri  = CoapApplServer.inputDeviceUri+"/sonar";
+    String entrySonar= 
+       protocol==ProtocolType.coap ? sonarUri : ""+RadarSystemConfig.sonarPort;
+    sonarClient=new SonarProxyAsClient("sonarClient",host,entrySonar,protocol);
 		
-		String ledUri     = CoapApplServer.outputDeviceUri+"/led";
-		String entryLed   = protocol==ProtocolType.coap ? ledUri : ""+RadarSystemConfig.ledPort;
-		ledClient = new LedProxyAsClient("ledClient", "localhost", entryLed, protocol );	
+    String ledUri  = CoapApplServer.outputDeviceUri+"/led";
+    String entryLed= 
+      protocol==ProtocolType.coap ? ledUri : ""+RadarSystemConfig.ledPort;
+    ledClient = new LedProxyAsClient("ledClient", host, entryLed, protocol);	
 	}
+
+Il test simula il comportamento del Controller, senza RadarDisplay:
+
+.. code::  java
+
+    @Test 
+    public void testEnablers() {
+      sonar.activate();
+      sonarServer.activate();
+      ledServer.activate();
+		
+      RadarSystemConfig.testing=false; //true => oneshot
+      RadarSystemConfig.sonarDelay=100;
+      RadarSystemConfig.DLIMIT=30;
+		
+      //Simulo il Controller
+      Utils.delay(500);		
+      while( sonarClient.isActive() ) {
+        int v = sonarClient.getDistance().getVal();
+        if( v < RadarSystemConfig.DLIMIT ){
+          ledClient.turnOn();
+          boolean ledState = ledClient.getState();
+          assertTrue( ledState );	
+        }else{
+         ledClient.turnOff();
+         boolean ledState = ledClient.getState();
+         assertTrue( ! ledState );	
+        }
+    }		
+  }
+
+
+ 
 
  
  

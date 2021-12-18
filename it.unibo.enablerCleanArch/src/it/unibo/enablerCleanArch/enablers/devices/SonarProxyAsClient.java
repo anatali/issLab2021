@@ -24,16 +24,16 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 
 	@Override
 	public IDistance getDistance() {
-		Colors.out( name + " | getDistance ", Colors.ANSI_PURPLE);
+		//Colors.out( name + " | getDistance ", Colors.ANSI_PURPLE);
 		String answer = sendRequestOnConnection("getDistance");
-		Colors.out( name + " | getDistance answer="+answer, Colors.ANSI_PURPLE);
+		//Colors.out( name + " | getDistance answer="+answer, Colors.ANSI_PURPLE);
 		return new Distance( Integer.parseInt(answer) );
 	}
 
 	@Override
 	public boolean isActive() {
 		String answer = sendRequestOnConnection("isActive");
-		Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
+		//Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
 		return answer.equals( "true" );
 	}
  

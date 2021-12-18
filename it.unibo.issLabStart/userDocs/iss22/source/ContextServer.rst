@@ -4,27 +4,41 @@
 .. role:: blue 
 .. role:: remark
 
+.. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
+
 ==================================================
 Il concetto di contesto
 ==================================================
 
 Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su una propria porta.
 
+.. image::  ./_static/img/Radar/EnablerAsServerSonarLed.PNG
+  :align: center 
+  :width: 20%
+
+
 Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
 computazionale. Questo server (che denominiamo ``TcpContextServer``) 
-verrebbe a costituire una sorta di ``Facade`` comune a tutti gli *enabler-server*
-attivati nello stesso :blue:`contesto` rappresentato da quel  nodo.
+verrebbe a costituire una sorta di ``Facade`` comune a tutti gli 
+``ApplMessageHandler`` disponibili su quel nodo.
 
+
+.. *enabler-server* attivati nello stesso :blue:`contesto` rappresentato da quel  nodo.
+
+.. image::  ./_static/img/Radar/TcpContextServerSonarLed.PNG
+  :align: center 
+  :width: 50%
+
+ 
 Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace di sapere per quale
-*enabler-server* è destinato un messaggio, per poi invocarne l'appropriato ``ApplMessageHandler``
-definito dall'application designer.
+componente è destinato un messaggio, per poi invocarne l'appropriato ``ApplMessageHandler``.
 
 -------------------------------------------------------
 Struttura dei messaggi applicativi
 -------------------------------------------------------
 
-Introduciamo dunque una  estensione sulla struttura dei messaggi, che ci fornirà d'ora in poi anche uno 
-:blue:`standard` sulla struttura delle informazioni scambiate via rete:
+Introduciamo dunque una  estensione sulla struttura dei messaggi, che ci darà d'ora in poi anche uno 
+:blue:`standard interno` sulla struttura delle informazioni scambiate via rete:
 
  .. code:: java
 
@@ -37,7 +51,7 @@ Introduciamo dunque una  estensione sulla struttura dei messaggi, che ci fornir�
   - RECEIVER: nome del componente chi riceve il messaggio 
   - SEQNUM:   numero di sequenza del messaggio
 
-I messaggi scambiati verranno logicamente suddivisi in diverse categorie:
+I messaggi scambiati sono logicamente suddivisi in diverse categorie:
 
 .. list-table:: 
   :widths: 70,30
@@ -56,7 +70,7 @@ I messaggi scambiati verranno logicamente suddivisi in diverse categorie:
 
 
 La classe ``ApplMessage`` fornisce metodi per la costruzione e la gestione di messaggi organizzati
-nel modo descritto. La classe si avvale del supporto del TuProlog.
+nel modo descritto. La classe si avvale del supporto del tuProlog_.
 
  .. code:: java
 
@@ -99,26 +113,36 @@ Il TcpContextServer
 -------------------------------------------------------
 
 Quando una stringa di forma ``msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )`` viene ricevuta
-dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (``SysMessageHandler``)
+dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (``ContextMsgHandler``)
 capace di invocare l'``ApplMessageHandler`` relativo al componente destinatario registrato presso
 di esso.
 
  .. code:: java
 
   public class TcpContextServer extends TcpServer{
-  private SysMessageHandler sysMsgHandler;
+  private static boolean activated = false;
+  private ContextMsgHandler ctxMsgHandler;
+
     public TcpContextServer(String name, int port ) {
-      super(name, port, new SysMessageHandler("sysHandler"));
-      sysMsgHandler = getHandler();
-    }   
-    public SysMessageHandler getHandler() {
-      return (SysMessageHandler) applHandler;
+      super(name, port, new ContextMsgHandler("ctxH"));
+      this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;
+    } 
+
+    @Override
+    public void activate() {
+      if( stopped ) {
+        stopped = false;
+        if( ! activated ) {		//SINGLETON
+          activated = true;
+          this.start();
+        }			
+      }
     }
-	  public void addComponent( String name, ApplMessageHandler h) {
-      sysMsgHandler.registerHandler(name,h);
+	  public void addComponent( String name, IApplMsgHandler h) {
+      ctxMsgHandler.addComponent(name,h);
 	  }
-    public void removeComponent( String name, ApplMessageHandler h) {
-      sysMsgHandler.unregisterHandler(name );
+    public void removeComponent( String name ) {
+      ctxMsgHandler.removeComponent(name );
     }
   }
 
@@ -128,23 +152,24 @@ Il gestore di sistema dei messaggi
 
  .. code:: java
 
-  public class SysMessageHandler extends ApplMessageHandler{
-  private HashMap<String,ApplMessageHandler> handlerMap = 
-                           new HashMap<String,ApplMessageHandler>();
+  public class ContextMsgHandler extends ApplMessageHandler{
+  private HashMap<String,IApplMsgHandler> handlerMap = 
+                           new HashMap<String,IApplMsgHandler>();
 
-    public SysMessageHandler(String name) { super(name); }
+    public ContextMsgHandler(String name) { super(name); }
 
     @Override
     public void elaborate(String message) {
       //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
-      ApplMessage msg = new ApplMessage(message);
-      ApplMessageHandler h = handlerMap.get(msg.msgReceiver());
-      if( h != null ) h.elaborate(message);
+      ApplMessage msg   = new ApplMessage(message);
+      String dest       = msg.msgReceiver();
+      IApplMsgHandler h = handlerMap.get( dest );
+      if( dest != null ) h.elaborate(msg.msgContent(), conn);
     }
-    public void registerHandler(String name, ApplMessageHandler h) {
+    public void addComponent( String name, IApplMsgHandler h) {
       handlerMap.put(name, h);
     }
-    public void unregisterHandler( String name ) {
+    public void removeComponent( String name ) {
       handlerMap.remove( name );
     }
   }
@@ -154,9 +179,9 @@ Il gestore di sistema dei messaggi
    :width: 80%
 
 
-:remark:`I componenti acquisiscono la capacità di interazione dal contesto`
+:remark:`I componenti IApplMsgHandler acquisiscono la capacità di interazione dal contesto`
 
-:remark:`I componenti si riducono a gestori di messaggi`
+:remark:`I componenti IApplMsgHandler sono semplici gestori di messaggi`
 
 
 -------------------------------------------------------
@@ -167,7 +192,7 @@ Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema su PC 
 
 - un Sonar di classe ``SonarAdapterEnablerAsServer`` che riceve valori di distanza inviati via rete
 - un Led  di classe ``LedEnablerAsServer`` che riceve comandi di accensione-spegnimento inviati via rete
-- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un ``SysMessageHandler``) 
+- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un ``ContextMsgHandler``) 
   il metodo ``elaborate`` del Sonar e del Led.
 
 Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe ``ApplMessageHandler``
@@ -207,7 +232,7 @@ metodo di esecuzione.
 ++++++++++++++++++++++++++++++++++++++++++
 Definizione dei messaggi
 ++++++++++++++++++++++++++++++++++++++++++
-I messaggi per aggiornare il Sonar e per comandare il Led sono definiti di tipo ``dispatch``:
+I messaggi per aggiornare il Sonar e per comandare il Led sono ``dispatch``:
 
  .. code:: java
 
@@ -239,34 +264,46 @@ Il metodo di configurazione definisce i parametri e crea i componenti:
     RadarSystemConfig.RadarGuieRemote   = false;    	
     RadarSystemConfig.pcHostAddr        = "localhost";
     RadarSystemConfig.ctxServerPort     = 8048;
-
-    int ledPort	       = 0;	//dont'care			
-    int sonarPort      = 0;	//dont'care		
-    
-    ProtocolType prtcl                  = null;
+    RadarSystemConfig.sonarDelay        = 1500;
+     
+ 
     //Creazione del server di contesto
     contextServer  = 
       new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
 		
-    //Creazione del sonar
-    sonar = 
-      new SonarAdapterEnablerAsServer("sonar", sonarPort,prtcl);
-		
-    //Creazione del Led
-    ILed led = DeviceFactory.createLed();		
-    LedEnablerAsServer ledServer = 
-      new LedEnablerAsServer("led", ledPort,prtcl,led);
- 		
-    //Registrazione dei componenti presso il server
-    contextServer.addComponent("sonar",(ApplMessageHandler) sonar);
-    contextServer.addComponent("led",ledServer);	
+    //Creazione del Sonar e del Led
+ 		sonar = DeviceFactory.createSonar();
+		led   = DeviceFactory.createLed();
+
+    //Registrazione dei componenti presso il contesto	
+    IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
+    IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);
+    IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
+    contextServer.addComponent("sonar", sonarHandler);
+    contextServer.addComponent("led",   ledHandler);	
+    contextServer.addComponent("radar", radarHandler);	
+  }//configureTheSystem
+
+
+++++++++++++++++++++++++++++++++++++++++++
+Definizione di un client di trasmissione
+++++++++++++++++++++++++++++++++++++++++++
+Il client per trasmettere messaggi al ``TcpContextServer`` del nodo è una semplice specializzazione 
+di ``ProxyAsClient``:
+
+ .. code:: java
+
+  public class ACallerClient  extends ProxyAsClient{
+    public ACallerClient(String name, String host, String entry ) {
+      super(name, host, entry, ProtocolType.tcp);
+    }
   }
 
 ++++++++++++++++++++++++++++++++++++++++++
 Esecuzione
 ++++++++++++++++++++++++++++++++++++++++++
-Il metodo di esecuzione utilizza un client per trasmettere al ``TcpContextServer`` 
-dapprima messaggi che riguardano il Sonar e successivamente messaggi che riguardano il Led
+Il metodo di esecuzione utilizza il client per trasmettere al ``TcpContextServer`` 
+dapprima messaggi che riguardano il Sonar e successivamente messaggi che riguardano il Led.
 
 .. invia prima un valore ``d>DLIMIT`` e poi un valore ``d<DLIMIT``
 
@@ -274,42 +311,62 @@ dapprima messaggi che riguardano il Sonar e successivamente messaggi che riguard
 .. code:: java
  
   public void execute() throws Exception{
+    sonar.activate();
     contextServer.activate();
-    ACallerClient client = 
-      new ACallerClient("client","localhost", RadarSystemConfig.ctxServerPort);
-    conn = client.getConn();
-    simulateDistance( true );
-    simulateDistance( false );
-  }
-	
-  protected void simulateDistance( boolean far ) throws Exception {
-    if( far ) conn.forward( fardistance.toString() );  
-    else  conn.forward( neardistance.toString() );  
-    //client-->contextServer-->sonar.valueUpdated()-->produced=true
-    int v = sonar.getVal();
-    if( v < RadarSystemConfig.DLIMIT ) conn.forward(turnOnLed.toString());  
-    else conn.forward(turnOffLed.toString());  		
+    //simulateDistance(   );
+    simulateController();
   }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+simulateDistance
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L'operazione ``simulateDistance`` usa la connessione in modo diretto: è un modo da evitare:
 
-++++++++++++++++++++++++++++++++++++++++++
-Definizione di un client di trasmissione
-++++++++++++++++++++++++++++++++++++++++++
-Il client per trasmettere messaggi al ``TcpContextServer`` del nodo è una semplice specializzazione 
-di ``EnablerAsClient``:
+.. code:: java
 
- .. code:: java
-
-  public class ACallerClient  extends EnablerAsClient{
-    public ACallerClient(String name, String host, int port ) {
-      super(name, host, port, ProtocolType.tcp);
-    }
-    @Override
-    protected void handleMessagesFromServer(Interaction2021 conn) 
-                                                throws Exception {}
+  protected void simulateDistance(  ) throws Exception {
+    ACallerClient serverCaller = 
+      new ACallerClient("client","localhost", ""+RadarSystemConfig.ctxServerPort);
+    conn = serverCaller.getConn();
+    conn.forward( fardistance.toString() );  
+    conn.forward( neardistance.toString() );  
   }
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+simulateController
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'operazione ``simulateController`` usa la connessione in modo diretto: è un modo da evitare:
+
+.. code:: java
  
+	protected void simulateController(    )  {
+    RadarSystemConfig.sonarDelay        = 50;
+    RadarSystemConfig.DLIMIT            = 40;
+		
+    ACallerClient sonarCaller  = 
+      new ACallerClient("sonarCaller", "localhost",  ""+RadarSystemConfig.ctxServerPort);
+    ACallerClient ledCaller    = 
+      new ACallerClient("ledCaller",   "localhost",  ""+RadarSystemConfig.ctxServerPort);
+    RadarGuiClient radarCaller = 
+      new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
+		
+    //Activate the sonar
+    sonarCaller.sendCommandOnConnection(sonarActivate.toString());
+
+    for( int i=1; i<= 10; i++) {
+      String answer = sonarCaller.sendRequestOnConnection(getSonarval.toString());
+      int v = Integer.parseInt(answer);
+      radarCaller.sendCommandOnConnection(radarUpdate.toString().replace("DISTANCE",answer));
+      if( v < RadarSystemConfig.DLIMIT ) 
+        ledCaller.sendCommandOnConnection(turnOnLed.toString());
+      else ledCaller.sendCommandOnConnection(turnOffLed.toString());  
+      String ledState = ledCaller.sendRequestOnConnection(getLedState.toString());
+      System.out.println("simulateController ledState=" + ledState + " for distance=" + v);
+      Utils.delay(1000);
+		}
+	}
 
 
 =========================================
@@ -317,7 +374,7 @@ Problemi ancora aperti
 =========================================
 
 - Un handler lento o che si blocca rallenta o blocca la gestione dei messaggi da parte del
-  ``SysMessageHandler`` e quindi del ``TcpContextServer``
+  ``ContextMsgHandler`` e quindi del ``TcpContextServer``
 - Nel caso di componenti con stato utlizzabili da più clients, vi possono essere problemi
   di concorrenza.
 

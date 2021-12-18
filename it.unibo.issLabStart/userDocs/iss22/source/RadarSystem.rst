@@ -19,6 +19,8 @@
 
 .. _CoAP: https://coap.technology/
 
+.. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
+
 ======================================
 RadarSystem
 ======================================

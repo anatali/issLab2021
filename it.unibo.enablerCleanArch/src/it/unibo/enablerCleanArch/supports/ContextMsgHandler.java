@@ -25,6 +25,7 @@ public class ContextMsgHandler extends ApplMsgHandler{
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
+		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 		ApplMessage msg      = new ApplMessage(message);
 		String dest          = msg.msgReceiver();
 		IApplMsgHandler h    = handlerMap.get(dest);

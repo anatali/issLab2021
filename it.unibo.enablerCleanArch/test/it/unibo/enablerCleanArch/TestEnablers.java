@@ -21,12 +21,10 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
 /*
- * Simulo un Controller su PC che usa
- * 	un SonarAdapterEnablerAsServer sulla porta 8013
- *  un LedAdapterEnablerAsClient 
- * Simulo un RaspberryPi che usa
- *  un SonarEnablerAsClient 
- *  un LedEnablerAsServer sulla porta 8015
+ * 	un Sonar Server sulla porta 8011
+ *  un Led Server sulla porta 8015
+ *  un Led Proxy 
+ *  un Sonar Proxy
  * 
  */
 public class TestEnablers {
@@ -99,7 +97,7 @@ public class TestEnablers {
 		ledServer.activate();
 		
 		RadarSystemConfig.testing=false; //true => oneshot
-		RadarSystemConfig.sonarDelay=100;
+		RadarSystemConfig.sonarDelay=50;
 		RadarSystemConfig.DLIMIT=30;
 		
 		//Simulo il Controller
@@ -109,10 +107,18 @@ public class TestEnablers {
 		
 		while( sonarClient.isActive() ) {
 			int v = sonarClient.getDistance().getVal();
-			Colors.out("Controller-simulated getVal="+v, Colors.GREEN);
+			Colors.out("testEnablers getVal="+v, Colors.GREEN);
 			//Utils.delay(500);
-			if( v < RadarSystemConfig.DLIMIT ) ledClient.turnOn();
-			else ledClient.turnOff();
+			if( v < RadarSystemConfig.DLIMIT ) {
+				ledClient.turnOn();
+				boolean ledState = ledClient.getState();
+				assertTrue( ledState );	
+			}
+			else {
+				ledClient.turnOff();
+				boolean ledState = ledClient.getState();
+				assertTrue( ! ledState );	
+			}
 		}		
 	}
 }

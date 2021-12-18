@@ -1,5 +1,6 @@
 package it.unibo.enablerCleanArch.enablers.devices;
 
+import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -18,9 +19,10 @@ public class LedProxyAsClientMain  {
 		String host     			 = "localhost" ;            
 
 		if( protocol == ProtocolType.tcp) {
+			ILed led = DeviceFactory.createLed();
 			int port = Integer.parseInt(ledPort);
 			EnablerAsServer ledServer = 
-					new EnablerAsServer("LedEnablerAsServer", port, protocol, new LedApplHandler("ledH") );
+					new EnablerAsServer("LedEnablerAsServer", port, protocol, new LedApplHandler("ledH",led) );
 			ledServer.activate();
 		}else if( protocol == ProtocolType.coap){
 			new CoapLedResource("led", DeviceType.input);

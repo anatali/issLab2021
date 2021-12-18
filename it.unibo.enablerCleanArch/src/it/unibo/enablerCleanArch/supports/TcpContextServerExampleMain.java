@@ -1,7 +1,11 @@
 package it.unibo.enablerCleanArch.supports;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.DeviceFactory;
+import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.ISonar;
+import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.domain.SonarModel;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.RadarGuiClient;
@@ -19,13 +23,14 @@ private ApplMessage turnOnLed    = new ApplMessage("msg( turn, dispatch, main, l
 private ApplMessage turnOffLed   = new ApplMessage("msg( turn, dispatch, main, led, off, 3 )");
 
 private ApplMessage sonarActivate= new ApplMessage("msg( sonarcmd, dispatch, main, sonar, activate, 4 )");
-private ApplMessage getSonarval  = new ApplMessage("msg( sonarcmd, request,  main, sonar, getVal,   5 )");
+private ApplMessage getSonarval  = new ApplMessage("msg( sonarcmd, request,  main, sonar, getDistance,   5 )");
 private ApplMessage getLedState  = new ApplMessage("msg( ledcmd,   request,  main, led,   getState, 6 )");
 
 private ApplMessage radarUpdate  = new ApplMessage("msg( update, request,  main, radar, DISTANCE, 7 )");
 
 private Interaction2021 conn; 
 private ISonar sonar;
+private ILed led;
 
 	public void configureTheSystem() {
 		RadarSystemConfig.simulation 		= true;    
@@ -37,16 +42,17 @@ private ISonar sonar;
 		RadarSystemConfig.pcHostAddr        = "localhost";
 		RadarSystemConfig.ctxServerPort     = 8048;
 		RadarSystemConfig.sonarDelay        = 1500;
-		
+		RadarSystemConfig.protcolType       = ProtocolType.tcp;
 
 		//Creazione del server di contesto
 		//ContextMsgHandler ctxH = new ContextMsgHandler("ctxH");
 		contextServer          = //new TcpServer("TcpContextServer", RadarSystemConfig.ctxServerPort, ctxH);
 				new TcpContextServer("TcpContextServer", RadarSystemConfig.ctxServerPort );
-		sonar = SonarModel.create();
+		sonar = DeviceFactory.createSonar();
+		led   = DeviceFactory.createLed();
 		//Registrazione dei componenti presso il contesto	
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
-		IApplMsgHandler ledHandler   = new LedApplHandler("ledH");
+		IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);
 		IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
 		
 //		ctxH.addComponent("sonar", sonarHandler);
@@ -79,29 +85,34 @@ private ISonar sonar;
 	protected void simulateController(    )  {
 		// client --> contextServer --> sonar.valueUpdated( ) --> produced=true
 
-		RadarSystemConfig.sonarDelay        = 50;
+		RadarSystemConfig.sonarDelay        = 250;
 		RadarSystemConfig.DLIMIT            = 40;
 		
 		ACallerClient sonarCaller  = 
 				new ACallerClient("sonarCaller", "localhost",  ""+RadarSystemConfig.ctxServerPort);
 		ACallerClient ledCaller    = 
 				new ACallerClient("ledCaller",   "localhost",  ""+RadarSystemConfig.ctxServerPort);
-		RadarGuiClient radarCaller = 
-				new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
+/*
+RadarGuiClient radarCaller = 
+				new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, 
+						RadarSystemConfig.protcolType);
+*/
+		IRadarDisplay radar = RadarDisplay.getRadarDisplay();
 		
 		sonarCaller.sendCommandOnConnection(sonarActivate.toString());
-		for( int i=1; i<= 10; i++) {
+		for( int i=1; i<= 30; i++) {
 			String answer = sonarCaller.sendRequestOnConnection(getSonarval.toString());
 			//System.out.println("simulateController sonar answer = " + answer);
 	 		int v = Integer.parseInt(answer);
 			//System.out.println("simulateController sonar value = " + v);
-	 		radarCaller.sendCommandOnConnection(radarUpdate.toString().replace("DISTANCE",answer));
+	 		//radarCaller.sendCommandOnConnection(radarUpdate.toString().replace("DISTANCE",answer));
+	 		radar.update(answer, "90");
 			if( v < RadarSystemConfig.DLIMIT ) 
 				ledCaller.sendCommandOnConnection(turnOnLed.toString());
 			else ledCaller.sendCommandOnConnection(turnOffLed.toString());  
 			String ledState = ledCaller.sendRequestOnConnection(getLedState.toString());
 			System.out.println("simulateController ledState=" + ledState + " for distance=" + v);
-			Colors.delay(500);
+			Utils.delay(200);
 		}
 	}
 	
