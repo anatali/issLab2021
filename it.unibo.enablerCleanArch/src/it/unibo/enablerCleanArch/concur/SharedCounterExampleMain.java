@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.supports.TcpServer;
 public class SharedCounterExampleMain  {
 private int ctxServerPort   = 7070;
 private String resourceName = "counterHandler";
-private String delay        = "200";
+private String delay        = "20"; 
 
 private ApplMessage msg1 = new ApplMessage(
 		"msg( dec, dispatch, main, DEST, dec(DELAY), 1 )"

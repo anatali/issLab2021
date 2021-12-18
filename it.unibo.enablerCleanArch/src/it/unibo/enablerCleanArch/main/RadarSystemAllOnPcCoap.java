@@ -1,6 +1,4 @@
 package it.unibo.enablerCleanArch.main;
-
-
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -24,7 +22,8 @@ private ProtocolType protocol = ProtocolType.coap;	//could be overwritten
 	}
 	
 	protected ISonar simulateSonarRemote() {
-		SonarResourceCoap sonarResource = new SonarResourceCoap("sonar");
+		sonar          = DeviceFactory.createSonar();
+		SonarResourceCoap sonarResource = new SonarResourceCoap("sonar", sonar);
 		//new EnablerAsServer("SonarCoap",RadarSystemConfig.sonarPort, protocol, sonarResource );
 		String sonarUri    = CoapApplServer.inputDeviceUri+"/"+sonarResource.getName();
 		ISonar sonarClient = new SonarProxyAsClient(sonarUri, "localhost",""+RadarSystemConfig.sonarPort, protocol );

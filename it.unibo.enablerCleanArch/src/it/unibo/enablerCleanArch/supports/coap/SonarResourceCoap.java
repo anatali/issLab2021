@@ -7,9 +7,10 @@ public class SonarResourceCoap extends CoapDeviceResource  {
 ISonar sonar;
 private String curVal = "-1";
 
-		public SonarResourceCoap(String name) {
+		public SonarResourceCoap(String name, ISonar sonar) {
 			super(name, DeviceType.input);
-			sonar = it.unibo.enablerCleanArch.domain.SonarModel.createSonarMock();
+			this.sonar = sonar;
+			//sonar = it.unibo.enablerCleanArch.domain.SonarModel.createSonarMock();
 			//getSonarValues();
 			Colors.out( getName() + " |  CREATED"   );	
 	 	}
@@ -31,7 +32,7 @@ private String curVal = "-1";
 			protected String elaborateGet(String req) {
 				Colors.out( getName() + " |  elaborateGet req=" + req, Colors.ANSI_YELLOW  );	
 				if( req.equals("isActive")) return ""+sonar.isActive();
-				else if( req.equals("getVal"))  return  curVal;
+				else if( req.equals("getDistance"))  return  curVal;
 				else return "notUnderstood";
 			}
 

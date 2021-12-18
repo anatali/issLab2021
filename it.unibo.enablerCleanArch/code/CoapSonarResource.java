@@ -30,8 +30,9 @@ private String curVal = "-1";
 	 // CoapDeviceResource
 		@Override
 		protected String elaborateGet(String req) {
-			Colors.out( getName() + " |  elaborateGet:" + req  );		
-			return  curVal;
+			Colors.out( getName() + " |  elaborateGet:" + req  );
+			if( req.equals("isActive")) return ""+sonar.isActive();
+			if( req.equals("getDistance")) return  curVal;
 		}
 
 		@Override

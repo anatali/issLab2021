@@ -39,8 +39,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
 	compile group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
 //LOG4j	//required by Californium
-	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25' 
-	
+	//compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25' 
+	ext['log4j2.version'] = '2.17.0'
 //CUSTOM
     compile name: '2p301'
     compile name: 'uniboInterfaces'

@@ -1,5 +1,7 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.server.resources.Resource;
+
+import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 
@@ -12,8 +14,8 @@ public class CoapSonarResourceMain   {
 	RadarSystemConfig.sonarDelay = 100;
 	
 	//Create sonar resource
-	Resource sonarRes = new CoapSonarResource("sonar", DeviceType.input) ;  //  
-	
+	//Resource sonarRes = new CoapSonarResource("sonar", DeviceType.input) ;  //  
+	Resource sonarRes = new SonarResourceCoap( "sonar", DeviceFactory.createSonar() ) ;
 	//CoapApplObserver obs = 	
 		new CoapApplObserver( "localhost", 
 				CoapApplServer.inputDeviceUri+"/"+sonarRes.getName() ,
