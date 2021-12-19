@@ -345,7 +345,7 @@ Il test simula il comportamento del Controller, senza RadarDisplay:
   }
 
 
-.. include:: DaTcpACoAP.rst 
+
 
  
  

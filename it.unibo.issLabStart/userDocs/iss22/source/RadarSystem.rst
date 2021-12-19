@@ -509,11 +509,12 @@ Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contien
 Test funzionale
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-==================================
-Il concetto di contesto
-==================================
+ 
+.. Si veda :doc:`ContextServer`.
 
-Si veda :doc:`ContextServer`.
+.. include:: ContextServer.rst 
+
+.. include:: DaTcpACoAP.rst 
 
 ==================================
 Un approccio top down
