@@ -11,12 +11,14 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 public class CoapSupport implements Interaction2021  {
 private CoapClient client;
+private CoapClient clientforQuery;
 private CoapObserveRelation relation = null;
 private String url;
 
 	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
-		url = "coap://"+address + ":5683/"+ path;
-		client = new CoapClient( url );
+		url             = "coap://"+address + ":5683/"+ path;
+		client          = new CoapClient( url );
+		clientforQuery  = new CoapClient( url+"?q="  );
 		Colors.out("CoapSupport | STARTS client url=" +  url,Colors.ANSI_YELLOW  ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 
 	}
@@ -41,7 +43,7 @@ private String url;
 		relation.proactiveCancel();	
 	}
 	public void  observeResource( CoapHandler handler  ) {
-		client.setURI( url );
+		//client.setURI( url );
 		relation = client.observe( handler ); 
 		Colors.out("CoapSupport | observeResource " + handler + " client="+client  ,Colors.RED  );
 	}
@@ -59,7 +61,7 @@ private String url;
 		//updateResource(msg);		
 		Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		//Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 	}
 
 	@Override
@@ -71,8 +73,8 @@ private String url;
 	public String request(String query) throws Exception {
  		 //return readResource(  query  );
 		String param = query.isEmpty() ? "" : "?q="+query;
-		client.setURI(url+param);
-		CoapResponse respGet = client.get(  );
+		clientforQuery.setURI(url+param);
+		CoapResponse respGet = clientforQuery.get(  );
 		Colors.out("CoapSupport | readResource query=" + query 
 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 		return respGet.getResponseText();

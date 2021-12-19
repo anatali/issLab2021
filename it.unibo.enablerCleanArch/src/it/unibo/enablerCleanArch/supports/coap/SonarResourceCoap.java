@@ -20,6 +20,7 @@ String curVal="";
 					while( sonar.isActive() ) {
 						int v = sonar.getDistance().getVal();
 						elaborateAndNotify(  v );
+						//Colors.out("sonar value="+v);
 					}
 				}
 			}.start();
@@ -28,30 +29,33 @@ String curVal="";
 		 // CoapDeviceResource
 			@Override
 			protected String elaborateGet(String req) {
-				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );	
-				if( req.equals("isActive")) return ""+sonar.isActive();
-				else if( req.equals("getDistance")) {
+				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
+				if( req == null || req.equals("getDistance")) {
 					Colors.out( getName() + " |  elaborateGet getDistance="+sonar, Colors.ANSI_YELLOW  );	
-					String answer = ""+(sonar.getDistance().getVal());
+					String answer = curVal; //""+(sonar.getDistance().getVal());
 					Colors.out( getName() + " |  elaborateGet answer=" + answer, Colors.ANSI_YELLOW  );	
 					return  answer;
-				}
+				}else if( req != null && req.equals("isActive")) return ""+sonar.isActive();
 				else return "notUnderstood";
 			}
 
 			@Override
 			protected void elaboratePut(String arg) {
-	 			Colors.out( getName() + " |  elaboratePut:" + arg, Colors.ANSI_YELLOW  );
+	 			//Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
-	 			changed();	// notify all CoAp observers
+	 			else if( arg.equals("setVal")) {
+		 			Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
+	 				curVal=""+22; 	
+	 				changed();
+	 			}
+	 			//changed();	// notify all CoAp observers
 			}
 			
 			protected void elaborateAndNotify(int arg) {
-				Colors.out( getName() + " |  elaborateAndNotify:" + arg, Colors.RED  );		
 				curVal= ""+arg;
+				Colors.out( getName() + " |  elaborateAndNotify:" + curVal , Colors.RED  );		
 				changed();	// notify all CoAp observers
-				//this.notify();
 			}
 		
 }

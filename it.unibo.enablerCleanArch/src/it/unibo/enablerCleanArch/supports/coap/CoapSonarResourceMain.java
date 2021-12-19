@@ -1,8 +1,11 @@
 package it.unibo.enablerCleanArch.supports.coap;
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.Resource;
 
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.Utils;
  
 
 public class CoapSonarResourceMain   {  
@@ -16,27 +19,36 @@ public class CoapSonarResourceMain   {
 	//Create sonar resource
 	//Resource sonarRes = new CoapSonarResource("sonar", DeviceType.input) ;  //  
 	Resource sonarRes = new SonarResourceCoap( "sonar", DeviceFactory.createSonar() ) ;
-	//CoapApplObserver obs = 	
-		new CoapApplObserver( "localhost", 
-				CoapApplServer.inputDeviceUri+"/"+sonarRes.getName() ,
-			    new SonarMessageHandler( "sonarH" ) 
-		);	
+	
+	String sonaruri = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
+	String sonarAddr = "coap://localhost:5683/"+sonaruri;
+	System.out.println("sonaruri= " + sonarAddr );
+
+	CoapApplObserver obs = 	new CoapApplObserver( "localhost", sonaruri,new SonarMessageHandler( "sonarH" ) );	
 		 
  	//USAGE
-	String uri = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
-	System.out.println("uri= " + uri );
-	CoapSupport cps = new CoapSupport("localhost", uri );
-	cps.forward("activate");	
+	
+//	CoapSupport cps = new CoapSupport("localhost", sonaruri );
+	
+//	cps.observeResource(obs);
+	
+	CoapClient client   = new CoapClient( sonarAddr );
+	//client.put("activate", MediaTypeRegistry.TEXT_PLAIN);
+	client.observe(obs);
+	//client.put("setVal", MediaTypeRegistry.TEXT_PLAIN);
+	client.put("activate", MediaTypeRegistry.TEXT_PLAIN);
+//	String vs = cps.request("getDistance");		//invia GET	
+//	System.out.println("vs=" + vs );
 /* 
-	for( int i= 1; i<=5; i++) {
+	for( int i= 1; i<=1; i++) {
 		String vs = cps.request("getDistance");		//invia GET	
 		System.out.println("vs=" + vs );
 		//Thread.sleep(200);
-	}	
-	cps.forward("stop");
-	//Thread.sleep(1000);
-	 * 
-	 */
+	}	*/
+	Utils.delay(1500);	
+//	cps.forward("stop");
+
+ 
 	System.exit(0);
 	
 /*

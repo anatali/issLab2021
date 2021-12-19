@@ -16,10 +16,12 @@ public abstract class CoapDeviceResource extends CoapResource {
  		//LOGGER.info("CoapDeviceResource " + name + " | created  ");
 	}
  
- 	
+ 
+	
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		Colors.out(getName() + " | handleGET arg=" + exchange.getRequestText() + " param=" + exchange.getQueryParameter("q"));
+//		Colors.out(getName() + " | handleGET arg=" + exchange.getRequestText() + " param=" + exchange.getQueryParameter("q"));
+		Colors.out(getName() + " | handleGET arg=" + exchange.getRequestText()  );
   		String answer = elaborateGet( exchange.getQueryParameter("q") );
   		exchange.respond(answer);
 	}
@@ -35,6 +37,7 @@ public abstract class CoapDeviceResource extends CoapResource {
  		String arg = exchange.getRequestText() ;
 		Colors.out(getName() + " | handlePUT arg=" + exchange.getRequestText()  );
 		elaboratePut( arg );
+		changed();
 		exchange.respond(CHANGED);
 	}
 
