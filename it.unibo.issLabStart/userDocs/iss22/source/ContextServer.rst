@@ -299,6 +299,7 @@ di ``ProxyAsClient``:
     }
   }
 
+
 ++++++++++++++++++++++++++++++++++++++++++
 Esecuzione
 ++++++++++++++++++++++++++++++++++++++++++
@@ -350,7 +351,8 @@ L'operazione ``simulateController`` usa la connessione in modo diretto: è un mo
     ACallerClient ledCaller    = 
       new ACallerClient("ledCaller",   "localhost",  ""+RadarSystemConfig.ctxServerPort);
     RadarGuiClient radarCaller = 
-      new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
+      new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, 
+        ProtocolType.tcp);
 		
     //Activate the sonar
     sonarCaller.sendCommandOnConnection(sonarActivate.toString());

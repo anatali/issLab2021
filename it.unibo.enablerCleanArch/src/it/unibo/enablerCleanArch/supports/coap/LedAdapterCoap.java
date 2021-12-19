@@ -20,7 +20,7 @@ private CoapSupport cps;
 	@Override
 	public void turnOn() { 
  		try {
- 			cps.updateResource( "on" );
+ 			cps.forward( "on" );
 			ledStateMirror = true;
 		} catch (Exception e) {
  			e.printStackTrace();
@@ -30,7 +30,7 @@ private CoapSupport cps;
 	@Override
 	public void turnOff() {   
  		try {
- 			cps.updateResource( "off" );
+ 			cps.forward( "off" );
 			ledStateMirror = false;
 		} catch (Exception e) {
  			e.printStackTrace();

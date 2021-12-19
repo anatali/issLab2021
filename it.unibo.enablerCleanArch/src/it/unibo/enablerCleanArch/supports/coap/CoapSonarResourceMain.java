@@ -26,16 +26,16 @@ public class CoapSonarResourceMain   {
 	String uri = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
 	System.out.println("uri= " + uri );
 	CoapSupport cps = new CoapSupport("localhost", uri );
- 	
+	cps.forward("activate");	
  
 	for( int i= 1; i<=10; i++) {
-		String vs = cps.readResource();		//invia GET	
+		String vs = cps.request("getDistance");		//invia GET	
 		System.out.println("vs=" + vs );
 		Thread.sleep(500);
 	}	
 	Thread.sleep(1000);
  
-	cps.updateResource("stop");
+	cps.forward("stop");
 	
 /*
 	//Altro modo per leggere i dati con CoapClient

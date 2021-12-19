@@ -37,14 +37,14 @@ private CoapSupport cps ;
 	
 	public void deactivate() { 
 		try {
-			cps.updateResource( "deactivate" );
+			cps.forward( "deactivate" );
 		} catch (Exception e) {
 			Colors.outerr("SonarAdapterCoapObserver | deactivate ERROR " + e.getMessage());
 		}
 	}	 
 	public  void activate() {
 		try {
-			cps.updateResource( "activate" );
+			cps.forward( "activate" );
 		} catch (Exception e) {
 			Colors.outerr("SonarAdapterCoapObserver | activate ERROR " + e.getMessage());
 		}		

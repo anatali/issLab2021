@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 
 public class SonarResourceCoap extends CoapDeviceResource  {
 ISonar sonar;
-private String curVal = "-1";
+//private String curVal = "-1";
 
 		public SonarResourceCoap(String name, ISonar sonar) {
 			super(name, DeviceType.input);
@@ -30,9 +30,14 @@ private String curVal = "-1";
 		 // CoapDeviceResource
 			@Override
 			protected String elaborateGet(String req) {
-				Colors.out( getName() + " |  elaborateGet req=" + req, Colors.ANSI_YELLOW  );	
+				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );	
 				if( req.equals("isActive")) return ""+sonar.isActive();
-				else if( req.equals("getDistance"))  return  curVal;
+				else if( req.equals("getDistance")) {
+					Colors.out( getName() + " |  elaborateGet getDistance="+sonar, Colors.ANSI_YELLOW  );	
+					String answer = ""+(sonar.getDistance().getVal());
+					Colors.out( getName() + " |  elaborateGet answer=" + answer, Colors.ANSI_YELLOW  );	
+					return  answer;
+				}
 				else return "notUnderstood";
 			}
 
@@ -46,7 +51,7 @@ private String curVal = "-1";
 			
 			protected void elaborateAndNotify(int arg) {
 				Colors.out( getName() + " |  elaborateAndNotify:" + arg, Colors.ANSI_YELLOW  );		
-				curVal= ""+arg;
+				//curVal= ""+arg;
 				changed();	// notify all CoAp observers
 			}
 		

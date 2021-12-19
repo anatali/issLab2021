@@ -21,19 +21,21 @@ private String url;
 		client.setTimeout( 1000L );		 
 	}
  	
-	public String readResource(   ) throws  Exception {
-		CoapResponse respGet = client.get( );
-		Colors.out("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode(),Colors.ANSI_YELLOW );		
-		return respGet.getResponseText();
-	}
+//	public String readResource(   ) throws  Exception {
+//		client.setURI(url);
+//		CoapResponse respGet = client.get( );
+//		Colors.out("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode(),Colors.ANSI_YELLOW );		
+//		return respGet.getResponseText();
+//	}
 
-	public String readResource( String query  ) throws  Exception {
-		CoapClient myclient  = new CoapClient( url+"?q="+query );
-		CoapResponse respGet = myclient.get(  );
-		Colors.out("CoapSupport | readResource query=" + query 
-				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
-		return respGet.getResponseText();
- 	}
+//	public String readResource( String query  ) throws  Exception {
+//		//CoapClient myclient  = new CoapClient( url+"?q="+query );
+//		client.setURI(url+"?q="+query);
+//		CoapResponse respGet = client.get(  );
+//		Colors.out("CoapSupport | readResource query=" + query 
+//				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
+//		return respGet.getResponseText();
+// 	}
 
 	public void removeObserve() {
 		relation.proactiveCancel();	
@@ -42,38 +44,40 @@ private String url;
 		relation = client.observe( handler );
 	}
 
-	public void updateResource( String msg ) throws  Exception {
+
+	
+//From Interaction2021
+//	protected void updateResource( String msg ) throws  Exception {
+//		Colors.out("CoapSupport | updateResource " + url + " msg=" + msg,Colors.ANSI_YELLOW);
+//		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
+//		Colors.out("CoapSupport | updateResource " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+//	}
+	@Override
+	public void forward(String msg) throws Exception {
+		//updateResource(msg);		
 		Colors.out("CoapSupport | updateResource " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
 		Colors.out("CoapSupport | updateResource " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 	}
 
-	
-//From Interaction2021
-	@Override
-	public void forward(String msg) throws Exception {
-		updateResource(msg);		
-	}
-
 	@Override
 	public String receiveMsg() throws Exception {
- 		throw new Exception("CoapSupport | receiveMsg alone not allowed");
+ 		throw new Exception("CoapSupport | receiveMsg not allowed");
 	}
 	
 	@Override
 	public String request(String query) throws Exception {
- 		 return readResource(  query  );
+ 		 //return readResource(  query  );
+		String param = query.isEmpty() ? "" : "?q="+query;
+		client.setURI(url+param);
+		CoapResponse respGet = client.get(  );
+		Colors.out("CoapSupport | readResource query=" + query 
+				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
+		return respGet.getResponseText();
 	}
 	@Override
-	public void reply(String reqid) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}	
-
-	@Override
 	public void close() throws Exception {
-		// TODO Auto-generated method stub
-		
+		client.delete();	
 	}
 
 

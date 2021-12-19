@@ -473,7 +473,7 @@ pensare alla costruzione di componenti software che possano ridurre il costo del
 
 
 --------------------------------------
-Progettazione e sviluppo incrementale
+Progettazione e sviluppo incrementali
 --------------------------------------
 
 Iniziamo il nostro progetto affrontando il primo punto del piano di lavoro proposto dall'analisi.
@@ -487,17 +487,7 @@ il passo successivo, che potrà coincidere o meno con quello pianificato nell'an
 .. include:: RadarSystemSupporti.rst
 
 .. include:: RadarSystemEnablers.rst
-
-
-+++++++++++++++++++++++++++++++++++++++++++++
-Da TCP a CoAP
-+++++++++++++++++++++++++++++++++++++++++++++
-
-- LedUsageMain
-- SonarUsageMain
-- RadarSystemMainOnPcCoap
-- RadarSystemMainOnPcLikeRaspCoap
-- 
+ 
  
 +++++++++++++++++++++++++++++++++++++++++++++
 Il sistema reale distribuito
