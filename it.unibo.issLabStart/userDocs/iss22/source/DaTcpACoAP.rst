@@ -4,9 +4,6 @@
 
 .. _Californium: https://www.eclipse.org/californium/
 
-+++++++++++++++++++++++++++++++++++++++++++++
-Da TCP a CoAP
-+++++++++++++++++++++++++++++++++++++++++++++
 
 CoAP  ( :blue:`Constrained Application Protocol`) è un protocollo aperto e leggero per dispositivi IoT.
 CoAP è simile ad HTTP, ma è stato specificato (in IETF RFC 7252 e approvato nel 2014) 
@@ -39,14 +36,168 @@ Il nostro interesse su CoAP si concentra , per ora, sui seguenti aspetti:
    una forte forma di :blue:`standardizzazione` sia alivello di 'verbi' di interazione (GET/PUT) sia a livello di 
    organizzazione del codice applicativo (gerarchia di risorse);
 #. l'adozione del protocollo CoAP come supporto alle interazioni potrebbe indurci a modificare radicalmente 
-   il software di livello applicativo già sviluppoato usando TCP. Oviamente sarebbe opportuno poter 
+   il software di livello applicativo già sviluppato usando TCP. Oviamente sarebbe opportuno poter 
    adottare il nuovo protocollo modificando il meno possibile quanto già prodotto.
 
 In questa sezione vediamo come affrontare il terzo punto con riferimento al RadarSystem.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il nostro CoapSupport
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Vediamo subito il risultato.
+
+------------------------------------------------
+Il RadarSystem basato su Tcp e CoAP
+------------------------------------------------
+
+
+++++++++++++++++++++++++++++++++++++++++++
+Un Led accessibile via Tcp o CoAP
+++++++++++++++++++++++++++++++++++++++++++
+
+ 
+Impostiamo un programma (di testing) che procede nelle seguenti fasi, ciscuna realizzata da una 
+specifica operazione:
+
+#. definisce i parameteri di configurazione tramite lettura di un file o 
+   mediante assegnamenti diretti alle variabili della classe ``RadarSystemConfig``;
+#. configura un sistema costuito da un solo Led remoto cui 
+   accede utilizzando il protocollo (Tcp o CoAP) specificato nel file di configurazione;
+#. esegue almeno una volta tutte operazioni rese disponibili dalla interfaccia ``ILed``;
+#. effettua la terminazione del sistema disattivando i server creati.
+
+.. code:: Java
+
+	public class LedUsageMain  {
+	private EnablerAsServer ledServer;
+	private ILed ledClient1, ledClient2;
+	private ILed led;
+
+		public static void main( String[] args)  {
+			LedUsageMain  sys = new LedUsageMain();	
+			sys.setup(null);
+			sys.configure();
+			sys.execute();
+			Utils.delay(2500);
+			sys.terminate();
+		}
+
+	public void setup( String fName) { 
+		if( fName != null )  RadarSystemConfig
+		else{
+			RadarSystemConfig.protcolType = ProtocolType.coap;
+			RadarSystemConfig.ledPort     = 8015;
+			...
+		}
+	}
+
+	public void configure() { 
+ 		configureTheLedEnablerServer();
+ 		configureTheLedProxyClient();
+	}
+
+ 	public void execute() { ... }
+
+	public void terminate() { ... }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Configurazione 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La fase di configurazione viene divisa in due parti:
+
+- la costruzione di un enabler tipo-server;
+- la costruzione di (alemno) un proxy tipo-client.
+
+La costruzione del proxy può avvenire creando una istanza di ``LedProxyAsClient`` avendo  cura 
+di specificare il paranetro ``entry`` in funzione del protocollo selezionato:
+
+.. code:: Java
+
+	protected void configureTheLedProxyClient() {		 
+		String host           = RadarSystemConfig.pcHostAddr;
+		ProtocolType protocol = RadarSystemConfig.protcolType;
+		String portLedTcp     = ""+RadarSystemConfig.ledPort;
+
+		String nameUri  = CoapApplServer.outputDeviceUri+"/led";
+		String entry    = protocol==ProtocolType.coap ? nameUri : portLedTcp;
+		ledClient1      = new LedProxyAsClient("client1", host, entry, protocol );
+		ledClient2      = new LedProxyAsClient("client2", host, entry, protocol );	
+	}
+
+La costruzione dell'enabler tipo-server per il Led avviene in due modi diversi:
+
+- se si usa TCP, si crea una istanza di ``EnablerAsServer`` specificando come ultimo patrametro
+  del costruttore un oggetto di gestione dei messaggi appliocativi, come  ``LedApplHandler``;
+- se si usa CoAP, si crea una ``LedResourceCoap`` di nome **led**, che potrà essere indentificata mediante
+  l'URI ``devices/output/led``.
+
+.. image:: ./_static/img/Radar/LedUsage.png 
+    :align: center
+    :width: 60%
+
+ 
+
+.. code:: Java
+
+   	protected void configureTheLedEnablerServer() {
+		led = DeviceFactory.createLed();
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp) {
+			ledServer = new EnablerAsServer("LedServer",RadarSystemConfig.ledPort, 
+				RadarSystemConfig.protcolType, new LedApplHandler("ledH",led) );
+			ledServer.activate();
+		}else if( RadarSystemConfig.protcolType == ProtocolType.coap){		
+				new LedResourceCoap("led", led);
+		} 
+	}
+
+La costruzione della ``LedResourceCoap`` provoca la attivazione diuna versione specializzate
+del ``CoAPServer`` (un singleton di classe ``CoAPApplServer``),  se non già avvenuta in precedenza. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Esecuzione 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La fase di esecuzione 
+
+.. code:: Java
+
+	public void execute() {
+		ledClient1.turnOn();	
+		boolean curLedstate = ledClient2.getState();
+ 		System.out.println("LedProxyAsClientMain | ledState=" + curLedstate);
+		assertTrue( curLedstate);
+		Utils.delay(1500);	//give time to look at the Led
+		ledClient2.turnOff();
+		curLedstate = ledClient1.getState();
+		System.out.println("LedProxyAsClientMain | ledState=" + curLedstate);
+		assertTrue( ! curLedstate);
+	}
+
+Notiamo che 
+- usiamo i client in modo intercambiabile per accedere al Led;
+- inseriamo asserzioni all'interno di execute, anticipando la scrittura di una TestUnit.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Terminazione 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+	public void terminate() {
+		if( led instanceof LedMockWithGui ) { 
+			((LedMockWithGui) led).destroyLedGui(  ); 
+		}
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp) ledServer.deactivate();
+		else {
+			CoapApplServer.getServer().stop();
+			CoapApplServer.getServer().destroy();
+		}
+	}
+
+
+------------------------------------------------
+Il CoapSupport
+------------------------------------------------
 
 Come supporto di base per CoAP, usiamo la libreria Californium_ di Eclipse e
 
@@ -88,6 +239,7 @@ predenza, che implementa l'interfaccia ``Interaction2021`` :
 La parte che implementa ``Interaction2021`` mappa i metodi dell'interfaccia nelle operazioni interne precedenti.
 
 .. code:: Java
+
 	protected void updateResource( String msg ) throws  Exception {
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
 	}
@@ -111,9 +263,9 @@ La parte che implementa ``Interaction2021`` mappa i metodi dell'interfaccia nell
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+------------------------------------------------
 Organizzazione delle risorse
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+------------------------------------------------
 Le risorse del nostro dominio applicativo  saranno organizzate come nella figura che segue:
 
 .. image:: ./_static/img/Radar/CoapRadarResources.png 
@@ -127,9 +279,9 @@ Le risorse del nostro dominio applicativo  saranno organizzate come nella figura
 
 Le risorse del dominio sono introdotte come specializzazioni di una classe-base.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Una CoapResource di base
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++
+La risorsa-base CoapDeviceResource
+++++++++++++++++++++++++++++++++++++++++
 
 La classe astratta ``CoapDeviceResource`` è una  ``CoapResource`` che realizza la gestione delle richieste GET e PUT 
 demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut``delle classi specializzate.
@@ -179,16 +331,19 @@ La risorsa viene creata come :blue:`risorsa osservabile`.
 
  
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Una CoapResource per il Led
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++
+Una risorsa per il Led
+++++++++++++++++++++++++++++++++++++++++
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Una CoapResource per il Led
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++
+Una risorsa per il Sonar
+++++++++++++++++++++++++++++++++++++++++
 
 
+------------------------------------------------
+TODO
+------------------------------------------------
 
 - LedUsageMain
 - SonarUsageMain

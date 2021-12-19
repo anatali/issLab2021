@@ -20,12 +20,10 @@ private final Dimension sizeOff = new Dimension(30,30);
 		led.turnOff();
 		return led;
 	}
-//	public static ILed createLed( Frame frame){
-//		LedMockWithGui led = new LedMockWithGui(frame);
-//		led.turnOff();
-//		return led;
-//	}
-	//Constructor
+	public void destroyLedGui(  ){
+		frame.dispose();
+	}
+ 	//Constructor
 	public LedMockWithGui( Frame frame ) {
 		super();
 		Colors.out("create LedMockWithGui");

@@ -512,7 +512,15 @@ Test funzionale
  
 .. Si veda :doc:`ContextServer`.
 
+==================================================
+Il concetto di contesto
+==================================================
+
 .. include:: ContextServer.rst 
+
+==================================================
+Da TCP a CoAP
+==================================================
 
 .. include:: DaTcpACoAP.rst 
 

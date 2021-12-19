@@ -6,9 +6,6 @@
 
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 
-==================================================
-Il concetto di contesto
-==================================================
 
 Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su una propria porta.
 
@@ -371,9 +368,9 @@ L'operazione ``simulateController`` usa la connessione in modo diretto: è un mo
 	}
 
 
-=========================================
+++++++++++++++++++++++++++++++++++++++++
 Problemi ancora aperti  
-=========================================
+++++++++++++++++++++++++++++++++++++++++
 
 - Un handler lento o che si blocca rallenta o blocca la gestione dei messaggi da parte del
   ``ContextMsgHandler`` e quindi del ``TcpContextServer``
