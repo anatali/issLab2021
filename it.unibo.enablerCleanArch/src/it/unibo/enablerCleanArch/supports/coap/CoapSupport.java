@@ -41,7 +41,9 @@ private String url;
 		relation.proactiveCancel();	
 	}
 	public void  observeResource( CoapHandler handler  ) {
-		relation = client.observe( handler );
+		client.setURI( url );
+		relation = client.observe( handler ); 
+		Colors.out("CoapSupport | observeResource " + handler + " client="+client  ,Colors.RED  );
 	}
 
 
@@ -55,9 +57,9 @@ private String url;
 	@Override
 	public void forward(String msg) throws Exception {
 		//updateResource(msg);		
-		Colors.out("CoapSupport | updateResource " + url + " msg=" + msg,Colors.ANSI_YELLOW);
+		Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		Colors.out("CoapSupport | updateResource " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 	}
 
 	@Override

@@ -10,6 +10,7 @@ public class Controller {
 	
 	public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
 		System.out.println("Controller | activate"  );
+		sonar.activate();
 		new Thread() {
 			public void run() { 
 				try {

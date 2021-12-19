@@ -21,7 +21,7 @@ public class CoapApplObserver implements CoapHandler{
 
 	@Override
 	public void onLoad(CoapResponse response) {
-		//Colors.out("CoapApplObserver | response " +  response.getResponseText() );
+		Colors.out("CoapApplObserver | response " +  response.getResponseText(), Colors.ANSI_PURPLE );
 		applHandler.elaborate(response.getResponseText(), null);
 	}
 

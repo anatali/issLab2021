@@ -5,13 +5,11 @@ import it.unibo.enablerCleanArch.supports.Colors;
 
 public class SonarResourceCoap extends CoapDeviceResource  {
 ISonar sonar;
-//private String curVal = "-1";
+String curVal="";
 
 		public SonarResourceCoap(String name, ISonar sonar) {
 			super(name, DeviceType.input);
 			this.sonar = sonar;
-			//sonar = it.unibo.enablerCleanArch.domain.SonarModel.createSonarMock();
-			//getSonarValues();
 			Colors.out( getName() + " |  CREATED"   );	
 	 	}
   			
@@ -50,9 +48,10 @@ ISonar sonar;
 			}
 			
 			protected void elaborateAndNotify(int arg) {
-				Colors.out( getName() + " |  elaborateAndNotify:" + arg, Colors.ANSI_YELLOW  );		
-				//curVal= ""+arg;
+				Colors.out( getName() + " |  elaborateAndNotify:" + arg, Colors.RED  );		
+				curVal= ""+arg;
 				changed();	// notify all CoAp observers
+				//this.notify();
 			}
 		
 }
