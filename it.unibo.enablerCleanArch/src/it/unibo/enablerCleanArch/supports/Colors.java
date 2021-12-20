@@ -9,7 +9,7 @@ public class Colors {
 	public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
 	public static final String YELLOW_BACKGROUND   = "\u001B[43m";
 	public static final String WHITE_BACKGROUND    = "\u001B[47m";
-	public static final String BACKGROUND          = " ";	//WHITE_BACKGROUND
+	public static final String BACKGROUND          = "";	//WHITE_BACKGROUND
 	 
 	
 	public static final String BLUE     = "\u001B[34m";
@@ -22,6 +22,9 @@ public class Colors {
 		System.out.println(  prefix + BACKGROUND + color + m + ANSI_RESET);
 	}
 	
+	public static void outappl( String m, String color  ) {		 
+		System.out.println(  BACKGROUND + color + m + ANSI_RESET);
+	}
 	public static void out( String m  ) {		 
 		System.out.println(  prefix + BACKGROUND + BLUE + m + ANSI_RESET);
 	}

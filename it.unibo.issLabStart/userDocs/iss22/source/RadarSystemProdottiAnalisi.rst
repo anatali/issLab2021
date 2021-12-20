@@ -282,7 +282,8 @@ Piano di lavoro
 Trattandosi di uno sviluppo di tipo bottm-up, il piano di lavoro parte dallo sviluppo dei componenti,
 seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistema che soddisfa i requisiti.
 
-Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito dal committente, possiamo pensare di procedere come segue:
+Poichè il nostro obiettivo è anche quello di riusare :blue:`core-code` fornito dal committente, 
+procediamo come segue:
 
 #. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
 #. definizione di alcuni supporti TCP per componenti lato client e lato server, con l'obiettivo di

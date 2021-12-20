@@ -19,10 +19,318 @@ CoAP non può utilizzare ``SSL/TLS`` per garantire la sicurezza della comunicazi
 ma si può fare riferimento allo standard *Datagram Transport Layer Security (DTLS)*, che funziona su UDP.
 Tuttavia CoAP è vulnerabile agli IP spoofing e quindi agli **attacchi DDoS** (*Distributed denial-of-service*).
 
+Ciò nonostante, Shodan (un motore di ricerca per i dispositivi connessi a Internet) 
+mostra 433,973 voci come risultato per la ricerca 'CoAP' (contro 249,335,005 per 'HTTP').
+
+------------------------------------------------
+La libreria Californium: un esempio di uso
+------------------------------------------------
+
+Come supporto di base per CoAP, usiamo la libreria Californium_ di Eclipse e
+
+- per la costruzione di risorse CoAP, usiamo la classe  ``CoapResource`` di Californium;
+- per la creazione di un sever CoAP, usiamo ``CoapServer`` di Californium;
+- per la creazione di un client per CoAP, usiamo ``CoapClient`` di Californium;
+- per la reagire in modo asincrono alle risposte di un CoAP-client che funge da osservatore, 
+  implementiamo l'interfaccia ``CoapHandler`` 
+
+Per fare un esempio di uso della libreria, impostiamo un programma (di testing) che procede nelle seguenti fasi, 
+ciscuna realizzata da una specifica operazione:
+
+#. configura il sistema attivando il ``CoapServer`` in cui ha inserito una risorsaCoap 'observable' e crea una istanza di ``CoapClient``
+#. utilizza il client per leggere e modificare lo stato corrente della risorsa;
+#. effettua la terminazione del sistema .
+
+.. code:: Java
+
+	public class CaliforniumUsageExample {
+	private CoapServer coapServer;
+	private ResourceObserverExample observer;
+	private CoapClient client;
+
+		public void configure() {...}
+		public void execute() { ... }
+		public void terminate() {...}
+
+		public static void main(String[] args)  {
+			CaliforniumUsageExample sys = new CaliforniumUsageExample();
+			sys.configure();
+			sys.execute();
+			//sys.executeQuery();
+			sys.executeQuerySameclient();
+			Utils.delay(10000);
+			sys.terminate();
+		}
+	}
+
+++++++++++++++++++++++++++++++++++++++
+Configurazione
+++++++++++++++++++++++++++++++++++++++
+
+   .. image:: ./_static/img/Architectures/CaliforniumExample.png 
+     :align: center
+     :width: 60%
+ 
+
+.. code:: Java
+
+	public void configure() {
+		coapServer        = new CoapServer();
+		CoapResource root = new CoapResource("root");
+		res               = new CoapResourceExample("example");
+		observer          = new ObserverExample();
+		
+		root.add( res );
+		coapServer.add( root );
+		coapServer.start();
+
+		String url               = "coap://localhost:5683/root/example" ;
+		client                   = new CoapClient( url );
+	}
+
+La risorsa di esempio definisce uno stato interno in forma di String e accumula le modifiche 
+fatte mediante PUT:
+
+.. code:: Java
+
+	class CoapResourceExample extends CoapResource{
+	String state = "s0";
+		public CoapResourceExample(String name) {
+			super(name);
+			setObservable(true); 
+		}
+		@Override
+		public void handleGET(CoapExchange exchange) {
+			exchange.respond( state );
+		}
+		@Override
+		public void handlePUT(CoapExchange exchange) {
+			state = state+"_"+exchange.getRequestText();
+			changed();
+			exchange.respond(CHANGED);
+		}
+		@Override
+		public void handlePOST(CoapExchange exchange) {
+			exchange.respond(CHANGED);
+		}
+		@Override
+		public void handleDELETE(CoapExchange exchange) {
+			delete();
+			exchange.respond(DELETED);
+		}	
+	}
+
+++++++++++++++++++++++++++++++++++++++
+Esecuzione 'naive'
+++++++++++++++++++++++++++++++++++++++
+
+L'esecuzione più semplice legge lo stato della risorsa tramite una invocazione GET e modifica lo stato
+tramite una PUT:
+
+.. code:: Java
+
+	public void execute() {
+ 		showTheResource(client);
+		modifyTheResource(client,"s1");		
+		showTheResource(client);		
+	}
+	protected void showTheResource(CoapClient client) {
+		CoapResponse answer  = client.get(  );
+		System.out.println("showTheResource | get answer="+answer.getResponseText() 
+		          + " code=" + answer.getCode());		
+	}
+	protected void modifyTheResource(CoapClient client, String newState) {
+		CoapResponse answer  = client.put(newState, 0);
+		System.out.println("modifyTheResource | put answer="+answer.getResponseText()
+		     + " code=" + answer.getCode());		
+	}
+
+
+Il risultato mostra anche i codici di risposta tipici del protocollo CoAP:
+
+.. code:: Java
+
+		 examplehandleGET request=
+	showTheResource | get answer=s0 code=2.05
+			examplehandlePUT request=s1
+	modifyTheResource | put answer= code=2.04
+			examplehandleGET request=
+	showTheResource | get answer=s0_s1 code=2.05
+
+++++++++++++++++++++++++++++++++++++++
+Esecuzione 'con observer'
+++++++++++++++++++++++++++++++++++++++
+
+Introduciamo un osservatore che implementa l'interfaccia ``CoapHandler``:
+
+.. code:: Java
+
+	class ObserverExample implements CoapHandler{
+		@Override
+		public void onLoad(CoapResponse response) {
+			Colors.outappl("ResourceObserverExample:" + response.getResponseText(),
+				 Colors.GREEN);
+		}
+
+		@Override
+		public void onError() {
+			Colors.outerr("ResourceObserverExample error"  );	
+		}
+	}
+
+In questa esecuzione, introduciamo l'osservatore e vediamo che esso viene attivato ad ogni PUT
+
+.. code:: Java
+
+	public void executeWithObserver() {
+		//inviamo una richiesta di osservazione sulla risorsa
+		CoapObserveRelation obsrelation = client.observe( observer );	
+		Utils.delay(1000); //per vedere che l'observer mostra subito lo stato 
+		// showTheResource(client);
+		// Utils.delay(1000);
+		modifyTheResource(client,"sobs");	//modifichiamo la risorsa	
+		Utils.delay(1000);	//l'observer ha tempo di mostrare la modifica		
+ 		cancelObserverRelation(obsrelation);	//OPZIONALE: elimina l'observer
+	}
+
+	protected void cancelObserverRelation(CoapObserveRelation obsrelation) {
+		obsrelation.proactiveCancel();
+		Utils.delay(1000);	//diamo tempo ...
+		Colors.outappl( "nObsOn_res="+res.getObserverCount() + 
+		" obsrelation_isCanceled=" + obsrelation.isCanceled(), Colors.ANSI_PURPLE);		
+	}
+
+Il risultato mostra che per ogni PUT (che modifica) viene eseguita una GET (per l'osservabilità).
+Se la parte opzionale non è commentata, si vede anche l'effetto della rimozione dell'observer.
+
+.. code:: Java
+
+		 examplehandleGET request=
+	ResourceObserverExample:s0_s1
+		 examplehandlePUT request=sobs
+		 examplehandleGET request=
+	modifyTheResource | put answer= code=2.04
+		 ResourceObserverExample:s0_s1_sobs
+		 examplehandleGET request=
+	ResourceObserverExample:s0_s1_sobs
+		 n obs su res=0 obsrelation isCanceled=true
+
+
+++++++++++++++++++++++++++++++++++++++
+Accesso GET 'con query'
+++++++++++++++++++++++++++++++++++++++
+
+Estendiamo la risposta a una GET gestendo la presenza di un parametro nella richiesta:
+
+.. code:: Java
+	@Override
+	public void handleGET(CoapExchange exchange) {
+		String query = exchange.getQueryParameter("q");
+		if( query == null ) {
+			Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
+			exchange.respond( state );
+		}else{
+			Colors.out( getName() + "handleGET query  =" + query);
+			if( query.equals("time")) 
+				exchange.respond( state + " at " + System.currentTimeMillis() );
+		}		
+	}
+
+
+Utilizziamo il client per inviare una query con un parametro:
+
+.. code:: Java
+
+	public void executeQuerySameclient() {
+ 		String url  = "coap://localhost:5683/root/example/?q=time" ;
+		Colors.outappl(   "executeQuerySameclient url=" + url  );
+		client.setURI(url);
+		CoapResponse answer    = client.get(  );
+		Colors.outappl("executeQuery | get answer="+answer.getResponseText()  
+			+ " code=" + answer.getCode());			
+		modifyTheResource(client, "squery");
+	}
+
+
+Il risultato:
+
+.. code:: Java
+
+	executeQuerySameclient url=coap://localhost:5683/root/example/?q=time
+			examplehandleGET query  =time
+	executeQuery | get answer=s0_s1_sobs at 1640001483853 code=2.05
+			examplehandlePUT request=squery
+	modifyTheResource | put answer= code=2.04
+
+------------------------------------------------
+Il CoapSupport
+------------------------------------------------
+
+
+Su queste basi, vediamo ora come è definito il nostro supporto per l'uso di CoAP, già menzionato in
+predenza, che implementa l'interfaccia ``Interaction2021`` :
+ 
+.. code:: Java
+
+    public class CoapSupport implements Interaction2021  {
+    private CoapClient client;
+    private CoapObserveRelation relation = null;
+    private String url;
+
+	public CoapSupport( String address, String path) {  
+		url = "coap://"+address + ":5683/"+ path;
+		client = new CoapClient( url );
+		client.setTimeout( 1000L );		 
+	}
+ 	
+	public String readResource(   ) throws  Exception {
+		CoapResponse respGet = client.get( );
+		return respGet.getResponseText();
+	}
+	public String readResource( String query  ) throws  Exception {
+		CoapClient myclient  = new CoapClient( url+"?q="+query );
+		CoapResponse respGet = myclient.get(  );
+		return respGet.getResponseText();
+ 	}
+	public void removeObserve() {
+	    relation.proactiveCancel();	
+	}
+	public void  observeResource( CoapHandler handler  ) {
+	    relation = client.observe( handler );
+	}
+
+La parte che implementa ``Interaction2021`` mappa i metodi dell'interfaccia nelle operazioni interne precedenti.
+
+.. code:: Java
+
+	protected void updateResource( String msg ) throws  Exception {
+		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
+	}
+	@Override
+	public void forward(String msg) throws Exception {
+        updateResource(msg);
+    }
+ 	@Override
+	public String request(String query) throws Exception{
+        return readResource(query);
+    }
+	@Override
+	public String receiveMsg() throws Exception {
+ 		throw new Exception("CoapSupport | receiveMsg alone not allowed");
+	}
+ 	@Override
+	public void close() throws Exception {
+		client.delete();		
+	}
+ 
+------------------------------------------------
+Il RadarSystem basato su Tcp e CoAP
+------------------------------------------------
+
 Il nostro interesse su CoAP si concentra , per ora, sui seguenti aspetti:
 
-#. CoAP fonsice un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
-   pone problemi di progettazione molto simili a quelli di applicazioni Web basate su HTTP;
+#. CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
+   implica schemi di progettazione molto simili a quelli di applicazioni Web basate su HTTP;
 #. l'uso di CoAP modifica il modello concettuale di riferimento per le interazioni, in quanto propone
    l'idea di accesso in lettura (GET) o modifica (PUT) a :blue:`risorse` identificate da ``URI`` attraverso un 
    unico :blue:`CoapServer`.
@@ -43,9 +351,6 @@ In questa sezione vediamo come affrontare il terzo punto con riferimento al Rada
 
 Vediamo subito il risultato.
 
-------------------------------------------------
-Il RadarSystem basato su Tcp e CoAP
-------------------------------------------------
 
 
 ++++++++++++++++++++++++++++++++++++++++++
@@ -195,71 +500,7 @@ Terminazione
 	}
 
 
-------------------------------------------------
-Il CoapSupport
-------------------------------------------------
 
-Come supporto di base per CoAP, usiamo la libreria Californium_ di Eclipse e
-
-- per la costruzione di risorse CoAP, usiamo la classe  ``CoapResource`` di Californium;
-- come sever CoAP usiamo ``CoapServer`` di Californium.
-
-Su queste basi, vediamo ora come è definito il nostro supporto per l'uso di CoAP, già menzionato in
-predenza, che implementa l'interfaccia ``Interaction2021`` :
- 
-.. code:: Java
-
-    public class CoapSupport implements Interaction2021  {
-    private CoapClient client;
-    private CoapObserveRelation relation = null;
-    private String url;
-
-	public CoapSupport( String address, String path) {  
-		url = "coap://"+address + ":5683/"+ path;
-		client = new CoapClient( url );
-		client.setTimeout( 1000L );		 
-	}
- 	
-	public String readResource(   ) throws  Exception {
-		CoapResponse respGet = client.get( );
-		return respGet.getResponseText();
-	}
-	public String readResource( String query  ) throws  Exception {
-		CoapClient myclient  = new CoapClient( url+"?q="+query );
-		CoapResponse respGet = myclient.get(  );
-		return respGet.getResponseText();
- 	}
-	public void removeObserve() {
-	    relation.proactiveCancel();	
-	}
-	public void  observeResource( CoapHandler handler  ) {
-	    relation = client.observe( handler );
-	}
-
-La parte che implementa ``Interaction2021`` mappa i metodi dell'interfaccia nelle operazioni interne precedenti.
-
-.. code:: Java
-
-	protected void updateResource( String msg ) throws  Exception {
-		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-	}
-	@Override
-	public void forward(String msg) throws Exception {
-        updateResource(msg);
-    }
- 	@Override
-	public String request(String query) throws Exception{
-        return readResource(query);
-    }
-	@Override
-	public String receiveMsg() throws Exception {
- 		throw new Exception("CoapSupport | receiveMsg alone not allowed");
-	}
- 	@Override
-	public void close() throws Exception {
-		client.delete();		
-	}
- 
 
 
 
