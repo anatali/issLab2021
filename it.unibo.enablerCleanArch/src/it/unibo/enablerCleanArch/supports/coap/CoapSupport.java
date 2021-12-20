@@ -5,20 +5,18 @@ import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
-
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
+ 
 public class CoapSupport implements Interaction2021  {
 private CoapClient client;
-private CoapClient clientforQuery;
-private CoapObserveRelation relation = null;
 private String url;
 
 	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
-		url             = "coap://"+address + ":5683/"+ path;
+		 url            = "coap://"+address + ":5683/"+ path;
 		client          = new CoapClient( url );
-		clientforQuery  = new CoapClient( url+"?q="  );
+//		clientforQuery  = new CoapClient( url+"?q="  );
 		Colors.out("CoapSupport | STARTS client url=" +  url,Colors.ANSI_YELLOW  ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 
 	}
@@ -39,13 +37,14 @@ private String url;
 //		return respGet.getResponseText();
 // 	}
 
-	public void removeObserve() {
+	public void removeObserve(CoapObserveRelation relation) {
 		relation.proactiveCancel();	
+ 		Colors.out("CoapSupport | removeObserve !!!!!!!!!!!!!!!" + relation ,Colors.ANSI_YELLOW  );
 	}
-	public void  observeResource( CoapHandler handler  ) {
-		//client.setURI( url );
-		relation = client.observe( handler ); 
-		Colors.out("CoapSupport | observeResource " + handler + " client="+client  ,Colors.RED  );
+	public CoapObserveRelation  observeResource( CoapHandler handler  ) {
+		CoapObserveRelation relation = client.observe( handler ); 
+		Colors.out("CoapSupport | added observer relation=" + relation + relation,Colors.ANSI_YELLOW  );
+ 		return relation;
 	}
 
 
@@ -57,11 +56,11 @@ private String url;
 //		Colors.out("CoapSupport | updateResource " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 //	}
 	@Override
-	public void forward(String msg) throws Exception {
+	public void forward(String msg)   {
 		//updateResource(msg);		
-		Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
+		//Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		//Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 	}
 
 	@Override
@@ -70,21 +69,22 @@ private String url;
 	}
 	
 	@Override
-	public String request(String query) throws Exception {
+	public String request(String query)   {
  		 //return readResource(  query  );
 		String param = query.isEmpty() ? "" : "?q="+query;
-		clientforQuery.setURI(url+param);
-		CoapResponse respGet = clientforQuery.get(  );
-		Colors.out("CoapSupport | readResource query=" + query 
-				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
+//		clientforQuery.setURI(url+param);
+		client.setURI(url+param);
+		CoapResponse respGet = client.get(  );
+//		Colors.out("CoapSupport | request=" + query 
+//				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 		return respGet.getResponseText();
 	}
 	@Override
-	public void close() throws Exception {
+	public void close()  {
 		client.delete();	
 	}
 
-
+	
 
 }
 /*

@@ -4,7 +4,7 @@
 
 .. _Californium: https://www.eclipse.org/californium/
 
-
+ 
 CoAP  ( :blue:`Constrained Application Protocol`) è un protocollo aperto e leggero per dispositivi IoT.
 CoAP è simile ad HTTP, ma è stato specificato (in IETF RFC 7252 e approvato nel 2014) 
 per soddisfare requisiti di dispositivi alimentati a batteria con risorse CPU e RAM limitate 
@@ -220,9 +220,10 @@ Se la parte opzionale non è commentata, si vede anche l'effetto della rimozione
 Accesso GET 'con query'
 ++++++++++++++++++++++++++++++++++++++
 
-Estendiamo la risposta a una GET gestendo la presenza di un parametro nella richiesta:
+Estendiamo la risposta a una GET, gestendo la presenza di un parametro nella richiesta:
 
 .. code:: Java
+
 	@Override
 	public void handleGET(CoapExchange exchange) {
 		String query = exchange.getQueryParameter("q");
@@ -256,11 +257,11 @@ Il risultato:
 
 .. code:: Java
 
-	executeQuerySameclient url=coap://localhost:5683/root/example/?q=time
+	executeQuerySameclient: url=coap://localhost:5683/root/example/?q=time
 			examplehandleGET query  =time
-	executeQuery | get answer=s0_s1_sobs at 1640001483853 code=2.05
+	executeQuerySameclient: get answer=s0_s1_sobs at 1640001483853 code=2.05
 			examplehandlePUT request=squery
-	modifyTheResource | put answer= code=2.04
+	modifyTheResource: put answer= code=2.04
 
 ------------------------------------------------
 Il CoapSupport

@@ -3,7 +3,6 @@ package it.unibo.enablerCleanArch.supports.coap;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED;
 import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapResponse;
@@ -52,22 +51,9 @@ String state = "s0";
 }
 
 
-class ObserverExample implements CoapHandler{
-
-	@Override
-	public void onLoad(CoapResponse response) {
- 		Colors.outappl("ResourceObserverExample:" + response.getResponseText(), Colors.GREEN);
-	}
-
-	@Override
-	public void onError() {
- 		Colors.outerr("ResourceObserverExample error"  );	
-	}
-	
-}
 public class CaliforniumUsageExample {
 private CoapServer coapServer;
-private ObserverExample observer;
+private ObserverNaive observer;
 private CoapClient client;
 private CoapResourceExample res;
 
@@ -75,7 +61,7 @@ private CoapResourceExample res;
 		coapServer               = new CoapServer();
 		CoapResource root        = new CoapResource("root");
 	    res                      = new CoapResourceExample("example");
-		observer				 = new ObserverExample();
+		observer				 = new ObserverNaive("obs1");
 		
 		root.add( res );
 		coapServer.add( root );
@@ -124,21 +110,21 @@ private CoapResourceExample res;
 	public void executeQuerySameclient() {
 		Colors.out("------------------------ executeQuerySameclient", Colors.RED);
 		String url           = "coap://localhost:5683/root/example/?q=time" ;
-		Colors.outappl(   "executeQuerySameclient url=" + url, Colors.GREEN  );
+		Colors.outappl(   "executeQuerySameclient: url=" + url, Colors.GREEN  );
 		client.setURI(url);
 		CoapResponse answer    = client.get(  );
-		Colors.outappl("executeQuery | get answer="+answer.getResponseText() 
+		Colors.outappl("executeQuerySameclient: get answer="+answer.getResponseText() 
 		 + " code=" + answer.getCode(), Colors.GREEN);			
 		modifyTheResource(client, "squery");
 	}
 
 	protected void showTheResource(CoapClient client) {
 		CoapResponse answer  = client.get(  );
-		System.out.println("showTheResource | get answer="+answer.getResponseText() + " code=" + answer.getCode());		
+		Colors.outappl("showTheResource | get answer="+answer.getResponseText() + " code=" + answer.getCode(), Colors.ANSI_PURPLE);		
 	}
 	protected void modifyTheResource(CoapClient client, String newState) {
 		CoapResponse answer  = client.put(newState, 0);
-		System.out.println("modifyTheResource | put answer="+answer.getResponseText()+ " code=" + answer.getCode());		
+		Colors.outappl("modifyTheResource: put answer="+answer.getResponseText()+ " code=" + answer.getCode(), Colors.ANSI_PURPLE);		
 	}
 	
 	
