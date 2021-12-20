@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports.coap;
+package it.unibo.enablerCleanArch.supports.coap.example;
 
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.server.resources.Resource;
@@ -6,8 +6,11 @@ import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 
-public class CoapSupportMain {
+public class CoapSupportExampleSonarMain {
 private CoapSupport cps;
 
 	public void configure() {
@@ -15,9 +18,9 @@ private CoapSupport cps;
 		RadarSystemConfig.sonarDelay = 100;
 		
 		//Create sonar resource
-		Resource sonarRes = new SonarResourceCoap( "sonar", DeviceFactory.createSonar() ) ;
-		
-		String sonaruri = CoapApplServer.inputDeviceUri+"/"+sonarRes.getName();
+		Resource sonarRes  = new SonarResourceCoap( "sonar", DeviceFactory.createSonar() ) ;
+		//Create the CoapSupport for the resource
+		String sonaruri = "root/"+sonarRes.getName();
 		cps = new CoapSupport("localhost", sonaruri );
 		
 //		CoapApplObserver obs = 	new CoapApplObserver( "localhost", sonaruri,new SonarMessageHandler( "sonarH" ) );	
@@ -69,7 +72,7 @@ private CoapSupport cps;
 	}
 	
 	public static void main(String[] args) throws  Exception {
-		CoapSupportMain sys = new CoapSupportMain();
+		CoapSupportExampleSonarMain sys = new CoapSupportExampleSonarMain();
 		sys.configure();
 		sys.execute();
 		sys.executeWithObserver();

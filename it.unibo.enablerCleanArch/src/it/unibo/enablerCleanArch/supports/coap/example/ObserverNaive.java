@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports.coap;
+package it.unibo.enablerCleanArch.supports.coap.example;
 
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
