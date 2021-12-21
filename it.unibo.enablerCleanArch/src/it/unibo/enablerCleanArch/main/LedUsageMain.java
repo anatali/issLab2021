@@ -51,7 +51,7 @@ private ILed led;
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
 		String portLedTcp     = ""+RadarSystemConfig.ledPort;
-		String nameUri        = CoapApplServer.outputDeviceUri+"/led";
+		String nameUri        = CoapApplServer.lightsDeviceUri+"/led"; 
 		String entry    = protocol==ProtocolType.coap ? nameUri : portLedTcp;
 		ledClient1      = new LedProxyAsClient("client1", host, entry, protocol );
 		ledClient2      = new LedProxyAsClient("client2", host, entry, protocol );	

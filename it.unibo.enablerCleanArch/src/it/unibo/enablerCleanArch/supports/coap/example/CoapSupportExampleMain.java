@@ -20,8 +20,8 @@ private CoapResourceExample res;
 		//Create the resource
 		Resource resource = new CoapResourceExample("example");
 
-		CoapResource root        = new CoapResource("root");
-	    res                      = new CoapResourceExample("example");
+		CoapResource root = new CoapResource("root");
+	    res               = new CoapResourceExample("example");
  		
 		root.add( res );
 		coapServer.add( root );
@@ -49,8 +49,8 @@ private CoapResourceExample res;
 	public void executeWithObserver() {
 		Colors.out("------------------------ executeWithObserver", Colors.RED);
 		try {
-			CoapObserveRelation relObs1 = cps.observeResource( new ObserverNaive("obs1") );
-			CoapObserveRelation relObs2 = cps.observeResource( new ObserverNaive("obs2") );
+			CoapObserveRelation rel1 = cps.observeResource( new ObserverNaive("obs1") );
+			CoapObserveRelation rel2 = cps.observeResource( new ObserverNaive("obs2") );
 			//cps.forward("activate");
 			for( int i=1; i<=3; i++ ) {
 				String vs = cps.request("");
@@ -59,9 +59,9 @@ private CoapResourceExample res;
 				Utils.delay(200);
 			}
 			Utils.delay(300);
-			cps.removeObserve(relObs1);
+			cps.removeObserve(rel1);
 			Utils.delay(200);
-			cps.removeObserve(relObs2);
+			cps.removeObserve(rel2);
 			Utils.delay(200);
 		} catch (Exception e) {
 			Colors.outerr("executeWithObserver error"+ e.getMessage());	 
@@ -69,9 +69,10 @@ private CoapResourceExample res;
 	}
 	
 	public void terminate() {
+		coapServer.stop();
+		coapServer.destroy();
 		cps.close();
  		Colors.outappl("terminate DONE", Colors.BLUE);
-		System.exit(0);
 	}
 	
 	public static void main(String[] args) throws  Exception {

@@ -37,7 +37,7 @@ private String url;
 	public void forward(String msg)   {
 		//Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		//Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 	}
 
 	@Override
@@ -47,7 +47,7 @@ private String url;
 	
 	@Override
 	public String request(String query)   {
- 		Colors.out("CoapSupport | request=" + query + " url="+url );
+// 		Colors.out("CoapSupport | request=" + query + " url="+url );
 		String param = query.isEmpty() ? "" : "?q="+query;
 		client.setURI(url+param);
 		CoapResponse respGet = client.get(  );
@@ -57,7 +57,7 @@ private String url;
 	}
 	@Override
 	public void close()  {
-		client.delete();	
+		client.shutdown();	
 	}
 
 	
