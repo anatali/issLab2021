@@ -33,7 +33,8 @@ String curVal="";
 				if( req == null || req.equals("getDistance")) {
 					String answer = curVal;  
 					return  answer;
-				}else if( req != null && req.equals("isActive")) return ""+sonar.isActive();
+				}else if( req != null && req.isEmpty()) return curVal; //fro the observers
+				else if( req != null && req.equals("isActive")) return ""+sonar.isActive();
 				else return "notUnderstood";
 			}
 
@@ -52,7 +53,7 @@ String curVal="";
 			
 			protected void elaborateAndNotify(int arg) {
 				curVal= ""+arg;
- 				//Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
+ 				Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
 				changed();	// notify all CoAp observers
 			}
 		

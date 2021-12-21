@@ -752,8 +752,8 @@ PUT di attivazione/disativazione.
 
     @Override
     protected void elaboratePut(String arg) {
-	 			if( arg.equals("activate")) getSonarValues();
-	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
+      if( arg.equals("activate")) getSonarValues();
+      else if( arg.equals("deactivate")) sonar.deactivate(); 	
     }
 
 La richiesta PUT di (de)attivazione provoca la (de)attivazione del Sonar.
@@ -783,10 +783,14 @@ In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valo
 Il Sonar accessibile via CoAP (o TCP)
 ------------------------------------------------
 
-Come già fatto per il Led, impostiamo un programma che prima configura e poi invia qualche 
+Come già fatto per il Led, impostiamo un programma che prima configura il sistema e poi invia qualche 
 richiesta.
 
-.. code:: Java	
+.. code:: Java
+
+  public class SonarUsageMain  {
+  private EnablerAsServer sonarServer;
+  private ISonar client1, client2;
 
 
 

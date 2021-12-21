@@ -9,7 +9,7 @@ public class ProxyAsClient {
 private Interaction2021 conn; 
 protected String name ;		//could be a uri
 protected ProtocolType protocol ;
-//protected CoapSupport coapSupport;
+
  
 	public ProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		try {
@@ -27,7 +27,6 @@ protected ProtocolType protocol ;
 			conn = TcpClient.connect(host,  port, 10); //10 = num of attempts
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
-			//name = uri
 			conn = new CoapSupport(host,  entry);  
 		}
 	}
@@ -53,5 +52,12 @@ protected ProtocolType protocol ;
  	}	
 	public Interaction2021 getConn() {
 		return conn;
+	}
+	
+	public void close() {
+		try {
+			conn.close();
+		} catch (Exception e) {
+			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		}
 	}
 }

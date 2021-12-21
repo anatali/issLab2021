@@ -2,34 +2,43 @@ package it.unibo.enablerCleanArch.main;
 
  
  
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapObserveRelation;
+
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.EnablerSonarAsServer;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.coap.SonarMessageHandler;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
+import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
   
 
 public class SonarUsageMain  {
 
 private EnablerAsServer sonarServer;
 private ISonar client1, client2;
+private CoapClient clientObs;
 
 	public void configure() {
 		RadarSystemConfig.simulation  = true;
  		RadarSystemConfig.testing     = false;
  		RadarSystemConfig.sonarPort   = 8011;
-		RadarSystemConfig.sonarDelay  = 500;
+		RadarSystemConfig.sonarDelay  = 100;
 		RadarSystemConfig.protcolType = ProtocolType.coap;
  		RadarSystemConfig.pcHostAddr  = "localhost";
  		
  		configureTheSonarEnablerServer();
  		configureTheSonarProxyClients();
+ 
  		Colors.outappl("SonarUsageMain | configure done", Colors.ANSI_PURPLE  );
 	}
 	
@@ -45,20 +54,45 @@ private ISonar client1, client2;
 	protected void configureTheSonarProxyClients() {		 
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		String nameUri        = CoapApplServer.inputDeviceUri+"/sonar";
-		String entry    = protocol==ProtocolType.coap ? nameUri : ""+RadarSystemConfig.sonarPort;
+		String sonarUri       = CoapApplServer.inputDeviceUri+"/sonar";
+		String entry    = protocol==ProtocolType.coap ? sonarUri : ""+RadarSystemConfig.sonarPort;
 		client1         = new SonarProxyAsClient("client1", host, entry, protocol );
 		client2         = new SonarProxyAsClient("client2", host, entry, protocol );	
 	}
-	
+	 
+	/*
+	 * Attiva un ObserverNaive 
+	 * oppure
+	 * un CoapApplObserver che utilizza SonarMessageHandler per visualizzare su RadarGui
+	 */
+	protected CoapObserveRelation createAnObserver() {
+		String sonarUri   = CoapApplServer.inputDeviceUri+"/sonar";
+ 		String sonarAddr  = "coap://localhost:5683/"+sonarUri;
+		clientObs         =  new CoapClient( sonarAddr );
+ 		//CoapApplObserver obs  =  new CoapApplObserver( "localhost", sonarUri,new SonarMessageHandler( "sonarH" ) );	
+ 		ObserverNaive obs  =	new ObserverNaive("obsnaive");
+		CoapObserveRelation relObs = clientObs.observe(obs);
+		return relObs;
+	}
 	public void execute() {
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp) { sonarServer.activate(); }
+		
+		//CASO CoAP -----------------
+		
+  		//Attivo il Sonar
 		client1.activate();
+		//Attivo un observer
+		CoapObserveRelation relObs =  createAnObserver();	
+ 		/*
 		for( int i=1; i<=5; i++) {
 			int v = client1.getDistance().getVal();
 			System.out.println("execute getVal="+v);
-			Utils.delay(100);
-		}	
+			Utils.delay(500);
+		}	*/
+		Utils.delay(1500);
+		//Tolgo l'observer
+		relObs.proactiveCancel();
+		Utils.delay(1000);
 	}
 
 	public void terminate() {
@@ -67,7 +101,13 @@ private ISonar client1, client2;
 			sonarServer.deactivate(); //stops also the sonar device
 		}
 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
+			//Fermo il clientObs
+			clientObs.shutdown();	
+			//Fermo il Sonar
 			client2.deactivate();
+			//Chiudo le connessioni
+			((ProxyAsClient) client1).close();
+			((ProxyAsClient) client2).close();
 			CoapApplServer.getServer().destroy();
 		}
 	}
