@@ -16,7 +16,8 @@ private static int count=1;
 protected String name;
 protected ProtocolType protocol;
 protected TcpServer serverTcp;
- 
+protected boolean isactive = false;
+
 	public EnablerAsServer( String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { //, String handlerClassName
  		try {
 			this.name     			= name;
@@ -32,33 +33,32 @@ protected TcpServer serverTcp;
 
  	protected void setServerSupport( int port, ProtocolType protocol,IApplMsgHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp ) {
-			//serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  this.getClass().getName(), this );
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
-			//serverTcp.activate();
 		}else if( protocol == ProtocolType.coap ) {
-			CoapApplServer.getServer();	//Dove sono le risorse? handler (SonarApplHandler, ... )
+			CoapApplServer.getServer();	//Le risorse sono create alla configurazione del sistema
 		}
 	}	
  	
  	public String getName() {
  		return name;
 	}
- 	public void  activate() {
+// 	public boolean isActive() {
+// 		return started;
+// 	}
+	public void  activate() {
 		if( protocol == ProtocolType.tcp ) {
-	 		Colors.out(name+" |  ACTIVATE", Colors.ANSI_PURPLE  );
+	 		//Colors.out(name+" |  ACTIVATE"   );
 			serverTcp.activate();
+			isactive = true;
 		}else if( protocol == ProtocolType.coap ) {
-		}		
- 		
- 	}
- 	public boolean isActive() {
- 		return true;
+		}			
  	}
  
  	public void deactivate() {
- 		//Colors.out(name+" |  DEACTIVATE  "  );
+ 		//Colors.out(name+" |  deactivate  "  );
 		if( protocol == ProtocolType.tcp ) {
 			serverTcp.deactivate();
+			isactive = false;
 		}else if( protocol == ProtocolType.coap ) {
 		}		
  	}

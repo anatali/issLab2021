@@ -20,8 +20,8 @@ private CoapSupport cps;
 		//Create sonar resource
 		Resource sonarRes  = new SonarResourceCoap( "sonar", DeviceFactory.createSonar() ) ;
 		//Create the CoapSupport for the resource
-		String sonaruri = "root/"+sonarRes.getName();
-		cps = new CoapSupport("localhost", sonaruri );
+		String sonaruri = CoapApplServer.inputDeviceUri +"/"+ sonarRes.getName(); 
+ 		cps = new CoapSupport("localhost", sonaruri );
 		
 //		CoapApplObserver obs = 	new CoapApplObserver( "localhost", sonaruri,new SonarMessageHandler( "sonarH" ) );	
 		

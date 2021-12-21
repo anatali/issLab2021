@@ -32,61 +32,43 @@ public class CoapApplServer extends CoapServer{
 	}
 	
 	public static Resource getResource( String uri ) {
-		return getResource( root, uri );
-		/*
-		Collection<Resource> rootChilds = root.getChildren();
-		Iterator<Resource> iter         = rootChilds.iterator();
-		//System.out.println("child size:"+rootChilds.size());
-		while( iter.hasNext() ) {
-			Resource curRes = iter.next();
-			String curUri   = curRes.getURI();
-			//System.out.println("CoapApplServer | getResource curUri:"+curUri);
-			if( curUri.equals(uri) ){
-				Colors.out("CoapApplServer | getResource finds "+ curRes.getName() + " for " + curUri, Colors.ANSI_YELLOW);
-				return  curRes;
-			}
-		}
- 		return null;*/
-		
+		return getResource( root, uri );		
 	}
 	
 	//Depth-first research
 	private static Resource getResource(Resource root, String uri) {
-		if( root == null ) return null;
-		else {
-			//Colors.out("getResource checks in: "+root.getName());
+		if( root != null ) {
+			//Colors.out("getResource checks in: "+root.getName() + " for uri=" + uri);
 			Collection<Resource> rootChilds = root.getChildren();
 			Iterator<Resource> iter         = rootChilds.iterator();
 			//Colors.out("child size:"+rootChilds.size());
 			while( iter.hasNext() ) {
 				Resource curRes = iter.next();
 				String curUri   = curRes.getURI();
-				//Colors.out("CoapApplServer | getResource curUri:"+curUri);
+				//Colors.out("getResource curUri:"+curUri);
 				if( curUri.equals(uri) ){
-					//Colors.out("CoapApplServer | getResource finds "+ curRes.getName() + " for " + curUri, Colors.ANSI_YELLOW);
+					//Colors.out("getResource finds "+ curRes.getName() + " for " + curUri, Colors.ANSI_YELLOW);
 					return  curRes;
-				}else { return getResource(curRes,uri); }
-			}
-	 		return null;			
+				}else { 
+					//Colors.out("getResource restart from:"+curRes.getName());
+					Resource subRes = getResource(curRes,uri); 
+					if( subRes != null ) return subRes;					
+				}
+			}//while  (all sons explored)
 		}
+		return null;
 	}
-//	public  void addCoapResourceAtRoot( CoapResource resource   ){
-//		Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
-//       	root.add( resource );
-//	}
+ 
 	public  void addCoapResource( CoapResource resource, String fatherUri  )   {
 		Resource res = getResource("/"+fatherUri);
-		if( res != null ) res.add( resource );
-		//Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
+		if( res != null ) {
+			res.add( resource );
+			Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
+		}else {
+			Colors.outerr("addCoapResource FAILS for " + fatherUri);
+		}
 	}
-//	public  void addOutputResource( CoapResource resource   )   {
-//		Resource outputDevice = getResource( "/"+outputDeviceUri );
-//		if( outputDevice != null )  outputDevice.add(resource);
-//	}
-//	public  void addInputResource( CoapResource resource   )   {
-//		Resource inputDevice = getResource( "/"+inputDeviceUri );
-//		if( inputDevice != null ) inputDevice.add(resource);
-//	}
+ 
 	public  void stopServer() {
 		stop();
 	}

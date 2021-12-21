@@ -10,7 +10,7 @@ String curVal="";
 		public SonarResourceCoap(String name, ISonar sonar) {
 			super(name, DeviceType.input);
 			this.sonar = sonar;
-			Colors.out( getName() + " |  CREATED"   );	
+			Colors.out( getName() + " |  SonarResourceCoap CREATED"   );	
 	 	}
   			
 		private void getSonarValues() {
@@ -29,7 +29,7 @@ String curVal="";
 		 // CoapDeviceResource
 			@Override
 			protected String elaborateGet(String req) {
-//				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
+ 				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
 				if( req == null || req.equals("getDistance")) {
 					String answer = curVal;  
 					return  answer;
@@ -39,7 +39,7 @@ String curVal="";
 
 			@Override
 			protected void elaboratePut(String arg) {
-	 			//Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
+	 			Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
 	 			else if( arg.equals("setVal")) { //just for some test ...
@@ -52,7 +52,7 @@ String curVal="";
 			
 			protected void elaborateAndNotify(int arg) {
 				curVal= ""+arg;
-//				Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
+ 				//Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
 				changed();	// notify all CoAp observers
 			}
 		

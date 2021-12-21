@@ -9,7 +9,7 @@ protected String name;
    
  	public ApplMsgHandler( String name  ) {  
 		this.name = name;
-		Colors.out(name + " | CREATING ... " , Colors.ANSI_PURPLE);
+		//Colors.out(name + " | CREATING ... "  );
 	}
    		
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {

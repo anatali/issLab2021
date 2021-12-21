@@ -47,12 +47,13 @@ private String url;
 	
 	@Override
 	public String request(String query)   {
-// 		Colors.out("CoapSupport | request=" + query + " url="+url );
-		String param = query.isEmpty() ? "" : "?q="+query;
+  		Colors.out("CoapSupport | request=" + query + " url="+url );
+		String param = query.isEmpty() ? "" :  "?q="+query;
+  		Colors.out("CoapSupport | param=" + param );
 		client.setURI(url+param);
 		CoapResponse respGet = client.get(  );
-// 		Colors.out("CoapSupport | request=" + query 
-// 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
+ 		Colors.out("CoapSupport | request=" + query 
+ 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 		return respGet.getResponseText();
 	}
 	@Override

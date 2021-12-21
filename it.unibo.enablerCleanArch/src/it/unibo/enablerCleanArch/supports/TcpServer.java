@@ -55,8 +55,8 @@ protected boolean stopped = true;
 		try {
 			Colors.out(getName()+" |  DEACTIVATE serversock=" +  serversock);
 			stopped = true;
-			serversock.close();
-		} catch (IOException e) {
+            serversock.close();
+		} catch (Exception e) {
 			Colors.outerr(getName() + " | deactivate ERROR: " + e.getMessage());	 
 		}
 	}

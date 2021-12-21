@@ -15,9 +15,9 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
  	
 	@Override 
 	public void run() {
-		String name          = handler.getName();
+		String name = handler.getName();
 		try {
-			Colors.out(name + " | TcpApplMessageHandler STARTS  conn=" + conn );
+			Colors.out( "TcpApplMessageHandler | STARTS with handler=" + name + " conn=" + conn );
 			while( true ) {
 				//Colors.out(name + " | waits for message  ...");
 			    String msg = conn.receiveMsg();

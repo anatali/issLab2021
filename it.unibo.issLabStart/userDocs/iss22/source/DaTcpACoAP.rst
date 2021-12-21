@@ -3,7 +3,7 @@
 .. role:: remark
 
 .. _Californium: https://www.eclipse.org/californium/
-
+ 
  
 CoAP  ( :blue:`Constrained Application Protocol`) è un protocollo aperto e leggero per dispositivi IoT.
 CoAP è simile ad HTTP, ma è stato specificato (in IETF RFC 7252 e approvato nel 2014) 
@@ -442,7 +442,7 @@ demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` del
 
 .. code:: Java
 
-   public abstract class CoapDeviceResource extends CoapResource {
+  public abstract class CoapDeviceResource extends CoapResource {
      protected abstract String elaborateGet(String req);
      protected abstract void elaboratePut(String req);	
     @Override
@@ -464,7 +464,7 @@ demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` del
     }
     @Override
     public void handlePOST(CoapExchange exchange) {}
-}
+  }
 
 La risorsa viene creata come :blue:`risorsa osservabile` da un costruttore che provvede ad  
 aggiungerla al server CoAP (il singleton ``CoapApplServer``), attivandolo - se già non lo fosse.
@@ -535,24 +535,28 @@ avvalendosi di una ricerca *depth-first* nell'aòbero delle risorse:
     }
 
     private static Resource getResource(Resource root, String uri) {
-      if( root == null ) return null;
-      else {
+      if( root != null ) {
         Collection<Resource> rootChilds = root.getChildren();
         Iterator<Resource> iter         = rootChilds.iterator();
             while( iter.hasNext() ) {
                 Resource curRes = iter.next();
                 String curUri   = curRes.getURI();
                 if( curUri.equals(uri) ){ return  curRes;
-                }else { return getResource(curRes,uri); }
-            }
-            return null;			
-        }
+                }else {  //explore sons
+                    Resource subRes = getResource(curRes,uri); 
+                    if( subRes != null ) return subRes;					               
+                 }
+            }//while
+      }
+      return null;			
     }
 
 
 ------------------------------------------------
 Una risorsa per il Led
 ------------------------------------------------
+La risorsa CoAP  per il Led è una specializzazione di ``CoapDeviceResource`` che 
+incorpora un Led e ridirige a questo Led le richieste GET e PUT.
 
 .. code:: Java
 
@@ -564,6 +568,7 @@ Una risorsa per il Led
      }
      @Override
      protected String elaborateGet(String req) { return ""+led.getState(); }
+     
      @Override
      protected void elaboratePut(String req) {
       if( req.equals( "on") ) led.turnOn();
@@ -610,7 +615,7 @@ Alle diverse fasi corrispondono altrettante oeprazioni:
 	public void setup( String fName) { 
 		if( fName != null )  RadarSystemConfig
 		else{
-			RadarSystemConfig.protcolType = ProtocolType.coap;
+			RadarSystemConfig.protcolType = ProtocolType.coap; //Protocol.tcp
 			RadarSystemConfig.ledPort     = 8015;
 			...
 		}
@@ -625,8 +630,9 @@ Alle diverse fasi corrispondono altrettante oeprazioni:
 
 
 ++++++++++++++++++++++++++++++++++++
-Configurazione 
+Configurazione di LedUsageMain
 ++++++++++++++++++++++++++++++++++++
+
 La fase di configurazione viene divisa in due parti:
 
 - la costruzione di un enabler tipo-server per il Led;
@@ -721,8 +727,66 @@ Terminazione
 ------------------------------------------------
 Una risorsa per il Sonar
 ------------------------------------------------
+La risorsa CoAP  per il Sonar è una specializzazione di ``CoapDeviceResource`` che 
+incorpora un Sonar e ridirige a questo Sonar le richieste GET di lettura  e i comandi 
+PUT di attivazione/disativazione.
 
 .. code:: Java
+
+  public class SonarResourceCoap extends CoapDeviceResource  {
+  ISonar sonar;
+  String curVal="";
+    public SonarResourceCoap(String name, ISonar sonar) {
+      super(name, DeviceType.input);
+      this.sonar = sonar;
+    }
+
+    @Override
+    protected String elaborateGet(String req) {
+      if( req == null || req.equals("getDistance")) {
+          String answer = curVal;
+          return answer;
+      }else if( req != null && req.equals("isActive")) return ""+sonar.isActive();
+          else return "notUnderstood";
+    }
+
+    @Override
+    protected void elaboratePut(String arg) {
+	 			if( arg.equals("activate")) getSonarValues();
+	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
+    }
+
+La richiesta PUT di (de)attivazione provoca la (de)attivazione del Sonar.
+In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valore corrente 
+``curVal`` della distanza misurata e notifica tutti gli observer.
+
+.. code:: Java			
+			
+    private void getSonarValues() {
+      new Thread() {
+        public void run() {
+          sonar.activate();
+          while( sonar.isActive() ) {
+            int v = sonar.getDistance().getVal();
+            elaborateAndNotify(  v );
+          }
+        }
+      }.start();
+    }
+    protected void elaborateAndNotify(int arg) {
+       curVal= ""+arg;
+	     changed();	// notify all CoAP observers
+    }		
+  }
+
+------------------------------------------------
+Il Sonar accessibile via CoAP (o TCP)
+------------------------------------------------
+
+Come già fatto per il Led, impostiamo un programma che prima configura e poi invia qualche 
+richiesta.
+
+.. code:: Java	
 
 
 
