@@ -4,7 +4,7 @@
 
 .. _Californium: https://www.eclipse.org/californium/
  
- 
+  
 CoAP  ( :blue:`Constrained Application Protocol`) è un protocollo aperto e leggero per dispositivi IoT.
 CoAP è simile ad HTTP, ma è stato specificato (in IETF RFC 7252 e approvato nel 2014) 
 per soddisfare requisiti di dispositivi alimentati a batteria con risorse CPU e RAM limitate 
@@ -728,7 +728,7 @@ Terminazione
 Una risorsa per il Sonar
 ------------------------------------------------
 La risorsa CoAP  per il Sonar è una specializzazione di ``CoapDeviceResource`` che 
-incorpora un Sonar e ridirige a questo Sonar le richieste GET di lettura  e i comandi 
+incorpora un Sonar, a cui ridirige le richieste GET di lettura  e i comandi 
 PUT di attivazione/disativazione.
 
 .. code:: Java
@@ -746,8 +746,10 @@ PUT di attivazione/disativazione.
       if( req == null || req.equals("getDistance")) {
           String answer = curVal;
           return answer;
-      }else if( req != null && req.equals("isActive")) return ""+sonar.isActive();
-          else return "notUnderstood";
+      }  
+      if( req != null && req.isEmpty()) return curVal; //for the observers
+      if( req != null && req.equals("isActive")) return ""+sonar.isActive();
+      else return "SonarResourceCoap: request notUnderstood";
     }
 
     @Override

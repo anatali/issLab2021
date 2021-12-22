@@ -229,19 +229,28 @@ metodo di esecuzione.
 ++++++++++++++++++++++++++++++++++++++++++
 Definizione dei messaggi
 ++++++++++++++++++++++++++++++++++++++++++
-I messaggi per aggiornare il Sonar e per comandare il Led sono ``dispatch``:
+I messaggi per aggiornare il Sonar (ai fini di testing) 
+e per comandare il Led sono definiti come ``dispatch``,  
+mentre quelli per ottenere informazioni sono definiti come  ``request``:
 
  .. code:: java
 
   //Definizione dei Messaggi
-  ApplMessage fardistance  = 
-    new ApplMessage("msg( distance, dispatch, main, sonar, 36, 0 )");
-  ApplMessage neardistance = 
-    new ApplMessage("msg( distance, dispatch, main, sonar, 10, 1 )");
   ApplMessage turnOnLed    = 
     new ApplMessage("msg( turn, dispatch, main, led, on, 2 )");
   ApplMessage turnOffLed   = 
     new ApplMessage("msg( turn, dispatch, main, led, off, 3 )");
+  ApplMessage sonarActivate =  
+    new ApplMessage("msg( sonarcmd, dispatch,main,sonar, activate,4)");
+  ApplMessage getDistance  = 
+    new ApplMessage("msg( sonarcmd, request, main,sonar, getDistance,5)");
+  ApplMessage getLedState  = 
+    new ApplMessage("msg( ledcmd,   request, main,led,   getState, 6)");
+  //For simulation:
+  ApplMessage fardistance  =
+    new ApplMessage("msg( distance, dispatch, main, sonar, 36, 0 )");
+  ApplMessage neardistance =
+    new ApplMessage("msg( distance, dispatch, main, sonar, 10, 1 )");
 
 
 ++++++++++++++++++++++++++++++++++++++++++

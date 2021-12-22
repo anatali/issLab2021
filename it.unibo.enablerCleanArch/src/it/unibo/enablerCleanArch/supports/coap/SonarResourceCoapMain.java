@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Utils;
  
 
-public class CoapSonarResourceMain   {  
+public class SonarResourceCoapMain   {  
 
  	 
 	public static void main(String[] args) throws  Exception {

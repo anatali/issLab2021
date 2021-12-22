@@ -10,25 +10,15 @@ public class CoapApplObserver implements CoapHandler{
 	
 	public CoapApplObserver(String hostAddr, String resourceUri, IApplMsgHandler applHandler) {
 		this.applHandler = applHandler;
-		//Creato da SonarAdapterCoap che specializza un EnablerAsServer
-		//Usa CoapSupport per creare un client/observer verso una CoapSonareResource su port
-		//Ogni item ricevuto da onload viene inviato a applHandler 
-		
-		//String uri = CoapApplServer.inputDeviceUri+"/"+resourceName ;
-		Colors.out("CoapApplObserver | resourceUri= " + resourceUri );
-//		CoapSupport cps = new CoapSupport(hostAddr, resourceUri );
-//		cps.observeResource(this);
+		Colors.outappl("CoapApplObserver | resourceUri= " + resourceUri, Colors.BLUE );
 	}
-
 	@Override
 	public void onLoad(CoapResponse response) {
-		Colors.out("CoapApplObserver | response " +  response.getResponseText(), Colors.ANSI_PURPLE );
+		Colors.outappl("CoapApplObserver | value=" +  response.getResponseText(), Colors.BLUE);
 		applHandler.elaborate(response.getResponseText(), null);
 	}
-
 	@Override
 	public void onError() {
-		System.out.println("CoapApplObserver | ERROR " );	
+		Colors.outerr("CoapApplObserver | ERROR " );	
 	}
-
 }

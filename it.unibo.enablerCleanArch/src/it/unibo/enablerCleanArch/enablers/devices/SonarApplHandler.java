@@ -24,7 +24,7 @@ ISonar sonar;
 					this.sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
  					sonar.activate();
- 				}else if( message.equals("activate")) {
+ 				}else if( message.equals("deactivate")) {
  					sonar.deactivate();
  				}else if( message.equals("isActive")) {
  					String sonarState = ""+sonar.isActive();

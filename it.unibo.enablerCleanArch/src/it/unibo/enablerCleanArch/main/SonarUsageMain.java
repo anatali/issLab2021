@@ -5,6 +5,7 @@ package it.unibo.enablerCleanArch.main;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapObserveRelation;
 
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
@@ -14,6 +15,8 @@ import it.unibo.enablerCleanArch.enablers.devices.EnablerSonarAsServer;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
@@ -27,29 +30,45 @@ public class SonarUsageMain  {
 private EnablerAsServer sonarServer;
 private ISonar client1, client2;
 private CoapClient clientObs;
+private boolean withContext = true;
+
+private ApplMessage sonarActivate =
+	new ApplMessage("msg( sonarcmd, dispatch,main,sonar, activate,0)");
 
 	public void configure() {
-		RadarSystemConfig.simulation  = true;
- 		RadarSystemConfig.testing     = false;
- 		RadarSystemConfig.sonarPort   = 8011;
-		RadarSystemConfig.sonarDelay  = 100;
-		RadarSystemConfig.protcolType = ProtocolType.coap;
- 		RadarSystemConfig.pcHostAddr  = "localhost";
+		RadarSystemConfig.simulation    = true;
+ 		RadarSystemConfig.testing       = false;
+ 		RadarSystemConfig.sonarPort     = 8011;
+		RadarSystemConfig.sonarDelay    = 100;
+		RadarSystemConfig.protcolType   = ProtocolType.tcp;  //ProtocolType.coap
+ 		RadarSystemConfig.pcHostAddr    = "localhost";
+ 		RadarSystemConfig.ctxServerPort = 8048;
  		
- 		configureTheSonarEnablerServer();
+ 		configureTheServer();
  		configureTheSonarProxyClients();
  
  		Colors.outappl("SonarUsageMain | configure done", Colors.ANSI_PURPLE  );
 	}
 	
-	protected void configureTheSonarEnablerServer() {
+	protected void configureTheServer() {
 		ISonar sonar = DeviceFactory.createSonar();
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp) {
-			sonarServer  = new EnablerSonarAsServer("sonarServer",RadarSystemConfig.sonarPort, 
-					RadarSystemConfig.protcolType, new SonarApplHandler("sonarH",sonar), sonar );		
+			if( withContext ) configureWithContext(sonar); 
+			else configureWithEnabler(sonar);
 		}else if( RadarSystemConfig.protcolType == ProtocolType.coap){		
 			new SonarResourceCoap("sonar", sonar);
 		}
+	}
+	protected void configureWithEnabler(ISonar sonar) {
+		sonarServer  = new EnablerSonarAsServer("sonarServer",RadarSystemConfig.sonarPort, 
+				RadarSystemConfig.protcolType, new SonarApplHandler("sonarH",sonar), sonar );				
+	}
+	protected void configureWithContext(ISonar sonar) {
+		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
+		TcpContextServer contextServer  =
+			    new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
+		contextServer.addComponent("sonar", sonarHandler);
+		contextServer.activate();
 	}
 	protected void configureTheSonarProxyClients() {		 
 		String host           = RadarSystemConfig.pcHostAddr;
@@ -63,7 +82,7 @@ private CoapClient clientObs;
 	/*
 	 * Attiva un ObserverNaive 
 	 * oppure
-	 * un CoapApplObserver che utilizza SonarMessageHandler per visualizzare su RadarGui
+	 * un CoapApplObserver che usa SonarMessageHandler per visualizzare su RadarGui
 	 */
 	protected CoapObserveRelation createAnObserver() {
 		String sonarUri   = CoapApplServer.inputDeviceUri+"/sonar";
@@ -75,8 +94,14 @@ private CoapClient clientObs;
 		return relObs;
 	}
 	public void execute() {
-		if( RadarSystemConfig.protcolType == ProtocolType.tcp) { sonarServer.activate(); }
-		
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp) { 
+			if( withContext) ; 
+			else sonarServer.activate(); 
+		}else if( RadarSystemConfig.protcolType == ProtocolType.coap) { 
+			executeCoap();
+		}
+	}
+	protected void executeCoap() {
 		//CASO CoAP -----------------
 		
   		//Attivo il Sonar
@@ -92,7 +117,7 @@ private CoapClient clientObs;
 		Utils.delay(1500);
 		//Tolgo l'observer
 		relObs.proactiveCancel();
-		Utils.delay(1000);
+		Utils.delay(1000);		
 	}
 
 	public void terminate() {

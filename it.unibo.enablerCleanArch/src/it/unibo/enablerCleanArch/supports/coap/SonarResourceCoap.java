@@ -33,9 +33,10 @@ String curVal="";
 				if( req == null || req.equals("getDistance")) {
 					String answer = curVal;  
 					return  answer;
-				}else if( req != null && req.isEmpty()) return curVal; //fro the observers
-				else if( req != null && req.equals("isActive")) return ""+sonar.isActive();
-				else return "notUnderstood";
+				}
+				if( req != null && req.isEmpty()) return curVal; //for the observers
+				if( req != null && req.equals("isActive")) return ""+sonar.isActive();
+				return "SonarResourceCoap: request notUnderstood";
 			}
 
 			@Override
