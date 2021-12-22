@@ -504,6 +504,9 @@ per notificare dati in forma di **String**, in modo da agevilare l'interoperabil
 In ogni caso, volendo impostare il Sonar come un dispositivo osservabile, 
 introduciamo un nuovo contratto, che estende il precedente:
 
+.. _ISonarObservable:
+.. _IObserver:
+
 .. code:: java
 
   interface ISonarObservable  extends ISonar{

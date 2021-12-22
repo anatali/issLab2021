@@ -100,6 +100,8 @@ Le interfacce ILed e IRadarDisplay
 
 .. _IDistance:
 
+.. _ISonar:
+
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Le interfacce IDistance e ISonar
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&

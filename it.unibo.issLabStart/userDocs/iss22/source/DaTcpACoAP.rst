@@ -785,8 +785,44 @@ In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valo
 Il Sonar accessibile via CoAP (o TCP)
 ------------------------------------------------
 
-Come già fatto per il Led, impostiamo un programma che prima configura il sistema e poi invia qualche 
-richiesta.
+Come già fatto per il Led, impostiamo un programma che prima configura il sistema e poi effettua operazioni relative al Sonar.
+
+
+Le possibili configurazioni sono:
+
+- Sonar come oggetto semplice (POJO), che implementa l'interfaccia  `ISonar`_ ; 
+- Sonar come POJO osservabile che implementa l'interfaccia `ISonarObservable`_.
+
+Il Sonar (semplice od osservabile) può essere reso utilizzabile da remoto: 
+
+- via TCP, con un enabler tipo-server (``EnablerSonarAsServer``) che invia i messaggi 'semplici' al gestore 
+  applicativo ``SonarApplHandler``;
+- via TCP, attraverso un ``TcpContextServer``, che ridirige il payload di messaggi di tipo ``ApplMessage``
+  al gestore applicativo ``SonarApplHandler``;
+- via CoAP, all'interno di una risorsa ``CoapResource`` ( come ``SonarResourceCoap`` che estende ``CoapDeviceResource``)
+  con URI= ``devices/ouput/sonar``.
+
+I paranetri di configurazione sono espressi dalle seguenti variabili:
+
+.. code:: Java
+
+  RadarSystemConfig.protcolType
+  boolean withContext   //usata se RadarSystemConfig.protcolType=ProtocolType.tcp
+  
+
+AL Sonar può essere associato un observer (o più):
+
+- realizzato come POJO che implementa la interfaccia `IObserver`_ (ad esempio ``SonarObserverFortesting``);
+- realizzato come componente CoAP che implementa l'interfaccia ``CoapHandler`` (ad esempio ``CoapApplObserver``).
+
+
+Per accedere al Sonar si possono usare:
+
+- clienti di tipo ``ProxyAsClient`` (come ``SonarProxyAsClient``) che implementano l'interfaccia ``ISonar``. 
+  Questi client inviano messaggi (semplici o di tipo ``ApplMessage``, secondo la configurazione selezionata) al server 
+  cui sono connessi;
+- supporti di tipo ``CoapSupport`` che implementano l'interfaccia ``Interaction2021`` inviando richieste GET/PUT
+
 
 .. code:: Java
 

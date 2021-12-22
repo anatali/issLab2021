@@ -1,8 +1,3 @@
-.. contents:: Overview
-   :depth: 5
-.. role:: red 
-.. role:: blue 
-.. role:: remark
 
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 
