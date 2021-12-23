@@ -34,7 +34,8 @@ private EnablerAsServer sonarServer;
 private ISonar client1, client2;
 private CoapClient clientObs;
 private boolean withContext       = false;
-
+private ISonarObservable  sonar;
+private IObserver obsfortesting;
 private ApplMessage sonarActivate = new ApplMessage("msg( sonarcmd, dispatch,main,sonar, activate,0)");
 private ApplMessage sonarStop     = new ApplMessage("msg( sonarcmd, dispatch, main, sonar, deactivate, 4 )");
 private ApplMessage getDistance   = new ApplMessage("msg( sonarcmd, request,  main, sonar, getDistance,   5 )");
@@ -48,7 +49,7 @@ private TcpContextServer contextServer;
  		RadarSystemConfig.testing       = false;
  		RadarSystemConfig.sonarPort     = 8011;
 		RadarSystemConfig.sonarDelay    = 100;
-		RadarSystemConfig.protcolType   = ProtocolType.coap;  //ProtocolType.coap
+		RadarSystemConfig.protcolType   = ProtocolType.tcp;  //ProtocolType.coap
  		RadarSystemConfig.pcHostAddr    = "localhost";
  		RadarSystemConfig.ctxServerPort = 8048;
  		
@@ -61,9 +62,9 @@ private TcpContextServer contextServer;
 	protected void configureTheServer() {
 		//ISonar sonar = DeviceFactory.createSonar();
 		boolean oneShot         = false;
-		ISonarObservable  sonar = DeviceFactory.createSonarObservable();
-		IObserver obs1          = new SonarObserverFortesting("obs1",sonar,oneShot) ;
-		sonar.register( obs1 );
+		sonar                   = DeviceFactory.createSonarObservable();
+		obsfortesting           = new SonarObserverFortesting("obsfortesting", oneShot) ;
+		sonar.register( obsfortesting );
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp) {
 			if( withContext ) configureWithContext(sonar); 
 			else configureWithEnabler(sonar);
@@ -127,22 +128,23 @@ private TcpContextServer contextServer;
 			for( int i=1; i<=5; i++) {
 				String v = sonarCaller.sendRequestOnConnection( getDistance.toString() );
 				System.out.println("executeTcp getDistance="+v);
-				Utils.delay(200);
+				Utils.delay(RadarSystemConfig.sonarDelay+100);
+				if( i == 5 ) 			sonar.unregister(obsfortesting);		 
 			}	 
-			sonarCaller.sendCommandOnConnection(sonarStop.toString());
-	
+			sonarCaller.sendCommandOnConnection(sonarStop.toString());	
 		}
 		else { //Tcp non context
-			sonarServer.activate(); 	
+ 			sonarServer.start(); 	
 			client1.activate(); //Activate the sonar
 			for( int i=1; i<=5; i++) {
 				int v = client1.getDistance().getVal();
-				System.out.println("executeTcp getDistance="+v);
-				Utils.delay(300);
+				Colors.outappl("executeTcp getDistance="+v, Colors.ANSI_PURPLE);
+				if( i == 5 ) 			sonar.unregister(obsfortesting);		 
+				Utils.delay(RadarSystemConfig.sonarDelay  );    
+				//WARNING: if too lazy, the SonarMock fills the queue and the  obsfortesting assertion fails
 			}	 
 			client1.deactivate();
 		}
- 		 
 	}
 	protected void executeCoap() {
 		//CASO CoAP -----------------
@@ -169,7 +171,7 @@ private TcpContextServer contextServer;
 	public void terminate() {
 		Colors.outappl("SonarUsageMain | terminate", Colors.ANSI_PURPLE );
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp) {
-			sonarServer.deactivate(); //stops also the sonar device
+			sonarServer.stop(); //stops also the sonar device
 		}
 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
 			//Fermo il clientObs

@@ -32,7 +32,7 @@ protected boolean isactive = false;
 	}
 
  	protected void setServerSupport( int port, ProtocolType protocol,IApplMsgHandler handler   ) throws Exception{
-		if( protocol == ProtocolType.tcp ) {
+		if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 		}else if( protocol == ProtocolType.coap ) {
 			CoapApplServer.getServer();	//Le risorse sono create alla configurazione del sistema
@@ -42,25 +42,23 @@ protected boolean isactive = false;
  	public String getName() {
  		return name;
 	}
-// 	public boolean isActive() {
-// 		return started;
-// 	}
-	public void  activate() {
-		if( protocol == ProtocolType.tcp ) {
+ 	public boolean isActive() {
+ 		return isactive;
+ 	}
+	public void  start() {
+		if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp ) {
 	 		//Colors.out(name+" |  ACTIVATE"   );
 			serverTcp.activate();
 			isactive = true;
-		}else if( protocol == ProtocolType.coap ) {
-		}			
+		} 			
  	}
  
- 	public void deactivate() {
+ 	public void stop() {
  		//Colors.out(name+" |  deactivate  "  );
 		if( protocol == ProtocolType.tcp ) {
 			serverTcp.deactivate();
 			isactive = false;
-		}else if( protocol == ProtocolType.coap ) {
-		}		
+		} 		
  	}
   	 
 }

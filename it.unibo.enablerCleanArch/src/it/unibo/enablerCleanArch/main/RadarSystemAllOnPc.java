@@ -26,7 +26,7 @@ private IRadarDisplay radar   = null;
 		EnablerAsServer sonarServer  = 
 		new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, protocol, new SonarApplHandler("sonarH",sonar) );
 		sonar.activate();
-		sonarServer.activate();
+		sonarServer.start();
 		
 		String nameUri = CoapApplServer.outputDeviceUri+"/sonar";
 		String entry   = protocol==ProtocolType.coap ? nameUri : ""+RadarSystemConfig.sonarPort;
@@ -38,7 +38,7 @@ private IRadarDisplay radar   = null;
 		EnablerAsServer ledServer  = 
 				new EnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
 				protocol,  new LedApplHandler("ledH", led) );
-		ledServer.activate();
+		ledServer.start();
 		String nameUri = CoapApplServer.inputDeviceUri+"/led";
 		String entry   = protocol==ProtocolType.coap ? nameUri : ""+RadarSystemConfig.sonarPort;
 		ILed ledClient = new LedProxyAsClient("ledClient", "localhost",entry, protocol);

@@ -194,6 +194,8 @@ Enabler per il Sonar
       - i comandi: ridirigendoli al sonar locale 
       - le richieste:  ridirigendole al sonar locale e inviando la risposta al client 
 
+.. _SonarApplHandler:
+
 .. code:: java
 
   public class SonarApplHandler extends ApplMsgHandler  {

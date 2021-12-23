@@ -72,15 +72,15 @@ public class TestEnablers {
 	@After
 	public void down() {
 		//System.out.println("down");		
-		ledServer.deactivate();
-		sonarServer.deactivate();
+		ledServer.stop();
+		sonarServer.stop();
 	}	
 	
 	
 	//@Test 
 	public void testTheLed() {
 		protocol = ProtocolType.tcp;
-		ledServer.activate();
+		ledServer.start();
 		
 		ledClient.turnOn();
 		Utils.delay(500);
@@ -94,8 +94,8 @@ public class TestEnablers {
 	@Test 
 	public void testEnablers() {
  		sonar.activate();
-		sonarServer.activate();
-		ledServer.activate();
+		sonarServer.start();
+		ledServer.start();
 		
 		RadarSystemConfig.testing=false; //true => oneshot
 		RadarSystemConfig.sonarDelay=250;

@@ -42,7 +42,7 @@ private ILed led;
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp) {
 			ledServer = new EnablerAsServer("LedServer", RadarSystemConfig.ledPort, 
 					RadarSystemConfig.protcolType, new LedApplHandler("ledH",led) );
-			ledServer.activate(); 
+			ledServer.start(); 
 		}else if( RadarSystemConfig.protcolType == ProtocolType.coap){		
 			new LedResourceCoap("led", led);
 		}
@@ -73,7 +73,7 @@ private ILed led;
 		if( led instanceof LedMockWithGui ) { 
 			((LedMockWithGui) led).destroyLedGui(  ); 
 		}
-		if( RadarSystemConfig.protcolType == ProtocolType.tcp) ledServer.deactivate();
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp) ledServer.stop();
 		else {
 			CoapApplServer.getServer().stop();
 			CoapApplServer.getServer().destroy();

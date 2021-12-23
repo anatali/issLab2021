@@ -40,9 +40,9 @@ public final static int queueSize = 10;
 	
 	@Override
 	public IDistance getDistance() {
-		//Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
 		try {
 			IDistance curVal = blockingQueue.take();
+			Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
 			return curVal;
 		} catch (InterruptedException e) {
 			Colors.outerr("SonarMock | ERROR:"+e.getMessage());
@@ -57,6 +57,7 @@ public final static int queueSize = 10;
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
+					Colors.out("SonarModel | call produce", Colors.GREEN);
 					sonarProduce(  );
 				}
 				Colors.out("SonarModel | ENDS", Colors.GREEN);

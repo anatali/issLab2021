@@ -12,13 +12,18 @@ private ISonar sonar;
 		super(name, port, protocol, handler);
 		this.sonar = sonar;
 	}
-// 	public boolean isActive() {
-// 		return sonar.isActive();
-// 	}
- 	public void deactivate() {
+ 	public boolean isActive() {
+ 		return sonar.isActive();
+ 	}
+ 	public void stop() {
  		//Colors.out(name+" |  EnablerSonarAsServer deactivate  "  );
- 		super.deactivate();
+ 		super.stop();
  		sonar.deactivate();
+  	}
+ 	public void start() {
+ 		//Colors.out(name+" |  EnablerSonarAsServer activate  "  );
+ 		super.start();
+ 		sonar.activate();
   	}
 
 }

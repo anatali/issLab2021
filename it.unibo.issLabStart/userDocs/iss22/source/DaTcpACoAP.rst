@@ -21,7 +21,7 @@ Tuttavia CoAP è vulnerabile agli IP spoofing e quindi agli **attacchi DDoS** (*
 
 Ciò nonostante, Shodan (un motore di ricerca per i dispositivi connessi a Internet) 
 mostra 433,973 voci come risultato per la ricerca 'CoAP' (contro 249,335,005 per 'HTTP').
-
+ 
 ------------------------------------------------
 La libreria Californium: un esempio di uso
 ------------------------------------------------
