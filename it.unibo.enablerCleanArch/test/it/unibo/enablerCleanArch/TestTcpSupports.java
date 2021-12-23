@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArch.supports.TcpClient;
+import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.TcpServer;
 
 
@@ -34,7 +34,7 @@ class ClientForTest{
  	
 	public void doWork( String name, int ntimes, boolean withserver ) {
 		try {
-			Interaction2021 conn  = TcpClient.connect("localhost", TestTcpSupports.testPort,ntimes);
+			Interaction2021 conn  = TcpClientSupport.connect("localhost", TestTcpSupports.testPort,ntimes);
 			//System.out.println(name + " | conn: " +conn );	
 			String request = "hello_from_" + name;
 			conn.forward(request);				//2

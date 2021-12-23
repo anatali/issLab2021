@@ -199,7 +199,7 @@ private TcpContextServer contextServer;
 			//Chiudo le connessioni
 			if( clientSonarProxy != null )  ((ProxyAsClient) clientSonarProxy).close();
 			if( client2 != null ) ((ProxyAsClient) client2).close();
-			CoapApplServer.getServer().destroy();
+			CoapApplServer.getTheServer().destroy();
 		}
 	}
 	

@@ -9,7 +9,6 @@ import it.unibo.enablerCleanArch.supports.Colors;
 
 public class CoapApplServer extends CoapServer{
 	
-	//private static CoapServer server = new CoapServer();
 	private static CoapResource root      = new CoapResource("devices");
 	private static CoapApplServer server  = null;
 	
@@ -17,9 +16,16 @@ public class CoapApplServer extends CoapServer{
 	public final static String lightsDeviceUri = outputDeviceUri+"/lights";
 	public final static String inputDeviceUri  = "devices/input";
 	
-	public static CoapApplServer getServer() {
+	public static CoapApplServer getTheServer() {
 		if( server == null ) server = new CoapApplServer();
 		return server;
+	}
+	public static void stopTheServer() {
+		if( server != null ) {
+			server.stop();
+			server.destroy();
+			Colors.out("CoapApplServer STOPPED" );
+		}
 	}
 	
 	private CoapApplServer(){
@@ -69,8 +75,6 @@ public class CoapApplServer extends CoapServer{
 		}
 	}
  
-	public  void stopServer() {
-		stop();
-	}
+ 
 
 }

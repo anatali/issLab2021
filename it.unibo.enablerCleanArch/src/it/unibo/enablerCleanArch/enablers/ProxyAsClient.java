@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArch.supports.TcpClient;
+import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 
 
@@ -24,7 +24,7 @@ protected ProtocolType protocol ;
 	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
 		if( protocol == ProtocolType.tcp) {
 			int port = Integer.parseInt(entry);
-			conn = TcpClient.connect(host,  port, 10); //10 = num of attempts
+			conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
 			conn = new CoapSupport(host,  entry);  
@@ -57,6 +57,7 @@ protected ProtocolType protocol ;
 	public void close() {
 		try {
 			conn.close();
+			Colors.out(name + " |  CLOSED " + conn  );
 		} catch (Exception e) {
 			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		}
 	}

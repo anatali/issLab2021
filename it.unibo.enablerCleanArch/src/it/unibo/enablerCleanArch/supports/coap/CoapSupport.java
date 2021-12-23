@@ -16,6 +16,7 @@ private String url;
 	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
 		url            = "coap://"+address + ":5683/"+ path;
 		client          = new CoapClient( url );
+ 		client.useExecutor(); //To be shutdown
 		Colors.out("CoapSupport | STARTS client url=" +  url,Colors.ANSI_YELLOW  ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 
 	}
@@ -58,10 +59,9 @@ private String url;
 	}
 	@Override
 	public void close()  {
+		Colors.out("CoapSupport | client shutdown=" + client);		
 		client.shutdown();	
 	}
-
-	
 
 }
 /*

@@ -65,8 +65,8 @@ private CoapSupport cps;
 	
 	public void terminate() {
 		cps.close();
-		CoapApplServer.getServer().stop(); 
-		CoapApplServer.getServer().destroy();
+		CoapApplServer.getTheServer().stop(); 
+		CoapApplServer.getTheServer().destroy();
 		Colors.outappl("terminate DONE", Colors.BLUE);
 		System.exit(0);
 	}

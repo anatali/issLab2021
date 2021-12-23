@@ -62,6 +62,7 @@ private Socket socket;
 	public void close() { 
 		try {
 			socket.close();
+			Colors.out( "TcpConnection | CLOSED  " );
 		} catch (IOException e) {
 			Colors.outerr( "TcpConnection | close ERROR " + e.getMessage());	
 		}

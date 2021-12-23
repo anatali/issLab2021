@@ -35,7 +35,7 @@ protected boolean isactive = false;
 		if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 		}else if( protocol == ProtocolType.coap ) {
-			CoapApplServer.getServer();	//Le risorse sono create alla configurazione del sistema
+			CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
 		}
 	}	
  	

@@ -75,8 +75,8 @@ private ILed led;
 		}
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp) ledServer.stop();
 		else {
-			CoapApplServer.getServer().stop();
-			CoapApplServer.getServer().destroy();
+			CoapApplServer.getTheServer().stop();
+			CoapApplServer.getTheServer().destroy();
 		}
 	}
 	public static void main( String[] args)  {

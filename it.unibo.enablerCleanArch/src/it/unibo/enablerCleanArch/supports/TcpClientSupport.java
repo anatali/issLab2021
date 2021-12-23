@@ -2,12 +2,16 @@ package it.unibo.enablerCleanArch.supports;
 import java.net.Socket;
  
  
-public class TcpClient {
-		
+public class TcpClientSupport {
+//	private Socket socket;
+	
 	public static Interaction2021 connect(String host, int port, int nattempts ) throws Exception {
+//		TcpClient tcpc = new TcpClient(host,   port,   nattempts);
+//		return new TcpConnection( tcpc.getSocket() );
+		 
 		for( int i=1; i<=nattempts; i++ ) {
 			try {
-		 		Socket socket         =  new Socket( host, port );
+				Socket socket         =  new Socket( host, port );
  				Interaction2021 conn  =  new TcpConnection( socket );
 				return conn;
 			}catch(Exception e) {
@@ -16,6 +20,7 @@ public class TcpClient {
 			}
 		}//for
 		throw new Exception("TcpClient | Unable to connect to host:" + host);
+		 
  	}
-  
+ 
 }
