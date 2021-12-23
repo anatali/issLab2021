@@ -13,9 +13,9 @@ public class SonarMockObservable extends SonarMock implements ISonarObservable  
 	} 	
 	@Override  //from SonarMock
 	protected void updateDistance( int d ) {
-		Colors.out("SonarMockObservable | updateDistance d="+d, Colors.GREEN);
- 		super.updateDistance(d);	            //pone curVal nella coda per getDistance
+		//Colors.out("SonarMockObservable | updateDistance d="+d, Colors.GREEN);
 		observableDistance.setVal( curVal );    //notifies the observers 
+ 		super.updateDistance(d);	            //pone curVal nella coda per getDistance
 	}
 
  	@Override

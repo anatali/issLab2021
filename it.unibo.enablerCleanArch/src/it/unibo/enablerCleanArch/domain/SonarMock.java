@@ -17,8 +17,8 @@ private int delta = 1;
 	protected void updateDistance( int d ) {
 		try {
 			curVal = new Distance( d );
-			Colors.out("SonarMock | put in queue d="+d + " qsize=" + blockingQueue.size() + " delay=" + RadarSystemConfig.sonarDelay, Colors.ANSI_YELLOW);
 			blockingQueue.put( curVal );
+			//Colors.out("SonarMock | put in queue d="+d + " qsize=" + blockingQueue.size() + " delay=" + RadarSystemConfig.sonarDelay, Colors.ANSI_YELLOW);
 		} catch (Exception e) {
 			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
 		}
@@ -30,13 +30,11 @@ private int delta = 1;
 			updateDistance( RadarSystemConfig.testingDistance );			      
 			stopped = true;  //one shot
 		}else {
-			updateDistance( curVal.getVal() - delta );			    
-			if( blockingQueue.size() >  7   ) 
-				Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
-			stopped = ( curVal.getVal() == 0 );
+			int v = curVal.getVal() - delta;
+			updateDistance( v );			    
+ 			if( blockingQueue.size() > 7) Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
+			stopped = ( v == 0 );
 			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
 		}
  	}
- 
- 
 }

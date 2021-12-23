@@ -29,7 +29,7 @@ public class ContextMsgHandler extends ApplMsgHandler{
 		ApplMessage msg      = new ApplMessage(message);
 		String dest          = msg.msgReceiver();
 		IApplMsgHandler h    = handlerMap.get(dest);
-		Colors.out(name +  " | elaborate h="+h.getName() + " since dest="+dest);
+		//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest);
 		if( dest != null ) h.elaborate(msg.msgContent(), conn);	
 	}
 

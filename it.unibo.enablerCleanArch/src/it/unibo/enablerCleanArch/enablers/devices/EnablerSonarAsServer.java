@@ -18,12 +18,12 @@ private ISonar sonar;
  	public void stop() {
  		//Colors.out(name+" |  EnablerSonarAsServer deactivate  "  );
  		super.stop();
- 		sonar.deactivate();
+ 		sonar.deactivate(); //The Sonar should (also) be activated from outside
   	}
  	public void start() {
  		//Colors.out(name+" |  EnablerSonarAsServer activate  "  );
  		super.start();
- 		sonar.activate();
+ 		//The Sonar must be started from outside
   	}
 
 }
