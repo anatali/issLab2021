@@ -16,6 +16,8 @@ dispositivi simulati che riproducono il comportamento dei dispositivi reali in m
 Inoltre, per facilitare la costruzione di dispositivi senza dover denotare in modo esplicito le classi
 di implementazione, conviene introdurre una **Factory**:
 
+.. _DeviceFactory:
+
 .. code:: java
 
   public class DeviceFactory {
@@ -476,9 +478,9 @@ Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :ma
 di varianza sulla distanza-base.
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Sonar come dispositivo osservabile
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il Sonar sviluppato fino a questo punto è un processo produttore di valori 
 di distamza resi disponibili dal metodo ``getDistance`` che nasconde al suo interno una coda per sincronizzare 
@@ -499,7 +501,7 @@ notificato agli observer potrebbe essere:
 - **IDistance**: è il tipo di dato prodotto dal Sonar a livello logico.
 
 Poichè gli observer potrebbero essere non locali e scritti in linguaggi diversi da Java, optiamo qui
-per notificare dati in forma di **String**, in modo da agevilare l'interoperabilità. 
+per notificare dati in forma di **String**, in modo da agevolare l'interoperabilità. 
 
 In ogni caso, volendo impostare il Sonar come un dispositivo osservabile, 
 introduciamo un nuovo contratto, che estende il precedente:
@@ -523,27 +525,128 @@ Nel quadro di un programma ad oggetti convenzionale, un ``ISonarObservable``  è
 con la capacità di registrare osservatori e di invocare, ad ogni aggiornamento del valore
 di distanza, il metodo ``update`` di tutti gli osservatori registrati.
 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SonarModelObservable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Introduciamo una versione observable del SonarModel:
+
 .. code:: java
 
-  public class SonarMockObservable 
-              extends SonarMock implements ISonarObservable{
-    IDistanceMeasured observableDistance = new DistanceMeasured(  );
-    
-    @Override  //from SonarMock
-    protected void updateDistance( int d ) {
-      super.updateDistance(d);	//pone curVal nella coda
-      observableDistance.setVal( curVal );    //notifies the observers 
-    }
-    @Override
-    public void register(IObserver obs) {
-        observableDistance.addObserver(obs);		
-    }
-    @Override
-    public void unregister(IObserver obs) {
-      observableDistance.deleteObserver(obs);		
-    }
+  public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
+	protected IDistanceMeasured observableDistance  ;		
+ 		
+	@Override
+	protected void sonarSetUp() {
+		observableDistance = new DistanceMeasured( );
+ 		Colors.out("SonarModelObservable | sonarSetUp curVal="+curVal);
+ 		observableDistance.setVal(curVal);
+ 	} 	
+	
+ 	@Override  //from SonarModel
+	protected void updateDistance( int d ) {
+		//Colors.out("SonarModelObservable | updateDistance d="+d, Colors.GREEN);
+		observableDistance.setVal( curVal );    //notifies the observers 
+ 		super.updateDistance(d);	            //pone curVal nella coda per getDistance
+	}
+
+ 	@Override
+	public void register(IObserver obs) {
+		Colors.out("SonarModelObservable | register on observableDistance obs="+obs);
+		observableDistance.addObserver(obs);		
+	}
+
+	@Override
+	public void unregister(IObserver obs) {
+		Colors.out("SonarModelObservable | unregister obs="+obs);
+		observableDistance.deleteObserver(obs);		
+	}
+  
   }
 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SonarMockObservable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+In questo modo il SonarMock observable può essere definito semplicemente ridefinendo il metodo asbstrat 
+relativo alla produzione dei dati:
+
+.. _SonarMockObservable:
+
+.. code:: java
+
+  public class SonarMockObservable extends SonarModelObservable   {
+	@Override
+	protected void sonarProduce() {
+		if( RadarSystemConfig.testing ) {
+			updateDistance( RadarSystemConfig.testingDistance );			      
+			stopped = true;  //one shot
+		}else {
+			int v = curVal.getVal() - 1;
+			updateDistance( v );			    
+ 			if( blockingQueue.size() > 7) Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
+			stopped = ( v == 0 );
+			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
+		}		
+	}
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SonarConcreteObservable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Analogamente, la versione observable del ``SonarConcrete`` si otiene ridefinendo (in assenza di ereditarietà
+multipla) i metodi astratti  di ``setUp`` e ``sonarProduce`` come già fatto in precedenza:
+
+.. _SonarConcreteObservable:
+
+.. code:: java
+
+  public class SonarConcreteObservable extends SonarModelObservable 
+ 	private int numData           = 5; 
+	private int dataCounter       = 1;
+	private  BufferedReader reader ;
+	 
+	@Override
+	protected void sonarSetUp() {
+		super.sonarSetUp();
+ 		try {
+			Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
+	        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+       	}catch( Exception e) {...	}
+	} 	
+
+	@Override
+	protected void sonarProduce( ) {
+    try {
+			String data = reader.readLine();
+			dataCounter++;
+			if( dataCounter % numData == 0 ) { //every numData ...
+ 				updateDistance( Integer.parseInt(data));
+			 }
+    }catch( Exception e) {... }		
+	}
+ 
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Aggiornamento di DeviceFactory
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+La nascita del nuovo tipo di Sonar ci induce a introdurre nuovi metodi in `DeviceFactory`_:
+
+.. code:: java
+
+  public static ISonar createSonar(boolean observable) {
+    if( observable ) return createSonarObservable();
+    else return createSonar();
+	}
+
+  public static ISonarObservable createSonarObservable() {
+		if( RadarSystemConfig.simulation)  { return new SonarMockObservable();
+		}else { return SonarConcreteObservable(); }	
+	}
+
+ 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La distanza come risorsa osservabile

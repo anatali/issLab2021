@@ -6,9 +6,10 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-public abstract class SonarModel  implements ISonar{ //extends Observable
+public abstract class SonarModel  implements ISonar{  
 public final static int queueSize = 10;
-	
+protected  IDistance curVal = new Distance(90);	 
+
 	protected boolean stopped  = false;
 	
 	protected BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
@@ -30,9 +31,18 @@ public final static int queueSize = 10;
 	protected SonarModel() {//hidden costructor, to force setup
 		sonarSetUp();
 	}
+	
+	protected void updateDistance( int d ) {
+		try {
+			curVal = new Distance( d );
+			blockingQueue.put( curVal );
+		} catch (InterruptedException e) {
+			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
+		}
+	}	
+
 	protected abstract void sonarSetUp() ;
-	//protected abstract void sonarProduce() ;
-	protected abstract void sonarProduce() ;
+ 	protected abstract void sonarProduce() ;
 
 	@Override
 	public boolean isActive() {

@@ -787,11 +787,12 @@ Il Sonar accessibile via CoAP (o TCP)
 
 Come già fatto per il Led, impostiamo un programma che prima configura il sistema e poi effettua operazioni relative al Sonar.
 
+A differenza del caso del Led, l'uso di un dispositivo di input quale il Sonar ci permette di impostare un maggior 
+numero di configurazioni, a partire dal Sonar stesso, che può essere:
 
-Le possibili configurazioni sono:
+- un oggetto (POJO) che implementa l'interfaccia  `ISonar`_ ; 
+- un POJO osservabile che implementa l'interfaccia `ISonarObservable`_.
 
-- Sonar come oggetto semplice (POJO), che implementa l'interfaccia  `ISonar`_ ; 
-- Sonar come POJO osservabile che implementa l'interfaccia `ISonarObservable`_.
 
 Il Sonar (semplice od osservabile) può essere reso utilizzabile da remoto: 
 

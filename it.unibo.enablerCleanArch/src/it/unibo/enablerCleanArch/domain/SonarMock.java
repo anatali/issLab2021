@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMock extends SonarModel implements ISonar{
-protected  IDistance curVal ;  
+//protected  IDistance curVal ;  
 private int delta = 1;
 	@Override
 	protected void sonarSetUp() {
@@ -14,15 +14,15 @@ private int delta = 1;
 		Colors.out("SonarMock | sonarSetUp curVal="+curVal);
 	}
 	
-	protected void updateDistance( int d ) {
-		try {
-			curVal = new Distance( d );
-			blockingQueue.put( curVal );
-			//Colors.out("SonarMock | put in queue d="+d + " qsize=" + blockingQueue.size() + " delay=" + RadarSystemConfig.sonarDelay, Colors.ANSI_YELLOW);
-		} catch (Exception e) {
-			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
-		}
-	}
+//	protected void updateDistance( int d ) {
+//		try {
+//			curVal = new Distance( d );
+//			blockingQueue.put( curVal );
+//			//Colors.out("SonarMock | put in queue d="+d + " qsize=" + blockingQueue.size() + " delay=" + RadarSystemConfig.sonarDelay, Colors.ANSI_YELLOW);
+//		} catch (Exception e) {
+//			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
+//		}
+//	}
 
 	@Override
 	protected void sonarProduce( ) {

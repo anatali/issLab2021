@@ -32,8 +32,7 @@ public class DeviceFactory {
 			return new SonarMockObservable();
 		}else { 
 			return null;
-		}
-		
+		}	
 	}
 	
 	//We do not have mock for RadarGui

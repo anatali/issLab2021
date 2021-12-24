@@ -1,33 +1,23 @@
 package it.unibo.enablerCleanArch.domain;
 
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
-public class SonarMockObservable extends SonarMock implements ISonarObservable  {
-	private IDistanceMeasured observableDistance  ;
+public class SonarMockObservable extends SonarModelObservable   {
+  
 	@Override
-	protected void sonarSetUp() {
-		super.sonarSetUp();
-		observableDistance = new DistanceMeasured( );		
-		observableDistance.setVal(curVal);
-		//Colors.out("SonarMockObservable | sonarSetUp curVal="+curVal, Colors.ANSI_PURPLE);
-	} 	
-	@Override  //from SonarMock
-	protected void updateDistance( int d ) {
-		//Colors.out("SonarMockObservable | updateDistance d="+d, Colors.GREEN);
-		observableDistance.setVal( curVal );    //notifies the observers 
- 		super.updateDistance(d);	            //pone curVal nella coda per getDistance
-	}
-
- 	@Override
-	public void register(IObserver obs) {
-		Colors.out("SonarObservableMock | register on observableDistance obs="+obs);
-		observableDistance.addObserver(obs);		
-	}
-
-	@Override
-	public void unregister(IObserver obs) {
-		Colors.out("SonarObservableMock | unregister obs="+obs);
-		observableDistance.deleteObserver(obs);		
+	protected void sonarProduce() {
+		if( RadarSystemConfig.testing ) {
+			updateDistance( RadarSystemConfig.testingDistance );			      
+			stopped = true;  //one shot
+		}else {
+			int v = curVal.getVal() - 1;
+			updateDistance( v );			    
+ 			if( blockingQueue.size() > 7) Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
+			stopped = ( v == 0 );
+			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
+		}		
 	}
   
 }
