@@ -9,12 +9,12 @@ protected String name;
    
  	public ApplMsgHandler( String name  ) {  
 		this.name = name;
-		//Colors.out(name + " | CREATING ... "  );
+		//Colors.out(name + " | CREATING ... ", Colors.ANSI_YELLOW );
 	}
    		
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
- 			Colors.out(name + " | sendMsgToClient " + message, Colors.ANSI_PURPLE);
+ 			//Colors.out(name + " | sendMsgToClient " + message, Colors.ANSI_YELLOW);
 			conn.forward( message );
 		} catch (Exception e) {
  			Colors.outerr(name + " | ERROR " + e.getMessage());;

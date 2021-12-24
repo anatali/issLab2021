@@ -68,7 +68,7 @@ public final static int queueSize = 10;
  	
 	@Override
 	public void deactivate() {
-		Colors.out("Sonar | deactivate");
+		Colors.out("SonarModel | deactivate", Colors.GREEN);
 		stopped = true;
 	}
 

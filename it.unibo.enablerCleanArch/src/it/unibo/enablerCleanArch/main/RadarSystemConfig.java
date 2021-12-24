@@ -24,6 +24,7 @@ public class RadarSystemConfig {
 	public static  int sonarPort         = 8012;
 	public static  int controllerPort    = 8016;
 	public static  int ctxServerPort     = 8048;
+	public static  boolean withContext   = false;
  	
 	public static int serverTimeOut       =  600000;  //10 minuti
 	public static int applStartdelay      =  5000;     
@@ -76,6 +77,8 @@ public class RadarSystemConfig {
 	        sonarPort        = object.getInt("sonarPort");
 	        controllerPort   = object.getInt("controllerPort");		
 	        
+	        ctxServerPort    = object.getInt("ctxServerPort");
+	        withContext      = object.getBoolean("withContext");	
 	        applStartdelay   = object.getInt("applStartdelay");	
 	        
 	        sonarObservable  = object.getBoolean("sonarObservable");	

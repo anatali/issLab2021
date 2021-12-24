@@ -12,7 +12,7 @@ public class SonarObserverFortesting implements IObserver{
 	private int v0          = -1;
 	private int delta       =  1;
 	
-	public SonarObserverFortesting(String name,  boolean oneShot) { //ISonarObservable sonar,
+	public SonarObserverFortesting(String name,  boolean oneShot) {  
 		this.name    = name;
 		this.oneShot = oneShot;
 	}
