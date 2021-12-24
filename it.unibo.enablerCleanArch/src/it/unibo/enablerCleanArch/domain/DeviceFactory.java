@@ -13,7 +13,11 @@ public class DeviceFactory {
 			return LedModel.createLedConcrete();
 		}
 	}
-	
+	public static ISonar createSonar(boolean observable) {
+		if( observable ) return createSonarObservable();
+		else return createSonar();
+	}
+
 	public static ISonar createSonar() {
 		//Colors.out("DeviceFactory | createSonar simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {

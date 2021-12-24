@@ -3,12 +3,9 @@ package it.unibo.enablerCleanArch.main;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
-import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.IDistance;
-import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
-import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
@@ -20,75 +17,44 @@ import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 import it.unibo.enablerCleanArch.supports.coap.SonarMessageHandler;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
-  
-
-public class SonarUsageMainCoap  { //extends SonarUsageMain
-
-private CoapClient clientObs = null;
-
-
-//EREDITABILI
-protected ISonar clientSonarProxy, client2;
-protected ISonar   sonar;
-protected boolean sonarWithObserver = false;
-protected IObserver obsfortesting;
-protected boolean withRadar = false;
 
 /*
- * ENITI ATTIVI
- * SonarMock 
- * CoapApplServer
- * SonarProxyAsClient
+ * Eredita il Sonar da 
  */
 
-	//@Override
-	public void configure() {
-		RadarSystemConfig.sonarDelay    = 100;
- 		createTheSonar();
- 		configureTheServer();
- 		//configureTheSonarProxyClients();
- 		Colors.outappl("SonarUsageMainCoap | configure done", Colors.ANSI_PURPLE  );
-	}
+public class SonarUsageMainCoap  extends SonarUsageAbstractMain {  
 
-	protected void createTheSonar() {
-		if( sonarWithObserver ) {
-			boolean oneShot         = false;
-			obsfortesting           = new SonarObserverFortesting("obsfortesting", oneShot) ;
-	 		sonar                   = DeviceFactory.createSonarObservable();
-			((ISonarObservable) sonar).register( obsfortesting );
-		}else {
-			sonar                   = DeviceFactory.createSonar();
-		}		
-	}
+private CoapClient clientObs = null;
+protected ISonar clientSonarProxy ;
+protected boolean useProxyClient = true;
 
+	@Override
+	public void setConfiguration() {
+		super.setConfiguration();
+		RadarSystemConfig.sonarObservable = false;		
+	}
 	
+	@Override
 	protected void configureTheServer() {
-		CoapApplServer.getTheServer();  //singleton
+		CoapApplServer.getTheServer();  //singleton; call fatta anche da SonarResourceCoap
 		new SonarResourceCoap("sonar", sonar); 
 	}
-	
-// 	protected void configureTheSonarProxyClients() {		 
-// 		String host      = RadarSystemConfig.pcHostAddr;
-// 		String sonarUri  = CoapApplServer.inputDeviceUri+"/sonar";
-// 		clientSonarProxy = new SonarProxyAsClient("clientSonarProxy", host, sonarUri, ProtocolType.coap );
-//		//client2          = new SonarProxyAsClient("client2", host, sonarUri, ProtocolType.coap );	
-//	}
-	 
+ 
+	@Override
 	public void execute() {
-		executeCoapUsingProxyClients();
-		//executeCoapUsingCoapSupport();
+		if( useProxyClient ) executeCoapUsingProxyClients();
+		else executeCoapUsingCoapSupport();
 	}
 
 	protected void executeCoapUsingProxyClients() {
- 
  		String host      = RadarSystemConfig.pcHostAddr;
  		String sonarUri  = CoapApplServer.inputDeviceUri+"/sonar";
  		clientSonarProxy = new SonarProxyAsClient("clientSonarProxy", host, sonarUri, ProtocolType.coap );
-		//client2          = new SonarProxyAsClient("client2", host, sonarUri, ProtocolType.coap );	
 		
   		//Attivo il Sonar
 		clientSonarProxy.activate();	 
-		//Attivo un observer
+		//Attivo un observer CoAP
+		boolean withRadar = false;
 		CoapObserveRelation relObs = createAnObserver(withRadar);	
 		
 		for( int i=1; i<=5; i++) {
@@ -96,13 +62,13 @@ protected boolean withRadar = false;
 			Colors.outappl("SonarUsageMainCoap | executeCoap with proxyClient i=" + i + " getVal="+v.getVal(), Colors.ANSI_PURPLE);
 			Utils.delay(500);
 		}	 
-		//Utils.delay(300);
-		//Tolgo l'observer CoAP
+ 		//Tolgo l'observer CoAP
 		relObs.proactiveCancel();
-		Utils.delay(500);
+		Utils.delay(300);
 		//Tolgo l'observer sul Sonar POJO
-		if( sonarWithObserver) ((ISonarObservable) sonar).unregister(obsfortesting); 
-		//client2.deactivate();		//USO client2 per disattivare
+		if( RadarSystemConfig.sonarObservable) ((ISonarObservable) sonar).unregister(obsfortesting); 
+		Utils.delay(300);
+		//Fermo il Sonar
 		clientSonarProxy.deactivate();
  	}
 	
@@ -140,6 +106,7 @@ protected boolean withRadar = false;
 
 	public void terminate() {
 		Colors.outappl("SonarUsageMainCoap | terminate", Colors.ANSI_PURPLE );
+		CoapApplServer.stopTheServer();  
 			//Fermo il clientObs
 			if( clientObs != null ) {
 				Colors.outappl("SonarUsageMainCoap | terminate clientObs="+clientObs, Colors.ANSI_PURPLE );
@@ -147,9 +114,8 @@ protected boolean withRadar = false;
 			}
 			//Chiudo le connessioni
 			if( clientSonarProxy != null )  ((ProxyAsClient) clientSonarProxy).close();
-			if( client2 != null ) ((ProxyAsClient) client2).close();
-			CoapApplServer.stopTheServer(); //.destroy();
-		Colors.outappl("SonarUsageMainCoap | terminate BYE", Colors.ANSI_PURPLE );	
+ 		Colors.outappl("SonarUsageMainCoap | terminate BYE", Colors.ANSI_PURPLE );	
+		System.exit(0); //per via di CoapHandler  ...
 	}
 	
 	public static void main( String[] args) throws Exception {

@@ -6,7 +6,6 @@ import java.net.Socket;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 public class TcpServer extends Thread{
-//private int port;
 private ServerSocket serversock;
 protected IApplMsgHandler userDefHandler;
 protected String name;
@@ -15,7 +14,6 @@ protected boolean stopped = true;
  	public TcpServer( String name, int port,  IApplMsgHandler userDefHandler   ) {
 		super(name);
 	      try {
-	  		//this.port             = port;
 	  		this.userDefHandler   = userDefHandler;
 	  		Colors.out(getName() + " | costructor port=" + port  ); //+" applHandlerClass=" + applHandlerClass 
 			this.name             = getName();

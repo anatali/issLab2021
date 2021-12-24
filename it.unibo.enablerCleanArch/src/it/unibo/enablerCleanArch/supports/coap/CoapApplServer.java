@@ -24,7 +24,7 @@ public class CoapApplServer extends CoapServer{
 		if( server != null ) {
 			server.stop();
 			server.destroy();
-			Colors.out("CoapApplServer STOPPED" );
+			Colors.out("CoapApplServer STOPPED", Colors.GREEN );
 		}
 	}
 	

@@ -24,7 +24,7 @@ public class TcpContextServer extends TcpServer{
  
 	public TcpContextServer(String name, int port ) { //, IApplMsgHandler handler
 		super(name, port,  new ContextMsgHandler("ctxH"));
-		this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;
+		this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;  //Inherited
  	}
  
 	@Override

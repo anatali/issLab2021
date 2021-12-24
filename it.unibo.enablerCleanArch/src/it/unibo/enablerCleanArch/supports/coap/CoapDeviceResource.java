@@ -1,8 +1,12 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import it.unibo.enablerCleanArch.supports.Colors;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
+
+import java.util.Iterator;
+import java.util.List;
 
 
 public abstract class CoapDeviceResource extends CoapResource {
@@ -17,17 +21,30 @@ public abstract class CoapDeviceResource extends CoapResource {
 	}
  
  
+	protected boolean examineGETOptions(CoapExchange exchange) {
+		boolean observe1Found = false;
+			List<Option> opts = exchange.getRequestOptions().asSortedList();
+			//Colors.out( getName() + "handleGET options size=" + opts.size() );
+			Iterator<Option> iter = opts.iterator();
+			while( iter.hasNext() ) {
+				Option option = iter.next();
+				Colors.out( getName() + "handleGET options=" + option );
+				//if( option.toString().contains("Observe: 1")) exchange.respond("BYE");
+				observe1Found =  true;
+			}		
+			return observe1Found;
+	}
 	
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		Colors.out( getName() + "handleGET request="  );
+ 		//examineGETOptions(exchange);
 		String query = exchange.getQueryParameter("q"); 
 		if( query == null ) {
- 			Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
+			//Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText() );
 			exchange.respond(answer);
 		}else{ 
- 			Colors.out( getName() + "handleGET query=" + query);
+ 			//Colors.out( getName() + "handleGET query=" + query);
  			String answer = elaborateGet( exchange.getQueryParameter("q") );
 	  		exchange.respond(answer);
 		}		

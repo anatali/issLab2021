@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Observable;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarObserverFortesting implements IObserver{
 	private String name;
@@ -19,26 +20,27 @@ public class SonarObserverFortesting implements IObserver{
 	public void update(Observable source, Object data) {
 		 //Colors.out( name + " | update data=" + data ); //+ " from " + source	
 		 update( data.toString() );
+		 //HORRIBLE EFFECT !!!!!!!!!!!!!!!!
+		 //Utils.delay(1000);  //the SonarMok is delayed !!!
 	}
 
 	@Override
 	public void update(String vs) {
 		try {
  		 if(oneShot) {
- 			 Colors.outappl( name + "| oneShot value=" + vs, Colors.BLUE );  
+ 			 Colors.outappl( name + "| oneShot value=" + vs, Colors.ANSI_YELLOW );  
  			 assertTrue(  vs.equals( ""+RadarSystemConfig.testingDistance) );	
  		 }else {
  			 int value = Integer.parseInt(vs);
  			 if( v0 == -1 ) {	//set the first value observed
  				v0 = value;
- 				Colors.outappl( name + "| v0=" + v0, Colors.BLUE);
+ 				Colors.outappl( name + "| v0=" + v0, Colors.ANSI_YELLOW);
  			 }else {
- 				Colors.outappl( name + "| value=" + value, Colors.BLUE );  
+ 				Colors.outappl( name + "| value=" + value, Colors.ANSI_YELLOW );  
   				int vexpectedMin = v0-delta;
  				int vexpectedMax = v0+delta;
  				assertTrue(  value <= vexpectedMax && value >= vexpectedMin );
  				v0 = value;			 
- 				//if( v0 == 30 && name.equals("obs1")) sonar.unregister(this);
  			 }
  		 } 
 		}catch( Exception e) {

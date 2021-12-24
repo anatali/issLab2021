@@ -29,6 +29,7 @@ public class RadarSystemConfig {
 	public static int applStartdelay      =  5000;     
 
 	public static int sonarDelay          =  100;     
+	public static boolean sonarObservable =  false;     
 	public static int DLIMIT              =  15;     
 	public static int testingDistance     =  DLIMIT - 2;     
     
@@ -77,6 +78,7 @@ public class RadarSystemConfig {
 	        
 	        applStartdelay   = object.getInt("applStartdelay");	
 	        
+	        sonarObservable  = object.getBoolean("sonarObservable");	
 	        sonarDelay       = object.getInt("sonarDelay");	
 	        DLIMIT           = object.getInt("DLIMIT");	
 	        testing          = object.getBoolean("testing");
