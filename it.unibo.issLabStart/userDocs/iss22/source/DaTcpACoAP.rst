@@ -3,7 +3,7 @@
 .. role:: remark
 
 .. _Californium: https://www.eclipse.org/californium/
- 
+.. _Shodan : https://www.shodan.io/ 
   
 CoAP  ( :blue:`Constrained Application Protocol`) è un protocollo aperto e leggero per dispositivi IoT.
 CoAP è simile ad HTTP, ma è stato specificato (in IETF RFC 7252 e approvato nel 2014) 
@@ -19,7 +19,7 @@ CoAP non può utilizzare ``SSL/TLS`` per garantire la sicurezza della comunicazi
 ma si può fare riferimento allo standard *Datagram Transport Layer Security (DTLS)*, che funziona su UDP.
 Tuttavia CoAP è vulnerabile agli IP spoofing e quindi agli **attacchi DDoS** (*Distributed denial-of-service*).
 
-Ciò nonostante, Shodan (un motore di ricerca per i dispositivi connessi a Internet) 
+Ciò nonostante, Shodan_ (un motore di ricerca per i dispositivi connessi a Internet) 
 mostra 433,973 voci come risultato per la ricerca 'CoAP' (contro 249,335,005 per 'HTTP').
  
 ------------------------------------------------
