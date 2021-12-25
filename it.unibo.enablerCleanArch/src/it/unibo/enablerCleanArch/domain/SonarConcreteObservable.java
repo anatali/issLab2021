@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 
 import it.unibo.enablerCleanArch.supports.Colors;
 
-public class SonarConcreteObservable extends SonarModelObservable implements ISonarObservable  {
+public class SonarConcreteObservable extends SonarModelObservable   {
 	private int numData           = 5; 
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;

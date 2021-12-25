@@ -18,7 +18,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
-import it.unibo.enablerCleanArch.supports.coap.SonarMessageHandler;
+import it.unibo.enablerCleanArch.supports.coap.SonarDistanceHandler;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
 
@@ -115,7 +115,7 @@ protected IObserver obsfortesting;
 		clientObs         =  new CoapClient( sonarAddr );
 		CoapHandler obs;
 		if( withRadar ) {
- 		     obs=new CoapApplObserver( "localhost", sonarUri,new SonarMessageHandler( "sonarH" ) );	
+ 		     obs=new CoapApplObserver( "localhost", sonarUri,new SonarDistanceHandler( "sonarH" ) );	
 		}else {
 			 obs=new ObserverNaive("obsnaive");}
 		CoapObserveRelation relObs = clientObs.observe(obs);

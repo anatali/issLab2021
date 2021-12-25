@@ -713,6 +713,8 @@ Il testing sul ``SonarMockObservable`` viene qui impostato nel modo che segue:
 L'*observer* viene impostato in modo da controllare anche dati emessi da un sonar reale
 che opera con ostacolo fisso posto davanti ad esso, alla distanza prefissata.
 
+.. _SonarObserverFortesting:
+
 .. code:: java
 
   class SonarObserverFortesting implements IObserver{
@@ -754,7 +756,8 @@ che opera con ostacolo fisso posto davanti ad esso, alla distanza prefissata.
   }
   }//SonarObserverFortesting
 
-
+Si noti che observer di questo tipo vengono di norma eseguiti all'interno del Thread dell'observable che sta operando 
+per conto di un qualche client.
 
 .. _controller: 
 

@@ -31,7 +31,7 @@ public class DeviceFactory {
 		if( RadarSystemConfig.simulation)  {
 			return new SonarMockObservable();
 		}else { 
-			return null;
+			return new SonarConcreteObservable();
 		}	
 	}
 	

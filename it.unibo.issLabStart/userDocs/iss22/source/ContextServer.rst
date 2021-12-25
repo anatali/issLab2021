@@ -11,9 +11,7 @@ Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su un
 
 Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
 computazionale. Questo server (che denominiamo ``TcpContextServer``) 
-verrebbe a costituire una sorta di ``Facade`` comune a tutti gli 
-``ApplMessageHandler`` disponibili su quel nodo.
-
+verrebbe a costituire una sorta di ``Facade`` comune a tutti gli `ApplMessageHandler`_ disponibili su quel nodo.
 
 .. *enabler-server* attivati nello stesso :blue:`contesto` rappresentato da quel  nodo.
 
@@ -23,7 +21,7 @@ verrebbe a costituire una sorta di ``Facade`` comune a tutti gli
 
  
 Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace di sapere per quale
-componente è destinato un messaggio, per poi invocarne l'appropriato ``ApplMessageHandler``.
+componente è destinato un messaggio, per poi invocarne l'appropriato `ApplMessageHandler`_.
 
 -------------------------------------------------------
 Struttura dei messaggi applicativi
@@ -110,9 +108,8 @@ Il TcpContextServer
 -------------------------------------------------------
 
 Quando una stringa di forma ``msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )`` viene ricevuta
-dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (``ContextMsgHandler``)
-capace di invocare l'``ApplMessageHandler`` relativo al componente destinatario registrato presso
-di esso.
+dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (`ContextMsgHandler`_ definito più avanti)
+capace di invocare l'`ApplMessageHandler`_ relativo al componente destinatario registrato presso di esso.
 
  .. code:: java
 
@@ -187,13 +184,16 @@ Il gestore di sistema dei messaggi
 Ridefinizione del SonarProxyAsClient
 -------------------------------------------------------
 
-Ridefiniamo i client in modo  da inviare messaggi di tipo `ApplMessage`_, quando la configurazione 
-specifica che usiamo il  `TcpContextServer`_:
+Introduciamo un nuovo parametro di configurazione per indicare l'uso del  `TcpContextServer`_:
 
 .. code:: java
+  
   RadarSystemConfig.withContext = true;
 
-.. _SonarProxyAsClient:
+Ridefiniamo i client in modo  da inviare messaggi di tipo `ApplMessage`_, quando la configurazione 
+*RadarSystemConfig.withContext* specifica che usiamo il  `TcpContextServer`_:
+
+.. _SonarProxyAsClient: 
 
 .. code::   java
 
@@ -240,10 +240,10 @@ Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema su PC 
 
 - un Sonar di classe ``SonarAdapterEnablerAsServer`` che riceve valori di distanza inviati via rete
 - un Led  di classe ``LedEnablerAsServer`` che riceve comandi di accensione-spegnimento inviati via rete
-- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un ``ContextMsgHandler``) 
+- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un `ContextMsgHandler`_) 
   il metodo ``elaborate`` del Sonar e del Led.
 
-Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe ``ApplMessageHandler``
+Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe `ApplMessageHandler`_
 che definisce il metodo ``elaborate`` per l'elaborazione dei messaggi a livello applicativo. 
 Inoltre essi non attivano alcun server se il tipo di protocollo
 specificato nel costruttore è ``null``.

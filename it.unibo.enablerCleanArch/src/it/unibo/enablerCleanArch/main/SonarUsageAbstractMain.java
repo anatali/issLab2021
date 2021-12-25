@@ -10,7 +10,6 @@ import it.unibo.enablerCleanArch.supports.Colors;
 public abstract class SonarUsageAbstractMain {
 	protected ISonar   sonar;
 
- 
 	public void setConfiguration() {
 		RadarSystemConfig.pcHostAddr         = "localhost";
 		RadarSystemConfig.sonarDelay         = 100;		

@@ -234,7 +234,8 @@ Proxy per il Sonar
     - Il '*proxy tipo client* per il Sonar è una specializzazione di  ``ProxyAsClient`` che implementa i 
       metodi di ``ISonar`` inviando dispatch o request all'*enabler tipo server* sulla connessione:
 
-.. _SonarProxyAsClient:
+
+.. SonarProxyAsClient   NON QUI: vedi ContextServer
 
 .. code:: java
 

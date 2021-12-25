@@ -9,9 +9,9 @@ import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
-public class SonarMessageHandler extends ApplMsgHandler{
+public class SonarDistanceHandler extends ApplMsgHandler{
 	private IRadarDisplay radar;	
-	public SonarMessageHandler(String name) {
+	public SonarDistanceHandler(String name) {
 		super(name);
 		radar = RadarDisplay.getRadarDisplay();
 	}
@@ -32,7 +32,6 @@ public class SonarMessageHandler extends ApplMsgHandler{
 			if( msg.length() > 0 ) radar.update(msg, "0");
 			else Colors.outerr("showDataOnGui ERROR: empty String");
 		}
-
 	}
 
 }

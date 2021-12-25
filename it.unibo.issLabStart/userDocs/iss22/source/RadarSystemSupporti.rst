@@ -78,6 +78,8 @@ Per raggiungere questi obiettivi, introduciamo un insieme di supporti che permet
 porre in esecuzione codice applicativo  rappresentato da oggetti che implementano l'interfaccia
 ``IApplMessageHandler`` così definita:
 
+.. _IApplMessageHandler:
+
 .. code:: Java
 
   public interface IApplMsgHandler {
@@ -117,6 +119,9 @@ messaggi applicativi sulla connessione fornita da una ``Socket``.
     public String receiveMsg()  { ... }
     @Override
     public void close() { ... }
+
+
+.. _ApplMessageHandler:
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La classe ``ApplMessageHandler`` per gestire messaggi applicativi

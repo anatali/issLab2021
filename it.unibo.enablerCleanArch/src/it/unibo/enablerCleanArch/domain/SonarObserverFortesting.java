@@ -18,10 +18,10 @@ public class SonarObserverFortesting implements IObserver{
 	}
 	@Override
 	public void update(Observable source, Object data) {
-		 //Colors.out( name + " | update data=" + data ); //+ " from " + source	
+		 Colors.out( name + " | update data=" + data ); //+ " from " + source	
 		 update( data.toString() );
 		 //HORRIBLE EFFECT !!!!!!!!!!!!!!!!
-		 //Utils.delay(1000);  //the SonarMok is delayed !!!
+		 Utils.delay(2000);  //the SonarMock is delayed !!!
 	}
 
 	@Override

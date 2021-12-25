@@ -433,6 +433,8 @@ Le risorse CoAP del nostro dominio applicativo  saranno organizzate come nella f
 
 Le risorse del dominio sono introdotte come specializzazioni di una classe-base.
 
+.. _CoapDeviceResource:
+
 ++++++++++++++++++++++++++++++++++++++++
 La risorsa-base CoapDeviceResource
 ++++++++++++++++++++++++++++++++++++++++
@@ -467,7 +469,8 @@ demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` del
   }
 
 La risorsa viene creata come :blue:`risorsa osservabile` da un costruttore che provvede ad  
-aggiungerla al server CoAP (il singleton ``CoapApplServer``), attivandolo - se già non lo fosse.
+aggiungerla al server CoAP (il singleton `CoapApplServer`_), attivandolo - se già non lo fosse.
+
 
 .. code:: Java
 
@@ -481,11 +484,15 @@ aggiungerla al server CoAP (il singleton ``CoapApplServer``), attivandolo - se g
        coapServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
     }
 
+
+.. _CoapApplServer:
+
 ------------------------------------------------
 Il Server delle risorse applicative
 ------------------------------------------------
  
-Il server ``CoapApplServer`` è una estensione di ``CoapServer`` che realizza un singleton capace 
+Il server ``CoapApplServer`` è una estensione di ``org.eclipse.californium.core.CoapServer`` 
+che realizza un singleton capace 
 di accogliere nuove risorse del dominio, ciascuna come un dispositivo, o di input o di output.
 
 
@@ -555,7 +562,7 @@ avvalendosi di una ricerca *depth-first* nell'aòbero delle risorse:
 ------------------------------------------------
 Una risorsa per il Led
 ------------------------------------------------
-La risorsa CoAP  per il Led è una specializzazione di ``CoapDeviceResource`` che 
+La risorsa CoAP  per il Led è una specializzazione di `CoapDeviceResource`_ che 
 incorpora un Led e ridirige a questo Led le richieste GET e PUT.
 
 .. code:: Java
@@ -727,9 +734,11 @@ Terminazione
 ------------------------------------------------
 Una risorsa per il Sonar
 ------------------------------------------------
-La risorsa CoAP  per il Sonar è una specializzazione di ``CoapDeviceResource`` che 
+La risorsa CoAP  per il Sonar è una specializzazione di `CoapDeviceResource`_ che 
 incorpora un Sonar, a cui ridirige le richieste GET di lettura  e i comandi 
 PUT di attivazione/disativazione.
+
+.. _SonarResourceCoap:
 
 .. code:: Java
 
@@ -782,12 +791,12 @@ In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valo
   }
 
 ------------------------------------------------
-Il Sonar accessibile via CoAP (o TCP)
+Il Sonar accessibile via CoAP (o TCP) 
 ------------------------------------------------
 
 Come già fatto per il Led, impostiamo un programma che prima configura il sistema e poi effettua operazioni relative al Sonar.
 
-A differenza del caso del Led, l'uso di un dispositivo di input quale il Sonar ci permette di impostare un maggior 
+A differenza del caso del Led, l'uso di un dispositivo di input quale il Sonar si presta ad impostare un maggior 
 numero di configurazioni, a partire dal Sonar stesso, che può essere:
 
 - un oggetto (POJO) che implementa l'interfaccia  `ISonar`_ ; 
@@ -796,11 +805,11 @@ numero di configurazioni, a partire dal Sonar stesso, che può essere:
 
 Il Sonar (semplice od osservabile) può essere reso utilizzabile da remoto: 
 
-- con un enabler tipo-server TCP (``EnablerSonarAsServer``) che invia i messaggi 'semplici' al gestore 
-  applicativo ``SonarApplHandler``;
-- attraverso un ``TcpContextServer``, che ridirige il payload di messaggi di tipo ``ApplMessage``
-  al gestore applicativo ``SonarApplHandler``;
-- come parte di una ``CoapResource`` ( come ``SonarResourceCoap`` che estende ``CoapDeviceResource``)
+- con un enabler tipo-server TCP (``EnablerSonarAsServer``) che invia messaggi 'semplici' al gestore 
+  applicativo `SonarApplHandler`_;
+- attraverso un ``TcpContextServer``, che ridirige **il payload** di messaggi di tipo ``ApplMessage``
+  al gestore applicativo `SonarApplHandler`_;
+- come parte di una ``CoapResource`` ( come `SonarResourceCoap`_ che estende `CoapDeviceResource`_)
   con URI= ``devices/ouput/sonar``.
 
 I paranetri di configurazione sono espressi dalle seguenti variabili:
@@ -811,27 +820,133 @@ I paranetri di configurazione sono espressi dalle seguenti variabili:
   boolean withContext   //usata se RadarSystemConfig.protcolType=ProtocolType.tcp
   
 
-AL Sonar può essere associato un observer (o più):
+Al Sonar può essere associato un observer (o più):
 
 - realizzato come POJO che implementa la interfaccia `IObserver`_ (ad esempio `SonarObserverFortesting`_);
 - realizzato come componente CoAP che implementa l'interfaccia ``CoapHandler`` (ad esempio `CoapApplObserver`_).
 
-Per accedere al Sonar si possono usare:
+Per accedere al Sonar si possono usare: 
 
 - clienti di tipo ``ProxyAsClient`` (come `SonarProxyAsClient`_) che implementano l'interfaccia ``ISonar``. 
-  Questi client inviano messaggi (semplici o di tipo ``ApplMessage``, secondo la configurazione selezionata) al server 
-  cui sono connessi;
-- supporti di tipo ``CoapSupport`` che implementano l'interfaccia `Interaction2021`_ inviando richieste GET/PUT
+  Questi client inviano al server cui sono connessi messaggi (semplici o di tipo ``ApplMessage``)
+  secondo la configurazione selezionata;
+- supporti di tipo ``CoapSupport`` che implementano l'interfaccia `Interaction2021`_ inviando richieste GET/PUT.
 
+
+In relazione alle diverse possibilità introdiuciamo diversi programmi di esempio, partendo da una classe 
+astratta, che si occupa della creazione del sonar come POJO e che definisce alcuni metodi di uso comune, 
+lasciandone altri non specificati:
+
+
+.. _SonarUsageAbstractMain:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+La classe astratta SonarUsageAbstractMain
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: Java
 
-  public class SonarUsageMain  {
-  private EnablerAsServer sonarServer;
-  private ISonar client1, client2;
+  public class SonarUsageAbstractMain  {
+  protected ISonar   sonar;
+
+  public void configure() {
+    setConfiguration();
+    createTheSonar();
+    createObservers();
+    configureTheServer();
+	}
+  public void setConfiguration() {
+    RadarSystemConfig.pcHostAddr         = "localhost";
+    RadarSystemConfig.sonarDelay         = 100;		
+    RadarSystemConfig.sonarObservable    = true;		
+  }
+  
+  public abstract void execute();
+
+	protected void createTheSonar() {
+		sonar = DeviceFactory.createSonar(RadarSystemConfig.sonarObservable);		
+	}
+  protected abstract void configureTheServer();
+  protected  abstract void createObservers(); 
+  }
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+Esempi di configurazioni applicative
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+A partire dalla classe astratta `SonarUsageAbstractMain`_ defininiamo i programmi:
+
+- ``SonarUsageMainWithEnablerTcp``: rende accessibile il Sonar attraverso il server TCP `EnablerSonarAsServer`_ .
+- ``SonarUsageMainWithContextTcp``: rende accessibile il Sonar attraverso il server di contesto 
+  `TcpContextServer`_, aggiungendovi il componente `SonarApplHandler`_.
+- ``SonarUsageMainCoap``: rende accessibile il Sonar attraverso la risorsa CoAP `SonarResourceCoap`_ che si aggiunge
+  al `CoapApplServer`_ con *URI-Path=devices/input/sonar*. Si permette anche la creazione di un observer CoAP 
+  di tipo `CoapApplObserver`_ che visualizza la distanza corrente sulla RadarGui,  attraverso un `SonarDistanceHandler`_
+
+Tutti i programmi:
+
+- utilizzano il Sonar remoto attraverso un client di tipo `SonarProxyAsClient`_, 
+  che invia messaggi (semplici o di tipo ``ApplMessage``), secondo la configurazione selezionata
+- permettono di associare al Sonar POJO un osservatore  `SonarObserverFortesting`_.
 
 
 .. _CoapApplObserver:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapApplObserver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+  public class CoapApplObserver implements CoapHandler{
+    protected IApplMsgHandler applHandler;
+    
+    public CoapApplObserver(String hostAddr, String resourceUri, IApplMsgHandler applHandler) {
+      this.applHandler = applHandler;
+    }
+    @Override
+    public void onLoad(CoapResponse response) {
+      applHandler.elaborate(response.getResponseText(), null);
+    }
+    @Override
+    public void onError() { //If a request timeouts or the server rejects it
+      Colors.outerr("CoapApplObserver | ERROR " );	      
+    }
+  }
+
+.. _SonarDistanceHandler:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SonarDistanceHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+  public class SonarDistanceHandler extends ApplMsgHandler{
+    private IRadarDisplay radar;	
+    public SonarDistanceHandler(String name) {
+      super(name);
+      radar = RadarDisplay.getRadarDisplay();
+    }
+
+    @Override
+    public void elaborate(String message, Interaction2021 conn) {
+      showDataOnGui( message );
+    }
+    
+    public  void showDataOnGui( String msg ){
+      try {  //Normally we handle structured message strings
+        ApplMessage m   = new ApplMessage( msg );
+        String distance = ((Struct) Term.createTerm(m.msgContent())).getArg(0).toString();
+        radar.update(distance, "0");
+      }catch( Exception e ){ //Otherwise we handle simple integers
+        if( msg.length() > 0 ) radar.update(msg, "0");
+        else Colors.outerr("showDataOnGui ERROR: empty String");
+      }
+    }
+
+  }
 
 ------------------------------------------------
 TODO
