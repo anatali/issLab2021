@@ -210,6 +210,7 @@ La modellazione di un componente produttore di dati è più complicata di quella
 in quanto occorre affrontare un classico problema produttore-consumatore.
 Al momento seguiremo un approccio tipico della programmazione concorrente, basato su memoria comune.
 
+.. _SonarModel:
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La classe astratta SonarModel
@@ -380,6 +381,8 @@ si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
 Per ridurre la frequenza di produzione, la inserzione nella coda 
 avviene solo dopo ogni  ``numData`` valori emessi sul dispositivo standard di output.
 
+.. _SonarConcrete:
+
 .. code:: java
 
   public class SonarConcrete extends SonarModel implements ISonar{
@@ -479,7 +482,7 @@ di varianza sulla distanza-base.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il Sonar come dispositivo osservabile
+Il Sonar osservabile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il Sonar sviluppato fino a questo punto è un processo produttore di valori 
@@ -526,129 +529,6 @@ con la capacità di registrare osservatori e di invocare, ad ogni aggiornamento 
 di distanza, il metodo ``update`` di tutti gli osservatori registrati.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-SonarModelObservable
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-Introduciamo una versione observable del SonarModel:
-
-.. code:: java
-
-  public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
-	protected IDistanceMeasured observableDistance  ;		
- 		
-	@Override
-	protected void sonarSetUp() {
-		observableDistance = new DistanceMeasured( );
- 		Colors.out("SonarModelObservable | sonarSetUp curVal="+curVal);
- 		observableDistance.setVal(curVal);
- 	} 	
-	
- 	@Override  //from SonarModel
-	protected void updateDistance( int d ) {
-		//Colors.out("SonarModelObservable | updateDistance d="+d, Colors.GREEN);
-		observableDistance.setVal( curVal );    //notifies the observers 
- 		super.updateDistance(d);	            //pone curVal nella coda per getDistance
-	}
-
- 	@Override
-	public void register(IObserver obs) {
-		Colors.out("SonarModelObservable | register on observableDistance obs="+obs);
-		observableDistance.addObserver(obs);		
-	}
-
-	@Override
-	public void unregister(IObserver obs) {
-		Colors.out("SonarModelObservable | unregister obs="+obs);
-		observableDistance.deleteObserver(obs);		
-	}
-  
-  }
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-SonarMockObservable
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-In questo modo il SonarMock observable può essere definito semplicemente ridefinendo il metodo asbstrat 
-relativo alla produzione dei dati:
-
-.. _SonarMockObservable:
-
-.. code:: java
-
-  public class SonarMockObservable extends SonarModelObservable   {
-	@Override
-	protected void sonarProduce() {
-		if( RadarSystemConfig.testing ) {
-			updateDistance( RadarSystemConfig.testingDistance );			      
-			stopped = true;  //one shot
-		}else {
-			int v = curVal.getVal() - 1;
-			updateDistance( v );			    
- 			if( blockingQueue.size() > 7) Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
-			stopped = ( v == 0 );
-			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
-		}		
-	}
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-SonarConcreteObservable
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-Analogamente, la versione observable del ``SonarConcrete`` si otiene ridefinendo (in assenza di ereditarietà
-multipla) i metodi astratti  di ``setUp`` e ``sonarProduce`` come già fatto in precedenza:
-
-.. _SonarConcreteObservable:
-
-.. code:: java
-
-  public class SonarConcreteObservable extends SonarModelObservable 
- 	private int numData           = 5; 
-	private int dataCounter       = 1;
-	private  BufferedReader reader ;
-	 
-	@Override
-	protected void sonarSetUp() {
-		super.sonarSetUp();
- 		try {
-			Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
-	        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-       	}catch( Exception e) {...	}
-	} 	
-
-	@Override
-	protected void sonarProduce( ) {
-    try {
-			String data = reader.readLine();
-			dataCounter++;
-			if( dataCounter % numData == 0 ) { //every numData ...
- 				updateDistance( Integer.parseInt(data));
-			 }
-    }catch( Exception e) {... }		
-	}
- 
-
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Aggiornamento di DeviceFactory
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-La nascita del nuovo tipo di Sonar ci induce a introdurre nuovi metodi in `DeviceFactory`_:
-
-.. code:: java
-
-  public static ISonar createSonar(boolean observable) {
-    if( observable ) return createSonarObservable();
-    else return createSonar();
-	}
-
-  public static ISonarObservable createSonarObservable() {
-		if( RadarSystemConfig.simulation)  { return new SonarMockObservable();
-		}else { return SonarConcreteObservable(); }	
-	}
-
- 
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La distanza come risorsa osservabile
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
@@ -685,35 +565,126 @@ come segue:
     public int getVal() { return d.getVal(); }	
     @Override
     public String toString() { return ""+ getVal(); }
-}
+  }
 
 
-Il ``SonarMockObservable`` viene definito cone una specializzazione del precedente 
-:ref:`SonarMock<SonarMock>`, che ridefinisce 
-il ``sonarSetUp`` creando un oggetto di tipo ``DistanceMeasured``
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SonarModelObservable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Il ``SonarModelObservable`` viene definito cone una specializzazione del precedente 
+`SonarModel`_, che ridefinisce il ``sonarSetUp`` creando un oggetto di tipo ``DistanceMeasured``
 e che implementa i metodi di registrazione ridiregendoli alla distanza osservabile.
 
 .. code:: java
 
-  public class SonarMockObservable 
-            extends SonarMock implements ISonarObservable  {
-  private IDistanceMeasured observableDistance  ;
-    @Override
-    protected void sonarSetUp() { 
-      super.sonarSetUp();
-      observableDistance = new DistanceMeasured( );		
-      observableDistance.setVal(curVal);
-    }
-    @Override  //from SonarMock
-    protected void updateDistance( int d ) {
-      super.updateDistance(d);	//pone curVal nella coda
-      observableDistance.setVal( curVal );    //notifies the observers 
-    }    
-    @Override
-    public void register(IObserver obs) {observableDistance.addObserver(obs);}
-    @Override
-    public void unregister(IObserver o){observableDistance.deleteObserver(o);}
+  public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
+  protected IDistanceMeasured observableDistance  ;		
+ 		
+	@Override
+	protected void sonarSetUp() {
+		observableDistance = new DistanceMeasured( );
+ 		observableDistance.setVal(curVal);
+ 	} 		
+ 	@Override  //from SonarModel
+	protected void updateDistance( int d ) {
+		observableDistance.setVal( curVal );    //notifies the observers 
+ 		super.updateDistance(d); //pone curVal nella coda per getDistance
+	}
+ 	@Override
+	public void register(IObserver obs) {
+		observableDistance.addObserver(obs);		
+	}
+	@Override
+	public void unregister(IObserver obs) {
+		observableDistance.deleteObserver(obs);		
+	}
   }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SonarMockObservable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Adesso, il SonarMock observable può essere definito ridefinendo il metodo asbstrat 
+relativo alla produzione dei dati:
+
+.. _SonarMockObservable:
+
+.. code:: java
+
+  public class SonarMockObservable extends SonarModelObservable{
+  @Override
+  protected void sonarProduce() {
+    if( RadarSystemConfig.testing ) {
+      updateDistance( RadarSystemConfig.testingDistance );			      
+      stopped = true;  //one shot
+    }else {
+      int v = curVal.getVal() - 1;
+      updateDistance( v );			    
+      stopped = ( v == 0 );
+      Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
+    }		
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SonarConcreteObservable
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Analogamente, la versione osservabile del `SonarConcrete`_ si ottiene ridefinendo (in assenza di ereditarietà
+multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``, come già fatto in precedenza:
+
+.. _SonarConcreteObservable:
+
+.. code:: java
+
+  public class SonarConcreteObservable extends SonarModelObservable 
+  private int numData           = 5; 
+  private int dataCounter       = 1;
+  private  BufferedReader reader ;
+	 
+  @Override
+  protected void sonarSetUp() {
+    super.sonarSetUp();
+    try {
+      Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
+      reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+    }catch( Exception e) {...	}
+  } 	
+  @Override
+  protected void sonarProduce( ) {
+    try {
+      String data = reader.readLine();
+      dataCounter++;
+      if( dataCounter % numData == 0 ) { //every numData ...
+        updateDistance( Integer.parseInt(data));
+      }
+    }catch( Exception e) {... }		
+  }
+ 
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Aggiornamento di DeviceFactory
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+La nascita del nuovo tipo di Sonar ci induce a introdurre nuovi metodi in `DeviceFactory`_:
+
+.. code:: java
+
+  public static ISonar createSonar(boolean observable) {
+    if( observable ) return createSonarObservable();
+    else return createSonar();
+    }
+
+  public static ISonarObservable createSonarObservable() {
+    if( RadarSystemConfig.simulation)  { return new SonarMockObservable();
+    }else { return SonarConcreteObservable(); }	
+  }
+
+ 
+
+
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Testing del Sonar osservabile

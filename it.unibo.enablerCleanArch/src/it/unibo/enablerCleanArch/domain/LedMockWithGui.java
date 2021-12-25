@@ -51,7 +51,7 @@ private final Dimension sizeOff = new Dimension(30,30);
 	public void turnOff() {
 		super.turnOff();
  		p.setSize( sizeOff );
-		p.setBackground(Color.gray);
+		p.setBackground(Color.red);
 		p.validate();
 		//frame.setSize(sizeOff);
 	}

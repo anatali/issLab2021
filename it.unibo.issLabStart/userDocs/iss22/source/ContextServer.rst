@@ -61,6 +61,8 @@ I messaggi scambiati sono logicamente suddivisi in diverse categorie:
         :width: 80%
 
 
+.. _ApplMessage:
+
 La classe ``ApplMessage`` fornisce metodi per la costruzione e la gestione di messaggi organizzati
 nel modo descritto. La classe si avvale del supporto del tuProlog_.
 
@@ -100,6 +102,9 @@ nel modo descritto. La classe si avvale del supporto del tuProlog_.
     public String toString() { ... }
   }
 
+
+.. _TcpContextServer:
+
 -------------------------------------------------------
 Il TcpContextServer
 -------------------------------------------------------
@@ -138,6 +143,9 @@ di esso.
     }
   }
 
+
+.. _ContextMsgHandler:
+
 -------------------------------------------------------
 Il gestore di sistema dei messaggi
 -------------------------------------------------------
@@ -175,6 +183,54 @@ Il gestore di sistema dei messaggi
 
 :remark:`I componenti IApplMsgHandler sono semplici gestori di messaggi`
 
+-------------------------------------------------------
+Ridefinizione del SonarProxyAsClient
+-------------------------------------------------------
+
+Ridefiniamo i client in modo  da inviare messaggi di tipo `ApplMessage`_, quando la configurazione 
+specifica che usiamo il  `TcpContextServer`_:
+
+.. code:: java
+  RadarSystemConfig.withContext = true;
+
+.. _SonarProxyAsClient:
+
+.. code::   java
+
+  public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
+ 	
+    public SonarProxyAsClient(String name,String host,String entry,ProtocolType protocol) {
+      super( name,  host,  entry, protocol );
+    }
+    @Override
+    public void activate() {
+      if( RadarSystemConfig.withContext )  
+        sendCommandOnConnection(Utils.sonarActivate.toString());
+      else sendCommandOnConnection("activate");		
+    }
+    @Override
+    public void deactivate() {
+      if( RadarSystemConfig.withContext )  
+        sendCommandOnConnection(Utils.sonarDeactivate.toString());
+      else sendCommandOnConnection("deactivate");		
+    }
+    @Override
+    public IDistance getDistance() {
+      String answer="";
+      if( RadarSystemConfig.withContext )  
+        answer = sendRequestOnConnection(Utils.getDistance.toString()) ;
+      else  answer = sendRequestOnConnection("getDistance");
+      return new Distance( Integer.parseInt(answer) );
+    }
+    @Override
+    public boolean isActive() {
+      String answer = "";
+      if( RadarSystemConfig.withContext )  
+        answer = sendRequestOnConnection(Utils.isActive.toString()) ;
+      else   sendRequestOnConnection("isActive");
+      return answer.equals( "true" );
+    } 
+  }
 
 -------------------------------------------------------
 Un esempio
@@ -225,27 +281,27 @@ metodo di esecuzione.
 Definizione dei messaggi
 ++++++++++++++++++++++++++++++++++++++++++
 I messaggi per aggiornare il Sonar (ai fini di testing) 
-e per comandare il Led sono definiti come ``dispatch``,  
+e per comandare il Led sono definiti nella classe ``Utils`` come ``dispatch``,  
 mentre quelli per ottenere informazioni sono definiti come  ``request``:
 
  .. code:: java
 
   //Definizione dei Messaggi
   ApplMessage turnOnLed    = 
-    new ApplMessage("msg( turn, dispatch, main, led, on, 2 )");
+    new ApplMessage("msg( turn, dispatch, system, led, on, 2 )");
   ApplMessage turnOffLed   = 
-    new ApplMessage("msg( turn, dispatch, main, led, off, 3 )");
+    new ApplMessage("msg( turn, dispatch, system, led, off, 3 )");
   ApplMessage sonarActivate =  
-    new ApplMessage("msg( sonarcmd, dispatch,main,sonar, activate,4)");
+    new ApplMessage("msg( sonarcmd, dispatch,system,sonar, activate,4)");
   ApplMessage getDistance  = 
-    new ApplMessage("msg( sonarcmd, request, main,sonar, getDistance,5)");
+    new ApplMessage("msg( sonarcmd, request, system,sonar, getDistance,5)");
   ApplMessage getLedState  = 
-    new ApplMessage("msg( ledcmd,   request, main,led,   getState, 6)");
+    new ApplMessage("msg( ledcmd,   request, system,led,   getState, 6)");
   //For simulation:
   ApplMessage fardistance  =
-    new ApplMessage("msg( distance, dispatch, main, sonar, 36, 0 )");
+    new ApplMessage("msg( distance, dispatch, system, sonar, 36, 0 )");
   ApplMessage neardistance =
-    new ApplMessage("msg( distance, dispatch, main, sonar, 10, 1 )");
+    new ApplMessage("msg( distance, dispatch, system, sonar, 10, 1 )");
 
 
 ++++++++++++++++++++++++++++++++++++++++++
@@ -259,14 +315,10 @@ Il metodo di configurazione definisce i parametri e crea i componenti:
   public void configureTheSystem() {
     RadarSystemConfig.simulation        = true;    
     RadarSystemConfig.testing           = true;    		
-    RadarSystemConfig.ControllerRemote  = false;    		
-    RadarSystemConfig.LedRemote         = false;    		
-    RadarSystemConfig.SonareRemote      = false;    		
-    RadarSystemConfig.RadarGuieRemote   = false;    	
     RadarSystemConfig.pcHostAddr        = "localhost";
     RadarSystemConfig.ctxServerPort     = 8048;
     RadarSystemConfig.sonarDelay        = 1500;
-     
+    RadarSystemConfig.withContext       = true; 
  
     //Creazione del server di contesto
     contextServer  = 
@@ -286,21 +338,7 @@ Il metodo di configurazione definisce i parametri e crea i componenti:
   }//configureTheSystem
 
 
-++++++++++++++++++++++++++++++++++++++++++
-Definizione di un client di trasmissione
-++++++++++++++++++++++++++++++++++++++++++
-Il client per trasmettere messaggi al ``TcpContextServer`` del nodo è una semplice specializzazione 
-di ``ProxyAsClient``:
-
- .. code:: java
-
-  public class ACallerClient  extends ProxyAsClient{
-    public ACallerClient(String name, String host, String entry ) {
-      super(name, host, entry, ProtocolType.tcp);
-    }
-  }
-
-
+ 
 ++++++++++++++++++++++++++++++++++++++++++
 Esecuzione
 ++++++++++++++++++++++++++++++++++++++++++
@@ -315,68 +353,53 @@ dapprima messaggi che riguardano il Sonar e successivamente messaggi che riguard
   public void execute() throws Exception{
     sonar.activate();
     contextServer.activate();
-    //simulateDistance(   );
     simulateController();
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-simulateDistance
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-L'operazione ``simulateDistance`` usa la connessione in modo diretto: è un modo da evitare:
 
-.. code:: java
-
-  protected void simulateDistance(  ) throws Exception {
-    ACallerClient serverCaller = 
-      new ACallerClient("client","localhost", ""+RadarSystemConfig.ctxServerPort);
-    conn = serverCaller.getConn();
-    conn.forward( fardistance.toString() );  
-    conn.forward( neardistance.toString() );  
-  }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 simulateController
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-L'operazione ``simulateController`` usa la connessione in modo diretto: è un modo da evitare:
+L'operazione ``simulateController`` effettua un numero prefissato di  letture del Sonar e di 
+update del Led:
 
 .. code:: java
  
-	protected void simulateController(    )  {
-    RadarSystemConfig.sonarDelay        = 50;
-    RadarSystemConfig.DLIMIT            = 40;
-		
-    ACallerClient sonarCaller  = 
-      new ACallerClient("sonarCaller", "localhost",  ""+RadarSystemConfig.ctxServerPort);
-    ACallerClient ledCaller    = 
-      new ACallerClient("ledCaller",   "localhost",  ""+RadarSystemConfig.ctxServerPort);
-    RadarGuiClient radarCaller = 
-      new RadarGuiClient("radarCaller","localhost",  ""+RadarSystemConfig.ctxServerPort, 
-        ProtocolType.tcp);
+  protected void simulateController(    )  {
+  RadarSystemConfig.sonarDelay = 50;
+  RadarSystemConfig.DLIMIT     = 60;
+  IRadarDisplay radar          = RadarDisplay.getRadarDisplay();
+   	
+  ProxyAsClient ledCaller     = new ProxyAsClient("ledCaller","localhost",
+            ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
 		
     //Activate the sonar
     sonarCaller.sendCommandOnConnection(sonarActivate.toString());
 
-    for( int i=1; i<= 10; i++) {
-      String answer = sonarCaller.sendRequestOnConnection(getSonarval.toString());
+    for( int i=1; i<=40; i++) {
+      String answer = 
+        sonarCaller.sendRequestOnConnection(Utils.getDistance.toString());
       int v = Integer.parseInt(answer);
-      radarCaller.sendCommandOnConnection(radarUpdate.toString().replace("DISTANCE",answer));
+      radar.update(answer, "90");
       if( v < RadarSystemConfig.DLIMIT ) 
-        ledCaller.sendCommandOnConnection(turnOnLed.toString());
-      else ledCaller.sendCommandOnConnection(turnOffLed.toString());  
-      String ledState = ledCaller.sendRequestOnConnection(getLedState.toString());
-      System.out.println("simulateController ledState=" + ledState + " for distance=" + v);
-      Utils.delay(1000);
-		}
-	}
+          ledCaller.sendCommandOnConnection(Utils.turnOnLed.toString());
+      else ledCaller.sendCommandOnConnection((Utils.turnOffLed.toString());  
+      String ledState = 
+          ledCaller.sendRequestOnConnection((Utils.getLedState.toString());
+      Colors.outappl("simulateController ledState=" + ledState +
+        " for distance=" + v + " i="+i, Colors.ANSI_PURPLE);
+    }
+  }
 
 
 ++++++++++++++++++++++++++++++++++++++++
 Problemi ancora aperti  
 ++++++++++++++++++++++++++++++++++++++++
 
-- Un handler lento o che si blocca rallenta o blocca la gestione dei messaggi da parte del
+- Un handler lento o che si blocca, rallenta o blocca la gestione dei messaggi da parte del
   ``ContextMsgHandler`` e quindi del ``TcpContextServer``
 - Nel caso di componenti con stato utlizzabili da più clients, vi possono essere problemi
   di concorrenza.

@@ -16,7 +16,7 @@ ISonar sonar;
   			
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
- 				//Colors.out(name+ " | elaborate " + message, Colors.ANSI_YELLOW);
+ 				//Colors.out(name+ " | elaborate " + message + " conn=" + conn, Colors.ANSI_YELLOW);
  				if( message.equals("getDistance")) {
  	 				//Colors.out(name+ " | elaborate getDistance="  , Colors.ANSI_YELLOW);
 					String vs = ""+sonar.getDistance().getVal();

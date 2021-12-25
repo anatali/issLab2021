@@ -5,8 +5,24 @@ import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class Utils {
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 
+public class Utils {
+	public static final  ApplMessage sonarActivate     = new ApplMessage("msg( sonarcmd, dispatch, system, sonar, activate,    0)");
+	public static final  ApplMessage sonarDeactivate   = new ApplMessage("msg( sonarcmd, dispatch, system, sonar, deactivate,  0)");
+	public static final  ApplMessage getDistance       = new ApplMessage("msg( sonarcmd, request,  system, sonar, getDistance, 0)");
+	public static final  ApplMessage isActive          = new ApplMessage("msg( sonarcmd, request,  system, sonar, isActive,    0)");
+
+	public static final ApplMessage fardistance  = new ApplMessage("msg( distance, dispatch, system, sonar, 36, 0 )");
+	public static final ApplMessage neardistance = new ApplMessage("msg( distance, dispatch, system, sonar, 10, 1 )");
+	public static final ApplMessage turnOnLed    = new ApplMessage("msg( turn, dispatch, system, led, on, 2 )");
+	public static final ApplMessage turnOffLed   = new ApplMessage("msg( turn, dispatch, system, led, off, 3 )");
+
+ 	public static final ApplMessage getLedState  = new ApplMessage("msg( ledcmd,   request,  system, led,   getState, 6 )");
+
+	private ApplMessage radarUpdate  = new ApplMessage("msg( update, request,  system, radar, DISTANCE, 7 )");
+	
+	
 	public static void showSystemInfo(){
 
 		System.out.println(

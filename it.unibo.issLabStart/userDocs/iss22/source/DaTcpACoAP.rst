@@ -796,11 +796,11 @@ numero di configurazioni, a partire dal Sonar stesso, che può essere:
 
 Il Sonar (semplice od osservabile) può essere reso utilizzabile da remoto: 
 
-- via TCP, con un enabler tipo-server (``EnablerSonarAsServer``) che invia i messaggi 'semplici' al gestore 
+- con un enabler tipo-server TCP (``EnablerSonarAsServer``) che invia i messaggi 'semplici' al gestore 
   applicativo ``SonarApplHandler``;
-- via TCP, attraverso un ``TcpContextServer``, che ridirige il payload di messaggi di tipo ``ApplMessage``
+- attraverso un ``TcpContextServer``, che ridirige il payload di messaggi di tipo ``ApplMessage``
   al gestore applicativo ``SonarApplHandler``;
-- via CoAP, all'interno di una risorsa ``CoapResource`` ( come ``SonarResourceCoap`` che estende ``CoapDeviceResource``)
+- come parte di una ``CoapResource`` ( come ``SonarResourceCoap`` che estende ``CoapDeviceResource``)
   con URI= ``devices/ouput/sonar``.
 
 I paranetri di configurazione sono espressi dalle seguenti variabili:
@@ -813,16 +813,15 @@ I paranetri di configurazione sono espressi dalle seguenti variabili:
 
 AL Sonar può essere associato un observer (o più):
 
-- realizzato come POJO che implementa la interfaccia `IObserver`_ (ad esempio ``SonarObserverFortesting``);
-- realizzato come componente CoAP che implementa l'interfaccia ``CoapHandler`` (ad esempio ``CoapApplObserver``).
-
+- realizzato come POJO che implementa la interfaccia `IObserver`_ (ad esempio `SonarObserverFortesting`_);
+- realizzato come componente CoAP che implementa l'interfaccia ``CoapHandler`` (ad esempio `CoapApplObserver`_).
 
 Per accedere al Sonar si possono usare:
 
-- clienti di tipo ``ProxyAsClient`` (come ``SonarProxyAsClient``) che implementano l'interfaccia ``ISonar``. 
+- clienti di tipo ``ProxyAsClient`` (come `SonarProxyAsClient`_) che implementano l'interfaccia ``ISonar``. 
   Questi client inviano messaggi (semplici o di tipo ``ApplMessage``, secondo la configurazione selezionata) al server 
   cui sono connessi;
-- supporti di tipo ``CoapSupport`` che implementano l'interfaccia ``Interaction2021`` inviando richieste GET/PUT
+- supporti di tipo ``CoapSupport`` che implementano l'interfaccia `Interaction2021`_ inviando richieste GET/PUT
 
 
 .. code:: Java
@@ -832,6 +831,7 @@ Per accedere al Sonar si possono usare:
   private ISonar client1, client2;
 
 
+.. _CoapApplObserver:
 
 ------------------------------------------------
 TODO
