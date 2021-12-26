@@ -20,8 +20,8 @@ public class SonarObserverFortesting implements IObserver{
 	public void update(Observable source, Object data) {
 		 Colors.out( name + " | update data=" + data ); //+ " from " + source	
 		 update( data.toString() );
-		 //HORRIBLE EFFECT !!!!!!!!!!!!!!!!
-		 Utils.delay(2000);  //the SonarMock is delayed !!!
+		 //HORRIBLE EFFECT !!??
+		 //Utils.delay(2000);  //the SonarMock is delayed !!!
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class SonarObserverFortesting implements IObserver{
 		try {
  		 if(oneShot) {
  			 Colors.outappl( name + "| oneShot value=" + vs, Colors.ANSI_YELLOW );  
- 			 assertTrue(  vs.equals( ""+RadarSystemConfig.testingDistance) );	
+ 			 if( RadarSystemConfig.testing ) assertTrue(  vs.equals( ""+RadarSystemConfig.testingDistance) );	
  		 }else {
  			 int value = Integer.parseInt(vs);
  			 if( v0 == -1 ) {	//set the first value observed
@@ -39,7 +39,8 @@ public class SonarObserverFortesting implements IObserver{
  				Colors.outappl( name + "| value=" + value, Colors.ANSI_YELLOW );  
   				int vexpectedMin = v0-delta;
  				int vexpectedMax = v0+delta;
- 				assertTrue(  value <= vexpectedMax && value >= vexpectedMin );
+ 				if( RadarSystemConfig.testing )
+ 					assertTrue(  value <= vexpectedMax && value >= vexpectedMin );
  				v0 = value;			 
  			 }
  		 } 

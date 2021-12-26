@@ -68,7 +68,7 @@ eclipse {
  
 
 //mainClassName = 'it.unibo.enablerCleanArch.main.RadarSystemMainOnRasp'
-mainClassName = 'it.unibo.enablerCleanArch.main.RadarSystemMainOnPc'
+mainClassName = 'it.unibo.enablerCleanArch.main.AllMainRadarLed'
 
 jar {
     println("building jar ...")

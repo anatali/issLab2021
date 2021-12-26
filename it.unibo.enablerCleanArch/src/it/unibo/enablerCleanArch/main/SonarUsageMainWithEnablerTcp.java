@@ -1,6 +1,5 @@
 package it.unibo.enablerCleanArch.main;
 
-import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
@@ -13,16 +12,20 @@ import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-public class SonarUsageMainWithEnablerTcp extends SonarUsageAbstractMain{
+public class SonarUsageMainWithEnablerTcp extends SonarUsageAbstractMain implements IApplication{
 	protected EnablerAsServer sonarServer;
  	protected IObserver obsfortesting;
 	
+ 	@Override //IApplication
+	public String getName() {
+		return "SonarUsageMainWithEnablerTcp";
+	}
 	@Override
-	public void setConfiguration() {	//Called by inherited configure
-		super.setConfiguration();
+	public void setUp(String fName) {	//Called by inherited configure
+		super.setUp(fName);
 		RadarSystemConfig.withContext     = false;
 		RadarSystemConfig.sonarObservable = true;	
-		RadarSystemConfig.sonarPort       = 8011;
+//		RadarSystemConfig.sonarPort       = 8011;
 	}
 	
 	@Override
@@ -68,12 +71,19 @@ public class SonarUsageMainWithEnablerTcp extends SonarUsageAbstractMain{
 		System.exit(0);
 	}
 	
-	public static void main( String[] args) throws Exception {
-		SonarUsageMainWithEnablerTcp  sys = new SonarUsageMainWithEnablerTcp();	
-		sys.configure();
-		sys.execute();
+	@Override
+	public void doJob(String fName) {
+		setUp(fName);
+		configure();
+		execute();
 		Utils.delay(500);
-		sys.terminate();
+		terminate();
+		
 	}
+	
+	public static void main( String[] args) throws Exception {
+		new SonarUsageMainWithEnablerTcp().doJob("RadarSystemConfig.json");	 //"RadarSystemConfig.json"
+	}
+	
 
 }

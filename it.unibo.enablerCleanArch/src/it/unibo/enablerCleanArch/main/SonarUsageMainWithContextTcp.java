@@ -1,7 +1,5 @@
 package it.unibo.enablerCleanArch.main;
 
-import it.unibo.enablerCleanArch.domain.DeviceFactory;
-import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
@@ -14,18 +12,23 @@ import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain{
+public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain implements IApplication {
 
 	protected ISonar clientSonarProxy ;	
 	private TcpContextServer ctxServer;
  	protected IObserver obsfortesting;
+ 	
+ 	@Override //IApplication
+	public String getName() {
+		return "SonarUsageMainWithContextTcp";
+	}
 	
 	@Override
-	public void setConfiguration() {	//Called by inherited configure
-		super.setConfiguration();
+	public void setUp(String fName) {	//Called by inherited configure
+		super.setUp(fName);
 		RadarSystemConfig.withContext     = true;
 		RadarSystemConfig.sonarObservable = true;	
-		RadarSystemConfig.ctxServerPort   = 8018;
+//		RadarSystemConfig.ctxServerPort   = 8018;
 	}
 	
 	@Override
@@ -42,7 +45,6 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain{
 		if( RadarSystemConfig.sonarObservable ) {
 			boolean oneShot         = false;
 			obsfortesting           = new SonarObserverFortesting("obsfortesting", oneShot) ;
-//	 		sonar                   = DeviceFactory.createSonarObservable();
 			((ISonarObservable) sonar).register( obsfortesting );
 		} 		
 	}
@@ -68,12 +70,16 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain{
 		System.exit(0);
 	}
 	
+	public void doJob(String fName) {
+		setUp(fName);
+		configure();
+		execute();
+		Utils.delay(500);
+		terminate();		
+	}
 	public static void main( String[] args) throws Exception {
 		SonarUsageMainWithContextTcp  sys = new SonarUsageMainWithContextTcp();	
-		sys.configure();
-		sys.execute();
-		Utils.delay(500);
-		sys.terminate();
-	}
+		sys.doJob("RadarSystemConfig.json");	 //"RadarSystemConfig.json"
+ 	}
 
 }

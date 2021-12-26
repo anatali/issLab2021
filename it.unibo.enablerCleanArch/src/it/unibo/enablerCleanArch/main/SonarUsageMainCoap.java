@@ -3,8 +3,6 @@ package it.unibo.enablerCleanArch.main;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
-
-import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
@@ -26,7 +24,7 @@ import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
  * Eredita il Sonar da 
  */
 
-public class SonarUsageMainCoap  extends SonarUsageAbstractMain {  
+public class SonarUsageMainCoap  extends SonarUsageAbstractMain implements IApplication{  
 
 private CoapClient clientObs = null;
 private CoapObserveRelation relObs = null;
@@ -35,10 +33,15 @@ protected ISonar clientSonarProxy = null;
 protected boolean useProxyClient = true;
 protected IObserver obsfortesting;
 
-	@Override
-	public void setConfiguration() {
-		super.setConfiguration();
-		RadarSystemConfig.sonarObservable = true;		
+	@Override //IApplication
+	public String getName() {
+		return "SonarUsageMainCoap";
+	}
+
+	 
+	public void setUp( String fName ) {
+		super.setUp(fName);
+ 		RadarSystemConfig.sonarObservable = true;		
 	}
 	
 	@Override
@@ -135,15 +138,22 @@ protected IObserver obsfortesting;
  		Colors.outappl("SonarUsageMainCoap | terminate BYE", Colors.ANSI_PURPLE );	
 		System.exit(0); //per via di CoapHandler  ...
 	}
+
+	@Override
+	public void doJob(String fName) {
+		setUp(fName);
+		configure();
+		execute();
+		Utils.delay(500);
+		terminate();
+	}
 	
 	public static void main( String[] args) throws Exception {
-		SonarUsageMainCoap  sys = new SonarUsageMainCoap();	
-		sys.configure();
-		sys.execute();
-		Utils.delay(500);
-		sys.terminate();
+		new SonarUsageMainCoap().doJob("RadarSystemConfig.json");	
 
 	}
+
+
 
 
 }

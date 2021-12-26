@@ -9,24 +9,31 @@ import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
+import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 
 
-public class LedUsageMain  {
+public class LedUsageMain  implements IApplication{
 
 private EnablerAsServer ledServer;
 private ILed ledClient1, ledClient2;
 private ILed led;
 
+	@Override //IApplication
+	public String getName() {
+		return "LedUsageMain";
+	}
+	
 	public void setUp( String fName) {
 		if( fName != null ) RadarSystemConfig.setTheConfiguration(fName);
 		else {
 			RadarSystemConfig.simulation  = true;
 	 		RadarSystemConfig.testing     = false;
 	 		RadarSystemConfig.ledPort     = 8015;
-	 		RadarSystemConfig.protcolType = ProtocolType.coap;
+	 		RadarSystemConfig.ledGui      = false;
+	 		RadarSystemConfig.protcolType = ProtocolType.tcp;
 	 		RadarSystemConfig.pcHostAddr  = "localhost";
 		}
 	}
@@ -59,13 +66,15 @@ private ILed led;
 	
 	public void execute() {
  		ledClient1.turnOn();	
+		Utils.delay(200);	//For Raspberry!
  		boolean curLedstate = ledClient2.getState();
- 		System.out.println("LedProxyAsClientMain | ledState from client2=" + curLedstate);
+ 		Colors.outappl("LedProxyAsClientMain | ledState from client2=" + curLedstate, Colors.GREEN);
  		assertTrue( curLedstate);
 		Utils.delay(1500);
 		ledClient2.turnOff();
+		Utils.delay(200);
 		curLedstate = ledClient1.getState();
-		System.out.println("LedProxyAsClientMain | ledState from client1=" + curLedstate);
+		Colors.outappl("LedProxyAsClientMain | ledState from client1=" + curLedstate, Colors.GREEN);
 		assertTrue( ! curLedstate);
 	}
 	
@@ -78,15 +87,20 @@ private ILed led;
 			CoapApplServer.getTheServer().stop();
 			CoapApplServer.getTheServer().destroy();
 		}
+		System.exit(0);
 	}
+	
+	public void doJob( String fName ) {	
+ 		setUp(fName);
+		configure();
+		execute();
+		Utils.delay(1500);
+ 		terminate();
+	}
+ 	
 	public static void main( String[] args)  {
 		LedUsageMain  sys = new LedUsageMain();	
-		sys.setUp(null);
-		sys.configure();
-		sys.execute();
-		Utils.delay(2500);
- 		sys.terminate();
-		//System.exit(0);
+		sys.doJob(null); //"RadarSystemConfig.json"
 	}
 	
 }

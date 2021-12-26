@@ -27,14 +27,12 @@ import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
   
 
-public class SonarUsageMain  {
+public class SonarUsageOldMain  {
 
 private EnablerAsServer sonarServer;
 private ISonar clientSonarProxy, client2;
 private CoapClient clientObs;
 private boolean withContext       = true;
- 
-
 private ISonar  sonar;
 private boolean sonarWithObserver = false;
 
@@ -48,14 +46,17 @@ private ApplMessage getDistance   = new ApplMessage("msg( sonarcmd, request,  ma
 private ProxyAsClient sonarCaller;
 private TcpContextServer contextServer;
 
-	public void configure() {
-		RadarSystemConfig.simulation    = true;
- 		RadarSystemConfig.testing       = false;
- 		RadarSystemConfig.sonarPort     = 8011;
-		RadarSystemConfig.sonarDelay    = 100;
-		RadarSystemConfig.protcolType   = ProtocolType.coap;  //ProtocolType.coap
- 		RadarSystemConfig.pcHostAddr    = "localhost";
- 		RadarSystemConfig.ctxServerPort = 8048;
+	public void configure(String fName) {
+		if( fName != null ) RadarSystemConfig.setTheConfiguration(fName);
+		else {
+			RadarSystemConfig.simulation    = true;
+	 		RadarSystemConfig.testing       = false;
+	 		RadarSystemConfig.sonarPort     = 8011;
+			RadarSystemConfig.sonarDelay    = 100;
+			RadarSystemConfig.protcolType   = ProtocolType.coap;  //ProtocolType.coap
+	 		RadarSystemConfig.pcHostAddr    = "localhost";
+	 		RadarSystemConfig.ctxServerPort = 8048;
+		}
  		
  		createTheSonar();
  		configureTheServer();
@@ -204,8 +205,8 @@ private TcpContextServer contextServer;
 	}
 	
 	public static void main( String[] args) throws Exception {
-		SonarUsageMain  sys = new SonarUsageMain();	
-		sys.configure();
+		SonarUsageOldMain  sys = new SonarUsageOldMain();	
+		sys.configure(null);
 		sys.execute();
 		Utils.delay(500);
 		sys.terminate();

@@ -28,11 +28,11 @@ La libreria Californium: un esempio di uso
 
 Come supporto di base per CoAP, usiamo la libreria Californium_ di Eclipse e
 
-- per la costruzione di risorse CoAP, usiamo la classe  ``CoapResource`` di Californium;
-- per la creazione di un sever CoAP, usiamo ``CoapServer`` di Californium;
-- per la creazione di un client per CoAP, usiamo ``CoapClient`` di Californium;
+- per la costruzione di risorse CoAP, usiamo la classe  ``CoapResource``;
+- per la creazione di un sever CoAP, usiamo ``CoapServer``;
+- per la creazione di un client per CoAP, usiamo ``CoapClient``;
 - per la reagire in modo asincrono alle risposte di un CoAP-client che funge da osservatore, 
-  implementiamo l'interfaccia ``CoapHandler`` 
+  implementiamo l'interfaccia ``CoapHandler``.
 
 Per fare un esempio di uso della libreria, impostiamo un programma (di testing) che procede nelle seguenti fasi, 
 ciscuna realizzata da una specifica operazione:
@@ -956,3 +956,5 @@ TODO
 - SonarUsageMain
 - RadarSystemMainOnPcCoap
 - RadarSystemMainOnPcLikeRaspCoap
+
+gradle build jar -x test

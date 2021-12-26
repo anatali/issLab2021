@@ -16,7 +16,7 @@ protected ProtocolType protocol ;
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
-			Colors.out(name+"  | STARTED conn=" + conn, Colors.GREEN);
+			Colors.out(name+"  | STARTED conn=" + conn );
 		} catch (Exception e) {
 			Colors.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
@@ -32,7 +32,7 @@ protected ProtocolType protocol ;
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {
-//		Colors.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, Colors.GREEN);
+ 		Colors.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn );
 		try {
 			conn.forward(cmd);
 		} catch (Exception e) {
@@ -40,10 +40,10 @@ protected ProtocolType protocol ;
 		}
 	}
 	public String sendRequestOnConnection( String request )  {
- 		//Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn, Colors.GREEN);
+ 		Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
 		try {
 			String answer = conn.request(request);
-			//Colors.out( name+"  | sendRequestOnConnection answer=" + answer , Colors.GREEN);
+			//Colors.out( name+"  | sendRequestOnConnection answer=" + answer  );
 			return answer;			
 		} catch (Exception e) {
 			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );

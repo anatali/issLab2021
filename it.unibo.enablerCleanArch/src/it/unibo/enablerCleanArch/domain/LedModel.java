@@ -14,8 +14,9 @@ public abstract class LedModel implements ILed{
 	}
 	
 	public static ILed createLedMock() {
-		//return new LedMock();
-		return LedMockWithGui.createLed();
+		if( RadarSystemConfig.ledGui ) return LedMockWithGui.createLed();
+		else return new LedMock();
+		
 	}
 	public static ILed createLedConcrete() {
 		return new LedConcrete();

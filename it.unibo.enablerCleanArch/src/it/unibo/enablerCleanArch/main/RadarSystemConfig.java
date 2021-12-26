@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public class RadarSystemConfig {
 	public static  boolean simulation           = true;
@@ -14,13 +15,14 @@ public class RadarSystemConfig {
 	public static  boolean ControllerRemote     = true;
 	public static  boolean LedRemote            = false;			
 	public static  boolean SonareRemote         = false;			
-	public static  boolean RadarGuieRemote      = false;			
+	public static  boolean RadarGuiRemote       = false;			
 	
 	public static  String pcHostAddr            = "192.168.1.132";
 	public static  String raspHostAddr          = "192.168.1.4";
 	
 	public static  int radarGuiPort      = 8014;
 	public static  int ledPort           = 8010;
+	public static  boolean ledGui        = false;
 	public static  int sonarPort         = 8012;
 	public static  int controllerPort    = 8016;
 	public static  int ctxServerPort     = 8048;
@@ -44,18 +46,10 @@ public class RadarSystemConfig {
 	}
 	
 	public static void setTheConfiguration( String resourceName ) {
+		//Nella distribuzione resourceName è in una dir che include la bin  
 		FileInputStream fis = null;
-		/*
- 		System.out.println("setTheConfiguration "  + resourceName); 
- 		try {
-			//String resourceName = "../RadarSystemConfig.json";	
-			//Nella distribuzione il file è in una dir che include la bin  
-			fis                 = new FileInputStream(new File(resourceName));
- 		} catch (FileNotFoundException e) {
- 			//System.out.println("setTheConfiguration configuration file not found yet" );
-		}
-		*/
 		try {
+			Colors.out("%%% setTheConfiguration from file:" + resourceName);
 			if(  fis == null ) {
  				 fis = new FileInputStream(new File(resourceName));
 			}
@@ -67,12 +61,13 @@ public class RadarSystemConfig {
 	        ControllerRemote = object.getBoolean("ControllerRemote");
 	        LedRemote        = object.getBoolean("LedRemote");
 	        SonareRemote     = object.getBoolean("SonareRemote");
-	        RadarGuieRemote  = object.getBoolean("RadarGuieRemote");
+	        RadarGuiRemote   = object.getBoolean("RadarGuiRemote");
 	        
 	        pcHostAddr       = object.getString("pcHostAddr");
 	        raspHostAddr     = object.getString("raspHostAddr");
 
 	        ledPort          = object.getInt("ledPort");
+	        ledGui           = object.getBoolean("ledGui");
 	        radarGuiPort     = object.getInt("radarGuiPort");
 	        sonarPort        = object.getInt("sonarPort");
 	        controllerPort   = object.getInt("controllerPort");		
@@ -90,7 +85,7 @@ public class RadarSystemConfig {
 	        		                  ? ProtocolType.tcp : ProtocolType.coap;
 	        
 		} catch (FileNotFoundException e) {
- 			System.out.println("setTheConfiguration ERROR " + e.getMessage() );
+ 			Colors.outerr("setTheConfiguration ERROR " + e.getMessage() );
 		}
 
 	}	

@@ -10,15 +10,17 @@ import it.unibo.enablerCleanArch.supports.Colors;
 public abstract class SonarUsageAbstractMain {
 	protected ISonar   sonar;
 
-	public void setConfiguration() {
-		RadarSystemConfig.pcHostAddr         = "localhost";
-		RadarSystemConfig.sonarDelay         = 100;		
-		RadarSystemConfig.sonarObservable    = true;		
+	public void setUp(String fName) {
+		if( fName != null ) RadarSystemConfig.setTheConfiguration(fName);
+		else {
+			RadarSystemConfig.pcHostAddr         = "localhost";
+			RadarSystemConfig.sonarDelay         = 100;		
+			RadarSystemConfig.sonarObservable    = true;	
+		}		
 	}
-	
+ 	
 	public void configure() {
-		setConfiguration();
- 		createTheSonar();
+  		createTheSonar();
  		createObservers();
  		configureTheServer();
  		Colors.outappl("SonarUsageMainCoap | configure done", Colors.ANSI_PURPLE  );
