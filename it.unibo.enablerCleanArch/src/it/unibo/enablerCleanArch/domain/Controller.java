@@ -1,5 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
+import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
 
@@ -9,23 +10,21 @@ import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
 public class Controller {
 	
 	public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
-		System.out.println("Controller | activate"  );
-		sonar.activate();
-		new Thread() {
+ 		new Thread() {
 			public void run() { 
 				try {
-					System.out.println("Controller | STARTS"  );
+					System.out.println("Controller | STARTS "    );
+					boolean a = sonar.isActive();
+					System.out.println("Controller | STARTS " + a );
 					while( sonar.isActive() ) {
 						IDistance d = sonar.getDistance(); //bloccante
 						System.out.println("Controller | d=" + d  );
 						RadarGuiUsecase.doUseCase( radar,d  );	//
  						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
-						//Colors.out("Controller | sonar data=" + d + " ledState=" + led.getState());
-						//Thread.sleep(1000);   //Rimuovere se sonar.getVal è bloccante
-					}
+ 					}
 					System.out.println("Controller | BYE"  );
 				} catch (Exception e) {
-		 			e.printStackTrace();
+		 			Colors.outerr("ERROR"+e.getMessage());
 				}					
 			}
 		}.start();

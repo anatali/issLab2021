@@ -22,7 +22,7 @@ private RadarSystemMainOnPc sys;
 			RadarSystemConfig.ControllerRemote	= true;    		
 			RadarSystemConfig.LedRemote  		= true;    		
 			RadarSystemConfig.SonareRemote  	= true;    		
-			RadarSystemConfig.RadarGuieRemote  	= false;    	
+			RadarSystemConfig.RadarGuiRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
 			sys.build();
 			delay(5000);

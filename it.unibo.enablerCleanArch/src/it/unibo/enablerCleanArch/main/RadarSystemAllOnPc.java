@@ -8,57 +8,73 @@ import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
 import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
+import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
  
-public class RadarSystemAllOnPc {
+public class RadarSystemAllOnPc implements IApplication{
 private ISonar sonar          = null;
 private ILed led              = null;
 private IRadarDisplay radar   = null;
- 
-	public void setup( String configFile ) throws Exception {
-		RadarSystemConfig.setTheConfiguration( configFile );
+private ISonar sonarClient;
+
+	public void setUp( String configFile )   {
+		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+		else {
+			RadarSystemConfig.simulation   = true;
+			RadarSystemConfig.SonareRemote = true;
+			RadarSystemConfig.LedRemote    = true;
+			RadarSystemConfig.sonarPort    = 8012;
+			RadarSystemConfig.ledPort      = 8010;
+			RadarSystemConfig.sonarDelay = 100;
+			RadarSystemConfig.testing    = false;			
+		}
 	}
 	
 	protected ISonar simulateSonarRemote(ProtocolType protocol) {
+		Colors.out("simulateSonarRemote", Colors.ANSI_PURPLE);
 		sonar = SonarModel.create();
 		
 		EnablerAsServer sonarServer  = 
-		new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, protocol, new SonarApplHandler("sonarH",sonar) );
-		sonar.activate();
+				new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, 
+						protocol, new SonarApplHandler("sonarH",sonar) );
 		sonarServer.start();
 		
-		String nameUri = CoapApplServer.outputDeviceUri+"/sonar";
+		String nameUri = CoapApplServer.inputDeviceUri+"/sonar";
 		String entry   = protocol==ProtocolType.coap ? nameUri : ""+RadarSystemConfig.sonarPort;
-		ISonar sonarClient = new SonarProxyAsClient("sonarClient", "localhost",entry, protocol );
+		sonarClient    = new SonarProxyAsClient("sonarClient", RadarSystemConfig.raspHostAddr,entry, protocol );
 		return sonarClient;
 	}
+	
 	protected ILed simulateLedRemote(ProtocolType protocol) {
+		Colors.out("simulateLedRemote", Colors.ANSI_PURPLE);
 		led = LedModel.create();
 		EnablerAsServer ledServer  = 
 				new EnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
 				protocol,  new LedApplHandler("ledH", led) );
 		ledServer.start();
-		String nameUri = CoapApplServer.inputDeviceUri+"/led";
-		String entry   = protocol==ProtocolType.coap ? nameUri : ""+RadarSystemConfig.sonarPort;
-		ILed ledClient = new LedProxyAsClient("ledClient", "localhost",entry, protocol);
+		String nameUri = CoapApplServer.outputDeviceUri+"/led";
+		String entry   = protocol==ProtocolType.coap ? nameUri : ""+RadarSystemConfig.ledPort;
+		ILed ledClient = new LedProxyAsClient("ledClient", RadarSystemConfig.raspHostAddr,entry, protocol);
 		return ledClient;
 		
 	}
-	public void buildAndRun(ProtocolType protocol) throws Exception {			
-			//Controller locale (al PC)
-			//Input
-			sonar  = RadarSystemConfig.SonareRemote ? simulateSonarRemote(protocol) :  SonarModel.create() ;
-			//Output
-			led    = RadarSystemConfig.LedRemote ? simulateLedRemote(protocol) : LedModel.create();
-			radar  = DeviceFactory.createRadarGui();	
-			
-			
-			Controller.activate(led, sonar, radar); 		
-
-			//if( sonar != null ) sonar.activate();
-
-	} 
+ 
+	
+	protected void configure() {
+		sonar  = RadarSystemConfig.SonareRemote ? 
+				simulateSonarRemote(RadarSystemConfig.protcolType) :  SonarModel.create() ;
+ 		led    = RadarSystemConfig.LedRemote ? 
+ 				simulateLedRemote(RadarSystemConfig.protcolType) : LedModel.create();
+		radar  = DeviceFactory.createRadarGui();	
+		Utils.delay(2000);
+ 	}
+	
+	protected void execute() {
+		sonarClient.activate();
+		Controller.activate(led, sonar, radar); 						
+	}
 	
 	public void activateSonar() {
 		if( sonar != null ) sonar.activate();
@@ -73,19 +89,29 @@ private IRadarDisplay radar   = null;
 		return sonar;
 	}
  
+	@Override
+	public void doJob(String configFileName) {
+ 		setUp(configFileName);
+		configure();
+		execute();
+		//Utils.delay(1500);
+ 		//terminate();		
+	}
 
+	@Override
+	public String getName() {
+		return "RadarSystemAllOnPc";
+	}
+
+	protected void terminate() {
+		System.exit(0);
+	}
 	
 	public static void main( String[] args) throws Exception {
-		RadarSystemAllOnPc sys = new RadarSystemAllOnPc();
-		sys.setup("RadarSystemConfigAllOnPc.json");
-		RadarSystemConfig.simulation   = true;
-		RadarSystemConfig.SonareRemote = true;
-		RadarSystemConfig.LedRemote    = true;
-		RadarSystemConfig.sonarPort    = 8012;
-		RadarSystemConfig.ledPort      = 8010;
-		RadarSystemConfig.sonarDelay = 100;
-		RadarSystemConfig.testing    = false;
-		sys.buildAndRun(ProtocolType.tcp);
+		new RadarSystemAllOnPc().doJob("RadarSystemConfig.json");
+//		sys.setup("RadarSystemConfigAllOnPc.json");
+//		sys.buildAndRun(ProtocolType.tcp);
 		//sys.activateSonar();
 	}
+
 }

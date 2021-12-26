@@ -26,10 +26,11 @@ private RadarSystemAllOnPc sys;
 			RadarSystemConfig.ControllerRemote	= false;    		
 			RadarSystemConfig.LedRemote  		= false;    		
 			RadarSystemConfig.SonareRemote  	= false;    		
-			RadarSystemConfig.RadarGuieRemote  	= false;    	
+			RadarSystemConfig.RadarGuiRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
 			RadarSystemConfig.protcolType       = ProtocolType.tcp;
-			sys.buildAndRun(RadarSystemConfig.protcolType);
+			//sys.buildAndRun(RadarSystemConfig.protcolType);
+			sys.doJob("RadarSystemConfig.json");
 			Utils.delay(2000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );

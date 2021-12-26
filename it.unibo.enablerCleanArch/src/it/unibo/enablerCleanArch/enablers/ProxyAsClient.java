@@ -43,7 +43,7 @@ protected ProtocolType protocol ;
  		Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
 		try {
 			String answer = conn.request(request);
-			//Colors.out( name+"  | sendRequestOnConnection answer=" + answer  );
+			Colors.out( name+"  | sendRequestOnConnection answer=" + answer  );
 			return answer;			
 		} catch (Exception e) {
 			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
