@@ -1,73 +1,96 @@
 package it.unibo.enablerCleanArch.main;
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapObserveRelation;
+
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
+import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
+import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 import it.unibo.enablerCleanArch.supports.coap.LedAdapterCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoapObserver;
  
-public class RadarSystemMainOnPcCoap {
-private ISonar sonar    = null;
-private ILed led        = null;
-private IRadarDisplay radar = null;
+public class RadarSystemMainOnPcCoap implements IApplication{
+private ISonar sonar    		   = null;
+private ILed led        		   = null;
+private IRadarDisplay radar 	   = null;
+private boolean useProxyClient 	   = true;
+private ISonar clientSonarProxy    = null;
+private CoapClient clientObs 	   = null;
+private CoapObserveRelation relObs = null;
+private IObserver obsfortesting;
 
-	public void setup() throws Exception {			
-		//RadarSystemConfig.setTheConfiguration( "RadarSystemConfigPcControllerAndGui.json"  );   
-		//Control 
-		//TODO ???
-		/*
-		if( RadarSystemConfig.ControllerRemote ) {
-			radar =  DeviceFactory.createRadarGui();			
-			new RadarGuiAdapterServer( RadarSystemConfig.radarGuiPort );
-		}else { //Controller locale (al PC)
-			//Input
-			sonar  = RadarSystemConfig.SonareRemote   
-					? new SonarAdapterCoapObserver("localhost", CoapApplServer.inputDeviceUri+"/sonar") 	//:5683 lo sa CoapSupport
-					: DeviceFactory.createSonar();
-			//Output
-			led    = RadarSystemConfig.LedRemote   
-					? new LedAdapterCoap( "localhost", CoapApplServer.outputDeviceUri+"/led" ) 
-					: DeviceFactory.createLed();
-			radar  = DeviceFactory.createRadarGui();	
-			Controller.activate(led, sonar, radar);
-  		}*/
-		
-		RadarSystemConfig.protcolType = ProtocolType.coap;
-		//Controller locale (al PC)
-		//sonar = new SonarAdapterCoapObserver("localhost", CoapApplServer.inputDeviceUri+"/sonar");
-		sonar = new SonarAdapterCoap("localhost", CoapApplServer.inputDeviceUri+"/sonar");
-		led   = new LedAdapterCoap( "localhost", CoapApplServer.outputDeviceUri+"/led" ) ;
-		
+	@Override
+	public String getName() {
+		return "RadarSystemMainOnPcCoap";
+	}
+	@Override
+	public void doJob(String configFileName) {
+		setUp(configFileName);
+		configure();
+		execute();
+	}
+	
+
+	public void setUp(String configFileName)  {			
+		if( configFileName != null ) RadarSystemConfig.setTheConfiguration(configFileName);
+		else {
+			RadarSystemConfig.raspHostAddr = "192.168.1.183";
+			RadarSystemConfig.DLIMIT       = 12;
+			RadarSystemConfig.simulation   = true;
+		}				
+ 	}
+	
+	public void configure()  {		
+		radar  = DeviceFactory.createRadarGui();
 	} 
 	
-	public void activateSonar() {
-		if( sonar != null ) sonar.activate();
+	public void execute() {
+		if( useProxyClient ) executeCoapUsingProxyClients();
+		else executeCoapUsingCoapSupport();
 	}
 
-	//ADDED for testing
-	//-------------------------------------------------
-	public ILed getLed() {
-		return led;
-	}
-	public ISonar getSonar() {
-		return sonar;
-	}
+	protected void executeCoapUsingProxyClients() {
+ 		String host      = RadarSystemConfig.raspHostAddr;
 
+ 		String sonarUri  = CoapApplServer.inputDeviceUri+"/sonar";
+ 		ISonar clientSonarProxy = new SonarProxyAsClient("sonarProxyCoap", host, sonarUri, ProtocolType.coap );
+
+ 		String ledUri  = CoapApplServer.lightsDeviceUri+"/led";
+ 		ILed clientLedProxy = new LedProxyAsClient("ledProxyCoap", host, ledUri, ProtocolType.coap );
+ 		
+		Controller.activate(clientLedProxy, clientSonarProxy, radar); //Activates the sonar
+
+ 	}
+	
+	protected void executeCoapUsingCoapSupport() {
+ 		String sonarUri = CoapApplServer.inputDeviceUri+"/sonar";
+		CoapSupport cps = new CoapSupport("localhost", sonarUri);
+		
+		cps.forward("activate");	//messaggi 'semplici'
+		for( int i=1; i<=5; i++) {
+			String v = cps.request("");  
+			Colors.outappl("RadaSystemMainCoap | executeCoap with CoapSupport i=" + i + " getVal="+v, Colors.ANSI_PURPLE);
+			Utils.delay(500);
+		}	 
+		cps.forward("deactivate");	//termina il Sonar
+		cps.close();
+	}
+	
+	
+
+ 
 	public IRadarDisplay getRadarGui() {
 		return radar;
 	}
-	/*
-	//La TestUnit decide di attivare il sistema
-	public void oneShotSonarForTesting( int distance ) {
-		if( sonar != null ) {
-			SonarMock sonarForTesting = (SonarMock) sonar;
-			sonarForTesting.oneShot( distance );
-		}
-	}
-	*/
 	public static void main( String[] args) throws Exception {
-		RadarSystemMainOnPcCoap sys = new RadarSystemMainOnPcCoap();
-		sys.setup();
-		sys.activateSonar();
+		new RadarSystemMainOnPcCoap().doJob(null);
+
 	}
+
+
 }

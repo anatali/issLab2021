@@ -36,9 +36,9 @@ private String url;
 //From Interaction2021
 	@Override
 	public void forward(String msg)   {
-		//Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
+		Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		//Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 	}
 
 	@Override

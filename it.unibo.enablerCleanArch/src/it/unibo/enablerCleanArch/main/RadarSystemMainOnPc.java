@@ -20,13 +20,15 @@ private IRadarDisplay radar = null;
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
 			RadarSystemConfig.simulation   = false;
-			RadarSystemConfig.raspHostAddr = "192.168.1.6";
+			RadarSystemConfig.raspHostAddr = "192.168.1.183";
 			RadarSystemConfig.SonareRemote = true;
 			RadarSystemConfig.LedRemote    = true;
 			RadarSystemConfig.sonarPort    = 8012;
 			RadarSystemConfig.ledPort      = 8010;
-			RadarSystemConfig.sonarDelay   = 100;
+			RadarSystemConfig.withContext  = true;
+			RadarSystemConfig.ctxServerPort= 8018;
 			RadarSystemConfig.testing      = false;			
+			RadarSystemConfig.DLIMIT       = 12;
 		}
  	}
 	
@@ -44,16 +46,22 @@ private IRadarDisplay radar = null;
 	}
 	
 	public void execute() {
-		ILed clientLedProxy = new LedProxyAsClient("clientLedProxy", 
-				RadarSystemConfig.raspHostAddr, ""+RadarSystemConfig.ledPort, ProtocolType.tcp );
-  		ISonar clientSonarProxy = new SonarProxyAsClient("clientSonarProxy", 
-				RadarSystemConfig.raspHostAddr, ""+RadarSystemConfig.sonarPort, ProtocolType.tcp );
- 		
-  		//clientSonarProxy.activate(); //Activate the sonar
+		ILed clientLedProxy;
+		ISonar clientSonarProxy;
+		if( RadarSystemConfig.withContext ) {
+			 clientLedProxy = new LedProxyAsClient("clientLedProxy", 
+					RadarSystemConfig.raspHostAddr, ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp );
+			 clientSonarProxy = new SonarProxyAsClient("clientSonarProxy", 
+	 				RadarSystemConfig.raspHostAddr, ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp );
+			
+		}else {
+			 clientLedProxy = new LedProxyAsClient("clientLedProxy", 
+					RadarSystemConfig.raspHostAddr, ""+RadarSystemConfig.ledPort, ProtocolType.tcp );
+			 clientSonarProxy = new SonarProxyAsClient("clientSonarProxy", 
+					RadarSystemConfig.raspHostAddr, ""+RadarSystemConfig.sonarPort, ProtocolType.tcp );
+		}
+ 		Controller.activate(clientLedProxy, clientSonarProxy, radar); //Activates the sonar
 
- 		Controller.activate(clientLedProxy, clientSonarProxy, radar);
- 		
- 		
 	}
 
 	public void terminate() {

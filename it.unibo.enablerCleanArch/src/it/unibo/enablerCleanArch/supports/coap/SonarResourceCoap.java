@@ -14,6 +14,7 @@ String curVal="0";  //Initial state
 	 	}
   			
 		private void getSonarValues() {
+			Colors.outerr( getName() + " |  SonarResourceCoap getSonarValues"   );
 			new Thread() {
 				public void run() {
 					sonar.activate();
@@ -29,7 +30,7 @@ String curVal="0";  //Initial state
 		 // CoapDeviceResource
 			@Override
 			protected String elaborateGet(String req) {
- 				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
+ 				//Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
 				if( req == null  ) {
 					Colors.outerr("getName() + \" | elaborateGet req NULL");
 					return curVal;
@@ -45,7 +46,7 @@ String curVal="0";  //Initial state
 
 			@Override
 			protected void elaboratePut(String arg) {
-	 			Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
+	 			//Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
 	 			else if( arg.equals("setVal")) { //just for some test ...
@@ -58,7 +59,7 @@ String curVal="0";  //Initial state
 			
 			protected void elaborateAndNotify(int arg) {
 				curVal= ""+arg;
- 				Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
+ 				//Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
 				changed();	// notify all CoAp observers
 			}
 		

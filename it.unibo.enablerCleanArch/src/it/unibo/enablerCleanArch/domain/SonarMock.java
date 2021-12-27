@@ -15,7 +15,14 @@ private int delta = 1;
 	}
 	
  
-
+	@Override
+	protected void updateDistance( int d ) {
+ 		curVal = new Distance( d );
+  	}	
+	@Override
+	public IDistance getDistance() {
+		return curVal;
+	}	
 	@Override
 	protected void sonarProduce( ) {
 		if( RadarSystemConfig.testing ) {

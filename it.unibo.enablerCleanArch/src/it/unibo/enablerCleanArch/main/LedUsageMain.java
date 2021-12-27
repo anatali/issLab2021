@@ -32,7 +32,7 @@ private ILed led;
 			RadarSystemConfig.simulation  = true;
 	 		RadarSystemConfig.testing     = false;
 	 		RadarSystemConfig.ledPort     = 8015;
-	 		RadarSystemConfig.ledGui      = false;
+	 		RadarSystemConfig.ledGui      = true;
 	 		RadarSystemConfig.protcolType = ProtocolType.tcp;
 	 		RadarSystemConfig.pcHostAddr  = "localhost";
 		}
@@ -65,8 +65,8 @@ private ILed led;
 	}
 	
 	public void execute() {
+		Utils.delay(1000);	//To see the startup
  		ledClient1.turnOn();	
-		Utils.delay(200);	//For Raspberry!
  		boolean curLedstate = ledClient2.getState();
  		Colors.outappl("LedProxyAsClientMain | ledState from client2=" + curLedstate, Colors.GREEN);
  		assertTrue( curLedstate);

@@ -62,7 +62,7 @@ private TcpContextServer ctxServer  = null;
 	protected void addLedToContext( ) {
 		led = LedModel.create();
 		IApplMsgHandler ledHandler = new LedApplHandler("ledH",led);
-		ctxServer.addComponent("sonar", ledHandler);				
+		ctxServer.addComponent("led", ledHandler);				
 	}
 	
 	protected void configure() {

@@ -86,19 +86,3 @@ protected boolean stopped  = false;
 
 
 
-/*
-//OLD before queue....
- 
-protected synchronized void valueUpdated( ){
-	produced = true;
-	this.notify();
-}
-
-protected synchronized void waitForUpdatedVal() {
-	try {
-			while( ! produced ) wait();
-			produced = false;
-		} catch (InterruptedException e) {
-			System.out.println("Sonar | waitForUpdatedVal ERROR " + e.getMessage() );
-	}		
-}*/

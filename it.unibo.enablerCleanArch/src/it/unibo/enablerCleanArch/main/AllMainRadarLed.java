@@ -21,6 +21,8 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 			programs.put("4", new SonarUsageMainCoap());
 			programs.put("5", new RadarSystemAllOnPc());
 			programs.put("6", new RadarSystemDevicesOnRasp());
+			programs.put("7", new RadaSystemMainCoap());
+			programs.put("8", new RadarSystemMainOnPcCoap());
 			String i = "";
 			outMenu();
 			Colors.outappl(">>>   ", Colors.ANSI_PURPLE);

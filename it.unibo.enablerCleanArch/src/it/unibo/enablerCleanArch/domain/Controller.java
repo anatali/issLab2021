@@ -9,6 +9,8 @@ import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
  */
 public class Controller {
 	
+
+	
 	public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
  		new Thread() {
 			public void run() { 

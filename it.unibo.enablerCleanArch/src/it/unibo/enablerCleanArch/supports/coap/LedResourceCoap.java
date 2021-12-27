@@ -9,7 +9,6 @@ public class LedResourceCoap extends CoapDeviceResource {
 	public LedResourceCoap(String name, ILed led ) {
 		super(name, DeviceType.output);
 		this.led = led;
-		//led = LedModel.create();
  	}
 
 	@Override

@@ -59,7 +59,7 @@ public abstract class CoapDeviceResource extends CoapResource {
  	@Override
 	public void handlePUT(CoapExchange exchange) {
  		String arg = exchange.getRequestText() ;
-		Colors.out(getName() + " | handlePUT arg=" + exchange.getRequestText()  );
+		//Colors.out(getName() + " | handlePUT arg=" + exchange.getRequestText()  );
 		elaboratePut( arg );
 		changed();
 		exchange.respond(CHANGED);
