@@ -14,15 +14,7 @@ private int delta = 1;
 		Colors.out("SonarMock | sonarSetUp curVal="+curVal);
 	}
 	
-//	protected void updateDistance( int d ) {
-//		try {
-//			curVal = new Distance( d );
-//			blockingQueue.put( curVal );
-//			//Colors.out("SonarMock | put in queue d="+d + " qsize=" + blockingQueue.size() + " delay=" + RadarSystemConfig.sonarDelay, Colors.ANSI_YELLOW);
-//		} catch (Exception e) {
-//			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
-//		}
-//	}
+ 
 
 	@Override
 	protected void sonarProduce( ) {

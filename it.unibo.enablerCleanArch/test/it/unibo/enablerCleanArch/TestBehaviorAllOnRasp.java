@@ -24,7 +24,7 @@ private RadarSystemMainOnPc sys;
 			RadarSystemConfig.SonareRemote  	= true;    		
 			RadarSystemConfig.RadarGuiRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
-			sys.build();
+			//sys.build();
 			delay(5000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );

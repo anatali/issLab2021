@@ -8,6 +8,7 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.main.RadarSystemMainOnPc;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class TestDevicesOnPc {
 private RadarSystemMainOnPc sys;
@@ -27,9 +28,9 @@ private RadarSystemMainOnPc sys;
 			RadarSystemConfig.RadarGuiRemote  	= false;    	
 			RadarSystemConfig.pcHostAddr        = "localhost";
 			
-			sys.build();
+			//sys.build();
 			//sys.dowork();   //the sonar does not start if RadarSystemConfig.testing
-			delay(1000);
+			Utils.delay(1000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
  		}
@@ -39,7 +40,7 @@ private RadarSystemMainOnPc sys;
 	public void resetAll() {
 		System.out.println("resetAll");		
 	}	
-	
+	/*
 	@Test 
 	public void testLed() {
 		System.out.println("testLed");
@@ -51,11 +52,12 @@ private RadarSystemMainOnPc sys;
 		sys.getLed().turnOff();
 		assertTrue(  ! sys.getLed().getState() );
 		
-		delay(1000);
+		Utils.delay(1000);
 	}	
-	
+	*/
 	//@Test 
 	public void testDevices() {
+		/*
 		System.out.println("testDevices");
 		assertTrue( ! sys.getLed().getState() );
 		
@@ -64,6 +66,7 @@ private RadarSystemMainOnPc sys;
 		
 		sys.getLed().turnOff();
 		assertTrue(  ! sys.getLed().getState() );
+		*/
 /*		
 		ISonar sonar = sys.getSonar();
 		int simulatedTargetDistance = 15;
@@ -74,11 +77,4 @@ private RadarSystemMainOnPc sys;
  */
 	}
 	
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
-				e.printStackTrace();
-		}		
-	}
 }

@@ -13,16 +13,17 @@ public class Controller {
  		new Thread() {
 			public void run() { 
 				try {
-					System.out.println("Controller | STARTS "    );
+					System.out.println("Controller | STARTS sonar=" + sonar   );
+					sonar.activate();
 					boolean a = sonar.isActive();
-					System.out.println("Controller | STARTS " + a );
+					Colors.outappl("Controller | STARTS " + a , Colors.BLUE);
 					while( sonar.isActive() ) {
 						IDistance d = sonar.getDistance(); //bloccante
-						System.out.println("Controller | d=" + d  );
+						Colors.outappl("Controller | d=" + d, Colors.BLUE  );
 						RadarGuiUsecase.doUseCase( radar,d  );	//
  						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
  					}
-					System.out.println("Controller | BYE"  );
+					Colors.outappl("Controller | BYE", Colors.BLUE  );
 				} catch (Exception e) {
 		 			Colors.outerr("ERROR"+e.getMessage());
 				}					

@@ -68,11 +68,12 @@ private ISonar sonarClient;
  		led    = RadarSystemConfig.LedRemote ? 
  				simulateLedRemote(RadarSystemConfig.protcolType) : LedModel.create();
 		radar  = DeviceFactory.createRadarGui();	
-		Utils.delay(2000);
+		//Utils.delay(2000);
  	}
 	
 	protected void execute() {
-		sonarClient.activate();
+		sonarClient.activate();	//activate the sonar
+		Utils.delay(1000);
 		Controller.activate(led, sonar, radar); 						
 	}
 	
@@ -94,8 +95,8 @@ private ISonar sonarClient;
  		setUp(configFileName);
 		configure();
 		execute();
-		//Utils.delay(1500);
- 		//terminate();		
+		Utils.delay(RadarSystemConfig.sonarDelay*70);
+ 		terminate();		
 	}
 
 	@Override

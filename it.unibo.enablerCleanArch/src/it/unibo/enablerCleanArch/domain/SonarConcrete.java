@@ -1,13 +1,14 @@
 package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-//import java.util.concurrent.BlockingQueue;
-
 import it.unibo.enablerCleanArch.supports.Colors;
 
+
+/*
+ * CurVal è usata come valore della distanza corrente misurata
+ */
 public class SonarConcrete extends SonarModel implements ISonar{
-	//protected  IDistance curVal ;
-	private int numData           = 5; 
+	private int numData           = 3; 
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;
 	
@@ -20,20 +21,15 @@ public class SonarConcrete extends SonarModel implements ISonar{
        		Colors.outerr("SonarConcrete | activate ERROR " + e.getMessage() );
     	}
 	}
-	
+	@Override
+	protected void updateDistance( int d ) {
+ 		curVal = new Distance( d );
+  	}	
 	@Override
 	public IDistance getDistance() {
- 		return curVal ;
+		return curVal;
 	}
-	
-	protected void updateDistance( int d ) {
-		try {
-			curVal = new Distance( d );
-			blockingQueue.put( curVal );
-		} catch (InterruptedException e) {
-			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
-		}
-	}	
+
 	@Override
 	protected void sonarProduce( ) {
         try {
@@ -42,7 +38,8 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			if( dataCounter % numData == 0 ) { //every numData ...
  				Colors.out("SonarConcrete | data=" + data );
  				updateDistance( Integer.parseInt(data));
-			 }
+ 				//Utils.delay(RadarSystemConfig.sonarDelay);
+			}
        }catch( Exception e) {
        	Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
        }		

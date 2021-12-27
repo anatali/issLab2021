@@ -9,10 +9,9 @@ import it.unibo.enablerCleanArch.supports.Utils;
 public abstract class SonarModel  implements ISonar{  
 public final static int queueSize = 10;
 protected  IDistance curVal = new Distance(90);	 
-
-	protected boolean stopped  = false;
+protected BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
+protected boolean stopped  = false;
 	
-	protected BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
 	
 	public static ISonar create() {
 		if( RadarSystemConfig.simulation )  return createSonarMock();
@@ -35,9 +34,10 @@ protected  IDistance curVal = new Distance(90);
 	protected void updateDistance( int d ) {
 		try {
 			curVal = new Distance( d );
+			//Colors.out("SonarModel | updateDistance "+ d);
 			blockingQueue.put( curVal );
 		} catch (InterruptedException e) {
-			Colors.outerr("SonarMock | updateDistance ERROR:"+e.getMessage());
+			Colors.outerr("SonarModel | updateDistance ERROR:"+e.getMessage());
 		}
 	}	
 
@@ -56,7 +56,7 @@ protected  IDistance curVal = new Distance(90);
 			//Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
 			return curVal;
 		} catch (InterruptedException e) {
-			Colors.outerr("SonarMock | ERROR:"+e.getMessage());
+			Colors.outerr("SonarModel | ERROR:"+e.getMessage());
 			return null;
 		}	
 	}

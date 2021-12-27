@@ -40,8 +40,8 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	public boolean isActive() {
 		String answer = "";
 		if( RadarSystemConfig.withContext )  answer = sendRequestOnConnection(Utils.isActive.toString()) ;
-		else   sendRequestOnConnection("isActive");
-		Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
+		else   answer=sendRequestOnConnection("isActive");
+		//Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
 		return answer.equals( "true" );
 	}
  	

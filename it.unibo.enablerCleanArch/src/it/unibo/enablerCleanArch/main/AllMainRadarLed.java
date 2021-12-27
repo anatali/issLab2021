@@ -5,12 +5,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
  
- 
-
 public class AllMainRadarLed {
 public HashMap<String,IApplication> programs = new HashMap<String,IApplication>();
-	
- 	
 	
 	protected void outMenu() {
 		for (String i : programs.keySet()) { //
@@ -23,6 +19,8 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		
 			programs.put("3", new SonarUsageMainWithContextTcp());
 			programs.put("4", new SonarUsageMainCoap());
+			programs.put("5", new RadarSystemAllOnPc());
+			programs.put("6", new RadarSystemDevicesOnRasp());
 			String i = "";
 			outMenu();
 			Colors.outappl(">>>   ", Colors.ANSI_PURPLE);

@@ -19,7 +19,7 @@ private static RadarDisplay display = null; //singleton
  	}
 	@Override
 	public void update(String distance, String angle) {	 
-		Colors.out("RadarDisplay | update distance="+distance);
+		//Colors.out("RadarDisplay | update distance="+distance);
 		curDistance =  distance;
 		radarSupport.update(distance,angle);
 	}
