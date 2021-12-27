@@ -5,6 +5,7 @@ import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.*;
+import it.unibo.enablerCleanArch.enablers.devices.RadarGuiProxyAsClient;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.DeviceType;
@@ -28,7 +29,7 @@ public class RadarSystemMainOnPcLikeRaspCoap {
 		}else { //Controller on Rasp
 			System.out.println("Controller on PcLikeRasp  "  );
  			IRadarDisplay radar =  
- 					new RadarGuiClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, ""+RadarSystemConfig.radarGuiPort, ProtocolType.tcp ); 
+ 					new RadarGuiProxyAsClient( "RadarGuiClient", RadarSystemConfig.pcHostAddr, ""+RadarSystemConfig.radarGuiPort, ProtocolType.tcp ); 
  			//Control
 			Controller.activate( led, sonar, radar );
  		}

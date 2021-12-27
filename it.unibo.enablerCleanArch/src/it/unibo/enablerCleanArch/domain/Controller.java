@@ -1,6 +1,8 @@
 package it.unibo.enablerCleanArch.domain;
 
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
 
@@ -24,6 +26,7 @@ public class Controller {
 						Colors.outappl("Controller | d=" + d, Colors.BLUE  );
 						RadarGuiUsecase.doUseCase( radar,d  );	//
  						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
+ 						Utils.delay(RadarSystemConfig.sonarDelay);
  					}
 					Colors.outappl("Controller | BYE", Colors.BLUE  );
 				} catch (Exception e) {

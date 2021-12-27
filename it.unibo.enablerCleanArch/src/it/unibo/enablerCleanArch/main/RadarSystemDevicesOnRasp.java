@@ -4,17 +4,18 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
+import it.unibo.enablerCleanArch.enablers.devices.RadarGuiProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
- 
+
+/*
+ * Applicazione che va in coppia con RadarSystemMainOnPc
+ */
 public class RadarSystemDevicesOnRasp implements IApplication{
 private ISonar sonar          		= null;
 private ILed led              		= null;
@@ -24,18 +25,22 @@ private TcpContextServer ctxServer  = null;
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
-			RadarSystemConfig.simulation   = true;
-			RadarSystemConfig.SonareRemote = false;
-			RadarSystemConfig.LedRemote    = false;
-			RadarSystemConfig.sonarPort    = 8012;
-			RadarSystemConfig.ledPort      = 8010;
-			RadarSystemConfig.sonarDelay   = 100;
-			RadarSystemConfig.withContext  = false;
-			RadarSystemConfig.testing      = false;			
+			RadarSystemConfig.simulation   		= true;
+			RadarSystemConfig.SonareRemote 		= false;
+			RadarSystemConfig.LedRemote    		= false;
+			RadarSystemConfig.ledGui    		= true;
+			RadarSystemConfig.ControllerRemote  = false; 
+			RadarSystemConfig.sonarPort    		= 8012;
+			RadarSystemConfig.ledPort      		= 8010;
+			RadarSystemConfig.radarGuiPort    	= 8014;
+			RadarSystemConfig.ctxServerPort     = 8018;
+			RadarSystemConfig.DLIMIT   			= 55;
+			RadarSystemConfig.sonarDelay   		= 100;
+			RadarSystemConfig.withContext  		= true; 
+			RadarSystemConfig.testing      		= false;			
 		}
 	}
 	
-
 	protected void createSonarEnabler( ) {
 		sonar = SonarModel.create();		
 		EnablerAsServer sonarServer  = 
@@ -74,7 +79,12 @@ private TcpContextServer ctxServer  = null;
 			createSonarEnabler( ) ;
 			createLedEnabler();
 		}
- 		//Utils.delay(2000);
+		if( ! RadarSystemConfig.ControllerRemote ) {
+			Utils.delay(1000); //Give time to the LedGui ...
+			IRadarDisplay radarClient = new RadarGuiProxyAsClient("radarClient",
+					RadarSystemConfig.pcHostAddr,""+RadarSystemConfig.radarGuiPort, ProtocolType.tcp);			
+			Controller.activate(led, sonar, radarClient);  //accede direttamente ai devices
+		} 
  	}
 	
 	protected void execute() {

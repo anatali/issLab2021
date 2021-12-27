@@ -1,11 +1,13 @@
-package it.unibo.enablerCleanArch.enablers;
+package it.unibo.enablerCleanArch.enablers.devices;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 
 
-public class RadarGuiClient extends ProxyAsClient implements IRadarDisplay {
+public class RadarGuiProxyAsClient extends ProxyAsClient implements IRadarDisplay {
  
-	public RadarGuiClient( String name, String host, String entry, ProtocolType protocol ) {
+	public RadarGuiProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		super( name, host, entry,protocol );
  	}
 

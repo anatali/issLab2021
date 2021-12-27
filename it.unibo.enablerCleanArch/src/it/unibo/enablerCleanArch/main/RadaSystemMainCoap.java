@@ -4,6 +4,7 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 
+import it.unibo.enablerCleanArch.domain.Controller;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.ILed;
@@ -50,6 +51,8 @@ protected IObserver obsfortesting;
 			RadarSystemConfig.pcHostAddr         = "localhost";
 			RadarSystemConfig.sonarDelay         = 100;		
 			RadarSystemConfig.sonarObservable    = false;	
+			RadarSystemConfig.ControllerRemote   = false;
+			RadarSystemConfig.DLIMIT             = 55;
 		}		
 	}
  	
@@ -60,6 +63,12 @@ protected IObserver obsfortesting;
  		
  		led = DeviceFactory.createLed();
  		new LedResourceCoap("led", led); 
+ 		
+ 		Utils.delay(1000); //Give time for the LedGui setup
+ 		
+ 		if( ! RadarSystemConfig.ControllerRemote ) {
+ 			Controller.activate(led, sonar, null);
+ 		}
  		
  		Colors.outappl("RadaSystemMainCoap | configure done", Colors.ANSI_PURPLE  );
 		//createObservers();

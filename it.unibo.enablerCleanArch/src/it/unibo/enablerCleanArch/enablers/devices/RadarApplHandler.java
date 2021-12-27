@@ -1,22 +1,26 @@
 package it.unibo.enablerCleanArch.enablers.devices;
  
+import org.json.JSONObject;
+
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
-import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 public class RadarApplHandler extends ApplMsgHandler {
 IRadarDisplay radar;
 
-	public RadarApplHandler(String name) {
+	public RadarApplHandler(String name, IRadarDisplay radar) {
 		super(name);
-		radar = RadarDisplay.getRadarDisplay(); 
+		this.radar = radar; 
 	}
 	
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		//System.out.println(name + " | elaborate " + message + " conn=" + conn);
-		String distance = message;
+		Colors.out(name + " | elaborate " + message + " conn=" + conn);
+		//{ "distance" : 90 , "angle" : 90 }
+		JSONObject jsonObj   = new JSONObject(message);	
+		String distance = ""+jsonObj.getInt("distance");
 		radar.update( distance, "90" );
 	}
 
