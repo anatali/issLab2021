@@ -4,9 +4,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import org.eclipse.paho.client.mqttv3.*;
 
- 
+import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.ApplMessageType;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 class MqttSupportCallback implements MqttCallback{
 private String clientName;
@@ -23,18 +25,18 @@ private BlockingQueue<String> blockingQueue ;
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
- 		blockingQueue.put( new String( message.getPayload() ) );
- 		
-		Colors.outappl("MqttSupportCallback | messageArrived for " + clientName + " topic="
-				+ topic + " message="+message + " bqsize="+blockingQueue.size(), Colors.ANSI_PURPLE);
+		//Colors.outappl("MqttSupportCallback | messageArrived:" + message, Colors.ANSI_PURPLE );
+		blockingQueue.put( message.toString() );		
+//		Colors.outappl("MqttSupportCallback | messageArrived:"+message + " for " + clientName 
+//				+ " topic=" + topic + " bqsize="+blockingQueue.size(), Colors.ANSI_PURPLE);
 	}
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
 		try {
-			Colors.outappl("MqttSupportCallback | deliveryComplete token=" 
-		       + token.getMessage() + " client=" + token.getClient().getClientId() , Colors.ANSI_YELLOW);
-		} catch (MqttException e) {
+//			Colors.outappl("MqttSupportCallback | deliveryComplete token=" 
+//		       + token.getMessage() + " client=" + token.getClient().getClientId() , Colors.ANSI_YELLOW);
+		} catch (Exception e) {
 			Colors.outerr("MqttSupportCallback | deliveryComplete Error:"+e.getMessage());		
 		}
  	}
@@ -45,6 +47,40 @@ private BlockingQueue<String> blockingQueue ;
  * Singleton for a specific broker
  */
 public class MqttSupport implements Interaction2021{
+	
+	private static int msgNum=0;	
+	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
+
+		public static ApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
+			try {
+				return new ApplMessage(msgId, ApplMessageType.dispatch.toString(),sender,dest,payload,""+(msgNum++));
+			} catch (Exception e) {
+				Colors.outerr("buildDispatch ERROR:"+ e.getMessage());
+				return null;
+			}
+		}
+		
+		public static ApplMessage buildRequest(String sender, String msgId, String payload, String dest) {
+			try {
+				return new ApplMessage(msgId, ApplMessageType.request.toString(),sender,dest,payload,""+(msgNum++));
+			} catch (Exception e) {
+				Colors.outerr("buildRequest ERROR:"+ e.getMessage());
+				return null;
+			}
+		}
+		public static ApplMessage buildReply(String sender, String msgId, String payload, String dest) {
+			try {
+				return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
+			} catch (Exception e) {
+				Colors.outerr("buildRequest ERROR:"+ e.getMessage());
+				return null;
+			}
+		}
+	
+	
+	
+	
+	
 protected MqttClient client;
 protected boolean isConnected = false;
 protected String topic;
@@ -86,9 +122,10 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 		MqttMessage message = new MqttMessage();
 		if (qos == 0 || qos == 1 || qos == 2) {
 			//qos=0 fire and forget; qos=1 at least once(default);qos=2 exactly once
-			message.setQos(0);
+			message.setQos(qos);
 		}
 		try {
+			//Colors.out("publish topic=" + topic + " msg=" + msg);
 			message.setPayload(msg.getBytes());		 
 			client.publish(topic, message);
 		} catch (MqttException e) {
@@ -104,22 +141,28 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 
 	@Override
 	public String request(String msg) throws Exception { //msg should contain the name of the sender
+		String answerTopic = topic+"answer";
+		subscribe( answerTopic );
 		publish(topic, msg, 0, false);
-		String answer = receiveMsg(topic+"answer" ); //UNDERSCORE NOT ALLOWED  
+		//Utils.delay(500);
+		String answer = receiveMsg( answerTopic ); //UNDERSCORE NOT ALLOWED  
 		return answer;
+	}
+	 
+	public void reply(String topic, String msg) throws Exception {
+		publish(topic+"answer",msg,0,false);
 	}
 	
 	protected String receiveMsg(String topic) throws Exception{
-		//Colors.out("receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue);
-		subscribe(topic);
+		Colors.out("receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue);
+		//subscribe(topic);
  		String answer = blockingQueue.take();
  		client.unsubscribe(topic);
-		return answer;		
+		return answer;		 
 	}
 
 	@Override
-	public String receiveMsg() throws Exception {
-		
+	public String receiveMsg() throws Exception {		
 		subscribe(topic);
  		String answer = blockingQueue.take();
  		client.unsubscribe(topic);

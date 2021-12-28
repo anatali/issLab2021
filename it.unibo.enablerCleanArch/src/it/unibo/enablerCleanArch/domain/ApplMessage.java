@@ -5,9 +5,7 @@ import alice.tuprolog.Term;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
-enum ApplMessageType{
-    event, dispatch, request, reply, invitation
-}
+
 
 public class ApplMessage {
     protected String msgId       = "";
@@ -26,7 +24,7 @@ public class ApplMessage {
         msgSender 	= SENDER;
         msgReceiver = RECEIVER;
         msgContent 	= CONTENT;
-        msgNum = Integer.parseInt(SEQNUM);		
+        msgNum      = Integer.parseInt(SEQNUM);		
 	}
 	
 	public void setConn( Interaction2021 conn ) {
