@@ -1,8 +1,10 @@
 package it.unibo.enablerCleanArch.enablers;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
  
 /*
  * Attiva un server relativo al protocollo specificato (se non null)
@@ -31,11 +33,13 @@ protected boolean isactive = false;
 		}
 	}
 
- 	protected void setServerSupport( int port, ProtocolType protocol,IApplMsgHandler handler   ) throws Exception{
+ 	protected void setServerSupport( int port, ProtocolType protocol, IApplMsgHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 		}else if( protocol == ProtocolType.coap ) {
 			CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
+		}else if( protocol == ProtocolType.mqtt ) { //String clientid, String topic, String brokerAddr
+			MqttSupport.getTheSupport().connectAsEnabler( name, handler );
 		}
 	}	
  	

@@ -15,7 +15,7 @@ import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 
 
-public class LedUsageMain  implements IApplication{
+public class LedUsageSimpleMain  implements IApplication{
 
 private EnablerAsServer ledServer;
 private ILed ledClient1, ledClient2;
@@ -62,18 +62,18 @@ private ILed led;
 		String nameUri        = CoapApplServer.lightsDeviceUri+"/led"; 
 		String entry    = protocol==ProtocolType.coap ? nameUri : portLedTcp;
 		ledClient1      = new LedProxyAsClient("client1", host, entry, protocol );
-		ledClient2      = new LedProxyAsClient("client2", host, entry, protocol );	
-	}
+ 	}
 	
 	public void execute() {
 		Utils.delay(1000);	//To see the startup
  		ledClient1.turnOn();	
- 		boolean curLedstate = ledClient2.getState();
- 		Colors.outappl("LedProxyAsClientMain | ledState from client2=" + curLedstate, Colors.GREEN);
+ 		boolean curLedstate = ledClient1.getState();
+ 		Colors.outappl("LedProxyAsClientMain | ledState from client1=" + curLedstate, Colors.GREEN);
  		//assertTrue( curLedstate);
 		Utils.delay(1500);
-		ledClient2.turnOff();
-		Utils.delay(200);
+		ledClient1.turnOff();
+		Utils.delay(1500);
+//		Utils.delay(200);
 		curLedstate = ledClient1.getState();
 		Colors.outappl("LedProxyAsClientMain | ledState from client1=" + curLedstate, Colors.GREEN);
 		//assertTrue( ! curLedstate);
@@ -100,7 +100,7 @@ private ILed led;
 	}
  	
 	public static void main( String[] args)  {
-		LedUsageMain  sys = new LedUsageMain();	
+		LedUsageSimpleMain  sys = new LedUsageSimpleMain();	
 		sys.doJob(null); //"RadarSystemConfig.json"
 	}
 	

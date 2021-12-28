@@ -42,9 +42,9 @@ private Socket socket;
 		return answer;
 	}
 	
-//	@Override
-//	public void reply(String reqid) throws Exception {
-//	} 
+	@Override
+	public void reply(String reqid) throws Exception {
+	} 
 	
 	@Override
 	public String receiveMsg()  {

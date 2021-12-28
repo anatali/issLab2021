@@ -6,49 +6,25 @@ import org.eclipse.paho.client.mqttv3.*;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ApplMessageType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-class MqttSupportCallback implements MqttCallback{
-private String clientName;
-private BlockingQueue<String> blockingQueue ;
-
-	public MqttSupportCallback(String clientName, BlockingQueue<String> blockingQueue ) {
-		this.clientName    = clientName;
-		this.blockingQueue = blockingQueue;
-	}
-	@Override
-	public void connectionLost(Throwable cause) {
-		Colors.outerr("MqttSupportCallback | connectionLost cause="+cause);
- 	}
-
-	@Override
-	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		//Colors.outappl("MqttSupportCallback | messageArrived:" + message, Colors.ANSI_PURPLE );
-		blockingQueue.put( message.toString() );		
-//		Colors.outappl("MqttSupportCallback | messageArrived:"+message + " for " + clientName 
-//				+ " topic=" + topic + " bqsize="+blockingQueue.size(), Colors.ANSI_PURPLE);
-	}
-
-	@Override
-	public void deliveryComplete(IMqttDeliveryToken token) {
-		try {
-//			Colors.outappl("MqttSupportCallback | deliveryComplete token=" 
-//		       + token.getMessage() + " client=" + token.getClient().getClientId() , Colors.ANSI_YELLOW);
-		} catch (Exception e) {
-			Colors.outerr("MqttSupportCallback | deliveryComplete Error:"+e.getMessage());		
-		}
- 	}
-	
-}
-
+ 
 /*
  * Singleton for a specific broker
  */
 public class MqttSupport implements Interaction2021{
-	
 	private static int msgNum=0;	
+	private static MqttSupport singletonMqttsupport = null;
+	public static MqttSupport getTheSupport() {
+		if( singletonMqttsupport == null ) singletonMqttsupport = new MqttSupport();
+		return singletonMqttsupport;
+	}
+	
+	
 	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
 
 		public static ApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
@@ -102,6 +78,12 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 			Colors.outerr("MqttSupport  | connect Error:" + e.getMessage());
 		}
 	}
+	
+	public void connectAsEnabler(String name, MqttCallback handler) {
+		connect("enabler"+name, "topic"+name, RadarSystemConfig.mqttBrokerAddr);
+		subscribe("topic"+name, handler);
+	}
+	
 	public void disconnect() {
 		try {
 			client.disconnect();
@@ -109,15 +91,21 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 			Colors.outerr("MqttSupport  | disconnect Error:" + e.getMessage());
 		}
 	}
+	
 	public void subscribe(String topic) {
+		subscribe( topic, new MqttSupportCallback(client.getClientId() , blockingQueue));
+	}
+	
+	public void subscribe(String topic, MqttCallback callback) {
 		try {
-			client.setCallback( new MqttSupportCallback(client.getClientId() , blockingQueue) );	
+			client.setCallback( callback );	
 			client.subscribe(topic);			
 			//Colors.out("subscribe topic=" + topic + " blockingQueue=" + blockingQueue);
 		} catch (MqttException e) {
 			Colors.outerr("MqttSupport  | subscribe Error:" + e.getMessage());
 		}
 	}
+	
 	public void publish(String topic, String msg, int qos, boolean retain) {
 		MqttMessage message = new MqttMessage();
 		if (qos == 0 || qos == 1 || qos == 2) {
@@ -149,7 +137,7 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 		return answer;
 	}
 	 
-	public void reply(String topic, String msg) throws Exception {
+	public void reply(String msg) throws Exception {
 		publish(topic+"answer",msg,0,false);
 	}
 	

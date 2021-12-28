@@ -3,6 +3,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 
 
 public class ProxyAsClient {
@@ -28,6 +29,8 @@ protected ProtocolType protocol ;
 			//Colors.out(name + " |  setConnection "  + conn );
 		}else if( protocol == ProtocolType.coap ) {
 			conn = new CoapSupport(host,  entry);  
+		}else if( protocol == ProtocolType.mqtt ) {
+			conn = MqttSupport.getTheSupport();
 		}
 	}
   	

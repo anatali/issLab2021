@@ -1,14 +1,13 @@
 package it.unibo.enablerCleanArch.supports.mqtt;
 
-import java.util.Date;
-
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class MqttSupportDemoMain {
 private String topic      = "unibodemo";
-private String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL
+private String brokerAddr = RadarSystemConfig.mqttBrokerAddr; // : 1883  OPTIONAL
 
 //String sender, String msgId, String payload, String dest
 private String helloMsg  = MqttSupport.buildDispatch("demo", "cmd",   "hello",    "anyone").toString();
@@ -64,7 +63,7 @@ private String aReply    = MqttSupport.buildReply("demo",  "answer", "ANSWER",  
 				if( msgInput.msgContent().equals("getTime")) {
 					String answer = aReply.replace("ANSWER", ""+java.time.LocalTime.now() );
 					//mqtt.publish(topic+"answer",answer,0,false);				//forward? NO topic
-					mqtt.reply(topic,answer);
+					mqtt.reply(answer);
 				}else mqtt.publish(topic+"answer","notUnderstand",0,false);
  			} catch (Exception e) {
 					Colors.outerr("receiver  | Error:" + e.getMessage());

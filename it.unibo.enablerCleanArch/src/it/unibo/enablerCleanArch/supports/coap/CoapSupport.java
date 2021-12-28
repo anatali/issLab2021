@@ -58,6 +58,10 @@ private String url;
 		return respGet.getResponseText();
 	}
 	@Override
+	public void reply(String reqid) throws Exception {
+	} 
+
+	@Override
 	public void close()  {
 		Colors.out("CoapSupport | client shutdown=" + client);		
 		client.shutdown();	
