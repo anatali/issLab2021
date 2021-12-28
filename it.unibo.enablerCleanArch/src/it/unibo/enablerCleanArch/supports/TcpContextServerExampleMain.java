@@ -42,7 +42,7 @@ private SonarProxyAsClient sonarCaller;
 		//Registrazione dei componenti presso il contesto	
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
 		IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);
-		IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
+		IApplMsgHandler radarHandler = new RadarApplHandler("radarH", RadarDisplay.getRadarDisplay());
 		
  		contextServer.addComponent("sonar", sonarHandler);
 		contextServer.addComponent("led",   ledHandler);	
