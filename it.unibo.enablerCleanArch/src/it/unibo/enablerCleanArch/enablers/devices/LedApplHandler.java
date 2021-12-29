@@ -15,7 +15,7 @@ ILed led;
 	
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name + " | elaborate message=" + message + " conn=" + conn, Colors.ANSI_YELLOW);
+		Colors.out(name + " | elaborate message=" + message + " conn=" + conn + " led="+led, Colors.GREEN);
  		if( message.equals("on")) led.turnOn();
  		else if( message.equals("off") ) led.turnOff();	
  		else if( message.equals("getState") ) sendMsgToClient(""+led.getState(), conn );

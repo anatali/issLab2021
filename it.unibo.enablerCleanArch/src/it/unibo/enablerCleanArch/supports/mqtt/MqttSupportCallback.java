@@ -34,7 +34,7 @@ public class MqttSupportCallback implements MqttCallback{
 		public void messageArrived(String topic, MqttMessage message) throws Exception {
 			Colors.outappl("MqttSupportCallback | messageArrived:" + message, Colors.ANSI_PURPLE );
 			if( blockingQueue != null ) blockingQueue.put( message.toString() );	
-			else if( handler != null ) handler.elaborate(message.toString(), MqttSupport.getTheSupport());  //TODO 
+			else if( handler != null ) handler.elaborate(message.toString(), null);  //TODO 
 //			Colors.outappl("MqttSupportCallback | messageArrived:"+message + " for " + clientName 
 //					+ " topic=" + topic + " bqsize="+blockingQueue.size(), Colors.ANSI_PURPLE);
 		}

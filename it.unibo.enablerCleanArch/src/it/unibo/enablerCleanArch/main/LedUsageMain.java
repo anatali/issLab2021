@@ -8,7 +8,6 @@ import it.unibo.enablerCleanArch.domain.LedMockWithGui;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.LedApplHandlerMqtt;
 import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -35,7 +34,7 @@ private ILed led;
 	 		RadarSystemConfig.ledPort     	= 8015;
 	 		RadarSystemConfig.ledGui      	= true;
 	 		RadarSystemConfig.withContext 	= false;
-	 		RadarSystemConfig.protcolType 	= ProtocolType.mqtt;
+	 		RadarSystemConfig.protcolType 	= ProtocolType.tcp;
 	 		RadarSystemConfig.pcHostAddr  	= "localhost";
 	 		RadarSystemConfig.mqttBrokerAddr= "tcp://broker.hivemq.com";
 		}
@@ -56,7 +55,7 @@ private ILed led;
 			ledServer.start(); 
 		}else if( RadarSystemConfig.protcolType == ProtocolType.mqtt){		
 			ledServer = new EnablerAsServer("LedServerMqtt", RadarSystemConfig.ledPort, 
-					RadarSystemConfig.protcolType, new LedApplHandlerMqtt("ledHMqtt",led) );
+					RadarSystemConfig.protcolType, new LedApplHandler("ledHMqtt",led) );
 			ledServer.start(); 
 		}else if( RadarSystemConfig.protcolType == ProtocolType.coap){		
 			new LedResourceCoap("led", led);
@@ -73,19 +72,19 @@ private ILed led;
 	}
 	
 	public void execute() {
-//		Utils.delay(1000);	//To see the startup
+		Utils.delay(1000);	//To see the startup
  		ledClient1.turnOn();	
  		Utils.delay(1000);
  		boolean curLedstate = ledClient1.getState();
  		Colors.outappl("LedUsageMain | ledState from client1=" + curLedstate, Colors.GREEN);
  		Utils.delay(2000);
-// 		//assertTrue( curLedstate);
-//		Utils.delay(1500);
-//		ledClient2.turnOff();
-//		Utils.delay(200);
-//		curLedstate = ledClient1.getState();
-//		Colors.outappl("LedUsageMain | ledState from client1=" + curLedstate, Colors.GREEN);
-		//assertTrue( ! curLedstate);
+ 		//assertTrue( curLedstate);
+		Utils.delay(1500);
+		ledClient2.turnOff();
+		Utils.delay(200);
+		curLedstate = ledClient1.getState();
+		Colors.outappl("LedUsageMain | ledState from client1=" + curLedstate, Colors.GREEN);
+		assertTrue( ! curLedstate);
 	}
 	
 	public void terminate() {

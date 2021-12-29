@@ -47,9 +47,12 @@ private ILed led;
 	protected void configureTheLedEnablerServer() {
 		led = DeviceFactory.createLed();
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		if( protocol == ProtocolType.tcp || protocol == ProtocolType.mqtt ) {
+		if( protocol == ProtocolType.tcp  ) {
 			ledServer = new EnablerAsServer("LedServer", RadarSystemConfig.ledPort, 
 					RadarSystemConfig.protcolType, new LedApplHandler("ledH",led) );
+			ledServer.start(); 
+		}else if( RadarSystemConfig.protcolType == ProtocolType.mqtt){		
+			ledServer = new EnablerAsServer("LedServerMqtt",   "topicLedServerMqtt" , new LedApplHandler("ledHMqtt",led) );
 			ledServer.start(); 
 		}else if( RadarSystemConfig.protcolType == ProtocolType.coap){		
 			new LedResourceCoap("led", led);
@@ -58,25 +61,32 @@ private ILed led;
 	protected void configureTheLedProxyClient() {		 
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		String portLedTcp     = ""+RadarSystemConfig.ledPort;
-		String nameUri        = CoapApplServer.lightsDeviceUri+"/led"; 
-		String entry    = protocol==ProtocolType.coap ? nameUri : portLedTcp;
+		String entry          = "";
+		switch( protocol ) {
+			case tcp : entry = ""+RadarSystemConfig.ledPort;
+			case coap: entry = CoapApplServer.lightsDeviceUri+"/led";
+			case mqtt: entry = "topic"+ledServer.getName(); 
+		}
+//		String portLedTcp     = ""+RadarSystemConfig.ledPort;
+//		String nameUri        = CoapApplServer.lightsDeviceUri+"/led"; 
+//		String entry    = protocol==ProtocolType.coap ? nameUri : portLedTcp;
 		ledClient1      = new LedProxyAsClient("client1", host, entry, protocol );
  	}
 	
 	public void execute() {
-		Utils.delay(1000);	//To see the startup
- 		ledClient1.turnOn();	
+//		Utils.delay(1000);	//To see the startup
+    	ledClient1.turnOn();	
+ 		Utils.delay(1000);
  		boolean curLedstate = ledClient1.getState();
  		Colors.outappl("LedProxyAsClientMain | ledState from client1=" + curLedstate, Colors.GREEN);
- 		//assertTrue( curLedstate);
-		Utils.delay(1500);
+ 		assertTrue( curLedstate);
+		Utils.delay(1000);
 		ledClient1.turnOff();
-		Utils.delay(1500);
-//		Utils.delay(200);
+		Utils.delay(1000);
+////		Utils.delay(200);
 		curLedstate = ledClient1.getState();
 		Colors.outappl("LedProxyAsClientMain | ledState from client1=" + curLedstate, Colors.GREEN);
-		//assertTrue( ! curLedstate);
+		assertTrue( ! curLedstate);
 	}
 	
 	public void terminate() {

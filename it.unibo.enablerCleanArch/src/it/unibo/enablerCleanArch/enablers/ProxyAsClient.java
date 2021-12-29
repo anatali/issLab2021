@@ -1,4 +1,6 @@
 package it.unibo.enablerCleanArch.enablers;
+import it.unibo.enablerCleanArch.enablers.devices.ClientApplHandlerMqtt;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
@@ -30,7 +32,10 @@ protected ProtocolType protocol ;
 		}else if( protocol == ProtocolType.coap ) {
 			conn = new CoapSupport(host,  entry);  
 		}else if( protocol == ProtocolType.mqtt ) {
-			conn = MqttSupport.getTheSupport();
+			Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
+			conn = new MqttSupport();
+			((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+			((MqttSupport) conn).subscribe(name, entry+"answer", new ClientApplHandlerMqtt("clientHMqtt",conn));
 		}
 	}
   	

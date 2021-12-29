@@ -26,21 +26,31 @@ protected boolean isactive = false;
 			this.protocol 			= protocol;
  			if( protocol != null ) {
 				setServerSupport( port, protocol, handler  );
-				Colors.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol + " handler="+handler);
 			}else Colors.out(name+" |  CREATED no protocol"  );
 		} catch (Exception e) {
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );
 		}
 	}
-
+	public EnablerAsServer( String name, String topic, IApplMsgHandler handler )   { //, String handlerClassName
+		this.name     			= name;
+		MqttSupport mqtt = new MqttSupport();
+		mqtt.connectMqtt(name,topic, handler);
+		Colors.out(name+" |  CREATED  MqttSupport  handler="+handler);
+	}
  	protected void setServerSupport( int port, ProtocolType protocol, IApplMsgHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
+			Colors.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol + " handler="+handler);
 		}else if( protocol == ProtocolType.coap ) {
 			CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
-		}else if( protocol == ProtocolType.mqtt ) { //String clientid, String topic, String brokerAddr
-			MqttSupport.getTheSupport().connectAsEnabler( name, handler );
+			Colors.out(name+" |  CREATED  CoapApplServer"  );
 		}
+//		else if( protocol == ProtocolType.mqtt ) { //String clientid, String topic, String brokerAddr
+//			//MqttSupport.getTheSupport().connectAsEnablerMqtt( name, handler );
+//			MqttSupport mqtt = new MqttSupport();
+//			mqtt.connectMqtt(name, handler);
+//			Colors.out(name+" |  CREATED  MqttSupport  handler="+handler);
+//		}
 	}	
  	
  	public String getName() {
