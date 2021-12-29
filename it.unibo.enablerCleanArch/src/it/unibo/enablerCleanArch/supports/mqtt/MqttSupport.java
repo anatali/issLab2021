@@ -14,7 +14,16 @@ import it.unibo.enablerCleanArch.supports.Utils;
 
  
 /*
- * Singleton for a specific broker
+ * MqttSupport implementa Interaction2021 e quindi realizza il concetto di connessione nel caso di MQTT.
+ * Nel caso di MQTT, una connessione è realizata usando due topic, la prima di nome t1 e la seconda di nome t1answer
+ * Un EnablerServer fissa il nome t1  (ad es LedServerMqtt)
+ * Un proxyclient c1 usa il nome t1 per inviare comandi e richieste al server 
+ * e fa una subscribe su t1answer (o meglio su t1c1answer) per ricevere le risposte alle sue request.
+ * L'operazione request del proxyclient usa la sua istanza di MqttSupport (mqttProxy) per fare la 
+ * publish della richiesta su t1. 
+ * Per ricevere la risposta dal server il proxyclient fa un polling (poll)
+ * sulla blockingqueue di mqttProxy in modo da permettere la esecuzione 
+ * di messageArrived del ClientApplHandlerMqtt che fa l'operazione di put sulla blockingqueue di mqttProxy.
  */
 public class MqttSupport implements Interaction2021{
 //	private static MqttSupport singletonMqttsupport = null;
