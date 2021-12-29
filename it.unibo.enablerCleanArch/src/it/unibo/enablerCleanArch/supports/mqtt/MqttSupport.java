@@ -17,55 +17,24 @@ import it.unibo.enablerCleanArch.supports.Utils;
  * Singleton for a specific broker
  */
 public class MqttSupport implements Interaction2021{
-	private static int msgNum=0;	
 	private static MqttSupport singletonMqttsupport = null;
 	public static MqttSupport getTheSupport() {
 		if( singletonMqttsupport == null ) singletonMqttsupport = new MqttSupport();
 		return singletonMqttsupport;
 	}
-	
-	
-	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
 
-		public static ApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
-			try {
-				return new ApplMessage(msgId, ApplMessageType.dispatch.toString(),sender,dest,payload,""+(msgNum++));
-			} catch (Exception e) {
-				Colors.outerr("buildDispatch ERROR:"+ e.getMessage());
-				return null;
-			}
-		}
-		
-		public static ApplMessage buildRequest(String sender, String msgId, String payload, String dest) {
-			try {
-				return new ApplMessage(msgId, ApplMessageType.request.toString(),sender,dest,payload,""+(msgNum++));
-			} catch (Exception e) {
-				Colors.outerr("buildRequest ERROR:"+ e.getMessage());
-				return null;
-			}
-		}
-		public static ApplMessage buildReply(String sender, String msgId, String payload, String dest) {
-			try {
-				return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
-			} catch (Exception e) {
-				Colors.outerr("buildRequest ERROR:"+ e.getMessage());
-				return null;
-			}
-		}
-	
-	
-	
-	
 	
 protected MqttClient client;
 protected boolean isConnected = false;
 protected String topic;
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
-
+protected String clientid;
+protected MqttCallback handler;
  	
 	public void connect(String clientid, String topic, String brokerAddr) {
 		try {
-			this.topic = topic;
+			this.clientid = clientid;
+			this.topic    = topic;
 			client = new MqttClient(brokerAddr, clientid);
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setKeepAliveInterval(480);
@@ -80,8 +49,9 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 	}
 	
 	public void connectAsEnabler(String name, MqttCallback handler) {
-		connect("enabler"+name, "topic"+name, RadarSystemConfig.mqttBrokerAddr);
-		subscribe("topic"+name, handler);
+		connect( name, "topic"+name, RadarSystemConfig.mqttBrokerAddr);
+		this.handler = handler;
+		subscribe("topic"+name, handler);   //UNDERSCORE not allowed 
 	}
 	
 	public void disconnect() {
@@ -113,7 +83,7 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 			message.setQos(qos);
 		}
 		try {
-			//Colors.out("publish topic=" + topic + " msg=" + msg);
+			//Colors.out("MqttSupport  | publish topic=" + topic + " msg=" + msg);
 			message.setPayload(msg.getBytes());		 
 			client.publish(topic, message);
 		} catch (MqttException e) {
@@ -124,35 +94,77 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 //----------------------------------------------------	
 	@Override
 	public void forward(String msg) throws Exception {
-		publish(topic, msg, 0, false);		
+		Colors.out("forward topic=" + topic + " msg=" + msg);
+		try{
+			new ApplMessage(msg); //no exception => we can pubish
+			publish(topic, msg, 0, false);	
+		}catch( Exception e ) { //The message is not structured
+			ApplMessage msgAppl = Utils.buildDispatch("mqtt", "cmd", msg, "unknown");
+			publish(topic, msgAppl.toString(), 0, false);
+		}				
 	}
 
 	@Override
 	public String request(String msg) throws Exception { //msg should contain the name of the sender
-		String answerTopic = topic+"answer";
-		subscribe( answerTopic );
-		publish(topic, msg, 0, false);
-		//Utils.delay(500);
-		String answer = receiveMsg( answerTopic ); //UNDERSCORE NOT ALLOWED  
-		return answer;
-	}
+		Colors.out(".......... request " + msg);
+
+		String answerTopic = topic+"answer"; //UNDERSCORE NOT ALLOWED  topic=topicLedServer
+		//subscribe( answerTopic );  //Before publish 
+ 		BlockingQueue<String> answerQueue = new LinkedBlockingDeque<String>(1);
+ //		subscribe(answerTopic, new MqttSupportCallback(answerQueue) );
+		try{
+			new ApplMessage(msg); //no exception => we can pubish
+			publish(topic, msg, 0, false);	
+		}catch( Exception e ) { //The message is not structured
+			ApplMessage msgAppl = Utils.buildRequest("mqtt", "request", msg, "unknown");
+			publish(topic, msgAppl.toString(), 0, false);
+		}	
+		Colors.out("......................................................");
+//		Utils.delay(1500); //give time to arrive ...
+//  		String answer = receiveMsg( answerTopic, answerQueue );  
+		return "todo";
+ 	}
 	 
 	public void reply(String msg) throws Exception {
+		Colors.out("MqttSupport | reply topic=" + topic+"answer"  + " msg="+msg);
 		publish(topic+"answer",msg,0,false);
 	}
 	
+	protected String receiveMsg(String topic, BlockingQueue<String> bq) throws Exception{
+		Colors.out("MqttSupport | receiveMsg2 topic=" + topic + " blockingQueue=" + bq);
+  		String answer = bq.take();
+		Colors.out("MqttSupport | receiveMsg2 answer=" + answer + " blockingQueue=" + bq);
+ 		try {
+ 			ApplMessage msg = new ApplMessage(answer); //answer is structured
+ 			answer = msg.msgContent(); 			
+ 		}catch(Exception e) {
+ 			Colors.out("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 			
+ 		}
+		client.unsubscribe(topic);
+		return answer;		 
+	}
+	
 	protected String receiveMsg(String topic) throws Exception{
-		Colors.out("receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue);
+		Colors.out("MqttSupport | receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue);
 		//subscribe(topic);
  		String answer = blockingQueue.take();
- 		client.unsubscribe(topic);
+		Colors.out("MqttSupport | receiveMsg answer=" + answer + " blockingQueue=" + blockingQueue);
+ 		try {
+ 			ApplMessage msg = new ApplMessage(answer); //answer is structured
+ 			answer = msg.msgContent(); 			
+ 		}catch(Exception e) {
+ 			Colors.out("MqttSupport | receiveMsg " + answer + " not structured"   ); 			
+ 		}
+		client.unsubscribe(topic);
 		return answer;		 
 	}
 
 	@Override
 	public String receiveMsg() throws Exception {		
+		Colors.out("MqttSupport | receiveMsg subscribes topic=" + topic + " blockingQueue=" + blockingQueue);
 		subscribe(topic);
  		String answer = blockingQueue.take();
+		Colors.out("MqttSupport | receiveMsg subscribes answer=" + answer + " blockingQueue=" + blockingQueue);
  		client.unsubscribe(topic);
 		return answer;
 	}

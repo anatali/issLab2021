@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.ApplMessageType;
 
 public class Utils {
 	public static final  ApplMessage sonarActivate     = new ApplMessage("msg( sonarcmd, dispatch, system, sonar, activate,    0)");
@@ -71,4 +72,35 @@ public class Utils {
 		}
 	}
 
+//------------------------------------------------------
+	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
+	private static int msgNum=0;	
+
+	public static ApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.dispatch.toString(),sender,dest,payload,""+(msgNum++));
+		} catch (Exception e) {
+			Colors.outerr("buildDispatch ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	
+	public static ApplMessage buildRequest(String sender, String msgId, String payload, String dest) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.request.toString(),sender,dest,payload,""+(msgNum++));
+		} catch (Exception e) {
+			Colors.outerr("buildRequest ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	public static ApplMessage buildReply(String sender, String msgId, String payload, String dest) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
+		} catch (Exception e) {
+			Colors.outerr("buildRequest ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+
+	
 }

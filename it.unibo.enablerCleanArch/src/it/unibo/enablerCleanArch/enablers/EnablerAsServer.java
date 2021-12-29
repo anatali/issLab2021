@@ -26,7 +26,7 @@ protected boolean isactive = false;
 			this.protocol 			= protocol;
  			if( protocol != null ) {
 				setServerSupport( port, protocol, handler  );
-				Colors.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol);
+				Colors.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol + " handler="+handler);
 			}else Colors.out(name+" |  CREATED no protocol"  );
 		} catch (Exception e) {
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );

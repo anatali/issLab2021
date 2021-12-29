@@ -16,10 +16,11 @@ protected String name;
 		this.name = name;
 		//Colors.out(name + " | CREATING ... ", Colors.ANSI_YELLOW );
 	}
-   		
+   	
+ 	//Warning: le risposte sono messaggi 'plain'
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
- 			//Colors.out(name + " | sendMsgToClient " + message, Colors.ANSI_YELLOW);
+ 			Colors.out(name + " | sendMsgToClient " + message, Colors.ANSI_YELLOW);
 			conn.forward( message );
 		} catch (Exception e) {
  			Colors.outerr(name + " | ERROR " + e.getMessage());;
@@ -31,7 +32,7 @@ protected String name;
 		return name;
 	}	
  	
-//MQTT part 	
+//MQTT part 	 MqttCallback
 	@Override
 	public void connectionLost(Throwable cause) {
 		Colors.outerr(name + " ApplMsgHandler | connectionLost cause="+cause);

@@ -10,9 +10,9 @@ private String topic      = "unibodemo";
 private String brokerAddr = RadarSystemConfig.mqttBrokerAddr; // : 1883  OPTIONAL
 
 //String sender, String msgId, String payload, String dest
-private String helloMsg  = MqttSupport.buildDispatch("demo", "cmd",   "hello",    "anyone").toString();
-private String aRequest  = MqttSupport.buildRequest("demo",  "query", "getTime",  "anyone").toString();
-private String aReply    = MqttSupport.buildReply("demo",  "answer", "ANSWER",    "anyone").toString();
+private String helloMsg  = Utils.buildDispatch("demo", "cmd",   "hello",    "anyone").toString();
+private String aRequest  = Utils.buildRequest("demo",  "query", "getTime",  "anyone").toString();
+private String aReply    = Utils.buildReply("demo",  "answer", "ANSWER",    "anyone").toString();
 
 //The reply should be related to a request
 	public void simulateSender() {

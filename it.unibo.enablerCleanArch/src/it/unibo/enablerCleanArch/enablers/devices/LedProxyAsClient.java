@@ -36,7 +36,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 		}
 		else {
 			answer = sendRequestOnConnection( "getState" );
-			//Colors.out(name+" |  getState answer " + answer );
+			Colors.out(name+" |  getState answer " + answer );
 		}
 		return answer.equals("true");
 	}
