@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch.main;
 import static org.junit.Assert.assertTrue;
 
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
+import it.unibo.enablerCleanArch.domain.IDevice;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.LedMockWithGui;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
@@ -58,9 +59,11 @@ private ILed led;
 		}else if( RadarSystemConfig.protcolType == ProtocolType.mqtt){		
 //			ledServer = new EnablerAsServer("LedServerMqtt",   
 //					"topicLedServerMqtt" , new LedApplHandler("ledHMqtt",led) );
-			IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);
+			IApplMsgHandler ledHandler   = new LedApplHandler( "ledH" );
 			IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
 			ctxH.addComponent("led", ledHandler);
+			((LedApplHandler)ctxH.getHandler("led")).setTheDevice( led ); //Injection
+			
 			EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt",   
 					"topicCtxMqtt" , ctxH );			
 			ctxServer.start(); 

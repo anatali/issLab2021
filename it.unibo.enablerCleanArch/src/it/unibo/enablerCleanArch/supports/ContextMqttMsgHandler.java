@@ -30,6 +30,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 			Colors.outerr(name + " | WARNING: ContextMqttMsgHandler requires MQTT" );
 		}
  	}
+	
 
  	@Override
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
@@ -54,10 +55,17 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		if( dest != null ) h.elaborate(msg.msgContent(), conn);	
 	}
 
+	@Override
+	public IApplMsgHandler getHandler( String name ) {
+		return handlerMap.get(name);
+	}
+
+	@Override
 	public void addComponent( String name, IApplMsgHandler h) {
 		Colors.out("ContextMsgHandler added:" + name);
 		handlerMap.put(name, h);
 	}
+	@Override
 	public void removeComponent( String name ) {
 		Colors.out("ContextMsgHandler removed:" + name);
 		handlerMap.remove( name );
