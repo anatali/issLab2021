@@ -2,13 +2,9 @@ package it.unibo.enablerCleanArch.supports;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
-
+ 
 /*
- * 
+ * TODO: omettere la oarte MqttCallback che viene realizzata da ContextMqttMsgHandler
  */
 public abstract class ApplMsgHandler  implements IApplMsgHandler {  
 protected String name;
@@ -18,13 +14,17 @@ protected String name;
 		//Colors.out(name + " | CREATING ... ", Colors.ANSI_YELLOW );
 	}
    	
- 	//Warning: le risposte sono messaggi 'plain'
+ 	//Warning: le risposte sono messaggi 'unstructured'
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
- 			Colors.out(name + " | sendMsgToClient message=" + message + " conn=" + conn, Colors.ANSI_YELLOW);
-			conn.forward( message );
+ 			Colors.out(name + " | ApplMsgHandler sendMsgToClient message=" + message + " conn=" + conn, Colors.ANSI_YELLOW);
+// 			if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
+// 				String reply = Utils.buildReply("sender", "msgid", message, "dest").toString();
+// 				conn.forward( reply );
+// 			}else 
+ 				conn.forward( message );
 		} catch (Exception e) {
- 			Colors.outerr(name + " | ERROR " + e.getMessage());;
+ 			Colors.outerr(name + " | ApplMsgHandler ERROR " + e.getMessage());;
 		}
  	} 
  	public abstract void elaborate(String message, Interaction2021 conn) ;
@@ -32,7 +32,8 @@ protected String name;
  	public String getName() {
 		return name;
 	}	
- 	
+ 
+ /*
 //MQTT part 	 MqttCallback
 	@Override
 	public void connectionLost(Throwable cause) {
@@ -44,14 +45,22 @@ protected String name;
 		Colors.outappl(name + " ApplMsgHandler | messageArrived:" + message + " topic="+topic, Colors.ANSI_PURPLE );
 		try { //Perhaps we receive a structured message
 			ApplMessage msgInput = new ApplMessage(message.toString());
-			if( msgInput.isRequest()) {
+			Colors.outappl(name + " ApplMsgHandler | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
+			if( msgInput.isRequest() ) {
 				MqttSupport conn = new MqttSupport();
-				conn.connect(name, topic+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
-				elaborate(  msgInput.msgContent(),   conn) ;
-			}
-			else elaborate(  msgInput.msgContent(),   null) ;
+				conn.connect(name+"Answer", topic+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+				if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
+					//the object working is ContextMsgHandler  
+					elaborate(  msgInput.toString(),   conn) ;
+				}else elaborate(  msgInput.msgContent(),   conn) ;
+			}else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
+						//the object working is ContextMsgHandler  
+						elaborate(  msgInput.toString(),   null) ;
+				 }else elaborate(  msgInput.msgContent(),   null) ;
 		}catch( Exception e) {
-			elaborate(  message.toString(),   null) ;
+			Colors.outerr(name + " ApplMsgHandler | messageArrived WARNING:"+ e.getMessage() );
+			//if( RadarSystemConfig.protcolType != ProtocolType.mqtt)  
+				//elaborate(  message.toString(),   null) ;
 		}
 	}
 
@@ -63,6 +72,21 @@ protected String name;
 		} catch (Exception e) {
 			Colors.outerr(name + " ApplMsgHandler | deliveryComplete Error:"+e.getMessage());		
 		}
+	}
+*/ 
+	@Override
+	public void connectionLost(Throwable cause) {
+		Colors.outerr(name + " ApplMsgHandler | connectionLost not implemented" );
+	}
+
+	@Override
+	public void messageArrived(String topic, MqttMessage message)  {
+		Colors.outerr(name + " ApplMsgHandler | messageArrived not implemented");
+ 	}
+
+	@Override
+	public void deliveryComplete(IMqttDeliveryToken token){
+		Colors.outerr(name + " ApplMsgHandler | deliveryComplete not implemented");
 	}
  	
 }

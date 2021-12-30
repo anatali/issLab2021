@@ -1,9 +1,10 @@
 package it.unibo.enablerCleanArch.enablers.devices;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
@@ -19,52 +20,75 @@ private Interaction2021 conn;
 		this.conn = conn;
  	}
 	
-	@Override  //MqttCallback
-	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		//Colors.outappl(name + " ApplMsgHandler | messageArrived:" + message, Colors.GREEN );
-		myTopic = topic;
+//	@Override  //MqttCallback
+//	public void messageArrived(String topic, MqttMessage message) throws Exception {
+//		//Colors.outappl(name + " ApplMsgHandler | messageArrived:" + message, Colors.GREEN );
+//		myTopic = topic;
+//		try { //Perhaps we receive a structured message
+//			ApplMessage msgInput = new ApplMessage(message.toString());
+//			if( msgInput.isRequest() ) {
+//				Colors.outappl(name + " ApplMsgHandler | REQUEST:" + message + " conn="+conn, Colors.RED );
+//				elaborate(  msgInput.msgContent(),   conn);				
+//			}else{ 
+//				elaborate(  msgInput.msgContent(),   conn) ;
+//			}
+//		}catch( Exception e) {
+//			elaborate(  message.toString(),  conn) ;
+//		}
+//	}	
+	
+	public void connectionLost(Throwable cause) {
+		Colors.outerr(name + " | connectionLost cause="+cause);
+	}
+	@Override
+	public void deliveryComplete(IMqttDeliveryToken token) {
+		try {
+//			Colors.outappl("MqttSupportCallback | deliveryComplete token=" 
+//		       + token.getMessage() + " client=" + token.getClient().getClientId() , Colors.ANSI_YELLOW);
+		} catch (Exception e) {
+			Colors.outerr(name + " | deliveryComplete Error:"+e.getMessage());		
+		}
+	}
+	
+	@Override
+	public void messageArrived(String topic, MqttMessage message)   {
+		Colors.outappl(name + " ApplMsgHandler | messageArrived:" + message + " topic="+topic, Colors.ANSI_PURPLE );
 		try { //Perhaps we receive a structured message
 			ApplMessage msgInput = new ApplMessage(message.toString());
+			Colors.outappl(name + " ApplMsgHandler | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
 			if( msgInput.isRequest() ) {
-				Colors.outappl(name + " ApplMsgHandler | REQUEST:" + message + " conn="+conn, Colors.RED );
-				elaborate(  msgInput.msgContent(),   conn);				
-			}else{ 
-				elaborate(  msgInput.msgContent(),   conn) ;
-			}
-		}catch( Exception e) {
-			elaborate(  message.toString(),  conn) ;
+				MqttSupport conn = new MqttSupport();
+				conn.connect(name+"Answer", topic+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+ 				elaborate(  msgInput.toString(),   conn) ;
+ 			}else  
+ 				elaborate(   msgInput.toString() ,   conn) ;
+ 		}catch( Exception e) {
+			Colors.outerr(name + " ApplMsgHandler | messageArrived WARNING:"+ e.getMessage() );
+			//if( RadarSystemConfig.protcolType != ProtocolType.mqtt)  
+				//elaborate(  message.toString(),   null) ;
 		}
-	}	
+	}
 	
-	//Non dovrebbe mai essere usato
-	@Override //LedApplHandler
+	 
+	@Override  
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
- 		try {
-  			String answer = Utils.buildReply("mqtt", "reply", message, "caller").toString();
-  			//String answerTopic = myTopic+"answer";
- 			Colors.out(name + " | sendMsgToClient " + answer  , Colors.RED);
-			conn.reply( answer );
-		} catch (Exception e) {
- 			Colors.outerr(name + " | ERROR " + e.getMessage());;
-		}
+		Colors.outerr(name + " | WARNING: sendMsgToClient for a client for answer should never been used");
  	} 
  
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		Colors.out(name + " | elaborate message=" + message + " conn=" + conn, Colors.RED);
-// 		if( message.equals("on")) led.turnOn();
-// 		else if( message.equals("off") ) led.turnOff();	
-// 		else if( message.equals("getState") ) sendMsgToClient(""+led.getState(), conn );
-		try {
+ 		try {
 			ApplMessage msg = new ApplMessage(message);
 			if( msg.isReply() ) {
-				//TODO: riattivare processo in attesa
+				Colors.out(name + " | put in queue message=" + msg.msgContent() + " conn=" + conn, Colors.RED);
+				((MqttSupport)conn).getQueue().put(msg.msgContent());
 			}else {
 				Colors.out(name + " | elaborate message put in queue  conn=" + conn, Colors.RED);
 				((MqttSupport)conn).getQueue().put(message);
 			}
 		}catch(Exception e) { //not a structured
-			Colors.out(name + " | elaborate message put in queue  conn=" + conn, Colors.RED);
+			Colors.out(name + " | " +e.getMessage() + " elaborate plain message put in queue  conn=" + conn, Colors.RED);
 			try {
 				((MqttSupport)conn).getQueue().put(message);
 			} catch (InterruptedException e1) {

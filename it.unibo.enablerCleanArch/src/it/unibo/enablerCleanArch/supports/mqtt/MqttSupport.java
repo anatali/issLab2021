@@ -133,7 +133,7 @@ protected MqttCallback handler;
  		//BlockingQueue<String> answerQueue = new LinkedBlockingDeque<String>(1);
 		//subscribe(topic, new MqttSupportCallback(answerQueue) );
 		try{
-			new ApplMessage(msg); //no exception => we can pubish
+			new ApplMessage(msg); //no exception => we can publish
 			publish(topic, msg, 0, false);	
 		}catch( Exception e ) { //The message is not structured
 			ApplMessage msgAppl = Utils.buildRequest("mqtt", "request", msg, "unknown");
@@ -171,8 +171,8 @@ protected MqttCallback handler;
  			ApplMessage msg = new ApplMessage(answer); //answer is structured
  			answer = msg.msgContent(); 			
  		}catch(Exception e) {
- 			Colors.out("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 			
- 		}
+ 			Colors.out("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 
+  		}
 		client.unsubscribe(topic);
 		return answer;		 
 	}

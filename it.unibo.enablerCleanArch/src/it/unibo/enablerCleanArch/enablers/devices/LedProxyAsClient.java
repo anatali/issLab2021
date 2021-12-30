@@ -19,12 +19,14 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 	@Override
 	public void turnOn() { 
  		if( RadarSystemConfig.withContext )  sendCommandOnConnection(Utils.turnOnLed.toString());
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  sendCommandOnConnection(Utils.turnOnLed.toString());
  		else sendCommandOnConnection( "on" );
  	}
 
 	@Override
 	public void turnOff() {   
  		if( RadarSystemConfig.withContext )  sendCommandOnConnection(Utils.turnOffLed.toString());
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  sendCommandOnConnection(Utils.turnOffLed.toString());
  		else sendCommandOnConnection( "off" );
  	}
 
@@ -34,6 +36,8 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 		if( RadarSystemConfig.withContext ) {
 			answer = sendRequestOnConnection(Utils.getLedState.toString()) ;
 		}
+  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
+  			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getState", "led").toString());
 		else {
 			answer = sendRequestOnConnection( "getState" );
 			Colors.out(name+" |  getState answer " + answer );
