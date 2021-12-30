@@ -4,13 +4,13 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.RadarGuiProxyAsClient;
-import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
+import it.unibo.enablerCleanArch.enablers.RadarGuiProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
+import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 
 /*
@@ -91,9 +91,6 @@ private TcpContextServer ctxServer  = null;
 		if( ctxServer != null ) ctxServer.activate();
 		//sonar.activate();	//NO activate the sonar is done by the Controller
  	}
-	
- 
-
   
 	@Override
 	public void doJob(String configFileName) {

@@ -2,6 +2,9 @@ package it.unibo.enablerCleanArch.supports;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  
 /*
  * TODO: omettere la oarte MqttCallback che viene realizzata da ContextMqttMsgHandler
@@ -18,10 +21,10 @@ protected String name;
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
  			Colors.out(name + " | ApplMsgHandler sendMsgToClient message=" + message + " conn=" + conn, Colors.ANSI_YELLOW);
-// 			if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
-// 				String reply = Utils.buildReply("sender", "msgid", message, "dest").toString();
-// 				conn.forward( reply );
-// 			}else 
+ 			if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
+ 				String reply = Utils.buildReply("sender", "msgid", message, "dest").toString();
+ 				conn.forward( reply );
+ 			}else 
  				conn.forward( message );
 		} catch (Exception e) {
  			Colors.outerr(name + " | ApplMsgHandler ERROR " + e.getMessage());;

@@ -1,11 +1,11 @@
 package it.unibo.enablerCleanArch.enablers;
-import it.unibo.enablerCleanArch.enablers.devices.ClientApplHandlerMqtt;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArchapplHandlers.ClientApplHandlerMqtt;
 
 
 public class ProxyAsClient {
@@ -13,6 +13,10 @@ private Interaction2021 conn;
 protected String name ;		//could be a uri
 protected ProtocolType protocol ;
 
+/*
+ * Realizza la connessione di tipo Interaction2021 (concetto astratto)
+ * in modo diverso, a seconda del protocollo indicato (tecnologia specifica)
+ */
  
 	public ProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		try {
@@ -25,18 +29,39 @@ protected ProtocolType protocol ;
 	}
 	
 	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
-		if( protocol == ProtocolType.tcp) {
-			int port = Integer.parseInt(entry);
-			conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
-			//Colors.out(name + " |  setConnection "  + conn );
-		}else if( protocol == ProtocolType.coap ) {
-			conn = new CoapSupport(host,  entry);  
-		}else if( protocol == ProtocolType.mqtt ) {
-			Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
-			conn = new MqttSupport();
-			((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
-			((MqttSupport) conn).subscribe(name, entry+"answer", new ClientApplHandlerMqtt("clientHMqtt",conn));
+		switch( protocol ) {
+			case tcp : {
+				int port = Integer.parseInt(entry);
+				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
+				//Colors.out(name + " |  setConnection "  + conn );		
+				break;
+			}
+			case coap : {
+				conn = new CoapSupport(host,  entry);  
+				break;
+			}
+			case mqtt : {
+				Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
+				conn = new MqttSupport();
+				((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+				ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
+				((MqttSupport) conn).subscribe(name, entry+name+"answer", h);	
+				break;
+			}
+				
 		}
+//		if( protocol == ProtocolType.tcp) {
+//			int port = Integer.parseInt(entry);
+//			conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
+//			//Colors.out(name + " |  setConnection "  + conn );
+//		}else if( protocol == ProtocolType.coap ) {
+//			conn = new CoapSupport(host,  entry);  
+//		}else if( protocol == ProtocolType.mqtt ) {
+//			Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
+//			conn = new MqttSupport();
+//			((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+//			((MqttSupport) conn).subscribe(name, entry+name+"answer", new ClientApplHandlerMqtt("clientHMqtt",conn));
+//		}
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {

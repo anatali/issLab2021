@@ -18,11 +18,14 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		
 			programs.put("3", new SonarUsageMainWithContextTcp());
-			programs.put("4", new SonarUsageMainCoap());
-			programs.put("5", new RadarSystemAllOnPc());
-			programs.put("6", new RadarSystemDevicesOnRasp());
-			programs.put("7", new RadaSystemMainCoap());
-			programs.put("8", new RadarSystemMainOnPcCoap());
+			programs.put("4", new SonarUsageMainWithContextMqtt());
+			programs.put("5", new SonarUsageMainCoap());
+			programs.put("6", new RadarSystemAllOnPc());
+			programs.put("7", new RadarSystemDevicesOnRasp());
+			programs.put("8", new RadaSystemMainCoap());
+			programs.put("9", new RadarSystemMainOnPcCoap());
+			programs.put("a", new RadarSystemDevicesOnRaspMqtt());
+			programs.put("A", new RadarSystemMainOnPcMqtt());
 			String i = "";
 			outMenu();
 			Colors.outappl(">>>   ", Colors.ANSI_PURPLE);
@@ -35,6 +38,9 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 		
 	}
 	public static void main( String[] args) throws Exception {
+		Colors.outappl("---------------------------------------------------", Colors.BLUE);
+		Colors.outappl("WARNING: this application uses RadarSystemConfig", Colors.BLUE);
+		Colors.outappl("---------------------------------------------------", Colors.BLUE);
 		new AllMainRadarLed().doChoice();
 	}
 }

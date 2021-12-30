@@ -26,7 +26,9 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 
 	public ContextMqttMsgHandler(String name) {
 		super(name);
-		if(  RadarSystemConfig.protcolType != ProtocolType.mqtt) { 
+		Colors.out(name + " |  RadarSystemConfig.protcolType=" +  RadarSystemConfig.protcolType);
+		Colors.out(name + " |  test=" +  (RadarSystemConfig.protcolType == ProtocolType.mqtt));
+		if(  ! RadarSystemConfig.protcolType.equals( ProtocolType.mqtt ) ) { 
 			Colors.outerr(name + " | WARNING: ContextMqttMsgHandler requires MQTT" );
 		}
  	}
@@ -85,10 +87,11 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 				ApplMessage msgInput = new ApplMessage(message.toString());
 				Colors.outappl(name + " | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
 				if( msgInput.isRequest() ) {
+					//Preparo connessione per spedire risposta 
+					String sender=msgInput.msgSender();
 					MqttSupport conn = new MqttSupport();
-					conn.connect(name+"Answer", topic+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
- 						//the object working is ContextMsgHandler  
-						elaborate(  msgInput.toString(),   conn) ;
+					conn.connect(name+"Answer", topic+sender+"answer", RadarSystemConfig.mqttBrokerAddr);  
+					elaborate(  msgInput.toString(),   conn) ;
  				}else  elaborate(  msgInput.toString(),   null) ;
  			}catch( Exception e) {
 				Colors.outerr(name + " | messageArrived WARNING:"+ e.getMessage() );

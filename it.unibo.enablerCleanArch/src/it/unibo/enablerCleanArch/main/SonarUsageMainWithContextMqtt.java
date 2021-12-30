@@ -4,15 +4,19 @@ import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
 import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
+import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ContextMqttMsgHandler;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
-public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain implements IApplication {
+public class SonarUsageMainWithContextMqtt extends SonarUsageAbstractMain implements IApplication {
 
 	protected ISonar clientSonarProxy ;	
 	private TcpContextServer ctxServer;
@@ -20,23 +24,28 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain impleme
  	
  	@Override //IApplication
 	public String getName() {
-		return "SonarUsageMainWithContextTcp";
+		return "SonarUsageMainWithContextMqtt";
 	}
 	
 	@Override
 	public void setUp(String fName) {	//Called by inherited configure
 		super.setUp(fName);
 		RadarSystemConfig.withContext     = true;
-		RadarSystemConfig.sonarObservable = true;	
-//		RadarSystemConfig.ctxServerPort   = 8018;
+		RadarSystemConfig.sonarObservable = false;	
+		RadarSystemConfig.protcolType     = ProtocolType.mqtt;
 	}
 	
 	@Override
 	protected void configureTheServer() {
-		ctxServer  = new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
-		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
-		ctxServer.addComponent("sonar", sonarHandler);
-  		ctxServer.activate();
+//		ctxServer  = new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
+//		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
+//		ctxServer.addComponent("sonar", sonarHandler);
+//  		ctxServer.activate();
+		IApplMsgHandler sonarHandler = new SonarApplHandler( "sonarH",sonar );
+		IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
+		ctxH.addComponent("sonar", sonarHandler);
+ 		EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt","topicCtxMqtt" , ctxH );			
+		ctxServer.start(); 
 	}
 	
 	//called by the inherited configure
@@ -51,22 +60,21 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain impleme
 
 	@Override
 	public void execute() {
- 		clientSonarProxy = new SonarProxyAsClient("clientSonarProxy", 
- 				RadarSystemConfig.pcHostAddr, ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp );
+ 		clientSonarProxy      = new SonarProxyAsClient("clientSonarProxy", 
+ 				RadarSystemConfig.pcHostAddr, "topicCtxMqtt", ProtocolType.mqtt );
  		clientSonarProxy.activate();
-		for( int i=1; i<=5; i++) {
+		for( int i=1; i<=2; i++) {
 			int v = clientSonarProxy.getDistance().getVal();
-			Colors.outappl("SonarUsageMainWithContextTcp | execute with proxyClient i=" + i + " getDistance=" + v, Colors.BLUE  );
-			Utils.delay(RadarSystemConfig.sonarDelay+100);
+			Colors.outappl("SonarUsageMainWithContextTcp | execute with proxyClient i=" + i + " getDistance=" + v, Colors.GREEN  );
+			//Utils.delay(RadarSystemConfig.sonarDelay+100);  //MQTT impone un ritmo lento ...
 		}	 
 		if( RadarSystemConfig.sonarObservable) ((ISonarObservable) sonar).unregister(obsfortesting); 
-		Utils.delay( 500  ); //The sonars works for a while, by putting data in the queue
-		clientSonarProxy.deactivate();;			
+		//Utils.delay( 500  ); //The sonars works for a while, by putting data in the queue
+		clientSonarProxy.deactivate();	
 	}
 	
 	public void terminate() {
-		Colors.outappl("SonarUsageMainWithContextTcp | terminate",     Colors.ANSI_PURPLE );
- 		Colors.outappl("SonarUsageMainWithContextTcp | terminate BYE", Colors.ANSI_PURPLE );	
+ 		Colors.outappl("SonarUsageMainWithContextMqtt | terminate BYE", Colors.ANSI_PURPLE );	
 		System.exit(0);
 	}
 	
@@ -78,8 +86,8 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain impleme
 		terminate();		
 	}
 	public static void main( String[] args) throws Exception {
-		SonarUsageMainWithContextTcp  sys = new SonarUsageMainWithContextTcp();	
-		sys.doJob("RadarSystemConfig.json");	 //"RadarSystemConfig.json"
+		SonarUsageMainWithContextMqtt  sys = new SonarUsageMainWithContextMqtt();	
+		sys.doJob("RadarSystemConfig.json");	  
  	}
 
 }

@@ -1,8 +1,6 @@
-package it.unibo.enablerCleanArch.enablers.devices;
+package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
-import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 
 public class EnablerSonarAsServer extends EnablerAsServer{

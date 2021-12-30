@@ -5,7 +5,6 @@ import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.*;
-import it.unibo.enablerCleanArch.enablers.devices.RadarGuiProxyAsClient;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.DeviceType;

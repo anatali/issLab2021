@@ -8,12 +8,12 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
-import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.RadarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.RadarGuiProxyAsClient;
-import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
+import it.unibo.enablerCleanArch.enablers.RadarGuiProxyAsClient;
+import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
+import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
+import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 public class TcpContextServerExampleMain {
 private TcpContextServer contextServer;

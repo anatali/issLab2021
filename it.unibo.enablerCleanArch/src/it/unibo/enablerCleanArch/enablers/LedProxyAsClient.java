@@ -1,9 +1,7 @@
-package it.unibo.enablerCleanArch.enablers.devices;
+package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
  
@@ -18,22 +16,30 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 
 	@Override
 	public void turnOn() { 
- 		if( RadarSystemConfig.withContext )  sendCommandOnConnection(Utils.turnOnLed.toString());
- 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  sendCommandOnConnection(Utils.turnOnLed.toString());
+ 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
+ 			sendCommandOnConnection(Utils.turnOnLed.toString());
+ 		}
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
+ 			sendCommandOnConnection(Utils.turnOnLed.toString());
+ 		}
  		else sendCommandOnConnection( "on" );
  	}
 
 	@Override
 	public void turnOff() {   
- 		if( RadarSystemConfig.withContext )  sendCommandOnConnection(Utils.turnOffLed.toString());
- 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  sendCommandOnConnection(Utils.turnOffLed.toString());
+ 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
+ 			sendCommandOnConnection(Utils.turnOffLed.toString());
+ 		}
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
+ 			sendCommandOnConnection(Utils.turnOffLed.toString());
+ 		}
  		else sendCommandOnConnection( "off" );
  	}
 
 	@Override
 	public boolean getState() {   
 		String answer="";
-		if( RadarSystemConfig.withContext ) {
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
 			answer = sendRequestOnConnection(Utils.getLedState.toString()) ;
 		}
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  

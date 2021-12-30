@@ -3,14 +3,14 @@ package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
+import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
-import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
+import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
+import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
  
 public class RadarSystemAllOnPc implements IApplication{

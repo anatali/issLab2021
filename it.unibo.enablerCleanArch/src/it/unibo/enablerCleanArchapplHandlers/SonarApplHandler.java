@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.enablers.devices;
+package it.unibo.enablerCleanArchapplHandlers;
 
  
 import it.unibo.enablerCleanArch.domain.ISonar;

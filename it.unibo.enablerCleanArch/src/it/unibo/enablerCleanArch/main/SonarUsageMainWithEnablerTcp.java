@@ -5,12 +5,12 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
 import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
+import it.unibo.enablerCleanArch.enablers.EnablerSonarAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.EnablerSonarAsServer;
-import it.unibo.enablerCleanArch.enablers.devices.SonarApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.SonarProxyAsClient;
+import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 public class SonarUsageMainWithEnablerTcp extends SonarUsageAbstractMain implements IApplication{
 	protected EnablerAsServer sonarServer;

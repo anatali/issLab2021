@@ -1,7 +1,5 @@
-package it.unibo.enablerCleanArch.enablers.devices;
+package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
-import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 
 

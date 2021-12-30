@@ -60,7 +60,7 @@ protected MqttCallback handler;
 			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
 			client.connect(options);
 			isConnected = true;
-			Colors.out("MqttSupport | connected " + clientid);
+			Colors.out("MqttSupport | connected " + clientid + " to " + topic);
 		} catch (MqttException e) {
 			isConnected = false;
 			Colors.outerr("MqttSupport  | connect Error:" + e.getMessage());
@@ -128,10 +128,12 @@ protected MqttCallback handler;
 	public String request(String msg) throws Exception { //msg should contain the name of the sender
 		Colors.out(".......... request " + msg + " by clientid=" + clientid + " support=" + this);
         
-		String answerTopic = topic+"answer"; //UNDERSCORE NOT ALLOWED  topic=topicLedServer
+		String answerTopic = topic+clientid+"answer"; //UNDERSCORE NOT ALLOWED  topic=topicLedServer
 		//subscribe( answerTopic );  //Before publish 
  		//BlockingQueue<String> answerQueue = new LinkedBlockingDeque<String>(1);
 		//subscribe(topic, new MqttSupportCallback(answerQueue) );
+		
+		//INVIO RICHIESTA su topic
 		try{
 			new ApplMessage(msg); //no exception => we can publish
 			publish(topic, msg, 0, false);	
@@ -140,13 +142,13 @@ protected MqttCallback handler;
 			publish(topic, msgAppl.toString(), 0, false);
 		}	
 		Colors.out("......................................................");
+		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
 		String answer = null;
 		while( answer== null ) {
 			answer=blockingQueue.poll() ;
 			Colors.out("MqttSupport | blockingQueue empty ..."  );
 			Utils.delay(500); //il client ApplMsgHandler dovrebbe andare ...
 		}
-  		//String answer = blockingQueue.take();
 		Colors.out("MqttSupport | request answer=" + answer + " blockingQueue=" + blockingQueue);
  		try {
  			ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured

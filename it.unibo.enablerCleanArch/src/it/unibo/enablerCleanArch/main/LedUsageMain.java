@@ -1,25 +1,31 @@
 package it.unibo.enablerCleanArch.main;
 
 import static org.junit.Assert.assertTrue;
-
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.LedMockWithGui;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
+import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.devices.LedApplHandler;
-import it.unibo.enablerCleanArch.enablers.devices.LedProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
+import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
+import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
+import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 
 public class LedUsageMain  implements IApplication{
 
 private EnablerAsServer ledServer;
+private TcpContextServer ctxServer;
 private ILed ledClient1, ledClient2;
 private ILed led;
+private String ctxTopic = "topicCtxMqtt";
 
 	@Override //IApplication
 	public String getName() {
@@ -33,7 +39,7 @@ private ILed led;
 	 		RadarSystemConfig.testing     	= false;
 	 		RadarSystemConfig.ledPort     	= 8015;
 	 		RadarSystemConfig.ledGui      	= true;
-	 		RadarSystemConfig.withContext 	= false;
+	 		RadarSystemConfig.withContext 	= true;
 	 		RadarSystemConfig.protcolType 	= ProtocolType.tcp;
 	 		RadarSystemConfig.pcHostAddr  	= "localhost";
 	 		RadarSystemConfig.mqttBrokerAddr= "tcp://broker.hivemq.com";
@@ -49,25 +55,45 @@ private ILed led;
 	protected void configureTheLedEnablerServer() {
 		led = DeviceFactory.createLed();
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		if( protocol == ProtocolType.tcp  ) {
-			ledServer = new EnablerAsServer("LedServer", RadarSystemConfig.ledPort, 
-					RadarSystemConfig.protcolType, new LedApplHandler("ledH",led) );
-			ledServer.start(); 
-		}else if( RadarSystemConfig.protcolType == ProtocolType.mqtt){		
-			ledServer = new EnablerAsServer("LedServerMqtt", RadarSystemConfig.ledPort, 
-					RadarSystemConfig.protcolType, new LedApplHandler("ledHMqtt",led) );
-			ledServer.start(); 
-		}else if( RadarSystemConfig.protcolType == ProtocolType.coap){		
-			new LedResourceCoap("led", led);
+		switch( protocol ) {
+			case tcp : {				
+				if( RadarSystemConfig.withContext ) {
+					ctxServer                    = new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
+				    IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led) ;
+				    ctxServer.addComponent("led", ledHandler);
+				    ctxServer.activate();
+				}else {
+					ledServer = new EnablerAsServer("LedServer", RadarSystemConfig.ledPort, 
+							RadarSystemConfig.protcolType, new LedApplHandler("ledH",led) );
+					ledServer.start(); 		
+				}
+				break;
+			}
+			case coap : { new LedResourceCoap("led", led); break; }
+			case mqtt :
+				IApplMsgHandler ledHandler   = new LedApplHandler( "ledH" );
+				IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
+				ctxH.addComponent("led", ledHandler);
+				((LedApplHandler)ctxH.getHandler("led")).setTheDevice( led ); //Injection				
+				EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt", ctxTopic , ctxH );			
+				ctxServer.start(); 
+				break;
 		}
 	}
 	protected void configureTheLedProxyClient() {		 
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		String portLedTcp     = ""+RadarSystemConfig.ledPort;
-		String nameUri        = CoapApplServer.lightsDeviceUri+"/led"; 
-		String entry    = protocol==ProtocolType.coap ? nameUri : portLedTcp;
-		ledClient1      = new LedProxyAsClient("client1", host, entry, protocol );
+		String entry          = "";
+		switch( protocol ) {
+			case tcp : {
+				if( RadarSystemConfig.withContext ) entry =  ""+RadarSystemConfig.ctxServerPort;
+				else entry = ""+RadarSystemConfig.ledPort; 
+				break;
+			}
+			case coap: entry = CoapApplServer.lightsDeviceUri+"/led"; break;
+			case mqtt: entry = ctxTopic; break;
+		}
+ 		ledClient1      = new LedProxyAsClient("client1", host, entry, protocol );
 		ledClient2      = new LedProxyAsClient("client2", host, entry, protocol );	
 	}
 	
@@ -77,21 +103,25 @@ private ILed led;
  		Utils.delay(1000);
  		boolean curLedstate = ledClient1.getState();
  		Colors.outappl("LedUsageMain | ledState from client1=" + curLedstate, Colors.GREEN);
- 		Utils.delay(2000);
- 		//assertTrue( curLedstate);
-		Utils.delay(1500);
+ 		Utils.delay(200);
+ 		assertTrue( curLedstate);
+		Utils.delay(1000);
 		ledClient2.turnOff();
-		Utils.delay(200);
-		curLedstate = ledClient1.getState();
-		Colors.outappl("LedUsageMain | ledState from client1=" + curLedstate, Colors.GREEN);
+		Utils.delay(500);
+		curLedstate = ledClient2.getState();
+		Colors.outappl("LedUsageMain | ledState from client2=" + curLedstate, Colors.GREEN);
 		assertTrue( ! curLedstate);
 	}
 	
 	public void terminate() {
+		Colors.outappl("terminate",Colors.BLUE);
 		if( led instanceof LedMockWithGui ) { 
 			((LedMockWithGui) led).destroyLedGui(  ); 
 		}
-		if( RadarSystemConfig.protcolType == ProtocolType.tcp) ledServer.stop();
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp ) {
+			if( ! RadarSystemConfig.withContext ) ledServer.stop();
+			else ctxServer.deactivate();
+		}
 		else {
 			CoapApplServer.getTheServer().stop();
 			CoapApplServer.getTheServer().destroy();

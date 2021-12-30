@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.enablers.devices;
+package it.unibo.enablerCleanArchapplHandlers;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -58,7 +58,7 @@ private Interaction2021 conn;
 			Colors.outappl(name + " ApplMsgHandler | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
 			if( msgInput.isRequest() ) {
 				MqttSupport conn = new MqttSupport();
-				conn.connect(name+"Answer", topic+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+				conn.connect(name+"Answer", topic+name+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
  				elaborate(  msgInput.toString(),   conn) ;
  			}else  
  				elaborate(   msgInput.toString() ,   conn) ;
