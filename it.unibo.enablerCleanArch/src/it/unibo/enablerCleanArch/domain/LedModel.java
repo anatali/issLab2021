@@ -19,6 +19,7 @@ public abstract class LedModel implements ILed{
 		
 	}
 	public static ILed createLedConcrete() {
+		Colors.out("createLedConcrete");
 		return new LedConcrete();
 	}	
 	

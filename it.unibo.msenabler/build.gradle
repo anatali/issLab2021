@@ -73,14 +73,14 @@ task runGui(type: JavaExec) {
 }
 */
 mainClassName = 'it.unibo.msenabler.MsenablerApplication'
-
+/*
 jar {
 	println("building jar ...")
 	from sourceSets.main.allSource
 	manifest {
 		attributes 'Main-Class': "$mainClassName"
 	}
-}
+}*/
 
 distributions {
 	main {

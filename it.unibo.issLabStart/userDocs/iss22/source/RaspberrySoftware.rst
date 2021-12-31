@@ -110,6 +110,14 @@ Java
     Include in /etc/environment
     JRE_HOME=/usr/lib/jvm/java-8-openjdk-armhf/jre/bin/java
 
+Installazione di ``OpenJDK 11``, il default Java development e runtime nell'ultima versione di Raspbian OS, 
+basata su Debian 10, Buster.
+
+.. code::
+
+    sudo apt update
+    sudo apt install default-jdk
+    java -version
 +++++++++++++++++++++++++++++++++
 GIT
 +++++++++++++++++++++++++++++++++
