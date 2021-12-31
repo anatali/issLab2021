@@ -16,8 +16,14 @@ import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
 
 public class RadarSystemMainOnPcMqtt implements IApplication{
 private IRadarDisplay radar = null;
+private ILed ledClient1;
+private boolean ledblinking = false;
 
-	
+    public RadarSystemMainOnPcMqtt(){
+		setup("RadarSystemConfig.json");
+		configure();    	
+    }
+    
 	@Override
 	public String getName() {	 
 		return "RadarSystemMainOnPcMqtt";
@@ -27,15 +33,6 @@ private IRadarDisplay radar = null;
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
 			RadarSystemConfig.simulation   		= false;
-//			RadarSystemConfig.raspHostAddr 		= "localhost"; //"192.168.1.183";
-//			RadarSystemConfig.SonareRemote 		= true;
-//			RadarSystemConfig.LedRemote    		= true;
-//			RadarSystemConfig.ControllerRemote  = true;
-//			RadarSystemConfig.sonarPort    		= 8012;
-//			RadarSystemConfig.ledPort      		= 8010;
-//			RadarSystemConfig.radarGuiPort    	= 8014;
-//			RadarSystemConfig.withContext  		= true;
-//			RadarSystemConfig.ctxServerPort		= 8018;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
@@ -44,25 +41,56 @@ private IRadarDisplay radar = null;
 	
 	public void configure()  {			
  		//radar  = DeviceFactory.createRadarGui();	
+		String host           = RadarSystemConfig.pcHostAddr;
+		ProtocolType protocol = RadarSystemConfig.protcolType;
+		String ctxTopic       = "topicCtxMqtt";
+ 		ledClient1            = new LedProxyAsClient("client1", host, ctxTopic, protocol );
  	} 
 	
 	@Override
 	public void doJob(String configFileName) {
 		setup(configFileName);
 		configure();
-		execute();
+		//execute();
+	}
+	
+	public void ledActivate( boolean v ) {
+		if( v ) ledClient1.turnOn();
+		else ledClient1.turnOff();
+	}
+	
+	public String ledState(   ) {
+		return ""+ledClient1.getState();
+	}
+	
+	public void doLedBlink() {
+		new Thread() {
+			public void run() {
+				ledblinking = true;
+				while( ledblinking ) {
+					ledActivate(true);
+					Utils.delay(500);
+					ledActivate(false);
+					Utils.delay(500);
+				}
+			}
+		}.start();
+	}
+	public void stopLedBlink() {
+		ledblinking = false;
 	}
 	
 	public void execute() {
-		String host           = RadarSystemConfig.pcHostAddr;
-		ProtocolType protocol = RadarSystemConfig.protcolType;
-		String ctxTopic       = "topicCtxMqtt";
- 		ILed ledClient1       = new LedProxyAsClient("client1", host, ctxTopic, protocol );
  		
- 		ledClient1.turnOn();
- 		Utils.delay(3000);
- 		ledClient1.turnOff();
+//		ledActivate(true);		
+//		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+// 		Utils.delay(2000);
+// 		ledActivate(false);
+//		Colors.outappl("Led state="+ledState(), Colors.GREEN);
 
+		doLedBlink();
+		Utils.delay(2000);
+		stopLedBlink();
 	}
 
 	public void terminate() {
@@ -76,7 +104,7 @@ private IRadarDisplay radar = null;
 
 	
 	public static void main( String[] args) throws Exception {
-		new RadarSystemMainOnPcMqtt().doJob(null);
+		new RadarSystemMainOnPcMqtt().execute(); //.doJob(null);
  	}
 
 }
