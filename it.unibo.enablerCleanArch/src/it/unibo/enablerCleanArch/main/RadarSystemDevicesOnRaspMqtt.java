@@ -23,19 +23,9 @@ private String ctxTopic   = "topicCtxMqtt";
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
 			RadarSystemConfig.simulation   		= true;
-//			RadarSystemConfig.SonareRemote 		= false;
-//			RadarSystemConfig.LedRemote    		= false;
  			RadarSystemConfig.ledGui    		= true;
-//			RadarSystemConfig.ControllerRemote  = false; 
-//			RadarSystemConfig.sonarPort    		= 8012;
-//			RadarSystemConfig.ledPort      		= 8010;
-//			RadarSystemConfig.radarGuiPort    	= 8014;
-// 			RadarSystemConfig.DLIMIT   			= 55;
-//			RadarSystemConfig.sonarDelay   		= 100;
-//			RadarSystemConfig.withContext  		= true; 
 			RadarSystemConfig.testing      		= false;		
-			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
-			
+			RadarSystemConfig.protcolType       = ProtocolType.mqtt;			
 		}
 	}
 	

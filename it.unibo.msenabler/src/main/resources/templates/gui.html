@@ -13,8 +13,19 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>RobotWebGui</title>
-      
+        <!-- <link rel="stylesheet" href="css/style.css"/> -->
 <style>
+#ledOn{
+      width: 50px;
+      height: 50px;
+      background: red;
+}
+
+#ledOff{
+      width: 10px;
+      height: 10px;
+      background: gray;
+}
 		table, th, td {
 		  border: 1px solid black;
 		  border-collapse: collapse;
@@ -68,8 +79,16 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
     <button>stopLedBlink</button>
 </form>
 
- 
-<div id="led" align="left"></div>
+
+
+
+<h2>Current Led State=<span th:text="${ledarg}">unknown</span></h2>
+
+
+<div th:id=${ledgui} align="left"></div>
+
+
+
 
    	
 </body>

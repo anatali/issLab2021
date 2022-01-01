@@ -14,42 +14,58 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HumanEnablerController {
-private RadarSystemMainOnPcMqtt sysClient;
+    public static RadarSystemMainOnPcMqtt sysClient;
 
     @Value("${unibo.application.name}")
-    String appName; 
+    String appName;
 
     @GetMapping("/")
     public String welcomePage(Model model) {
-        System.out.println("HumanEnablerController welcomePage" + model  );
-         //RadarSystemDevicesOnRaspMqtt sys = new RadarSystemDevicesOnRaspMqtt();
-         //RadarSystemConfig.setTheConfiguration(   );
-         try{
-             //new RadarSystemDevicesOnRaspMqtt().doJob("RadarSystemConfig.json");
-             sysClient = new RadarSystemMainOnPcMqtt();
-             //sys.doJob("RadarSystemConfig.json");
-        }catch(Exception e) {
-            model.addAttribute("arg", "ERROR " + e.getMessage());
-            return "welcome";
-        }
+        model.addAttribute("ledarg", "false (perhaps)");
         model.addAttribute("arg", appName);
-        //return "welcome";
-
+        model.addAttribute("ledgui","ledOff");
+        System.out.println("HumanEnablerController welcomePage" + model  );
         return "gui";
+    }
+
+    //protected void activateTheDevices(){
+    //    new RadarSystemDevicesOnRaspMqtt().doJob("RadarSystemConfig.json");
+    //}
+    protected void activateTheClient(){
+        sysClient = new RadarSystemMainOnPcMqtt();
     }
 
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
         //System.out.println("HumanEnablerController doOn sys=" + sys  );
-        if( sysClient != null ) sysClient.ledActivate(true);
+        activateTheClient();
+        if( sysClient != null ){
+            sysClient.ledActivate(true);
+            String ledState = sysClient.ledState();
+            System.out.println("HumanEnablerController doOn ledState=" + ledState  );
+            model.addAttribute("ledgui","ledOn");
+            model.addAttribute("ledarg", ledState);
+        }
+        model.addAttribute("arg", appName+" After Led on");
+        //model.addAttribute("ledarg", "ledOn");
         return "gui";
     }
+
+
 
     @PostMapping( path = "/off" )
     public String doOff(@RequestParam(name="cmd", required=false, defaultValue="")
                         String moveName, Model model){
-        if( sysClient != null ) sysClient.ledActivate(false);
+        activateTheClient();
+        if( sysClient != null ){
+            sysClient.ledActivate(false);
+            String ledState = sysClient.ledState();
+            System.out.println("HumanEnablerController doOff ledState=" + ledState  );
+            model.addAttribute("ledgui","ledOff");
+            model.addAttribute("ledarg", ledState);
+        }
+         model.addAttribute("arg", appName+" After Led off");
         return "gui";
     }
 

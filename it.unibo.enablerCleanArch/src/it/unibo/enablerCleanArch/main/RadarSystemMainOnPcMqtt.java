@@ -89,7 +89,7 @@ private boolean ledblinking = false;
 //		Colors.outappl("Led state="+ledState(), Colors.GREEN);
 
 		doLedBlink();
-		Utils.delay(2000);
+		Utils.delay(3000);
 		stopLedBlink();
 	}
 
