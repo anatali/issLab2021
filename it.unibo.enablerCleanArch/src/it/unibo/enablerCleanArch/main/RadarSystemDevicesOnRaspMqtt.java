@@ -68,7 +68,20 @@ private String ctxTopic   = "topicCtxMqtt";
 	public String ledState(   ) {
 		return ""+led.getState();
 	}
-	
+	public void sonarActivate(   ) {
+		sonar.activate();
+	}
+	public boolean sonarIsactive(   ) {
+		return sonar.isActive();
+	}
+
+	public void sonarDectivate(   ) {
+		sonar.deactivate();
+	}
+	public String sonarDistance(   ) {
+ 		return ""+sonar.getDistance();
+	}
+
 	public void doLedBlink() {
 		new Thread() {
 			public void run() {

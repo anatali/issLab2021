@@ -1,5 +1,6 @@
 package it.unibo.msenabler;
 
+import it.unibo.enablerCleanArch.supports.Colors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,18 +17,19 @@ import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
 
 @Controller
 public class HumanEnablerController {
-    public static RadarSystemDevicesOnRaspMqtt sysClient ;
+    public static RadarSystemDevicesOnRaspMqtt applMqtt;
 
     @Value("${unibo.application.name}")
     String appName;
 
     @GetMapping("/")
     public String welcomePage(Model model) {
-        if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
+        if( applMqtt == null ){ applMqtt = MsenablerApplication.sys; }
         model.addAttribute("ledstate", "false (perhaps)");
         model.addAttribute("arg", appName);
         model.addAttribute("ledgui","ledOff");
-        System.out.println("HumanEnablerController welcomePage" + model + " sysClient=" + sysClient );
+        Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + applMqtt);
+        Colors.out("HumanEnablerController sonar active=" + applMqtt.sonarIsactive()  );
         return "gui";
     }
 
@@ -44,10 +46,10 @@ public class HumanEnablerController {
         //System.out.println("HumanEnablerController doOn sys=" + sys  );
         //activateTheClient();
         //if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
-        if( sysClient != null ){
-            sysClient.ledActivate(true);
-            String ledState = sysClient.ledState();
-            System.out.println("HumanEnablerController doOn ledState=" + ledState  );
+        if( applMqtt != null ){
+            applMqtt.ledActivate(true);
+            String ledState = applMqtt.ledState();
+            Colors.out("HumanEnablerController doOn ledState=" + ledState  );
             model.addAttribute("ledgui","ledOn");
             model.addAttribute("ledstate", ledState);
         }
@@ -63,9 +65,9 @@ public class HumanEnablerController {
                         String moveName, Model model){
         //activateTheClient();
         //if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
-        if( sysClient != null ){
-            sysClient.ledActivate(false);
-            String ledState = sysClient.ledState();
+        if( applMqtt != null ){
+            applMqtt.ledActivate(false);
+            String ledState = applMqtt.ledState();
             System.out.println("HumanEnablerController doOff ledState=" + ledState  );
             model.addAttribute("ledgui","ledOff");
             model.addAttribute("ledstate", ledState);
@@ -77,7 +79,7 @@ public class HumanEnablerController {
     @PostMapping( path = "/doLedBlink" )
     public String doBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                 String moveName, Model model){
-        if( sysClient != null ) sysClient.doLedBlink( );
+        if( applMqtt != null ) applMqtt.doLedBlink( );
         model.addAttribute("arg", appName+" After Led blink");
         model.addAttribute("ledstate","ledBlinking ...");
         return "gui";
@@ -86,13 +88,30 @@ public class HumanEnablerController {
     @PostMapping( path = "/stopLedBlink" )
     public String stopLedBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
-        if( sysClient != null ) sysClient.stopLedBlink( );
-        String ledState = sysClient.ledState();
+        if( applMqtt != null ) applMqtt.stopLedBlink( );
+        String ledState = applMqtt.ledState();
         System.out.println("HumanEnablerController stopLedBlink ledState=" + ledState  );
         model.addAttribute("arg", appName+" After Led stop blink");
         if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
         else model.addAttribute("ledgui","ledOff");
         model.addAttribute("ledstate",ledState);
+        return "gui";
+    }
+
+    @PostMapping( path = "/distance" )
+    public String distance(@RequestParam(name="cmd", required=false, defaultValue="")
+                                  String moveName, Model model){
+
+        String d = "unknown";
+        Colors.out("HumanEnablerController sonar active=" + applMqtt.sonarIsactive()  );
+        if( applMqtt != null ){
+            if( ! applMqtt.sonarIsactive() ) applMqtt.sonarActivate();
+            //it.unibo.enablerCleanArch.supports.Utils.delay(1000);
+            d = applMqtt.sonarDistance();
+            Colors.out("HumanEnablerController sonar d=" + d  );
+        }
+        model.addAttribute("arg", appName+" After distance");
+        model.addAttribute("sonardistance",d);
         return "gui";
     }
 

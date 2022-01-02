@@ -4,6 +4,8 @@
 .. role:: blue 
 .. role:: remark
  
+.. _RpiImager: https://www.raspberrypi.com/software/
+.. _Bullseye:  ://www.raspberrypi.com/news/raspberry-pi-os-debian-bullseye/
 
 ======================================
 RaspberrySoftware
@@ -26,7 +28,8 @@ Appunti `a.a. 20-21 <../../../../../../it.unibo.raspIntro2020/userDocs/LabRaspiI
 .. https://github.com/anatali/issLab2021/blob/master/it.unibo.issLabStart/
 
  
-#. Crea scheda SD con ``2020-02-13-raspbian-buster-lite``.
+#. Crea scheda SD (usando `RpiImager`_) con ``2020-02-13-raspbian-buster-lite``
+   o con il più recente `Bullseye`_.
 #. Con la scheda inserita in un PC, crea un file vuoto ``boot/ssh``.
 #. Crea un file ``boot/wpa_supplicant.conf`` con il seguente contenuto
 

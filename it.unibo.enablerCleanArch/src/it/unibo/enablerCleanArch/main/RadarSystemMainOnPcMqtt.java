@@ -65,7 +65,7 @@ private boolean ledblinking = false;
 	public String ledState(   ) {
 		return ""+ledClient1.getState();
 	}
-	public String sonarState(   ) {
+	public String sonarDistance(   ) {
 		return ""+sonarClient.getDistance();
 	}
 	
@@ -104,7 +104,7 @@ private boolean ledblinking = false;
 		sonarClient.activate();
 		while( sonarClient.isActive() ) {
 			Utils.delay(500);
-			String sonarstate = sonarState(   );
+			String sonarstate = sonarDistance(   );
 			Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
 			break;
 		}

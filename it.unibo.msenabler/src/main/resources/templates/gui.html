@@ -79,14 +79,17 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
     <button>stopLedBlink</button>
 </form>
 
-
+<form action="/distance" method="post">
+    <input name="cmd" id="distance" value="Sonar distance" style="font-size:15px;" >
+    <button>Show sonar distance</button>
+</form>
 
 
 <h2>Current Led State=<span th:text="${ledstate}">unknown</span></h2>
 
-
 <div th:id=${ledgui} align="left"></div>
 
+<h2>Current distance=<span th:text="${sonardistance}">unknown</span></h2>
 
 
 
