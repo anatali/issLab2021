@@ -103,11 +103,14 @@ private boolean ledblinking = false;
 		
 		sonarClient.activate();
 		while( sonarClient.isActive() ) {
-			Utils.delay(500);
+			Utils.delay(800);
 			String sonarstate = sonarDistance(   );
 			Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
 			break;
 		}
+		sonarClient.deactivate();
+		
+		terminate();
 	}
 
 	public void terminate() {

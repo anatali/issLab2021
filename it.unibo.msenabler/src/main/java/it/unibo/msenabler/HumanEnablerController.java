@@ -1,5 +1,6 @@
 package it.unibo.msenabler;
 
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -101,14 +102,13 @@ public class HumanEnablerController {
     @PostMapping( path = "/distance" )
     public String distance(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
-
         String d = "unknown";
-        Colors.out("HumanEnablerController sonar active=" + applMqtt.sonarIsactive()  );
+        Colors.out("HumanEnablerController DISTANCE - sonar active=" + applMqtt.sonarIsactive()  );
         if( applMqtt != null ){
             if( ! applMqtt.sonarIsactive() ) applMqtt.sonarActivate();
             //it.unibo.enablerCleanArch.supports.Utils.delay(1000);
             d = applMqtt.sonarDistance();
-            Colors.out("HumanEnablerController sonar d=" + d  );
+            Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
         }
         model.addAttribute("arg", appName+" After distance");
         model.addAttribute("sonardistance",d);

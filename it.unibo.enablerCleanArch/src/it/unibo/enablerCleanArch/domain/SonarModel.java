@@ -10,7 +10,7 @@ public abstract class SonarModel  implements ISonar{
 public final static int queueSize = 10;
 protected  IDistance curVal = new Distance(90);	 
 protected BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
-protected boolean stopped  = false;
+protected boolean stopped  = true;
 	
 	
 	public static ISonar create() {
@@ -63,6 +63,7 @@ protected boolean stopped  = false;
 	
 	@Override
 	public void activate() {
+		curVal = new Distance( 90 );
 		Colors.out("SonarModel | activate", Colors.GREEN);
 		stopped = false;
 		new Thread() {

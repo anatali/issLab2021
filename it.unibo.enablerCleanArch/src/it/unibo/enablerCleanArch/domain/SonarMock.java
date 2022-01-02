@@ -6,7 +6,6 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMock extends SonarModel implements ISonar{
-//protected  IDistance curVal ;  
 private int delta = 1;
 	@Override
 	protected void sonarSetUp() {
@@ -32,7 +31,7 @@ private int delta = 1;
 			int v = curVal.getVal() - delta;
 			updateDistance( v );			    
  			if( blockingQueue.size() > 7) Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
-			stopped = ( v == 0 );
+			stopped = ( v <= 0 );
 			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
 		}
  	}

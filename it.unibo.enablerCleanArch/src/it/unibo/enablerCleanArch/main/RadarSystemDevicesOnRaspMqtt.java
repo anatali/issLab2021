@@ -79,7 +79,7 @@ private String ctxTopic   = "topicCtxMqtt";
 		sonar.deactivate();
 	}
 	public String sonarDistance(   ) {
- 		return ""+sonar.getDistance();
+ 		return ""+sonar.getDistance().getVal();
 	}
 
 	public void doLedBlink() {
