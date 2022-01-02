@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArchapplHandlers;
 
 import java.util.HashMap;
 
@@ -7,6 +7,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 
 /*
@@ -45,6 +51,11 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		}
  	} 
 
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {
+		Colors.outerr(name+ " | I should be necìver here");
+	}
+
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		Colors.out(name+" | elaborate:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
@@ -54,7 +65,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
 		IApplMsgHandler  h   = handlerMap.get(dest);
 		//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
-		if( dest != null ) h.elaborate(msg.msgContent(), conn);	
+		if( dest != null ) h.elaborate( msg , conn);	
 	}
 
 	@Override

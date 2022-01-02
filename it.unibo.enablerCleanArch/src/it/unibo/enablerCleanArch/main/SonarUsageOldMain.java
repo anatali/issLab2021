@@ -21,10 +21,10 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
-import it.unibo.enablerCleanArch.supports.coap.SonarDistanceHandler;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
+import it.unibo.enablerCleanArchapplHandlers.SonarDistanceHandler;
   
 
 public class SonarUsageOldMain  {

@@ -1,7 +1,11 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArchapplHandlers;
 
 import java.util.HashMap;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 /*
   * Il ContextMsgHandler viene invocato dal TcpContextServer (un singleton).
@@ -21,6 +25,9 @@ public class ContextMsgHandler extends ApplMsgHandler{
 	public ContextMsgHandler(String name) {
 		super(name);
  	}
+
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {

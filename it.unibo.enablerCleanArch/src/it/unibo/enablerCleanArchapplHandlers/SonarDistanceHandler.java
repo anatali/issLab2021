@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports.coap;
+package it.unibo.enablerCleanArchapplHandlers;
 
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
@@ -15,6 +15,9 @@ public class SonarDistanceHandler extends ApplMsgHandler{
 		super(name);
 		radar = RadarDisplay.getRadarDisplay();
 	}
+
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {

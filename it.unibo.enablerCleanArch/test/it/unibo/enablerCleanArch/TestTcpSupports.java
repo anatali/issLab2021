@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
@@ -19,6 +21,9 @@ class NaiveHandler extends ApplMsgHandler {
 	public NaiveHandler(String name) {
 		super(name);
   	}
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
+
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		System.out.println(name+" | elaborates: "+message);

@@ -1,10 +1,12 @@
 package it.unibo.enablerCleanArchapplHandlers;
 
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IDevice;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 
 /*
@@ -23,6 +25,17 @@ ILed led;
 	
 	public void setTheDevice( ILed dev ) {
 		led = dev;
+	}
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {
+		String payload = message.msgContent();
+		if( message.isRequest() ) {
+			if(payload.equals("getState") ) {
+				String ledstate = ""+led.getState();
+				ApplMessage reply = Utils.buildReply("led", "ledanswer", ledstate, message.msgSender()) ;
+				sendMsgToClient(reply, conn ); 
+			}
+		}else elaborate(payload, conn);
 	}
 	
  	@Override

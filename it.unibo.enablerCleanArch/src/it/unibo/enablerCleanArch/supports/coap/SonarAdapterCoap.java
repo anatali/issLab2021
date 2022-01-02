@@ -39,6 +39,9 @@ private IDistance curVal = null;
 		return v;
 	}
 	
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
+	
  	@Override  //from ApplMessageHandler
 	public void elaborate(String message, Interaction2021 conn) {
 		try {

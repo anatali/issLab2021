@@ -10,6 +10,7 @@ import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArchapplHandlers.NaiveMessageHandler;
  
 
 public class SonarResourceCoapMain   {  

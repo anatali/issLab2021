@@ -36,8 +36,8 @@ private CounterWithDelay c = new CounterWithDelay();
 			Struct cmdT     = (Struct) Term.createTerm(message);
 			elaborateDec(   cmdT );
 		}	
-		
  	} 
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
 	
 	protected void elaborateDec( Struct cmdT ) {
 		int delay = Integer.parseInt(cmdT.getArg(0).toString());

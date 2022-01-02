@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArchapplHandlers;
  
 import org.json.JSONObject;
 
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Colors;
@@ -14,6 +15,9 @@ IRadarDisplay radar;
 		super(name);
 		this.radar = radar; 
 	}
+
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
 	
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {

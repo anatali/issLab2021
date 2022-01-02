@@ -6,10 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import it.unibo.enablerCleanArch.enablers.NaiveApplHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.TcpServer;
+import it.unibo.enablerCleanArchapplHandlers.NaiveApplHandler;
 
 
 /*

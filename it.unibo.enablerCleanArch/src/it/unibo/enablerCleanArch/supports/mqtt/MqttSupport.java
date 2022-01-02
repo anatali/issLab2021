@@ -116,7 +116,7 @@ protected MqttCallback handler;
 	public void forward(String msg) throws Exception {
 		Colors.out("forward topic=" + topic + " msg=" + msg);
 		try{
-			new ApplMessage(msg); //no exception => we can pubish
+			new ApplMessage(msg); //no exception => we can publish
 			publish(topic, msg, 0, false);	
 		}catch( Exception e ) { //The message is not structured
 			ApplMessage msgAppl = Utils.buildDispatch("mqtt", "cmd", msg, "unknown");

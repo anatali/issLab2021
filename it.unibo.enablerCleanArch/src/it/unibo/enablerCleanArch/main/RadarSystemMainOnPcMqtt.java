@@ -16,7 +16,9 @@ import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
 
 public class RadarSystemMainOnPcMqtt implements IApplication{
 private IRadarDisplay radar = null;
-private ILed ledClient1;
+private ILed   ledClient1;
+private ISonar sonarClient;
+
 private boolean ledblinking = false;
 
     public RadarSystemMainOnPcMqtt(){
@@ -45,7 +47,8 @@ private boolean ledblinking = false;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
 		String ctxTopic       = "topicCtxMqtt";
  		ledClient1            = new LedProxyAsClient("client1", host, ctxTopic, protocol );
- 	} 
+ 		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
+	} 
 	
 	@Override
 	public void doJob(String configFileName) {
@@ -61,6 +64,9 @@ private boolean ledblinking = false;
 	
 	public String ledState(   ) {
 		return ""+ledClient1.getState();
+	}
+	public String sonarState(   ) {
+		return ""+sonarClient.getDistance();
 	}
 	
 	public void doLedBlink() {
@@ -88,9 +94,20 @@ private boolean ledblinking = false;
 // 		ledActivate(false);
 //		Colors.outappl("Led state="+ledState(), Colors.GREEN);
 
-		doLedBlink();
-		Utils.delay(3000);
-		stopLedBlink();
+//		doLedBlink();
+//		Utils.delay(3000);
+//		stopLedBlink();
+		
+//		String ledstate = ledState(   );
+//		Colors.outappl("Led state="+ledstate, Colors.GREEN);
+		
+		sonarClient.activate();
+		while( sonarClient.isActive() ) {
+			Utils.delay(500);
+			String sonarstate = sonarState(   );
+			Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
+			break;
+		}
 	}
 
 	public void terminate() {

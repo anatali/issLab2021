@@ -40,7 +40,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 	public boolean getState() {   
 		String answer="";
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
-			answer = sendRequestOnConnection(Utils.getLedState.toString()) ;
+			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getState", "led").toString()) ;
 		}
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getState", "led").toString());

@@ -75,18 +75,21 @@ private Interaction2021 conn;
 		Colors.outerr(name + " | WARNING: sendMsgToClient for a client for answer should never been used");
  	} 
  
+	@Override
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
+
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		Colors.out(name + " | elaborate message=" + message + " conn=" + conn, Colors.RED);
  		try {
 			ApplMessage msg = new ApplMessage(message);
-			if( msg.isReply() ) {
-				Colors.out(name + " | put in queue message=" + msg.msgContent() + " conn=" + conn, Colors.RED);
-				((MqttSupport)conn).getQueue().put(msg.msgContent());
-			}else {
+//			if( msg.isReply() ) {
+//				Colors.out(name + " | put in queue message=" + msg.msgContent() + " conn=" + conn, Colors.RED);
+//				((MqttSupport)conn).getQueue().put(msg.msgContent());
+//			}else {
 				Colors.out(name + " | elaborate message put in queue  conn=" + conn, Colors.RED);
 				((MqttSupport)conn).getQueue().put(message);
-			}
+//			}
 		}catch(Exception e) { //not a structured
 			Colors.out(name + " | " +e.getMessage() + " elaborate plain message put in queue  conn=" + conn, Colors.RED);
 			try {

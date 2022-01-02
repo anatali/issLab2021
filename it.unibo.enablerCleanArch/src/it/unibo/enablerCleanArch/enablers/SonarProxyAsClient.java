@@ -14,14 +14,20 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  	}
  	@Override
 	public void activate() {
- 		if( RadarSystemConfig.withContext )  sendCommandOnConnection(Utils.sonarActivate.toString());
+ 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext )  
+ 			sendCommandOnConnection(Utils.sonarActivate.toString());
+  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
+  			sendCommandOnConnection(Utils.sonarActivate.toString());
  		else sendCommandOnConnection("activate");		
 	}
 
 	@Override
 	public void deactivate() {
- 		if( RadarSystemConfig.withContext )  sendCommandOnConnection(Utils.sonarDeactivate.toString());
- 		else sendCommandOnConnection("deactivate");		
+ 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext )  
+ 			sendCommandOnConnection(Utils.sonarDeactivate.toString());
+  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
+  			sendCommandOnConnection(Utils.sonarDeactivate.toString());
+		else sendCommandOnConnection("deactivate");		
 	}
 
 	@Override
@@ -31,7 +37,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext )  
 			answer = sendRequestOnConnection(Utils.getDistance.toString()) ;
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
-  			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getDistance", "sonar").toString());
+  			answer = sendRequestOnConnection(Utils.getDistance.toString().replace("system", name)) ;
 		else  answer = sendRequestOnConnection("getDistance");
 		//Colors.out( name + " | getDistance answer="+answer, Colors.ANSI_PURPLE);
 		return new Distance( Integer.parseInt(answer) );
@@ -41,6 +47,8 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	public boolean isActive() {
 		String answer = "";
 		if( RadarSystemConfig.withContext )  answer = sendRequestOnConnection(Utils.isActive.toString()) ;
+  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
+  			answer = sendRequestOnConnection(Utils.isActive.toString().replace("system", name)) ;
 		else   answer=sendRequestOnConnection("isActive");
 		//Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
 		return answer.equals( "true" );
