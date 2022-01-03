@@ -1,4 +1,4 @@
-package it.unibo.websocketDemo.websocket;
+package it.unibo.websocketDemo;
 
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.TextMessage;

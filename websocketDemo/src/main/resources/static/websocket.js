@@ -6,14 +6,14 @@ function connect() {
     var host     = document.location.host;
     var pathname = "/it/unibo/websocketDemo/websocket/";//document.location.pathname;
     var addr     = "ws://" +host  + pathname + "chat/" + username;
-console.log("connect addr=" + addr  );
-console.log(" ws==undefined is " + (ws == undefined) );
-if( ws !== undefined ) console.log(" ws.readyState is " + (ws.readyState) );
-// Assicura che sia aperta un unica connessione
-if(ws !== undefined && ws.readyState !== WebSocket.CLOSED){
-writeResponse("Connesione WebSocket già stabilita");
-return;
-}
+    console.log("connect addr=" + addr  );
+    console.log(" ws==undefined is " + (ws == undefined) );
+    if( ws !== undefined ) console.log(" ws.readyState is " + (ws.readyState) );
+    // Assicura che sia aperta un unica connessione
+    if(ws !== undefined && ws.readyState !== WebSocket.CLOSED){
+    writeResponse("Connesione WebSocket già stabilita");
+    return;
+    }
     ws = new WebSocket(addr);
 
     ws.onmessage = function(event) {

@@ -540,7 +540,7 @@ Il progetto *it.unibo.enablerCleanArch* è sviluppato in ``Java8`` e fornisce il
 
 .. code:: 
 
-  1    LedUsageMain
+  1    LedUsageMain 
   a    RadarSystemDevicesOnRaspMqtt
   A    RadarSystemMainOnPcMqtt
   2    SonarUsageMainWithEnablerTcp
@@ -563,8 +563,11 @@ it.unibo.msenabler
 Il progetto *it.unibo.msenabler*  è sviluppato in ``Java11`` e utilizza SpringBoot per fornire 
 una WebGui alla porta ``8081`` che permette di comandare il Led usando l'applicazione **A**.
 
+Si consiglia la lettura preliminare di :ref:`WebSockets<WebSockets>`. 
+
 L'applicazione SpringBoot potrebbe anche attivare la parte applicativa **a** ed essere eseguita 
 su un Raspberry basato su **Buster**, che utilizza ``Java11``.
+
 
 
 ==================================
