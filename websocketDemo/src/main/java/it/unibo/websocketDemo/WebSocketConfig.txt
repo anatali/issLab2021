@@ -1,0 +1,35 @@
+package it.unibo.websocketDemo;
+
+/*
+JSR 356 or the Java API for WebSocket, specifies an API that Java developers can use
+for integrating WebSockets withing their applications
+– both on the server side as well as on the Java client side.
+
+https://www.baeldung.com/java-websockets
+
+@ServerEndpoint: If decorated with @ServerEndpoint, the container ensures availability of the class as a WebSocket server listening to a specific URI space
+@ClientEndpoint: A class decorated with this annotation is treated as a WebSocket client
+@OnOpen: A Java method with @OnOpen is invoked by the container when a new WebSocket connection is initiated
+@OnMessage: A Java method, annotated with @OnMessage, receives the information from the WebSocket container when a message is sent to the endpoint
+@OnError: A method with @OnError is invoked when there is a problem with the communication
+@OnClose: Used to decorate a Java method that is called by the container when the WebSocket connection closes
+
+
+The WebSocket specification supports two on-wire data formats – text and binary.
+The API supports both these formats, adds capabilities to work with Java objects
+and health check messages (ping-pong) as defined in the specification:
+
+Text: Any textual data (java.lang.String, primitives or their equivalent wrapper classes)
+Binary: Binary data (e.g. audio, image etc.) represented by a java.nio.ByteBuffer or a byte[] (byte array)
+Java objects: The API makes it possible to work with native (Java object) representations in your code and use custom
+transformers (encoders/decoders) to convert them into compatible on-wire formats (text, binary) allowed by the
+WebSocket protocol
+Ping-Pong: A javax.websocket.PongMessage is an acknowledgment sent by a WebSocket peer in response to a health check
+(ping) request
+For our application, we'll be using Java Objects. We'll create the classes for encoding and decoding messages.
+
+
+To run the application we built in the example, all we need to do is deploy the war file
+in a web server and go to the URL: http://localhost:8080/java-websocket/.
+You can find the link to the repository here.
+ */

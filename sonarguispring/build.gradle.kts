@@ -116,7 +116,7 @@ dependencies {
 	implementation("uniboIssSupport:IssWsHttpJavaSupport:1.0")
 	implementation("uniboInterfaces:uniboInterfaces")
 	implementation("uniboProtocolSupport:unibonoawtsupports")
-	implementation("uniboplanner20:it.unibo.planner20:1.0")
+	implementation("uniboplanner20:it.unibo.planner20:1.0Old")
 	implementation("qak:it.unibo.qakactor:2.4")
 
 }
