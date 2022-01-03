@@ -67,7 +67,7 @@ class CoapSupport(address: String, path: String) {
         v = readResource()
         println("CoapSupport | POST v=$v")
     }
-
+/*
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -76,6 +76,6 @@ class CoapSupport(address: String, path: String) {
             cs.test()
         }
     }
-
+*/
 
 }
