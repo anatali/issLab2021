@@ -75,21 +75,71 @@ Setup
 
        server.port = 8070
 
-#. Inseriamo file ``index.html`` in **resources/static** per poter lanciare l'applicazione
+#. Inseriamo un file ``index.html`` in **resources/static** per poter lanciare un'applicazione che 
+   presenta un'area  di ouput per  la visualizzazione di messaggi e un'area di input per la loro 
+   immissione
 
     .. code:: html
 
         <html>
+        <head>
+            <style>
+                .messageAreaStyle {
+                    text-align: left;
+                    width: 50%;
+                    padding: 1em;
+                    border: 1px solid black;
+                }
+            </style>
+            <title>wsdemoNoStomp client</title>
+        </head>
+
         <body>
         <h1>Welcome</h1>
+        <div id="messageArea"  class="messageAreaStyle"></div>
+
+        <div class="input-fields">
+            <p>Type a message and hit send:</p>
+            <input id="inputmessage"/><button id="send">Send</button>
+        </div>
+
+        <script src="wsdemominimal.js"></script>
         </body>
         </html>
 
+    La pagina iniziale si presenta come segue:
+
+    .. image:: ./_static/img/pageMinimal.PNG
+     :align: center
+     :width: 50% 
+    
+
 +++++++++++++++++++++++++++++++++++++++++++++++
-Setup
+wsdemominimal.js
 +++++++++++++++++++++++++++++++++++++++++++++++
 
+Lo script  ``wsdemominimal.js`` contine funzioni che inviano al server il messaggio di input e che aggiungono
+messaggi nella output area:
 
+.. code:: js
+
+    const messageWindow   = document.getElementById("messageArea");
+    const sendButton      = document.getElementById("send");
+    const messageInput    = document.getElementById("inputmessage");
+
+    sendButton.onclick = function (event) {
+        sendMessage(messageInput.value);
+        messageInput.value = "";
+    };
+
+    function sendMessage(message) {
+        socket.send(message);
+        addMessageToWindow("Sent Message: " + message);
+    }
+
+    function addMessageToWindow(message) {
+        messageWindow.innerHTML += `<div>${message}</div>`
+    }
 
 -  ``WebSocketConfiguration`` implementa ``WebSocketConfigurer`` e definisce metodi di callback
    per configurare WebSocket request handling via ``@EnableWebSocket`` annotation. Nel nostro caso

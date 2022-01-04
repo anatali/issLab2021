@@ -3,11 +3,22 @@
     const sendButton      = document.getElementById("send");
     const messageInput    = document.getElementById("inputmessage");
 
-    var socket = connect();
      sendButton.onclick = function (event) {
         sendMessage(messageInput.value);
         messageInput.value = "";
     };
+
+    function sendMessage(message) {
+        socket.send(message);
+        addMessageToWindow("Sent Message: " + message);
+    }
+
+    function addMessageToWindow(message) {
+        messageWindow.innerHTML += `<div>${message}</div>`
+    }
+
+    var socket = connect();
+
 
     function connect(){
         var socket;
@@ -36,12 +47,4 @@
         return socket;
     }//connect
 
-    function sendMessage(message) {
-        socket.send(message);
-        addMessageToWindow("Sent Message: " + message);
-    }
-
-    function addMessageToWindow(message) {
-        messageWindow.innerHTML += `<div>${message}</div>`
-    }
 
