@@ -1,4 +1,4 @@
-package it.unibo.websocketDemo.model;
+package model;
 
 public class Message {
     private String from;

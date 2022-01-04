@@ -1,11 +1,11 @@
-package it.unibo.websocketDemo.websocket;
+package websocket;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
 import com.google.gson.Gson;
-import it.unibo.websocketDemo.model.Message;
+import model.Message;
 
 public class MessageDecoder implements Decoder.Text<Message> {
 

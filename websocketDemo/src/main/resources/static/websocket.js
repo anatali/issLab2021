@@ -4,7 +4,7 @@ function connect() {
     var username = document.getElementById("username").value;
 
     var host     = document.location.host;
-    var pathname = "/it/unibo/websocketDemo/websocket/";//document.location.pathname;
+    var pathname = document.location.pathname; //"/it/unibo/websocketDemo/websocket/";//
     var addr     = "ws://" +host  + pathname + "chat/" + username;
     console.log("connect addr=" + addr  );
     console.log(" ws==undefined is " + (ws == undefined) );

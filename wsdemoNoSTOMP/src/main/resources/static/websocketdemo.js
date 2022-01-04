@@ -58,7 +58,7 @@
 
         var pathname =  document.location.pathname;
         var addr     = "ws://" +host  + pathname + "socket"  ;
-        console.log("connect addr=" + addr  );
+        alert("connect addr=" + addr  );
         //console.log(" socket==undefined is " + (socket == undefined) );
 
         // Assicura che sia aperta un unica connessione

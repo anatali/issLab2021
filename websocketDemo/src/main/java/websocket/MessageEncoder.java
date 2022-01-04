@@ -1,7 +1,8 @@
-package it.unibo.websocketDemo.websocket;
+package websocket;
 
 import com.google.gson.Gson;
-import it.unibo.websocketDemo.model.Message;
+import model.Message;
+
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;

@@ -1,6 +1,6 @@
-package it.unibo.websocketDemo.websocket;
+package websocket;
 
-import it.unibo.websocketDemo.model.Message;
+import model.Message;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
