@@ -1,20 +1,14 @@
-.. contents:: Contenuti
-   :depth: 3
-.. role:: red
-.. role:: blue 
-.. role:: remark 
-
 .. _WebSocket: https://it.wikipedia.org/wiki/WebSocket
-.. _Springio: https://start.spring.io/
  
+
 .. _`WebSockets`:
 
 ======================================
 Web sockets
 ======================================
 
-.. code:: java 
- 
+.. code:: java
+
     anaconda
     sphinx-quickstart
 
@@ -23,10 +17,7 @@ contemporaneamente (full-duplex) su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi 
 (testo o binario).
 
-Nella sua forma più semplice, 
-
-:remark:`un WebSocket è solo un canale di comunicazione tra due applicazioni` 
-
+Nella sua forma più semplice, un WebSocket è solo un canale di comunicazione tra due applicazioni
 e non deve essere necessariamente coinvolto un browser.
 
 A differenza di HTTP, che è un protocollo a livello di applicazione, nel protocollo WebSocket 
@@ -35,7 +26,7 @@ un framework o un container sappia come instradarlo o elaborarlo.
 
 Per questo motivo il WebSocket RFC definisce l'uso di sottoprotocolli. 
 Durante l'handshake, il client e il server possono utilizzare l'intestazione 
-*Sec-WebSocket-Protocol* per :blue:`concordare un sottoprotocollo`, ovvero un protocollo 
+*Sec-WebSocket-Protocol* per concordare un sottoprotocollo, ovvero un protocollo 
 a livello di applicazione superiore da utilizzare. 
 L'uso di un sottoprotocollo non è richiesto, ma anche se non utilizzato, le applicazioni 
 dovranno comunque scegliere un formato di messaggio che sia il client che il server 
@@ -59,41 +50,18 @@ Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazi
 a un client di utilizzare un browser per inviare un messaggio o una immagine a un server 
 che provvede a visualizzare il messaggio o l'immagine presso tutti i client collegati.
 
-+++++++++++++++++++++++++++++++++++++++++++++++
-Setup
-+++++++++++++++++++++++++++++++++++++++++++++++
+.. code:: java
 
-#. Iniziamo creando una applicazione *SpringBoot* collegandoci a Springio_ e selezionando 
-   come da figura:
-
-   .. image:: ./_static/img/springioBase.PNG
-     :align: center
-     :width: 90%
-#. Specifichiamo una nuova porta (il deafult è ``8080``) ponendo in *resources/application.properties*
-
-    .. code:: Java
-
-       server.port = 8070
-
-#. Inseriamo file ``index.html`` in **resources/static** per poter lanciare l'applicazione
-
-    .. code:: html
-
-        <html>
-        <body>
-        <h1>Welcome</h1>
-        </body>
-        </html>
-
-+++++++++++++++++++++++++++++++++++++++++++++++
-Setup
-+++++++++++++++++++++++++++++++++++++++++++++++
-
+    https://start.spring.io/
+    Gradle, Java 2.6.2 Jar Java11
 
 
 -  ``WebSocketConfiguration`` implementa ``WebSocketConfigurer`` e definisce metodi di callback
    per configurare WebSocket request handling via ``@EnableWebSocket`` annotation. Nel nostro caso
    aggiunge WebSocketHandler per il path **/socket**:      
+
+
+:download:`WebSocketHandler.java <../../../src/main/java/it/unibo/wsdemoNoSTOMP/WebSocketHandler.java>`
 
    .. code:: java 
 
@@ -136,7 +104,7 @@ Setup
 WebSocket in SpringBoot: versione STOMP
 ------------------------------------------------------
 
-STOMP è un semplice protocollo di messaggistica originariamente creato per l'uso 
+STOMP  è  un semplice protocollo di messaggistica originariamente creato per l'uso 
 in linguaggi di scripting con frame ispirati a HTTP. 
 STOMP è ampiamente supportato e adatto per l'uso su WebSocket e sul web.
 
@@ -144,9 +112,7 @@ STOMP può essere utilizzato anche senza websocket, ad esempio tramite una conne
 Telnet o un servizio di message broker.
 
 
-
-
-https://www.baeldung.com/websockets-spring
+https://www.baeldung.com/websockets-spring 
 
 
 https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/

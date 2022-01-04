@@ -15,7 +15,6 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Welcome to websocket’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -32,24 +31,8 @@
 
           <div class="body" role="main">
             
-  <div class="contents topic" id="contenuti">
-<p class="topic-title">Contenuti</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#web-sockets" id="id2">Web sockets</a></p>
-<ul>
-<li><p><a class="reference internal" href="#websocket-in-springboot-versione-base" id="id3">WebSocket in SpringBoot: versione base</a></p>
-<ul>
-<li><p><a class="reference internal" href="#setup" id="id4">Setup</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id5">Setup</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#websocket-in-springboot-versione-stomp" id="id6">WebSocket in SpringBoot: versione STOMP</a></p></li>
-</ul>
-</li>
-</ul>
-</div>
-<section id="web-sockets">
-<span id="websockets"></span><h1><a class="toc-backref" href="#id2">Web sockets</a><a class="headerlink" href="#web-sockets" title="Permalink to this headline">¶</a></h1>
+  <section id="web-sockets">
+<span id="websockets"></span><h1>Web sockets<a class="headerlink" href="#web-sockets" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">anaconda</span>
 <span class="n">sphinx</span><span class="o">-</span><span class="n">quickstart</span>
 </pre></div>
@@ -58,15 +41,14 @@
 contemporaneamente (full-duplex) su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi
 (testo o binario).</p>
-<p>Nella sua forma più semplice,</p>
-<p><span class="remark">un WebSocket è solo un canale di comunicazione tra due applicazioni</span></p>
-<p>e non deve essere necessariamente coinvolto un browser.</p>
+<p>Nella sua forma più semplice, un WebSocket è solo un canale di comunicazione tra due applicazioni
+e non deve essere necessariamente coinvolto un browser.</p>
 <p>A differenza di HTTP, che è un protocollo a livello di applicazione, nel protocollo WebSocket
 semplicemente non ci sono abbastanza informazioni in un messaggio in arrivo affinché
 un framework o un container sappia come instradarlo o elaborarlo.</p>
 <p>Per questo motivo il WebSocket RFC definisce l’uso di sottoprotocolli.
 Durante l’handshake, il client e il server possono utilizzare l’intestazione
-<em>Sec-WebSocket-Protocol</em> per <span class="blue">concordare un sottoprotocollo</span>, ovvero un protocollo
+<em>Sec-WebSocket-Protocol</em> per concordare un sottoprotocollo, ovvero un protocollo
 a livello di applicazione superiore da utilizzare.
 L’uso di un sottoprotocollo non è richiesto, ma anche se non utilizzato, le applicazioni
 dovranno comunque scegliere un formato di messaggio che sia il client che il server
@@ -79,44 +61,22 @@ in qualsiasi momento, anziché costringere il client al polling.</p>
 <p>I WebSocket utilizzano le Socket nella loro implementazione basata su un protocollo standard
 che definisce un <em>handshake</em> di connessione e un <em>frame</em> di messaggio.</p>
 <section id="websocket-in-springboot-versione-base">
-<h2><a class="toc-backref" href="#id3">WebSocket in SpringBoot: versione base</a><a class="headerlink" href="#websocket-in-springboot-versione-base" title="Permalink to this headline">¶</a></h2>
+<h2>WebSocket in SpringBoot: versione base<a class="headerlink" href="#websocket-in-springboot-versione-base" title="Permalink to this headline">¶</a></h2>
 <p>Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente
 a un client di utilizzare un browser per inviare un messaggio o una immagine a un server
 che provvede a visualizzare il messaggio o l’immagine presso tutti i client collegati.</p>
-<section id="setup">
-<h3><a class="toc-backref" href="#id4">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic">
-<li><p>Iniziamo creando una applicazione <em>SpringBoot</em> collegandoci a <a class="reference external" href="https://start.spring.io/">Springio</a> e selezionando
-come da figura:</p>
-<a class="reference internal image-reference" href="_images/springioBase.PNG"><img alt="_images/springioBase.PNG" class="align-center" src="_images/springioBase.PNG" style="width: 90%;" /></a>
-</li>
-<li><p>Specifichiamo una nuova porta (il deafult è <code class="docutils literal notranslate"><span class="pre">8080</span></code>) ponendo in <em>resources/application.properties</em></p>
-<blockquote>
-<div><div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="n">server</span><span class="p">.</span><span class="na">port</span> <span class="o">=</span> <span class="mi">8070</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">https</span><span class="p">:</span><span class="c1">//start.spring.io/</span>
+<span class="n">Gradle</span><span class="p">,</span> <span class="n">Java</span> <span class="mf">2.6.2</span> <span class="n">Jar</span> <span class="n">Java11</span>
 </pre></div>
 </div>
-</div></blockquote>
-</li>
-<li><p>Inseriamo file <code class="docutils literal notranslate"><span class="pre">index.html</span></code> in <strong>resources/static</strong> per poter lanciare l’applicazione</p>
-<blockquote>
-<div><div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Welcome<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-</ol>
-</section>
-<section id="id1">
-<h3><a class="toc-backref" href="#id5">Setup</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">WebSocketConfiguration</span></code> implementa <code class="docutils literal notranslate"><span class="pre">WebSocketConfigurer</span></code> e definisce metodi di callback
 per configurare WebSocket request handling via <code class="docutils literal notranslate"><span class="pre">&#64;EnableWebSocket</span></code> annotation. Nel nostro caso
-aggiunge WebSocketHandler per il path <strong>/socket</strong>:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
+aggiunge WebSocketHandler per il path <strong>/socket</strong>:</p></li>
+</ul>
+<p><a class="reference download internal" download="" href="_downloads/810102d00debe978f83035187ef75dec/WebSocketHandler.java"><code class="xref download docutils literal notranslate"><span class="pre">WebSocketHandler.java</span></code></a></p>
+<blockquote>
+<div><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
 <span class="nd">@EnableWebSocket</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfiguration</span> <span class="kd">implements</span> <span class="n">WebSocketConfigurer</span> <span class="p">{</span>
 <span class="nd">@Bean</span>
@@ -133,7 +93,8 @@ aggiunge WebSocketHandler per il path <strong>/socket</strong>:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</li>
+</div></blockquote>
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">WebSocketHandler</span></code> definisce l’handler custom come specializzazione della classe astratta
 <code class="docutils literal notranslate"><span class="pre">AbstractWebSocketHandler</span></code> o delle sue sottoclassi <code class="docutils literal notranslate"><span class="pre">TextWebSocketHandler</span></code> o <code class="docutils literal notranslate"><span class="pre">BinaryWebSocketHandler</span></code></p>
 <blockquote>
@@ -156,10 +117,9 @@ aggiunge WebSocketHandler per il path <strong>/socket</strong>:</p>
 </li>
 </ul>
 </section>
-</section>
 <section id="websocket-in-springboot-versione-stomp">
-<h2><a class="toc-backref" href="#id6">WebSocket in SpringBoot: versione STOMP</a><a class="headerlink" href="#websocket-in-springboot-versione-stomp" title="Permalink to this headline">¶</a></h2>
-<p>STOMP è un semplice protocollo di messaggistica originariamente creato per l’uso
+<h2>WebSocket in SpringBoot: versione STOMP<a class="headerlink" href="#websocket-in-springboot-versione-stomp" title="Permalink to this headline">¶</a></h2>
+<p>STOMP  è  un semplice protocollo di messaggistica originariamente creato per l’uso
 in linguaggi di scripting con frame ispirati a HTTP.
 STOMP è ampiamente supportato e adatto per l’uso su WebSocket e sul web.</p>
 <p>STOMP può essere utilizzato anche senza websocket, ad esempio tramite una connessione
@@ -187,19 +147,14 @@ Telnet o un servizio di message broker.</p>
 
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Web sockets</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#websocket-in-springboot-versione-base">WebSocket in SpringBoot: versione base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#websocket-in-springboot-versione-stomp">WebSocket in SpringBoot: versione STOMP</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="WebSockets.html">Web sockets</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to websocket’s documentation!</a></li>
   </ul></li>
 </ul>
 </div>
@@ -233,7 +188,7 @@ Telnet o un servizio di message broker.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/WebSockets.rst.txt"
+      <a href="_sources/WebSockets copy.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
