@@ -115,10 +115,10 @@ Setup
     
 
 +++++++++++++++++++++++++++++++++++++++++++++++
-wsdemominimal.js
+wsminimal.js
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Lo script  ``wsdemominimal.js`` definisce funzioni che inviano al server il messaggio di input e che aggiungono
+Lo script  ``wsminimal.js`` definisce funzioni che inviano al server il messaggio di input e che aggiungono
 messaggi nella output area e funzioni per connettersi a una WebSocket.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -283,33 +283,32 @@ Introduzione di un Controller
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 
-package it.unibo.wsdemoNoSTOMP;
+.. code:: java
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+    package it.unibo.wsdemoNoSTOMP;
 
-@Controller
-public class WebSocketController {
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
 
-    @RequestMapping("/")
-    public String starting() {
-        return "indexAlsoImages";//"wsbroadcast";
+    @Controller
+    public class WebSocketController {
+        @RequestMapping("/")
+        public String textOnly() {
+            return "indexNoImages";
+        }
+
+        @RequestMapping("/alsoimages")
+        public String alsoImages() {
+            return "indexAlsoImages";
+        }
     }
-/*
-    @RequestMapping("/socket")
-    public String getWebSocket() {
-        return "indexAlsoImages";//"wsbroadcast";
-    }
-
- */
-}
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++
 Gestione di immagini
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Lo script  ``wsdemominimal.js`` definisce funzioni
+Lo script  ``wsalsoimages.js`` definisce funzioni
 
 .. code:: java
 

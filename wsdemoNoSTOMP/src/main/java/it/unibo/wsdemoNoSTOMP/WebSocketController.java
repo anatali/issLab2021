@@ -18,11 +18,11 @@ public class WebSocketController {
     public String alsoImages() {
         return "indexAlsoImages";
     }
-
-    @RequestMapping("/extra")
+/*
+     @RequestMapping("/extra")
     public String getWebSocket() {
         return "wsbroadcast";//"wsbroadcast";
     }
-
+*/
 
 }
