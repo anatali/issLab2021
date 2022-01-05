@@ -25,7 +25,7 @@
         var host     = document.location.host;
         var pathname =  document.location.pathname;
         var addr     = "ws://" +host  + pathname + "socket"  ;
-        //alert("connect addr=" + addr  );
+        alert("connect addr=" + addr  );
 
         // Assicura che sia aperta un unica connessione
         if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){

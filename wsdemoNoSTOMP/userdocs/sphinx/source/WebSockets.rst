@@ -1,5 +1,5 @@
 .. contents:: Contenuti
-   :depth: 3
+   :depth: 5
 .. role:: red
 .. role:: blue 
 .. role:: remark 
@@ -118,8 +118,12 @@ Setup
 wsdemominimal.js
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Lo script  ``wsdemominimal.js`` contine funzioni che inviano al server il messaggio di input e che aggiungono
-messaggi nella output area:
+Lo script  ``wsdemominimal.js`` definisce funzioni che inviano al server il messaggio di input e che aggiungono
+messaggi nella output area e funzioni per connettersi a una WebSocket.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Funzioni di input/output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: js
 
@@ -130,46 +134,91 @@ messaggi nella output area:
     sendButton.onclick = function (event) {
         sendMessage(messageInput.value);
         messageInput.value = "";
-    };
-
+    }
     function sendMessage(message) {
         socket.send(message);
         addMessageToWindow("Sent Message: " + message);
     }
-
     function addMessageToWindow(message) {
         messageWindow.innerHTML += `<div>${message}</div>`
     }
 
--  ``WebSocketConfiguration`` implementa ``WebSocketConfigurer`` e definisce metodi di callback
-   per configurare WebSocket request handling via ``@EnableWebSocket`` annotation. Nel nostro caso
-   aggiunge WebSocketHandler per il path **/socket**:      
+    var socket = connect();
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Funzioni di connessione e ricezione messaggi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-   .. code:: java 
+.. _connect:
+
+.. code:: js
+
+    function connect(){
+        var socket;
+        var host     = document.location.host;
+        var pathname =  document.location.pathname;
+        var addr     = "ws://" +host + pathname + "socket"  ;
+
+        // Assicura che sia aperta un unica connessione
+        if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+             alert("WARNING: Connessione WebSocket già stabilita");
+        }
+        socket = new WebSocket(addr); //CONNESSIONE
+
+        socket.onopen = function (event) {
+            addMessageToWindow("Connected");
+        };
+        socket.onmessage = function (event) {
+            addMessageToWindow(`Got Message: ${event.data}`);
+        };
+        return socket;
+    }//connect
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Configurazione
++++++++++++++++++++++++++++++++++++++++++++++++
+
+Affinché l'applicazione Spring inoltri le richieste di un client al server (l'endpoint), 
+è necessario registrare un gestore utilizzando una classe di configurazione 
+che implementa l'interfaccia ``WebSocketConfigurer``.
+
+.. code:: java
 
     @Configuration
     @EnableWebSocket
     public class WebSocketConfiguration implements WebSocketConfigurer {
-    @Bean
-    public ServletServerContainerFactoryBean createWebSocketContainer() {
-        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxBinaryMessageBufferSize(1024000);
-        return container;
+        @Override
+        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+            registry.addHandler(new WebSocketHandler(), "/socket").setAllowedOrigins("*");
+        }
     }
 
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler(), "/socket").setAllowedOrigins("*");
-    }
-    }
+L'annotazione ``@EnableWebSocket`` (da aggiungere a una classe di configurazione ``@Configuration`` )  
+abilita l'uso delle plain WebSocket. 
 
--  ``WebSocketHandler`` definisce l'handler custom come specializzazione della classe astratta
-   ``AbstractWebSocketHandler`` o delle sue sottoclassi ``TextWebSocketHandler`` o ``BinaryWebSocketHandler``    
+In base alla configurazione, il server risponderà a richieste inviate al seguente indirizzo:
 
-    .. code:: java
+.. code:: java
 
-       public class WebSocketHandler extends AbstractWebSocketHandler {
-            ...
+    ws://<serverIP>:8070/socket
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Handler
++++++++++++++++++++++++++++++++++++++++++++++++
+
+La classe  ``WebSocketHandler`` definisce un gestore custom di messaggi come specializzazione della classe astratta
+``AbstractWebSocketHandler`` (o delle sue sottoclassi ``TextWebSocketHandler`` o ``BinaryWebSocketHandler``).    
+
+Nel nostro caso, la gestione reinvia sulla WebSocket il messaggio ricevuto .
+Questa azione del server porrà in esecuzione sul client  l'operazione ``socket.onmessage`` (si veda) `connect`_) che visualizza 
+il messaggio nell'area di output.
+
+.. code:: java
+
+    public class WebSocketHandler extends AbstractWebSocketHandler {
+        ...
         @Override
         protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
             System.out.println("New Text Message Received");
@@ -180,7 +229,91 @@ messaggi nella output area:
             System.out.println("New Binary Message Received");
             session.sendMessage(message);
         }
-       }
+    }
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Propagazione a tutti i client
++++++++++++++++++++++++++++++++++++++++++++++++
+
+Per propagare un messaggio a tutti i client connessi attraverso la WebSocket, basata tenere traccia
+delle sessioni e 
+
+.. code:: java
+
+    public class WebSocketHandler extends AbstractWebSocketHandler {
+    private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        sessions.add(session);
+        System.out.println("Added the session:" + session);
+        super.afterConnectionEstablished(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        sessions.remove(session);
+        System.out.println("Removed the session:" + session);
+        super.afterConnectionClosed(session, status);
+    }
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+        System.out.println("New Text Message Received");
+        sendToAll(message);
+    }
+    protected void sendToAll(TextMessage message) throws IOException{
+        Iterator<WebSocketSession> iter = sessions.iterator();
+        while( iter.hasNext() ){
+            iter.next().sendMessage(message);
+        }
+    }
+
+    }
+
+Notiamo che l'applicazione funziona anche in assenza di un controller, in quanto Spring utilizza di deafult il file
+**resources/static/index.html**.
+
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Un client in Java
++++++++++++++++++++++++++++++++++++++++++++++++
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Introduzione di un Controller
++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+package it.unibo.wsdemoNoSTOMP;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class WebSocketController {
+
+    @RequestMapping("/")
+    public String starting() {
+        return "indexAlsoImages";//"wsbroadcast";
+    }
+/*
+    @RequestMapping("/socket")
+    public String getWebSocket() {
+        return "indexAlsoImages";//"wsbroadcast";
+    }
+
+ */
+}
+
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Gestione di immagini
++++++++++++++++++++++++++++++++++++++++++++++++
+
+Lo script  ``wsdemominimal.js`` definisce funzioni
+
+.. code:: java
+
+
 
 ------------------------------------------------------
 WebSocket in SpringBoot: versione STOMP
@@ -190,13 +323,18 @@ STOMP è un semplice protocollo di messaggistica originariamente creato per l'us
 in linguaggi di scripting con frame ispirati a HTTP. 
 STOMP è ampiamente supportato e adatto per l'uso su WebSocket e sul web.
 
-STOMP può essere utilizzato anche senza websocket, ad esempio tramite una connessione 
-Telnet o un servizio di message broker.
+STOMP può essere utilizzato anche senza WebSocket, ad esempio tramite una connessione 
+Telnet, HTTP o un servizio di message broker.
+
+STOMP è progettato per interagire con un :blue:`broker di messaggi` realizzato in memoria (lato server);
+dunque, rispetto all'uso delle WebSocket, rende più semplice inviare messaggi solo 
+a un particolare utente o ad utenti che sono iscritti a un particolare argomento. 
 
 
 
 
 https://www.baeldung.com/websockets-spring
 
+https://www.dariawan.com/series/build-spring-websocket-application/
 
 https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/

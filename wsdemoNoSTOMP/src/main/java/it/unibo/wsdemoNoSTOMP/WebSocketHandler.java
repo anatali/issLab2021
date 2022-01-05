@@ -37,16 +37,25 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
         System.out.println("New Text Message Received");
         //session.sendMessage(message);
         //Send to all the connected clients
+        sendToAll(message);
+        /*
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             iter.next().sendMessage(message);
-        }
+        }*/
     }
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
         System.out.println("New Binary Message Received");
         //session.sendMessage(message);
         //Send to all the connected clients
+        Iterator<WebSocketSession> iter = sessions.iterator();
+        while( iter.hasNext() ){
+            iter.next().sendMessage(message);
+        }
+    }
+
+    protected void sendToAll(TextMessage message) throws IOException{
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             iter.next().sendMessage(message);
