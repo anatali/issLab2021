@@ -21,6 +21,12 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 // https://mvnrepository.com/artifact/org.springframework/spring-websocket
 	//implementation("org.springframework:spring-websocket:5.3.14")
+// https://mvnrepository.com/artifact/org.webjars/webjars-locator
+	//implementation 'org.webjars:webjars-locator:0.42'
+// https://mvnrepository.com/artifact/org.webjars/bootstrap
+	implementation 'org.webjars:bootstrap:5.1.3'
+// https://mvnrepository.com/artifact/org.webjars/jquery
+	implementation 'org.webjars:jquery:3.6.0'
 
 
 }

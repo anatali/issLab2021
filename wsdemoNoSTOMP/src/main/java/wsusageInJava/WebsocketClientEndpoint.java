@@ -1,4 +1,4 @@
-package wsusage;
+package wsusageInJava;
 
 import javax.imageio.ImageIO;
 import javax.websocket.*;
@@ -8,11 +8,7 @@ import java.io.File;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-/**
- * ChatServer Client
- *
- * @author Jiji_Sasidharan
- */
+
 @ClientEndpoint
 public class WebsocketClientEndpoint {
 
@@ -53,7 +49,6 @@ public class WebsocketClientEndpoint {
 
     /**
      * Callback hook for Message Events. This method will be invoked when a client send a message.
-     *
      */
     @OnMessage
     public void onMessage(String message) {
@@ -70,7 +65,7 @@ public class WebsocketClientEndpoint {
         try{
              ByteArrayInputStream bis = new ByteArrayInputStream(bytes.array());
              BufferedImage bImage2 = ImageIO.read(bis);
-            ImageIO.write(bImage2, "jpg", new File("output.jpg") );
+            ImageIO.write(bImage2, "jpg", new File("outputimage.jpg") );
             System.out.println("image created");
         }catch( Exception e){
             throw new RuntimeException(e);
@@ -81,8 +76,7 @@ public class WebsocketClientEndpoint {
 
     /**
      * register message handler
-     *
-     * @param msgHandler
+      * @param msgHandler
      */
     public void addMessageHandler(IMessageHandler msgHandler) {
         this.messageHandler = msgHandler;
@@ -90,13 +84,11 @@ public class WebsocketClientEndpoint {
 
     /**
      * Send a message.
-     *
      * @param message
      */
     public void sendMessage(String message) {
         System.out.println("Sending ... " + message);
         this.userSession.getAsyncRemote().sendText(message);
     }
-
 
 }

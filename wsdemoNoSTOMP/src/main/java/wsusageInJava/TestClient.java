@@ -1,4 +1,4 @@
-package wsusage;
+package wsusageInJava;
 import java.net.URI;
 import java.net.URISyntaxException;
 

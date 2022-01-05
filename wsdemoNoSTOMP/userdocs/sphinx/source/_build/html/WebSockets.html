@@ -282,6 +282,84 @@ delle sessioni e</p>
 </section>
 <section id="un-client-in-java">
 <h3><a class="toc-backref" href="#id10">Un client in Java</a><a class="headerlink" href="#un-client-in-java" title="Permalink to this headline">¶</a></h3>
+<p>E’ un esempio di machine-to-machine interaction.</p>
+<p>La classe <code class="docutils literal notranslate"><span class="pre">WebsocketClientEndpoint</span></code> riproduce in Java la stessa struttura del client già
+vista in JavaScript; in più possiamo ora salvare su file l’informnazione ricevuta (in particolare immagini
+di tipo <code class="docutils literal notranslate"><span class="pre">jpg</span></code>).</p>
+<p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;ClientEndpoint</span></code> (che corrisponde alla interfaccia <code class="docutils literal notranslate"><span class="pre">javax.websocket.ClientEndpoint</span></code>)
+denota che un POJO è un web socket client. Come tale questo POJO può definire i metodi delle web socket lifecycle
+usando le <em>web socket method level annotations</em>.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@ClientEndpoint</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebsocketClientEndpoint</span> <span class="p">{</span>
+
+<span class="n">Session</span> <span class="n">userSession</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="kd">private</span> <span class="n">IMessageHandler</span> <span class="n">messageHandler</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="nf">WebsocketClientEndpoint</span><span class="p">(</span><span class="n">URI</span> <span class="n">endpointURI</span><span class="p">)</span> <span class="p">{</span>
+ <span class="k">try</span> <span class="p">{</span>
+    <span class="n">WebSocketContainer</span> <span class="n">container</span><span class="o">=</span>
+            <span class="n">ContainerProvider</span><span class="p">.</span><span class="na">getWebSocketContainer</span><span class="p">();</span>
+    <span class="n">container</span><span class="p">.</span><span class="na">connectToServer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">endpointURI</span><span class="p">);</span>
+ <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Callback hook for Connection open events.</span>
+<span class="cm"> * @param userSession the userSession which is opened.</span>
+<span class="cm">*/</span>
+<span class="nd">@OnOpen</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onOpen</span><span class="p">(</span><span class="n">Session</span> <span class="n">userSession</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="na">userSession</span> <span class="o">=</span> <span class="n">userSession</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Callback hook for Connection close events.</span>
+<span class="cm"> * @param userSession the userSession which is getting closed.</span>
+<span class="cm"> * @param reason the reason for connection close</span>
+<span class="cm">*/</span>
+<span class="nd">@OnClose</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClose</span><span class="p">(</span><span class="n">Session</span> <span class="n">userSession</span><span class="p">,</span> <span class="n">CloseReason</span> <span class="n">reason</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="na">userSession</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Callback hook for Message Events.</span>
+<span class="cm"> * This method will be invoked when a client send a message.</span>
+<span class="cm">*/</span>
+<span class="nd">@OnMessage</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMessage</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">messageHandler</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">messageHandler</span><span class="p">.</span><span class="na">handleMessage</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@OnMessage</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMessage</span><span class="p">(</span><span class="n">ByteBuffer</span> <span class="n">bytes</span><span class="p">)</span> <span class="p">{</span>
+ <span class="k">try</span><span class="p">{</span>
+    <span class="n">ByteArrayInputStream</span> <span class="n">bis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayInputStream</span><span class="p">(</span><span class="n">bytes</span><span class="p">.</span><span class="na">array</span><span class="p">());</span>
+    <span class="c1">//Dai bytes alla immagine e salvataggio in un file</span>
+    <span class="n">BufferedImage</span> <span class="n">bImage2</span>    <span class="o">=</span> <span class="n">ImageIO</span><span class="p">.</span><span class="na">read</span><span class="p">(</span><span class="n">bis</span><span class="p">);</span>
+    <span class="n">ImageIO</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">bImage2</span><span class="p">,</span> <span class="s">&quot;jpg&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;outputimage.jpg&quot;</span><span class="p">)</span> <span class="p">);</span>
+ <span class="p">}</span><span class="k">catch</span><span class="p">(</span> <span class="n">Exception</span> <span class="n">e</span><span class="p">){</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="p">}</span>
+<span class="cm">/**</span>
+<span class="cm"> * register message handler</span>
+<span class="cm">  * @param msgHandler</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">addMessageHandler</span><span class="p">(</span><span class="n">IMessageHandler</span> <span class="n">msgHandler</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="na">messageHandler</span> <span class="o">=</span> <span class="n">msgHandler</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/**</span>
+<span class="cm"> * Send a message.</span>
+<span class="cm"> * @param message</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendMessage</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="na">userSession</span><span class="p">.</span><span class="na">getAsyncRemote</span><span class="p">().</span><span class="na">sendText</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <section id="introduzione-di-un-controller">
 <h3><a class="toc-backref" href="#id11">Introduzione di un Controller</a><a class="headerlink" href="#introduzione-di-un-controller" title="Permalink to this headline">¶</a></h3>
@@ -307,7 +385,28 @@ delle sessioni e</p>
 </section>
 <section id="gestione-di-immagini">
 <h3><a class="toc-backref" href="#id12">Gestione di immagini</a><a class="headerlink" href="#gestione-di-immagini" title="Permalink to this headline">¶</a></h3>
-<p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> definisce funzioni</p>
+<p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> usato da <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce funzioni per la gestione delle immagini simili</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span>sendImageButton.onclick = function (event) { //event is a PointerEvent
+    let file = fileInput.files[0];  //file: object File
+    sendMessage(file);
+    fileInput.value = null;
+};
+
+socket.onmessage = function (event) {
+    if (event.data instanceof ArrayBuffer) {
+        addMessageToWindow(&#39;Got Image:&#39;);
+        addImageToWindow(event.data);
+    } else {
+        addMessageToWindow(`Got Message: ${event.data}`);
+    }
+};
+
+function addImageToWindow(image) {
+    let url = URL.createObjectURL(new Blob([image]));
+    imageWindow.innerHTML += `&lt;img src=&quot;${url}&quot;/&gt;`
+}
+</pre></div>
+</div>
 </section>
 </section>
 <section id="websocket-in-springboot-versione-stomp">
@@ -320,8 +419,24 @@ Telnet, HTTP o un servizio di message broker.</p>
 <p>STOMP è progettato per interagire con un <span class="blue">broker di messaggi</span> realizzato in memoria (lato server);
 dunque, rispetto all’uso delle WebSocket, rende più semplice inviare messaggi solo
 a un particolare utente o ad utenti che sono iscritti a un particolare argomento.</p>
+<p><a class="reference external" href="https://spring.io/guides/gs/messaging-stomp-websocket/">https://spring.io/guides/gs/messaging-stomp-websocket/</a></p>
+<ul>
+<li><p>Create a Resource Representation Class. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.</p></li>
+<li><p>Create a Message-handling Controller.</p></li>
+<li><p>Configure Spring for STOMP messaging.</p></li>
+<li><div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocketMessageBroker</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfig</span> <span class="kd">implements</span> <span class="n">WebSocketMessageBrokerConfigurer</span> <span class="p">{</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a Browser Client . index.html</p></li>
+<li><p>./gradlew bootRun</p></li>
+<li><p>java -jar build/libs/gs-messaging-stomp-websocket-0.1.0.jar</p></li>
+</ul>
 <p><a class="reference external" href="https://www.baeldung.com/websockets-spring">https://www.baeldung.com/websockets-spring</a></p>
 <p><a class="reference external" href="https://www.dariawan.com/series/build-spring-websocket-application/">https://www.dariawan.com/series/build-spring-websocket-application/</a></p>
+<p><a class="reference external" href="https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/">https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/</a></p>
 <p><a class="reference external" href="https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/">https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/</a></p>
 </section>
 </section>

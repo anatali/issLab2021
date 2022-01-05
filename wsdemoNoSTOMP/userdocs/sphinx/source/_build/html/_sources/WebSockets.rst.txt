@@ -55,6 +55,8 @@ che definisce un *handshake* di connessione e un *frame* di messaggio.
 WebSocket in SpringBoot: versione base
 ------------------------------------------------------
 
+.. https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/
+
 Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente
 a un client di utilizzare un browser per inviare un messaggio o una immagine a un server 
 che provvede a visualizzare il messaggio o l'immagine presso tutti i client collegati.
@@ -278,6 +280,90 @@ Notiamo che l'applicazione funziona anche in assenza di un controller, in quanto
 Un client in Java
 +++++++++++++++++++++++++++++++++++++++++++++++
 
+E' un esempio di machine-to-machine interaction.
+
+La classe ``WebsocketClientEndpoint`` riproduce in Java la stessa struttura del client già
+vista in JavaScript; in più possiamo ora salvare su file l'informnazione ricevuta (in particolare immagini
+di tipo ``jpg``).
+
+L'annotazione ``@ClientEndpoint`` (che corrisponde alla interfaccia ``javax.websocket.ClientEndpoint``)
+denota che un POJO è un web socket client. Come tale questo POJO può definire i metodi delle web socket lifecycle
+usando le *web socket method level annotations*.
+
+.. code:: java
+
+    @ClientEndpoint
+    public class WebsocketClientEndpoint {
+
+    Session userSession = null;
+    private IMessageHandler messageHandler;
+
+    public WebsocketClientEndpoint(URI endpointURI) {
+     try {
+        WebSocketContainer container=
+                ContainerProvider.getWebSocketContainer();
+        container.connectToServer(this, endpointURI);
+     } catch (Exception e) { throw new RuntimeException(e); }
+    }
+
+    /**
+     * Callback hook for Connection open events.
+     * @param userSession the userSession which is opened.
+    */
+    @OnOpen
+    public void onOpen(Session userSession) {
+        this.userSession = userSession;
+    }
+
+    /**
+     * Callback hook for Connection close events.
+     * @param userSession the userSession which is getting closed.
+     * @param reason the reason for connection close
+    */
+    @OnClose
+    public void onClose(Session userSession, CloseReason reason) {
+        this.userSession = null;
+    }
+
+    /**
+     * Callback hook for Message Events. 
+     * This method will be invoked when a client send a message.
+    */
+    @OnMessage
+    public void onMessage(String message) {
+        if (this.messageHandler != null) {
+            this.messageHandler.handleMessage(message);
+        }
+    }
+
+    @OnMessage
+    public void onMessage(ByteBuffer bytes) {
+     try{
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes.array());
+        //Dai bytes alla immagine e salvataggio in un file
+        BufferedImage bImage2    = ImageIO.read(bis);
+        ImageIO.write(bImage2, "jpg", new File("outputimage.jpg") );
+     }catch( Exception e){ throw new RuntimeException(e); }
+
+    }
+    /**
+     * register message handler
+      * @param msgHandler
+    */
+    public void addMessageHandler(IMessageHandler msgHandler) {
+        this.messageHandler = msgHandler;
+    }
+    /**
+     * Send a message.
+     * @param message
+    */
+    public void sendMessage(String message) {
+        this.userSession.getAsyncRemote().sendText(message);
+    }
+    }
+
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++
 Introduzione di un Controller
 +++++++++++++++++++++++++++++++++++++++++++++++
@@ -308,10 +394,29 @@ Introduzione di un Controller
 Gestione di immagini
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Lo script  ``wsalsoimages.js`` definisce funzioni
+Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzioni per la gestione delle immagini simili
 
 .. code:: java
 
+    sendImageButton.onclick = function (event) { //event is a PointerEvent
+        let file = fileInput.files[0];  //file: object File
+        sendMessage(file);
+        fileInput.value = null;
+    };
+
+    socket.onmessage = function (event) {
+        if (event.data instanceof ArrayBuffer) {
+            addMessageToWindow('Got Image:');
+            addImageToWindow(event.data);
+        } else {
+            addMessageToWindow(`Got Message: ${event.data}`);
+        }
+    };
+
+    function addImageToWindow(image) {
+        let url = URL.createObjectURL(new Blob([image]));
+        imageWindow.innerHTML += `<img src="${url}"/>`
+    }
 
 
 ------------------------------------------------------
@@ -329,11 +434,34 @@ STOMP è progettato per interagire con un :blue:`broker di messaggi` realizzato 
 dunque, rispetto all'uso delle WebSocket, rende più semplice inviare messaggi solo 
 a un particolare utente o ad utenti che sono iscritti a un particolare argomento. 
 
+https://spring.io/guides/gs/messaging-stomp-websocket/
 
+- Create a Resource Representation Class. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.
+- Create a Message-handling Controller.
+- Configure Spring for STOMP messaging.
+- 
+  .. code:: Java
+
+    @Configuration
+    @EnableWebSocketMessageBroker
+    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+
+- Create a Browser Client . index.html
+- ./gradlew bootRun
+- java -jar build/libs/gs-messaging-stomp-websocket-0.1.0.jar
 
 
 https://www.baeldung.com/websockets-spring
 
 https://www.dariawan.com/series/build-spring-websocket-application/
 
+https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Esempio più articolato
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/
+
+ 
