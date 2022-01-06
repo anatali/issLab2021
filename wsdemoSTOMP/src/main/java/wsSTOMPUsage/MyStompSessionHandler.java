@@ -1,6 +1,7 @@
 package wsSTOMPUsage;
 
 import it.unibo.wsdemoSTOMP.InputMessage;
+import it.unibo.wsdemoSTOMP.OutputMessage;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -11,11 +12,11 @@ import java.lang.reflect.Type;
 public class MyStompSessionHandler extends StompSessionHandlerAdapter {
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-        System.out.println("New session established : " + session.getSessionId());
-        session.subscribe("/topic/messages", this);
-        System.out.println("Subscribed to /topic/messages");
-        session.send("/app/chat", getSampleMessage());
-        System.out.println("InputMessage sent to websocket server");
+        System.out.println("MyStompSessionHandler | New session established : " + session.getSessionId());
+        session.subscribe("/topic/output", this);
+        System.out.println("Subscribed to /topic/output");
+        session.send("/unibo/inputmsg", getSampleMessage());
+        System.out.println("MyStompSessionHandler | InputMessage sent to websocket server");
     }
 
     @Override
@@ -25,13 +26,16 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter {
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return InputMessage.class;
+        return OutputMessage.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        InputMessage msg = (InputMessage) payload;
-        System.out.println("Received : " + msg.getName()  );
+        //System.out.println("MyStompSessionHandler | Received : " + payload + " " + payload.getClass() );
+        if( payload instanceof OutputMessage) {
+            OutputMessage msg = (OutputMessage) payload;
+            System.out.println("MyStompSessionHandler | Received : " + msg.getContent());
+        }
     }
 
     /**

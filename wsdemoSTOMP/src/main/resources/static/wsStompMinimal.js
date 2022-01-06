@@ -9,10 +9,7 @@
      };
 
     function sendMessage(message) {
-        //socket.send(message);
-        console.log("sendMessage");
         stompClient.send("/unibo/inputmsg", {}, JSON.stringify({'name': $("#inputmessage").val()}));
-
         addMessageToWindow("Sent Message: " + message);
     }
 
@@ -25,7 +22,14 @@
 
 
 function connect() {
-    var socket  = new SockJS('/stomp-websocket');
+        //var socket  = new SockJS('/stomp-websocket');
+        var host     = document.location.host;
+        //var pathname = document.location.pathname;
+        var addr     = "ws://" +host  + "/stomp-websocket"  ;
+        console.log("connect addr="+addr);
+
+        //var addr     = "ws://localhost/stomp-websocket"  ;
+    var socket = new WebSocket(addr);
 
             socket.onopen = function (event) {
                 addMessageToWindow("Connected");

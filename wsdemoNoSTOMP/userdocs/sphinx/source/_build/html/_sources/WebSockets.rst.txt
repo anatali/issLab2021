@@ -6,6 +6,7 @@
 
 .. _WebSocket: https://it.wikipedia.org/wiki/WebSocket
 .. _Springio: https://start.spring.io/
+.. _SockJs: https://openbase.com/js/sockjs/documentation#what-is-sockjs
  
 .. _`WebSockets`:
 
@@ -66,6 +67,9 @@ che provvede a visualizzare il messaggio o l'immagine presso tutti i client coll
 +++++++++++++++++++++++++++++++++++++++++++++++
 Setup
 +++++++++++++++++++++++++++++++++++++++++++++++
+Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente a un client 
+di utilizzare un browser per inviare un messaggio o una immagine a un server che provvede a visualizzare 
+il messaggio o l’immagine presso tutti i client collegati.
 
 #. Iniziamo creando una applicazione *SpringBoot* collegandoci a Springio_ e selezionando 
    come da figura:
@@ -428,6 +432,7 @@ WebSocket in SpringBoot: versione STOMP
 (STOMP) è un protocollo di messaggistica text-based progettato per operare con MOM 
 (Message Orinented Middleware) ed originariamente creato per l'uso 
 in linguaggi di scripting con frame ispirati a HTTP. 
+E' una alternativa a AMQP (Advanced Message Queuing Protocol) e JMS (Java Messaging Service).
 
 STOMP può essere utilizzato anche senza WebSocket, ad esempio tramite una connessione 
 Telnet, HTTP o un  message broker. Tuttavia,
@@ -456,12 +461,31 @@ Partendo dal SetUp precedente `SetupNoStomp`_, aggiungiamo alcune dipendenze nel
     //Nuove dipendenze
     implementation 'org.webjars:webjars-locator-core'
 	implementation 'org.webjars:sockjs-client:1.5.1'
-	implementation 'org.webjars:stomp-websocket:2.3.4'
+	implementation 'org.webjars:stomp-websocket:2.3.4' 
     implementation 'org.webjars:bootstrap:5.1.3'
     implementation 'org.webjars:jquery:3.6.0'
 
 I :blue:`WebJar` sono dipendenze lato client impacchettate in file JAR e non sono legate a Spring.
 Per approfondire, si veda: https://www.baeldung.com/maven-webjars e https://mvnrepository.com/artifact/org.webjars. 
+
+++++++++++++++++++++++++++++++++++++++++++++++++ 
+WebSocket vs. SockJs
+++++++++++++++++++++++++++++++++++++++++++++++++
+A partire dal 2018, il supporto WebSocket nei browser è quasi onnipresente. 
+Tuttavia, per supportare vecchi browwer, potrebbe essere necessario fare uso di 
+SockJS_, con le seguenti avvertenze:
+
+- Le convenzioni del protocollo URL sono diverse per WebSocket ( ``ws:/`` o ``wss:``) e SockJS ( ``http:`` o ``https:``).
+- Le sequenze di handshake interne sono diverse, quindi alcuni broker utilizzeranno punti finali diversi per entrambi i protocolli.
+- Nessuno di questi consente di impostare intestazioni personalizzate durante l'handshake HTTP.
+- SockJS supporta internamente diversi meccanismi di trasporto. Si potrebbe dover affrontare limitazioni 
+  specifiche a seconda del trasporto effettivo in uso.
+- La riconnessione automatica non è abbastanza affidabile con SockJS.
+- Gli heartbeat potrebbero non essere supportati su SockJS da alcuni broker.
+- SockJS non consente più di una connessione simultanea allo stesso broker. 
+  Questo di solito non è un problema per la maggior parte delle applicazioni.
+
+ 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
 La funzione del servizio

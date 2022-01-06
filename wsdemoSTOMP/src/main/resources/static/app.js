@@ -13,7 +13,12 @@ function setConnected(connected) {
 }
 
 function connect() {
-    var socket  = new SockJS('/stomp-websocket');
+        //var socket  = new SockJS('/stomp-websocket');
+        var host     = document.location.host;
+        //var pathname = document.location.pathname;
+        var addr     = "ws://" + host + "/stomp-websocket"  ;
+        console.log(addr);
+    var socket = new WebSocket(addr);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);

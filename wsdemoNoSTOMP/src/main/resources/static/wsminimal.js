@@ -21,7 +21,6 @@
 
 
     function connect(){
-        var socket;
         var host     = document.location.host;
         var pathname =  document.location.pathname;
         var addr     = "ws://" +host  + pathname + "socket"  ;
@@ -31,7 +30,7 @@
         if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
              alert("WARNING: Connessione WebSocket già stabilita");
         }
-        socket = new WebSocket(addr);
+        var socket = new WebSocket(addr);
 
         //socket.binaryType = "arraybuffer";
 
