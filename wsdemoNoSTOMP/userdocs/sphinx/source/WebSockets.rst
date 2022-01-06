@@ -61,6 +61,8 @@ Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazi
 a un client di utilizzare un browser per inviare un messaggio o una immagine a un server 
 che provvede a visualizzare il messaggio o l'immagine presso tutti i client collegati.
 
+.. _SetupNoStomp:
+
 +++++++++++++++++++++++++++++++++++++++++++++++
 Setup
 +++++++++++++++++++++++++++++++++++++++++++++++
@@ -70,7 +72,7 @@ Setup
 
    .. image:: ./_static/img/springioBase.PNG
      :align: center
-     :width: 90%
+     :width: 90+
 #. Specifichiamo una nuova porta (il deafult è ``8080``) ponendo in *resources/application.properties*
 
     .. code:: Java
@@ -88,7 +90,7 @@ Setup
             <style>
                 .messageAreaStyle {
                     text-align: left;
-                    width: 50%;
+                    width: 50+;
                     padding: 1em;
                     border: 1px solid black;
                 }
@@ -113,7 +115,7 @@ Setup
 
     .. image:: ./_static/img/pageMinimal.PNG
      :align: center
-     :width: 50% 
+     :width: 50+ 
     
 
 +++++++++++++++++++++++++++++++++++++++++++++++
@@ -123,9 +125,9 @@ wsminimal.js
 Lo script  ``wsminimal.js`` definisce funzioni che inviano al server il messaggio di input e che aggiungono
 messaggi nella output area e funzioni per connettersi a una WebSocket.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++++++
 Funzioni di input/output
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: js
 
@@ -147,9 +149,9 @@ Funzioni di input/output
 
     var socket = connect();
  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++++++
 Funzioni di connessione e ricezione messaggi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. _connect:
 
@@ -422,23 +424,91 @@ Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzi
 ------------------------------------------------------
 WebSocket in SpringBoot: versione STOMP
 ------------------------------------------------------
-
-STOMP è un semplice protocollo di messaggistica originariamente creato per l'uso 
+:blue:`Simple Text Oriented Message Protocol`
+(STOMP) è un protocollo di messaggistica text-based progettato per operare con MOM 
+(Message Orinented Middleware) ed originariamente creato per l'uso 
 in linguaggi di scripting con frame ispirati a HTTP. 
-STOMP è ampiamente supportato e adatto per l'uso su WebSocket e sul web.
 
 STOMP può essere utilizzato anche senza WebSocket, ad esempio tramite una connessione 
-Telnet, HTTP o un servizio di message broker.
+Telnet, HTTP o un  message broker. Tuttavia,
+STOMP è ampiamente supportato e adatto per l'uso su WebSocket e sul web.
 
 STOMP è progettato per interagire con un :blue:`broker di messaggi` realizzato in memoria (lato server);
 dunque, rispetto all'uso delle WebSocket, rende più semplice inviare messaggi solo 
 a un particolare utente o ad utenti che sono iscritti a un particolare argomento. 
 
+++++++++++++++++++++++++++++++++++++++++++++++++
+Setup e Dipendenze
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+Partendo dal SetUp precedente `SetupNoStomp`_, aggiungiamo alcune dipendenze nel file ``build.gradle``:
+
+.. code::
+
+    dependencies {
+    //Dipendenze generate dal Setup
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    //Nuove dipendenze
+    implementation 'org.webjars:webjars-locator-core'
+	implementation 'org.webjars:sockjs-client:1.5.1'
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.webjars:bootstrap:5.1.3'
+    implementation 'org.webjars:jquery:3.6.0'
+
+I :blue:`WebJar` sono dipendenze lato client impacchettate in file JAR e non sono legate a Spring.
+Per approfondire, si veda: https://www.baeldung.com/maven-webjars e https://mvnrepository.com/artifact/org.webjars. 
+
+++++++++++++++++++++++++++++++++++++++++++++++++ 
+La funzione del servizio
+++++++++++++++++++++++++++++++++++++++++++++++++
+Il servizio accetta messaggi in formato JSON
+
+++++++++++++++++++++++++++++++++++++++++++++++++ 
+Componenti
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+I componenti-base della applicazione in versione STOMP sono
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Configurazione Spring
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Client (in javascript per browser)
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Client (in Java per programmi)
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 https://spring.io/guides/gs/messaging-stomp-websocket/
 
-- Create a Resource Representation Class. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.
-- Create a Message-handling Controller.
-- Configure Spring for STOMP messaging.
+- Possibile premessa https://www.baeldung.com/intro-to-project-lombok
+- 
+- 
+  .. code:: Java
+
+
+- Create a Resource Representation Class. HelloMessage. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.
+-  model the greeting representation, Greeting
+- Create a Message-handling Controller. GreetingController
+  
+  .. code:: Java
+
+  	@MessageMapping("/hello")    
+      un msg inviato a /hello induce l'esecuzione del metodo con input un oggetto di tipo HelloMessage
+      ricavato dal payload del emssaggio
+    @SendTo("/topic/greetings")
+      induce a inviare la risposta del metodo a tutti i sottoscrittori di /topic/greetings
+
+- Configure Spring for STOMP messaging. WebSocketConfig
 - 
   .. code:: Java
 
@@ -458,9 +528,9 @@ https://www.dariawan.com/series/build-spring-websocket-application/
 
 https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Esempio più articolato
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/
 

@@ -1,0 +1,34 @@
+<html>
+<head>
+    <style>
+        .messageAreaStyle {
+            text-align: left;
+            width: 80%;
+            padding: 1em;
+            border: 1px solid black;
+        }
+    </style>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <title>wsdemoNoStomp client</title>
+</head>
+
+<body>
+<h1>Welcome</h1>
+<div id="messageArea"  class="messageAreaStyle"></div>
+
+<div class="input-fields">
+    <p>Type a message and hit send:</p>
+    <input id="inputmessage"/><button id="send">Send</button>
+</div>
+
+<!--
+Put here and not in head
+-->
+<script src="wsStompMinimal.js"></script>
+
+</body>
+</html>
