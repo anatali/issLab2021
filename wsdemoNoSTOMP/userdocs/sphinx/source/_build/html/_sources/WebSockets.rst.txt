@@ -477,12 +477,12 @@ SockJS_, con le seguenti avvertenze:
 
 - Le convenzioni del protocollo URL sono diverse per WebSocket ( ``ws:/`` o ``wss:``) e SockJS ( ``http:`` o ``https:``).
 - Le sequenze di handshake interne sono diverse, quindi alcuni broker utilizzeranno punti finali diversi per entrambi i protocolli.
-- Nessuno di questi consente di impostare intestazioni personalizzate durante l'handshake HTTP.
-- SockJS supporta internamente diversi meccanismi di trasporto. Si potrebbe dover affrontare limitazioni 
+- Nessuno di questi consente di impostare intestazioni personalizzate durante l'handshake *HTTP*.
+- *SockJS* supporta internamente diversi meccanismi di trasporto. Si potrebbe dover affrontare limitazioni 
   specifiche a seconda del trasporto effettivo in uso.
-- La riconnessione automatica non è abbastanza affidabile con SockJS.
-- Gli heartbeat potrebbero non essere supportati su SockJS da alcuni broker.
-- SockJS non consente più di una connessione simultanea allo stesso broker. 
+- La riconnessione automatica non è abbastanza affidabile con *SockJS*.
+- Gli heartbeat potrebbero non essere supportati su *SockJS* da alcuni broker.
+- *SockJS* non consente più di una connessione simultanea allo stesso broker. 
   Questo di solito non è un problema per la maggior parte delle applicazioni.
 
  
@@ -491,35 +491,38 @@ SockJS_, con le seguenti avvertenze:
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Configurazione 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Il servizio viene configurato da una classe che implementa l'interfaccia 
+Il servizio viene configurato in SpringBoot da una classe che implementa l'interfaccia 
 ``WebSocketMessageBrokerConfigurer`` :
 
 .. code:: Java
 
-    @Configuration
-    @EnableWebSocketMessageBroker
-    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+   @Configuration
+   @EnableWebSocketMessageBroker
+   public class WebSocketConfig 
+            implements WebSocketMessageBrokerConfigurer{
 
-	@Override
-	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/unibo");
-		config.setApplicationDestinationPrefixes("/input");
-	}
+   @Override
+   public void configureMessageBroker(MessageBrokerRegistry config){
+    config.enableSimpleBroker("/demoTopic");   
+    config.setApplicationDestinationPrefixes(
+                   "/demoInput","/anotherInput");
+   }
 
-	@Override
-	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/stomp-websocket");  //.withSockJS();
-	}
-}
+   @Override
+   public void registerStompEndpoints(StompEndpointRegistry registry) {
+     registry.addEndpoint("/unibo");  //.withSockJS();  
+   }
+   }
 
 Nella configurazione specificata, il servizio:
 
-#. offre una connessione STOMP su *WebSocket* (escludimao *SockJS*) con URL 
-   ``ws://<serverIP>:8080/stomp-websocket``;
-#. abilita un broker su memoria comune, con prefisso di destinazione ``unibo``. I client 
-   si possono sottoscrivere a topic che iniziano con questo prefisso, ad es. ``/unibo/output``;
-#. imposta  ``intput`` come prefisso di destinazione. I client quindi invieranno messaggi
-   agli endpoint che iniziano con questo prefisso, cioè  ``/unibo/input``;
+#. abilita il supporto STOMP su *WebSocket* (escludiamo *SockJS*) registrando l'endpoint ``unibo``.  
+   Dunque l'indirizzo per connetersi sarà: ``ws://<serverIP>:8080/unibo``;
+#. abilita un broker su memoria comune, con prefisso di destinazione ``demoTopic``. I client 
+   si possono sottoscrivere a endpoint che iniziano con questo prefisso, ad es. ``/demoTopic/output``;
+#. imposta  ``demoInput`` e ``anotherInput`` come prefissi di destinazione dell'applicazione. 
+   I clienti quindi invieranno messaggi agli endpoint che iniziano con ``/demoInput/unibo`` oppure
+   ``/anotherInput/unibo``;
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
@@ -556,33 +559,165 @@ deve essere inviato come messaggio alla destinazione specificata ``/unibo/output
     @Controller
     public class MessageController {
 
-	@MessageMapping("/input")    //un msg inviato a /inputmsg induce l'esecuzione del metodo
-	@SendTo("/unibo/output")	    //la risposta è inviata ai subscribers di /topic/output
-	public OutputMessage elabInput(InputMessage message) throws Exception {
-		return new OutputMessage("Elaborated: " + HtmlUtils.htmlEscape(message.getName()) + " ");
+	@MessageMapping("/input")     
+	@SendTo("/unibo/output")	    
+	public OutputMessage elabInput(InputMessage msg) throws Exception{
+		return new OutputMessage("Elaborated: " 
+          + HtmlUtils.htmlEscape(msg.getName()) + " ");
 	}
+
+	@RequestMapping("/")
+	public String entryMinimal() { return "indexNoImages"; }
     }
 
 
 L'operazione ``HtmlUtils.htmlEscape`` elabora il nome nel messaggio di input in modo da poter
 essere reso nel DOM lato client.
 
+Il file restituito dal controller è simile a quanto già introdotto nella versione non-SOMP
+
+.. code:: html
+    <html>
+    <head>
+        <style>
+            .messageAreaStyle {
+                text-align: left;
+                width: 80%;
+                padding: 1em;
+                border: 1px solid black;
+            }
+        </style>
+        <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/main.css" rel="stylesheet">
+        <script src="/webjars/jquery/jquery.min.js"></script>
+        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+        <title>wsdemoNoStomp</title>
+    </head>
+
+    <body>
+    <h1>Welcome</h1>
+    <div id="messageArea"  class="messageAreaStyle"></div>
+
+    <div class="input-fields">
+        <p>Type a message and hit send:</p>
+        <input id="inputmessage"/><button id="send">Send</button>
+    </div>
+
+    <!--
+    Put here and not in head
+    -->
+    <script src="wsStompMinimal.js"></script>
+
+    </body>
+    </html>
+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
 Componenti
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-I componenti-base della applicazione in versione STOMP sono quindi oggetti DTO (Data Tranfer Object)
-rappresentati dalle classi InputMessage e OutputMessage.
+I componenti-base della applicazione in versione STOMP sono quindi oggetti DTO (:blue:`Data Transfer Object`)
+rappresentati dalle classi ``InputMessage`` e ``OutputMessage`` .
   
 
+.. list-table::
+   :width: 100%
+   :widths: 50,50
+   
+   * - .. code:: Java
+          
+          public class InputMessage {
+            private String name;
+            public InputMessage(String name) {
+                this.name = name;}
+            public String getName() {return name;}
+            public void setName(String name) {
+                this.name = name;}
+          }
+     - .. code:: Java
+          
+        public class OutputMessage {
+        private String content;
+        public OutputMessage(String content) {
+            this.content = content; }
+        public String getContent() { 
+            return content; }
+        }
  
-
+++++++++++++++++++++++++++++++++++++++++++++++++
+index.html
+++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Client (in javascript per browser)
 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+Parte relativa alla pagina:
+
+.. code:: js
+    
+    const messageWindow   = document.getElementById("messageArea");
+    const sendButton      = document.getElementById("send");
+    const messageInput    = document.getElementById("inputmessage");
+
+     sendButton.onclick = function (event) {
+        sendMessage(messageInput.value);
+        messageInput.value = "";
+     };
+
+    function sendMessage(message) {
+        stompClient.send("/unibo/inputmsg", {}, JSON.stringify({'name': $("#inputmessage").val()}));
+        addMessageToWindow("Sent Message: " + message);
+    }
+
+    function addMessageToWindow(message) {
+        messageWindow.innerHTML += `<div>${message}</div>`
+    }
+
+    //var socket =
+    connect();
+
+
+function connect() {
+        //var socket  = new SockJS('/stomp-websocket');
+        var host     = document.location.host;
+        //var pathname = document.location.pathname;
+        var addr     = "ws://" +host  + "/stomp-websocket"  ;
+        console.log("connect addr="+addr);
+
+        //var addr     = "ws://localhost/stomp-websocket"  ;
+    var socket = new WebSocket(addr);
+
+            socket.onopen = function (event) {
+                addMessageToWindow("Connected");
+            };
+
+            socket.onmessage = function (event) {
+                addMessageToWindow(`Got Message: ${event.data}`);
+                //alert(`Got Message: ${event.data}`)
+
+            };
+
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        //setConnected(true);
+        addMessageToWindow("Connected " + frame);
+        //console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/output', function (greeting) {
+            showAnswer(JSON.parse(greeting.body).content);
+        });
+    });
+}
+
+function showAnswer(message) {
+    addMessageToWindow("Answer:" + message);
+}
+
+Parte relativa alla interazione:
+
+.. code:: js
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Client (in Java per programmi)

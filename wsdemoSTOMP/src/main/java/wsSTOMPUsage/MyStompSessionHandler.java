@@ -13,9 +13,9 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter {
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         System.out.println("MyStompSessionHandler | New session established : " + session.getSessionId());
-        session.subscribe("/topic/output", this);
-        System.out.println("Subscribed to /topic/output");
-        session.send("/unibo/inputmsg", getSampleMessage());
+        session.subscribe("/demoTopic/output", this);
+        System.out.println("Subscribed to /demoTopic/output");
+        session.send("/anotherInput/unibo", getSampleMessage());
         System.out.println("MyStompSessionHandler | InputMessage sent to websocket server");
     }
 

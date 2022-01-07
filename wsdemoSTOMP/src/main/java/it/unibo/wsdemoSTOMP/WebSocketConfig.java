@@ -10,16 +10,23 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+	/*
+	 * register on  /demoTopic/output
+	 * send to      /demoInput/unibo
+	 */
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/topic");
-		config.setApplicationDestinationPrefixes("/unibo");
-		//The client will send messages at the application endpoint
+		config.enableSimpleBroker("/demoTopic");
+		config.setApplicationDestinationPrefixes("/demoInput", "/anotherInput");
+		//config.setApplicationDestinationPrefix("/anotherdemoInput");
 	}
 
+	/*
+	 * connect to ws://localhost/unibo
+	 */
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/stomp-websocket");//  .withSockJS();
+		registry.addEndpoint("/unibo");//  .withSockJS();
 	}
 
 }

@@ -9,8 +9,9 @@
      };
 
     function sendMessage(message) {
-        stompClient.send("/unibo/inputmsg", {}, JSON.stringify({'name': $("#inputmessage").val()}));
-        addMessageToWindow("Sent Message: " + message);
+        //stompClient.send("/unibo/input", {}, JSON.stringify({'name': $("#inputmessage").val()}));
+        stompClient.send("/demoInput/unibo", {}, JSON.stringify({'name': message}));
+        addMessageToWindow("Sent Message: " + message ); //+ " stompClient=" + stompClient
     }
 
     function addMessageToWindow(message) {
@@ -22,14 +23,12 @@
 
 
 function connect() {
-        //var socket  = new SockJS('/stomp-websocket');
-        var host     = document.location.host;
+        //var socket   = new SockJS('/unibo');  //NON USIAMO SockJs
+        var host       = document.location.host;
         //var pathname = document.location.pathname;
-        var addr     = "ws://" +host  + "/stomp-websocket"  ;
+        var addr       = "ws://" + host  + "/unibo"  ;
         console.log("connect addr="+addr);
-
-        //var addr     = "ws://localhost/stomp-websocket"  ;
-    var socket = new WebSocket(addr);
+        var socket     = new WebSocket(addr);
 
             socket.onopen = function (event) {
                 addMessageToWindow("Connected");
@@ -45,8 +44,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         //setConnected(true);
         addMessageToWindow("Connected " + frame);
-        //console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/output', function (greeting) {
+        stompClient.subscribe('/demoTopic/output', function (greeting) {
             showAnswer(JSON.parse(greeting.body).content);
         });
     });
