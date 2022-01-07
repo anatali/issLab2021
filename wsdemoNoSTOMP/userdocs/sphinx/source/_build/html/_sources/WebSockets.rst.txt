@@ -83,9 +83,11 @@ il messaggio o l’immagine presso tutti i client collegati.
 
        server.port = 8070
 
-#. Inseriamo un file ``index.html`` in **resources/static** per poter lanciare un'applicazione che 
+#. Inseriamo un file ``_index.html`` in **resources/static** per poter lanciare un'applicazione che 
    presenta un'area  di ouput per  la visualizzazione di messaggi e un'area di input per la loro 
    immissione
+
+.. _indexNoImagesNoStomp:
 
     .. code:: html
 
@@ -126,12 +128,16 @@ il messaggio o l’immagine presso tutti i client collegati.
 wsminimal.js
 +++++++++++++++++++++++++++++++++++++++++++++++
 
+.. _wsminimal:
+
+
 Lo script  ``wsminimal.js`` definisce funzioni che inviano al server il messaggio di input e che aggiungono
 messaggi nella output area e funzioni per connettersi a una WebSocket.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
 Funzioni di input/output
 +++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 .. code:: js
 
@@ -531,14 +537,14 @@ La funzione del servizio
 
 Il servizio:
 
-#. riceve un messaggio (in formato JSON) inviato su endpoint=``/unibo/input``;
+#. riceve un messaggio (in formato JSON) inviato su endpoint= ``/demoInput/unibo``;
    il messaggio viene mappato in Java usando come DAO la classe ``InputMessage``
 #. elabora il messaggio
 #. costruisce un messaggio di risposta di tipo ``OutputMessage`` e lo pubblica
-   (ancora in formato JSON) sulla coda ``/unibo/output``.
+   (ancora in formato JSON) su endpoint ``/demoTopic/output``.
 
 La conversione dei messaggi da JSon a Java e viceversa è effettuata in modo automatico 
-in SpringBoot, una volta definito un opportuno controller.
+in SpringBoot, una volta definito un opportuno Controller.
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
@@ -557,26 +563,27 @@ deve essere inviato come messaggio alla destinazione specificata ``/unibo/output
 .. code:: Java
 
     @Controller
-    public class MessageController {
+    public class HIController {
 
-	@MessageMapping("/input")     
-	@SendTo("/unibo/output")	    
+	@MessageMapping("/unibo")     
+	@SendTo("/demoTopic/output")	    
 	public OutputMessage elabInput(InputMessage msg) throws Exception{
 		return new OutputMessage("Elaborated: " 
-          + HtmlUtils.htmlEscape(msg.getName()) + " ");
+               + HtmlUtils.htmlEscape(msg.getName()) + " ");
 	}
 
 	@RequestMapping("/")
 	public String entryMinimal() { return "indexNoImages"; }
     }
 
-
 L'operazione ``HtmlUtils.htmlEscape`` elabora il nome nel messaggio di input in modo da poter
 essere reso nel DOM lato client.
 
-Il file restituito dal controller è simile a quanto già introdotto nella versione non-SOMP
+Il file  ``indexNoImages.html`` restituito da ``HIController`` è simile a quanto già introdotto nella versione 
+non-STOMP indexNoImagesNoStomp_, con un set più ampio di dipendenze:
 
 .. code:: html
+
     <html>
     <head>
         <style>
@@ -589,8 +596,6 @@ Il file restituito dal controller è simile a quanto già introdotto nella versi
         </style>
         <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="/main.css" rel="stylesheet">
-        <script src="/webjars/jquery/jquery.min.js"></script>
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
         <script src="/webjars/stomp-websocket/stomp.min.js"></script>
         <title>wsdemoNoStomp</title>
     </head>
@@ -603,14 +608,48 @@ Il file restituito dal controller è simile a quanto già introdotto nella versi
         <p>Type a message and hit send:</p>
         <input id="inputmessage"/><button id="send">Send</button>
     </div>
-
-    <!--
-    Put here and not in head
-    -->
+ 
     <script src="wsStompMinimal.js"></script>
 
     </body>
     </html>
+
+La pagina HTML utilizza il file wsStompMinimal.js identico a wsminimal_ della versione non-STOMP per
+quanto riguarda la parte relativa alla gestione della pagina e con nuove funzioni per quanto riguarda
+la parte di interazione:
+
+.. code:: js
+    //Parte di gestione pagina
+    ...
+
+    //Parte di interazione
+    function connect() {
+        var host       = document.location.host;
+        var addr       = "ws://" + host  + "/unibo"  ;
+        var socket     = new WebSocket(addr);
+
+        socket.onopen = function (event) {
+            addMessageToWindow("Connected");
+        };
+
+        socket.onmessage = function (event) {
+            addMessageToWindow(`Got Message: ${event.data}`);
+
+        };
+
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            addMessageToWindow("Connected " + frame);
+            stompClient.subscribe('/demoTopic/output', function (greeting) {
+                showAnswer(JSON.parse(greeting.body).content);
+            });
+        });
+    }
+
+    function sendMessage(message) {
+        stompClient.send("/demoInput/unibo", {}, JSON.stringify({'name': message}));
+        addMessageToWindow("Sent Message: " + message ); //+ " stompClient=" + stompClient
+    }
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
@@ -645,84 +684,86 @@ rappresentati dalle classi ``InputMessage`` e ``OutputMessage`` .
             return content; }
         }
  
-++++++++++++++++++++++++++++++++++++++++++++++++
-index.html
-++++++++++++++++++++++++++++++++++++++++++++++++
+ 
 
-
-++++++++++++++++++++++++++++++++++++++++++++++++
-Client (in javascript per browser)
-++++++++++++++++++++++++++++++++++++++++++++++++
-
-Parte relativa alla pagina:
-
-.. code:: js
-    
-    const messageWindow   = document.getElementById("messageArea");
-    const sendButton      = document.getElementById("send");
-    const messageInput    = document.getElementById("inputmessage");
-
-     sendButton.onclick = function (event) {
-        sendMessage(messageInput.value);
-        messageInput.value = "";
-     };
-
-    function sendMessage(message) {
-        stompClient.send("/unibo/inputmsg", {}, JSON.stringify({'name': $("#inputmessage").val()}));
-        addMessageToWindow("Sent Message: " + message);
-    }
-
-    function addMessageToWindow(message) {
-        messageWindow.innerHTML += `<div>${message}</div>`
-    }
-
-    //var socket =
-    connect();
-
-
-function connect() {
-        //var socket  = new SockJS('/stomp-websocket');
-        var host     = document.location.host;
-        //var pathname = document.location.pathname;
-        var addr     = "ws://" +host  + "/stomp-websocket"  ;
-        console.log("connect addr="+addr);
-
-        //var addr     = "ws://localhost/stomp-websocket"  ;
-    var socket = new WebSocket(addr);
-
-            socket.onopen = function (event) {
-                addMessageToWindow("Connected");
-            };
-
-            socket.onmessage = function (event) {
-                addMessageToWindow(`Got Message: ${event.data}`);
-                //alert(`Got Message: ${event.data}`)
-
-            };
-
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        //setConnected(true);
-        addMessageToWindow("Connected " + frame);
-        //console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/output', function (greeting) {
-            showAnswer(JSON.parse(greeting.body).content);
-        });
-    });
-}
-
-function showAnswer(message) {
-    addMessageToWindow("Answer:" + message);
-}
-
-Parte relativa alla interazione:
-
-.. code:: js
+ 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Client (in Java per programmi)
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. code:: Java
+ 
+    public class StompClient {
+
+    private static final String URL = "ws://localhost:8080/unibo";  
+
+    private static WebSocketStompClient stompClient;
+
+    protected static void connectForSockJs(){
+        List<Transport> transports = new ArrayList<>(2);
+        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+        transports.add(new RestTemplateXhrTransport());
+
+        SockJsClient sockjsClient = new SockJsClient(transports);
+        stompClient               = new WebSocketStompClient(sockjsClient);
+
+    }
+    protected static void connectForWebSocket(){
+        WebSocketClient client  = new StandardWebSocketClient();
+         stompClient            = new WebSocketStompClient(client);
+    }
+    public static void main(String[] args) {
+        //connectForSockJs();  //To be used when the server is based
+        connectForWebSocket();
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+
+        StompSessionHandler sessionHandler = new MyStompSessionHandler();
+        stompClient.connect(URL, sessionHandler);
+
+        new Scanner(System.in).nextLine(); // Don't close immediately.
+    }
+    }
+
+
+.. code:: Java
+
+    public class MyStompSessionHandler extends StompSessionHandlerAdapter {
+    @Override
+    public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+         session.subscribe("/demoTopic/output", this);
+         session.send("/anotherInput/unibo", getSampleMessage());
+     }
+
+    @Override
+    public void handleException(StompSession session, 
+      StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+        ....
+    }
+
+    @Override
+    public Type getPayloadType(StompHeaders headers) {
+        return OutputMessage.class;
+    }
+
+    @Override
+    public void handleFrame(StompHeaders headers, Object payload) {
+         if( payload instanceof OutputMessage) {
+            OutputMessage msg = (OutputMessage) payload;
+         }
+    }
+    
+    private InputMessage getSampleMessage() {
+        InputMessage msg = new InputMessage();
+        msg.setName("Nicky");
+        return msg;
+    }
+    }
+
+
+----------------
+OLD
+----------------
 
 
 https://spring.io/guides/gs/messaging-stomp-websocket/
@@ -730,7 +771,7 @@ https://spring.io/guides/gs/messaging-stomp-websocket/
 - Possibile premessa https://www.baeldung.com/intro-to-project-lombok
 - 
 - 
-  .. code:: Java
+  
 
 
 - Create a Resource Representation Class. HelloMessage. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.
