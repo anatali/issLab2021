@@ -487,20 +487,98 @@ SockJS_, con le seguenti avvertenze:
 
  
 
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Configurazione 
+++++++++++++++++++++++++++++++++++++++++++++++++
+Il servizio viene configurato da una classe che implementa l'interfaccia 
+``WebSocketMessageBrokerConfigurer`` :
+
+.. code:: Java
+
+    @Configuration
+    @EnableWebSocketMessageBroker
+    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry config) {
+		config.enableSimpleBroker("/unibo");
+		config.setApplicationDestinationPrefixes("/input");
+	}
+
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/stomp-websocket");  //.withSockJS();
+	}
+}
+
+Nella configurazione specificata, il servizio:
+
+#. offre una connessione STOMP su *WebSocket* (escludimao *SockJS*) con URL 
+   ``ws://<serverIP>:8080/stomp-websocket``;
+#. abilita un broker su memoria comune, con prefisso di destinazione ``unibo``. I client 
+   si possono sottoscrivere a topic che iniziano con questo prefisso, ad es. ``/unibo/output``;
+#. imposta  ``intput`` come prefisso di destinazione. I client quindi invieranno messaggi
+   agli endpoint che iniziano con questo prefisso, cioè  ``/unibo/input``;
+
+
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
 La funzione del servizio
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Il servizio accetta messaggi in formato JSON
+
+Il servizio:
+
+#. riceve un messaggio (in formato JSON) inviato su endpoint=``/unibo/input``;
+   il messaggio viene mappato in Java usando come DAO la classe ``InputMessage``
+#. elabora il messaggio
+#. costruisce un messaggio di risposta di tipo ``OutputMessage`` e lo pubblica
+   (ancora in formato JSON) sulla coda ``/unibo/output``.
+
+La conversione dei messaggi da JSon a Java e viceversa è effettuata in modo automatico 
+in SpringBoot, una volta definito un opportuno controller.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++ 
+Il controller
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+Il controller specifica la gestione delle richieste ``WebSocket`` avviene in modo simile 
+alle normali richieste ``HTTP``, ma utilizzando ``@SubscribeMappinge`` o ``@MessageMapping`` 
+(e non ``@RequestMapping`` o ``@GetMapping``).
+
+Nel caso specifico, utilizziamo ``@MessageMapping`` per mappare i messaggi diretti a ``input``.
+
+L'annotazione ``@SendTo`` indica che il valore di ritorno   
+deve essere inviato come messaggio alla destinazione specificata ``/unibo/output``.
+
+.. code:: Java
+
+    @Controller
+    public class MessageController {
+
+	@MessageMapping("/input")    //un msg inviato a /inputmsg induce l'esecuzione del metodo
+	@SendTo("/unibo/output")	    //la risposta è inviata ai subscribers di /topic/output
+	public OutputMessage elabInput(InputMessage message) throws Exception {
+		return new OutputMessage("Elaborated: " + HtmlUtils.htmlEscape(message.getName()) + " ");
+	}
+    }
+
+
+L'operazione ``HtmlUtils.htmlEscape`` elabora il nome nel messaggio di input in modo da poter
+essere reso nel DOM lato client.
+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++ 
 Componenti
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-I componenti-base della applicazione in versione STOMP sono
+I componenti-base della applicazione in versione STOMP sono quindi oggetti DTO (Data Tranfer Object)
+rappresentati dalle classi InputMessage e OutputMessage.
+  
 
-++++++++++++++++++++++++++++++++++++++++++++++++
-Configurazione Spring
-++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+
+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Client (in javascript per browser)

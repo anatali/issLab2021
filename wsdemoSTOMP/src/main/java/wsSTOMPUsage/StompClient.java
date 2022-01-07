@@ -18,17 +18,24 @@ public class StompClient {
 
     private static String URL = "ws://localhost:8080/stomp-websocket"; //topic/input
 
-    public static void main(String[] args) {
+    private static WebSocketStompClient stompClient;
+
+    protected static void connectForSockJs(){
         List<Transport> transports = new ArrayList<>(2);
         transports.add(new WebSocketTransport(new StandardWebSocketClient()));
         transports.add(new RestTemplateXhrTransport());
 
         SockJsClient sockjsClient = new SockJsClient(transports);
-        WebSocketStompClient stompClient = new WebSocketStompClient(sockjsClient);
+        stompClient               = new WebSocketStompClient(sockjsClient);
 
-        //WebSocketClient client           = new StandardWebSocketClient();
-        //WebSocketStompClient stompClient = new WebSocketStompClient(client);
-
+    }
+    protected static void connectForWebSocket(){
+        WebSocketClient client  = new StandardWebSocketClient();
+         stompClient            = new WebSocketStompClient(client);
+    }
+    public static void main(String[] args) {
+        //connectForSockJs();  //To be used when the server is based
+        connectForWebSocket();
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
         StompSessionHandler sessionHandler = new MyStompSessionHandler();

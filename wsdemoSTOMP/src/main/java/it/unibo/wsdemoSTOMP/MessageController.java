@@ -9,8 +9,11 @@ import org.springframework.web.util.HtmlUtils;
 @Controller
 public class MessageController {
 
+/*
+Il Controller cerca i files nella directory template
+ */
 	@RequestMapping("/")
-	public String entry() {
+	public String entryMinimal() {
 		return "indexNoImages";
 	}
 

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
     <title>Web sockets &#8212; websocket 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -35,32 +35,33 @@
   <div class="contents topic" id="contenuti">
 <p class="topic-title">Contenuti</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#web-sockets" id="id1">Web sockets</a></p>
+<li><p><a class="reference internal" href="#web-sockets" id="id2">Web sockets</a></p>
 <ul>
-<li><p><a class="reference internal" href="#websocket-in-springboot-versione-base" id="id2">WebSocket in SpringBoot: versione base</a></p>
+<li><p><a class="reference internal" href="#websocket-in-springboot-versione-base" id="id3">WebSocket in SpringBoot: versione base</a></p>
 <ul>
-<li><p><a class="reference internal" href="#setup" id="id3">Setup</a></p></li>
-<li><p><a class="reference internal" href="#wsminimal-js" id="id4">wsminimal.js</a></p></li>
-<li><p><a class="reference internal" href="#funzioni-di-input-output" id="id5">Funzioni di input/output</a></p></li>
-<li><p><a class="reference internal" href="#funzioni-di-connessione-e-ricezione-messaggi" id="id6">Funzioni di connessione e ricezione messaggi</a></p></li>
-<li><p><a class="reference internal" href="#configurazione" id="id7">Configurazione</a></p></li>
-<li><p><a class="reference internal" href="#handler" id="id8">Handler</a></p></li>
-<li><p><a class="reference internal" href="#propagazione-a-tutti-i-client" id="id9">Propagazione a tutti i client</a></p></li>
-<li><p><a class="reference internal" href="#un-client-in-java" id="id10">Un client in Java</a></p></li>
-<li><p><a class="reference internal" href="#introduzione-di-un-controller" id="id11">Introduzione di un Controller</a></p></li>
-<li><p><a class="reference internal" href="#gestione-di-immagini" id="id12">Gestione di immagini</a></p></li>
+<li><p><a class="reference internal" href="#setup" id="id4">Setup</a></p></li>
+<li><p><a class="reference internal" href="#wsminimal-js" id="id5">wsminimal.js</a></p></li>
+<li><p><a class="reference internal" href="#funzioni-di-input-output" id="id6">Funzioni di input/output</a></p></li>
+<li><p><a class="reference internal" href="#funzioni-di-connessione-e-ricezione-messaggi" id="id7">Funzioni di connessione e ricezione messaggi</a></p></li>
+<li><p><a class="reference internal" href="#configurazione" id="id8">Configurazione</a></p></li>
+<li><p><a class="reference internal" href="#handler" id="id9">Handler</a></p></li>
+<li><p><a class="reference internal" href="#propagazione-a-tutti-i-client" id="id10">Propagazione a tutti i client</a></p></li>
+<li><p><a class="reference internal" href="#un-client-in-java" id="id11">Un client in Java</a></p></li>
+<li><p><a class="reference internal" href="#introduzione-di-un-controller" id="id12">Introduzione di un Controller</a></p></li>
+<li><p><a class="reference internal" href="#gestione-di-immagini" id="id13">Gestione di immagini</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#websocket-in-springboot-versione-stomp" id="id13">WebSocket in SpringBoot: versione STOMP</a></p>
+<li><p><a class="reference internal" href="#websocket-in-springboot-versione-stomp" id="id14">WebSocket in SpringBoot: versione STOMP</a></p>
 <ul>
-<li><p><a class="reference internal" href="#setup-e-dipendenze" id="id14">Setup e Dipendenze</a></p></li>
-<li><p><a class="reference internal" href="#websocket-vs-sockjs" id="id15">WebSocket vs. SockJs</a></p></li>
-<li><p><a class="reference internal" href="#la-funzione-del-servizio" id="id16">La funzione del servizio</a></p></li>
-<li><p><a class="reference internal" href="#componenti" id="id17">Componenti</a></p></li>
-<li><p><a class="reference internal" href="#configurazione-spring" id="id18">Configurazione Spring</a></p></li>
-<li><p><a class="reference internal" href="#client-in-javascript-per-browser" id="id19">Client (in javascript per browser)</a></p></li>
-<li><p><a class="reference internal" href="#client-in-java-per-programmi" id="id20">Client (in Java per programmi)</a></p></li>
-<li><p><a class="reference internal" href="#esempio-piu-articolato" id="id21">Esempio più articolato</a></p></li>
+<li><p><a class="reference internal" href="#setup-e-dipendenze" id="id15">Setup e Dipendenze</a></p></li>
+<li><p><a class="reference internal" href="#websocket-vs-sockjs" id="id16">WebSocket vs. SockJs</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id17">Configurazione</a></p></li>
+<li><p><a class="reference internal" href="#la-funzione-del-servizio" id="id18">La funzione del servizio</a></p></li>
+<li><p><a class="reference internal" href="#il-controller" id="id19">Il controller</a></p></li>
+<li><p><a class="reference internal" href="#componenti" id="id20">Componenti</a></p></li>
+<li><p><a class="reference internal" href="#client-in-javascript-per-browser" id="id21">Client (in javascript per browser)</a></p></li>
+<li><p><a class="reference internal" href="#client-in-java-per-programmi" id="id22">Client (in Java per programmi)</a></p></li>
+<li><p><a class="reference internal" href="#esempio-piu-articolato" id="id23">Esempio più articolato</a></p></li>
 </ul>
 </li>
 </ul>
@@ -68,7 +69,7 @@
 </ul>
 </div>
 <section id="web-sockets">
-<span id="websockets"></span><h1><a class="toc-backref" href="#id1">Web sockets</a><a class="headerlink" href="#web-sockets" title="Permalink to this headline">¶</a></h1>
+<span id="websockets"></span><h1><a class="toc-backref" href="#id2">Web sockets</a><a class="headerlink" href="#web-sockets" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">anaconda</span>
 <span class="n">sphinx</span><span class="o">-</span><span class="n">quickstart</span>
 </pre></div>
@@ -98,12 +99,12 @@ in qualsiasi momento, anziché costringere il client al polling.</p>
 <p>I WebSocket utilizzano le Socket nella loro implementazione basata su un protocollo standard
 che definisce un <em>handshake</em> di connessione e un <em>frame</em> di messaggio.</p>
 <section id="websocket-in-springboot-versione-base">
-<h2><a class="toc-backref" href="#id2">WebSocket in SpringBoot: versione base</a><a class="headerlink" href="#websocket-in-springboot-versione-base" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">WebSocket in SpringBoot: versione base</a><a class="headerlink" href="#websocket-in-springboot-versione-base" title="Permalink to this headline">¶</a></h2>
 <p>Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente
 a un client di utilizzare un browser per inviare un messaggio o una immagine a un server
 che provvede a visualizzare il messaggio o l’immagine presso tutti i client collegati.</p>
 <section id="setup">
-<span id="setupnostomp"></span><h3><a class="toc-backref" href="#id3">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<span id="setupnostomp"></span><h3><a class="toc-backref" href="#id4">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
 <p>Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente a un client
 di utilizzare un browser per inviare un messaggio o una immagine a un server che provvede a visualizzare
 il messaggio o l’immagine presso tutti i client collegati.</p>
@@ -154,12 +155,12 @@ immissione</p>
 </ol>
 </section>
 <section id="wsminimal-js">
-<h3><a class="toc-backref" href="#id4">wsminimal.js</a><a class="headerlink" href="#wsminimal-js" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">wsminimal.js</a><a class="headerlink" href="#wsminimal-js" title="Permalink to this headline">¶</a></h3>
 <p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsminimal.js</span></code> definisce funzioni che inviano al server il messaggio di input e che aggiungono
 messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
 </section>
 <section id="funzioni-di-input-output">
-<h3><a class="toc-backref" href="#id5">Funzioni di input/output</a><a class="headerlink" href="#funzioni-di-input-output" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">Funzioni di input/output</a><a class="headerlink" href="#funzioni-di-input-output" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span> <span class="nx">messageWindow</span>   <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;messageArea&quot;</span><span class="p">);</span>
 <span class="kd">const</span> <span class="nx">sendButton</span>      <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;send&quot;</span><span class="p">);</span>
 <span class="kd">const</span> <span class="nx">messageInput</span>    <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;inputmessage&quot;</span><span class="p">);</span>
@@ -181,7 +182,7 @@ messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
 </div>
 </section>
 <section id="funzioni-di-connessione-e-ricezione-messaggi">
-<h3><a class="toc-backref" href="#id6">Funzioni di connessione e ricezione messaggi</a><a class="headerlink" href="#funzioni-di-connessione-e-ricezione-messaggi" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">Funzioni di connessione e ricezione messaggi</a><a class="headerlink" href="#funzioni-di-connessione-e-ricezione-messaggi" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-js notranslate" id="connect"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">connect</span><span class="p">(){</span>
     <span class="kd">var</span> <span class="nx">socket</span><span class="p">;</span>
     <span class="kd">var</span> <span class="nx">host</span>     <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span>
@@ -192,7 +193,7 @@ messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
     <span class="k">if</span><span class="p">(</span><span class="nx">socket</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">!==</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">CLOSED</span><span class="p">){</span>
          <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;WARNING: Connessione WebSocket già stabilita&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="nx">socket</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span> <span class="c1">//CONNESSIONE</span>
+    <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span> <span class="c1">//CONNESSIONE</span>
 
     <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="s2">&quot;Connected&quot;</span><span class="p">);</span>
@@ -206,7 +207,7 @@ messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
 </div>
 </section>
 <section id="configurazione">
-<h3><a class="toc-backref" href="#id7">Configurazione</a><a class="headerlink" href="#configurazione" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">Configurazione</a><a class="headerlink" href="#configurazione" title="Permalink to this headline">¶</a></h3>
 <p>Affinché l’applicazione Spring inoltri le richieste di un client al server (l’endpoint),
 è necessario registrare un gestore utilizzando una classe di configurazione
 che implementa l’interfaccia <code class="docutils literal notranslate"><span class="pre">WebSocketConfigurer</span></code>.</p>
@@ -223,12 +224,12 @@ che implementa l’interfaccia <code class="docutils literal notranslate"><span 
 <p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;EnableWebSocket</span></code> (da aggiungere a una classe di configurazione <code class="docutils literal notranslate"><span class="pre">&#64;Configuration</span></code> )
 abilita l’uso delle plain WebSocket.</p>
 <p>In base alla configurazione, il server risponderà a richieste inviate al seguente indirizzo:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">ws</span><span class="p">:</span><span class="c1">//&lt;serverIP&gt;:8070/socket</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">ws:</span><span class="c1">//&lt;serverIP&gt;:8070/socket</span>
 </pre></div>
 </div>
 </section>
 <section id="handler">
-<h3><a class="toc-backref" href="#id8">Handler</a><a class="headerlink" href="#handler" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Handler</a><a class="headerlink" href="#handler" title="Permalink to this headline">¶</a></h3>
 <p>La classe  <code class="docutils literal notranslate"><span class="pre">WebSocketHandler</span></code> definisce un gestore custom di messaggi come specializzazione della classe astratta
 <code class="docutils literal notranslate"><span class="pre">AbstractWebSocketHandler</span></code> (o delle sue sottoclassi <code class="docutils literal notranslate"><span class="pre">TextWebSocketHandler</span></code> o <code class="docutils literal notranslate"><span class="pre">BinaryWebSocketHandler</span></code>).</p>
 <p>Nel nostro caso, la gestione reinvia sulla WebSocket il messaggio ricevuto .
@@ -251,7 +252,7 @@ il messaggio nell’area di output.</p>
 </div>
 </section>
 <section id="propagazione-a-tutti-i-client">
-<h3><a class="toc-backref" href="#id9">Propagazione a tutti i client</a><a class="headerlink" href="#propagazione-a-tutti-i-client" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Propagazione a tutti i client</a><a class="headerlink" href="#propagazione-a-tutti-i-client" title="Permalink to this headline">¶</a></h3>
 <p>Per propagare un messaggio a tutti i client connessi attraverso la WebSocket, basata tenere traccia
 delle sessioni e</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketHandler</span> <span class="kd">extends</span> <span class="n">AbstractWebSocketHandler</span> <span class="p">{</span>
@@ -289,7 +290,7 @@ delle sessioni e</p>
 <strong>resources/static/index.html</strong>.</p>
 </section>
 <section id="un-client-in-java">
-<h3><a class="toc-backref" href="#id10">Un client in Java</a><a class="headerlink" href="#un-client-in-java" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Un client in Java</a><a class="headerlink" href="#un-client-in-java" title="Permalink to this headline">¶</a></h3>
 <p>E’ un esempio di machine-to-machine interaction.</p>
 <p>La classe <code class="docutils literal notranslate"><span class="pre">WebsocketClientEndpoint</span></code> riproduce in Java la stessa struttura del client già
 vista in JavaScript; in più possiamo ora salvare su file l’informnazione ricevuta (in particolare immagini
@@ -370,7 +371,7 @@ usando le <em>web socket method level annotations</em>.</p>
 </div>
 </section>
 <section id="introduzione-di-un-controller">
-<h3><a class="toc-backref" href="#id11">Introduzione di un Controller</a><a class="headerlink" href="#introduzione-di-un-controller" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">Introduzione di un Controller</a><a class="headerlink" href="#introduzione-di-un-controller" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">it.unibo.wsdemoNoSTOMP</span><span class="p">;</span>
 
 <span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="p">;</span>
@@ -392,7 +393,7 @@ usando le <em>web socket method level annotations</em>.</p>
 </div>
 </section>
 <section id="gestione-di-immagini">
-<h3><a class="toc-backref" href="#id12">Gestione di immagini</a><a class="headerlink" href="#gestione-di-immagini" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id13">Gestione di immagini</a><a class="headerlink" href="#gestione-di-immagini" title="Permalink to this headline">¶</a></h3>
 <p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> usato da <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce funzioni per la gestione delle immagini simili</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span>sendImageButton.onclick = function (event) { //event is a PointerEvent
     let file = fileInput.files[0];  //file: object File
@@ -418,7 +419,7 @@ function addImageToWindow(image) {
 </section>
 </section>
 <section id="websocket-in-springboot-versione-stomp">
-<h2><a class="toc-backref" href="#id13">WebSocket in SpringBoot: versione STOMP</a><a class="headerlink" href="#websocket-in-springboot-versione-stomp" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">WebSocket in SpringBoot: versione STOMP</a><a class="headerlink" href="#websocket-in-springboot-versione-stomp" title="Permalink to this headline">¶</a></h2>
 <p><span class="blue">Simple Text Oriented Message Protocol</span>
 (STOMP) è un protocollo di messaggistica text-based progettato per operare con MOM
 (Message Orinented Middleware) ed originariamente creato per l’uso
@@ -431,7 +432,7 @@ STOMP è ampiamente supportato e adatto per l’uso su WebSocket e sul web.</p>
 dunque, rispetto all’uso delle WebSocket, rende più semplice inviare messaggi solo
 a un particolare utente o ad utenti che sono iscritti a un particolare argomento.</p>
 <section id="setup-e-dipendenze">
-<h3><a class="toc-backref" href="#id14">Setup e Dipendenze</a><a class="headerlink" href="#setup-e-dipendenze" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">Setup e Dipendenze</a><a class="headerlink" href="#setup-e-dipendenze" title="Permalink to this headline">¶</a></h3>
 <p>Partendo dal SetUp precedente <a class="reference internal" href="#setupnostomp">SetupNoStomp</a>, aggiungiamo alcune dipendenze nel file <code class="docutils literal notranslate"><span class="pre">build.gradle</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dependencies</span> <span class="p">{</span>
 <span class="o">//</span><span class="n">Dipendenze</span> <span class="n">generate</span> <span class="n">dal</span> <span class="n">Setup</span>
@@ -453,7 +454,7 @@ a un particolare utente o ad utenti che sono iscritti a un particolare argomento
 Per approfondire, si veda: <a class="reference external" href="https://www.baeldung.com/maven-webjars">https://www.baeldung.com/maven-webjars</a> e <a class="reference external" href="https://mvnrepository.com/artifact/org.webjars">https://mvnrepository.com/artifact/org.webjars</a>.</p>
 </section>
 <section id="websocket-vs-sockjs">
-<h3><a class="toc-backref" href="#id15">WebSocket vs. SockJs</a><a class="headerlink" href="#websocket-vs-sockjs" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">WebSocket vs. SockJs</a><a class="headerlink" href="#websocket-vs-sockjs" title="Permalink to this headline">¶</a></h3>
 <p>A partire dal 2018, il supporto WebSocket nei browser è quasi onnipresente.
 Tuttavia, per supportare vecchi browwer, potrebbe essere necessario fare uso di
 <a class="reference external" href="https://openbase.com/js/sockjs/documentation#what-is-sockjs">SockJS</a>, con le seguenti avvertenze:</p>
@@ -469,22 +470,82 @@ specifiche a seconda del trasporto effettivo in uso.</p></li>
 Questo di solito non è un problema per la maggior parte delle applicazioni.</p></li>
 </ul>
 </section>
+<section id="id1">
+<h3><a class="toc-backref" href="#id17">Configurazione</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Il servizio viene configurato da una classe che implementa l’interfaccia
+<code class="docutils literal notranslate"><span class="pre">WebSocketMessageBrokerConfigurer</span></code> :</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocketMessageBroker</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfig</span> <span class="kd">implements</span> <span class="n">WebSocketMessageBrokerConfigurer</span> <span class="p">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMessageBroker</span><span class="p">(</span><span class="n">MessageBrokerRegistry</span> <span class="n">config</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">config</span><span class="p">.</span><span class="na">enableSimpleBroker</span><span class="p">(</span><span class="s">&quot;/unibo&quot;</span><span class="p">);</span>
+            <span class="n">config</span><span class="p">.</span><span class="na">setApplicationDestinationPrefixes</span><span class="p">(</span><span class="s">&quot;/input&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerStompEndpoints</span><span class="p">(</span><span class="n">StompEndpointRegistry</span> <span class="n">registry</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">registry</span><span class="p">.</span><span class="na">addEndpoint</span><span class="p">(</span><span class="s">&quot;/stomp-websocket&quot;</span><span class="p">);</span>  <span class="c1">//.withSockJS();</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>}</p>
+<p>Nella configurazione specificata, il servizio:</p>
+<ol class="arabic simple">
+<li><p>offre una connessione STOMP su <em>WebSocket</em> (escludimao <em>SockJS</em>) con URL
+<code class="docutils literal notranslate"><span class="pre">ws://&lt;serverIP&gt;:8080/stomp-websocket</span></code>;</p></li>
+<li><p>abilita un broker su memoria comune, con prefisso di destinazione <code class="docutils literal notranslate"><span class="pre">unibo</span></code>. I client
+si possono sottoscrivere a topic che iniziano con questo prefisso, ad es. <code class="docutils literal notranslate"><span class="pre">/unibo/output</span></code>;</p></li>
+<li><p>imposta  <code class="docutils literal notranslate"><span class="pre">intput</span></code> come prefisso di destinazione. I client quindi invieranno messaggi
+agli endpoint che iniziano con questo prefisso, cioè  <code class="docutils literal notranslate"><span class="pre">/unibo/input</span></code>;</p></li>
+</ol>
+</section>
 <section id="la-funzione-del-servizio">
-<h3><a class="toc-backref" href="#id16">La funzione del servizio</a><a class="headerlink" href="#la-funzione-del-servizio" title="Permalink to this headline">¶</a></h3>
-<p>Il servizio accetta messaggi in formato JSON</p>
+<h3><a class="toc-backref" href="#id18">La funzione del servizio</a><a class="headerlink" href="#la-funzione-del-servizio" title="Permalink to this headline">¶</a></h3>
+<p>Il servizio:</p>
+<ol class="arabic simple">
+<li><p>riceve un messaggio (in formato JSON) inviato su endpoint=``/unibo/input``;
+il messaggio viene mappato in Java usando come DAO la classe <code class="docutils literal notranslate"><span class="pre">InputMessage</span></code></p></li>
+<li><p>elabora il messaggio</p></li>
+<li><p>costruisce un messaggio di risposta di tipo <code class="docutils literal notranslate"><span class="pre">OutputMessage</span></code> e lo pubblica
+(ancora in formato JSON) sulla coda <code class="docutils literal notranslate"><span class="pre">/unibo/output</span></code>.</p></li>
+</ol>
+<p>La conversione dei messaggi da JSon a Java e viceversa è effettuata in modo automatico
+in SpringBoot, una volta definito un opportuno controller.</p>
+</section>
+<section id="il-controller">
+<h3><a class="toc-backref" href="#id19">Il controller</a><a class="headerlink" href="#il-controller" title="Permalink to this headline">¶</a></h3>
+<p>Il controller specifica la gestione delle richieste <code class="docutils literal notranslate"><span class="pre">WebSocket</span></code> avviene in modo simile
+alle normali richieste <code class="docutils literal notranslate"><span class="pre">HTTP</span></code>, ma utilizzando <code class="docutils literal notranslate"><span class="pre">&#64;SubscribeMappinge</span></code> o <code class="docutils literal notranslate"><span class="pre">&#64;MessageMapping</span></code>
+(e non <code class="docutils literal notranslate"><span class="pre">&#64;RequestMapping</span></code> o <code class="docutils literal notranslate"><span class="pre">&#64;GetMapping</span></code>).</p>
+<p>Nel caso specifico, utilizziamo <code class="docutils literal notranslate"><span class="pre">&#64;MessageMapping</span></code> per mappare i messaggi diretti a <code class="docutils literal notranslate"><span class="pre">input</span></code>.</p>
+<p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;SendTo</span></code> indica che il valore di ritorno
+deve essere inviato come messaggio alla destinazione specificata <code class="docutils literal notranslate"><span class="pre">/unibo/output</span></code>.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MessageController</span> <span class="p">{</span>
+
+    <span class="nd">@MessageMapping</span><span class="p">(</span><span class="s">&quot;/input&quot;</span><span class="p">)</span>    <span class="c1">//un msg inviato a /inputmsg induce l&#39;esecuzione del metodo</span>
+    <span class="nd">@SendTo</span><span class="p">(</span><span class="s">&quot;/unibo/output&quot;</span><span class="p">)</span>            <span class="c1">//la risposta è inviata ai subscribers di /topic/output</span>
+    <span class="kd">public</span> <span class="n">OutputMessage</span> <span class="nf">elabInput</span><span class="p">(</span><span class="n">InputMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">OutputMessage</span><span class="p">(</span><span class="s">&quot;Elaborated: &quot;</span> <span class="o">+</span> <span class="n">HtmlUtils</span><span class="p">.</span><span class="na">htmlEscape</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="na">getName</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>L’operazione <code class="docutils literal notranslate"><span class="pre">HtmlUtils.htmlEscape</span></code> elabora il nome nel messaggio di input in modo da poter
+essere reso nel DOM lato client.</p>
 </section>
 <section id="componenti">
-<h3><a class="toc-backref" href="#id17">Componenti</a><a class="headerlink" href="#componenti" title="Permalink to this headline">¶</a></h3>
-<p>I componenti-base della applicazione in versione STOMP sono</p>
-</section>
-<section id="configurazione-spring">
-<h3><a class="toc-backref" href="#id18">Configurazione Spring</a><a class="headerlink" href="#configurazione-spring" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">Componenti</a><a class="headerlink" href="#componenti" title="Permalink to this headline">¶</a></h3>
+<p>I componenti-base della applicazione in versione STOMP sono quindi oggetti DTO (Data Tranfer Object)
+rappresentati dalle classi InputMessage e OutputMessage.</p>
 </section>
 <section id="client-in-javascript-per-browser">
-<h3><a class="toc-backref" href="#id19">Client (in javascript per browser)</a><a class="headerlink" href="#client-in-javascript-per-browser" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">Client (in javascript per browser)</a><a class="headerlink" href="#client-in-javascript-per-browser" title="Permalink to this headline">¶</a></h3>
 </section>
 <section id="client-in-java-per-programmi">
-<h3><a class="toc-backref" href="#id20">Client (in Java per programmi)</a><a class="headerlink" href="#client-in-java-per-programmi" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">Client (in Java per programmi)</a><a class="headerlink" href="#client-in-java-per-programmi" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="https://spring.io/guides/gs/messaging-stomp-websocket/">https://spring.io/guides/gs/messaging-stomp-websocket/</a></p>
 <ul>
 <li><p>Possibile premessa <a class="reference external" href="https://www.baeldung.com/intro-to-project-lombok">https://www.baeldung.com/intro-to-project-lombok</a></p></li>
@@ -517,7 +578,7 @@ Questo di solito non è un problema per la maggior parte delle applicazioni.</p>
 <p><a class="reference external" href="https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/">https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/</a></p>
 </section>
 <section id="esempio-piu-articolato">
-<h3><a class="toc-backref" href="#id21">Esempio più articolato</a><a class="headerlink" href="#esempio-piu-articolato" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">Esempio più articolato</a><a class="headerlink" href="#esempio-piu-articolato" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/">https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/</a></p>
 </section>
 </section>
@@ -540,7 +601,7 @@ Questo di solito non è un problema per la maggior parte delle applicazioni.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Web sockets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#websocket-in-springboot-versione-base">WebSocket in SpringBoot: versione base</a></li>
@@ -561,7 +622,7 @@ Questo di solito non è un problema per la maggior parte delle applicazioni.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -583,7 +644,7 @@ Questo di solito non è un problema per la maggior parte delle applicazioni.</p>
       &copy;2022, Antonio Natali.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
