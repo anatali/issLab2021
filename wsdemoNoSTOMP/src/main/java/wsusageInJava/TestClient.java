@@ -18,7 +18,7 @@ public class TestClient {
             });
 
             // send message to websocket
-            clientEndPoint.sendMessage("hello from Java client 3");
+            clientEndPoint.sendMessage("hello from Java client");
 
 
             // wait for messages from websocket

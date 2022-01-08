@@ -40,11 +40,14 @@
 <li><p><a class="reference internal" href="#websocket-in-springboot-versione-base" id="id3">WebSocket in SpringBoot: versione base</a></p>
 <ul>
 <li><p><a class="reference internal" href="#setup" id="id4">Setup</a></p></li>
-<li><p><a class="reference internal" href="#wsminimal-js" id="id5">wsminimal.js</a></p></li>
-<li><p><a class="reference internal" href="#funzioni-di-input-output" id="id6">Funzioni di input/output</a></p></li>
-<li><p><a class="reference internal" href="#funzioni-di-connessione-e-ricezione-messaggi" id="id7">Funzioni di connessione e ricezione messaggi</a></p></li>
+<li><p><a class="reference internal" href="#wsminimal-js" id="id5">wsminimal.js</a></p>
+<ul>
+<li><p><a class="reference internal" href="#funzioni-di-connessione-e-ricezione-messaggi" id="id6">Funzioni di connessione e ricezione messaggi</a></p></li>
+<li><p><a class="reference internal" href="#funzioni-di-input-output" id="id7">Funzioni di input/output</a></p></li>
+</ul>
+</li>
 <li><p><a class="reference internal" href="#configurazione" id="id8">Configurazione</a></p></li>
-<li><p><a class="reference internal" href="#handler" id="id9">Handler</a></p></li>
+<li><p><a class="reference internal" href="#il-gestore-websockethandler" id="id9">Il gestore WebSocketHandler</a></p></li>
 <li><p><a class="reference internal" href="#propagazione-a-tutti-i-client" id="id10">Propagazione a tutti i client</a></p></li>
 <li><p><a class="reference internal" href="#un-client-in-java" id="id11">Un client in Java</a></p></li>
 <li><p><a class="reference internal" href="#introduzione-di-un-controller" id="id12">Introduzione di un Controller</a></p></li>
@@ -73,12 +76,8 @@
 </div>
 <section id="web-sockets">
 <span id="websockets"></span><h1><a class="toc-backref" href="#id2">Web sockets</a><a class="headerlink" href="#web-sockets" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">anaconda</span>
-<span class="n">sphinx</span><span class="o">-</span><span class="n">quickstart</span>
-</pre></div>
-</div>
 <p><a class="reference external" href="https://it.wikipedia.org/wiki/WebSocket">WebSocket</a> è un protocollo che consente a due o più computer di comunicare tra loro
-contemporaneamente (full-duplex) su una singola connessione TCP.
+in modo full-duplex su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi
 (testo o binario).</p>
 <p>Nella sua forma più semplice,</p>
@@ -108,12 +107,12 @@ a un client di utilizzare un browser per inviare un messaggio o una immagine a u
 che provvede a visualizzare il messaggio o l’immagine presso tutti i client collegati.</p>
 <section id="setup">
 <span id="setupnostomp"></span><h3><a class="toc-backref" href="#id4">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
-<p>Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente a un client
-di utilizzare un browser per inviare un messaggio o una immagine a un server che provvede a visualizzare
-il messaggio o l’immagine presso tutti i client collegati.</p>
-<ol class="arabic">
+<ol class="arabic simple">
 <li><p>Iniziamo creando una applicazione <em>SpringBoot</em> collegandoci a <a class="reference external" href="https://start.spring.io/">Springio</a> e selezionando
 come da figura:</p></li>
+</ol>
+<a class="reference internal image-reference" href="_images/springioBase.PNG"><img alt="_images/springioBase.PNG" class="align-center" src="_images/springioBase.PNG" style="width: 80%;" /></a>
+<ol class="arabic">
 <li><p>Specifichiamo una nuova porta (il deafult è <code class="docutils literal notranslate"><span class="pre">8080</span></code>) ponendo in <em>resources/application.properties</em></p>
 <blockquote>
 <div><div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="n">server</span><span class="p">.</span><span class="na">port</span> <span class="o">=</span> <span class="mi">8070</span>
@@ -121,9 +120,9 @@ come da figura:</p></li>
 </div>
 </div></blockquote>
 </li>
-<li><p>Inseriamo un file <code class="docutils literal notranslate"><span class="pre">_index.html</span></code> in <strong>resources/static</strong> per poter lanciare un’applicazione che
-presenta un’area  di ouput per  la visualizzazione di messaggi e un’area di input per la loro
-immissione</p></li>
+<li><p>Inseriamo un file <code class="docutils literal notranslate"><span class="pre">index.html</span></code> in <strong>resources/static</strong> per poter lanciare un’applicazione che
+presenta un’area  di ouput per la visualizzazione di messaggi e un’area di input per la loro
+immissione:</p></li>
 </ol>
 <blockquote id="indexnoimagesnostomp">
 <div><div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -148,45 +147,27 @@ immissione</p></li>
     <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;inputmessage&quot;</span><span class="p">/&gt;&lt;</span><span class="nt">button</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;send&quot;</span><span class="p">&gt;</span>Send<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;wsdemominimal.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;wsminimal.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </pre></div>
 </div>
 <p>La pagina iniziale si presenta come segue:</p>
 </div></blockquote>
+<a class="reference internal image-reference" href="_images/pageMinimal.PNG"><img alt="_images/pageMinimal.PNG" class="align-center" src="_images/pageMinimal.PNG" style="width: 60%;" /></a>
 </section>
 <section id="wsminimal-js">
 <h3><a class="toc-backref" href="#id5">wsminimal.js</a><a class="headerlink" href="#wsminimal-js" title="Permalink to this headline">¶</a></h3>
-<p id="wsminimal">Lo script  <code class="docutils literal notranslate"><span class="pre">wsminimal.js</span></code> definisce funzioni che inviano al server il messaggio di input e che aggiungono
-messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
-</section>
-<section id="funzioni-di-input-output">
-<h3><a class="toc-backref" href="#id6">Funzioni di input/output</a><a class="headerlink" href="#funzioni-di-input-output" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span> <span class="nx">messageWindow</span>   <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;messageArea&quot;</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">sendButton</span>      <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;send&quot;</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">messageInput</span>    <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;inputmessage&quot;</span><span class="p">);</span>
-
-<span class="nx">sendButton</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">sendMessage</span><span class="p">(</span><span class="nx">messageInput</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
-    <span class="nx">messageInput</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="kd">function</span> <span class="nx">sendMessage</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
-    <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="s2">&quot;Sent Message: &quot;</span> <span class="o">+</span> <span class="nx">message</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="kd">function</span> <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">messageWindow</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="sb">`&lt;div&gt;</span><span class="si">${</span><span class="nx">message</span><span class="si">}</span><span class="sb">&lt;/div&gt;`</span>
-<span class="p">}</span>
-
-<span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">();</span>
-</pre></div>
-</div>
-</section>
+<p id="wsminimal">Lo script  <code class="docutils literal notranslate"><span class="pre">wsminimal.js</span></code> definisce funzioni che realizzano la connessione con il server
+e funzioni di I/O che permettono di inviare un messaggio al server e di visualizzare la risposta.</p>
 <section id="funzioni-di-connessione-e-ricezione-messaggi">
-<h3><a class="toc-backref" href="#id7">Funzioni di connessione e ricezione messaggi</a><a class="headerlink" href="#funzioni-di-connessione-e-ricezione-messaggi" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-js notranslate" id="connect"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">connect</span><span class="p">(){</span>
-    <span class="kd">var</span> <span class="nx">socket</span><span class="p">;</span>
+<h4><a class="toc-backref" href="#id6">Funzioni di connessione e ricezione messaggi</a><a class="headerlink" href="#funzioni-di-connessione-e-ricezione-messaggi" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p><em>connect</em>: effettua una connessione alla WebSocket e riceve i messaggi inviati dal server.</p></li>
+</ul>
+<div class="highlight-js notranslate" id="connect"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">();</span>
+
+<span class="kd">function</span> <span class="nx">connect</span><span class="p">(){</span>
     <span class="kd">var</span> <span class="nx">host</span>     <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span>
     <span class="kd">var</span> <span class="nx">pathname</span> <span class="o">=</span>  <span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span><span class="p">;</span>
     <span class="kd">var</span> <span class="nx">addr</span>     <span class="o">=</span> <span class="s2">&quot;ws://&quot;</span> <span class="o">+</span><span class="nx">host</span> <span class="o">+</span> <span class="nx">pathname</span> <span class="o">+</span> <span class="s2">&quot;socket&quot;</span>  <span class="p">;</span>
@@ -195,7 +176,7 @@ messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
     <span class="k">if</span><span class="p">(</span><span class="nx">socket</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">!==</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">CLOSED</span><span class="p">){</span>
          <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;WARNING: Connessione WebSocket già stabilita&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span> <span class="c1">//CONNESSIONE</span>
+    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span> <span class="c1">//CONNESSIONE</span>
 
     <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="s2">&quot;Connected&quot;</span><span class="p">);</span>
@@ -208,45 +189,72 @@ messaggi nella output area e funzioni per connettersi a una WebSocket.</p>
 </pre></div>
 </div>
 </section>
+<section id="funzioni-di-input-output">
+<h4><a class="toc-backref" href="#id7">Funzioni di input/output</a><a class="headerlink" href="#funzioni-di-input-output" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p><em>sendMessage</em>: invia un messaggio al server attraverso la socket</p></li>
+<li><p><em>addMessageToWindow</em> : visualizza un messaggio nella output area</p></li>
+</ul>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span> <span class="nx">messageWindow</span>   <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;messageArea&quot;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">messageInput</span>    <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;inputmessage&quot;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">sendButton</span>      <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;send&quot;</span><span class="p">);</span>
+
+<span class="nx">sendButton</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">sendMessage</span><span class="p">(</span><span class="nx">messageInput</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+    <span class="nx">messageInput</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">sendMessage</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+    <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="s2">&quot;Sent Message: &quot;</span> <span class="o">+</span> <span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">messageWindow</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="sb">`&lt;div&gt;</span><span class="si">${</span><span class="nx">message</span><span class="si">}</span><span class="sb">&lt;/div&gt;`</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
 <section id="configurazione">
 <h3><a class="toc-backref" href="#id8">Configurazione</a><a class="headerlink" href="#configurazione" title="Permalink to this headline">¶</a></h3>
-<p>Affinché l’applicazione Spring inoltri le richieste di un client al server (l’endpoint),
+<p>Affinché l’applicazione Spring inoltri le richieste di un client al server,
 è necessario registrare un gestore utilizzando una classe di configurazione
 che implementa l’interfaccia <code class="docutils literal notranslate"><span class="pre">WebSocketConfigurer</span></code>.</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
 <span class="nd">@EnableWebSocket</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfiguration</span> <span class="kd">implements</span> <span class="n">WebSocketConfigurer</span> <span class="p">{</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerWebSocketHandlers</span><span class="p">(</span><span class="n">WebSocketHandlerRegistry</span> <span class="n">registry</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">registry</span><span class="p">.</span><span class="na">addHandler</span><span class="p">(</span><span class="k">new</span> <span class="n">WebSocketHandler</span><span class="p">(),</span> <span class="s">&quot;/socket&quot;</span><span class="p">).</span><span class="na">setAllowedOrigins</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
-    <span class="p">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerWebSocketHandlers</span><span class="p">(</span><span class="n">WebSocketHandlerRegistry</span> <span class="n">registry</span><span class="p">){</span>
+    <span class="n">registry</span><span class="p">.</span><span class="na">addHandler</span><span class="p">(</span>
+    <span class="k">new</span> <span class="n">WebSocketHandler</span><span class="p">(),</span> <span class="s">&quot;/socket&quot;</span><span class="p">).</span><span class="na">setAllowedOrigins</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;EnableWebSocket</span></code> (da aggiungere a una classe di configurazione <code class="docutils literal notranslate"><span class="pre">&#64;Configuration</span></code> )
+<p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;EnableWebSocket</span></code> (da aggiungere a una classe qualificata <code class="docutils literal notranslate"><span class="pre">&#64;Configuration</span></code>)
 abilita l’uso delle plain WebSocket.</p>
-<p>In base alla configurazione, il server risponderà a richieste inviate al seguente indirizzo:</p>
+<p>In base alla configurazione, il server risponderà, con una istanza di <code class="docutils literal notranslate"><span class="pre">WebSocketHandler</span></code>,
+a richieste inviate al seguente indirizzo:</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">ws:</span><span class="c1">//&lt;serverIP&gt;:8070/socket</span>
 </pre></div>
 </div>
 </section>
-<section id="handler">
-<h3><a class="toc-backref" href="#id9">Handler</a><a class="headerlink" href="#handler" title="Permalink to this headline">¶</a></h3>
+<section id="il-gestore-websockethandler">
+<h3><a class="toc-backref" href="#id9">Il gestore WebSocketHandler</a><a class="headerlink" href="#il-gestore-websockethandler" title="Permalink to this headline">¶</a></h3>
 <p>La classe  <code class="docutils literal notranslate"><span class="pre">WebSocketHandler</span></code> definisce un gestore custom di messaggi come specializzazione della classe astratta
 <code class="docutils literal notranslate"><span class="pre">AbstractWebSocketHandler</span></code> (o delle sue sottoclassi <code class="docutils literal notranslate"><span class="pre">TextWebSocketHandler</span></code> o <code class="docutils literal notranslate"><span class="pre">BinaryWebSocketHandler</span></code>).</p>
-<p>Nel nostro caso, la gestione reinvia sulla WebSocket il messaggio ricevuto .
-Questa azione del server porrà in esecuzione sul client  l’operazione <code class="docutils literal notranslate"><span class="pre">socket.onmessage</span></code> (si veda) <a class="reference internal" href="#connect">connect</a>) che visualizza
-il messaggio nell’area di output.</p>
+<p>Nel nostro caso, la gestione consisterà nel reinviare sulla WebSocket il messaggio ricevuto.
+Questa azione del server porrà in esecuzione sul client  l’operazione <code class="docutils literal notranslate"><span class="pre">socket.onmessage</span></code>
+(si veda <a class="reference internal" href="#connect">connect</a>) che visualizzerà il messaggio nell’area di output.</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketHandler</span> <span class="kd">extends</span> <span class="n">AbstractWebSocketHandler</span> <span class="p">{</span>
     <span class="p">...</span>
     <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">handleTextMessage</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span> <span class="n">TextMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;New Text Message Received&quot;</span><span class="p">);</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">handleTextMessage</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span>
+                        <span class="n">TextMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
         <span class="n">session</span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">handleBinaryMessage</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span> <span class="n">BinaryMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;New Binary Message Received&quot;</span><span class="p">);</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">handleBinaryMessage</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span>
+                        <span class="n">BinaryMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
         <span class="n">session</span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -255,27 +263,28 @@ il messaggio nell’area di output.</p>
 </section>
 <section id="propagazione-a-tutti-i-client">
 <h3><a class="toc-backref" href="#id10">Propagazione a tutti i client</a><a class="headerlink" href="#propagazione-a-tutti-i-client" title="Permalink to this headline">¶</a></h3>
-<p>Per propagare un messaggio a tutti i client connessi attraverso la WebSocket, basata tenere traccia
-delle sessioni e</p>
+<p>Per propagare un messaggio a tutti i client connessi attraverso la WebSocket, basta tenere traccia
+delle sessioni.</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketHandler</span> <span class="kd">extends</span> <span class="n">AbstractWebSocketHandler</span> <span class="p">{</span>
-<span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">WebSocketSession</span><span class="o">&gt;</span> <span class="n">sessions</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CopyOnWriteArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">WebSocketSession</span><span class="o">&gt;</span> <span class="n">sessions</span><span class="o">=</span>
+                        <span class="k">new</span> <span class="n">CopyOnWriteArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
 
 <span class="nd">@Override</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterConnectionEstablished</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterConnectionEstablished</span><span class="p">(</span>
+            <span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
     <span class="n">sessions</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
-    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Added the session:&quot;</span> <span class="o">+</span> <span class="n">session</span><span class="p">);</span>
     <span class="kd">super</span><span class="p">.</span><span class="na">afterConnectionEstablished</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="nd">@Override</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterConnectionClosed</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span> <span class="n">CloseStatus</span> <span class="n">status</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterConnectionClosed</span><span class="p">(</span> <span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span>
+                        <span class="n">CloseStatus</span> <span class="n">status</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
     <span class="n">sessions</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
-    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Removed the session:&quot;</span> <span class="o">+</span> <span class="n">session</span><span class="p">);</span>
     <span class="kd">super</span><span class="p">.</span><span class="na">afterConnectionClosed</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">status</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="nd">@Override</span>
-<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">handleTextMessage</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span> <span class="n">TextMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;New Text Message Received&quot;</span><span class="p">);</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">handleTextMessage</span><span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span>
+                    <span class="n">TextMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">{</span>
     <span class="n">sendToAll</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">sendToAll</span><span class="p">(</span><span class="n">TextMessage</span> <span class="n">message</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">{</span>
@@ -284,7 +293,6 @@ delle sessioni e</p>
         <span class="n">iter</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -293,13 +301,10 @@ delle sessioni e</p>
 </section>
 <section id="un-client-in-java">
 <h3><a class="toc-backref" href="#id11">Un client in Java</a><a class="headerlink" href="#un-client-in-java" title="Permalink to this headline">¶</a></h3>
-<p>E’ un esempio di machine-to-machine interaction.</p>
-<p>La classe <code class="docutils literal notranslate"><span class="pre">WebsocketClientEndpoint</span></code> riproduce in Java la stessa struttura del client già
-vista in JavaScript; in più possiamo ora salvare su file l’informnazione ricevuta (in particolare immagini
-di tipo <code class="docutils literal notranslate"><span class="pre">jpg</span></code>).</p>
-<p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;ClientEndpoint</span></code> (che corrisponde alla interfaccia <code class="docutils literal notranslate"><span class="pre">javax.websocket.ClientEndpoint</span></code>)
-denota che un POJO è un web socket client. Come tale questo POJO può definire i metodi delle web socket lifecycle
-usando le <em>web socket method level annotations</em>.</p>
+<p>Come esempio di machine-to-machine (M2M) interaction, definiamo
+una classe <code class="docutils literal notranslate"><span class="pre">WebsocketClientEndpoint.java</span></code> che riproduce in Java la stessa struttura del client già
+vista in JavaScript; in più permettiamo di salvare su file l’informazione ricevuta
+(in particolare immagini di tipo <code class="docutils literal notranslate"><span class="pre">jpg</span></code>).</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@ClientEndpoint</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebsocketClientEndpoint</span> <span class="p">{</span>
 
@@ -309,41 +314,35 @@ usando le <em>web socket method level annotations</em>.</p>
 <span class="kd">public</span> <span class="nf">WebsocketClientEndpoint</span><span class="p">(</span><span class="n">URI</span> <span class="n">endpointURI</span><span class="p">)</span> <span class="p">{</span>
  <span class="k">try</span> <span class="p">{</span>
     <span class="n">WebSocketContainer</span> <span class="n">container</span><span class="o">=</span>
-            <span class="n">ContainerProvider</span><span class="p">.</span><span class="na">getWebSocketContainer</span><span class="p">();</span>
+        <span class="n">ContainerProvider</span><span class="p">.</span><span class="na">getWebSocketContainer</span><span class="p">();</span>
     <span class="n">container</span><span class="p">.</span><span class="na">connectToServer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">endpointURI</span><span class="p">);</span>
  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span> <span class="p">}</span>
 <span class="p">}</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Callback hook for Connection open events.</span>
-<span class="cm"> * @param userSession the userSession which is opened.</span>
-<span class="cm">*/</span>
+</pre></div>
+</div>
+<p>L’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;ClientEndpoint</span></code> (che corrisponde alla interfaccia <code class="docutils literal notranslate"><span class="pre">javax.websocket.ClientEndpoint</span></code>)
+denota che un POJO è un web socket client. Come tale, questo POJO può definire i metodi delle web socket lifecycle
+usando le <em>web socket method level annotations</em>.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">//Callback hook for Connection open events.</span>
 <span class="nd">@OnOpen</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onOpen</span><span class="p">(</span><span class="n">Session</span> <span class="n">userSession</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="na">userSession</span> <span class="o">=</span> <span class="n">userSession</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Callback hook for Connection close events.</span>
-<span class="cm"> * @param userSession the userSession which is getting closed.</span>
-<span class="cm"> * @param reason the reason for connection close</span>
-<span class="cm">*/</span>
+<span class="c1">//Callback hook for Connection close events.</span>
 <span class="nd">@OnClose</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClose</span><span class="p">(</span><span class="n">Session</span> <span class="n">userSession</span><span class="p">,</span> <span class="n">CloseReason</span> <span class="n">reason</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="na">userSession</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Callback hook for Message Events.</span>
-<span class="cm"> * This method will be invoked when a client send a message.</span>
-<span class="cm">*/</span>
+<span class="c1">//Callback hook for Message Events, invoked when a client send a message.</span>
 <span class="nd">@OnMessage</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMessage</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">messageHandler</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="na">messageHandler</span><span class="p">.</span><span class="na">handleMessage</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-
+<span class="c1">//Callback hook for images</span>
 <span class="nd">@OnMessage</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMessage</span><span class="p">(</span><span class="n">ByteBuffer</span> <span class="n">bytes</span><span class="p">)</span> <span class="p">{</span>
  <span class="k">try</span><span class="p">{</span>
@@ -352,19 +351,14 @@ usando le <em>web socket method level annotations</em>.</p>
     <span class="n">BufferedImage</span> <span class="n">bImage2</span>    <span class="o">=</span> <span class="n">ImageIO</span><span class="p">.</span><span class="na">read</span><span class="p">(</span><span class="n">bis</span><span class="p">);</span>
     <span class="n">ImageIO</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">bImage2</span><span class="p">,</span> <span class="s">&quot;jpg&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;outputimage.jpg&quot;</span><span class="p">)</span> <span class="p">);</span>
  <span class="p">}</span><span class="k">catch</span><span class="p">(</span> <span class="n">Exception</span> <span class="n">e</span><span class="p">){</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span> <span class="p">}</span>
-
 <span class="p">}</span>
-<span class="cm">/**</span>
-<span class="cm"> * register message handler</span>
-<span class="cm">  * @param msgHandler</span>
-<span class="cm">*/</span>
+
+<span class="c1">//register message handler</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addMessageHandler</span><span class="p">(</span><span class="n">IMessageHandler</span> <span class="n">msgHandler</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="na">messageHandler</span> <span class="o">=</span> <span class="n">msgHandler</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="cm">/**</span>
-<span class="cm"> * Send a message.</span>
-<span class="cm"> * @param message</span>
-<span class="cm">*/</span>
+
+<span class="c1">//Send a message.</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendMessage</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="na">userSession</span><span class="p">.</span><span class="na">getAsyncRemote</span><span class="p">().</span><span class="na">sendText</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
 <span class="p">}</span>
@@ -374,6 +368,10 @@ usando le <em>web socket method level annotations</em>.</p>
 </section>
 <section id="introduzione-di-un-controller">
 <h3><a class="toc-backref" href="#id12">Introduzione di un Controller</a><a class="headerlink" href="#introduzione-di-un-controller" title="Permalink to this headline">¶</a></h3>
+<p>Abbiamo già osservato che l’applicazione funziona anche in assenza di un controller,
+in quanto Spring utilizza di default il file <strong>resources/static/index.html</strong>.
+Tuttavia l’introduzione di un controller può essere utile per gestire più casi, come ad esempio
+un servizio senza/con la possibilità di trasferire immagini.</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">it.unibo.wsdemoNoSTOMP</span><span class="p">;</span>
 
 <span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="p">;</span>
@@ -393,10 +391,51 @@ usando le <em>web socket method level annotations</em>.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Il file <code class="docutils literal notranslate"><span class="pre">indexNoImages.html</span></code> è simile a al precedente <a class="reference internal" href="#indexnoimagesnostomp">indexNoImagesNoStomp</a>, mentre il file
+<code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> include anche una sezione per il trasferimento immagini:</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="c">&lt;!-- indexAlsoImages.html --&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+        <span class="p">#</span><span class="nn">messages</span> <span class="p">{</span>
+            <span class="k">text-align</span><span class="p">:</span> <span class="kc">left</span><span class="p">;</span>
+            <span class="k">width</span><span class="p">:</span> <span class="mi">50</span><span class="kt">%</span><span class="p">;</span>
+            <span class="k">padding</span><span class="p">:</span> <span class="mi">1</span><span class="kt">em</span><span class="p">;</span>
+            <span class="k">border</span><span class="p">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="kc">solid</span> <span class="kc">black</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="p">#</span><span class="nn">images</span> <span class="p">{</span>
+            <span class="k">text-align</span><span class="p">:</span> <span class="kc">left</span><span class="p">;</span>
+            <span class="k">width</span><span class="p">:</span> <span class="mi">50</span><span class="kt">%</span><span class="p">;</span>
+            <span class="k">padding</span><span class="p">:</span> <span class="mi">1</span><span class="kt">em</span><span class="p">;</span>
+            <span class="k">border</span><span class="p">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="kc">solid</span> <span class="kc">red</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>WebSocket Client<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;container&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;messages&quot;</span>   <span class="na">class</span><span class="o">=</span><span class="s">&quot;messages&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;images&quot;</span>     <span class="na">class</span><span class="o">=</span><span class="s">&quot;images&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;input-fields&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Type a message and hit send:<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;message&quot;</span><span class="p">/&gt;&lt;</span><span class="nt">button</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;send&quot;</span><span class="p">&gt;</span>Send<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Select an image and hit send:<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;file&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;file&quot;</span> <span class="na">accept</span><span class="o">=</span><span class="s">&quot;image/*&quot;</span><span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">button</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;sendImage&quot;</span><span class="p">&gt;</span>Send Image<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;wsalsoimages.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+</div>
 </section>
 <section id="gestione-di-immagini">
 <h3><a class="toc-backref" href="#id13">Gestione di immagini</a><a class="headerlink" href="#gestione-di-immagini" title="Permalink to this headline">¶</a></h3>
-<p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> usato da <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce funzioni per la gestione delle immagini simili</p>
+<p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> usato da <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce funzioni per la gestione
+delle immagini.</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span>sendImageButton.onclick = function (event) { //event is a PointerEvent
     let file = fileInput.files[0];  //file: object File
     sendMessage(file);
@@ -446,8 +485,8 @@ a un particolare utente o ad utenti che sono iscritti a un particolare argomento
 
 <span class="o">//</span><span class="n">Nuove</span> <span class="n">dipendenze</span>
 <span class="n">implementation</span> <span class="s1">&#39;org.webjars:webjars-locator-core&#39;</span>
-    <span class="n">implementation</span> <span class="s1">&#39;org.webjars:sockjs-client:1.5.1&#39;</span>
-    <span class="n">implementation</span> <span class="s1">&#39;org.webjars:stomp-websocket:2.3.4&#39;</span>
+<span class="n">implementation</span> <span class="s1">&#39;org.webjars:sockjs-client:1.5.1&#39;</span>
+<span class="n">implementation</span> <span class="s1">&#39;org.webjars:stomp-websocket:2.3.4&#39;</span>
 <span class="n">implementation</span> <span class="s1">&#39;org.webjars:bootstrap:5.1.3&#39;</span>
 <span class="n">implementation</span> <span class="s1">&#39;org.webjars:jquery:3.6.0&#39;</span>
 </pre></div>

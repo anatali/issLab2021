@@ -1,36 +1,29 @@
 <html>
 <head>
     <style>
-        #messages {
+        .messageAreaStyle {
             text-align: left;
             width: 50%;
             padding: 1em;
             border: 1px solid black;
         }
-        #images {
-            text-align: left;
-            width: 50%;
-            padding: 1em;
-            border: 1px solid green;
-        }
     </style>
     <title>Sample WebSocket Client</title>
 </head>
 <body>
-<div class="container">
-    <div id="messages"   class="messages"></div>
-
-    <div id="images" class="images"></div>
+<h1>Welcome</h1>
+     <div id="messageArea"  class="messageAreaStyle"></div>
 
     <div class="input-fields">
         <p>Type a message and hit send:</p>
-        <input id="message"/><button id="send">Send</button>
-
+        <input id="inputmessage"/><button id="send">Send</button>
+<!--
         <p>Select an image and hit send:</p>
         <input type="file" id="file" accept="image/*"/>
         <button id="sendImage">Send Image</button>
+-->
     </div>
-</div>
+
 </body>
-<script src="websocketdemo.js"></script>
+<script src="wsminimal.js"></script>
 </html>

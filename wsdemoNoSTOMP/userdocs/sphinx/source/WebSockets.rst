@@ -13,14 +13,8 @@
 ======================================
 Web sockets
 ======================================
-
-.. code:: java 
- 
-    anaconda
-    sphinx-quickstart
-
-WebSocket_ è un protocollo che consente a due o più computer di comunicare tra loro 
-contemporaneamente (full-duplex) su una singola connessione TCP.
+WebSocket_ è un protocollo che consente a due o più computer di comunicare tra loro  
+in modo full-duplex su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi 
 (testo o binario).
 
@@ -67,25 +61,24 @@ che provvede a visualizzare il messaggio o l'immagine presso tutti i client coll
 +++++++++++++++++++++++++++++++++++++++++++++++
 Setup
 +++++++++++++++++++++++++++++++++++++++++++++++
-Come primo semplice esempio di uso di WebSocket in Spring, creiamo una applicazione che consente a un client 
-di utilizzare un browser per inviare un messaggio o una immagine a un server che provvede a visualizzare 
-il messaggio o l’immagine presso tutti i client collegati.
 
 #. Iniziamo creando una applicazione *SpringBoot* collegandoci a Springio_ e selezionando 
    come da figura:
 
-   .. image:: ./_static/img/springioBase.PNG
+.. image:: ./_static/img/springioBase.PNG
      :align: center
-     :width: 90+
+     :width: 80%
+
 #. Specifichiamo una nuova porta (il deafult è ``8080``) ponendo in *resources/application.properties*
 
     .. code:: Java
 
        server.port = 8070
 
-#. Inseriamo un file ``_index.html`` in **resources/static** per poter lanciare un'applicazione che 
-   presenta un'area  di ouput per  la visualizzazione di messaggi e un'area di input per la loro 
-   immissione
+#. Inseriamo un file ``index.html`` in **resources/static** per poter lanciare un'applicazione che 
+   presenta un'area  di ouput per la visualizzazione di messaggi e un'area di input per la loro 
+   immissione:
+
 
 .. _indexNoImagesNoStomp:
 
@@ -113,15 +106,16 @@ il messaggio o l’immagine presso tutti i client collegati.
             <input id="inputmessage"/><button id="send">Send</button>
         </div>
 
-        <script src="wsdemominimal.js"></script>
+        <script src="wsminimal.js"></script>
         </body>
         </html>
 
     La pagina iniziale si presenta come segue:
 
-    .. image:: ./_static/img/pageMinimal.PNG
-     :align: center
-     :width: 50+ 
+.. image:: ./_static/img/pageMinimal.PNG
+    :align: center
+    :width: 60%
+
     
 
 +++++++++++++++++++++++++++++++++++++++++++++++
@@ -130,20 +124,56 @@ wsminimal.js
 
 .. _wsminimal:
 
+Lo script  ``wsminimal.js`` definisce funzioni che realizzano la connessione con il server
+e funzioni di I/O che permettono di inviare un messaggio al server e di visualizzare la risposta.
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Funzioni di connessione e ricezione messaggi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Lo script  ``wsminimal.js`` definisce funzioni che inviano al server il messaggio di input e che aggiungono
-messaggi nella output area e funzioni per connettersi a una WebSocket.
+- *connect*: effettua una connessione alla WebSocket e riceve i messaggi inviati dal server.
 
-+++++++++++++++++++++++++++++++++++++++++++++++++
+.. _connect:
+
+.. code:: js
+
+    var socket = connect();
+
+    function connect(){
+        var host     = document.location.host;
+        var pathname =  document.location.pathname;
+        var addr     = "ws://" +host + pathname + "socket"  ;
+
+        // Assicura che sia aperta un unica connessione
+        if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+             alert("WARNING: Connessione WebSocket già stabilita");
+        }
+        var socket = new WebSocket(addr); //CONNESSIONE
+
+        socket.onopen = function (event) {
+            addMessageToWindow("Connected");
+        };
+        socket.onmessage = function (event) {
+            addMessageToWindow(`Got Message: ${event.data}`);
+        };
+        return socket;
+    }//connect
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Funzioni di input/output
-+++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+- *sendMessage*: invia un messaggio al server attraverso la socket 
+- *addMessageToWindow* : visualizza un messaggio nella output area 
 
 
 .. code:: js
 
     const messageWindow   = document.getElementById("messageArea");
-    const sendButton      = document.getElementById("send");
     const messageInput    = document.getElementById("inputmessage");
+    const sendButton      = document.getElementById("send");
 
     sendButton.onclick = function (event) {
         sendMessage(messageInput.value);
@@ -157,44 +187,11 @@ Funzioni di input/output
         messageWindow.innerHTML += `<div>${message}</div>`
     }
 
-    var socket = connect();
- 
-+++++++++++++++++++++++++++++++++++++++++++++++++
-Funzioni di connessione e ricezione messaggi
-+++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. _connect:
-
-.. code:: js
-
-    function connect(){
-        var socket;
-        var host     = document.location.host;
-        var pathname =  document.location.pathname;
-        var addr     = "ws://" +host + pathname + "socket"  ;
-
-        // Assicura che sia aperta un unica connessione
-        if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
-             alert("WARNING: Connessione WebSocket già stabilita");
-        }
-        socket = new WebSocket(addr); //CONNESSIONE
-
-        socket.onopen = function (event) {
-            addMessageToWindow("Connected");
-        };
-        socket.onmessage = function (event) {
-            addMessageToWindow(`Got Message: ${event.data}`);
-        };
-        return socket;
-    }//connect
-
-
-
 +++++++++++++++++++++++++++++++++++++++++++++++
 Configurazione
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Affinché l'applicazione Spring inoltri le richieste di un client al server (l'endpoint), 
+Affinché l'applicazione Spring inoltri le richieste di un client al server, 
 è necessario registrare un gestore utilizzando una classe di configurazione 
 che implementa l'interfaccia ``WebSocketConfigurer``.
 
@@ -203,44 +200,46 @@ che implementa l'interfaccia ``WebSocketConfigurer``.
     @Configuration
     @EnableWebSocket
     public class WebSocketConfiguration implements WebSocketConfigurer {
-        @Override
-        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-            registry.addHandler(new WebSocketHandler(), "/socket").setAllowedOrigins("*");
-        }
+      @Override
+      public void registerWebSocketHandlers(WebSocketHandlerRegistry registry){
+        registry.addHandler(
+        new WebSocketHandler(), "/socket").setAllowedOrigins("*");
+      }
     }
 
-L'annotazione ``@EnableWebSocket`` (da aggiungere a una classe di configurazione ``@Configuration`` )  
+L'annotazione ``@EnableWebSocket`` (da aggiungere a una classe qualificata ``@Configuration``)  
 abilita l'uso delle plain WebSocket. 
 
-In base alla configurazione, il server risponderà a richieste inviate al seguente indirizzo:
+In base alla configurazione, il server risponderà, con una istanza di ``WebSocketHandler``, 
+a richieste inviate al seguente indirizzo:
 
 .. code:: java
 
     ws://<serverIP>:8070/socket
 
 +++++++++++++++++++++++++++++++++++++++++++++++
-Handler
+Il gestore WebSocketHandler
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 La classe  ``WebSocketHandler`` definisce un gestore custom di messaggi come specializzazione della classe astratta
 ``AbstractWebSocketHandler`` (o delle sue sottoclassi ``TextWebSocketHandler`` o ``BinaryWebSocketHandler``).    
 
-Nel nostro caso, la gestione reinvia sulla WebSocket il messaggio ricevuto .
-Questa azione del server porrà in esecuzione sul client  l'operazione ``socket.onmessage`` (si veda) `connect`_) che visualizza 
-il messaggio nell'area di output.
+Nel nostro caso, la gestione consisterà nel reinviare sulla WebSocket il messaggio ricevuto.
+Questa azione del server porrà in esecuzione sul client  l'operazione ``socket.onmessage`` 
+(si veda `connect`_) che visualizzerà il messaggio nell'area di output.
 
 .. code:: java
 
     public class WebSocketHandler extends AbstractWebSocketHandler {
         ...
         @Override
-        protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-            System.out.println("New Text Message Received");
+        protected void handleTextMessage(WebSocketSession session, 
+                            TextMessage message) throws IOException {
             session.sendMessage(message);
         }
         @Override
-        protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
-            System.out.println("New Binary Message Received");
+        protected void handleBinaryMessage(WebSocketSession session, 
+                            BinaryMessage message) throws IOException {
             session.sendMessage(message);
         }
     }
@@ -249,30 +248,31 @@ il messaggio nell'area di output.
 Propagazione a tutti i client
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Per propagare un messaggio a tutti i client connessi attraverso la WebSocket, basata tenere traccia
-delle sessioni e 
+Per propagare un messaggio a tutti i client connessi attraverso la WebSocket, basta tenere traccia
+delle sessioni.
 
 .. code:: java
 
     public class WebSocketHandler extends AbstractWebSocketHandler {
-    private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+    private final List<WebSocketSession> sessions=
+                            new CopyOnWriteArrayList<>();
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(
+                WebSocketSession session) throws Exception{
         sessions.add(session);
-        System.out.println("Added the session:" + session);
         super.afterConnectionEstablished(session);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed( WebSocketSession session, 
+                            CloseStatus status) throws Exception{
         sessions.remove(session);
-        System.out.println("Removed the session:" + session);
         super.afterConnectionClosed(session, status);
     }
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        System.out.println("New Text Message Received");
+    protected void handleTextMessage(WebSocketSession session, 
+                        TextMessage message) throws IOException{
         sendToAll(message);
     }
     protected void sendToAll(TextMessage message) throws IOException{
@@ -281,7 +281,6 @@ delle sessioni e
             iter.next().sendMessage(message);
         }
     }
-
     }
 
 Notiamo che l'applicazione funziona anche in assenza di un controller, in quanto Spring utilizza di deafult il file
@@ -292,15 +291,11 @@ Notiamo che l'applicazione funziona anche in assenza di un controller, in quanto
 Un client in Java
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-E' un esempio di machine-to-machine interaction.
+Come esempio di machine-to-machine (M2M) interaction, definiamo
+una classe ``WebsocketClientEndpoint.java`` che riproduce in Java la stessa struttura del client già
+vista in JavaScript; in più permettiamo di salvare su file l'informazione ricevuta 
+(in particolare immagini di tipo ``jpg``).
 
-La classe ``WebsocketClientEndpoint`` riproduce in Java la stessa struttura del client già
-vista in JavaScript; in più possiamo ora salvare su file l'informnazione ricevuta (in particolare immagini
-di tipo ``jpg``).
-
-L'annotazione ``@ClientEndpoint`` (che corrisponde alla interfaccia ``javax.websocket.ClientEndpoint``)
-denota che un POJO è un web socket client. Come tale questo POJO può definire i metodi delle web socket lifecycle
-usando le *web socket method level annotations*.
 
 .. code:: java
 
@@ -313,41 +308,37 @@ usando le *web socket method level annotations*.
     public WebsocketClientEndpoint(URI endpointURI) {
      try {
         WebSocketContainer container=
-                ContainerProvider.getWebSocketContainer();
+            ContainerProvider.getWebSocketContainer();
         container.connectToServer(this, endpointURI);
      } catch (Exception e) { throw new RuntimeException(e); }
     }
 
-    /**
-     * Callback hook for Connection open events.
-     * @param userSession the userSession which is opened.
-    */
+L'annotazione ``@ClientEndpoint`` (che corrisponde alla interfaccia ``javax.websocket.ClientEndpoint``)
+denota che un POJO è un web socket client. Come tale, questo POJO può definire i metodi delle web socket lifecycle
+usando le *web socket method level annotations*.
+
+.. code:: java
+
+    //Callback hook for Connection open events.
     @OnOpen
     public void onOpen(Session userSession) {
         this.userSession = userSession;
     }
 
-    /**
-     * Callback hook for Connection close events.
-     * @param userSession the userSession which is getting closed.
-     * @param reason the reason for connection close
-    */
+    //Callback hook for Connection close events.
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
         this.userSession = null;
     }
 
-    /**
-     * Callback hook for Message Events. 
-     * This method will be invoked when a client send a message.
-    */
+    //Callback hook for Message Events, invoked when a client send a message.
     @OnMessage
     public void onMessage(String message) {
         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
     }
-
+    //Callback hook for images
     @OnMessage
     public void onMessage(ByteBuffer bytes) {
      try{
@@ -356,19 +347,14 @@ usando le *web socket method level annotations*.
         BufferedImage bImage2    = ImageIO.read(bis);
         ImageIO.write(bImage2, "jpg", new File("outputimage.jpg") );
      }catch( Exception e){ throw new RuntimeException(e); }
-
     }
-    /**
-     * register message handler
-      * @param msgHandler
-    */
+
+    //register message handler
     public void addMessageHandler(IMessageHandler msgHandler) {
         this.messageHandler = msgHandler;
     }
-    /**
-     * Send a message.
-     * @param message
-    */
+
+    //Send a message.
     public void sendMessage(String message) {
         this.userSession.getAsyncRemote().sendText(message);
     }
@@ -379,7 +365,10 @@ usando le *web socket method level annotations*.
 +++++++++++++++++++++++++++++++++++++++++++++++
 Introduzione di un Controller
 +++++++++++++++++++++++++++++++++++++++++++++++
-
+Abbiamo già osservato che l'applicazione funziona anche in assenza di un controller, 
+in quanto Spring utilizza di default il file **resources/static/index.html**.
+Tuttavia l'introduzione di un controller può essere utile per gestire più casi, come ad esempio
+un servizio senza/con la possibilità di trasferire immagini.
 
 .. code:: java
 
@@ -392,7 +381,7 @@ Introduzione di un Controller
     public class WebSocketController {
         @RequestMapping("/")
         public String textOnly() {
-            return "indexNoImages";
+            return "indexNoImages"; 
         }
 
         @RequestMapping("/alsoimages")
@@ -401,12 +390,54 @@ Introduzione di un Controller
         }
     }
 
+Il file ``indexNoImages.html`` è simile a al precedente indexNoImagesNoStomp_, mentre il file 
+``indexAlsoImages.html`` include anche una sezione per il trasferimento immagini:
+
+.. code:: html
+
+    <!-- indexAlsoImages.html -->
+    <html>
+    <head>
+        <style>
+            #messages {
+                text-align: left;
+                width: 50%;
+                padding: 1em;
+                border: 1px solid black;
+            }
+            #images {
+                text-align: left;
+                width: 50%;
+                padding: 1em;
+                border: 1px solid red;
+            }
+        </style>
+        <title>WebSocket Client</title>
+    </head>
+    <body>
+    <div class="container">
+        <div id="messages"   class="messages"></div>
+        <div id="images"     class="images"></div>
+
+        <div class="input-fields">
+            <p>Type a message and hit send:</p>
+            <input id="message"/><button id="send">Send</button>
+
+            <p>Select an image and hit send:</p>
+            <input type="file" id="file" accept="image/*"/>
+            <button id="sendImage">Send Image</button>
+        </div>
+    </div>
+    </body>
+    <script src="wsalsoimages.js"></script>
+    </html>
 
 +++++++++++++++++++++++++++++++++++++++++++++++
 Gestione di immagini
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzioni per la gestione delle immagini simili
+Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzioni per la gestione 
+delle immagini.
 
 .. code:: java
 
@@ -466,8 +497,8 @@ Partendo dal SetUp precedente `SetupNoStomp`_, aggiungiamo alcune dipendenze nel
     
     //Nuove dipendenze
     implementation 'org.webjars:webjars-locator-core'
-	implementation 'org.webjars:sockjs-client:1.5.1'
-	implementation 'org.webjars:stomp-websocket:2.3.4' 
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:stomp-websocket:2.3.4' 
     implementation 'org.webjars:bootstrap:5.1.3'
     implementation 'org.webjars:jquery:3.6.0'
 
@@ -759,7 +790,7 @@ Client (in Java per programmi)
         return msg;
     }
     }
-
+ 
 
 ----------------
 OLD
