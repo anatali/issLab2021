@@ -12,10 +12,14 @@ public class HIController {
 	@RequestMapping("/")
 	public String entryMinimal() {
 		System.out.println("HIController | entryMinimal   "  );
-		return "indexNoImages";
+		return "indexNoImages"; //usa wsStompMinimal.js
 	}
 
-	
+	@RequestMapping("/better")
+	public String entryBetter() {
+		return "indexBetter";	 //usa wsStompBetter.js
+	}
+
 	@MessageMapping("/unibo")	 
 	@SendTo("/demoTopic/output")
 	public OutputMessage elabInput(InputMessage message) throws Exception {

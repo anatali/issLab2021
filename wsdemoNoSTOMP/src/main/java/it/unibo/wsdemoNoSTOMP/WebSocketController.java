@@ -21,8 +21,9 @@ public class WebSocketController {
 
     @RequestMapping("/extra")
     public String getWebSocket() {
-        return "ws-broadcast";
+        return "myws-broadcast";
     }
+
 
 
 }

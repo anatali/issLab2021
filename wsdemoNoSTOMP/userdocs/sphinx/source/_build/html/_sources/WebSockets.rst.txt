@@ -549,7 +549,7 @@ Il servizio viene configurato in SpringBoot da una classe che implementa l'inter
    public void registerStompEndpoints(StompEndpointRegistry registry) {
      registry.addEndpoint("/unibo");  //.withSockJS();  
    }
-   }
+   }  
 
 Nella configurazione specificata, il servizio:
 

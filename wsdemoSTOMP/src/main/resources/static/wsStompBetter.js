@@ -16,14 +16,14 @@ function connect() {
         //var socket  = new SockJS('/stomp-websocket');
         var host     = document.location.host;
         //var pathname = document.location.pathname;
-        var addr     = "ws://" + host + "/stomp-websocket"  ;
+        var addr     = "ws://" + host + "/unibo"  ; //stomp-websocket
         console.log(addr);
     var socket = new WebSocket(addr);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/output', function (greeting) {
+        stompClient.subscribe('/demoTopic/output', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
         });
     });
@@ -39,7 +39,7 @@ function disconnect() {
 
 function sendName() {
     console.log("sendName");
-    stompClient.send("/unibo/inputmsg", {}, JSON.stringify({'name': $("#name").val()}));
+    stompClient.send("/demoInput/unibo", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
 function showGreeting(message) {

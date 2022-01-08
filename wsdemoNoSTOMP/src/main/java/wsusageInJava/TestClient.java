@@ -8,7 +8,7 @@ public class TestClient {
         try {
             // open websocket
             final WebsocketClientEndpoint clientEndPoint =
-                    new WebsocketClientEndpoint(new URI("ws://localhost:8070/socket"));
+                    new WebsocketClientEndpoint(new URI("ws://localhost:8080/socket"));
 
             // add listener
             clientEndPoint.addMessageHandler(new IMessageHandler() {

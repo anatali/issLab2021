@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>Web sockets &#8212; websocket 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -176,7 +176,7 @@ e funzioni di I/O che permettono di inviare un messaggio al server e di visualiz
     <span class="k">if</span><span class="p">(</span><span class="nx">socket</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">!==</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">CLOSED</span><span class="p">){</span>
          <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;WARNING: Connessione WebSocket già stabilita&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span> <span class="c1">//CONNESSIONE</span>
+    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span> <span class="c1">//CONNESSIONE</span>
 
     <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">addMessageToWindow</span><span class="p">(</span><span class="s2">&quot;Connected&quot;</span><span class="p">);</span>
@@ -234,7 +234,7 @@ che implementa l’interfaccia <code class="docutils literal notranslate"><span 
 abilita l’uso delle plain WebSocket.</p>
 <p>In base alla configurazione, il server risponderà, con una istanza di <code class="docutils literal notranslate"><span class="pre">WebSocketHandler</span></code>,
 a richieste inviate al seguente indirizzo:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">ws:</span><span class="c1">//&lt;serverIP&gt;:8070/socket</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">ws</span><span class="p">:</span><span class="c1">//&lt;serverIP&gt;:8070/socket</span>
 </pre></div>
 </div>
 </section>
@@ -780,7 +780,7 @@ rappresentati dalle classi <code class="docutils literal notranslate"><span clas
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Web sockets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#websocket-in-springboot-versione-base">WebSocket in SpringBoot: versione base</a></li>
@@ -802,7 +802,7 @@ rappresentati dalle classi <code class="docutils literal notranslate"><span clas
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -824,7 +824,7 @@ rappresentati dalle classi <code class="docutils literal notranslate"><span clas
       &copy;2022, Antonio Natali.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -10,7 +10,8 @@
 
     function sendMessage(message) {
         //stompClient.send("/unibo/input", {}, JSON.stringify({'name': $("#inputmessage").val()}));
-        stompClient.send("/demoInput/unibo", {}, JSON.stringify({'name': message}));
+        var jsonMsg = JSON.stringify( {'name': message});
+        stompClient.send( "/demoInput/unibo", {}, jsonMsg );
         addMessageToWindow("Sent Message: " + message ); //+ " stompClient=" + stompClient
     }
 
@@ -41,6 +42,7 @@ function connect() {
             };
 
     stompClient = Stomp.over(socket);
+
     stompClient.connect({}, function (frame) {
         //setConnected(true);
         addMessageToWindow("Connected " + frame);

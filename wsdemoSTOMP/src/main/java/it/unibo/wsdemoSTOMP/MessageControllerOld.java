@@ -6,21 +6,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.HtmlUtils;
 
-//@Controller
-public class MessageController {
-
-
+//@Controller  //Replaced by HIController
+public class MessageControllerOld {
 //Il Controller cerca i files nella directory template
 
 	@RequestMapping("/")
 	public String entryMinimal() {
 		System.out.println("MessageController | entryMinimal   "  );
-		return "indexNoImages";
+		return "indexNoImages";  //usa wsStompMinimal.js
 	}
 
 	@RequestMapping("/better")
 	public String entryBetter() {
-		return "indexBetter";
+		return "indexBetter";	 //usa wsStompBetter.js
 	}
 
 
