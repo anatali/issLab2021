@@ -9,8 +9,11 @@
     };
 
     function sendMessage(message) {
-        socket.send(message);
-        addMessageToWindow("Sent Message: " + message);
+        //socket.send(message);
+        //addMessageToWindow("Sent Message: " + message);
+        var jsonMsg = JSON.stringify( {'name': message});
+        socket.send(jsonMsg);
+        addMessageToWindow("Sent Message: " + jsonMsg);
     }
 
     function addMessageToWindow(message) {

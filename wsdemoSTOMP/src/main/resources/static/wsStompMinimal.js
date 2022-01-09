@@ -36,16 +36,19 @@ function connect() {
             };
 
             socket.onmessage = function (event) {
-                addMessageToWindow(`Got Message: ${event.data}`);
-                //alert(`Got Message: ${event.data}`)
+               alert(`Got Message: ${event.data}`)
+              addMessageToWindow(`Got Message: ${event.data}`);
 
             };
 
     stompClient = Stomp.over(socket);
 
+    console.log("stompClient " + stompClient);
+    //addMessageToWindow("Stomp Connecting ... "  );
+
     stompClient.connect({}, function (frame) {
         //setConnected(true);
-        addMessageToWindow("Connected " + frame);
+        addMessageToWindow("Connected " ); //+ frame
         stompClient.subscribe('/demoTopic/output', function (greeting) {
             showAnswer(JSON.parse(greeting.body).content);
         });

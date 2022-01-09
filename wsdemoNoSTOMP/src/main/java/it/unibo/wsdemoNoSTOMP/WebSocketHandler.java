@@ -22,26 +22,26 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
-        System.out.println("Added the session:" + session);
+        System.out.println("WebSocketHandler | Added the session:" + session);
         super.afterConnectionEstablished(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
-        System.out.println("Removed the session:" + session);
+        System.out.println("WebSocketHandler | Removed the session:" + session);
         super.afterConnectionClosed(session, status);
     }
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        System.out.println("New Text Message Received: " + message);
+        System.out.println("WebSocketHandler | New Text Message Received: " + message);
         //session.sendMessage(message);
         //Send to all the connected clients
         sendToAll(message);
     }
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
-        System.out.println("New Binary Message Received");
+        System.out.println("WebSocketHandler | New Binary Message Received " );
         //session.sendMessage(message);
         //Send to all the connected clients
         Iterator<WebSocketSession> iter = sessions.iterator();
