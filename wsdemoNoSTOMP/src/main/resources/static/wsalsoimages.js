@@ -24,7 +24,7 @@ function disconnect() {
    
         // Assicura che sia aperta un unica connessione
         if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
-             console.log("Connessione WebSocket già  stabilita");
+             console.log("Connessione WebSocket già stabilita");
         }
         //console.log(" connect addr" + addr ); //ws://localhost:8085/socket
         socket = new WebSocket(addr);
@@ -54,7 +54,7 @@ function disconnect() {
     }
     
     function sendImage(file){
-    console.log("sendImage " + file);
+    	console.log("sendImage " + file);
         //let file = fileInput.files[0];  //file: object File
         sendMessage(file);
         //fileInput.value = null;    

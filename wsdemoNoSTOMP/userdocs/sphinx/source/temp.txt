@@ -41,6 +41,8 @@
 
 
 
+.. (e la  *Content Delivery Network* (:blue:`CDN`) pubblica jsdelivr_) 
+
 JSR 356 or the Java API for WebSocket, specifies an API that Java developers can use
 for integrating WebSockets withing their applications
 – both on the server side as well as on the Java client side.
@@ -72,3 +74,95 @@ For our application, we'll be using Java Objects. We'll create the classes for e
 To run the application we built in the example, all we need to do is deploy the war file
 in a web server and go to the URL: http://localhost:8080/java-websocket/.
 You can find the link to the repository here.
+
+
+
+.. code:: html
+
+    <!-- indexAlsoImages.html -->
+    <html>
+    <head>
+        <style>
+            #messages {
+                text-align: left;
+                width: 50%;
+                padding: 1em;
+                border: 1px solid black;
+            }
+            #images {
+                text-align: left;
+                width: 50%;
+                padding: 1em;
+                border: 1px solid red;
+            }
+        </style>
+        <title>WebSocket Client</title>
+    </head>
+    <body>
+    <div class="container">
+        <div id="messages"   class="messages"></div>
+        <div id="images"     class="images"></div>
+
+        <div class="input-fields">
+            <p>Type a message and hit send:</p>
+            <input id="message"/><button id="send">Send</button>
+
+            <p>Select an image and hit send:</p>
+            <input type="file" id="file" accept="image/*"/>
+            <button id="sendImage">Send Image</button>
+        </div>
+    </div>
+    </body>
+    <script src="wsalsoimages.js"></script>
+    </html>
+
+    ----------------
+OLD
+----------------
+
+
+https://spring.io/guides/gs/messaging-stomp-websocket/
+
+- Possibile premessa https://www.baeldung.com/intro-to-project-lombok
+- 
+- 
+  
+
+
+- Create a Resource Representation Class. HelloMessage. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.
+-  model the greeting representation, Greeting
+- Create a Message-handling Controller. GreetingController
+  
+  .. code:: Java
+
+  	@MessageMapping("/hello")    
+      un msg inviato a /hello induce l'esecuzione del metodo con input un oggetto di tipo HelloMessage
+      ricavato dal payload del emssaggio
+    @SendTo("/topic/greetings")
+      induce a inviare la risposta del metodo a tutti i sottoscrittori di /topic/greetings
+
+- Configure Spring for STOMP messaging. WebSocketConfig
+- 
+  .. code:: Java
+
+    @Configuration
+    @EnableWebSocketMessageBroker
+    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+
+- Create a Browser Client . index.html
+- ./gradlew bootRun
+- java -jar build/libs/gs-messaging-stomp-websocket-0.1.0.jar
+
+
+https://www.baeldung.com/websockets-spring
+
+https://www.dariawan.com/series/build-spring-websocket-application/
+
+https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Esempio più articolato
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/

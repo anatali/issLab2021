@@ -22,14 +22,8 @@ in modo full-duplex su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi 
 (testo o binario).
 
-Nella sua forma più semplice, 
-
-:remark:`un WebSocket è solo un canale di comunicazione tra due applicazioni` 
-
-e non deve essere necessariamente coinvolto un browser.
-
 A differenza di HTTP, che è un protocollo a livello di applicazione, nel protocollo WebSocket 
-semplicemente non ci sono abbastanza informazioni in un messaggio in arrivo affinché 
+non ci sono abbastanza informazioni in un messaggio in arrivo affinché 
 un framework o un container sappia come instradarlo o elaborarlo.
 
 Per questo motivo il WebSocket RFC definisce l'uso di sottoprotocolli. 
@@ -40,10 +34,16 @@ L'uso di un sottoprotocollo non è richiesto, ma anche se non utilizzato, le app
 dovranno comunque scegliere un formato di messaggio che sia il client che il server 
 possano comprendere. 
 
+Nella sua forma più semplice, 
+
+:remark:`un WebSocket è solo un canale di comunicazione tra due applicazioni` 
+
+e non deve essere necessariamente coinvolto un browser.
+
 
 Tuttavia l'uso più comune di WebSocket è facilitare la comunicazione tra un un'applicazione
 server e un'applicazione basata su browser.
-Infatti, rispetto a HTTP RESTful ha il vantaggio di realizzare comunicazioni  a 
+Infatti, rispetto a HTTP RESTful, ha il vantaggio di realizzare comunicazioni  a 
 bidirezionali e in tempo reale. Ciò consente al server di inviare informazione al client 
 in qualsiasi momento, anziché costringere il client al polling.
 
@@ -73,18 +73,24 @@ Setup
      :align: center
      :width: 80%
 
-#. Specifichiamo una nuova porta (il deafult è ``8080``) ponendo in *resources/application.properties*
+#. Specifichiamo una nuova porta (il default è ``8080``) ponendo in *resources/application.properties*
 
     .. code:: Java
 
-       server.port = 8070
+       server.port = 8085
 
 #. Inseriamo un file ``index.html`` in **resources/static** per poter lanciare un'applicazione che 
    presenta un'area  di ouput per la visualizzazione di messaggi e un'area di input per la loro 
-   immissione:
+   immissione. In questo caso l'applicazione funziona anche senza la definzione di un Controller
+
+ 
 
 
 .. _indexNoImagesNoStomp:
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Il file *index.html*
++++++++++++++++++++++++++++++++++++++++++++++++
 
     .. code:: html
 
@@ -98,7 +104,7 @@ Setup
                     border: 1px solid black;
                 }
             </style>
-            <title>wsdemoNoStomp client</title>
+            <title>wsdemoNoStomp</title>
         </head>
 
         <body>
@@ -121,12 +127,11 @@ Setup
     :width: 60%
 
     
-
-+++++++++++++++++++++++++++++++++++++++++++++++
-wsminimal.js
-+++++++++++++++++++++++++++++++++++++++++++++++
-
 .. _wsminimal:
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Lo script *wsminimal.js*
++++++++++++++++++++++++++++++++++++++++++++++++
 
 Lo script  ``wsminimal.js`` definisce funzioni che realizzano la connessione con il server
 e funzioni di I/O che permettono di inviare un messaggio al server e di visualizzare la risposta.
@@ -145,29 +150,31 @@ Funzioni di connessione e ricezione messaggi
     var socket = connect();
 
     function connect(){
-        var host     = document.location.host;
-        var pathname =  document.location.pathname;
-        var addr     = "ws://" +host + pathname + "socket"  ;
+      var host     = document.location.host;
+      var pathname =  document.location.pathname;
+      var addr     = "ws://" +host + pathname + "socket"  ;
 
-        // Assicura che sia aperta un unica connessione
-        if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
-             alert("WARNING: Connessione WebSocket già stabilita");
-        }
-        var socket = new WebSocket(addr); //CONNESSIONE
+      // Assicura che sia aperta un unica connessione
+      if(socket!==undefined && socket.readyState!==WebSocket.CLOSED){
+        alert("WARNING: Connessione WebSocket già stabilita");
+      }
+      var socket = new WebSocket(addr); //CONNESSIONE
 
-        socket.onopen = function (event) {
-            addMessageToWindow("Connected");
-        };
-        socket.onmessage = function (event) {
-            addMessageToWindow(`Got Message: ${event.data}`);
-        };
-        return socket;
+      socket.onopen = function (event) {
+        addMessageToWindow("Connected");
+      };
+      socket.onmessage = function (event) { //RICEZIONE
+        addMessageToWindow(`Got Message: ${event.data}`);
+      };
+      return socket;
     }//connect
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Funzioni di input/output
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. _sendMessage:
 
 - *sendMessage*: invia un messaggio al server attraverso la socket 
 - *addMessageToWindow* : visualizza un messaggio nella output area 
@@ -219,7 +226,7 @@ a richieste inviate al seguente indirizzo:
 
 .. code:: java
 
-    ws://<serverIP>:8070/socket
+    ws://<serverIP>:8085/socket
 
 +++++++++++++++++++++++++++++++++++++++++++++++
 Il gestore WebSocketHandler
@@ -297,9 +304,33 @@ Un client in Java
 
 Come esempio di machine-to-machine (M2M) interaction, definiamo
 una classe ``WebsocketClientEndpoint.java`` che riproduce in Java la stessa struttura del client già
-vista in JavaScript; in più permettiamo di salvare su file l'informazione ricevuta 
+vista in JavaScript (wsminimal_); in più permettiamo di salvare su file l'informazione ricevuta 
 (in particolare immagini di tipo ``jpg``).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Esempio di Uso del client
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+    
+    // open websocket
+     WebsocketClientEndpoint clientEndPoint =
+            new WebsocketClientEndpoint(new URI("ws://localhost:8085/socket"));
+
+    // add listener
+        clientEndPoint.addMessageHandler(new IMessageHandler() {
+          public void handleMessage(String message) {
+                System.out.println(message);
+          }
+    });
+
+    // send message to websocket
+    clientEndPoint.sendMessage("hello from Java client");
+
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Struttura del client
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: java
 
@@ -320,6 +351,11 @@ vista in JavaScript; in più permettiamo di salvare su file l'informazione ricev
 L'annotazione ``@ClientEndpoint`` (che corrisponde alla interfaccia ``javax.websocket.ClientEndpoint``)
 denota che un POJO è un web socket client. Come tale, questo POJO può definire i metodi delle web socket lifecycle
 usando le *web socket method level annotations*.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Metodi relativi alla websocket
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 .. code:: java
 
@@ -395,107 +431,265 @@ un servizio senza/con la possibilità di trasferire immagini.
     }
 
 Il file ``indexNoImages.html`` è simile a al precedente indexNoImagesNoStomp_, mentre il file 
-``indexAlsoImages.html`` include anche una sezione per il trasferimento immagini:
+``indexAlsoImages.html`` include anche una sezione per il trasferimento immagini.
 
-.. code:: html
 
-    <!-- indexAlsoImages.html -->
-    <html>
-    <head>
-        <style>
-            #messages {
-                text-align: left;
-                width: 50%;
-                padding: 1em;
-                border: 1px solid black;
-            }
-            #images {
-                text-align: left;
-                width: 50%;
-                padding: 1em;
-                border: 1px solid red;
-            }
-        </style>
-        <title>WebSocket Client</title>
-    </head>
-    <body>
-    <div class="container">
-        <div id="messages"   class="messages"></div>
-        <div id="images"     class="images"></div>
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Trasferimento di immagini: indexAlsoImages.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        <div class="input-fields">
-            <p>Type a message and hit send:</p>
-            <input id="message"/><button id="send">Send</button>
-
-            <p>Select an image and hit send:</p>
-            <input type="file" id="file" accept="image/*"/>
-            <button id="sendImage">Send Image</button>
-        </div>
-    </div>
-    </body>
-    <script src="wsalsoimages.js"></script>
-    </html>
-
-+++++++++++++++++++++++++++++++++++++++++++++++
-Trasferimento di immagini
-+++++++++++++++++++++++++++++++++++++++++++++++
-
-Il file file ``indexAlsoImages.html`` definisce una pagina che permette, oltre all'invio e ricezione di 
+Il file ``indexAlsoImages.html`` definisce una pagina HTML che permette, oltre all'invio e ricezione di 
 testi, il trasferimento di immagini.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Questo file:
+
+- fa uso di Bootstrap_, una libreria  utile per realizzare pagine web reattive e 
+  mobile-first, con HTML, CSS e JavaScript; la libreria usa il preprocessore CSS 
+  scritto in Ruby denominato ``Sass`` (*Syntactically Awesome Style Sheets*)
+- utilizza il codice JavaScript definito nel file indexAlsoImages_
+- presenta all'utente:
+   - pulsanti per la connessione/disconnessione alla WebSocket di 
+     ``URL=ws://<ServerIP>:8085/socket``
+   - pulsanti per l'invio di testi e di immaggini
+   - un'area di output per la visualizzazione di informazioni inviate dal server
+
+    .. image:: ./_static/img/indexAlsoImages.png 
+        :align: left
+        :width: 80%
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Bootstrap  e webJars
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Questo file fa uso di Bootstrap_, una libreria  utile per realizzare pagine web reattive e 
-mobile-first con HTML, CSS e JavaScript che usa il preprocessore CSS scritto in Ruby denominato ``Sass`` 
-(*Syntactically Awesome Style Sheets*).
+L'uso di Bootstrap_ avviene attraverso i webjars_, introducendo in *build.gradle* le seguenti 
+nuove dipendenze:
 
-Useremo questo tool attraverso i webjars_ (e la  *Content Delivery Network* (:blue:`CDN`) pubblica 
-jsdelivr_).
-
-I :blue:`WebJar` (chee non sono legati a Spring) sono dipendenze lato client impacchettate in file JAR .
-
-..Per approfondire, si veda: https://www.baeldung.com/maven-webjars e https://mvnrepository.com/artifact/org.webjars. 
-
-Per l'uso di Bootstrap introduciamo in *build.gradle* le seguenti nuove dipendenze
-
-.. code:: java
+.. code:: 
 
 	implementation 'org.webjars:webjars-locator-core'
 	implementation 'org.webjars:bootstrap:5.1.3'
 	implementation 'org.webjars:jquery:3.6.0'
 
+I :blue:`WebJar_` (chee non sono legati a Spring) sono dipendenze lato client impacchettate in file JAR.
+
+.. Per approfondire, si veda: https://www.baeldung.com/maven-webjars e https://mvnrepository.com/artifact/org.webjars. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Struttura generale del file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: html
+
+  <html>
+  <head>
+  <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <script src="/webjars/jquery/jquery.min.js"></script>
+  <title>wsdemoNoStomp-images</title>
+  </head>
+    <body>
+    <div id="main-content" class="container-fluid pt-3">
+      <h1>wsdemoNoStomp</h1>
+      <!-- Connessione/Disconnessione alla WebSocket -->
+      <!-- Inserzione di testi e immagini            -->
+      <!-- Area di output                            -->
+    </div>
+    </body>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Connessione/Disconnessione alla WebSocket
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: html
+
+     <div class="row">   
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" 
+                        type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" 
+                        type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+      </div>
+
+    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Inserzione di testi e immagini
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: html
+
+    <div class="row">
+        <div class="col-md-6">
+        <form class="form-inline">
+        <div class="form-group">
+            <label for="inputmsg">Input (text)</label>
+            <input type="text" id="inputmsg" 
+                    class="form-control" placeholder="Input here...">
+        </div>
+        <button id="sendmsg" 
+                class="btn btn-default" type="submit">Send text</button>
+        </form>
+        </div>
+    </div>
+      
+    <div class="row">
+        <div class="col-md-6">
+        <form class="form-inline">
+        <div class="form-group">
+            <label for="myfile">Input (image)</label>
+            <input type="file" id="myfile" name="myfile" 
+                    class="form-control" accept="image/*"/>
+        </div>
+        <button id="sendImage" 
+                class="btn btn-default" type="submit">Send Image</button>
+        </form>
+        </div>    
+    </div> 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Area di output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: html
+
+       <div class="row">
+            <div class="col-md-12">
+                <table id="conversation" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Output Area</th>
+                    </tr>
+                    </thead>
+                    <tbody id="output">
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
 
 
-Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzioni per il trasferimento 
-di immagini.
 
-Questo script è utilizzato dal 
+.. _indexAlsoImages:
 
-.. code:: java
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Lo script *wsalsoimages.js*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    sendImageButton.onclick = function (event) { //event is a PointerEvent
-        let file = fileInput.files[0];  //file: object File
-        sendMessage(file);
-        fileInput.value = null;
-    };
+Lo script  ``wsalsoimages.js`` utilizza JQuery e definisce funzioni:
 
-    socket.onmessage = function (event) {
-        if (event.data instanceof ArrayBuffer) {
-            addMessageToWindow('Got Image:');
-            addImageToWindow(event.data);
-        } else {
-            addMessageToWindow(`Got Message: ${event.data}`);
-        }
-    };
+- per la connessione/disconnessione mediante WebSocket
+- per permettere all'utente di inserire messaggi e immagini da inviare al server mediante WebSocket
+- per visualizzare informazioni ricevute dal server
+ 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Riferimenti agli oeggetti della pagina
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.. code:: js
+
+    const fileInput = document.getElementById("myfile");
+    console.log("fileInput="+fileInput.files[0]);
+
+    $(function () {
+        $("form").on('submit', function (e) { e.preventDefault(); });
+        $( "#connect" ).click(function() { connect(); });
+        $( "#disconnect" ).click(function() { disconnect(); });
+        $( "#sendmsg" ).click(function() {
+            sendMessage($("#inputmsg").val());});
+        $( "#sendImage" ).click(function() { 
+            let f = fileInput.files[0]; sendImage(f); });
+    });
 
     function addImageToWindow(image) {
         let url = URL.createObjectURL(new Blob([image]));
-        imageWindow.innerHTML += `<img src="${url}"/>`
+        $("#output").append("<tr><td>" + 
+            `<img src="${url}"/>` + "</td></tr>");
     }
 
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Funzioni di (dis)connessione su webSocket
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Al caricamento della pagina si vuole sia attivo il solo pulsante 
+
+.. code:: js
+
+    function disconnect() {
+        setConnected(false);
+    }
+
+    function setConnected(connected) {
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+        if (connected) { $("#conversation").show(); }
+        else { $("#conversation").hide(); }
+        $("#output").html("");
+    }
+
+    function connect(){
+        var host     = document.location.host;
+        var pathname =  "/"; 	//document.location.pathname;
+        var addr     = "ws://" + host  + pathname + "socket"  ;
+   
+        // Assicura che sia aperta un unica connessione
+        if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+             console.log("Connessione WebSocket già  stabilita");
+        }
+
+        socket = new WebSocket(addr);
+
+        socket.binaryType = "arraybuffer";
+
+        socket.onopen = function (event) {
+        	setConnected(true);
+            addMessageToWindow("Connected");
+        };
+
+        /*
+        RICEZIONE di messaggi dal server
+        */
+        socket.onmessage = function (event) {
+             if (event.data instanceof ArrayBuffer) {
+                addMessageToWindow('Got Image:');
+                addImageToWindow(event.data);
+            } else {
+                addMessageToWindow(`Got Message: ${event.data}`);
+            }
+        };
+    }//connect
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Funzioni di invio di informazione
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.. code:: js
+
+    function sendMessage(message) {
+    console.log("sendMessage " + message );
+        socket.send(message);
+        addMessageToWindow("Sent Message: " + message);
+    }
+    
+    function sendImage(file){
+    	console.log("sendImage " + file);
+        //let file = fileInput.files[0];  //file: object File
+        sendMessage(file);
+        //fileInput.value = null;    
+    }
+
+
+
+ 
 
 ------------------------------------------------------
 WebSocket in SpringBoot: versione STOMP
@@ -522,13 +716,13 @@ Partendo dal SetUp precedente `SetupNoStomp`_, aggiungiamo alcune dipendenze nel
 
 .. code::
 
-    dependencies {
-    //Dipendenze generate dal Setup
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  dependencies {
+  //Dipendenze generate dal Setup
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-websocket'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     //Nuove dipendenze
     implementation 'org.webjars:webjars-locator-core'
@@ -566,7 +760,7 @@ Configurazione
 Il servizio viene configurato in SpringBoot da una classe che implementa l'interfaccia 
 ``WebSocketMessageBrokerConfigurer`` :
 
-.. code:: Java
+.. code:: java
 
    @Configuration
    @EnableWebSocketMessageBroker
@@ -685,6 +879,7 @@ quanto riguarda la parte relativa alla gestione della pagina e con nuove funzion
 la parte di interazione:
 
 .. code:: js
+
     //Parte di gestione pagina
     ...
 
@@ -732,21 +927,21 @@ rappresentati dalle classi ``InputMessage`` e ``OutputMessage`` .
    
    * - .. code:: Java
           
-          public class InputMessage {
-            private String name;
-            public InputMessage(String name) {
-                this.name = name;}
-            public String getName() {return name;}
-            public void setName(String name) {
-                this.name = name;}
-          }
+        public class InputMessage { 
+        private String name;
+        public InputMessage(String name) {
+            this.name = name;}
+        public String getName(){return name;}
+        public void setName(String name){
+            this.name = name;}
+        }
      - .. code:: Java
           
-        public class OutputMessage {
+        public class OutputMessage{
         private String content;
-        public OutputMessage(String content) {
+        public OutputMessage(String content){
             this.content = content; }
-        public String getContent() { 
+        public String getContent(){ 
             return content; }
         }
  
@@ -826,56 +1021,4 @@ Client (in Java per programmi)
     }
     }
  
-
-----------------
-OLD
-----------------
-
-
-https://spring.io/guides/gs/messaging-stomp-websocket/
-
-- Possibile premessa https://www.baeldung.com/intro-to-project-lombok
-- 
-- 
-  
-
-
-- Create a Resource Representation Class. HelloMessage. Spring will use the Jackson JSON library to automatically marshal instances of type Greeting into JSON.
--  model the greeting representation, Greeting
-- Create a Message-handling Controller. GreetingController
-  
-  .. code:: Java
-
-  	@MessageMapping("/hello")    
-      un msg inviato a /hello induce l'esecuzione del metodo con input un oggetto di tipo HelloMessage
-      ricavato dal payload del emssaggio
-    @SendTo("/topic/greetings")
-      induce a inviare la risposta del metodo a tutti i sottoscrittori di /topic/greetings
-
-- Configure Spring for STOMP messaging. WebSocketConfig
-- 
-  .. code:: Java
-
-    @Configuration
-    @EnableWebSocketMessageBroker
-    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-
-- Create a Browser Client . index.html
-- ./gradlew bootRun
-- java -jar build/libs/gs-messaging-stomp-websocket-0.1.0.jar
-
-
-https://www.baeldung.com/websockets-spring
-
-https://www.dariawan.com/series/build-spring-websocket-application/
-
-https://www.dariawan.com/tutorials/spring/spring-boot-websocket-basic-example/
-
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Esempio più articolato
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-https://www.dariawan.com/tutorials/spring/build-chat-application-using-spring-boot-and-websocket/
-
  
