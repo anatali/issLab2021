@@ -51,7 +51,7 @@
 <li><p><a class="reference internal" href="#propagazione-a-tutti-i-client" id="id10">Propagazione a tutti i client</a></p></li>
 <li><p><a class="reference internal" href="#un-client-in-java" id="id11">Un client in Java</a></p></li>
 <li><p><a class="reference internal" href="#introduzione-di-un-controller" id="id12">Introduzione di un Controller</a></p></li>
-<li><p><a class="reference internal" href="#gestione-di-immagini" id="id13">Gestione di immagini</a></p></li>
+<li><p><a class="reference internal" href="#trasferimento-di-immagini" id="id13">Trasferimento di immagini</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#websocket-in-springboot-versione-stomp" id="id14">WebSocket in SpringBoot: versione STOMP</a></p>
@@ -432,10 +432,26 @@ un servizio senza/con la possibilità di trasferire immagini.</p>
 </pre></div>
 </div>
 </section>
-<section id="gestione-di-immagini">
-<h3><a class="toc-backref" href="#id13">Gestione di immagini</a><a class="headerlink" href="#gestione-di-immagini" title="Permalink to this headline">¶</a></h3>
-<p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> usato da <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce funzioni per la gestione
-delle immagini.</p>
+<section id="trasferimento-di-immagini">
+<h3><a class="toc-backref" href="#id13">Trasferimento di immagini</a><a class="headerlink" href="#trasferimento-di-immagini" title="Permalink to this headline">¶</a></h3>
+<p>Il file file <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce una pagina che permette, oltre all’invio e ricezione di
+testi, il trasferimento di immagini.</p>
+<p>Questo file fa uso di <a class="reference external" href="https://getbootstrap.com/">Bootstrap</a>, una libreria  utile per realizzare pagine web reattive e
+mobile-first con HTML, CSS e JavaScript che usa il preprocessore CSS scritto in Ruby denominato <code class="docutils literal notranslate"><span class="pre">Sass</span></code>
+(<em>Syntactically Awesome Style Sheets</em>).</p>
+<p>Useremo questo tool attraverso i <a class="reference external" href="https://mvnrepository.com/artifact/org.webjars">webjars</a> (e la  <em>Content Delivery Network</em> (<span class="blue">CDN</span>) pubblica
+<a class="reference external" href="https://www.jsdelivr.com/">jsdelivr</a>).</p>
+<p>I <span class="blue">WebJar</span> (chee non sono legati a Spring) sono dipendenze lato client impacchettate in file JAR .</p>
+<p>..Per approfondire, si veda: <a class="reference external" href="https://www.baeldung.com/maven-webjars">https://www.baeldung.com/maven-webjars</a> e <a class="reference external" href="https://mvnrepository.com/artifact/org.webjars">https://mvnrepository.com/artifact/org.webjars</a>.</p>
+<p>Per l’uso di Bootstrap introduciamo in <em>build.gradle</em> le seguenti nuove dipendenze</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span>implementation &#39;org.webjars:webjars-locator-core&#39;
+implementation &#39;org.webjars:bootstrap:5.1.3&#39;
+implementation &#39;org.webjars:jquery:3.6.0&#39;
+</pre></div>
+</div>
+<p>Lo script  <code class="docutils literal notranslate"><span class="pre">wsalsoimages.js</span></code> usato da <code class="docutils literal notranslate"><span class="pre">indexAlsoImages.html</span></code> definisce funzioni per il trasferimento
+di immagini.</p>
+<p>Questo script è utilizzato dal</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span>sendImageButton.onclick = function (event) { //event is a PointerEvent
     let file = fileInput.files[0];  //file: object File
     sendMessage(file);

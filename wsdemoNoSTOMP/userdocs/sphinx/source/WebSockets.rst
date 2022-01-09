@@ -7,6 +7,10 @@
 .. _WebSocket: https://it.wikipedia.org/wiki/WebSocket
 .. _Springio: https://start.spring.io/
 .. _SockJs: https://openbase.com/js/sockjs/documentation#what-is-sockjs
+.. _Bootstrap: https://getbootstrap.com/
+.. _jsdelivr: https://www.jsdelivr.com/
+.. _webjars: https://mvnrepository.com/artifact/org.webjars
+.. _webjarsexplain: https://www.baeldung.com/maven-webjars 
  
 .. _`WebSockets`:
 
@@ -433,11 +437,42 @@ Il file ``indexNoImages.html`` è simile a al precedente indexNoImagesNoStomp_, 
     </html>
 
 +++++++++++++++++++++++++++++++++++++++++++++++
-Gestione di immagini
+Trasferimento di immagini
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzioni per la gestione 
-delle immagini.
+Il file file ``indexAlsoImages.html`` definisce una pagina che permette, oltre all'invio e ricezione di 
+testi, il trasferimento di immagini.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Bootstrap  e webJars
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Questo file fa uso di Bootstrap_, una libreria  utile per realizzare pagine web reattive e 
+mobile-first con HTML, CSS e JavaScript che usa il preprocessore CSS scritto in Ruby denominato ``Sass`` 
+(*Syntactically Awesome Style Sheets*).
+
+Useremo questo tool attraverso i webjars_ (e la  *Content Delivery Network* (:blue:`CDN`) pubblica 
+jsdelivr_).
+
+I :blue:`WebJar` (chee non sono legati a Spring) sono dipendenze lato client impacchettate in file JAR .
+
+..Per approfondire, si veda: https://www.baeldung.com/maven-webjars e https://mvnrepository.com/artifact/org.webjars. 
+
+Per l'uso di Bootstrap introduciamo in *build.gradle* le seguenti nuove dipendenze
+
+.. code:: java
+
+	implementation 'org.webjars:webjars-locator-core'
+	implementation 'org.webjars:bootstrap:5.1.3'
+	implementation 'org.webjars:jquery:3.6.0'
+
+
+
+
+Lo script  ``wsalsoimages.js`` usato da ``indexAlsoImages.html`` definisce funzioni per il trasferimento 
+di immagini.
+
+Questo script è utilizzato dal 
 
 .. code:: java
 
