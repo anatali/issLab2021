@@ -23,9 +23,9 @@ public class HIController {
 	@MessageMapping("/unibo")	 
 	@SendTo("/demoTopic/output")
 	public OutputMessage elabInput(InputMessage message) throws Exception {
-		System.out.println("HIController | elabInput  message=" + message.getName());
+		System.out.println("HIController | elabInput  message=" + message.getInput());
 		//HtmlUtils.htmlEscape prepara il nome nel messaggio di input ad essere reso nel DOM lato client
-		return new OutputMessage("Elaborated: " + HtmlUtils.htmlEscape(message.getName()) + " ");
+		return new OutputMessage("Elaborated: " + HtmlUtils.htmlEscape(message.getInput()) + " ");
 	}
 	
 }

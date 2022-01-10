@@ -1,7 +1,9 @@
 var socket;  //set by connect() called by the enduser
+var sockConnected = false;
 
 
 function setConnected(connected) {
+	sockConnected = connected;
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) { $("#conversation").show(); }
@@ -15,8 +17,6 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-
-
     function connect(){
         var host     = document.location.host;
         var pathname =  "/"; 	//document.location.pathname;
@@ -24,7 +24,7 @@ function disconnect() {
    
         // Assicura che sia aperta un unica connessione
         if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
-             console.log("Connessione WebSocket già stabilita");
+             console.log("Connessione WebSocket gia' stabilita");
         }
         //console.log(" connect addr" + addr ); //ws://localhost:8085/socket
         socket = new WebSocket(addr);
@@ -48,17 +48,14 @@ function disconnect() {
     }//connect
 
     function sendMessage(message) {
-    console.log("sendMessage " + message );
-        socket.send(message);
-        addMessageToWindow("Sent Message: " + message);
+        console.log("sendMessage " + message );
+        if( socket == null || ! sockConnected ) alert("Please connect ...");
+        else{
+            socket.send(message);
+            addMessageToWindow("Sent Message: " + message);
+        }
     }
     
-    function sendImage(file){
-    	console.log("sendImage " + file);
-        //let file = fileInput.files[0];  //file: object File
-        sendMessage(file);
-        //fileInput.value = null;    
-    }
 
     function addMessageToWindow(message) {
     	//console.log("addMessageToWindow " + message);
@@ -80,38 +77,8 @@ $(function () {
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#sendmsg" ).click(function() {  sendMessage($("#inputmsg").val()); });
     //$( "#sendImage" ).click(function() {  let f = $("#myfile"); console.log(  f.files ); sendImage(f); });
-    $( "#sendImage" ).click(function() {  let f = fileInput.files[0]; console.log(  f  ); sendImage(f); });
+    $( "#sendImage" ).click(function() {  let f = fileInput.files[0]; sendMessage(f); });
 });
 
-
- /*
-    const messageWindow   = document.getElementById("messages");
-    const imageWindow     = document.getElementById("images");
-
-    const connectButton   = document.getElementById("connect");
-
-    const sendButton      = document.getElementById("send");
-    const messageInput    = document.getElementById("message");
-
-    const fileInput       = document.getElementById("file");
-    const sendImageButton = document.getElementById("sendImage");
-*/
-
-  /*  
-    sendButton.onclick = function (event) {
-        sendMessage(messageInput.value);
-        messageInput.value = "";
-    };
-    
  
-    connectButton.onclick = function(event){
-    console.log("connect onclick:" + event.data );
-    	connect();
-    }
-
-    sendImageButton.onclick = function (event) { //PointerEvent
-        let file = fileInput.files[0];  //file: object File
-        sendMessage(file);
-        fileInput.value = null;
-    };
-*/
+ 

@@ -1,15 +1,15 @@
 package it.unibo.wsdemoSTOMP;
 
 public class InputMessage {
-	private String name;
-	public InputMessage() { this.name = "xxx"; }
-	public InputMessage(String name) {
-		this.name = name;
+	private String input;
+	public InputMessage() {  }
+	public InputMessage(String input) {
+		this.input = input;
 	}
-	public String getName() {
-		return name;
+	public String getInput() {
+		return input;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setInput(String name) {
+		this.input = input;
 	}
 }

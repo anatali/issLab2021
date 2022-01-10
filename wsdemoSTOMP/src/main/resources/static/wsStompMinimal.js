@@ -10,7 +10,7 @@
 
     function sendMessage(message) {
         //stompClient.send("/unibo/input", {}, JSON.stringify({'name': $("#inputmessage").val()}));
-        var jsonMsg = JSON.stringify( {'name': message});
+        var jsonMsg = JSON.stringify( {'input': message});
         stompClient.send( "/demoInput/unibo", {}, jsonMsg );
         addMessageToWindow("Sent Message: " + message ); //+ " stompClient=" + stompClient
     }
