@@ -52,12 +52,7 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 
 <p>I am <i>it.unibo.msenabler - templates/gui.html</i></p>
 
-<!--
-<form action="/movegui" method="post" enctype='text/plain'>
-	<input type="submit" style="font-size:15px;" value="open the move gui">
-</form>
-<br/><br/>
--->
+ 
 <form action="/on" method="post">
 	<input name="cmd" id="on" value="Led turnOn" style="font-size:15px;" >
 	<button>on</button>
@@ -86,7 +81,6 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 
 
 <h2>Current Led State=<span th:text="${ledstate}">unknown</span></h2>
-
 <div th:id=${ledgui} align="left"></div>
 
 <h2>Current distance=<span th:text="${sonardistance}">unknown</span></h2>

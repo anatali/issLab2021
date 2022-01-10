@@ -6,18 +6,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-//import it.unibo.enablerCleanArch.main.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
+
 
 @Controller
 public class HumanEnablerController {
+	private boolean basicGui = false;
+	
     public static RadarSystemDevicesOnRaspMqtt applMqtt;
 
     @Value("${unibo.application.name}")
@@ -31,8 +34,21 @@ public class HumanEnablerController {
         model.addAttribute("ledgui","ledOff");
         Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + applMqtt);
         Colors.out("HumanEnablerController sonar active=" + applMqtt.sonarIsactive()  );
-        return "gui";
+        basicGui = false;
+        return "RadarSystemUserConsole";
     }
+    @GetMapping("/basic")
+    public String basicPage(Model model) {
+        if( applMqtt == null ){ applMqtt = MsenablerApplication.sys; }
+        model.addAttribute("ledstate", "false (perhaps)");
+        model.addAttribute("arg", appName);
+        model.addAttribute("ledgui","ledOff");
+        Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + applMqtt);
+        Colors.out("HumanEnablerController sonar active=" + applMqtt.sonarIsactive()  );
+        basicGui = true;
+        return "RadarSystemUserGui";  
+    }
+
 
     //protected void activateTheDevices(){
     //    new RadarSystemDevicesOnRaspMqtt().doJob("RadarSystemConfig.json");
@@ -44,7 +60,7 @@ public class HumanEnablerController {
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
-        //System.out.println("HumanEnablerController doOn sys=" + sys  );
+    	Colors.out("HumanEnablerController doOn "   );
         //activateTheClient();
         //if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
         if( applMqtt != null ){
@@ -56,7 +72,7 @@ public class HumanEnablerController {
         }
         model.addAttribute("arg", appName+" After Led on");
         //model.addAttribute("ledstate", "ledOn");
-        return "gui";
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
 
@@ -69,12 +85,12 @@ public class HumanEnablerController {
         if( applMqtt != null ){
             applMqtt.ledActivate(false);
             String ledState = applMqtt.ledState();
-            System.out.println("HumanEnablerController doOff ledState=" + ledState  );
+            Colors.out("HumanEnablerController doOff ledState=" + ledState  );
             model.addAttribute("ledgui","ledOff");
             model.addAttribute("ledstate", ledState);
         }
          model.addAttribute("arg", appName+" After Led off");
-        return "gui";
+         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/doLedBlink" )
@@ -83,7 +99,7 @@ public class HumanEnablerController {
         if( applMqtt != null ) applMqtt.doLedBlink( );
         model.addAttribute("arg", appName+" After Led blink");
         model.addAttribute("ledstate","ledBlinking ...");
-        return "gui";
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/stopLedBlink" )
@@ -91,12 +107,12 @@ public class HumanEnablerController {
                                   String moveName, Model model){
         if( applMqtt != null ) applMqtt.stopLedBlink( );
         String ledState = applMqtt.ledState();
-        System.out.println("HumanEnablerController stopLedBlink ledState=" + ledState  );
+        Colors.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
         model.addAttribute("arg", appName+" After Led stop blink");
         if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
         else model.addAttribute("ledgui","ledOff");
         model.addAttribute("ledstate",ledState);
-        return "gui";
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/distance" )
@@ -112,7 +128,7 @@ public class HumanEnablerController {
         }
         model.addAttribute("arg", appName+" After distance");
         model.addAttribute("sonardistance",d);
-        return "gui";
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @ExceptionHandler

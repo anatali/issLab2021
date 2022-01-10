@@ -11,7 +11,7 @@ Welcome to websocket's documentation!
    :caption: Contents:
 
    WebSockets
-
+ 
 
 .. Indices and tables
 .. ==================

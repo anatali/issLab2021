@@ -553,6 +553,7 @@ Struttura generale del file indexAlsoImages.html
       <!-- Area di output                            -->
     </div>
     </body>
+    <script src="wsalsoimages.js"></script>
 
 Notiamo la necessità dell'uso di un WebJarsContainer_ come elemento-base del layout Bootstrap.
 
@@ -1041,7 +1042,7 @@ Pagina indexBetter.html
 Il file  ``indexBetter.html`` restituito da ``HIController`` nella richiesta   */better* 
 è simile a `indexAlsoImages`_ e fa uso del file  ``wsStompBetter.js`` simile a  `wsalsoimages`_
 
-
+ 
  
 
 
