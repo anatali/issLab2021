@@ -12,7 +12,7 @@ public class HIController {
 	@RequestMapping("/")
 	public String entryMinimal() {
 		System.out.println("HIController | entryMinimal   "  );
-		return "indexNoImages"; //usa wsStompMinimal.js
+		return "indexNaive"; //usa wsStompMinimal.js
 	}
 
 	@RequestMapping("/better")

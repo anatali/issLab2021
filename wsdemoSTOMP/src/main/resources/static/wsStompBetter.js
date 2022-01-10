@@ -3,28 +3,36 @@ var stompClient = null;
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
+    if (connected) { $("#conversation").show(); }
+    else { $("#conversation").hide(); }
     $("#output").html("");
 }
 
 function connect() {
-        //var socket  = new SockJS('/stomp-websocket');
-        var host     = document.location.host;
-        //var pathname = document.location.pathname;
-        var addr     = "ws://" + host + "/unibo"  ; //stomp-websocket
-        console.log(addr);
+    //var socket  = new SockJS('/stomp-websocket');
+    var host     = document.location.host;
+    //var pathname = document.location.pathname;
+    var addr     = "ws://" + host + "/unibo"  ;
+    console.log("connect addr="+addr);
     var socket = new WebSocket(addr);
+
+/*
+        socket.onopen = function (event) {
+        	setConnected(true);
+            showMsg("Connected");
+        };
+
+        socket.onmessage = function (event) {
+             //console.log("onmessage event=" + event.data );
+             showMsg(`Got Message: ${event.data}`);
+        }
+*/
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/demoTopic/output', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        console.log('stompClient connected: ' + frame);
+        stompClient.subscribe('/demoTopic/output', function (info) {
+            showMsg(JSON.parse(info.body).content);
         });
     });
 }
@@ -37,21 +45,19 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    console.log("sendName");
-    stompClient.send("/demoInput/unibo", {}, JSON.stringify({'name': $("#name").val()}));
+function sendMsg() {
+    console.log("sendMsg");
+    stompClient.send("/demoInput/unibo", {}, JSON.stringify({'input': $("#input").val()}));
 }
 
-function showGreeting(message) {
+function showMsg(message) {
     $("#output").append("<tr><td>" + message + "</td></tr>");
 }
 
 $(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
+    $("form").on('submit', function (e) { e.preventDefault(); });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $( "#send" ).click(function() { sendMsg(); });
 });
 

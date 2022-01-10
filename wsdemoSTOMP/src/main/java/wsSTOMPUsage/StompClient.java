@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class StompClient {
 
-    private static final String URL = "ws://localhost:8080/unibo";  
+    private static final String URL = "ws://localhost:8087/unibo";
 
     private static WebSocketStompClient stompClient;
 

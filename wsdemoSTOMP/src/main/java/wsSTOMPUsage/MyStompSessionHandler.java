@@ -45,7 +45,6 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter {
     private InputMessage getSampleMessage() {
         InputMessage msg = new InputMessage();
         msg.setInput("Nicky");
-        //msg.setText("Howdy!!");
         return msg;
     }
 }
