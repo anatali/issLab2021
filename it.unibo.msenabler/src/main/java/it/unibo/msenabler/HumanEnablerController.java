@@ -3,16 +3,10 @@ package it.unibo.msenabler;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
-
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.SendTo;
-//import org.springframework.messaging.handler.annotation.MessageMapping;
-//import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,8 +26,8 @@ public class HumanEnablerController {
     @Value("${unibo.application.name}")
     String appName;
 
-    //@GetMapping("/")
-    @RequestMapping("/")
+    @GetMapping("/")
+    //@RequestMapping("/")
     public String welcomePage(Model model) {
     	
         if( applMqtt == null ){ applMqtt = MsenablerApplication.sys; }
@@ -59,19 +53,10 @@ public class HumanEnablerController {
     }
 
 
-    //protected void activateTheDevices(){
-    //    new RadarSystemDevicesOnRaspMqtt().doJob("RadarSystemConfig.json");
-    //}
-//    protected void activateTheClient(){
-//        sysClient = new RadarSystemMainOnPcMqtt();
-//    }
-
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
     	Colors.out("HumanEnablerController doOn "   );
-        //activateTheClient();
-        //if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
         if( applMqtt != null ){
             applMqtt.ledActivate(true);
             String ledState = applMqtt.ledState();
@@ -80,7 +65,6 @@ public class HumanEnablerController {
             model.addAttribute("ledstate", ledState);
         }
         model.addAttribute("arg", appName+" After Led on");
-        //model.addAttribute("ledstate", "ledOn");
         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
@@ -169,9 +153,6 @@ public class HumanEnablerController {
             	}
             }.start();
         }
-//        model.addAttribute("arg", appName+" After distance");
-//        model.addAttribute("sonardistance",d);
-          //if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     

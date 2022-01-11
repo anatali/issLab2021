@@ -13,8 +13,6 @@ public static RadarSystemDevicesOnRaspMqtt sys ;
 		SpringApplication.run(MsenablerApplication.class, args);
 		sys = new RadarSystemDevicesOnRaspMqtt();
 		sys.doJob("RadarSystemConfig.json");
-		//Utils.delay(1000);
-		//HumanEnablerController.sysClient = new RadarSystemMainOnPcMqtt();
 	}
 
 }

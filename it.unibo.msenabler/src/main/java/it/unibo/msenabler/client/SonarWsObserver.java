@@ -100,7 +100,7 @@ public class SonarWsObserver {
         try {
             // open websocket
             SonarWsObserver clientEndPoint =
-                    new SonarWsObserver(new URI("ws://localhost:8081/sonarsocket"));
+                    new SonarWsObserver(new URI("ws://192.168.1.113:8081/sonarsocket"));
 
             // add listener
             clientEndPoint.addMessageHandler(new IMessageHandler() {
@@ -114,7 +114,7 @@ public class SonarWsObserver {
 
 
             // wait for messages from websocket
-            Utils.delay(30000);
+            Utils.delay(6000000);
 
         }  catch (URISyntaxException ex) {
             System.err.println("URISyntaxException exception: " + ex.getMessage());

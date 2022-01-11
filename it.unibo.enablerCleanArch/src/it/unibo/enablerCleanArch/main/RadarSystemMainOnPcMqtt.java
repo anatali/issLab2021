@@ -88,11 +88,12 @@ private boolean ledblinking = false;
 	
 	public void execute() {
  		
-//		ledActivate(true);		
+ 		ledActivate(true);		
 //		Colors.outappl("Led state="+ledState(), Colors.GREEN);
-// 		Utils.delay(2000);
-// 		ledActivate(false);
-//		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+//  		Utils.delay(1000);
+ 		ledActivate(false);
+		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+ 		//Utils.delay(5000);
 
 //		doLedBlink();
 //		Utils.delay(3000);
@@ -101,20 +102,22 @@ private boolean ledblinking = false;
 //		String ledstate = ledState(   );
 //		Colors.outappl("Led state="+ledstate, Colors.GREEN);
 		
-		sonarClient.activate();
-		while( sonarClient.isActive() ) {
-			Utils.delay(800);
-			String sonarstate = sonarDistance(   );
-			Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
-			break;
+ 		 
+		for( int i=1; i<=3; i++) {
+			sonarClient.activate();
+			while( sonarClient.isActive() ) {
+				//Utils.delay(800);
+				String sonarstate = sonarDistance(   );
+				Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
+				break;
+			}
+			sonarClient.deactivate();
 		}
-		sonarClient.deactivate();
-		
 		terminate();
 	}
 
 	public void terminate() {
-		System.exit(0);
+		//System.exit(0);
 	}
 
  

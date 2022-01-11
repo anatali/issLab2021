@@ -60,7 +60,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
      }
 
     protected void sendToAll(TextMessage message) throws IOException{
-        Colors.outappl("WebSocketHandler | sendToAll " + sessions.size(), Colors.ANSI_PURPLE );
+        Colors.outappl("WebSocketHandler | sendToAll " + sessions.size() + " " + message , Colors.ANSI_PURPLE );
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             iter.next().sendMessage(message);
