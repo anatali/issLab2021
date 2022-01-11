@@ -140,7 +140,6 @@ public class HumanEnablerController {
     }
 
     @PostMapping( path = "/sonardataon" )
-    @SendTo("/sonarsocket")
     public String sonardataon(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
     	if( sonarDataOn ) {
@@ -160,8 +159,10 @@ public class HumanEnablerController {
                         //update on ws
                         try {
 							h.sendToAll( d );
-						} catch (IOException e) {
+						} catch (Exception e) {
  							Colors.outerr("ws update ERROR:" + e.getMessage());
+ 							sonarDataOn = false;
+ 							applMqtt.sonarDectivate();
 						}
                     }   
                     sonarDataOn = false;
