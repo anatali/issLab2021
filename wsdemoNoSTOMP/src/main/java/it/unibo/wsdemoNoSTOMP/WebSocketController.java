@@ -9,12 +9,12 @@ Optional: utile per eseguire più casi di studio
 @Controller
 public class WebSocketController {
 
-    @RequestMapping("/")
+    @RequestMapping("/basic")
     public String textOnly() {
         return "indexNoImages";
     }
 
-    @RequestMapping("/alsoimages")
+    @RequestMapping("/")
     public String alsoImages() {
         return "indexAlsoImages";
     }

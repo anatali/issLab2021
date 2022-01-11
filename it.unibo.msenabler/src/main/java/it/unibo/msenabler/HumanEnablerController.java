@@ -2,42 +2,51 @@ package it.unibo.msenabler;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
+
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
 
 
 @Controller
 public class HumanEnablerController {
-	private boolean basicGui = false;
-	
+	private boolean basicGui    = false;
+	private boolean sonarDataOn = false;
     public static RadarSystemDevicesOnRaspMqtt applMqtt;
 
     @Value("${unibo.application.name}")
     String appName;
 
-    @GetMapping("/")
+    //@GetMapping("/")
+    @RequestMapping("/")
     public String welcomePage(Model model) {
+    	
         if( applMqtt == null ){ applMqtt = MsenablerApplication.sys; }
         model.addAttribute("ledstate", "false (perhaps)");
         model.addAttribute("arg", appName);
         model.addAttribute("ledgui","ledOff");
         Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + applMqtt);
         Colors.out("HumanEnablerController sonar active=" + applMqtt.sonarIsactive()  );
+        
         basicGui = false;
         return "RadarSystemUserConsole";
     }
-    @GetMapping("/basic")
+    @RequestMapping("/basic")
     public String basicPage(Model model) {
         if( applMqtt == null ){ applMqtt = MsenablerApplication.sys; }
         model.addAttribute("ledstate", "false (perhaps)");
@@ -122,15 +131,56 @@ public class HumanEnablerController {
         Colors.out("HumanEnablerController DISTANCE - sonar active=" + applMqtt.sonarIsactive()  );
         if( applMqtt != null ){
             if( ! applMqtt.sonarIsactive() ) applMqtt.sonarActivate();
-            //it.unibo.enablerCleanArch.supports.Utils.delay(1000);
             d = applMqtt.sonarDistance();
             Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
-        }
+        }            	
         model.addAttribute("arg", appName+" After distance");
         model.addAttribute("sonardistance",d);
         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
+    @PostMapping( path = "/sonardataon" )
+    @SendTo("/sonarsocket")
+    public String sonardataon(@RequestParam(name="cmd", required=false, defaultValue="")
+                                  String moveName, Model model){      
+    	if( sonarDataOn ) {
+    		if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    	}
+        Colors.out("HumanEnablerController sonardataon - sonar active=" + applMqtt.sonarIsactive()  );
+        if( applMqtt != null ){
+            if( ! applMqtt.sonarIsactive() ) applMqtt.sonarActivate();
+            sonarDataOn = true;
+            WebSocketHandler h = WebSocketHandler.getWebSocketHandler();
+            new Thread() {
+            	public void run() {
+                    while( applMqtt.sonarIsactive() && sonarDataOn ) {
+                    	String d = applMqtt.sonarDistance();
+                    	Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
+                        Utils.delay(RadarSystemConfig.sonarDelay);
+                        //update on ws
+                        try {
+							h.sendToAll( d );
+						} catch (IOException e) {
+ 							Colors.outerr("ws update ERROR:" + e.getMessage());
+						}
+                    }   
+                    sonarDataOn = false;
+            	}
+            }.start();
+        }
+//        model.addAttribute("arg", appName+" After distance");
+//        model.addAttribute("sonardistance",d);
+          //if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+    
+    @PostMapping( path = "/sonardataoff" )
+    public String sonardataoff(@RequestParam(name="cmd", required=false, defaultValue="")
+                                  String moveName, Model model){      
+    	sonarDataOn = false;
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+    
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
         HttpHeaders responseHeaders = new HttpHeaders();
