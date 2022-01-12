@@ -41,7 +41,8 @@ protected String topic;
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
 protected String clientid;
 protected MqttCallback handler;
- 	
+protected String brokerAddr;
+
     public MqttSupport() {
     	
     }
@@ -52,8 +53,9 @@ protected MqttCallback handler;
     
 	public void connect(String clientid, String topic, String brokerAddr) {
 		try {
-			this.clientid = clientid;
-			this.topic    = topic;
+			this.clientid   = clientid;
+			this.topic      = topic;
+			this.brokerAddr = brokerAddr;
 			client        = new MqttClient(brokerAddr, clientid);
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setKeepAliveInterval(480);
@@ -90,12 +92,13 @@ protected MqttCallback handler;
 		try {
 			client.setCallback( callback );	
 			client.subscribe(topic);			
-			Colors.out("subscribe " + clientid + " topic=" + topic + " blockingQueue=" + blockingQueue, Colors.ANSI_YELLOW);
+			Colors.out("subscribe " + clientid + " topic=" + topic + " blockingQueue=" + blockingQueue, Colors.BLUE);
 		} catch (MqttException e) {
 			Colors.outerr("MqttSupport  | subscribe Error:" + e.getMessage());
 		}
 	}
 	
+	private int nattempts = 0;
 	public void publish(String topic, String msg, int qos, boolean retain) {
 		MqttMessage message = new MqttMessage();
 		if (qos == 0 || qos == 1 || qos == 2) {
@@ -108,6 +111,10 @@ protected MqttCallback handler;
 			client.publish(topic, message);
 		} catch (MqttException e) {
 			Colors.outerr("MqttSupport  | publish Error:" + e.getMessage());
+			if( nattempts++ <= 2 ) {
+				connectMqtt( clientid,  topic,  handler);
+				publish(  topic,   msg,   qos,   retain);
+			}else nattempts = 0;
 		}
 	}
 	

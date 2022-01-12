@@ -87,12 +87,13 @@ private boolean ledblinking = false;
 	}
 	
 	public void execute() {
- 		
+		//sonarClient.deactivate();
+		
  		ledActivate(true);		
-//		Colors.outappl("Led state="+ledState(), Colors.GREEN);
-//  		Utils.delay(1000);
+ 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+  		Utils.delay(1000);
  		ledActivate(false);
-		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
  		//Utils.delay(5000);
 
 //		doLedBlink();
@@ -103,21 +104,27 @@ private boolean ledblinking = false;
 //		Colors.outappl("Led state="+ledstate, Colors.GREEN);
 		
  		 
-		for( int i=1; i<=3; i++) {
+		//for( int i=1; i<=3; i++) {
 			sonarClient.activate();
-			while( sonarClient.isActive() ) {
-				//Utils.delay(800);
-				String sonarstate = sonarDistance(   );
-				Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
-				break;
+			while( ! sonarClient.isActive() ) {
+				Colors.outappl("Sonar not active .. =", Colors.GREEN);
+				Utils.delay(500);
 			}
+			//if( sonarClient.isActive() ) {
+				for( int i=1; i<=3; i++) {
+	 				String sonarstate = sonarDistance(   );
+					Colors.outappl("Sonar state="+sonarstate, Colors.GREEN);
+					Utils.delay(500);
+				}
+ 			//}
+				//Utils.delay(800);
 			sonarClient.deactivate();
-		}
+		//}
 		terminate();
 	}
 
 	public void terminate() {
-		//System.exit(0);
+		System.exit(0);
 	}
 
  

@@ -17,9 +17,6 @@
 
 .. _`WebSockets`:
 
-======================================
-Web sockets
-======================================
 WebSocket_ è un protocollo che consente a due o più computer di comunicare tra loro  
 in modo full-duplex su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi 
@@ -529,7 +526,7 @@ I :blue:`WebJar` (chee non sono legati a Spring) sono dipendenze lato client imp
 Per approfondire, si veda: WebJarsDocs_ e WebJarsExamples_.
 
 
-.. _indexAlsoImages:
+.. _indexAlsoImagesHtml:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Struttura generale del file indexAlsoImages.html

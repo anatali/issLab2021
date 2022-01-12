@@ -18,7 +18,7 @@ ISonar sonar;
  
 		@Override
 		public void elaborate( ApplMessage message, Interaction2021 conn ) {
-			Colors.out(name+ " | elaborate ApplMessage " + message + " conn=" + conn, Colors.ANSI_YELLOW);
+			Colors.out(name+ " | elaborate ApplMessage " + message + " conn=" + conn, Colors.BLUE);
 			String payload = message.msgContent();
 			if( message.isRequest() ) {
 				if(payload.equals("getDistance") ) {
@@ -35,11 +35,11 @@ ISonar sonar;
 		
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
- 				Colors.out(name+ " | elaborate " + message + " conn=" + conn, Colors.ANSI_YELLOW);
+ 				Colors.out(name+ " | elaborate " + message + " conn=" + conn, Colors.BLUE);
  				if( message.equals("getDistance")) {
- 	 				//Colors.out(name+ " | elaborate getDistance="  , Colors.ANSI_YELLOW);
+ 	 				//Colors.out(name+ " | elaborate getDistance="  , Colors.BLUE);
 					String vs = ""+sonar.getDistance().getVal();
- 	 				//Colors.out(name+ " | elaborate vs=" + vs, Colors.ANSI_YELLOW);
+ 	 				//Colors.out(name+ " | elaborate vs=" + vs, Colors.BLUE);
 					this.sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
  					sonar.activate();

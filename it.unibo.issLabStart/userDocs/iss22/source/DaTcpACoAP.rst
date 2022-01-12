@@ -689,7 +689,7 @@ La costruzione della ``LedResourceCoap`` provoca la attivazione di una versione 
 del ``CoAPServer`` (un singleton di classe ``CoAPApplServer``),  se non già avvenuta in precedenza. 
 
 ++++++++++++++++++++++++++++++++++++
-Esecuzione 
+Esecuzione di LedUsageMain
 ++++++++++++++++++++++++++++++++++++
 La fase di esecuzione 
 
@@ -893,9 +893,9 @@ Tutti i programmi:
 
 .. _CoapApplObserver:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-CoapApplObserver
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. CoapApplObserver
+.. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 
@@ -917,9 +917,9 @@ CoapApplObserver
 
 .. _SonarDistanceHandler:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SonarDistanceHandler
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. SonarDistanceHandler
+.. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 

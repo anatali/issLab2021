@@ -15,13 +15,13 @@ protected String name;
    
  	public ApplMsgHandler( String name  ) {  
 		this.name = name;
-		//Colors.out(name + " | CREATING ... ", Colors.ANSI_YELLOW );
+		//Colors.out(name + " | CREATING ... ", Colors.BLUE );
 	}
    	
  	//Warning: le risposte sono messaggi 'unstructured'
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
- 			Colors.out(name + " | ApplMsgHandler sendMsgToClient message=" + message + " conn=" + conn, Colors.ANSI_YELLOW);
+ 			Colors.out(name + " | ApplMsgHandler sendMsgToClient message=" + message + " conn=" + conn, Colors.BLUE);
 // 			if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
 // 				String reply = Utils.buildReply("sender", "msgid", message, "dest").toString();
 // 				conn.forward( reply );

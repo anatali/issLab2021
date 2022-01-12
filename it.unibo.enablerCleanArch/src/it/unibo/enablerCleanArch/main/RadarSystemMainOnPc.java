@@ -27,15 +27,16 @@ private IRadarDisplay radar = null;
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
 			RadarSystemConfig.simulation   		= false;
-			RadarSystemConfig.raspHostAddr 		= "localhost"; //"192.168.1.183";
+			RadarSystemConfig.raspHostAddr 		= "192.168.1.15"; //"192.168.1.183";
 			RadarSystemConfig.SonareRemote 		= true;
 			RadarSystemConfig.LedRemote    		= true;
-			RadarSystemConfig.ControllerRemote  = true;
+			RadarSystemConfig.ControllerRemote  = false;
 			RadarSystemConfig.sonarPort    		= 8012;
 			RadarSystemConfig.ledPort      		= 8010;
 			RadarSystemConfig.radarGuiPort    	= 8014;
 			RadarSystemConfig.withContext  		= true;
 			RadarSystemConfig.ctxServerPort		= 8018;
+			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
 		}

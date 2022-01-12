@@ -43,7 +43,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
  	@Override
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
- 			Colors.out(name + " | sendMsgToClient message=" + message + " conn=" + conn, Colors.ANSI_YELLOW);
+ 			Colors.out(name + " | sendMsgToClient message=" + message + " conn=" + conn, Colors.BLUE);
    			String reply = Utils.buildReply("sender", "msgid", message, "dest").toString();
  			conn.forward( reply );
   		} catch (Exception e) {
