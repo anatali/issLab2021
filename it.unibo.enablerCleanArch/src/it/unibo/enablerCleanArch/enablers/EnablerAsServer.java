@@ -31,9 +31,11 @@ protected boolean isactive = false;
 			Colors.outerr(name+" |  CREATE Error: " + e.getMessage()  );
 		}
 	}
+	
+	//TODO Better to define EnablerAsServerMqtt
 	public EnablerAsServer( String name, String topic, IApplMsgHandler handler )   { //, String handlerClassName
 		this.name     			= name;
-		MqttSupport mqtt = new MqttSupport();
+		MqttSupport mqtt        = new MqttSupport();
 		mqtt.connectMqtt(name,topic, handler);
 		Colors.out(name+" |  CREATED  MqttSupport  handler="+handler);
 	}

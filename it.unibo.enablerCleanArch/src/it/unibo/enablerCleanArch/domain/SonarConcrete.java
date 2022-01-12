@@ -1,7 +1,10 @@
 package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 
 /*
@@ -11,7 +14,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	private int numData           = 3; 
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;
-	private String lastData       = "";
+	private int lastSonarVal      = 0;
 	@Override
 	protected void sonarSetUp() {
  		try {
@@ -21,14 +24,14 @@ public class SonarConcrete extends SonarModel implements ISonar{
        		Colors.outerr("SonarConcrete | activate ERROR " + e.getMessage() );
     	}
 	}
-	@Override
-	protected void updateDistance( int d ) {
- 		curVal = new Distance( d );
-  	}	
-	@Override
-	public IDistance getDistance() {
-		return curVal;
-	}
+//	@Override
+//	protected void updateDistance( int d ) {
+// 		curVal = new Distance( d );
+//  	}	
+//	@Override
+//	public IDistance getDistance() {
+//		return curVal;
+//	}
 
 	@Override
 	protected void sonarProduce( ) {
@@ -36,12 +39,16 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			String data = reader.readLine();
 			if( data == null ) return;
 			dataCounter++;
+			
 			if( dataCounter % numData == 0 ) { //every numData ...				
- 				if( ! lastData.equals(data) ) {
- 					Colors.out("SonarConcrete | data=" + data );
- 				}
- 				lastData = data;
- 				updateDistance( Integer.parseInt(data));
+				int v = Integer.parseInt(data);
+				//Colors.out("SonarConcrete | v=" + v );
+				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
+					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistremia stream
+ 					Colors.out("SonarConcrete updateDistance | v=" + v );
+ 					lastSonarVal = v;
+ 	 				updateDistance( v );
+				}
  				//Utils.delay(RadarSystemConfig.sonarDelay);
 			}
        }catch( Exception e) {

@@ -1,11 +1,9 @@
 package it.unibo.enablerCleanArch.supports.mqtt;
 
 import java.util.concurrent.BlockingQueue;
-
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 

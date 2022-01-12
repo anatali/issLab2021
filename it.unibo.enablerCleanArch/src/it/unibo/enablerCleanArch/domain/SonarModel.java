@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public abstract class SonarModel  implements ISonar{  
-public final static int queueSize = 10;
+public final static int queueSize = 1;  //backpressure to the production
 protected  IDistance curVal = new Distance(90);	 
 protected BlockingQueue<IDistance> blockingQueue = new LinkedBlockingDeque<IDistance>(queueSize);
 protected boolean stopped  = true;
@@ -34,7 +34,7 @@ protected boolean stopped  = true;
 	protected void updateDistance( int d ) {
 		try {
 			curVal = new Distance( d );
-			//Colors.out("SonarModel | updateDistance "+ d);
+			Colors.out("SonarModel | updateDistance "+ d);
 			blockingQueue.put( curVal );
 		} catch (InterruptedException e) {
 			Colors.outerr("SonarModel | updateDistance ERROR:"+e.getMessage());
@@ -66,6 +66,7 @@ protected boolean stopped  = true;
 		curVal = new Distance( 90 );
 		Colors.out("SonarModel | activate", Colors.GREEN);
 		stopped = false;
+		blockingQueue.clear();
 		new Thread() {
 			public void run() {
 				while( ! stopped  ) {
@@ -81,9 +82,10 @@ protected boolean stopped  = true;
 	public void deactivate() {
 		Colors.out("SonarModel | deactivate", Colors.GREEN);
 		stopped = true;
+		blockingQueue.clear();  //IMPORTANT if queueSize > 1
 	}
 
 }
 
-
+  
 
