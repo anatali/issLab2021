@@ -28,7 +28,7 @@ protected boolean stopped  = true;
 	}	
 	
 	protected SonarModel() {//hidden costructor, to force setup
-		sonarSetUp();
+		sonarSetUp();  //Lo mettiamo anche in activate
 	}
 	
 	protected void updateDistance( int d ) {
@@ -64,6 +64,7 @@ protected boolean stopped  = true;
 	@Override
 	public void activate() {
 		curVal = new Distance( 90 );
+		//sonarSetUp(); 
 		Colors.out("SonarModel | activate", Colors.GREEN);
 		stopped = false;
 		blockingQueue.clear();

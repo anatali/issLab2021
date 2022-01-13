@@ -110,11 +110,13 @@ protected String brokerAddr;
 			message.setPayload(msg.getBytes());		 
 			client.publish(topic, message);
 		} catch (MqttException e) {
-			Colors.outerr("MqttSupport  | publish Error:" + e.getMessage());
-			if( nattempts++ <= 2 ) {
-				connectMqtt( clientid,  topic,  handler);
-				publish(  topic,   msg,   qos,   retain);
-			}else nattempts = 0;
+			Colors.outerr("MqttSupport  | publish Error " + nattempts + ":" + e.getMessage());
+			if( nattempts++ > 3 ) { 
+				Colors.outerr("MqttSupport  | publish NO MORE POSSIBLE"  );
+				System.exit(10);
+				//connectMqtt( clientid,  topic,  handler);
+				//publish(  topic,   msg,   qos,   retain);
+			} 
 		}
 	}
 	

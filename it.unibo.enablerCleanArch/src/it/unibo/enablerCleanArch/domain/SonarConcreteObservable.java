@@ -10,19 +10,23 @@ public class SonarConcreteObservable extends SonarModelObservable   {
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;
 	private int lastSonarVal      = 0;
+	private Process p             = null;
 	 
 	@Override
 	protected void sonarSetUp() {
 		super.sonarSetUp();
- 		try {
-			Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
-	        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-	        Colors.out("SonarConcreteObservable | sonarSetUp done");
+ 		try { 
+ 			if( p == null ) {
+		        Colors.out("SonarConcreteObservable | sonarSetUp ");
+				p          = Runtime.getRuntime().exec("sudo ./SonarAlone");
+		        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+ 		}
        	}catch( Exception e) {
        		Colors.outerr("SonarConcreteObservable | sonarSetUp ERROR " + e.getMessage() );
     	}
 	} 	
 
+	//Identical to SonarConcrete
 	@Override
 	protected void sonarProduce( ) {
         try {
@@ -32,19 +36,28 @@ public class SonarConcreteObservable extends SonarModelObservable   {
 			
 			if( dataCounter % numData == 0 ) { //every numData ...				
 				int v = Integer.parseInt(data);
-				//Colors.out("SonarConcrete | v=" + v );
+				//Colors.out("SonarConcreteObservable | v=" + v );
 				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
 					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistremia stream
- 					Colors.out("SonarConcrete updateDistance | v=" + v );
+ 					Colors.out("SonarConcreteObservable call updateDistance | v=" + v );
  					lastSonarVal = v;
  	 				updateDistance( v );
 				}
  				//Utils.delay(RadarSystemConfig.sonarDelay);
 			}
        }catch( Exception e) {
-       		Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
+       		Colors.outerr("SonarConcreteObservable | sonarProduce: " + e.getMessage() );
        }		
 	}
 
+	@Override
+	public void deactivate() {
+		Colors.out("SonarConcreteObservable | deactivate", Colors.GREEN);
+		if( p != null ) {
+			p.destroy();  //Block the runtime process
+			p=null;
+		}
+		super.deactivate();
+ 	}
   
 }

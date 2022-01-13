@@ -35,7 +35,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 //		return curVal;
 //	}
 
-	//Identical to SonarConcrete
+	
 
 	@Override
 	protected void sonarProduce( ) {

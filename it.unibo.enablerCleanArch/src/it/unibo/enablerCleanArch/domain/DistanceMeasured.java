@@ -13,9 +13,10 @@ private IDistance d;
 	@Override
 	public void setVal( IDistance v ) {
 		d = v;
-		//Colors.out("DistanceMeasured setVal="+v, Colors.RED);
+		Colors.out("DistanceMeasured setVal="+v, Colors.ANSI_YELLOW);
 		setChanged();
-	    notifyObservers( ""+d.getVal() );		
+		Colors.out("DistanceMeasured setVal="+v + " hasChanged=" + hasChanged(), Colors.ANSI_YELLOW);
+	    notifyObservers( d );		
 	}
 	@Override
 	public IDistance getDistance(   ) {
