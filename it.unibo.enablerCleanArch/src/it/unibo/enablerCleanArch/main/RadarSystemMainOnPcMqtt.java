@@ -47,7 +47,7 @@ private boolean ledblinking = false;
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
 		String ctxTopic       = "topicCtxMqtt";
- 		ledClient            = new LedProxyAsClient("clientLed", host, ctxTopic, protocol );
+ 		ledClient             = new LedProxyAsClient("clientLed", host, ctxTopic, protocol );
  		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
 	} 
 	

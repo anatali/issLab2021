@@ -1,10 +1,16 @@
 package it.unibo.enablerCleanArch.domain;
 
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 
 public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
 	protected IDistanceMeasured observableDistance  ;		
  		
+	public static ISonarObservable create() {
+		if( RadarSystemConfig.simulation )  return new SonarMockObservable();
+		else  return new SonarConcreteObservable();		
+	}
+
 	@Override
 	protected void sonarSetUp() {
 		observableDistance = new DistanceMeasured( );
@@ -12,11 +18,15 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
  		observableDistance.setVal(curVal);
  	} 	
 	
+ 
+	
  	@Override  //from SonarModel
 	protected void updateDistance( int d ) {
-		//Colors.out("SonarModelObservable | updateDistance d="+d, Colors.GREEN);
+		curVal = new Distance( d );
+		Colors.out("SonarModelObservable | updateDistance d="+curVal.getVal(), Colors.GREEN);
 		observableDistance.setVal( curVal );    //notifies the observers 
- 		super.updateDistance(d);	            //pone curVal nella coda per getDistance
+		//Non aggiorniamo la coda perchè per un observable non ci sono consumatori
+ 		//super.updateDistance(d);	             
 	}
 
  	@Override

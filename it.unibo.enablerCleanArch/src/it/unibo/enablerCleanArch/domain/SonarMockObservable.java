@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMockObservable extends SonarModelObservable   {
-  
+	
 	@Override
 	protected void sonarProduce() {
 		if( RadarSystemConfig.testing ) {
@@ -14,7 +14,7 @@ public class SonarMockObservable extends SonarModelObservable   {
 		}else {
 			int v = curVal.getVal() - 1;
 			updateDistance( v );			    
- 			if( blockingQueue.size() > 7) Colors.out("SonarMock | queue size="+blockingQueue.size(), Colors.RED);
+ 			//if( blockingQueue.size() > 7) Colors.out("SonarMockObservable | queue size="+blockingQueue.size(), Colors.RED);
 			stopped = ( v == 0 );
 			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
 		}		

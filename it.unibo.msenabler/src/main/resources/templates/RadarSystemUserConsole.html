@@ -52,10 +52,46 @@ Pulsanti di invio comandi
        <div class="row">
         <div class="col-md-6">
         <h3>Led commands</h3>
+        <table>
+        <tr>
+        <td>
             <form class="form-inline" action="/on" method="post">
             <div class="form-group">
-                    <button id="on" type="submit">Led TutnOn</button>
+                    <button id="on" type="submit">Led TutnOn</button>                     
+             </div>
+            </form>
+        </td>
+       <td>
+            <form class="form-inline" action="/off" method="post">
+            <div class="form-group">
+                     <button id="off" type="submit">Led TutnOff</button>
                       
+            </div>
+            </form>
+        </td>
+       <td>
+             <form class="form-inline" action="/doLedBlink" method="post">
+            <div class="form-group">
+                     <button id="doLedBlink" type="submit">Start led blinking</button>
+                      
+            </div>
+            </form>
+        </td>
+       <td>
+              <form class="form-inline" action="/stopLedBlink" method="post">
+            <div class="form-group">
+                     <button id="stopLedBlink" type="submit">Stop led blinking</button>
+                      
+            </div>
+            </form>     
+        </td>
+        </tr>
+        </table>
+        
+        <!--
+            <form class="form-inline" action="/on" method="post">
+            <div class="form-group">
+                    <button id="on" type="submit">Led TutnOn</button>                     
              </div>
             </form>
             <form class="form-inline" action="/off" method="post">
@@ -75,36 +111,60 @@ Pulsanti di invio comandi
                      <button id="stopLedBlink" type="submit">Stop led blinking</button>
                       
             </div>
-            </form>     
+            </form>    --> 
  
  <br/> 
 <h4>Current Led State=<span th:text="${ledstate}">unknown</span></h4>
 <div th:id=${ledgui} align="left"></div>
  
 <hr/>           
-           <h3>Sonar commands</h3>      
+           <h3>Sonar commands</h3>     
+           
+           <table>
+           <tr>
+           <td>
             <form class="form-inline" action="/distance" method="post">
             <div class="form-group">
                      <button id="distance" type="submit">Current Sonar distance</button>
                       
             </div>
             </form>           
-            <form class="form-inline" action="/sonardataon" method="post">
+           </td>
+            <td>
+             <form class="form-inline" action="/sonardataon" method="post">
             <div class="form-group">
                      <button id="sonardataon" type="submit">Start sonar data view</button>
                       
             </div>
             </form>           
-            <form class="form-inline" action="/sonardataoff" method="post">
+           </td>
+            <td>
+             <form class="form-inline" action="/sonardataoff" method="post">
             <div class="form-group">
                      <button id="sonardataoff" type="submit">Stop sonar data view</button>
                       
           </div>
             </form>           
-        </div>
+           </td>
+           </tr>
+           </table>
+           
+            
+         </div>
       </div>
       
  <br/> 
+ <!--
+Area dati sonar
+-->
+
+<div class="row">
+    <div class="col-md-12">
+    	 <h2>Sonar data</h2>
+         <p id="sonarData">unknown</p>
+    </div>
+</div>
+
 <h4>Current Sonar distance=<span th:text="${sonardistance}">unknown</span></h4>
 
 <hr/> 
@@ -128,16 +188,7 @@ Area di output
 </div>
 
 
-<!--
-Area dati sonar
--->
 
-<div class="row">
-    <div class="col-md-12">
-    	 <h2>Sonar data</h2>
-         <p id="sonarData">unknown</p>
-    </div>
-</div>
 
 </body>
 <script src="wsNoStomp.js"></script>

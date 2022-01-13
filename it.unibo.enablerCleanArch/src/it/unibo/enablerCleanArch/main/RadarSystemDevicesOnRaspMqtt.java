@@ -16,9 +16,9 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
  * Applicazione che va in coppia con RadarSystemMainOnPc
  */
 public class RadarSystemDevicesOnRaspMqtt implements IApplication{
-private ISonar sonar      = null;
-private ILed led          = null;
-private String ctxTopic   = "topicCtxMqtt";  
+private ISonarObservable sonar  = null;
+private ILed led          		= null;
+private String ctxTopic   		= "topicCtxMqtt";  
 
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
@@ -31,7 +31,7 @@ private String ctxTopic   = "topicCtxMqtt";
 	}
 	
 	protected void createServerMqtt( ) {
-		sonar = SonarModel.create();		
+		sonar = SonarModelObservable.create();		
   		led   = LedModel.create();
 		IApplMsgHandler ledHandler   = new LedApplHandler( "ledH", led );
 		IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
@@ -80,6 +80,10 @@ private String ctxTopic   = "topicCtxMqtt";
 	}
 	public String sonarDistance(   ) {
  		return ""+sonar.getDistance().getVal();
+	}
+	
+	public ISonarObservable getSonar() {		 
+		return sonar;
 	}
 
 	public void doLedBlink() {

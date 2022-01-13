@@ -1,5 +1,6 @@
 package it.unibo.msenabler;
 
+import it.unibo.enablerCleanArch.domain.ISonarObservable;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -126,13 +127,14 @@ public class HumanEnablerController {
     @PostMapping( path = "/sonardataon" )
     public String sonardataon(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
-    	if( sonarDataOn ) {
-    		if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
-    	}
+//    	if( sonarDataOn ) {
+//    		if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+//    	}
         Colors.out("HumanEnablerController sonardataon - sonar active=" + applMqtt.sonarIsactive()  );
         if( applMqtt != null ){
             if( ! applMqtt.sonarIsactive() ) applMqtt.sonarActivate();
-            sonarDataOn = true;
+            //sonarDataOn = true;
+            /*
             WebSocketHandler h = WebSocketHandler.getWebSocketHandler();
             new Thread() {
             	public void run() {
@@ -151,7 +153,7 @@ public class HumanEnablerController {
                     }   
                     sonarDataOn = false;
             	}
-            }.start();
+            }.start();*/
         }
         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
@@ -159,7 +161,8 @@ public class HumanEnablerController {
     @PostMapping( path = "/sonardataoff" )
     public String sonardataoff(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
-    	sonarDataOn = false;
+    	//sonarDataOn = false;
+    	applMqtt.sonarDectivate();
         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     
