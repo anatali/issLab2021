@@ -308,8 +308,9 @@ WebCam
 .. code::
 
     sudo apt install fswebcam
-    fswebcam image1.jpg                #crea immagine 320×240
+    fswebcam image1.jpg                #crea immagine 640x320
     fswebcam -r 1280x720 image2.jpg    #crea immagine 1280x720
+    fswebcam -r 320×240 image3.jpg     #crea immagine 320×240
 
 
 Se abbiamo installato una WebCam con microfono, controlliamone il funzionamento    
@@ -329,7 +330,7 @@ mjpg-streamer
 .. code::
 
     git clone https://github.com/jacksonliam/mjpg-streamer.git    
-    sudo apt-get install cmake libjpeg8-dev
+    sudo apt-get install cmake libjpeg9-dev
     cd mjpg-streamer-experimental
     make
     sudo make install
@@ -377,6 +378,13 @@ L'ultima versione non sembra facilmente caricabile.
 ----------------------------------
 ngrok
 ----------------------------------
+
+#. Download di ngrok (tar -xvzf  ngrok-stable-linux-arm.tgz)
+#. Acquisire account (ad es. con Google)
+#. Acquisire authtoken (xxx)
+#. ngrok authtoken xxx (salvato in /home/pi/.ngrok2/ngrok.yml)
+#. ngrok http 8081
+#. usare il forqarding proposto (http://1eaa-95-249-218-184.ngrok.io)
 
 ----------------------------------
 wiringpi on Bullseye

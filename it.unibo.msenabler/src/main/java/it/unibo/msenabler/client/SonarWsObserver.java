@@ -100,7 +100,7 @@ public class SonarWsObserver {
         try {
             // open websocket
             SonarWsObserver clientEndPoint =
-                    new SonarWsObserver(new URI("ws://192.168.1.113:8081/sonarsocket"));
+                    new SonarWsObserver(new URI("ws://192.168.1.22:8081/sonarsocket"));
 
             // add listener
             clientEndPoint.addMessageHandler(new IMessageHandler() {
