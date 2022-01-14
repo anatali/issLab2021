@@ -54,6 +54,16 @@ public class HumanEnablerController {
     }
 
 
+    @PostMapping(path = "/setApplAddress")
+    public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")String addr , Model viewmodel )  {
+    	if( ! addr.equals( "localhost" ) ){
+            viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
+            viewmodel.addAttribute("applAddr",  addr);
+        }else{
+            viewmodel.addAttribute("viewmodelarg", "localhost not allowed");
+        }
+        if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){

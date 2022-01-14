@@ -18,7 +18,7 @@ Il modello di riferimento è il ``RaspberryPi 3 B+`` ma possono essere usati anc
 precedenti e ovviamente il ``RaspberryPi 4 B``.
 
 ------------------
-Azioni Preliminari
+Azioni Preliminari 
 ------------------
 .. C:\Didattica\Quantum\cidemo\userDocs\BrainCraftNat\Note\source
  
@@ -334,11 +334,23 @@ mjpg-streamer
     cd mjpg-streamer-experimental
     make
     sudo make install
-     ./start.sh     or bash start.sh
-    
+
+
+Attivazione e prova:
+.. code::
+
+    ./start.sh     or bash start.sh
+
     http://localhost:8080/stream.html   
 
+Se la :red:`webcam si ferma` dopo qualche secondo, modificare 
+in ``/boot/config.txt``  da gpu_mem=128 a :blue:`gpu_mem=256`.
+
+Altro codice di attivazione:
+.. code::
+
     /usr/local/bin/mjpg_streamer -i "input_uvc.so -r 1280x720  -d /dev/video0 -f 30" -o "output_http.so -p 8085  -w /usr/local/share/mjpg-streamer/www" 
+
     http://localhost:8085/stream.html   
 
 ..    export LD_LIBRARY_PATH=../mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so"
