@@ -15,8 +15,8 @@ import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoapObserver;
  
 public class RadarSystemMainOnPcCoap implements IApplication{
-private ISonar sonar    		   = null;
-private ILed led        		   = null;
+//private ISonar sonar    		   = null;
+//private ILed led        		   = null;
 private IRadarDisplay radar 	   = null;
 private boolean useProxyClient 	   = true;
 private ISonar clientSonarProxy    = null;
@@ -33,16 +33,18 @@ private IObserver obsfortesting;
 		setUp(configFileName);
 		configure();
 		execute();
+		
 	}
 	
 
 	public void setUp(String configFileName)  {			
 		if( configFileName != null ) RadarSystemConfig.setTheConfiguration(configFileName);
 		else {
-			RadarSystemConfig.raspHostAddr = "192.168.1.24";
+			RadarSystemConfig.raspHostAddr = "192.168.1.9";
 			RadarSystemConfig.DLIMIT       = 12;
 			RadarSystemConfig.simulation   = false;
 			RadarSystemConfig.withContext  = false;
+			RadarSystemConfig.sonarDelay   = 250;
 		}				
  	}
 	
@@ -64,8 +66,25 @@ private IObserver obsfortesting;
  		String ledUri  = CoapApplServer.lightsDeviceUri+"/led";
  		ILed clientLedProxy = new LedProxyAsClient("ledProxyCoap", host, ledUri, ProtocolType.coap );
  		
-		Controller.activate(clientLedProxy, clientSonarProxy, radar); //Activates the sonar
-
+ 		
+ 		clientSonarProxy.activate();
+ 		/*
+ 		for( int i=1; i<=3; i++) {
+ 			Utils.delay(1000);
+ 			IDistance d = clientSonarProxy.getDistance(); //bloccante
+ 			Colors.outappl("RadarSystemMainOnPcCoap | d=" + d, Colors.BLUE  );
+ 		}
+		
+ 		for( int i=1; i<=3; i++) {
+	 		clientLedProxy.turnOn();
+	 		Utils.delay(1000);
+	 		clientLedProxy.turnOff();
+	 		Utils.delay(1000);
+		}
+ 		
+ 		*/
+		Controller.activate(clientLedProxy, clientSonarProxy, radar);  
+		
  	}
 	
 	protected void executeCoapUsingCoapSupport() {

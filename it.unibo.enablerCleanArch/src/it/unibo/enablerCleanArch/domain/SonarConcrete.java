@@ -15,12 +15,13 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	private int dataCounter       = 1;
 	private  BufferedReader reader ;
 	private int lastSonarVal      = 0;
+	private Process p ;
 	
 	@Override
 	protected void sonarSetUp() {
  		try {
-			Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
-	        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));
+			p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
+	        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
 	        Colors.out("SonarConcrete | sonarSetUp done");
        	}catch( Exception e) {
        		Colors.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
@@ -29,13 +30,29 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	 
 	@Override
 	protected void updateDistance( int d ) {
+		Colors.out("SonarConcrete updateDistance | d=" + d  );
  		curVal = new Distance( d );
   	}	
 	@Override
 	public IDistance getDistance() {
+		Colors.out("SonarConcrete getDistance | curVal=" + curVal  );
 		return curVal;
 	}
 
+	@Override
+	public void activate() {
+		Colors.out("SonarConcreteObservable | activate ");
+ 		try { 
+ 			if( p == null ) {
+		        Colors.out("SonarConcreteObservable | sonarSetUp ");
+				p          = Runtime.getRuntime().exec("sudo ./SonarAlone");
+		        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+ 		}
+       	}catch( Exception e) {
+       		Colors.outerr("SonarConcreteObservable | sonarSetUp ERROR " + e.getMessage() );
+    	}
+ 		super.activate();
+ 	}
 	
 
 	@Override
@@ -47,10 +64,9 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			
 			if( dataCounter % numData == 0 ) { //every numData ...				
 				int v = Integer.parseInt(data);
-				//Colors.out("SonarConcrete | v=" + v );
+				Colors.out("SonarConcrete | v=" + v );
 				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
 					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistremia stream
- 					Colors.out("SonarConcrete updateDistance | v=" + v );
  					lastSonarVal = v;
  	 				updateDistance( v );
 				}
@@ -61,5 +77,16 @@ public class SonarConcrete extends SonarModel implements ISonar{
        }		
 	}
  
+	@Override
+	public void deactivate() {
+		Colors.out("SonarConcreteObservable | deactivate", Colors.GREEN);
+	    lastSonarVal      = 0;
+	    curVal            = new Distance(90);
+		if( p != null ) {
+			p.destroy();  //Block the runtime process
+			p=null;
+		}
+		super.deactivate();
+ 	}
 
  }

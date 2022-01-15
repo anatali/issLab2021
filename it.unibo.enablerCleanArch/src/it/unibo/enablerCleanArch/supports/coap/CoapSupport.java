@@ -54,7 +54,7 @@ private String url;
 	
 	@Override
 	public String request(String query)   {
-  		Colors.out("CoapSupport | request=" + query + " url="+url );
+  		Colors.out("CoapSupport | request query=" + query + " url="+url );
 		String param = query.isEmpty() ? "" :  "?q="+query;
   		Colors.out("CoapSupport | param=" + param );
 		client.setURI(url+param);
@@ -63,7 +63,7 @@ private String url;
 	 		Colors.out("CoapSupport | request=" + query 
 	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 			return respGet.getResponseText();
-		}else return "unknown";
+		}else return "0";
 	}
 	@Override
 	public void reply(String reqid) throws Exception {
