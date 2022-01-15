@@ -36,6 +36,37 @@ A queta parte corrisponde la parte di applicazione  **A**, da eseguire sul PC pe
 e per ricevere informazioni sul loro stato.
 Le due parti interagiscono via MQTT usando il broker di indirizzo ``tcp://broker.hivemq.com``.
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Caso 8 uso di Coap - sistema tutto su Raspberry
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: 
+
+"simulation"       : "false",
+"ControllerRemote" : "false",
+"LedRemote"        : "false",
+"SonareRemote"     : "false",
+"RadarGuiRemote"   : "false",
+"protocolType"     : "coap",
+"withContext"      : "false",
+........................................
+"pcHostAddr"       : "192.168.1.9",
+"raspHostAddr"     : "192.168.1.24",
+"radarGuiPort"     : "8014",
+"ledPort"          : "8010",
+"ledGui"           : "true",
+"sonarPort"        : "8012",
+"sonarObservable"  : "false",
+"controllerPort"   : "8016",
+"serverTimeOut"    : "600000",
+"applStartdelay"   : "3000",
+"sonarDelay"       : "100",
+"sonarDistanceMax" : "150",
+"DLIMIT"           : "12",
+"ctxServerPort"    : "8018",
+"mqttBrokerAddr"   : "tcp://broker.hivemq.com",
+"testing"          : "false"
+
 
 .. _msenabler:
 
@@ -63,8 +94,8 @@ L'applicazione Spring alla base di *it.unibo.msenabler* potrebbe operare in due 
   - utilizzando una websocket (con URI=/radarsocket). Per questa parte, si consiglia la lettura preliminare 
     di :ref:`WebSockets<WebSockets>`.   
 
-#. caso remoto: essere attivata su un PC ed utlizzare l'applicazione **A** per inviare e ricevere informazione 
-   via MQTT dalla parte applicativa ( **a**)  operante sul Raspberry.
+#. caso remoto: essere attivata su un PC ed utlizzare l'applicazione **A** (o 9) per inviare e ricevere informazione 
+   via MQTT dalla parte applicativa ( **a** o 7)  operante sul Raspberry.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Caso locale 
@@ -76,7 +107,11 @@ Come ogni applicazione SpringBoot, gli elementi salienti sono:
 - La pagina che utilillza Bootstrap è ``RadarSystemUserConsole.html``
 - WebSocketConfiguration
 
+Sembra molto lento, in particolare quando si attiva la webcam.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Caso remoto 
 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+Su Raspberry, attiviamo 7 (RadarSystemDevicesOnRasp) e su PC 9 (RadarSystemMainOnPcCoap)
+all'interno di una applicazione SpringBoot.

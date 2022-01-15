@@ -37,8 +37,14 @@ private String url;
 	@Override
 	public void forward(String msg)   {
 		Colors.out("CoapSupport | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
-		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
-		Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		if( client != null ) {
+			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
+			if( resp != null )
+			Colors.out("CoapSupport | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+		    else {
+			Colors.outerr("CoapSupport | forward - resp null "   );			
+		    }
+		}
 	}
 
 	@Override
@@ -53,9 +59,11 @@ private String url;
   		Colors.out("CoapSupport | param=" + param );
 		client.setURI(url+param);
 		CoapResponse respGet = client.get(  );
- 		Colors.out("CoapSupport | request=" + query 
- 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
-		return respGet.getResponseText();
+		if( respGet != null ) {
+	 		Colors.out("CoapSupport | request=" + query 
+	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
+			return respGet.getResponseText();
+		}else return "unknown";
 	}
 	@Override
 	public void reply(String reqid) throws Exception {

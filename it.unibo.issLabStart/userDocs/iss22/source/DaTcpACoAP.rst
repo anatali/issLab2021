@@ -643,7 +643,7 @@ Configurazione di LedUsageMain
 La fase di configurazione viene divisa in due parti:
 
 - la costruzione di un enabler tipo-server per il Led;
-- la costruzione di (alemno) un proxy tipo-client per il Led.
+- la costruzione di (almeno) un proxy tipo-client per il Led.
 
 La costruzione del proxy può avvenire creando una istanza di ``LedProxyAsClient`` avendo  cura 
 di specificare il paranetro ``entry`` in funzione del protocollo selezionato:

@@ -26,14 +26,15 @@ public class SonarConcrete extends SonarModel implements ISonar{
        		Colors.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
     	}
 	}
-//	@Override
-//	protected void updateDistance( int d ) {
-// 		curVal = new Distance( d );
-//  	}	
-//	@Override
-//	public IDistance getDistance() {
-//		return curVal;
-//	}
+	 
+	@Override
+	protected void updateDistance( int d ) {
+ 		curVal = new Distance( d );
+  	}	
+	@Override
+	public IDistance getDistance() {
+		return curVal;
+	}
 
 	
 

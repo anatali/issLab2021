@@ -39,9 +39,10 @@ private IObserver obsfortesting;
 	public void setUp(String configFileName)  {			
 		if( configFileName != null ) RadarSystemConfig.setTheConfiguration(configFileName);
 		else {
-			RadarSystemConfig.raspHostAddr = "192.168.1.183";
+			RadarSystemConfig.raspHostAddr = "192.168.1.24";
 			RadarSystemConfig.DLIMIT       = 12;
-			RadarSystemConfig.simulation   = true;
+			RadarSystemConfig.simulation   = false;
+			RadarSystemConfig.withContext  = false;
 		}				
  	}
 	

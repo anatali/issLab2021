@@ -1,7 +1,9 @@
 package it.unibo.enablerCleanArch.supports.coap;
 
 import it.unibo.enablerCleanArch.domain.ISonar;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarResourceCoap extends CoapDeviceResource  {
 ISonar sonar;
@@ -20,8 +22,9 @@ String curVal="0";  //Initial state
 					sonar.activate();
 					while( sonar.isActive() ) {
 						int v = sonar.getDistance().getVal();
+						Utils.delay(RadarSystemConfig.sonarDelay);
 						elaborateAndNotify(  v );
-						//Colors.out("sonar value="+v);
+						//Colors.out("SonarResourceCoap | sonar value="+v);
 					}
 				}
 			}.start();
@@ -30,7 +33,7 @@ String curVal="0";  //Initial state
 		 // CoapDeviceResource
 			@Override
 			protected String elaborateGet(String req) {
- 				//Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
+ 				Colors.out( getName() + " | elaborateGet req=" + req, Colors.GREEN  );					
 				if( req == null  ) {
 					Colors.outerr("getName() + \" | elaborateGet req NULL");
 					return curVal;
@@ -46,7 +49,7 @@ String curVal="0";  //Initial state
 
 			@Override
 			protected void elaboratePut(String arg) {
-	 			//Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
+	 			Colors.out( getName() + " |  elaboratePut:" + arg, Colors.GREEN  );
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
 	 			else if( arg.equals("setVal")) { //just for some test ...
@@ -59,7 +62,7 @@ String curVal="0";  //Initial state
 			
 			protected void elaborateAndNotify(int arg) {
 				curVal= ""+arg;
- 				//Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
+ 				Colors.out( getName() + " | elaborateAndNotify:" + curVal , Colors.GREEN  );		
 				changed();	// notify all CoAp observers
 			}
 		

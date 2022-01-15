@@ -40,6 +40,26 @@
  	
 </style>
 
+<script type="text/javascript">
+/*
+To be used when the application is not activated by the localhost
+*/
+ 	function startWebCam(){
+	         var applip =""
+	         var appladdr = document.getElementById("appladdr").innerHTML
+	         if(  appladdr.length == 0 ){
+	         	alert("sorry, no webcam");
+	          	return; 
+	         }
+	         console.log("appladdr ... "+appladdr )
+	         var url = appladdr+":8085"  // FOR WEB CAM
+	         var len = url.length;
+	         var n   = url.indexOf(":");
+	         var j   = url.substring(n+1,len);
+	         applip = "http://" + url + "/?action=stream";
+	         //alert(applip); //applip=http://192.168.1.72:8080/?action=stream
+	}
+ </script>
 
  </head>
 <body>
@@ -47,21 +67,10 @@
     <h1><span th:text="${arg}">Our Arg</span></h1>
  
 <p>basicrobotaddr:
-<span id="appladdr" th:text="${robotAddr}">unknown</span>
+<span id="appladdr" th:text="${applicationlAddr}">applIP unknown</span>
 </p>
 
-<script type="text/javascript">
-         var applip =""
-         var appladdr = document.getElementById("appladdr").innerHTML
-         if(  appladdr.length == 0 ) appladdr="/192.168.1.9"; 
-         console.log("appladdr ... "+appladdr )
-         var url = appladdr+":8080"  // FOR WEB CAM
-         var len = url.length;
-         var n   = url.indexOf(":");
-         var j   = url.substring(n+1,len);
-         applip = "http://" + url + "/?action=stream";
-         alert(applip); //applip=http://192.168.1.72:8080/?action=stream
-</script>
+ 
 
 <!--
 Pulsanti di invio comandi
@@ -210,11 +219,35 @@ Area di output
              <div id="content" align="left">
                 <img src="" id="img_src" alt=""  width="640" height="480"><br/>
             </div>
+ 
+
 <script type="text/javascript">
-    if( applip.length>0) document.getElementById("img_src").src = applip;
+	function startTheWebCam(appladdr){
+	         var applip =""
+ 	         if(  appladdr.length == 0 ){
+	         	alert("sorry, no webcam appladdr=" + appladdr);
+	          	return; 
+	         }
+	         console.log("appladdr ... "+appladdr )
+	         var url = appladdr+":8080"  // FOR WEB CAM
+	         var len = url.length;
+	         var n   = url.indexOf(":");
+	         var j   = url.substring(n+1,len);
+	         applip = "http://" + url + "/?action=stream";
+	         document.getElementById("img_src").src = applip;
+ 	}
+
+    function myIp() {
+      var ip = location.host;
+      //alert(ip);
+      document.getElementById("appladdr").innerHTML   = ip;
+      return ip;
+    }
+    //var ip = myIp();
+    console.log( window.location.hostname );
+    startTheWebCam( window.location.hostname );
+    //if( applip.length>0) document.getElementById("img_src").src = applip;
 </script>
-
-
 </body>
 <script src="wsNoStomp.js"></script>
 </html>

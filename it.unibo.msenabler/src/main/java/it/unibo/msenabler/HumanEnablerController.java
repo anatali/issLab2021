@@ -58,7 +58,7 @@ public class HumanEnablerController {
     public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")String addr , Model viewmodel )  {
     	if( ! addr.equals( "localhost" ) ){
             viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
-            viewmodel.addAttribute("applAddr",  addr);
+            viewmodel.addAttribute("applicationlAddr",  addr);
         }else{
             viewmodel.addAttribute("viewmodelarg", "localhost not allowed");
         }
@@ -110,12 +110,12 @@ public class HumanEnablerController {
     public String stopLedBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
         if( applMqtt != null ) applMqtt.stopLedBlink( );
-        String ledState = applMqtt.ledState();
-        Colors.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
+//        String ledState = applMqtt.ledState();
+//        Colors.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
         model.addAttribute("arg", appName+" After Led stop blink");
-        if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
-        else model.addAttribute("ledgui","ledOff");
-        model.addAttribute("ledstate",ledState);
+//        if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
+//        else model.addAttribute("ledgui","ledOff");
+//        model.addAttribute("ledstate",ledState);
         if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 

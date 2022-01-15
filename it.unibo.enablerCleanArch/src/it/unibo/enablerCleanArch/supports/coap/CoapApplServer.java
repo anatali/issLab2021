@@ -69,7 +69,7 @@ public class CoapApplServer extends CoapServer{
 		Resource res = getResource("/"+fatherUri);
 		if( res != null ) {
 			res.add( resource );
-			Colors.out("CoapApplServer | added " + resource.getName(), Colors.ANSI_YELLOW );
+			Colors.out("CoapApplServer | added " + resource.getName() + " father=" + fatherUri, Colors.ANSI_PURPLE );
 		}else {
 			Colors.outerr("addCoapResource FAILS for " + fatherUri);
 		}
