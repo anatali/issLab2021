@@ -37,36 +37,82 @@ e per ricevere informazioni sul loro stato.
 Le due parti interagiscono via MQTT usando il broker di indirizzo ``tcp://broker.hivemq.com``.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Caso 8 uso di Coap - sistema tutto su Raspberry
+I diversi scenari
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso 8 uso di Coap - sistema tutto su Raspberry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il sistema su Raspberry attiva un unico server (**CoapApplServer**) e aggiunge come risorse 
+il Led ( devices/output/lights/led ) e il Sonar (devices/input/sonar). 
 
 .. code:: 
 
-"simulation"       : "false",
-"ControllerRemote" : "false",
-"LedRemote"        : "false",
-"SonareRemote"     : "false",
-"RadarGuiRemote"   : "false",
-"protocolType"     : "coap",
-"withContext"      : "false",
-........................................
-"pcHostAddr"       : "192.168.1.9",
-"raspHostAddr"     : "192.168.1.24",
-"radarGuiPort"     : "8014",
-"ledPort"          : "8010",
-"ledGui"           : "true",
-"sonarPort"        : "8012",
-"sonarObservable"  : "false",
-"controllerPort"   : "8016",
-"serverTimeOut"    : "600000",
-"applStartdelay"   : "3000",
-"sonarDelay"       : "100",
-"sonarDistanceMax" : "150",
-"DLIMIT"           : "12",
-"ctxServerPort"    : "8018",
-"mqttBrokerAddr"   : "tcp://broker.hivemq.com",
-"testing"          : "false"
+   "simulation"       : "false",
+   "ControllerRemote" : "false",
+   "LedRemote"        : "false",
+   "SonareRemote"     : "false",
+   "RadarGuiRemote"   : "false",
+   "protocolType"     : "coap",
+   "withContext"      : "false",
+   "sonarDelay"       : "200",
+   ........................................
+   "pcHostAddr"       : "192.168.1.9",
+   "raspHostAddr"     : "192.168.1.24",
+   "radarGuiPort"     : "8014",
+   "ledPort"          : "8010",
+   "ledGui"           : "true",
+   "sonarPort"        : "8012",
+   "sonarObservable"  : "false",
+   "controllerPort"   : "8016",
+   "serverTimeOut"    : "600000",
+   "applStartdelay"   : "3000",
+   "sonarDistanceMax" : "150",
+   "DLIMIT"           : "12",
+   "ctxServerPort"    : "8018",
+   "mqttBrokerAddr"   : "tcp://broker.hivemq.com",
+   "testing"          : "false"
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso 8 uso di Coap - dispositivi su Raspberry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Condifguriamo il sistema su Raspberry specificando che il controller è remoto.
+
+.. code:: 
+
+   "simulation"       : "false",
+   "ControllerRemote" : "true",
+   ...
+
+
+A questo punto attiviamo il programma 9 su PC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso 9 uso di Coap - Controller su PC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Questo programma nasce per usare CoAP e quindi fissa in modo diretto i parametri di configurazione 
+che gli interessano:
+
+.. code:: 
+
+   	RadarSystemConfig.raspHostAddr = "192.168.1.xxx";
+		RadarSystemConfig.DLIMIT       = 12;
+		RadarSystemConfig.simulation   = false;
+		RadarSystemConfig.withContext  = false;
+		RadarSystemConfig.sonarDelay   = 200;     //come quello del Raspberry
+
+Il programma può operare anche definendo il Controller come un observer della risorsa Sonar,
+ponendo 
+
+.. code:: 
+
+   useProxyClient = false
+
+In caso contrario, il Controller opera con un convenzionale ciclo **read-eval-print**.
 
 .. _msenabler:
 

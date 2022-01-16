@@ -6,6 +6,7 @@ import org.eclipse.californium.core.CoapObserveRelation;
 
 import it.unibo.enablerCleanArch.domain.Controller;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
+import it.unibo.enablerCleanArch.domain.IApplication;
 import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.IObserver;

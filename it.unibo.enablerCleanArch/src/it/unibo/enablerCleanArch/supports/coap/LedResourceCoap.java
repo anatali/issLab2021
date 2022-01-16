@@ -1,7 +1,6 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import it.unibo.enablerCleanArch.domain.ILed;
- 
- 
+import it.unibo.enablerCleanArch.supports.Colors;
 
 public class LedResourceCoap extends CoapDeviceResource {
 	private ILed led; 
@@ -18,10 +17,10 @@ public class LedResourceCoap extends CoapDeviceResource {
 
 	@Override
 	protected void elaboratePut(String req) {
-		//System.out.println( getName() + " |  before elaboratePut req:" + req + " led:" + led.getState()  );
+		//Colors.out( getName() + " |  before elaboratePut req:" + req + " led:" + led.getState()  );
 		if( req.equals( "on") ) led.turnOn();
 		else if( req.equals("off") ) led.turnOff();		
-		//System.out.println( getName() + " |  after elaboratePut :" + led.getState()  );
+		//Colors.out( getName() + " |  after elaboratePut :" + led.getState()  );
 	}  
 
 }

@@ -1,5 +1,6 @@
 package it.unibo.enablerCleanArch.main;
 
+import it.unibo.enablerCleanArch.domain.IApplication;
 import it.unibo.enablerCleanArch.supports.Colors;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

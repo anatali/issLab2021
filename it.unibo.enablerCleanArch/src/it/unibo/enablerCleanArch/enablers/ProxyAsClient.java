@@ -37,7 +37,7 @@ protected ProtocolType protocol ;
 				break;
 			}
 			case coap : {
-				conn = new CoapSupport(host,  entry);  
+				conn = new CoapSupport(host,  entry);  //entry is uri path
 				break;
 			}
 			case mqtt : {
@@ -65,7 +65,7 @@ protected ProtocolType protocol ;
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {
- 		Colors.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn );
+ 		//Colors.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn );
 		try {
 			conn.forward(cmd);
 		} catch (Exception e) {
@@ -73,7 +73,7 @@ protected ProtocolType protocol ;
 		}
 	}
 	public String sendRequestOnConnection( String request )  {
- 		Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
+ 		//Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
 		try {
 			String answer = conn.request(request);
 			Colors.out( name+"  | sendRequestOnConnection answer=" + answer  );

@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.main;
 
 import static org.junit.Assert.assertTrue;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
+import it.unibo.enablerCleanArch.domain.IApplication;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.LedMockWithGui;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;

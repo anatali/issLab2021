@@ -27,8 +27,8 @@ class HIController {
     @Value("\${human.logo}")
     var appName: String?    = null
 
-    var coap    = CoapSupport("coap://localhost:8028", "ctxsonarresource/sonarresource")
-
+    //var coap    = CoapSupport("coap://localhost:8028", "ctxsonarresource/sonarresource")
+    var coap    = CoapSupport("coap://192.168.1.26:5683", "devices/input/sonar")
 
     /*
      * Update the page vie socket.io when the application-resource changes.
@@ -43,6 +43,7 @@ class HIController {
         //connQakSupport = connQakCoap()
         //connQakSupport.createConnection()
         coap.observeResource( WebPageCoapHandler(this) ) //TODO: update the HTML page via socket
+        coap.updateResource("activate")
     }
 
 

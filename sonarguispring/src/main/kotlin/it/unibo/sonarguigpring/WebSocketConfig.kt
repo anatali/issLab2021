@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 
 //See https://spring.io/guides/gs/messaging-stomp-websocket/
-@Configuration
+//@Configuration
 @EnableWebSocketMessageBroker   //enables WebSocket message handling, backed by a message broker
 class WebSocketConfig : WebSocketMessageBrokerConfigurer {
-
+/*
     companion object {
         const val topicForClient = "/topic/infodisplay"
         const val brokerDestinationPrefix = "/topic"
@@ -44,6 +44,6 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
           */
          registry.addEndpoint(stompEndpointPath).withSockJS()
     }
-
+*/
 
 }

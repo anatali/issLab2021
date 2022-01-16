@@ -15,7 +15,7 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 /*
  * Applicazione che va in coppia con RadarSystemMainOnPc
  */
-public class RadarSystemDevicesOnRaspMqtt implements IApplication{
+public class RadarSystemDevicesOnRaspMqtt implements IApplicationFacade{
 private ISonarObservable sonar  = null;
 private ILed led          		= null;
 private String ctxTopic   		= "topicCtxMqtt";  

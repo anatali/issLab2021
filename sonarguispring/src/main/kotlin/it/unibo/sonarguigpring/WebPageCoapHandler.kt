@@ -18,8 +18,9 @@ An object of this class is registered as observer of the resource
         sysUtil.colorPrint("WebPageCoapHandler | response content=$content}", Color.GREEN )
         //response={"sonarvalue":"D"} or {"info":"somevalue"}
         try {
-            val jsonContent = JSONObject(content)
-            if (jsonContent.has("sonarvalue")){
+            /*
+           val jsonContent = JSONObject(content)
+             if (jsonContent.has("sonarvalue")){
                 val sonarRep = ResourceRep("" + HtmlUtils.htmlEscape( jsonContent.getString("sonarvalue"))  )
                 sysUtil.colorPrint("WebPageCoapHandler | sonar value=${sonarRep.content}", Color.BLUE)
                 controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, sonarRep)
@@ -31,7 +32,7 @@ An object of this class is registered as observer of the resource
                 val infoRep = ResourceRep("" + HtmlUtils.htmlEscape( jsonContent.getString("info")) + ":"+ counter++)
                 sysUtil.colorPrint("WebPageCoapHandler | info=${infoRep.content}", Color.BLUE)
                 controller.simpMessagingTemplate?.convertAndSend(WebSocketConfig.topicForClient, infoRep)
-            }
+            }*/
         }catch(e:Exception){
             sysUtil.colorPrint("WebPageCoapHandler | ERROR=${content}", Color.RED)
         }

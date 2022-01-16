@@ -1,5 +1,6 @@
 package it.unibo.enablerCleanArch.main;
 
+import it.unibo.enablerCleanArch.domain.IApplication;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;

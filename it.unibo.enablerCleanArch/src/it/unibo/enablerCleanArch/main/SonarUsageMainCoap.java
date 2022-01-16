@@ -3,6 +3,8 @@ package it.unibo.enablerCleanArch.main;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
+
+import it.unibo.enablerCleanArch.domain.IApplication;
 import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
