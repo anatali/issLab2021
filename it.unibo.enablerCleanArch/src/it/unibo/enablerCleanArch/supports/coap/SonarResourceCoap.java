@@ -19,11 +19,11 @@ String curDistance="0";  //Initial state
 			Colors.outerr( getName() + " |  SonarResourceCoap getSonarValues"   );
 			new Thread() {
 				public void run() {
-					sonar.activate();
+					if( ! sonar.isActive() ) sonar.activate();
 					while( sonar.isActive() ) {
 						int v = sonar.getDistance().getVal();
-						Utils.delay(RadarSystemConfig.sonarDelay);
 						elaborateAndNotify(  v );
+						Utils.delay(RadarSystemConfig.sonarDelay);
 						//Colors.out("SonarResourceCoap | sonar value="+v);
 					}
 				}
@@ -39,7 +39,8 @@ String curDistance="0";  //Initial state
 					return curDistance;
 				}
 				if( req.equals("getDistance")) {
-					String answer = curDistance;  
+					//String answer = curDistance;  
+					String answer = ""+sonar.getDistance().getVal();
 					return  answer;
 				}
 				if( req != null && req.isEmpty()) return curDistance; //for the observers

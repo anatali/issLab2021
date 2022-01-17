@@ -41,15 +41,15 @@ public class SonarConcrete extends SonarModel implements ISonar{
 
 	@Override
 	public void activate() {
-		Colors.out("SonarConcreteObservable | activate ");
+		Colors.out("SonarConcrete | activate ");
  		try { 
  			if( p == null ) {
-		        Colors.out("SonarConcreteObservable | sonarSetUp ");
+		        Colors.out("SonarConcrete | sonarSetUp ");
 				p          = Runtime.getRuntime().exec("sudo ./SonarAlone");
 		        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
  		}
        	}catch( Exception e) {
-       		Colors.outerr("SonarConcreteObservable | sonarSetUp ERROR " + e.getMessage() );
+       		Colors.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
     	}
  		super.activate();
  	}
@@ -60,18 +60,18 @@ public class SonarConcrete extends SonarModel implements ISonar{
         try {
 			String data = reader.readLine();
 			if( data == null ) return;
-			dataCounter++;
+			//dataCounter++;
 			
-			if( dataCounter % numData == 0 ) { //every numData ...				
+			//if( dataCounter % numData == 0 ) { //every numData ...				
 				int v = Integer.parseInt(data);
 				Colors.out("SonarConcrete | v=" + v );
 				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
-					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistremia stream
+					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistemi a stream
  					lastSonarVal = v;
  	 				updateDistance( v );
 				}
  				//Utils.delay(RadarSystemConfig.sonarDelay);
-			}
+			//}
        }catch( Exception e) {
        		Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
        }		
@@ -79,7 +79,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
  
 	@Override
 	public void deactivate() {
-		Colors.out("SonarConcreteObservable | deactivate", Colors.GREEN);
+		Colors.out("SonarConcrete | deactivate", Colors.GREEN);
 	    lastSonarVal      = 0;
 	    curVal            = new Distance(90);
 		if( p != null ) {

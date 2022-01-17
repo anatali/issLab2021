@@ -8,15 +8,16 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
 
-public class ControllerAsCoapObserver  implements CoapHandler{
+public class ControllerAsCoapSonarObserver  implements CoapHandler{
 private String name;
 private IRadarDisplay radar ;
 private ILed led;
 
-	public ControllerAsCoapObserver( String name,ILed led ) {
-		this.name = name;
-		radar = DeviceFactory.createRadarGui();
-		this.led = led;
+
+	public ControllerAsCoapSonarObserver( String name,ILed led, IRadarDisplay radar) {
+		this.name  = name;
+		this.radar = radar;
+		this.led   = led;
 	}
 	@Override
 	public void onLoad(CoapResponse response) {

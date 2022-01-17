@@ -35,10 +35,10 @@ public class HumanEnablerController {
         model.addAttribute("arg", appName);
         model.addAttribute("ledgui","ledOff");
         Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + appl);
-        Colors.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
-        
+        //Colors.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
+        //appl.sonarActivate();
         //allOnRasp = false;
-        return "RadarSystemUserConsole";
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     @RequestMapping("/basic")
     public String basicPage(Model model) {
@@ -66,13 +66,15 @@ public class HumanEnablerController {
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
-    	Colors.out("HumanEnablerController doOn "   );
+    	Colors.out("HumanEnablerController doOn " + appl  );
         if( appl != null ){
             appl.ledActivate(true);
             String ledState = appl.ledState();
             Colors.out("HumanEnablerController doOn ledState=" + ledState  );
             model.addAttribute("ledgui","ledOn");
             model.addAttribute("ledstate", ledState);
+            
+            appl.sonarActivate();
         }
         model.addAttribute("arg", appName+" After Led on");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -91,6 +93,8 @@ public class HumanEnablerController {
             Colors.out("HumanEnablerController doOff ledState=" + ledState  );
             model.addAttribute("ledgui","ledOff");
             model.addAttribute("ledstate", ledState);
+            
+            appl.sonarDectivate();
         }
          model.addAttribute("arg", appName+" After Led off");
          if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -99,7 +103,7 @@ public class HumanEnablerController {
     @PostMapping( path = "/doLedBlink" )
     public String doBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                 String moveName, Model model){
-        if( appl != null ) appl.doLedBlink( );
+        //if( appl != null ) appl.doLedBlink( );
         model.addAttribute("arg", appName+" After Led blink");
         model.addAttribute("ledstate","ledBlinking ...");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -108,7 +112,7 @@ public class HumanEnablerController {
     @PostMapping( path = "/stopLedBlink" )
     public String stopLedBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
-        if( appl != null ) appl.stopLedBlink( );
+        //if( appl != null ) appl.stopLedBlink( );
 //        String ledState = appl.ledState();
 //        Colors.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
         model.addAttribute("arg", appName+" After Led stop blink");
@@ -179,7 +183,7 @@ public class HumanEnablerController {
     public ResponseEntity handle(Exception ex) {
         HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity(
-                "BaseController ERROR " + ex.getMessage(),
+                "HumanEnablerController ERROR " + ex.getMessage(),
                 responseHeaders, HttpStatus.CREATED);
     }
 

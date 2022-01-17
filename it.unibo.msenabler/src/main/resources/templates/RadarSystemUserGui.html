@@ -45,6 +45,33 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 }
 </style>      
 
+<script type="text/javascript">
+/*
+To be used when the application is not activated by the localhost
+*/
+
+ 	function setWebCamIp( appladdr ){
+ 	var applip ="";
+ 	/*
+	         var appladdr = document.getElementById("appladdr").innerHTML
+	         if(  appladdr.length == 0 ){
+	         	alert("sorry, no webcam");
+	          	return; 
+	         }
+	         var appladdr = "192.168.1.29";
+	*/
+	         console.log("startWebCam appladdr="+appladdr )
+	         var url = appladdr+":8080"  // FOR WEB CAM
+	         var len = url.length;
+	         var n   = url.indexOf(":");
+	         var j   = url.substring(n+1,len);
+	         applip = "http://" + url + "/?action=stream";
+	         //alert(applip); //applip=http://192.168.1.72:8080/?action=stream
+	         
+	         return applip;
+	}
+ </script>
+ 
  </head>
 <body>
 <h1><span th:text="${arg}">Our Arg</span></h1>
@@ -85,6 +112,18 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 
 <h2>Current distance=<span th:text="${sonardistance}">unknown</span></h2>
 
+<hr/>
+<h3>WebCam</h3>
+             <div id="content" align="left">
+                <img src="" id="img_src" alt=""  width="640" height="480"><br/>
+            </div>
+ 
+
+<script type="text/javascript">
+    console.log( window.location.hostname );
+    var applip = setWebCamIp( "192.168.1.29" );
+    if( applip.length>0) document.getElementById("img_src").src = applip;
+</script>
 
 
    	

@@ -76,7 +76,7 @@ il Led ( devices/output/lights/led ) e il Sonar (devices/input/sonar).
    "testing"          : "false"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Caso 8 uso di Coap - dispositivi su Raspberry
+Caso 8 uso di Coap - dispositivi su Raspberry 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Condifguriamo il sistema su Raspberry specificando che il controller è remoto.

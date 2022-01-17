@@ -21,17 +21,17 @@ public class Controller {
 					sonar.activate();
 					boolean a = sonar.isActive();
 					Colors.outappl("Controller | STARTS " + a , Colors.BLUE);
-					for( int i=1; i<=100; i++) {
+					for( int i=1; i<=50; i++) {
 					//while( sonar.isActive() ) {
-						IDistance d = sonar.getDistance(); //bloccante
-						Colors.outappl("Controller | i="+i +" d=" + d, Colors.BLUE  );
+						IDistance d = sonar.getDistance(); //potrebbe essere bloccante
+						Colors.outappl("Controller | d="+d +" i=" + i, Colors.BLUE  );
 						RadarGuiUsecase.doUseCase( radar,d  );	//
  						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
  						Utils.delay(RadarSystemConfig.sonarDelay);
  					}
 					sonar.deactivate();
 					Colors.outappl("Controller | BYE", Colors.BLUE  );
-					System.exit(0);
+					//System.exit(0);
 				} catch (Exception e) {
 		 			Colors.outerr("ERROR"+e.getMessage());
 				}					
