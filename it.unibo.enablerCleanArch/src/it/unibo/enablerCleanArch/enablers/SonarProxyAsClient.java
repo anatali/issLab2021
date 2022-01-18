@@ -18,6 +18,8 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  			sendCommandOnConnection(Utils.sonarActivate.toString());
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			sendCommandOnConnection(Utils.sonarActivate.toString());
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) 
+ 			sendRequestOnConnection("activate");
  		else sendCommandOnConnection("activate");		
 	}
 
@@ -27,7 +29,9 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  			sendCommandOnConnection(Utils.sonarDeactivate.toString());
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			sendCommandOnConnection(Utils.sonarDeactivate.toString());
-		else sendCommandOnConnection("deactivate");		
+		else if( RadarSystemConfig.protcolType == ProtocolType.coap) 
+ 			sendRequestOnConnection("deactivate");
+ 		else sendCommandOnConnection("deactivate");		
 	}
 
 	@Override

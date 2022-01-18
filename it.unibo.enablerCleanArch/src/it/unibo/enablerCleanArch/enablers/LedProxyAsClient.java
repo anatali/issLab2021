@@ -22,7 +22,9 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
  			sendCommandOnConnection(Utils.turnOnLed.toString());
  		}
- 		else sendCommandOnConnection( "on" );
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
+ 			sendCommandOnConnection( "on" );
+ 		}else sendCommandOnConnection( "on" );
  	}
 
 	@Override
@@ -33,7 +35,9 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
  			sendCommandOnConnection(Utils.turnOffLed.toString());
  		}
- 		else sendCommandOnConnection( "off" );
+ 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
+ 			sendCommandOnConnection( "off" );
+ 		} else sendCommandOnConnection( "off" );
  	}
 
 	@Override

@@ -40,12 +40,14 @@ public abstract class CoapDeviceResource extends CoapResource {
  		//examineGETOptions(exchange);
 		String query = exchange.getQueryParameter("q"); 
 		if( query == null ) {
-			//Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
+			Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText() );
+			Colors.out( getName() + "handleGET request answer=" + answer , Colors.RED );
 			exchange.respond(answer);
 		}else{ 
- 			//Colors.out( getName() + "handleGET query=" + query);
+ 			Colors.out( getName() + "handleGET query=" + query);
  			String answer = elaborateGet( exchange.getQueryParameter("q") );
+			Colors.out( getName() + "handleGET query answer=" + answer , Colors.RED );
 	  		exchange.respond(answer);
 		}		
 	}
@@ -59,10 +61,10 @@ public abstract class CoapDeviceResource extends CoapResource {
  	@Override
 	public void handlePUT(CoapExchange exchange) {
  		String arg = exchange.getRequestText() ;
-		//Colors.out(getName() + " | handlePUT arg=" + exchange.getRequestText()  );
 		elaboratePut( arg );
-		changed();
-		exchange.respond(CHANGED);
+		//changed();
+		Colors.out(getName() + " | handlePUT arg=" + exchange.getRequestText() + " CHANGED="+ CHANGED );
+		exchange.respond(""+CHANGED);
 	}
 
  	protected abstract String elaborateGet(String req);

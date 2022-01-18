@@ -37,7 +37,7 @@ protected ProtocolType protocol ;
 				break;
 			}
 			case coap : {
-				conn = new CoapSupport(host,  entry);  //entry is uri path
+				conn = new CoapSupport("CoapSupport_"+name, host,  entry);  //entry is uri path
 				break;
 			}
 			case mqtt : {
@@ -50,18 +50,7 @@ protected ProtocolType protocol ;
 			}
 				
 		}
-//		if( protocol == ProtocolType.tcp) {
-//			int port = Integer.parseInt(entry);
-//			conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
-//			//Colors.out(name + " |  setConnection "  + conn );
-//		}else if( protocol == ProtocolType.coap ) {
-//			conn = new CoapSupport(host,  entry);  
-//		}else if( protocol == ProtocolType.mqtt ) {
-//			Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
-//			conn = new MqttSupport();
-//			((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
-//			((MqttSupport) conn).subscribe(name, entry+name+"answer", new ClientApplHandlerMqtt("clientHMqtt",conn));
-//		}
+ 
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {

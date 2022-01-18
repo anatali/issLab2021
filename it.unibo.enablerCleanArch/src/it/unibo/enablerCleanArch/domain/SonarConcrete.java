@@ -64,7 +64,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			
 			//if( dataCounter % numData == 0 ) { //every numData ...				
 				int v = Integer.parseInt(data);
-				Colors.out("SonarConcrete | v=" + v );
+				//Colors.out("SonarConcrete | v=" + v );
 				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
 					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistemi a stream
  					lastSonarVal = v;

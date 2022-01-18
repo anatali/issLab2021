@@ -24,8 +24,8 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 			programs.put("6", new RadarSystemAllOnPc());
 			programs.put("7", new RadarSystemDevicesOnRasp());
 			programs.put("8", new RadaSystemMainCoap());
-			programs.put("9", new RadarSystemMainOnPcCoap());
-			programs.put("a", new RadarSystemDevicesOnRaspMqtt());
+//			programs.put("9", new RadarSystemMainOnPcCoap());
+//			programs.put("a", new RadarSystemDevicesOnRaspMqtt());
 			programs.put("A", new RadarSystemMainOnPcMqtt());
 			String i = "";
 			outMenu();

@@ -73,7 +73,7 @@ protected boolean stopped  = true;
 				while( ! stopped  ) {
 					//Colors.out("SonarModel | call produce", Colors.GREEN);
 					sonarProduce(  );
-					Utils.delay(RadarSystemConfig.sonarDelay);
+					//Utils.delay(RadarSystemConfig.sonarDelay);
 				}
 				Colors.out("SonarModel | ENDS", Colors.GREEN);
 		    }
