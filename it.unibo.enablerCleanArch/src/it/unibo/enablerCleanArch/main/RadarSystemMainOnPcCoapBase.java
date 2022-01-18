@@ -90,7 +90,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
    		//CoapHandler obs = new ObserverNaive("obs"); //new ControllerAsCoapSonarObserver("obsController", led, radar) ;
 		//rel1            = coapSonarSup.observeResource( obs );
 		//Controller.activate(led, sonar, radar);  
-		led.turnOff();
+//		led.turnOff();
 		Colors.out("ledState=" +led.getState() );
 //		sonar.activate();
 //		Utils.delay(10000);

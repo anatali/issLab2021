@@ -9,8 +9,9 @@ public class WebCamRasp {
 	
 	public static void getPhoto(String fName) { //image.jpg
  		try {
- 			//     /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental
-			Runtime.getRuntime().exec("/home/pi/nat/mjpg-streamer/mjpg-streamer-experimental/fswebcam -r 320×240 " + fName);
+ 			//cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental
+			Runtime.getRuntime().exec("cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental");
+			Runtime.getRuntime().exec("fswebcam -r 320×240 " + fName);
  	        Colors.out("WebCamRasp | getPhoto done");
        	}catch( Exception e) {
        		Colors.outerr("WebCamRasp | getPhoto ERROR " + e.getMessage() );
