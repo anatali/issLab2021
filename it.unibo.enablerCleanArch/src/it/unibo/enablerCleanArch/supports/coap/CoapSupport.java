@@ -45,11 +45,10 @@ private String name = "CoapSprt";
 //From Interaction2021
 	@Override
 	public void forward(String msg)   {
-		Colors.out(name + " | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
+		//Colors.out(name + " | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		if( client != null ) {
 			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
- 			if( resp != null )
-				Colors.out(name + " | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+ 			if( resp != null ) Colors.out(name + " | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
 		    //else { Colors.outerr(name + " | forward - resp null "   ); }  //?????
 		} 
 	}

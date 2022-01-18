@@ -12,6 +12,8 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 <html>
 <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
         <title>RadarSystemUserGui</title>
         <!-- <link rel="stylesheet" href="css/style.css"/> -->
 <style>
@@ -106,11 +108,37 @@ To be used when the application is not activated by the localhost
     <button>Show sonar distance</button>
 </form>
 
+<form action="/sonardataon" method="post">
+    <input name="cmd" id="sonaron" value="Sonar activate" style="font-size:15px;" >
+    <button>Sonar activate</button>
+</form>
+
+<form action="/sonardataoff" method="post">
+    <input name="cmd" id="sonaroff" value="Sonar deactivate" style="font-size:15px;" >
+    <button>Sonar deactivate</button>
+</form>
+
 
 <h2>Current Led State=<span th:text="${ledstate}">unknown</span></h2>
 <div th:id=${ledgui} align="left"></div>
 
-<h2>Current distance=<span th:text="${sonardistance}">unknown</span></h2>
+<h2>Info </h2>
+<table >
+    <thead>
+    <tr>
+        <th>Info area</th>
+    </tr>
+    </thead>
+    <tbody id="output">
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Sonar data</h2>
+        <p id="sonarData">unknown</p>
+    </div>
+</div>
 
 <hr/>
 <h3>WebCam</h3>
@@ -121,11 +149,11 @@ To be used when the application is not activated by the localhost
 
 <script type="text/javascript">
     console.log( window.location.hostname );
-    var applip = setWebCamIp( "192.168.1.29" );
+    var applip = setWebCamIp( "192.168.1.112" );
     if( applip.length>0) document.getElementById("img_src").src = applip;
 </script>
 
 
-   	
+<script src="wsNoStomp.js"></script>
 </body>
 </html>

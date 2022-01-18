@@ -23,6 +23,7 @@ import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
+import it.unibo.enablerCleanArch.supports.coap.WebCamRaspResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
 import it.unibo.enablerCleanArchapplHandlers.SonarDistanceHandler;
 
@@ -70,6 +71,9 @@ protected IObserver obsfortesting;
  		if( ! RadarSystemConfig.ControllerRemote ) {
  			Controller.activate(led, sonar, null);
  		}
+ 		
+ 		//WebCam
+ 		new WebCamRaspResourceCoap("webcam");
  		
  		Colors.outappl("RadaSystemMainCoap | configure done", Colors.ANSI_PURPLE  );
 		//createObservers();

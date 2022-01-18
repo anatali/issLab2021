@@ -40,6 +40,7 @@ public class HumanEnablerController {
         //allOnRasp = false;
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
+    /*
     @RequestMapping("/basic")
     public String basicPage(Model model) {
         if( appl == null ){ appl = MsenablerApplication.sysMqtt; }
@@ -51,7 +52,7 @@ public class HumanEnablerController {
         //allOnRasp = true;
         return "RadarSystemUserGui";  
     }
-
+*/
 
     @PostMapping(path = "/setApplAddress")
     public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")String addr , Model viewmodel )  {
@@ -74,7 +75,7 @@ public class HumanEnablerController {
             model.addAttribute("ledgui","ledOn");
             model.addAttribute("ledstate", ledState);
             
-            appl.sonarActivate();
+            //appl.sonarActivate();  //useful in debug ...
         }
         model.addAttribute("arg", appName+" After Led on");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -94,7 +95,7 @@ public class HumanEnablerController {
             model.addAttribute("ledgui","ledOff");
             model.addAttribute("ledstate", ledState);
             
-            appl.sonarDectivate();
+            //appl.sonarDectivate(); //useful in debug ...
         }
          model.addAttribute("arg", appName+" After Led off");
          if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -176,14 +177,13 @@ public class HumanEnablerController {
                                   String moveName, Model model){      
     	//sonarDataOn = false;
     	appl.sonarDectivate();
-        if( allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        return new ResponseEntity(
-                "HumanEnablerController ERROR " + ex.getMessage(),
+        return new ResponseEntity( "HumanEnablerController ERROR " + ex.getMessage(),
                 responseHeaders, HttpStatus.CREATED);
     }
 

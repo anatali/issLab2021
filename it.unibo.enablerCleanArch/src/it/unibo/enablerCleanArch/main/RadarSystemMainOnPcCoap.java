@@ -15,7 +15,8 @@ private ILed led        		   = null;
 private IRadarDisplay radar 	   = null;
 private CoapSupport coapSonarSup   = null;
 private CoapObserveRelation relObs = null;
- 
+private final int ampl             = 3;
+
 	@Override
 	public String getName() {
 		return "RadarSystemMainOnPcCoap";
@@ -33,7 +34,7 @@ private CoapObserveRelation relObs = null;
 		if( configFileName != null ) RadarSystemConfig.setTheConfiguration(configFileName);
 		else {
 			RadarSystemConfig.raspHostAddr = "192.168.1.9";
-			RadarSystemConfig.DLIMIT       = 10;
+			RadarSystemConfig.DLIMIT       = 10*ampl;
 			RadarSystemConfig.simulation   = false;
 			RadarSystemConfig.withContext  = false;
 			RadarSystemConfig.sonarDelay   = 250;
@@ -83,7 +84,7 @@ private CoapObserveRelation relObs = null;
 	protected void executeWithObserverAsController() {
 		configure();		
  		radar           = DeviceFactory.createRadarGui();
-  		CoapHandler obs = new ControllerAsCoapSonarObserver("obsController", led, radar) ;
+  		CoapHandler obs = new ControllerAsCoapSonarObserver("obsController", led, radar, ampl) ;
 		relObs          = coapSonarSup.observeResource( obs );
  		sonar.activate();  
 		Utils.delay(10000);

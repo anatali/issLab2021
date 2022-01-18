@@ -9,12 +9,13 @@ import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
 import it.unibo.enablerCleanArch.main.RadarSystemMainOnPcCoapBase;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 
 @SpringBootApplication
 public class MsenablerApplication {
 public static RadarSystemDevicesOnRaspMqtt sysMqtt ;
 public static RadarSystemMainOnPcCoapBase sysCoap ;
-public static final boolean allOnRasp = false;
+public static final boolean allOnRasp = false;   //when true, this appl must run on Raspberry
 /*
  * This operation is called when the application runs over Raspberry
  */
@@ -39,6 +40,9 @@ public static final boolean allOnRasp = false;
     private static void startSystemCoap() {
     	sysCoap= new RadarSystemMainOnPcCoapBase();
     	sysCoap.setUp(null);
+        WebSocketHandler h  = WebSocketHandler.getWebSocketHandler();
+    	CoapSupport sonarCoapSupport = sysCoap.getSonarCoapSupport();
+    	sonarCoapSupport.observeResource(new SonarDataObserver(h) );
     	RadarSystemConfig.raspHostAddr = "192.168.1.112";
     }
     

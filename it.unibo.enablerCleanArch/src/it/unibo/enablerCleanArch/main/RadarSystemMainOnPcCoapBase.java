@@ -34,8 +34,9 @@ private CoapObserveRelation relObs = null;
 private IObserver obsfortesting;
 private CoapSupport coapSonarSup   = null;
 private CoapSupport coapLedSup     = null;
+private CoapSupport coapWebCamSup  = null;
 private CoapObserveRelation rel1   = null;
- 
+private final int ampl             = 3;
 	@Override
 	public String getName() {
 		return "RadarSystemMainOnPcCoap";
@@ -43,45 +44,14 @@ private CoapObserveRelation rel1   = null;
 	
 	@Override
 	public void setUp( String configFile )  {			
- 			RadarSystemConfig.raspHostAddr = "192.168.1.31";
-			RadarSystemConfig.DLIMIT       = 12;
+ 			RadarSystemConfig.raspHostAddr = "192.168.1.112";
+			RadarSystemConfig.DLIMIT       = 10*ampl;
 			RadarSystemConfig.simulation   = false;
 			RadarSystemConfig.withContext  = false;
 			RadarSystemConfig.sonarDelay   = 250;
  			configureUsingProxy();
   	}
-	public void entryMainAsApplInGui( ) {
-		setUp(null);
-   		CoapHandler obs = new ObserverNaive("obs"); //new ControllerAsCoapSonarObserver("obsController", led, radar) ;
-		rel1            = coapSonarSup.observeResource( obs );
-		//Controller.activate(led, sonar, radar);  
-		led.turnOff();
-		Colors.out("ledState=" +led.getState() );
-		//sonar.activate();
-		//Utils.delay(10000);
-		//Terminate
-		sonarDectivate() ;	//termina il Sonar
-		coapSonarSup.close();
-		if(rel1 != null ) rel1.proactiveCancel();
-		System.exit(0);		
-	}
 	
-	public void entryorMainOnPc( ) {
-		RadarSystemConfig.raspHostAddr = "192.168.1.31";
-		RadarSystemConfig.protcolType  = ProtocolType.coap;
-		RadarSystemConfig.DLIMIT       = 12;
-		RadarSystemConfig.simulation   = false;
-		RadarSystemConfig.withContext  = false;
-		RadarSystemConfig.sonarDelay   = 250;
-		radar  = DeviceFactory.createRadarGui(); //since it is called on PC
-		configureUsingCoapSupport();
-		executeCoapUsingCoapSupport();
- 		//Utils.delay(10000);
-		//Terminate
-		sonarDectivate() ;	//termina il Sonar
-		if(rel1 != null ) rel1.proactiveCancel();
-		System.exit(0);
-	}
 	
 	/*
 	 * Ogni proxyclient introduce un CoapSupport per la sua risorsa
@@ -98,9 +68,57 @@ private CoapObserveRelation rel1   = null;
 Colors.out("........................................ coapSonarSup=" + coapSonarSup);
  		String ledUri  = CoapApplServer.lightsDeviceUri+"/led";
  		led            = new LedProxyAsClient("ledProxyCoap", host, ledUri, ProtocolType.coap );		
+ 
+ 		CoapHandler obs = new ControllerAsCoapSonarObserver("obsController", led, radar, ampl) ;
+		rel1            = coapSonarSup.observeResource( obs );
+		
+ 		String webcamUri = CoapApplServer.inputDeviceUri+"/webcam";
+ 		coapWebCamSup    = new CoapSupport("coapWebCamSup",RadarSystemConfig.raspHostAddr, webcamUri);
+		     
 	}
 
+	public CoapSupport getSonarCoapSupport() {
+		return coapSonarSup;
+	}
+	
+	/*
+	 * Simula operazioni che farà la Spring GUI
+	 */
  
+	public void entryMainAsApplInGui( ) {
+		setUp(null);
+   		//CoapHandler obs = new ObserverNaive("obs"); //new ControllerAsCoapSonarObserver("obsController", led, radar) ;
+		//rel1            = coapSonarSup.observeResource( obs );
+		//Controller.activate(led, sonar, radar);  
+		led.turnOff();
+		Colors.out("ledState=" +led.getState() );
+//		sonar.activate();
+//		Utils.delay(10000);
+		
+		WebCamRasp.getPhoto(getName());
+		//Terminate
+		sonarDectivate() ;	//termina il Sonar
+		coapSonarSup.close();
+		if(rel1 != null ) rel1.proactiveCancel();
+		System.exit(0);		
+	}
+	
+	public void entryorMainOnPc( ) {
+		RadarSystemConfig.raspHostAddr = "192.168.1.112";
+		RadarSystemConfig.protcolType  = ProtocolType.coap;
+		RadarSystemConfig.DLIMIT       = 10*ampl;
+		RadarSystemConfig.simulation   = false;
+		RadarSystemConfig.withContext  = false;
+		RadarSystemConfig.sonarDelay   = 250;
+		radar  = DeviceFactory.createRadarGui(); //since it is called on PC
+		configureUsingCoapSupport();
+		executeCoapUsingCoapSupport();
+		//Terminate
+		sonarDectivate() ;	//termina il Sonar
+		if(rel1 != null ) rel1.proactiveCancel();
+		System.exit(0);
+	}
+
 	/*
 	 * NO: Meglio usare i supporti creati entro i proxy, anche se bisogna poi 'estrarre' il CoapSupport
 	 * per costruire un coap observer
@@ -111,8 +129,8 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
  		//Colors.out("............. coapSonarSup=" + coapSonarSup);
  		String ledUri   = CoapApplServer.lightsDeviceUri+"/led";
  		led             = new LedProxyAsClient("ledProxyCoap", RadarSystemConfig.raspHostAddr, ledUri, ProtocolType.coap );
- 		//CoapHandler obs = new ControllerAsCoapSonarObserver("obsController", led, radar) ;
-		//rel1            = coapSonarSup.observeResource( obs );
+ 		CoapHandler obs = new ControllerAsCoapSonarObserver("obsController", led, radar, ampl) ;
+		rel1            = coapSonarSup.observeResource( obs );
  	}
 	
 	/*
@@ -125,10 +143,12 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 		Utils.delay(1000);
 		ledActivate(false);
 		Colors.out("ledState=" +led.getState() );
+		Utils.delay(1000);
 		
-		/*
+		
 		sonarActivate();	
-		
+ 		Utils.delay(10000);
+		/*
 		for( int i=1; i<=3; i++) {
 			String d = coapSonarSup.request("getDistance");  
 			Colors.outappl("RadarSystemMainOnPcCoapBase | executeCoap with CoapSupport i=" + i + " d="+d, Colors.ANSI_PURPLE);

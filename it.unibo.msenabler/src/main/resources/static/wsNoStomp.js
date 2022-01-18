@@ -44,7 +44,7 @@
     }
 
     function addMessageToWindow(message) {
-    	//console.log("addMessageToWindow " + message);
+    	console.log("addMessageToWindow " + message);
         $("#output").append("<tr><td>" + message + "</td></tr>");
      }
           
