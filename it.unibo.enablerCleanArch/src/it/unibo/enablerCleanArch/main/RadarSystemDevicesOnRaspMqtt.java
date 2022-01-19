@@ -103,9 +103,16 @@ private String ctxTopic   		= "topicCtxMqtt";
 		ledblinking = false;
 	}
 	
- 	
+	@Override
+	public void takePhoto( String fName ) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public static void main( String[] args) throws Exception {
 		new RadarSystemDevicesOnRaspMqtt().doJob(null); //"RadarSystemConfig.json"
  	}
+
+
 
 }

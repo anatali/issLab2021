@@ -1,6 +1,5 @@
 package it.unibo.enablerCleanArch.domain;
-
-import it.unibo.enablerCleanArch.supports.Utils;
+  
 
 public interface IApplicationFacade { //extends IApplication
 	//public void doJob(String configFileName);
@@ -12,6 +11,8 @@ public interface IApplicationFacade { //extends IApplication
 	public boolean sonarIsactive(   );
 	public void sonarDectivate(   );
 	public String sonarDistance(   );	
+	public void takePhoto( String fName  );	
+
 //	public ISonarObservable getSonar();
 //	public void doLedBlink();
 //	public void stopLedBlink();

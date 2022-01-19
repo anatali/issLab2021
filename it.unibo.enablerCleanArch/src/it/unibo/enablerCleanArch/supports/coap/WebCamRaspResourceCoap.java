@@ -18,7 +18,10 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 
 	@Override
 	protected void elaboratePut(String req) {
-		Colors.out( getName() + " |  before elaboratePut req:" + req   );
+		String fname=req.substring( req.indexOf('-')+1, req.length());
+		Colors.out( getName() + " |  before elaboratePut fname:" + fname   );
+		WebCamRasp.getPhoto(fname);
+ 		 
  	}  
 
 }

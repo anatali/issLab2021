@@ -17,11 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
 
+import java.io.File;
+
 
 @Controller
 public class HumanEnablerController {
 	private boolean allOnRasp   = MsenablerApplication.allOnRasp;
 	private boolean sonarDataOn = false;
+	//private String raspAddr     = null;
+
     public static IApplicationFacade appl; //RadarSystemDevicesOnRaspMqtt appl;
 
     @Value("${unibo.application.name}")
@@ -30,7 +34,7 @@ public class HumanEnablerController {
     @GetMapping("/")
     //@RequestMapping("/")
     public String welcomePage(Model model) {    	
-        if( appl == null ){ appl = allOnRasp ? MsenablerApplication.sysMqtt : MsenablerApplication.sysCoap; }
+        //if( appl == null ){  appl = allOnRasp ? MsenablerApplication.sysMqtt : MsenablerApplication.sysCoap; }
         model.addAttribute("ledstate", "false (perhaps)");
         model.addAttribute("arg", appName);
         model.addAttribute("ledgui","ledOff");
@@ -55,12 +59,19 @@ public class HumanEnablerController {
 */
 
     @PostMapping(path = "/setApplAddress")
-    public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")String addr , Model viewmodel )  {
+    public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")
+                                             String addr , Model viewmodel )  {
     	if( ! addr.equals( "localhost" ) ){
-            viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
-            viewmodel.addAttribute("applicationlAddr",  addr);
-        }else{
-            viewmodel.addAttribute("viewmodelarg", "localhost not allowed");
+            //viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
+            Colors.out("HumanEnablerController setApplAddress " + addr  );
+            viewmodel.addAttribute("applicationAddr",  addr);
+            //raspAddr = addr;
+            //if( appl == null ){
+                if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+                else appl = MsenablerApplication.startSystemCoap(addr);
+                //}
+          }else{
+            //viewmodel.addAttribute("viewmodelarg", "localhost not allowed");
         }
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
@@ -179,7 +190,21 @@ public class HumanEnablerController {
     	appl.sonarDectivate();
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
-    
+
+    @PostMapping( path = "/getphoto" )
+    public String getPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
+                                       String moveName, Model model) {
+        String fName = "curPhoto.jpg";
+        appl.takePhoto(fName);
+        File f = new File(fName);
+        //leggo il contenuto del file (image) e lo invio alla zona output della pagina
+        //addImageToWindow(image)
+        model.addAttribute("arg", appName+" After PHOTO");
+        model.addAttribute("photo", "PHOTO in "+fName);
+
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
         HttpHeaders responseHeaders = new HttpHeaders();

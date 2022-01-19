@@ -1,5 +1,6 @@
 package it.unibo.msenabler;
 
+import it.unibo.enablerCleanArch.domain.IApplicationFacade;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -19,7 +20,7 @@ public static final boolean allOnRasp = false;   //when true, this appl must run
 /*
  * This operation is called when the application runs over Raspberry
  */
-    private static void startSystemMqtt() {
+    public static IApplicationFacade startSystemMqtt() {
 		sysMqtt = new RadarSystemDevicesOnRaspMqtt();
         WebSocketHandler h     = WebSocketHandler.getWebSocketHandler();
         sysMqtt.doJob("RadarSystemConfig.json");
@@ -31,24 +32,25 @@ public static final boolean allOnRasp = false;   //when true, this appl must run
         	sonar = sysMqtt.getSonar();
         }
         sonar.register(h);
-    	
+    	return sysMqtt;
     }
     
     /*
      * This operation is called when the application runs on PC
      */
-    private static void startSystemCoap() {
-    	sysCoap= new RadarSystemMainOnPcCoapBase();
+    public static IApplicationFacade startSystemCoap(String raspAddr) {
+    	sysCoap= new RadarSystemMainOnPcCoapBase(raspAddr);
     	sysCoap.setUp(null);
         WebSocketHandler h  = WebSocketHandler.getWebSocketHandler();
     	CoapSupport sonarCoapSupport = sysCoap.getSonarCoapSupport();
     	sonarCoapSupport.observeResource(new SonarDataObserver(h) );
-    	RadarSystemConfig.raspHostAddr = "192.168.1.112";
+    	//RadarSystemConfig.raspHostAddr = "192.168.1.112";
+		return sysCoap;
     }
     
 	public static void main(String[] args) {
 		SpringApplication.run(MsenablerApplication.class, args);
-		if( allOnRasp ) startSystemMqtt(); else startSystemCoap();
+		//if( allOnRasp ) startSystemMqtt(); else startSystemCoap();
 	}
 
 }

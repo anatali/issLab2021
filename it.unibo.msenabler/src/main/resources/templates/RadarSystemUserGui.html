@@ -79,9 +79,26 @@ To be used when the application is not activated by the localhost
 <h1><span th:text="${arg}">Our Arg</span></h1>
 
 
-<p>I am <i>it.unibo.msenabler - templates/gui.html</i></p>
+<p>I am <i>it.unibo.msenabler - templates/RadarSystemUserGui.html</i></p>
 
- 
+<!--
+Acquire the address of the application on the Raspberry
+-->
+
+<p>Raspberry IP: <span id="raspApplAddr" th:text="${applicationAddr}"></span></p>
+
+
+
+<form action="/setApplAddress" method="post">
+    <div class="form-group">
+        <input name="cmd" id="raspAddr" placeholder="192.168.1.xxx">
+        <button>Rasp IP</button>
+
+    </div>
+</form>
+
+<hr/>
+
 <form action="/on" method="post">
 	<input name="cmd" id="on" value="Led turnOn" style="font-size:15px;" >
 	<button>on</button>
@@ -118,8 +135,13 @@ To be used when the application is not activated by the localhost
     <button>Sonar deactivate</button>
 </form>
 
+<form action="/getphoto" method="post">
+    <input name="cmd" id="getphoto" value="Take a photo" style="font-size:15px;" >
+    <button>Take a photo</button>
+</form>
 
-<h2>Current Led State=<span th:text="${ledstate}">unknown</span></h2>
+
+<h4>Current Led State=<span th:text="${ledstate}">unknown</span></h4>
 <div th:id=${ledgui} align="left"></div>
 
 <h2>Info </h2>
@@ -135,11 +157,17 @@ To be used when the application is not activated by the localhost
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Sonar data</h2>
+        <h4>Sonar data</h4>
         <p id="sonarData">unknown</p>
     </div>
 </div>
-
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Photo</h4>
+         <span th:text="${photo}"></span>
+    </div>
+</div>
 <hr/>
 <h3>WebCam</h3>
              <div id="content" align="left">
@@ -148,9 +176,9 @@ To be used when the application is not activated by the localhost
  
 
 <script type="text/javascript">
-    console.log( window.location.hostname );
-    var applip = setWebCamIp( "192.168.1.112" );
-    if( applip.length>0) document.getElementById("img_src").src = applip;
+    console.log( document.getElementById("raspApplAddr").innerHtml );
+    //var applip = setWebCamIp( "192.168.1.112" );
+    //if( applip.length>0) document.getElementById("img_src").src = applip;
 </script>
 
 

@@ -1,4 +1,6 @@
 package it.unibo.enablerCleanArch.main;
+import java.io.File;
+
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -37,6 +39,11 @@ private CoapSupport coapLedSup     = null;
 private CoapSupport coapWebCamSup  = null;
 private CoapObserveRelation rel1   = null;
 private final int ampl             = 3;
+
+
+    public RadarSystemMainOnPcCoapBase(String addr) {
+    	RadarSystemConfig.raspHostAddr = addr;
+    }
 	@Override
 	public String getName() {
 		return "RadarSystemMainOnPcCoap";
@@ -44,8 +51,7 @@ private final int ampl             = 3;
 	
 	@Override
 	public void setUp( String configFile )  {			
- 			RadarSystemConfig.raspHostAddr = "192.168.1.112";
-			RadarSystemConfig.DLIMIT       = 10*ampl;
+ 			RadarSystemConfig.DLIMIT       = 10*ampl;
 			RadarSystemConfig.simulation   = false;
 			RadarSystemConfig.withContext  = false;
 			RadarSystemConfig.sonarDelay   = 250;
@@ -87,6 +93,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
  
 	public void entryMainAsApplInGui( ) {
 		setUp(null);
+		RadarSystemConfig.raspHostAddr = "192.168.1.34";  
    		//CoapHandler obs = new ObserverNaive("obs"); //new ControllerAsCoapSonarObserver("obsController", led, radar) ;
 		//rel1            = coapSonarSup.observeResource( obs );
 		//Controller.activate(led, sonar, radar);  
@@ -95,7 +102,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 //		sonar.activate();
 //		Utils.delay(10000);
 		
-		WebCamRasp.getPhoto(getName());
+ 		coapWebCamSup.forward("getPhoto-zzz.jpg");
 		//Terminate
 		sonarDectivate() ;	//termina il Sonar
 		coapSonarSup.close();
@@ -192,10 +199,17 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 		String answer = coapSonarSup.request("getDistance");
 		return answer;
 	}
+
+	@Override
+	public void takePhoto( String fName ) {
+		coapWebCamSup.forward("getPhoto-"+fName);	
+		//restituisco il contenuto del file
+	}
+
 	
 	public static void main( String[] args) throws Exception {
 		//new RadarSystemMainOnPcCoapBase().entryorMainOnPc();//   
-		new RadarSystemMainOnPcCoapBase().entryMainAsApplInGui();
+		new RadarSystemMainOnPcCoapBase("192.168.1.34").entryMainAsApplInGui();
 
 	}
 

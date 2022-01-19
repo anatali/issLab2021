@@ -133,6 +133,11 @@ private final int ampl             = 3;
 		return answer;
 	}
 	
+	@Override
+	public void takePhoto( String fName ) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public static void main( String[] args) throws Exception {
 		new RadarSystemMainOnPcCoap().doJob(null);
