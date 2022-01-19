@@ -109,9 +109,16 @@ private String ctxTopic   		= "topicCtxMqtt";
 		
 	}
 	
+	@Override
+	public void startWebCamStream() {
+		// TODO Auto-generated method stub
+		
+	}	
 	public static void main( String[] args) throws Exception {
 		new RadarSystemDevicesOnRaspMqtt().doJob(null); //"RadarSystemConfig.json"
  	}
+
+
 
 
 

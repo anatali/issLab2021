@@ -63,7 +63,7 @@ public abstract class CoapDeviceResource extends CoapResource {
  		String arg = exchange.getRequestText() ;
 		elaboratePut( arg );
 		//changed();
-		Colors.out(getName() + " | handlePUT arg=" + exchange.getRequestText() + " CHANGED="+ CHANGED );
+		Colors.out(getName() + " | handlePUT arg=" + arg + " CHANGED="+ CHANGED );
 		exchange.respond(""+CHANGED);
 	}
 

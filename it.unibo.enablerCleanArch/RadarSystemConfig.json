@@ -18,6 +18,7 @@
 "sonarDelay"       : "100",
 "sonarDistanceMax" : "150",
 "DLIMIT"           : "12",
+"webCam"           : "true",
 "withContext"      : "false",
 "ctxServerPort"    : "8018",
 "mqttBrokerAddr"   : "tcp://broker.hivemq.com",

@@ -7,20 +7,25 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
  	
 	public WebCamRaspResourceCoap( String name  ) {
 		super(name, DeviceType.input);  //add the resource
+		WebCamRasp.startWebCamStream();  //Forse non prende foto ???
   	}
 
 	@Override
 	protected String elaborateGet(String req) {
-		Colors.out( getName() + " |  before elaborateGet req:" + req   );
-		WebCamRasp.getPhoto("xxx.jpg");
- 		return "done xxx.jpg" ;
+		Colors.out( getName() + " | before elaborateGet req:" + req   );
+  		return "nothing to to" ;
 	}
 
 	@Override
 	protected void elaboratePut(String req) {
-		String fname=req.substring( req.indexOf('-')+1, req.length());
-		Colors.out( getName() + " |  before elaboratePut fname:" + fname   );
-		WebCamRasp.getPhoto(fname);
+		Colors.out( getName() + " | before elaboratePut req:" + req   );
+		 if( req.startsWith("getPhoto-") ){
+			String fname=req.substring( req.indexOf('-')+1, req.length());
+			Colors.out( getName() + " | getPhoto fname:" + fname   );
+			WebCamRasp.getPhoto(fname);
+		}else if( req.startsWith("startWebCamStream") ){
+			WebCamRasp.startWebCamStream();
+		}
  		 
  	}  
 

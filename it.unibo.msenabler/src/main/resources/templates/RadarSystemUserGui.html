@@ -47,32 +47,7 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 }
 </style>      
 
-<script type="text/javascript">
-/*
-To be used when the application is not activated by the localhost
-*/
 
- 	function setWebCamIp( appladdr ){
- 	var applip ="";
- 	/*
-	         var appladdr = document.getElementById("appladdr").innerHTML
-	         if(  appladdr.length == 0 ){
-	         	alert("sorry, no webcam");
-	          	return; 
-	         }
-	         var appladdr = "192.168.1.29";
-	*/
-	         console.log("startWebCam appladdr="+appladdr )
-	         var url = appladdr+":8080"  // FOR WEB CAM
-	         var len = url.length;
-	         var n   = url.indexOf(":");
-	         var j   = url.substring(n+1,len);
-	         applip = "http://" + url + "/?action=stream";
-	         //alert(applip); //applip=http://192.168.1.72:8080/?action=stream
-	         
-	         return applip;
-	}
- </script>
  
  </head>
 <body>
@@ -83,17 +58,30 @@ To be used when the application is not activated by the localhost
 
 <!--
 Acquire the address of the application on the Raspberry
+<p id="raspIp">Raspberry IP: <span id="raspApplAddr" th:text="${applicationAddr}"></span></p>
 -->
 
-<p>Raspberry IP: <span id="raspApplAddr" th:text="${applicationAddr}"></span></p>
 
-
+<p id="raspIp" th:text="${applicationAddr}"> </p>
+<p id="webCamActive" th:text="${webCamActive}"> </p>
+<p id="applStarted" th:text="${applStarted}"> </p>
 
 <form action="/setApplAddress" method="post">
     <div class="form-group">
         <input name="cmd" id="raspAddr" placeholder="192.168.1.xxx">
         <button>Rasp IP</button>
-
+    </div>
+</form>
+<form action="/webCamActive" method="post">
+    <div class="form-group">
+        <input name="cmd" id="webCamActive" placeholder="false">
+        <button>WebCam active</button>
+    </div>
+</form>
+<form action="/startAppl" method="post">
+    <div class="form-group">
+        <input name="cmd" id="startAppl" placeholder="false">
+        <button>StartAppl</button>
     </div>
 </form>
 
@@ -140,6 +128,14 @@ Acquire the address of the application on the Raspberry
     <button>Take a photo</button>
 </form>
 
+<!--
+<form action="/startWebCamStream" method="post">
+    <input name="cmd" id="startWebCamStream" value="Start WebCam" style="font-size:15px;" >
+    <button>Start WebCam</button>
+</form>
+-->
+
+
 
 <h4>Current Led State=<span th:text="${ledstate}">unknown</span></h4>
 <div th:id=${ledgui} align="left"></div>
@@ -170,15 +166,46 @@ Acquire the address of the application on the Raspberry
 </div>
 <hr/>
 <h3>WebCam</h3>
+
+
+<button type="button" onclick="showWebCam()">Show WebCam</button>
+
+
              <div id="content" align="left">
                 <img src="" id="img_src" alt=""  width="640" height="480"><br/>
             </div>
  
 
 <script type="text/javascript">
-    console.log( document.getElementById("raspApplAddr").innerHtml );
+ 	function setWebCamIp( appladdr ){
+ 	var applip ="";
+ 	/*
+	         var appladdr = document.getElementById("appladdr").innerHTML
+	         if(  appladdr.length == 0 ){
+	         	alert("sorry, no webcam");
+	          	return;
+	         }
+	         var appladdr = "192.168.1.29";
+	*/
+	         console.log("startWebCam appladdr="+appladdr )
+	         var url = appladdr+":8080"  // FOR WEB CAM
+	         var len = url.length;
+	         var n   = url.indexOf(":");
+	         var j   = url.substring(n+1,len);
+	         applip = "http://" + url + "/?action=stream";
+	         //alert(applip); //applip=http://192.168.1.72:8080/?action=stream
+
+	         return applip;
+	}
+
+function showWebCam(){
+    console.log( "showWebCam:"+ document.getElementById("raspIp").innerHTML );
+    var applip = setWebCamIp( document.getElementById("raspIp").innerHTML );
+    if( applip.length>0)  document.getElementById("img_src").src = applip;
+}
+    //console.log( document.getElementById("raspApplAddr").innerHtml );
     //var applip = setWebCamIp( "192.168.1.112" );
-    //if( applip.length>0) document.getElementById("img_src").src = applip;
+    //document.getElementById("img_src").src = applip;
 </script>
 
 

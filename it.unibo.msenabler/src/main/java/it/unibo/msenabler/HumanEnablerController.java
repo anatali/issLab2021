@@ -24,7 +24,9 @@ import java.io.File;
 public class HumanEnablerController {
 	private boolean allOnRasp   = MsenablerApplication.allOnRasp;
 	private boolean sonarDataOn = false;
-	//private String raspAddr     = null;
+	private String raspAddr     = "unkown";
+    private boolean webCamActive= false;
+    private boolean applStarted = false;
 
     public static IApplicationFacade appl; //RadarSystemDevicesOnRaspMqtt appl;
 
@@ -42,6 +44,7 @@ public class HumanEnablerController {
         //Colors.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
         //appl.sonarActivate();
         //allOnRasp = false;
+        setModelValues(model,"entry");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     /*
@@ -64,17 +67,49 @@ public class HumanEnablerController {
     	if( ! addr.equals( "localhost" ) ){
             //viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
             Colors.out("HumanEnablerController setApplAddress " + addr  );
-            viewmodel.addAttribute("applicationAddr",  addr);
-            //raspAddr = addr;
+            raspAddr = addr;
+
             //if( appl == null ){
-                if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
-                else appl = MsenablerApplication.startSystemCoap(addr);
+                //if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+                //else appl = MsenablerApplication.startSystemCoap(addr);
                 //}
           }else{
             //viewmodel.addAttribute("viewmodelarg", "localhost not allowed");
         }
+        setModelValues(viewmodel,"setApplAddress");
+    	if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+
+    @PostMapping(path = "/webCamActive")
+    public String webCamActive(@RequestParam(name="cmd", required=false, defaultValue="")
+                                         String value , Model viewmodel ) {
+
+        webCamActive = value.equals("true");
+        if( webCamActive ) RadarSystemConfig.webCam = true;
+        else RadarSystemConfig.webCam = false;
+
+        setModelValues(viewmodel,"webCamActive");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
+
+    @PostMapping(path = "/startAppl")
+    public String startAppl(@RequestParam(name="cmd", required=false, defaultValue="")
+                                       String value , Model viewmodel ) {
+        if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+        else appl = MsenablerApplication.startSystemCoap(raspAddr);
+        applStarted = true;
+        setModelValues(viewmodel, "startAppl");
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+
+    }
+
+    protected void setModelValues(Model model, String info){
+        model.addAttribute("arg", appName+" " + info);
+        model.addAttribute("applicationAddr",  raspAddr);
+        model.addAttribute("webCamActive",  webCamActive);
+        model.addAttribute("applStarted",  applStarted);
+    }
+
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
@@ -88,8 +123,8 @@ public class HumanEnablerController {
             
             //appl.sonarActivate();  //useful in debug ...
         }
-        model.addAttribute("arg", appName+" After Led on");
-        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+        setModelValues(model,"Led on");
+         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
 
@@ -108,16 +143,16 @@ public class HumanEnablerController {
             
             //appl.sonarDectivate(); //useful in debug ...
         }
-         model.addAttribute("arg", appName+" After Led off");
-         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+        setModelValues(model,"Led off");
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/doLedBlink" )
     public String doBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                 String moveName, Model model){
         //if( appl != null ) appl.doLedBlink( );
-        model.addAttribute("arg", appName+" After Led blink");
         model.addAttribute("ledstate","ledBlinking ...");
+        setModelValues(model,"Led blink");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
@@ -131,6 +166,7 @@ public class HumanEnablerController {
 //        if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
 //        else model.addAttribute("ledgui","ledOff");
 //        model.addAttribute("ledstate",ledState);
+        setModelValues(model,"Led blink stop");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
@@ -144,8 +180,8 @@ public class HumanEnablerController {
             d = appl.sonarDistance();
             Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
         }            	
-        model.addAttribute("arg", appName+" After distance");
         model.addAttribute("sonardistance",d);
+        setModelValues(model,"Distance");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
@@ -180,6 +216,7 @@ public class HumanEnablerController {
             	}
             }.start();*/
         }
+        setModelValues(model,"sonardataon");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     
@@ -188,6 +225,7 @@ public class HumanEnablerController {
                                   String moveName, Model model){      
     	//sonarDataOn = false;
     	appl.sonarDectivate();
+        setModelValues(model,"sonardataoff");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
@@ -199,12 +237,22 @@ public class HumanEnablerController {
         File f = new File(fName);
         //leggo il contenuto del file (image) e lo invio alla zona output della pagina
         //addImageToWindow(image)
-        model.addAttribute("arg", appName+" After PHOTO");
         model.addAttribute("photo", "PHOTO in "+fName);
-
+        setModelValues(model,"getphoto");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
+/*
+    @PostMapping( path = "/startWebCamStream" )
+    public String startWebCamStream(@RequestParam(name="cmd", required=false, defaultValue="")
+                                   String moveName, Model model) {
+        appl.startWebCamStream();
+        setModelValues(model,"startWebCamStream");
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+*/
+    
+    
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
         HttpHeaders responseHeaders = new HttpHeaders();

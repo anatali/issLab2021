@@ -73,7 +73,7 @@ protected IObserver obsfortesting;
  		}
  		
  		//WebCam
- 		new WebCamRaspResourceCoap("webcam");
+ 		if( RadarSystemConfig.webCam) new WebCamRaspResourceCoap("webcam");
  		
  		Colors.outappl("RadaSystemMainCoap | configure done", Colors.ANSI_PURPLE  );
 		//createObservers();

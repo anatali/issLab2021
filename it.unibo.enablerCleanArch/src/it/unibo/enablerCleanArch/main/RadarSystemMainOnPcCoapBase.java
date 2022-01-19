@@ -203,9 +203,11 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	@Override
 	public void takePhoto( String fName ) {
 		coapWebCamSup.forward("getPhoto-"+fName);	
-		//restituisco il contenuto del file
 	}
 
+	public void startWebCamStream(  ) {
+		coapWebCamSup.forward("startWebCamStream");	
+	}
 	
 	public static void main( String[] args) throws Exception {
 		//new RadarSystemMainOnPcCoapBase().entryorMainOnPc();//   

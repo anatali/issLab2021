@@ -27,6 +27,7 @@ public class RadarSystemConfig {
 	public static  int controllerPort    = 8016;
 	public static  int ctxServerPort     = 8048;
 	public static  String mqttBrokerAddr = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL
+	public static  boolean webCam        = false;
 	public static  boolean withContext   = false;
  	
 	public static int serverTimeOut       =  600000;  //10 minuti
@@ -76,6 +77,7 @@ public class RadarSystemConfig {
 	        
 	        ctxServerPort    = object.getInt("ctxServerPort");
 	        mqttBrokerAddr   = object.getString("mqttBrokerAddr");
+	        webCam           = object.getBoolean("webCam");
 	        withContext      = object.getBoolean("withContext");	
 	        applStartdelay   = object.getInt("applStartdelay");	
 	        

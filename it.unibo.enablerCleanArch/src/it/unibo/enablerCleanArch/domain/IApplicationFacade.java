@@ -12,6 +12,7 @@ public interface IApplicationFacade { //extends IApplication
 	public void sonarDectivate(   );
 	public String sonarDistance(   );	
 	public void takePhoto( String fName  );	
+	public void startWebCamStream(   );	
 
 //	public ISonarObservable getSonar();
 //	public void doLedBlink();

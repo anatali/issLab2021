@@ -20,6 +20,7 @@
 "DLIMIT"           : "12",
 "withContext"      : "false",
 "ctxServerPort"    : "8018",
+"webCam"           : "true",
 "mqttBrokerAddr"   : "tcp://broker.hivemq.com",
 "testing"          : "false"
 
