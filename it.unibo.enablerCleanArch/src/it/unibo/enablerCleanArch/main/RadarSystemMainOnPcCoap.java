@@ -144,6 +144,10 @@ private final int ampl             = 3;
 		// TODO Auto-generated method stub
 		
 	}	
+	@Override
+	public void stopWebCamStream(  ) {
+		
+	}
 	public static void main( String[] args) throws Exception {
 		new RadarSystemMainOnPcCoap().doJob(null);
 

@@ -27,6 +27,7 @@ public class HumanEnablerController {
 	private String raspAddr     = "unkown";
     private boolean webCamActive= false;
     private boolean applStarted = false;
+    private String ledState     = "false";
 
     public static IApplicationFacade appl; //RadarSystemDevicesOnRaspMqtt appl;
 
@@ -37,7 +38,7 @@ public class HumanEnablerController {
     //@RequestMapping("/")
     public String welcomePage(Model model) {    	
         //if( appl == null ){  appl = allOnRasp ? MsenablerApplication.sysMqtt : MsenablerApplication.sysCoap; }
-        model.addAttribute("ledstate", "false (perhaps)");
+        model.addAttribute("ledstate", ledState+"(perhaps)");
         model.addAttribute("arg", appName);
         model.addAttribute("ledgui","ledOff");
         Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + appl);
@@ -47,19 +48,7 @@ public class HumanEnablerController {
         setModelValues(model,"entry");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
-    /*
-    @RequestMapping("/basic")
-    public String basicPage(Model model) {
-        if( appl == null ){ appl = MsenablerApplication.sysMqtt; }
-        model.addAttribute("ledstate", "false (perhaps)");
-        model.addAttribute("arg", appName);
-        model.addAttribute("ledgui","ledOff");
-        Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + appl);
-        Colors.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
-        //allOnRasp = true;
-        return "RadarSystemUserGui";  
-    }
-*/
+
 
     @PostMapping(path = "/setApplAddress")
     public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")
@@ -80,17 +69,6 @@ public class HumanEnablerController {
     	if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
-    @PostMapping(path = "/webCamActive")
-    public String webCamActive(@RequestParam(name="cmd", required=false, defaultValue="")
-                                         String value , Model viewmodel ) {
-
-        webCamActive = value.equals("true");
-        if( webCamActive ) RadarSystemConfig.webCam = true;
-        else RadarSystemConfig.webCam = false;
-
-        setModelValues(viewmodel,"webCamActive");
-        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
-    }
 
     @PostMapping(path = "/startAppl")
     public String startAppl(@RequestParam(name="cmd", required=false, defaultValue="")
@@ -103,12 +81,6 @@ public class HumanEnablerController {
 
     }
 
-    protected void setModelValues(Model model, String info){
-        model.addAttribute("arg", appName+" " + info);
-        model.addAttribute("applicationAddr",  raspAddr);
-        model.addAttribute("webCamActive",  webCamActive);
-        model.addAttribute("applStarted",  applStarted);
-    }
 
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
@@ -116,7 +88,7 @@ public class HumanEnablerController {
     	Colors.out("HumanEnablerController doOn " + appl  );
         if( appl != null ){
             appl.ledActivate(true);
-            String ledState = appl.ledState();
+            ledState = appl.ledState();
             Colors.out("HumanEnablerController doOn ledState=" + ledState  );
             model.addAttribute("ledgui","ledOn");
             model.addAttribute("ledstate", ledState);
@@ -136,7 +108,7 @@ public class HumanEnablerController {
         //if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
         if( appl != null ){
             appl.ledActivate(false);
-            String ledState = appl.ledState();
+            ledState = appl.ledState();
             Colors.out("HumanEnablerController doOff ledState=" + ledState  );
             model.addAttribute("ledgui","ledOff");
             model.addAttribute("ledstate", ledState);
@@ -188,33 +160,9 @@ public class HumanEnablerController {
     @PostMapping( path = "/sonardataon" )
     public String sonardataon(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
-//    	if( sonarDataOn ) {
-//    		if( basicGui ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
-//    	}
-        Colors.out("HumanEnablerController sonardataon - sonar active=" + appl.sonarIsactive()  );
+         Colors.out("HumanEnablerController sonardataon - sonar active=" + appl.sonarIsactive()  );
         if( appl != null ){
             if( ! appl.sonarIsactive() ) appl.sonarActivate();
-            //sonarDataOn = true;
-            /*
-            WebSocketHandler h = WebSocketHandler.getWebSocketHandler();
-            new Thread() {
-            	public void run() {
-                    while( appl.sonarIsactive() && sonarDataOn ) {
-                    	String d = appl.sonarDistance();
-                    	Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
-                        Utils.delay(RadarSystemConfig.sonarDelay);
-                        //update on ws
-                        try {
-							h.sendToAll( d );
-						} catch (Exception e) {
- 							Colors.outerr("ws update ERROR:" + e.getMessage());
- 							sonarDataOn = false;
- 							appl.sonarDectivate();
-						}
-                    }   
-                    sonarDataOn = false;
-            	}
-            }.start();*/
         }
         setModelValues(model,"sonardataon");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -242,16 +190,37 @@ public class HumanEnablerController {
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
-/*
-    @PostMapping( path = "/startWebCamStream" )
-    public String startWebCamStream(@RequestParam(name="cmd", required=false, defaultValue="")
-                                   String moveName, Model model) {
-        appl.startWebCamStream();
-        setModelValues(model,"startWebCamStream");
+
+    @PostMapping(path = "/webCamActive")
+    public String webCamActive(@RequestParam(name="cmd", required=false, defaultValue="")
+                                       String value , Model viewmodel ) {
+          if( ! webCamActive ) {
+            appl.startWebCamStream();
+            webCamActive = true;
+        }
+        setModelValues(viewmodel,"webCamActive");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
-*/
-    
+    @PostMapping(path = "/webCamStop")
+    public String webCamStop(@RequestParam(name="cmd", required=false, defaultValue="")
+                                       String value , Model viewmodel ) {
+          if(  webCamActive ) {
+            appl.stopWebCamStream();
+            webCamActive = false;
+        }
+        setModelValues(viewmodel,"webCamActive");
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+
+
+protected void setModelValues(Model model, String info){
+    model.addAttribute("arg", appName+" " + info);
+    model.addAttribute("applicationAddr",  raspAddr);
+    model.addAttribute("webCamActive",  webCamActive);
+    model.addAttribute("applStarted",  applStarted);
+    model.addAttribute("ledState",  ledState);
+}
+
     
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
@@ -261,3 +230,33 @@ public class HumanEnablerController {
     }
 
 }
+
+/*
+    @PostMapping( path = "/startWebCamStream" )
+    public String startWebCamStream(@RequestParam(name="cmd", required=false, defaultValue="")
+                                   String moveName, Model model) {
+        appl.startWebCamStream();
+        setModelValues(model,"startWebCamStream");
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
+*/
+            /*
+            WebSocketHandler h = WebSocketHandler.getWebSocketHandler();
+            new Thread() {
+            	public void run() {
+                    while( appl.sonarIsactive() && sonarDataOn ) {
+                    	String d = appl.sonarDistance();
+                    	Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
+                        Utils.delay(RadarSystemConfig.sonarDelay);
+                        //update on ws
+                        try {
+							h.sendToAll( d );
+						} catch (Exception e) {
+ 							Colors.outerr("ws update ERROR:" + e.getMessage());
+ 							sonarDataOn = false;
+ 							appl.sonarDectivate();
+						}
+                    }
+                    sonarDataOn = false;
+            	}
+            }.start();*/

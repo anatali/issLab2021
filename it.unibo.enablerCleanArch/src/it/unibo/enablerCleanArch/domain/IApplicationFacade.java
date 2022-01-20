@@ -13,6 +13,7 @@ public interface IApplicationFacade { //extends IApplication
 	public String sonarDistance(   );	
 	public void takePhoto( String fName  );	
 	public void startWebCamStream(   );	
+	public void stopWebCamStream(   );	
 
 //	public ISonarObservable getSonar();
 //	public void doLedBlink();

@@ -32,11 +32,19 @@ when we use application/x-www-form-urlencoded, Spring doesn't understand it as a
 		  border: 1px solid black;
 		  border-collapse: collapse;
 		}    
-h3{
- background-color: yellow;
- border: solid ;
-}
 
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 5px px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 </style>      
 
 
@@ -59,7 +67,7 @@ Acquire the address of the application on the Raspberry
 
 
 
-<h3>SetUp Area</h3>
+
 
 <form action="/setApplAddress" method="post">
     <div class="form-group">
@@ -67,7 +75,12 @@ Acquire the address of the application on the Raspberry
         <button>Rasp IP</button> <span id="raspIp" th:text="${applicationAddr}"> </span>
     </div>
 </form>
-
+<form action="/webCamActive" method="post">
+    <div class="form-group">
+        <!-- <input name="cmd" id="webCamActive" placeholder="false"> -->
+        <button>WebCam active</button> <span id="webCamActive" th:text="${webCamActive}"> </span>
+    </div>
+</form>
 <form action="/startAppl" method="post">
     <div class="form-group">
         <!-- <input name="cmd" id="startAppl" placeholder="false"> -->
@@ -75,14 +88,6 @@ Acquire the address of the application on the Raspberry
     </div>
 </form>
 
-<hr/>
-<h5>WS-Information Area</h5>
-<table >
-    <thead>
-    </thead>
-    <tbody id="output">
-    </tbody>
-</table>
 <!--
 LED
 -->
@@ -91,7 +96,7 @@ LED
 
 <div class="row">
     <div class="col-md-6">
-        <h3>Led area</h3>
+        <h3>Led commands</h3>
         <table>
             <tr>
                 <td>
@@ -128,102 +133,130 @@ LED
             </tr>
         </table>
 
-<div th:id=${ledgui} align="left"></div>
-<h5>Current Led State: <span th:text="${ledstate}"></span></h5>
 
+
+
+
+
+<form action="/on" method="post">
+	<!-- <input name="cmd" id="on" value="Led turnOn" style="font-size:15px;" > -->
+	<button>Led turnOn</button>
+</form>
+
+
+<form action="/off" method="post">
+    <!-- <input name="cmd" id="off" value="Led turnOff" style="font-size:15px;" > -->
+    <button>Led turnOff</button>
+</form>
+
+<form action="/doLedBlink" method="post">
+    <!-- <input name="cmd" id="doLedBlink" value="Led blink" style="font-size:15px;" > -->
+    <button>Led blink ON</button>
+</form>
+
+<form action="/stopLedBlink" method="post">
+    <!-- <input name="cmd" id="stopLedBlink" value="Led blink STOP" style="font-size:15px;" > -->
+    <button>Led blink OFF</button>
+</form>
+
+<h4>Current Led State: <span th:text="${ledstate}"></span></h4>
+<div th:id=${ledgui} align="left"></div>
 
 <hr/>
 <!--
 SONAR
 -->
-        <h3>Sonar area</h3>
+<form action="/distance" method="post">
+    <input name="cmd" id="distance" value="Sonar distance" style="font-size:15px;" >
+    <button>Show sonar distance</button>
+</form>
 
-        <table>
-            <tr>
-                <td>
-                    <form class="form-inline" action="/distance" method="post">
-                        <div class="form-group">
-                            <button id="distance" type="submit">Current Sonar distance</button>
+<form action="/sonardataon" method="post">
+    <input name="cmd" id="sonaron" value="Sonar activate" style="font-size:15px;" >
+    <button>Sonar activate</button>
+</form>
 
-                        </div>
-                    </form>
-                </td>
-                <td>
-                    <form class="form-inline" action="/sonardataon" method="post">
-                        <div class="form-group">
-                            <button>Sonar activate</button>
-
-                        </div>
-                    </form>
-                </td>
-                <td>
-                    <form class="form-inline" action="/sonardataoff" method="post">
-                        <div class="form-group">
-                            <button>Sonar deactivate</button>
-                        </div>
-                    </form>
-                </td>
-            </tr>
-        </table>
+<form action="/sonardataoff" method="post">
+    <input name="cmd" id="sonaroff" value="Sonar deactivate" style="font-size:15px;" >
+    <button>Sonar deactivate</button>
+</form>
 
 
+
+<!--
+<form action="/startWebCamStream" method="post">
+    <input name="cmd" id="startWebCamStream" value="Start WebCam" style="font-size:15px;" >
+    <button>Start WebCam</button>
+</form>
+-->
+
+
+
+
+<h2>Info Area</h2>
+<table >
+    <thead>
+    <!-- <tr> <th>Info area</th> </tr> -->
+    </thead>
+    <tbody id="output">
+    </tbody>
+</table>
+
+<h4>Sonar data</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <p id="sonarData">unknown</p>
     </div>
 </div>
 
-<h5>Current Sonar distance:  <span th:text="${sonardistance}">unknown</span></h5>
-<h5>Sonar data:  <span id="sonarData">unknown</span></h5>
-
-
-<hr/>
-<h3>WebCam Area</h3>
 
 <!--
 PHOTO SECTION
 -->
-
+<hr/>
 <form action="/getphoto" method="post">
+    <!-- <input name="cmd" id="getphoto" value="Take a photo" style="font-size:15px;" > -->
     <button>Take a photo</button>
 </form>
-
 <div class="row">
     <div class="col-md-12">
         <h4>Photo</h4>
          <span th:text="${photo}"></span>
     </div>
 </div>
+<hr/>
+<h3>WebCam</h3>
 
-
-<!--
-Stream section
--->
-<form action="/webCamActive" method="post">
-    <div class="form-group">
-        <button>WebCam-stream start</button> <span id="webCamActive" th:text="${webCamActive}"> </span>
-    </div>
-</form>
-<form action="/webCamStop" method="post">
-    <div class="form-group">
-        <button>WebCam-stream stop</button>
-    </div>
-</form>
 
 <button type="button" onclick="showWebCam()">Show WebCam</button>
+
+
              <div id="content" align="left">
                 <img src="" id="img_src" alt=""  width="640" height="480"><br/>
             </div>
-<hr/>
+ 
 
 <script type="text/javascript">
  	function setWebCamIp( appladdr ){
- 	    var applip ="";
-	    console.log("startWebCam appladdr="+appladdr )
-	    var url = appladdr+":8080"  // FOR WEB CAM
-	    var len = url.length;
-	    var n   = url.indexOf(":");
-	    var j   = url.substring(n+1,len);
-	    applip = "http://" + url + "/?action=stream";
-	    //alert(applip); //applip=http://192.168.1.72:8080/?action=stream
-	    return applip;
+ 	var applip ="";
+ 	/*
+	         var appladdr = document.getElementById("appladdr").innerHTML
+	         if(  appladdr.length == 0 ){
+	         	alert("sorry, no webcam");
+	          	return;
+	         }
+	         var appladdr = "192.168.1.29";
+	*/
+	         console.log("startWebCam appladdr="+appladdr )
+	         var url = appladdr+":8080"  // FOR WEB CAM
+	         var len = url.length;
+	         var n   = url.indexOf(":");
+	         var j   = url.substring(n+1,len);
+	         applip = "http://" + url + "/?action=stream";
+	         //alert(applip); //applip=http://192.168.1.72:8080/?action=stream
+
+	         return applip;
 	}
 
 function showWebCam(){
@@ -231,6 +264,9 @@ function showWebCam(){
     var applip = setWebCamIp( document.getElementById("raspIp").innerHTML );
     if( applip.length>0)  document.getElementById("img_src").src = applip;
 }
+    //console.log( document.getElementById("raspApplAddr").innerHtml );
+    //var applip = setWebCamIp( "192.168.1.112" );
+    //document.getElementById("img_src").src = applip;
 </script>
 
 

@@ -93,16 +93,18 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
  
 	public void entryMainAsApplInGui( ) {
 		setUp(null);
-		RadarSystemConfig.raspHostAddr = "192.168.1.34";  
+		RadarSystemConfig.raspHostAddr = "192.168.1.9";  
    		//CoapHandler obs = new ObserverNaive("obs"); //new ControllerAsCoapSonarObserver("obsController", led, radar) ;
 		//rel1            = coapSonarSup.observeResource( obs );
 		//Controller.activate(led, sonar, radar);  
 //		led.turnOff();
-		Colors.out("ledState=" +led.getState() );
+//		Colors.out("ledState=" +led.getState() );
 //		sonar.activate();
 //		Utils.delay(10000);
 		
- 		coapWebCamSup.forward("getPhoto-zzz.jpg");
+		//startWebCamStream();
+		
+		takePhoto("zzz.jpg");
 		//Terminate
 		sonarDectivate() ;	//termina il Sonar
 		coapSonarSup.close();
@@ -208,10 +210,13 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	public void startWebCamStream(  ) {
 		coapWebCamSup.forward("startWebCamStream");	
 	}
+	public void stopWebCamStream(  ) {
+		coapWebCamSup.forward("stopWebCamStream");	
+	}
 	
 	public static void main( String[] args) throws Exception {
 		//new RadarSystemMainOnPcCoapBase().entryorMainOnPc();//   
-		new RadarSystemMainOnPcCoapBase("192.168.1.34").entryMainAsApplInGui();
+		new RadarSystemMainOnPcCoapBase("192.168.1.9").entryMainAsApplInGui();
 
 	}
 

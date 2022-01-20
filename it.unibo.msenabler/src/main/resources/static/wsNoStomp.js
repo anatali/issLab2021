@@ -18,7 +18,7 @@
 
         socket.onopen = function (event) {
         	//setConnected(true);
-            addMessageToWindow("Connected");
+            addMessageToWindow("Connected to WebSocket:" + addr);
         };
   
         socket.onmessage = function (event) {

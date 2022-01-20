@@ -15,7 +15,16 @@ public class WebCamRasp {
 
        		Colors.out("WebCamRasp | startStream done "  );
     	}catch( Exception e) {
-       		Colors.outerr("WebCamRasp | getPhoto ERROR " + e.getMessage() );
+       		Colors.outerr("WebCamRasp | startStream ERROR " + e.getMessage() );
+    	}
+	}
+	public static void stopWebCamStream( ) {  
+ 		try {
+       		Colors.out("WebCamRasp | stopStream  "  );
+  			Runtime.getRuntime().exec("sudo killall mjpg_streamer");
+       		Colors.out("WebCamRasp | stopStream done "  );
+    	}catch( Exception e) {
+       		Colors.outerr("WebCamRasp | stopStream ERROR " + e.getMessage() );
     	}
 	}
 	
@@ -25,7 +34,7 @@ public class WebCamRasp {
 			//cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental
 			//Runtime.getRuntime().exec("cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental");
 			//Runtime.getRuntime().exec("fswebcam -r 320×240 " + fName);
- 	        Runtime.getRuntime().exec("bash getPhoto.sh "+ fName );
+ 	        Runtime.getRuntime().exec("fswebcam "+ fName );
  	        Colors.out("WebCamRasp | getPhoto done");
        	}catch( Exception e) {
        		Colors.outerr("WebCamRasp | getPhoto ERROR " + e.getMessage() );

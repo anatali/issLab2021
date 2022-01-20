@@ -7,7 +7,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
  	
 	public WebCamRaspResourceCoap( String name  ) {
 		super(name, DeviceType.input);  //add the resource
-		WebCamRasp.startWebCamStream();  //Forse non prende foto ???
+		//WebCamRasp.startWebCamStream();  //Forse non prende foto ???
   	}
 
 	@Override
