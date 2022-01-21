@@ -219,13 +219,11 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 		coapWebCamSup.forward("stopWebCamStream");	
 	}
 	
-	//https://www.baeldung.com/java-base64-image-string
 	public String getImage(String fName) {
 		try {
-			byte[] fileContent = FileUtils.readFileToByteArray(new File(fName));
-			String encodedString = Base64.getEncoder().encodeToString(fileContent);
- 			return encodedString;
-		} catch (Exception e) {
+			String imgBase64 = coapWebCamSup.request("getImage-" + fName);
+			return imgBase64;
+ 		} catch (Exception e) {
  			Colors.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());
  			return "";
 		}

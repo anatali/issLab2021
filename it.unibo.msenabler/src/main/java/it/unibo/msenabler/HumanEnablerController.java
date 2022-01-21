@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
 
 import java.io.File;
+import java.util.Base64;
 
 
 @Controller
@@ -28,7 +29,7 @@ public class HumanEnablerController {
     private boolean webCamActive= false;
     private boolean applStarted = false;
     private String ledState     = "false";
-
+    private String photoFName   = "curPhoto.jpg";
     public static IApplicationFacade appl; //RadarSystemDevicesOnRaspMqtt appl;
 
     @Value("${unibo.application.name}")
@@ -180,16 +181,31 @@ public class HumanEnablerController {
     @PostMapping( path = "/getphoto" )
     public String getPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
                                        String moveName, Model model) {
-        String fName = "curPhoto.jpg";
-        appl.takePhoto(fName);
-        File f = new File(fName);
+        Colors.out("HumanEnablerController getphoto 0 "    );
+        appl.takePhoto(photoFName);
+        Colors.out("HumanEnablerController getphoto 1 "    );
+        //Occorre fare richiesta e attendere risposta
+        String photoBase64 = appl.getImage(photoFName);
+        Colors.out("HumanEnablerController showPhoto: " + photoBase64  );
+        appl.storeImage(photoBase64,"curPhoto.jpg");
+
+
+        //File f = new File(photoFName);
         //leggo il contenuto del file (image) e lo invio alla zona output della pagina
         //addImageToWindow(image)
-        model.addAttribute("photo", "PHOTO in "+fName);
+        model.addAttribute("photo", "PHOTO in "+photoFName);
         setModelValues(model,"getphoto");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
-
+    @PostMapping( path = "/showphoto" )
+    public String showPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
+                                   String moveName, Model model) {
+        //String photoBase64 = appl.getImage(photoFName);
+        //Colors.out("HumanEnablerController showPhoto: " + photoBase64  );
+        //appl.storeImage(photoBase64,"curPhoto.jpg");
+        //model.addAttribute("photo", "PHOTO in "+photoFName);
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+    }
 
     @PostMapping(path = "/webCamActive")
     public String webCamActive(@RequestParam(name="cmd", required=false, defaultValue="")

@@ -20,8 +20,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class MyFiliter1 implements Filter{
 
 	@Override

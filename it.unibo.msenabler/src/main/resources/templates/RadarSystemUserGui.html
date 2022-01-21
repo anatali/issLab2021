@@ -191,14 +191,24 @@ PHOTO SECTION
 <div class="row">
     <div class="col-md-12">
         <h5>Current Photo: <span th:text="${photo}"></span></h5>
+        <!--
         <button type="button" onclick="sendMessage('curPhoto.jpg')">Show Photo</button>
         <div id="contentPhoto" align="left">
             <img src="" id="img_photo" alt=""  width="200" height="200"><br/>
         </div>
+        -->
+        <img src="" id="img_photo" alt=""  width="200" height="200"><br/>
+        <button type="button" onclick="sendMessage('curPhoto.jpg')">Show Photo</button>
     </div>
 </div>
 
-
+        <!--
+        <form action="/showphoto" method="post">
+            <div class="form-group">
+                <button>Show Photo</button>
+            </div>
+        </form>
+-->
 <!--
 Stream section
 -->

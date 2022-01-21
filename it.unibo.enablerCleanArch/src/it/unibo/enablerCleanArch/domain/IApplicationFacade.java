@@ -14,6 +14,8 @@ public interface IApplicationFacade { //extends IApplication
 	public void takePhoto( String fName  );	
 	public void startWebCamStream(   );	
 	public void stopWebCamStream(   );	
+	public String getImage(String fName);
+	public void storeImage(String encodedString, String fName);
 
 //	public ISonarObservable getSonar();
 //	public void doLedBlink();

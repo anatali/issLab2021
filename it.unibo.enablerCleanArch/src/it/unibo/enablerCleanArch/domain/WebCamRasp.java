@@ -1,4 +1,9 @@
 package it.unibo.enablerCleanArch.domain;
+import java.io.File;
+import java.util.Base64;
+
+import org.apache.commons.io.FileUtils;
+ 
 import it.unibo.enablerCleanArch.supports.Colors;
 
 public class WebCamRasp {
@@ -39,6 +44,20 @@ public class WebCamRasp {
        	}catch( Exception e) {
        		Colors.outerr("WebCamRasp | getPhoto ERROR " + e.getMessage() );
     	}
+		
+	}
+	
+	public static String getImage(String fName) {  
+		//https://www.baeldung.com/java-base64-image-string
+		try {
+			Colors.out("WebCamRasp | getImage in:" + fName);
+			byte[] fileContent   = FileUtils.readFileToByteArray(new File(fName));
+			String encodedString = Base64.getEncoder().encodeToString(fileContent);
+ 			return encodedString;
+		} catch (Exception e) {
+ 			Colors.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());
+ 			return "";
+		}
 		
 	}
 }
