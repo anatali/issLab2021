@@ -22,6 +22,13 @@ dependencies {
  	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'		//WEB SOCKETS!!
+    implementation 'org.springframework.boot:spring-boot-starter-security'      //SECURITY
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
+	implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.1'   
+    // integrates spring boot auth and thymeleaf templating
+    //compile ("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
+    // required for the @@EnableOAuth2Sso annotation
+    //compile ('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.5.RELEASE')
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
