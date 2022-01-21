@@ -1,6 +1,10 @@
 package it.unibo.enablerCleanArch.main;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Base64;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -180,7 +184,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	}
 	@Override
 	public void sonarActivate() {
-		Colors.out("RadarSystemMainOnPcCoapBase sonarActivate");
+		Colors.out("RadarSystemMainOnPcCoapBase | sonarActivate");
 		coapSonarSup.forward("activate"); //messaggi 'semplici' 
 		
 	}
@@ -204,23 +208,47 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	public void takePhoto( String fName ) {
 		coapWebCamSup.forward("getPhoto-"+fName);	
 	}
-
+	
+	@Override
+	public void startWebCamStream(  ) {
+		coapWebCamSup.forward("startWebCamStream");	
+	}
+	
+	@Override
+	public void stopWebCamStream() {
+		coapWebCamSup.forward("stopWebCamStream");	
+	}
+	
+	//https://www.baeldung.com/java-base64-image-string
+	public String getImage(String fName) {
+		try {
+			byte[] fileContent = FileUtils.readFileToByteArray(new File(fName));
+			String encodedString = Base64.getEncoder().encodeToString(fileContent);
+ 			return encodedString;
+		} catch (Exception e) {
+ 			Colors.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());
+ 			return "";
+		}
+	}
+	
+	public void storeImage(String encodedString, String fName) {
+		try {
+			byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+			FileUtils.writeByteArrayToFile(new File(fName), decodedBytes);
+		} catch (Exception e) {
+ 			Colors.outerr("RadarSystemMainOnPcCoapBase | storeImage " + e.getMessage());			 
+		}
+	}
 	
 	public static void main( String[] args) throws Exception {
 		//new RadarSystemMainOnPcCoapBase().entryorMainOnPc();//   
 		new RadarSystemMainOnPcCoapBase("192.168.1.34").entryMainAsApplInGui();
 
 	}
-	@Override
-	public void startWebCamStream() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void stopWebCamStream() {
-		// TODO Auto-generated method stub
-		
-	}
+	
+ 
+
+ 
 
  
 

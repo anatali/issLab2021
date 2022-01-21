@@ -47,7 +47,7 @@ h3{
 
 
 <p>I am <i>it.unibo.msenabler - templates/RadarSystemUserGui.html</i></p>
-
+<hr/>
 <!--
 Acquire the address of the application on the Raspberry
 <p id="raspIp">Raspberry IP: <span id="raspApplAddr" th:text="${applicationAddr}"></span></p>
@@ -58,22 +58,25 @@ Acquire the address of the application on the Raspberry
 -->
 
 
+<div class="row">
+    <div class="col-md-6">
+    <h3>SetUp Area</h3>
 
-<h3>SetUp Area</h3>
+    <form action="/setApplAddress" method="post">
+        <div class="form-group">
+            <input name="cmd" id="raspAddr" placeholder="192.168.1.xxx">
+            <button>Rasp IP</button> <span id="raspIp" th:text="${applicationAddr}"> </span>
+        </div>
+    </form>
 
-<form action="/setApplAddress" method="post">
-    <div class="form-group">
-        <input name="cmd" id="raspAddr" placeholder="192.168.1.xxx">
-        <button>Rasp IP</button> <span id="raspIp" th:text="${applicationAddr}"> </span>
+    <form action="/startAppl" method="post">
+        <div class="form-group">
+            <!-- <input name="cmd" id="startAppl" placeholder="false"> -->
+            <button>StartAppl</button><span id="applStarted" th:text="${applStarted}"> </span>
+        </div>
+    </form>
     </div>
-</form>
-
-<form action="/startAppl" method="post">
-    <div class="form-group">
-        <!-- <input name="cmd" id="startAppl" placeholder="false"> -->
-        <button>StartAppl</button><span id="applStarted" th:text="${applStarted}"> </span>
-    </div>
-</form>
+</div>
 
 <hr/>
 <h5>WS-Information Area</h5>
@@ -173,22 +176,25 @@ SONAR
 <h5>Current Sonar distance:  <span th:text="${sonardistance}">unknown</span></h5>
 <h5>Sonar data:  <span id="sonarData">unknown</span></h5>
 
-
-<hr/>
+<div class="row">
+    <div class="col-md-6">
+ <hr/>
 <h3>WebCam Area</h3>
 
 <!--
 PHOTO SECTION
 -->
-
 <form action="/getphoto" method="post">
     <button>Take a photo</button>
 </form>
 
 <div class="row">
     <div class="col-md-12">
-        <h4>Photo</h4>
-         <span th:text="${photo}"></span>
+        <h5>Current Photo: <span th:text="${photo}"></span></h5>
+        <button type="button" onclick="sendMessage('curPhoto.jpg')">Show Photo</button>
+        <div id="contentPhoto" align="left">
+            <img src="" id="img_photo" alt=""  width="200" height="200"><br/>
+        </div>
     </div>
 </div>
 
@@ -208,11 +214,12 @@ Stream section
 </form>
 
 <button type="button" onclick="showWebCam()">Show WebCam</button>
-             <div id="content" align="left">
+             <div id="contentStream" align="left">
                 <img src="" id="img_src" alt=""  width="640" height="480"><br/>
             </div>
 <hr/>
-
+    </div>
+</div>
 <script type="text/javascript">
  	function setWebCamIp( appladdr ){
  	    var applip ="";

@@ -51,6 +51,9 @@ l':blue:`autenticazione`  dall':blue:`autorizzazione`, fornendo strategie
 e punti di estensione per entrambi.
 
 
+
+
+
 +++++++++++++++++++++++++++++++++++
 Autenticazione
 +++++++++++++++++++++++++++++++++++
@@ -64,6 +67,15 @@ Una volta che l'autenticazione ha esito positivo, possiamo passare all'autorizza
 +++++++++++++++++++++++++++++++++++
 Autorizzazione
 +++++++++++++++++++++++++++++++++++
+
+Il check realtvo a **Cross site request forgery** (CSRF) :blue:`CSRF` è abilitato di defualt da Spring Security. 
+
+.. image:: ./_static/img/Access/csrf.png 
+   :align: center
+   :width: 70%
+
+.. mperva.com/learn/application-security/csrf-cross-site-request-forgery/#:~:text=Cross%20site%20request%20forgery%20(CSRF)%2C%20also%20known%20as%20XSRF,a%20user%20is%20logged%20in.
+
 
 .. image:: ./_static/img/Access/filters.png 
    :align: center

@@ -50,12 +50,23 @@
           
     //Il Raspberry potrebbe inviare immagini ... 
     function addImageToWindow(image) {
+        console.log("addImageToWindow " + image);
         let url = URL.createObjectURL(new Blob([image]));
-        $("#output").append("<tr><td>" + `<img src="${url}"/>` + "</td></tr>");
+        console.log("addImageToWindow url=" + url);
+        $("#img_photo").append( `<img src="${url}"/>`  );
         //imageWindow.innerHTML += `<img src="${url}"/>`
     }
 
-
+    function sendMessage(message) {
+        console.log("sendMessage " + message + " using " + socket);
+        if( socket == undefined  ){
+            connect();
+        } //alert("Please connect ..."); //|| ! sockConnected
+        //else{
+            socket.send(message);
+            addMessageToWindow("Sent Message: " + message);
+        //}
+    }
 
 /*
 The <button> element, when placed in a form, 
@@ -75,6 +86,8 @@ $(function () {
     $( "#doLedBlink" ).click(function() {  });
     $( "#stopLedBlink" ).click(function() {  });
     $( "#distance" ).click(function() {  });
+    //$( "#distance" ).click(function() {  });
+
 //    $( "#sendImage" ).click(function() {  let f = fileInput.files[0]; sendMessage(f); });
 });
 

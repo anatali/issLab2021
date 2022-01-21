@@ -214,7 +214,7 @@ public class HumanEnablerController {
 
 
 protected void setModelValues(Model model, String info){
-    model.addAttribute("arg", appName+" " + info);
+    model.addAttribute("arg", appName+" - action=" + info);
     model.addAttribute("applicationAddr",  raspAddr);
     model.addAttribute("webCamActive",  webCamActive);
     model.addAttribute("applStarted",  applStarted);
