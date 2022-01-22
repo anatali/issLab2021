@@ -70,7 +70,7 @@ private String name = "CoapSprt";
 	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 			return respGet.getResponseText();
 		}else {
-	 		Colors.out(name + " | request=" + query +" RESPONSE NULL ",Colors.ANSI_YELLOW);
+	 		Colors.out(name + " | request=" + query +" RESPONSE NULL ",Colors.RED);
 			return "0";
 		}
 	}

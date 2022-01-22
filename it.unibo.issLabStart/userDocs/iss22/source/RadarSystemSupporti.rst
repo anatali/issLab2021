@@ -407,7 +407,18 @@ Test con molti clienti
 .. L'errore da indagare:
 .. .. code:: Java
 .. oneClientServer | ERROR: Socket operation on nonsocket: configureBlocking
- 
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Supporti per HTTP
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: Java
+
+  HttpURLConnection con =
+  IssHttpSupport
+
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Supporti per altri protocolli
 +++++++++++++++++++++++++++++++++++++++++++++

@@ -178,23 +178,23 @@ public class HumanEnablerController {
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
-    @PostMapping( path = "/getphoto" )
+    @PostMapping( path = "/takephoto" )
     public String getPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
                                        String moveName, Model model) {
-        Colors.out("HumanEnablerController getphoto-0 "    );
+        Colors.out("HumanEnablerController takephoto-0 "    );
         appl.takePhoto(photoFName);
-        Colors.out("HumanEnablerController getphoto-1 "    );
+        //Colors.out("HumanEnablerController takephoto-1 "    );
         //Occorre fare richiesta e attendere risposta
-        String photoBase64 = appl.getImage(photoFName);
-        Colors.out("HumanEnablerController photoBase64 length=" + photoBase64.length()  );
-        appl.storeImage(photoBase64,photoFName);
+        //String photoBase64 = appl.getImage(photoFName);
+        //Colors.out("HumanEnablerController photoBase64 length=" + photoBase64.length()  );
+        //appl.storeImage(photoBase64,photoFName);
 
 
         //File f = new File(photoFName);
         //leggo il contenuto del file (image) e lo invio alla zona output della pagina
         //addImageToWindow(image)
         model.addAttribute("photo", "PHOTO in "+photoFName);
-        setModelValues(model,"getphoto");
+        setModelValues(model,"takephoto");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     @PostMapping( path = "/showphoto" )

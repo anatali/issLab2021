@@ -48,7 +48,8 @@ public class WebCamRasp {
 	public static String getImage(String fName) {  
 		//https://www.baeldung.com/java-base64-image-string
 		try {
-			Colors.out("WebCamRasp | getImage in:" + fName);
+			fName = "/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/"+fName;
+			Colors.out("WebCamRasp | getImage from:" + fName);
 			File imgFile = new File(fName);
 			//Colors.out("WebCamRasp | getImage imgFile:" + imgFile);
 			byte[] fileContent   = FileUtils.readFileToByteArray( imgFile );

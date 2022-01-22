@@ -1,5 +1,5 @@
 package it.unibo.msenabler.filters;
-
+/*
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,27 +8,28 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-@EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+*/
+//@EnableWebSecurity
+public class WebSecurityConfig  { //extends WebSecurityConfigurerAdapter
+    /*
+    //@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.inMemoryAuthentication().withUser("pi")
                 .password(passwordEncoder().encode("unibo")).roles("USER");
     }
 
-    @Bean
+    //@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
          
     }
-    
+    */
 /*
  *     
- */
+
     //a nice little DSL with which you can configure your FilterChain
-    @Override
+    //@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
@@ -40,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       //we have stopped the csrf to make post method work
         http.cors().and().csrf().disable();
     }
-    
+  */
  
     
    /*

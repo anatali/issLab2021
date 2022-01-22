@@ -8,12 +8,16 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
+import org.eclipse.californium.core.coap.Request;
+
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.HttpClientSupport;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
@@ -97,25 +101,39 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
  
 	public void entryMainAsApplInGui( ) {
 		setUp(null);
-		RadarSystemConfig.raspHostAddr = "192.168.1.34";  
+		RadarSystemConfig.raspHostAddr = "192.168.1.9";  
    		//CoapHandler obs = new ObserverNaive("obs"); //new ControllerAsCoapSonarObserver("obsController", led, radar) ;
 		//rel1            = coapSonarSup.observeResource( obs );
 		//Controller.activate(led, sonar, radar);  
-//		led.turnOff();
+		led.turnOn();
 		Colors.out("ledState=" +led.getState() );
+		Utils.delay(500);
+		led.turnOff();
+		Colors.out("ledState=" +led.getState() );
+		
+		
+		HttpClientSupport httpSup = new HttpClientSupport( "http://192.168.1.132"  );
+		String answer = httpSup.requestSynch("photo");
+		Colors.out("answer=" +answer );
+		
 //		sonar.activate();
 //		Utils.delay(10000);
-		
- 		coapWebCamSup.forward("getPhoto-zzz.jpg");
+ 		
+/*		String photoFName = "zzz.jpg";
+		takePhoto(photoFName);
+		//String photoBase64 = getImage(photoFName); //
+		//storeImage(photoBase64,"zzzCopy.jpg");
+*/		
 		//Terminate
-		sonarDectivate() ;	//termina il Sonar
+//		sonarDectivate() ;	//termina il Sonar
 		coapSonarSup.close();
 		if(rel1 != null ) rel1.proactiveCancel();
+		 
 		System.exit(0);		
 	}
 	
 	public void entryorMainOnPc( ) {
-		RadarSystemConfig.raspHostAddr = "192.168.1.112";
+		RadarSystemConfig.raspHostAddr = "192.168.1.9";
 		RadarSystemConfig.protcolType  = ProtocolType.coap;
 		RadarSystemConfig.DLIMIT       = 10*ampl;
 		RadarSystemConfig.simulation   = false;
@@ -206,7 +224,20 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 
 	@Override
 	public void takePhoto( String fName ) {
-		coapWebCamSup.forward("getPhoto-"+fName);	
+		coapWebCamSup.forward("takePhoto-"+fName);	
+	}
+	
+	public void sendPhoto( String photo) {
+		Request request = Request.newPost();
+		request.setURI("");
+		request.setPayload(photo);
+		request.getOptions().setContentFormat(MediaTypeRegistry.IMAGE_JPEG);
+		try {
+		request.send();
+		} catch (Exception e) {
+		System.err.println("Failed to execute request: " + e.getMessage());
+		}
+
 	}
 	
 	@Override
@@ -242,7 +273,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	
 	public static void main( String[] args) throws Exception {
 		//new RadarSystemMainOnPcCoapBase().entryorMainOnPc();//   
-		new RadarSystemMainOnPcCoapBase("192.168.1.34").entryMainAsApplInGui();
+		new RadarSystemMainOnPcCoapBase("192.168.1.9").entryMainAsApplInGui();
 
 	}
 	

@@ -1,5 +1,7 @@
 package it.unibo.enablerCleanArch.supports.coap;
 
+import java.net.InetAddress;
+
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
@@ -65,6 +67,10 @@ String curDistance="0";  //Initial state
 				curDistance= ""+arg;
  				Colors.out( getName() + " | elaborateAndNotify:" + curDistance , Colors.GREEN  );		
 				changed();	// notify all CoAP observers
+			}
+			@Override
+			protected void elaboratePut(String req, InetAddress callerAddr) {
+				Colors.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
 			}
 		
 }

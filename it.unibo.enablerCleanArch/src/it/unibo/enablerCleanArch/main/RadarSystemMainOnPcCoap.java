@@ -33,7 +33,7 @@ private final int ampl             = 3;
 	public void setUp(String configFileName)  {			
 		if( configFileName != null ) RadarSystemConfig.setTheConfiguration(configFileName);
 		else {
-			RadarSystemConfig.raspHostAddr = "192.168.1.11";
+			RadarSystemConfig.raspHostAddr = "192.168.1.9";
 			RadarSystemConfig.DLIMIT       = 10*ampl;
 			RadarSystemConfig.simulation   = false;
 			RadarSystemConfig.withContext  = false;
