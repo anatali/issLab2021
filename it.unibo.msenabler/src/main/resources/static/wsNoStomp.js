@@ -1,4 +1,4 @@
- var socket=connect();
+ var socket;
  
     function connect(){
         var host       = document.location.host;
@@ -18,7 +18,7 @@
 
         socket.onopen = function (event) {
         	//setConnected(true);
-            addMessageToWindow("Connected to WebSocket:" + addr);
+            addMessageToWindow("Connected to WebSocket:" + addr + " socket=" + socket);
         };
   
         socket.onmessage = function (event) {
@@ -32,7 +32,7 @@
          
     }//connect
  
- 
+ connect();
 
 
 //Si veda: https://developer.mozilla.org/en-US/docs/Web/API/Element
@@ -56,16 +56,19 @@
         $("#img_photo").append( `<img src="${url}"/>`  );
         //imageWindow.innerHTML += `<img src="${url}"/>`
     }
-
+    var attempts = 0;
     function sendMessage(message) {
         console.log("sendMessage " + message + " using " + socket);
-        if( socket == undefined  ){
-            connect();
-        } //alert("Please connect ..."); //|| ! sockConnected
-        //else{
-            socket.send(message);
-            addMessageToWindow("Sent Message: " + message);
-        //}
+            setTimeout( () => {
+                if( socket != undefined ){
+                     socket.send(message);
+                     addMessageToWindow("Sent Message: " + message);
+                     attempts= 0;
+                }else{
+                if( attempts++ < 3)
+                    sendMessage(message);
+                }
+            }, 1000) ;
     }
 
 /*

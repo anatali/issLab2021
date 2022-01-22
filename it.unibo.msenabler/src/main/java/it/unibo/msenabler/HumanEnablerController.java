@@ -181,13 +181,13 @@ public class HumanEnablerController {
     @PostMapping( path = "/getphoto" )
     public String getPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
                                        String moveName, Model model) {
-        Colors.out("HumanEnablerController getphoto 0 "    );
+        Colors.out("HumanEnablerController getphoto-0 "    );
         appl.takePhoto(photoFName);
-        Colors.out("HumanEnablerController getphoto 1 "    );
+        Colors.out("HumanEnablerController getphoto-1 "    );
         //Occorre fare richiesta e attendere risposta
         String photoBase64 = appl.getImage(photoFName);
-        Colors.out("HumanEnablerController showPhoto: " + photoBase64  );
-        appl.storeImage(photoBase64,"curPhoto.jpg");
+        Colors.out("HumanEnablerController photoBase64 length=" + photoBase64.length()  );
+        appl.storeImage(photoBase64,photoFName);
 
 
         //File f = new File(photoFName);

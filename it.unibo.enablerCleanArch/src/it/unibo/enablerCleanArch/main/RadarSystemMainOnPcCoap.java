@@ -33,7 +33,7 @@ private final int ampl             = 3;
 	public void setUp(String configFileName)  {			
 		if( configFileName != null ) RadarSystemConfig.setTheConfiguration(configFileName);
 		else {
-			RadarSystemConfig.raspHostAddr = "192.168.1.9";
+			RadarSystemConfig.raspHostAddr = "192.168.1.11";
 			RadarSystemConfig.DLIMIT       = 10*ampl;
 			RadarSystemConfig.simulation   = false;
 			RadarSystemConfig.withContext  = false;
@@ -60,24 +60,28 @@ private final int ampl             = 3;
 
 	protected void executeWithController() {
 		configure();
-   		/*
+   		
  		for( int i=1; i<=3; i++) {
+	 		led.turnOn();
+	 		Utils.delay(1000);
+	 		led.turnOff();
+	 		Utils.delay(1000);
+		}
+ 		
+ 		/*
+  		for( int i=1; i<=3; i++) {
  			Utils.delay(1000);
  			IDistance d = clientSonarProxy.getDistance(); //bloccante
  			Colors.outappl("RadarSystemMainOnPcCoap | d=" + d, Colors.BLUE  );
  		}
 		
- 		for( int i=1; i<=3; i++) {
-	 		clientLedProxy.turnOn();
-	 		Utils.delay(1000);
-	 		clientLedProxy.turnOff();
-	 		Utils.delay(1000);
-		}
  		
- 		*/
+ 		
 		radar  = DeviceFactory.createRadarGui();
  		Controller.activate(led, sonar, radar);  
 		Utils.delay(10000);
+		*/
+		
 		terminate();
  	}
 	

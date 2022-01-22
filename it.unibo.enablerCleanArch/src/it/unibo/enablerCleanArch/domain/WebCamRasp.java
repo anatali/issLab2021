@@ -1,9 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
 import java.io.File;
 import java.util.Base64;
-
 import org.apache.commons.io.FileUtils;
- 
 import it.unibo.enablerCleanArch.supports.Colors;
 
 public class WebCamRasp {
@@ -33,16 +31,16 @@ public class WebCamRasp {
     	}
 	}
 	
-	public static void getPhoto(String fName) {  
+	public static void takePhoto(String fName) {  
  		try {
- 	        Colors.out("WebCamRasp | getPhoto in:" + fName);
+ 	        Colors.out("WebCamRasp | takePhoto in:" + fName);
 			//cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental
 			//Runtime.getRuntime().exec("cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental");
 			//Runtime.getRuntime().exec("fswebcam -r 320×240 " + fName);
- 	        Runtime.getRuntime().exec("fswebcam "+ fName );
- 	        Colors.out("WebCamRasp | getPhoto done");
+ 	        Runtime.getRuntime().exec("fswebcam -r 320×240 "+ fName );
+ 	        Colors.out("WebCamRasp | takePhoto done");
        	}catch( Exception e) {
-       		Colors.outerr("WebCamRasp | getPhoto ERROR " + e.getMessage() );
+       		Colors.outerr("WebCamRasp | takePhoto ERROR " + e.getMessage() );
     	}
 		
 	}
@@ -51,8 +49,12 @@ public class WebCamRasp {
 		//https://www.baeldung.com/java-base64-image-string
 		try {
 			Colors.out("WebCamRasp | getImage in:" + fName);
-			byte[] fileContent   = FileUtils.readFileToByteArray(new File(fName));
+			File imgFile = new File(fName);
+			//Colors.out("WebCamRasp | getImage imgFile:" + imgFile);
+			byte[] fileContent   = FileUtils.readFileToByteArray( imgFile );
+			Colors.out("WebCamRasp | getImage fileContent:" + fileContent.length);
 			String encodedString = Base64.getEncoder().encodeToString(fileContent);
+			Colors.out("WebCamRasp | getImage encodedString=" + encodedString.length());
  			return encodedString;
 		} catch (Exception e) {
  			Colors.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());

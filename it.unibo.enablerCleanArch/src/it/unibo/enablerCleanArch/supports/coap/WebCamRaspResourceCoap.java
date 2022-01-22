@@ -16,7 +16,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		if( req.startsWith("getImage-")) {
 			String fname=req.substring( req.indexOf('-')+1, req.length());
 			String imgBase64 = WebCamRasp.getImage(fname);
-			Colors.out(getName() + " | imgBase64:" + imgBase64.length());
+			Colors.out(getName() + " | imgBase64 length=" + imgBase64.length());
 			return imgBase64;
 		}
   		return "nothing to to" ;
@@ -28,7 +28,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		 if( req.startsWith("getPhoto-") ){
 			String fname=req.substring( req.indexOf('-')+1, req.length());
 			Colors.out( getName() + " | getPhoto fname:" + fname   );
-			WebCamRasp.getPhoto(fname);
+			WebCamRasp.takePhoto(fname);
 		}else if( req.startsWith("startWebCamStream") ){
 			WebCamRasp.startWebCamStream();
 		}

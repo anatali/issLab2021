@@ -222,6 +222,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	public String getImage(String fName) {
 		try {
 			String imgBase64 = coapWebCamSup.request("getImage-" + fName);
+			Colors.out("RadarSystemMainOnPcCoapBase | getImage imgBase64.length()=" + imgBase64.length());
 			return imgBase64;
  		} catch (Exception e) {
  			Colors.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());
@@ -232,6 +233,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	public void storeImage(String encodedString, String fName) {
 		try {
 			byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+			Colors.out("RadarSystemMainOnPcCoapBase | storeImage decodedBytes.length=" + decodedBytes.length);
 			FileUtils.writeByteArrayToFile(new File(fName), decodedBytes);
 		} catch (Exception e) {
  			Colors.outerr("RadarSystemMainOnPcCoapBase | storeImage " + e.getMessage());			 

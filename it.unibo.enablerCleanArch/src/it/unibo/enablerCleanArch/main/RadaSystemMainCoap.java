@@ -79,11 +79,8 @@ protected IObserver obsfortesting;
  		Colors.outappl("RadaSystemMainCoap | configure done", Colors.ANSI_PURPLE  );
 		//createObservers();
 	}
-	 
- 
 
-	//Called by the inherited configure
-	 
+	//Called by the inherited configure 
 	protected void createObservers() {
 		if( RadarSystemConfig.sonarObservable ) {
 			boolean oneShot         = false;

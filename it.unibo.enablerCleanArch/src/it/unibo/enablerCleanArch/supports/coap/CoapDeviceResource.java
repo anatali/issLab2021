@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.Option;
+import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import it.unibo.enablerCleanArch.supports.Colors;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
@@ -42,13 +43,15 @@ public abstract class CoapDeviceResource extends CoapResource {
 		if( query == null ) {
 			Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText() );
-			Colors.out( getName() + "handleGET request answer=" + answer , Colors.RED );
+			if( answer.length() < 500 ) Colors.out( getName() + "handleGET request answer=" + answer , Colors.RED );
+			else Colors.out( getName() + "handleGET request long answer=" + answer.length() , Colors.GREEN ); 
 			exchange.respond(answer);
 		}else{ 
  			Colors.out( getName() + "handleGET query=" + query);
  			String answer = elaborateGet( exchange.getQueryParameter("q") );
-			Colors.out( getName() + "handleGET query answer=" + answer , Colors.RED );
-	  		exchange.respond(answer);
+ 			if( answer.length() < 500 ) Colors.out( getName() + "handleGET query answer=" + answer , Colors.RED );
+			else Colors.out( getName() + "handleGET request long answer=" + answer.length() , Colors.GREEN ); 
+  			exchange.respond("too long");
 		}		
 	}
 

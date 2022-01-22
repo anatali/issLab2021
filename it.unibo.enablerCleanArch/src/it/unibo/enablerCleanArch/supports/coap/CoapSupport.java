@@ -69,7 +69,10 @@ private String name = "CoapSprt";
 	 		Colors.out(name + " | request=" + query 
 	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
 			return respGet.getResponseText();
-		}else return "0";
+		}else {
+	 		Colors.out(name + " | request=" + query +" RESPONSE NULL ",Colors.ANSI_YELLOW);
+			return "0";
+		}
 	}
 	
 	//https://phoenixnap.com/kb/install-java-raspberry-pi
