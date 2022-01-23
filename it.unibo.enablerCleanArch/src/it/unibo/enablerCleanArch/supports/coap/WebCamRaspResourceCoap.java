@@ -74,7 +74,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 			String fname=req.substring( req.indexOf('-')+1, req.length());
 			WebCamRasp.takePhoto(fname);
 			
-			String encodedString = WebCamRasp.getImage(fname);
+			//String encodedString = WebCamRasp.getImage(fname);
 			
 			String replyAddr=callerAddr.getHostAddress();
 			//sendPhotoHttp(replyAddr, encodedString);
@@ -96,7 +96,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 			builder.addTextBody("username", "John");
 		    builder.addTextBody("password", "pass");
 		    builder.addBinaryBody(
-		      "image", new File(fname), ContentType.create("image/jpeg"), fname);
+		      "image", new File("/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/"+fname), ContentType.create("image/jpeg"), fname);
 			//String encodedString = Base64.getEncoder().encodeToString(fileContent);
 
 		    HttpEntity multipart = builder.build();

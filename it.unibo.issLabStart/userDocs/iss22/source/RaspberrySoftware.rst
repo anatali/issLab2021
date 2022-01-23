@@ -305,11 +305,29 @@ RaspiCam
 WebCam
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Alcune webcam hanno la funzione di bilanciare automaticamente la loro luminosità. 
+Ad esempio, in una stanza buia percepiscono che la luminosità deve essere aumentata mentre in un'area luminosa, 
+la luminosità potrebbe dover essere ridotta. 
+La fotocamera lo fa esaminando i propri fotogrammi e analizzandoli.
+ Quando si verifica una cattura di un'immagine subito dopo l'inizializzazione della fotocamera, 
+ non ha visto dati sufficienti per sapere quanto sia luminoso l'ambiente e sembra che presuppone 
+ che l'ambiente sia SUPER luminoso e riduce al minimo il controllo dell'esposizione (risultando in un'immagine nera). 
+ Man mano che vengono esaminati più fotogrammi, la fotocamera regola rapidamente le impostazioni di esposizione.
+
+Per utilizzare fswebcam, possiamo fornirgli l'opzione la -S <num>cui opzione è il numero di fotogrammi 
+che la fotocamera dovrebbe "vedere" e "saltare" prima di acquisire l'immagine desiderata. 
+Trovo che se fornisco un salto della 20fotocamera ha avuto abbastanza fotogrammi per regolare automaticamente 
+la sua esposizione e poiché stiamo elaborando 30 fotogrammi al secondo, 
+è ancora meno di un secondo di ritardo per catturare 1 fotogramma. 
+Per lo streaming video, non dovremmo avere il problema in quanto la fotocamera verrà inizializzata 
+e rimarrà inizializzata.
+
+
 .. code::
 
     sudo apt install fswebcam
-    fswebcam image1.jpg                #crea immagine 640x320
-    fswebcam -r 1280x720 image2.jpg    #crea immagine 1280x720
+    fswebcam image1.jpg   -S 20             #crea immagine 640x320
+    fswebcam -r 1280x720 image2.jpg    #crea immagine 1280x720  
     fswebcam -r 320×240 image3.jpg     #crea immagine 320×240
 
 
