@@ -1,6 +1,8 @@
 package it.unibo.enablerCleanArch.supports;
 
 import java.net.URI;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -38,18 +40,28 @@ public class HttpClientSupport {
   //===================================================================
 
     protected String performrequest( String msg )  {
-        
+        //https://www.tutorialspoint.com/apache_httpclient/apache_httpclient_quick_guide.htm
+    	//https://hc.apache.org/httpcomponents-client-5.1.x/quickstart.html
         try {
-            //Colors.out( "HttpClientSupport | performrequest:" + msg + " URL=" + URL );
+        	//URL = URL+"/photo";
+        	URL = URL+msg;
+            Colors.out( "HttpClientSupport | performrequest:" + msg + " URL=" + URL );
             StringEntity entity     = new StringEntity(msg);
             HttpUriRequest httppost = RequestBuilder.post()
                     .setUri(new URI(URL))
-                    //.setHeader("Content-Type", "application/json")
+                    .addParameter("Name", "pi").addParameter("password", "unibo")
+                    //.addParameter("request", "todo")
+                    //.setHeader("Content-Type", ContentType.TEXT_PLAIN.getMimeType())
                     //.setHeader("Accept", "application/json")
                     .setEntity(entity)
                     .build();
             CloseableHttpResponse response = httpclient.execute(httppost);
-            Colors.out( "HttpClientSupport | response:" + response  );
+//            Colors.out( "HttpClientSupport | response_a:" + response  );
+//            Colors.out( "HttpClientSupport | response_b:" + response.getEntity()   );
+//            Colors.out( "HttpClientSupport | response_c:" + response.getEntity().getContent()  );
+            String answer = IOUtils.toString(response.getEntity().getContent(), "UTf-8");
+            Colors.out( "HttpClientSupport | answer:" + answer  );
+           
             return response.getEntity().getContent().toString();
             /*
             String jsonStr = EntityUtils.toString( response.getEntity() );

@@ -52,6 +52,7 @@ dependencies {
 	compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
 //IMAGES	
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+	implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.13'
 	
 }
 
