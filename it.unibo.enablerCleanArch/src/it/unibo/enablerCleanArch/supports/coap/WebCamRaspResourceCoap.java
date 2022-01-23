@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -24,6 +25,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;
@@ -76,7 +78,8 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 			
 			String replyAddr=callerAddr.getHostAddress();
 			//sendPhotoHttp(replyAddr, encodedString);
-			sendPhotoHttp1( "http://"+replyAddr+":8081/photo", fname);
+			//sendPhotoHttp1( "http://"+replyAddr+":8081/photo", fname);
+			sendPhotoHttp2( "http://"+replyAddr+":8081/photo", fname);
 			
 			//Colors.out( getName() + " | takePhoto fname:" + fname    );
 		}else if( req.startsWith("startWebCamStream") ){
@@ -84,13 +87,39 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		}		
 	}
 	
+	//https://www.baeldung.com/httpclient-post-http-request
+	protected void sendPhotoHttp2( String url, String fname  )   {
+		try {
+			CloseableHttpClient client = HttpClients.createDefault();
+		    HttpPost httpPost = new HttpPost(url+"/?request=todo");
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+			builder.addTextBody("username", "John");
+		    builder.addTextBody("password", "pass");
+		    builder.addBinaryBody(
+		      "image", new File(fname), ContentType.create("image/jpeg"), fname);
+			//String encodedString = Base64.getEncoder().encodeToString(fileContent);
+
+		    HttpEntity multipart = builder.build();
+		    httpPost.setEntity(multipart);
+		    CloseableHttpResponse response = client.execute(httpPost);
+		    HttpEntity resEntity = response.getEntity();
+		    if (resEntity != null) {
+		    	Colors.out("resEntity not null");
+		    	Colors.out(EntityUtils.toString(resEntity), Colors.BgYellow);
+		    	EntityUtils.consume(resEntity) ;
+		    }		    
+	    }catch( Exception e) {
+	    	Colors.outerr(getName() + " | sendPhotoHttp ERROR" + e.getMessage());
+	    }
+	}
+	//https://www.codejava.net/frameworks/spring-boot/spring-boot-file-upload-tutorial
 	protected void sendPhotoHttp1( String url, String fname  )   {
 		try {
 	    //HttpClient httpclient = new DefaultHttpClient();
 	    HttpClient httpclient = HttpClientBuilder.create().build();
 	    //httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-	    HttpPost httppost = new HttpPost(url+"?request=todo"); //"http://localhost:9000/upload"
+	    HttpPost httppost = new HttpPost(url+"/?request=todo"); //"http://localhost:9000/upload"
 	    //File file = new File(fname); //"C:\\Users\\joao\\Pictures\\bla.jpg"
 
 	    //MultipartEntity mpEntity = new MultipartEntity();
@@ -99,6 +128,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 	    //mpEntity.addPart("request", cbFile);
 	    FileBody fileBody = new FileBody(new File(fname)); //image should be a String
 	    builder.addPart("image", fileBody); 
+	    //builder.addBinaryBody("image", fileBody);
 
 	    //httppost.setEntity(mpEntity);
 	    HttpEntity mpEntity = builder.build();
@@ -108,7 +138,8 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 	    HttpResponse response = httpclient.execute(httppost);
 	   
 	    HttpEntity resEntity = response.getEntity();
-/*
+
+ /*
  * https://stackoverflow.com/questions/9197745/what-exactly-is-an-http-entity
  * 
  * Entity is an optional payload inside an http message(either request or response), 
@@ -119,7 +150,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 	    Colors.out(""+response.getStatusLine(), Colors.BgCyan);
 	    if (resEntity != null) {
 	    	Colors.out("resEntity not null");
-	    	//Colors.out(EntityUtils.toString(resEntity), Colors.BgMagenta);
+	    	Colors.out(EntityUtils.toString(resEntity), Colors.BgMagenta);
 	    }
 	    if (resEntity != null) {
 	    	Colors.out("resEntity consumeContent");
@@ -140,7 +171,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		try {
  			
 			HttpClientSupport httpSup = new HttpClientSupport( "http://"+replyAddr+":8081" );			
-			String answer = httpSup.requestSynch("/photo/?request="+encodedString);			
+			String answer = httpSup.requestSynch("/photo/?request="+"encodedString");			
 			Colors.out( getName() + " |  sendPhotoHttp answer=" + answer  );
 			
 			/*

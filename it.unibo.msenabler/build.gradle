@@ -46,6 +46,8 @@ dependencies {
 	//LOG4j   //required by Californium
 	//implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
+//IMAGES	
+	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
 //CUSTOM
 	implementation files('libs/it.unibo.enablerCleanArch-1.0.jar')
