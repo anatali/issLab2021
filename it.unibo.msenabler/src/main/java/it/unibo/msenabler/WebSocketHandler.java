@@ -32,6 +32,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IObser
         sessions.add(session);
         Colors.outappl("WebSocketHandler | Added the session:" + session, Colors.ANSI_PURPLE);
         super.afterConnectionEstablished(session);
+        //sendToAll("WELCOME!");
     }
 
     @Override
@@ -48,7 +49,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IObser
     }
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
-        Colors.outappl("WebSocketHandler | New Binary Message Received ", Colors.ANSI_PURPLE );
+        Colors.outappl("WebSocketHandler | New Binary Message Received " + message.getPayloadLength(), Colors.ANSI_PURPLE );
          //Send to all the connected clients
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
@@ -58,12 +59,12 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IObser
     public void sendToAll(String message) throws IOException{
     	sendToAll( new TextMessage(message) );
      }
-    public void sendToAll( byte[] message) throws IOException{
+    public void sendBinaryToAll( byte[] message) throws IOException{
         sendToAllBinary( new BinaryMessage(message) );
     }
 
     protected void sendToAll(TextMessage message) throws IOException{
-        Colors.outappl("WebSocketHandler | sendToAll " + sessions.size() + " " + message , Colors.ANSI_PURPLE );
+        Colors.out("WebSocketHandler | sendToAll " + sessions.size() + " " + message  );
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             iter.next().sendMessage(message);
@@ -71,10 +72,12 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IObser
     }
 
     protected void sendToAllBinary(BinaryMessage message) throws IOException{
-        Colors.outappl("WebSocketHandler | sendToAllBinary " + sessions.size() + " " + message , Colors.ANSI_PURPLE );
+        Colors.out("WebSocketHandler | sendToAllBinary " + sessions.size() + " " + message  );
+        //sendToAll(new TextMessage("photo!!!"));
+        
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
-            iter.next().sendMessage(message);
+            iter.next().sendMessage( message ); //message
         }
     }
 	@Override

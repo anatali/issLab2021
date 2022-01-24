@@ -22,18 +22,18 @@ public class MachineEnablerController {
         String s         = multipartFile.getContentType();
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         try {
-
+            byte[] imgContent = multipartFile.getBytes();
             Colors.out("MachineEnablerController | elaborate " + msg
                     + " ContentType:" + multipartFile.getContentType()
                     + " filename:" + fileName
-                    + " content length=" + multipartFile.getBytes().length
+                    + " content length=" + imgContent.length
                     + " wshandler=" + wshandler
             );
 
             storeImage(multipartFile.getBytes(),fileName);
              
             //Oltre a memorizzare su file lo invio sulla ws
-            wshandler.sendToAll( multipartFile.getBytes()   );
+            wshandler.sendBinaryToAll( multipartFile.getBytes()   );
 
 
         }catch(Exception e){

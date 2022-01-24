@@ -89,6 +89,7 @@ Acquire the address of the application on the Raspberry
     <tbody id="output">
     </tbody>
 </table>
+
 <!--
 LED
 -->
@@ -181,6 +182,9 @@ SONAR
 
 <div class="row">
     <div class="col-md-6">
+    
+    
+    
  <hr/>
 <h3>WebCam Area</h3>
 
@@ -194,13 +198,11 @@ PHOTO SECTION
 <div class="row">
     <div class="col-md-12">
         <h5>Current Photo: <span th:text="${photo}"></span></h5>
-        <!--
-        <button type="button" onclick="sendMessage('curPhoto.jpg')">Show Photo</button>
-        <div id="contentPhoto" align="left">
-            <img src="" id="img_photo" alt=""  width="200" height="200"><br/>
-        </div>
-        -->
-        <img src="" id="img_photo" alt=""  width="200" height="200"><br/>
+ 
+        
+        <img src="" id="imgphoto" alt="www"  width="200" height="200"/>
+        
+        <br/>
         <button type="button" onclick="showCurrentPhoto( )">Show Photo</button>
         <br/>
           <button type="button" id="dirshow">Dir show</button>
@@ -208,20 +210,19 @@ PHOTO SECTION
 </div>
 
         <h4>Propagate Photo</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-inline">
+        <div class="row">
+           <div class="col-md-6">
+                  <form class="form-inline">
                             <div class="form-group">
-                                <label for="myfile">Input (image)</label>
+                                <label for="inputmsg">Input (image)</label>
                                 <input type="file" id="myfile" name="myfile" class="form-control" accept="image/*"/>
                             </div>
-                            <!-- <button id="sendImage" class="btn btn-default" type="submit">Send Image</button> -->
-                            <button type="button" id="sendImage" >Send Image</button>
-
+                            <button id="sendImage" class="btn btn-default" type="submit">Send Image</button>
                   </form>
             </div>
         </div>
-        <!--
+        
+<!--
         <form action="/showphoto" method="post">
             <div class="form-group">
                 <button>Show Photo</button>
@@ -269,7 +270,8 @@ function showWebCam(){
 }
 </script>
 
-</div>
+
 <script src="wsNoStomp.js"></script>
+</div>
 </body>
 </html>

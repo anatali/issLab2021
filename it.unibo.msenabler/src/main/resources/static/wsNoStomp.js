@@ -22,11 +22,15 @@
         };
   
         socket.onmessage = function (event) {
+             console.log(" onmessage" + (event.data instanceof ArrayBuffer) );
+             //alert("onmessage");
              if (event.data instanceof ArrayBuffer) {
-                addMessageToWindow('Got Image:');
+                addMessageToWindow('Got Image:' );
                 addImageToWindow(event.data);
             } else {
+                //alert(" onmessage data=" + event.data );
                 updateSonarData( event.data );
+
             }
         };     
          
@@ -53,12 +57,23 @@
         console.log("addImageToWindow " + image);
         let url = URL.createObjectURL(new Blob([image]));
         console.log("addImageToWindow url=" + url);
-        $("#img_photo").append( `<img src="${url}"/>`  );
+        //$("#output").append("<tr><td>" + `<img src="${url}"/>` + "</td></tr>");   //OK
+        //alert( $("#imgphoto").src  );
+        $("#imgphoto").src  =   `<img src="${url}"/>`  ;
         //imageWindow.innerHTML += `<img src="${url}"/>`
     }
     var attempts = 0;
     function sendMessage(message) {
         console.log("sendMessage " + message + " using " + socket);
+        //alert("xxx sendMessage");
+        if( socket == null  ) alert("Please connect ...");
+        else{
+            socket.send(message);
+            //addMessageToWindow("Sent Message: " + message);
+        }
+        
+        /*
+        alert("sendMessage");
             setTimeout( () => {
                 if( socket != undefined ){
                      socket.send(message);
@@ -69,14 +84,14 @@
                     sendMessage(message);
                 }
             }, 1000) ;
+            */
     }
 
     function showCurrentPhoto(){
         console.log("showCurrentPhoto curPhoto.jpg "  );
 
     }
-     const fileInput = document.getElementById("myfile");
-     //console.log("fileInput="+fileInput.files[0]);
+
 
 const imgArea = document.getElementById('img_src');
 
@@ -107,6 +122,10 @@ butDir.addEventListener('click', async () => {
   }
 });
 
+const fileInput = document.getElementById("myfile");
+//console.log("fileInput="+fileInput.files[0]);
+
+
 /*
 The <button> element, when placed in a form, 
 will submit the form automatically unless otherwise specified. 
@@ -117,7 +136,7 @@ You can use the following 2 strategies:
 
 */
 $(function () {
-    $( "form").on('submit', function (e) {  console.log(e);  });    //e.preventDefault();
+    $( "form").on('submit', function (e) { e.preventDefault();  });    
     $( "#connect" ).click( function() { connect(); });  
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#on" ).click(function() {  });  //console.log("on");
@@ -127,8 +146,8 @@ $(function () {
     $( "#distance" ).click(function() {  });
     //$( "#distance" ).click(function() {  });
 
-    $( "#sendImage" ).click(function() {  let f = fileInput.files[0];   readImage(f); });
-    //$( "#sendImage" ).click(function() {  addMessageToWindow("image"); });
+    $( "#sendImage" ).click(function() {  let f = fileInput.files[0];  sendMessage(f); }); //readImage(f);
+
 });
 
 
