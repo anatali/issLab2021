@@ -14,6 +14,8 @@ import java.io.File;
 //See https://www.baeldung.com/rest-template
 @RestController
 public class MachineEnablerController {
+    private WebSocketHandler wshandler = WebSocketHandler.getWebSocketHandler();
+
     @PostMapping( "/photo" )
     public String elaborate( @RequestParam(name="request") String  msg,
                              @RequestParam("image") MultipartFile multipartFile){
@@ -25,9 +27,15 @@ public class MachineEnablerController {
                     + " ContentType:" + multipartFile.getContentType()
                     + " filename:" + fileName
                     + " content length=" + multipartFile.getBytes().length
+                    + " wshandler=" + wshandler
             );
 
             storeImage(multipartFile.getBytes(),fileName);
+             
+            //Oltre a memorizzare su file lo invio sulla ws
+            wshandler.sendToAll( multipartFile.getBytes()   );
+
+
         }catch(Exception e){
             Colors.outerr("elaborate ERROR:"+ e.getMessage());
         }
