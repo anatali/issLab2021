@@ -43,6 +43,9 @@ h3{
  
  </head>
 <body>
+
+<div id="main-content" class="container-fluid pt-3">
+
 <h1><span th:text="${arg}">Our Arg</span></h1>
 
 
@@ -198,10 +201,26 @@ PHOTO SECTION
         </div>
         -->
         <img src="" id="img_photo" alt=""  width="200" height="200"><br/>
-        <button type="button" onclick="sendMessage('curPhoto.jpg')">Show Photo</button>
+        <button type="button" onclick="showCurrentPhoto( )">Show Photo</button>
+        <br/>
+          <button type="button" id="dirshow">Dir show</button>
     </div>
 </div>
 
+        <h4>Propagate Photo</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="myfile">Input (image)</label>
+                                <input type="file" id="myfile" name="myfile" class="form-control" accept="image/*"/>
+                            </div>
+                            <!-- <button id="sendImage" class="btn btn-default" type="submit">Send Image</button> -->
+                            <button type="button" id="sendImage" >Send Image</button>
+
+                  </form>
+            </div>
+        </div>
         <!--
         <form action="/showphoto" method="post">
             <div class="form-group">
@@ -250,7 +269,7 @@ function showWebCam(){
 }
 </script>
 
-
+</div>
 <script src="wsNoStomp.js"></script>
 </body>
 </html>

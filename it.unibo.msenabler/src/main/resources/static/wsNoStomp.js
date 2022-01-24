@@ -44,7 +44,7 @@
     }
 
     function addMessageToWindow(message) {
-    	console.log("addMessageToWindow " + message);
+    	//console.log("addMessageToWindow " + message);
         $("#output").append("<tr><td>" + message + "</td></tr>");
      }
           
@@ -71,6 +71,42 @@
             }, 1000) ;
     }
 
+    function showCurrentPhoto(){
+        console.log("showCurrentPhoto curPhoto.jpg "  );
+
+    }
+     const fileInput = document.getElementById("myfile");
+     //console.log("fileInput="+fileInput.files[0]);
+
+const imgArea = document.getElementById('img_src');
+
+//https://web.dev/read-files/#read-content
+function readImage(file) {
+  alert(file.name);
+  // Check if the file is an image.
+  if (file.type && !file.type.startsWith('image/')) {
+    alert('File is not an image.', file.type, file);
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.addEventListener('load', (event) => {
+        imgArea.src = event.target.result;
+    //addImageToWindow(event.target.result);
+  });
+  reader.readAsDataURL(file);
+}//readImage
+
+//https://web.dev/file-system-access/#opening-a-directory-and-enumerating-its-contents
+//await Promise.all for file length
+const butDir = document.getElementById('dirshow');
+butDir.addEventListener('click', async () => {
+  const dirHandle = await window.showDirectoryPicker();
+  for await (const entry of dirHandle.values()) {
+    console.log(entry.kind, entry.name);
+  }
+});
+
 /*
 The <button> element, when placed in a form, 
 will submit the form automatically unless otherwise specified. 
@@ -91,7 +127,8 @@ $(function () {
     $( "#distance" ).click(function() {  });
     //$( "#distance" ).click(function() {  });
 
-//    $( "#sendImage" ).click(function() {  let f = fileInput.files[0]; sendMessage(f); });
+    $( "#sendImage" ).click(function() {  let f = fileInput.files[0];   readImage(f); });
+    //$( "#sendImage" ).click(function() {  addMessageToWindow("image"); });
 });
 
 
