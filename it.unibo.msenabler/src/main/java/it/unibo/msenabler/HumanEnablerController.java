@@ -183,13 +183,18 @@ public class HumanEnablerController {
                                        String moveName, Model model) {
         Colors.out("HumanEnablerController takephoto-0 "    );
         appl.takePhoto(photoFName);
+        /*
+         * Raspberry fa la foto e la invia al server con una POST
+         * Il MachineEnablerController del server memorizza la foto sul file curPhoto.jpg
+         * e poi invia la foto su tutte le connessioni correnti della ws.
+         * Tutti ricevono la foto, tranne in browser che ha originato il processo.
+         * a meno di non ritardare l'aggiornamento della ws
+         */
         //Colors.out("HumanEnablerController takephoto-1 "    );
         //Occorre fare richiesta e attendere risposta
         //String photoBase64 = appl.getImage(photoFName);
         //Colors.out("HumanEnablerController photoBase64 length=" + photoBase64.length()  );
         //appl.storeImage(photoBase64,photoFName);
-
-
         //File f = new File(photoFName);
         //leggo il contenuto del file (image) e lo invio alla zona output della pagina
         //addImageToWindow(image)

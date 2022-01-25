@@ -73,8 +73,6 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IObser
 
     protected void sendToAllBinary(BinaryMessage message) throws IOException{
         Colors.out("WebSocketHandler | sendToAllBinary " + sessions.size() + " " + message  );
-        //sendToAll(new TextMessage("photo!!!"));
-        
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             iter.next().sendMessage( message ); //message

@@ -1,6 +1,8 @@
 package it.unibo.msenabler;
 
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
+
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 //See https://www.baeldung.com/rest-template
 @RestController
@@ -33,15 +36,28 @@ public class MachineEnablerController {
             storeImage(multipartFile.getBytes(),fileName);
              
             //Oltre a memorizzare su file lo invio sulla ws
-            wshandler.sendBinaryToAll( multipartFile.getBytes()   );
-
-
+            propagatePhoto(imgContent);
+            
         }catch(Exception e){
             Colors.outerr("elaborate ERROR:"+ e.getMessage());
         }
-         return ("Going to manage photo:" + msg + " " + fileName  );
+        return ("Going to manage photo:" + msg + " " + fileName  );
     }
 
+    
+    protected void propagatePhoto(byte[] imgContent ) {
+        new Thread() {
+        	public void run() {
+        		try {
+        			Utils.delay(300);
+        			Colors.out(" --- PROPAGATE THE PHOTO AFTER SOME TIME --- ");
+					wshandler.sendBinaryToAll( imgContent   );
+				} catch (IOException e) {
+					Colors.outerr("elaborate propagate photo ERROR:"+ e.getMessage());
+				}
+        	} 
+        }.start();    	
+    }
     public void storeImage(byte[] decodedBytes, String fName) {
         try {
             //byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
