@@ -31,7 +31,7 @@ import it.unibo.enablerCleanArchapplHandlers.SonarDistanceHandler;
  * Eredita il Sonar da 
  */
 
-public class RadaSystemMainCoap    implements IApplication{  
+public class RadarSystemMainCoap    implements IApplication{  
 private ISonar   sonar;
 private ILed     led;
 
@@ -118,7 +118,7 @@ protected IObserver obsfortesting;
 	}
 	
 	public static void main( String[] args) throws Exception {
-		new RadaSystemMainCoap().doJob("RadarSystemConfig.json");	
+		new RadarSystemMainCoap().doJob("RadarSystemConfig.json");	
 
 	}
 

@@ -34,25 +34,37 @@ import org.apache.http.entity.mime.content.FileBody;
 import it.unibo.enablerCleanArch.domain.WebCamRasp;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.HttpClientSupport;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class WebCamRaspResourceCoap extends CoapDeviceResource {
- 	
+ 	private String workingAddr = "/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/";
+ 			
 	public WebCamRaspResourceCoap( String name  ) {
 		super(name, DeviceType.input);  //add the resource
 		//WebCamRasp.startWebCamStream();  //Forse non prende foto ???
   	}
+	@Override
+	protected String elaborateGet(String req ) {
+		return "nothing to to";
+	}
 
 	@Override
-	protected String elaborateGet(String req) {
-		Colors.out( getName() + " | before elaborateGet req:" + req   );
+	protected String elaborateGet(String req, InetAddress callerAddr) {
+		Colors.out( getName() + " | before elaborateGet req:" + req + " callerAddr=" + callerAddr );
 		if( req.startsWith("getImage-")) {
 			String fname=req.substring( req.indexOf('-')+1, req.length());
 			String imgBase64 = WebCamRasp.getImage(fname);
 			Colors.out(getName() + " | imgBase64 length=" + imgBase64.length());
 			return imgBase64;
+	 		 
 		}
-  		return "nothing to to" ;
-	}
+		if( req.startsWith("sendCurrentPhoto")) {
+			String replyAddr=callerAddr.getHostAddress();
+			sendPhotoHttp2( "http://"+replyAddr+":8081/photo", "curPhoto.jpg");
+	 		return "photo posted" ;			
+		}
+		return "request unknown";
+ 	}
 
 	@Override
 	protected void elaboratePut(String req) {
@@ -72,14 +84,26 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		Colors.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
 		 if( req.startsWith("takePhoto-") ){
 			String fname=req.substring( req.indexOf('-')+1, req.length());
+			File photoFile = new File(workingAddr+fname);
+			if( photoFile.exists() ) {
+				photoFile.delete();
+				Colors.out( getName() + " | deleted file" + fname  );
+			}
+			
 			WebCamRasp.takePhoto(fname);
 			
-			//String encodedString = WebCamRasp.getImage(fname);
+//			photoFile = new File(workingAddr+fname);
+//			while( ! photoFile.isFile() ) {
+//				Colors.out( getName() + " | waiting for file ... " + fname  );
+//				Utils.delay(500); 
+//				photoFile = new File(workingAddr+fname);
+//			}
 			
+			//String encodedString = WebCamRasp.getImage(fname);			
 			String replyAddr=callerAddr.getHostAddress();
 			//sendPhotoHttp(replyAddr, encodedString);
 			//sendPhotoHttp1( "http://"+replyAddr+":8081/photo", fname);
-			sendPhotoHttp2( "http://"+replyAddr+":8081/photo", fname);
+ 			//sendPhotoHttp2( "http://"+replyAddr+":8081/photo", fname);
 			
 			//Colors.out( getName() + " | takePhoto fname:" + fname    );
 		}else if( req.startsWith("startWebCamStream") ){

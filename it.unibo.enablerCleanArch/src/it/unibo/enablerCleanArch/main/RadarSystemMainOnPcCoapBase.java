@@ -261,6 +261,12 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 		}
 	}
 	
+	@Override
+	public void sendCurrentPhoto() {
+		String answer = coapWebCamSup.request("sendCurrentPhot"  );
+		Colors.out("RadarSystemMainOnPcCoapBase | sendCurrentPhoto answer=" + answer);
+	}
+	
 	public void storeImage(String encodedString, String fName) {
 		try {
 			byte[] decodedBytes = Base64.getDecoder().decode(encodedString);

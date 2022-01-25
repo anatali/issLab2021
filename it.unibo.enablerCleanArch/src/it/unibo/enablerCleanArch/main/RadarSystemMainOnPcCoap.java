@@ -159,7 +159,11 @@ private final int ampl             = 3;
 		return null;
 	}
 
-
+	@Override
+	public void sendCurrentPhoto() {
+		
+	}
+	
 	@Override
 	public void storeImage(String encodedString, String fName) {
 		// TODO Auto-generated method stub

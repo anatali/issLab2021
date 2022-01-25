@@ -16,7 +16,7 @@ import java.io.IOException;
 
 //See https://www.baeldung.com/rest-template
 @RestController
-public class MachineEnablerController {
+public class MIController {
     private WebSocketHandler wshandler = WebSocketHandler.getWebSocketHandler();
 
     @PostMapping( "/photo" )
@@ -33,10 +33,10 @@ public class MachineEnablerController {
                     + " wshandler=" + wshandler
             );
 
-            storeImage(multipartFile.getBytes(),fileName);
+            //storeImage(multipartFile.getBytes(),fileName);
              
             //Oltre a memorizzare su file lo invio sulla ws
-            propagatePhoto(imgContent);
+            propagatePhoto(imgContent, fileName);
             
         }catch(Exception e){
             Colors.outerr("elaborate ERROR:"+ e.getMessage());
@@ -45,11 +45,13 @@ public class MachineEnablerController {
     }
 
     
-    protected void propagatePhoto(byte[] imgContent ) {
+    protected void propagatePhoto(byte[] imgContent, String fileName ) {
         new Thread() {
         	public void run() {
         		try {
-        			Utils.delay(300);
+        			Colors.out(" --- STORE THE PHOTO  in " + fileName );
+        			storeImage(imgContent,fileName);
+        			Utils.delay(1000);
         			Colors.out(" --- PROPAGATE THE PHOTO AFTER SOME TIME --- ");
 					wshandler.sendBinaryToAll( imgContent   );
 				} catch (IOException e) {

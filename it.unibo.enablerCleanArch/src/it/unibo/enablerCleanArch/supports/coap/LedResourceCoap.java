@@ -17,6 +17,10 @@ public class LedResourceCoap extends CoapDeviceResource {
 		Colors.out( getName() + " |  before elaborateGet req:" + req + " led:" + led.getState()  );
  		return ""+led.getState();
 	}
+	@Override
+	protected String elaborateGet(String req, InetAddress callerAddr) {
+		return getName() + " | elaborateGet with callerAddr";
+	}
 
 	@Override
 	protected void elaboratePut(String req) {

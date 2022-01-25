@@ -49,6 +49,11 @@ String curDistance="0";  //Initial state
 				if( req != null && req.equals("isActive")) return ""+sonar.isActive();
 				return "SonarResourceCoap: request notUnderstood";
 			}
+			
+			@Override
+			protected String elaborateGet(String req, InetAddress callerAddr) {
+				return "SonarResourceCoap: elaborateGet with callerAddr";
+			}
 
 			@Override
 			protected void elaboratePut(String arg) {

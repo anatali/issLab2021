@@ -22,7 +22,7 @@ import java.util.Base64;
 
 
 @Controller
-public class HumanEnablerController {
+public class HIController {
 	private boolean allOnRasp   = MsenablerApplication.allOnRasp;
 	private boolean sonarDataOn = false;
 	private String raspAddr     = "unkown";
@@ -183,6 +183,7 @@ public class HumanEnablerController {
                                        String moveName, Model model) {
         Colors.out("HumanEnablerController takephoto-0 "    );
         appl.takePhoto(photoFName);
+        appl.sendCurrentPhoto();
         /*
          * Raspberry fa la foto e la invia al server con una POST
          * Il MachineEnablerController del server memorizza la foto sul file curPhoto.jpg

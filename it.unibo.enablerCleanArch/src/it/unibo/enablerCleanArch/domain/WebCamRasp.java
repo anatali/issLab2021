@@ -1,8 +1,10 @@
 package it.unibo.enablerCleanArch.domain;
 import java.io.File;
+import java.io.IOException;
 import java.util.Base64;
 import org.apache.commons.io.FileUtils;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class WebCamRasp {
 
@@ -34,11 +36,29 @@ public class WebCamRasp {
 	public static void takePhoto(String fName) {  
  		try {
  	        Colors.out("WebCamRasp | takePhoto in:" + fName);
-			//cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental
-			//Runtime.getRuntime().exec("cd /home/pi/nat/mjpg-streamer/mjpg-streamer-experimental");
 			//Runtime.getRuntime().exec("fswebcam -r 320×240 " + fName);
- 	        Runtime.getRuntime().exec("fswebcam -r 320×240 "+ fName );
- 	        Colors.out("WebCamRasp | takePhoto done");
+ 	        /*
+ 	        new Thread() {
+ 	        	public void run() {
+ 	        		try {
+						Runtime.getRuntime().exec("fswebcam -r &"+ fName );
+					} catch (IOException e) {
+						Colors.outerr("WebCamRasp | thread takePhoto ERROR " + e.getMessage() );					}
+ 	        	}
+ 	        }.start();
+ 	        */
+ 	       Runtime.getRuntime().exec("fswebcam -r "+ fName + " &");
+ 	       Utils.delay(2000);
+ 	       /*
+ 	        Colors.out("WebCamRasp | takePhoto launched "  );
+ 	        File photoFile = new File( fName );
+			while( ! photoFile.isFile() ) {
+				Colors.out( "WebCamRasp | waiting for file ... " + fName  );
+				Utils.delay(500); 
+				photoFile = new File( fName );
+			}
+ 	        */
+ 	        
        	}catch( Exception e) {
        		Colors.outerr("WebCamRasp | takePhoto ERROR " + e.getMessage() );
     	}

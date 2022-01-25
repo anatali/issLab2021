@@ -122,6 +122,11 @@ private String ctxTopic   		= "topicCtxMqtt";
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void sendCurrentPhoto() {
+		
+	}
 
 
 	@Override
