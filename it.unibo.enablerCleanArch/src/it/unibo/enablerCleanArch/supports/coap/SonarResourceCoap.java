@@ -18,7 +18,7 @@ String curDistance="0";  //Initial state
 	 	}
   			
 		private void getSonarValues() {
-			Colors.outerr( getName() + " |  SonarResourceCoap getSonarValues"   );
+			Colors.out( getName() + " |  SonarResourceCoap getSonarValues"   );
 			new Thread() {
 				public void run() {
 					if( ! sonar.isActive() ) sonar.activate();
@@ -67,15 +67,18 @@ String curDistance="0";  //Initial state
 	 			}
 	 			//changed();	// notify all CoAp observers
 			}
+			@Override
+			protected void elaboratePut(String req, InetAddress callerAddr) {
+				Colors.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
+				elaboratePut(req);
+			}			
+			
 			
 			protected void elaborateAndNotify(int arg) {
 				curDistance= ""+arg;
  				Colors.out( getName() + " | elaborateAndNotify:" + curDistance , Colors.GREEN  );		
 				changed();	// notify all CoAP observers
 			}
-			@Override
-			protected void elaboratePut(String req, InetAddress callerAddr) {
-				Colors.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
-			}
+
 		
 }

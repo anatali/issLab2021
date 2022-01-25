@@ -117,8 +117,10 @@ function readImage(file) {
   reader.readAsDataURL(file);
 }//readImage
 
+/*
 //https://web.dev/file-system-access/#opening-a-directory-and-enumerating-its-contents
 //await Promise.all for file length
+
 const butDir = document.getElementById('dirshow');
 butDir.addEventListener('click', async () => {
   const dirHandle = await window.showDirectoryPicker();
@@ -126,7 +128,7 @@ butDir.addEventListener('click', async () => {
     console.log(entry.kind, entry.name);
   }
 });
-
+*/
 const fileInput = document.getElementById("myfile");
 //console.log("fileInput="+fileInput.files[0]);
 

@@ -19,6 +19,6 @@ public interface IApplicationFacade { //extends IApplication
 	public void storeImage(String encodedString, String fName);
 
 //	public ISonarObservable getSonar();
-//	public void doLedBlink();
-//	public void stopLedBlink();
+ 	public void doLedBlink();
+ 	public void stopLedBlink();
 }

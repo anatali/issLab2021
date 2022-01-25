@@ -60,6 +60,12 @@ public class HIController {
             Colors.out("HumanEnablerController setApplAddress " + addr  );
             raspAddr = addr;
 
+            if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+            else appl = MsenablerApplication.startSystemCoap(raspAddr);
+            applStarted = true;
+            //setModelValues(viewmodel, "startAppl");
+
+
             //if( appl == null ){
                 //if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
                 //else appl = MsenablerApplication.startSystemCoap(addr);
@@ -83,7 +89,9 @@ public class HIController {
 
     }
 
-
+/*
+LED
+ */
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
@@ -124,7 +132,7 @@ public class HIController {
     @PostMapping( path = "/doLedBlink" )
     public String doBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                 String moveName, Model model){
-        //if( appl != null ) appl.doLedBlink( );
+        if( appl != null ) appl.doLedBlink( );
         model.addAttribute("ledstate","ledBlinking ...");
         setModelValues(model,"Led blink");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -133,10 +141,11 @@ public class HIController {
     @PostMapping( path = "/stopLedBlink" )
     public String stopLedBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
-        //if( appl != null ) appl.stopLedBlink( );
+        if( appl != null ) appl.stopLedBlink( );
+        model.addAttribute("ledstate","no led blink");
 //        String ledState = appl.ledState();
 //        Colors.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
-        model.addAttribute("arg", appName+" After Led stop blink");
+          //model.addAttribute("arg", appName+" After Led stop blink");
 //        if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
 //        else model.addAttribute("ledgui","ledOff");
 //        model.addAttribute("ledstate",ledState);

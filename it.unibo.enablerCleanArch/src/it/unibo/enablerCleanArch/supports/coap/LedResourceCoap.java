@@ -19,7 +19,7 @@ public class LedResourceCoap extends CoapDeviceResource {
 	}
 	@Override
 	protected String elaborateGet(String req, InetAddress callerAddr) {
-		return getName() + " | elaborateGet with callerAddr";
+		return elaborateGet(req);
 	}
 
 	@Override
@@ -32,6 +32,7 @@ public class LedResourceCoap extends CoapDeviceResource {
 	@Override
 	protected void elaboratePut(String req, InetAddress callerAddr) {
 		Colors.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
+		elaboratePut(req);
 	}
 
 }

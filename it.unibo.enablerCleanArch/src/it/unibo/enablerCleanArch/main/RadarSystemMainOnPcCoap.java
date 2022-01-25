@@ -10,13 +10,15 @@ import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
  
 public class RadarSystemMainOnPcCoap implements IApplicationFacade{
+	
 private ISonar sonar    		   = null;
 private ILed led        		   = null;
 private IRadarDisplay radar 	   = null;
 private CoapSupport coapSonarSup   = null;
 private CoapObserveRelation relObs = null;
 private final int ampl             = 3;
-
+private boolean ledblinking        = false;
+ 
 	@Override
 	public String getName() {
 		return "RadarSystemMainOnPcCoap";
@@ -115,6 +117,16 @@ private final int ampl             = 3;
 	@Override
 	public String ledState() {
  		return ""+led.getState();
+	}
+	@Override
+	public void doLedBlink() {
+		
+		
+	}
+	@Override
+	public void stopLedBlink() {
+		
+		
 	}
 	@Override
 	public void sonarActivate() {

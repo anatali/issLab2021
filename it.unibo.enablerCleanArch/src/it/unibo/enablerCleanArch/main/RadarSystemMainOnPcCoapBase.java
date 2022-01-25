@@ -47,7 +47,7 @@ private CoapSupport coapLedSup     = null;
 private CoapSupport coapWebCamSup  = null;
 private CoapObserveRelation rel1   = null;
 private final int ampl             = 3;
-
+private boolean ledblinking        = false;
 
     public RadarSystemMainOnPcCoapBase(String addr) {
     	RadarSystemConfig.raspHostAddr = addr;
@@ -200,6 +200,27 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	public String ledState() {
  		return ""+led.getState();//coapLedSup.request("ledState"); //payload don't care
 	}
+	
+	@Override
+	public void doLedBlink() {
+		new Thread() {
+			public void run() {
+				ledblinking = true;
+				while( ledblinking ) {
+					ledActivate(true);
+					Utils.delay(500);
+					ledActivate(false);
+					Utils.delay(500);
+				}
+			}
+		}.start();		
+		
+	}
+	@Override
+	public void stopLedBlink() {
+		ledblinking = false;		
+	}
+	
 	@Override
 	public void sonarActivate() {
 		Colors.out("RadarSystemMainOnPcCoapBase | sonarActivate");
@@ -282,6 +303,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 		new RadarSystemMainOnPcCoapBase("192.168.1.9").entryMainAsApplInGui();
 
 	}
+
 	
  
 

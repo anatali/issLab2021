@@ -69,15 +69,16 @@ Acquire the address of the application on the Raspberry
         <div class="form-group">
             <input name="cmd" id="raspAddr" placeholder="192.168.1.xxx">
             <button>Rasp IP</button> <span id="raspIp" th:text="${applicationAddr}"> </span>
+            Application-facade started: <b><span id="applStarted" th:text="${applStarted}"></span></b>
         </div>
     </form>
-
+<!--
     <form action="/startAppl" method="post">
         <div class="form-group">
-            <!-- <input name="cmd" id="startAppl" placeholder="false"> -->
             <button class="btn btn-default">StartAppl</button><span id="applStarted" th:text="${applStarted}"> </span>
         </div>
     </form>
+    -->
     </div>
 </div>
 
@@ -117,25 +118,26 @@ LED
                     </form>
                 </td>
                 <td>
+                    <div th:id=${ledgui} align="left"></div>
+                </td>
+                <td>
                     <form class="form-inline" action="/doLedBlink" method="post">
                         <div class="form-group">
-                            <button id="doLedBlink" type="submit">Start led blinking</button>
-
+                            <button id="doLedBlink" type="submit">Led blink</button>
                         </div>
                     </form>
                 </td>
                 <td>
                     <form class="form-inline" action="/stopLedBlink" method="post">
                         <div class="form-group">
-                            <button id="stopLedBlink" type="submit">Stop led blinking</button>
-
+                            <button id="stopLedBlink" type="submit">Led blink stop</button>
                         </div>
                     </form>
                 </td>
-            </tr>
+             </tr>
         </table>
 
-<div th:id=${ledgui} align="left"></div>
+
 <h5>Current Led State: <span th:text="${ledstate}"></span></h5>
 
 
