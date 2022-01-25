@@ -51,6 +51,9 @@
     	//console.log("addMessageToWindow " + message);
         $("#output").append("<tr><td>" + message + "</td></tr>");
      }
+
+
+const imgArea = document.getElementById('imgphoto');
           
     //Il Raspberry potrebbe inviare immagini ... 
     function addImageToWindow(image) {
@@ -58,8 +61,10 @@
         let url = URL.createObjectURL(new Blob([image]));
         console.log("addImageToWindow url=" + url);
         //$("#output").append("<tr><td>" + `<img src="${url}"/>` + "</td></tr>");   //OK
-        //alert( $("#imgphoto").src  );
-        $("#imgphoto").src  =   `<img src="${url}"/>`  ;
+        console.log(  imgArea    );
+        imgArea.src  = url;
+        //document.getElementById('imgphoto').src  = url;  // `<img src="${url}"/>`  ;
+        console.log(  imgArea.src  );
         //imageWindow.innerHTML += `<img src="${url}"/>`
     }
     var attempts = 0;
@@ -93,7 +98,7 @@
     }
 
 
-const imgArea = document.getElementById('img_src');
+
 
 //https://web.dev/read-files/#read-content
 function readImage(file) {
@@ -136,7 +141,7 @@ You can use the following 2 strategies:
 
 */
 $(function () {
-    $( "form").on('submit', function (e) { e.preventDefault();  });    
+    //$( "form").on('submit', function (e) { e.preventDefault();  });    
     $( "#connect" ).click( function() { connect(); });  
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#on" ).click(function() {  });  //console.log("on");
