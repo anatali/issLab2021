@@ -4,6 +4,7 @@ package it.unibo.msenabler;
 import it.unibo.enablerCleanArch.domain.IApplicationFacade;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -183,7 +184,9 @@ public class HIController {
                                        String moveName, Model model) {
         Colors.out("HumanEnablerController takephoto-0 "    );
         appl.takePhoto(photoFName);
-        appl.sendCurrentPhoto();
+        //Si dovrebbe gestire una risposta ...
+        //Utils.delay(2000);
+        //appl.sendCurrentPhoto();  //riceve una POST NON VA
         /*
          * Raspberry fa la foto e la invia al server con una POST
          * Il MachineEnablerController del server memorizza la foto sul file curPhoto.jpg
@@ -210,6 +213,7 @@ public class HIController {
         //Colors.out("HumanEnablerController showPhoto: " + photoBase64  );
         //appl.storeImage(photoBase64,"curPhoto.jpg");
         //model.addAttribute("photo", "PHOTO in "+photoFName);
+        appl.sendCurrentPhoto();
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 

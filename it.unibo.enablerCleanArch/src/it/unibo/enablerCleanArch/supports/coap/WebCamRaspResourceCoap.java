@@ -58,9 +58,9 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 			return imgBase64;
 	 		 
 		}
-		if( req.startsWith("sendCurrentPhoto")) {
+		if( req.startsWith("sendCurrentPhot")) {
 			String replyAddr=callerAddr.getHostAddress();
-			sendPhotoHttp2( "http://"+replyAddr+":8081/photo", "curPhoto.jpg");
+			sendPhotoHttp2( "http://"+replyAddr+":8081/photo", workingAddr+"curPhoto.jpg");
 	 		return "photo posted" ;			
 		}
 		return "request unknown";
@@ -119,8 +119,8 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 			builder.addTextBody("username", "John");
 		    builder.addTextBody("password", "pass");
-		    builder.addBinaryBody(
-		      "image", new File("/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/"+fname), ContentType.create("image/jpeg"), fname);
+		    builder.addBinaryBody( //  "/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/"+
+		      "image", new File(fname), ContentType.create("image/jpeg"), fname);
 			//String encodedString = Base64.getEncoder().encodeToString(fileContent);
 
 		    HttpEntity multipart = builder.build();
@@ -133,7 +133,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		    	EntityUtils.consume(resEntity) ;
 		    }		    
 	    }catch( Exception e) {
-	    	Colors.outerr(getName() + " | sendPhotoHttp ERROR" + e.getMessage());
+	    	Colors.outerr(getName() + " | sendPhotoHttp ERROR:" + e.getMessage());
 	    }
 	}
 	//https://www.codejava.net/frameworks/spring-boot/spring-boot-file-upload-tutorial

@@ -37,28 +37,7 @@ public class WebCamRasp {
  		try {
  	        Colors.out("WebCamRasp | takePhoto in:" + fName);
 			//Runtime.getRuntime().exec("fswebcam -r 320×240 " + fName);
- 	        /*
- 	        new Thread() {
- 	        	public void run() {
- 	        		try {
-						Runtime.getRuntime().exec("fswebcam -r &"+ fName );
-					} catch (IOException e) {
-						Colors.outerr("WebCamRasp | thread takePhoto ERROR " + e.getMessage() );					}
- 	        	}
- 	        }.start();
- 	        */
- 	       Runtime.getRuntime().exec("fswebcam -r "+ fName + " &");
- 	       Utils.delay(2000);
- 	       /*
- 	        Colors.out("WebCamRasp | takePhoto launched "  );
- 	        File photoFile = new File( fName );
-			while( ! photoFile.isFile() ) {
-				Colors.out( "WebCamRasp | waiting for file ... " + fName  );
-				Utils.delay(500); 
-				photoFile = new File( fName );
-			}
- 	        */
- 	        
+  	        Runtime.getRuntime().exec("fswebcam "+ fName ); 	        
        	}catch( Exception e) {
        		Colors.outerr("WebCamRasp | takePhoto ERROR " + e.getMessage() );
     	}

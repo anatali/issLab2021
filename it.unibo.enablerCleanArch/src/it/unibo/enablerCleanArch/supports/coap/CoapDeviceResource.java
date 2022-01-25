@@ -44,6 +44,8 @@ public abstract class CoapDeviceResource extends CoapResource {
 		if( query == null ) {
 			Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText(), exchange.getSourceAddress() );
+			
+			
 			if( answer.length() < 500000 ) {
 				Colors.out( getName() + "handleGET request answer=" + answer , Colors.GREEN );
 				exchange.respond(answer);
@@ -53,9 +55,11 @@ public abstract class CoapDeviceResource extends CoapResource {
 				exchange.respond("long answer");
 			}
 			
-		}else{ 
+		}else{  //query != null
  			Colors.out( getName() + "handleGET query=" + query);
- 			String answer = elaborateGet( exchange.getQueryParameter("q") );
+ 			String answer = elaborateGet( exchange.getQueryParameter("q"), exchange.getSourceAddress() );
+ 			
+ 			
  			if( answer.length() < 500000 ) {
  				if( answer.length() < 1000) Colors.out( getName() + "handleGET q-query answer=" + answer , Colors.GREEN );
  				else Colors.out( getName() + "handleGET q-long answer=" + answer.length() , Colors.RED );

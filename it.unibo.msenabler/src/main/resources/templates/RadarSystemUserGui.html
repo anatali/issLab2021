@@ -201,9 +201,16 @@ PHOTO SECTION
         <img src="" id="imgphoto" alt=""  width="640" height="320"/>
         
         <br/>
-        <button type="button" onclick="showCurrentPhoto( )">Show Photo</button>
+        <form action="/showphoto" method="post">
+            <button>Show photo</button>
+        </form>
+
+        <!-- <button type="button" onclick="showCurrentPhoto( )">Show Photo</button>
+
+
+
         <br/>
-          <button type="button" id="dirshow">Dir show</button>
+          <button type="button" id="dirshow">Dir show</button>-->
     </div>
 </div>
 
@@ -212,7 +219,7 @@ PHOTO SECTION
            <div class="col-md-6">
                   <form class="form-inline">
                             <div class="form-group">
-                                <label for="inputmsg">Input (image)</label>
+                                <label for="myfile">Input (image)</label>
                                 <input type="file" id="myfile" name="myfile" class="form-control" accept="image/*"/>
                             </div>
                             <button id="sendImage" class="btn btn-default" type="button">Send Image</button>

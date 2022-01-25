@@ -52,7 +52,7 @@ String curDistance="0";  //Initial state
 			
 			@Override
 			protected String elaborateGet(String req, InetAddress callerAddr) {
-				return "SonarResourceCoap: elaborateGet with callerAddr";
+				return elaborateGet(req);
 			}
 
 			@Override

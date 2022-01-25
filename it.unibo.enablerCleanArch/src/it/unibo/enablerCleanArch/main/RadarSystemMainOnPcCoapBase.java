@@ -263,7 +263,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	
 	@Override
 	public void sendCurrentPhoto() {
-		String answer = coapWebCamSup.request("sendCurrentPhot"  );
+		String answer = coapWebCamSup.request("sendCurrentPhoto"  );
 		Colors.out("RadarSystemMainOnPcCoapBase | sendCurrentPhoto answer=" + answer);
 	}
 	
