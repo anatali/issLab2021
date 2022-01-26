@@ -1,14 +1,12 @@
-.. contents:: Overview
-   :depth: 3
 .. role:: red
-.. role:: blue 
-.. role:: remark
+.. role:: blue  
+.. role:: remark   
 
  
 ======================================
 Dal motto all'azione
 ======================================
-
+ 
 :remark:`Non c'è codice senza progetto.`
 
 :remark:`Non c'è progetto senza analisi del problema.`

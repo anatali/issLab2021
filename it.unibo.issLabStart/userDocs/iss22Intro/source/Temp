@@ -1,0 +1,44 @@
+:remark:`
+.. epigraph:: 
+
+.. _tcpsupprt:
+
+.. .. list-table::
+   :width: 100%
+   :widths: 70,30
+
+   * - L'idea è che l'`enabler` dovrebbe svolgere rispetto all'oggetto embedded una funzione analoga alle tute  
+       in stile 'IronMan', in modo da costruire un microservizio.
+     -  .. image:: ./_static/img/Radar/TutaVolo.jpg 
+           :width: 100%
+
+``  ``
+
+.. _My target:
+
+`My target`_.
+
+:ref:`SonarModel<SonarModel>`
+
+===
+---
++++
+%%%
+&&&
+
+
+ Il delay qualificato cone **'HORRIBLE EFFECT'**  potrebbe ripercuotersi sui client 
+in modo inaccettabile e mettere in crisi un sistema. Si veda ad esempio
+
+.. _HorribleEffetcts:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Sperimentazione di effetti indesiderati
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Gli effetti dei ritardi indotti dagli observer POJO possono essere sperimentati invocando, ad esempio,
+``SonarUsageMainWithContextTcp`` dopo avere tolto il commento sul delay nel metodo update di
+ `SonarObserverFortesting`_.
+
+
+ 

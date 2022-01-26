@@ -7,11 +7,8 @@ iss22
 ==========================================
 
 .. toctree::
-   :maxdepth: 1 
-
-   CostruzioneSoftware 
-   Strumenti per lo sviluppo
-   Tecnologie 
+   :maxdepth: 5 
+     
    Architetture
    AttoriQak 
    RaspberryPi
@@ -20,12 +17,9 @@ iss22
    Applicazioni   
    RadarGuiCoap
    RadarSystem
-   WebSockets
-   ContextServer
    ApproccioTopdown
-   Indicazioni
-   ColloquioFinale
- 
+    
+
 
 
 Indices and tables

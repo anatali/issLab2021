@@ -1,5 +1,3 @@
-.. contents:: Overview
-   :depth: 5
 .. role:: red 
 .. role:: blue 
 .. role:: remark
@@ -545,12 +543,7 @@ Distribuzione
   
 
 
-==================================
-Un approccio top down
-==================================
-
-
-Si veda :doc:`ApproccioTopdown`.
+ 
 
 
 
