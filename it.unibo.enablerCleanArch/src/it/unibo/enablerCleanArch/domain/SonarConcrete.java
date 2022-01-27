@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -30,11 +31,24 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	 
 	@Override
 	protected void updateDistance( int d ) {
-		Colors.out("SonarConcrete updateDistance | d=" + d  );
+		Colors.out("SonarConcrete  | updateDistance d=" + d  );
+ 		if( RadarSystemConfig.protcolType  == ProtocolType.mqtt) {
+ 			super.updateDistance(d);
+ 			return;
+ 		}
+//			try {
+//				blockingQueue.put( curVal );
+//			} catch (InterruptedException e) {
+//				Colors.outerr("SonarConcrete  | updateDistance ERROR:" + e.getMessage() );;
+//			}
  		curVal = new Distance( d );
   	}	
+	
 	@Override
 	public IDistance getDistance() {
+		if( RadarSystemConfig.protcolType  == ProtocolType.mqtt) {
+			return super.getDistance();
+		}
 		Colors.out("SonarConcrete getDistance | curVal=" + curVal  );
 		return curVal;
 	}

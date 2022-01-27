@@ -13,21 +13,21 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 
 /*
- * Applicazione che va in coppia con RadarSystemMainOnPc
+ * Applicazione che va in coppia con RadarSystemMainOnPcMqtt
  */
-public class RadarSystemDevicesOnRaspMqtt implements IApplicationFacade{
+public class RadarSystemDevicesOnRaspMqtt implements IApplication { //IApplicationFacade
 private ISonarObservable sonar  = null;
 private ILed led          		= null;
 private String ctxTopic   		= "topicCtxMqtt";  
 
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
-			RadarSystemConfig.simulation   		= true;
- 			RadarSystemConfig.ledGui    		= true;
-			RadarSystemConfig.testing      		= false;		
+		//else {
+			//RadarSystemConfig.simulation   		= true;
+ 			//RadarSystemConfig.ledGui    		= true;
+			RadarSystemConfig.testing      		= false;	
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;			
-		}
+		//}
 	}
 	
 	protected void createServerMqtt( ) {
@@ -103,6 +103,7 @@ private String ctxTopic   		= "topicCtxMqtt";
 		ledblinking = false;
 	}
 	
+	/*
 	@Override
 	public void takePhoto( String fName ) {
 		// TODO Auto-generated method stub
@@ -134,9 +135,10 @@ private String ctxTopic   		= "topicCtxMqtt";
 		// TODO Auto-generated method stub
 		
 	}
+*/
 	
 	public static void main( String[] args) throws Exception {
-		new RadarSystemDevicesOnRaspMqtt().doJob(null); //"RadarSystemConfig.json"
+		new RadarSystemDevicesOnRaspMqtt().doJob("RadarSystemConfig.json"); //"RadarSystemConfig.json"
  	}
 
 

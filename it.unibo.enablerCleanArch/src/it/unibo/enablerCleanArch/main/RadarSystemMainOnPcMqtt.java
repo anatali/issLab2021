@@ -13,7 +13,7 @@ import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
 
 /*
- * Applicazione che va in coppia con RadarSystemDevicesOnRasp
+ * Applicazione che va in coppia con RadarSystemDevicesOnRaspMqtt
  */
 
 public class RadarSystemMainOnPcMqtt implements IApplication{
@@ -90,14 +90,14 @@ private boolean ledblinking = false;
 	
 	public void execute() {
 		//sonarClient.deactivate();
-/*		
+		
  		ledActivate(true);		
  		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
   		Utils.delay(1000);
  		ledActivate(false);
 		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
  		//Utils.delay(5000);
-
+/*
 //		doLedBlink();
 //		Utils.delay(3000);
 //		stopLedBlink();
@@ -113,26 +113,24 @@ private boolean ledblinking = false;
 		}
 */		 
 		//for( int i=1; i<=3; i++) {
-			sonarClient.activate();
-			
-			boolean b = sonarClient.isActive();
-			
-			Colors.outappl("Sonar active="+b, Colors.GREEN);
-			
+			sonarClient.activate();			
+			boolean b = sonarClient.isActive();			
+			Colors.outappl("Sonar active="+b, Colors.GREEN);			
 			while( ! b ) {
 				Colors.outappl("Sonar not active .. =", Colors.GREEN);
 				Utils.delay(500);
 			}
-/*			
+ 			
 			//if( sonarClient.isActive() ) {
-				for( int i=1; i<=3; i++) {
+				for( int i=1; i<=10; i++) {
 	 				int d = sonarClient.getDistance().getVal();
 					Colors.outappl("Sonar state i=" + i + " -> "+d, Colors.GREEN);
-					//Utils.delay(500);
+					if( d < RadarSystemConfig.DLIMIT ) ledActivate(true);	
+					else ledActivate(false);	
+					Utils.delay(500);
 				}
  			//}
-				 * 
-				 */
+ 
 			Utils.delay(5000);
 			sonarClient.deactivate();
 			Colors.outappl("Sonar deactivate ", Colors.GREEN);

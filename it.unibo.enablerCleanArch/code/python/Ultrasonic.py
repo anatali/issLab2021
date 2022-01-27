@@ -36,14 +36,16 @@ class Ultrasonic:
         return int(distance_cm[2])
                  
     def run(self):
-        L = self.get_distance()
+    	print ('Ultrasonic is starting ... ')
+    	L = self.get_distance()
+    	print ('Ultrasonic L=' + str(L) )
           
             
         
 ultrasonic=Ultrasonic()              
 # Main program logic follows:
 if __name__ == '__main__':
-    print ('Program is starting ... ')
+    ### print ('Program is starting ... ')
     try:
         ultrasonic.run()
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.

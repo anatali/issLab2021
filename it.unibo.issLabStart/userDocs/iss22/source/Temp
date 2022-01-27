@@ -1,4 +1,4 @@
-sphinks -quickstart
+in python virtualenv sphinks -quickstart
 
 :remark:`
 .. epigraph:: 
