@@ -9,8 +9,9 @@
 
 
 =============================================
-
+Access
 =============================================
+
 Un'applicazione Web Spring è una servlet ( ``DispatcherServlet`` ), 
 che reindirizza le richieste HTTP ai  ``@Controllers`` o ``@RestControllers``.
 Per fare in modo che l'autenticazione e l'autorizzazione siano eseguite prima che una richiesta 
@@ -88,19 +89,20 @@ una catena, quindi vengono ordinati.
 
 .. In effetti, un filtro può porre il veto al resto della catena se vuole gestire  la richiesta stessa. Un filtro può anche modificare la richiesta o  la risposta utilizzata nei filtri e nel servlet a valle.  
 
-
 Spring Security è installato come un singolo Filter nella catena e 
 il suo tipo concreto è ``FilterChainProxy``.
 
-In un'applicazione Spring Boot, il filtro di sicurezza è ``@Bean in ApplicationContext``, 
+In una applicazione Spring Boot, il filtro di sicurezza è ``@Bean in ApplicationContext``,
 ed è installato per impostazione predefinita in modo che venga applicato 
 a ogni richiesta. 
-Viene installato in una posizione definita da 
-``SecurityProperties.DEFAULT_FILTER_ORDER``, 
-che a sua volta è ancorata da FilterRegistrationBean.
-``REQUEST_WRAPPER_FILTER_MAX_ORDER``(l'ordine massimo che un'applicazione 
+
+Viene installato in una posizione definita da  ``SecurityProperties.DEFAULT_FILTER_ORDER``, 
+che a sua volta è ancorata da ``FilterRegistrationBean``.
+
+``REQUEST_WRAPPER_FILTER_MAX_ORDER`` (l'ordine massimo che un'applicazione 
 Spring Boot si aspetta che i filtri abbiano se avvolgono la richiesta, 
 modificandone il comportamento). 
+
 C'è di più, però: dal punto di vista del container, 
 Spring Security è un filtro unico, ma, al suo interno, 
 ci sono filtri aggiuntivi, ognuno dei quali gioca un ruolo speciale. 

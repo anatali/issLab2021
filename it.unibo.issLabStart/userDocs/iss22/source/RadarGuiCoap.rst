@@ -1,10 +1,7 @@
-.. contents:: Overview
-   :depth: 5
 .. role:: red 
 .. role:: blue 
 .. role:: remark
-
-.. `` 
+ 
 
 ======================================
 RadarGuiCoap

@@ -17,6 +17,12 @@
 
 .. _`WebSockets`:
 
+
+==================================================
+WebSockets
+==================================================
+
+
 WebSocket_ è un protocollo che consente a due o più computer di comunicare tra loro  
 in modo full-duplex su una singola connessione TCP.
 È uno strato molto sottile su TCP che trasforma un flusso di byte in un flusso di messaggi 

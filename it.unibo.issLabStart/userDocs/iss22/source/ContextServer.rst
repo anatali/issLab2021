@@ -1,6 +1,12 @@
-
+.. role:: red 
+.. role:: blue 
+.. role:: remark
+  
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 
+==================================================
+Il concetto di contesto
+==================================================
 
 Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su una propria porta.
 

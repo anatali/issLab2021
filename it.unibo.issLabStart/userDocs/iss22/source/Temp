@@ -1,3 +1,5 @@
+sphinks -quickstart
+
 :remark:`
 .. epigraph:: 
 
@@ -41,4 +43,29 @@ Gli effetti dei ritardi indotti dagli observer POJO possono essere sperimentati 
  `SonarObserverFortesting`_.
 
 
- 
+==================================================
+Il concetto di contesto
+==================================================
+
+.. include:: ContextServer.rst 
+
+==================================================
+Da TCP a CoAP
+==================================================
+
+.. include:: DaTcpACoAP.rst 
+
+
+==================================================
+WebSockets
+==================================================
+
+.. include:: WebSockets.rst 
+
+
+
+==================================
+Distribuzione del RadarSystem
+==================================  
+
+.. include:: RadarSystemDeploy.rst  

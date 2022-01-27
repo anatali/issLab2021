@@ -2,6 +2,10 @@
 .. role:: blue 
 .. role:: remark
 
+==================================
+Distribuzione del RadarSystem
+==================================  
+
 La distribuzione del *RadarSystem* assume due forme:
 
 - la forma di una libreria di nome ``it.unibo.enablerCleanArch-1.0.jar`` prodotta dal progetto it.unibo.enablerCleanArch_

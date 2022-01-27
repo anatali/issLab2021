@@ -121,6 +121,7 @@ basata su Debian 10, Buster.
     sudo apt update
     sudo apt install default-jdk
     java -version
+    
 +++++++++++++++++++++++++++++++++
 GIT
 +++++++++++++++++++++++++++++++++
@@ -235,14 +236,31 @@ Durante l'installazione viene creato automaticamente un nuovo certificato SSL au
 +++++++++++++++++++++++++++++++++
 Ambiente virtuale Python
 +++++++++++++++++++++++++++++++++
+Una volta installato, Python3 si trova in ``/usr/bin/`` ed è un symlink di ``/usr/bin/python3``, 
+che a sua volta è un symlink di ``/usr/bin/python3.7`` (il vero binario).
+
+.. code::
+
+    which python3
+         /usr/bin/python3
+    ls -lart /usr/bin/python3
+        lrwxrwxrwx 1 root root 9 Mar 26  2019 /usr/bin/python3 -> python3.7
+    ls -lart /usr/bin/python3.7
+        -rwxr-xr-x 2 root root 4275580 Dec 20  2019 /usr/bin/python3.7
+
+
+
 
 Un ambiente virtuale è uno strumento Python per la gestione delle dipendenze e 
 l' isolamento del progetto. Consentono ai Package del sito Python (librerie di terze parti) 
 di essere installati localmente in una directory isolata per un particolare progetto, 
 invece di essere installati globalmente (cioè come parte di un Python a livello di sistema).
 
-Posizionamoci in una drectory di lavoro e
-creiamo un ambiente per Python 3 denominato **myenv**.
+.. From https://www.mynetbrick.com/index.php/varie/30-python-virtualenv
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Installezione di virtualenv
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Fase 1: aggiungiamo un opzione di configurazione al file hidden denominato `.bashrc` aggiungendo il comando
 (alias) `myenv`.
@@ -260,6 +278,55 @@ Fase 2: attiviamo il nuovo virtualenv e entriamo in esso:
     python3 -m pip install virtualenv
     python3 -m virtualenv myenv
 
+
+In coppia con ``virtualenv``, è consigliabile l'installazione del modulo ``virtualenvwrapper`` 
+che contiene una sere di utilities per facilitare la gestione degli ambienti virtuali.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Installezione di virtualenvwrapper
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+    
+    sudo pip3 install virtualenv virtualenvwrapper
+
+Verifichiamo  l'avvenuta installazione e la relativa versione:
+
+.. code::
+
+    virtualenv --version
+        virtualenv 20.10.0 from /home/pi/.local/lib/python3.7/site-packages/virtualenv/__init__.py
+
+Per fruire degli ambienti aggiungiamo i riferimenti e le risorse nel profilo
+
+.. code::
+
+    nano ~/.profile
+    --------------------------------------------------
+    # virtualenv and virtualenvwrapper
+    export WORKON_HOME=$HOME/.virtualenvs
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    source /usr/local/bin/virtualenvwrapper.sh
+    --------------------------------------------------
+
+Ricarichiamo le risorse del profilo:
+
+.. code::
+
+    source ~/.profile
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Creazione di un virtual environment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Posizionamoci in una drectory di lavoro e
+creiamo un ambiente per Python 3 denominato **myenv**.
+
+.. code::   
+
+    mkvirtualenv myenv   
+    
+
 Per entrare nel virtualenv appena creato basta digitare:    
     
     ``myenv``
@@ -267,6 +334,15 @@ Per entrare nel virtualenv appena creato basta digitare:
 Per uscire dal virtualenv: 
 
     ``deactivate``.
+
+Per visualizzare gli ambienti virtuali creati, occoorre avere installato `virtualenvwrapper``:
+
+.. code::  
+
+    lsvirtualenv -l
+ 
+
+
 
 +++++++++++++++++++++++++++++++++
 Multi-Media
@@ -309,10 +385,10 @@ Alcune webcam hanno la funzione di bilanciare automaticamente la loro luminosit�
 Ad esempio, in una stanza buia percepiscono che la luminosità deve essere aumentata mentre in un'area luminosa, 
 la luminosità potrebbe dover essere ridotta. 
 La fotocamera lo fa esaminando i propri fotogrammi e analizzandoli.
- Quando si verifica una cattura di un'immagine subito dopo l'inizializzazione della fotocamera, 
- non ha visto dati sufficienti per sapere quanto sia luminoso l'ambiente e sembra che presuppone 
- che l'ambiente sia SUPER luminoso e riduce al minimo il controllo dell'esposizione (risultando in un'immagine nera). 
- Man mano che vengono esaminati più fotogrammi, la fotocamera regola rapidamente le impostazioni di esposizione.
+Quando si verifica una cattura di un'immagine subito dopo l'inizializzazione della fotocamera, 
+non ha visto dati sufficienti per sapere quanto sia luminoso l'ambiente e sembra che presuppone 
+che l'ambiente sia SUPER luminoso e riduce al minimo il controllo dell'esposizione (risultando in un'immagine nera). 
+Man mano che vengono esaminati più fotogrammi, la fotocamera regola rapidamente le impostazioni di esposizione.
 
 Per utilizzare fswebcam, possiamo fornirgli l'opzione la -S <num>cui opzione è il numero di fotogrammi 
 che la fotocamera dovrebbe "vedere" e "saltare" prima di acquisire l'immagine desiderata. 
