@@ -3,8 +3,18 @@
 .. role:: remark
 
 ==================================
-Distribuzione del RadarSystem
+RadarSystem deployment
 ==================================  
+ 
+ .. code:: 
+
+  gradle build jar -x test
+
+Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contiene la directory bin  
+
+ 
+.. Test funzionale
+.. Si veda :doc:`ContextServer`.
 
 La distribuzione del *RadarSystem* assume due forme:
 

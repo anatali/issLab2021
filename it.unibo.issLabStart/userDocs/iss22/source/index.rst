@@ -7,21 +7,19 @@ iss22
 ==========================================
 
 .. toctree::
-   :maxdepth: 4 
+   :maxdepth: 1 
      
-   Architetture
-   AttoriQak 
-   RaspberryPi
-   RaspberrySoftware
-   Robots
-   Applicazioni   
-   RadarGuiCoap
    RadarSystem
+   RadarSystemAnalisi
+   RadarSystemProdottiAnalisi
+   RadarSystemProgetto
+   RadarSystemSupporti
+   EnablersTCP
+   RadarSystemEnablers
    ContextServer
-   DaTcpACoAP
-   WebSockets
+   RadarGuiCoap
+   RadarSystemCoap
    RadarSystemDeploy
-   Access
    ApproccioTopDown
     
 

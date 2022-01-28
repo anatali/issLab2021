@@ -1,7 +1,10 @@
+.. role:: red 
+.. role:: blue 
+.. role:: remark
 
-+++++++++++++++++++++++++++++++++++++++++++++
-Prodotti della analisi
-+++++++++++++++++++++++++++++++++++++++++++++
+==============================================
+Prodotti al termine della analisi
+==============================================
 
 Importanti prodotti, al termine della fase di analisi dei requisiti e del problema sono:
 
@@ -10,9 +13,9 @@ Importanti prodotti, al termine della fase di analisi dei requisiti e del proble
 - la proposta di un :blue:`piano di lavoro` per lo sviluppo del sistema.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+------------------------------------------------------------
 Architettura logica come modello di riferimento
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+------------------------------------------------------------
 
 L'architettura logica di un sistema costituisce un :blue:`modello del sistema` ispirato dai requisiti funzionali 
 e dalle forze in gioco nel dominio applicativo o nella specifica applicazione e mira ad identificare 
@@ -35,9 +38,9 @@ Un modo per *valutare la qualità* di una architettura logica e la *coerenza con
   a livelli di astrazione via via descrescenti (con tecniche di raffinamento e :blue:`zooming`) 
   o siamo di fornte a un ammasso non organizzato di parti?
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++++++
 Architettura ad oggetti
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++++++
 
 Se astraiamo dalla distribuzione (supponendo ad esempio che tutto il sistema possa
 essere supportato sul RaspberryPi), l'architettura logica del sistema risulta
@@ -59,9 +62,9 @@ Nel caso di Java, il costrutto interface può essere usato per denotare un compo
 come aspetto essenziale le funzionalità che esso deve offrire e una sorta di :blue:`contratto` 
 sull’uso del componente.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Modello ad oggetti del dominio
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 I modelli iniziali dei componenti descritti da interfacce Java per il *Led,
 il Sonar e il RadarDisplay* costuiscono il nostro :blue:`modello del dominio`. 
 Ispirandoci agli schemi port-adapter_ e clean-architecture_:
@@ -70,9 +73,9 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 
 :remark:`il software relativo dominio sarà scritto in un package dedicato (xxx.domain)`
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Le interfacce ILed e IRadarDisplay
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 .. list-table::
@@ -101,9 +104,9 @@ Le interfacce ILed e IRadarDisplay
 
 .. _ISonar:
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Le interfacce IDistance e ISonar
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 .. list-table::
   :widths: 50, 50 
   :width: 100%
@@ -142,9 +145,9 @@ Notiamo che, invece, per il Led abbiamo 'ridotto' il concetto di stato del Led a
 tipo predefinito  ``boolean``. Questa diverso modo di procedere potrebbe avere conseguenze, che verranno
 poste meglio in luce in seguito.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++++++
 Architettura logica del sistema
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++++++
 
 La :blue:`architettura logica` suggerita dal problema è rappresentabile con la figura che segue:
  
@@ -200,9 +203,9 @@ Ma forse non è proprio così.
     in particolare, l'interazione Controller-Sonar sarà basata su una interazione punto-a-punto utilizzando
     il protocollo TCP.  Il :blue:`come` realizzare questa interazione sarà compito del progettista.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Dagli oggetti alla distribuzione: gli enablers
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+---------------------------------------------------------
+Dagli oggetti alla distribuzione: i design patterns
+---------------------------------------------------------
 
 Il fatto di avere espresso il ``Controller`` con riferimento a interfacce e non ad oggetti concreti, 
 significa che il progettista si può avvalere di appropriati :blue:`design pattern` per 
@@ -223,6 +226,9 @@ implementare i componenti in modo che possano scambiare informazione via rete.
 - La **Facade** è un'interfaccia di livello superiore (più semplice) per un sottosistema 
   di una o più classi.  
 
++++++++++++++++++++++++++++++++++++++++
+Il concetto di 'oggetto enabler'
++++++++++++++++++++++++++++++++++++++++
 
 Traendo ispirazione dal  pattern-decorator_, possiamo evidenziare, come analisti, la necessità
 di introdurre un nuovo tipo di ente, che denominiamo :blue:`enabler`, 
@@ -276,9 +282,9 @@ Siamo di fornte ai primi passi relativi a un
 
 che troverà più avanti un suo pieno sviluppo con i concetti di :blue:`attore` e di microservizio_.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+---------------------------------------------------------
 Piano di lavoro
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+---------------------------------------------------------
 
 Trattandosi di uno sviluppo di tipo bottm-up, il piano di lavoro parte dallo sviluppo dei componenti,
 seguito da un opportuno 'assemblaggio' degli stessi in modo da formare il sistema che soddisfa i requisiti.

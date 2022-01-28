@@ -289,6 +289,7 @@ Installezione di virtualenvwrapper
 .. code::
     
     sudo pip3 install virtualenv virtualenvwrapper
+    pip install virtualenvwrapper-win  //su Windows10
 
 Verifichiamo  l'avvenuta installazione e la relativa versione:
 

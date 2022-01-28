@@ -1,11 +1,17 @@
+.. role:: red 
+.. role:: blue 
+.. role:: remark
+
 .. _tcpsupport:
 
-+++++++++++++++++++++++++++++++++++++++++++++
-Supporti per TCP
-+++++++++++++++++++++++++++++++++++++++++++++
- 
-Il nostro piano di lavoro prevede la definizione di supporti TCP lato client 
-e lato server, con l’obiettivo di formare un insieme riusabile anche in applicazioni future.
+===============================================
+Supporti per TCP (SPRINT1)
+===============================================
+  
+Il secondo punto del piano di lavoro prevede:
+
+#. definizione di alcuni supporti TCP per componenti lato client e lato server, con l'obiettivo di
+   formare un insieme riusabile anche in applicazioni future; 
 
 Abbiamo detto che la creazione di questi supporti non è indispensabile, ma può costituire un 
 elemento strategico a livello aziendale, per evitare di rifare ogni volta il codice
@@ -19,9 +25,9 @@ del lavoro, la possibilità di estendere anche ad altri protocolli i supporti cr
 
 .. _tcpsupportClient:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------
 TCPClient
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------
 Introduciamo la classe ``TcpClient`` con cui istanziare oggetti che stabilisccono una connessione 
 su un data coppia ``IP,Port``. Il metodo  static ``connect`` restiruisce un oggetto 
 che implementa l'interfaccia  :ref:`Interaction2021<conn2021>`  
@@ -49,9 +55,9 @@ e che potrà essere usato per inviare-ricevere messaggi sulla connessione.
 
 Si noti che il client fa un certo numero di tentativi prima di segnalare la impossibilità di connessione.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+--------------------------------------------------------------------
 La classe ``Colors`` per visualizzare messaggi di sistema
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+--------------------------------------------------------------------
 
 La classe :blue:`Colors` è una utility per scrivere su standard ouput messaggi colorati. 
 Il metodo ``Colors.outerr`` visualizza un messaggio in colore rosso, 
@@ -62,9 +68,9 @@ Per ottenere messaggi colorati in Eclipse, occorre installare il plugin  *ANSI-E
 
 .. _tcpsupportServer:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------
 TCP Server
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------
 
 Alla semplicità del supporto lato client si contrappone una maggior complessità lato server, in quanto
 occorre:
@@ -99,9 +105,9 @@ sulla connessione :ref:`Interaction2021<conn2021>`
 che il server avrà stabilito con i clienti e anche di inviare risposte ai clienti 
 sulla stessa connessione.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 ``TcpConnection`` come implementazione di ``Interaction2021``
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 
 La classe ``TcpConnection`` costituisce una implementazione della interfaccia 
 :ref:`Interaction2021<conn2021>`
@@ -123,9 +129,9 @@ messaggi applicativi sulla connessione fornita da una ``Socket``.
 
 .. _ApplMessageHandler:
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 La classe ``ApplMessageHandler`` per gestire messaggi applicativi
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 
 Per agevolare il lavoro dell'application designer, viene definita una classe astratta che 
 realizza l'invio di messaggi ai clienti, ma
@@ -149,9 +155,9 @@ delega alle classi specializzate il compito di definire il metodo  ``elaborate``
     public abstract void elaborate( String message, Interaction2021 conn ) ;
    }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 Il TCPserver come oggetto attivo
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
  
 .. Mediante la classe ``TcpServer`` possiamo istanziare oggetti che realizzano un server TCP che apre una ``ServerSocket`` e gestisce la richiesta di connessione da parte dei clienti.
 
@@ -201,9 +207,9 @@ e il metodo ``run`` che ne specifica il funzionamento.
   @Override
   public void run() { ... }
   
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++++++
 Il funzionamento del TCPserver
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++++++
 Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
 
 #.  attende una richiesta di connessione;  
@@ -228,9 +234,9 @@ Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
   }catch (Exception e) {...}
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 TcpMessageHandler
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+----------------------------------------------------------------------
 La classe ``TcpMessageHandler`` definisce oggetti (dotati di un Thread interno) che si occupano
 di ricevere messaggi su una data connessione 
 :ref:`Interaction2021<conn2021>`, delegandone la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto
@@ -255,9 +261,9 @@ nel costruttore.
     }
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+----------------------------------------------------------------------  
 Architettura del supporto
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+----------------------------------------------------------------------
 
 L'architettura del sistema in seguito a due chiamate da parte di due client diversi, può essere 
 rappresentata come nella figura che segue:
@@ -269,9 +275,9 @@ rappresentata come nella figura che segue:
 :remark:`Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi.` 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+----------------------------------------------------------------------
 Una TestUnit
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+----------------------------------------------------------------------
 Una TestUnit può essere utile sia come esempio d'uso dei suppporti, sia per chiarire le
 interazioni client-server.
 
@@ -284,9 +290,9 @@ Per impostare la TestUnit, seguiamo le seguente user-story:
   Mi aspetto anche che altri TCP-client possano agire allo stesso modo senza che le
   loro informazioni interferiscano con le mie.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++
 Metodi before/after
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+++++++++++++++++++++++++++++++++++++++++
 
 Il metodo che la JUnit esegue dopo ogni test, disattiva il server (se esiste): 
 
@@ -307,9 +313,9 @@ Il metodo che la JUnit esegue dopo ogni test, disattiva il server (se esiste):
 
 Il metodo ``startTheServer`` verrà usato dalle operazioni di test per creare ed attivare il TCPServer.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 L'handler dei messaggi applicativi ``NaiveHandler``
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 La classe ``NaiveHandler`` definisce l'handler che useremo nel test per elaborare i messaggi inivati dai clienti. 
 Il metodo di elaborazione si avvale della connessione ereditata da ':ref:`ApplMessageHandler<msgh>`
@@ -326,9 +332,9 @@ per inviare al cliente una risposta che contiene anche il messaggio ricevuto.
     }
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Un semplice client per i test
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Un semplice client di testing viene definito in modo che (metodo ``doWork``) il client :
 
@@ -355,9 +361,9 @@ Un semplice client di testing viene definito in modo che (metodo ``doWork``) il 
     }
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Test per l'interazione senza server
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Il test controlla che un client esegue un certo numero di tetnativi ogni volta
 che tenta di connettersi a un server:
@@ -372,9 +378,9 @@ che tenta di connettersi a un server:
     new ClientForTest().doWork("clientNoServer",numAttempts,withserver);
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Test per l'interazione client-server
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Un test che riguarda il funzionamento atteso in una interazione tra un singolo client e il server
 può essere così definito:
@@ -388,9 +394,9 @@ può essere così definito:
     new ClientForTest().doWork("client1",10,withserver);
   }
 	
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Test con molti clienti
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: Java
 
@@ -409,25 +415,23 @@ Test con molti clienti
 .. oneClientServer | ERROR: Socket operation on nonsocket: configureBlocking
 
 
-+++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------
+Supporti per altri protocolli
+---------------------------------
+
+Udp, Bluetooth  ``unibonoawtsupports.jar``
+ 
++++++++++++++++++++++++++++++++++++++++++++++++
+La libreria ``unibonoawtsupports.jar``
++++++++++++++++++++++++++++++++++++++++++++++++
+
+  
+---------------------------------
 Supporti per HTTP
-+++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------
 
 .. code:: Java
 
   HttpURLConnection con =
   IssHttpSupport
-
-
-+++++++++++++++++++++++++++++++++++++++++++++
-Supporti per altri protocolli
-+++++++++++++++++++++++++++++++++++++++++++++
-
-Udp, Bluetooth  ``unibonoawtsupports.jar``
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-La libreria ``unibonoawtsupports.jar``
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-  
 

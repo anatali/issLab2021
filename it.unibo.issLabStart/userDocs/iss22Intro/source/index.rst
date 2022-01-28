@@ -12,7 +12,9 @@ Welcome to iss22Intro's documentation!
    
    CostruzioneSoftware 
    Strumenti per lo sviluppo
-   Tecnologie  
+   Architetture
+   Applicazioni
+   AttoriQak
    Indicazioni 
    ColloquioFinale
 
