@@ -21,7 +21,8 @@
 "webCam"           : "true",
 "withContext"      : "false",
 "ctxServerPort"    : "8018",
-"mqttBrokerAddr"   : "tcp://broker.hivemq.com",
+"mqttBrokerAddr"   : "tcp://localhost:1883",
+"tempBrokerAddr"   : "tcp://broker.hivemq.com",
 "testing"          : "false"
 
 }

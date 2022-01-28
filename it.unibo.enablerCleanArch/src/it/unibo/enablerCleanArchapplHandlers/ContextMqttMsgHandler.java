@@ -53,7 +53,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 
 	@Override
 	public void elaborate( ApplMessage message, Interaction2021 conn ) {
-		Colors.outerr(name+ " | I should be necìver here");
+		Colors.outerr(name+ " | I should be never here");
 	}
 
  	@Override

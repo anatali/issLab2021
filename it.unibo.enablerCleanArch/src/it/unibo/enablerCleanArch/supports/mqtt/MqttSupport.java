@@ -55,17 +55,18 @@ protected String brokerAddr;
 		try {
 			this.clientid   = clientid;
 			this.topic      = topic;
-			this.brokerAddr = brokerAddr;
-			client        = new MqttClient(brokerAddr, clientid);
+			this.brokerAddr = brokerAddr; //"192.168.1.132:1883"; //
+			Colors.out("MqttSupport | connecting to " + this.brokerAddr + " topic: " + topic);
+			client        = new MqttClient(brokerAddr, clientid );
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setKeepAliveInterval(480);
 			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
-			client.connect(options);
+			client.connect(options);		 
 			isConnected = true;
 			Colors.out("MqttSupport | connected " + clientid + " to " + topic);
 		} catch (MqttException e) {
 			isConnected = false;
-			Colors.outerr("MqttSupport  | connect Error:" + e.getMessage());
+			Colors.outerr("MqttSupport  | connect " + brokerAddr + " Error:" + e.getMessage());
 		}
 	}
 	
@@ -135,7 +136,7 @@ protected String brokerAddr;
 
 	@Override
 	public String request(String msg) throws Exception { //msg should contain the name of the sender
-		Colors.out(".......... request " + msg + " by clientid=" + clientid + " support=" + this);
+		Colors.out("...request " + msg + " by clientid=" + clientid + " support=" + this);
         
 		String answerTopic = topic+clientid+"answer"; //UNDERSCORE NOT ALLOWED  topic=topicLedServer
 		//subscribe( answerTopic );  //Before publish 
@@ -150,12 +151,11 @@ protected String brokerAddr;
 			ApplMessage msgAppl = Utils.buildRequest("mqtt", "request", msg, "unknown");
 			publish(topic, msgAppl.toString(), 0, false);
 		}	
-		Colors.out("......................................................");
 		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
 		String answer = null;
 		while( answer== null ) {
 			answer=blockingQueue.poll() ;
-			Colors.out("MqttSupport | blockingQueue empty ..."  );
+			Colors.out("MqttSupport | blockingQueue poll answer=" + answer );
 			Utils.delay(500); //il client ApplMsgHandler dovrebbe andare ...
 		}
 		Colors.out("MqttSupport | request answer=" + answer + " blockingQueue=" + blockingQueue);

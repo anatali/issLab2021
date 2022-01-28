@@ -26,7 +26,7 @@ public class RadarSystemConfig {
 	public static  int sonarPort         = 8012;
 	public static  int controllerPort    = 8016;
 	public static  int ctxServerPort     = 8048;
-	public static  String mqttBrokerAddr = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL
+	public static  String mqttBrokerAddr = "tcp://localhost:1883"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
 	public static  boolean webCam        = false;
 	public static  boolean withContext   = false;
  	

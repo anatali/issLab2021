@@ -23,8 +23,9 @@ private String ctxTopic   		= "topicCtxMqtt";
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		//else {
-			//RadarSystemConfig.simulation   		= true;
- 			//RadarSystemConfig.ledGui    		= true;
+			RadarSystemConfig.simulation   		= true;
+ 			RadarSystemConfig.ledGui    		= true;
+		    RadarSystemConfig.withContext       = true;  //dont't care
 			RadarSystemConfig.testing      		= false;	
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;			
 		//}

@@ -1,16 +1,12 @@
 package it.unibo.enablerCleanArch.main;
 
-import java.io.IOException;
-
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
-import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
+
 
 /*
  * Applicazione che va in coppia con RadarSystemDevicesOnRaspMqtt
@@ -30,13 +26,21 @@ private boolean ledblinking = false;
 	public String getName() {	 
 		return "RadarSystemMainOnPcMqtt";
 	}
+	
+	@Override
+	public void doJob(String configFileName) {
+		setup(configFileName);
+		configure();    	
+		execute();
+	}
 
-	public void setup( String configFile )  {
+	protected void setup( String configFile )  {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
 			RadarSystemConfig.simulation   		= false;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
+			//RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 			//RadarSystemConfig.withContext       = true;
 		}
@@ -51,12 +55,6 @@ private boolean ledblinking = false;
  		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
 	} 
 	
-	@Override
-	public void doJob(String configFileName) {
-		setup(configFileName);
-		configure();    	
-		execute();
-	}
 
 	
 	public void ledActivate( boolean v ) {
@@ -89,13 +87,12 @@ private boolean ledblinking = false;
 	}
 	
 	public void execute() {
-		//sonarClient.deactivate();
 		
  		ledActivate(true);		
- 		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
-  		Utils.delay(1000);
+ 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+   		Utils.delay(1000);
  		ledActivate(false);
-		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
+ 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
  		//Utils.delay(5000);
 /*
 //		doLedBlink();
@@ -112,6 +109,8 @@ private boolean ledblinking = false;
 				e.printStackTrace();
 		}
 */		 
+		
+		
 		//for( int i=1; i<=3; i++) {
 			sonarClient.activate();			
 			boolean b = sonarClient.isActive();			
@@ -122,18 +121,20 @@ private boolean ledblinking = false;
 			}
  			
 			//if( sonarClient.isActive() ) {
-				for( int i=1; i<=10; i++) {
-	 				int d = sonarClient.getDistance().getVal();
-					Colors.outappl("Sonar state i=" + i + " -> "+d, Colors.GREEN);
-					if( d < RadarSystemConfig.DLIMIT ) ledActivate(true);	
-					else ledActivate(false);	
-					Utils.delay(500);
-				}
+//				for( int i=1; i<=10; i++) {
+//	 				int d = sonarClient.getDistance().getVal();
+//					Colors.outappl("Sonar state i=" + i + " -> "+d, Colors.GREEN);
+//					if( d < RadarSystemConfig.DLIMIT ) ledActivate(true);	
+//					else ledActivate(false);	
+//					Utils.delay(500);
+//				}
  			//}
  
 			Utils.delay(5000);
+			
 			sonarClient.deactivate();
 			Colors.outappl("Sonar deactivate ", Colors.GREEN);
+			
 		//}
 			 
 		terminate();
