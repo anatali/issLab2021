@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
  
 /*
  * TODO: omettere la oarte MqttCallback che viene realizzata da ContextMqttMsgHandler
@@ -35,6 +36,15 @@ protected String name;
  			Colors.outerr(name + " | ApplMsgHandler sendMsgToClient ERROR " + e.getMessage());;
 		}
  	} 
+ 	@Override
+ 	public void sendAnswerToClient( String reply  ) {
+		Colors.out(name + " | ApplMsgHandler sendAnswerToClient reply=" + reply, Colors.BgCyan);
+		try {
+			MqttSupport.getSupport().reply(reply);
+		} catch (Exception e) {
+			Colors.outerr("name + \" | ApplMsgHandler sendAnswerToClient ERROR " + e.getMessage());
+ 		}
+  	}
  	public void sendMsgToClient( ApplMessage message, Interaction2021 conn  ) {
  		sendMsgToClient( message.toString(), conn );
  	}

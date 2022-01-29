@@ -45,6 +45,12 @@ private CounterWithDelay c = new CounterWithDelay();
 		c.dec(delay);			
 	}
 
+	@Override
+	public void sendAnswerToClient(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
  
 
 }

@@ -38,7 +38,7 @@ public class ContextMsgHandler extends ApplMsgHandler{
 		Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
 		IApplMsgHandler h    = handlerMap.get(dest);
 		//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
-		if( dest != null ) h.elaborate(msg.msgContent(), conn);	
+		if( dest != null && (! msg.isReply()) ) h.elaborate(msg.msgContent(), conn);	
 	}
 
 	public void addComponent( String name, IApplMsgHandler h) {

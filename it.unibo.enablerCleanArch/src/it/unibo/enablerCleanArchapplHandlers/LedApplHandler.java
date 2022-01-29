@@ -36,10 +36,10 @@ ILed led;
 				String ledstate = ""+led.getState();
 				ApplMessage reply = Utils.buildReply("led", "ledanswer", ledstate, message.msgSender()) ;
 				
-				sendMsgToClient(reply, conn );  
-					//E' una reply al client - La connessione mqtt dovrebbe consoscere la topic
+				//sendMsgToClient(reply, conn );  
+				//E' una reply al client - La connessione mqtt dovrebbe consoscere la topic
 				
-				//sendAnswerToClient();
+				sendAnswerToClient(reply.toString());
 			}
 		}else if( message.isReply() ) {
 			

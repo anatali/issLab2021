@@ -50,6 +50,10 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		}
  	} 
 
+ 	@Override
+ 	public void sendAnswerToClient( String message  ) {
+ 		
+ 	}
 
 	@Override
 	public IApplMsgHandler getHandler( String name ) {

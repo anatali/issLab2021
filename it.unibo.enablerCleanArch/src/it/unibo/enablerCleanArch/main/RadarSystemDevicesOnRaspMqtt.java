@@ -26,8 +26,8 @@ private String ctxTopic   		= "topicCtxMqtt";
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		//else {
-			RadarSystemConfig.simulation   		= true;
- 			RadarSystemConfig.ledGui    		= true;
+			RadarSystemConfig.simulation   		= false;
+ 			RadarSystemConfig.ledGui    		= false;
 		    RadarSystemConfig.withContext       = true;  //dont't care
 			RadarSystemConfig.testing      		= false;	
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;			
@@ -45,7 +45,7 @@ private String ctxTopic   		= "topicCtxMqtt";
 		ctxH.addComponent("sonar", sonarHandler);	
 		
 		//EnablerAsServerMqtt ctxServer = new EnablerAsServerMqtt("CtxServerMqtt", ctxTopic , ctxH );			
-		MqttSupport mqtt        = MqttSupport.getSupport();
+		MqttSupport mqtt = MqttSupport.getSupport();
 		mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
   	}
  

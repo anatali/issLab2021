@@ -4,7 +4,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupportOut;
 import it.unibo.enablerCleanArchapplHandlers.ClientApplHandlerMqtt;
 
 
@@ -42,11 +42,10 @@ protected ProtocolType protocol ;
 			}
 			case mqtt : {
 				Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
-				conn = MqttSupport.getSupport();
-				
-//				((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
-//				ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
-//				((MqttSupport) conn).subscribe(name, entry+name+"answer", h);	
+				conn = MqttSupportOut.getSupport();				
+				//((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+				ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
+				((MqttSupportOut) conn).subscribe(name, entry+name+"answer", h);	
 				break;
 			}
 				

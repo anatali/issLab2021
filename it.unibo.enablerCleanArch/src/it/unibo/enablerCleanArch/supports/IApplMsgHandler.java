@@ -9,4 +9,5 @@ public interface IApplMsgHandler extends MqttCallback{
 	public void elaborate( String message, Interaction2021 conn ) ;	
 	public void elaborate( ApplMessage message, Interaction2021 conn );//ESTENSIONE dopo Context
 	public void sendMsgToClient( String message, Interaction2021 conn );
+	public void sendAnswerToClient( String message  );
 }

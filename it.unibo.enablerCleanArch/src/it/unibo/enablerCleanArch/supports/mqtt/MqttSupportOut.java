@@ -26,7 +26,7 @@ import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
  * sulla blockingqueue di mqttProxy in modo da permettere la esecuzione 
  * di messageArrived del ClientApplHandlerMqtt che fa l'operazione di put sulla blockingqueue di mqttProxy.
  */
-public class MqttSupport implements Interaction2021{
+public class MqttSupportOut implements Interaction2021{
 //	private static MqttSupport singletonMqttsupport = null;
 //	
 //	public static MqttSupport getTheSupport() {
@@ -43,20 +43,20 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 protected String clientid;
 protected IApplMsgHandler handler;
 protected String brokerAddr;
-protected static MqttSupport mqttSup ;
+protected static MqttSupportOut mqttSup ;
 public static final String topicOut = "topicCtxMqtt";
 
-	public static MqttSupport getSupport() {
-		if( mqttSup == null  ) mqttSup = new MqttSupport();
-//		if( ! mqttSup.isConnected ) {
-//			IContextMsgHandler  ctxH = new ContextMqttMsgHandler ( "ctxH" );
-//			//mqttSup.connectMqtt("CtxServerMqtt", myTopic , ctxH); 
-//			mqttSup.connect("mqttSupport", topicOut, RadarSystemConfig.mqttBrokerAddr);
-// 		}
+	public static MqttSupportOut getSupport() {
+		if( mqttSup == null  ) mqttSup = new MqttSupportOut();
+		if( ! mqttSup.isConnected ) {
+			IContextMsgHandler  ctxH = new ContextMqttMsgHandler ( "ctxH" );
+			//mqttSup.connectMqtt("CtxServerMqtt", myTopic , ctxH); 
+			mqttSup.connect("mqttSupportOut", topicOut, RadarSystemConfig.mqttBrokerAddr);
+ 		}
 		return mqttSup;
 	}
 	
-    protected MqttSupport() {
+    protected MqttSupportOut() {
     }
      
     public BlockingQueue<String> getQueue() {

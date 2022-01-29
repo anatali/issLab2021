@@ -36,14 +36,14 @@ private boolean ledblinking = false;
 
 	protected void setup( String configFile )  {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
+		//else {
 			RadarSystemConfig.simulation   		= false;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
-			//RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
+			RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 			//RadarSystemConfig.withContext       = true;
-		}
+		//}
  	}
 	
 	public void configure()  {			
@@ -52,7 +52,7 @@ private boolean ledblinking = false;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
 		String ctxTopic       = "topicCtxMqtt";
  		ledClient             = new LedProxyAsClient("clientLed", host, ctxTopic, protocol );
- 		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
+ 		//sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
 	} 
 	
 
@@ -89,11 +89,11 @@ private boolean ledblinking = false;
 	public void execute() {
 		
  		ledActivate(true);		
- 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+ 		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
  
    		Utils.delay(1000);
  		ledActivate(false);
- 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+ 		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
  
  		//Utils.delay(5000);
 /*
