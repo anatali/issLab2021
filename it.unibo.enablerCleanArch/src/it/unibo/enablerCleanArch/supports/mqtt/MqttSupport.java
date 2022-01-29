@@ -42,21 +42,28 @@ protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(
 protected String clientid;
 protected MqttCallback handler;
 protected String brokerAddr;
+protected static MqttSupport mqttSup ;
 
-    public MqttSupport() {
-    	
+
+	public static MqttSupport getSupport() {
+		if( mqttSup == null  ) mqttSup = new MqttSupport();
+		return mqttSup;
+	}
+	
+    protected MqttSupport() {
     }
-    
+     
     public BlockingQueue<String> getQueue() {
     	return blockingQueue;
     }
     
 	public void connect(String clientid, String topic, String brokerAddr) {
+		//( ! isConnected )
 		try {
 			this.clientid   = clientid;
 			this.topic      = topic;
 			this.brokerAddr = brokerAddr;
-			client        = new MqttClient(brokerAddr, clientid);
+			client          = new MqttClient(brokerAddr, clientid);
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setKeepAliveInterval(480);
 			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
@@ -106,7 +113,7 @@ protected String brokerAddr;
 			message.setQos(qos);
 		}
 		try {
-			//Colors.out("MqttSupport  | publish topic=" + topic + " msg=" + msg);
+			Colors.out("MqttSupport  | publish topic=" + topic + " msg=" + msg + " client=" + client);
 			message.setPayload(msg.getBytes());		 
 			client.publish(topic, message);
 		} catch (MqttException e) {
@@ -135,7 +142,7 @@ protected String brokerAddr;
 
 	@Override
 	public String request(String msg) throws Exception { //msg should contain the name of the sender
-		Colors.out(".......... request " + msg + " by clientid=" + clientid + " support=" + this);
+		Colors.out("... request " + msg + " by clientid=" + clientid + " support=" + this);
         
 		String answerTopic = topic+clientid+"answer"; //UNDERSCORE NOT ALLOWED  topic=topicLedServer
 		//subscribe( answerTopic );  //Before publish 
@@ -150,12 +157,11 @@ protected String brokerAddr;
 			ApplMessage msgAppl = Utils.buildRequest("mqtt", "request", msg, "unknown");
 			publish(topic, msgAppl.toString(), 0, false);
 		}	
-		Colors.out("......................................................");
-		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
+ 		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
 		String answer = null;
 		while( answer== null ) {
 			answer=blockingQueue.poll() ;
-			Colors.out("MqttSupport | blockingQueue empty ..."  );
+			Colors.out("MqttSupport | blockingQueue poll answer=" + answer  );
 			Utils.delay(500); //il client ApplMsgHandler dovrebbe andare ...
 		}
 		Colors.out("MqttSupport | request answer=" + answer + " blockingQueue=" + blockingQueue);

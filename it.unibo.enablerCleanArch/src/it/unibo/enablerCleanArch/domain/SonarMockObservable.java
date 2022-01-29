@@ -5,7 +5,14 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMockObservable extends SonarModelObservable   {
-	
+
+	@Override
+	protected void sonarSetUp() {
+		observableDistance = new DistanceMeasured( );
+ 		Colors.out("SonarModcklObservable | sonarSetUp curVal="+curVal);
+ 		observableDistance.setVal(curVal);
+ 	} 	
+
 	@Override
 	protected void sonarProduce() {
 		if( RadarSystemConfig.testing ) {

@@ -35,7 +35,7 @@ protected boolean isactive = false;
 	//TODO Better to define EnablerAsServerMqtt
 	public EnablerAsServer( String name, String topic, IApplMsgHandler handler )   { //, String handlerClassName
 		this.name     			= name;
-		MqttSupport mqtt        = new MqttSupport();
+		MqttSupport mqtt        = MqttSupport.getSupport();
 		mqtt.connectMqtt(name,topic, handler);
 		Colors.out(name+" |  CREATED  MqttSupport  handler="+handler);
 	}

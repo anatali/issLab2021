@@ -11,29 +11,29 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
 		else  return new SonarConcreteObservable();		
 	}
 
-	@Override
-	protected void sonarSetUp() {
-		observableDistance = new DistanceMeasured( );
- 		Colors.out("SonarModelObservable | sonarSetUp curVal="+curVal);
- 		observableDistance.setVal(curVal);
- 	} 	
+//	@Override
+//	protected void sonarSetUp() {
+//		observableDistance = new DistanceMeasured( );
+// 		Colors.out("SonarModelObservable | sonarSetUp curVal="+curVal);
+// 		observableDistance.setVal(curVal);
+// 	} 	
 	
 	//Ritorna il valore più recente
-	@Override
-	public IDistance getDistance() {
-  		return curVal;
- 	}
+//	@Override
+//	public IDistance getDistance() {
+//  		return curVal;
+// 	}
 
  
 	
- 	@Override  //from SonarModel
-	protected void updateDistance( int d ) {
-		curVal = new Distance( d );
-		Colors.out("SonarModelObservable | updateDistance "+curVal.getVal(), Colors.GREEN);
-		observableDistance.setVal( curVal );    //notifies the observers 
-		//Non aggiorniamo la coda perchè per un observable non ci sono consumatori
- 		//super.updateDistance(d);	             
-	}
+// 	@Override  //from SonarModel
+//	protected void updateDistance( int d ) {
+//		curVal = new Distance( d );
+//		Colors.out("SonarModelObservable | updateDistance "+curVal.getVal(), Colors.GREEN);
+//		observableDistance.setVal( curVal );    //notifies the observers 
+//		//Non aggiorniamo la coda perchè per un observable non ci sono consumatori
+// 		//super.updateDistance(d);	             
+//	}
 
  	@Override
 	public void register(IObserver obs) {

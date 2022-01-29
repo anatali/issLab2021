@@ -51,22 +51,6 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		}
  	} 
 
-	@Override
-	public void elaborate( ApplMessage message, Interaction2021 conn ) {
-		Colors.outerr(name+ " | I should be necìver here");
-	}
-
- 	@Override
-	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name+" | elaborate:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
-		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
-		ApplMessage msg      = new ApplMessage(message);
-		String dest          = msg.msgReceiver();
-		Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
-		IApplMsgHandler  h   = handlerMap.get(dest);
-		//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
-		if( dest != null ) h.elaborate( msg , conn);	
-	}
 
 	@Override
 	public IApplMsgHandler getHandler( String name ) {
@@ -100,13 +84,45 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 				if( msgInput.isRequest() ) {
 					//Preparo connessione per spedire risposta 
 					String sender=msgInput.msgSender();
-					MqttSupport conn = new MqttSupport();
-					conn.connect(name+"Answer", topic+sender+"answer", RadarSystemConfig.mqttBrokerAddr);  
-					elaborate(  msgInput.toString(),   conn) ;
+					//MqttSupport conn = MqttSupport.getSupport();
+					//conn.connect(name+"Answer", topic+sender+"answer", RadarSystemConfig.mqttBrokerAddr);  
+					elaborateRequest(  msgInput.toString(),   name+"Answer", topic+sender+"answer" ) ;
  				}else  elaborate(  msgInput.toString(),   null) ;
  			}catch( Exception e) {
 				Colors.outerr(name + " | messageArrived WARNING:"+ e.getMessage() );
  			}
+		}
+		
+		@Override
+		public void elaborate( ApplMessage message, Interaction2021 conn ) {
+			Colors.outerr(name+ " | I should be never here");
+		}
+
+	 	@Override
+		public void elaborate(String message, Interaction2021 conn) {
+			Colors.out(name+" | elaborate:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
+			//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+			ApplMessage msg      = new ApplMessage(message);
+			String dest          = msg.msgReceiver();
+			Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
+			IApplMsgHandler  h   = handlerMap.get(dest);
+			//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
+			if( dest != null ) h.elaborate( msg , conn);	
+		}
+
+	 	/*
+		 * non posso dare una nuova connessione al broker dallo stesso PC
+		 */
+		protected void elaborateRequest( String message, String clientid, String topic  ) {
+			Colors.out(name+" | elaborate:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
+			//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+			ApplMessage msg      = new ApplMessage(message);
+			String dest          = msg.msgReceiver();
+			Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
+			IApplMsgHandler  h   = handlerMap.get(dest);
+			//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
+			if( dest != null ) h.elaborate( msg , MqttSupport.getSupport());
+			//il msg contiene implicitamente la topic di risposta e il sender della risposta (l'attuale receiver)
 		}
 
 		@Override

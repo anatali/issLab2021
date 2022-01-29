@@ -22,7 +22,7 @@ public class TestSonarMockObservable {
 		System.out.println("down");		
 	}	
 	
-	//@Test 
+	@Test 
 	public void testSingleshotSonarObservableMock() {
  		RadarSystemConfig.testing = true;
 		boolean oneShot           = true;			
@@ -30,14 +30,14 @@ public class TestSonarMockObservable {
 		IObserver obs1            = new SonarObserverFortesting("obs1",sonar,oneShot) ;
 		sonar.register( obs1 );	//add an observer
 		sonar.activate();
-		sonar.register( new SonarObserverFortesting("obs2",sonar,oneShot) );	 
-		
+		//sonar.register( new SonarObserverFortesting("obs2",sonar,oneShot) );	 
+		Utils.delay(500);  //setup
 		int v0 = sonar.getDistance().getVal();
  		System.out.println("testSingleshotSonarObservableMock v0=" + v0);
  		assertTrue(  v0 == RadarSystemConfig.testingDistance );
 	}
 	
-	@Test 
+	//@Test 
 	public void testSonarObservableMock() {
 		RadarSystemConfig.testing    = false;
  		RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
@@ -50,13 +50,13 @@ public class TestSonarMockObservable {
 		IObserver obs2          = new SonarObserverFortesting("obs2",sonar,oneShot);
 		
 		sonar.register( obs1 );	//add an observer
-		sonar.register( obs2 );	//add an observer
+		//sonar.register( obs2 );	//add an observer
 
-		new SonarConsumerForTesting( sonar, delta ).start();  //consuma
+		//new SonarConsumerForTesting( sonar, delta ).start();  //consuma
 
 		sonar.activate();
 		while( sonar.isActive() ) { Utils.delay(100);}
-		
+		 Utils.delay(1000);
 /*		
 		while( sonar.isActive() ) { 
 			int d = sonar.getDistance().getVal(); //toglie elementi dalla coda

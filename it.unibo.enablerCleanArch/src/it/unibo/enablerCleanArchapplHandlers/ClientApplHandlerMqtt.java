@@ -57,7 +57,7 @@ private Interaction2021 conn;
 			ApplMessage msgInput = new ApplMessage(message.toString());
 			Colors.outappl(name + " ApplMsgHandler | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
 			if( msgInput.isRequest() ) {
-				MqttSupport conn = new MqttSupport();
+				MqttSupport conn = MqttSupport.getSupport();
 				conn.connect(name+"Answer", topic+name+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
  				elaborate(  msgInput.toString(),   conn) ;
  			}else  
