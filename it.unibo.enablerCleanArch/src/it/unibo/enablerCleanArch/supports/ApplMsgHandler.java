@@ -17,6 +17,10 @@ protected String name;
 		this.name = name;
 		//Colors.out(name + " | CREATING ... ", Colors.BLUE );
 	}
+ 	
+ 	public String getName() {
+		return name;
+	}	 
    	
  	//Warning: le risposte sono messaggi 'unstructured'
  	public void sendMsgToClient( String message, Interaction2021 conn  ) {
@@ -37,9 +41,7 @@ protected String name;
  	
  	public abstract void elaborate(String message, Interaction2021 conn) ;
  	
- 	public String getName() {
-		return name;
-	}	
+
  
  /*
 //MQTT part 	 MqttCallback

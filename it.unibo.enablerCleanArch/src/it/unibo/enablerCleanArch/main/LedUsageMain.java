@@ -15,7 +15,8 @@ import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
-import it.unibo.enablerCleanArchapplHandlers.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.mqtt.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
@@ -76,8 +77,10 @@ private String ctxTopic = "topicCtxMqtt";
 				IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
 				ctxH.addComponent("led", ledHandler);
 				((LedApplHandler)ctxH.getHandler("led")).setTheDevice( led ); //Injection				
-				EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt", ctxTopic , ctxH );			
-				ctxServer.start(); 
+//				EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt", ctxTopic , ctxH );			
+//				ctxServer.start(); 
+				MqttSupport mqtt        = MqttSupport.getSupport();
+				mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
 				break;
 		}
 	}

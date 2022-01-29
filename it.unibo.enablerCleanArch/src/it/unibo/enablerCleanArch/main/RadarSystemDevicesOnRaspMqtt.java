@@ -4,10 +4,13 @@ package it.unibo.enablerCleanArch.main;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArchapplHandlers.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.mqtt.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.mqtt.EnablerAsServerMqtt;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
@@ -41,8 +44,9 @@ private String ctxTopic   		= "topicCtxMqtt";
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
 		ctxH.addComponent("sonar", sonarHandler);	
 		
-		EnablerAsServer ctxServer    = new EnablerAsServer("CtxServerMqtt", ctxTopic , ctxH );			
-		ctxServer.start(); 
+		//EnablerAsServerMqtt ctxServer = new EnablerAsServerMqtt("CtxServerMqtt", ctxTopic , ctxH );			
+		MqttSupport mqtt        = MqttSupport.getSupport();
+		mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
   	}
  
 	

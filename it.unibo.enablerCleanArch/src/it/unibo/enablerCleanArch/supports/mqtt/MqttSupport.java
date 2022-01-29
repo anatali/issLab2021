@@ -9,8 +9,10 @@ import it.unibo.enablerCleanArch.domain.ApplMessageType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
 
  
 /*
@@ -41,7 +43,7 @@ protected boolean isConnected = false;
 protected String topic;
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
 protected String clientid;
-protected MqttCallback handler;
+protected IApplMsgHandler handler;
 protected String brokerAddr;
 protected static MqttSupport mqttSup ;
 
@@ -58,7 +60,11 @@ protected static MqttSupport mqttSup ;
     	return blockingQueue;
     }
     
-	public void connect(String clientid, String topic, String brokerAddr) {
+    public IApplMsgHandler getHandler() {
+    	return handler;
+    }
+    
+	protected void connect(String clientid, String topic, String brokerAddr) {
 		if( ! isConnected )
 		try {
 			this.clientid   = clientid;
@@ -78,10 +84,11 @@ protected static MqttSupport mqttSup ;
 	}
 	
  	
-	public void connectMqtt(String clientid, String topic, MqttCallback handler) {
+	public void connectMqtt(String clientid, String topic, IApplMsgHandler handler) {
 		connect( clientid, topic, RadarSystemConfig.mqttBrokerAddr);
 		this.handler = handler;
 		subscribe(clientid, topic, handler);    
+		Colors.out(clientid + " | CREATED MqttSupport handler="+handler + " subscribed to " + topic);
 	}
 	
 	public void disconnect() {
@@ -151,12 +158,17 @@ protected static MqttSupport mqttSup ;
 		//subscribe(topic, new MqttSupportCallback(answerQueue) );
 		
 		//INVIO RICHIESTA su topic
+		MqttAnswerHandler ah = null;
 		try{
-			new ApplMessage(msg); //no exception => we can publish
+			ApplMessage m = new ApplMessage(msg); //no exception => we can publish
 			publish(topic, msg, 0, false);	
+			ah = new MqttAnswerHandler( blockingQueue );
+			//Aggiungo il gestore della risposta con il nome del sender
+			((ContextMsgHandler)handler).addComponent(m.msgSender(), ah );				
 		}catch( Exception e ) { //The message is not structured
+			Colors.outerr("MqttSupport | request ERROR: request message not structured");
 			ApplMessage msgAppl = Utils.buildRequest("mqtt", "request", msg, "unknown");
-			publish(topic, msgAppl.toString(), 0, false);
+			publish(topic, msgAppl.toString(), 0, false); //????
 		}	
  		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
 		String answer = null;
@@ -168,7 +180,8 @@ protected static MqttSupport mqttSup ;
 		Colors.out("MqttSupport | request answer=" + answer + " blockingQueue=" + blockingQueue);
  		try {
  			ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured
- 			answer = msgAnswer.msgContent(); 			
+ 			answer = msgAnswer.msgContent(); 		
+ 			if( ah != null) ((ContextMsgHandler)handler).removeComponent(ah.getName());
  		}catch(Exception e) {
  			Colors.out("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 			
  		}

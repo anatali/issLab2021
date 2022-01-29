@@ -13,7 +13,8 @@ import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArchapplHandlers.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.mqtt.ContextMqttMsgHandler;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
@@ -45,8 +46,10 @@ public class SonarUsageMainWithContextMqtt extends SonarUsageAbstractMain implem
 		IApplMsgHandler sonarHandler = new SonarApplHandler( "sonarH",sonar );
 		IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
 		ctxH.addComponent("sonar", sonarHandler);
- 		EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt","topicCtxMqtt" , ctxH );			
-		ctxServer.start(); 
+// 		EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt","topicCtxMqtt" , ctxH );			
+//		ctxServer.start(); 
+		MqttSupport mqtt        = MqttSupport.getSupport();
+		mqtt.connectMqtt("CtxServerMqtt", "topicCtxMqtt" , ctxH); 
 	}
 	
 	//called by the inherited configure

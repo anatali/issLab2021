@@ -32,13 +32,6 @@ protected boolean isactive = false;
 		}
 	}
 	
-	//TODO Better to define EnablerAsServerMqtt
-	public EnablerAsServer( String name, String topic, IApplMsgHandler handler )   { //, String handlerClassName
-		this.name     			= name;
-		MqttSupport mqtt        = MqttSupport.getSupport();
-		mqtt.connectMqtt(name,topic, handler);
-		Colors.out(name+" |  CREATED  MqttSupport  handler="+handler);
-	}
  	protected void setServerSupport( int port, ProtocolType protocol, IApplMsgHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );

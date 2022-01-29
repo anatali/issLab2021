@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArchapplHandlers;
+package it.unibo.enablerCleanArch.supports.mqtt;
 
 import java.util.HashMap;
 
@@ -13,7 +13,6 @@ import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 
 /*
   * Il ContextMsgHandler viene invocato dal TcpContextServer (un singleton).

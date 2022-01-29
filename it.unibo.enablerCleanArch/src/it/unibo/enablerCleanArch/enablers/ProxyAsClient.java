@@ -43,9 +43,10 @@ protected ProtocolType protocol ;
 			case mqtt : {
 				Colors.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
 				conn = MqttSupport.getSupport();
-				((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
-				ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
-				((MqttSupport) conn).subscribe(name, entry+name+"answer", h);	
+				
+//				((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+//				ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
+//				((MqttSupport) conn).subscribe(name, entry+name+"answer", h);	
 				break;
 			}
 				
