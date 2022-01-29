@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports.mqtt;
+ackage it.unibo.enablerCleanArch.supports.mqtt;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -15,7 +15,8 @@ import it.unibo.enablerCleanArch.supports.Utils;
  
 /*
  * MqttSupport implementa Interaction2021 e quindi realizza il concetto di connessione nel caso di MQTT.
- * Nel caso di MQTT, una connessione è realizata usando due topic, la prima di nome t1 e la seconda di nome t1answer
+ * Nel caso di MQTT, una connessione è realizata usando due topic, la prima di nome t1 
+ * e la seconda di nome t1answer.
  * Un EnablerServer fissa il nome t1  (ad es LedServerMqtt)
  * Un proxyclient c1 usa il nome t1 per inviare comandi e richieste al server 
  * e fa una subscribe su t1answer (o meglio su t1c1answer) per ricevere le risposte alle sue request.
@@ -58,7 +59,7 @@ protected static MqttSupport mqttSup ;
     }
     
 	public void connect(String clientid, String topic, String brokerAddr) {
-		//( ! isConnected )
+		if( ! isConnected )
 		try {
 			this.clientid   = clientid;
 			this.topic      = topic;

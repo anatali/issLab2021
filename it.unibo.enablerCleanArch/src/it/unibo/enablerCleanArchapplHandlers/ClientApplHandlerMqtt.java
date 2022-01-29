@@ -58,8 +58,8 @@ private Interaction2021 conn;
 			Colors.outappl(name + " ApplMsgHandler | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
 			if( msgInput.isRequest() ) {
 				MqttSupport conn = MqttSupport.getSupport();
-				conn.connect(name+"Answer", topic+name+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
- 				elaborate(  msgInput.toString(),   conn) ;
+				//conn.connect(name+"Answer", topic+name+"answer", RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
+ 				elaborate(  msgInput.toString(),   conn) ;   //answer TODO
  			}else  
  				elaborate(   msgInput.toString() ,   conn) ;
  		}catch( Exception e) {

@@ -107,6 +107,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 			Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
 			IApplMsgHandler  h   = handlerMap.get(dest);
 			//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
+			//esempio di h: LedApplHandler
 			if( dest != null ) h.elaborate( msg , conn);	
 		}
 
@@ -114,7 +115,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		 * non posso dare una nuova connessione al broker dallo stesso PC
 		 */
 		protected void elaborateRequest( String message, String clientid, String topic  ) {
-			Colors.out(name+" | elaborate:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
+			Colors.out(name+" | elaborateRequest:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
 			//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 			ApplMessage msg      = new ApplMessage(message);
 			String dest          = msg.msgReceiver();

@@ -29,15 +29,20 @@ ILed led;
 	@Override
 	public void elaborate( ApplMessage message, Interaction2021 conn ) {
 		String payload = message.msgContent();
+		String sender  = message.msgSender();
+		String receiver= message.msgReceiver();
 		if( message.isRequest() ) {
 			if(payload.equals("getState") ) {
 				String ledstate = ""+led.getState();
 				ApplMessage reply = Utils.buildReply("led", "ledanswer", ledstate, message.msgSender()) ;
+				
 				sendMsgToClient(reply, conn );  
 					//E' una reply al client - La connessione mqtt dovrebbe consoscere la topic
 				
 				//sendAnswerToClient();
 			}
+		}else if( message.isReply() ) {
+			
 		}else elaborate(payload, conn);
 	}
 	
