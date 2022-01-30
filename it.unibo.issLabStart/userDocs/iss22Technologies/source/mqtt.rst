@@ -60,3 +60,12 @@ La libreria che implementa MQTT in Python è ``paho-mqtt``.
 .. code::
 
     pip install paho-mqtt
+
+
+-----------------------------------------------------
+Implementazione di Interaction2021
+-----------------------------------------------------
+
+.. image:: ./_static/img/Tecno/MqttConn.PNG 
+
+ 
