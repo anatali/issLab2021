@@ -24,11 +24,14 @@ ISonar sonar;
 				if(payload.equals("getDistance") ) {
 					String vs = ""+sonar.getDistance().getVal();
 					ApplMessage reply = Utils.buildReply("sonar", "distance", vs, message.msgSender()) ;
-					sendMsgToClient(reply, conn ); 
+					//sendMsgToClient(reply, conn ); 
+ 					sendAnswerToClient(reply.toString());
+
 				}else if(payload.equals("isActive") ) {
  					String sonarState = ""+sonar.isActive();
 					ApplMessage reply = Utils.buildReply("sonar", "sonarstate", sonarState, message.msgSender()) ;
-					sendMsgToClient(reply, conn ); 					
+					//sendMsgToClient(reply, conn ); 		
+  					sendAnswerToClient(reply.toString());
 				}
 			}else elaborate(payload, conn);			
 		}
@@ -47,7 +50,7 @@ ISonar sonar;
  					sonar.deactivate();
  				}else if( message.equals("isActive")) {
  					String sonarState = ""+sonar.isActive();
- 					this.sendMsgToClient(sonarState, conn);
- 				}
+ 					//this.sendMsgToClient(sonarState, conn);					 
+  				}
  			}
 }

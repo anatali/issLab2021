@@ -27,7 +27,10 @@ private static int n = 0;
  				message.getId() + "  Qos="+ message.getQos() + " isDuplicate=" 
  				+ message.isDuplicate() + " payload=" + message.getPayload().length, 
  				Colors.ANSI_PURPLE );
- 		if( message.getPayload().length == 1 ) return;  //perchè RICEVO 0 ???
+ 		if( message.getPayload().length == 1 ) {
+ 			elaborate("sorry", MqttSupport.getSupport() );
+ 			return;  //perchè RICEVO 0 ???
+ 		}
 		try { //Perhaps we receive a structured message
 			ApplMessage msgInput = new ApplMessage(message.toString());
 			elaborate(msgInput, MqttSupport.getSupport() );
@@ -49,6 +52,11 @@ private static int n = 0;
 		@Override
 		public void elaborate(String message, Interaction2021 conn) {
 			Colors.out(name + " | elaborate String: " + message);
+			try {
+				blockingQueue.put(message.toString());
+			} catch (InterruptedException e) {
+				Colors.outerr(name + " | elaborate ERROR " + e.getMessage());
+			}			
 			
 		}
 		@Override

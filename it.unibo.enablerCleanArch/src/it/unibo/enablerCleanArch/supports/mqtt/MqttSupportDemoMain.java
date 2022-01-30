@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class MqttSupportDemoMain {
-private String topic      = "unibodemo";
+private String topic      = MqttSupport.topicOut;
 private String brokerAddr = RadarSystemConfig.mqttBrokerAddr; // : 1883  OPTIONAL
 
 //String sender, String msgId, String payload, String dest
@@ -91,8 +91,8 @@ private String aReply    = Utils.buildReply("demo",  "answer", "ANSWER",    "any
 	public void doSendReceive() {
  		simulateReceiver("receiver1");
  		Utils.delay(1000);
- 		simulateReceiver("receiver2");
- 		Utils.delay(1000);
+// 		simulateReceiver("receiver2");
+// 		Utils.delay(1000);
  		simulateSender();		
 	}
 	public void doRequest() {
@@ -103,8 +103,8 @@ private String aReply    = Utils.buildReply("demo",  "answer", "ANSWER",    "any
 
 	public static void main(String[] args) throws Exception  {
 		MqttSupportDemoMain sys = new MqttSupportDemoMain();	
- 		//sys.doSendReceive();
-  		sys.doRequest();
+ 		sys.doSendReceive();
+  		//sys.doRequest();
  	}
 
 }

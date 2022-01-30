@@ -153,7 +153,7 @@ public static final String topicOut = "topicCtxMqtt";
 			Colors.out("MqttSupport  | publish topic=" + topic + " msg=" + msg + " client=" + client);
 			message.setPayload(msg.toString().getBytes());		 
 			client.publish(topic, message);
-			Colors.out("MqttSupport  | publish DONE on topic=" + topic );
+			//Colors.out("MqttSupport  | publish-DONE on topic=" + topic );
 		} catch (MqttException e) {
 			Colors.outerr("MqttSupport  | publish Error " + nattempts + ":" + e.getMessage());
 //			if( nattempts++ > 3 ) { 
@@ -210,6 +210,7 @@ public static final String topicOut = "topicCtxMqtt";
 			Colors.out("MqttSupport | blockingQueue-poll answer=" + answer  );
 			Utils.delay(500); //il client ApplMsgHandler dovrebbe andare ...
 		}
+		client.unsubscribe("xxx");
 		Colors.out("MqttSupport | request-answer=" + answer + " blockingQueue=" + blockingQueue);
  		try {
  			ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured
@@ -227,7 +228,7 @@ public static final String topicOut = "topicCtxMqtt";
 			Colors.out("MqttSupport | reply  msg="+msg);
 			String dest = m.msgReceiver();
 			publish("xxx",msg,2,false);
-			Colors.out("MqttSupport | reply  DONE" );
+			//Colors.out("MqttSupport | reply  DONE" );
  		}catch(Exception e) {
 			Colors.outerr("MqttSupport | reply msg not structured " + msg);
 			//publish(topic+"Answer",msg,0,false);
@@ -250,7 +251,7 @@ public static final String topicOut = "topicCtxMqtt";
 	
 	protected String receiveMsg(String topic) throws Exception{
 		Colors.out("MqttSupport | receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue);
-		//subscribe(topic);
+		subscribe("client1",topic);
  		String answer = blockingQueue.take();
 		Colors.out("MqttSupport | receiveMsg answer=" + answer + " blockingQueue=" + blockingQueue);
  		try {
@@ -277,8 +278,9 @@ public static final String topicOut = "topicCtxMqtt";
 	public void close() throws Exception {
 		try {
 			client.disconnect();
+			Colors.outappl("MqttSupport | client disconnected ", Colors.GREEN);
 			client.close();
-		} catch (MqttException e) {
+ 		} catch (MqttException e) {
 			Colors.outerr("MqttSupport  | close Error:" + e.getMessage());
  		}
 	}
