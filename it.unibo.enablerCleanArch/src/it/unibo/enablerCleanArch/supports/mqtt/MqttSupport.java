@@ -266,11 +266,9 @@ public static final String topicOut = "topicCtxMqtt";
 
 	@Override
 	public String receiveMsg() throws Exception {		
-		Colors.out("MqttSupport | receiveMsg subscribes topic=" + topicOut + " blockingQueue=" + blockingQueue);
-		//subscribe(topic);
- 		String answer = blockingQueue.take();
+		Colors.out("MqttSupport | receiveMsg ... blockingQueue=" + blockingQueue);
+  		String answer = blockingQueue.take();
 		Colors.out("MqttSupport | receiveMsg subscribes answer=" + answer + " blockingQueue=" + blockingQueue);
- 		client.unsubscribe(topicOut);
 		return answer;
 	}
 

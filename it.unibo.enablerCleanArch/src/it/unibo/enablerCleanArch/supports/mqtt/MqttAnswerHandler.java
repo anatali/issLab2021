@@ -40,10 +40,10 @@ private static int n = 0;
 	}
  		@Override
 		public void elaborate(ApplMessage message, Interaction2021 conn) {
-			Colors.out(name + " | elaborate " + message);
 			//Invio sulla coda
 			try {
 				blockingQueue.put(message.toString());
+				Colors.outappl(name + " | elaborate " + message + " blockingQueue=" + blockingQueue, Colors.ANSI_PURPLE);
 			} catch (InterruptedException e) {
 				Colors.outerr(name + " | elaborate ERROR " + e.getMessage());
 			}			
