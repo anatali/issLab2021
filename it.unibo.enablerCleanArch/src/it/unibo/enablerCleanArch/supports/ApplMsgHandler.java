@@ -9,7 +9,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
  
 /*
- * TODO: omettere la oarte MqttCallback che viene realizzata da ContextMqttMsgHandler
+ * TODO: omettere la parte MqttCallback che viene realizzata da ContextMqttMsgHandler
  */
 public abstract class ApplMsgHandler  implements IApplMsgHandler {  
 protected String name;
@@ -101,7 +101,7 @@ protected String name;
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message)  {
-		Colors.outerr(name + " ApplMsgHandler | messageArrived not implemented");
+		Colors.outerr(name + " ApplMsgHandler | messageArrived not yet implemented");
  	}
 
 	@Override

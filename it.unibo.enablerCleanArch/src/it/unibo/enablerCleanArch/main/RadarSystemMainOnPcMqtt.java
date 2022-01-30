@@ -16,7 +16,6 @@ public class RadarSystemMainOnPcMqtt implements IApplication{
 private IRadarDisplay radar = null;
 private ILed   ledClient;
 private ISonar sonarClient;
-
 private boolean ledblinking = false;
 
     public RadarSystemMainOnPcMqtt(){
@@ -54,9 +53,7 @@ private boolean ledblinking = false;
  		ledClient             = new LedProxyAsClient("clientLed", host, ctxTopic, protocol );
  		//sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
 	} 
-	
-
-	
+ 	
 	public void ledActivate( boolean v ) {
 		if( v ) ledClient.turnOn();
 		else ledClient.turnOff();
@@ -89,11 +86,11 @@ private boolean ledblinking = false;
 	public void execute() {
 		
  		ledActivate(true);		
- 		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
+ 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
  
    		Utils.delay(1000);
- 		ledActivate(false);
- 		//Colors.outappl("Led state="+ledState(), Colors.GREEN);
+  		ledActivate(false);
+ 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
  
  		//Utils.delay(5000);
 /*

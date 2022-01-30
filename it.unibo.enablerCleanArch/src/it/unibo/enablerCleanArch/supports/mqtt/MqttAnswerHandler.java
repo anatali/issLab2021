@@ -19,6 +19,22 @@ private static int n = 0;
 		super("mqttAnswHandler"+ n++);
  		this.blockingQueue = blockingQueue;
 	}
+	
+	@Override
+	public void messageArrived(String topic, MqttMessage message)   {
+ 		Colors.outappl(name + " | messageArrived:" + message + " on topic="+topic, Colors.ANSI_PURPLE );
+ 		Colors.outappl(name + " | msgId=" + 
+ 				message.getId() + "  Qos="+ message.getQos() + " isDuplicate=" 
+ 				+ message.isDuplicate() + " payload=" + message.getPayload().length, 
+ 				Colors.ANSI_PURPLE );
+ 		if( message.getPayload().length == 1 ) return;  //perchè RICEVO 0 ???
+		try { //Perhaps we receive a structured message
+			ApplMessage msgInput = new ApplMessage(message.toString());
+			elaborate(msgInput, MqttSupport.getSupport() );
+		}catch( Exception e) {
+			Colors.out(name + " ApplMsgHandler | messageArrived WARNING:"+ e.getMessage(), Colors.ANSI_YELLOW );
+ 		}
+	}
  		@Override
 		public void elaborate(ApplMessage message, Interaction2021 conn) {
 			Colors.out(name + " | elaborate " + message);
@@ -35,5 +51,8 @@ private static int n = 0;
 			Colors.out(name + " | elaborate String: " + message);
 			
 		}
-		
+		@Override
+		public void deliveryComplete(IMqttDeliveryToken token){
+			Colors.out(name + " ApplMsgHandler | deliveryComplete token=" + token.getMessageId(), Colors.ANSI_YELLOW);
+		}		
 }

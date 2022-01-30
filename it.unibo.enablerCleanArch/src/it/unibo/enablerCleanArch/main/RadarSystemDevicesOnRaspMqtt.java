@@ -46,7 +46,9 @@ private String ctxTopic   		= "topicCtxMqtt";
 		
 		//EnablerAsServerMqtt ctxServer = new EnablerAsServerMqtt("CtxServerMqtt", ctxTopic , ctxH );			
 		MqttSupport mqtt = MqttSupport.getSupport();
-		mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
+		//mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
+		mqtt.connectToBroker("CtxServerMqtt", RadarSystemConfig.mqttBrokerAddr); 
+		mqtt.subscribe( ctxTopic, ctxH );
   	}
  
 	

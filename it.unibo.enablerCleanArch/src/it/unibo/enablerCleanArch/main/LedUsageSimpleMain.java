@@ -71,7 +71,9 @@ private ILed led;
 //						"topicCtxMqtt" , ctxH );			
 //				ctxServer.start(); 
 				MqttSupport mqtt        = MqttSupport.getSupport();
-				mqtt.connectMqtt("CtxServerMqtt", "topicCtxMqtt" , ctxH); 
+				//mqtt.connectMqtt("CtxServerMqtt", "topicCtxMqtt" , ctxH); 
+				mqtt.connectToBroker("CtxServerMqtt", RadarSystemConfig.mqttBrokerAddr); 
+				mqtt.subscribe( "topicCtxMqtt", ctxH );
 				break;
 		}
 	}

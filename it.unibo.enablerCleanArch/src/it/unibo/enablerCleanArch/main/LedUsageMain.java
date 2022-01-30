@@ -79,8 +79,10 @@ private String ctxTopic = "topicCtxMqtt";
 				((LedApplHandler)ctxH.getHandler("led")).setTheDevice( led ); //Injection				
 //				EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt", ctxTopic , ctxH );			
 //				ctxServer.start(); 
-				MqttSupport mqtt        = MqttSupport.getSupport();
-				mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
+				MqttSupport mqtt = MqttSupport.getSupport();
+//				mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
+				mqtt.connectToBroker("CtxServerMqtt", RadarSystemConfig.mqttBrokerAddr); 
+				mqtt.subscribe( ctxTopic, ctxH );
 				break;
 		}
 	}

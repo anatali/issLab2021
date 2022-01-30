@@ -49,7 +49,9 @@ public class SonarUsageMainWithContextMqtt extends SonarUsageAbstractMain implem
 // 		EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt","topicCtxMqtt" , ctxH );			
 //		ctxServer.start(); 
 		MqttSupport mqtt        = MqttSupport.getSupport();
-		mqtt.connectMqtt("CtxServerMqtt", "topicCtxMqtt" , ctxH); 
+		//mqtt.connectMqtt("CtxServerMqtt", "topicCtxMqtt" , ctxH); 
+		mqtt.connectToBroker("CtxServerMqtt", RadarSystemConfig.mqttBrokerAddr); 
+		mqtt.subscribe( "topicCtxMqtt", ctxH );		
 	}
 	
 	//called by the inherited configure
