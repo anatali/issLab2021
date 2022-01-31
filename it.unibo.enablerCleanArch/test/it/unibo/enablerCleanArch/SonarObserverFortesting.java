@@ -7,7 +7,7 @@ import java.util.Observable;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 class SonarObserverFortesting implements IObserver{
 	private String name;
@@ -30,15 +30,15 @@ class SonarObserverFortesting implements IObserver{
 	@Override
 	public void update(String vs) {
  		 if(oneShot) {
- 			 Colors.out( name + "| oneShot value=" + vs, Colors.ANSI_YELLOW );  
+ 			 ColorsOut.out( name + "| oneShot value=" + vs, ColorsOut.ANSI_YELLOW );  
  			 assertTrue(  vs.equals( ""+RadarSystemConfig.testingDistance) );	
  		 }else {
  			 int value = Integer.parseInt(vs);
  			 if( v0 == -1 ) {	//set the first value observed
  				v0 = value;
- 				Colors.out( name + "| v0=" + v0, Colors.ANSI_YELLOW);
+ 				ColorsOut.out( name + "| v0=" + v0, ColorsOut.ANSI_YELLOW);
  			 }else {
- 				Colors.out( name + "| value=" + value, Colors.ANSI_YELLOW );  
+ 				ColorsOut.out( name + "| value=" + value, ColorsOut.ANSI_YELLOW );  
   				int vexpectedMin = v0-delta;
  				int vexpectedMax = v0+delta;
  				assertTrue(  value <= vexpectedMax && value >= vexpectedMin );

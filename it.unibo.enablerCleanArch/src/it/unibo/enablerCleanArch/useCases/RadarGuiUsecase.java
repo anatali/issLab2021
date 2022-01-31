@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.useCases;
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class RadarGuiUsecase {
  

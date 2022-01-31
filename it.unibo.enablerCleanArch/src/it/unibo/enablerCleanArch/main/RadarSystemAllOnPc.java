@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
@@ -33,7 +33,7 @@ private ISonar sonarClient;
 	}
 	
 	protected ISonar simulateSonarRemote(ProtocolType protocol) {
-		Colors.out("simulateSonarRemote", Colors.ANSI_PURPLE);
+		ColorsOut.out("simulateSonarRemote", ColorsOut.ANSI_PURPLE);
 		sonar = SonarModel.create();
 		
 		EnablerAsServer sonarServer  = 
@@ -48,7 +48,7 @@ private ISonar sonarClient;
 	}
 	
 	protected ILed simulateLedRemote(ProtocolType protocol) {
-		Colors.out("simulateLedRemote", Colors.ANSI_PURPLE);
+		ColorsOut.out("simulateLedRemote", ColorsOut.ANSI_PURPLE);
 		led = LedModel.create();
 		EnablerAsServer ledServer  = 
 				new EnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 

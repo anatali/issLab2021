@@ -80,7 +80,7 @@ public class Utils {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.dispatch.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
-			Colors.outerr("buildDispatch ERROR:"+ e.getMessage());
+			ColorsOut.outerr("buildDispatch ERROR:"+ e.getMessage());
 			return null;
 		}
 	}
@@ -89,7 +89,7 @@ public class Utils {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.request.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
-			Colors.outerr("buildRequest ERROR:"+ e.getMessage());
+			ColorsOut.outerr("buildRequest ERROR:"+ e.getMessage());
 			return null;
 		}
 	}
@@ -97,7 +97,7 @@ public class Utils {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
-			Colors.outerr("buildRequest ERROR:"+ e.getMessage());
+			ColorsOut.outerr("buildRequest ERROR:"+ e.getMessage());
 			return null;
 		}
 	}

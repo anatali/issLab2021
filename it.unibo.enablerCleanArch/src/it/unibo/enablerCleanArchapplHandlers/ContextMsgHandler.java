@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArchapplHandlers;
 import java.util.HashMap;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
@@ -31,22 +31,22 @@ public class ContextMsgHandler extends ApplMsgHandler{
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name+" | elaborate:" + message + " conn=" + conn, Colors.ANSI_PURPLE);
+		ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn);
 		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 		ApplMessage msg      = new ApplMessage(message);
 		String dest          = msg.msgReceiver();
-		Colors.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, Colors.ANSI_PURPLE);
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
 		IApplMsgHandler h    = handlerMap.get(dest);
 		//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
 		if( dest != null && (! msg.isReply()) ) h.elaborate(msg.msgContent(), conn);	
 	}
 
 	public void addComponent( String name, IApplMsgHandler h) {
-		Colors.out("ContextMsgHandler added:" + name);
+		ColorsOut.out(name +  " | added:" + name);
 		handlerMap.put(name, h);
 	}
 	public void removeComponent( String name ) {
-		Colors.out("ContextMsgHandler removed:" + name);
+		ColorsOut.out(name +  " | removed:" + name);
 		handlerMap.remove( name );
 	}
 }

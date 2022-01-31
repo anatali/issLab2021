@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
@@ -71,7 +71,7 @@ public class SonarUsageMainWithContextMqtt extends SonarUsageAbstractMain implem
  		clientSonarProxy.activate();
 		for( int i=1; i<=2; i++) {
 			int v = clientSonarProxy.getDistance().getVal();
-			Colors.outappl("SonarUsageMainWithContextTcp | execute with proxyClient i=" + i + " getDistance=" + v, Colors.GREEN  );
+			ColorsOut.outappl("SonarUsageMainWithContextTcp | execute with proxyClient i=" + i + " getDistance=" + v, ColorsOut.GREEN  );
 			//Utils.delay(RadarSystemConfig.sonarDelay+100);  //MQTT impone un ritmo lento ...
 		}	 
 		if( RadarSystemConfig.sonarObservable) ((ISonarObservable) sonar).unregister(obsfortesting); 
@@ -80,7 +80,7 @@ public class SonarUsageMainWithContextMqtt extends SonarUsageAbstractMain implem
 	}
 	
 	public void terminate() {
- 		Colors.outappl("SonarUsageMainWithContextMqtt | terminate BYE", Colors.ANSI_PURPLE );	
+ 		ColorsOut.outappl("SonarUsageMainWithContextMqtt | terminate BYE", ColorsOut.ANSI_PURPLE );	
 		System.exit(0);
 	}
 	

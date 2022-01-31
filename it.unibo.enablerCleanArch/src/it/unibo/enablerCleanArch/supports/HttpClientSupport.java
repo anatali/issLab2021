@@ -17,20 +17,20 @@ public class HttpClientSupport {
     public HttpClientSupport( String url ){
         httpclient = HttpClients.createDefault();
         URL        = url;
-        Colors.out( "HttpClientSupport | created for url=" + url  );
+        ColorsOut.out( "HttpClientSupport | created for url=" + url  );
     }
     
     public void forward( String msg)  {
-        Colors.out( "HttpClientSupport | forward:" + msg  );
+        ColorsOut.out( "HttpClientSupport | forward:" + msg  );
         performrequest(msg);
     }   
     
     public void request( String msg) {
-        Colors.out( "HttpClientSupport | request:" + msg  );
+        ColorsOut.out( "HttpClientSupport | request:" + msg  );
         performrequest(msg);    //the answer is lost
     }
     public void reply(String msg) {
-        Colors.out( "HttpClientSupport | WARNING: reply NOT IMPLEMENTED"  );
+        ColorsOut.out( "HttpClientSupport | WARNING: reply NOT IMPLEMENTED"  );
     }
     
     public String requestSynch( String msg) {
@@ -45,7 +45,7 @@ public class HttpClientSupport {
         try {
         	//URL = URL+"/photo";
         	URL = URL+msg;
-            Colors.out( "HttpClientSupport | performrequest:" + msg + " URL=" + URL );
+            ColorsOut.out( "HttpClientSupport | performrequest:" + msg + " URL=" + URL );
             StringEntity entity     = new StringEntity(msg);
             HttpUriRequest httppost = RequestBuilder.post()
                     .setUri(new URI(URL))
@@ -60,7 +60,7 @@ public class HttpClientSupport {
 //            Colors.out( "HttpClientSupport | response_b:" + response.getEntity()   );
 //            Colors.out( "HttpClientSupport | response_c:" + response.getEntity().getContent()  );
             String answer = IOUtils.toString(response.getEntity().getContent(), "UTf-8");
-            Colors.out( "HttpClientSupport | answer:" + answer  );
+            ColorsOut.out( "HttpClientSupport | answer:" + answer  );
            
             return response.getEntity().getContent().toString();
             /*
@@ -71,7 +71,7 @@ public class HttpClientSupport {
                 //Colors.out("IssHttpSupport | response=" + endmove);
             }*/
         } catch(Exception e){
-            Colors.out("HttpClientSupport | ERROR:" + e.getMessage());
+            ColorsOut.out("HttpClientSupport | ERROR:" + e.getMessage());
          }
         return "sorry ... " ;
     }

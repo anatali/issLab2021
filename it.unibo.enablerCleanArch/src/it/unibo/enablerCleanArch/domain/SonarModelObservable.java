@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
 	protected IDistanceMeasured observableDistance  ;		
@@ -40,13 +40,13 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
 
  	@Override
 	public void register(IObserver obs) {
-		Colors.out("SonarModelObservable | register on observableDistance obs="+obs);
+		ColorsOut.out("SonarModelObservable | register on observableDistance obs="+obs);
 		observableDistance.addObserver(obs);		
 	}
 
 	@Override
 	public void unregister(IObserver obs) {
-		Colors.out("SonarModelObservable | unregister obs="+obs);
+		ColorsOut.out("SonarModelObservable | unregister obs="+obs);
 		observableDistance.deleteObserver(obs);		
 	}
   

@@ -4,7 +4,7 @@ import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
  
@@ -16,10 +16,10 @@ private CounterWithDelay c = new CounterWithDelay();
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name + " | elaborate: "+message);
+		ColorsOut.out(name + " | elaborate: "+message);
 		try {
 			ApplMessage msg = new ApplMessage(message);
-			Colors.out(name + " | elaborate: "+msg);
+			ColorsOut.out(name + " | elaborate: "+msg);
 			String cmd      = msg.msgContent();
 			Struct cmdT     = (Struct) Term.createTerm(cmd);
 			String cmdName  = cmdT.getName();
@@ -27,7 +27,7 @@ private CounterWithDelay c = new CounterWithDelay();
 				elaborateDec(cmdT);	
 				if( msg.isRequest() ) {
 					String reply = "answer_from_" + name;
-	 				Colors.out(name + " | reply="+reply );					
+	 				ColorsOut.out(name + " | reply="+reply );					
 					//sendMsgToClient( msg.msgId(),   "replyToDec", msg.msgSender(), reply);
 	 				sendMsgToClient(  reply, conn ) ;
 				}
@@ -41,7 +41,7 @@ private CounterWithDelay c = new CounterWithDelay();
 	
 	protected void elaborateDec( Struct cmdT ) {
 		int delay = Integer.parseInt(cmdT.getArg(0).toString());
-		Colors.out(name + " | dec delay="+delay);
+		ColorsOut.out(name + " | dec delay="+delay);
 		c.dec(delay);			
 	}
 

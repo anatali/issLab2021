@@ -15,7 +15,7 @@ public class TcpClientSupport {
  				Interaction2021 conn  =  new TcpConnection( socket );
 				return conn;
 			}catch(Exception e) {
-				Colors.out("TcpClient | Another attempt to connect with host:" + host + " port=" + port);
+				ColorsOut.out("TcpClient | Another attempt to connect with host:" + host + " port=" + port);
 				Thread.sleep(500);
 			}
 		}//for

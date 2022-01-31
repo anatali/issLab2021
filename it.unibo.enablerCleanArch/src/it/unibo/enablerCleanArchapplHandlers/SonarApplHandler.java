@@ -4,7 +4,7 @@ package it.unibo.enablerCleanArchapplHandlers;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 
@@ -18,7 +18,7 @@ ISonar sonar;
  
 		@Override
 		public void elaborate( ApplMessage message, Interaction2021 conn ) {
-			Colors.out(name+ " | elaborate ApplMessage " + message + " conn=" + conn, Colors.BLUE);
+			ColorsOut.out(name+ " | elaborate ApplMessage " + message + " conn=" + conn, ColorsOut.BLUE);
 			String payload = message.msgContent();
 			if( message.isRequest() ) {
 				if(payload.equals("getDistance") ) {
@@ -38,7 +38,7 @@ ISonar sonar;
 		
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
- 				Colors.out(name+ " | elaborate " + message + " conn=" + conn, Colors.BLUE);
+ 				ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
  				if( message.equals("getDistance")) {
  	 				//Colors.out(name+ " | elaborate getDistance="  , Colors.BLUE);
 					String vs = ""+sonar.getDistance().getVal();

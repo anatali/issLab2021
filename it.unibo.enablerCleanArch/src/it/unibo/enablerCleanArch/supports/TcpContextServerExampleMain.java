@@ -82,7 +82,7 @@ RadarGuiClient radarCaller =
 				ledCaller.sendCommandOnConnection(Utils.turnOnLed.toString());
 			else ledCaller.sendCommandOnConnection(Utils.turnOffLed.toString());  
 			String ledState = ledCaller.sendRequestOnConnection(Utils.getLedState.toString());
-			Colors.outappl("simulateController ledState=" + ledState + " for distance=" + v + " i="+i, Colors.ANSI_PURPLE);
+			ColorsOut.outappl("simulateController ledState=" + ledState + " for distance=" + v + " i="+i, ColorsOut.ANSI_PURPLE);
 			//Utils.delay(100);
 		}
 		sonarCaller.sendCommandOnConnection(Utils.sonarDeactivate.toString());

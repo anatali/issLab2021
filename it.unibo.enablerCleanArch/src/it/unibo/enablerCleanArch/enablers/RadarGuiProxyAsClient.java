@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 
 public class RadarGuiProxyAsClient extends ProxyAsClient implements IRadarDisplay {
@@ -15,7 +15,7 @@ public class RadarGuiProxyAsClient extends ProxyAsClient implements IRadarDispla
 		try {
 			sendCommandOnConnection(msg);
 		} catch (Exception e) {
- 			Colors.outerr(name+" | update ERROR:" +e.getMessage());;
+ 			ColorsOut.outerr(name+" | update ERROR:" +e.getMessage());;
 		}   
  	}
 

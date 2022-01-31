@@ -14,7 +14,7 @@ import it.unibo.enablerCleanArch.enablers.EnablerSonarAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -62,7 +62,7 @@ private TcpContextServer contextServer;
  		configureTheServer();
  		configureTheSonarProxyClients();
  
- 		Colors.outappl("SonarUsageMain | configure done", Colors.ANSI_PURPLE  );
+ 		ColorsOut.outappl("SonarUsageMain | configure done", ColorsOut.ANSI_PURPLE  );
 	}
 	
 	protected void createTheSonar() {
@@ -153,7 +153,7 @@ private TcpContextServer contextServer;
 			 
 			for( int i=1; i<=5; i++) {
 				int v = clientSonarProxy.getDistance().getVal();
-				Colors.outappl("SonarUsageMain | executeTcp getDistance="+v, Colors.ANSI_PURPLE);
+				ColorsOut.outappl("SonarUsageMain | executeTcp getDistance="+v, ColorsOut.ANSI_PURPLE);
 				Utils.delay(RadarSystemConfig.sonarDelay  );    
 			}	  
 			if( sonarWithObserver) ((ISonarObservable) sonar).unregister(obsfortesting); 
@@ -173,7 +173,7 @@ private TcpContextServer contextServer;
  		 
 		for( int i=1; i<=5; i++) {
 			String v = cps.request(""); //getDistance		//USO CoapSupport per leggere
-			Colors.outappl("SonarUsageMain | executeCoap getVal="+v, Colors.ANSI_PURPLE);
+			ColorsOut.outappl("SonarUsageMain | executeCoap getVal="+v, ColorsOut.ANSI_PURPLE);
 			Utils.delay(500);
 		}	 
 		Utils.delay(300);
@@ -185,7 +185,7 @@ private TcpContextServer contextServer;
 	}
 
 	public void terminate() {
-		Colors.outappl("SonarUsageMain | terminate", Colors.ANSI_PURPLE );
+		ColorsOut.outappl("SonarUsageMain | terminate", ColorsOut.ANSI_PURPLE );
 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && ! withContext) {
 			sonarServer.stop(); //stops also the sonar device
 		}if( RadarSystemConfig.protcolType == ProtocolType.tcp && withContext) {

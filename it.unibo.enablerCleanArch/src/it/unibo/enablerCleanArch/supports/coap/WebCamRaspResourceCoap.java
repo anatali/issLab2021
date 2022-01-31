@@ -32,7 +32,7 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 
 import it.unibo.enablerCleanArch.domain.WebCamRasp;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.HttpClientSupport;
 import it.unibo.enablerCleanArch.supports.Utils;
 
@@ -50,11 +50,11 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 
 	@Override
 	protected String elaborateGet(String req, InetAddress callerAddr) {
-		Colors.out( getName() + " | before elaborateGet req:" + req + " callerAddr=" + callerAddr );
+		ColorsOut.out( getName() + " | before elaborateGet req:" + req + " callerAddr=" + callerAddr );
 		if( req.startsWith("getImage-")) {
 			String fname=req.substring( req.indexOf('-')+1, req.length());
 			String imgBase64 = WebCamRasp.getImage(fname);
-			Colors.out(getName() + " | imgBase64 length=" + imgBase64.length());
+			ColorsOut.out(getName() + " | imgBase64 length=" + imgBase64.length());
 			return imgBase64;
 	 		 
 		}
@@ -68,10 +68,10 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 
 	@Override
 	protected void elaboratePut(String req) {
-		Colors.out( getName() + " | before elaboratePut req:" + req   );
+		ColorsOut.out( getName() + " | before elaboratePut req:" + req   );
 		 if( req.startsWith("takePhoto-") ){
 			String fname=req.substring( req.indexOf('-')+1, req.length());
-			Colors.out( getName() + " | takePhoto fname:" + fname   );
+			ColorsOut.out( getName() + " | takePhoto fname:" + fname   );
 			WebCamRasp.takePhoto(fname);
 		}else if( req.startsWith("startWebCamStream") ){
 			WebCamRasp.startWebCamStream();
@@ -81,13 +81,13 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 	
 	@Override
 	protected void elaboratePut(String req, InetAddress callerAddr) {
-		Colors.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
+		ColorsOut.out( getName() + " | before elaboratePut req:" + req + " callerAddr="  + callerAddr  );
 		 if( req.startsWith("takePhoto-") ){
 			String fname=req.substring( req.indexOf('-')+1, req.length());
 			File photoFile = new File(workingAddr+fname);
 			if( photoFile.exists() ) {
 				photoFile.delete();
-				Colors.out( getName() + " | deleted file" + fname  );
+				ColorsOut.out( getName() + " | deleted file" + fname  );
 			}
 			
 			WebCamRasp.takePhoto(fname);
@@ -128,12 +128,12 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 		    CloseableHttpResponse response = client.execute(httpPost);
 		    HttpEntity resEntity = response.getEntity();
 		    if (resEntity != null) {
-		    	Colors.out("resEntity not null");
-		    	Colors.out(EntityUtils.toString(resEntity), Colors.BgYellow);
+		    	ColorsOut.out("resEntity not null");
+		    	ColorsOut.out(EntityUtils.toString(resEntity), ColorsOut.BgYellow);
 		    	EntityUtils.consume(resEntity) ;
 		    }		    
 	    }catch( Exception e) {
-	    	Colors.outerr(getName() + " | sendPhotoHttp ERROR:" + e.getMessage());
+	    	ColorsOut.outerr(getName() + " | sendPhotoHttp ERROR:" + e.getMessage());
 	    }
 	}
 	//https://www.codejava.net/frameworks/spring-boot/spring-boot-file-upload-tutorial
@@ -158,7 +158,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 	    HttpEntity mpEntity = builder.build();
 	    httppost.setEntity(mpEntity);
 	    
-	    Colors.out("sendPhotoHttp1 executing request "+ httppost.getRequestLine(), Colors.BgMagenta ); //
+	    ColorsOut.out("sendPhotoHttp1 executing request "+ httppost.getRequestLine(), ColorsOut.BgMagenta ); //
 	    HttpResponse response = httpclient.execute(httppost);
 	   
 	    HttpEntity resEntity = response.getEntity();
@@ -171,13 +171,13 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
  * 
  * It is an abstraction representing a request or response payload. 
  */
-	    Colors.out(""+response.getStatusLine(), Colors.BgCyan);
+	    ColorsOut.out(""+response.getStatusLine(), ColorsOut.BgCyan);
 	    if (resEntity != null) {
-	    	Colors.out("resEntity not null");
-	    	Colors.out(EntityUtils.toString(resEntity), Colors.BgMagenta);
+	    	ColorsOut.out("resEntity not null");
+	    	ColorsOut.out(EntityUtils.toString(resEntity), ColorsOut.BgMagenta);
 	    }
 	    if (resEntity != null) {
-	    	Colors.out("resEntity consumeContent");
+	    	ColorsOut.out("resEntity consumeContent");
 	      //resEntity.consumeContent();
 	      EntityUtils.consume(resEntity) ;
 	      //is deprecated so please use EntityUtils.consume(HttpEntity) when feasible.
@@ -186,7 +186,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 
 	    httpclient.getConnectionManager().shutdown();
 	    }catch( Exception e) {
-	    	Colors.outerr(getName() + " | sendPhotoHttp ERROR" + e.getMessage());
+	    	ColorsOut.outerr(getName() + " | sendPhotoHttp ERROR" + e.getMessage());
 	    }
 
 	}
@@ -196,7 +196,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
  			
 			HttpClientSupport httpSup = new HttpClientSupport( "http://"+replyAddr+":8081" );			
 			String answer = httpSup.requestSynch("/photo/?request="+"encodedString");			
-			Colors.out( getName() + " |  sendPhotoHttp answer=" + answer  );
+			ColorsOut.out( getName() + " |  sendPhotoHttp answer=" + answer  );
 			
 			/*
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -230,7 +230,7 @@ public class WebCamRaspResourceCoap extends CoapDeviceResource {
 	            */
  	            
 		}catch( Exception e ) {
-			Colors.outerr(getName() + " | sendPhotoHttp ERROR" + e.getMessage());
+			ColorsOut.outerr(getName() + " | sendPhotoHttp ERROR" + e.getMessage());
 		}
 	}
 }

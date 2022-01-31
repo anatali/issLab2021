@@ -15,12 +15,12 @@ protected boolean stopped = true;
 		super(name);
 	      try {
 	  		this.userDefHandler   = userDefHandler;
-	  		Colors.out(getName() + " | costructor port=" + port  ); //+" applHandlerClass=" + applHandlerClass 
+	  		ColorsOut.out(getName() + " | costructor port=" + port  ); //+" applHandlerClass=" + applHandlerClass 
 			this.name             = getName();
 		    serversock            = new ServerSocket( port );
 		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
 	     }catch (Exception e) { 
-	    	 Colors.outerr(getName() + " | costruct ERROR: " + e.getMessage());
+	    	 ColorsOut.outerr(getName() + " | costruct ERROR: " + e.getMessage());
 	     }
 	}
 	
@@ -38,7 +38,7 @@ protected boolean stopped = true;
 		 		new TcpApplMessageHandler( userDefHandler, conn );			 		
 			}//while
 		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
-			  Colors.out(getName() + " | probably socket closed: " + e.getMessage(), Colors.GREEN);		 
+			  ColorsOut.out(getName() + " | probably socket closed: " + e.getMessage(), ColorsOut.GREEN);		 
 		  }
 	}
 	
@@ -51,11 +51,11 @@ protected boolean stopped = true;
  
 	public void deactivate() {
 		try {
-			Colors.out(getName()+" |  DEACTIVATE serversock=" +  serversock);
+			ColorsOut.out(getName()+" |  DEACTIVATE serversock=" +  serversock);
 			stopped = true;
             serversock.close();
 		} catch (Exception e) {
-			Colors.outerr(getName() + " | deactivate ERROR: " + e.getMessage());	 
+			ColorsOut.outerr(getName() + " | deactivate ERROR: " + e.getMessage());	 
 		}
 	}
  

@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
  
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarMock extends SonarModel implements ISonar{
@@ -10,7 +10,7 @@ private int delta = 1;
 	@Override
 	protected void sonarSetUp() {
 		curVal = new Distance(90);		
-		Colors.out("SonarMock | sonarSetUp curVal="+curVal);
+		ColorsOut.out("SonarMock | sonarSetUp curVal="+curVal);
 	}
 	
  

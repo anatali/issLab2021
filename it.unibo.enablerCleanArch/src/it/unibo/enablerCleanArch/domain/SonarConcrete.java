@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 //import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 //import it.unibo.enablerCleanArch.supports.Utils;
 
 
@@ -23,9 +23,9 @@ public class SonarConcrete extends SonarModel implements ISonar{
  		try {
 			p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
 	        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
-	        Colors.out("SonarConcrete | sonarSetUp done");
+	        ColorsOut.out("SonarConcrete | sonarSetUp done");
        	}catch( Exception e) {
-       		Colors.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
+       		ColorsOut.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
     	}
 	}
 	 
@@ -55,15 +55,15 @@ public class SonarConcrete extends SonarModel implements ISonar{
 
 	@Override
 	public void activate() {
-		Colors.out("SonarConcrete | activate ");
+		ColorsOut.out("SonarConcrete | activate ");
  		try { 
  			if( p == null ) {
-		        Colors.out("SonarConcrete | sonarSetUp ");
+		        ColorsOut.out("SonarConcrete | sonarSetUp ");
 				p          = Runtime.getRuntime().exec("sudo ./SonarAlone");
 		        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
  		}
        	}catch( Exception e) {
-       		Colors.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
+       		ColorsOut.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
     	}
  		super.activate();
  	}
@@ -87,13 +87,13 @@ public class SonarConcrete extends SonarModel implements ISonar{
  				//Utils.delay(RadarSystemConfig.sonarDelay);
 			//}
        }catch( Exception e) {
-       		Colors.outerr("SonarConcrete | ERROR " + e.getMessage() );
+       		ColorsOut.outerr("SonarConcrete | ERROR " + e.getMessage() );
        }		
 	}
  
 	@Override
 	public void deactivate() {
-		Colors.out("SonarConcrete | deactivate", Colors.GREEN);
+		ColorsOut.out("SonarConcrete | deactivate", ColorsOut.GREEN);
 	    lastSonarVal      = 0;
 	    curVal            = new Distance(90);
 		if( p != null ) {

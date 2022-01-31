@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import radarPojo.radarSupport;
 
 public class RadarDisplay implements IRadarDisplay{
@@ -27,7 +27,7 @@ private static RadarDisplay display = null; //singleton
 	//ADDED for testing
 	//-------------------------------------------------
 	public int getCurDistance() {
-		Colors.out("RadarDisplay | getCurDistance="+curDistance);
+		ColorsOut.out("RadarDisplay | getCurDistance="+curDistance);
 		return Integer.parseInt(curDistance);
 	}
 

@@ -5,7 +5,7 @@ import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
  
@@ -26,17 +26,17 @@ private String name = "CoapSprt";
 		url            = "coap://"+address + ":5683/"+ path;
 		client          = new CoapClient( url );
  		client.useExecutor(); //To be shutdown
-		Colors.out(name + " | STARTS client url=" +  url,Colors.ANSI_YELLOW  ); //+ " client=" + client );
+		ColorsOut.out(name + " | STARTS client url=" +  url,ColorsOut.ANSI_YELLOW  ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 		
 	}
  	
 	public void removeObserve(CoapObserveRelation relation) {
 		relation.proactiveCancel();	
- 		Colors.out(name + " | removeObserve !!!!!!!!!!!!!!!" + relation ,Colors.ANSI_YELLOW  );
+ 		ColorsOut.out(name + " | removeObserve !!!!!!!!!!!!!!!" + relation ,ColorsOut.ANSI_YELLOW  );
 	}
 	public CoapObserveRelation observeResource( CoapHandler handler  ) {
 		CoapObserveRelation relation = client.observe( handler ); 
-		Colors.out(name + " | added " + handler + " relation=" + relation + relation,Colors.ANSI_YELLOW  );
+		ColorsOut.out(name + " | added " + handler + " relation=" + relation + relation,ColorsOut.ANSI_YELLOW  );
  		return relation;
 	}
 
@@ -48,7 +48,7 @@ private String name = "CoapSprt";
 		//Colors.out(name + " | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
 		if( client != null ) {
 			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
- 			if( resp != null ) Colors.out(name + " | forward " + msg + " resp=" + resp.getCode(),Colors.ANSI_YELLOW  );
+ 			if( resp != null ) ColorsOut.out(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
 		    //else { Colors.outerr(name + " | forward - resp null "   ); }  //?????
 		} 
 	}
@@ -60,17 +60,17 @@ private String name = "CoapSprt";
 	
 	@Override
 	public String request(String query)   {
-  		Colors.out(name + " | request query=" + query + " url="+url );
+  		ColorsOut.out(name + " | request query=" + query + " url="+url );
 		String param = query.isEmpty() ? "" :  "?q="+query;
-  		Colors.out(name + " | param=" + param );
+  		ColorsOut.out(name + " | param=" + param );
 		client.setURI(url+param);
 		CoapResponse respGet = client.get(  );
 		if( respGet != null ) {
-	 		Colors.out(name + " | request=" + query 
-	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),Colors.ANSI_YELLOW);
+	 		ColorsOut.out(name + " | request=" + query 
+	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),ColorsOut.ANSI_YELLOW);
 			return respGet.getResponseText();
 		}else {
-	 		Colors.out(name + " | request=" + query +" RESPONSE NULL ",Colors.RED);
+	 		ColorsOut.out(name + " | request=" + query +" RESPONSE NULL ",ColorsOut.RED);
 			return "0";
 		}
 	}
@@ -83,7 +83,7 @@ private String name = "CoapSprt";
 
 	@Override
 	public void close()  {
-		Colors.out(name + " | client shutdown=" + client);		
+		ColorsOut.out(name + " | client shutdown=" + client);		
 		client.shutdown();	
 	}
 

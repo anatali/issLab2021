@@ -4,12 +4,11 @@ import java.util.concurrent.BlockingQueue;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 
 public class MqttSupportCallback implements MqttCallback{
-//	private String clientName;
-	private BlockingQueue<String> blockingQueue = null;
+ 	private BlockingQueue<String> blockingQueue = null;
 	private IApplMsgHandler handler = null;
 
 	public MqttSupportCallback( IApplMsgHandler handler ) {
@@ -25,12 +24,12 @@ public class MqttSupportCallback implements MqttCallback{
 		}
 		@Override
 		public void connectionLost(Throwable cause) {
-			Colors.outerr("MqttSupportCallback | connectionLost cause="+cause);
+			ColorsOut.outerr("MqttSupportCallback | connectionLost cause="+cause);
 	 	}
 
 		@Override
 		public void messageArrived(String topic, MqttMessage message) throws Exception {
-			Colors.outappl("MqttSupportCallback | messageArrived:" + message, Colors.ANSI_PURPLE );
+			ColorsOut.outappl("MqttSupportCallback | messageArrived:" + message, ColorsOut.ANSI_PURPLE );
 			if( blockingQueue != null ) blockingQueue.put( message.toString() );	
 			else if( handler != null ) handler.elaborate(message.toString(), null);  //TODO 
 //			Colors.outappl("MqttSupportCallback | messageArrived:"+message + " for " + clientName 
@@ -43,7 +42,7 @@ public class MqttSupportCallback implements MqttCallback{
 //				Colors.outappl("MqttSupportCallback | deliveryComplete token=" 
 //			       + token.getMessage() + " client=" + token.getClient().getClientId() , Colors.ANSI_YELLOW);
 			} catch (Exception e) {
-				Colors.outerr("MqttSupportCallback | deliveryComplete Error:"+e.getMessage());		
+				ColorsOut.outerr("MqttSupportCallback | deliveryComplete Error:"+e.getMessage());		
 			}
 	 	}
 		

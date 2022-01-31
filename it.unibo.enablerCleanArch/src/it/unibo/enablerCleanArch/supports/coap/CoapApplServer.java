@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class CoapApplServer extends CoapServer{
 	
@@ -24,7 +24,7 @@ public class CoapApplServer extends CoapServer{
 		if( server != null ) {
 			server.stop();
 			server.destroy();
-			Colors.out("CoapApplServer STOPPED", Colors.GREEN );
+			ColorsOut.out("CoapApplServer STOPPED", ColorsOut.GREEN );
 		}
 	}
 	
@@ -69,9 +69,9 @@ public class CoapApplServer extends CoapServer{
 		Resource res = getResource("/"+fatherUri);
 		if( res != null ) {
 			res.add( resource );
-			Colors.out("CoapApplServer | added " + resource.getName() + " father=" + fatherUri, Colors.ANSI_PURPLE );
+			ColorsOut.out("CoapApplServer | added " + resource.getName() + " father=" + fatherUri, ColorsOut.ANSI_PURPLE );
 		}else {
-			Colors.outerr("addCoapResource FAILS for " + fatherUri);
+			ColorsOut.outerr("addCoapResource FAILS for " + fatherUri);
 		}
 	}
  

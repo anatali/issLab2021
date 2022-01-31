@@ -16,7 +16,7 @@ import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
@@ -76,7 +76,7 @@ protected IObserver obsfortesting;
  		//if( RadarSystemConfig.webCam) 
  			new WebCamRaspResourceCoap("webcam");
  		
- 		Colors.outappl("RadaSystemMainCoap | configure done", Colors.ANSI_PURPLE  );
+ 		ColorsOut.outappl("RadaSystemMainCoap | configure done", ColorsOut.ANSI_PURPLE  );
 		//createObservers();
 	}
 

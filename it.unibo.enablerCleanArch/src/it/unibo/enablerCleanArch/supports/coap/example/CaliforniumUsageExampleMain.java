@@ -8,7 +8,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 
@@ -31,18 +31,18 @@ private CoapResourceExample res;
 
 		String url               = "coap://localhost:5683/root/example" ;
 		client                   = new CoapClient( url );
-		Colors.out(   "configure DONE "  );
+		ColorsOut.out(   "configure DONE "  );
 		
 	}
 	public void execute() {
-		Colors.out("------------------------ execute", Colors.RED);
+		ColorsOut.out("------------------------ execute", ColorsOut.RED);
  		showTheResource(client);
 		modifyTheResource(client,"s1");		
 		showTheResource(client);		
 	}
 	
 	public void executeWithObserver() {
-		Colors.out("------------------------ executeWithObserver", Colors.RED);
+		ColorsOut.out("------------------------ executeWithObserver", ColorsOut.RED);
 		CoapObserveRelation obsrelation = client.observe( observer );	//invia una richiesta di osservazione sulla risorsa
 		//per ogni PUT (che modifica) vederemo venire eseguita una GET (per l'osservabilità)
 		Utils.delay(1000);			//diamo tempo di vedere che l'observer mostra subito lo stato 
@@ -57,43 +57,43 @@ private CoapResourceExample res;
 	protected void cancelObserverRelation(CoapObserveRelation obsrelation) {
 		obsrelation.proactiveCancel();
 		Utils.delay(1000);	//diamo tempo ...
-		Colors.outappl( "nObsOn_res="+res.getObserverCount() + " obsrelation_isCanceled=" + obsrelation.isCanceled(), Colors.ANSI_PURPLE);		
+		ColorsOut.outappl( "nObsOn_res="+res.getObserverCount() + " obsrelation_isCanceled=" + obsrelation.isCanceled(), ColorsOut.ANSI_PURPLE);		
 	}
 	
 	public void executeQuery() {
-		Colors.out("------------------------ executeQuery", Colors.RED);
+		ColorsOut.out("------------------------ executeQuery", ColorsOut.RED);
 		String url             = "coap://localhost:5683/root/example/?q=time" ;
-		Colors.out(   "executeQuery url=" + url  );
+		ColorsOut.out(   "executeQuery url=" + url  );
 		CoapClient myclient    = new CoapClient( url );
 		CoapResponse answer    = myclient.get(  );
 		System.out.println("executeQuery | get answer="+answer.getResponseText() + " code=" + answer.getCode());			
 		modifyTheResource(myclient, "squery");
 	}
 	public void executeQuerySameclient() {
-		Colors.out("------------------------ executeQuerySameclient", Colors.RED);
+		ColorsOut.out("------------------------ executeQuerySameclient", ColorsOut.RED);
 		String url           = "coap://localhost:5683/root/example/?q=time" ;
-		Colors.outappl(   "executeQuerySameclient: url=" + url, Colors.GREEN  );
+		ColorsOut.outappl(   "executeQuerySameclient: url=" + url, ColorsOut.GREEN  );
 		client.setURI(url);
 		CoapResponse answer    = client.get(  );
-		Colors.outappl("executeQuerySameclient: get answer="+answer.getResponseText() 
-		 + " code=" + answer.getCode(), Colors.GREEN);			
+		ColorsOut.outappl("executeQuerySameclient: get answer="+answer.getResponseText() 
+		 + " code=" + answer.getCode(), ColorsOut.GREEN);			
 		modifyTheResource(client, "squery");
 	}
 
 	protected void showTheResource(CoapClient client) {
 		CoapResponse answer  = client.get(  );
-		Colors.outappl("showTheResource | get answer="+answer.getResponseText() + " code=" + answer.getCode(), Colors.ANSI_PURPLE);		
+		ColorsOut.outappl("showTheResource | get answer="+answer.getResponseText() + " code=" + answer.getCode(), ColorsOut.ANSI_PURPLE);		
 	}
 	protected void modifyTheResource(CoapClient client, String newState) {
 		CoapResponse answer  = client.put(newState, 0);
-		Colors.outappl("modifyTheResource: put answer="+answer.getResponseText()+ " code=" + answer.getCode(), Colors.ANSI_PURPLE);		
+		ColorsOut.outappl("modifyTheResource: put answer="+answer.getResponseText()+ " code=" + answer.getCode(), ColorsOut.ANSI_PURPLE);		
 	}
 	
 	
 	public void terminate() {
 		coapServer.stop();
 		coapServer.destroy();
-		Colors.out(   "terminated "  );
+		ColorsOut.out(   "terminated "  );
 	}
 	public static void main(String[] args)  {
 		CaliforniumUsageExampleMain sys = new CaliforniumUsageExampleMain();

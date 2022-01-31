@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonarObservable;
 import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArchapplHandlers.NaiveMessageHandler;
  
@@ -76,17 +76,17 @@ public class SonarResourceCoapMain   {
 //TERMINATE	
 	//obs.
 	Utils.delay(1000);	//last observation
-	Colors.outappl("TERMINATE", Colors.BLUE);
+	ColorsOut.outappl("TERMINATE", ColorsOut.BLUE);
 	//Proactive Observe cancellation: Cancel the observe relation by sending a GET with Observe=1.
 	while( ! obsrelation.isCanceled()) {
-		Colors.out("attempts to remove the observer ", Colors.BLUE);
+		ColorsOut.out("attempts to remove the observer ", ColorsOut.BLUE);
 		obsrelation.proactiveCancel(); 
 		Utils.delay(1000);
 	}
 	CoapApplServer.stopTheServer();
  	client.shutdown();
  	 
-	Colors.outappl("BYE", Colors.BLUE);
+	ColorsOut.outappl("BYE", ColorsOut.BLUE);
 	System.exit(0);
 	}
 

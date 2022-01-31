@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.IApplication;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -29,19 +29,19 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 			programs.put("A", new RadarSystemMainOnPcMqtt());
 			String i = "";
 			outMenu();
-			Colors.outappl(">>>   ", Colors.ANSI_PURPLE);
+			ColorsOut.outappl(">>>   ", ColorsOut.ANSI_PURPLE);
  			BufferedReader inputr = new BufferedReader(new InputStreamReader(System.in));
 			i =  inputr.readLine();
  			programs.get( i ).doJob("RadarSystemConfig.json");
  		} catch ( Exception e) {
-			 Colors.outerr("ERROR:" + e.getMessage() );
+			 ColorsOut.outerr("ERROR:" + e.getMessage() );
 		}
 		
 	}
 	public static void main( String[] args) throws Exception {
-		Colors.outappl("---------------------------------------------------", Colors.BLUE);
-		Colors.outappl("WARNING: this application uses RadarSystemConfig", Colors.BLUE);
-		Colors.outappl("---------------------------------------------------", Colors.BLUE);
+		ColorsOut.outappl("---------------------------------------------------", ColorsOut.BLUE);
+		ColorsOut.outappl("WARNING: this application uses RadarSystemConfig", ColorsOut.BLUE);
+		ColorsOut.outappl("---------------------------------------------------", ColorsOut.BLUE);
 		new AllMainRadarLed().doChoice();
 	}
 }

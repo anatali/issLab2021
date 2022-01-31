@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch.domain;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class SonarConcreteObservable extends SonarModelObservable   {
 	private int numData           = 5; 
@@ -18,12 +18,12 @@ public class SonarConcreteObservable extends SonarModelObservable   {
 	 	observableDistance.setVal(curVal); 
  		try { 
  			if( p == null ) {
-		        Colors.out("SonarConcreteObservable | sonarSetUp ");
+		        ColorsOut.out("SonarConcreteObservable | sonarSetUp ");
 				p          = Runtime.getRuntime().exec("sudo ./SonarAlone");
 		        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
  		}
        	}catch( Exception e) {
-       		Colors.outerr("SonarConcreteObservable | sonarSetUp ERROR " + e.getMessage() );
+       		ColorsOut.outerr("SonarConcreteObservable | sonarSetUp ERROR " + e.getMessage() );
     	}
 	} 	
 	
@@ -56,20 +56,20 @@ public class SonarConcreteObservable extends SonarModelObservable   {
 				//Colors.out("SonarConcreteObservable | v=" + v );
 				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
 					//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistremia stream
- 					Colors.out("SonarConcreteObservable call updateDistance | v=" + v );
+ 					ColorsOut.out("SonarConcreteObservable call updateDistance | v=" + v );
  					lastSonarVal = v;
  	 				updateDistance( v );
 				}
  				//Utils.delay(RadarSystemConfig.sonarDelay);
 			}
        }catch( Exception e) {
-       		Colors.outerr("SonarConcreteObservable | sonarProduce: " + e.getMessage() );
+       		ColorsOut.outerr("SonarConcreteObservable | sonarProduce: " + e.getMessage() );
        }		
 	}
 
 	@Override
 	public void deactivate() {
-		Colors.out("SonarConcreteObservable | deactivate", Colors.GREEN);
+		ColorsOut.out("SonarConcreteObservable | deactivate", ColorsOut.GREEN);
 		if( p != null ) {
 			p.destroy();  //Block the runtime process
 			p=null;

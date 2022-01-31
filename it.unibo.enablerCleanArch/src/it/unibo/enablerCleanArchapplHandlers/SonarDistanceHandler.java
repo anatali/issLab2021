@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IRadarDisplay;
 import it.unibo.enablerCleanArch.domain.RadarDisplay;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 public class SonarDistanceHandler extends ApplMsgHandler{
@@ -21,7 +21,7 @@ public class SonarDistanceHandler extends ApplMsgHandler{
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name + " | elaborate " + message );
+		ColorsOut.out(name + " | elaborate " + message );
 		showDataOnGui( message );
 	}
 	
@@ -33,7 +33,7 @@ public class SonarDistanceHandler extends ApplMsgHandler{
 			radar.update(distance, "0");
 		}catch( Exception e ){ //Otherwise we handle simple integers
 			if( msg.length() > 0 ) radar.update(msg, "0");
-			else Colors.outerr("showDataOnGui ERROR: empty String");
+			else ColorsOut.outerr("showDataOnGui ERROR: empty String");
 		}
 	}
 

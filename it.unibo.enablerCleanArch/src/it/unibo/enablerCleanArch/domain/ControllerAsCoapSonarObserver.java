@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
 
@@ -23,7 +23,7 @@ private int ampl;
 		String vs   = response.getResponseText();
 		int v       = Integer.parseInt(vs) * ampl;
 		IDistance d = new Distance(v);
- 		Colors.outappl(name + " | " + vs, Colors.ANSI_PURPLE);
+ 		ColorsOut.outappl(name + " | " + vs, ColorsOut.ANSI_PURPLE);
  		if( d.getVal() > 0 ) {
  			
 			LedAlarmUsecase.doUseCase( led,  d  );   
@@ -32,6 +32,6 @@ private int ampl;
 	}
 	@Override
 	public void onError() {
- 		Colors.outerr(name + " | error"  );	
+ 		ColorsOut.outerr(name + " | error"  );	
 	}	
 }

@@ -16,7 +16,7 @@ import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.HttpClientSupport;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -79,7 +79,7 @@ private boolean ledblinking        = false;
  		
   		//Extract the support for the sonar, in order to set an observer 
   		coapSonarSup     = (CoapSupport) sonarProxy.getConn();
-Colors.out("........................................ coapSonarSup=" + coapSonarSup);
+ColorsOut.out("........................................ coapSonarSup=" + coapSonarSup);
  		String ledUri  = CoapApplServer.lightsDeviceUri+"/led";
  		led            = new LedProxyAsClient("ledProxyCoap", host, ledUri, ProtocolType.coap );		
  
@@ -106,15 +106,15 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 		//rel1            = coapSonarSup.observeResource( obs );
 		//Controller.activate(led, sonar, radar);  
 		led.turnOn();
-		Colors.out("ledState=" +led.getState() );
+		ColorsOut.out("ledState=" +led.getState() );
 		Utils.delay(500);
 		led.turnOff();
-		Colors.out("ledState=" +led.getState() );
+		ColorsOut.out("ledState=" +led.getState() );
 		
 		
 		HttpClientSupport httpSup = new HttpClientSupport( "http://192.168.1.132"  );
 		String answer = httpSup.requestSynch("photo");
-		Colors.out("answer=" +answer );
+		ColorsOut.out("answer=" +answer );
 		
 //		sonar.activate();
 //		Utils.delay(10000);
@@ -168,10 +168,10 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	protected void executeCoapUsingCoapSupport() {
 		//led.turnOff();
 		ledActivate(true);
-		Colors.out("ledState=" +led.getState() );
+		ColorsOut.out("ledState=" +led.getState() );
 		Utils.delay(1000);
 		ledActivate(false);
-		Colors.out("ledState=" +led.getState() );
+		ColorsOut.out("ledState=" +led.getState() );
 		Utils.delay(1000);
 		
 		
@@ -223,7 +223,7 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	
 	@Override
 	public void sonarActivate() {
-		Colors.out("RadarSystemMainOnPcCoapBase | sonarActivate");
+		ColorsOut.out("RadarSystemMainOnPcCoapBase | sonarActivate");
 		coapSonarSup.forward("activate"); //messaggi 'semplici' 
 		
 	}
@@ -274,10 +274,10 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	public String getImage(String fName) {
 		try {
 			String imgBase64 = coapWebCamSup.request("getImage-" + fName);
-			Colors.out("RadarSystemMainOnPcCoapBase | getImage imgBase64.length()=" + imgBase64.length());
+			ColorsOut.out("RadarSystemMainOnPcCoapBase | getImage imgBase64.length()=" + imgBase64.length());
 			return imgBase64;
  		} catch (Exception e) {
- 			Colors.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());
+ 			ColorsOut.outerr("RadarSystemMainOnPcCoapBase | getImage " + e.getMessage());
  			return "";
 		}
 	}
@@ -285,16 +285,16 @@ Colors.out("........................................ coapSonarSup=" + coapSonarS
 	@Override
 	public void sendCurrentPhoto() {
 		String answer = coapWebCamSup.request("sendCurrentPhoto"  );
-		Colors.out("RadarSystemMainOnPcCoapBase | sendCurrentPhoto answer=" + answer);
+		ColorsOut.out("RadarSystemMainOnPcCoapBase | sendCurrentPhoto answer=" + answer);
 	}
 	
 	public void storeImage(String encodedString, String fName) {
 		try {
 			byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
-			Colors.out("RadarSystemMainOnPcCoapBase | storeImage decodedBytes.length=" + decodedBytes.length);
+			ColorsOut.out("RadarSystemMainOnPcCoapBase | storeImage decodedBytes.length=" + decodedBytes.length);
 			FileUtils.writeByteArrayToFile(new File(fName), decodedBytes);
 		} catch (Exception e) {
- 			Colors.outerr("RadarSystemMainOnPcCoapBase | storeImage " + e.getMessage());			 
+ 			ColorsOut.outerr("RadarSystemMainOnPcCoapBase | storeImage " + e.getMessage());			 
 		}
 	}
 	

@@ -13,7 +13,7 @@ import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
@@ -82,7 +82,7 @@ protected IObserver obsfortesting;
 		
 		for( int i=1; i<=5; i++) {
 			IDistance v = clientSonarProxy.getDistance( );  
-			Colors.outappl("SonarUsageMainCoap | execute with proxyClient i=" + i + " getDistance="+v.getVal(), Colors.ANSI_PURPLE);
+			ColorsOut.outappl("SonarUsageMainCoap | execute with proxyClient i=" + i + " getDistance="+v.getVal(), ColorsOut.ANSI_PURPLE);
 			Utils.delay(500);
 		}	 
  		//Tolgo l'observer CoAP
@@ -102,7 +102,7 @@ protected IObserver obsfortesting;
 		cps.forward("activate");	//messaggi 'semplici'
 		for( int i=1; i<=5; i++) {
 			String v = cps.request("");  
-			Colors.outappl("SonarUsageMainCoap | executeCoap with CoapSupport i=" + i + " getVal="+v, Colors.ANSI_PURPLE);
+			ColorsOut.outappl("SonarUsageMainCoap | executeCoap with CoapSupport i=" + i + " getVal="+v, ColorsOut.ANSI_PURPLE);
 			Utils.delay(500);
 		}	 
 		cps.forward("deactivate");	//termina il Sonar
@@ -128,16 +128,16 @@ protected IObserver obsfortesting;
 	}
 
 	public void terminate() {
-		Colors.outappl("SonarUsageMainCoap | terminate", Colors.ANSI_PURPLE );
+		ColorsOut.outappl("SonarUsageMainCoap | terminate", ColorsOut.ANSI_PURPLE );
 		CoapApplServer.stopTheServer();  
 			//Fermo il clientObs
 			if( clientObs != null ) {
-				Colors.outappl("SonarUsageMainCoap | terminate clientObs="+clientObs, Colors.ANSI_PURPLE );
+				ColorsOut.outappl("SonarUsageMainCoap | terminate clientObs="+clientObs, ColorsOut.ANSI_PURPLE );
 				clientObs.shutdown();	
 			}
 			//Chiudo le connessioni
 			if( clientSonarProxy != null )  ((ProxyAsClient) clientSonarProxy).close();
- 		Colors.outappl("SonarUsageMainCoap | terminate BYE", Colors.ANSI_PURPLE );	
+ 		ColorsOut.outappl("SonarUsageMainCoap | terminate BYE", ColorsOut.ANSI_PURPLE );	
 		System.exit(0); //per via di CoapHandler  ...
 	}
 

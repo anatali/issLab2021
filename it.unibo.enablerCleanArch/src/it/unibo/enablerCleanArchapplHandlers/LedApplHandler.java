@@ -1,10 +1,9 @@
 package it.unibo.enablerCleanArchapplHandlers;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.IDevice;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 
@@ -36,10 +35,6 @@ ILed led;
 			if(payload.equals("getState") ) {
 				String ledstate = ""+led.getState();
 				ApplMessage reply = Utils.buildReply("led", reqId, ledstate, message.msgSender()) ;
-				
-				//sendMsgToClient(reply, conn );  
-				//E' una reply al client - La connessione mqtt dovrebbe consoscere la topic
-				
 				sendAnswerToClient(reply.toString());
 			}
 		}else if( message.isReply() ) {
@@ -49,7 +44,7 @@ ILed led;
 	
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name + " | elaborate message=" + message + " conn=" + conn + " led="+led, Colors.GREEN);
+		ColorsOut.out(name + " | elaborate message=" + message + " conn=" + conn + " led="+led, ColorsOut.GREEN);
  		if( message.equals("on")) led.turnOn();
  		else if( message.equals("off") ) led.turnOff();	
  		else if( message.equals("getState") ) sendMsgToClient(""+led.getState(), conn );

@@ -8,7 +8,7 @@ import it.unibo.enablerCleanArch.domain.LedMockWithGui;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
@@ -39,12 +39,13 @@ private String ctxTopic = "topicCtxMqtt";
 		else {
 			RadarSystemConfig.simulation  	= true;
 	 		RadarSystemConfig.testing     	= false;
+	 		RadarSystemConfig.tracing       = false;
 	 		RadarSystemConfig.ledPort     	= 8015;
 	 		RadarSystemConfig.ledGui      	= true;
 	 		RadarSystemConfig.withContext 	= true;
-	 		RadarSystemConfig.protcolType 	= ProtocolType.tcp;
+	 		RadarSystemConfig.protcolType 	= ProtocolType.mqtt;
 	 		RadarSystemConfig.pcHostAddr  	= "localhost";
-	 		RadarSystemConfig.mqttBrokerAddr= "tcp://broker.hivemq.com";
+			RadarSystemConfig.mqttBrokerAddr= "tcp://test.mosquitto.org";
 		}
 	}
  
@@ -73,17 +74,12 @@ private String ctxTopic = "topicCtxMqtt";
 			}
 			case coap : { new LedResourceCoap("led", led); break; }
 			case mqtt :
-				IApplMsgHandler ledHandler   = new LedApplHandler( "ledH" );
-				IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
-				ctxH.addComponent("led", ledHandler);
-				((LedApplHandler)ctxH.getHandler("led")).setTheDevice( led ); //Injection				
-//				EnablerAsServer ctxServer = new EnablerAsServer("CtxServerMqtt", ctxTopic , ctxH );			
-//				ctxServer.start(); 
-				MqttSupport mqtt = MqttSupport.getSupport();
-//				mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
-				mqtt.connectToBroker("CtxServerMqtt", RadarSystemConfig.mqttBrokerAddr); 
-				mqtt.subscribe( ctxTopic, ctxH );
-				break;
+				LedApplHandler ledHandler   = new LedApplHandler( "ledH" );
+				ledHandler.setTheDevice( led ); //Injection	
+ 				MqttSupport mqtt        = MqttSupport.getSupport();
+				IContextMsgHandler ctxH = mqtt.getHandler();
+ 				ctxH.addComponent("led", ledHandler);
+ 				break;
 		}
 	}
 	protected void configureTheLedProxyClient() {		 
@@ -108,19 +104,19 @@ private String ctxTopic = "topicCtxMqtt";
  		ledClient1.turnOn();	
  		Utils.delay(1000);
  		boolean curLedstate = ledClient1.getState();
- 		Colors.outappl("LedUsageMain | ledState from client1=" + curLedstate, Colors.GREEN);
+ 		ColorsOut.outappl("LedUsageMain | ledState from client1=" + curLedstate, ColorsOut.GREEN);
  		Utils.delay(200);
  		assertTrue( curLedstate);
 		Utils.delay(1000);
 		ledClient2.turnOff();
 		Utils.delay(500);
 		curLedstate = ledClient2.getState();
-		Colors.outappl("LedUsageMain | ledState from client2=" + curLedstate, Colors.GREEN);
+		ColorsOut.outappl("LedUsageMain | ledState from client2=" + curLedstate, ColorsOut.GREEN);
 		assertTrue( ! curLedstate);
 	}
 	
 	public void terminate() {
-		Colors.outappl("terminate",Colors.BLUE);
+		ColorsOut.outappl("terminate",ColorsOut.BLUE);
 		if( led instanceof LedMockWithGui ) { 
 			((LedMockWithGui) led).destroyLedGui(  ); 
 		}

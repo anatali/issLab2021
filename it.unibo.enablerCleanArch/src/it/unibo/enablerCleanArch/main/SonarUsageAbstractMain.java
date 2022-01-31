@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 /*
  * Crea il Sonar come POJO (observable)
@@ -23,7 +23,7 @@ public abstract class SonarUsageAbstractMain {
   		createTheSonar();
  		createObservers();
  		configureTheServer();
- 		Colors.outappl("SonarUsageMainCoap | configure done", Colors.ANSI_PURPLE  );
+ 		ColorsOut.outappl("SonarUsageMainCoap | configure done", ColorsOut.ANSI_PURPLE  );
 	}
 
 	protected void createTheSonar() {

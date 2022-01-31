@@ -4,7 +4,7 @@ import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 
@@ -112,7 +112,7 @@ private boolean ledblinking = false;
 		
 */ 
 		
-			Colors.outappl("Led state="+ledState(), Colors.GREEN);
+			ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
 //			Colors.outappl("sonar active="+sonarClient.isActive(), Colors.GREEN);
 
 /*
@@ -144,9 +144,9 @@ private boolean ledblinking = false;
 	public void terminate() {
 		try {
 			MqttSupport.getSupport().close();
-			Colors.outappl("BYE BYE ", Colors.GREEN);
+			ColorsOut.outappl("BYE BYE ", ColorsOut.GREEN);
 		} catch (Exception e) {
-			Colors.outerr("terminate ERROR:" + e.getMessage());
+			ColorsOut.outerr("terminate ERROR:" + e.getMessage());
  		}
 		//System.exit(0);
 	}

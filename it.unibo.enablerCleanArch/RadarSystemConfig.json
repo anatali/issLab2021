@@ -23,6 +23,7 @@
 "ctxServerPort"    : "8018",
 "mqttBrokerAddr"   : "tcp://localhost:1883",
 "tempBrokerAddr"   : "tcp://broker.hivemq.com",
+"tracing"          : "false",
 "testing"          : "false"
 
 }

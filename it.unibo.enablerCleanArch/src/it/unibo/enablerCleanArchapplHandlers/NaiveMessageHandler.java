@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArchapplHandlers;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 public class NaiveMessageHandler extends ApplMsgHandler{
@@ -15,7 +15,7 @@ public class NaiveMessageHandler extends ApplMsgHandler{
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		Colors.out(name + " | elaborate " + message );
+		ColorsOut.out(name + " | elaborate " + message );
  	}
 	
  

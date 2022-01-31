@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Panel;
 
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class LedMockWithGui extends LedMock {  
@@ -17,7 +17,7 @@ private final Dimension sizeOff = new Dimension(30,30);
 
 	public static ILed createLed(  ){
 		LedMockWithGui led = new LedMockWithGui(Utils.initFrame(150,150));
-		led.turnOff();
+		//led.turnOff();
 		return led;
 	}
 	public void destroyLedGui(  ){
@@ -26,7 +26,7 @@ private final Dimension sizeOff = new Dimension(30,30);
  	//Constructor
 	public LedMockWithGui( Frame frame ) {
 		super();
-		Colors.out("create LedMockWithGui");
+		//Colors.out("create LedMockWithGui");
 		this.frame = frame;
  		configure( );
   	}	

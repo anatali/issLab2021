@@ -4,7 +4,7 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.server.resources.Resource;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
@@ -27,29 +27,29 @@ private CoapSupport cps;
 		
 	}
 	public void execute() {
-		Colors.out("------------------------ execute", Colors.RED);
+		ColorsOut.out("------------------------ execute", ColorsOut.RED);
 		try {
 			cps.forward("activate");
 			Utils.delay(200);
 			for( int i=1; i<=3; i++ ) {
 				String vs = cps.request("getDistance");
-				Colors.outappl("execute: current distance="+vs, Colors.BLUE);
+				ColorsOut.outappl("execute: current distance="+vs, ColorsOut.BLUE);
 				Utils.delay(200);
 			}
 			cps.forward("deactivate");
 		} catch (Exception e) {
-			Colors.outerr("execute error"+ e.getMessage());	 
+			ColorsOut.outerr("execute error"+ e.getMessage());	 
  		}	
 	}
 	public void executeWithObserver() {
-		Colors.out("------------------------ executeWithObserver", Colors.RED);
+		ColorsOut.out("------------------------ executeWithObserver", ColorsOut.RED);
 		try {
 			CoapObserveRelation relObs1 = cps.observeResource( new ObserverNaive("obs1") );
 			CoapObserveRelation relObs2 = cps.observeResource( new ObserverNaive("obs2") );
 			cps.forward("activate");
 			for( int i=1; i<=3; i++ ) {
 				String vs = cps.request("getDistance");
-				Colors.outappl("executeWithObserver: distance i=" + i + " vs="+vs, Colors.BLUE);
+				ColorsOut.outappl("executeWithObserver: distance i=" + i + " vs="+vs, ColorsOut.BLUE);
 				Utils.delay(200);
 			}
 			Utils.delay(300);
@@ -59,7 +59,7 @@ private CoapSupport cps;
 			Utils.delay(200);
 			cps.forward("deactivate");
 		} catch (Exception e) {
-			Colors.outerr("executeWithObserver error"+ e.getMessage());	 
+			ColorsOut.outerr("executeWithObserver error"+ e.getMessage());	 
  		}	
 	}
 	
@@ -67,7 +67,7 @@ private CoapSupport cps;
 		cps.close();
 		CoapApplServer.getTheServer().stop(); 
 		CoapApplServer.getTheServer().destroy();
-		Colors.outappl("terminate DONE", Colors.BLUE);
+		ColorsOut.outappl("terminate DONE", ColorsOut.BLUE);
 		System.exit(0);
 	}
 	

@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
 
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class DeviceFactory {
 
@@ -27,7 +27,7 @@ public class DeviceFactory {
 		}
 	}
 	public static ISonarObservable createSonarObservable() {
-		Colors.out("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
+		ColorsOut.out("DeviceFactory | createSonarObservable simulated="+RadarSystemConfig.simulation);
 		if( RadarSystemConfig.simulation)  {
 			return new SonarMockObservable();
 		}else { 

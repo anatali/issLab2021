@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch.domain;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public abstract class SonarModelWithQueue  implements ISonar{  
@@ -19,11 +19,11 @@ protected boolean stopped  = true;
 	}
 
 	public static ISonar createSonarMock() {
-		Colors.out("createSonarMock");
+		ColorsOut.out("createSonarMock");
 		return new SonarMock();
 	}	
 	public static ISonar createSonarConcrete() {
-		Colors.out("createSonarConcrete");
+		ColorsOut.out("createSonarConcrete");
 		return new SonarConcrete();
 	}	
 	
@@ -34,10 +34,10 @@ protected boolean stopped  = true;
 	protected void updateDistance( int d ) {
 		try {
 			curVal = new Distance( d );
-			Colors.out("SonarModel | updateDistance "+ d);
+			ColorsOut.out("SonarModel | updateDistance "+ d);
 			blockingQueue.put( curVal );
 		} catch (InterruptedException e) {
-			Colors.outerr("SonarModel | updateDistance ERROR:"+e.getMessage());
+			ColorsOut.outerr("SonarModel | updateDistance ERROR:"+e.getMessage());
 		}
 	}	
 
@@ -56,7 +56,7 @@ protected boolean stopped  = true;
 			//Colors.out("SonarModel | getDistance curVal="+curVal, Colors.ANSI_PURPLE);
 			return curVal;
 		} catch (InterruptedException e) {
-			Colors.outerr("SonarModel | ERROR:"+e.getMessage());
+			ColorsOut.outerr("SonarModel | ERROR:"+e.getMessage());
 			return null;
 		}	
 	}
@@ -65,7 +65,7 @@ protected boolean stopped  = true;
 	public void activate() {
 		curVal = new Distance( 90 );
 		//sonarSetUp(); 
-		Colors.out("SonarModel | activate", Colors.GREEN);
+		ColorsOut.out("SonarModel | activate", ColorsOut.GREEN);
 		stopped = false;
 		blockingQueue.clear();
 		new Thread() {
@@ -75,14 +75,14 @@ protected boolean stopped  = true;
 					sonarProduce(  );
 					//Utils.delay(RadarSystemConfig.sonarDelay);
 				}
-				Colors.out("SonarModel | ENDS", Colors.GREEN);
+				ColorsOut.out("SonarModel | ENDS", ColorsOut.GREEN);
 		    }
 		}.start();
 	}
  	
 	@Override
 	public void deactivate() {
-		Colors.out("SonarModel | deactivate", Colors.GREEN);
+		ColorsOut.out("SonarModel | deactivate", ColorsOut.GREEN);
 		stopped = true;
 		blockingQueue.clear();  //IMPORTANT if queueSize > 1
 	}

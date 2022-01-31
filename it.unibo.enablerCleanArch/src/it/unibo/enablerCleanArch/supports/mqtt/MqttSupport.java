@@ -5,7 +5,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ApplMessageType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
@@ -37,37 +37,36 @@ public class MqttSupport implements Interaction2021{
 
 	
 protected MqttClient client;
-protected boolean isConnected = false;
-//protected String topic;
+public static final String topicOut = "topicCtxMqtt";
+protected static MqttSupport mqttSup ;  //to realize a singleton
+
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
 protected String clientid;
-protected IApplMsgHandler handler;
+protected IContextMsgHandler handler;
 protected String brokerAddr;
-protected static MqttSupport mqttSup ;
-public static final String topicOut = "topicCtxMqtt";
+protected boolean isConnected   = false;
+
 
 	public static synchronized MqttSupport getSupport() {
 		if( mqttSup == null  ) mqttSup = new MqttSupport();
-//		if( ! mqttSup.isConnected ) {
-//			IContextMsgHandler  ctxH = new ContextMqttMsgHandler ( "ctxH" );
-//			//mqttSup.connectMqtt("CtxServerMqtt", myTopic , ctxH); 
-//			mqttSup.connect("mqttSupport", topicOut, RadarSystemConfig.mqttBrokerAddr);
-// 		}
 		return mqttSup;
 	}
 	
     protected MqttSupport() {
+    	connectToBroker("mqttSupport", RadarSystemConfig.mqttBrokerAddr);	
+    	handler = new ContextMqttMsgHandler( "ctxH"  );
+    	subscribe(MqttSupport.topicOut, handler);
     }
      
     public BlockingQueue<String> getQueue() {
     	return blockingQueue;
     }
     
-    public IApplMsgHandler getHandler() {
+    public IContextMsgHandler getHandler() {
     	return handler;
     }
     
- 
+    
     
     public void connectToBroker(String clientid,  String brokerAddr) {
 		try {
@@ -79,10 +78,10 @@ public static final String topicOut = "topicCtxMqtt";
 			client.connect(options);
 			this.clientid   = clientid; //client.getClientId();
 			isConnected = true;
-			Colors.out("MqttSupport | connected client " + client.getClientId() + " to broker " + brokerAddr, Colors.CYAN);
+			ColorsOut.out("MqttSupport | connected client " + client.getClientId() + " to broker " + brokerAddr );
 		} catch (MqttException e) {
 			isConnected = false;
-			Colors.outerr("MqttSupport  | connect Error:" + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | connect Error:" + e.getMessage());
 		}    	
     }
  
@@ -99,26 +98,27 @@ public static final String topicOut = "topicCtxMqtt";
 			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
 			client.connect(options);
 			isConnected = true;
-			Colors.out("MqttSupport | connected " + clientid + " to " + topic, Colors.CYAN);
+			ColorsOut.out("MqttSupport | connected " + clientid + " to " + topic, ColorsOut.CYAN);
 		} catch (MqttException e) {
 			isConnected = false;
-			Colors.outerr("MqttSupport  | connect Error:" + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | connect Error:" + e.getMessage());
 		}
 	}
 	
-	
+/*	
 	protected void connectMqtt(String clientid, String topic, IApplMsgHandler handler) {
 		connect( clientid, topic, RadarSystemConfig.mqttBrokerAddr);
 		this.handler = handler;
 		subscribe(clientid, topic, handler);    
 		Colors.out(clientid + " | CREATED MqttSupport handler="+handler + " subscribed to " + topic, Colors.CYAN);
 	}
-	
+*/	
 	public void disconnect() {
 		try {
 			client.disconnect();
+			client.close();
 		} catch (MqttException e) {
-			Colors.outerr("MqttSupport  | disconnect Error:" + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | disconnect Error:" + e.getMessage());
 		}
 	}
 	
@@ -129,16 +129,16 @@ public static final String topicOut = "topicCtxMqtt";
 	public void unsubscribe( String topic ) {
 		try {
 			client.unsubscribe(topic);
-			Colors.out("unsubscribed " + clientid + " topic=" + topic + " blockingQueue=" + blockingQueue, Colors.CYAN);
+			ColorsOut.out("unsubscribed " + clientid + " topic=" + topic + " blockingQueue=" + blockingQueue, ColorsOut.CYAN);
 		} catch (MqttException e) {
-			Colors.outerr("MqttSupport  | unsubscribe Error:" + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | unsubscribe Error:" + e.getMessage());
 		}
 	}
 	
 	public void subscribe ( String topic, IApplMsgHandler handler) {
 		//this.handler = handler;
 		subscribe(clientid, topic, handler);    
-		Colors.out(clientid + " | MqttSupport handler="+handler.getName() + " subscribed to " + topic, Colors.CYAN);		
+		ColorsOut.out(clientid + " | MqttSupport handler="+handler.getName() + " subscribed to " + topic, ColorsOut.CYAN);		
 	}
 	
 	protected void subscribe(String clientid, String topic, MqttCallback callback) {
@@ -148,7 +148,7 @@ public static final String topicOut = "topicCtxMqtt";
 			client.subscribe(topic);			
 			//Colors.out("subscribed " + clientid + " topic=" + topic + " blockingQueue=" + blockingQueue, , Colors.CYAN);
 		} catch (MqttException e) {
-			Colors.outerr("MqttSupport  | subscribe Error:" + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | subscribe Error:" + e.getMessage());
 		}
 	}
 	
@@ -161,19 +161,19 @@ public static final String topicOut = "topicCtxMqtt";
 			message.setQos(qos);
 		}
 		try {
-			Colors.out("MqttSupport  | publish topic=" + topic + " msg=" + msg + " client=" + client, Colors.CYAN);
+			ColorsOut.out("MqttSupport  | publish topic=" + topic + " msg=" + msg + " client=" + client, ColorsOut.CYAN);
 			message.setPayload(msg.toString().getBytes());		 
 			client.publish(topic, message);
 			//Colors.out("MqttSupport  | publish-DONE on topic=" + topic, Colors.CYAN );
 		} catch (MqttException e) {
-			Colors.outerr("MqttSupport  | publish Error "  + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | publish Error "  + e.getMessage());
 		}
 	}
 	
 //----------------------------------------------------	
 	@Override
 	public void forward(String msg) throws Exception {
-		Colors.out("forward topic=" + topicOut + " msg=" + msg);
+		//Colors.out("forward topic=" + topicOut + " msg=" + msg);
 		try{
 			new ApplMessage(msg); //no exception => we can publish
 		}catch( Exception e ) { //The message is not structured
@@ -182,58 +182,65 @@ public static final String topicOut = "topicCtxMqtt";
 		publish(topicOut, msg, 2, false);	
 	}
 
+	
+	protected MqttClient setupConnectionFroAnswer(String answerTopicName) {
+		try{
+			MqttClient clientAnswer    = new MqttClient(brokerAddr, "clientAnswer");
+			MqttConnectOptions options = new MqttConnectOptions();
+			options.setKeepAliveInterval(480);
+			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
+			clientAnswer.connect(options);
+	 		//Colors.out("MqttSupport | connected clientAnswer to " + brokerAddr  , Colors.CYAN);
+	 		MqttAnswerHandler ah = new MqttAnswerHandler( "replyH", blockingQueue );	
+	 		clientAnswer.setCallback(ah);
+	 		clientAnswer.subscribe(answerTopicName);		
+	 		return clientAnswer;
+		}catch( Exception e ) { //The message is not structured
+			ColorsOut.outerr("MqttSupport | setupConnectionFroAnswer ERROR:" + e.getMessage());
+			return null;
+		}
+	}
+	
 	@Override
 	public String request(String msg) throws Exception { //msg should contain the name of the sender
-		Colors.out("... request " + msg + " by clientid=" + clientid + " support=" + this, Colors.CYAN);		
+		ColorsOut.out("... request " + msg + " by clientid=" + clientid + " support=" + this, ColorsOut.CYAN);		
 		//INVIO RICHIESTA su topic
-		MqttAnswerHandler ah = null;
-		ApplMessage mmm;
+//		MqttAnswerHandler ah = null;
+		ApplMessage requestMsg;
 		try{
-			 mmm = new ApplMessage(msg); //no exception => we can publish
+			 requestMsg = new ApplMessage(msg); //no exception => we can publish
 		}catch( Exception e ) { //The message is not structured
-			Colors.outerr("MqttSupport | request warning:" + e.getMessage());
-			mmm = Utils.buildRequest("mqtt", "request", msg, "unknown");
+			ColorsOut.outerr("MqttSupport | request warning:" + e.getMessage());
+			requestMsg = Utils.buildRequest("mqtt", "request", msg, "unknown");
 		}			
 		
 //Preparo per ricevere la risposta
-		String sender = mmm.msgSender();
-		String reqid  = mmm.msgId();
+		String sender = requestMsg.msgSender();
+		String reqid  = requestMsg.msgId();
 		String answerTopicName = "answ_"+reqid+"_"+sender;
-		Colors.out("request answerTopicName="+answerTopicName, Colors.RED);
-		ah = new MqttAnswerHandler( "replyH", blockingQueue );
-		//Aggiungo il gestore della risposta con il nome del sender
-		//if( handler != null ) ((ContextMsgHandler)handler).addComponent(mmm.msgSender(), ah );	
-		
-		MqttClient clientAnswer    = new MqttClient(brokerAddr, "clientAnswer");
-		MqttConnectOptions options = new MqttConnectOptions();
-		options.setKeepAliveInterval(480);
-		options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
-		clientAnswer.connect(options);
- 		Colors.out("MqttSupport | connected clientAnswer "  , Colors.CYAN);
- 		clientAnswer.setCallback(ah);
- 		clientAnswer.subscribe(answerTopicName);
-		
-		//subscribe(answerTopicName,ah); //"xxx"
+		ColorsOut.out("request answerTopicName="+answerTopicName, ColorsOut.RED);
+//		ah = new MqttAnswerHandler( "replyH", blockingQueue );	
+		MqttClient clientAnswer    = setupConnectionFroAnswer(answerTopicName);
 
-		publish(topicOut, mmm.toString(), 0, false);	
-		
- 		
+//Invio la richiesta 		
+		publish(topicOut, requestMsg.toString(), 2, false);	
  		
  		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
 		String answer = null;
 		while( answer== null ) {
 			answer=blockingQueue.poll() ;
-			Colors.out("MqttSupport | blockingQueue-poll answer=" + answer, Colors.CYAN  );
-			Utils.delay(500); //il client ApplMsgHandler dovrebbe andare ...
-		}
-		client.unsubscribe(answerTopicName);
-		Colors.out("MqttSupport | request-answer=" + answer + " blockingQueue=" + blockingQueue, Colors.CYAN);
+			ColorsOut.out("MqttSupport | blockingQueue-poll answer=" + answer, ColorsOut.CYAN  );
+			Utils.delay(200); //il client ApplMsgHandler dovrebbe andare ...
+		}	
+		ColorsOut.out("MqttSupport | request-answer=" + answer + " blockingQueue=" + blockingQueue, ColorsOut.CYAN);
  		try {
  			ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured
  			answer = msgAnswer.msgContent(); 		
- 			//if( ah != null && handler != null) ((ContextMsgHandler)handler).removeComponent(ah.getName());
- 		}catch(Exception e) {
- 			Colors.outerr("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 			
+ 			//Disconnect ancd close the answer client
+ 			clientAnswer.disconnect();
+ 			clientAnswer.close();
+   		}catch(Exception e) {
+ 			ColorsOut.outerr("MqttSupport | request-answer ERROR: " + e.getMessage()   ); 			
  		}
 		return answer;
  	}
@@ -241,35 +248,35 @@ public static final String topicOut = "topicCtxMqtt";
 	public void reply(String msg) throws Exception {
 		try {
 			ApplMessage m = new ApplMessage(msg);
-			Colors.out("MqttSupport | reply  msg="+msg, Colors.CYAN);
-			//TODO: Bisogna tenere traccia della richiesta e del caller
+			//Colors.out("MqttSupport | reply  msg="+msg, Colors.CYAN);
+			//TODO: Si potrebbe tenere traccia della richiesta e del caller
 			String dest  = m.msgReceiver();
 			String reqid = m.msgId();
 			String answerTopicName = "answ_"+reqid+"_"+dest;
 			publish(answerTopicName,msg,2,false); //"xxx"
 			//Colors.out("MqttSupport | reply  DONE", Colors.CYAN );
  		}catch(Exception e) {
-			Colors.outerr("MqttSupport | reply msg not structured " + msg);
+			ColorsOut.outerr("MqttSupport | reply msg not structured " + msg);
 			//publish(topic+"Answer",msg,0,false);
 		}
 	}
 	
 	protected String receiveMsg(String topic, BlockingQueue<String> bq) throws Exception{
-		Colors.out("MqttSupport | receiveMsg2 topic=" + topic + " blockingQueue=" + bq, Colors.CYAN);
+		ColorsOut.out("MqttSupport | receiveMsg2 topic=" + topic + " blockingQueue=" + bq, ColorsOut.CYAN);
   		String answer = bq.take();
-		Colors.out("MqttSupport | receiveMsg2 answer=" + answer + " blockingQueue=" + bq, Colors.CYAN);
+		ColorsOut.out("MqttSupport | receiveMsg2 answer=" + answer + " blockingQueue=" + bq, ColorsOut.CYAN);
  		try {
  			ApplMessage msg = new ApplMessage(answer); //answer is structured
  			answer = msg.msgContent(); 			
  		}catch(Exception e) {
- 			Colors.outerr("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 
+ 			ColorsOut.outerr("MqttSupport | receiveMsg2 " + answer + " not structured"   ); 
   		}
 		client.unsubscribe(topic);
 		return answer;		 
 	}
 	
 	protected String receiveMsg(String topic) throws Exception{
-		Colors.out("MqttSupport | receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue, Colors.CYAN);
+		ColorsOut.out("MqttSupport | receiveMsg topic=" + topic + " blockingQueue=" + blockingQueue, ColorsOut.CYAN);
 		//subscribe("mqttsupport",topic);
  		String answer = blockingQueue.take();
 		//Colors.out("MqttSupport | receiveMsg answer=" + answer + " blockingQueue=" + blockingQueue, Colors.CYAN);
@@ -277,7 +284,7 @@ public static final String topicOut = "topicCtxMqtt";
  			ApplMessage msg = new ApplMessage(answer); //answer is structured
  			answer = msg.msgContent(); 			
  		}catch(Exception e) {
- 			Colors.outerr("MqttSupport | receiveMsg " + answer + " not structured"   ); 			
+ 			ColorsOut.outerr("MqttSupport | receiveMsg " + answer + " not structured"   ); 			
  		}
 		client.unsubscribe(topic);
 		return answer;		 
@@ -285,9 +292,9 @@ public static final String topicOut = "topicCtxMqtt";
 
 	@Override
 	public String receiveMsg() throws Exception {		
-		Colors.out("MqttSupport | receiveMsg ... blockingQueue=" + blockingQueue, Colors.CYAN);
+		ColorsOut.out("MqttSupport | receiveMsg ... blockingQueue=" + blockingQueue, ColorsOut.CYAN);
   		String answer = blockingQueue.take();
-		Colors.out("MqttSupport | receiveMsg answer=" + answer + " blockingQueue=" + blockingQueue, Colors.CYAN);
+		ColorsOut.out("MqttSupport | receiveMsg answer=" + answer + " blockingQueue=" + blockingQueue, ColorsOut.CYAN);
 		return answer;
 	}
 
@@ -295,10 +302,10 @@ public static final String topicOut = "topicCtxMqtt";
 	public void close()   {
 		try {
 			client.disconnect();
-			Colors.outappl("MqttSupport | client disconnected ", Colors.CYAN);
+			ColorsOut.outappl("MqttSupport | client disconnected ", ColorsOut.CYAN);
 			client.close();
  		} catch (MqttException e) {
-			Colors.outerr("MqttSupport  | close Error:" + e.getMessage());
+			ColorsOut.outerr("MqttSupport  | close Error:" + e.getMessage());
  		}
 	}
 	

@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 
 public class CoapApplObserver implements CoapHandler{
@@ -9,16 +9,16 @@ public class CoapApplObserver implements CoapHandler{
 	
 	public CoapApplObserver(String hostAddr, String resourceUri, IApplMsgHandler applHandler) {
 		this.applHandler = applHandler;
-		Colors.outappl("CoapApplObserver | resourceUri= " + resourceUri, Colors.BLUE );
+		ColorsOut.outappl("CoapApplObserver | resourceUri= " + resourceUri, ColorsOut.BLUE );
 	}
 	
 
 	@Override
 	public void onLoad(CoapResponse response) {
-		Colors.outappl("CoapApplObserver | value=" +  response.getResponseText(), Colors.BLUE);
+		ColorsOut.outappl("CoapApplObserver | value=" +  response.getResponseText(), ColorsOut.BLUE);
 		if( response.getResponseText().equals("BYE")) {
 		try {
-			Colors.outappl("CoapApplObserver | finalize=" +  response.getResponseText(), Colors.BLUE);
+			ColorsOut.outappl("CoapApplObserver | finalize=" +  response.getResponseText(), ColorsOut.BLUE);
 			this.onError();
 			//this.finalize();
 		} catch (Throwable e) {
@@ -29,7 +29,7 @@ public class CoapApplObserver implements CoapHandler{
 	@Override
 	public void onError() {
 		//If a request timeouts or the server rejects it
-		Colors.outerr("CoapApplObserver | ERROR " );	
+		ColorsOut.outerr("CoapApplObserver | ERROR " );	
 		 
 	}
 }

@@ -1,9 +1,10 @@
 package it.unibo.enablerCleanArch.supports;
- 
+
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
 //Install ANSI-Escape in Console form EclipseMarket
 //See 
-public class Colors {
+public class ColorsOut {
 	public static final String ANSI_YELLOW         = "\u001B[33m";
 	public static final String ANSI_PURPLE         = "\u001B[35m";
 	public static final String ANSI_RESET          = "\u001B[0m";
@@ -11,9 +12,7 @@ public class Colors {
 	public static final String YELLOW_BACKGROUND   = "\u001B[43m";
 	public static final String WHITE_BACKGROUND    = "\u001B[47m";
 	public static final String BACKGROUND          = "";	//WHITE_BACKGROUND
-	
-	
-	 
+ 	 
 	
 	public static final String BLACK    = "\u001b[30m";
 	public static final String RED      = "\u001B[31m";
@@ -34,14 +33,16 @@ public class Colors {
 	                                                
 	public static final String prefix   = "		";
 	
-	public static void out( String m, String color ) {		 
+	public static void out( String m, String color ) {	
+		if( RadarSystemConfig.tracing )
 		System.out.println(  prefix + BACKGROUND + color + m + ANSI_RESET);
 	}
 	
 	public static void outappl( String m, String color  ) {		 
 		System.out.println(  BACKGROUND + color + m + ANSI_RESET);
 	}
-	public static void out( String m  ) {		 
+	public static void out( String m  ) {	
+		//if( RadarSystemConfig.tracing )
 		System.out.println(  prefix + BACKGROUND + BLUE + m + ANSI_RESET);
 	}
 	public static void outerr( String m  ) {		 

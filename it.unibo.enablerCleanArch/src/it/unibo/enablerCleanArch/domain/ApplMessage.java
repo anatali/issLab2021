@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.domain;
 
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 
@@ -29,7 +29,7 @@ public class ApplMessage {
 	
 	public void setConn( Interaction2021 conn ) {
 		if( isRequest() ) this.conn = conn;
-		else Colors.out("WARNING: setting conn in a non-request message");
+		else ColorsOut.out("WARNING: setting conn in a non-request message");
 	}
 	public Interaction2021 getConn(   ) {
 		return conn;

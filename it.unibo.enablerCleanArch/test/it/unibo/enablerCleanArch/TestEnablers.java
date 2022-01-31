@@ -15,7 +15,7 @@ import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.DeviceType;
@@ -108,7 +108,7 @@ public class TestEnablers {
 		
 		while( sonarClient.isActive() ) {
 			int v = sonarClient.getDistance().getVal();
-			Colors.out("testEnablers getVal="+v, Colors.GREEN);
+			ColorsOut.out("testEnablers getVal="+v, ColorsOut.GREEN);
 			//Utils.delay(500);
 			if( v < RadarSystemConfig.DLIMIT ) {
 				ledClient.turnOn();

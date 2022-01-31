@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.domain.ISonarObservable;
 import it.unibo.enablerCleanArch.domain.SonarObserverFortesting;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -57,7 +57,7 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain impleme
  		clientSonarProxy.activate();
 		for( int i=1; i<=5; i++) {
 			int v = clientSonarProxy.getDistance().getVal();
-			Colors.outappl("SonarUsageMainWithContextTcp | execute with proxyClient i=" + i + " getDistance=" + v, Colors.BLUE  );
+			ColorsOut.outappl("SonarUsageMainWithContextTcp | execute with proxyClient i=" + i + " getDistance=" + v, ColorsOut.BLUE  );
 			Utils.delay(RadarSystemConfig.sonarDelay+100);
 		}	 
 		if( RadarSystemConfig.sonarObservable) ((ISonarObservable) sonar).unregister(obsfortesting); 
@@ -66,8 +66,8 @@ public class SonarUsageMainWithContextTcp extends SonarUsageAbstractMain impleme
 	}
 	
 	public void terminate() {
-		Colors.outappl("SonarUsageMainWithContextTcp | terminate",     Colors.ANSI_PURPLE );
- 		Colors.outappl("SonarUsageMainWithContextTcp | terminate BYE", Colors.ANSI_PURPLE );	
+		ColorsOut.outappl("SonarUsageMainWithContextTcp | terminate",     ColorsOut.ANSI_PURPLE );
+ 		ColorsOut.outappl("SonarUsageMainWithContextTcp | terminate BYE", ColorsOut.ANSI_PURPLE );	
 		System.exit(0);
 	}
 	

@@ -6,7 +6,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IDistance;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class MqttSupportDemoEssential {
@@ -30,11 +30,11 @@ public void simulateReceiver(String name) {
 	new Thread() {
 		public void run() {
 		try {
- 			Colors.outappl("receiver STARTS with " + mqtt, Colors.GREEN);
+ 			ColorsOut.outappl("receiver STARTS with " + mqtt, ColorsOut.GREEN);
 			String inputMNsg = mqtt.receiveMsg();
-			Colors.outappl("receiver RECEIVED:"+ inputMNsg, Colors.BLACK);
+			ColorsOut.outappl("receiver RECEIVED:"+ inputMNsg, ColorsOut.BLACK);
  		} catch (Exception e) {
-			Colors.outerr("receiver  | Error:" + e.getMessage());
+			ColorsOut.outerr("receiver  | Error:" + e.getMessage());
 	 	}
 		}//run
 	}.start();
@@ -61,7 +61,7 @@ public void doSendReceive() {
 		mqtt.forward(helloMsg);	//OK
 		Utils.delay(1000);
 		end();  //Se no si ha poi un  connectionLost  
-		Colors.outappl("doSendReceive BYE BYE" , Colors.BLACK);
+		ColorsOut.outappl("doSendReceive BYE BYE" , ColorsOut.BLACK);
  	} catch (Exception e) {
 		e.printStackTrace();
 	}
@@ -78,21 +78,21 @@ public void simulateCalled( String name ) {
 	new Thread() {
 		public void run() {
 		try {
- 			Colors.outappl(name + "| STARTS with " + mqtt, Colors.GREEN);
+ 			ColorsOut.outappl(name + "| STARTS with " + mqtt, ColorsOut.GREEN);
 			String inputMNsg = mqtt.receiveMsg();  //Si blocca sulla coda popolata da 
-			Colors.outappl(name + "| RECEIVED:"+ inputMNsg, Colors.BLACK);
+			ColorsOut.outappl(name + "| RECEIVED:"+ inputMNsg, ColorsOut.BLACK);
 //Elaborate and send answer			
  			ApplMessage msgInput = new ApplMessage(inputMNsg);
-			Colors.outappl(name + " | input=" + msgInput + " topic="+topic, Colors.GREEN);
+			ColorsOut.outappl(name + " | input=" + msgInput + " topic="+topic, ColorsOut.GREEN);
 			String caller = msgInput.msgSender();
 			String reqId  = msgInput.msgId();
 			String myReply = Utils.buildReply(name ,  reqId, "ANSWER", caller  ).toString();
 			String content = "time('" + java.time.LocalTime.now() + "')";
  			String answer  = myReply.replace("ANSWER", content );  
-			Colors.outappl(name + "| replies:"+ answer, Colors.GREEN);
+			ColorsOut.outappl(name + "| replies:"+ answer, ColorsOut.GREEN);
 			mqtt.reply(answer);  			
  		} catch (Exception e) {
-			Colors.outerr(name + " | Error:" + e.getMessage());
+			ColorsOut.outerr(name + " | Error:" + e.getMessage());
 	 	}
 		}//run 
 	}.start(); 
@@ -106,7 +106,7 @@ public void doRequestRespond() {
 	try {
 		String req1 = Utils.buildRequest(caller,  requestId,"getTime",  "called1").toString();
 		String answer1 = mqtt.request(req1);	 //blocking
-		Colors.outappl(caller + " RECEIVED answer1:"+ answer1, Colors.BLACK);
+		ColorsOut.outappl(caller + " RECEIVED answer1:"+ answer1, ColorsOut.BLACK);
 //		String req2 = Utils.buildRequest(caller,  requestId,"getTime",  "called2").toString();
 //		String answer2 = mqtt.request(req2);	   //blocking
 //		Colors.outappl(caller + " RECEIVED answer2:"+ answer2, Colors.BLACK);

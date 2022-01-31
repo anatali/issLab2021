@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
@@ -23,9 +23,9 @@ protected ProtocolType protocol ;
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
-			Colors.out(name+"  | STARTED conn=" + conn );
+			//Colors.out(name+"  | STARTED conn=" + conn );
 		} catch (Exception e) {
-			Colors.outerr( name+"  |  ERROR " + e.getMessage());		}
+			ColorsOut.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
 	
 	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
@@ -41,13 +41,11 @@ protected ProtocolType protocol ;
 				break;
 			}
 			case mqtt : {
-				Colors.out(name+"  | ProxyAsClient connect MQTT don't care entry=" + entry );
+				//La connessione col Broker viene stabilita in fase di configurazione
+				//La entry è quella definita in MqttSupport.topicOut;
+				//ColorsOut.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
 				conn = MqttSupport.getSupport();				
-				//((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
-				//ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
-				//((MqttSupport) conn).connectToBroker( name, RadarSystemConfig.mqttBrokerAddr );	//entry+name+"answer"
-				//((MqttSupport) conn).subscribe(name,"xxx");
-				break;
+ 				break;
 			}				
 		}
 	}
@@ -57,17 +55,17 @@ protected ProtocolType protocol ;
 		try {
 			conn.forward(cmd);
 		} catch (Exception e) {
-			Colors.outerr( name+"  | sendCommandOnConnection ERROR=" + e.getMessage()  );
+			ColorsOut.outerr( name+"  | sendCommandOnConnection ERROR=" + e.getMessage()  );
 		}
 	}
 	public String sendRequestOnConnection( String request )  {
  		//Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
 		try {
 			String answer = conn.request(request);
-			Colors.out( name+"  | sendRequestOnConnection-answer=" + answer  );
+			//ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer  );
 			return answer;			
 		} catch (Exception e) {
-			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
+			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
 			return null;
 		}
  	}	
@@ -78,8 +76,8 @@ protected ProtocolType protocol ;
 	public void close() {
 		try {
 			conn.close();
-			Colors.out(name + " |  CLOSED " + conn  );
+			ColorsOut.out(name + " |  CLOSED " + conn  );
 		} catch (Exception e) {
-			Colors.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		}
+			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		}
 	}
 }

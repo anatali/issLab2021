@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.domain;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public abstract class LedModel implements ILed{
 	private boolean state = false;	
@@ -19,7 +19,7 @@ public abstract class LedModel implements ILed{
 		
 	}
 	public static ILed createLedConcrete() {
-		Colors.out("createLedConcrete");
+		ColorsOut.out("createLedConcrete");
 		return new LedConcrete();
 	}	
 	

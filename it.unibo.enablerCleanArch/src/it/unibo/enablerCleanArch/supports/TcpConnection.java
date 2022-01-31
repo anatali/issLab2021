@@ -53,7 +53,7 @@ private Socket socket;
 			String	line = inputChannel.readLine() ; //blocking =>
  			return line;		
 		} catch ( Exception e   ) {
-			Colors.outerr( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
+			ColorsOut.outerr( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
 	 		return null;
 		}		
 	}
@@ -62,9 +62,9 @@ private Socket socket;
 	public void close() { 
 		try {
 			socket.close();
-			Colors.out( "TcpConnection | CLOSED  " );
+			ColorsOut.out( "TcpConnection | CLOSED  " );
 		} catch (IOException e) {
-			Colors.outerr( "TcpConnection | close ERROR " + e.getMessage());	
+			ColorsOut.outerr( "TcpConnection | close ERROR " + e.getMessage());	
 		}
 	}
 

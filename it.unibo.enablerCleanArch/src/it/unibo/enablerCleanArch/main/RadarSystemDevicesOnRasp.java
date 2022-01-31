@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.EnablerAsServer;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.RadarGuiProxyAsClient;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.TcpContextServer;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -47,7 +47,7 @@ private TcpContextServer ctxServer  = null;
 				new EnablerAsServer("sonarServer",RadarSystemConfig.sonarPort, 
 						ProtocolType.tcp, new SonarApplHandler("sonarH",sonar) );
 		sonarServer.start();
-		Colors.out("createSonarEnabler DONE",Colors.ANSI_YELLOW);
+		ColorsOut.out("createSonarEnabler DONE",ColorsOut.ANSI_YELLOW);
  	}
 	
 	protected void createLedEnabler( ) {
@@ -56,7 +56,7 @@ private TcpContextServer ctxServer  = null;
 				new EnablerAsServer("LedEnablerAsServer",RadarSystemConfig.ledPort, 
 						ProtocolType.tcp,  new LedApplHandler("ledH", led) );
 		ledServer.start();
-		Colors.out("createLedEnable DONE", Colors.ANSI_YELLOW);
+		ColorsOut.out("createLedEnable DONE", ColorsOut.ANSI_YELLOW);
  	}
  
 	protected void addSonarToContext( ) {

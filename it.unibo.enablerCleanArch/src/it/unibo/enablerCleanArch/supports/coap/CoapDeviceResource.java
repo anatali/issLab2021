@@ -3,7 +3,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
 
 import java.net.InetAddress;
@@ -30,7 +30,7 @@ public abstract class CoapDeviceResource extends CoapResource {
 			Iterator<Option> iter = opts.iterator();
 			while( iter.hasNext() ) {
 				Option option = iter.next();
-				Colors.out( getName() + "handleGET options=" + option );
+				ColorsOut.out( getName() + "handleGET options=" + option );
 				//if( option.toString().contains("Observe: 1")) exchange.respond("BYE");
 				observe1Found =  true;
 			}		
@@ -42,31 +42,31 @@ public abstract class CoapDeviceResource extends CoapResource {
  		//examineGETOptions(exchange);
 		String query = exchange.getQueryParameter("q"); 
 		if( query == null ) {
-			Colors.out( getName() + "handleGET request=" + exchange.getRequestText() );
+			ColorsOut.out( getName() + "handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText(), exchange.getSourceAddress() );
 			
 			
 			if( answer.length() < 500000 ) {
-				Colors.out( getName() + "handleGET request answer=" + answer , Colors.GREEN );
+				ColorsOut.out( getName() + "handleGET request answer=" + answer , ColorsOut.GREEN );
 				exchange.respond(answer);
 			}
 			else {
-				Colors.out( getName() + "handleGET  long answer=" + answer.length() , Colors.RED ); 
+				ColorsOut.out( getName() + "handleGET  long answer=" + answer.length() , ColorsOut.RED ); 
 				exchange.respond("long answer");
 			}
 			
 		}else{  //query != null
- 			Colors.out( getName() + "handleGET query=" + query);
+ 			ColorsOut.out( getName() + "handleGET query=" + query);
  			String answer = elaborateGet( exchange.getQueryParameter("q"), exchange.getSourceAddress() );
  			
  			
  			if( answer.length() < 500000 ) {
- 				if( answer.length() < 1000) Colors.out( getName() + "handleGET q-query answer=" + answer , Colors.GREEN );
- 				else Colors.out( getName() + "handleGET q-long answer=" + answer.length() , Colors.RED );
+ 				if( answer.length() < 1000) ColorsOut.out( getName() + "handleGET q-query answer=" + answer , ColorsOut.GREEN );
+ 				else ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED );
  				exchange.respond(answer);
  			}
 			else {
-				Colors.out( getName() + "handleGET q-long answer=" + answer.length() , Colors.RED ); 
+				ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED ); 
 	  			exchange.respond("too long");
 	  		}
 
@@ -81,11 +81,11 @@ public abstract class CoapDeviceResource extends CoapResource {
  	}
  	@Override
 	public void handlePUT(CoapExchange exchange) {
- 		Colors.out(getName() + " | handlePUT addr=" + exchange.getSourceAddress(), Colors.BgYellow );
+ 		ColorsOut.out(getName() + " | handlePUT addr=" + exchange.getSourceAddress(), ColorsOut.BgYellow );
  		String arg = exchange.getRequestText() ;
 		elaboratePut( arg, exchange.getSourceAddress() );
 		//changed();
-		Colors.out(getName() + " | handlePUT arg=" + arg + " CHANGED="+ CHANGED );
+		ColorsOut.out(getName() + " | handlePUT arg=" + arg + " CHANGED="+ CHANGED );
 		exchange.respond(""+CHANGED);
 	}
 

@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.enablers;
 
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
  
 /*
@@ -50,7 +50,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
   			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getState", "led").toString());
 		else {
 			answer = sendRequestOnConnection( "getState" );
-			Colors.out(name+" |  getState answer " + answer );
+			//ColorsOut.out(name+" |  getState answer " + answer );
 		}
 		return answer.equals("true");
 	}

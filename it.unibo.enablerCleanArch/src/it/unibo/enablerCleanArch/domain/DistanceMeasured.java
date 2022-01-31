@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
 
 import java.util.Observable;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 /*
  * Decorator
@@ -13,9 +13,9 @@ private IDistance d;
 	@Override
 	public void setVal( IDistance v ) {
 		d = v;
-		Colors.out("DistanceMeasured setVal="+v, Colors.ANSI_YELLOW);
+		ColorsOut.out("DistanceMeasured setVal="+v, ColorsOut.ANSI_YELLOW);
 		setChanged();
-		Colors.out("DistanceMeasured setVal="+v + " hasChanged=" + hasChanged(), Colors.ANSI_YELLOW);
+		ColorsOut.out("DistanceMeasured setVal="+v + " hasChanged=" + hasChanged(), ColorsOut.ANSI_YELLOW);
 	    notifyObservers( d );		
 	}
 	@Override

@@ -2,7 +2,7 @@ package it.unibo.enablerCleanArch.supports.coap;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import it.unibo.enablerCleanArch.domain.*;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
  
 
 /*
@@ -17,7 +17,7 @@ private CoapSupport cps ;
  		System.out.println("SonarAdapterCoapObserver |  STARTS  " + resourceUri );
  		//Attivo un Observer che implementa ISonar (per il Controller)
  		cps = new CoapSupport(hostAddr, resourceUri );
-		Colors.out("SonarAdapterCoapObserver |  cps  " + cps );
+		ColorsOut.out("SonarAdapterCoapObserver |  cps  " + cps );
 		cps.observeResource(this);		
  	}
 
@@ -39,14 +39,14 @@ private CoapSupport cps ;
 		try {
 			cps.forward( "deactivate" );
 		} catch (Exception e) {
-			Colors.outerr("SonarAdapterCoapObserver | deactivate ERROR " + e.getMessage());
+			ColorsOut.outerr("SonarAdapterCoapObserver | deactivate ERROR " + e.getMessage());
 		}
 	}	 
 	public  void activate() {
 		try {
 			cps.forward( "activate" );
 		} catch (Exception e) {
-			Colors.outerr("SonarAdapterCoapObserver | activate ERROR " + e.getMessage());
+			ColorsOut.outerr("SonarAdapterCoapObserver | activate ERROR " + e.getMessage());
 		}		
 		
 	}    

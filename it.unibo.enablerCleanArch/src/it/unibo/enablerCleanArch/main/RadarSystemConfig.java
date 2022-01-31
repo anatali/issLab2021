@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class RadarSystemConfig {
 	public static  boolean simulation           = true;
@@ -39,7 +39,7 @@ public class RadarSystemConfig {
 	public static int DLIMIT              =  15;     
 	public static int testingDistance     =  DLIMIT - 2;     
     
-
+	public static boolean tracing         = false;	
 	public static boolean testing         = false;			
 	
 	public static ProtocolType protcolType = ProtocolType.tcp;
@@ -52,7 +52,7 @@ public class RadarSystemConfig {
 		//Nella distribuzione resourceName è in una dir che include la bin  
 		FileInputStream fis = null;
 		try {
-			Colors.out("%%% setTheConfiguration from file:" + resourceName);
+			ColorsOut.out("%%% setTheConfiguration from file:" + resourceName);
 			if(  fis == null ) {
  				 fis = new FileInputStream(new File(resourceName));
 			}
@@ -85,6 +85,7 @@ public class RadarSystemConfig {
 	        sonarDelay       = object.getInt("sonarDelay");	
 	        sonarDistanceMax = object.getInt("sonarDistanceMax");	
 	        DLIMIT           = object.getInt("DLIMIT");	
+	        tracing          = object.getBoolean("tracing");
 	        testing          = object.getBoolean("testing");
 	        
 	        switch( object.getString("protocolType") ) {
@@ -94,7 +95,7 @@ public class RadarSystemConfig {
 	        }
  	        
 		} catch (FileNotFoundException e) {
- 			Colors.outerr("setTheConfiguration ERROR " + e.getMessage() );
+ 			ColorsOut.outerr("setTheConfiguration ERROR " + e.getMessage() );
 		}
 
 	}	
