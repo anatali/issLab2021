@@ -15,18 +15,23 @@ public class MqttAnswerHandler extends ApplMsgHandler{
 private static int n = 0; 
 	private BlockingQueue<String> blockingQueue = null;
 
-	public MqttAnswerHandler( BlockingQueue<String> blockingQueue ) {
-		super("mqttAnswHandler"+ n++);
+	public MqttAnswerHandler( String name, BlockingQueue<String> blockingQueue ) {
+		super( name );
  		this.blockingQueue = blockingQueue;
+ 		Colors.outappl(name+" | MqttAnswerHandler CREATED blockingQueue=" + blockingQueue, Colors.ANSI_PURPLE);		
+	}
+
+	public MqttAnswerHandler( BlockingQueue<String> blockingQueue ) {
+		this("mqttAnswHandler"+ n++, blockingQueue);
 	}
 	
 	@Override
 	public void messageArrived(String topic, MqttMessage message)   {
  		Colors.outappl(name + " | messageArrived:" + message + " on topic="+topic, Colors.ANSI_PURPLE );
- 		Colors.outappl(name + " | msgId=" + 
- 				message.getId() + "  Qos="+ message.getQos() + " isDuplicate=" 
- 				+ message.isDuplicate() + " payload=" + message.getPayload().length, 
- 				Colors.ANSI_PURPLE );
+// 		Colors.outappl(name + " | msgId=" + 
+// 				message.getId() + "  Qos="+ message.getQos() + " isDuplicate=" 
+// 				+ message.isDuplicate() + " payload=" + message.getPayload().length, 
+// 				Colors.ANSI_PURPLE );
  		if( message.getPayload().length == 1 ) {
  			elaborate("sorry", MqttSupport.getSupport() );
  			return;  //perchè RICEVO 0 ???

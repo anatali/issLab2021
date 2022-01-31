@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.Colors;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-public class MqttSupportDemoMain {
+public class MqttSupportDemoOldMain {
 private String topic      = MqttSupport.topicOut;
 private String brokerAddr = RadarSystemConfig.mqttBrokerAddr; // : 1883  OPTIONAL
 
@@ -102,7 +102,7 @@ private String aReply    = Utils.buildReply("demo",  "answer", "ANSWER",    "any
 	}
 
 	public static void main(String[] args) throws Exception  {
-		MqttSupportDemoMain sys = new MqttSupportDemoMain();	
+		MqttSupportDemoOldMain sys = new MqttSupportDemoOldMain();	
  		sys.doSendReceive();
   		//sys.doRequest();
  	}

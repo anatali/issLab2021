@@ -45,7 +45,7 @@ protected ProtocolType protocol ;
 				conn = MqttSupport.getSupport();				
 				//((MqttSupport) conn).connect(name, entry, RadarSystemConfig.mqttBrokerAddr);  //Serve solo per spedire
 				//ClientApplHandlerMqtt h = new ClientApplHandlerMqtt(name+"Handler",conn); //prior to connecting
-				((MqttSupport) conn).connectToBroker( name );	//entry+name+"answer"
+				//((MqttSupport) conn).connectToBroker( name, RadarSystemConfig.mqttBrokerAddr );	//entry+name+"answer"
 				//((MqttSupport) conn).subscribe(name,"xxx");
 				break;
 			}				
