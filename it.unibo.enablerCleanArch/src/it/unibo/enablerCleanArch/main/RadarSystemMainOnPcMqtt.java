@@ -7,6 +7,7 @@ import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.SonarObserverHandlerNaive;
 
 
 /*
@@ -18,6 +19,7 @@ private IRadarDisplay radar = null;
 private ILed   ledClient;
 private ISonar sonarClient;
 private boolean ledblinking = false;
+private MqttSupport mqtt;
 
     public RadarSystemMainOnPcMqtt(){
     }
@@ -40,7 +42,7 @@ private boolean ledblinking = false;
 			RadarSystemConfig.simulation   		= false;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
-			RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
+			RadarSystemConfig.mqttBrokerAddr    = "tcp://test.mosquitto.org"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 			//RadarSystemConfig.withContext       = true;
 		//}
@@ -50,7 +52,10 @@ private boolean ledblinking = false;
  		//radar  = DeviceFactory.createRadarGui();	
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		String ctxTopic       = "topicCtxMqtt";
+		mqtt = MqttSupport.getSupport("pc", "pctopic");
+		mqtt.subscribe("sonarDataTopic", new SonarObserverHandlerNaive("sonarDataHOnPc") );
+		
+		String ctxTopic       = MqttSupport.topicOut;
  		ledClient             = new LedProxyAsClient("clientLed", host, ctxTopic, protocol );
  		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
 	} 
@@ -85,13 +90,13 @@ private boolean ledblinking = false;
 	}
 	
 	public void execute() {
-		
-// 		ledActivate(true);		
-// 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+	//Segnale di vita ...	
+  		ledActivate(true);		
+// 		ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
 // 
-//   		Utils.delay(1000);
-//  		ledActivate(false);
-// 		Colors.outappl("Led state="+ledState(), Colors.GREEN);
+    	Utils.delay(500);
+  		ledActivate(false);
+// 		ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
  
  		//Utils.delay(5000);
 /*
@@ -100,10 +105,10 @@ private boolean ledblinking = false;
 //		stopLedBlink();
 		
 //		String ledstate = ledState(   );
-//		Colors.outappl("Led state="+ledstate, Colors.GREEN);
+//		ColorsOut.outappl("Led state="+ledstate, ColorsOut.GREEN);
 		
 		try {
-			Colors.outappl("Please hit to restart ", Colors.ANSI_PURPLE);
+			ColorsOut.outappl("Please hit to restart ", ColorsOut.ANSI_PURPLE);
 			int v = System.in.read();
 		} catch (IOException e) {
 				e.printStackTrace();
@@ -112,33 +117,38 @@ private boolean ledblinking = false;
 		
 */ 
 		
-			ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
-//			Colors.outappl("sonar active="+sonarClient.isActive(), Colors.GREEN);
+//			ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
+//			ColorsOut.outappl("sonar active="+sonarClient.isActive(), ColorsOut.GREEN);
 
-/*
+		boolean b = sonarClient.isActive();			
+		ColorsOut.outappl("Sonar active="+b, ColorsOut.GREEN);	
+		
+		
+  		ColorsOut.outappl("ACTIVATE THE SONAR", ColorsOut.BLACK); 
 			sonarClient.activate();			
-			boolean b = sonarClient.isActive();			
-			Colors.outappl("Sonar active="+b, Colors.GREEN);			
-			while( ! b ) {
-				Colors.outappl("Sonar not active .. =", Colors.GREEN);
-				Utils.delay(500);
+			b = sonarClient.isActive();			
+			ColorsOut.outappl("Sonar active="+b, ColorsOut.GREEN);			
+			/*
+			 	while( ! b ) {
+				ColorsOut.outappl("Sonar not active .. =", ColorsOut.GREEN);
+				Utils.delay(2500);
+				b = sonarClient.isActive();
 			}
- 			
-				for( int i=1; i<=10; i++) {
+ 			*/
+				for( int i=1; i<=15; i++) {
 	 				int d = sonarClient.getDistance().getVal();
-					Colors.outappl("Sonar state i=" + i + " -> "+d, Colors.GREEN);
-//					if( d < RadarSystemConfig.DLIMIT ) ledActivate(true);	
-//					else ledActivate(false);	
-					Utils.delay(500);
+					ColorsOut.outappl("Sonar state i=" + i + " -> "+d, ColorsOut.GREEN);
+					if( d < 10 ) ledActivate(true);	//RadarSystemConfig.DLIMIT
+					else ledActivate(false);	
+//					Utils.delay(200);   //Con QoS = 2 sono 4 messaggi scambiati
+					//TODO: passare a uno schema di sonar observable  
 				}
-
-		Utils.delay(5000);
-			
+		
+		
+		Utils.delay(1000);			
 		sonarClient.deactivate();
-		Colors.outappl("Sonar deactivate ", Colors.GREEN);
-*/
-			 
-		terminate();
+		ColorsOut.outappl("Sonar deactivate ", ColorsOut.GREEN);
+ 		terminate();
 	}
 
 	public void terminate() {

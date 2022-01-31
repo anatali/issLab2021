@@ -28,15 +28,16 @@ ILed led;
 	@Override
 	public void elaborate( ApplMessage message, Interaction2021 conn ) {
 		String payload = message.msgContent();
-		String sender  = message.msgSender();
-		String receiver= message.msgReceiver();
-		String reqId   = message.msgId();
+//		String sender  = message.msgSender();
+//		String receiver= message.msgReceiver();
+//		String reqId   = message.msgId();
 		if( message.isRequest() ) {
-			if(payload.equals("getState") ) {
-				String ledstate = ""+led.getState();
-				ApplMessage reply = Utils.buildReply("led", reqId, ledstate, message.msgSender()) ;
+//			if(payload.equals("getState") ) {
+ 				String ledstate = ""+led.getState();
+//				ApplMessage reply = Utils.buildReply("led", reqId, ledstate, message.msgSender()) ;
+ 				ApplMessage reply = prepareReply( message, ledstate);
 				sendAnswerToClient(reply.toString());
-			}
+			
 		}else if( message.isReply() ) {
 			
 		}else elaborate(payload, conn);

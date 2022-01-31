@@ -11,6 +11,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.mqtt.ContextMqttMsgHandler;
 import it.unibo.enablerCleanArch.supports.mqtt.EnablerAsServerMqtt;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.SonarObserverMqtt;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
@@ -37,18 +38,20 @@ private String ctxTopic   		= "topicCtxMqtt";
 	protected void createServerMqtt( ) {
 		sonar = SonarModelObservable.create();		
   		led   = LedModel.create();
+		MqttSupport mqtt = MqttSupport.getSupport();
+		
+		 
+		IObserver sonarObs  = new SonarObserverMqtt( "sonarObs" ) ;
+		sonar.register( sonarObs );
+
+		
+
+		//Aggiunta degli handler per i comandi e le richieste
 		IApplMsgHandler ledHandler   = new LedApplHandler( "ledH", led );
-		IContextMsgHandler  ctxH     = new ContextMqttMsgHandler ( "ctxH" );
-		ctxH.addComponent("led", ledHandler);
- 		
+		IContextMsgHandler  ctxH     = mqtt.getHandler(); //new ContextMqttMsgHandler ( "ctxH" );
+		ctxH.addComponent("led", ledHandler); 		
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
 		ctxH.addComponent("sonar", sonarHandler);	
-		
-		//EnablerAsServerMqtt ctxServer = new EnablerAsServerMqtt("CtxServerMqtt", ctxTopic , ctxH );			
-		MqttSupport mqtt = MqttSupport.getSupport();
-		//mqtt.connectMqtt("CtxServerMqtt", ctxTopic , ctxH); 
-		mqtt.connectToBroker("CtxServerMqtt", RadarSystemConfig.mqttBrokerAddr); 
-		mqtt.subscribe( ctxTopic, ctxH );
   	}
  
 	

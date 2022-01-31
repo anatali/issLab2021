@@ -47,15 +47,20 @@ protected String brokerAddr;
 protected boolean isConnected   = false;
 
 
-	public static synchronized MqttSupport getSupport() {
-		if( mqttSup == null  ) mqttSup = new MqttSupport();
+	public static synchronized MqttSupport getSupport( ) {
+		if( mqttSup == null  ) mqttSup = new MqttSupport("mqttSupport", MqttSupport.topicOut);
+		return mqttSup;
+	}
+	public static synchronized MqttSupport getSupport(String clientName, String topicToSubscribe) {
+		if( mqttSup == null  ) mqttSup = new MqttSupport(clientName,topicToSubscribe);
 		return mqttSup;
 	}
 	
-    protected MqttSupport() {
-    	connectToBroker("mqttSupport", RadarSystemConfig.mqttBrokerAddr);	
-    	handler = new ContextMqttMsgHandler( "ctxH"  );
-    	subscribe(MqttSupport.topicOut, handler);
+    protected MqttSupport(String clientName, String topicToSubscribe) {
+    	connectToBroker(clientName, RadarSystemConfig.mqttBrokerAddr);	   	
+		handler = new ContextMqttMsgHandler( "ctxH"  );
+    	subscribe(topicToSubscribe, handler);
+
     }
      
     public BlockingQueue<String> getQueue() {

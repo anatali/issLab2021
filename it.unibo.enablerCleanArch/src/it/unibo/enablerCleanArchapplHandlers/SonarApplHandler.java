@@ -23,14 +23,12 @@ ISonar sonar;
 			if( message.isRequest() ) {
 				if(payload.equals("getDistance") ) {
 					String vs = ""+sonar.getDistance().getVal();
-					ApplMessage reply = Utils.buildReply("sonar", "distance", vs, message.msgSender()) ;
-					//sendMsgToClient(reply, conn ); 
- 					sendAnswerToClient(reply.toString());
+					ApplMessage reply = prepareReply( message, vs);  //Utils.buildReply("sonar", "distance", vs, message.msgSender()) ;
+					sendAnswerToClient(reply.toString());
 
 				}else if(payload.equals("isActive") ) {
  					String sonarState = ""+sonar.isActive();
-					ApplMessage reply = Utils.buildReply("sonar", "sonarstate", sonarState, message.msgSender()) ;
-					//sendMsgToClient(reply, conn ); 		
+					ApplMessage reply = prepareReply( message, sonarState); //Utils.buildReply("sonar", "sonarstate", sonarState, message.msgSender()) ;
   					sendAnswerToClient(reply.toString());
 				}
 			}else elaborate(payload, conn);			

@@ -47,7 +47,21 @@ protected String name;
  	
  	public abstract void elaborate(String message, Interaction2021 conn) ;
  	
-
+ 	
+    protected ApplMessage prepareReply(ApplMessage message, String answer) {
+		String payload = message.msgContent();
+		String sender  = message.msgSender();
+		String receiver= message.msgReceiver();
+		String reqId   = message.msgId();
+		ApplMessage reply = null;
+		if( message.isRequest() ) {
+			//The msgId of the reply must be the id of the request !!!!
+ 			reply = Utils.buildReply(receiver, reqId, answer, message.msgSender()) ;
+		}else { //DEFENSIVE
+			ColorsOut.outerr(name + " | ApplMsgHandler prepareReply ERROR: message not a request");
+		}
+		return reply;
+    }
  
 	@Override
 	public void connectionLost(Throwable cause) {
