@@ -20,10 +20,10 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
 // 	} 	
 	
 	//Ritorna il valore più recente
-//	@Override
-//	public IDistance getDistance() {
-//  		return curVal;
-// 	}
+	@Override
+	public IDistance getDistance() {
+  		return observableDistance;
+ 	}
 
  
 	
@@ -38,7 +38,7 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
 //	}
 	
 	protected void updateDistance( int d ) {
- 		observableDistance.setVal(new Distance( d ));;
+ 		observableDistance.setVal(new Distance( d ));
 		//ColorsOut.out("SonarModelObservable | updateDistance "+ d);
 	}	
  

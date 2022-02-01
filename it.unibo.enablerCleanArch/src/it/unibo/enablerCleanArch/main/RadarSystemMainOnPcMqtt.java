@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
-import it.unibo.enablerCleanArch.supports.mqtt.SonarObserverHandlerNaive;
+import it.unibo.enablerCleanArch.supports.mqtt.SonarDataObserverHandler;
 
 
 /*
@@ -29,12 +29,7 @@ private MqttSupport mqtt;
 		return "RadarSystemMainOnPcMqtt";
 	}
 	
-	@Override
-	public void doJob(String configFileName) {
-		setup(configFileName);
-		configure();    	
-		execute();
-	}
+	
 
 	protected void setup( String configFile )  {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
@@ -42,7 +37,7 @@ private MqttSupport mqtt;
 			RadarSystemConfig.simulation   		= false;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
-			RadarSystemConfig.mqttBrokerAddr    = "tcp://test.mosquitto.org"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
+			RadarSystemConfig.mqttBrokerAddr    = "tcp://test.mosquitto.org"; //: 1883  OPTIONAL  "tcp://localhost:1883"; // tcp://broker.hivemq.com
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 			//RadarSystemConfig.withContext       = true;
 		//}
@@ -50,14 +45,15 @@ private MqttSupport mqtt;
 	
 	public void configure()  {			
  		//radar  = DeviceFactory.createRadarGui();	
+		mqtt                  = MqttSupport.getSupport("pc2", "pctopic");
+		
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		mqtt = MqttSupport.getSupport("pc", "pctopic");
-		mqtt.subscribe("sonarDataTopic", new SonarObserverHandlerNaive("sonarDataHOnPc") );
-		
 		String ctxTopic       = MqttSupport.topicOut;
  		ledClient             = new LedProxyAsClient("clientLed", host, ctxTopic, protocol );
- 		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
+  		sonarClient           = new SonarProxyAsClient("clientSonar", host, ctxTopic, protocol );
+ 		
+  		mqtt.subscribe("sonarDataTopic", new SonarDataObserverHandler("sonarDataHOnPc", ledClient) );
 	} 
  	
 	public void ledActivate( boolean v ) {
@@ -89,37 +85,23 @@ private MqttSupport mqtt;
 		ledblinking = false;
 	}
 	
-	public void execute() {
-	//Segnale di vita ...	
+	@Override
+	public void doJob(String configFileName) {
+		setup(configFileName);
+		configure();    	
+		execute();
+	}
+	
+	protected void workWithLed() {
   		ledActivate(true);		
 // 		ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
 // 
     	Utils.delay(500);
   		ledActivate(false);
 // 		ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
- 
- 		//Utils.delay(5000);
-/*
-//		doLedBlink();
-//		Utils.delay(3000);
-//		stopLedBlink();
-		
-//		String ledstate = ledState(   );
-//		ColorsOut.outappl("Led state="+ledstate, ColorsOut.GREEN);
-		
-		try {
-			ColorsOut.outappl("Please hit to restart ", ColorsOut.ANSI_PURPLE);
-			int v = System.in.read();
-		} catch (IOException e) {
-				e.printStackTrace();
-		}
- 
-		
-*/ 
-		
-//			ColorsOut.outappl("Led state="+ledState(), ColorsOut.GREEN);
-//			ColorsOut.outappl("sonar active="+sonarClient.isActive(), ColorsOut.GREEN);
-
+  		Utils.delay(500);		
+	}
+	protected void workWithSonar() {
 		boolean b = sonarClient.isActive();			
 		ColorsOut.outappl("Sonar active="+b, ColorsOut.GREEN);	
 		
@@ -135,22 +117,22 @@ private MqttSupport mqtt;
 				b = sonarClient.isActive();
 			}
  			*/
-				for( int i=1; i<=15; i++) {
+			
+			 
+				for( int i=1; i<=5; i++) {
 	 				int d = sonarClient.getDistance().getVal();
 					ColorsOut.outappl("Sonar state i=" + i + " -> "+d, ColorsOut.GREEN);
-					if( d < 10 ) ledActivate(true);	//RadarSystemConfig.DLIMIT
-					else ledActivate(false);	
+//					if( d < 10 ) ledActivate(true);	//RadarSystemConfig.DLIMIT
+//					else ledActivate(false);	
 //					Utils.delay(200);   //Con QoS = 2 sono 4 messaggi scambiati
 					//TODO: passare a uno schema di sonar observable  
 				}
-		
-		
-		Utils.delay(1000);			
-		sonarClient.deactivate();
+				 
+		//Utils.delay(3000);
 		ColorsOut.outappl("Sonar deactivate ", ColorsOut.GREEN);
- 		terminate();
+		sonarClient.deactivate();
 	}
-
+	
 	public void terminate() {
 		try {
 			MqttSupport.getSupport().close();
@@ -160,6 +142,20 @@ private MqttSupport mqtt;
  		}
 		//System.exit(0);
 	}
+
+	public void execute() {
+		//workWithLed();
+		workWithSonar();
+		Utils.delay(1000);
+  		terminate();
+	}
+  		
+ 
+//		doLedBlink();
+//		stopLedBlink();
+ 
+
+
 
  
  	public IRadarDisplay getRadarGui() {

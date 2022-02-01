@@ -71,6 +71,15 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void waitTheUser() {
+		try {
+			ColorsOut.outappl("Please hit to restart ", ColorsOut.ANSI_PURPLE);
+			int v = System.in.read();
+		} catch (Exception e) {
+				e.printStackTrace();
+		}
+	}
 
 //------------------------------------------------------
 	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM

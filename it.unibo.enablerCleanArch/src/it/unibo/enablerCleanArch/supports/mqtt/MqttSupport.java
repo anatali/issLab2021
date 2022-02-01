@@ -3,14 +3,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import org.eclipse.paho.client.mqttv3.*;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.ApplMessageType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
+ 
 
  
 /*
@@ -60,7 +59,6 @@ protected boolean isConnected   = false;
     	connectToBroker(clientName, RadarSystemConfig.mqttBrokerAddr);	   	
 		handler = new ContextMqttMsgHandler( "ctxH"  );
     	subscribe(topicToSubscribe, handler);
-
     }
      
     public BlockingQueue<String> getQueue() {
@@ -77,12 +75,31 @@ protected boolean isConnected   = false;
 		try {
  			this.brokerAddr = brokerAddr;
 			client          = new MqttClient(brokerAddr, clientid);
-			MqttConnectOptions options = new MqttConnectOptions();
-			options.setKeepAliveInterval(480);
-			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
-			client.connect(options);
+			MqttConnectOptions connOpts = new MqttConnectOptions();
+			
+		    connOpts.setCleanSession(true);
+		    //connOpts.setUserName(userName);
+		    //connOpts.setPassword(passWord.toCharArray());
+		    /* 
+		     * This value, measured in seconds, defines the maximum time interval the client  
+ 			 *  will wait for the network connection to the MQTT server to be established
+		    */
+		    connOpts.setConnectionTimeout(60); 
+		    /* 
+		     * This value, measured in seconds, defines the maximum time interval between 
+		     * messages sent or received
+		     */
+		    connOpts.setKeepAliveInterval(30); 
+		    connOpts.setAutomaticReconnect(true);			
+			
+//			options.setKeepAliveInterval(480);
+//			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
+			client.connect(connOpts);
 			this.clientid   = clientid; //client.getClientId();
 			isConnected = true;
+			
+			
+			
 			ColorsOut.out("MqttSupport | connected client " + client.getClientId() + " to broker " + brokerAddr );
 		} catch (MqttException e) {
 			isConnected = false;
@@ -307,9 +324,9 @@ protected boolean isConnected   = false;
 	public void close()   {
 		try {
 			client.disconnect();
-			ColorsOut.outappl("MqttSupport | client disconnected ", ColorsOut.CYAN);
 			client.close();
- 		} catch (MqttException e) {
+			ColorsOut.outappl("MqttSupport | client disconnected and closed ", ColorsOut.CYAN);
+		} catch (MqttException e) {
 			ColorsOut.outerr("MqttSupport  | close Error:" + e.getMessage());
  		}
 	}
