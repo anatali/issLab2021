@@ -6,14 +6,14 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class SonarConcreteObservable extends SonarModelObservable   {
-	private int numData           = 5; 
-	private int dataCounter       = 1;
+//	private int numData           = 5; 
+//	private int dataCounter       = 1;
 	private  BufferedReader reader ;
 	private int lastSonarVal      = 0;
 	private Process p             = null;
 	 
 	@Override
-	protected void sonarSetUp() {
+	protected void sonarSetUp() {//called by SonarModel constructor
  		observableDistance = new DistanceMeasured( );
 	 	observableDistance.setVal(curVal); 
  		try { 
@@ -27,6 +27,13 @@ public class SonarConcreteObservable extends SonarModelObservable   {
     	}
 	} 	
 	
+	@Override
+	public void activate() {
+		ColorsOut.out("SonarConcreteObservable | activate ");
+ 		if( p == null ) { sonarSetUp();  }
+ 		super.activate();
+ 	}
+
  
 	//Identical to SonarConcrete
 	@Override
@@ -34,9 +41,9 @@ public class SonarConcreteObservable extends SonarModelObservable   {
         try {
 			String data = reader.readLine();
 			if( data == null ) return;
-			dataCounter++;
+//			dataCounter++;
 			
-			if( dataCounter % numData == 0 ) { //every numData ...				
+//			if( dataCounter % numData == 0 ) { //every numData ...				
 				int v = Integer.parseInt(data);
 				//Colors.out("SonarConcreteObservable | v=" + v );
 				if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
@@ -46,7 +53,7 @@ public class SonarConcreteObservable extends SonarModelObservable   {
  	 				updateDistance( v );
 				}
  				//Utils.delay(RadarSystemConfig.sonarDelay);
-			}
+//			}
        }catch( Exception e) {
        		ColorsOut.outerr("SonarConcreteObservable | sonarProduce: " + e.getMessage() );
        }		

@@ -17,7 +17,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	private Process p ;
 	
 	@Override
-	protected void sonarSetUp() {
+	protected void sonarSetUp() {//called by SonarModel constructor
  		try {
 			p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
 	        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
@@ -27,7 +27,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
     	}
 	}
 
-
+	
 	@Override
 	public void activate() {
 		ColorsOut.out("SonarConcrete | activate ");
@@ -49,7 +49,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
  	 			updateDistance( v );
 			}
        }catch( Exception e) {
-       		ColorsOut.outerr("SonarConcrete | ERROR " + e.getMessage() );
+       		ColorsOut.outerr("SonarConcrete |  " + e.getMessage() );
        }		
 	}
  

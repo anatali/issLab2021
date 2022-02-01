@@ -21,8 +21,7 @@ public class SonarMockObservable extends SonarModelObservable   {
 		}else {
 			int v = curVal.getVal() - 1;
 			updateDistance( v );			    
- 			//if( blockingQueue.size() > 7) Colors.out("SonarMockObservable | queue size="+blockingQueue.size(), Colors.RED);
-			stopped = ( v == 0 );
+ 			stopped = ( v == 0 );
 			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
 		}		
 	}

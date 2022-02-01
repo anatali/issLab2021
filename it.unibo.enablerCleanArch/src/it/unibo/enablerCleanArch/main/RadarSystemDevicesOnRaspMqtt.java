@@ -20,9 +20,9 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
  * Applicazione che va in coppia con RadarSystemMainOnPcMqtt
  */
 public class RadarSystemDevicesOnRaspMqtt implements IApplication { //IApplicationFacade
-private ISonarObservable sonar  = null;
-private ILed led          		= null;
-private String ctxTopic   		= "topicCtxMqtt";  
+private ISonar  sonar  = null;
+private ILed led       = null;
+//private String ctxTopic= "topicCtxMqtt";  
 
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
@@ -36,17 +36,17 @@ private String ctxTopic   		= "topicCtxMqtt";
 	}
 	
 	protected void createServerMqtt( ) {
-		sonar = SonarModelObservable.create();		
+		if( RadarSystemConfig.sonarObservable ) {
+			sonar = SonarModelObservable.create();		
+			IObserver sonarObs  = new SonarObserverMqtt( "sonarObs" ) ;
+			((ISonarObservable)sonar).register( sonarObs );			
+		}
+		else { sonar = SonarModel.create(); }
   		led   = LedModel.create();
-		MqttSupport mqtt = MqttSupport.getSupport();
-		
-		 
-		IObserver sonarObs  = new SonarObserverMqtt( "sonarObs" ) ;
-		sonar.register( sonarObs );
 
+  		MqttSupport mqtt = MqttSupport.getSupport();
 		
-
-		//Aggiunta degli handler per i comandi e le richieste
+  		//Aggiunta degli handler per i comandi e le richieste
 		IApplMsgHandler ledHandler   = new LedApplHandler( "ledH", led );
 		IContextMsgHandler  ctxH     = mqtt.getHandler(); //new ContextMqttMsgHandler ( "ctxH" );
 		ctxH.addComponent("led", ledHandler); 		
@@ -92,7 +92,7 @@ private String ctxTopic   		= "topicCtxMqtt";
  		return ""+sonar.getDistance().getVal();
 	}
 	
-	public ISonarObservable getSonar() {		 
+	public ISonar getSonar() {		 
 		return sonar;
 	}
 

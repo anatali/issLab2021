@@ -23,6 +23,7 @@ public class SonarObserverMqtt implements IObserver{
 	@Override
 	public void update(String vs) {
 		try {
+			 ColorsOut.out( name + " | update vs=" + vs ); //+ " from " + source	
 			 mqtt.publish("sonarDataTopic", vs, 0, false);
  		}catch( Exception e) {
 			ColorsOut.outerr(name+" | update failure:" + e.getMessage());

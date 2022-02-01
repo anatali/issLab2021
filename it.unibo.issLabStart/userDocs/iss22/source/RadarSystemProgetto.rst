@@ -435,9 +435,8 @@ si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
       String data = reader.readLine();
       if( data == null ) return;
       int v = Integer.parseInt(data);
-      if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
-        //Eliminiamo dati del tipo 3430 
-        //TODO: filtri in sottosistemi a stream
+      //Eliminiamo dati del tipo 3430 
+      if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	        
         lastSonarVal = v;
         updateDistance( v );
       }
@@ -527,24 +526,15 @@ di varianza sulla distanza-base.
 Il Sonar osservabile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il Sonar sviluppato fino a questo punto è un processo produttore di valori 
-di distamza resi disponibili dal metodo ``getDistance`` che nasconde al suo interno una coda per sincronizzare 
-i processi consumatori con il processo di produzione del  ``core-code HC-SR04``.
+La transizione ad un Sonar osservabile può essere affrontata pensando il nuovo dispositivo in due modi:
 
-La transizione ad un Sonar osservabile può essere affronatata pensando il nuovo dispostivo in due modi:
-
-- come una risorsa che modifica uno stato interno ad ogni passo di produzione del *core-code HC-SR04* 
+- come una risorsa che modifica il proprio stato interno ad ogni passo di produzione 
   e che invia agli observer una notifica sul nuovo stato;
 - come ad un processo che aggiorna un oggetto :blue:`DistanceMeasured` implementato come una
   :blue:`risorsa osservabile`.
 
-Come nel caso del tipo dei dati della coda, il tipo di dato 
-notificato agli observer potrebbe essere:
-
-- **int**: è il tipo di dato prodotto dal *core-code HC-SR04*;
-- **String**: è la rappresentazione di un valore non meglio determinato;
-- **IDistance**: è il tipo di dato prodotto dal Sonar a livello logico.
-
+Come nel caso del Sonar non osservabile, il tipo di dato 
+notificato agli observer potrebbe essere **int**, **String** o **IDistance**.
 Poichè gli observer potrebbero essere non locali e scritti in linguaggi diversi da Java, optiamo qui
 per notificare dati in forma di **String**, in modo da agevolare l'interoperabilità. 
 
@@ -552,6 +542,7 @@ In ogni caso, volendo impostare il Sonar come un dispositivo osservabile,
 introduciamo un nuovo contratto, che estende il precedente:
 
 .. _ISonarObservable:
+
 .. _IObserver:
 
 .. code:: java
@@ -575,7 +566,8 @@ La distanza come risorsa osservabile
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 In questa versione, optiamo per l'idea che il Sonar-observable sia un processo che aggiorna un
-nuovo componente del dominio applicativo che implementa l'interfaccia ``IDistanceMeasured``:
+nuovo componente del dominio applicativo che rappresenta il valore osservabile di una distanza
+e che implementa l'interfaccia ``IDistanceMeasured``:
 
 .. code:: java
 
@@ -586,7 +578,7 @@ nuovo componente del dominio applicativo che implementa l'interfaccia ``IDistanc
     public void deleteObserver(Observer obs);//implemented by Observable 
   }
 
-La casse :blue:`DistanceMeasured` che esprime una :blue:`distanza osservabile` può essere definita
+La casse :blue:`DistanceMeasured` che realizza il concetto di :blue:`distanza osservabile` può essere definita
 come segue:
 
 .. code:: java
@@ -598,8 +590,8 @@ come segue:
     @Override
     public void setVal( IDistance v ) {
       d = v;
-      setChanged();
-      notifyObservers( ""+d.getVal() );		
+      setChanged(); //IMPORTANT!!
+      notifyObservers( d );		
     }
     @Override
     public IDistance getDistance(   ) { return d; }	
@@ -616,46 +608,57 @@ SonarModelObservable
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Il ``SonarModelObservable`` viene definito cone una specializzazione del precedente 
-`SonarModel`_, che ridefinisce il ``sonarSetUp`` creando un oggetto di tipo ``DistanceMeasured``
-e che implementa i metodi di registrazione ridiregendoli alla distanza osservabile.
+`SonarModel`_, che implementa i metodi di registrazione ridiregendoli alla distanza osservabile.
 
 .. code:: java
 
-  public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
+  public abstract class SonarModelObservable 
+          extends SonarModel implements ISonarObservable  {
   protected IDistanceMeasured observableDistance  ;		
- 		
-	@Override
-	protected void sonarSetUp() {
-		observableDistance = new DistanceMeasured( );
- 		observableDistance.setVal(curVal);
- 	} 		
- 	@Override  //from SonarModel
-	protected void updateDistance( int d ) {
-		observableDistance.setVal( curVal );    //notifies the observers 
- 		super.updateDistance(d); //pone curVal nella coda per getDistance
-	}
- 	@Override
-	public void register(IObserver obs) {
-		observableDistance.addObserver(obs);		
-	}
-	@Override
-	public void unregister(IObserver obs) {
-		observableDistance.deleteObserver(obs);		
-	}
+
+  //Factory method
+  public static ISonarObservable create() {
+    if( RadarSystemConfig.simulation )  return new SonarMockObservable();
+    else  return new SonarConcreteObservable();		
+  }
+
+  @Override
+  public IDistance getDistance() { return observableDistance; }
+
+  @Override
+  public void register(IObserver obs) {
+    observableDistance.addObserver(obs);		
+  }
+
+  @Override
+  public void unregister(IObserver obs) {
+    observableDistance.deleteObserver(obs);		
+  }
+
+  protected void updateDistance( int d ) {
+ 		observableDistance.setVal(new Distance( d ));
+	}	
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 SonarMockObservable
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Adesso, il SonarMock observable può essere definito ridefinendo il metodo asbstrat 
-relativo alla produzione dei dati:
+Adesso, il SonarMock osservabile può essere definito ridefinendo il metodo asbstract 
+relativo alla produzione dei dati in modo analogo a quanto fatto per il Sonar:
 
 .. _SonarMockObservable:
 
 .. code:: java
 
   public class SonarMockObservable extends SonarModelObservable{
+
+  @Override
+  protected void sonarSetUp() {
+    observableDistance = new DistanceMeasured( );
+    observableDistance.setVal(curVal);
+  } 	
+
   @Override
   protected void sonarProduce() {
     if( RadarSystemConfig.testing ) {
@@ -665,7 +668,7 @@ relativo alla produzione dei dati:
       int v = curVal.getVal() - 1;
       updateDistance( v );			    
       stopped = ( v == 0 );
-      Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
+      Utils.delay(RadarSystemConfig.sonarDelay); //avoid fast generation
     }		
   }
 
@@ -674,7 +677,7 @@ SonarConcreteObservable
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Analogamente, la versione osservabile del `SonarConcrete`_ si ottiene ridefinendo (in assenza di ereditarietà
-multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``, come già fatto in precedenza:
+multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``. Inoltre 
 
 .. _SonarConcreteObservable:
 
@@ -684,24 +687,41 @@ multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``, come già fatto in
   private int numData           = 5; 
   private int dataCounter       = 1;
   private  BufferedReader reader ;
+  private int lastSonarVal      = 0;
+  private Process p             = null;
 	 
   @Override
   protected void sonarSetUp() {
-    super.sonarSetUp();
-    try {
-      Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
-      reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+     try {
+      if( p == null ) {
+        p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
+        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+      }
     }catch( Exception e) {...	}
   } 	
+  
   @Override
   protected void sonarProduce( ) {
     try {
       String data = reader.readLine();
-      dataCounter++;
-      if( dataCounter % numData == 0 ) { //every numData ...
-        updateDistance( Integer.parseInt(data));
+      if( data == null ) return;
+      int v = Integer.parseInt(data);
+      //Eliminiamo dati del tipo 3430 
+      if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	        
+        lastSonarVal = v;
+        updateDistance( v );
       }
     }catch( Exception e) {... }		
+
+  @Override
+  public void deactivate() {
+    if( p != null ) {
+      p.destroy(); 
+      p=null;
+    }
+    super.deactivate();
+ 	}
+
   }
  
 

@@ -144,7 +144,7 @@ private MqttSupport mqtt;
 	}
 
 	public void execute() {
-		//workWithLed();
+		workWithLed();
 		workWithSonar();
 		Utils.delay(1000);
   		terminate();
