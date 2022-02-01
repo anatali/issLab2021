@@ -2,6 +2,14 @@
 .. role:: blue 
 .. role:: remark
 
+.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
+
+.. _clean-architecture:  https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+
+.. _microservizio: https://en.wikipedia.org/wiki/Microservices
+
+.. _pattern-decorator: https://it.wikipedia.org/wiki/Decorator
+
 ==============================================
 Prodotti al termine della analisi
 ==============================================
@@ -62,6 +70,8 @@ Nel caso di Java, il costrutto interface può essere usato per denotare un compo
 come aspetto essenziale le funzionalità che esso deve offrire e una sorta di :blue:`contratto` 
 sull’uso del componente.
 
+.. _modelloOggettiDominio:
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Modello ad oggetti del dominio
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,10 +83,14 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 
 :remark:`il software relativo dominio sarà scritto in un package dedicato (xxx.domain)`
 
+
+.. _ILed:
+
+.. _IRadarDisplay:
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Le interfacce ILed e IRadarDisplay
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 .. list-table::
   :widths: 50, 50
@@ -86,7 +100,7 @@ Le interfacce ILed e IRadarDisplay
     -  RadarDisplay
   * -        
       .. code:: java
-
+        
         public interface ILed {
           public void turnOn();
           public void turnOff();

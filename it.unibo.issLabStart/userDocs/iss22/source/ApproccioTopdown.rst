@@ -233,9 +233,9 @@ I messaggi scambiati verranno logicamente suddivisi in diverse categorie:
         :width: 80%
  
  
-++++++++++++++++++++++++++
-Interaction2021
-++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++
+Una interfaccia per l'interazione
+++++++++++++++++++++++++++++++++++++++             
 
 Una connessione punto-a-punto sarà rappresentata da un oggetto che implements la seguente interfaccia, che permette di
 inviare/ricevere messaggi astraendo dallo specifico protocollo:

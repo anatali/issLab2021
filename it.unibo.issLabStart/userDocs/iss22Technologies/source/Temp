@@ -2,6 +2,10 @@ in anaconda
 lsvirtualenv -l
 sphinks-quickstart  //TUTTO ATTACCATO
 
+https://docutils.sourceforge.io/docs/user/rst/quickref.html
+https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html
+
+
 :remark:`
 .. epigraph:: 
 

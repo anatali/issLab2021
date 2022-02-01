@@ -1,10 +1,8 @@
 package it.unibo.enablerCleanArch.domain;
  
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.Utils;
+
 
 public abstract class SonarModel  implements ISonar{  
 protected  IDistance curVal = new Distance(90);	 
