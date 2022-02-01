@@ -21,7 +21,7 @@ public class TestSonarMock {
 	public void testSonarMock() {
 		RadarSystemConfig.simulation = true;
 		RadarSystemConfig.testing    = false;
-		RadarSystemConfig.sonarDelay = 500;		//quite fast generation ...
+		RadarSystemConfig.sonarDelay = 10;		//quite fast generation ...
 		int delta = 1;
 		
 		ISonar sonar = DeviceFactory.createSonar();

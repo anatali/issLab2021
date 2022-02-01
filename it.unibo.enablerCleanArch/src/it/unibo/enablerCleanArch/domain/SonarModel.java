@@ -42,7 +42,7 @@ protected boolean stopped   = true;
 	
 	@Override
 	public IDistance getDistance() {
-			return curVal;
+		return curVal;
 	}
 	
 	@Override

@@ -280,6 +280,26 @@ Poichè i consumtori si aspettano valori di distanza, siamo qui indotti ad optar
 ``IDistance``. Tuttavia, motivi di efficienza potrebbero farci optare per la prima e 
 motivi di flessibilità e di interoperabilità per la seconda.
 
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+La classe Distance
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+La classe che implementa ``IDistance`` viene definita come segue:
+
+.. code:: java
+
+  public class Distance implements IDistance{
+  private int v;
+    public Distance(int d) { v=d;	}
+    @Override
+    public int getVal() { return v; }
+    @Override
+    public String toString(){ return ""+v; }
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+La produzione dei dati
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 Il codice relativo alla produzione dei dati viene incapsulato in un metodo abstract ``sonarProduce``
 che dovrà essere definito in modo diverso da un ``SonarMock`` e un ``SonarConcrete``, così come il
 metodo di inizializzazione ``sonarSetUp``:
@@ -317,21 +337,19 @@ attivare un Thread interno di produzione di dati:
     }
 
 La parte applicativa che funge da consumatore dei dati prodotti dal Sonar dovrà invocare il metodo
-``geDistance`` che viene definito in modo da bloccare il chiamante se il Sonar è in 'fase di produzione',
-riattivandolo non appena il dato è stato prodotto:  
+``geDistance`` che viene definito in modo da restituire il valore corrente prodotto da Sonar:
 
 .. code:: java
 
     @Override
     public IDistance getDistance() {   
-      try {
-        IDistance curVal = blockingQueue.take();
-        return curVal;
-      } catch (InterruptedException e) {
-        ...
-        return null;
-      }	
-  }
+      return curVal;
+   }
+
+La variabile ``curVal`` dovrebbe essere logicamente protetta da un meccanismo di mutua esclusione.
+Tuttavia i dati sono in continuo aggiornamento e l'eventuale lettura di un valore non completamente modificato
+non è qui un problema.
+
 
 .. _SonarMock:
 
@@ -343,26 +361,20 @@ Un Mock-sonar che produce valori di distanza da ``90`` a ``0`` può quindi ora e
 .. code:: java
 
   public class SonarMock extends SonarModel implements ISonar{
-  protected  IDistance curVal ;  
   private int delta = 1;
     @Override
     protected void sonarSetUp(){  curVal = new Distance(90);  }
 
-    protected void updateDistance( int d) { 
-      try {
-        curVal = new Distance( d ); 
-        blockingQueue.put( curVal );
-      } catch (Exception e) { ...	} 
-    }    
     @Override
     protected void sonarProduce() {
       if( RadarSystemConfig.testing ) {
         updateDistance( RadarSystemConfig.testingDistance );
         stopped = true;  //one shot
       }else {
-        updateDistance( curVal.getVal() - delta );
-        stopped = ( curVal.getVal() == 0 );
-        Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
+        int v = curVal.getVal() - delta;
+        updateDistance( v );
+        stopped = ( v <= 0 );
+        Utils.delay(RadarSystemConfig.sonarDelay); //avoid fast generation
     }
   }  
 
@@ -370,7 +382,7 @@ Si noti che:
  
 - viene definito un nuovo parametro di configurazione ``testing`` che, quando ``true``,  denota che
   il sonar sta lavorando in una fase di testing, per cui produce un solo valore dato dal
-  parametro ``testingDistance``;
+  parametro ``testingDistance``. Ciò al fine di controllare il Sonar come emettitore di un dato noto.
 - viene definito un nuovo parametro di configurazione ``sonarDelay`` per un rallentamento
   della frequenza di generazione dei dati.
  
@@ -385,19 +397,7 @@ Si noti che:
   "sonarDelay"       : "100"
   }
 
-- l'oggetto inserito in coda (dal metodo ``updateDistance``) è una nuova istanza della classe che 
-  implementa ``IDistance``.
 
-.. code:: java
-
-  public class Distance implements IDistance{
-  private int v;
-    public Distance(int d) { v=d;	}
-    @Override
-    public int getVal() { return v; }
-    @Override
-    public String toString(){ return ""+v; }
-  }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il SonarConcrete
@@ -406,40 +406,53 @@ Il SonarConcrete
 Il componente che realizza la gestione di un Sonar concreto, conesso a un RaspberryPi,
 si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
 
-Per ridurre la frequenza di produzione, la inserzione nella coda 
-avviene solo dopo ogni  ``numData`` valori emessi sul dispositivo standard di output.
 
 .. _SonarConcrete:
 
 .. code:: java
 
   public class SonarConcrete extends SonarModel implements ISonar{
-  private int numData           = 5; 
-  private int dataCounter       = 1;
+	private int lastSonarVal = 0;
+  private Process p ;
   private  BufferedReader reader ;
 	
   @Override
   protected void sonarSetUp() {
-    curVal.setVal( 0 );		
     try {
-      Process p  = Runtime.getRuntime().exec("sudo ./SonarAlone");
+      p      = Runtime.getRuntime().exec("sudo ./SonarAlone");
       reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
     }catch( Exception e) { ... 	}
   }
-  protected void updateDistance( int d ) {
-    try {
-      curVal = new Distance( d );
-      blockingQueue.put( curVal );
-    } catch (InterruptedException e) {...	}
-  }	
+
+	@Override
+	public void activate() {
+    if( p == null ) 	sonarSetUp();
+    super.activate();
+ 	}
+
   protected void sonarProduce() {
     try {
       String data = reader.readLine();
-      dataCounter++;
-      if( dataCounter % numData == 0 ) { //every numData ...
-        updateDistance( Integer.parseInt(data));      
+      if( data == null ) return;
+      int v = Integer.parseInt(data);
+      if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
+        //Eliminiamo dati del tipo 3430 
+        //TODO: filtri in sottosistemi a stream
+        lastSonarVal = v;
+        updateDistance( v );
       }
     }catch( Exception e) { ... }
+  }
+
+  @Override
+  public void deactivate() {
+    lastSonarVal      = 0;
+    curVal            = new Distance(90);
+    if( p != null ) {
+      p.destroy();   
+      p=null;
+    }
+    super.deactivate();
   }
   }
 
@@ -459,12 +472,13 @@ Il testing di un sonar riguarda due aspetti distinti:
 Ovviamente qui ci dobbiamo occupare della seconda parte, supponendo che la prima sia soddisfatta. A tal fine
 possiamo procedere come segue:
 
-- per il *LedMock*, poichè siamo noi a generare la sequenza di valori, possiamo
+- per il *SonardMock*, poichè siamo noi a generare la sequenza di valori, possiamo
   verificare che un **unico** consumatore riceva dal metodo ``getDistance`` i valori nella giusta sequenza;
-- per il *LedConcrete*, poniamo uno schermo a distanza prefissata :math:`D`  e verifichiamo che
+- per il *SonarConcrete*, poniamo uno schermo a distanza prefissata :math:`D`  e verifichiamo che
   un consumatore riceva dal  metodo ``getDistance`` valori :math:`D \pm \epsilon`.
 
-Un processo consumatore di dati emessi dal sonar può essere definito come segue:
+Un processo consumatore di dati emessi dal sonar può essere definito verificando l'aspettativa
+di ricevere dati nell'intervallo di confidenza stabilito:
 
 .. code:: java
 
