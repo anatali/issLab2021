@@ -9,6 +9,14 @@ public class RadarSystemMainAllOnPc implements IApplication{
 		return "RadarSystemMainAllOnPc";
 	}
 
+	
+ 	
+	@Override
+	public void doJob(String configFileName) {
+		setup(configFileName);
+		execute();
+	}
+	
 	public void setup( String configFile )  {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else {
@@ -21,14 +29,7 @@ public class RadarSystemMainAllOnPc implements IApplication{
 		}
  	}
 	
- 	
-	@Override
-	public void doJob(String configFileName) {
-		setup(configFileName);
-		executeAllOnPc();
-	}
-	
-	public void executeAllOnPc() {
+	protected void execute() {
 		IRadarDisplay radar;
 		//Dispositivi di Input
 	    ISonar sonar         = DeviceFactory.createSonar();
@@ -49,9 +50,9 @@ public class RadarSystemMainAllOnPc implements IApplication{
 	}
 
  
- 	public IRadarDisplay getRadarGui() {
-		return radar;
-	}
+// 	public IRadarDisplay getRadarGui() {
+//		return radar;
+//	}
 
 	
 	public static void main( String[] args) throws Exception {
