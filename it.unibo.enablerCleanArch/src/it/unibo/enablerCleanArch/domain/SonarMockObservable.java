@@ -9,7 +9,7 @@ public class SonarMockObservable extends SonarModelObservable   {
 	@Override
 	protected void sonarSetUp() {
 		observableDistance = new DistanceMeasured( );
- 		ColorsOut.out("SonarModcklObservable | sonarSetUp curVal="+curVal);
+ 		ColorsOut.out("SonarModckObservable | sonarSetUp curVal="+curVal);
  		observableDistance.setVal(curVal);
  	} 	
 

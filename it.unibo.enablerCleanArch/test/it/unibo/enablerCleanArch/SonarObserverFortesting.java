@@ -43,7 +43,7 @@ class SonarObserverFortesting implements IObserver{
  				int vexpectedMax = v0+delta;
  				assertTrue(  value <= vexpectedMax && value >= vexpectedMin );
  				v0 = value;			 
- 				if( v0 == 30 && name.equals("obs1")) sonar.unregister(this);
+ 				//if( v0 == 30 && name.equals("obs1")) sonar.unregister(this);
  			 }
  		 }
 	}

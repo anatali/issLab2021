@@ -1,6 +1,5 @@
 package it.unibo.enablerCleanArch.domain;
 
-import android.graphics.Color;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 
@@ -16,6 +15,7 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
 	public IDistance getDistance() {
   		return observableDistance;
  	}
+	@Override
 	protected void updateDistance( int d ) {
 		ColorsOut.out("SonarModelObservable call updateDistance | d=" + d, ColorsOut.GREEN );
  		observableDistance.setVal( new Distance( d ) ); //notifies

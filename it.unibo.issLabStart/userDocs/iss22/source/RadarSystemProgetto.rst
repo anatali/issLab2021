@@ -567,9 +567,9 @@ di distanza, il metodo ``update`` di tutti gli osservatori registrati.
 La distanza come risorsa osservabile
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-In questa versione, optiamo per l'idea che il Sonar-observable sia un processo che aggiorna un
-nuovo componente del dominio applicativo che rappresenta il valore osservabile di una distanza
-e che implementa l'interfaccia ``IDistanceMeasured``:
+In questa versione, optiamo per l'idea che il Sonar-observable sia un processo che aggiorna 
+il valore  di una distanza osservabile (distanza misurata)
+che implementa l'interfaccia ``IDistanceMeasured``:
 
 .. code:: java
 
@@ -580,7 +580,7 @@ e che implementa l'interfaccia ``IDistanceMeasured``:
     public void deleteObserver(Observer obs);//implemented by Observable 
   }
 
-La casse :blue:`DistanceMeasured` che realizza il concetto di :blue:`distanza osservabile` può essere definita
+La casse :blue:`DistanceMeasured` che realizza il concetto di :blue:`distanza misurata osservabile` può essere definita
 come segue:
 
 .. code:: java
@@ -623,30 +623,21 @@ Il ``SonarModelObservable`` viene definito cone una specializzazione del precede
     if( RadarSystemConfig.simulation )  return new SonarMockObservable();
     else  return new SonarConcreteObservable();		
   }
-
   @Override
   public IDistance getDistance() { return observableDistance; }
-
   @Override
-  public void register(IObserver obs) {
-    observableDistance.addObserver(obs);		
-  }
-
+  public void register(IObserver obs) { observableDistance.addObserver(obs); }
   @Override
-  public void unregister(IObserver obs) {
-    observableDistance.deleteObserver(obs);		
-  }
-
-  protected void updateDistance( int d ) {
- 		observableDistance.setVal(new Distance( d ));
-	}	
+  public void unregister(IObserver obs) {observableDistance.deleteObserver(obs);}
+  @Override
+  protected void updateDistance(int d){observableDistance.setVal(new Distance(d));}	
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 SonarMockObservable
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Adesso, il SonarMock osservabile può essere definito ridefinendo il metodo asbstract 
+Ora il SonarMock osservabile può essere definito ridefinendo il metodo asbstract 
 relativo alla produzione dei dati in modo analogo a quanto fatto per il Sonar:
 
 .. _SonarMockObservable:
@@ -686,22 +677,27 @@ multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``. Inoltre
 .. code:: java
 
   public class SonarConcreteObservable extends SonarModelObservable 
-  private int numData           = 5; 
-  private int dataCounter       = 1;
   private  BufferedReader reader ;
   private int lastSonarVal      = 0;
   private Process p             = null;
 	 
-  @Override
-  protected void sonarSetUp() {
-     try {
-      if( p == null ) {
-        p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
-        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-      }
-    }catch( Exception e) {...	}
-  } 	
+    @Override
+    protected void sonarSetUp() {
+   	    observableDistance = new DistanceMeasured( );
+	    observableDistance.setVal( new Distance(lastSonarVal) ); 
+    } 	
   
+    @Override
+    public void activate() {
+        if( p == null ) {
+        try { 
+            p      = Runtime.getRuntime().exec("sudo ./SonarAlone");
+            reader = new BufferedReader(new InputStreamReader(p.getInputStream()));	
+        }catch( Exception e) {...}
+ 		}
+ 		super.activate();
+    }
+
   @Override
   protected void sonarProduce( ) {
     try {
@@ -715,15 +711,14 @@ multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``. Inoltre
       }
     }catch( Exception e) {... }		
 
-  @Override
-  public void deactivate() {
-    if( p != null ) {
-      p.destroy(); 
-      p=null;
+    @Override
+    public void deactivate() {
+        if( p != null ) {
+            p.destroy(); 
+            p=null;
+        }
+        super.deactivate();
     }
-    super.deactivate();
- 	}
-
   }
  
 
@@ -769,9 +764,8 @@ Il testing sul ``SonarMockObservable`` viene qui impostato nel modo che segue:
     IObserver obs1         = new SonarObserverFortesting("obs1",oneShot) ;
     sonar.register( obs1 );	//add then observer
     sonar.activate();
-    sonar.register( new SonarObserverFortesting("obs2",sonar,oneShot) );	 		
     int v0 = sonar.getDistance().getVal();
- 		assertTrue(  v0 == RadarSystemConfig.testingDistance );
+    assertTrue(  v0 == RadarSystemConfig.testingDistance );
   }
 
 L'*observer* viene impostato in modo da controllare anche dati emessi da un sonar reale
@@ -802,18 +796,15 @@ che opera con ostacolo fisso posto davanti ad esso, alla distanza prefissata.
     if(oneShot) {
       assertTrue( value == RadarSystemConfig.testingDistance );	
     }else {
+      int value = Integer.parseInt(vs);
       if( v0 == -1 ) {//set the first value observed
         v0 = value;
       }else {
-        int value = Integer.parseInt(vs);
-        if( v0 == -1 ) {	//set the first value observed
-          v0 = value;
-        }else {
-          int vexpectedMin = v0-delta;
-          int vexpectedMax = v0+delta;
-          assertTrue(value<=vexpectedMax && value>=vexpectedMin );
-          v0 = value;			 
-          if( v0 == 30 && name.equals("obs1")) sonar.unregister(this);
+        int vexpectedMin = v0-delta;
+        int vexpectedMax = v0+delta;
+        assertTrue(value<=vexpectedMax && value>=vexpectedMin );
+        v0 = value;			 
+        //if( v0 == 30 && name.equals("obs1")) sonar.unregister(this);
         }
       }
     }
