@@ -25,7 +25,7 @@ il passo successivo, che potrà coincidere o meno con quello pianificato nell'an
 
 --------------------------------------------------------
 Il primo SPRINT: Componenti per i dispositivi di I/O
-----------------------------------------------------------
+--------------------------------------------------------
 
 
 Il primo :blue:`SPRINT` del nostro sviluppo bottom-up consiste nel realizzare componenti-base 
@@ -412,32 +412,33 @@ si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
 .. code:: java
 
   public class SonarConcrete extends SonarModel implements ISonar{
-	private int lastSonarVal = 0;
   private Process p ;
   private  BufferedReader reader ;
 	
   @Override
   protected void sonarSetUp() {
-    try {
-      p      = Runtime.getRuntime().exec("sudo ./SonarAlone");
-      reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
-    }catch( Exception e) { ... 	}
+    curVal = new Distance(90);	  
   }
 
-	@Override
-	public void activate() {
-    if( p == null ) 	sonarSetUp();
+  @Override
+  public void activate() {
+    if( p == null ) { 
+      try {
+        p = Runtime.getRuntime().exec("sudo ./SonarAlone");
+        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
+ 		  }catch( Exception e) { ... }
+    }
     super.activate();
- 	}
+  }
 
   protected void sonarProduce() {
     try {
       String data = reader.readLine();
       if( data == null ) return;
       int v = Integer.parseInt(data);
+      int lastSonarVal = curVal.getVal();
       //Eliminiamo dati del tipo 3430 
       if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	        
-        lastSonarVal = v;
         updateDistance( v );
       }
     }catch( Exception e) { ... }
@@ -445,7 +446,6 @@ si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
 
   @Override
   public void deactivate() {
-    lastSonarVal      = 0;
     curVal            = new Distance(90);
     if( p != null ) {
       p.destroy();   
@@ -820,20 +820,21 @@ per conto di un qualche client.
 Il Controller
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 Il componente che realizza la logica applicativa può essere definito partendo dal modello introdotto
-nella fase di analisi, attivando un Thread che realizza lo schema *read-eval-print*.
+nella fase di analisi (:ref:`controllerLogic`) , attivando un Thread che realizza lo schema *read-eval-print*.
 Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
 
 .. code:: java
 
   public class Controller {
     public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
-      System.out.println("Controller | activate"  );
       new Thread() {
         public void run() { 
           try {
-            while( sonar.isActive() ) {
+            sonar.activate();
+            //while( sonar.isActive() ) {
+            for( int i=1; i<=90; i++) { //meglio per il testing ...
               IDistance d = sonar.getDistance();  
-              RadarGuiUsecase.doUseCase( radar,d  );	 
+              if( radar != null)  RadarGuiUsecase.doUseCase( radar,d  );	 
               LedAlarmUsecase.doUseCase( led,  d  );   
             }
           } catch (Exception e) { ...  }					
@@ -841,6 +842,15 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
       }.start();
     }
   } 
+
+Il Controller si prende la responabilità di attivare la computazione attivando il Sonar.
+Logicamente la computazione prosegue fintanto che il Sonar è attivo; tuttavia il testing
+può essere agevolato se limite al numero di iterazioni. 
+
+Notiamo anche che il Controller evita (al momento) di realizzare il requisito ``radarGui`` 
+(si veda :ref:`requirements`)   
+se riceve in ingresso un riferimento nullo al ``RadarDisplay``.  
+
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 LedAlarmUsecase
@@ -867,6 +877,15 @@ RadarGuiUsecase
     }	 
   }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Un Controller più reattivo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+L'uso di un Sonar osservabile permette di eseguire la business logic del Controller all'interno di un
+componente che riceve i dati dal Sonar non appena vengono prodotti.
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il sistema simulato su PC
@@ -875,48 +894,49 @@ Il sistema simulato su PC
 Il sistema viene dapprima costruito secondo le specifiche contenute nel file di configurazione e 
 successivamente attivato facendo partire il Sonar.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Fase di setup
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 .. code:: java
 
-  public class RadarSystemMainOnPc {
+  public class RadarSystemMainOnPc implements IApplication{
   private ISonar sonar        = null;
   private ILed led            = null;
   private IRadarDisplay radar = null;
 
+  @Override
+	public void doJob(String configFileName) {
+		setup(configFileName);
+		executeAllOnPc();
+	}
     ...
-    public static void main( String[] args) throws Exception {
-      RadarSystemMainOnPc sys = new RadarSystemMainOnPc();
-      sys.setup( "RadarSystemConfigPcControllerAndGui.json" );
-      sys.build();
-      sys.activateSonar();
-    }  
+  public static void main( String[] args) throws Exception {
+      new RadarSystemMainAllOnPc().doJob(null); //su PC
+      new RadarSystemMainAllOnPc().doJob("RadarSystemConfig.json");  //su Raspberry
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Il file di configurazione
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
+Fase di configurazione
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Il file di configurazione ``RadarSystemConfig`` deve contenere la definizione del set di parametri
+che vengono definiti dal programma in caso tale file non venga fornito:
+
 .. code:: java
 
-  {
-  "simulation"       : "true",
-  "ControllerRemote" : "false",
-  "LedRemote"        : "false",
-  "SonareRemote"     : "false",
-  "RadarGuieRemote"  : "false",
-  "pcHostAddr"       : "localhost",
-  "raspHostAddr"     : "192.168.1.12",
-  "radarGuiPort"     : "8014",
-  "ledPort"          : "8010",
-  "sonarPort"        : "8012",
-  "controllerPort"   : "8016",
-  "serverTimeOut"    : "600000",
-  "applStartdelay"   : "3000",
-  "sonarDelay"       : "100",
-  "DLIMIT"           : "15",
-  "testing"          : "false"
-  }
+
+
+
+	public void setup( String configFile )  {
+		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+		else {
+			RadarSystemConfig.simulation   		= true;
+			RadarSystemConfig.ledGui          = true;
+ 			RadarSystemConfig.testing      		= false;			
+			RadarSystemConfig.DLIMIT      		= 40; //12 su Rasp
+			RadarSystemConfig.sonarDelay      = 250;
+			RadarSystemConfig.RadarGuiRemote  = false;
+		}
+ 	}
+
+
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Fase di costruzione del sistema
@@ -924,7 +944,7 @@ Fase di costruzione del sistema
   
 .. code:: java
 
-  public class RadarSystemMainOnPc {
+  public class RadarSystemMainAllOnPc {
     ...
     public void build() throws Exception {			
       //Dispositivi di Input
@@ -943,6 +963,23 @@ Fase di costruzione del sistema
 
 Una unità di testing può automatizzare l'esecuzione di questo sistema ed 
 effettuare controlli sul suo funzionamento.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Il file di configurazione
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
+
+Il file di configurazione ``RadarSystemConfig`` deve contenre la definizione dei seguenti parametri:
+
+.. code:: java
+
+  {
+			RadarSystemConfig.simulation   		= true;
+			RadarSystemConfig.ledGui          = true;
+ 			RadarSystemConfig.testing      		= false;			
+			RadarSystemConfig.DLIMIT      		= 40;     //12 su Rasp
+			RadarSystemConfig.sonarDelay      = 250;
+			RadarSystemConfig.RadarGuiRemote  = false;  //true su Rasp
+  }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Utilità per il testing
@@ -1014,5 +1051,9 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
   }
 
   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il sistema su RaspberryPi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
  

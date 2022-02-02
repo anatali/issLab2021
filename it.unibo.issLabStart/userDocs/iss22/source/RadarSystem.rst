@@ -30,6 +30,9 @@ Tetendo conto dal nostro motto:
 
 impostiamo un processo di produzione del software partendo da un insieme di requisiti.
 
+
+.. _requirements:
+
 --------------------------------------
 Requisiti
 --------------------------------------

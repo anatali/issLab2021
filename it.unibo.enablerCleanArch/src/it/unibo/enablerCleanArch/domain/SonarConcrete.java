@@ -13,29 +13,29 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
  */
 public class SonarConcrete extends SonarModel implements ISonar{
 	private  BufferedReader reader ;
-	private int lastSonarVal      = 0;
 	private Process p ;
 	
 	@Override
 	protected void sonarSetUp() {//called by SonarModel constructor
- 		try {
-			p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
-	        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
-	        ColorsOut.out("SonarConcrete | sonarSetUp done");
-       	}catch( Exception e) {
-       		ColorsOut.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
-    	}
+		curVal = new Distance(90);	
 	}
 
 	
 	@Override
 	public void activate() {
 		ColorsOut.out("SonarConcrete | activate ");
- 		if( p == null ) { sonarSetUp();  }
+ 		if( p == null ) { 
+ 	 		try {
+ 				p       = Runtime.getRuntime().exec("sudo ./SonarAlone");
+ 		        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
+ 		        ColorsOut.out("SonarConcrete | sonarSetUp done");
+ 	       	}catch( Exception e) {
+ 	       		ColorsOut.outerr("SonarConcrete | sonarSetUp ERROR " + e.getMessage() );
+ 	    	}
+ 		}
  		super.activate();
  	}
 	
-
 	@Override
 	protected void sonarProduce( ) {
         try {
@@ -43,10 +43,10 @@ public class SonarConcrete extends SonarModel implements ISonar{
 			if( data == null ) return;
 			int v = Integer.parseInt(data);
 			//Colors.out("SonarConcrete | v=" + v );
+			int lastSonarVal = curVal.getVal();
 			if( lastSonarVal != v && v < RadarSystemConfig.sonarDistanceMax) {	
 				//Eliminiamo dati del tipo 3430 //TODO: filtri in sottosistemi a stream
- 				lastSonarVal = v;
- 	 			updateDistance( v );
+  	 			updateDistance( v );	 			
 			}
        }catch( Exception e) {
        		ColorsOut.outerr("SonarConcrete |  " + e.getMessage() );
@@ -56,8 +56,7 @@ public class SonarConcrete extends SonarModel implements ISonar{
 	@Override
 	public void deactivate() {
 		ColorsOut.out("SonarConcrete | deactivate", ColorsOut.GREEN);
-	    lastSonarVal      = 0;
-	    curVal            = new Distance(90);
+	    curVal = new Distance(90);
 		if( p != null ) {
 			p.destroy();  //Block the runtime process
 			p=null;

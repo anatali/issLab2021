@@ -9,6 +9,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
+import it.unibo.radar.interfaces.IRadar;
 
 /*
  * Applicazione che va in coppia con RadarSystemDevicesOnRasp
@@ -25,8 +26,8 @@ private IRadarDisplay radar = null;
 
 	public void setup( String configFile )  {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
-			RadarSystemConfig.simulation   		= false;
+		//else {
+			RadarSystemConfig.simulation   		= true;
 			RadarSystemConfig.raspHostAddr 		= "192.168.1.15"; //"192.168.1.183";
 			RadarSystemConfig.SonareRemote 		= true;
 			RadarSystemConfig.LedRemote    		= true;
@@ -39,18 +40,25 @@ private IRadarDisplay radar = null;
 			RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.DLIMIT      		= 12; //55
-		}
+			RadarSystemConfig.sonarDelay        = 250;
+		//}
  	}
 	
-	public void configure()  {			
- 		radar  = DeviceFactory.createRadarGui();	
- 	} 
-	
+ 	
 	@Override
 	public void doJob(String configFileName) {
 		setup(configFileName);
-		configure();
-		execute();
+		executeAllOnPc();
+	}
+	
+	public void executeAllOnPc() {
+		//Dispositivi di Input
+	    ISonar sonar  = DeviceFactory.createSonar();
+	    //Dispositivi di Output
+	    ILed  led            = DeviceFactory.createLed();
+	    IRadarDisplay radar  = DeviceFactory.createRadarGui();
+	    //Controller
+	    Controller.activate(led, sonar, radar);	//activates the sonar
 	}
 	
 	public void execute() {
@@ -74,10 +82,8 @@ private IRadarDisplay radar = null;
 			EnablerAsServer radarServer  = 
 					new EnablerAsServer("radarServer",RadarSystemConfig.radarGuiPort, 
 							ProtocolType.tcp,  new RadarApplHandler("radarH", radar) );
-			radarServer.start();	
-			
+			radarServer.start();				
 		}
-
 	}
 
 	public void terminate() {

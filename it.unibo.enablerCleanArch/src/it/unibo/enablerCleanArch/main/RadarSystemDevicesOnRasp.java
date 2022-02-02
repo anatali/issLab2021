@@ -14,7 +14,7 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 
 /*
- * Applicazione che va in coppia con RadarSystemMainOnPc
+ * Applicazione che va in coppia con RadarSystemMainOnPc se si vuole anche il radar
  */
 public class RadarSystemDevicesOnRasp implements IApplication{
 private ISonar sonar          		= null;
@@ -24,7 +24,7 @@ private TcpContextServer ctxServer  = null;
 
 	public void setUp( String configFile )   {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
+		//else {
 			RadarSystemConfig.simulation   		= true;
 			RadarSystemConfig.SonareRemote 		= false;
 			RadarSystemConfig.LedRemote    		= false;
@@ -38,7 +38,7 @@ private TcpContextServer ctxServer  = null;
 			RadarSystemConfig.sonarDelay   		= 100;
 			RadarSystemConfig.withContext  		= true; 
 			RadarSystemConfig.testing      		= false;			
-		}
+		//}
 	}
 	
 	protected void createSonarEnabler( ) {

@@ -172,6 +172,8 @@ La :blue:`architettura logica` suggerita dal problema è rappresentabile con la 
  
 :remark:`Non vi sono situazioni di uso concorrente di risorse.`
 
+.. _controllerLogic:
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 La logica del Controller
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,7 +199,7 @@ A questo punto possiamo anche esprimere il funzionamento logico del ``Controller
 .. Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
    solo porre in luce la relazione logica tra i componenti individuati dall'analisi del problema.
 
-Il :blue:`come` avviene l'interazione tra le parti relativa alla acqusizione dei dati e all'invio dei comandi
+Il :blue:`come` avviene l'interazione tra le parti relativa alla acquisizione dei dati e all'invio dei comandi
 non è specificato al momento. 
 Come analisti del problema possiamo però evidenziare che il ``Controller`` 
 può acquisire i dati del Sonar in  modi diversi:
