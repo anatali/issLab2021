@@ -1,10 +1,11 @@
 package it.unibo.enablerCleanArch.domain;
 
+import android.graphics.Color;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
-	protected IDistanceMeasured observableDistance  ;		
+	protected IDistanceMeasured observableDistance ; 
  		
 	public static ISonarObservable create() {
 		if( RadarSystemConfig.simulation )  return new SonarMockObservable();
@@ -16,17 +17,17 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
   		return observableDistance;
  	}
 	protected void updateDistance( int d ) {
- 		observableDistance.setVal(new Distance( d ));
-		//ColorsOut.out("SonarModelObservable | updateDistance "+ d);
-	}	
+		ColorsOut.out("SonarModelObservable call updateDistance | d=" + d, ColorsOut.GREEN );
+ 		observableDistance.setVal( new Distance( d ) ); //notifies
+ 	}	
   	@Override
 	public void register(IObserver obs) {
-		ColorsOut.out("SonarModelObservable | register on observableDistance obs="+obs);
+		ColorsOut.out("SonarModelObservable | register on observableDistance obs="+obs, ColorsOut.GREEN);
 		observableDistance.addObserver(obs);		
 	}
 	@Override
 	public void unregister(IObserver obs) {
-		ColorsOut.out("SonarModelObservable | unregister obs="+obs);
+		ColorsOut.out("SonarModelObservable | unregister obs="+obs, ColorsOut.GREEN);
 		observableDistance.deleteObserver(obs);		
 	}
 

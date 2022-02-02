@@ -40,15 +40,15 @@ private ILed led       = null;
 			sonar = SonarModelObservable.create();		
 			IObserver sonarObs  = new SonarObserverMqtt( "sonarObs" ) ;
 			((ISonarObservable)sonar).register( sonarObs );			
-		}
-		else { sonar = SonarModel.create(); }
+		}else { sonar = SonarModel.create(); }
+		ColorsOut.out(" | createServerMqtt CREATED sonar= " + sonar, ColorsOut.BLUE);
   		led   = LedModel.create();
 
   		MqttSupport mqtt = MqttSupport.getSupport();
 		
   		//Aggiunta degli handler per i comandi e le richieste
 		IApplMsgHandler ledHandler   = new LedApplHandler( "ledH", led );
-		IContextMsgHandler  ctxH     = mqtt.getHandler(); //new ContextMqttMsgHandler ( "ctxH" );
+		IContextMsgHandler  ctxH     = mqtt.getHandler(); 
 		ctxH.addComponent("led", ledHandler); 		
 		IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
 		ctxH.addComponent("sonar", sonarHandler);	

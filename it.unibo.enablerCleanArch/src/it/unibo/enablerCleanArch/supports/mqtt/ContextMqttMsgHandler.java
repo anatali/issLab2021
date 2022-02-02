@@ -61,12 +61,12 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 
 	@Override
 	public void addComponent( String devName, IApplMsgHandler h) {
-		ColorsOut.out(name + " | added:" + devName);
+		ColorsOut.out(name + " | added:" + devName, ColorsOut.BLUE);
 		handlerMap.put(devName, h);
 	}
 	@Override
 	public void removeComponent( String devName ) {
-		ColorsOut.out(name + " | removed:" + devName);
+		ColorsOut.out(name + " | removed:" + devName, ColorsOut.BLUE);
 		handlerMap.remove( devName );
 	}
 	
@@ -79,10 +79,10 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 
 		@Override
 		public void messageArrived(String topic, MqttMessage message)   {
-			ColorsOut.out(name + " | messageArrived:" + message + " topic="+topic );
+			ColorsOut.out(name + " | messageArrived:" + message + " topic="+topic, ColorsOut.BLUE );
 			try { //Perhaps we receive a structured message
 				ApplMessage msgInput = new ApplMessage(message.toString());
-				//Colors.out(name + " | msgInput:" + msgInput.msgContent() , Colors.ANSI_PURPLE );
+				//Colors.out(name + " | msgInput:" + msgInput.msgContent() , ColorsOut.BLUE );
 				elaborate(msgInput, MqttSupport.getSupport());
  			}catch( Exception e) {
 				ColorsOut.outerr(name + " | messageArrived WARNING:"+ e.getMessage() );
@@ -92,7 +92,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		@Override
 		public void elaborate( ApplMessage msg, Interaction2021 conn ) {
  			String dest          = msg.msgReceiver();
-			ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
+			ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.BLUE);
 			IApplMsgHandler  h   = handlerMap.get(dest);
 			//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
 			//esempio di h: LedApplHandler
@@ -101,7 +101,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 
 	 	@Override
 		public void elaborate(String message, Interaction2021 conn) {
-			ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.ANSI_PURPLE);
+			ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.BLUE);
 			//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 			ApplMessage msg      = new ApplMessage(message);
 			elaborate( msg.toString(), conn);
@@ -111,8 +111,8 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 		@Override
 		public void deliveryComplete(IMqttDeliveryToken token) {
 			try {
-//				Colors.out((name + " | deliveryComplete token=" + token.getMessage() 
-//			       + " client=" + token.getClient().getClientId() ), Colors.ANSI_YELLOW);
+//				ColorsOut.out((name + " | deliveryComplete token=" + token.getMessage() 
+//			       + " client=" + token.getClient().getClientId() ), , ColorsOut.BLUE);
 			} catch (Exception e) {
 				ColorsOut.outerr(name + " | deliveryComplete Error:"+e.getMessage());		
 			}

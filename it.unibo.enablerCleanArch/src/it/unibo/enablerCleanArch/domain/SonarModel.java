@@ -14,22 +14,22 @@ protected boolean stopped   = true;
 	}
 
 	public static ISonar createSonarMock() {
-		ColorsOut.out("createSonarMock");
+		ColorsOut.out("createSonarMock", ColorsOut.BLUE);
 		return new SonarMock();
 	}	
 	public static ISonar createSonarConcrete() {
-		ColorsOut.out("createSonarConcrete");
+		ColorsOut.out("createSonarConcrete", ColorsOut.BLUE);
 		return new SonarConcrete();
 	}	
 	
 	protected SonarModel() {//hidden costructor, to force setup
-		ColorsOut.out("SonarModel | sonarSetUp " );
+		ColorsOut.out("SonarModel | calling (specialized) sonarSetUp ", ColorsOut.BLUE );
 		sonarSetUp();   
 	}
 	
 	protected void updateDistance( int d ) {
 		curVal = new Distance( d );
-		ColorsOut.out("SonarModel | updateDistance "+ d);
+		ColorsOut.out("SonarModel | updateDistance "+ d, ColorsOut.BLUE);
 	}	
 
 	protected abstract void sonarSetUp() ;
@@ -48,7 +48,7 @@ protected boolean stopped   = true;
 	@Override
 	public void activate() {
 		curVal = new Distance( 90 );
- 		ColorsOut.out("SonarModel | activate", ColorsOut.GREEN);
+ 		ColorsOut.out("SonarModel | activate" );
 		stopped = false;
 		new Thread() {
 			public void run() {
@@ -57,14 +57,14 @@ protected boolean stopped   = true;
 					sonarProduce(  );
 					//Utils.delay(RadarSystemConfig.sonarDelay);
 				}
-				ColorsOut.out("SonarModel | ENDS", ColorsOut.GREEN);
+				ColorsOut.out("SonarModel | ENDS" );
 		    }
 		}.start();
 	}
  	
 	@Override
 	public void deactivate() {
-		ColorsOut.out("SonarModel | deactivate", ColorsOut.GREEN);
+		ColorsOut.out("SonarModel | deactivate" );
 		stopped = true;
 	}
 

@@ -6,14 +6,15 @@ import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArch.supports.Utils;
+ 
 
 public class SonarApplHandler extends ApplMsgHandler  {
-ISonar sonar;
+private ISonar sonar;
   
 		public SonarApplHandler(String name, ISonar sonar) {
 			super(name);
 			this.sonar = sonar;
+			ColorsOut.out(name+ " | SonarApplHandler CREATED sonar= " + sonar, ColorsOut.BLUE);
 	 	}
  
 		@Override
@@ -38,11 +39,12 @@ ISonar sonar;
 			public void elaborate(String message, Interaction2021 conn) {
  				ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
  				if( message.equals("getDistance")) {
- 	 				//Colors.out(name+ " | elaborate getDistance="  , Colors.BLUE);
+ 	 				//ColorsOut.out(name+ " | elaborate getDistance="  , ColorsOut.BLUE);
 					String vs = ""+sonar.getDistance().getVal();
- 	 				//Colors.out(name+ " | elaborate vs=" + vs, Colors.BLUE);
+ 	 				//Colors.out(name+ " | elaborate vs=" + vs, ColorsOut.BLUE);
 					this.sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
+ 					ColorsOut.out(name+ " | activate sonar="+sonar , ColorsOut.BLUE);
  					sonar.activate();
  				}else if( message.equals("deactivate")) {
  					sonar.deactivate();

@@ -522,11 +522,13 @@ Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :ma
 di varianza sulla distanza-base.
 
 
+.. _sonarOsservabile: 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Sonar osservabile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La transizione ad un Sonar osservabile può essere affrontata pensando il nuovo dispositivo in due modi:
+La transizione ad un Sonar osservabile prospettata in :ref:`patternObserver` può essere affrontata pensando il nuovo dispositivo in due modi:
 
 - come una risorsa che modifica il proprio stato interno ad ogni passo di produzione 
   e che invia agli observer una notifica sul nuovo stato;

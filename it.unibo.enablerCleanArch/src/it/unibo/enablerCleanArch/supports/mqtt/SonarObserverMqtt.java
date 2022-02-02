@@ -10,20 +10,20 @@ public class SonarObserverMqtt implements IObserver{
 	private String name;
 	private MqttSupport mqtt;
  
-	public SonarObserverMqtt(String name ) {  
+	public SonarObserverMqtt( String name ) {  
 		this.name    = name;
 		mqtt         = MqttSupport.getSupport();
 	}
- 	@Override
+ 	@Override  //java.util.Observer
 	public void update(Observable source, Object data) {
-		 ColorsOut.out( name + " | update data=" + data ); //+ " from " + source	
+		 ColorsOut.out( name + " | update data=" + data, ColorsOut.GREEN ); //+ " from " + source	
 		 update( data.toString() );
 	}
 
-	@Override
+	@Override  //IObserver
 	public void update(String vs) {
 		try {
-			 ColorsOut.out( name + " | update vs=" + vs ); //+ " from " + source	
+			 ColorsOut.out( name + " | update vs=" + vs, ColorsOut.GREEN ); //+ " from " + source	
 			 mqtt.publish("sonarDataTopic", vs, 0, false);
  		}catch( Exception e) {
 			ColorsOut.outerr(name+" | update failure:" + e.getMessage());

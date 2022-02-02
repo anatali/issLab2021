@@ -116,7 +116,7 @@ private MqttSupport mqtt;
 				Utils.delay(2500);
 				b = sonarClient.isActive();
 			}
- 			*/
+ 			
 			
 			 
 				for( int i=1; i<=5; i++) {
@@ -127,8 +127,8 @@ private MqttSupport mqtt;
 //					Utils.delay(200);   //Con QoS = 2 sono 4 messaggi scambiati
 					//TODO: passare a uno schema di sonar observable  
 				}
-				 
-		//Utils.delay(3000);
+				 */
+		Utils.delay(3000);
 		ColorsOut.outappl("Sonar deactivate ", ColorsOut.GREEN);
 		sonarClient.deactivate();
 	}
@@ -144,7 +144,7 @@ private MqttSupport mqtt;
 	}
 
 	public void execute() {
-		workWithLed();
+		//workWithLed();
 		workWithSonar();
 		Utils.delay(1000);
   		terminate();

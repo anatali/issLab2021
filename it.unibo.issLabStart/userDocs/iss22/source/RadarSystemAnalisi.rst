@@ -51,6 +51,8 @@ l'uso di un dispositivo di input presenta due modalità principali:
 - il componente consumatore dei dati si relaziona con dispostivo di input seccondo 
   il  :blue:`pattern observer`.  
 
+.. _patternObserver: 
+
 ---------------------------------------------
 Il pattern observer
 ---------------------------------------------
@@ -66,7 +68,7 @@ in questo modo nessuno dei due componenti avrebbe alcun riferimento staticamente
   
 Una 'variante' del pattern observer è costituita dalla possibilità che un dispositivo di input
 possa 'pubblicare' i propri dati su una risorsa esterna osservabile. 
-Torneremo su questa variante più avanti.
+Torneremo su questa variante più avanti (si veda :ref:`sonarOsservabile`).
 
 Notiamo che software disponibile per il Sonar opera come produttore di dati, ma non offre operazioni
 per la registrazione di osservatori; un componente interessato ai dati del Sonar deve fare in modo 

@@ -1,6 +1,8 @@
 package it.unibo.enablerCleanArch.domain;
 
 import java.util.Observable;
+import java.util.Observer;
+
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 /*
@@ -9,14 +11,15 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 public class DistanceMeasured extends Observable implements IDistanceMeasured{
 private IDistance d;
 
-	public DistanceMeasured() {}
+	//public DistanceMeasured() {}
 	@Override
 	public void setVal( IDistance v ) {
 		d = v;
-		ColorsOut.out("DistanceMeasured setVal="+v, ColorsOut.ANSI_YELLOW);
+		ColorsOut.out("DistanceMeasured setVal="+v + " obsNum=" + countObservers(), ColorsOut.MAGENTA);
 		setChanged();
-		ColorsOut.out("DistanceMeasured setVal="+v + " hasChanged=" + hasChanged(), ColorsOut.ANSI_YELLOW);
-	    notifyObservers( d );		
+		ColorsOut.out("DistanceMeasured setVal="+v + " hasChanged=" + hasChanged(), ColorsOut.MAGENTA);
+	    
+		notifyObservers( d );		
 	}
 	@Override
 	public IDistance getDistance(   ) {
@@ -29,5 +32,12 @@ private IDistance d;
 	public String toString() {
 		return ""+ getVal();
 	}
+  	
+	@Override
+	public void addObserver(Observer obs) {
+		ColorsOut.out("DistanceMeasured addObserver="+obs , ColorsOut.MAGENTA);
+		super.addObserver(obs);
+		ColorsOut.out("DistanceMeasured addObserver obsNum=" + countObservers(), ColorsOut.RED);
+ 	}
  
 }

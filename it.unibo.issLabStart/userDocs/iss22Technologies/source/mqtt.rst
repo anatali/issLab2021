@@ -109,3 +109,6 @@ being delivered.
      the sending side has finished processing. 
      For instance a connect may be sent, the conack received before the connect notify 
        send has been processed!
+
+
+.. image:: ./_static/img/Tecno/CleanSession.PNG 
