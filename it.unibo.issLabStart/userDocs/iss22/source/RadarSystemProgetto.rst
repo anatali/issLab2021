@@ -826,7 +826,47 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
 .. code:: java
 
   public class Controller {
-    public static void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
+
+  //Factory method
+  public static Controller create(ILed led, ISonar sonar,IRadarDisplay radar, 
+                                    ActionFunction endFun) {
+    return new Controller( led,  sonar, radar,endFun );
+  }
+	
+  //Constructor
+  private Controller( ILed led, ISonar sonar,IRadarDisplay radar, 
+                                    ActionFunction endFun ) {
+    this.led    = led;
+    this.sonar  = sonar;
+    this.radar  = radar;
+    this.endFun = endFun;
+  }
+
+  public void start( ) {
+    sonar.activate();
+    activate( );
+  }
+
+  Il Controller riceve in ingresso i (riferimenti ai) componenti del sistema e una funzione 
+  di callback che implementa la seguente interfaccia:
+  
+.. code:: java
+
+    public interface ActionFunction {
+      void run(String msg);
+    }
+
+
+La funzione di callback ``endFun`` verrà invocata al termine delle attività
+del Controller.  
+  
+  
+Il Controller viene attivato dal metodo ``start`` che attiva il Sonar e lancia un Thread interno 
+di lavoro.
+
+.. code:: java 
+
+    protected void activate(  ) {
       new Thread() {
         public void run() { 
           try {
@@ -840,24 +880,27 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
                 LedAlarmUsecase.doUseCase( led,  d  );   
               }
             }
+            sonar.deactivate();
+            endFun.run("Controller | BYE ");
           } catch (Exception e) { ...  }					
         }
       }.start();
     }
   } 
 
-Il Controller si prende la responabilità di attivare la computazione attivando il Sonar.
 Logicamente la computazione prosegue fintanto che il Sonar è attivo; tuttavia 
-limitando a priori il numero di iterazioni, il testing
-può essere agevolato. 
+la messa a punto del sistema (e il testing) può essere agevolato
+limitando a priori il numero di iterazioni. 
 
 Notiamo anche che il Controller evita (al momento) di realizzare il requisito ``radarGui`` 
-(si veda :ref:`requirements`)    se riceve in ingresso un riferimento nullo al ``RadarDisplay``.  
+(si veda :ref:`requirements`) se riceve in ingresso un riferimento nullo al ``RadarDisplay``.  
 
+.. Questo rende possibile l'esecuzione del Controller anche  la
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 LedAlarmUsecase
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 .. code:: java
 
   public class LedAlarmUsecase {
@@ -872,6 +915,7 @@ LedAlarmUsecase
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 RadarGuiUsecase
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 .. code:: java
 
   public class RadarGuiUsecase {
@@ -886,9 +930,10 @@ Un sistema più reattivo
 
 L'uso di un Sonar osservabile permette di eseguire la business logic del Controller all'interno di un
 componente che riceve i dati dal Sonar non appena vengono prodotti.
-Prima di affrontare il refactoring del sistema in questo, impostiamo l'esecuzione e il testing del
+Prima di affrontare il refactoring del sistema in questo senso, impostiamo l'esecuzione e il testing del
 sistema nella versione attuale.
 
+.. _IApplication:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'interfaccia IApplication
@@ -898,14 +943,15 @@ D'ora in poi saremo chiamati a realizzare diverse versioni/configurazioni del si
 in distribuito. Per agevolare il lancio di queste diverse versioni, introducimo il vincolo che ciascuna
 di esse implementi l'interfaccia che segue:
 
+.. code:: java
 
-public interface IApplication {
-	public void doJob(String configFileName);
-	public String getName();
-}
+  public interface IApplication {
+    public void doJob(String configFileName);
+    public String getName();
+  }
 
-Ogni versione del sistema dovrà duque fornire un nome e un metodo per essere eseguita, una volta specificato
-il file di configurazione.
+Ogni versione del sistema dovrà duque fornire un nome e un metodo ``doJob`` per essere eseguita, 
+che riceve in ingresso il file di configurazione.
 
 
 
@@ -914,101 +960,83 @@ Il sistema simulato su PC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 La prima, semplice versione del sistema da eseguire e testare lavora su un singolo computer
-(PC o Raspberry) con dispositivi simulati.
+(PC o Raspberry) con dispositivi simulati o reali (su Raspberry).
 
 - Quando attiaviamo il sistema su PC usando un IDE (Eclipse o IntelliJ), conviene fissare i parametri di 
-  configurazione nel codice.ù
-- Quando attiviamo il sistema su Raspberry usando la distribuzione fornita da un file jar, conviene
+  configurazione all'interno del codice.
+- Quando attiviamo il sistema su Raspberry usando come  distribuzione un file ``jar``, conviene
   fissare i parametri di  configurazione utilizzando il file ``RadarSystemConfig.json``.
 
 .. code:: java
 
-  public class RadarSystemMainOnPc implements IApplication{
+  public class RadarSystemMainLocal implements IApplication{
   private ISonar sonar        = null;
   private ILed led            = null;
   private IRadarDisplay radar = null;
+  private Controller controller;
+
+	@Override
+	public String getName() {	return "RadarSystemMainLocal";  }
 
   @Override
-	public void doJob(String configFileName) {
-		setup(configFileName);
-		execute();
-	}
+  public void doJob(String configFileName) {
+    setup(configFileName);
+    configure();
+    controller.start();
+  }
     ...
   public static void main( String[] args) throws Exception {
       new RadarSystemMainAllOnPc().doJob(null); //su PC
-      //new RadarSystemMainAllOnPc().doJob("RadarSystemConfig.json"); //su Raspberry
+      //new RadarSystemMainAllOnPc().doJob("RadarSystemConfig.json"); //su Rasp
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Fase di setup
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+I parametri di  configurazione definiti a livello di programma o nel file ``RadarSystemConfig.json`` sono
+quelli indicati nel codice di setUp:
+
+.. code:: java
+
+  public void setup( String configFile )  {
+    if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+    else {
+      RadarSystemConfig.testing      		= false;			
+      RadarSystemConfig.sonarDelay       = 200;
+    //Su PC
+      RadarSystemConfig.simulation   		= true;
+      RadarSystemConfig.DLIMIT      		= 40;  
+      RadarSystemConfig.ledGui          = true;
+      RadarSystemConfig.RadarGuiRemote  = false;
+    //Su Raspberry (nel file di configurazione)
+      //RadarSystemConfig.simulation    = false;
+      //RadarSystemConfig.DLIMIT      	= 12;  
+      //RadarSystemConfig.ledGui         = false;
+      //RadarSystemConfig.RadarGuiRemote = true;
+    }
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Fase di configurazione
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-I parametri di  configurazione definiti a livello di programma o nel file ``RadarSystemConfig.json`` sono
-quelli inidicati nel codice di setUp:
-
 .. code:: java
 
-	public void setup( String configFile )  {
-		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
-			RadarSystemConfig.simulation   		= true;
-			RadarSystemConfig.ledGui          = true;
- 			RadarSystemConfig.testing      		= false;			
-			RadarSystemConfig.DLIMIT      		= 40; //12 su Rasp
-			RadarSystemConfig.sonarDelay      = 250;
-			RadarSystemConfig.RadarGuiRemote  = false;
-		}
- 	}
-
-
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Fase di esecuzione
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-L'esecuzione del sistema consiste
-
-.. code:: java
-
-     ...
-    public void execute() throws Exception {			
-      //Dispositivi di Input
-      sonar  = DeviceFactory.createSonar();
-      //Dispositivi di Output
-      led    = DeviceFactory.createLed();
-	    if( ! RadarSystemConfig.RadarGuiRemote ) {
-	    	radar  = DeviceFactory.createRadarGui();
-	    }else {
-	    	radar = null;
-	    }
-      //Controller 
-      Controller.activate(led, sonar, radar);
-    }    
-    public void activateSonar() {
-      if( sonar != null ) sonar.activate();
-    }
-    public static void main( String[] args) throws Exception { ... }
+  protected void configure() {
+    //Dispositivi di Input
+      sonar      = DeviceFactory.createSonar();
+    //Dispositivi di Output
+      led        = DeviceFactory.createLed();
+      radar      = RadarSystemConfig.RadarGuiRemote ? 
+                       null : DeviceFactory.createRadarGui();
+    //Controller
+      ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
+      controller = Controller.create(led, sonar, radar, endFun);	 
   }
 
-Una unità di testing può automatizzare l'esecuzione di questo sistema ed 
-effettuare controlli sul suo funzionamento.
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Il file di configurazione
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
-
-Il file di configurazione ``RadarSystemConfig`` deve contenre la definizione dei seguenti parametri:
-
-.. code:: java
-
-  {
-			RadarSystemConfig.simulation   		= true;
-			RadarSystemConfig.ledGui          = true;
- 			RadarSystemConfig.testing      		= false;			
-			RadarSystemConfig.DLIMIT      		= 40;     //12 su Rasp
-			RadarSystemConfig.sonarDelay      = 250;
-			RadarSystemConfig.RadarGuiRemote  = false;  //true su Rasp
-  }
+ 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Utilità per il testing
@@ -1018,7 +1046,7 @@ Inseriamo nel main program  metodi che restitusicono un riferimento ai component
 
 .. code:: java
 
-  public class RadarSystemMainOnPc {
+  public class RadarSystemMainLocal {
     ... 
     public ILed getLed() { return led; }
     public ISonar getSonar() { return sonar; }

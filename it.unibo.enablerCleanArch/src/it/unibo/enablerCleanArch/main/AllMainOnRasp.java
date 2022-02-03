@@ -1,12 +1,13 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.IApplication;
+import it.unibo.enablerCleanArch.local.main.RadarSystemMainLocal;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
  
-public class AllMainRadarLed {
+public class AllMainOnRasp {
 public HashMap<String,IApplication> programs = new HashMap<String,IApplication>();
 	
 	protected void outMenu() {
@@ -16,7 +17,7 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
  	}
 	public void doChoice() {
 		try {
-			//programs.put("1", new LedUsageMain());
+			programs.put("1", new RadarSystemMainLocal());
 			/*
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		
@@ -43,8 +44,8 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 	}
 	public static void main( String[] args) throws Exception {
 		ColorsOut.outappl("---------------------------------------------------", ColorsOut.BLUE);
-		ColorsOut.outappl("WARNING: this application uses RadarSystemConfig", ColorsOut.BLUE);
+		ColorsOut.outappl("AllMainOnRasp WARNING: this application uses RadarSystemConfig", ColorsOut.BLUE);
 		ColorsOut.outappl("---------------------------------------------------", ColorsOut.BLUE);
-		new AllMainRadarLed().doChoice();
+		new AllMainOnRasp().doChoice();
 	}
 }

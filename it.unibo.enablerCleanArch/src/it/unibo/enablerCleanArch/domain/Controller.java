@@ -1,41 +1,61 @@
 package it.unibo.enablerCleanArch.domain;
 
+import java.util.function.Consumer;
+
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
 
-/*
- * Il Controller riceve dati dal sonar e attiva gli use cases
- */
+
 public class Controller {
-private boolean activateTheSonar = false;
+private ILed led;
+private ISonar sonar;
+private IRadarDisplay radar;
+private ActionFunction endFun;
 
-	public Controller(boolean activateTheSonar ) {
-		this.activateTheSonar  = activateTheSonar;
+	public static Controller create(ILed led, ISonar sonar,IRadarDisplay radar ) {
+		return new Controller( led,  sonar, radar  );
 	}
+	
+	private Controller( ILed led, ISonar sonar,IRadarDisplay radar ) {
+		this.led    = led;
+		this.sonar  = sonar;
+		this.radar  = radar;
+		//this.endFun = endFun;
+	}
+	
+	
+	public void start( ActionFunction endFun, int n ) {
+		this.endFun = endFun;
+		ColorsOut.outappl("Controller | start with endFun=" + endFun , ColorsOut.BLUE);
+		sonar.activate();
+		activate( n );
+	}
+	
 
-	public void activate( ILed led, ISonar sonar,IRadarDisplay radar) {
+	/*
+	 * Il Controller riceve dati dal sonar e attiva gli use cases
+	 */
+	protected void activate( int limit ) {
  		new Thread() {
 			public void run() { 
 				try {
-					System.out.println("Controller | STARTS sonar=" + sonar   );
-					if( activateTheSonar ) sonar.activate();
-					boolean sonarActive = sonar.isActive();
+  					boolean sonarActive = sonar.isActive();
 					ColorsOut.outappl("Controller | STARTS " + sonarActive , ColorsOut.BLUE);
 					if( sonarActive ) {
-						for( int i=1; i<=90; i++) {
+						for( int i=1; i<=limit; i++) {
 						//while( sonar.isActive() ) {
 							IDistance d = sonar.getDistance(); //potrebbe essere bloccante
 							ColorsOut.outappl("Controller | d="+d +" i=" + i, ColorsOut.BLUE  );
 							if( radar != null) RadarGuiUsecase.doUseCase( radar,d  );	//
 	 						LedAlarmUsecase.doUseCase( led,  d  );  //Meglio inviare un msg su una coda
-	 						Utils.delay(RadarSystemConfig.sonarDelay);  //Al rtimo della generazione ...
+	 						Utils.delay(RadarSystemConfig.sonarDelay);  //Al ritmo della generazione ...
 	 					}
-					}
-					sonar.deactivate();
-					ColorsOut.outappl("Controller | BYE", ColorsOut.BLUE  );
+					}				
+					//ColorsOut.outappl("Controller | BYE", ColorsOut.BLUE  );
+					endFun.run("Controller | BYE ");
 					//System.exit(0);
 				} catch (Exception e) {
 		 			ColorsOut.outerr("ERROR"+e.getMessage());

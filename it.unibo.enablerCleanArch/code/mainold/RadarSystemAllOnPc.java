@@ -68,6 +68,7 @@ private ISonar sonarClient;
  		led    = RadarSystemConfig.LedRemote ? 
  				simulateLedRemote(RadarSystemConfig.protcolType) : LedModel.create();
 		radar  = DeviceFactory.createRadarGui();	
+		controller
 		//Utils.delay(2000);
  	}
 	

@@ -19,9 +19,9 @@ private int delta = 1;
 	}	
 	@Override
 	protected void sonarProduce( ) {
-		if( RadarSystemConfig.testing ) {
+		if( RadarSystemConfig.testing ) {	//produces always the same value
 			updateDistance( RadarSystemConfig.testingDistance );			      
-			stopped = true;  //one shot
+			//stopped = true;  //one shot
 		}else {
 			int v = curVal.getVal() - delta;
 			updateDistance( v );			    

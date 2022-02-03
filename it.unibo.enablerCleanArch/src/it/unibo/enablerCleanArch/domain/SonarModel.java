@@ -37,6 +37,7 @@ protected boolean stopped   = true;
 
 	@Override
 	public boolean isActive() {
+		//ColorsOut.out("SonarModel | isActive "+ (! stopped), ColorsOut.GREEN);
 		return ! stopped;
 	}
 	
