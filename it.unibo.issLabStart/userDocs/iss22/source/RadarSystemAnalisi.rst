@@ -225,9 +225,10 @@ In ogni caso, la possibilità che il server possa inviare messaggi al client, im
 
 :remark:`un client deve essere anche capace di agire come ricevitore di messaggi.`
 
+.. _Interaction2021:
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-L'idea di connessione: l'interfaccia ``Interaction2021``
+L'interfaccia ``Interaction2021``
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 La necessità di  inviare e ricevere messaggi via rete segnala un :blue:`gap`  tra il livello tecnologico 
@@ -245,7 +246,6 @@ Questo concetto può essere realizzato da un oggetto che rende disponibile oppor
 nella seguente interfaccia:
 
 .. _conn2021: 
-.. _Interaction2021:
 
 .. code:: Java
 
@@ -253,13 +253,14 @@ nella seguente interfaccia:
     public void forward(  String msg ) throws Exception;
     public String request(  String msg ) throws Exception;
     public String receiveMsg(  )  throws Exception;
+    public void reply(  String msg ) throws Exception;
     public void close( )  throws Exception;
   }
 
 Il metodo ``forward`` è un metodo di trasmissione :blue:`'fire-and-forget'`, mentre il metodo ``request`` denota 
 l'invio di informazione cui deve corrispondere una *ack* o una *response* da parte del server.
 Concettualmente, un server che invia una *response/ack* sulla connessione con un client effettua una operazione
-di :blue:`reply` che assimiliamo alla *forward* di un messaggio con appropriato contenuto informativo. 
+di ``reply`` che assimiliamo alla *forward* di un messaggio con appropriato contenuto informativo. 
 
 L'informazione scambiata è rappresenta da una ``String`` che è un tipo di dato presente in tutti
 i linguaggi di programmazione.
@@ -270,7 +271,7 @@ La ``String`` restituita dal metodo ``receiveMsg`` può rappresentare una rispos
 inviato in precedenza con ``forward``.
 
 Ovviamente la definizione di questa interfaccia potrà essere estesa e modificata in futuro, 
-a partire dall fase di progettazione, ma rappresenta una forte indicazione dell'analista di 
+a partire dalla fase di progettazione, ma rappresenta una forte indicazione dell'analista di 
 pensare alla costruzione di componenti software che possano ridurre il costo delle applicazioni future.
 
 

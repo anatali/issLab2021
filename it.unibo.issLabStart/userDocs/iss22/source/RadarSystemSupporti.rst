@@ -69,14 +69,15 @@ occorre:
 - fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
   codice applicativo.
 
-Per raggiungere questi obiettivi, nel seguito incapsuleremo il codice applicativo  entro oggetti che implementano l'interfaccia
-``IApplMessageHandler``.
 
 .. _IApplMsgHandler:
 
 +++++++++++++++++++++++++++++++++++++++++++
 L'interfaccia ``IApplMsgHandler``
 +++++++++++++++++++++++++++++++++++++++++++
+
+Nel seguito, incapsuleremo il codice applicativo  entro oggetti che implementano l'interfaccia
+``IApplMessageHandler``.
 
 .. code:: Java
 
@@ -86,18 +87,19 @@ L'interfaccia ``IApplMsgHandler``
     public void sendMsgToClient( String message, Interaction2021 conn  );
   }
 
-Il costruttore del TCP server avrà la seguente signature:
+Il costruttore del TCP server avrà quindi la seguente signature:
 
 .. code:: Java
 
   public TcpServer(String name,int port, IApplMessageHandler userDefHandler) 
 
-cioè riceverà un oggetto di livello applicativo capace di
+cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di:
+
 - gestire i messaggi ricevutisulla connessione :ref:`Interaction2021<conn2021>` che il server avrà stabilito con i clienti 
 - inviare risposte ai clienti sulla stessa connessione.
 
 ----------------------------------------------------------------------
-``TcpConnection`` come implementazione di ``Interaction2021``
+``TcpConnection`` implementa ``Interaction2021``
 ----------------------------------------------------------------------
 
 La classe ``TcpConnection`` costituisce una implementazione della interfaccia 
@@ -110,23 +112,21 @@ messaggi applicativi sulla connessione fornita da una ``Socket``.
   public class TcpConnection implements Interaction2021{
     ...
   public TcpConnection( Socket socket  ) throws Exception { ... }
-    @Override
-    public void forward(String msg)  throws Exception { ... }
-    @Override
-    public String receiveMsg()  { ... }
-    @Override
-    public void close() { ... }
-
+ 
+Le implementazione delle operazioni si riduce alla scrittura/lettura di informazione sulla Socket 
+e si rimanda quindi direttamente al codice.
 
 .. _ApplMessageHandler:
 
 ----------------------------------------------------------------------
-La classe ``ApplMessageHandler`` per gestire messaggi applicativi
+``ApplMessageHandler`` implementa ``IApplMsgHandler``
 ----------------------------------------------------------------------
 
 Per agevolare il lavoro dell'application designer, viene definita una classe astratta che 
-realizza l'invio di messaggi ai clienti, ma
-delega alle classi specializzate il compito di definire il metodo  ``elaborate``.
+implementa la interfaccia :ref:`IApplMsgHandler<IApplMsgHandler>`.
+Questa classe realizza l'invio di messaggi ai clienti, ma
+delega alle classi specializzate il compito di definire il metodo  ``elaborate`` per la gestione
+dei messaggi in ingresso.
 
 .. _msgh: 
 
@@ -206,7 +206,9 @@ Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
 #.  attende una richiesta di connessione;  
 #.  all'arrivo della richiesta, creae un oggetto (attivo)
     di classe :ref:`TcpMessageHandler<tcpmsgh>` passandondogli l':ref:`ApplMessageHandler<msgh>` 
-    ricevuto nel costruttore e la connessione appena stabilita;
+    ricevuto nel costruttore e la connessione (di tipo ):ref:`Interaction2021<conn2021>`) appena stabilita.
+    Questo oggetto attende messaggi sulla nuova connessione 
+    e ne delega la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto
 #.  torna in fase di attesa di conessione con un altro client.
 
 .. code:: Java
@@ -224,6 +226,14 @@ Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
     }//while
   }catch (Exception e) {...}
 
+La figura che segue mostra l'architettura che si realizza in seguito a chiamate 
+da parte di due client diversi
+
+.. image:: ./_static/img/Architectures/ServerAndConnections.png 
+    :align: center
+    :width: 80%
+ 
+:remark:`Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi.` 
 
 ----------------------------------------------------------------------
 TcpMessageHandler

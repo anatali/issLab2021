@@ -43,7 +43,8 @@ private Socket socket;
 	}
 	
 	@Override
-	public void reply(String reqid) throws Exception {
+	public void reply(String msg) throws Exception {
+		forward(msg);
 	} 
 	
 	@Override
