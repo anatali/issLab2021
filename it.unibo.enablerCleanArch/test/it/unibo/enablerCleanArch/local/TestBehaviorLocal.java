@@ -21,7 +21,7 @@ private RadarSystemMainLocal sys;
 		try {
 			sys = new RadarSystemMainLocal();
 			sys.setup( null );
-			RadarSystemConfig.testing    		= true;  //oneshot
+			RadarSystemConfig.testing    		= true;   
 			RadarSystemConfig.tracing    		= true; 
 			//sys = new RadarSystemMainOnPc();
 //			
@@ -76,7 +76,7 @@ private RadarSystemMainLocal sys;
 	 	    		&& radarDisplayedDistance == RadarSystemConfig.testingDistance);
 		};
 		
-		sys.getController().start( endFun, 1 );
+		sys.getController().start( endFun, 1 ); //one-shot
   	    Utils.delay(1000) ; //give time to work ... 		
 	}
  

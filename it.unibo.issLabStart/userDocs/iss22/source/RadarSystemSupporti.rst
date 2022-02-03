@@ -8,7 +8,7 @@
 Supporti per TCP (SPRINT1)
 ===============================================
   
-Il secondo punto del piano di lavoro prevede:
+Il secondo punto del piano di lavoro (si veda :ref:`PianoLavoro`) prevede:
 
 #. definizione di alcuni supporti TCP per componenti lato client e lato server, con l'obiettivo di
    formare un insieme riusabile anche in applicazioni future; 
@@ -55,17 +55,6 @@ e che potrà essere usato per inviare-ricevere messaggi sulla connessione.
 
 Si noti che il client fa un certo numero di tentativi prima di segnalare la impossibilità di connessione.
 
---------------------------------------------------------------------
-La classe ``Colors`` per visualizzare messaggi di sistema
---------------------------------------------------------------------
-
-La classe :blue:`Colors` è una utility per scrivere su standard ouput messaggi colorati. 
-Il metodo ``Colors.outerr`` visualizza un messaggio in colore rosso, 
-mentre ``Colors.out`` lo fa con il colore blu o con un colore specificato come parametro.
-
-Per ottenere messaggi colorati in Eclipse, occorre installare il plugin  *ANSI-Escape in Console*.
-
-
 .. _tcpsupportServer:
 
 -------------------------------------
@@ -75,16 +64,19 @@ TCP Server
 Alla semplicità del supporto lato client si contrappone una maggior complessità lato server, in quanto
 occorre:
 
-- permettere di stabilire (in generale) connenessioni con più client;
+- permettere di stabilire connenessioni con più client;
 - fare in modo che si stabilisca una diversa connessione con ciascun client;
 - fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
   codice applicativo.
 
-Per raggiungere questi obiettivi, introduciamo un insieme di supporti che permettano al server di
-porre in esecuzione codice applicativo  rappresentato da oggetti che implementano l'interfaccia
-``IApplMessageHandler`` così definita:
+Per raggiungere questi obiettivi, nel seguito incapsuleremo il codice applicativo  entro oggetti che implementano l'interfaccia
+``IApplMessageHandler``.
 
-.. _IApplMessageHandler:
+.. _IApplMsgHandler:
+
++++++++++++++++++++++++++++++++++++++++++++
+L'interfaccia ``IApplMsgHandler``
++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: Java
 
@@ -98,12 +90,11 @@ Il costruttore del TCP server avrà la seguente signature:
 
 .. code:: Java
 
-  public TcpServer(String name,int port,IApplMessageHandler userDefHandler) 
+  public TcpServer(String name,int port, IApplMessageHandler userDefHandler) 
 
-cioè riceverà un oggetto di livello applicativo capace di gestire i messaggi ricevuti
-sulla connessione :ref:`Interaction2021<conn2021>` 
-che il server avrà stabilito con i clienti e anche di inviare risposte ai clienti 
-sulla stessa connessione.
+cioè riceverà un oggetto di livello applicativo capace di
+- gestire i messaggi ricevutisulla connessione :ref:`Interaction2021<conn2021>` che il server avrà stabilito con i clienti 
+- inviare risposte ai clienti sulla stessa connessione.
 
 ----------------------------------------------------------------------
 ``TcpConnection`` come implementazione di ``Interaction2021``

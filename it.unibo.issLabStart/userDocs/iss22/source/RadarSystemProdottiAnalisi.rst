@@ -298,6 +298,8 @@ Siamo di fornte ai primi passi relativi a un
 
 che troverà più avanti un suo pieno sviluppo con i concetti di :blue:`attore` e di microservizio_.
 
+.. _PianoLavoro:
+
 ---------------------------------------------------------
 Piano di lavoro
 ---------------------------------------------------------

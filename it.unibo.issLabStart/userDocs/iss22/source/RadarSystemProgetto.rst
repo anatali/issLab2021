@@ -6,7 +6,8 @@
 Progettazione e sviluppo incrementali
 ==================================================
  
-Iniziamo il nostro progetto affrontando il primo punto del piano di lavoro proposto dall'analisi.
+Iniziamo il nostro progetto affrontando il primo punto del piano di lavoro proposto dall'analisi 
+(si veda :ref:`PianoLavoro`).
 
 #. definizione dei componenti software di base legati ai dispositivi di I/O (Sonar, RadarDisplay e Led);
 
@@ -32,9 +33,9 @@ Il primo :blue:`SPRINT` del nostro sviluppo bottom-up consiste nel realizzare co
 per i dispositivi di I/O, partendo dalle interfacce introdotte nella analisi. 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Dispositivi reali e Mock, DeviceFactory e file di configurazione
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+DeviceFactory e file di configurazione
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Per agevolare la messa a punto di una applicazione, conviene spesso introdurre Mock-objects, cioè
 dispositivi simulati che riproducono il comportamento dei dispositivi reali in modo controllato.
@@ -55,7 +56,7 @@ di implementazione, conviene introdurre una **Factory**:
 Ciasun metodo di ``DeviceFactory`` restitusce una istanza di dispositivo reale o Mock in accordo alle specifiche
 contenute in un file di Configurazione (``RadarSystemConfig.json``) che qui ipotizziamo scritto in JSon:
 
-.. code:: java
+.. code::  
 
   {
   "simulation"       : "true",
@@ -82,6 +83,29 @@ che inizializza variabili ``static`` accessibili all'applicazione:
       ...
     }
   }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La classe ``ColorsOut`` 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La classe :blue:`ColorsOut` è una utility per scrivere su standard ouput messaggi colorati. 
+Il metodo ``ColorsOut.outerr`` visualizza un messaggio in colore rosso, 
+mentre ``ColorsOut.out`` lo fa con il colore blu o con un colore specificato esplicitamente come parametro
+quando il paramtero di configurazione 
+
+.. code:: 
+
+  {
+  "simulation"       : "true",
+  "tracing"          : "true",
+   ...
+   }
+
+Per ottenere messaggi colorati in Eclipse, occorre installare il plugin  *ANSI-Escape in Console*.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Dispositivi reali e Mock 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Per essere certi che un dispositivo Mock possa essere un sostituto efficace di un dispositivo reale,
 introduciamo per ogni dispositivo una **classe astratta** comune alle due tipologie, 
@@ -948,9 +972,9 @@ delle versioni del sistema dovrà implementare una precisa interfaccia.
 
 .. _IApplication:
 
--------------------------------------- 
+++++++++++++++++++++++++++++++++++++++++ 
 L'interfaccia IApplication
--------------------------------------- 
+++++++++++++++++++++++++++++++++++++++++
  
 .. code:: java
 
@@ -964,11 +988,11 @@ che riceve in ingresso il file di configurazione.
 
 
 ++++++++++++++++++++++++++++++++++++++++
-Il sistema simulato su PC
+Il sistema simulato in locale
 ++++++++++++++++++++++++++++++++++++++++
 
 La prima, semplice versione del sistema da eseguire e testare lavora su un singolo computer
-(PC o Raspberry) con dispositivi simulati o reali (su Raspberry).
+(PC o Raspberry) con dispositivi simulati o reali (nel caso di Raspberry).
 
 - Quando attiaviamo il sistema su PC usando un IDE (Eclipse o IntelliJ), conviene fissare i parametri di 
   configurazione all'interno del codice.
@@ -1026,7 +1050,7 @@ quelli indicati nel codice di ``setup``:
       //RadarSystemConfig.RadarGuiRemote = true;
     }
   }//setup
-
+   ...
   }//RadarSystemMainLocal
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1047,11 +1071,6 @@ Fase di configurazione
       controller = Controller.create(led, sonar, radar, endFun);	 
   }
 
-
-+++++++++++++++++++++++++++++++++++++++++
-Testing su PC
-+++++++++++++++++++++++++++++++++++++++++
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Utilità per il testing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1062,35 +1081,31 @@ Inseriamo nel main program  metodi che restitusicono un riferimento ai component
 
   public class RadarSystemMainLocal {
     ... 
+    public IRadarDisplay getRadarGui() { return radar; }
     public ILed getLed() { return led; }
     public ISonar getSonar() { return sonar; }
+    public Controller getController() { return controller; }
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Testing del sistema simulato su PC
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
++++++++++++++++++++++++++++++++++++++++++
+Testing (su PC)
++++++++++++++++++++++++++++++++++++++++++
+ 
 La testUnit introduce un metodo di setup per definire i parametri di configurazione 
 (in modo da non dipendere da files esterni) e per costruire il sistema.
 
 .. code:: java
 
-  public class TestBehaviorAllOnPc {
-  private RadarSystemAllOnPc sys;
+  public class TestBehaviorLocal {
+  private RadarSystemMainLocal sys;
     @Before
     public void setUp() {
       System.out.println("setUp");
       try {
-        sys = new RadarSystemAllOnPc();
-        //Set system configuration (we don't use RadarSystemConfig.json)
-        RadarSystemConfig.simulation        = true;    
-        RadarSystemConfig.testing           = true;    		
-        RadarSystemConfig.ControllerRemote  = false;    		
-        RadarSystemConfig.LedRemote         = false;    		
-        RadarSystemConfig.SonareRemote      = false;    		
-        RadarSystemConfig.RadarGuieRemote   = false;    	
-        RadarSystemConfig.pcHostAddr        = "localhost";
-        sys.build();
+        sys = new RadarSystemMainLocal();
+        sys.setup( null );  //non usiamo il file di configurazione
+        RadarSystemConfig.testing    		= true;   
+        RadarSystemConfig.tracing    		= true; 
       } catch (Exception e) {
         fail("setup ERROR " + e.getMessage() );
       }
@@ -1114,17 +1129,38 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
    
   protected void testTheDistance( boolean ledStateExpected ) {
     RadarDisplay radar = RadarDisplay.getRadarDisplay();  //singleton
-    sys.activateSonar();   //il sonar produce un solo valore
-    while( sys.getSonar().isActive() ) Utils.delay(10); //give time to work 
-      assertTrue(  sys.getLed().getState() == ledStateExpected
-        && radar.getCurDistance() == RadarSystemConfig.testingDistance);
-    Utils.delay(1000) ; //give time to look at the display		
+    ActionFunction endFun = (n) -> {  //eseguita quando il Controller termina
+      System.out.println(n);
+      boolean ledState = sys.getLed().getState();
+      int radarDisplayedDistance = radar.getCurDistance();
+      assertTrue(  ledState == ledStateExpected
+	 	    		&& radarDisplayedDistance == RadarSystemConfig.testingDistance);
+		};	
+    sys.getController().start( endFun, 1 ); //one-shot
+    Utils.delay(1000) ; //give time to work ... 		
   }
 
   
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++
 Il sistema su RaspberryPi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++
+
+#. Impostazione del main file in ``build.gradle``
+ 
+   .. code::  
+
+     mainClassName = 'it.unibo.enablerCleanArch.main.AllMainOnRasp'
+
+#. Creazione del file di distribuzione
+ 
+   .. code::  
+
+       gradle distZip -x test
+
+#. Trasferimento del file ``it.unibo.enablerCleanArch-1.0.zip`` su RaspberryPi e unzipping 
+#. Posizionamento nella directory di lavoro:  ``it.unibo.enablerCleanArch-1.0/bin``
+#. Impostazione dei parametri di configurazione nel file ``RadarSystemConfig.json`` nella directory di lavoro
+#. Esecuzione di ``./it.unibo.enablerCleanArch``
 
 
  
