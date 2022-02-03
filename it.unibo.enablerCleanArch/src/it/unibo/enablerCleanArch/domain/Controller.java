@@ -23,7 +23,6 @@ private ActionFunction endFun;
 		this.led    = led;
 		this.sonar  = sonar;
 		this.radar  = radar;
-		//this.endFun = endFun;
 	}
 	
 	

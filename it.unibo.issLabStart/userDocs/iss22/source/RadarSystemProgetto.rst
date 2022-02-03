@@ -826,55 +826,52 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
 .. code:: java
 
   public class Controller {
+  private ILed led;
+  private ISonar sonar;
+  private IRadarDisplay radar;
+  private ActionFunction endFun;
 
   //Factory method
-  public static Controller create(ILed led, ISonar sonar,IRadarDisplay radar, 
-                                    ActionFunction endFun) {
-    return new Controller( led,  sonar, radar,endFun );
+  public static Controller create(ILed led, ISonar sonar,IRadarDisplay radar) {
+    return new Controller( led,  sonar, radar );
   }
 	
   //Constructor
-  private Controller( ILed led, ISonar sonar,IRadarDisplay radar, 
-                                    ActionFunction endFun ) {
+  private Controller( ILed led, ISonar sonar,IRadarDisplay radar) {
     this.led    = led;
     this.sonar  = sonar;
     this.radar  = radar;
-    this.endFun = endFun;
   }
 
-  public void start( ) {
-    sonar.activate();
+  public void start( ActionFunction endFun, int limit  ) {
+    this.endFun = endFun;
+    sonar.activate( limit );
     activate( );
   }
 
-  Il Controller riceve in ingresso i (riferimenti ai) componenti del sistema e una funzione 
-  di callback che implementa la seguente interfaccia:
-  
+Il Controller riceve in ingresso i (riferimenti ai) componenti del sistema e può essere attivato 
+invocando il metodo ``start`` il cui argomento ``n`` fissa un limite massimo al numero delle iterazioni
+e il cui argomento ``endFun`` è una funzione di callback (che verrà invocata
+al termine delle attività) e che implementa la seguente interfaccia:
+
 .. code:: java
 
     public interface ActionFunction {
       void run(String msg);
     }
-
-
-La funzione di callback ``endFun`` verrà invocata al termine delle attività
-del Controller.  
-  
-  
-Il Controller viene attivato dal metodo ``start`` che attiva il Sonar e lancia un Thread interno 
-di lavoro.
+   
+Il metodo ``start`` attiva il Sonar e lancia un Thread interno di lavoro.
 
 .. code:: java 
 
-    protected void activate(  ) {
+    protected void activate( int limit ) {
       new Thread() {
         public void run() { 
           try {
             sonar.activate();
-            boolean sonarActive = sonar.isActive();
             //while( sonarActive() ) {
-            if( sonarActive() ) {
-              for( int i=1; i<=90; i++) { //meglio per il testing ...
+            if( sonar.isActive() ) {
+              for( int i=1; i<=limit; i++) { //meglio per il testing ...
                 IDistance d = sonar.getDistance();  
                 if( radar != null)  RadarGuiUsecase.doUseCase(radar,d);	 
                 LedAlarmUsecase.doUseCase( led,  d  );   
@@ -888,14 +885,14 @@ di lavoro.
     }
   } 
 
-Logicamente la computazione prosegue fintanto che il Sonar è attivo; tuttavia 
+Logicamente, la computazione prosegue fintanto che il Sonar è attivo; tuttavia, 
 la messa a punto del sistema (e il testing) può essere agevolato
 limitando a priori il numero di iterazioni. 
 
 Notiamo anche che il Controller evita (al momento) di realizzare il requisito ``radarGui`` 
 (si veda :ref:`requirements`) se riceve in ingresso un riferimento nullo al ``RadarDisplay``.  
 
-.. Questo rende possibile l'esecuzione del Controller anche  la
+ 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 LedAlarmUsecase
@@ -933,16 +930,28 @@ componente che riceve i dati dal Sonar non appena vengono prodotti.
 Prima di affrontare il refactoring del sistema in questo senso, impostiamo l'esecuzione e il testing del
 sistema nella versione attuale.
 
+
+--------------------------------------
+Esecuzione su Pc e su Raspberry
+--------------------------------------
+
+D'ora in poi dovremo realizzare diverse versioni/configurazioni del sistema, sia in locale sia
+in distribuito. Per agevolare il lancio di queste diverse versioni, impostamo un programma che permette
+la scelta di una tra queste in base al suo nome. In particolare:
+
+- il programma ``AllMainOnRasp`` permette la scelta di versioni del sistema che girano sul RaspberryPi
+- il programma ``AllMainOnPc`` permette la scelta di versioni del sistema che girano sul Pc
+
+Per permettere la selezione, introducimo il vincolo che ciascuna
+delle versioni del sistema dovrà implementare una precisa interfaccia.
+
+
 .. _IApplication:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-------------------------------------- 
 L'interfaccia IApplication
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-D'ora in poi saremo chiamati a realizzare diverse versioni/configurazioni del sistema sia in locale sia
-in distribuito. Per agevolare il lancio di queste diverse versioni, introducimo il vincolo che ciascuna
-di esse implementi l'interfaccia che segue:
-
+-------------------------------------- 
+ 
 .. code:: java
 
   public interface IApplication {
@@ -954,10 +963,9 @@ Ogni versione del sistema dovrà duque fornire un nome e un metodo ``doJob`` per
 che riceve in ingresso il file di configurazione.
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++
 Il sistema simulato su PC
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++
 
 La prima, semplice versione del sistema da eseguire e testare lavora su un singolo computer
 (PC o Raspberry) con dispositivi simulati o reali (su Raspberry).
@@ -990,14 +998,16 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
       //new RadarSystemMainAllOnPc().doJob("RadarSystemConfig.json"); //su Rasp
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Fase di setup
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 I parametri di  configurazione definiti a livello di programma o nel file ``RadarSystemConfig.json`` sono
-quelli indicati nel codice di setUp:
+quelli indicati nel codice di ``setup``:
 
 .. code:: java
+
+  public class RadarSystemMainLocal implements IApplication{
 
   public void setup( String configFile )  {
     if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
@@ -1015,11 +1025,13 @@ quelli indicati nel codice di setUp:
       //RadarSystemConfig.ledGui         = false;
       //RadarSystemConfig.RadarGuiRemote = true;
     }
-  }
+  }//setup
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+  }//RadarSystemMainLocal
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Fase di configurazione
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: java
 
@@ -1036,11 +1048,13 @@ Fase di configurazione
   }
 
 
- 
++++++++++++++++++++++++++++++++++++++++++
+Testing su PC
++++++++++++++++++++++++++++++++++++++++++
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Utilità per il testing
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Inseriamo nel main program  metodi che restitusicono un riferimento ai componenti del sistema:
 
