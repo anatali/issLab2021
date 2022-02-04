@@ -1,7 +1,8 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.IApplication;
-import it.unibo.enablerCleanArch.local.main.RadarSystemMainLocal;
+import it.unibo.enablerCleanArch.main.local.RadarSystemMainLocal;
+import it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,6 +19,7 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 	public void doChoice() {
 		try {
 			programs.put("1", new RadarSystemMainLocal());
+			programs.put("2", new RadarSystemMainRaspWithoutRadar());
 			/*
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		

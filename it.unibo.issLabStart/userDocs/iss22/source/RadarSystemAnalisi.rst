@@ -172,10 +172,23 @@ In questa fase, possiamo diviedere i protocolli di comunicazioni più diffusi in
 - protocolli :blue:`publish-subscribe` che si avvalgono di un mediatore (broker) tra client e server. Esempio
   di questo tipo di protocollo è ``MQTT`` che viene supportato da broker come ``Mosquitto, RabbitMQ, HiveMq``, etc. 
 
-Al momento dovremmo avere conoscenze su come usare protocolli quali TCP/UDP e HTTP
-ma siamo forse meno esperti nell'uso di supporti per la comunicazione mediata tramite broker.
 
-Seguiamo dunque l'idea delle **comunicazioni dirette** facendo riferimento al protocollo TCP
+.. _ProtocolType:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Tipi di protocollo 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La classe ``ProtocolType`` enumera i protocolli cui potremo fare riferimento in seguito.  
+
+.. code:: java
+
+  public enum ProtocolType {  tcp, udp, coap, mqtt, http, bluetoth  }
+
+Attualmente, dovremmo avere conoscenze su come usare protocolli quali TCP/UDP e HTTP
+ma siamo forse meno esperti nell'uso di supporti per altri.
+
+Seguiamo dunque, per adesso, l'idea delle **comunicazioni dirette** facendo riferimento al protocollo TCP
 (più affidabile di UDP e supporto di base per HTTP)  che assume ora il ruolo di 'collante' 
 principale tra le parti.
 
@@ -201,6 +214,7 @@ di operare come un `client-TCP` e componenti capaci di operare come un `server-T
     - Il client deve dapprima aprire una ``Socket`` sulla coppia ``IPS,P`` e poi inviare o ricevere messaggi su tale socket.
       Si stabilisce così una *connessione punto-a-punto bidirezionale* tra il nodo del client e quello del server.
 
+.. _TipiInterazione:
 
 ++++++++++++++++++++++++++++++++++++++++++
 Tipi di interazione

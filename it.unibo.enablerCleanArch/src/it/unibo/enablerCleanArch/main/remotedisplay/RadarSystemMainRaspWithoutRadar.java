@@ -1,17 +1,16 @@
-package it.unibo.enablerCleanArch.local.main;
-
-import java.util.function.Consumer;
+package it.unibo.enablerCleanArch.main.remotedisplay;
 
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.RadarGuiProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Utils;
+ 
 
 /*
  * Applicazione che va in coppia con RadarSystemDevicesOnRasp
  */
 
-public class RadarSystemMainLocal implements IApplication{
+public class RadarSystemMainRaspWithoutRadar implements IApplication{
 private IRadarDisplay radar;
 private ISonar sonar;
 private ILed  led ;
@@ -19,25 +18,15 @@ private Controller controller;
 
 	@Override
 	public String getName() {	 
-		return "RadarSystemMainLocal";
+		return "RadarSystemMainRaspWithoutRadar";
 	}
 
 	public void setup( String configFile )  {
-		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
-  			RadarSystemConfig.testing      		= false;			
+   			RadarSystemConfig.testing      		= false;			
 			RadarSystemConfig.sonarDelay        = 200;
-			//Su PC
-			RadarSystemConfig.simulation   		= true;
-			RadarSystemConfig.DLIMIT      		= 40;  
-			RadarSystemConfig.ledGui            = true;
-			RadarSystemConfig.RadarGuiRemote    = false;
-			//Su Raspberry (nel file di configurazione)
-//			RadarSystemConfig.simulation   		= false;
-//			RadarSystemConfig.DLIMIT      		= 12;  
-//			RadarSystemConfig.ledGui            = false;
-//			RadarSystemConfig.RadarGuiRemote    = true;
-		}
+ 			RadarSystemConfig.simulation   		= false;
+			RadarSystemConfig.DLIMIT      		= 12;  
+			RadarSystemConfig.radarGuiPort      = 8014;
 		configure();
  	}
 	
@@ -56,7 +45,10 @@ private Controller controller;
 	    sonar      = DeviceFactory.createSonar();
 	    //Dispositivi di Output
 	    led        = DeviceFactory.createLed();
-	    radar      = RadarSystemConfig.RadarGuiRemote ? null : DeviceFactory.createRadarGui();
+	    radar      = new  RadarGuiProxyAsClient("radarPxy", 
+				          RadarSystemConfig.pcHostAddr, 
+				          ""+RadarSystemConfig.radarGuiPort, 
+				          ProtocolType.tcp);
 	    //Controller
 	    controller = Controller.create(led, sonar, radar);	 
 	}
@@ -74,7 +66,7 @@ private Controller controller;
  	public Controller getController() { return controller; }
 	
 	public static void main( String[] args) throws Exception {
-		new RadarSystemMainLocal().doJob(null);
+		new RadarSystemMainRaspWithoutRadar().doJob(null);
  	}
 
 }

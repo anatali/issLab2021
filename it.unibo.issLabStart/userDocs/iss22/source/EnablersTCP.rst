@@ -2,6 +2,8 @@
 .. role:: blue 
 .. role:: remark
 
+.. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
+
 =====================================================
 Enablers per TCP (SPRINT2)
 =====================================================
@@ -92,16 +94,6 @@ Notiamo che:
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContextServer`.
 - si fornisce anche un supporto per il protocollo CoAP_, di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Tipi di protocollo supportati
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-La classe ``ProtocolType`` enumera i protocolli utlizzabili dagli enablers.  
-
-.. code:: java
-
-  public enum ProtocolType {  tcp, udp, coap, ... }
 
 
 ------------------------------------------------

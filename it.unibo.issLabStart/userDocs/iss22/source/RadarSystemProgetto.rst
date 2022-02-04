@@ -883,7 +883,10 @@ al termine delle attività) e che implementa la seguente interfaccia:
     public interface ActionFunction {
       void run(String msg);
     }
-   
+
+
+:remark:`La funzione di callback è una chiusura lessicale sul chiamante`
+
 Il metodo ``start`` attiva il Sonar e lancia un Thread interno di lavoro.
 
 .. code:: java 
@@ -916,7 +919,10 @@ limitando a priori il numero di iterazioni.
 Notiamo anche che il Controller evita (al momento) di realizzare il requisito ``radarGui`` 
 (si veda :ref:`requirements`) se riceve in ingresso un riferimento nullo al ``RadarDisplay``.  
 
- 
+.. image:: ./_static/img/radar/ArchLogicaOOP.PNG 
+    :align: center
+    :width: 60%
+
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 LedAlarmUsecase
@@ -932,6 +938,8 @@ LedAlarmUsecase
       } catch (Exception e) { ... }					
     }
   } 
+
+
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 RadarGuiUsecase
@@ -987,17 +995,14 @@ Ogni versione del sistema dovrà duque fornire un nome e un metodo ``doJob`` per
 che riceve in ingresso il file di configurazione.
 
 
+.. _RadarSystemMainLocal:
+
 ++++++++++++++++++++++++++++++++++++++++
-Il sistema simulato in locale
+Il sistema in locale
 ++++++++++++++++++++++++++++++++++++++++
 
 La prima, semplice versione del sistema da eseguire e testare lavora su un singolo computer
-(PC o Raspberry) con dispositivi simulati o reali (nel caso di Raspberry).
-
-- Quando attiaviamo il sistema su PC usando un IDE (Eclipse o IntelliJ), conviene fissare i parametri di 
-  configurazione all'interno del codice.
-- Quando attiviamo il sistema su Raspberry usando come  distribuzione un file ``jar``, conviene
-  fissare i parametri di  configurazione utilizzando il file ``RadarSystemConfig.json``.
+(PC o Raspberry) con dispositivi simulati o (nel caso di Raspberry) reali.
 
 .. code:: java
 
@@ -1026,8 +1031,14 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
 Fase di setup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-I parametri di  configurazione definiti a livello di programma o nel file ``RadarSystemConfig.json`` sono
-quelli indicati nel codice di ``setup``:
+Il metodo ``setup`` fissa i parametri di  configurazione leggendo il file ``RadarSystemConfig.json``
+o assegnando loro un valore a livello di programma.
+Osserviamo che:
+
+- Quando attiaviamo il sistema su PC usando un IDE (Eclipse o IntelliJ), conviene fissare i parametri di 
+  configurazione all'interno del codice.
+- Quando attiviamo il sistema su Raspberry usando come  distribuzione un file ``jar``, conviene
+  fissare i parametri di  configurazione utilizzando il file ``RadarSystemConfig.json``.
 
 .. code:: java
 
@@ -1057,6 +1068,9 @@ quelli indicati nel codice di ``setup``:
 Fase di configurazione
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Il metodo ``configure`` crea i dispositivi simulati concreti a seconda dei parametri di
+configurazione.
+
 .. code:: java
 
   protected void configure() {
@@ -1071,7 +1085,7 @@ Fase di configurazione
       controller = Controller.create(led, sonar, radar, endFun);	 
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 Utilità per il testing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1140,7 +1154,8 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
     Utils.delay(1000) ; //give time to work ... 		
   }
 
-  
+.. _RadarSystemMainLocalOnRasp:
+ 
 +++++++++++++++++++++++++++++++++++++++++
 Il sistema su RaspberryPi
 +++++++++++++++++++++++++++++++++++++++++

@@ -6,8 +6,8 @@ import org.junit.*;
 
 import it.unibo.enablerCleanArch.domain.ActionFunction;
 import it.unibo.enablerCleanArch.domain.RadarDisplay;
-import it.unibo.enablerCleanArch.local.main.RadarSystemMainLocal;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.main.local.RadarSystemMainLocal;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 

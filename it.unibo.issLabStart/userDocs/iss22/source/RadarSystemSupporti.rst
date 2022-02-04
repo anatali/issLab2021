@@ -2,6 +2,8 @@
 .. role:: blue 
 .. role:: remark
 
+.. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
+
 .. _tcpsupport:
 
 ===============================================
@@ -55,6 +57,27 @@ e che potrà essere usato per inviare-ricevere messaggi sulla connessione.
 
 Si noti che il client fa un certo numero di tentativi prima di segnalare la impossibilità di connessione.
 
+.. _TcpConnection:
+
+----------------------------------------------------------------------
+``TcpConnection`` implementa ``Interaction2021``
+----------------------------------------------------------------------
+
+La classe ``TcpConnection`` costituisce una implementazione della interfaccia 
+:ref:`Interaction2021<conn2021>`
+e quindi realizza i metodi di supporto per la ricezione e la trasmissione di
+messaggi applicativi sulla connessione fornita da una ``Socket``.
+
+.. code:: Java
+
+  public class TcpConnection implements Interaction2021{
+    ...
+  public TcpConnection( Socket socket  ) throws Exception { ... }
+ 
+Le implementazione delle operazioni si riduce alla scrittura/lettura di informazione sulla Socket 
+e si rimanda quindi direttamente al codice.
+
+
 .. _tcpsupportServer:
 
 -------------------------------------
@@ -68,6 +91,8 @@ occorre:
 - fare in modo che si stabilisca una diversa connessione con ciascun client;
 - fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
   codice applicativo.
+
+
 
 
 .. _IApplMsgHandler:
@@ -98,29 +123,12 @@ cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di
 - gestire i messaggi ricevutisulla connessione :ref:`Interaction2021<conn2021>` che il server avrà stabilito con i clienti 
 - inviare risposte ai clienti sulla stessa connessione.
 
-----------------------------------------------------------------------
-``TcpConnection`` implementa ``Interaction2021``
-----------------------------------------------------------------------
-
-La classe ``TcpConnection`` costituisce una implementazione della interfaccia 
-:ref:`Interaction2021<conn2021>`
-e quindi realizza i metodi di supporto per la ricezione e la trasmissione di
-messaggi applicativi sulla connessione fornita da una ``Socket``.
-
-.. code:: Java
-
-  public class TcpConnection implements Interaction2021{
-    ...
-  public TcpConnection( Socket socket  ) throws Exception { ... }
- 
-Le implementazione delle operazioni si riduce alla scrittura/lettura di informazione sulla Socket 
-e si rimanda quindi direttamente al codice.
 
 .. _ApplMessageHandler:
 
-----------------------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ``ApplMessageHandler`` implementa ``IApplMsgHandler``
-----------------------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Per agevolare il lavoro dell'application designer, viene definita una classe astratta che 
 implementa la interfaccia :ref:`IApplMsgHandler<IApplMsgHandler>`.
@@ -146,20 +154,22 @@ dei messaggi in ingresso.
     public abstract void elaborate( String message, Interaction2021 conn ) ;
    }
 
-----------------------------------------------------------------------
+.. image:: ./_static/img/Architectures/ApplMessageHandler.png 
+    :align: center
+    :width: 60%
+
+
+
+.. _TCPserver:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Il TCPserver come oggetto attivo
-----------------------------------------------------------------------
- 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 .. Mediante la classe ``TcpServer`` possiamo istanziare oggetti che realizzano un server TCP che apre una ``ServerSocket`` e gestisce la richiesta di connessione da parte dei clienti.
 
 Il ``TcpServer`` viene definito come un Thread che definisce  metodi per essere attivato e disattivato
 e il metodo ``run`` che ne specifica il funzionamento.
-
-.. riceve un :ref:`ApplMessageHandler<msgh>` come oggetto di  'callback' che contiene la logica di gestione dei messaggi applicativi ricevuti dai client che si connetteranno.
- 
-
-.. server: 
- 
 
 .. code:: Java
 
@@ -198,17 +208,18 @@ e il metodo ``run`` che ne specifica il funzionamento.
   @Override
   public void run() { ... }
   
-++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il funzionamento del TCPserver
-++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
 
 #.  attende una richiesta di connessione;  
 #.  all'arrivo della richiesta, creae un oggetto (attivo)
     di classe :ref:`TcpMessageHandler<tcpmsgh>` passandondogli l':ref:`ApplMessageHandler<msgh>` 
-    ricevuto nel costruttore e la connessione (di tipo ):ref:`Interaction2021<conn2021>`) appena stabilita.
+    ricevuto nel costruttore e la connessione (di tipo :ref:`Interaction2021<conn2021>`) appena stabilita.
     Questo oggetto attende messaggi sulla nuova connessione 
-    e ne delega la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto
+    e ne delega la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto;
 #.  torna in fase di attesa di conessione con un altro client.
 
 .. code:: Java
@@ -235,9 +246,10 @@ da parte di due client diversi
  
 :remark:`Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi.` 
 
-----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TcpMessageHandler
-----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 La classe ``TcpMessageHandler`` definisce oggetti (dotati di un Thread interno) che si occupano
 di ricevere messaggi su una data connessione 
 :ref:`Interaction2021<conn2021>`, delegandone la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto
@@ -262,18 +274,6 @@ nel costruttore.
     }
   }
 
-----------------------------------------------------------------------  
-Architettura del supporto
-----------------------------------------------------------------------
-
-L'architettura del sistema in seguito a due chiamate da parte di due client diversi, può essere 
-rappresentata come nella figura che segue:
-
-.. image:: ./_static/img/Architectures/ServerAndConnections.png 
-   :align: center
-   :width: 80%
- 
-:remark:`Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi.` 
 
 
 ----------------------------------------------------------------------
@@ -282,7 +282,7 @@ Una TestUnit
 Una TestUnit può essere utile sia come esempio d'uso dei suppporti, sia per chiarire le
 interazioni client-server.
 
-Per impostare la TestUnit, seguiamo le seguente user-story:
+Per impostare la TestUnit, seguiamo le seguente :blue:`user-story`:
 
 .. epigraph:: 
 
@@ -295,49 +295,53 @@ Per impostare la TestUnit, seguiamo le seguente user-story:
 Metodi before/after
 ++++++++++++++++++++++++++++++++++++++++
 
-Il metodo che la JUnit esegue dopo ogni test, disattiva il server (se esiste): 
+I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TCPServer: 
 
 .. code:: Java
 
   public class TestTcpSupports {
   private TcpServer server;
   public static final int testPort = 8111; 
- 
+
+  @Before
+  public void up() {
+		server = new TcpServer("tcpServer",testPort, new NaiveHandler("naiveH") );
+    server.activate();		
+  }
+
   @After
   public void down() {
     if( server != null ) server.deactivate();
   }	
-  protected void startTheServer(String name) {
-    erver = new TcpServer(name,testPort, NaiveHandler.create());
-    server.activate();		
-  }
-
-Il metodo ``startTheServer`` verrà usato dalle operazioni di test per creare ed attivare il TCPServer.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 L'handler dei messaggi applicativi ``NaiveHandler``
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-La classe ``NaiveHandler`` definisce l'handler che useremo nel test per elaborare i messaggi inivati dai clienti. 
-Il metodo di elaborazione si avvale della connessione ereditata da ':ref:`ApplMessageHandler<msgh>`
-per inviare al cliente una risposta che contiene anche il messaggio ricevuto.
+L' `ApplMessageHandler`_ associato al server è molto semplice: visualizza il messaggio ricevuto
+sulla connessione e invia una risposta avvalendosi  
+della connessione ereditata da ':ref:`ApplMessageHandler<msgh>`.
 
 .. code:: Java
 
-  class NaiveHandler extends ApplMessageHandler {
+  class NaiveHandler extends ApplMsgHandler {
     public NaiveHandler(String name) { super(name); }
     @Override
     public void elaborate(String message, Interaction2021 conn) {
       System.out.println(name+" | elaborates: "+message);
-      sendMsgToClient("answerTo_"+message, conn);	//send a reply
+      sendMsgToClient("answerTo_"+message, conn);	
     }
+    @Override
+    public void elaborate(ApplMessage message, Interaction2021 conn) {}
   }
+
+ 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Un semplice client per i test
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Un semplice client di testing viene definito in modo che (metodo ``doWork``) il client :
+Un semplice client di testing viene definito in modo che (metodo ``doWorkWithServerOn``) il client :
 
 #. si connette al server
 #. invia un messaggio
@@ -347,7 +351,7 @@ Un semplice client di testing viene definito in modo che (metodo ``doWork``) il 
 .. code:: Java
 
   class ClientForTest{
-    public void doWork(String name, int ntimes, boolean withserver) {
+    public void doWorkWithServerOn(String name, int ntimes ) {
       try {
         Interaction2021 conn  = 
           TcpClient.connect("localhost",TestTcpSupports.testPort,ntimes);//1
@@ -357,63 +361,192 @@ Un semplice client di testing viene definito in modo che (metodo ``doWork``) il 
         System.out.println(name + " | receives the answer: " +answer );	
         assertTrue( answer.equals("answerTo_"+ request)); //4
       } catch (Exception e) {
-        if( withserver ) fail();
+        fail();
       }
     }
   }
+
+Il metodo  ``doWorkWithServerOn`` controlla che un client esegua un certo numero di tentativi ogni volta
+che tenta di connettersi a un server:
+
+.. code:: Java
+
+  public void doWorkWithServerOff( String name, int ntimes  ) {
+    try {
+      connect(ntimes);
+      fail(); //non deve connttersi ...
+    } catch (Exception e) {
+      ColorsOut.outerr(name + " | ERROR (expected)" + e.getMessage());	
+    }
+  }
+
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Test per l'interazione senza server
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Il test controlla che un client esegue un certo numero di tetnativi ogni volta
-che tenta di connettersi a un server:
-
 .. code:: Java
 
   @Test 
   public void testClientNoServer() {
-    int numAttempts = 3;
-    boolean withserver = false;
-    ClientForTest.withserver = false; //per evitare fallimento 
-    new ClientForTest().doWork("clientNoServer",numAttempts,withserver);
+    server.deactivate(); //il server deve essere down
+    new ClientForTest().doWorkWithServerOff( "clientNoServer", 3  );	
   }
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Test per l'interazione client-server
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Un test che riguarda il funzionamento atteso in una interazione tra un singolo client e il server
-può essere così definito:
-
 .. code:: Java
 
-  @Test 
-  public void testSingleClient() {
-    startTheServer("oneClientServer");
-    boolean withserver = true;
-    new ClientForTest().doWork("client1",10,withserver);
-  }
+	@Test 
+	public void testSingleClient() {
+    new ClientForTest().doWorkWithServerOn( "client1",10  );		
+	}
+ 
 	
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Test con molti clienti
+Test con più clienti
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: Java
 
-  @Test 
-  public void testManyClients() {
-    startTheServer("manyClientsServer");
-    boolean withserver = true;
-    new ClientForTest().doWork("client1",10,withserver);
-    new ClientForTest().doWork("client2",1,withserver);
-    new ClientForTest().doWork("client3",1,withserver);
+	@Test 
+	public void testManyClients() {
+    new ClientForTest().doWorkWithServerOn("client1",10  );
+    new ClientForTest().doWorkWithServerOn("client2",1 );
+    new ClientForTest().doWorkWithServerOn("client3",1 );
   }	
 
 
 .. L'errore da indagare:
 .. .. code:: Java
 .. oneClientServer | ERROR: Socket operation on nonsocket: configureBlocking
+
+
+
+---------------------------------
+RadarSystem distribuito
+---------------------------------
+
+Una prima versione distribuita del ``RadarSystem`` consiste nell'attivare tutto il sistema
+sul Raspberry, lasciando sul PC solo il ``RadarDisplay``, che richiede una appropriata GUI.
+
+Per ottenere lo scopo, si può ricorrere al  pattern-proxy_ e fare in modo che
+l'oggetto che realizza il caso d'uso :ref:`RadarGuiUsecase` (nella versione
+:ref:`RadarSystemMainLocal` ) riceva come argomento ``radar`` un Proxy per 
+il *RadarDisplay* realizzato da un TCP client che interagisce con 
+un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
+
+
+.. image:: ./_static/img/radar/RadarOnPc.PNG 
+    :align: center
+    :width: 60%
+
+
+ 
+
++++++++++++++++++++++++++++++++++++++++++
+ProxyAsClient
++++++++++++++++++++++++++++++++++++++++++
+
+
+Introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
+
+- l'host a cui connettersi 
+- la porta espressa da una *String* denominata lo``entry``
+- il tipo di protocollo da usare
+
+.. image:: ./_static/img/Radar/ProxyAsClient.PNG
+    :align: center
+    :width: 40%
+
+
+.. code:: java
+
+  public class ProxyAsClient {
+    private Interaction2021 conn; 
+    protected String name ;		//could be a uri
+    protected ProtocolType protocol ;
+
+    public ProxyAsClient( 
+          String name, String host, String entry, ProtocolType protocol ) {
+      try {
+        this.name     = name;
+        this.protocol = protocol;        
+        setConnection(host, entry, protocol);
+      } catch (Exception e) {...}
+    }
+
+    public Interaction2021 getConn() { return conn; }
+
+Il fatto di denotare la porta del server con una *String* invece che con un *int* ci darà
+la possibilità di gestire anche comunicazioni basate su CoAP; in questo secondo caso,
+il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`.
+
+Il metodo ``setConnection`` effettua la connessione al server remoto in funzione del tipo di
+protocollo specificato:
+
+.. code:: java
+
+    protected void setConnection(
+          String host,String entry,ProtocolType protocol) throws Exception{
+      if( protocol == ProtocolType.tcp) {
+        conn = TcpClient.connect(host,  Integer.parseInt(entry), 10);
+      }else if( protocol == ProtocolType.coap ) {
+        conn = new CoapSupport(host, entry );	
+      }
+    }
+
+Nel caso di CoAP, il metodo ``setConnection`` si avvale di un supporto   ``CoapSupport``
+che definiremo più avanti e che restituisce un oggetto di tipo ``Interaction2021`` 
+come nel caso di TCP/UDP.
+
+Con riferimento ai :ref:`TipiInterazione` introdotti nella fase di analisi,
+il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* un metodo per inviare
+*request* con attesa di response/ack:
+
+.. code:: java    
+
+  protected void sendCommandOnConnection( String cmd ) {
+    try {
+      conn.forward(cmd);
+    } catch (Exception e) {...}
+  }  
+  public String sendRequestOnConnection( String request )  {
+    try {
+      String answer = conn.request(request);
+      return answer;
+    }catch (Exception e) { ...; return null;}
+  }
+
+:remark:`Il ProxyAsClient così definito realizza request-response sincrone (bloccanti)`
+
++++++++++++++++++++++++++++++++++++++++++
+Refactoring del codice su Raspberry
++++++++++++++++++++++++++++++++++++++++++
+
+La fase di configurazione della versione :ref:`RadarSystemMainLocal` su Raspberry 
+può ora essere modificata in modo da associare alla variabile *radar* un ProxyClient:
+
+.. code:: java  
+
+  protected void configure() {
+    ...
+    radar = RadarSystemConfig.RadarGuiRemote ?
+              new  ProxyAsClient("radarPxy", RadarSystemConfig.pcHostAddr, ProtocolType.tcp)
+              : DeviceFactory.createRadarGui();
+  ...
+  }
+
+
+Per completare il sistema non rimane che definire il TCPServer da attivare sul PC
+
++++++++++++++++++++++++++++++++++++++++++
+Un server per il RadarDisplay
++++++++++++++++++++++++++++++++++++++++++
+
+
 
 
 ---------------------------------
