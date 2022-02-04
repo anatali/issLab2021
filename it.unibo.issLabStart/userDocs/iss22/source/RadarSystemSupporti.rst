@@ -430,7 +430,7 @@ RadarSystem distribuito
 ---------------------------------
 
 Una prima versione distribuita del ``RadarSystem`` consiste nell'attivare tutto il sistema
-sul Raspberry, lasciando sul PC solo il ``RadarDisplay``, che richiede una appropriata GUI.
+sul Raspberry, lasciando sul PC solo il ``RadarDisplay``.
 
 Per ottenere lo scopo, si può ricorrere al  pattern-proxy_ e fare in modo che
 l'oggetto che realizza il caso d'uso :ref:`RadarGuiUsecase` (nella versione
@@ -455,7 +455,7 @@ Introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
 
 - l'host a cui connettersi 
 - la porta espressa da una *String* denominata lo``entry``
-- il tipo di protocollo da usare
+- il tipo di protocollo (:ref:`ProtocolType`) da usare
 
 .. image:: ./_static/img/Radar/ProxyAsClient.PNG
     :align: center
@@ -539,14 +539,23 @@ può ora essere modificata in modo da associare alla variabile *radar* un ProxyC
   ...
   }
 
+Si veda:
+
+- *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar*  (main che implementa :ref:`IApplication`)
 
 Per completare il sistema non rimane che definire il TCPServer da attivare sul PC
+
 
 +++++++++++++++++++++++++++++++++++++++++
 Un server per il RadarDisplay
 +++++++++++++++++++++++++++++++++++++++++
 
+Si veda:
 
+- *it.unibo.enablerCleanArch.supports.TcpServer*
+- *it.unibo.enablerCleanArch.supports.TcpApplMessageHandler*
+- *it.unibo.enablerCleanArchapplHandler.RadarApplHandler*
+- *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainDisplayOnPc*  (main che implementa :ref:`IApplication`)
 
 
 ---------------------------------

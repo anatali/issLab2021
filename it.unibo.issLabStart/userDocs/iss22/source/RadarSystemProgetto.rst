@@ -23,7 +23,6 @@ il passo successivo, che potrà coincidere o meno con quello pianificato nell'an
 .. .. include:: RadarSystemEnablers.rst
  
 
-
 --------------------------------------------------------
 Il primo SPRINT: Componenti per i dispositivi di I/O
 --------------------------------------------------------

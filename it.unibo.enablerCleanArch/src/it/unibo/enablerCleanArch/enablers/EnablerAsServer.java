@@ -20,7 +20,7 @@ protected ProtocolType protocol;
 protected TcpServer serverTcp;
 protected boolean isactive = false;
 
-	public EnablerAsServer( String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { //, String handlerClassName
+	public EnablerAsServer( String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { 
  		try {
 			this.name     			= name;
 			this.protocol 			= protocol;

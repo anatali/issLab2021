@@ -16,7 +16,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 
 	@Override
 	public void turnOn() { 
- 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
+  		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
  			sendCommandOnConnection(Utils.turnOnLed.toString());
  		}
  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
@@ -24,12 +24,13 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
  		}
  		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
  			sendCommandOnConnection( "on" );
- 		}else sendCommandOnConnection( "on" );
+ 		}else //CASO DI DEFAULT
+ 			sendCommandOnConnection( "on" );
  	}
 
 	@Override
 	public void turnOff() {   
- 		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
  			sendCommandOnConnection(Utils.turnOffLed.toString());
  		}
  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
@@ -37,7 +38,8 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
  		}
  		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
  			sendCommandOnConnection( "off" );
- 		} else sendCommandOnConnection( "off" );
+ 		} else  //CASO DI DEFAULT
+ 			sendCommandOnConnection( "off" );
  	}
 
 	@Override
@@ -48,9 +50,9 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 		}
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getState", "led").toString());
-		else {
+		else { //CASO DI DEFAULT
 			answer = sendRequestOnConnection( "getState" );
-			//ColorsOut.out(name+" |  getState answer " + answer );
+			//ColorsOut.out(name+" |  getState answer=" + answer, ColorsOut.BLUE );
 		}
 		return answer.equals("true");
 	}

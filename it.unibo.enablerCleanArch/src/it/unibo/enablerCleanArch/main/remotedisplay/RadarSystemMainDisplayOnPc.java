@@ -34,6 +34,7 @@ private IRadarDisplay radar = null;
  	
 	@Override
 	public void doJob(String configFileName) {
+		RadarSystemConfig.tracing = true;
 		setup(configFileName);
 		executeDisplayOnPc();
 	}
@@ -41,8 +42,8 @@ private IRadarDisplay radar = null;
 	public void executeDisplayOnPc() {
  	   IRadarDisplay radar     = DeviceFactory.createRadarGui();
  	   IApplMsgHandler handler = new RadarApplHandler("radarH", radar);
- 	   TcpServer serverRadar = new TcpServer( "ServerTcp", RadarSystemConfig.radarGuiPort,  handler );
- 	   serverRadar.start();				
+ 	   TcpServer serverRadar   = new TcpServer( "ServerTcp", RadarSystemConfig.radarGuiPort,  handler );
+ 	   serverRadar.activate();				
  	}
 	
  

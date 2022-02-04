@@ -20,7 +20,8 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
   			sendCommandOnConnection(Utils.sonarActivate.toString());
  		else if( RadarSystemConfig.protcolType == ProtocolType.coap) 
  			sendRequestOnConnection("activate");
- 		else sendCommandOnConnection("activate");		
+ 		else //CASO DI DEFAULT
+ 			sendCommandOnConnection("activate");		
 	}
 
 	@Override
@@ -31,7 +32,8 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
   			sendCommandOnConnection(Utils.sonarDeactivate.toString());
 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) 
  			sendRequestOnConnection("deactivate");
- 		else sendCommandOnConnection("deactivate");		
+ 		else //CASO DI DEFAULT
+ 			sendCommandOnConnection("deactivate");		
 	}
 
 	@Override
@@ -42,8 +44,9 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 			answer = sendRequestOnConnection(Utils.getDistance.toString()) ;
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			answer = sendRequestOnConnection(Utils.getDistance.toString().replace("system", name)) ;
-		else  answer = sendRequestOnConnection("getDistance");
-		//Colors.out( name + " | getDistance answer="+answer, Colors.ANSI_PURPLE);
+		else  //CASO DI DEFAULT
+			answer = sendRequestOnConnection("getDistance");
+		ColorsOut.out( name + " | getDistance answer="+answer, ColorsOut.ANSI_PURPLE);
 		return new Distance( Integer.parseInt(answer) );
 	}
 
@@ -54,7 +57,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			answer = sendRequestOnConnection(Utils.isActive.toString().replace("system", name)) ;
 		else   answer=sendRequestOnConnection("isActive");
-		//Colors.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
+		//ColorsOut.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
 		return answer.equals( "true" );
 	}
  	

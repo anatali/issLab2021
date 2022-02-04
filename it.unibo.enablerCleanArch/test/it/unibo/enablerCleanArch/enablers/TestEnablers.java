@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch;
+package it.unibo.enablerCleanArch.enablers;
 
 import static org.junit.Assert.assertTrue;
 

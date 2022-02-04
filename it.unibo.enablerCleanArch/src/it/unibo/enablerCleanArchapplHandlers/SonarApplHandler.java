@@ -41,8 +41,8 @@ private ISonar sonar;
  				if( message.equals("getDistance")) {
  	 				//ColorsOut.out(name+ " | elaborate getDistance="  , ColorsOut.BLUE);
 					String vs = ""+sonar.getDistance().getVal();
- 	 				//Colors.out(name+ " | elaborate vs=" + vs, ColorsOut.BLUE);
-					this.sendMsgToClient(vs, conn);
+ 	 				ColorsOut.out(name+ " | elaborate vs=" + vs, ColorsOut.BLUE);
+					sendMsgToClient(vs, conn);
  				}else if( message.equals("activate")) {
  					ColorsOut.out(name+ " | activate sonar="+sonar , ColorsOut.BLUE);
  					sonar.activate();
@@ -50,7 +50,7 @@ private ISonar sonar;
  					sonar.deactivate();
  				}else if( message.equals("isActive")) {
  					String sonarState = ""+sonar.isActive();
- 					//this.sendMsgToClient(sonarState, conn);					 
+ 					sendMsgToClient(sonarState, conn);					 
   				}
  			}
 }

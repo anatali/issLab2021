@@ -17,15 +17,15 @@ di introdurre nel sistema degli :blue:`enabler`, che hanno lo scopo di fornire f
 di ricezione/trasmissione di informazione su rete a un nucleo di 
 *core-code* incapsulato al proprio interno.
 
-Nell'ambito di un processo di sviluppo bottom-up, in cui il procollo TCP è
+Nell'ambito di un processo di sviluppo bottom-up in cui il procollo TCP è
 la tecnologia di riferimento per le comunicazioni, risulta naturale pensare subito a 
 un enabler *tipo-server* capace di ricevere richieste  da parte di client remoti (normalmente
-dei proxy).
+dei Proxy).
 
 .. due tipi di enabler: uno per ricevere (diciamo un enabler *tipo-server*) e uno per trasmettere (diciamo un enabler *tipo-client*).
  
 Come suggerito nell'analisi, ponendo il ``Controller`` su PC, 
-possiamo  (procedere )senza modificare il codice introdotto in :ref:`Controller<controller>`)
+possiamo  (senza modificare il codice introdotto in :ref:`Controller<controller>`)
 impostare una architettura come quella rappresentata in figura:
 
 .. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
@@ -46,7 +46,7 @@ Enabler tipo-server
 ------------------------------------------------
 
 Iniziamo con il definire un enabler *tipo-server* che demanda la gestione dei messaggi ricevuti 
-ad oggetti di una classe definita dall'Application-designer.
+ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
 
 .. image:: ./_static/img/Radar/EnablerAsServer.PNG
    :align: center 
@@ -72,10 +72,10 @@ ad oggetti di una classe definita dall'Application-designer.
                       IApplMsgHandler handler) throws Exception{
       if( protocol == ProtocolType.tcp ) {
           serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port, handler );        
-      }else if( protocol == ProtocolType.udp ) { ... 
       }else if( protocol == ProtocolType.coap ) { 
           CoapApplServer.getServer(); 
       }
+      ...
     }	 
     public void activate() {
       if( protocol == ProtocolType.tcp ) {
@@ -93,7 +93,7 @@ Notiamo che:
 
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContextServer`.
-- si fornisce anche un supporto per il protocollo `CoAP`_, di cui parleremo nella sezione :doc:`RadarGuiCoap`.
+- si prevede anche un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
 
 
@@ -200,7 +200,7 @@ Enabler e proxy per il Led
 
 L'enabler server per il Led usa un gestore di messaggi ``LedApplHandler`` che riceve comandi
 e richieste da un ``LedProxyAsClient``. 
-Entrambe queste classi sono simili a quanto visto per i sonar.
+Entrambe queste classi sono simili a quanto visto per il Sonar.
  
 
  
@@ -217,62 +217,76 @@ La configurazione crea gli elementi della architettura di figura:
 
 .. code::  java
 
-    @Before
-    public void setup() {
-      RadarSystemConfig.simulation = true;
-      RadarSystemConfig.ledPort    = 8015;
-      RadarSystemConfig.sonarPort  = 8011;
-      RadarSystemConfig.sonarDelay = 100;
-      RadarSystemConfig.testing    = false;
+  public class TestEnablersTcp {
+	@Before
+	public void setup() {
+		RadarSystemConfig.withContext= false; 
+		RadarSystemConfig.simulation = true;
+		RadarSystemConfig.ledGui     = true;
+		RadarSystemConfig.ledPort    = 8015;
+		RadarSystemConfig.sonarPort  = 8011;
+		RadarSystemConfig.sonarDelay = 100;
+ 		RadarSystemConfig.testing    = false;
+ 		RadarSystemConfig.tracing    = false;
+ 
+ 		//I devices
+   		sonar 	= DeviceFactory.createSonar();
+		led     = DeviceFactory.createLed();
+		
+ 		//I server
+  	 	sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,
+              protocol, new SonarApplHandler("sonarH", sonar) );
+	 	ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort, 
+              protocol, new LedApplHandler("ledH", led)  );
+ 
+ 		//I client
+   		sonarPxy = new SonarProxyAsClient(
+         "sonarPxy", "localhost", ""+RadarSystemConfig.sonarPort, protocol );		
+ 		ledPxy   = new LedProxyAsClient( 
+       "ledPxy",   "localhost", ""+RadarSystemConfig.ledPort,   protocol );	
 
-    sonar = DeviceFactory.createSonar();
-    led   = DeviceFactory.createLed();
-    host  = "localhot";
-		
-    //I server
-    sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort, 
-                              protocol,new SonarApplHandler("sonarH", sonar));
-    ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort,   
-                              protocol,new LedApplHandler("ledH", led)  );
-		
-    //I client
-    String sonarUri  = CoapApplServer.inputDeviceUri+"/sonar";
-    String entrySonar= 
-       protocol==ProtocolType.coap ? sonarUri : ""+RadarSystemConfig.sonarPort;
-    sonarClient=new SonarProxyAsClient("sonarClient",host,entrySonar,protocol);
-		
-    String ledUri  = CoapApplServer.outputDeviceUri+"/led";
-    String entryLed= 
-      protocol==ProtocolType.coap ? ledUri : ""+RadarSystemConfig.ledPort;
-    ledClient = new LedProxyAsClient("ledClient", host, entryLed, protocol);	
 	}
+
+	@After
+	public void down() {
+		System.out.println("down");		
+		ledServer.stop();
+		sonarServer.stop();
+	}	
+	
+ 	
 
 Il test simula il comportamento del Controller, senza RadarDisplay:
 
 .. code::  java
 
-    @Test 
-    public void testEnablers() {
-      sonar.activate();
-      sonarServer.activate();
-      ledServer.activate();
+	@Test 
+	public void testEnablers() {
+		sonarServer.start();
+		ledServer.start();
+		System.out.println(" ==================== testEnablers "  );
+ 		
+		//Simulo il Controller
+ 		Utils.delay(500);		
 		
-      RadarSystemConfig.testing=false; //true => oneshot
-      RadarSystemConfig.sonarDelay=100;
-      RadarSystemConfig.DLIMIT=30;
+		//Attivo il sonar
+		sonarPxy.activate();
+		System.out.println("testEnablers " + sonarPxy.isActive());
 		
-      //Simulo il Controller
-      Utils.delay(500);		
-      while( sonarClient.isActive() ) {
-        int v = sonarClient.getDistance().getVal();
-        if( v < RadarSystemConfig.DLIMIT ){
-          ledClient.turnOn();
-          boolean ledState = ledClient.getState();
-          assertTrue( ledState );	
-        }else{
-         ledClient.turnOff();
-         boolean ledState = ledClient.getState();
-         assertTrue( ! ledState );	
-        }
-    }		
-  }
+		while( sonarPxy.isActive() ) {
+			int v = sonarPxy.getDistance().getVal();
+			ColorsOut.out("testEnablers getVal="+v, ColorsOut.GREEN);
+			//Utils.delay(500);
+			if( v < RadarSystemConfig.DLIMIT ) {
+				ledPxy.turnOn();
+				boolean ledState = ledPxy.getState();
+				assertTrue( ledState );	
+			}
+			else {
+				ledPxy.turnOff();
+				boolean ledState = ledPxy.getState();
+				assertTrue( ! ledState );	
+			}
+		}		
+	}
+ 

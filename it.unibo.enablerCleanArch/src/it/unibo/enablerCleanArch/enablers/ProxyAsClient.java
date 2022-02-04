@@ -23,7 +23,7 @@ protected ProtocolType protocol ;
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
-			//Colors.out(name+"  | STARTED conn=" + conn );
+			//ColorsOut.out(name+"  | STARTED conn=" + conn );
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
@@ -33,7 +33,7 @@ protected ProtocolType protocol ;
 			case tcp : {
 				int port = Integer.parseInt(entry);
 				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
-				//Colors.out(name + " |  setConnection "  + conn );		
+				ColorsOut.out(name + " |  setConnection "  + conn );		
 				break;
 			}
 			case coap : {
@@ -51,7 +51,7 @@ protected ProtocolType protocol ;
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {
- 		//Colors.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn );
+ 		//ColorsOut.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, ColorsOut.BLUE );
 		try {
 			conn.forward(cmd);
 		} catch (Exception e) {

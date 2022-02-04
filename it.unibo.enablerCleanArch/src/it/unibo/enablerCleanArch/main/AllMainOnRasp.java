@@ -18,8 +18,8 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
  	}
 	public void doChoice() {
 		try {
-			programs.put("1", new RadarSystemMainLocal());
-			programs.put("2", new RadarSystemMainRaspWithoutRadar());
+			programs.put("1", new RadarSystemMainLocal());		//look at RadarSystemConfig
+			programs.put("2", new RadarSystemMainRaspWithoutRadar());  //with RadarSystemMainDisplayOnPc
 			/*
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		

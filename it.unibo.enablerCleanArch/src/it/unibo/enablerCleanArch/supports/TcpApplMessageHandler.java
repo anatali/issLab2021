@@ -19,9 +19,9 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 		try {
 			ColorsOut.out( "TcpApplMessageHandler | STARTS with handler=" + name + " conn=" + conn );
 			while( true ) {
-				//Colors.out(name + " | waits for message  ...");
+				//ColorsOut.out(name + " | waits for message  ...");
 			    String msg = conn.receiveMsg();
-			    //Colors.out(name + "  | TcpApplMessageHandler received:" + msg );
+			    //ColorsOut.out(name + "  | TcpApplMessageHandler received:" + msg );
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;
