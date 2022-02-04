@@ -14,8 +14,7 @@ iss22
    RadarSystemProdottiAnalisi
    RadarSystemProgetto
    RadarSystemSupporti
-   EnablersTCP 
-   RadarSystemEnablers
+   Enablers
    ContextServer
    RadarGuiCoap
    RadarSystemCoap
