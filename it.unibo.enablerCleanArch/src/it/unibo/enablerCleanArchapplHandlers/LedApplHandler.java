@@ -14,17 +14,17 @@ import it.unibo.enablerCleanArch.supports.Utils;
 public class LedApplHandler extends ApplMsgHandler {
 ILed led;
 
-	public LedApplHandler(String name ) {
-		super( name );
-	}
+//	public LedApplHandler(String name ) {
+//		super( name );
+//	}
 	public LedApplHandler(String name, ILed led) {
 		super(name);
 		this.led = led;
 	}
 	
-	public void setTheDevice( ILed dev ) {
-		led = dev;
-	}
+//	public void setTheDevice( ILed dev ) {
+//		led = dev;
+//	}
 	@Override
 	public void elaborate( ApplMessage message, Interaction2021 conn ) {
 		String payload = message.msgContent();

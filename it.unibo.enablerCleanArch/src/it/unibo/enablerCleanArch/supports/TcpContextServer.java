@@ -19,24 +19,24 @@ import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
  *  senza un concetto di naming delle risorse basato su path.
  */
 public class TcpContextServer extends TcpServer{
-	private static boolean activated = false;
+//	private static boolean activated = false;
 	private ContextMsgHandler ctxMsgHandler;
  
-	public TcpContextServer(String name, int port ) { //, IApplMsgHandler handler
+	public TcpContextServer(String name, int port ) {  
 		super(name, port,  new ContextMsgHandler("ctxH"));
 		this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;  //Inherited
  	}
  
-	@Override
-	public void activate() {
-		if( stopped ) {
-			stopped = false;
-			if( ! activated ) {		//SINGLETON
-				activated = true;
-				this.start();
-			}			
-		}
-	}
+//	@Override
+//	public void activate() {
+//		if( stopped ) {
+//			stopped = false;
+//			if( ! activated ) {		//SINGLETON
+//				activated = true;
+//				this.start();
+//			}			
+//		}
+//	}
 	
 	public void addComponent( String name, IApplMsgHandler h) {
 		ctxMsgHandler.addComponent(name, h);

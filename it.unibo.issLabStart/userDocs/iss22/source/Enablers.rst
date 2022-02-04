@@ -122,7 +122,11 @@ Enabler per il Sonar
       - i comandi: ridirigendoli al sonar locale 
       - le richieste:  ridirigendole al sonar locale e inviando la risposta al client 
 
-.. _SonarApplHandler:
+ 
+
++++++++++++++++++++++++++++++++++++
+SonarApplHandler
++++++++++++++++++++++++++++++++++++
 
 .. code:: java
 
@@ -148,6 +152,8 @@ Enabler per il Sonar
     }
   }
 
+.. _SonarProxyAsClientNoContext:
+
 ++++++++++++++++++++++++++++++++++++++++
 Proxy per il Sonar
 ++++++++++++++++++++++++++++++++++++++++
@@ -162,8 +168,6 @@ Proxy per il Sonar
     - Il '*proxy tipo client* per il Sonar è una specializzazione di  ``ProxyAsClient`` che implementa i 
       metodi di ``ISonar`` inviando dispatch o request all'*enabler tipo server* sulla connessione:
 
-
-.. SonarProxyAsClient   NON QUI: vedi ContextServer
 
 .. code:: java
 
@@ -200,8 +204,39 @@ Enabler e proxy per il Led
 
 L'enabler server per il Led usa un gestore di messaggi ``LedApplHandler`` che riceve comandi
 e richieste da un ``LedProxyAsClient``. 
-Entrambe queste classi sono simili a quanto visto per il Sonar.
+Entrambe queste classi sono simili a quanto visto per il Sonar. 
+Riportimao qui solo la struttura dell'handler che realizza la logica applicativa.
+
  
+
++++++++++++++++++++++++++++++++++++
+LedApplHandler
++++++++++++++++++++++++++++++++++++
+
+.. code:: Java
+
+  public class LedApplHandler extends ApplMsgHandler {
+  ILed led;
+
+    public LedApplHandler(String name ) {
+      super( name );
+    }
+    public LedApplHandler(String name, ILed led) {
+      super(name);
+      this.led = led;
+    }
+    
+    @Override
+    public void elaborate(String message, Interaction2021 conn) {
+      if( message.equals("on")) led.turnOn();
+      else if( message.equals("off") ) led.turnOff();	
+      else if( message.equals("getState") ) sendMsgToClient(""+led.getState(), conn );
+    }
+
+    @Override
+    public void elaborate( ApplMessage message, Interaction2021 conn ) { ...	}
+
+  }
 
  
 -----------------------------------------

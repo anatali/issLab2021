@@ -17,7 +17,7 @@ Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su un
 
 Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
 computazionale. Questo server (che denominiamo ``TcpContextServer``) 
-verrebbe a costituire una sorta di ``Facade`` comune a tutti gli `ApplMessageHandler`_ disponibili su quel nodo.
+verrebbe a costituire una sorta di ``Facade`` comune a tutti gli :ref:`ApplMessageHandler<ApplMessageHandler>` disponibili su quel nodo.
 
 .. *enabler-server* attivati nello stesso :blue:`contesto` rappresentato da quel  nodo.
 
@@ -27,8 +27,10 @@ verrebbe a costituire una sorta di ``Facade`` comune a tutti gli `ApplMessageHan
 
  
 Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace di sapere per quale
-componente è destinato un messaggio, per poi invocarne l'appropriato `ApplMessageHandler`_.
+componente è destinato un messaggio, per poi invocarne l'appropriato :ref:`ApplMessageHandler<ApplMessageHandler>`
+(si vedano ad esempio :ref:`LedApplHandler` e :ref:`SonarApplHandler`).
 
+  
 -------------------------------------------------------
 Struttura dei messaggi applicativi
 -------------------------------------------------------
@@ -64,18 +66,25 @@ I messaggi scambiati sono logicamente suddivisi in diverse categorie:
         :align: center
         :width: 80%
 
+.. code:: java
+
+  enum ApplMessageType{
+      event, dispatch, request, reply, invitation
+  }   
+   
 
 .. _ApplMessage:
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+La classe ApplMessage
+++++++++++++++++++++++++++++++++++++++++++++++++
 
 La classe ``ApplMessage`` fornisce metodi per la costruzione e la gestione di messaggi organizzati
 nel modo descritto. La classe si avvale del supporto del tuProlog_.
 
  .. code:: java
 
-  enum ApplMessageType{
-      event, dispatch, request, reply, invitation
-  }   
-  public class ApplMessage {
+   public class ApplMessage {
     protected String msgId       = "";
     protected String msgType     = null;
     protected String msgSender   = "";
@@ -113,11 +122,21 @@ nel modo descritto. La classe si avvale del supporto del tuProlog_.
 Il TcpContextServer
 -------------------------------------------------------
 
-Quando una stringa di forma ``msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )`` viene ricevuta
-dal  ``TcpContextServer``, questi attiva un gestore di sistema dei messaggi (`ContextMsgHandler`_ definito più avanti)
-capace di invocare l'`ApplMessageHandler`_ relativo al componente destinatario registrato presso di esso.
+Il ``TcpContextServer`` è una specializzazione del :ref:`TcpServer<TcpServer>` che lega il campo ``userDefHandler`` 
+a un gestore di messaggi (si veda `ContextMsgHandler`_ ) che ha il compito
+di 'girare' il meassggio ricevuto di forma ``msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )``
+al gestore applicativo, sulla base dell'attributo  ``RECEIVER`` del messaggio.
 
- .. code:: java
+.. image:: ./_static/img/Architectures/MessageHandlers.PNG
+   :align: center 
+   :width: 50%
+
+Per ottenere questo scopo, il TcpContextServer
+definisce metodi per aggiungere al  (ed eliminare dal)  `ContextMsgHandler`_  oggetti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` 
+che realizzano la gestione di livello applicativo dei messaggi di tipo `ApplMessage`_.
+
+ 
+.. code:: java
 
   public class TcpContextServer extends TcpServer{
   private static boolean activated = false;
@@ -128,34 +147,28 @@ capace di invocare l'`ApplMessageHandler`_ relativo al componente destinatario r
       this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;
     } 
 
-    @Override
-    public void activate() {
-      if( stopped ) {
-        stopped = false;
-        if( ! activated ) {		//SINGLETON
-          activated = true;
-          this.start();
-        }			
-      }
-    }
-	  public void addComponent( String name, IApplMsgHandler h) {
+    public void addComponent( String name, IApplMsgHandler h) {
       ctxMsgHandler.addComponent(name,h);
-	  }
+    }
     public void removeComponent( String name ) {
       ctxMsgHandler.removeComponent(name );
     }
   }
-
-
+ 
 .. _ContextMsgHandler:
 
 -------------------------------------------------------
 Il gestore di sistema dei messaggi
 -------------------------------------------------------
 
+Il gestore dei sistema dei messaggi attua il dispatching consultando una mappa
+interna che associa un nome (ilo destinatario) a un handler.
+
+
  .. code:: java
 
   public class ContextMsgHandler extends ApplMessageHandler{
+  //MAPPA
   private HashMap<String,IApplMsgHandler> handlerMap = 
                            new HashMap<String,IApplMsgHandler>();
 
@@ -182,12 +195,13 @@ Il gestore di sistema dei messaggi
    :width: 80%
 
 
-:remark:`I componenti IApplMsgHandler acquisiscono la capacità di interazione dal contesto`
-
 :remark:`I componenti IApplMsgHandler sono semplici gestori di messaggi`
 
+:remark:`I componenti IApplMsgHandler acquisiscono dal contesto la capacità di interazione`
+
+
 -------------------------------------------------------
-Ridefinizione del SonarProxyAsClient
+Ridefinizione dei client Proxy
 -------------------------------------------------------
 
 Introduciamo un nuovo parametro di configurazione per indicare l'uso del  `TcpContextServer`_:
@@ -196,7 +210,8 @@ Introduciamo un nuovo parametro di configurazione per indicare l'uso del  `TcpCo
   
   RadarSystemConfig.withContext = true;
 
-Ridefiniamo i client in modo  da inviare messaggi di tipo `ApplMessage`_, quando la configurazione 
+Ridefiniamo i client definiti in precedenza (come ad esempio :ref:`SonarProxyAsClient<SonarProxyAsClientNoContext>`)
+in modo  da inviare messaggi di tipo `ApplMessage`_, quando la configurazione 
 *RadarSystemConfig.withContext* specifica che usiamo il  `TcpContextServer`_:
 
 .. _SonarProxyAsClient: 
@@ -238,6 +253,35 @@ Ridefiniamo i client in modo  da inviare messaggi di tipo `ApplMessage`_, quando
     } 
   }
 
++++++++++++++++++++++++++++++++++++++++++++++
+Definizione dei messaggi come ``ApplMessage``
++++++++++++++++++++++++++++++++++++++++++++++
+I messaggi per aggiornare il Sonar (ai fini di testing) 
+e per comandare il Led sono definiti nella classe ``Utils`` come ``dispatch``,  
+mentre quelli per ottenere informazioni sono definiti come  ``request``:
+
+ .. code:: java
+
+  //Definizione dei Messaggi
+  ApplMessage turnOnLed    = 
+    new ApplMessage("msg( turn, dispatch, system, led, on, 2 )");
+  ApplMessage turnOffLed   = 
+    new ApplMessage("msg( turn, dispatch, system, led, off, 3 )");
+  ApplMessage sonarActivate =  
+    new ApplMessage("msg( sonarcmd, dispatch,system,sonar, activate,4)");
+  ApplMessage getDistance  = 
+    new ApplMessage("msg( sonarcmd, request, system,sonar, getDistance,5)");
+  ApplMessage getLedState  = 
+    new ApplMessage("msg( ledcmd,   request, system,led,   getState, 6)");
+  //For simulation:
+  ApplMessage fardistance  =
+    new ApplMessage("msg( distance, dispatch, system, sonar, 36, 0 )");
+  ApplMessage neardistance =
+    new ApplMessage("msg( distance, dispatch, system, sonar, 10, 1 )");
+
+
+
+
 -------------------------------------------------------
 Un esempio
 -------------------------------------------------------
@@ -249,7 +293,7 @@ Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema su PC 
 - un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un `ContextMsgHandler`_) 
   il metodo ``elaborate`` del Sonar e del Led.
 
-Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe `ApplMessageHandler`_
+Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe :ref:`ApplMessageHandler`
 che definisce il metodo ``elaborate`` per l'elaborazione dei messaggi a livello applicativo. 
 Inoltre essi non attivano alcun server se il tipo di protocollo
 specificato nel costruttore è ``null``.
@@ -282,33 +326,6 @@ metodo di esecuzione.
         sys.execute();
       }
     }
-
-++++++++++++++++++++++++++++++++++++++++++
-Definizione dei messaggi
-++++++++++++++++++++++++++++++++++++++++++
-I messaggi per aggiornare il Sonar (ai fini di testing) 
-e per comandare il Led sono definiti nella classe ``Utils`` come ``dispatch``,  
-mentre quelli per ottenere informazioni sono definiti come  ``request``:
-
- .. code:: java
-
-  //Definizione dei Messaggi
-  ApplMessage turnOnLed    = 
-    new ApplMessage("msg( turn, dispatch, system, led, on, 2 )");
-  ApplMessage turnOffLed   = 
-    new ApplMessage("msg( turn, dispatch, system, led, off, 3 )");
-  ApplMessage sonarActivate =  
-    new ApplMessage("msg( sonarcmd, dispatch,system,sonar, activate,4)");
-  ApplMessage getDistance  = 
-    new ApplMessage("msg( sonarcmd, request, system,sonar, getDistance,5)");
-  ApplMessage getLedState  = 
-    new ApplMessage("msg( ledcmd,   request, system,led,   getState, 6)");
-  //For simulation:
-  ApplMessage fardistance  =
-    new ApplMessage("msg( distance, dispatch, system, sonar, 36, 0 )");
-  ApplMessage neardistance =
-    new ApplMessage("msg( distance, dispatch, system, sonar, 10, 1 )");
-
 
 ++++++++++++++++++++++++++++++++++++++++++
 Definizione del configuratore
