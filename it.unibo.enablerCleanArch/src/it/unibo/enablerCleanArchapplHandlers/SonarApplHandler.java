@@ -14,7 +14,7 @@ private ISonar sonar;
 		public SonarApplHandler(String name, ISonar sonar) {
 			super(name);
 			this.sonar = sonar;
-			ColorsOut.out(name+ " | SonarApplHandler CREATED sonar= " + sonar, ColorsOut.BLUE);
+			ColorsOut.out(name+ " | SonarApplHandler CREATED with sonar= " + sonar, ColorsOut.BLUE);
 	 	}
  
 		@Override

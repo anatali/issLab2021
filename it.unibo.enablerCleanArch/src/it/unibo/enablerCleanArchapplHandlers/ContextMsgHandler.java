@@ -37,16 +37,16 @@ public class ContextMsgHandler extends ApplMsgHandler{
 		String dest          = msg.msgReceiver();
 		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
 		IApplMsgHandler h    = handlerMap.get(dest);
-		//Colors.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, Colors.GREEN);
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN);
 		if( dest != null && (! msg.isReply()) ) h.elaborate(msg.msgContent(), conn);	
 	}
 
-	public void addComponent( String name, IApplMsgHandler h) {
-		ColorsOut.out(name +  " | added:" + name);
-		handlerMap.put(name, h);
+	public void addComponent( String devname, IApplMsgHandler h) {
+		ColorsOut.out(name +  " | added:" + devname);
+		handlerMap.put(devname, h);
 	}
-	public void removeComponent( String name ) {
-		ColorsOut.out(name +  " | removed:" + name);
-		handlerMap.remove( name );
+	public void removeComponent( String devname ) {
+		ColorsOut.out(name +  " | removed:" + devname);
+		handlerMap.remove( devname );
 	}
 }

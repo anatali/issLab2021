@@ -328,7 +328,7 @@ specificato nel costruttore è ``null``.
 .. image:: ./_static/img/Radar/sysDistr1.PNG
    :align: center 
    :width: 60%
- 
+
 ++++++++++++++++++++++++++++++++++++++++++
 Struttura del programma 
 ++++++++++++++++++++++++++++++++++++++++++

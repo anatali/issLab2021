@@ -27,22 +27,13 @@ public class TcpContextServer extends TcpServer{
 		this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;  //Inherited
  	}
  
-//	@Override
-//	public void activate() {
-//		if( stopped ) {
-//			stopped = false;
-//			if( ! activated ) {		//SINGLETON
-//				activated = true;
-//				this.start();
-//			}			
-//		}
-//	}
+
 	
-	public void addComponent( String name, IApplMsgHandler h) {
-		ctxMsgHandler.addComponent(name, h);
+	public void addComponent( String devname, IApplMsgHandler h) {
+		ctxMsgHandler.addComponent(devname, h);
 	}
-	public void removeComponent( String name ) {
-		ctxMsgHandler.removeComponent( name );
+	public void removeComponent( String devname ) {
+		ctxMsgHandler.removeComponent( devname );
 	}
  
 }

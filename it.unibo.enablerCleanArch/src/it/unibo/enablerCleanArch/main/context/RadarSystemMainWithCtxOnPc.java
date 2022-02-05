@@ -33,9 +33,9 @@ private Controller controller;
  	      RadarSystemConfig.protcolType       = ProtocolType.tcp;
  		  RadarSystemConfig.testing           = false;
 		  RadarSystemConfig.raspHostAddr      = "192.168.1.9";
-		  RadarSystemConfig.ctxServerPort     = 8048;
+		  RadarSystemConfig.ctxServerPort     = 8018;
 		  RadarSystemConfig.sonarDelay        = 1500;
-		  RadarSystemConfig.withContext       = true;		
+		  RadarSystemConfig.withContext       = true; //MANDATORY: to use ApplMessage
 		  RadarSystemConfig.tracing           = true;
 	
 	}
@@ -44,7 +44,7 @@ private Controller controller;
 		String host           = RadarSystemConfig.raspHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
 		String ctxport        = ""+RadarSystemConfig.ctxServerPort;
-		led    		= new LedProxyAsClient("ledPxy", host, ctxport, protocol );
+		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
   		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
   		radar  		= DeviceFactory.createRadarGui();
   		controller 	= Controller.create(led, sonar, radar);
@@ -65,6 +65,7 @@ private Controller controller;
 	
  
 	public void terminate() {
+		sonar.deactivate();
 		System.exit(0);
 	}
 

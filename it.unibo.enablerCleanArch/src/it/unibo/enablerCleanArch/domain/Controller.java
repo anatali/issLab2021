@@ -26,11 +26,11 @@ private ActionFunction endFun;
 	}
 	
 	
-	public void start( ActionFunction endFun, int n ) {
+	public void start( ActionFunction endFun, int limit ) {
 		this.endFun = endFun;
 		ColorsOut.outappl("Controller | start with endFun=" + endFun , ColorsOut.BLUE);
 		sonar.activate();
-		activate( n );
+		activate( limit );
 	}
 	
 
