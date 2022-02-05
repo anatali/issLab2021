@@ -202,6 +202,81 @@ interna che associa un :blue:`identificativo univoco` (il nome del destinatario)
 
 
 -------------------------------------------------------
+Ridefinizione degli handler
+-------------------------------------------------------
+
+All'interno di ogni handler applicativo, occorre ora definire il codice del metodo `elaborate` 
+quando il messggio di input è di tipo `ApplMessage`_.
+
+++++++++++++++++++++++++++++++++++++++++++
+elaborate di :ref:`LedApplHandler` 
+++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+  public void elaborate( ApplMessage message, Interaction2021 conn ) {
+    String payload = message.msgContent();
+		if( message.isRequest() ) {
+			if(payload.equals("getState") ) {
+ 				String ledstate = ""+led.getState();
+        ApplMessage reply = prepareReply( message, ledstate);
+				sendAnswerToClient(reply.toString());
+			}
+		}else if( message.isReply() ) {
+			
+		}else elaborate(payload, conn); //call to previous version
+  }
+
+
+++++++++++++++++++++++++++++++++++++++++++
+elaborate di :ref:`SonarApplHandler` 
+++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+  public void elaborate( ApplMessage message, Interaction2021 conn ) {
+  String payload = message.msgContent();
+			if( message.isRequest() ) {
+				if(payload.equals("getDistance") ) {
+					String vs = ""+sonar.getDistance().getVal();
+					ApplMessage reply = prepareReply( message, vs);   
+					sendAnswerToClient(reply.toString());
+
+				}else if(payload.equals("isActive") ) {
+ 					String sonarState = ""+sonar.isActive();
+					ApplMessage reply = prepareReply( message, sonarState); //Utils.buildReply("sonar", "sonarstate", sonarState, message.msgSender()) ;
+  					sendAnswerToClient(reply.toString());
+				}
+			}else elaborate(payload, conn);			
+  }
+
+++++++++++++++++++++++++++++++++++++++++++
+Il metodo prepareReply
+++++++++++++++++++++++++++++++++++++++++++
+
+Il metodo ``prepareReply`` viene introdotto in :ref:`ApplMsgHandler<ApplMsgHandler>` in modo che:
+
+- l'identificativo del messaggio di risposta coincida con quello della richiesta
+- l'identificativo del destinatario sia il mittente della richiesta
+
+.. code:: java
+
+    protected ApplMessage prepareReply(ApplMessage message, String answer) {
+		String payload = message.msgContent();
+		String sender  = message.msgSender();
+		String receiver= message.msgReceiver();
+		String reqId   = message.msgId();
+		ApplMessage reply = null;
+		if( message.isRequest() ) {
+			//The msgId of the reply must be the id of the request !!!!
+ 			reply = Utils.buildReply(receiver, reqId, answer, message.msgSender()) ;
+		}else { //DEFENSIVE
+			ColorsOut.outerr(name + " | ApplMsgHandler prepareReply ERROR: message not a request");
+		}
+		return reply;
+    }
+
+-------------------------------------------------------
 Ridefinizione dei client Proxy
 -------------------------------------------------------
 
@@ -277,7 +352,10 @@ dei protocolli CoAP e MQTT :
   }
 
 I metodi ``sendCommandOnConnection`` e ``sendRequestOnConnection`` sono definiti in :ref:`ProxyAsClient`.
- 
+
+
+.. _messaggiAppl:
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Definizione dei messaggi come ``ApplMessage``
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -313,139 +391,22 @@ di informazione.
 Un esempio
 -------------------------------------------------------
 
-Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema su PC che abbia tre componenti:
+Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema che abbia il Controller (e il radar) su PC
+e i dispositivi sul Raspberry, secondo l'architettura mostrata in figura:
 
-- un Sonar di classe ``SonarAdapterEnablerAsServer`` che riceve valori di distanza inviati via rete
-- un Led  di classe ``LedEnablerAsServer`` che riceve comandi di accensione-spegnimento inviati via rete
-- un ``TcpContextServer`` che riceve messaggi da client remoti e invoca (usando un `ContextMsgHandler`_) 
-  il metodo ``elaborate`` del Sonar e del Led.
-
-Ricordiamo che gli enabler *tipo-server* sono tutti specializzazioni della classe :ref:`IApplMsgHandler`
-che definisce il metodo ``elaborate`` per l'elaborazione dei messaggi a livello applicativo. 
-Inoltre essi non attivano alcun server se il tipo di protocollo
-specificato nel costruttore è ``null``.
 
 .. image:: ./_static/img/Radar/sysDistr1.PNG
    :align: center 
    :width: 60%
 
-++++++++++++++++++++++++++++++++++++++++++
-Struttura del programma 
-++++++++++++++++++++++++++++++++++++++++++
+I dispositivi sul Raspberry sono incspsulati in  handler che gestiscono i :ref:`Messaggi applicativi<messaggiAppl>` inviati 
+loro dal :ref:`TcpContextServer<TcpContextServer>`.
 
-La struttura del programma di esempio comprende un metodo di configurazione del sistema e un
-metodo di esecuzione.
+Si veda:
 
- .. code:: java
-
-    public class TcpContextServerExampleMain {
-      private TcpContextServer contextServer;
-      private ISonar sonar;
-      private Interaction2021 conn; 
-      //Definizione dei Messaggi
-      ...
-      //Definizione di un metodo di configurazione
-      public void configureTheSystem() { ... }
-      
-      //Definizione di un metodo di esecuzione
-      public void execute() throws Exception{ ... }
-
-      public static void main( String[] args) throws Exception {
-        TcpContextServerExampleMain sys = new TcpContextServerExampleMain();
-        sys.configureTheSystem();
-        sys.execute();
-      }
-    }
-
-++++++++++++++++++++++++++++++++++++++++++
-Definizione del configuratore
-++++++++++++++++++++++++++++++++++++++++++
-
-Il metodo di configurazione definisce i parametri e crea i componenti:
-
- .. code:: java
-
-  public void configureTheSystem() {
-    RadarSystemConfig.simulation        = true;    
-    RadarSystemConfig.testing           = true;    		
-    RadarSystemConfig.pcHostAddr        = "localhost";
-    RadarSystemConfig.ctxServerPort     = 8048;
-    RadarSystemConfig.sonarDelay        = 1500;
-    RadarSystemConfig.withContext       = true; 
+- ``RadarSystemMainDevsCtxOnRasp`` : da attivare sul Raspberry 
+- ``RadarSystemMainWithCtxOnPc`` : da attivare sul PC
  
-    //Creazione del server di contesto
-    contextServer  = 
-      new TcpContextServer("TcpApplServer",RadarSystemConfig.ctxServerPort);
-		
-    //Creazione del Sonar e del Led
- 		sonar = DeviceFactory.createSonar();
-		led   = DeviceFactory.createLed();
-
-    //Registrazione dei componenti presso il contesto	
-    IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar);
-    IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);
-    IApplMsgHandler radarHandler = new RadarApplHandler("radarH");
-    contextServer.addComponent("sonar", sonarHandler);
-    contextServer.addComponent("led",   ledHandler);	
-    contextServer.addComponent("radar", radarHandler);	
-  }//configureTheSystem
-
-
- 
-++++++++++++++++++++++++++++++++++++++++++
-Esecuzione
-++++++++++++++++++++++++++++++++++++++++++
-Il metodo di esecuzione utilizza il client per trasmettere al ``TcpContextServer`` 
-dapprima messaggi che riguardano il Sonar e successivamente messaggi che riguardano il Led.
-
-.. invia prima un valore ``d>DLIMIT`` e poi un valore ``d<DLIMIT``
-
-
-.. code:: java
- 
-  public void execute() throws Exception{
-    sonar.activate();
-    contextServer.activate();
-    simulateController();
-  }
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-simulateController
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-L'operazione ``simulateController`` effettua un numero prefissato di  letture del Sonar e di 
-update del Led:
-
-.. code:: java
- 
-  protected void simulateController(    )  {
-  RadarSystemConfig.sonarDelay = 50;
-  RadarSystemConfig.DLIMIT     = 60;
-  IRadarDisplay radar          = RadarDisplay.getRadarDisplay();
-   	
-  ProxyAsClient ledCaller     = new ProxyAsClient("ledCaller","localhost",
-            ""+RadarSystemConfig.ctxServerPort, ProtocolType.tcp);
-		
-    //Activate the sonar
-    sonarCaller.sendCommandOnConnection(sonarActivate.toString());
-
-    for( int i=1; i<=40; i++) {
-      String answer = 
-        sonarCaller.sendRequestOnConnection(Utils.getDistance.toString());
-      int v = Integer.parseInt(answer);
-      radar.update(answer, "90");
-      if( v < RadarSystemConfig.DLIMIT ) 
-          ledCaller.sendCommandOnConnection(Utils.turnOnLed.toString());
-      else ledCaller.sendCommandOnConnection((Utils.turnOffLed.toString());  
-      String ledState = 
-          ledCaller.sendRequestOnConnection((Utils.getLedState.toString());
-      Colors.outappl("simulateController ledState=" + ledState +
-        " for distance=" + v + " i="+i, Colors.ANSI_PURPLE);
-    }
-  }
 
 
 ++++++++++++++++++++++++++++++++++++++++
@@ -453,21 +414,106 @@ Problemi ancora aperti
 ++++++++++++++++++++++++++++++++++++++++
 
 - Un handler lento o che si blocca, rallenta o blocca la gestione dei messaggi da parte del
-  ``ContextMsgHandler`` e quindi del ``TcpContextServer``
-- Nel caso di componenti con stato utlizzabili da più clients, vi possono essere problemi
-  di concorrenza.
+  ``ContextMsgHandler`` e quindi del :ref:`TcpContextServer<TcpContextServer>`.
+- Nel caso di componenti con stato utlizzabili da più clienti, vi possono essere problemi di concorrenza.
+  
+Per un esempio, si consideri un contatore (POJO) che effettua una operazione di decremento rilasciando il controllo 
+prima del completamento della operazione. 
+  
+.. code:: java
 
-  L'esempio:
-
-  - ``SharedCounterExampleMain`` 
-  - ``CounterWithDelay``
-  - ``EnablerCounter``
-  - ``CounterClient``
-  - ``msg( dec, dispatch, main, counter, dec(10), 1 )``
-
-
+  public class CounterWithDelay {
+    private int n = 2;
+    public void inc() { n = n + 1; }
+    public void dec(int dt) {	//synchronized required BUT other clients delayed
+      int v = n;
+      v = v - 1;
+      ColorsOut.delay(dt);  //the control is given to another client
+      ColorsOut.out("Counter resumes v= " + v);
+      n = v;
+      ColorsOut.out("Counter new value after dec= " + n);
+    }
+  }
+  
 .. image:: ./_static/img/Radar/CounterWithDelay.PNG
    :align: center  
    :width: 60%
+
+
+L'handler che
+
+
+.. code:: java
+
+  public class CounterHandler extends ApplMsgHandler {
+  private CounterWithDelay c = new CounterWithDelay();
+	public CounterHandler( String name ) {
+		 super(name);
+	}
+
+	@Override
+	public void elaborate(String message, Interaction2021 conn) {
+		ColorsOut.out(name + " | elaborate: "+message);
+		try {
+			ApplMessage msg = new ApplMessage(message);
+			ColorsOut.out(name + " | elaborate: "+msg);
+			String cmd      = msg.msgContent();
+			Struct cmdT     = (Struct) Term.createTerm(cmd);
+			String cmdName  = cmdT.getName();
+			if( cmdName.equals("dec")) {
+				elaborateDec(cmdT);	
+				if( msg.isRequest() ) {
+					String reply = "answer_from_" + name;
+	 				ColorsOut.out(name + " | reply="+reply );					
+					//sendMsgToClient( msg.msgId(),   "replyToDec", msg.msgSender(), reply);
+	 				sendMsgToClient(  reply, conn ) ;
+				}
+		}
+		}catch( Exception e) {
+			Struct cmdT     = (Struct) Term.createTerm(message);
+			elaborateDec(   cmdT );
+		}	
+ 	} 
+	public void elaborate( ApplMessage message, Interaction2021 conn ) {
+  }
+	
+	protected void elaborateDec( Struct cmdT ) {
+		int delay = Integer.parseInt(cmdT.getArg(0).toString());
+		ColorsOut.out(name + " | dec delay="+delay);
+		c.dec(delay);			
+	}
+
+	@Override
+	public void sendAnswerToClient(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+ 
+
+}
+
+
+La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio ``msg( dec, dispatch, main, counter, dec(DELAY), 1 )``
+con ``DELAY`` fissato a un certo valore.
+Ad esempio:
+
+.. code:: java
+
+  String delay = "200"; 
+  ApplMessage msgDec = new ApplMessage(
+      "msg( cmd, dispatch, main, DEST, dec(DELAY), 1 )"
+      .replace("DEST", resourceName).replace("DELAY", delay));
+
+  new ProxyAsClient("client1","localhost", ""+ctxServerPort, ProtocolType.tcp).
+      sendCommandOnConnection(msgDec.toString());
+
+Il programma ``SharedCounterExampleMain`` crea due chiamate di questo tipo una di seguito all'alltra. 
+Con delay basso (ad esempio ``delay = "10"``) il comportamento è corretto (e il contatore va a 0), 
+ma con ``delay = "200"`` si vede che il decremento non avviene (il contatore si fissa a 1).
+ 
+
+
+
 
  

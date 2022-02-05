@@ -5,19 +5,13 @@ import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.TcpContextServer;
-import it.unibo.enablerCleanArch.supports.TcpServer;
-import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
-import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
-import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
 /*
- * Applicazione che va in coppia con RadarSystemDevicesOnRasp
+ * Applicazione che va in coppia con RadarSystemMainDevsCtxOnRasp
  */
 
 public class RadarSystemMainWithCtxOnPc implements IApplication{
-private TcpContextServer contextServer;
+
 private IRadarDisplay radar;
 private ISonar sonar;
 private ILed  led ;

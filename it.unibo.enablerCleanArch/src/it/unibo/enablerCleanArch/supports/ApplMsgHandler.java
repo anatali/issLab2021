@@ -48,15 +48,15 @@ protected String name;
  	public abstract void elaborate(String message, Interaction2021 conn) ;
  	
  	
-    protected ApplMessage prepareReply(ApplMessage message, String answer) {
-		String payload = message.msgContent();
-		String sender  = message.msgSender();
-		String receiver= message.msgReceiver();
-		String reqId   = message.msgId();
+    protected ApplMessage prepareReply(ApplMessage requestMsg, String answer) {
+		String payload = requestMsg.msgContent();
+		String sender  = requestMsg.msgSender();
+		String receiver= requestMsg.msgReceiver();
+		String reqId   = requestMsg.msgId();
 		ApplMessage reply = null;
-		if( message.isRequest() ) {
+		if( requestMsg.isRequest() ) {
 			//The msgId of the reply must be the id of the request !!!!
- 			reply = Utils.buildReply(receiver, reqId, answer, message.msgSender()) ;
+ 			reply = Utils.buildReply(receiver, reqId, answer, requestMsg.msgSender()) ;
 		}else { //DEFENSIVE
 			ColorsOut.outerr(name + " | ApplMsgHandler prepareReply ERROR: message not a request");
 		}

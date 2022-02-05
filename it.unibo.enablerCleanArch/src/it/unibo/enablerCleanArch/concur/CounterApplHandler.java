@@ -8,10 +8,12 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
  
-public class CounterHandler extends ApplMsgHandler {
-private CounterWithDelay c = new CounterWithDelay();
-	public CounterHandler( String name ) {
+public class CounterApplHandler extends ApplMsgHandler {
+private CounterWithDelay counter
+;
+	public CounterApplHandler( String name, CounterWithDelay counter ) {
 		 super(name);
+		 this.counter = counter;
 	}
 
 	@Override

@@ -154,6 +154,10 @@ SonarApplHandler
         sendMsgToClient(sonarState, conn);
       }
     }
+  
+    @Override
+    public void elaborate(ApplMessage message,Interaction2021 conn) {...}
+
   }
 
 .. _SonarProxyAsClientNoContext:
@@ -224,9 +228,6 @@ LedApplHandler
   public class LedApplHandler extends ApplMsgHandler   {
   ILed led;
 
-    public LedApplHandler(String name ) {
-      super( name );
-    }
     public LedApplHandler(String name, ILed led) {
       super(name);
       this.led = led;

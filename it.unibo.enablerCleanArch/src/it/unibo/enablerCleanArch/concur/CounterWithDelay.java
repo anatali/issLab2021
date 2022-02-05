@@ -11,8 +11,6 @@ private int n = 2;
 		ColorsOut.delay(dt);   //the control is given to another client
 		ColorsOut.out("Counter resumes v= " + v);
 		n = v;
-		ColorsOut.out("Counter n= " + n);
+		ColorsOut.out("Counter new value after dec= " + n);
 	}
-	
- 
 }

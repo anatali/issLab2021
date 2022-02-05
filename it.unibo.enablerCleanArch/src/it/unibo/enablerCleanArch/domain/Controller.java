@@ -1,7 +1,5 @@
 package it.unibo.enablerCleanArch.domain;
 
-import java.util.function.Consumer;
-
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;

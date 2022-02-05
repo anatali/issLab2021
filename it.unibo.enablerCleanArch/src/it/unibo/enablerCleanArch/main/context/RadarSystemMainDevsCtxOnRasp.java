@@ -11,7 +11,7 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
  
 
 /*
- * Applicazione che va in coppia con RadarSystemDevicesOnRasp
+ * Applicazione che va in coppia con RadarSystemMainWithCtxOnPc
  */
 
 public class RadarSystemMainDevsCtxOnRasp implements IApplication{
@@ -54,10 +54,8 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 		//Registrazione dei componenti presso il contesto
 		  IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar); 
 		  IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);		  
-//		  IApplMsgHandler radarHandler = new RadarApplHandler("radarH",radar);
 		  contextServer.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
 		  contextServer.addComponent("led",   ledHandler);		//led NAME mandatory
-//		  contextServer.addComponent("radar", radarHandler); 	
 	}
   
 	public void terminate() {
@@ -67,11 +65,6 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 		System.exit(0);
 	}
 
- 
-// 	public IRadarDisplay getRadarGui() { return radar; }
- 	public ILed getLed() { return led; }
- 	public ISonar getSonar() { return sonar; }
-// 	public Controller getController() { return controller; }
 	
 	public static void main( String[] args) throws Exception {
 		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
