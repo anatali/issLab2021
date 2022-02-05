@@ -54,10 +54,10 @@ protected String name;
 		String receiver= requestMsg.msgReceiver();
 		String reqId   = requestMsg.msgId();
 		ApplMessage reply = null;
-		if( requestMsg.isRequest() ) {
+		if( requestMsg.isRequest() ) { //DEFENSIVE
 			//The msgId of the reply must be the id of the request !!!!
  			reply = Utils.buildReply(receiver, reqId, answer, requestMsg.msgSender()) ;
-		}else { //DEFENSIVE
+		}else { 
 			ColorsOut.outerr(name + " | ApplMsgHandler prepareReply ERROR: message not a request");
 		}
 		return reply;

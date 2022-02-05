@@ -14,17 +14,13 @@ import it.unibo.enablerCleanArch.supports.Utils;
 public class LedApplHandler extends ApplMsgHandler {
 ILed led;
 
-//	public LedApplHandler(String name ) {
-//		super( name );
-//	}
+
 	public LedApplHandler(String name, ILed led) {
 		super(name);
 		this.led = led;
 	}
 	
-//	public void setTheDevice( ILed dev ) {
-//		led = dev;
-//	}
+
 	@Override
 	public void elaborate( ApplMessage message, Interaction2021 conn ) {
 		String payload = message.msgContent();
@@ -32,12 +28,11 @@ ILed led;
 //		String receiver= message.msgReceiver();
 //		String reqId   = message.msgId();
 		if( message.isRequest() ) {
-//			if(payload.equals("getState") ) {
+			if(payload.equals("getState") ) {
  				String ledstate = ""+led.getState();
-//				ApplMessage reply = Utils.buildReply("led", reqId, ledstate, message.msgSender()) ;
  				ApplMessage reply = prepareReply( message, ledstate);
 				sendAnswerToClient(reply.toString());
-			
+			}
 		}else if( message.isReply() ) {
 			
 		}else elaborate(payload, conn);

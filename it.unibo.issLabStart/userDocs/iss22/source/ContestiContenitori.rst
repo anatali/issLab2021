@@ -447,17 +447,14 @@ L'handler che
 
   public class CounterHandler extends ApplMsgHandler {
   private CounterWithDelay c = new CounterWithDelay();
-	public CounterHandler( String name ) {
-		 super(name);
-	}
+
+  public CounterHandler( String name ) { super(name); }
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		ColorsOut.out(name + " | elaborate: "+message);
-		try {
-			ApplMessage msg = new ApplMessage(message);
-			ColorsOut.out(name + " | elaborate: "+msg);
-			String cmd      = msg.msgContent();
+    try {
+      ApplMessage msg = new ApplMessage(message);
+      String cmd      = msg.msgContent();
 			Struct cmdT     = (Struct) Term.createTerm(cmd);
 			String cmdName  = cmdT.getName();
 			if( cmdName.equals("dec")) {
@@ -494,13 +491,13 @@ L'handler che
 }
 
 
-La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio ``msg( dec, dispatch, main, counter, dec(DELAY), 1 )``
+La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio ``msg( cmd, dispatch, main, counter, dec(DELAY), 1)``
 con ``DELAY`` fissato a un certo valore.
 Ad esempio:
 
 .. code:: java
 
-  String delay = "200"; 
+  String delay = "500"; 
   ApplMessage msgDec = new ApplMessage(
       "msg( cmd, dispatch, main, DEST, dec(DELAY), 1 )"
       .replace("DEST", resourceName).replace("DELAY", delay));
@@ -509,8 +506,8 @@ Ad esempio:
       sendCommandOnConnection(msgDec.toString());
 
 Il programma ``SharedCounterExampleMain`` crea due chiamate di questo tipo una di seguito all'alltra. 
-Con delay basso (ad esempio ``delay = "10"``) il comportamento è corretto (e il contatore va a 0), 
-ma con ``delay = "200"`` si vede che il decremento non avviene (il contatore si fissa a 1).
+Con delay basso (ad esempio ``delay = "50"``) il comportamento è corretto (e il contatore va a 0), 
+ma con ``delay = "500"`` si vede che il decremento non avviene (il contatore si fissa a 1).
  
 
 

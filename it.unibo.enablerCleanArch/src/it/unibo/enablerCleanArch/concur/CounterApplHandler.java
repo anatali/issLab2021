@@ -15,44 +15,37 @@ private CounterWithDelay counter
 		 super(name);
 		 this.counter = counter;
 	}
-
+	
 	@Override
-	public void elaborate(String message, Interaction2021 conn) {
-		ColorsOut.out(name + " | elaborate: "+message);
+	public void elaborate(String cmd, Interaction2021 conn) {		
+		ColorsOut.out(name + " | elaborate cmd: "+cmd);
+		elaborate( cmd );
+	} 
+	
+	protected String elaborate( String cmd ) {
+		String answer=null;
 		try {
-			ApplMessage msg = new ApplMessage(message);
-			ColorsOut.out(name + " | elaborate: "+msg);
-			String cmd      = msg.msgContent();
-			Struct cmdT     = (Struct) Term.createTerm(cmd);
+ 			Struct cmdT     = (Struct) Term.createTerm(cmd);
 			String cmdName  = cmdT.getName();
 			if( cmdName.equals("dec")) {
-				elaborateDec(cmdT);	
-				if( msg.isRequest() ) {
-					String reply = "answer_from_" + name;
-	 				ColorsOut.out(name + " | reply="+reply );					
-					//sendMsgToClient( msg.msgId(),   "replyToDec", msg.msgSender(), reply);
-	 				sendMsgToClient(  reply, conn ) ;
-				}
+				int delay = Integer.parseInt(cmdT.getArg(0).toString());
+				ColorsOut.out(name + " | dec delay="+delay);
+				counter.dec(delay);	
+				answer = ""+counter.getVal();
 		}
 		}catch( Exception e) {
-			Struct cmdT     = (Struct) Term.createTerm(message);
-			elaborateDec(   cmdT );
-		}	
- 	} 
-	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
+ 		}	
+		return answer;
+	}
 	
-	protected void elaborateDec( Struct cmdT ) {
-		int delay = Integer.parseInt(cmdT.getArg(0).toString());
-		ColorsOut.out(name + " | dec delay="+delay);
-		c.dec(delay);			
-	}
-
 	@Override
-	public void sendAnswerToClient(String message) {
-		// TODO Auto-generated method stub
-		
+	public void elaborate( ApplMessage msg, Interaction2021 conn ) {
+		ColorsOut.out(name + " | elaborate ApplMessage: "+msg);
+ 		String answer = elaborate( msg.msgContent() );
+		if( msg.isRequest() ) {
+			ApplMessage  reply = prepareReply(msg, answer);
+			sendAnswerToClient(reply.toString());			
+		}
 	}
-
- 
 
 }

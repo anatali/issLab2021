@@ -27,18 +27,30 @@ public class ContextMsgHandler extends ApplMsgHandler{
  	}
 
 	@Override
-	public void elaborate( ApplMessage message, Interaction2021 conn ) {}
+	public void elaborate( ApplMessage msg, Interaction2021 conn ) {
+		ColorsOut.out(name+" | elaborate ApplMessage:" + msg + " conn=" + conn);
+		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+ 		String dest          = msg.msgReceiver();
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
+		IApplMsgHandler h    = handlerMap.get(dest);
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN);
+		if( dest != null && (! msg.isReply()) ) h.elaborate( msg , conn);			
+	}
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn);
-		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
-		ApplMessage msg      = new ApplMessage(message);
-		String dest          = msg.msgReceiver();
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
-		IApplMsgHandler h    = handlerMap.get(dest);
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN);
-		if( dest != null && (! msg.isReply()) ) h.elaborate(msg.msgContent(), conn);	
+		try {
+ 			ApplMessage msg      = new ApplMessage(message);
+			elaborate( msg, conn );
+	//		String dest          = msg.msgReceiver();
+	//		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
+	//		IApplMsgHandler h    = handlerMap.get(dest);
+	//		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN);
+	//		if( dest != null && (! msg.isReply()) ) h.elaborate(msg.msgContent(), conn);	
+		}catch(Exception e) {
+			ColorsOut.outerr(name +  " | elaborate ERROR " + e.getMessage());
+		}
 	}
 
 	public void addComponent( String devname, IApplMsgHandler h) {
