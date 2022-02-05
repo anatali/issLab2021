@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.IApplication;
+import it.unibo.enablerCleanArch.main.context.RadarSystemMainDevsCtxOnRasp;
 import it.unibo.enablerCleanArch.main.local.RadarSystemMainLocal;
 import it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
@@ -18,8 +19,9 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
  	}
 	public void doChoice() {
 		try {
-			programs.put("1", new RadarSystemMainLocal());		//look at RadarSystemConfig
-			programs.put("2", new RadarSystemMainRaspWithoutRadar());  //with RadarSystemMainDisplayOnPc
+			programs.put("1", new RadarSystemMainLocal());				//look at RadarSystemConfig
+			programs.put("2", new RadarSystemMainRaspWithoutRadar());  	//with RadarSystemMainDisplayOnPc
+			programs.put("3", new RadarSystemMainDevsCtxOnRasp()); 		 //with RadarSystemMainWithCtxOnPc
 			/*
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		

@@ -15,7 +15,7 @@ iss22
    RadarSystemProgetto
    RadarSystemSupporti
    Enablers
-   ContextServer
+   ContestiContenitori
    RadarGuiCoap
    RadarSystemCoap
    RadarSystemDeploy

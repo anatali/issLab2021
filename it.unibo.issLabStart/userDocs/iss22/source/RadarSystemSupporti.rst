@@ -102,7 +102,7 @@ L'interfaccia ``IApplMsgHandler``
 +++++++++++++++++++++++++++++++++++++++++++
 
 Nel seguito, incapsuleremo il codice applicativo  entro oggetti che implementano l'interfaccia
-``IApplMessageHandler``.
+``IApplMsgHandler``.
 
 .. code:: Java
 
@@ -116,7 +116,7 @@ Il costruttore del TCP server avrà quindi la seguente signature:
 
 .. code:: Java
 
-  public TcpServer(String name,int port, IApplMessageHandler userDefHandler) 
+  public TcpServer(String name,int port, IApplMsgHandler userDefHandler) 
 
 cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di:
 
@@ -124,10 +124,10 @@ cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di
 - inviare risposte ai clienti sulla stessa connessione.
 
 
-.. _ApplMessageHandler:
+.. _ApplMsgHandler:
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-``ApplMessageHandler`` implementa ``IApplMsgHandler``
+``ApplMsgHandler`` implementa ``IApplMsgHandler``
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Per agevolare il lavoro dell'application designer, viene definita una classe astratta che 
@@ -140,9 +140,9 @@ dei messaggi in ingresso.
 
 .. code:: Java
 
-  public abstract class ApplMessageHandler implements IApplMsgHandler{  
+  public abstract class ApplMsgHandler implements IApplMsgHandler{  
   protected String name;
-    public ApplMessageHandler( String name ) { this.name = name; }
+    public ApplMsgHandler( String name ) { this.name = name; }
     
     public Interaction2021 getName(  ) {  return name;  }
     
@@ -179,7 +179,7 @@ e il metodo ``run`` che ne specifica il funzionamento.
   private int port;
   private ServerSocket serversock;
 
-  public TcpServer(String name,int port,IApplMessageHandler userDefHandler){
+  public TcpServer(String name,int port,IApplMsgHandler userDefHandler){
     super(name);
     this.port        = port;
     this.applHandler = applHandler;
@@ -318,7 +318,7 @@ I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TC
 L'handler dei messaggi applicativi ``NaiveHandler``
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-L' `ApplMessageHandler`_ associato al server è molto semplice: visualizza il messaggio ricevuto
+L' `ApplMsgHandler`_ associato al server è molto semplice: visualizza il messaggio ricevuto
 sulla connessione e invia una risposta avvalendosi  
 della connessione ereditata da ':ref:`ApplMessageHandler<msgh>`.
 
@@ -446,6 +446,7 @@ un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
 
  
 
+
 +++++++++++++++++++++++++++++++++++++++++
 ProxyAsClient
 +++++++++++++++++++++++++++++++++++++++++
@@ -484,6 +485,12 @@ Il fatto di denotare la porta del server con una *String* invece che con un *int
 la possibilità di gestire anche comunicazioni basate su CoAP; in questo secondo caso,
 il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`.
 
+``ProxyAsClient`` definisce le seguenti operazioni:
+
+- **setConnection**: stabilire una connessione con un server remoto dato un protocollo;
+- **sendCommandOnConnection**: inviare un comando al server;
+- **sendCommandOnConnection**: inviare una richiesta al server e attendere la risposta;
+
 Il metodo ``setConnection`` effettua la connessione al server remoto in funzione del tipo di
 protocollo specificato:
 
@@ -503,7 +510,7 @@ che definiremo più avanti e che restituisce un oggetto di tipo ``Interaction202
 come nel caso di TCP/UDP.
 
 Con riferimento ai :ref:`TipiInterazione` introdotti nella fase di analisi,
-il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* un metodo per inviare
+il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* e un metodo per inviare
 *request* con attesa di response/ack:
 
 .. code:: java    

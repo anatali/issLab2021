@@ -113,6 +113,8 @@ che funga anche da Factory specifica per quel tipo di dispositivo.
 Partiamo ovviamente tenendo conto delle specifiche sulle interfacce introdotte in fase di analisi:
 :ref:`modelloOggettiDominio`.
 
+.. _Led:
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Led
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -245,7 +247,9 @@ il Led 'funziona' da un punto di vista logico) ma compaiono messaggi del tipo:
 
   LedConcrete | ERROR Cannot run program "sudo": ...  
 
- 
+
+.. _Sonar:
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il Sonar 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 

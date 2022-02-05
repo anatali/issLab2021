@@ -9,10 +9,11 @@
 .. _CoAP: https://coap.technology/
 
 =====================================================
-Enablers (SPRINT2)
+Enablers (SPRINT2) 
 =====================================================
 
-L'analisi del problema ha posto in evidenza la opportunità/necessità,
+L'analisi del problema ha posto in evidenza (si veda :ref:`concettodienabler`) 
+la opportunità/necessità,
 di introdurre nel sistema degli :blue:`enabler`, che hanno lo scopo di fornire funzionalità
 di ricezione/trasmissione di informazione su rete a un nucleo di 
 *core-code* incapsulato al proprio interno.
@@ -40,6 +41,8 @@ rappresentata come segue:
 .. image:: ./_static/img/Architectures/cleanArchCone.jpg 
    :align: center
    :width: 50%
+
+.. _Enabler:
 
 ------------------------------------------------
 Enabler tipo-server
@@ -92,7 +95,7 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
 Notiamo che:
 
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
-  Questo caso sarà applicato più avanti, nella sezione  :doc:`ContextServer`.
+  Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
 - si prevede anche un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
 
@@ -117,7 +120,8 @@ Enabler per il Sonar
          :align: center 
          :width: 80%
     - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
-      applicativo  di tipo ``IApplMsgHandler`` che elabora:
+      applicativo ``SonarApplHandler`` di tipo ``IApplMsgHandler`` che estende 
+      la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un memtodo che elabora:
 
       - i comandi: ridirigendoli al sonar locale 
       - le richieste:  ridirigendole al sonar locale e inviando la risposta al client 
@@ -165,8 +169,8 @@ Proxy per il Sonar
   * - .. image::  ./_static/img/Radar/SonarProxyAsClient.PNG
          :align: center 
          :width: 70%
-    - Il '*proxy tipo client* per il Sonar è una specializzazione di  ``ProxyAsClient`` che implementa i 
-      metodi di ``ISonar`` inviando dispatch o request all'*enabler tipo server* sulla connessione:
+    - Il '*proxy tipo client* per il Sonar è una specializzazione di  :ref:`ProxyAsClient` che implementa i 
+      metodi di ``ISonar`` inviando dispatch o request all'*enabler tipo server* sulla connessione :ref:`Interaction2021`:
 
 
 .. code:: java
@@ -202,10 +206,12 @@ Enabler e proxy per il Led
          :align: center 
          :width: 60%
 
-L'enabler server per il Led usa un gestore di messaggi ``LedApplHandler`` che riceve comandi
-e richieste da un ``LedProxyAsClient``. 
-Entrambe queste classi sono simili a quanto visto per il Sonar. 
-Riportimao qui solo la struttura dell'handler che realizza la logica applicativa.
+L'enabler server per il Led usa un gestore di messaggi ``LedApplHandler`` che 
+che estende  la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un memtodo che elabora:
+i comandi e le richieste ricevute da un ``LedProxyAsClient``. 
+
+Entrambe queste classi sono simili a quanto visto per il Sonar;
+riportiamo qui solo la struttura dell'handler che realizza la logica applicativa.
 
  
 
@@ -215,7 +221,7 @@ LedApplHandler
 
 .. code:: Java
 
-  public class LedApplHandler extends ApplMsgHandler {
+  public class LedApplHandler extends ApplMsgHandler   {
   ILed led;
 
     public LedApplHandler(String name ) {
@@ -234,11 +240,12 @@ LedApplHandler
     }
 
     @Override
-    public void elaborate( ApplMessage message, Interaction2021 conn ) { ...	}
+    public void elaborate(ApplMessage message,Interaction2021 conn) {...}
 
   }
 
- 
+.. _testingEnablers:
+
 -----------------------------------------
 Testing degli enabler
 -----------------------------------------
@@ -324,4 +331,52 @@ Il test simula il comportamento del Controller, senza RadarDisplay:
 			}
 		}		
 	}
- 
+
+-----------------------------------------
+Da POJO a gestori di messaggi
+-----------------------------------------
+
+Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti, che potrebbero
+emergere al termine della SPRINT-review:
+
+- i nuovi componenti-base di livello applicativo non sono più POJO, ma sono
+  gestori di messaggi, come ad esempio `SonarApplHandler`_  e `LedApplHandler`_;
+- i POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
+  negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`;
+- i gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<Enabler>`) 
+  che forniscono una infrastruttura per le comunicazioni via rete. Il codice
+  che realizza gli enabler e i proxy può essere riutilizzato in altre applicazioni;
+- l'attenzione dell':blue:`Application Designer` si concentra sulla definizione del metodo 
+  ``elaborate`` di componenti-gestori di tipo :ref:`ApplMsgHandler<ApplMsgHandler>` 
+  che ricevono dalla
+  infrastruttura-enabler un oggetto (di tipo  :ref:`Interaction2021<Interaction2021>`) 
+  che abilita alle interazioni via rete;
+- i messaggi gestiti dagli handler sono  ``String`` di struttura non meglio specificata;
+  notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati, 
+  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
+
+
+Il :ref:`testing degli enablers<testingEnablers>`  ha già mostrato come sia possibile affrontare 
+il punto 4 del nostro :ref:`piano di lavoro<PianoLavoro>` 
+
+-  assemblaggio dei componenti  per formare il sistema distribuito.
+
+Tuttavia emerge un punto critico:
+
+:remark:`introdurre un serverTCP per ogni componente è troppo costoso in sistemi non banali`
+
+Un serverTCP richiede infatti la creazione di un nuovo Thread. Anche se il costo di questa
+operazione potrebbe essere (notevolmente) ridotto sostituendo il Thread Java con la 
+coroutine Kotlin, il team di sviluppo osserva che lo si può evitare con una modifica 
+non troppo complessa.
+
+
+La modifica parte da questa idea: è possibile che i gestori applicativi di messaggi (gli handler)
+possano essere dotati di capacità di comunicazione avvalendosi di un *singolo serverTCP* 
+per nodo computazionale?
+
+
+La prossima sezione sarà dedicata alla realizzazione di questa idea, che ci farà fare
+un ulteriore passo in avanti nella transizione dal paradigma ad oggetti al paradigma
+a messaggi.
+

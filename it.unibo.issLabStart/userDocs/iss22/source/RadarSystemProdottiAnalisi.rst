@@ -242,6 +242,8 @@ implementare i componenti in modo che possano scambiare informazione via rete.
 - La **Facade** è un'interfaccia di livello superiore (più semplice) per un sottosistema 
   di una o più classi.  
 
+.. _concettodienabler:  
+
 +++++++++++++++++++++++++++++++++++++++
 Il concetto di 'oggetto enabler'
 +++++++++++++++++++++++++++++++++++++++
