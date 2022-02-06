@@ -30,7 +30,7 @@ public abstract class CoapDeviceResource extends CoapResource {
 			Iterator<Option> iter = opts.iterator();
 			while( iter.hasNext() ) {
 				Option option = iter.next();
-				ColorsOut.out( getName() + "handleGET options=" + option );
+				ColorsOut.out( getName() + " handleGET options=" + option );
 				//if( option.toString().contains("Observe: 1")) exchange.respond("BYE");
 				observe1Found =  true;
 			}		
@@ -42,21 +42,21 @@ public abstract class CoapDeviceResource extends CoapResource {
  		//examineGETOptions(exchange);
 		String query = exchange.getQueryParameter("q"); 
 		if( query == null ) {
-			ColorsOut.out( getName() + "handleGET request=" + exchange.getRequestText() );
+			ColorsOut.out( getName() + " handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText(), exchange.getSourceAddress() );
 			
 			
 			if( answer.length() < 500000 ) {
-				ColorsOut.out( getName() + "handleGET request answer=" + answer , ColorsOut.GREEN );
+				ColorsOut.out( getName() + " handleGET request answer=" + answer , ColorsOut.GREEN );
 				exchange.respond(answer);
 			}
 			else {
-				ColorsOut.out( getName() + "handleGET  long answer=" + answer.length() , ColorsOut.RED ); 
+				ColorsOut.out( getName() + " handleGET  long answer=" + answer.length() , ColorsOut.RED ); 
 				exchange.respond("long answer");
 			}
 			
 		}else{  //query != null
- 			ColorsOut.out( getName() + "handleGET query=" + query);
+ 			ColorsOut.out( getName() + " handleGET query=" + query);
  			String answer = elaborateGet( exchange.getQueryParameter("q"), exchange.getSourceAddress() );
  			
  			

@@ -42,8 +42,8 @@ String curDistance="0";  //Initial state
 				}
 				if( req.equals("getDistance")) {
 					//String answer = curDistance;  
-					String answer = ""+sonar.getDistance().getVal();
-					return  answer;
+					curDistance = ""+sonar.getDistance().getVal();
+					return  curDistance;
 				}
 				if( req != null && req.isEmpty()) return curDistance; //for the observers
 				if( req != null && req.equals("isActive")) return ""+sonar.isActive();
@@ -60,11 +60,11 @@ String curDistance="0";  //Initial state
 	 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
-	 			else if( arg.equals("setVal")) { //just for some test ...
-		 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
-	 				curDistance=""+22; 	
-	 				changed();
-	 			}
+//	 			else if( arg.equals("setVal")) { //just for some test ...
+//		 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
+//	 				curDistance=""+22; 	
+//	 				changed();
+//	 			}
 	 			//changed();	// notify all CoAp observers
 			}
 			@Override

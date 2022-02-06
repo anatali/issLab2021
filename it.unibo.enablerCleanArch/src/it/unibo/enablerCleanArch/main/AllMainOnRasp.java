@@ -1,7 +1,8 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.IApplication;
-import it.unibo.enablerCleanArch.main.all.RadarSystemDevicesOnRasp;
+import it.unibo.enablerCleanArch.main.all.RadarSystemDevicesOnRaspAllProtocols;
+import it.unibo.enablerCleanArch.main.coap.RadarSystemDevicesOnRaspCoap;
 import it.unibo.enablerCleanArch.main.context.tcp.RadarSystemMainDevsCtxTcpOnRasp;
 import it.unibo.enablerCleanArch.main.local.RadarSystemMainLocal;
 import it.unibo.enablerCleanArch.main.mqtt.RadarSystemDevicesOnRaspMqtt;
@@ -21,11 +22,14 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
  	}
 	public void doChoice() {
 		try {
-			programs.put("a", new RadarSystemDevicesOnRaspMqtt());		//with RadarSystemMainOnPcMqtt
 			programs.put("1", new RadarSystemMainLocal());				//look at RadarSystemConfig
 			programs.put("2", new RadarSystemMainRaspWithoutRadar());  	//with RadarSystemMainDisplayOnPc
+			
 			programs.put("3", new RadarSystemMainDevsCtxTcpOnRasp()); 	//with RadarSystemMainWithCtxTcpOnPc
-			programs.put("4", new RadarSystemDevicesOnRasp()); 			//with RadarSystemMainControllerOnPc
+			programs.put("4", new RadarSystemDevicesOnRaspMqtt());		//with RadarSystemMainOnPcMqtt
+			programs.put("5", new RadarSystemDevicesOnRaspCoap());		//with RadarSystemMainOnPcCoap
+			
+			programs.put("a", new RadarSystemDevicesOnRaspAllProtocols()); 	//with RadarSystemMainOnPcAllProtocols
  		/*
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		

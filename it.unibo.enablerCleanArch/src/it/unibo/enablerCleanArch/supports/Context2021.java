@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArch.supports;
 
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttContextServer;
 import it.unibo.enablerCleanArch.supports.tcp.TcpContextServer;
 
@@ -11,6 +12,7 @@ public class Context2021 {
 	IContext ctx = null;
 	ProtocolType protocol = RadarSystemConfig.protcolType;
 	
+	ColorsOut.out("Context2021 CREATE support for protocol=" + protocol);
 		switch( protocol ) {
 		case tcp : {
 			ctx=new TcpContextServer(id, entry);
@@ -23,6 +25,7 @@ public class Context2021 {
 			break;
 		}
 		case coap : {
+			CoapApplServer.getTheServer();
 			break;
 		}
 		default:

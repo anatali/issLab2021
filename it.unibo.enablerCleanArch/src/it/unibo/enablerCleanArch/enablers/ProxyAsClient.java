@@ -59,7 +59,7 @@ protected ProtocolType protocol ;
 		}
 	}
 	public String sendRequestOnConnection( String request )  {
- 		//Colors.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
+ 		ColorsOut.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
 		try {
 			String answer = conn.request(request);
 			//ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer  );

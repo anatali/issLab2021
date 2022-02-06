@@ -6,8 +6,10 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContext;
 
-public class CoapApplServer extends CoapServer{
+public class CoapApplServer extends CoapServer implements IContext{
 	
 	private static CoapResource root      = new CoapResource("devices");
 	private static CoapApplServer server  = null;
@@ -73,6 +75,26 @@ public class CoapApplServer extends CoapServer{
 		}else {
 			ColorsOut.outerr("addCoapResource FAILS for " + fatherUri);
 		}
+	}
+	@Override
+	public void addComponent(String name, IApplMsgHandler h) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void removeComponent(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void activate() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void deactivate() {
+		// TODO Auto-generated method stub
+		
 	}
  
  
