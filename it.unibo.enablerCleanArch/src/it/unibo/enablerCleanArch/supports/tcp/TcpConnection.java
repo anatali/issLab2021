@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArch.supports.tcp;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -7,6 +7,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+
+import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 
 public class TcpConnection implements Interaction2021{

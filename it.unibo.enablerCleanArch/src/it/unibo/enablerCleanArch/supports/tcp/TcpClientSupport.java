@@ -1,5 +1,8 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArch.supports.tcp;
 import java.net.Socket;
+
+import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
  
  
 public class TcpClientSupport {

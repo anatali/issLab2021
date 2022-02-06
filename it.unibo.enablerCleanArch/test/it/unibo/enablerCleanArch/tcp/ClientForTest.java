@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArch.supports.TcpClientSupport;
+import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
 
 /*
  * A client that performs a request on a connnection woth the server 

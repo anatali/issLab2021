@@ -33,8 +33,8 @@ import org.apache.http.entity.mime.content.FileBody;
 
 import it.unibo.enablerCleanArch.domain.WebCamRasp;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.HttpClientSupport;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.http.HttpClientSupport;
 
 public class WebCamRaspResourceCoap extends CoapDeviceResource {
  	private String workingAddr = "/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/";

@@ -67,7 +67,8 @@ Implementazione di Interaction2021
 -----------------------------------------------------
 
 .. image:: ./_static/img/Tecno/MqttConn.PNG 
-
+  :align: center 
+  :width: 50%
 
 
 

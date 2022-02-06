@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch.main.remotedisplay;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
-import it.unibo.enablerCleanArch.supports.TcpServer;
+import it.unibo.enablerCleanArch.supports.tcp.TcpServer;
 import it.unibo.enablerCleanArchapplHandlers.RadarApplHandler;
 
 /*

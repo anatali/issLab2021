@@ -1,9 +1,12 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArch.supports.tcp;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
  
 public class TcpServer extends Thread{
 private ServerSocket serversock;
@@ -46,7 +49,7 @@ protected boolean stopped = true;
 		if( stopped ) {
 			stopped = false;
 			this.start();
-		}
+		}//else already activated
 	}
  
 	public void deactivate() {

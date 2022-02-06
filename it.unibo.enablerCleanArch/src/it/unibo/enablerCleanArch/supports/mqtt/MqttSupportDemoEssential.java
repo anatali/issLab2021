@@ -10,7 +10,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class MqttSupportDemoEssential {
-private String topic      = MqttSupport.topicOut;
+private String topic      = MqttSupport.topicInput;
 private String brokerAddr = RadarSystemConfig.mqttBrokerAddr; // : 1883  OPTIONAL
 
 private final String caller    = "demo";

@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArch.supports.http;
 
 import java.net.URI;
 
@@ -9,6 +9,8 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class HttpClientSupport {
 	private CloseableHttpClient httpclient;

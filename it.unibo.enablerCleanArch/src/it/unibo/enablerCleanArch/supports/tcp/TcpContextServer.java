@@ -1,5 +1,7 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArch.supports.tcp;
 
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
 
 /*
@@ -18,9 +20,13 @@ import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
  *  TcpContextServer svolge un ruolo simile a CoapServer, 
  *  senza un concetto di naming delle risorse basato su path.
  */
-public class TcpContextServer extends TcpServer{
+public class TcpContextServer extends TcpServer implements IContext{
 	private ContextMsgHandler ctxMsgHandler;
  
+	public TcpContextServer(String name, String portStr ) {  
+ 		this( name,Integer.parseInt(portStr) );
+	}
+
 	public TcpContextServer(String name, int port ) {  
 		super(name, port,  new ContextMsgHandler("ctxH"));
 		this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;  //Inherited

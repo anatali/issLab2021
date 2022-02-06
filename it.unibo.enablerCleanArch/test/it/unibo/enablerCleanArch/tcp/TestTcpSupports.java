@@ -3,7 +3,8 @@ package it.unibo.enablerCleanArch.tcp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import it.unibo.enablerCleanArch.supports.TcpServer;
+
+import it.unibo.enablerCleanArch.supports.tcp.TcpServer;
 
 public class TestTcpSupports {
 private TcpServer server;

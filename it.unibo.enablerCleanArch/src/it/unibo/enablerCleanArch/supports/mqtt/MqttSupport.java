@@ -6,6 +6,7 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -25,18 +26,10 @@ import it.unibo.enablerCleanArch.supports.Utils;
  * sulla blockingqueue di mqttProxy in modo da permettere la esecuzione 
  * di messageArrived del ClientApplHandlerMqtt che fa l'operazione di put sulla blockingqueue di mqttProxy.
  */
-public class MqttSupport implements Interaction2021{
-//	private static MqttSupport singletonMqttsupport = null;
-//	
-//	public static MqttSupport getTheSupport() {
-//		if( singletonMqttsupport == null ) 
-//			singletonMqttsupport = new MqttSupport();
-//		return singletonMqttsupport;
-//	}
-
-	
+public class MqttSupport implements Interaction2021 {
+ 	
 protected MqttClient client;
-public static final String topicOut = "topicCtxMqtt";
+public static final String topicInput = "topicCtxMqtt";
 protected static MqttSupport mqttSup ;  //to realize a singleton
 
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
@@ -47,10 +40,10 @@ protected boolean isConnected   = false;
 
 
 	public static synchronized MqttSupport getSupport( ) {
-		if( mqttSup == null  ) mqttSup = new MqttSupport("mqttSupport", MqttSupport.topicOut);
+		//if( mqttSup == null  ) mqttSup = new MqttSupport("mqttSupport", MqttSupport.topicOut);
 		return mqttSup;
 	}
-	public static synchronized MqttSupport getSupport(String clientName, String topicToSubscribe) {
+	public static synchronized MqttSupport createSupport(String clientName, String topicToSubscribe) {
 		if( mqttSup == null  ) mqttSup = new MqttSupport(clientName,topicToSubscribe);
 		return mqttSup;
 	}
@@ -72,9 +65,12 @@ protected boolean isConnected   = false;
     
     
     public void connectToBroker(String clientid,  String brokerAddr) {
+    	if( isConnected ) return;
 		try {
- 			this.brokerAddr = brokerAddr;
+			ColorsOut.out("MqttSupport | connectToBroker clientid " + clientid  + " to broker " + brokerAddr );
+			this.brokerAddr = brokerAddr;
 			client          = new MqttClient(brokerAddr, clientid);
+			ColorsOut.out("MqttSupport | connectToBroker clientSupportId=" + client.getClientId() );
 			MqttConnectOptions connOpts = new MqttConnectOptions();
 			
 		    connOpts.setCleanSession(true);
@@ -97,9 +93,7 @@ protected boolean isConnected   = false;
 			client.connect(connOpts);
 			this.clientid   = clientid; //client.getClientId();
 			isConnected = true;
-			
-			
-			
+ 			
 			ColorsOut.out("MqttSupport | connected client " + client.getClientId() + " to broker " + brokerAddr );
 		} catch (MqttException e) {
 			isConnected = false;
@@ -109,7 +103,7 @@ protected boolean isConnected   = false;
  
    
 	protected void connect(String clientid, String topic, String brokerAddr) {
-		if( ! isConnected )
+		if( isConnected ) return;
 		try {
 			this.clientid   = clientid;
 			//this.topic      = topic;
@@ -132,13 +126,15 @@ protected boolean isConnected   = false;
 		connect( clientid, topic, RadarSystemConfig.mqttBrokerAddr);
 		this.handler = handler;
 		subscribe(clientid, topic, handler);    
-		Colors.out(clientid + " | CREATED MqttSupport handler="+handler + " subscribed to " + topic, Colors.CYAN);
+		ColorsOut.out(clientid + " | CREATED MqttSupport handler="+handler + " subscribed to " + topic, ColorsOut.CYAN);
 	}
 */	
 	public void disconnect() {
 		try {
 			client.disconnect();
 			client.close();
+			isConnected = false;
+			ColorsOut.out(clientid + " | disconnect ", ColorsOut.CYAN);
 		} catch (MqttException e) {
 			ColorsOut.outerr("MqttSupport  | disconnect Error:" + e.getMessage());
 		}
@@ -201,7 +197,7 @@ protected boolean isConnected   = false;
 		}catch( Exception e ) { //The message is not structured
 			ApplMessage msgAppl = Utils.buildDispatch("mqtt", "cmd", msg, "unknown");
 		}				
-		publish(topicOut, msg, 2, false);	
+		publish(topicInput, msg, 2, false);	
 	}
 
 	
@@ -245,7 +241,7 @@ protected boolean isConnected   = false;
 		MqttClient clientAnswer    = setupConnectionFroAnswer(answerTopicName);
 
 //Invio la richiesta 		
-		publish(topicOut, requestMsg.toString(), 2, false);	
+		publish(topicInput, requestMsg.toString(), 2, false);	
  		
  		//ATTESA RISPOSTA su answerTopic (subscribe done by ClientApplHandlerMqtt)
 		String answer = null;

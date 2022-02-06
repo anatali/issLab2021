@@ -1,6 +1,6 @@
 package it.unibo.enablerCleanArch.supports.mqtt;
 
- import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.LedModel;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -11,8 +11,6 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 
 public class MqttSupportDemoLedMain {
- 
- 
   
 private MqttSupport mqtt;
 private IContextMsgHandler ctxH;
@@ -31,22 +29,20 @@ public void simulateReceiver(String name) {
 	}.start();
 }
 
-protected void initMqttSupport() {
- 	mqtt = MqttSupport.getSupport();
- 	ctxH = mqtt.getHandler();
-}
+ 
 
 protected void endMqttSupport() {
 	mqtt.disconnect();
 }
 
 public void doJob() {
-	initMqttSupport();
+ 	mqtt = MqttSupport.createSupport("demoLed",MqttSupport.topicInput);
+ 	ctxH = mqtt.getHandler();
 	
 	//Configure the system (proxy site)
 	ILed leddev = LedModel.create();
 	ctxH.addComponent( "led", new LedApplHandler("ledH",leddev) );
-  	ILed led = new LedProxyAsClient("ledpxy", RadarSystemConfig.pcHostAddr, MqttSupport.topicOut, ProtocolType.mqtt );
+  	ILed led = new LedProxyAsClient("ledpxy", RadarSystemConfig.pcHostAddr, MqttSupport.topicInput, ProtocolType.mqtt );
 	
   	//Operate
 	ColorsOut.outappl("doJob | STARTS ... " , ColorsOut.BLACK);
@@ -78,10 +74,10 @@ public void doJob() {
 		RadarSystemConfig.simulation  = true;
 		RadarSystemConfig.protcolType = ProtocolType.mqtt;
 		RadarSystemConfig.ledGui      = true;
-		RadarSystemConfig.tracing     = false;
+		RadarSystemConfig.tracing     = true;
 		RadarSystemConfig.pcHostAddr  = "localhost";
-		MqttSupportDemoLedMain sys = new MqttSupportDemoLedMain();	
 		
+		MqttSupportDemoLedMain sys    = new MqttSupportDemoLedMain();			
 		sys.doJob();
  		//sys.doSendReceive();
   		//sys.doRequestRespond();

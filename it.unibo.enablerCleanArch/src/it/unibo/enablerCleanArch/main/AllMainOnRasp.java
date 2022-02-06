@@ -1,8 +1,10 @@
 package it.unibo.enablerCleanArch.main;
 
 import it.unibo.enablerCleanArch.domain.IApplication;
-import it.unibo.enablerCleanArch.main.context.RadarSystemMainDevsCtxOnRasp;
+import it.unibo.enablerCleanArch.main.context.mqtt.RadarSystemMainDevsCtxMqttOnRasp;
+import it.unibo.enablerCleanArch.main.context.tcp.RadarSystemMainDevsCtxOnRasp;
 import it.unibo.enablerCleanArch.main.local.RadarSystemMainLocal;
+import it.unibo.enablerCleanArch.main.mqtt.RadarSystemDevicesOnRaspMqtt;
 import it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import java.io.BufferedReader;
@@ -19,10 +21,12 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
  	}
 	public void doChoice() {
 		try {
+			programs.put("a", new RadarSystemDevicesOnRaspMqtt());		//with RadarSystemMainOnPcMqtt
 			programs.put("1", new RadarSystemMainLocal());				//look at RadarSystemConfig
 			programs.put("2", new RadarSystemMainRaspWithoutRadar());  	//with RadarSystemMainDisplayOnPc
-			programs.put("3", new RadarSystemMainDevsCtxOnRasp()); 		 //with RadarSystemMainWithCtxOnPc
-			/*
+			programs.put("3", new RadarSystemMainDevsCtxOnRasp()); 		//with RadarSystemMainWithCtxOnPc
+			programs.put("4", new RadarSystemMainDevsCtxMqttOnRasp()); 	//with RadarSystemMainWithCtxMqttOnPc	
+					/*
 			programs.put("1", new LedUsageMain());
 			programs.put("2", new SonarUsageMainWithEnablerTcp());		
 			programs.put("3", new SonarUsageMainWithContextTcp());
