@@ -14,7 +14,7 @@ import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
  * Applicazione che va in coppia con RadarSystemMainWithCtxOnPc
  */
 
-public class RadarSystemMainDevsCtxOnRasp implements IApplication{
+public class RadarSystemMainDevsCtxTcpOnRasp implements IApplication{
 	private ISonar sonar;
 	private ILed  led ;
  	private TcpContextServer contextServer;
@@ -67,7 +67,7 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	
 	public static void main( String[] args) throws Exception {
 		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
-		new RadarSystemMainDevsCtxOnRasp().doJob(null);
+		new RadarSystemMainDevsCtxTcpOnRasp().doJob(null);
  	}
 
 }

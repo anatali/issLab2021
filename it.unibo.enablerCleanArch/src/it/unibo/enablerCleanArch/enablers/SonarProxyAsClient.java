@@ -40,13 +40,17 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	public IDistance getDistance() {
 		String answer="";
 		//Colors.out( name + " | getDistance ", Colors.ANSI_PURPLE);
-		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext )  
-			answer = sendRequestOnConnection(Utils.getDistance.toString()) ;
+		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) 
+			answer = sendRequestOnConnection( Utils.getDistance.toString() ) ;
   		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
   			answer = sendRequestOnConnection(Utils.getDistance.toString().replace("system", name)) ;
 		else  //CASO DI DEFAULT
 			answer = sendRequestOnConnection("getDistance");
 		ColorsOut.out( name + " | getDistance answer="+answer, ColorsOut.ANSI_PURPLE);
+		if( answer.startsWith("msg")){ //structured msg
+			ApplMessage ma = new ApplMessage(answer);
+			answer = ma.msgContent();
+		}
 		return new Distance( Integer.parseInt(answer) );
 	}
 

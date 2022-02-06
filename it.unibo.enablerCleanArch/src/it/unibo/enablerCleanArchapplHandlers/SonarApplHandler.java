@@ -25,12 +25,14 @@ private ISonar sonar;
 				if(payload.equals("getDistance") ) {
 					String vs = ""+sonar.getDistance().getVal();
 					ApplMessage reply = prepareReply( message, vs);  //Utils.buildReply("sonar", "distance", vs, message.msgSender()) ;
-					sendAnswerToClient(reply.toString());
+					//sendAnswerToClient(reply.toString());
+					sendMsgToClient( reply.toString(), conn );
 
 				}else if(payload.equals("isActive") ) {
  					String sonarState = ""+sonar.isActive();
 					ApplMessage reply = prepareReply( message, sonarState); //Utils.buildReply("sonar", "sonarstate", sonarState, message.msgSender()) ;
-  					sendAnswerToClient(reply.toString());
+  					//sendAnswerToClient(reply.toString());
+					sendMsgToClient( reply.toString(), conn );
 				}
 			}else elaborate(payload, conn);			
 		}

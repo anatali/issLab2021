@@ -10,7 +10,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
  * Applicazione che va in coppia con RadarSystemMainDevsCtxOnRasp
  */
 
-public class RadarSystemMainWithCtxOnPc implements IApplication{
+public class RadarSystemMainWithCtxTcpOnPc implements IApplication{
 
 private IRadarDisplay radar;
 private ISonar sonar;
@@ -70,7 +70,7 @@ private Controller controller;
 
 	
 	public static void main( String[] args) throws Exception {
-		new RadarSystemMainWithCtxOnPc().doJob(null);
+		new RadarSystemMainWithCtxTcpOnPc().doJob(null);
  	}
 
 }
