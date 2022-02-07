@@ -1,8 +1,5 @@
-package it.unibo.enablerCleanArchapplHandlers;
+package it.unibo.enablerCleanArch.domain;
 
-import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.IApplLogic;
-import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
  
@@ -19,11 +16,12 @@ ILed led;
 	public String elaborate( ApplMessage message ) {
 		ColorsOut.out("LedApplLogic | elaborate ApplMessage=" + message  + " led="+led, ColorsOut.GREEN);
 		String payload = message.msgContent();
-		if( ! message.isRequest() ) return "request_expected";
- 		if(payload.equals("getState") ) {
- 				String ledstate = ""+led.getState();
- 				ApplMessage reply = Utils.prepareReply( message, ledstate);
+		if(  message.isRequest() ) {
+	 		if(payload.equals("getState") ) {
+	 			String ledstate = ""+led.getState();
+	 			ApplMessage reply = Utils.prepareReply( message, ledstate);
 				return (reply.toString() ); //msg(...)
+			}else return "request_unknown";
 		}else return elaborate( payload );
 	}
    

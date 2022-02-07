@@ -43,13 +43,13 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 	    sonar      = DeviceFactory.createSonar();
 	    //Dispositivi di Output
 	    led        = DeviceFactory.createLed();
-	    led.turnOff();
+	    //led.turnOff();
 		//Creazione del server di contesto
 	    ctx  = Context2021.create();
   		//Registrazione dei componenti presso il contesto
-//		  IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar); 
+ 		  IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar); 
 		  IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  
-//		  ctx.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
+ 		  ctx.addComponent("sonar", sonarHandler);	    //sonar NAME mandatory
 		  ctx.addComponent("led",   ledHandler);		//led NAME mandatory
 	}
   

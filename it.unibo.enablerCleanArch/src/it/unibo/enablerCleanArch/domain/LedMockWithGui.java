@@ -17,7 +17,7 @@ private final Dimension sizeOff = new Dimension(30,30);
 
 	public static ILed createLed(  ){
 		LedMockWithGui led = new LedMockWithGui(Utils.initFrame(150,150));
-		//led.turnOff();
+		led.turnOff();
 		return led;
 	}
 	public void destroyLedGui(  ){

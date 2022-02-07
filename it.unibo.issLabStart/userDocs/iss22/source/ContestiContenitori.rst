@@ -485,9 +485,6 @@ L'handler che
 		// TODO Auto-generated method stub
 		
 	}
-
- 
-
 }
 
 
@@ -510,7 +507,21 @@ Con delay basso (ad esempio ``delay = "50"``) il comportamento è corretto (e il
 ma con ``delay = "500"`` si vede che il decremento non avviene (il contatore si fissa a 1).
  
 
+---------------------------------------
+Il caso di Coap
+---------------------------------------
 
+La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
+
+La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
+In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 
+al sistema tramite ``CoapApplServer`` che la ``Context2021.create()`` riduce a ``CoapServer`` in cui 
+sono registrate le risorse.
+
+
+---------------------------------------
+Il caso di MQTT
+---------------------------------------
 
 
  

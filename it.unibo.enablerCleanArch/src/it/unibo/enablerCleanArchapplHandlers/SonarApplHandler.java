@@ -2,15 +2,31 @@ package it.unibo.enablerCleanArchapplHandlers;
 
  
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
+import it.unibo.enablerCleanArch.domain.SonarApplLogic;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
+import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
  
 
 public class SonarApplHandler extends ApplMsgHandler  {
 private ISonar sonar;
+
+public static IApplMsgHandler create(String name, ISonar sonar) {
+	if( Utils.isCoap() ) {
+		return new SonarResourceCoap("led",  new SonarApplLogic(sonar) );
+	}else {
+		return new SonarApplHandler(name, sonar);
+	}
+}
+
   
 		public SonarApplHandler(String name, ISonar sonar) {
 			super(name);

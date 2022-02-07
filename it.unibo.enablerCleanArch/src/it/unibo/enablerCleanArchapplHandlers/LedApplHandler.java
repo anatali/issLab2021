@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArchapplHandlers;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IApplLogic;
 import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.LedApplLogic;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;

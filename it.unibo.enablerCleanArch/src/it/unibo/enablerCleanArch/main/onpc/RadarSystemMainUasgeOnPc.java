@@ -44,11 +44,11 @@ private Controller controller;
 			String ledUri   =  CoapApplServer.lightsDeviceUri+"/led";
 			String sonarUri =  CoapApplServer.inputDeviceUri+"/sonar";		
 			led    		    = new LedProxyAsClient("ledPxy",     host, ledUri,   protocol );
-//			sonar  		    = new SonarProxyAsClient("sonarPxy", host, sonarUri, protocol );
+ 			sonar  		    = new SonarProxyAsClient("sonarPxy", host, sonarUri, protocol );
 		}else {
 			String ctxport  = "" +RadarSystemConfig.ctxServerPort;
 			led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
-//  		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
+   		    sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
  		}
   		//controller 	= Controller.create( led, sonar );
 	}
@@ -62,6 +62,10 @@ private Controller controller;
 	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
  	    led.turnOff();
 		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
+		
+		boolean sonarState = sonar.isActive();
+		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
+		
 	}
 	public void execute() {
 	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };

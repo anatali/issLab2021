@@ -3,10 +3,10 @@ import java.net.InetAddress;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IApplLogic;
 import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.LedApplLogic;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArchapplHandlers.LedApplLogic;
 
 public class LedResourceCoap extends ApplResourceCoap   {
  	private IApplLogic ledLogic;

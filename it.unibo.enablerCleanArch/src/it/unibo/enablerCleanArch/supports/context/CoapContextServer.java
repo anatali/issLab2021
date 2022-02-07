@@ -24,7 +24,7 @@ public class CoapContextServer implements IContext{
 	}
 	@Override
 	public void addComponent(String name, IApplMsgHandler h) { //h is a ApplResourceCoap
-		ColorsOut.outerr( "CoapContextServer |  h " + h   );	 	
+		ColorsOut.outerr( "CoapContextServer |  add handler=" + h   );	 	
  	}
 	@Override
 	public void removeComponent(String name) {

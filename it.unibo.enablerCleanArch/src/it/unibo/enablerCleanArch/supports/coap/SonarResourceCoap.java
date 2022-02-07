@@ -2,28 +2,36 @@ package it.unibo.enablerCleanArch.supports.coap;
 
 import java.net.InetAddress;
 
+import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.IApplLogic;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarResourceCoap extends ApplResourceCoap  {
-ISonar sonar;
+//ISonar sonar;
 String curDistance="0";  //Initial state
+private IApplLogic sonarLogic;
 
-		public SonarResourceCoap(String name, ISonar sonar) {
+ 
+		public SonarResourceCoap(String name, IApplLogic sonarLogic) {
 			super(name, DeviceType.input);
-			this.sonar = sonar;
+			this.sonarLogic = sonarLogic;
 			ColorsOut.out( getName() + " |  SonarResourceCoap CREATED"   );	
 	 	}
+		
+		private boolean sonarActive() {
+			return sonarLogic.elaborate("isActive").equals("true");
+		}
   			
 		private void getSonarValues() {
-			ColorsOut.out( getName() + " |  SonarResourceCoap getSonarValues"   );
+			ColorsOut.out( getName() + " |  SonarResourceCoap getSonarValues for observers"   );
 			new Thread() {
 				public void run() {
-					if( ! sonar.isActive() ) sonar.activate();
-					while( sonar.isActive() ) {
-						int v = sonar.getDistance().getVal();
+					if( ! sonarActive() ) sonarLogic.elaborate("activate");
+					while( sonarActive() ) {
+						String v = sonarLogic.elaborate("getDistance");
 						elaborateAndNotify(  v );
 						Utils.delay(RadarSystemConfig.sonarDelay);
 						//Colors.out("SonarResourceCoap | sonar value="+v);
@@ -35,11 +43,19 @@ String curDistance="0";  //Initial state
 		 // CoapDeviceResource
 			@Override
 			protected String elaborateGet(String req) {
+				String answer = "";
  				ColorsOut.out( getName() + " | elaborateGet req=" + req + " curVal="+curDistance , ColorsOut.GREEN  );					
 				if( req == null  ) {
-					ColorsOut.outerr("getName() + \" | elaborateGet req NULL");
-					return curDistance;
+					ColorsOut.outerr(getName() +  " | elaborateGet req NULL");
+					answer = curDistance;
 				}
+				try {
+					ApplMessage msg = new ApplMessage( req );
+					answer = sonarLogic.elaborate( msg  );			
+				}catch( Exception e) {
+					answer = sonarLogic.elaborate( req  );
+				}		
+				/*
 				if( req.equals("getDistance")) {
 					//String answer = curDistance;  
 					curDistance = ""+sonar.getDistance().getVal();
@@ -48,6 +64,8 @@ String curDistance="0";  //Initial state
 				if( req != null && req.isEmpty()) return curDistance; //for the observers
 				if( req != null && req.equals("isActive")) return ""+sonar.isActive();
 				return "SonarResourceCoap: request notUnderstood";
+				*/
+				return answer; //sonarLogic.elaborate(req);
 			}
 			
 			@Override
@@ -58,6 +76,9 @@ String curDistance="0";  //Initial state
 			@Override
 			protected void elaboratePut(String arg) {
 	 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
+	 			
+	 			sonarLogic.elaborate(arg);
+	 			/*
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
 //	 			else if( arg.equals("setVal")) { //just for some test ...
@@ -66,6 +87,8 @@ String curDistance="0";  //Initial state
 //	 				changed();
 //	 			}
 	 			//changed();	// notify all CoAp observers
+	 			 * 
+	 			 */
 			}
 			@Override
 			protected void elaboratePut(String req, InetAddress callerAddr) {
@@ -74,11 +97,9 @@ String curDistance="0";  //Initial state
 			}			
 			
 			
-			protected void elaborateAndNotify(int arg) {
-				curDistance= ""+arg;
+			protected void elaborateAndNotify(String arg) {
+				curDistance=  arg;
  				ColorsOut.out( getName() + " | elaborateAndNotify:" + curDistance , ColorsOut.GREEN  );		
 				changed();	// notify all CoAP observers
 			}
-
-		
-}
+ }
