@@ -482,10 +482,8 @@ L'handler che
 
 	@Override
 	public void sendAnswerToClient(String message) {
-		// TODO Auto-generated method stub
-		
 	}
-}
+  }
 
 
 La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio ``msg( cmd, dispatch, main, counter, dec(DELAY), 1)``
@@ -523,5 +521,13 @@ sono registrate le risorse.
 Il caso di MQTT
 ---------------------------------------
 
+---------------------------------------
+TODOFeb7
+---------------------------------------
 
- 
+- Introdurre ``IApplLogic`` , ``LedApplLogic`` e ``SonarApplLogic``
+- Introdurre gli handler come wrapper di ``IApplLogic`` capaci di elaborare comandi e inviare risposte
+- Introdurre i criteri per armonizzare i diversi supporti (TCP, MQTT, CoAP) nel ``Context2021``
+- Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri
+  delle *operazioni astratte*
+  
