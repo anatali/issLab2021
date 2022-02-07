@@ -6,6 +6,7 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.Utils;
  
  
 public class CounterApplHandler extends ApplMsgHandler {
@@ -43,7 +44,7 @@ private CounterWithDelay counter
 		ColorsOut.out(name + " | elaborate ApplMessage: "+msg);
  		String answer = elaborate( msg.msgContent() );
 		if( msg.isRequest() ) {
-			ApplMessage  reply = prepareReply(msg, answer);
+			ApplMessage  reply = Utils.prepareReply(msg, answer);
 			sendAnswerToClient(reply.toString());			
 		}
 	}

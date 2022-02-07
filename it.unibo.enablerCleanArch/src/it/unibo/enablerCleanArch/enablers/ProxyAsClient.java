@@ -1,7 +1,9 @@
 package it.unibo.enablerCleanArch.enablers;
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
@@ -62,8 +64,9 @@ protected ProtocolType protocol ;
  		ColorsOut.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
 		try {
 			String answer = conn.request(request);
-			//ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer  );
-			return answer;			
+			ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer  );
+			return Utils.getContent( answer );
+ 		
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
 			return null;

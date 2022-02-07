@@ -16,6 +16,9 @@ private ActionFunction endFun;
 	public static Controller create(ILed led, ISonar sonar,IRadarDisplay radar ) {
 		return new Controller( led,  sonar, radar  );
 	}
+	public static Controller create(ILed led, ISonar sonar ) {
+		return new Controller( led,  sonar, DeviceFactory.createRadarGui()  );
+	}
 	
 	private Controller( ILed led, ISonar sonar,IRadarDisplay radar ) {
 		this.led    = led;

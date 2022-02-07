@@ -17,15 +17,9 @@ import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
-import it.unibo.enablerCleanArch.supports.coap.LedAdapterCoap;
-import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoap;
-import it.unibo.enablerCleanArch.supports.coap.SonarAdapterCoapObserver;
-import it.unibo.enablerCleanArch.supports.coap.example.ObserverNaive;
-import it.unibo.enablerCleanArchapplHandlers.NaiveMessageHandler;
 
 
 /*

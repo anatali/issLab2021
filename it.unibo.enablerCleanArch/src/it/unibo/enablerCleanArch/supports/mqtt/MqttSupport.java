@@ -5,9 +5,9 @@ import org.eclipse.paho.client.mqttv3.*;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.IContext;
-import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
  
@@ -34,7 +34,7 @@ protected static MqttSupport mqttSup ;  //to realize a singleton
 
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
 protected String clientid;
-protected IContextMsgHandler handler;
+protected IContextMsgHandlerMqtt handler;
 protected String brokerAddr;
 protected boolean isConnected   = false;
 
@@ -58,7 +58,7 @@ protected boolean isConnected   = false;
     	return blockingQueue;
     }
     
-    public IContextMsgHandler getHandler() {
+    public IContextMsgHandlerMqtt getHandler() {
     	return handler;
     }
     
@@ -122,7 +122,7 @@ protected boolean isConnected   = false;
 	}
 	
 /*	
-	protected void connectMqtt(String clientid, String topic, IApplMsgHandler handler) {
+	protected void connectMqtt(String clientid, String topic, IApplMsgHandlerMqtt handler) {
 		connect( clientid, topic, RadarSystemConfig.mqttBrokerAddr);
 		this.handler = handler;
 		subscribe(clientid, topic, handler);    
@@ -153,7 +153,7 @@ protected boolean isConnected   = false;
 		}
 	}
 	
-	public void subscribe ( String topic, IApplMsgHandler handler) {
+	public void subscribe ( String topic, IApplMsgHandlerMqtt handler) {
 		//this.handler = handler;
 		subscribe(clientid, topic, handler);    
 		ColorsOut.out(clientid + " | MqttSupport handler="+handler.getName() + " subscribed to " + topic, ColorsOut.CYAN);		

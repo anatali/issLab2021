@@ -33,6 +33,33 @@ public class Utils {
 			"AT START | num of threads="+ Thread.activeCount() +" currentThread=" + Thread.currentThread() );
 	}
 
+	public static ApplMessage prepareReply(ApplMessage requestMsg, String answer) {
+		//String payload = requestMsg.msgContent();
+		String sender  = requestMsg.msgSender();
+		String receiver= requestMsg.msgReceiver();
+		String reqId   = requestMsg.msgId();
+		ApplMessage reply = null;
+		if( requestMsg.isRequest() ) { //DEFENSIVE
+			//The msgId of the reply must be the id of the request !!!!
+ 			reply = Utils.buildReply(receiver, reqId, answer, sender) ;
+		}else { 
+			ColorsOut.outerr( "Utils | prepareReply ERROR: message not a request");
+		}
+		return reply;
+    }
+
+	public static String getContent( String msg ) {
+		String result = "";
+		try {
+			ApplMessage m = new ApplMessage(msg);
+			result        = m.msgContent();
+		}catch( Exception e) {
+			result = msg;
+		}
+		return result;	
+	}
+
+	
 	public static Frame initFrame(int dx, int dy){
  		Frame frame         = new Frame();
  		BorderLayout layout = new BorderLayout();

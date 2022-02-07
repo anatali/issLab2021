@@ -55,7 +55,7 @@ public class ApplMessage {
     public String msgSender() { return msgSender; }
     public String msgReceiver() { return msgReceiver;  }
     public String msgContent() { return msgContent;  }
-    public String msgNum() { return "" + msgNum; }
+    public String msgNum() { return "" + msgNum; } 
     
     
     public boolean isEvent(){

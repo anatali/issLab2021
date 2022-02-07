@@ -6,9 +6,10 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
-public class SonarDataObserverHandler implements IApplMsgHandler{
+public class SonarDataObserverHandler implements IApplMsgHandlerMqtt{
 	private String name;
 	private ILed led;
 	private int lastDistanceVal = 0;

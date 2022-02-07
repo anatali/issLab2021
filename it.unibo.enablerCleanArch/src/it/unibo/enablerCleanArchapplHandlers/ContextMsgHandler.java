@@ -28,12 +28,14 @@ public class ContextMsgHandler extends ApplMsgHandler{
 
 	@Override
 	public void elaborate( ApplMessage msg, Interaction2021 conn ) {
-		ColorsOut.out(name+" | elaborate ApplMessage:" + msg + " conn=" + conn);
+		ColorsOut.out(name+" | elaborateeeeee ApplMessage:" + msg + " conn=" + conn);
 		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
- 		String dest          = msg.msgReceiver();
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
+ 		String dest  = msg.msgReceiver();
+		//ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
+		ColorsOut.out(name +  " | elaborate  dest="+dest );
 		IApplMsgHandler h    = handlerMap.get(dest);
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN);
+		ColorsOut.out(name +  " | elaborate  h="+h );
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest );
 		if( dest != null && (! msg.isReply()) ) h.elaborate( msg , conn);			
 	}
 

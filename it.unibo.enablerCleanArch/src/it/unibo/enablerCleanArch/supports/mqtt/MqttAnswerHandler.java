@@ -9,9 +9,10 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
-public class MqttAnswerHandler extends ApplMsgHandler{
+public class MqttAnswerHandler extends ApplMsgHandler implements IApplMsgHandlerMqtt{
 private static int n = 0; 
 	private BlockingQueue<String> blockingQueue = null;
 
@@ -67,5 +68,11 @@ private static int n = 0;
 		@Override
 		public void deliveryComplete(IMqttDeliveryToken token){
 			ColorsOut.out(name + " ApplMsgHandler | deliveryComplete token=" + token.getMessageId(), ColorsOut.ANSI_YELLOW);
+		}
+
+		@Override
+		public void connectionLost(Throwable cause) {
+			// TODO Auto-generated method stub
+			
 		}		
 }

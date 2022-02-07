@@ -11,6 +11,7 @@ import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 
@@ -26,7 +27,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
  *  ma il RECEIVER non sarebbe più quello usato nella versione precedente.
  */
 
-public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsgHandler{
+public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsgHandlerMqtt{
 	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>();
 
 	public ContextMqttMsgHandler(String name) {

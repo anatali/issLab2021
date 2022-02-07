@@ -5,6 +5,8 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
 
+
+//TODO: ??? CoapApplServer coapServer = CoapApplServer.getTheServer();  //SINGLETION
 public class CoapContextServer implements IContext{
 private String clientId;
 private String entry;

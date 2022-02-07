@@ -1,10 +1,10 @@
 package it.unibo.enablerCleanArch.supports;
 
-import org.eclipse.paho.client.mqttv3.MqttCallback;
+ 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
  
 
-public interface IApplMsgHandler extends MqttCallback{
+public interface IApplMsgHandler  {
 	public String getName(); 
 	public void elaborate( String message, Interaction2021 conn ) ;	
 	public void elaborate( ApplMessage message, Interaction2021 conn );//ESTENSIONE dopo Context
