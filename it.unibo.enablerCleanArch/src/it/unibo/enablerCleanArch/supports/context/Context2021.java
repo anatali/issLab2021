@@ -1,11 +1,11 @@
-package it.unibo.enablerCleanArch.supports;
+package it.unibo.enablerCleanArch.supports.context;
 
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.coap.CoapContextServer;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttContextServer;
-import it.unibo.enablerCleanArch.supports.tcp.TcpContextServer;
 
 public class Context2021 {
 
@@ -26,8 +26,7 @@ public class Context2021 {
 			break;
 		}
 		case coap : {
-			//CoapApplServer.getTheServer();
-			ctx = new CoapContextServer(id,entry);
+			ctx = new CoapContextServer( );
 			ctx.activate();
 			break;
 		}
@@ -54,7 +53,7 @@ public class Context2021 {
 				break;
 			}
 			case coap : {
-				clientId = RadarSystemConfig.pcHostAddr;
+				clientId = "";
 				entry    = "";
 				break;
 			}

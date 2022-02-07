@@ -7,6 +7,7 @@ import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 
 /*
  * Applicazione che va in coppia con RadarSystemMainDevsCtxOnRasp
@@ -21,7 +22,7 @@ private Controller controller;
 	
 	@Override
 	public String getName() {	 
-		return "RadarSystemMainWithCtxTcpOnPc";
+		return "RadarSystemMainUasgeOnPc";
 	}
 
 	public void setup(   )  {
@@ -39,10 +40,17 @@ private Controller controller;
 	protected void configure() {
 		String host           = RadarSystemConfig.raspHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		String ctxport        = ""+RadarSystemConfig.ctxServerPort;
-		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
-  		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
-   		//controller 	= Controller.create( led, sonar );
+		if(Utils.isCoap() ) {
+			String ledUri   =  CoapApplServer.lightsDeviceUri+"/led";
+			String sonarUri =  CoapApplServer.inputDeviceUri+"/sonar";		
+			led    		    = new LedProxyAsClient("ledPxy",     host, ledUri,   protocol );
+//			sonar  		    = new SonarProxyAsClient("sonarPxy", host, sonarUri, protocol );
+		}else {
+			String ctxport  = "" +RadarSystemConfig.ctxServerPort;
+			led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
+//  		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
+ 		}
+  		//controller 	= Controller.create( led, sonar );
 	}
 	
  	

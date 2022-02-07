@@ -3,7 +3,12 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.Option;
 import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+
+import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
+
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.*;
 
 import java.net.InetAddress;
@@ -11,12 +16,14 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public abstract class CoapDeviceResource extends CoapResource {
+public abstract class ApplResourceCoap extends CoapResource implements IApplMsgHandler {
+//private IApplMsgHandler handler;
 
-	public CoapDeviceResource(String name, DeviceType dtype)  {
+	public ApplResourceCoap(String name, DeviceType dtype )  {
 		super(name);
 		setObservable(true); 
-		CoapApplServer coapServer = CoapApplServer.getTheServer();  //SINGLETION
+		//this.handler = handler;
+		CoapApplServer coapServer            = CoapApplServer.getTheServer();  //SINGLETION
  		if( dtype==DeviceType.input )        coapServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
  		else if( dtype==DeviceType.output )  coapServer.addCoapResource( this, CoapApplServer.lightsDeviceUri);
  		//LOGGER.info("CoapDeviceResource " + name + " | created  ");
@@ -44,32 +51,14 @@ public abstract class CoapDeviceResource extends CoapResource {
 		if( query == null ) {
 			ColorsOut.out( getName() + " handleGET request=" + exchange.getRequestText() );
 			String answer = elaborateGet( exchange.getRequestText(), exchange.getSourceAddress() );
-			
-			
-			if( answer.length() < 500000 ) {
 				ColorsOut.out( getName() + " handleGET request answer=" + answer , ColorsOut.GREEN );
-				exchange.respond(answer);
-			}
-			else {
-				ColorsOut.out( getName() + " handleGET  long answer=" + answer.length() , ColorsOut.RED ); 
-				exchange.respond("long answer");
-			}
-			
+				exchange.respond(answer);			
 		}else{  //query != null
  			ColorsOut.out( getName() + " handleGET query=" + query);
  			String answer = elaborateGet( exchange.getQueryParameter("q"), exchange.getSourceAddress() );
- 			
- 			
- 			if( answer.length() < 500000 ) {
- 				if( answer.length() < 1000) ColorsOut.out( getName() + "handleGET q-query answer=" + answer , ColorsOut.GREEN );
- 				else ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED );
- 				exchange.respond(answer);
- 			}
-			else {
-				ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED ); 
-	  			exchange.respond("too long");
-	  		}
-
+   			if( answer.length() < 1000) ColorsOut.out( getName() + "handleGET q-query answer=" + answer , ColorsOut.GREEN );
+ 			else ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED );
+ 			exchange.respond(answer);
 		}		
 	}
 
@@ -101,4 +90,27 @@ public abstract class CoapDeviceResource extends CoapResource {
 		exchange.respond(DELETED);
 	}
 
+	/*
+	 * 
+	 */
+	@Override
+	public void elaborate(String message, Interaction2021 conn) {
+		ColorsOut.outerr("elaborate String  in CoapApplResource");		
+	}
+
+	@Override
+	public void elaborate(ApplMessage message, Interaction2021 conn) {
+		ColorsOut.outerr("elaborate ApplMessage  in CoapApplResource");		
+	}
+
+	@Override
+	public void sendMsgToClient(String message, Interaction2021 conn) {
+		//Does nothing since already implemented by the Coap protocol		
+	}
+
+	@Override
+	public void sendAnswerToClient(String message) {
+		//Does nothing since already implemented by the Coap protocol
+	}
+	
 }

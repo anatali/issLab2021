@@ -7,7 +7,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-public class SonarResourceCoap extends CoapDeviceResource  {
+public class SonarResourceCoap extends ApplResourceCoap  {
 ISonar sonar;
 String curDistance="0";  //Initial state
 

@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArchapplHandlers;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.IApplLogic;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -8,7 +9,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
 /*
  * TODO: il Led dovrebbe essere injected con un metodo o una annotation
  */
-public class LedApplLogic   {
+public class LedApplLogic implements IApplLogic  {
 ILed led;
  
 	public LedApplLogic(  ILed led) {

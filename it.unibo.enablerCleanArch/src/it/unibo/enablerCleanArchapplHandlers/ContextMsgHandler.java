@@ -2,10 +2,14 @@ package it.unibo.enablerCleanArchapplHandlers;
 
 import java.util.HashMap;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 
 /*
   * Il ContextMsgHandler viene invocato dal TcpContextServer (un singleton).
@@ -22,6 +26,7 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
 public class ContextMsgHandler extends ApplMsgHandler{
 	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>();
 
+ 	
 	public ContextMsgHandler(String name) {
 		super(name);
  	}

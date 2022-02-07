@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 
-public class LedResourceCoapBare extends CoapDeviceResource {
+public class LedResourceCoapBare extends CoapDeviceResourceBare {
 	private ILed led; 
 	
 	public LedResourceCoapBare(String name, ILed led ) {

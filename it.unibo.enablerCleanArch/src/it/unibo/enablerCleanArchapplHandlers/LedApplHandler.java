@@ -1,21 +1,34 @@
 package it.unibo.enablerCleanArchapplHandlers;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.IApplLogic;
 import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
+import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
  
 /*
  * TODO: il Led dovrebbe essere injected con un metodo o una annotation
  */
 public class LedApplHandler extends ApplMsgHandler {
-private LedApplLogic ledLogic;
+private IApplLogic ledLogic;
+
+	public static IApplMsgHandler create(String name, ILed led) {
+		if( RadarSystemConfig.protcolType == ProtocolType.coap) {
+			return new LedResourceCoap("led",  new LedApplLogic(led) );
+		}else {
+			return new LedApplHandler(name,led);
+		}
+	}
  
 	public LedApplHandler(String name, ILed led) {
 		super(name);
 		ledLogic = new LedApplLogic(led) ;
-	}
+ 	}
 	
 
 	@Override

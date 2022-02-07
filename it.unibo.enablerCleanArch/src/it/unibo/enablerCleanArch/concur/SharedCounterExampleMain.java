@@ -4,7 +4,7 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.tcp.TcpContextServer;
+import it.unibo.enablerCleanArch.supports.context.TcpContextServer;
 
 
 public class SharedCounterExampleMain  {

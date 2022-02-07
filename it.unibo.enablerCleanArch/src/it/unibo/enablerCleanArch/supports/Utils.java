@@ -7,6 +7,8 @@ import java.awt.event.WindowListener;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ApplMessageType;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 
 public class Utils {
 	public static final  ApplMessage sonarActivate     = new ApplMessage("msg( sonarcmd, dispatch, system, sonar, activate,    0)");
@@ -59,6 +61,9 @@ public class Utils {
 		return result;	
 	}
 
+	public static boolean isCoap() {
+		return RadarSystemConfig.protcolType==ProtocolType.coap ;
+	}
 	
 	public static Frame initFrame(int dx, int dy){
  		Frame frame         = new Frame();

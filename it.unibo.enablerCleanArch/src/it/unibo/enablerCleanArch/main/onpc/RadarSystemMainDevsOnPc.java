@@ -3,15 +3,15 @@ package it.unibo.enablerCleanArch.main.onpc;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Context2021;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
+import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
  
 
 /*
- * Applicazione che va in coppia con RadarSystemMainWithCtxOnPc
+ * Applicazione che va in coppia con RadarSystemMainUasgeOnPc
  */
 
 public class RadarSystemMainDevsOnPc implements IApplication{
@@ -47,9 +47,9 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 		//Creazione del server di contesto
 	    ctx  = Context2021.create();
   		//Registrazione dei componenti presso il contesto
-		  IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar); 
-		  IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);		  
-		  ctx.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
+//		  IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar); 
+		  IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  
+//		  ctx.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
 		  ctx.addComponent("led",   ledHandler);		//led NAME mandatory
 	}
   

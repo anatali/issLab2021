@@ -36,7 +36,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.http.HttpClientSupport;
 
-public class WebCamRaspResourceCoap extends CoapDeviceResource {
+public class WebCamRaspResourceCoap extends ApplResourceCoap {
  	private String workingAddr = "/home/pi/nat/it.unibo.enablerCleanArch-1.0/bin/";
  			
 	public WebCamRaspResourceCoap( String name  ) {

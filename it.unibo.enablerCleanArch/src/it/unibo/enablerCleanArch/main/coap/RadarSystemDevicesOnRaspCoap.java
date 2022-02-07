@@ -62,17 +62,16 @@ protected IObserver obsfortesting;
 	public void configure() {
 		//CoapApplServer.getTheServer();  //singleton; call fatta anche da SonarResourceCoap
 		sonar = DeviceFactory.createSonar(RadarSystemConfig.sonarObservable);	
- 		new SonarResourceCoap("sonar", sonar); 
+ 		//new SonarResourceCoap("sonar", sonar); 
  		
  		led = DeviceFactory.createLed();
- 		new LedResourceCoap("led", led); 
+ 		//new LedResourceCoap("led", led); 
  		
  		Utils.delay(1000); //Give time for the LedGui setup
  		
  		
  		//WebCam
- 		if( RadarSystemConfig.webCam ) 
- 			new WebCamRaspResourceCoap("webcam");
+ 		//if( RadarSystemConfig.webCam ) new WebCamRaspResourceCoap("webcam");
  		
  		ColorsOut.outappl("RadaSystemMainCoap | configure done", ColorsOut.ANSI_PURPLE  );
 		//createObservers();

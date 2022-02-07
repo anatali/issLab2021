@@ -54,8 +54,8 @@ public class TestEnablersCoap {
 		/*
 		 * Le risorse
 		 */
- 			 sonarRes = new SonarResourceCoap("sonar",sonar ) ;  
-			 ledRes   = new LedResourceCoap("led", led) ;  
+// 			 sonarRes = new SonarResourceCoap("sonar",sonar ) ;  
+//			 ledRes   = new LedResourceCoap("led", led) ;  
  
 		/*
 		 * I client

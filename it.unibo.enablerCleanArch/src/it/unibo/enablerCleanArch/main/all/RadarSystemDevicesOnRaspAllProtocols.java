@@ -3,13 +3,13 @@ package it.unibo.enablerCleanArch.main.all;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.Context2021;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
+import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
@@ -69,8 +69,8 @@ private ILed led       = null;
   		led   = LedModel.create();
   		
   		if( RadarSystemConfig.protcolType == ProtocolType.coap) {
-  			new SonarResourceCoap("sonar", sonar);
-  			new LedResourceCoap("led", led); 
+  			//new SonarResourceCoap("sonar", sonar);
+  			//new LedResourceCoap("led", led); 
   		}else {		
 	  		//Aggiunta degli handler per i comandi e le richieste
 			IApplMsgHandler ledHandler   = new LedApplHandler( "ledH",   led );
