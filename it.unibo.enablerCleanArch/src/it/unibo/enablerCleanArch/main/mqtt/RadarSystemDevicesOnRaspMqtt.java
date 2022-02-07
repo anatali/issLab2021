@@ -43,7 +43,6 @@ private ILed led       = null;
 		String clientId 		=  "rasp";
 		String topicToSubscribe =  MqttSupport.topicInput;
 		IContext ctx            = Context2021.create(clientId,topicToSubscribe);    //activates!!
-		//ctx.activate();
 		
 		if( RadarSystemConfig.sonarObservable ) {
 			sonar = SonarModelObservable.create();		

@@ -64,6 +64,9 @@ public class Utils {
 	public static boolean isCoap() {
 		return RadarSystemConfig.protcolType==ProtocolType.coap ;
 	}
+	public static boolean isMqtt() {
+		return RadarSystemConfig.protcolType==ProtocolType.mqtt ;
+	}
 	
 	public static Frame initFrame(int dx, int dy){
  		Frame frame         = new Frame();

@@ -1,10 +1,8 @@
 package it.unibo.enablerCleanArch.supports.coap;
 
 import java.net.InetAddress;
-
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.IApplLogic;
-import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;

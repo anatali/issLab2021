@@ -2,6 +2,7 @@ package it.unibo.enablerCleanArchapplHandlers;
 
  
 import it.unibo.enablerCleanArch.domain.ApplMessage;
+import it.unibo.enablerCleanArch.domain.IApplLogic;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.domain.SonarApplLogic;
@@ -18,10 +19,11 @@ import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 
 public class SonarApplHandler extends ApplMsgHandler  {
 private ISonar sonar;
+private IApplLogic sonarLogic;
 
 public static IApplMsgHandler create(String name, ISonar sonar) {
 	if( Utils.isCoap() ) {
-		return new SonarResourceCoap("led",  new SonarApplLogic(sonar) );
+		return new SonarResourceCoap("sonar",  new SonarApplLogic(sonar) );
 	}else {
 		return new SonarApplHandler(name, sonar);
 	}
@@ -30,7 +32,7 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
   
 		public SonarApplHandler(String name, ISonar sonar) {
 			super(name);
-			this.sonar = sonar;
+			sonarLogic = new SonarApplLogic(sonar);
 			ColorsOut.out(name+ " | SonarApplHandler CREATED with sonar= " + sonar, ColorsOut.BLUE);
 	 	}
  
@@ -39,11 +41,17 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
 			ColorsOut.out(name+ " | elaborate ApplMessage " + message + " conn=" + conn, ColorsOut.BLUE);
 			String payload = message.msgContent();
 			if( message.isRequest() ) {
+				String answer = sonarLogic.elaborate(message);
+				if( Utils.isMqtt() ) sendAnswerToClient( answer  );
+				else sendMsgToClient( answer, conn );
+			}else sonarLogic.elaborate( message.msgContent() ); //non devo inviare risposta
+			/*
+			if( message.isRequest() ) {
 				if(payload.equals("getDistance") ) {
 					String vs = ""+sonar.getDistance().getVal();
 					ApplMessage reply = Utils.prepareReply( message, vs);  //Utils.buildReply("sonar", "distance", vs, message.msgSender()) ;
-					//sendAnswerToClient(reply.toString());
-					sendMsgToClient( reply.toString(), conn );
+					if( Utils.isMqtt() ) sendAnswerToClient( reply.toString()  );
+					else sendMsgToClient( reply.toString(), conn );
 
 				}else if(payload.equals("isActive") ) {
  					String sonarState = ""+sonar.isActive();
@@ -52,24 +60,25 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
 					sendMsgToClient( reply.toString(), conn );
 				}
 			}else elaborate(payload, conn);			
+			*/
 		}
 		
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
  				ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
- 				if( message.equals("getDistance")) {
+ 				if( message.equals("getDistance") || message.equals("isActive")  ) {
  	 				//ColorsOut.out(name+ " | elaborate getDistance="  , ColorsOut.BLUE);
-					String vs = ""+sonar.getDistance().getVal();
- 	 				ColorsOut.out(name+ " | elaborate vs=" + vs, ColorsOut.BLUE);
-					sendMsgToClient(vs, conn);
- 				}else if( message.equals("activate")) {
- 					ColorsOut.out(name+ " | activate sonar="+sonar , ColorsOut.BLUE);
- 					sonar.activate();
- 				}else if( message.equals("deactivate")) {
- 					sonar.deactivate();
- 				}else if( message.equals("isActive")) {
- 					String sonarState = ""+sonar.isActive();
- 					sendMsgToClient(sonarState, conn);					 
-  				}
+//					String vs = ""+sonar.getDistance().getVal();
+// 	 				ColorsOut.out(name+ " | elaborate vs=" + vs, ColorsOut.BLUE);
+					sendMsgToClient(sonarLogic.elaborate(message), conn);
+// 				}else if( message.equals("activate")) {
+// 					ColorsOut.out(name+ " | activate sonar="+sonar , ColorsOut.BLUE);
+// 					sonarLogic.elaborate("activate");
+// 				}else if( message.equals("deactivate")) {
+// 					sonar.deactivate();
+// 				}else if( message.equals("isActive")) {
+// 					String sonarState = ""+sonar.isActive();
+// 					sendMsgToClient(sonarState, conn);					 
+  				}else sonarLogic.elaborate(message);
  			}
 }

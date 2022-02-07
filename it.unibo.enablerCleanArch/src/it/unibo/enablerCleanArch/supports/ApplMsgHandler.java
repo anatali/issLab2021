@@ -42,7 +42,7 @@ protected String name;
 			if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
 				MqttSupport.getSupport().reply(reply);
 			}else {
-				ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient not implmented for  " + RadarSystemConfig.protcolType);
+				ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient not implemented for  " + RadarSystemConfig.protcolType);
 			}
 		} catch (Exception e) {
 			ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient ERROR " + e.getMessage());
@@ -50,36 +50,5 @@ protected String name;
   	}
  	
  	public abstract void elaborate(String message, Interaction2021 conn) ;
- 	
- 	
-//    protected ApplMessage prepareReply(ApplMessage requestMsg, String answer) {
-//		String payload = requestMsg.msgContent();
-//		String sender  = requestMsg.msgSender();
-//		String receiver= requestMsg.msgReceiver();
-//		String reqId   = requestMsg.msgId();
-//		ApplMessage reply = null;
-//		if( requestMsg.isRequest() ) { //DEFENSIVE
-//			//The msgId of the reply must be the id of the request !!!!
-// 			reply = Utils.buildReply(receiver, reqId, answer, requestMsg.msgSender()) ;
-//		}else { 
-//			ColorsOut.outerr(name + " | ApplMsgHandler prepareReply ERROR: message not a request");
-//		}
-//		return reply;
-//    }
- 
-//	@Override
-//	public void connectionLost(Throwable cause) {
-//		ColorsOut.outerr(name + " ApplMsgHandler | connectionLost not implemented" );
-//	}
-//
-//	@Override
-//	public void messageArrived(String topic, MqttMessage message)  {
-//		ColorsOut.outerr(name + " ApplMsgHandler | messageArrived not yet implemented");
-// 	}
-//
-//	@Override
-//	public void deliveryComplete(IMqttDeliveryToken token){
-//		ColorsOut.outerr(name + " ApplMsgHandler | deliveryComplete not implemented");
-//	}
  	
 }

@@ -11,6 +11,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
+import it.unibo.enablerCleanArch.supports.Utils;
  
 /*
  * TODO: il Led dovrebbe essere injected con un metodo o una annotation
@@ -51,10 +52,10 @@ private IApplLogic ledLogic;
 		
 		if( message.isRequest() ) {
 			String answer = ledLogic.elaborate(message);
-			//sendAnswerToClient( answer  );
-			sendMsgToClient( answer, conn );
+			if( Utils.isMqtt() ) sendAnswerToClient( answer  );
+			else sendMsgToClient( answer, conn );
 		}else {
-			ledLogic.elaborate( message.msgContent() );
+			ledLogic.elaborate( message.msgContent() ); //non devo inviare risposta
 		}	
 	}
 	

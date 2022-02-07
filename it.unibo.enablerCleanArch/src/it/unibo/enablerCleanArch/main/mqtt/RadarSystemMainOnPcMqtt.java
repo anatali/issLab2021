@@ -50,14 +50,11 @@ private MqttSupport mqtt;
  	}
 	
 	public void configure()  {					
-		//mqtt                  = MqttSupport.createSupport("pc3", "pctopic");
 		String clientId 		=  "pc4";
 		String topicToSubscribe = "pctopic";
 		IContext ctx          = Context2021.create(clientId,topicToSubscribe);   //activates! 
-		//ctx.activate();
 		String host           = RadarSystemConfig.pcHostAddr;
 		ProtocolType protocol = RadarSystemConfig.protcolType;
-		//String ctxTopic       = MqttSupport.topicOut;
  		ledClient             = new LedProxyAsClient("clientLed",    host,  topicToSubscribe, protocol );
   		sonarClient           = new SonarProxyAsClient("clientSonar", host, topicToSubscribe, protocol );
  		

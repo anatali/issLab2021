@@ -37,18 +37,18 @@ public class Context2021 {
 	}//create with args
 	
 	
-	
-	public static IContext create() {
+/*	
+	public static IContext create(String name, String entry) {
 		String clientId = null;
 		String entry    = null;
 		switch( RadarSystemConfig.protcolType ) {
 			case tcp : {
-				clientId = "tcpCtx";
+				clientId = name;
 				entry    = ""+RadarSystemConfig.ctxServerPort;
 				break;
 			}
 			case mqtt : {
-				clientId = "pc4";
+				clientId = name;
 				entry    = "pctopic";
 				break;
 			}
@@ -63,5 +63,6 @@ public class Context2021 {
  
 		return create(clientId,entry);   //activates! 
 	}//create
-
+*/
+	
 }	
