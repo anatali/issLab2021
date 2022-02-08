@@ -75,9 +75,7 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
                       IApplMsgHandler handler) throws Exception{
       if( protocol == ProtocolType.tcp ) {
           serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port, handler );        
-      }else if( protocol == ProtocolType.coap ) { 
-          CoapApplServer.getServer(); 
-      }
+      }else if( protocol == ... ) { ...  }
       ...
     }	 
     public void activate() {
@@ -96,21 +94,84 @@ Notiamo che:
 
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
-- si prevede anche un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
+- si prevede anche la possibilità di utilizzare altri protocolli
+  .. un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
+
+.. _IApplLogicNoCtx:
 
 ------------------------------------------
 Trasduttori applicativi
 ------------------------------------------
 
-Ogni enabler deve ricevere in ingresso un gestore  applicativo che implementa :ref:`IApplMsgHandler` estendendo 
-la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora comandi o richieste inviate
-in forma di messaggi.
+Ogni enabler deve ricevere in ingresso un gestore  applicativo (handler) che implementa :ref:`IApplMsgHandler` estendendo 
+la classe :ref:`ApplMsgHandler<ApplMsgHandler>`. L'handler deve definire il metodo ``elaborate`` che gestisce
+i comandi o le richieste ricevute dal sever in forma di messaggi.
+
+L'handler deve quindi fare fronte a due compiti:
+
+#. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar
+#. inviare al mittente la risposta, in caso il messaggio sia una richiesta
+
+Facendo riferimento al single responsibility principle, conviene delegare il primo compito ad
+un componente che non 'sappia nulla' della *dimensione interazione* e che si occupi solo della
+interpretazione del messaggio. Introduciamo una interfaccia per componenti di questo tipo: 
+
+
+
+.. code:: java
+
+  public interface IApplLogic {
+    public String elaborate( String message );
+  }
+
+
+.. _LedApplLogicNoCtx:
+
++++++++++++++++++++++++++++++++++++++
+Un trasduttore per il Led
++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+  
+  public class LedApplLogic implements IApplLogic  {
+  ILed led;
+    public LedApplLogic(  ILed led) { this.led = led; }
+
+    public String elaborate( String message ) {
+      //Analizza message e invoca il led, restituendo un risultato o una risposta
+      if( message.equals("getState") ) return ""+led.getState() ;
+      else if( message.equals("on")) led.turnOn();
+      else if( message.equals("off") ) led.turnOff();	
+      return message+"_done";
+    }
+
+.. _SonarApplLogicNoCtx:
+
++++++++++++++++++++++++++++++++++++++
+Un trasduttore per il Sonar
++++++++++++++++++++++++++++++++++++++
+
+Ad esempio, nel caso del Sonar:
+
+.. code:: java
+
+  public class SonarApplLogic implements IApplLogic{
+  private	ISonar sonar;
+
+    public SonarApplLogic(ISonar sonar) { this.sonar = sonar; }    
+    @Override
+      public String elaborate(String message) {
+      //Analizza message e invoca il Sonar restituendo un risultato o una risposta
+      }
+  }
+
+ 
 
 .. I messaggi possono essere semplici sringhe oppure oggetti di tipo :ref:`ApplMessage<ApplMessage>` che introdurremto in :doc::`ApplMessage<ApplMessage>`.
 
 
 ------------------------------------------
-Enabler e proxy per il Sonar
+Il caso del Sonar 
 ------------------------------------------
 
 .. image::  ./_static/img/Radar/EnablerProxySonar.PNG
@@ -129,43 +190,16 @@ Enabler per il Sonar
          :align: center 
          :width: 80%
     - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
-      applicativo ``SonarApplHandler`` di tipo ``IApplMsgHandler`` che estende 
-      la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora:
+      applicativo ``SonarApplHandler`` che si avvale di :ref:`SonarApplLogicNoCtx` per 
+      trasformare messaggi in chiamate di metodi:
+      
+.. di tipo ``IApplMsgHandler`` che estende  la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora:
 
       - i *comandi*: ridirigendoli al sonar locale 
       - le *richieste*:  ridirigendole al sonar locale e inviando la risposta al client 
 
-Il ``SonarApplHandler``  deve quindi fare fronte a due compiti:
+.. _SonarApplHandlerNoContext:
 
-#. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar
-#. inviare al mittente la risposta, in caso il messaggio sia una richiesta
-
-Facendo riferimento al single responsibility principle, 
-
-.. code:: java
-
-  public class SonarApplLogic implements IApplLogic{
-  private	ISonar sonar;
-
-	  public SonarApplLogic(ISonar sonar) { this.sonar = sonar; }    
-    @Override
-      public String elaborate(String message) {
-      //Anallizza message e invoca il sonar restituendo un risultato o una risposta
-      }
-
-    @Override
-	  public String elaborate(ApplMessage message) {
-      //Anallizza message e invoca il sonar restituendo un risultato o una risposta
-    }
-  }
-
-.. code:: java
-
-  public interface IApplLogic {
-    public String elaborate( ApplMessage message );
-    public String elaborate( String message );
-  }
-  
 +++++++++++++++++++++++++++++++++++
 SonarApplHandler
 +++++++++++++++++++++++++++++++++++
@@ -178,22 +212,12 @@ SonarApplHandler
     public SonarApplHandler(String name, ISonar sonar) {
       super(name);
       sonarLogic = new SonarApplLogic(sonar);
-      this.sonar=sonar;
     }
+
     @Override
     public void elaborate(String message, Interaction2021 conn) {
- 				if( message.equals("getDistance") || message.equals("isActive")  ) {
-   			}else sonarLogic.elaborate(message);
-    }
-  
-    @Override
-    public void elaborate(ApplMessage message,Interaction2021 conn) {...}
-			String payload = message.msgContent();
-			if( message.isRequest() ) {
-				String answer = sonarLogic.elaborate(message);
-				if( Utils.isMqtt() ) sendAnswerToClient( answer  );
-				else sendMsgToClient( answer, conn );
-			}else sonarLogic.elaborate( message.msgContent() ); //no risposta
+      if( message.equals("getDistance") || message.equals("isActive")  ) {
+      }else sonarLogic.elaborate(message);
     }
   }
 
@@ -211,7 +235,8 @@ Proxy per il Sonar
          :align: center 
          :width: 70%
     - Il '*proxy tipo client* per il Sonar è una specializzazione di  :ref:`ProxyAsClient` che implementa i 
-      metodi di ``ISonar`` inviando dispatch o request all'*enabler tipo server* sulla connessione :ref:`Interaction2021`:
+      metodi di ``ISonar`` inviando comandi o richieste all'*enabler tipo server* sulla connessione 
+      :ref:`Interaction2021<Interaction2021>`:
 
 
 .. code:: java
@@ -240,21 +265,18 @@ Proxy per il Sonar
  
 
 -----------------------------------------
-Enabler e proxy per il Led
+Il caso del Led
 -----------------------------------------
+Il caso del Led è simile al caso del Sonar, sia per quanto riguarda l'enabler, sia per quanto riguarda il proxy.
 
 .. image::  ./_static/img/Radar/EnablerProxyLed.PNG
          :align: center 
          :width: 60%
 
-L'enabler server per il Led usa un gestore di messaggi ``LedApplHandler`` che 
-che estende  la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un memtodo che elabora:
-i comandi e le richieste ricevute da un ``LedProxyAsClient``. 
-
-Entrambe queste classi sono simili a quanto visto per il Sonar;
-riportiamo qui solo la struttura dell'handler che realizza la logica applicativa.
-
  
+Riportiamo qui solo la struttura dell'handler che realizza la logica applicativa.
+
+.. _LedApplHandlerNoContext:
 
 +++++++++++++++++++++++++++++++++++
 LedApplHandler
@@ -263,23 +285,18 @@ LedApplHandler
 .. code:: Java
 
   public class LedApplHandler extends ApplMsgHandler   {
-  ILed led;
+  private IApplLogic ledLogic;
 
     public LedApplHandler(String name, ILed led) {
       super(name);
-      this.led = led;
+      ledLogic = new LedApplLogic(led) ;
     }
     
     @Override
     public void elaborate(String message, Interaction2021 conn) {
-      if( message.equals("on")) led.turnOn();
-      else if( message.equals("off") ) led.turnOff();	
-      else if( message.equals("getState") ) sendMsgToClient(""+led.getState(), conn );
+      if( message.equals("getState") ) sendMsgToClient( ledLogic.elaborate(message), conn );
+      else ledLogic.elaborate(message);
     }
-
-    @Override
-    public void elaborate(ApplMessage message,Interaction2021 conn) {...}
-
   }
 
 .. _testingEnablers:
@@ -288,7 +305,7 @@ LedApplHandler
 Testing degli enabler
 -----------------------------------------
 
-La configurazione crea gli elementi della architettura di figura:
+La procedura si setup (configurazione) del testing crea gli elementi della architettura di figura:
 
 .. image::  ./_static/img/Radar/TestEnablers.PNG
          :align: center 
@@ -298,41 +315,39 @@ La configurazione crea gli elementi della architettura di figura:
 .. code::  java
 
   public class TestEnablersTcp {
-	@Before
-	public void setup() {
-		RadarSystemConfig.withContext= false; 
-		RadarSystemConfig.simulation = true;
-		RadarSystemConfig.ledGui     = true;
-		RadarSystemConfig.ledPort    = 8015;
-		RadarSystemConfig.sonarPort  = 8011;
-		RadarSystemConfig.sonarDelay = 100;
- 		RadarSystemConfig.testing    = false;
- 		RadarSystemConfig.tracing    = false;
+  @Before
+  public void setup() {
+    RadarSystemConfig.withContext= false; 
+    RadarSystemConfig.simulation = true;
+    RadarSystemConfig.ledGui     = true;
+    RadarSystemConfig.ledPort    = 8015;
+    RadarSystemConfig.sonarPort  = 8011;
+    RadarSystemConfig.sonarDelay = 100;
+    RadarSystemConfig.testing    = false;
+    RadarSystemConfig.tracing    = false;
  
- 		//I devices
-   		sonar 	= DeviceFactory.createSonar();
-		led     = DeviceFactory.createLed();
+    //I devices
+    sonar 	= DeviceFactory.createSonar();
+    led     = DeviceFactory.createLed();
 		
- 		//I server
-  	 	sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,
-              protocol, new SonarApplHandler("sonarH", sonar) );
-	 	ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort, 
-              protocol, new LedApplHandler("ledH", led)  );
+    //I server
+    sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,
+                protocol, new SonarApplHandler("sonarH", sonar) );
+    ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort, 
+                protocol, new LedApplHandler("ledH", led)  );
  
- 		//I client
-   		sonarPxy = new SonarProxyAsClient(
-         "sonarPxy", "localhost", ""+RadarSystemConfig.sonarPort, protocol );		
- 		ledPxy   = new LedProxyAsClient( 
-       "ledPxy",   "localhost", ""+RadarSystemConfig.ledPort,   protocol );	
+    //I proxy
+    sonarPxy = new SonarProxyAsClient( "sonarPxy", "localhost", 
+              ""+RadarSystemConfig.sonarPort, protocol );		
+    ledPxy   = new LedProxyAsClient( "ledPxy",   "localhost", 
+             ""+RadarSystemConfig.ledPort,   protocol );	
+  }
 
-	}
-
-	@After
-	public void down() {
-		System.out.println("down");		
-		ledServer.stop();
-		sonarServer.stop();
-	}	
+  @After
+  public void down() {
+    ledServer.stop();
+    sonarServer.stop();
+  }	
 	
  	
 
@@ -390,8 +405,8 @@ emergere al termine della SPRINT-review:
   infrastruttura-enabler un oggetto (di tipo  :ref:`Interaction2021<Interaction2021>`) 
   che abilita alle interazioni via rete;
 - i messaggi gestiti dagli handler sono  ``String`` di struttura non meglio specificata;
-  notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati, 
-  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
+
+.. notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati,  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
 
 
 Il :ref:`testing degli enablers<testingEnablers>`  ha già mostrato come sia possibile affrontare 
@@ -401,7 +416,7 @@ il punto 4 del nostro :ref:`piano di lavoro<PianoLavoro>`
 
 Tuttavia emerge un punto critico:
 
-:remark:`introdurre un serverTCP per ogni componente è troppo costoso in sistemi non banali`
+:remark:`introdurre un serverTCP per ogni componente potrebbe essere, in generale, troppo costoso`
 
 Un serverTCP richiede infatti la creazione di un nuovo Thread. Anche se il costo di questa
 operazione potrebbe essere (notevolmente) ridotto sostituendo il Thread Java con la 
@@ -409,7 +424,7 @@ coroutine Kotlin, il team di sviluppo osserva che lo si può evitare con una mod
 non troppo complessa.
 
 
-La modifica parte da questa idea: è possibile che i gestori applicativi di messaggi (gli handler)
+La modifica parte da questa domanda: è possibile che i gestori applicativi di messaggi (gli handler)
 possano essere dotati di capacità di comunicazione avvalendosi di un *singolo serverTCP* 
 per nodo computazionale?
 

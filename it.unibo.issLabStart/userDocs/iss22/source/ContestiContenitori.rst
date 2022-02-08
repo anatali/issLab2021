@@ -119,12 +119,12 @@ nel modo descritto. La classe si avvale del supporto del tuProlog_.
 
 .. _IApplMsgHandlerEsteso:
 
--------------------------------------------------------
-Estensione della interfaccia :ref:`IApplMsgHandler `
--------------------------------------------------------
+-----------------------------------------------------------------------
+Estensione della interfaccia :ref:`IApplMsgHandler<IApplMsgHandler>`
+-----------------------------------------------------------------------
 
-In relazione alla nuova esigenza, provvediamo ad inserire un vuovo metodo nel contratto relativo ad ogni
-componente di livello applicativo.
+In relazione alla nuova esigenza, provvediamo ad estendere il contratto relativo ai gestori dei messaggi di
+di livello applicativo.
 
 .. code:: Java
 
@@ -133,12 +133,23 @@ componente di livello applicativo.
     public void elaborate( ApplMessage message, Interaction2021 conn ); 
   }
 
+ 
 
-Il metodo ``elaborate`` con argomento :ref:`ApplMessage<ApplMessage>` viene presentato subito qui,
-ma verrà introdotto solo più avanti
-(si veda :doc:`ContestiContenitori`) quando avremo la necessità di imporre una precisa
-struttura ai messaggi ed introdurre in essi anche informazioni relative al nome del mittente e del
-destinatario.
+.. _IApplLogicEsteso:
+
+----------------------------------------------------------------------
+Estensione della interfaccia :ref:`IApplLogic<IApplLogicNoCtx>`
+----------------------------------------------------------------------
+
+In modo analogo estendiamo il contratto relativo alla interpretazione dei messaggi:
+
+.. code:: java
+
+  public interface IApplLogic {
+    ...
+    public String elaborate( ApplMessage message );    
+  }
+
 
 .. _TcpContextServer:
 
