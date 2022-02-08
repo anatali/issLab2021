@@ -9,6 +9,9 @@ import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  	
+	public SonarProxyAsClient( String name, String host, String entry  ) {		
+		this(name, host, entry, RadarSystemConfig.protcolType);
+	}
 	public SonarProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		super( name,  host,  entry, protocol );
  	}

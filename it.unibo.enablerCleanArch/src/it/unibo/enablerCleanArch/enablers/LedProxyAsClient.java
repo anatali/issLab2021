@@ -10,20 +10,24 @@ import it.unibo.enablerCleanArch.supports.Utils;
  */
 public class LedProxyAsClient extends ProxyAsClient implements ILed {
 
+ 	public LedProxyAsClient( String name, String host, String entry  ) {		
+		this(name, host, entry, RadarSystemConfig.protcolType);
+	}
+
 	public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
 		super(name,host,entry, protocol);
 	}
 
 	@Override
 	public void turnOn() { 
-  		if( RadarSystemConfig.protcolType == ProtocolType.tcp && RadarSystemConfig.withContext ) {
+  		if( RadarSystemConfig.withContext || Utils.isMqtt() || Utils.isCoap() ) {
  			sendCommandOnConnection(Utils.turnOnLed.toString());
- 		}
- 		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
- 			sendCommandOnConnection(Utils.turnOnLed.toString());
- 		}
- 		else if( RadarSystemConfig.protcolType == ProtocolType.coap) {
- 			sendCommandOnConnection( "on" );
+// 		}
+// 		else if( Utils.isMqtt() ) {
+// 			sendCommandOnConnection(Utils.turnOnLed.toString());
+// 		}
+// 		else if( Utils.isCoap()) {
+// 			sendCommandOnConnection( "on" );
  		}else //CASO DI DEFAULT
  			sendCommandOnConnection( "on" );
  	}

@@ -2,9 +2,12 @@ package it.unibo.enablerCleanArch.enablers;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
 
@@ -22,14 +25,16 @@ protected ProtocolType protocol ;
  
 	public ProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		try {
+			ColorsOut.out(name+"  | CREATING entry= "+entry+" protocol=" + protocol );
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
-			//ColorsOut.out(name+"  | STARTED conn=" + conn );
+			ColorsOut.out(name+"  | CREATED entry= "+entry+" conn=" + conn );
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
 	
+ 	
 	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
 		switch( protocol ) {
 			case tcp : {
@@ -44,11 +49,14 @@ protected ProtocolType protocol ;
 			}
 			case mqtt : {
 				//La connessione col Broker viene stabilita in fase di configurazione
-				//La entry è quella definita in MqttSupport.topicOut;
+				//La entry è quella definita per ricevere risposte;
 				//ColorsOut.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
-				conn = MqttSupport.getSupport();				
+				conn = MqttSupport.getSupport();					
  				break;
-			}				
+			}	
+			default :{
+				ColorsOut.outerr(name + " | Protocol unknown");
+			}
 		}
 	}
   	

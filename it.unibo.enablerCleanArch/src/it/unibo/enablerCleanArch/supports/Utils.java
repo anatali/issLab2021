@@ -7,8 +7,12 @@ import java.awt.event.WindowListener;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.domain.ApplMessageType;
+import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
+import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
+import it.unibo.enablerCleanArch.supports.context.Context2021;
 
 public class Utils {
 	public static final  ApplMessage sonarActivate     = new ApplMessage("msg( sonarcmd, dispatch, system, sonar, activate,    0)");
@@ -67,6 +71,32 @@ public class Utils {
 	public static boolean isMqtt() {
 		return RadarSystemConfig.protcolType==ProtocolType.mqtt ;
 	}
+	public static boolean isTcp() {
+		return RadarSystemConfig.protcolType==ProtocolType.tcp ;
+	}
+	
+//	public static String getServerHost() {
+//		String host = "";
+// 		if( isCoap() ) {
+//			host  = RadarSystemConfig.pcHostAddr;
+// 		}else if( isMqtt() ) {
+// 			host  = RadarSystemConfig.mqttBrokerAddr;
+// 		}else if(  isTcp() ) {
+// 			host  = RadarSystemConfig.pcHostAddr;
+//		}
+//		return host;
+//	}
+//	public static String getServerEntry(String useentry) {
+//		String entry  = "";
+//		if( isCoap() ) {
+//			entry  = useentry;
+// 		}else if( isMqtt() ) {
+// 			entry  = useentry;
+// 		}else if(  isTcp() ) {
+// 			entry  = "" +RadarSystemConfig.ctxServerPort;
+//		}		
+//		return entry;
+//	}
 	
 	public static Frame initFrame(int dx, int dy){
  		Frame frame         = new Frame();

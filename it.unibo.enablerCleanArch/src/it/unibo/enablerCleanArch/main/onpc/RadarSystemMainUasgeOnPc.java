@@ -17,9 +17,14 @@ import it.unibo.enablerCleanArch.supports.context.Context2021;
 
 public class RadarSystemMainUasgeOnPc implements IApplication{
 
+public static final String mqttAnswerTopic  = "pctopic";
+
 private ISonar sonar;
 private ILed  led ;
 private Controller controller;
+
+private String serverHost = "";
+private String serverEntry = "";
 
 	
 	@Override
@@ -28,10 +33,10 @@ private Controller controller;
 	}
 
 	public void setup(   )  {
- 	      RadarSystemConfig.protcolType       = ProtocolType.mqtt;
+ 	      RadarSystemConfig.protcolType       = ProtocolType.coap;
  		  RadarSystemConfig.testing           = false;
 		  RadarSystemConfig.raspHostAddr      = "localhost"; //"192.168.1.9";
-		  RadarSystemConfig.ctxServerPort     = 8018;
+ 		  RadarSystemConfig.ctxServerPort     = 8018;
 		  RadarSystemConfig.sonarDelay        = 1500;
 		  RadarSystemConfig.withContext       = true; //MANDATORY: to use ApplMessage
 		  RadarSystemConfig.DLIMIT            = 40;
@@ -40,40 +45,71 @@ private Controller controller;
 	}
 	
 	protected void configure() {
-		String host           = RadarSystemConfig.raspHostAddr;
-		ProtocolType protocol = RadarSystemConfig.protcolType;
-		if(Utils.isCoap() ) {
-			String ledUri   =  CoapApplServer.lightsDeviceUri+"/led";
-			String sonarUri =  CoapApplServer.inputDeviceUri+"/sonar";		
-			led    		    = new LedProxyAsClient("ledPxy",     host, ledUri,   protocol );
- 			sonar  		    = new SonarProxyAsClient("sonarPxy", host, sonarUri, protocol );
-		}else if(Utils.isMqtt() ) {
-			String clientId 		= "pc4";
-			String topicToSubscribe = "pctopic";
-			IContext ctx            = Context2021.create(clientId,topicToSubscribe);   //activates! 
-			led    		= new LedProxyAsClient("ledPxy",     host, topicToSubscribe, protocol );
-   		    sonar  		= new SonarProxyAsClient("sonarPxy", host, topicToSubscribe, protocol );
-		}else { 
- 			String ctxport  = "" +RadarSystemConfig.ctxServerPort;
-			led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
-   		    sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
+//		String host           = RadarSystemConfig.raspHostAddr;
+//		ProtocolType protocol = RadarSystemConfig.protcolType;
+//		  String serverhost  ="";
+//		  String serverentry ="";
+//
+//		if(Utils.isCoap() ) {
+//			serverhost      =  RadarSystemConfig.raspHostAddr;
+//			String ledUri   =  CoapApplServer.lightsDeviceUri+"/led";
+//			String sonarUri =  CoapApplServer.inputDeviceUri+"/sonar";		
+//			led    		    = new LedProxyAsClient("ledPxy",     host, ledUri,   protocol );
+// 			sonar  		    = new SonarProxyAsClient("sonarPxy", host, sonarUri, protocol );
+//		}else if(Utils.isMqtt() ) {
+//			serverhost      = RadarSystemConfig.raspHostAddr;  //dont'care
+//			String clientId 		= "pc4";
+//			String topicToSubscribe = "pctopic";
+//			IContext ctx            = Context2021.create(clientId,topicToSubscribe);   //activates! 
+//			led    		= new LedProxyAsClient("ledPxy",     host, topicToSubscribe, protocol );
+//   		    sonar  		= new SonarProxyAsClient("sonarPxy", host, topicToSubscribe, protocol );
+//		}else if(Utils.isTcp() ){ 
+// 			String ctxport  = "" +RadarSystemConfig.ctxServerPort;
+//			led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
+//   		    sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
+// 		}
+		
+		
+		
+		
+		
+		if(Utils.isTcp() ) { 
+			serverHost  = RadarSystemConfig.raspHostAddr;
+			serverEntry = "" +RadarSystemConfig.ctxServerPort; 
+		}
+		if(Utils.isMqtt() ) { 
+			serverHost  = RadarSystemConfig.mqttBrokerAddr;
+			Context2021.create("pv4","pctopic");
+			serverEntry = mqttAnswerTopic; 
+		}		
+		
+		if(Utils.isCoap() ) { 
+			serverHost  = RadarSystemConfig.raspHostAddr;
+			serverEntry = CoapApplServer.lightsDeviceUri+"/led"; 
+		}
+   		led  = new LedProxyAsClient("ledPxy", serverHost, serverEntry );
+
+ 		if(Utils.isCoap() ) { 
+ 			serverEntry = CoapApplServer.inputDeviceUri+"/sonar"; 
  		}
-  		//controller 	= Controller.create( led, sonar );
+  		sonar = new SonarProxyAsClient("sonarPxy",  serverHost, serverEntry  );
+ 		
+  		
 	}
 	
  	
 	
-	protected void useLed() {
-//	    led.turnOn();
-//	    Utils.delay(1000);
-//	    boolean ledState = led.getState();
-//	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
-// 	    led.turnOff();
-//		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
+	protected void useLedAndSonar() {
+	    led.turnOn();
+	    Utils.delay(1000);
+	    boolean ledState = led.getState();
+	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
+ 	    led.turnOff();
+		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
 		
 		boolean sonarState = sonar.isActive();
 		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
-		
+ 		
 		sonar.activate(); 
 		ColorsOut.outappl("sonar state=" + sonar.isActive(), ColorsOut.GREEN);
 		Utils.delay(1000);
@@ -86,8 +122,9 @@ private Controller controller;
 	}
 	public void execute() {
 	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-	    useLed();
-		//controller.start(endFun, 10);
+	    useLedAndSonar();
+//	    controller 	= Controller.create( led, sonar );
+//		controller.start(endFun, 10);
 	    
  	}
  
@@ -97,10 +134,7 @@ private Controller controller;
 		sonar.deactivate();
 		System.exit(0);
 	}
-
  
- 
-
 	@Override
 	public void doJob(String configFileName) {
 		setup( );
