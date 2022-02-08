@@ -35,34 +35,6 @@ public class Context2021 {
 		}
 		return ctx;
 	}//create with args
-	
-	
-/*	
-	public static IContext create(String name, String entry) {
-		String clientId = null;
-		String entry    = null;
-		switch( RadarSystemConfig.protcolType ) {
-			case tcp : {
-				clientId = name;
-				entry    = ""+RadarSystemConfig.ctxServerPort;
-				break;
-			}
-			case mqtt : {
-				clientId = name;
-				entry    = "pctopic";
-				break;
-			}
-			case coap : {
-				clientId = "";
-				entry    = "";
-				break;
-			}
-			default:
-				break;
-			}//switch
  
-		return create(clientId,entry);   //activates! 
-	}//create
-*/
 	
 }	

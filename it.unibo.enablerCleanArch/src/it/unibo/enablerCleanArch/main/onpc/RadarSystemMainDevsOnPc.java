@@ -29,7 +29,7 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 	public void setup(   )  {
  			RadarSystemConfig.ctxServerPort     = 8018;
 			RadarSystemConfig.withContext       = true;
-		    RadarSystemConfig.protcolType       = ProtocolType.coap;
+		    RadarSystemConfig.protcolType       = ProtocolType.mqtt;
  			RadarSystemConfig.sonarDelay        = 200;
  			RadarSystemConfig.simulation   		= true;
 			RadarSystemConfig.DLIMIT      		= 55;  
