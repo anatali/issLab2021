@@ -109,7 +109,7 @@ public abstract class ApplResourceCoap extends CoapResource implements IApplMsgH
 	}
 
 	@Override
-	public void sendAnswerToClient(String message) {
+	public void sendAnswerToClient(String message, Interaction2021 conn) {
 		//Does nothing since already implemented by the Coap protocol
 	}
 	

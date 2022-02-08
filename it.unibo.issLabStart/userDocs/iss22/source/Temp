@@ -73,3 +73,8 @@ Distribuzione del RadarSystem
 ==================================  
 
 .. include:: RadarSystemDeploy.rst  
+
+Il metodo ``elaborate`` con argomento :ref:`ApplMessage<ApplMessage>` viene presentato subito qui,
+ma verrà introdotto solo più avanti
+(si veda :ref:`IApplMsgHandler<IApplMsgHandlerEsteso>` in :doc:`ContestiContenitori`) quando avremo la necessità di 
+introdurre nei messaggi anche informazioni relative al nome del mittente e del destinatario.

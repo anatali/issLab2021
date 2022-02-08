@@ -9,7 +9,7 @@
 .. _CoAP: https://coap.technology/
 
 =====================================================
-Enablers (SPRINT2) 
+Abilitatori di comunicazione
 =====================================================
 
 L'analisi del problema ha posto in evidenza (si veda :ref:`concettodienabler`) 
@@ -98,6 +98,15 @@ Notiamo che:
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
 - si prevede anche un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
+------------------------------------------
+Trasduttori applicativi
+------------------------------------------
+
+Ogni enabler deve ricevere in ingresso un gestore  applicativo che implementa :ref:`IApplMsgHandler` estendendo 
+la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora comandi o richieste inviate
+in forma di messaggi.
+
+.. I messaggi possono essere semplici sringhe oppure oggetti di tipo :ref:`ApplMessage<ApplMessage>` che introdurremto in :doc::`ApplMessage<ApplMessage>`.
 
 
 ------------------------------------------
@@ -121,13 +130,42 @@ Enabler per il Sonar
          :width: 80%
     - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
       applicativo ``SonarApplHandler`` di tipo ``IApplMsgHandler`` che estende 
-      la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un memtodo che elabora:
+      la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora:
 
-      - i comandi: ridirigendoli al sonar locale 
-      - le richieste:  ridirigendole al sonar locale e inviando la risposta al client 
+      - i *comandi*: ridirigendoli al sonar locale 
+      - le *richieste*:  ridirigendole al sonar locale e inviando la risposta al client 
 
- 
+Il ``SonarApplHandler``  deve quindi fare fronte a due compiti:
 
+#. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar
+#. inviare al mittente la risposta, in caso il messaggio sia una richiesta
+
+Facendo riferimento al single responsibility principle, 
+
+.. code:: java
+
+  public class SonarApplLogic implements IApplLogic{
+  private	ISonar sonar;
+
+	  public SonarApplLogic(ISonar sonar) { this.sonar = sonar; }    
+    @Override
+      public String elaborate(String message) {
+      //Anallizza message e invoca il sonar restituendo un risultato o una risposta
+      }
+
+    @Override
+	  public String elaborate(ApplMessage message) {
+      //Anallizza message e invoca il sonar restituendo un risultato o una risposta
+    }
+  }
+
+.. code:: java
+
+  public interface IApplLogic {
+    public String elaborate( ApplMessage message );
+    public String elaborate( String message );
+  }
+  
 +++++++++++++++++++++++++++++++++++
 SonarApplHandler
 +++++++++++++++++++++++++++++++++++
@@ -135,29 +173,28 @@ SonarApplHandler
 .. code:: java
 
   public class SonarApplHandler extends ApplMsgHandler  {
-  ISonar sonar;
+  private IApplLogic sonarLogic;
+
     public SonarApplHandler(String name, ISonar sonar) {
       super(name);
+      sonarLogic = new SonarApplLogic(sonar);
       this.sonar=sonar;
     }
     @Override
     public void elaborate(String message, Interaction2021 conn) {
-      if( message.equals("getDistance")) {
-        String vs = ""+sonar.getDistance().getVal();
-        sendMsgToClient(vs, conn);
-      }else if( message.equals("activate")) {
-        sonar.activate();
-      }else if( message.equals("activate")) {
-        sonar.deactivate();
-      }else if( message.equals("isActive")) {
-        String sonarState = ""+sonar.isActive();
-        sendMsgToClient(sonarState, conn);
-      }
+ 				if( message.equals("getDistance") || message.equals("isActive")  ) {
+   			}else sonarLogic.elaborate(message);
     }
   
     @Override
     public void elaborate(ApplMessage message,Interaction2021 conn) {...}
-
+			String payload = message.msgContent();
+			if( message.isRequest() ) {
+				String answer = sonarLogic.elaborate(message);
+				if( Utils.isMqtt() ) sendAnswerToClient( answer  );
+				else sendMsgToClient( answer, conn );
+			}else sonarLogic.elaborate( message.msgContent() ); //no risposta
+    }
   }
 
 .. _SonarProxyAsClientNoContext:

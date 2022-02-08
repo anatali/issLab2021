@@ -34,8 +34,12 @@ protected String name;
  		sendMsgToClient( message.toString(), conn );
  	}
 	
- 	
  	@Override
+ 	public void sendAnswerToClient( String reply, Interaction2021 conn   ) {
+		sendMsgToClient(reply, conn);		
+ 	}
+ 	
+ 	//@Override
  	public void sendAnswerToClient( String reply  ) {
 		ColorsOut.out(name + " | ApplMsgHandler sendAnswerToClient reply=" + reply, ColorsOut.BLUE);
 		try {

@@ -3,7 +3,7 @@
 .. role:: remark
 
 ===================================================
-Il RadarSystem basato su CoAP
+Il RadarSystem con CoAP
 ===================================================
 
 Il nostro interesse su CoAP si concentra , per ora, sui seguenti aspetti:
@@ -19,7 +19,7 @@ Il nostro interesse su CoAP si concentra , per ora, sui seguenti aspetti:
      :align: center
      :width: 40%
 
-   Da questo punto di vista, il modello è simile a quanto proposto in  :doc:`ContextServer`, ma con
+   Da questo punto di vista, il modello è simile a quanto proposto in  :doc:`ContestiContenitori`, ma con
    una forte forma di :blue:`standardizzazione` sia a livello di 'verbi' di interazione (GET/PUT) sia a livello di 
    organizzazione del codice applicativo (gerarchia di risorse);
 #. l'adozione del protocollo CoAP come supporto alle interazioni potrebbe indurci a modificare radicalmente 
@@ -413,16 +413,16 @@ Come già fatto per il Led, impostiamo un programma che prima configura il siste
 A differenza del caso del Led, l'uso di un dispositivo di input quale il Sonar si presta ad impostare un maggior 
 numero di configurazioni, a partire dal Sonar stesso, che può essere:
 
-- un oggetto (POJO) che implementa l'interfaccia  `ISonar`_ ; 
-- un POJO osservabile che implementa l'interfaccia `ISonarObservable`_.
+- un oggetto (POJO) che implementa l'interfaccia  :ref:`ISonar`; 
+- un POJO osservabile che implementa l'interfaccia :ref:`ISonarObservable`.
 
 
 Il Sonar (semplice od osservabile) può essere reso utilizzabile da remoto: 
 
 - con un enabler tipo-server TCP (``EnablerSonarAsServer``) che invia messaggi 'semplici' al gestore 
-  applicativo `SonarApplHandler`_;
+  applicativo :ref:`SonarApplHandler`;
 - attraverso un ``TcpContextServer``, che ridirige **il payload** di messaggi di tipo ``ApplMessage``
-  al gestore applicativo `SonarApplHandler`_;
+  al gestore applicativo :ref:`SonarApplHandler`;
 - come parte di una ``CoapResource`` ( come `SonarResourceCoap`_ che estende `CoapDeviceResource`_)
   con URI= ``devices/ouput/sonar``.
 
@@ -436,15 +436,15 @@ I paranetri di configurazione sono espressi dalle seguenti variabili:
 
 Al Sonar può essere associato un observer (o più):
 
-- realizzato come POJO che implementa la interfaccia `IObserver`_ (ad esempio `SonarObserverFortesting`_);
+- realizzato come POJO che implementa la interfaccia :ref:`IObserver` (ad esempio :ref:`SonarObserverFortesting`);
 - realizzato come componente CoAP che implementa l'interfaccia ``CoapHandler`` (ad esempio `CoapApplObserver`_).
 
 Per accedere al Sonar si possono usare: 
 
-- clienti di tipo ``ProxyAsClient`` (come `SonarProxyAsClient`_) che implementano l'interfaccia ``ISonar``. 
+- clienti di tipo ``ProxyAsClient`` (come :ref:`SonarProxyAsClient`) che implementano l'interfaccia ``ISonar``. 
   Questi client inviano al server cui sono connessi messaggi (semplici o di tipo ``ApplMessage``)
   secondo la configurazione selezionata;
-- supporti di tipo ``CoapSupport`` che implementano l'interfaccia `Interaction2021`_ inviando richieste GET/PUT.
+- supporti di tipo ``CoapSupport`` che implementano l'interfaccia :ref:`Interaction2021` inviando richieste GET/PUT.
 
 
 In relazione alle diverse possibilità introdiuciamo diversi programmi di esempio, partendo da una classe 
@@ -491,18 +491,18 @@ Esempi di configurazioni applicative
 
 A partire dalla classe astratta `SonarUsageAbstractMain`_ defininiamo i programmi:
 
-- ``SonarUsageMainWithEnablerTcp``: rende accessibile il Sonar attraverso il server TCP `EnablerSonarAsServer`_ .
+- ``SonarUsageMainWithEnablerTcp``: rende accessibile il Sonar attraverso il server TCP :ref:`EnablerSonarAsServer`.
 - ``SonarUsageMainWithContextTcp``: rende accessibile il Sonar attraverso il server di contesto 
-  `TcpContextServer`_, aggiungendovi il componente `SonarApplHandler`_.
+  :ref:`TcpContextServer`, aggiungendovi il componente :ref:`SonarApplHandler`.
 - ``SonarUsageMainCoap``: rende accessibile il Sonar attraverso la risorsa CoAP `SonarResourceCoap`_ che si aggiunge
   al `CoapApplServer`_ con *URI-Path=devices/input/sonar*. Si permette anche la creazione di un observer CoAP 
   di tipo `CoapApplObserver`_ che visualizza la distanza corrente sulla RadarGui,  attraverso un `SonarDistanceHandler`_
 
 Tutti i programmi:
 
-- utilizzano il Sonar remoto attraverso un client di tipo `SonarProxyAsClient`_, 
+- utilizzano il Sonar remoto attraverso un client di tipo :ref:`SonarProxyAsClient`, 
   che invia messaggi (semplici o di tipo ``ApplMessage``), secondo la configurazione selezionata
-- permettono di associare al Sonar POJO un osservatore  `SonarObserverFortesting`_.
+- permettono di associare al Sonar POJO un osservatore  :ref:`SonarObserverFortesting`.
 
 
 .. _CoapApplObserver:

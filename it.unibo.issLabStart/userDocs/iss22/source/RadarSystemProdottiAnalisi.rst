@@ -11,7 +11,7 @@
 .. _pattern-decorator: https://it.wikipedia.org/wiki/Decorator
 
 ==============================================
-Prodotti al termine della analisi
+Prodotti della analisi
 ==============================================
 
 Importanti prodotti, al termine della fase di analisi dei requisiti e del problema sono:

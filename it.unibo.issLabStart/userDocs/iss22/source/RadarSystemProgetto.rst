@@ -3,7 +3,7 @@
 .. role:: remark
 
 ==================================================
-Progettazione e sviluppo incrementali
+Progettazione e sviluppo
 ==================================================
  
 Iniziamo il nostro progetto affrontando il primo punto del piano di lavoro proposto dall'analisi 

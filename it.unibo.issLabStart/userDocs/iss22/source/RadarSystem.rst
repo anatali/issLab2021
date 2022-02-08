@@ -168,52 +168,5 @@ In sintesi
 Il sistema comprende un dispositivo di input (il Sonar) e due dispositivi di output (il Led e il RadarDisplay)
 
 
---------------------------------------
-Analisi del problema
---------------------------------------
-
-Per analizzare le problematiche implicite nei requisiti, dobbiamo porre molta attenzione a non confondere 
-l'**analisi del problema** con l'analisi *di come pensiamo di risolvere* il problema.
-
-Due sono gli approcci principali possibili:
-
-- approccio :blue:`bottom-up`: partiamo da quello che abbiamo a disposizione e analizziamo i problemi che
-  sorgono per 'assemblare le parti disponibili' in modo da costruire un sistema che soddisfi i requisiti funzionali;
-- approccio :blue:`top-down`: partiamo analizzando le proprietà che il sistema deve 'logicamente' avere,
-  senza legarci a priori ad alcun specifico componente e/o tecnologia. Successivamente, evidenziamo le
-  problematiche che sorgono sia per soddisfare i requisiti funzionali sia per utilizzare (se si pone il caso) 
-  componenti forniti dal committente o dalla nostra azienda, considerndo anche framework e infrastrutture 
-  disponibili sul mercato (con una evidente propensione  all'open-source e al free software).
-
-E' molto probabile che la maggior marte delle persone sia propensa a seguire (almeno inizialmente) un
-approccio bottom-up, essendo l'approccio top-down meno legato a enti subito concretamente usabili come 
-'building blocks'. 
-
-Osserviamo però che il compito della analisi del problema non è quello di trovare una soluzione, 
-ma quello di porre in luce le problematiche in gioco (il :blue:`cosa` si deve fare) e capire con quali risorse 
-(tempo, persone, denaro, etc. )  queste problematiche debbano/possano essere affrontate e risolte.
-Sarà compito dei progettisti quello di trovare il modo (il :blue:`come`) pervenire ad una soluzione 'ottimale'
-date le premesse dell'analisi e le risorse a disposizione.
-
-Anticipiamo subito che il nostro approccio di riferimento sarà di tipo top-down, per motivi che si dovrebbero
-risultare chiari durante il percorso che ora iniziamo seguendo, al momento, un tipico modo di procedere bottom-up.
-
-Sarà proprio rendendoci conto dei limiti di approcci bottom-up che acquisiremo (se non l'abbiamo già)
-il convincimento che conviene chiarire bene il :blue:`cosa` prima di affrontare il :blue:`come` e che anche
-il :blue:`come` può essere convenientemente affrontato ritardando o incapsulando il più possibile dettagli legati 
-alle tecnologie utilizzate.
-
-
-
-
-
-
-  
-
-
  
-
-
-
-  
 

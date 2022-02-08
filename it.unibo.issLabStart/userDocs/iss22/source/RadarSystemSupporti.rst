@@ -7,7 +7,7 @@
 .. _tcpsupport:
 
 ===============================================
-Supporti per TCP (SPRINT1)
+Supporti per comunicazioni 
 ===============================================
   
 Il secondo punto del piano di lavoro (si veda :ref:`PianoLavoro`) prevede:
@@ -110,7 +110,9 @@ Nel seguito, incapsuleremo il codice applicativo  entro oggetti che implementano
     public String getName(); 
     public  void elaborate( String message, Interaction2021 conn ) ;	 
     public void sendMsgToClient( String message, Interaction2021 conn  );
+    public void sendAnswerToClient( String message, Interaction2021 conn  );
   }
+
 
 Il costruttore del TCP server avrà quindi la seguente signature:
 
@@ -120,8 +122,8 @@ Il costruttore del TCP server avrà quindi la seguente signature:
 
 cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di:
 
-- gestire i messaggi ricevutisulla connessione :ref:`Interaction2021<conn2021>` che il server avrà stabilito con i clienti 
-- inviare risposte ai clienti sulla stessa connessione.
+- gestire i messaggi ricevuti sulla connessione :ref:`Interaction2021<conn2021>` che il server avrà stabilito con i clienti 
+- inviare risposte (o altri messagi) ai clienti sulla stessa connessione.
 
 
 .. _ApplMsgHandler:
@@ -145,11 +147,16 @@ dei messaggi in ingresso.
     public ApplMsgHandler( String name ) { this.name = name; }
     
     public Interaction2021 getName(  ) {  return name;  }
-    
+    @Override
     public void sendMsgToClient( String message, Interaction2021 conn  ) {
-      try {  conn.forward( message );
-      }catch(Exception e){Colors.outerr(name + " | ERROR " + e.getMessage());}
+      try {  
+        conn.forward( message );
+      }catch(Exception e){ ... }
     } 
+    @Override
+    public void sendAnswerToClient( String reply, Interaction2021 conn   ) {
+        sendMsgToClient(reply, conn);
+    }
     
     public abstract void elaborate( String message, Interaction2021 conn ) ;
    }
@@ -565,23 +572,5 @@ Si veda:
 - *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainDisplayOnPc*  (main che implementa :ref:`IApplication`)
 
 
----------------------------------
-Supporti per altri protocolli
----------------------------------
 
-Udp, Bluetooth  ``unibonoawtsupports.jar``
- 
-+++++++++++++++++++++++++++++++++++++++++++++++
-La libreria ``unibonoawtsupports.jar``
-+++++++++++++++++++++++++++++++++++++++++++++++
-
-  
----------------------------------
-Supporti per HTTP
----------------------------------
-
-.. code:: Java
-
-  HttpURLConnection con =
-  IssHttpSupport
 

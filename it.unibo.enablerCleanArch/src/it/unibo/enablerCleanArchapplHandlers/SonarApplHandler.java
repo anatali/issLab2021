@@ -18,7 +18,7 @@ import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
  
 
 public class SonarApplHandler extends ApplMsgHandler  {
-private ISonar sonar;
+ 
 private IApplLogic sonarLogic;
 
 public static IApplMsgHandler create(String name, ISonar sonar) {
@@ -45,40 +45,12 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
 				if( Utils.isMqtt() ) sendAnswerToClient( answer  );
 				else sendMsgToClient( answer, conn );
 			}else sonarLogic.elaborate( message.msgContent() ); //non devo inviare risposta
-			/*
-			if( message.isRequest() ) {
-				if(payload.equals("getDistance") ) {
-					String vs = ""+sonar.getDistance().getVal();
-					ApplMessage reply = Utils.prepareReply( message, vs);  //Utils.buildReply("sonar", "distance", vs, message.msgSender()) ;
-					if( Utils.isMqtt() ) sendAnswerToClient( reply.toString()  );
-					else sendMsgToClient( reply.toString(), conn );
-
-				}else if(payload.equals("isActive") ) {
- 					String sonarState = ""+sonar.isActive();
-					ApplMessage reply = Utils.prepareReply( message, sonarState); //Utils.buildReply("sonar", "sonarstate", sonarState, message.msgSender()) ;
-  					//sendAnswerToClient(reply.toString());
-					sendMsgToClient( reply.toString(), conn );
-				}
-			}else elaborate(payload, conn);			
-			*/
 		}
 		
  			@Override
 			public void elaborate(String message, Interaction2021 conn) {
  				ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
  				if( message.equals("getDistance") || message.equals("isActive")  ) {
- 	 				//ColorsOut.out(name+ " | elaborate getDistance="  , ColorsOut.BLUE);
-//					String vs = ""+sonar.getDistance().getVal();
-// 	 				ColorsOut.out(name+ " | elaborate vs=" + vs, ColorsOut.BLUE);
-					sendMsgToClient(sonarLogic.elaborate(message), conn);
-// 				}else if( message.equals("activate")) {
-// 					ColorsOut.out(name+ " | activate sonar="+sonar , ColorsOut.BLUE);
-// 					sonarLogic.elaborate("activate");
-// 				}else if( message.equals("deactivate")) {
-// 					sonar.deactivate();
-// 				}else if( message.equals("isActive")) {
-// 					String sonarState = ""+sonar.isActive();
-// 					sendMsgToClient(sonarState, conn);					 
-  				}else sonarLogic.elaborate(message);
+   				}else sonarLogic.elaborate(message);
  			}
 }

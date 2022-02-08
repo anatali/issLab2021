@@ -79,8 +79,12 @@ public class SonarDataObserverHandler implements IApplMsgHandlerMqtt{
 		ColorsOut.out(name + " | sendMsgToClient:" + message);
 		
 	}
+//	@Override
+//	public void sendAnswerToClient(String message) {
+//		ColorsOut.out(name + " | sendAnswerToClient:" + message);
+//	}
 	@Override
-	public void sendAnswerToClient(String message) {
-		ColorsOut.out(name + " | sendAnswerToClient:" + message);
+	public void sendAnswerToClient(String message, Interaction2021 conn) {
+		ColorsOut.out(name + " | sendAnswerToClient:" + message);		
 	}
 }
