@@ -1,16 +1,19 @@
-package it.unibo.enablerCleanArch.main.all;
+package it.unibo.enablerCleanArch.main.onpc;
 
 import java.util.Observable;
 import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
  
 
-public class SonarObserver implements IObserver{
+public class SonarObserverEmitter implements IObserver{
 	private String name;
-  
-	public SonarObserver( String name ) {  
+	private Interaction2021 conn;
+	
+	public SonarObserverEmitter( String name, Interaction2021 conn ) {  
 		this.name    = name;
+		this.conn    = conn;
  	}
  	@Override  //java.util.Observer
 	public void update(Observable source, Object data) {
@@ -22,9 +25,10 @@ public class SonarObserver implements IObserver{
 	public void update(String vs) {
 		try {
 			 ColorsOut.out( name + " | update vs=" + vs, ColorsOut.GREEN ); //+ " from " + source	
-			 if( Utils.isMqtt() ) {
-				 //mqtt.publish("sonarDataTopic", vs, 0, false);
-			 }
+//			 if( Utils.isMqtt() ) {
+//				 //mqtt.publish("sonarDataTopic", vs, 0, false);
+//			 }
+			 conn.forward(vs);
  		}catch( Exception e) {
 			ColorsOut.outerr(name+" | update failure:" + e.getMessage());
 		}

@@ -9,7 +9,7 @@ public class SonarMockObservable extends SonarModelObservable   {
 	@Override
 	protected void sonarSetUp() {
 		observableDistance = new DistanceMeasured( );
- 		ColorsOut.out("SonarModckObservable | sonarSetUp curVal="+curVal);
+ 		ColorsOut.out("SonarMockObservable | sonarSetUp curVal="+curVal);
  		observableDistance.setVal(curVal);
  	} 	
 
@@ -19,11 +19,12 @@ public class SonarMockObservable extends SonarModelObservable   {
 			updateDistance( RadarSystemConfig.testingDistance );			      
 			stopped = true;  //one shot
 		}else {
-			int v = curVal.getVal() - 1;
+			int v = observableDistance.getDistance( ).getVal() - 1; //curVal.getVal() - 1; 
+			ColorsOut.out("SonarMockObservable | produced:"+v);
 			updateDistance( v );			    
  			stopped = ( v == 0 );
+ 			//curVal  = new Distance( v );
 			Utils.delay(RadarSystemConfig.sonarDelay);  //avoid fast generation
 		}		
 	}
-  
 }

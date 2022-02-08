@@ -20,7 +20,7 @@ public class LedApplHandler extends ApplMsgHandler {
 private IApplLogic ledLogic;
 
 	public static IApplMsgHandler create(String name, ILed led) {
-		if( RadarSystemConfig.protcolType == ProtocolType.coap) {
+		if( Utils.isCoap() ) {
 			return new LedResourceCoap("led",  new LedApplLogic(led) );
 		}else {
 			return new LedApplHandler(name,led);

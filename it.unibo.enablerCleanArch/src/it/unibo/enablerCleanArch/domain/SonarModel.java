@@ -65,7 +65,7 @@ protected boolean stopped   = true;
  	
 	@Override
 	public void deactivate() {
-		ColorsOut.out("SonarModel | deactivate" );
+		ColorsOut.out("SonarModel | deactivate", ColorsOut.BgCyan );
 		stopped = true;
 	}
 

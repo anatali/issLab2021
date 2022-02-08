@@ -14,6 +14,7 @@ public class LedResourceCoap extends ApplResourceCoap   {
  	public LedResourceCoap(String name, IApplLogic ledLogic   ) {
 		super(name, DeviceType.output);
 		this.ledLogic = ledLogic;
+		ColorsOut.out( getName() + " | LedResourceCoap CREATED"      );
    	}
 
 	@Override

@@ -15,9 +15,8 @@ private IDistance d;
 	@Override
 	public void setVal( IDistance v ) {
 		d = v;
-		ColorsOut.out("DistanceMeasured setVal="+v + " obsNum=" + countObservers(), ColorsOut.MAGENTA);
-		setChanged();
-		ColorsOut.out("DistanceMeasured setVal="+v + " hasChanged=" + hasChanged(), ColorsOut.MAGENTA);
+ 		setChanged();
+		ColorsOut.out("DistanceMeasured setVal="+v + " obsNum=" + countObservers() + " hasChanged=" + hasChanged(), ColorsOut.MAGENTA);
 	    
 		notifyObservers( d );		
 	}

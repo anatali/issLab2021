@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch.main.onpc;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.main.all.SonarObserver;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -29,13 +30,14 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 	public void setup(   )  {
  			RadarSystemConfig.ctxServerPort     = 8018;
 			RadarSystemConfig.withContext       = true;
-		    RadarSystemConfig.protcolType       = ProtocolType.mqtt;
+		    RadarSystemConfig.protcolType       = ProtocolType.coap;
  			RadarSystemConfig.sonarDelay        = 200;
  			RadarSystemConfig.simulation   		= true;
 			RadarSystemConfig.DLIMIT      		= 55;  
 			RadarSystemConfig.ledGui            = true;
-			RadarSystemConfig.tracing           = true;
 			RadarSystemConfig.testing           = false;
+			RadarSystemConfig.tracing           = true;
+			RadarSystemConfig.sonarObservable   = true;
 			RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  "tcp://localhost:1883" 	
  	}
 	
@@ -43,7 +45,13 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 	 	
 	protected void configure() {
 		//Dispositivi di Input
-	    sonar      = DeviceFactory.createSonar();
+		if( RadarSystemConfig.sonarObservable ) {
+			sonar               = DeviceFactory.createSonarObservable();		
+//			IObserver sonarObs  = new SonarObserver( "sonarObs" ) ;
+//			((ISonarObservable)sonar).register( sonarObs );			
+		}else{
+			sonar      = DeviceFactory.createSonar();
+		}
 	    //Dispositivi di Output
 	    led        = DeviceFactory.createLed();
 	    //led.turnOff();

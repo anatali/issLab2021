@@ -17,7 +17,7 @@ public abstract class SonarModelObservable extends SonarModel implements ISonarO
  	}
 	@Override
 	protected void updateDistance( int d ) {
-		ColorsOut.out("SonarModelObservable call updateDistance | d=" + d, ColorsOut.GREEN );
+		//ColorsOut.out("SonarModelObservable call updateDistance | d=" + d, ColorsOut.GREEN );
  		observableDistance.setVal( new Distance( d ) ); //notifies
  	}	
   	@Override

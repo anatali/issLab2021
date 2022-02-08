@@ -1,5 +1,7 @@
 package it.unibo.enablerCleanArch.main.onpc;
 
+import org.eclipse.californium.core.CoapClient;
+
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -35,13 +37,13 @@ private String serverHost = "";
 	}
 
 	public void setup(   )  {
- 	      RadarSystemConfig.protcolType       = ProtocolType.mqtt;
- 		  RadarSystemConfig.testing           = false;
+ 	      RadarSystemConfig.protcolType       = ProtocolType.coap;
 		  RadarSystemConfig.raspHostAddr      = "localhost"; //"192.168.1.9";
  		  RadarSystemConfig.ctxServerPort     = 8018;
 		  RadarSystemConfig.sonarDelay        = 1500;
 		  RadarSystemConfig.withContext       = true; //MANDATORY: to use ApplMessage
 		  RadarSystemConfig.DLIMIT            = 40;
+ 		  RadarSystemConfig.testing           = false;
 		  RadarSystemConfig.tracing           = true;
 		  RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  "tcp://localhost:1883" 	
 	}
@@ -53,6 +55,10 @@ private String serverHost = "";
 			String sonarPath = CoapApplServer.inputDeviceUri+"/sonar"; 
 			led              = new LedProxyAsClient("ledPxy", serverHost, ledPath );
 			sonar            = new SonarProxyAsClient("sonarPxy",  serverHost, sonarPath  );
+			CoapClient  client = new CoapClient( "coap://localhost:5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
+			//CoapObserveRelation obsrelation = 
+					client.observe( new SonarObserverCoap("sonarObs") );
+			//cancelObserverRelation(obsrelation);
 		}else {
 			String serverEntry = "";
 			if(Utils.isTcp() ) { 
@@ -72,22 +78,22 @@ private String serverHost = "";
  	
 	
 	protected void useLedAndSonar() {
-	    led.turnOn();
-	    Utils.delay(1000);
-	    boolean ledState = led.getState();
-	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
- 	    led.turnOff();
-		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
+//	    led.turnOn();
+//	    Utils.delay(1000);
+//	    boolean ledState = led.getState();
+//	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
+// 	    led.turnOff();
+//		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
 		
-		boolean sonarState = sonar.isActive();
-		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
+//		boolean sonarState = sonar.isActive();
+//		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
  		
 		sonar.activate(); 
 		ColorsOut.outappl("sonar state=" + sonar.isActive(), ColorsOut.GREEN);
 		Utils.delay(1000);
-		int d = sonar.getDistance().getVal();
-		ColorsOut.outappl("sonar distance=" + d, ColorsOut.GREEN);
-		Utils.delay(1000);
+//		int d = sonar.getDistance().getVal();
+//		ColorsOut.outappl("sonar distance=" + d, ColorsOut.GREEN);
+		//Utils.delay(1000);
 		 
 		terminate();
 		
@@ -102,8 +108,9 @@ private String serverHost = "";
  
 	public void terminate() {
 		led.turnOff();
-	    //Utils.delay(1000); //give the time for last actions ...
-		sonar.deactivate();
+ 		sonar.deactivate();
+		ColorsOut.outappl("BYE", ColorsOut.GREEN);
+		Utils.delay(3000);
 		System.exit(0);
 	}
  

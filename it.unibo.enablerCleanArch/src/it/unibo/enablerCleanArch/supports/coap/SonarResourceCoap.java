@@ -8,10 +8,8 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarResourceCoap extends ApplResourceCoap  {
-//ISonar sonar;
 String curDistance="0";  //Initial state
 private IApplLogic sonarLogic;
-
  
 		public SonarResourceCoap(String name, IApplLogic sonarLogic) {
 			super(name, DeviceType.input);
@@ -30,9 +28,9 @@ private IApplLogic sonarLogic;
 					if( ! sonarActive() ) sonarLogic.elaborate("activate");
 					while( sonarActive() ) {
 						String v = sonarLogic.elaborate("getDistance");
+		 				//ColorsOut.out( getName() + " | SonarResourceCoap v=" + v , ColorsOut.BgYellow  );		
 						elaborateAndNotify(  v );
 						Utils.delay(RadarSystemConfig.sonarDelay);
-						//Colors.out("SonarResourceCoap | sonar value="+v);
 					}
 				}
 			}.start();
@@ -42,10 +40,11 @@ private IApplLogic sonarLogic;
 			@Override
 			protected String elaborateGet(String req) {
 				String answer = "";
- 				ColorsOut.out( getName() + " | elaborateGet req=" + req + " curVal="+curDistance , ColorsOut.GREEN  );					
-				if( req == null  ) {
-					ColorsOut.outerr(getName() +  " | elaborateGet req NULL");
+ 				ColorsOut.out( getName() + " | elaborateGet req=" + req + " curDistance="+curDistance    );					
+				if( req == null || req.isEmpty() ) { //query by observers
+					ColorsOut.outerr(getName() +  " | elaborateGet req NULL or empty");
 					answer = curDistance;
+					return answer;
 				}
 				try {
 					ApplMessage msg = new ApplMessage( req );
@@ -53,6 +52,7 @@ private IApplLogic sonarLogic;
 				}catch( Exception e) {
 					answer = sonarLogic.elaborate( req  );
 				}		
+				return answer; //sonarLogic.elaborate(req);
 				/*
 				if( req.equals("getDistance")) {
 					//String answer = curDistance;  
@@ -63,7 +63,6 @@ private IApplLogic sonarLogic;
 				if( req != null && req.equals("isActive")) return ""+sonar.isActive();
 				return "SonarResourceCoap: request notUnderstood";
 				*/
-				return answer; //sonarLogic.elaborate(req);
 			}
 			
 			@Override
@@ -75,7 +74,8 @@ private IApplLogic sonarLogic;
 			protected void elaboratePut(String arg) {
 	 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
 	 			
-	 			sonarLogic.elaborate(arg);
+	 			String result = sonarLogic.elaborate(arg);
+	 			if( result.equals("activate_done")) getSonarValues(); //per CoAP observers
 	 			/*
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	
@@ -97,7 +97,7 @@ private IApplLogic sonarLogic;
 			
 			protected void elaborateAndNotify(String arg) {
 				curDistance=  arg;
- 				ColorsOut.out( getName() + " | elaborateAndNotify:" + curDistance , ColorsOut.GREEN  );		
-				changed();	// notify all CoAP observers
+ 				ColorsOut.out( getName() + " | elaborateAndNotify:" + curDistance , ColorsOut.BgYellow  );		
+ 				changed();	// notify all CoAP observers
 			}
  }
