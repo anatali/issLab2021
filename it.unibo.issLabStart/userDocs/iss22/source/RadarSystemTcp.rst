@@ -35,9 +35,9 @@ elaborate di :ref:`LedApplHandler`
   }
 
 
-++++++++++++++++++++++++++++++++++++++++++
-elaborate di :ref:`SonarApplHandler` 
-++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++
+Metodo elaborate di :ref:`SonarApplHandler` 
+++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: java
 
@@ -192,6 +192,11 @@ di informazione.
     new ApplMessage("msg( distance, dispatch, system, sonar, 10, 1 )");
 
 
+.. _primoPrototipo: 
+
+------------------------------------------
+Architettura del primo prototipo
+------------------------------------------
 
 
 Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema che abbia il Controller (e il radar) su PC
@@ -200,7 +205,7 @@ e i dispositivi sul Raspberry, secondo l'architettura mostrata in figura:
 
 .. image:: ./_static/img/Radar/sysDistr1.PNG
    :align: center 
-   :width: 60%
+   :width: 70%
 
 I dispositivi sul Raspberry sono incspsulati in  handler che gestiscono i :ref:`Messaggi applicativi<messaggiAppl>` inviati 
 loro dal :ref:`TcpContextServer<TcpContextServer>`.
@@ -210,11 +215,133 @@ Si veda:
 - ``RadarSystemMainDevsCtxOnRasp`` : da attivare sul Raspberry 
 - ``RadarSystemMainWithCtxOnPc`` : da attivare sul PC
  
+--------------------------------------------
+Deployoment del primo prototipo
+--------------------------------------------
+
+.. code:: 
+
+  gradle build jar -x test
+
+Crea il file `build\distributions\it.unibo.enablerCleanArch-1.0.zip` che contiene la directory bin  
+
+ 
+.. Test funzionale
+.. Si veda :doc:`ContextServer`.
+
+La distribuzione del *RadarSystem* assume due forme:
+
+- la forma di una libreria di nome ``it.unibo.enablerCleanArch-1.0.jar`` prodotta dal progetto it.unibo.enablerCleanArch_
+- la forma di una applicazione web (che utiliza la libreria precedente) prodotta dal progetto ``it.unibo.msenabler``
 
 
-++++++++++++++++++++++++++++++++++++++++
+.. _enablerCleanArch:
+
+++++++++++++++++++++++++++++++++++++
+it.unibo.enablerCleanArch
+++++++++++++++++++++++++++++++++++++
+
+Il progetto *it.unibo.enablerCleanArch* è sviluppato in ``Java8`` e fornisce il programma
+``AllMainRadarLed`` che permette di selezionare ed eseguire diverse configurazioni applicative.
+
+.. code:: 
+
+  1    LedUsageMain 
+  a    RadarSystemDevicesOnRaspMqtt
+  A    RadarSystemMainOnPcMqtt
+  2    SonarUsageMainWithEnablerTcp
+  3    SonarUsageMainWithContextTcp 
+  4    SonarUsageMainWithContextMqtt
+  5    SonarUsageMainCoap
+  6    RadarSystemAllOnPc
+  7    RadarSystemDevicesOnRasp
+  8    RadaSystemMainCoap
+  9    RadarSystemMainOnPcCoap
+
+Selezionando **a** si esegue la parte di applicazione che attiva i dispositivi Led e Sonar sul Raspberry.
+A queta parte corrisponde la parte di applicazione  **A**, da eseguire sul PC per inviare comandi ai dispositivi remoti 
+e per ricevere informazioni sul loro stato.
+Le due parti interagiscono via MQTT usando il broker di indirizzo ``tcp://broker.hivemq.com``.
+
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso 8 uso di Coap - sistema tutto su Raspberry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il sistema su Raspberry attiva un unico server (**CoapApplServer**) e aggiunge come risorse 
+il Led ( devices/output/lights/led ) e il Sonar (devices/input/sonar). 
+
+.. code:: 
+
+   "simulation"       : "false",
+   "ControllerRemote" : "false",
+   "LedRemote"        : "false",
+   "SonareRemote"     : "false",
+   "RadarGuiRemote"   : "false",
+   "protocolType"     : "coap",
+   "withContext"      : "false",
+   "sonarDelay"       : "200",
+   ........................................
+   "pcHostAddr"       : "192.168.1.9",
+   "raspHostAddr"     : "192.168.1.24",
+   "radarGuiPort"     : "8014",
+   "ledPort"          : "8010",
+   "ledGui"           : "true",
+   "sonarPort"        : "8012",
+   "sonarObservable"  : "false",
+   "controllerPort"   : "8016",
+   "serverTimeOut"    : "600000",
+   "applStartdelay"   : "3000",
+   "sonarDistanceMax" : "150",
+   "DLIMIT"           : "12",
+   "ctxServerPort"    : "8018",
+   "mqttBrokerAddr"   : "tcp://broker.hivemq.com",
+   "testing"          : "false"
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso 8 uso di Coap - dispositivi su Raspberry 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Condifguriamo il sistema su Raspberry specificando che il controller è remoto.
+
+.. code:: 
+
+   "simulation"       : "false",
+   "ControllerRemote" : "true",
+   ...
+
+
+A questo punto attiviamo il programma 9 su PC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso 9 uso di Coap - Controller su PC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Questo programma nasce per usare CoAP e quindi fissa in modo diretto i parametri di configurazione 
+che gli interessano:
+
+.. code:: 
+
+   	RadarSystemConfig.raspHostAddr = "192.168.1.xxx";
+		RadarSystemConfig.DLIMIT       = 12;
+		RadarSystemConfig.simulation   = false;
+		RadarSystemConfig.withContext  = false;
+		RadarSystemConfig.sonarDelay   = 200;     //come quello del Raspberry
+
+Il programma può operare anche definendo il Controller come un observer della risorsa Sonar,
+ponendo 
+
+.. code:: 
+
+   useProxyClient = false
+
+In caso contrario, il Controller opera con un convenzionale ciclo **read-eval-print**.
+
+
+-----------------------------------------------
 Problemi ancora aperti  
-++++++++++++++++++++++++++++++++++++++++
+-----------------------------------------------
 
 - Un handler lento o che si blocca, rallenta o blocca la gestione dei messaggi da parte del
   ``ContextMsgHandler`` e quindi del :ref:`TcpContextServer<TcpContextServer>`.

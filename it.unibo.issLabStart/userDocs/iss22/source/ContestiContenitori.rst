@@ -124,7 +124,7 @@ Estensione della interfaccia :ref:`IApplMsgHandler<IApplMsgHandler>`
 -----------------------------------------------------------------------
 
 In relazione alla nuova esigenza, provvediamo ad estendere il contratto relativo ai gestori dei messaggi di
-di livello applicativo.
+livello applicativo.
 
 .. code:: Java
 

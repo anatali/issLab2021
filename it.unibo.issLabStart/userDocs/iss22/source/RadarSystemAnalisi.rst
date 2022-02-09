@@ -6,9 +6,6 @@
 Analisi del problema
 ===========================================
 
-
-
-
 Dopo l'analisi dei requisiti e i colloqui con il committente, possiamo riassumere la
 situazione elencando *ciò che abbiamo e disposizione* e le :blue:`problematiche` che si prospettano.
  

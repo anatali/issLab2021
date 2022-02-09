@@ -8,26 +8,70 @@
 Verso un framework per la interazione distribuita
 ==================================================
 
----------------------------------------
-TODOFeb7
----------------------------------------
+I primi SPRINT dello sviluppo hanno seguito un processo bottom-up, che ha fatto riferimento
+a TCP come protocollo per le comunicazioni di rete.
 
-:ref:`LedApplHandler`
+Abbiamo anche costruito un  :ref:`prototipo<primoPrototipo>` di una versione distribuita del sistema, 
+la cui architettura è schematizzata nella figura che segue:
 
-- Introdurre ``IApplLogic`` , ``LedApplLogic`` e ``SonarApplLogic``
-- Introdurre gli handler come wrapper di ``IApplLogic`` capaci di elaborare comandi e inviare risposte
-- Introdurre i criteri per armonizzare i diversi supporti (TCP, MQTT, CoAP) nel ``Context2021``
-- Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri
-  delle *operazioni astratte*
+.. image:: ./_static/img/Radar/sysDistr1.PNG
+   :align: center 
+   :width: 70%
+
+Con maggior dettaglio, questa architettura si basa sugli elementi costitutivi di figura:
 
 .. image:: ./_static/img/Architectures/framework0.PNG
    :align: center  
-   :width: 60%
+   :width: 70%
+
+
+- Un oggetto (POJO) di interfaccia ``Ixxx`` che definisce il comportamento di un dispositivo reale o simulato.   
+- Un oggetto di interfaccia :ref:`IApplIntepreter<IApplIntepreterEsteso>` che trasforma messaggi (di comando e richieste
+  di informazione)   in chiamate a metodi di ``Ixxx``.
+- Un oggetto di interfaccia :ref:`IApplMsgHandler<IApplMsgHandlerEsteso>` che definisce il codice di gestione
+  dei messaggi di livello applicativo indirizzati a un particolare dispositivo.
+- Un oggetto di tipo :ref:`ContextMsgHandler<ContextMsgHandler>` che realizza un gestore dei sistema dei messaggi 
+  che ne attua il reindirizzamento (dispatching) agli opportuni handler applicativi.
+- Un (unico) :ref:`TcpContextServer<TcpContextServer>` attivato su un nodo di elaborazione ``A`` (ad esempio un Raspberry) che 
+  permette a componenti :ref:`proxy<ProxyAsClient>` allocati su nodi esterni  (ad esempio un PC)
+  di interagire con i dispositivi allocati su ``A``.
+
+La domanda che ci poniamo ora è se questa organizzazione possa essere riusata nel caso in cui si voglia sostituire
+al protocolllo TCP un altro protocollo, tra quelli indicati in:ref:`ProtocolType`.
+
+---------------------------------------
+Il caso di UDP
+---------------------------------------
+
+La possibilità di sostituire TCP con UDP è  resa possibile dalla libreria  ``unibonoawtsupports.jar`` sviluppata
+in anni passati. Il compito non si è rivelato troppo difficle, visto la relativa vicinanza concettuale tra i due 
+protocolli.
+
+Più arduo sembra invece il caso di un protocollo di tipo publish-subscribe come MQTT o di un protocollo come CoAP
+che cambia l'impostazione logica in modo simile ad HTTP-REST, che mira a modellizzare
+tutte le *interazioni client/server* come uno :blue:`scambio di rappresentazioni di risorse`.
+
+---------------------------------
+Supporti per HTTP
+---------------------------------
+.. code:: Java
+
+  HttpURLConnection con =
+  IssHttpSupport
+
+- Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri
+  delle *operazioni astratte*
+
+
 
 
 ---------------------------------------
 Il caso di Coap
 ---------------------------------------
+CoAP mira a modellizzare
+tutte le interazioni client/server come uno scambio di rappresentazioni di risorse. L'obiettivo
+è quello di realizzare una infrastruttura di gestione delle risorse remote tramite alcune semplici
+funzioni di accesso e interazione come quelle di HTTP: PUT, POST, GET, DELETE.
 
 La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
 
@@ -41,23 +85,9 @@ sono registrate le risorse.
 Il caso di MQTT
 ---------------------------------------
 
----------------------------------
-Supporti per altri protocolli
----------------------------------
-
-Udp, Bluetooth  ``unibonoawtsupports.jar``
- 
-+++++++++++++++++++++++++++++++++++++++++++++++
-La libreria ``unibonoawtsupports.jar``
-+++++++++++++++++++++++++++++++++++++++++++++++
 
   
----------------------------------
-Supporti per HTTP
----------------------------------
+ 
 
-.. code:: Java
 
-  HttpURLConnection con =
-  IssHttpSupport
 
