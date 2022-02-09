@@ -37,7 +37,7 @@ Con maggior dettaglio, questa architettura si basa sugli elementi costitutivi di
   di interagire con i dispositivi allocati su ``A``.
 
 La domanda che ci poniamo ora è se questa organizzazione possa essere riusata nel caso in cui si voglia sostituire
-al protocolllo TCP un altro protocollo, tra quelli indicati in:ref:`ProtocolType`.
+al protocolllo TCP un altro protocollo, tra quelli indicati in :ref:`ProtocolType`.
 
 ---------------------------------------
 Il caso UDP
@@ -67,7 +67,7 @@ I ContextServer
 ---------------------------------
 Come primo passo per la definizione di un nostro framework, introduciamo un contratto per 
 il concetto di ContextServer che imponga metodi per attivare/disattivare il server e per
-aggiungere/rimuovere compoenti di tipo :ref:`IApplMsgHandler`:
+aggiungere/rimuovere compoenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++
