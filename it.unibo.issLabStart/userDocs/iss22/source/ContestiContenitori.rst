@@ -135,17 +135,17 @@ di livello applicativo.
 
  
 
-.. _IApplLogicEsteso:
+.. _IApplIntepreterEsteso:
 
-----------------------------------------------------------------------
-Estensione della interfaccia :ref:`IApplLogic<IApplLogicNoCtx>`
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Estensione della interfaccia :ref:`IApplIntepreter<IApplIntepreterNoCtx>`
+-------------------------------------------------------------------------------
 
 In modo analogo estendiamo il contratto relativo alla interpretazione dei messaggi:
 
 .. code:: java
 
-  public interface IApplLogic {
+  public interface IApplIntepreter {
     ...
     public String elaborate( ApplMessage message );    
   }

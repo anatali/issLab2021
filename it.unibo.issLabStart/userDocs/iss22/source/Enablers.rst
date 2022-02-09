@@ -8,6 +8,15 @@
 
 .. _CoAP: https://coap.technology/
 
+.. _grammatica regolare: https://it.wikipedia.org/wiki/Grammatica_regolare
+
+.. _BackusNaur Form : https://it.wikipedia.org/wiki/Backus-Naur_Form
+
+.. _pattern interpreter : https://it.wikipedia.org/wiki/Interpreter_pattern
+
+.. _test di Turing : https://it.wikipedia.org/wiki/Test_di_Turing
+
+
 =====================================================
 Abilitatori di comunicazione
 =====================================================
@@ -97,10 +106,10 @@ Notiamo che:
 - si prevede anche la possibilità di utilizzare altri protocolli
   .. un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
-.. _IApplLogicNoCtx:
+.. _IApplIntepreterNoCtx:
 
 ------------------------------------------
-Trasduttori applicativi
+Interpreti
 ------------------------------------------
 
 Ogni enabler deve ricevere in ingresso un gestore  applicativo (handler) che implementa :ref:`IApplMsgHandler` estendendo 
@@ -112,7 +121,7 @@ L'handler deve quindi fare fronte a due compiti:
 #. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar
 #. inviare al mittente la risposta, in caso il messaggio sia una richiesta
 
-Facendo riferimento al single responsibility principle, conviene delegare il primo compito ad
+Facendo riferimento al single responsibility principle (SRP), conviene delegare il primo compito ad
 un componente che non 'sappia nulla' della *dimensione interazione* e che si occupi solo della
 interpretazione del messaggio. Introduciamo una interfaccia per componenti di questo tipo: 
 
@@ -120,22 +129,58 @@ interpretazione del messaggio. Introduciamo una interfaccia per componenti di qu
 
 .. code:: java
 
-  public interface IApplLogic {
+  public interface IApplIntepreter {
     public String elaborate( String message );
   }
 
+.. _LinguaggioComando:
 
-.. _LedApplLogicNoCtx:
+++++++++++++++++++++++++++++++++++++++
+Linguaggio di comando
+++++++++++++++++++++++++++++++++++++++
+
+In questo nostro semplice sistema, la String message rappresenta un comando o una richiesta e segue la sintassi di
+una  `grammatica regolare`_ che può essere definita mediante le seguenti regole in `BackusNaur Form`_:
+
+.. code::
+
+  MSG          ::=  LEDMSG   | SONARMSG 
+  LEDMSG       ::=  LEDCMD   | LEDREQUEST 
+  SONARMSG     ::=  SONARCMD | SONARREQUEST
+  LEDCMD       ::= "on" | "off" 
+  LEDREQUEST   ::=  "getState"
+  SONARCMD     ::= "activate" | "deactivate"
+  SONARREQUEST ::= "getDistance"   |  "isActive"   
+
+
+Concettualmente, dobbiamo fare ora riferimento al `pattern interpreter`_ .
+Tuttavia, la semplicità di questo linguaggio non richiede al momento approfondimenti di tecniche
+per il riconoscimento e la esecuzione di frasi: basteranno dei semplici ``if``,
+come vederemo nelle sezioni successive.
+
+Occorre però segnalare un punto importante: stiamo introducendo l'idea che si possa interagire 
+con un componente software (nel nostro caso con un dispositivo di I/O) 'parlando' con tale componente,
+invece che invocarne un metodo.
+
+Il linguaggio con cui comunicare con il componente potrebbe essere, in applicazioni future, molto
+più articolato dell'attuale, tanto da porci di fronte a questioni come il famoso `test di Turing`_.
+
+ 
+
+.. _LedApplIntepreterNoCtx:
 
 +++++++++++++++++++++++++++++++++++++
-Un trasduttore per il Led
+Un interpreter per il Led
 +++++++++++++++++++++++++++++++++++++
+
+L'intepreter per il Led riconosce frasi generate da ``LEDMSG`` (si veda `LinguaggioComando`_)  e le esegue 
+invocando il dispositivo rappresentato da un POJO di interfaccia :ref:`ILed<ILed>`.
 
 .. code:: java
   
-  public class LedApplLogic implements IApplLogic  {
+  public class LedApplIntepreter implements IApplIntepreter  {
   ILed led;
-    public LedApplLogic(  ILed led) { this.led = led; }
+    public LedApplIntepreter(  ILed led) { this.led = led; }
 
     public String elaborate( String message ) {
       //Analizza message e invoca il led, restituendo un risultato o una risposta
@@ -145,23 +190,26 @@ Un trasduttore per il Led
       return message+"_done";
     }
 
-.. _SonarApplLogicNoCtx:
+.. _SonarApplIntepreterNoCtx:
 
 +++++++++++++++++++++++++++++++++++++
-Un trasduttore per il Sonar
+Un interpreter per il Sonar
 +++++++++++++++++++++++++++++++++++++
 
-Ad esempio, nel caso del Sonar:
+L'intepreter per il Sonar riconosce frasi generate da ``SONARMSG`` (si veda `LinguaggioComando`_) e le esegue invocando 
+il dispositivo rappresentato da un POJO di interfaccia :ref:`ISonar<ISonar>`.
+
 
 .. code:: java
 
-  public class SonarApplLogic implements IApplLogic{
+  public class SonarApplIntepreter implements IApplIntepreter{
   private	ISonar sonar;
 
-    public SonarApplLogic(ISonar sonar) { this.sonar = sonar; }    
+    public SonarApplIntepreter(ISonar sonar) { this.sonar = sonar; }    
     @Override
       public String elaborate(String message) {
       //Analizza message e invoca il Sonar restituendo un risultato o una risposta
+      ...
       }
   }
 
@@ -171,7 +219,7 @@ Ad esempio, nel caso del Sonar:
 
 
 ------------------------------------------
-Il caso del Sonar 
+Componenti per il Sonar 
 ------------------------------------------
 
 .. image::  ./_static/img/Radar/EnablerProxySonar.PNG
@@ -190,13 +238,15 @@ Enabler per il Sonar
          :align: center 
          :width: 80%
     - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
-      applicativo ``SonarApplHandler`` che si avvale di :ref:`SonarApplLogicNoCtx` per 
+      applicativo ``SonarApplHandler`` che si avvale di :ref:`SonarApplIntepreterNoCtx` per 
       trasformare messaggi in chiamate di metodi:
       
 .. di tipo ``IApplMsgHandler`` che estende  la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora:
 
       - i *comandi*: ridirigendoli al sonar locale 
       - le *richieste*:  ridirigendole al sonar locale e inviando la risposta al client 
+
+
 
 .. _SonarApplHandlerNoContext:
 
@@ -207,11 +257,11 @@ SonarApplHandler
 .. code:: java
 
   public class SonarApplHandler extends ApplMsgHandler  {
-  private IApplLogic sonarLogic;
+  private IApplIntepreter sonarLogic;
 
     public SonarApplHandler(String name, ISonar sonar) {
       super(name);
-      sonarLogic = new SonarApplLogic(sonar);
+      sonarLogic = new SonarApplIntepreter(sonar);
     }
 
     @Override
@@ -265,7 +315,7 @@ Proxy per il Sonar
  
 
 -----------------------------------------
-Il caso del Led
+Componenti per il Led
 -----------------------------------------
 Il caso del Led è simile al caso del Sonar, sia per quanto riguarda l'enabler, sia per quanto riguarda il proxy.
 
@@ -285,11 +335,11 @@ LedApplHandler
 .. code:: Java
 
   public class LedApplHandler extends ApplMsgHandler   {
-  private IApplLogic ledLogic;
+  private IApplIntepreter ledLogic;
 
     public LedApplHandler(String name, ILed led) {
       super(name);
-      ledLogic = new LedApplLogic(led) ;
+      ledLogic = new LedApplIntepreter(led) ;
     }
     
     @Override
@@ -390,10 +440,10 @@ Da POJO a gestori di messaggi
 -----------------------------------------
 
 Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti, che potrebbero
-emergere al termine della SPRINT-review:
+emergere al termine di una SPRINT-review:
 
 - i nuovi componenti-base di livello applicativo non sono più POJO, ma sono
-  gestori di messaggi, come ad esempio `SonarApplHandler`_  e `LedApplHandler`_;
+  gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`;
 - i POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
   negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`;
 - i gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<Enabler>`) 

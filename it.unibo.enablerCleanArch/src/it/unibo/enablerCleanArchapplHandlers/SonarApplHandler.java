@@ -2,10 +2,10 @@ package it.unibo.enablerCleanArchapplHandlers;
 
  
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.IApplLogic;
+import it.unibo.enablerCleanArch.domain.IApplInterpreter;
 import it.unibo.enablerCleanArch.domain.ILed;
 import it.unibo.enablerCleanArch.domain.ISonar;
-import it.unibo.enablerCleanArch.domain.SonarApplLogic;
+import it.unibo.enablerCleanArch.domain.SonarApplInterpreter;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
@@ -19,11 +19,11 @@ import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 
 public class SonarApplHandler extends ApplMsgHandler  {
  
-private IApplLogic sonarLogic;
+private IApplInterpreter sonarLogic;
 
 public static IApplMsgHandler create(String name, ISonar sonar) {
 	if( Utils.isCoap() ) {
-		return new SonarResourceCoap("sonar",  new SonarApplLogic(sonar) );
+		return new SonarResourceCoap("sonar",  new SonarApplInterpreter(sonar) );
 	}else {
 		return new SonarApplHandler(name, sonar);
 	}
@@ -32,7 +32,7 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
   
 		public SonarApplHandler(String name, ISonar sonar) {
 			super(name);
-			sonarLogic = new SonarApplLogic(sonar);
+			sonarLogic = new SonarApplInterpreter(sonar);
 			ColorsOut.out(name+ " | SonarApplHandler CREATED with sonar= " + sonar, ColorsOut.BLUE);
 	 	}
  

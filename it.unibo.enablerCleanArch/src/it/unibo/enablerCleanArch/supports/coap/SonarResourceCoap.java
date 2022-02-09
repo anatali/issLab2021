@@ -2,16 +2,16 @@ package it.unibo.enablerCleanArch.supports.coap;
 
 import java.net.InetAddress;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.IApplLogic;
+import it.unibo.enablerCleanArch.domain.IApplInterpreter;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarResourceCoap extends ApplResourceCoap  {
 String curDistance="0";  //Initial state
-private IApplLogic sonarLogic;
+private IApplInterpreter sonarLogic;
  
-		public SonarResourceCoap(String name, IApplLogic sonarLogic) {
+		public SonarResourceCoap(String name, IApplInterpreter sonarLogic) {
 			super(name, DeviceType.input);
 			this.sonarLogic = sonarLogic;
 			ColorsOut.out( getName() + " |  SonarResourceCoap CREATED"   );	

@@ -2,6 +2,8 @@ in anaconda
 lsvirtualenv -l
 sphinks-quickstart  //TUTTO ATTACCATO
 
+.. _test di Turing : https://it.wikipedia.org/wiki/Test_di_Turing
+
 :remark:`
 .. epigraph:: 
 

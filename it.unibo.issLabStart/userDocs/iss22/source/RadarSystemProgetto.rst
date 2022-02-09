@@ -2,6 +2,10 @@
 .. role:: blue 
 .. role:: remark
 
+.. _mvc: https://it.wikipedia.org/wiki/Model-view-controller
+
+.. _MVP: https://www.nexsoft.it/model-view-presenter/
+
 ==================================================
 Progettazione e sviluppo
 ==================================================
@@ -122,6 +126,8 @@ Il Led
 Un Led è un dispositivo di output che può essere modellato e gestito realizzando i metodi di ``ILed``
 (vedi :ref:`ILed`) come *getter/setter* di uno stato interno.  
 
+.. _LedModel:
+
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La classe astratta LedModel
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -161,6 +167,8 @@ cui è demandata la responsabilità di accendere/spegnere il Led.
 
 La variabile locale booleana ``state`` viene posta a ``true`` quando il Led è acceso.
 
+.. _ledMock:
+
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il LedMock
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -187,6 +195,8 @@ sullo standard output.
 Una implementazione più user-friendly potrebbe 
 introdurre una GUI che cambia di colore e/o dimensione a seconda che il Led sia acceso o spento.
 A questo scopo introduciamo anche la classe ``LedMockWithGui``.
+
+.. _ledConcrete:
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Il LedConcrete
@@ -768,10 +778,6 @@ La nascita del nuovo tipo di Sonar ci induce a introdurre nuovi metodi in `Devic
     }else { return SonarConcreteObservable(); }	
   }
 
- 
-
-
-
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Testing del Sonar osservabile
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -840,6 +846,31 @@ che opera con ostacolo fisso posto davanti ad esso, alla distanza prefissata.
 
 Si noti che observer di questo tipo vengono di norma eseguiti all'interno del Thread dell'observable che sta operando 
 per conto di un qualche client.
+
+.. _ledOsservabile: 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il Led osservabile?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Essendo il Led un dispositivo di output, sembra avere poco senso l'ipotesi di rendere anche il Led osservabile.
+
+Tuttavia, la seguente domanda potrebbe essere rilevante:
+
+:remark:`può essere utile rendere osservabile il LedModel?`
+
+Notiamo infatti che il :ref:`LedMock<LedMock>` e il :ref:`LedConcrete<LedConcrete>` potrebbero essere visti non tanto come due
+specializzazioni della classe :ref:`LedModel<LedModel>`, quanto come due possibili :blue:`viste del modello`.
+
+Questa ipotesi trae ispirazione dal pattern `MVC`_ (*Model View Controller*): ogni modifica del  :ref:`LedModel<LedModel>`
+viene propagata ad uno o più observer che visualizzano la variazione di stato del Led o come dispostivo simulato 
+(:ref:`LedMock<LedMock>`) o come dispositivo concreto (:ref:`LedConcrete<LedConcrete>`).
+
+Una variante potrebbe essere anche la introduzione di un *Presenter*, come suggerito dal pattern 
+`MVP`_ (*Model View Presenter*).
+
+
+
 
 .. _controller: 
 

@@ -24,10 +24,9 @@
 ======================================
 RadarSystem
 ======================================
-Tetendo conto dal nostro motto: 
 
-:remark:`non c’è codice senza progetto, progetto senza analisi del problema, problema senza requisiti`
 
+Tetendo conto di quanto detto in :doc:`Introduzione` e in :doc:`Indicazioni`,
 impostiamo un processo di produzione del software partendo da un insieme di requisiti.
 
 

@@ -1,9 +1,9 @@
 package it.unibo.enablerCleanArchapplHandlers;
 
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.IApplLogic;
+import it.unibo.enablerCleanArch.domain.IApplInterpreter;
 import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.domain.LedApplLogic;
+import it.unibo.enablerCleanArch.domain.LedApplInterpreter;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
@@ -17,11 +17,11 @@ import it.unibo.enablerCleanArch.supports.Utils;
  * TODO: il Led dovrebbe essere injected con un metodo o una annotation
  */
 public class LedApplHandler extends ApplMsgHandler {
-private IApplLogic ledLogic;
+private IApplInterpreter ledLogic;
 
 	public static IApplMsgHandler create(String name, ILed led) {
 		if( Utils.isCoap() ) {
-			return new LedResourceCoap("led",  new LedApplLogic(led) );
+			return new LedResourceCoap("led",  new LedApplInterpreter(led) );
 		}else {
 			return new LedApplHandler(name,led);
 		}
@@ -29,7 +29,7 @@ private IApplLogic ledLogic;
  
 	public LedApplHandler(String name, ILed led) {
 		super(name);
-		ledLogic = new LedApplLogic(led) ;
+		ledLogic = new LedApplInterpreter(led) ;
  	}
 	
 

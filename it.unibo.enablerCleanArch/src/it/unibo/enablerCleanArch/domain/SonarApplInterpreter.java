@@ -4,16 +4,16 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
-public class SonarApplLogic implements IApplLogic{
+public class SonarApplInterpreter implements IApplInterpreter{
 private	ISonar sonar;
 
-	public SonarApplLogic(ISonar sonar) {
+	public SonarApplInterpreter(ISonar sonar) {
 		this.sonar = sonar;
 	}
 
 	@Override
 	public String elaborate(ApplMessage message) {
-		ColorsOut.out( "SonarApplLogic | elaborate ApplMessage " + message  , ColorsOut.BLUE);
+		ColorsOut.out( "SonarApplInterpreter | elaborate ApplMessage " + message  , ColorsOut.BLUE);
 		 
 		String payload = message.msgContent();
 		if( message.isRequest() ) {
@@ -36,12 +36,12 @@ private	ISonar sonar;
 
 	@Override
 	public String elaborate(String message) {
-		ColorsOut.out("SonarApplLogic | elaborate " + message, ColorsOut.BLUE);
+		ColorsOut.out("SonarApplInterpreter | elaborate " + message, ColorsOut.BLUE);
 			if( message.equals("getDistance")) {
 				//ColorsOut.out(name+ " | elaborate getDistance="  , ColorsOut.BLUE);
 				return ""+sonar.getDistance().getVal();
  			}else if( message.equals("activate")) {
-				ColorsOut.out("SonarApplLogic | activate sonar="+sonar , ColorsOut.BLUE);
+				ColorsOut.out("SonarApplInterpreter | activate sonar="+sonar , ColorsOut.BLUE);
 				sonar.activate();
 			}else if( message.equals("deactivate")) {
 				sonar.deactivate();

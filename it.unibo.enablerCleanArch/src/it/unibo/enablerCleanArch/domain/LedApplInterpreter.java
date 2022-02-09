@@ -6,15 +6,15 @@ import it.unibo.enablerCleanArch.supports.Utils;
 /*
  * TODO: il Led dovrebbe essere injected con un metodo o una annotation
  */
-public class LedApplLogic implements IApplLogic  {
+public class LedApplInterpreter implements IApplInterpreter  {
 ILed led;
  
-	public LedApplLogic(  ILed led) {
+	public LedApplInterpreter(  ILed led) {
  		this.led = led;
 	}
 
 	public String elaborate( ApplMessage message ) {
-		ColorsOut.out("LedApplLogic | elaborate ApplMessage=" + message  + " led="+led, ColorsOut.GREEN);
+		ColorsOut.out("LedApplInterpreter | elaborate ApplMessage=" + message  + " led="+led, ColorsOut.GREEN);
 		String payload = message.msgContent();
 		if(  message.isRequest() ) {
 	 		if(payload.equals("getState") ) {
@@ -26,7 +26,7 @@ ILed led;
 	}
    
 	public String elaborate( String message ) {
-		ColorsOut.out("LedApplLogic | elaborate String=" + message  + " led="+led, ColorsOut.GREEN);
+		ColorsOut.out("LedApplInterpreter | elaborate String=" + message  + " led="+led, ColorsOut.GREEN);
  		if( message.equals("getState") ) return ""+led.getState() ;
  		else if( message.equals("on")) led.turnOn();
  		else if( message.equals("off") ) led.turnOff();	
