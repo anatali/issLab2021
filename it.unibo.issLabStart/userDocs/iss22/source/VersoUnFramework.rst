@@ -150,6 +150,7 @@ definito nel parametro di configurazione:
     RadarSystemConfig.mqttBrokerAddr = "tcp://broker.hivemq.com"
 
 
+Come passo successivo, creiamo la possibilità di definire proxy diversi per i diversi protocolli
 
 --------------------------------------------------------
 Estensione della classe :ref:`ProxyAsClient`
@@ -159,25 +160,25 @@ Estensione della classe :ref:`ProxyAsClient`
 
   public class ProxyAsClient {
    ....
-	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
-		switch( protocol ) {
-			case tcp : {
-				int port = Integer.parseInt(entry);
-				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
-				break;
-			}
-			case coap : {
-				conn = new CoapSupport("CoapSupport_"+name, host,  entry);  //entry is uri path
-				break;
-			}
-			case mqtt : {
-				conn = MqttSupport.getSupport();					
- 				break;
-			}	
-			default :{
-				ColorsOut.outerr(name + " | Protocol unknown");
-			}
-		}
+  protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
+    witch( protocol ) {
+    case tcp : {
+      int port = Integer.parseInt(entry);
+      conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
+      break;
+    }
+    case coap : {
+      conn = new CoapSupport("CoapSupport_"+name, host,  entry);  //entry is uri path
+      break;
+    }
+    case mqtt : {
+      conn = MqttSupport.getSupport();					
+      break;
+    }	
+    default :{
+      ColorsOut.outerr(name + " | Protocol unknown");
+    }
+  }
 
 
 ---------------------------------------
