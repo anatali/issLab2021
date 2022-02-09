@@ -1,13 +1,8 @@
 package it.unibo.enablerCleanArch.enablers;
-import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
-import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
 

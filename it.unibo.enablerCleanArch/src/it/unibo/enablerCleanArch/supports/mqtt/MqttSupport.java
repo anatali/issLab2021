@@ -43,6 +43,7 @@ protected boolean isConnected   = false;
 		//if( mqttSup == null  ) mqttSup = new MqttSupport("mqttSupport", MqttSupport.topicOut);
 		return mqttSup;
 	}
+	
 	public static synchronized MqttSupport createSupport(String clientName, String topicToSubscribe) {
 		if( mqttSup == null  ) mqttSup = new MqttSupport(clientName,topicToSubscribe);
 		return mqttSup;

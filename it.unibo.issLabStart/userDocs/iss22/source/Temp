@@ -80,3 +80,13 @@ Il metodo ``elaborate`` con argomento :ref:`ApplMessage<ApplMessage>` viene pres
 ma verrà introdotto solo più avanti
 (si veda :ref:`IApplMsgHandler<IApplMsgHandlerEsteso>` in :doc:`ContestiContenitori`) quando avremo la necessità di 
 introdurre nei messaggi anche informazioni relative al nome del mittente e del destinatario.
+
+
+
+===========================   ===========================    =========================== 
+     Server                              id                        entry
+---------------------------   ---------------------------   ---------------------------
+:ref:`TcpContextServer`               nome host                 port
+:ref:`MqttContextServer`              id del client              nome topic     
+:ref:`CoapContextServer`                    -                      -
+===========================   ===========================    ===========================   

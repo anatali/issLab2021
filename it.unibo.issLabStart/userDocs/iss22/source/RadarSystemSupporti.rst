@@ -489,8 +489,9 @@ Introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
     public Interaction2021 getConn() { return conn; }
 
 Il fatto di denotare la porta del server con una *String* invece che con un *int* ci darà
-la possibilità di gestire anche comunicazioni basate su CoAP; in questo secondo caso,
-il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`.
+la possibilità di gestire anche comunicazioni basate su altri protocolli; ad esempio per CoAP 
+il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)` 
+(si veda :doc:`VersoUnFramework`).
 
 ``ProxyAsClient`` definisce le seguenti operazioni:
 
@@ -507,14 +508,16 @@ protocollo specificato:
           String host,String entry,ProtocolType protocol) throws Exception{
       if( protocol == ProtocolType.tcp) {
         conn = TcpClient.connect(host,  Integer.parseInt(entry), 10);
-      }else if( protocol == ProtocolType.coap ) {
-        conn = new CoapSupport(host, entry );	
+      }else if( protocol == ... ) {
+        conn = ...	
       }
     }
 
-Nel caso di CoAP, il metodo ``setConnection`` si avvale di un supporto   ``CoapSupport``
-che definiremo più avanti e che restituisce un oggetto di tipo ``Interaction2021`` 
-come nel caso di TCP/UDP.
+.. Nel caso di CoAP, il metodo ``setConnection`` si avvale di un supporto   ``CoapSupport``
+.. che definiremo più avanti e che restituisce un oggetto di tipo ``Interaction2021`` 
+.. come nel caso di TCP/UDP.
+
+Il caso di Proxy per altri protocolli sarà affrontato in :doc:`VersoUnFramework`.
 
 Con riferimento ai :ref:`TipiInterazione` introdotti nella fase di analisi,
 il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* e un metodo per inviare

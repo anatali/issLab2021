@@ -6,12 +6,10 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.main.all.SonarObserver;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
-import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
- 
+import it.unibo.enablerCleanArch.supports.context.Context2021; 
 
 /*
  * Applicazione che va in coppia con RadarSystemMainUasgeOnPc

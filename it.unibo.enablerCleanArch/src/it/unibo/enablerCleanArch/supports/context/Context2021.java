@@ -4,7 +4,6 @@ import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IContext;
-import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttContextServer;
 
 public class Context2021 {

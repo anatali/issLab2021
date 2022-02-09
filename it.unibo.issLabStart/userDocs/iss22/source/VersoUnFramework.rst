@@ -40,7 +40,7 @@ La domanda che ci poniamo ora è se questa organizzazione possa essere riusata n
 al protocolllo TCP un altro protocollo, tra quelli indicati in:ref:`ProtocolType`.
 
 ---------------------------------------
-Il caso di UDP
+Il caso UDP
 ---------------------------------------
 
 La possibilità di sostituire TCP con UDP è  resa possibile dalla libreria  ``unibonoawtsupports.jar`` sviluppata
@@ -52,22 +52,151 @@ che cambia l'impostazione logica in modo simile ad HTTP-REST, che mira a modelli
 tutte le *interazioni client/server* come uno :blue:`scambio di rappresentazioni di risorse`.
 
 ---------------------------------
-Supporti per HTTP
+Il caso HTTP
 ---------------------------------
+
+Affronteremo l'uso di questo protocollo più avanti, in relazione alla costruzione di un componente  Web GUI.
+
 .. code:: Java
 
   HttpURLConnection con =
   IssHttpSupport
 
-- Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri
-  delle *operazioni astratte*
+---------------------------------
+I ContextServer
+---------------------------------
+Come primo passo per la definizione di un nostro framework, introduciamo un contratto per 
+il concetto di ContextServer che imponga metodi per attivare/disattivare il server e per
+aggiungere/rimuovere compoenti di tipo :ref:`IApplMsgHandler`:
 
 
+++++++++++++++++++++++++++++++++++++++++++++++
+IContext
+++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+  public interface IContext {
+    public void addComponent( String name, IApplMsgHandler h);
+    public void removeComponent( String name );
+    public void activate();
+    public void deactivate();
+  }
+
+Questo contratto è già rispettato da :ref:`TcpContextServer`, così che possiamo estendere la sua definizione come segue: 
+
+  public class TcpContextServer extends TcpServer :blue:`implements IContext`
+
+Oltre il ContextServer per TCP, dovremo introdurre anche ContextServer per MQTT (si veda :ref:`MqttContextServer`) 
+e per CoAP (si veda :ref:`CoapContextServer`).
+
+.. Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri delle *operazioni astratte*
+
+Al solito, è opportuno definire  una Factory per la creazione del ContextServer appropriato, in funzione del protocolllo:
 
 
 ---------------------------------------
-Il caso di Coap
+Context2021
 ---------------------------------------
+
+.. code:: java
+
+  public class Context2021 {
+
+    public static IContext create(String id, String entry ) {
+    IContext ctx = null;
+    ProtocolType protocol = RadarSystemConfig.protcolType;
+      switch( protocol ) {
+      case tcp : {
+        ctx=new TcpContextServer(id, entry);
+        ctx.activate();
+        break;
+      }
+      case mqtt : {
+        ctx= new MqttContextServer( id, entry);
+        ctx.activate();
+        break;
+      }
+      case coap : {
+        ctx = new CoapContextServer( );
+        ctx.activate();
+        break;
+      }
+      default:
+        break;
+      }
+      return ctx;
+    }//create  
+
+ 
+
+
+I parametri ``id`` ed ``entry`` da specificare nel costruttore sono:
+
+===========================   ===========================    =========================== 
+        Server                            id                        entry
+---------------------------   ---------------------------    ---------------------------
+:ref:`TcpContextServer`               nome host                 port
+:ref:`MqttContextServer`              id del client              nome topic     
+:ref:`CoapContextServer`                    -                      -
+===========================   ===========================    ===========================   
+
+
+Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto basta conoscere l'indirizzo el broker,
+definito nel parametro di configurazione:
+
+.. code::
+
+    RadarSystemConfig.mqttBrokerAddr = "tcp://broker.hivemq.com"
+
+
+
+--------------------------------------------------------
+Estensione della classe :ref:`ProxyAsClient`
+--------------------------------------------------------
+
+.. code:: java
+
+  public class ProxyAsClient {
+   ....
+	protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
+		switch( protocol ) {
+			case tcp : {
+				int port = Integer.parseInt(entry);
+				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
+				break;
+			}
+			case coap : {
+				conn = new CoapSupport("CoapSupport_"+name, host,  entry);  //entry is uri path
+				break;
+			}
+			case mqtt : {
+				conn = MqttSupport.getSupport();					
+ 				break;
+			}	
+			default :{
+				ColorsOut.outerr(name + " | Protocol unknown");
+			}
+		}
+
+
+---------------------------------------
+I nuovi ContextServer
+---------------------------------------
+
+
++++++++++++++++++++++++++++++++++++++++
+MqttContextServer
++++++++++++++++++++++++++++++++++++++++
+
+ 
+
++++++++++++++++++++++++++++++++++++++++
+CoapContextServer
++++++++++++++++++++++++++++++++++++++++
+
+
+
 CoAP mira a modellizzare
 tutte le interazioni client/server come uno scambio di rappresentazioni di risorse. L'obiettivo
 è quello di realizzare una infrastruttura di gestione delle risorse remote tramite alcune semplici
@@ -75,19 +204,16 @@ funzioni di accesso e interazione come quelle di HTTP: PUT, POST, GET, DELETE.
 
 La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
 
+- ``CoapApplServer`` extends CoapServer implements :ref:`IContext`
+- class ``CoapSupport`` implements :ref:`Interaction2021`
+- abstract class ``ApplResourceCoap`` extends CoapResource implements :ref:`IApplMsgHandler`
+- 
+
 La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
 In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 
 al sistema tramite ``CoapApplServer`` che la ``Context2021.create()`` riduce a ``CoapServer`` in cui 
 sono registrate le risorse.
 
-
----------------------------------------
-Il caso di MQTT
----------------------------------------
-
-
-  
- 
 
 
 

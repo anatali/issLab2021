@@ -16,14 +16,6 @@ private String topic;
 		ColorsOut.out("MqttContextServer CREATED");
 	}
 	@Override
-	public void addComponent(String name, IApplMsgHandler h) {
-		mqtt.getHandler().addComponent(name, h);		
-	}
-	@Override
-	public void removeComponent(String name) {
-		mqtt.getHandler().removeComponent(name);		
-	}
-	@Override
 	public void activate() {
 		mqtt = MqttSupport.createSupport( clientId, topic );
 		mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
@@ -35,4 +27,12 @@ private String topic;
 		mqtt.disconnect();
 		mqtt = null;
  	}
+	@Override
+	public void addComponent(String name, IApplMsgHandler h) {
+		mqtt.getHandler().addComponent(name, h);		
+	}
+	@Override
+	public void removeComponent(String name) {
+		mqtt.getHandler().removeComponent(name);		
+	}
 }
