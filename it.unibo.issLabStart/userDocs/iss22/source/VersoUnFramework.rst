@@ -4,8 +4,12 @@
   
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 
+.. _californium: https://www.eclipse.org/californium/
+
+.. _paho: https://www.eclipse.org/paho/
+
 ==================================================
-Verso un framework per la interazione distribuita
+Verso un framework
 ==================================================
 
 I primi SPRINT dello sviluppo hanno seguito un processo bottom-up, che ha fatto riferimento
@@ -44,8 +48,8 @@ Il caso UDP
 ---------------------------------------
 
 La possibilità di sostituire TCP con UDP è  resa possibile dalla libreria  ``unibonoawtsupports.jar`` sviluppata
-in anni passati. Il compito non si è rivelato troppo difficle, visto la relativa vicinanza concettuale tra i due 
-protocolli.
+in anni passati. Il compito non si è rivelato troppo difficle, visto la relativa vicinanza operazionale tra le
+librerie dei due protocolli.
 
 Più arduo sembra invece il caso di un protocollo di tipo publish-subscribe come MQTT o di un protocollo come CoAP
 che cambia l'impostazione logica in modo simile ad HTTP-REST, che mira a modellizzare
@@ -65,9 +69,11 @@ Affronteremo l'uso di questo protocollo più avanti, in relazione alla costruzio
 ---------------------------------
 I ContextServer
 ---------------------------------
-Come primo passo per la definizione di un nostro framework, introduciamo un contratto per 
+
+Come primo passo per la definizione di un nostro framework di supporto alle applicazioni distribuite, 
+introduciamo un contratto per 
 il concetto di ContextServer che imponga metodi per attivare/disattivare il server e per
-aggiungere/rimuovere compoenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
+aggiungere/rimuovere componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -85,19 +91,19 @@ IContext
 
 Questo contratto è già rispettato da :ref:`TcpContextServer`, così che possiamo estendere la sua definizione come segue: 
 
-  public class TcpContextServer extends TcpServer :blue:`implements IContext`
+  public class TcpContextServer extends TcpServer **implements IContext**
 
 Oltre il ContextServer per TCP, dovremo introdurre anche ContextServer per MQTT (si veda :ref:`MqttContextServer`) 
 e per CoAP (si veda :ref:`CoapContextServer`).
 
 .. Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri delle *operazioni astratte*
 
-Al solito, è opportuno definire  una Factory per la creazione del ContextServer appropriato, in funzione del protocolllo:
+Al solito, è opportuno definire  una Factory per la creazione di un ContextServer in funzione del protocolllo:
 
 
----------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++
 Context2021
----------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: java
 
@@ -131,26 +137,60 @@ Context2021
  
 
 
-I parametri ``id`` ed ``entry`` da specificare nel costruttore sono:
+I parametri ``id`` ed ``entry`` da specificare nel costruttore nei vari casi sono:
 
 ===========================   ===========================    =========================== 
         Server                            id                        entry
 ---------------------------   ---------------------------    ---------------------------
-:ref:`TcpContextServer`               nome host                 port
+:ref:`TcpContextServer`               nome host                  port
 :ref:`MqttContextServer`              id del client              nome topic     
 :ref:`CoapContextServer`                    -                      -
 ===========================   ===========================    ===========================   
 
 
-Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto basta conoscere l'indirizzo el broker,
-definito nel parametro di configurazione:
-
-.. code::
-
-    RadarSystemConfig.mqttBrokerAddr = "tcp://broker.hivemq.com"
+Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto per attivarlo occore conoscere
+l'indirizzo del broker (unico per tutti i componenti del sistema), definito nel parametro di configurazione:
+``RadarSystemConfig.mqttBrokerAddr = "tcp://broker.hivemq.com"``.
+ 
 
 
-Come passo successivo, creiamo la possibilità di definire proxy diversi per i diversi protocolli
++++++++++++++++++++++++++++++++
+IContextMsgHandler
++++++++++++++++++++++++++++++++
+
+Ogni ContextServer necessita di un gestore di sistema dei messaggi  come :ref:`ContextMsgHandler<ContextMsgHandler>`.
+
+Introduciamo anche per questo gestore un contratto che imponga la implementazione di metodi per
+aggiungere/rimuovere oggetti applicativi di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`.
+
+  .. code:: java
+
+    public interface IContextMsgHandler extends IApplMsgHandler{
+      public void addComponent( String name, IApplMsgHandler h);
+      public void removeComponent( String name );
+      public IApplMsgHandler getHandler( String name );
+    } 
+
+L'operazione ``getHandler`` permette di ottenere il riferimento a un oggetto applicativo 'registrato' nel contesto, 
+dato il nome dell'oggetto.
+
+.. image:: ./_static/img/Architectures/framework1.PNG
+   :align: center  
+   :width: 70%
+
+Osserviamo che il framework:
+
+:remark:`realizza una infrastruttura di comunicazione`
+
+:remark:`permette di creare componenti applicativi capaci di intergire in rete`
+
+:remark:`impone che ogni componente applicativo abbia un nome univoco`
+
+ 
+
+
+Come passo successivo, creiamo la possibilità di definire proxy diversi per i diversi protocolli.
+
 
 --------------------------------------------------------
 Estensione della classe :ref:`ProxyAsClient`
@@ -160,15 +200,17 @@ Estensione della classe :ref:`ProxyAsClient`
 
   public class ProxyAsClient {
    ....
-  protected void setConnection( String host, String entry, ProtocolType protocol  ) throws Exception {
-    witch( protocol ) {
+  protected void setConnection( String host, String entry, 
+                ProtocolType protocol  ) throws Exception {
+    switch( protocol ) {
     case tcp : {
       int port = Integer.parseInt(entry);
-      conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
+      int numOfAttempts = 10;
+      conn = TcpClientSupport.connect(host,port,numOfAttempts);  
       break;
     }
     case coap : {
-      conn = new CoapSupport("CoapSupport_"+name, host,  entry);  //entry is uri path
+      conn = new CoapSupport("CoapSupport_"+name, host,entry);//entry is uri path
       break;
     }
     case mqtt : {
@@ -180,35 +222,172 @@ Estensione della classe :ref:`ProxyAsClient`
     }
   }
 
+---------------------------------------------------------
+I supporti per :ref:`Interaction2021<Interaction2021>`
+---------------------------------------------------------
+
+Il :ref:`tcpsupportClient` crea l'implemetazione TCP di :ref:`Interaction2021<Interaction2021>` 
+introdotta a suo tempo, come oggetto di classe :ref:`TcpConnection<TcpConnection>`.
+
+La creazione di analoghi supporti per MQTT e CoAP  parte dalle seguenti osservazioni:
+
+- per MQTT si tratta di creare una connessione con un broker che media la interazione tra mittente
+  e destinatario
+- per CoAP si tratta di utilizzare un oggetto fornito dalla libreria di riferimento
+  (`californium`_) di classe ``CoapClient``, che richiede come argomento l'URL della risorsa
+  a cui ci si vuole connettere. Questo URL ha la forma:
+
+  .. code:: 
+
+    "coap://"+host + ":5683/"+ entry
+
+
+
+
 
 ---------------------------------------
 I nuovi ContextServer
 ---------------------------------------
 
+Abbiamo già introdotto :ref:`TcpContextServer` come implementazione di :ref:`IContext`
+che utilizza librerie per la gestione di *Socket*.
+
+La creazione di analoghi ContextServer per MQTT e CoAP  parte dalla disponibilità di opportune librerie
+di supporto. Noi useremo le seguenti:
+
+- per MQTT: la libreria `paho`_
+- per CoAP: la libreria `californium`_
 
 +++++++++++++++++++++++++++++++++++++++
 MqttContextServer
 +++++++++++++++++++++++++++++++++++++++
+Un ContextServer per MQTT richiede che un client di classe ``MqttClient`` si connetta al nodo 
+facendo una subscribe alla  topic specificata dal parametro ``entry``.
 
+A tal fine introduciamo la classe ``MqttContextServer`` che implementa `IContext`_ e si avvale di
+un oggetto di supporto alle interazioni di classe ``MqttSupport`` che costituisce un singleton per un nodo
+computazionale:
+
+
+.. code:: java
+
+    public class MqttContextServer implements IContext{
+    private MqttSupport mqtt ; //Singleton
+      ...
+	  @Override
+	  public void activate() {
+		  mqtt = MqttSupport.createSupport( clientId, topic );
+		  mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
+  	}
+      ...
+
+Il metodo ``activate`` del ContextServer per MQTT, crea un supporto univoco per il nodo. 
  
+
+.. image:: ./_static/img/Architectures/frameworkMqtt.PNG
+   :align: center  
+   :width: 70%
+ 
+.. _MqttSupport:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MqttSupport implementa :ref:`Interaction2021<Interaction2021>`
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il costruttore della singola istanza di  MqttSupport:
+
+- crea un MqttClient con il dato  ``clientId``, che si connette al Broker e fa una subscribe a alla data ``topic``
+- crea un oggetto che implementa una estensione di :ref:`IContextMsgHandler<IContextMsgHandler>` dedicato 
+  alla gestione di sistema (dispatching) dei messaggi, in modo analogo a 
+
+.. code:: java
+
+  public class MqttSupport implements Interaction2021
+  protected IContextMsgHandlerMqtt handler;
+    ...
+    protected MqttSupport(String clientName, String topicToSubscribe) {
+    	connectToBroker(clientName, RadarSystemConfig.mqttBrokerAddr);	   	
+		  handler = new ContextMqttMsgHandler( "ctxH"  );
+    	subscribe(topicToSubscribe, handler);
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IContextMsgHandlerMqtt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'estensione di :ref:`IContextMsgHandler<IContextMsgHandler>` che MqttSupport deve implementare 
+tiene conto 
+
+.. code:: java
+
+  public interface IContextMsgHandlerMqtt 
+      extends IContextMsgHandler, IApplMsgHandlerMqtt{}
+
+  public interface IApplMsgHandlerMqtt 
+      extends IApplMsgHandler, MqttCallback{
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ContextMqttMsgHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+.. code:: java
+
+  public class ContextMqttMsgHandler extends ApplMsgHandler 
+                              implements IContextMsgHandlerMqtt{
+    ...
+
+    @Override
+	  public void addComponent( String devName, IApplMsgHandler h) {
+      ...
+    }
+
+    @Override
+		public void elaborate( ApplMessage msg, Interaction2021 conn ) {
+      ...
+    }
+
+    @Override
+    public void elaborate(String message, Interaction2021 conn) {
+      ...
+    }
+
+    @Override
+		public void messageArrived(String topic, MqttMessage message)   {
+    }
+
+  }
+
+MqttSupport implementa :ref:`Interaction2021` e quindi realizza il concetto di connessione come segue:
+
+- una connessione è realizzata usando due topic. Se la prima ha nome ``t1``, la seconda ha nome ``t1CXanswer``
+  ove CX è il nome del client che invia una richiesta su ``t1``. 
+   
+Ad esempio, un proxyclient ``ledPxy`` che usa la topic ``t1`` per inviare comandi e richieste al al ContextServer,  
+fa una subscribe su ``t1ledPxyanswer``   per ricevere le risposte.
+
 
 +++++++++++++++++++++++++++++++++++++++
 CoapContextServer
 +++++++++++++++++++++++++++++++++++++++
-
-
 
 CoAP mira a modellizzare
 tutte le interazioni client/server come uno scambio di rappresentazioni di risorse. L'obiettivo
 è quello di realizzare una infrastruttura di gestione delle risorse remote tramite alcune semplici
 funzioni di accesso e interazione come quelle di HTTP: PUT, POST, GET, DELETE.
 
+Si tratta quindi di utilizzare un oggetto di `californium`_ (libreria di riferimento) di classe ``CoapServer``
+  in cui si siano aggiunte tutte le risorse che corrispondono ai componenti destinatari di messaggi (ad
+  esempio, una risorsa per il Led e una per il Sonar)
+
 La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
 
 - ``CoapApplServer`` extends CoapServer implements :ref:`IContext`
 - class ``CoapSupport`` implements :ref:`Interaction2021`
 - abstract class ``ApplResourceCoap`` extends CoapResource implements :ref:`IApplMsgHandler`
-- 
+
 
 La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
 In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 

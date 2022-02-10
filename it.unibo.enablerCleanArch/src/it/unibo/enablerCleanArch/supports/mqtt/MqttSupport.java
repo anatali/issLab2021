@@ -6,7 +6,6 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandlerMqtt;
-import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -15,7 +14,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
  
 /*
  * MqttSupport implementa Interaction2021 e quindi realizza il concetto di connessione nel caso di MQTT.
- * Nel caso di MQTT, una connessione è realizata usando due topic, la prima di nome t1 
+ * Nel caso di MQTT, una connessione è realizzata usando due topic, la prima di nome t1 
  * e la seconda di nome t1answer.
  * Un EnablerServer fissa il nome t1  (ad es LedServerMqtt)
  * Un proxyclient c1 usa il nome t1 per inviare comandi e richieste al server 

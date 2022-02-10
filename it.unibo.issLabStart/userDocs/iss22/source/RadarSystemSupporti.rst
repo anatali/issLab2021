@@ -28,16 +28,16 @@ del lavoro, la possibilità di estendere anche ad altri protocolli i supporti cr
 .. _tcpsupportClient:
 
 -------------------------------------
-TCPClient
+TcpClientSupport
 -------------------------------------
-Introduciamo la classe ``TcpClient`` con cui istanziare oggetti che stabilisccono una connessione 
+Introduciamo la classe ``TcpClientSupport`` con cui istanziare oggetti che stabilisccono una connessione 
 su un data coppia ``IP,Port``. Il metodo  static ``connect`` restiruisce un oggetto 
 che implementa l'interfaccia  :ref:`Interaction2021<conn2021>`  
 e che potrà essere usato per inviare-ricevere messaggi sulla connessione.
 
 .. code:: Java
 
-  public class TcpClient {
+  public class TcpClientSupport {
 
     public static Interaction2021 connect(
               String host,int port,int nattempts) throws Exception{
@@ -361,7 +361,7 @@ Un semplice client di testing viene definito in modo che (metodo ``doWorkWithSer
     public void doWorkWithServerOn(String name, int ntimes ) {
       try {
         Interaction2021 conn  = 
-          TcpClient.connect("localhost",TestTcpSupports.testPort,ntimes);//1
+          TcpClientSupport.connect("localhost",TestTcpSupports.testPort,ntimes);//1
         String request = "hello from" + name;
         conn.forward(request);              //2
         String answer = conn.receiveMsg();  //3
@@ -507,7 +507,7 @@ protocollo specificato:
     protected void setConnection(
           String host,String entry,ProtocolType protocol) throws Exception{
       if( protocol == ProtocolType.tcp) {
-        conn = TcpClient.connect(host,  Integer.parseInt(entry), 10);
+        conn = TcpClientSupport.connect(host,  Integer.parseInt(entry), 10);
       }else if( protocol == ... ) {
         conn = ...	
       }

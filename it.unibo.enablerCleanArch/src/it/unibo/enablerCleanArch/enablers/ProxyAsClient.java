@@ -1,12 +1,13 @@
 package it.unibo.enablerCleanArch.enablers;
+import java.net.Socket;
+
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
 import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
-
-
+import it.unibo.enablerCleanArch.supports.tcp.TcpConnection;
 
 public class ProxyAsClient {
 private Interaction2021 conn; 
@@ -34,6 +35,7 @@ protected ProtocolType protocol ;
 		switch( protocol ) {
 			case tcp : {
 				int port = Integer.parseInt(entry);
+				//conn = new TcpConnection( new Socket( host, port ) ) ; //non fa attempts
 				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
 				ColorsOut.out(name + " |  setConnection "  + conn );		
 				break;
