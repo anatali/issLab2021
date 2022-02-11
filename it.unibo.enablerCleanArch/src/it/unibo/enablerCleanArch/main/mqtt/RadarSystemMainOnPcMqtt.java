@@ -9,7 +9,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.context.Context2021;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArch.supports.mqtt.SonarDataObserverHandler;
 import it.unibo.enablerCleanArch.useCases.LedAlarmUsecase;
 import it.unibo.enablerCleanArch.useCases.RadarGuiUsecase;
@@ -23,7 +23,7 @@ public class RadarSystemMainOnPcMqtt implements IApplication{
 private ILed   ledClient;
 private ISonar sonarClient;
 private boolean ledblinking = false;
-private MqttSupport mqtt;
+private MqttConnection mqtt;
 
     public RadarSystemMainOnPcMqtt(){
     }
@@ -170,7 +170,7 @@ private MqttSupport mqtt;
 
 	public void terminate() {
 		try {
-			MqttSupport.getSupport().close();
+			MqttConnection.getSupport().close();
 			ColorsOut.outappl("BYE BYE ", ColorsOut.GREEN);
 		} catch (Exception e) {
 			ColorsOut.outerr("terminate ERROR:" + e.getMessage());

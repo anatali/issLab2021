@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.tcp.TcpConnection;
 
@@ -48,7 +48,7 @@ protected ProtocolType protocol ;
 				//La connessione col Broker viene stabilita in fase di configurazione
 				//La entry è quella definita per ricevere risposte;
 				//ColorsOut.out(name+"  | ProxyAsClient connect MQTT entry=" + entry );
-				conn = MqttSupport.getSupport();					
+				conn = MqttConnection.getSupport();					
  				break;
 			}	
 			default :{

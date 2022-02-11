@@ -12,7 +12,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArch.supports.mqtt.ContextMqttMsgHandler;
 import it.unibo.enablerCleanArch.supports.mqtt.EnablerAsServerMqtt;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArch.supports.mqtt.SonarObserverMqtt;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
@@ -41,7 +41,7 @@ private ILed led       = null;
   		//MqttSupport mqtt = MqttSupport.getSupport();
     //CReazione del contesto (in funzione del protocollo)
 		String clientId 		=  "rasp";
-		String topicToSubscribe =  MqttSupport.topicInput;
+		String topicToSubscribe =  MqttConnection.topicInput;
 		IContext ctx            = Context2021.create(clientId,topicToSubscribe);    //activates!!
 		
 		if( RadarSystemConfig.sonarObservable ) {

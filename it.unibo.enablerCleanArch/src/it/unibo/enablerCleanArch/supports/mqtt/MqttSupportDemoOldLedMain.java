@@ -10,9 +10,14 @@ import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 
-public class MqttSupportDemoLedMain {
+
+/*
+ * Versione senza MqttContextServer  che introduce un  ContextMqttMsgHandler in MqttSupport
+ * SUPERATA in Feb10
+ */
+public class MqttSupportDemoOldLedMain {
   
-private MqttSupport mqtt;
+private MqttConnection mqtt;
 private IContextMsgHandler ctxH;
 
 public void simulateReceiver(String name) {
@@ -36,13 +41,13 @@ protected void endMqttSupport() {
 }
 
 public void doJob() {
- 	mqtt = MqttSupport.createSupport("demoLed",MqttSupport.topicInput);
- 	ctxH = mqtt.getHandler();
+ 	mqtt = MqttConnection.createSupport("demoLed",MqttConnection.topicInput);
+ 	//ctxH = mqtt.getHandler();   //NO: suoerato Feb10
 	
 	//Configure the system (proxy site)
 	ILed leddev = LedModel.create();
 	ctxH.addComponent( "led", new LedApplHandler("ledH",leddev) );
-  	ILed led = new LedProxyAsClient("ledpxy", RadarSystemConfig.pcHostAddr, MqttSupport.topicInput, ProtocolType.mqtt );
+  	ILed led = new LedProxyAsClient("ledpxy", RadarSystemConfig.pcHostAddr, MqttConnection.topicInput, ProtocolType.mqtt );
 	
   	//Operate
 	ColorsOut.outappl("doJob | STARTS ... " , ColorsOut.BLACK);
@@ -77,7 +82,7 @@ public void doJob() {
 		RadarSystemConfig.tracing     = true;
 		RadarSystemConfig.pcHostAddr  = "localhost";
 		
-		MqttSupportDemoLedMain sys    = new MqttSupportDemoLedMain();			
+		MqttSupportDemoOldLedMain sys    = new MqttSupportDemoOldLedMain();			
 		sys.doJob();
  		//sys.doSendReceive();
   		//sys.doRequestRespond();

@@ -4,7 +4,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArch.supports.tcp.TcpServer;
  
 /*
@@ -24,7 +24,7 @@ protected boolean isactive = false;
  	
  	public EnablerAsServerMqtt( String name, String topic, IApplMsgHandler handler )   { //, String handlerClassName
 		this.name     			= name;
-		MqttSupport mqtt        = MqttSupport.getSupport();
+		MqttConnection mqtt        = MqttConnection.getSupport();
 		//mqtt.connectMqtt(name,topic, handler);
 		ColorsOut.out(name+" |  CREATED  MqttSupport  handler="+handler);
 	}

@@ -10,7 +10,7 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.context.Context2021;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 
@@ -45,7 +45,7 @@ private ILed led       = null;
 			}
 			case mqtt : {
 				clientId = "rasp";
-				entry    = MqttSupport.topicInput;
+				entry    = MqttConnection.topicInput;
 				break;
 			}
 			case coap : {

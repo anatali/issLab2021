@@ -6,7 +6,6 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandlerMqtt;
-import it.unibo.enablerCleanArch.supports.IContextMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
  
@@ -25,42 +24,42 @@ import it.unibo.enablerCleanArch.supports.Utils;
  * sulla blockingqueue di mqttProxy in modo da permettere la esecuzione 
  * di messageArrived del ClientApplHandlerMqtt che fa l'operazione di put sulla blockingqueue di mqttProxy.
  */
-public class MqttSupport implements Interaction2021 {
+public class MqttConnection implements Interaction2021 {
  	
 protected MqttClient client;
 public static final String topicInput = "topicCtxMqtt";
-protected static MqttSupport mqttSup ;  //to realize a singleton
+protected static MqttConnection mqttSup ;  //to realize a singleton
 
 protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
 protected String clientid;
-protected IContextMsgHandlerMqtt handler;
+//protected IContextMsgHandlerMqtt handler;
 protected String brokerAddr;
 protected boolean isConnected   = false;
 
 
-	public static synchronized MqttSupport getSupport( ) {
+	public static synchronized MqttConnection getSupport( ) {
 		//if( mqttSup == null  ) mqttSup = new MqttSupport("mqttSupport", MqttSupport.topicOut);
 		return mqttSup;
 	}
 	
-	public static synchronized MqttSupport createSupport(String clientName, String topicToSubscribe) {
-		if( mqttSup == null  ) mqttSup = new MqttSupport(clientName,topicToSubscribe);
+	public static synchronized MqttConnection createSupport(String clientName, String topicToSubscribe) {
+		if( mqttSup == null  ) mqttSup = new MqttConnection(clientName,topicToSubscribe);
 		return mqttSup;
 	}
 	
-    protected MqttSupport(String clientName, String topicToSubscribe) {
+    protected MqttConnection(String clientName, String topicToSubscribe) {
     	connectToBroker(clientName, RadarSystemConfig.mqttBrokerAddr);	   	
-		handler = new ContextMqttMsgHandler( "ctxH"  );
-    	subscribe(topicToSubscribe, handler);
+//		handler = new ContextMqttMsgHandler( "ctxH"  );
+//    	subscribe(topicToSubscribe, handler);
     }
      
     public BlockingQueue<String> getQueue() {
     	return blockingQueue;
     }
     
-    public IContextMsgHandlerMqtt getHandler() {
-    	return handler;
-    }
+//    public IContextMsgHandlerMqtt getHandler() {
+//    	return handler;
+//    }
     
     
     
@@ -141,7 +140,7 @@ protected boolean isConnected   = false;
 	}
 	
 	public void subscribe(String clientid, String topic) {
-		subscribe( clientid, topic, new MqttSupportCallback(client.getClientId() , blockingQueue));
+		subscribe( clientid, topic, new MqttConnectionCallback(client.getClientId() , blockingQueue));
 	}
 	
 	public void unsubscribe( String topic ) {
@@ -163,7 +162,7 @@ protected boolean isConnected   = false;
 		try {
 			//Colors.out("subscribe " + client.getClientId() + " topic=" + topic  , , Colors.CYAN);
 			client.setCallback( callback );	
-			client.subscribe(topic);			
+			client.subscribe( topic );			
 			//Colors.out("subscribed " + clientid + " topic=" + topic + " blockingQueue=" + blockingQueue, , Colors.CYAN);
 		} catch (MqttException e) {
 			ColorsOut.outerr("MqttSupport  | subscribe Error:" + e.getMessage());

@@ -223,7 +223,7 @@ Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
 
 #.  attende una richiesta di connessione;  
 #.  all'arrivo della richiesta, creae un oggetto (attivo)
-    di classe :ref:`TcpMessageHandler<tcpmsgh>` passandondogli l':ref:`ApplMessageHandler<msgh>` 
+    di classe :ref:`TcpApplMessageHandler<tcpmsgh>` passandondogli l':ref:`ApplMessageHandler<msgh>` 
     ricevuto nel costruttore e la connessione (di tipo :ref:`Interaction2021<conn2021>`) appena stabilita.
     Questo oggetto attende messaggi sulla nuova connessione 
     e ne delega la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto;
@@ -254,10 +254,10 @@ da parte di due client diversi
 :remark:`Notiamo che vi può essere concorrenza nell'uso di oggetti condivisi.` 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-TcpMessageHandler
+TcpApplMessageHandler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La classe ``TcpMessageHandler`` definisce oggetti (dotati di un Thread interno) che si occupano
+La classe ``TcpApplMessageHandler`` definisce oggetti (dotati di un Thread interno) che si occupano
 di ricevere messaggi su una data connessione 
 :ref:`Interaction2021<conn2021>`, delegandone la gestione all':ref:`ApplMessageHandler<msgh>` ricevuto
 nel costruttore.
@@ -491,7 +491,7 @@ Introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
 Il fatto di denotare la porta del server con una *String* invece che con un *int* ci darà
 la possibilità di gestire anche comunicazioni basate su altri protocolli; ad esempio per CoAP 
 il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)` 
-(si veda :doc:`VersoUnFramework`).
+(si veda :ref:`ProxyAsClientEsteso`).
 
 ``ProxyAsClient`` definisce le seguenti operazioni:
 

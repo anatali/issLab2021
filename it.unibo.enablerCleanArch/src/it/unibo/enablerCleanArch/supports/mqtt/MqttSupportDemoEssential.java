@@ -10,7 +10,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class MqttSupportDemoEssential {
-private String topic      = MqttSupport.topicInput;
+private String topic      = MqttConnection.topicInput;
 private String brokerAddr = RadarSystemConfig.mqttBrokerAddr; // : 1883  OPTIONAL
 
 private final String caller    = "demo";
@@ -24,7 +24,7 @@ private String helloMsg  = Utils.buildDispatch(caller, "cmd",    "hello",    "AN
 
 //private BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
 
-private MqttSupport mqtt;
+private MqttConnection mqtt;
 
 public void simulateReceiver(String name) {
 	new Thread() {
@@ -41,7 +41,7 @@ public void simulateReceiver(String name) {
 }
 
 protected void init() {
- 	mqtt = MqttSupport.getSupport();
+ 	mqtt = MqttConnection.getSupport();
 	mqtt.connectToBroker("demo", RadarSystemConfig.mqttBrokerAddr);	
 	MqttAnswerHandler h = new MqttAnswerHandler("demoH", mqtt.getQueue() );
 	mqtt.subscribe(topic, h);

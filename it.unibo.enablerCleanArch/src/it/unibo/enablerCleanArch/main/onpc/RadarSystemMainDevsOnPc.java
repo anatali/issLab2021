@@ -6,7 +6,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.main.all.SonarObserver;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArchapplHandlers.LedApplHandler;
 import it.unibo.enablerCleanArchapplHandlers.SonarApplHandler;
 import it.unibo.enablerCleanArch.supports.context.Context2021; 
@@ -28,7 +28,7 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 	public void setup(   )  {
  			RadarSystemConfig.ctxServerPort     = 8018;
 			RadarSystemConfig.withContext       = true;
-		    RadarSystemConfig.protcolType       = ProtocolType.coap;
+		    RadarSystemConfig.protcolType       = ProtocolType.mqtt;
  			RadarSystemConfig.sonarDelay        = 200;
  			RadarSystemConfig.simulation   		= true;
 			RadarSystemConfig.DLIMIT      		= 55;  
@@ -59,7 +59,7 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 		switch( RadarSystemConfig.protcolType ) {
 		case tcp :  { id="rasp";  entry=""+RadarSystemConfig.ctxServerPort; break; }
 		case coap : {  break; }
-		case mqtt : { id="rasp";  entry=MqttSupport.topicInput; break; }
+		case mqtt : { id="rasp";  entry=MqttConnection.topicInput; break; }
 		default:
 		};
 	    ctx  = Context2021.create(id,entry);

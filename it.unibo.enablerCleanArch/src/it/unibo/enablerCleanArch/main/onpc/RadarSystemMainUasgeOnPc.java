@@ -12,7 +12,7 @@ import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.context.Context2021;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 
 /*
  * Applicazione che va in coppia con RadarSystemMainDevsCtxOnRasp
@@ -37,7 +37,7 @@ private String serverHost = "";
 	}
 
 	public void setup(   )  {
- 	      RadarSystemConfig.protcolType       = ProtocolType.coap;
+ 	      RadarSystemConfig.protcolType       = ProtocolType.mqtt;
 		  RadarSystemConfig.raspHostAddr      = "localhost"; //"192.168.1.9";
  		  RadarSystemConfig.ctxServerPort     = 8018;
 		  RadarSystemConfig.sonarDelay        = 1500;
@@ -66,7 +66,7 @@ private String serverHost = "";
 				serverEntry = "" +RadarSystemConfig.ctxServerPort; 
 			}
 			if(Utils.isMqtt() ) { 
- 				MqttSupport.createSupport( mqttCurClient,mqttAnswerTopic );
+ 				MqttConnection.createSupport( mqttCurClient,mqttAnswerTopic );
 				serverHost  = RadarSystemConfig.mqttBrokerAddr;  //dont'care
 				serverEntry = mqttAnswerTopic; 
 			}				
@@ -78,15 +78,15 @@ private String serverHost = "";
  	
 	
 	protected void useLedAndSonar() {
-//	    led.turnOn();
-//	    Utils.delay(1000);
-//	    boolean ledState = led.getState();
-//	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
-// 	    led.turnOff();
-//		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
+	    led.turnOn();
+	    Utils.delay(1000);
+	    boolean ledState = led.getState();
+	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
+ 	    led.turnOff();
+		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
 		
-//		boolean sonarState = sonar.isActive();
-//		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
+		boolean sonarState = sonar.isActive();
+		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
  		
 		sonar.activate(); 
 		ColorsOut.outappl("sonar state=" + sonar.isActive(), ColorsOut.GREEN);

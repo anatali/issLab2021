@@ -84,7 +84,7 @@ public class ContextMqttMsgHandler extends ApplMsgHandler implements IContextMsg
 			try { //Perhaps we receive a structured message
 				ApplMessage msgInput = new ApplMessage(message.toString());
 				//Colors.out(name + " | msgInput:" + msgInput.msgContent() , ColorsOut.BLUE );
-				elaborate(msgInput, MqttSupport.getSupport());
+				elaborate(msgInput, MqttConnection.getSupport());
  			}catch( Exception e) {
 				ColorsOut.outerr(name + " | messageArrived WARNING:"+ e.getMessage() );
  			}

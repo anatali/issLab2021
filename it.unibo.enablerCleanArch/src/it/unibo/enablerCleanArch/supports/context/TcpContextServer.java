@@ -23,7 +23,7 @@ import it.unibo.enablerCleanArchapplHandlers.ContextMsgHandler;
  */
 public class TcpContextServer extends TcpServer implements IContext{
 	private ContextMsgHandler ctxMsgHandler;
- 
+	//private IContextMsgHandler ctxMsgHandler;		//Dopo framework
 	public TcpContextServer(String name, String portStr ) {  
  		this( name,Integer.parseInt(portStr) );
 	}

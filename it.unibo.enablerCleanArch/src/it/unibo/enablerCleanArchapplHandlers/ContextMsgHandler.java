@@ -8,6 +8,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
+import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 
@@ -23,7 +24,7 @@ import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
  *  ma il RECEIVER non sarebbe più quello usato nella versione precedente.
  */
 
-public class ContextMsgHandler extends ApplMsgHandler{
+public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHandler{
 	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>();
 
  	
@@ -67,5 +68,10 @@ public class ContextMsgHandler extends ApplMsgHandler{
 	public void removeComponent( String devname ) {
 		ColorsOut.out(name +  " | removed:" + devname);
 		handlerMap.remove( devname );
+	}
+
+	@Override
+	public IApplMsgHandler getHandler(String name) {
+		return handlerMap.get(name);
 	}
 }

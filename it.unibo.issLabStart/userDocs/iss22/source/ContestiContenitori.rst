@@ -31,6 +31,8 @@ Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace
 componente è destinato un messaggio, per poi invocarne l'appropriato :ref:`IApplMsgHandler<IApplMsgHandler>`
 (come :ref:`LedApplHandler` e :ref:`SonarApplHandler`).
 
+.. _msgApplicativi:
+
 -------------------------------------------------------
 Struttura dei messaggi applicativi
 -------------------------------------------------------

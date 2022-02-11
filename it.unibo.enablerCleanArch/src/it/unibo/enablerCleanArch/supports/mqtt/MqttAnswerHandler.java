@@ -34,12 +34,12 @@ private static int n = 0;
 // 				+ message.isDuplicate() + " payload=" + message.getPayload().length, 
 // 				Colors.ANSI_PURPLE );
  		if( message.getPayload().length == 1 ) {
- 			elaborate("sorry", MqttSupport.getSupport() );
+ 			elaborate("sorry", MqttConnection.getSupport() );
  			return;  //perchè RICEVO 0 ???
  		}
 		try { //Perhaps we receive a structured message
 			ApplMessage msgInput = new ApplMessage(message.toString());
-			elaborate(msgInput, MqttSupport.getSupport() );
+			elaborate(msgInput, MqttConnection.getSupport() );
 		}catch( Exception e) {
 			ColorsOut.out(name + " ApplMsgHandler | messageArrived WARNING:"+ e.getMessage(), ColorsOut.ANSI_YELLOW );
  		}

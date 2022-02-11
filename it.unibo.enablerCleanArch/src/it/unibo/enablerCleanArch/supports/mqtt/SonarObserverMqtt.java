@@ -8,11 +8,11 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 public class SonarObserverMqtt implements IObserver{
 	private String name;
-	private MqttSupport mqtt;
+	private MqttConnection mqtt;
  
 	public SonarObserverMqtt( String name ) {  
 		this.name    = name;
-		mqtt         = MqttSupport.getSupport();
+		mqtt         = MqttConnection.getSupport();
 	}
  	@Override  //java.util.Observer
 	public void update(Observable source, Object data) {

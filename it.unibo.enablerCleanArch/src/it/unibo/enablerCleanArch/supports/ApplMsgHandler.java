@@ -3,7 +3,7 @@ package it.unibo.enablerCleanArch.supports;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.mqtt.MqttSupport;
+import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
  
 /*
  * TODO: omettere la parte MqttCallback che viene realizzata da ContextMqttMsgHandler
@@ -44,7 +44,7 @@ protected String name;
 		ColorsOut.out(name + " | ApplMsgHandler sendAnswerToClient reply=" + reply, ColorsOut.BLUE);
 		try {
 			if( RadarSystemConfig.protcolType == ProtocolType.mqtt) {
-				MqttSupport.getSupport().reply(reply);
+				MqttConnection.getSupport().reply(reply);
 			}else {
 				ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient not implemented for  " + RadarSystemConfig.protcolType);
 			}

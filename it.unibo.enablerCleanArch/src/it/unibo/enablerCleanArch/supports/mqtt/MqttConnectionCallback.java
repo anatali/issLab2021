@@ -7,18 +7,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 
-public class MqttSupportCallback implements MqttCallback{
+public class MqttConnectionCallback implements MqttCallback{
  	private BlockingQueue<String> blockingQueue = null;
 	private IApplMsgHandler handler = null;
 
-	public MqttSupportCallback( IApplMsgHandler handler ) {
+	public MqttConnectionCallback( IApplMsgHandler handler ) {
  		this.handler       = handler;
 	}
-	public MqttSupportCallback( BlockingQueue<String> blockingQueue ) {
+	public MqttConnectionCallback( BlockingQueue<String> blockingQueue ) {
  		this.blockingQueue = blockingQueue;
 	}
 
-		public MqttSupportCallback(String clientName, BlockingQueue<String> blockingQueue ) {
+		public MqttConnectionCallback(String clientName, BlockingQueue<String> blockingQueue ) {
 			//this.clientName    = clientName;
 			this.blockingQueue = blockingQueue;
 		}
