@@ -10,13 +10,13 @@ import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 public class LedAdapterCoap implements ILed {
 private boolean ledStateMirror = false;
 //private CoapClient client;
-private CoapSupport cps;
+private CoapConnection cps;
 //private IApplMsgHandler ledHandler;
 
 	public LedAdapterCoap( String hostAddr, String resourceUri ) {
  		ColorsOut.out( "LedAdapterCoap |  STARTS for " + hostAddr +" resourceName=>"+resourceUri, ColorsOut.BLUE);
 		//client  = new CoapClient( "coap://localhost:5683/"+ resourceUri ); //+"?value=10"
-		cps = new CoapSupport(hostAddr, resourceUri );
+		cps = new CoapConnection(hostAddr, resourceUri );
 		//CoapResponse answer = client.get();
 	}
  	

@@ -7,10 +7,10 @@ import org.eclipse.californium.core.server.resources.Resource;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
 
 public class CoapSupportExampleMain {
-private CoapSupport cps;
+private CoapConnection cps;
 private CoapServer coapServer;
 private CoapResourceExample res;
 
@@ -29,7 +29,7 @@ private CoapResourceExample res;
  		
 		//Create the CoapSupport for the resource
 		String resourceuri = "root/"+resource.getName();
-		cps = new CoapSupport("localhost", resourceuri );
+		cps = new CoapConnection("localhost", resourceuri );
 		
 	}
 	public void execute() {

@@ -9,16 +9,16 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
  
  
-public class CoapSupport implements Interaction2021  {
+public class CoapConnection implements Interaction2021  {
 private CoapClient client;
 private String url;
 private String name = "CoapSprt";
 
-	public CoapSupport( String name, String address, String path) {  
- 		this.name = name;
- 		setCoapClient(address,path);
- 	}
-	public CoapSupport( String address, String path) { //"coap://localhost:5683/" + path
+//	public CoapConnection( String name, String address, String path) {  
+// 		this.name = name;
+// 		setCoapClient(address,path);
+// 	}
+	public CoapConnection( String address, String path) { //"coap://localhost:5683/" + path
  		setCoapClient(address,path);
 	}
 	
@@ -53,10 +53,6 @@ private String name = "CoapSprt";
 		} 
 	}
 
-	@Override
-	public String receiveMsg() throws Exception {
- 		throw new Exception(name + " | receiveMsg not allowed");
-	}
 	
 	@Override
 	public String request(String query)   {
@@ -79,7 +75,13 @@ private String name = "CoapSprt";
 	
 	@Override
 	public void reply(String reqid) throws Exception {
+		throw new Exception(name + " | reply not allowed");
 	} 
+
+	@Override
+	public String receiveMsg() throws Exception {
+ 		throw new Exception(name + " | receiveMsg not allowed");
+	}
 
 	@Override
 	public void close()  {

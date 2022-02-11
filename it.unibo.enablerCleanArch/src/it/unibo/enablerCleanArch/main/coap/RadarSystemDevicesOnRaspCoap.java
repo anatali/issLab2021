@@ -21,7 +21,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplObserver;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.SonarResourceCoap;
 import it.unibo.enablerCleanArch.supports.coap.WebCamRaspResourceCoap;

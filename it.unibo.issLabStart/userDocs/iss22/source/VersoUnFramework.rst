@@ -67,7 +67,7 @@ Come librerie di riferimento useremo le seguenti:
 
 
 ---------------------------------------------------------
-I supporti per :ref:`Interaction2021<Interaction2021>`
+Nuovi supporti :ref:`Interaction2021<Interaction2021>`
 ---------------------------------------------------------
 
 Il :ref:`tcpsupportClient` crea l'implemetazione TCP di :ref:`Interaction2021<Interaction2021>` 
@@ -75,15 +75,13 @@ introdotta a suo tempo, come oggetto di classe :ref:`TcpConnection<TcpConnection
 
 La creazione di analoghi supporti per MQTT e CoAP  parte dalle seguenti osservazioni:
 
-- per MQTT si tratta di creare una connessione con un broker che media la interazione tra mittente
-  e destinatario
+- per MQTT si tratta di creare una connessione fisica con un broker che media la interazione tra mittente
+  e destinatario e una connessione logica utilizzando le topic;
 - per CoAP si tratta di utilizzare un oggetto  
-  di classe ``CoapClient`` di `californium`_, che richiede come argomento l'``URL`` della risorsa
-  a cui ci si vuole connettere, che ha la forma:
+  di classe ``CoapClient`` di `californium`_, che richiede come argomento l'``URI`` della risorsa
+  a cui ci si vuole connettere.
 
-  .. code:: 
-
-    "coap://"+host + ":5683/"+ entry
+  
 
 .. _MqttConnection:
 
@@ -91,15 +89,15 @@ La creazione di analoghi supporti per MQTT e CoAP  parte dalle seguenti osservaz
 ``MqttConnection`` implementa :ref:`Interaction2021<Interaction2021>`
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Come :ref:`TcpConnection`, la classe ``MqttConnection`` implementa :ref:`Interaction2021` 
+Come :ref:`TcpConnection<TcpConnection>`, la classe ``MqttConnection`` implementa :ref:`Interaction2021<Interaction2021>` 
 e quindi realizza il concetto di connessione tenendo conto delle seguenti caratteristiche del protocollo
-MQTT e della libreiria `paho`_:
+MQTT e della libreria `paho`_:
 
 - non vi è più (come in TCP)  una connessione punto-a-punto con il nodo destinatario ma una connessione punto-a-punto
   con un Broker (il cui indirizzo sarà nel parametro di configurazione ``RadarSystemConfig.mqttBrokerAddr``);
 - la connessione col Broker viene effettuata da un client  di classe ``org.eclipse.paho.client.mqttv3.MqttClient``
   che deve avere un preciso ``clientId`` (di tipo ``String``). Il Broker accetta una sola connessione per volta
-  da un dato ``clientId`` e dunque la ``MqttConnection`` fornisce un singleton.
+  da un dato ``clientId`` e dunque la ``MqttConnection`` è impostata come un singleton.
 
 .. code:: java
 
@@ -107,7 +105,8 @@ MQTT e della libreiria `paho`_:
   public static final String topicInput = "topicCtxMqtt";   
   protected static MqttConnection mqttSup ;  //for singleton
 
-  protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
+  protected BlockingQueue<String> blockingQueue = 
+                new LinkedBlockingDeque<String>(10);
   protected String clientid;
 
     //Factory method
@@ -129,15 +128,11 @@ Il costruttore del singleton  ``MqttConnection``crea un ``MqttClient`` con ``cli
 il quale si connette al Broker.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-publish e subscribe
+publish
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-- ``MqttConnection`` realizza l'invio di un messaggio invocando l'operazione ``publish`` su una topic;
-- la ricezione di un messaggio si realizza attraverso la ``subscribe`` ad una topic; i messaggi pubblicati su
-  questa topic posssono essere gestiti associando al client (col metodo ``setCallback``) un oggetto di classe 
-  ``org.eclipse.paho.client.mqttv3.MqttCallback`` 
+``MqttConnection`` realizza l'invio di un messaggio invocando l'operazione ``publish`` su una topic;
 
- 
 .. code:: java 
 
     public void publish(String topic, String msg, int qos, boolean retain) {
@@ -152,6 +147,30 @@ publish e subscribe
       } catch (MqttException e) { ...  }
 	  }
 
+Il metodo ``publish`` viene usato per la implementazione del motodo ``forward`` dei messaggi strutturati.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MqttConnection forward  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+
+  @Override
+  public void forward(String msg) throws Exception {
+    new ApplMessage(msg); //no exception => we can publish
+    publish(topicInput, msg, 2, false);	
+	}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subscribe
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La ricezione di un messaggio si realizza attraverso la ``subscribe`` ad una topic; i messaggi pubblicati su
+questa topic posssono essere gestiti associando al client (col metodo ``setCallback``) un oggetto di classe 
+``org.eclipse.paho.client.mqttv3.MqttCallback`` 
+
+.. code:: java  
+
     //To receive and handle a messagge (command or request)
     public void subscribe ( String topic, IApplMsgHandlerMqtt handler) {
       subscribe(clientid, topic, handler);    
@@ -165,7 +184,7 @@ publish e subscribe
 
 Poichè la gestione di un messaggio è competenza del livello applicativo, l'handler passato alla
 ``subscribe`` deve rispettare un contratto imposto sia dal nostro framework sia dalla libreria.
-Per questo l'oggetto di callback deve implementare una interfaccia che estende :ref:`IApplMsgHandler`.
+Questo contratto viene definito da una interfaccia che estende :ref:`IApplMsgHandler`.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,31 +193,18 @@ IApplMsgHandlerMqtt
 
 .. code:: java
 
-   public interface IApplMsgHandlerMqtt extends IApplMsgHandler, MqttCallback{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il metodo forward  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-.. code:: java
-
-  @Override
-  public void forward(String msg) throws Exception {
-		try{
-      new ApplMessage(msg); //no exception => we can publish
-    }catch( Exception e ) { //The message is not structured
-      ApplMessage msgAppl = Utils.buildDispatch("mqtt", "cmd", msg, "unknown");
-    }				
-    publish(topicInput, msg, 2, false);	
-	}
+   public interface IApplMsgHandlerMqtt 
+                      extends IApplMsgHandler, MqttCallback{}
 
 
+
+.. _connessionecomecoppia:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Connessione come coppia di topic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Una connessione di tipo :ref:`Interaction2021` viene da noi realizzata usando due topic: 
+Una connessione di tipo :ref:`Interaction2021<Interaction2021>` viene qui realizzata usando due topic: 
 una per ricevere messaggi e una per inviare risposte relative ai messaggi di richiesta. 
 
 Se la topic di ricezione ha nome ``t1``, la topic per le risposte deve avere il nome ``t1CXanswer`` 
@@ -219,12 +225,12 @@ Per permettere al livello applicativo di ricevere una risposta, l'handler di cal
 answertopic (``MqttConnectionCallback``) provvede a inserire il messaggio nella ``blockingQueue`` del supporto.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il metodo request  
+MqttConnection request  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il metodo ``request`` di :ref:`Interaction2021<Interaction2021>` viene implementato facendo una ``publish`` sulla entry-topic
 del nodo destinatario per poi far attendere la risposta a un nuovo client temporaneo appositamente creato per 
-sottosrviversi sulla answertopic.
+sottoscrivversi alla answertopic.
 
 .. code:: java
 
@@ -245,9 +251,14 @@ sottosrviversi sulla answertopic.
 		clientAnswer.disconnect();
 		clientAnswer.close();
   }
- 
-Il metodo ``waitFroAnswerBlocking`` attende la risposta sulla  ``blockingQueue`` e, quando questa
-arriva, disattiva il client temporaneo.
+
+Il client temporaneo viene disattivato dopo la ricezione della richiesta.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MqttConnection receiveMsg  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo ``receiveMsg`` attende un messaggio sulla  ``blockingQueue`` .
 
 .. code:: java
 
@@ -260,30 +271,133 @@ arriva, disattiva il client temporaneo.
   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Il metodo reply  
+MqttConnection reply  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il metodo reply viene implementato facendo una public sulla answertopic, il cui nome viene costruito
-ai partire dai dati contenuti nel messaggio
+Il metodo reply viene implementato pubblicando un messaggio di risposta su una topic, il cui nome viene costruito
+ai partire dai dati contenuti nel messaggio di richiesta come specificato in :ref:`connessionecomecoppia`.
 
 .. code:: java
 
-	public void reply(String msg) throws Exception {
-		try {
-			ApplMessage m = new ApplMessage(msg);
-			String dest   = m.msgReceiver();
-			String reqid  = m.msgId();
-			String answerTopicName = "answ_"+reqid+"_"+dest;
-			publish(answerTopicName,msg,2,false); //"xxx"
+  public void reply(String msg) throws Exception {
+    try {
+      ApplMessage m = new ApplMessage(msg);
+      String dest   = m.msgReceiver();
+      String reqid  = m.msgId();
+      String answerTopicName = "answ_"+reqid+"_"+dest;
+      publish(answerTopicName,msg,2,false);  
  		}catch(Exception e) { ... 		}
-	}
-
-
-
+    }
 
 .. image:: ./_static/img/Radar/MqttConn.PNG
    :align: center  
    :width: 70%
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+``CoapConnection`` implementa :ref:`Interaction2021<Interaction2021>`
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CoAP considera le interazioni (client/server) tra componenti come uno scambio di rappresentazioni di risorse
+e si pone l'obiettivo di realizzare una infrastruttura di gestione di risorse remote tramite alcune semplici
+funzioni di accesso e interazione come quelle di ``HTTP``: ``PUT, POST, GET, DELETE``.
+
+La classe ``CoapConnection``  implementa :ref:`Interaction2021<Interaction2021>` 
+e quindi realizza il concetto di connessione, tenendo conto delle seguenti caratteristiche del protocollo
+CoAP e della libreria `californium`_:
+
+- per interagire con una risorsa remota si può usare un oggetto di classe ``org.eclipse.californium.core.CoapClient`` 
+  che invia richieste all'``URI`` speficato come argomento del costruttore, come ad esempio:
+
+  .. code:: 
+
+    "coap://"+hostaddress + ":5683/"+ resourcePath
+
+- le risorse allocate su un nodo sono istanze della classe ``org.eclipse.californium.core.CoapResource`` 
+  e sono gestite da un server di classe ``org.eclipse.californium.core.CoapServer``. Questo server realizza già
+  funzioni analoghe a quelle da :ref:`IContext`.
+
+
+.. code:: java 
+
+  public class CoapConnection implements Interaction2021  {
+  private CoapClient client;
+  private String url;
+  
+    public CoapConnection( String address, String path) { //"coap://localhost:5683/" + path
+      setCoapClient(address,path);
+    }
+    
+    protected void setCoapClient(String address, String path) {
+      url     = "coap://"+address + ":5683/"+ path;
+      client  = new CoapClient( url );
+      client.useExecutor(); //To be shutdown
+      client.setTimeout( 1000L );		 		
+    }
+
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapConnection forward  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo di invio di un messaggio si traduce in una operazione PUT effettuata dal CoapClient.
+
+.. code:: java 
+
+  @Override
+  	public void forward(String msg)   {
+			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
+ 		} 
+	}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapConnection request  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo di invio di una richiesta si traduce in una operazione GET effettuata dal CoapClient.
+
+.. code:: java 
+
+  @Override
+  public String request( String query )   {
+		String param = query.isEmpty() ? "" :  "?q="+query;
+		client.setURI(url+param);
+		CoapResponse respGet = client.get(  );
+		if( respGet != null ) {
+			return respGet.getResponseText();
+		}else {
+			return "0";
+		}
+	}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapConnection receiveMsg  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo di ricezione di un messaggio è già realizzato dalla infrastruutura CoAP fornita da  `californium`_.
+
+.. code:: java 
+
+	@Override
+	public String receiveMsg() throws Exception {
+ 		throw new Exception(name + " | receiveMsg not allowed");
+	}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapConnection reply 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il metodo di invio di una risposta è già realizzato dalla infrastruutura CoAP fornita da `californium`_.
+
+.. code:: java 
+
+	@Override
+	public String reply() throws Exception {
+ 		throw new Exception(name + " | reply not allowed");
+	}
+
 
 
 
@@ -291,8 +405,8 @@ ai partire dai dati contenuti nel messaggio
 I ContextServer
 ---------------------------------
 
-Come primo passo per la definizione di un nostro framework di supporto alle applicazioni distribuite, 
-introduciamo un contratto per il concetto di ContextServer che imponga metodi per attivare/disattivare il server e per
+Poichè dovremo definire un ContextServer per ogni protocollo, faccaimo in modo che ciascuno di essi
+rispetti uno stesso contratto, che imponga metodi per attivare/disattivare il server e per
 aggiungere/rimuovere componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
 
 
@@ -313,8 +427,8 @@ Questo contratto è già rispettato da :ref:`TcpContextServer`, così che possia
 
   public class TcpContextServer extends TcpServer **implements IContext**
 
-Dobbiamo ora introdurre un ContextServer per MQTT (si veda :ref:`MqttContextServer`) 
-e per CoAP (si veda :ref:`CoapContextServer`).
+Dobbiamo ora introdurre un ContextServer per MQTT (che denominiamo :ref:`MqttContextServer`) 
+e per CoAP (che denominiamo :ref:`CoapContextServer`).
 
 .. Individuare i punti in cui occorre tenere conto dello specifico protocollo per definire i parametri delle *operazioni astratte*
 
@@ -368,9 +482,8 @@ I parametri ``id`` ed ``entry`` da specificare nel costruttore nei vari casi son
 ===========================   ===========================    ===========================   
 
 
-Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto per attivarlo occore conoscere
-l'indirizzo del broker (unico per tutti i componenti del sistema), definito nel parametro di configurazione:
-``RadarSystemConfig.mqttBrokerAddr``.
+Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto coorelato al  
+``CoapServer``di ``org.eclipse.californium``.
  
 
 
@@ -378,7 +491,7 @@ l'indirizzo del broker (unico per tutti i componenti del sistema), definito nel 
 IContextMsgHandler
 +++++++++++++++++++++++++++++++
 
-Ogni ContextServer necessita di un gestore di sistema dei messaggi  come il 
+Ogni ContextServer si avvale di un gestore di sistema dei messaggi  come il 
 :ref:`ContextMsgHandler<ContextMsgHandler>` già definito per il TCP.
 
 Introduciamo anche per questo gestore un contratto che imponga la implementazione di metodi per
@@ -599,19 +712,7 @@ associata al
 		}
 	}
 
-
-
  
-
-
- 
-
-
-
-
-
-
-
 
 +++++++++++++++++++++++++++++++++++++++
 CoapContextServer

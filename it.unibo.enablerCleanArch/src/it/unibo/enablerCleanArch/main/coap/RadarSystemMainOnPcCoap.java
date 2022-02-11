@@ -9,7 +9,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
 import it.unibo.enablerCleanArch.supports.context.Context2021;
  
 public class RadarSystemMainOnPcCoap implements IApplicationFacade{
@@ -17,7 +17,7 @@ public class RadarSystemMainOnPcCoap implements IApplicationFacade{
 private ISonar sonar    		   = null;
 private ILed led        		   = null;
 private IRadarDisplay radar 	   = null;
-private CoapSupport coapSonarSup   = null;
+private CoapConnection coapSonarSup   = null;
 private CoapObserveRelation relObs = null;
 private final int ampl             = 3;
 private boolean ledblinking        = false;
@@ -59,7 +59,7 @@ private boolean ledblinking        = false;
  		SonarProxyAsClient sonarProxy = new SonarProxyAsClient("sonarProxyCoap", host, sonarUri, ProtocolType.coap );
   		sonar            = sonarProxy;
  		
-  		coapSonarSup     = (CoapSupport) sonarProxy.getConn();
+  		coapSonarSup     = (CoapConnection) sonarProxy.getConn();
 
  		String ledUri  = CoapApplServer.lightsDeviceUri+"/led";
  		led            = new LedProxyAsClient("ledProxyCoap", host, ledUri, ProtocolType.coap );

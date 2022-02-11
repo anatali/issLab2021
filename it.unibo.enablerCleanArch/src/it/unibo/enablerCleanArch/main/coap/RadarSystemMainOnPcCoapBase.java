@@ -19,7 +19,7 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
 
 
 /*
@@ -35,9 +35,9 @@ private ISonar clientSonarProxy    = null;
 private CoapClient clientObs 	   = null;
 private CoapObserveRelation relObs = null;
 private IObserver obsfortesting;
-private CoapSupport coapSonarSup   = null;
-private CoapSupport coapLedSup     = null;
-private CoapSupport coapWebCamSup  = null;
+private CoapConnection coapSonarSup   = null;
+private CoapConnection coapLedSup     = null;
+private CoapConnection coapWebCamSup  = null;
 private CoapObserveRelation rel1   = null;
 private final int ampl             = 3;
 private boolean ledblinking        = false;
@@ -71,7 +71,7 @@ private boolean ledblinking        = false;
   		sonar            = sonarProxy;
  		
   		//Extract the support for the sonar, in order to set an observer 
-  		coapSonarSup     = (CoapSupport) sonarProxy.getConn();
+  		coapSonarSup     = (CoapConnection) sonarProxy.getConn();
 ColorsOut.out("........................................ coapSonarSup=" + coapSonarSup);
  		String ledUri  = CoapApplServer.lightsDeviceUri+"/led";
  		led            = new LedProxyAsClient("ledProxyCoap", host, ledUri, ProtocolType.coap );		
@@ -80,11 +80,12 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 		rel1            = coapSonarSup.observeResource( obs );
 		
  		String webcamUri = CoapApplServer.inputDeviceUri+"/webcam";
- 		coapWebCamSup    = new CoapSupport("coapWebCamSup",RadarSystemConfig.raspHostAddr, webcamUri);
+ 		//coapWebCamSup    = new CoapConnection("coapWebCamSup",RadarSystemConfig.raspHostAddr, webcamUri);
+		coapWebCamSup    = new CoapConnection( RadarSystemConfig.raspHostAddr, webcamUri);
 		     
 	}
 
-	public CoapSupport getSonarCoapSupport() {
+	public CoapConnection getSonarCoapSupport() {
 		return coapSonarSup;
 	}
 	
@@ -135,7 +136,8 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 	 */	
 	protected void configureUsingCoapSupport() {
  		String sonarUri = CoapApplServer.inputDeviceUri+"/sonar";
- 		coapSonarSup    = new CoapSupport("coapSonarSup",RadarSystemConfig.raspHostAddr, sonarUri);
+ 		//coapSonarSup    = new CoapConnection("coapSonarSup",RadarSystemConfig.raspHostAddr, sonarUri);
+ 		coapSonarSup    = new CoapConnection( RadarSystemConfig.raspHostAddr, sonarUri );
  		//Colors.out("............. coapSonarSup=" + coapSonarSup);
  		String ledUri   = CoapApplServer.lightsDeviceUri+"/led";
  		led             = new LedProxyAsClient("ledProxyCoap", RadarSystemConfig.raspHostAddr, ledUri, ProtocolType.coap );

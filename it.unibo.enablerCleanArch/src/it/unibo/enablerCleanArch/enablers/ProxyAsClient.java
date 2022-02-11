@@ -4,7 +4,7 @@ import java.net.Socket;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.Utils;
-import it.unibo.enablerCleanArch.supports.coap.CoapSupport;
+import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 import it.unibo.enablerCleanArch.supports.tcp.TcpClientSupport;
 import it.unibo.enablerCleanArch.supports.tcp.TcpConnection;
@@ -41,7 +41,8 @@ protected ProtocolType protocol ;
 				break;
 			}
 			case coap : {
-				conn = new CoapSupport("CoapSupport_"+name, host,  entry);  //entry is uri path
+				//conn = new CoapConnection("CoapSupport_"+name, host,  entry);  //entry is uri path
+				conn = new CoapConnection( host,  entry );
 				break;
 			}
 			case mqtt : {

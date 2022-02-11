@@ -10,13 +10,13 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
  */
 public class SonarAdapterCoapObserver implements ISonar, CoapHandler{
 private IDistance curVal = null;
-private CoapSupport cps ;
+private CoapConnection cps ;
 
 	public SonarAdapterCoapObserver( String hostAddr, String resourceUri   ) {
 		
  		System.out.println("SonarAdapterCoapObserver |  STARTS  " + resourceUri );
  		//Attivo un Observer che implementa ISonar (per il Controller)
- 		cps = new CoapSupport(hostAddr, resourceUri );
+ 		cps = new CoapConnection(hostAddr, resourceUri );
 		ColorsOut.out("SonarAdapterCoapObserver |  cps  " + cps );
 		cps.observeResource(this);		
  	}

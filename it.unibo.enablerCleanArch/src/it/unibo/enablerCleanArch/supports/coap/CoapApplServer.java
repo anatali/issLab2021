@@ -76,6 +76,7 @@ public class CoapApplServer extends CoapServer implements IContext{
 			ColorsOut.outerr("addCoapResource FAILS for " + fatherUri);
 		}
 	}
+	
 	@Override
 	public void addComponent(String name, IApplMsgHandler h) {
 		// TODO Auto-generated method stub
