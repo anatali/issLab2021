@@ -196,7 +196,7 @@ IApplMsgHandlerMqtt
 .. code:: java
 
    public interface IApplMsgHandlerMqtt 
-                      extends IApplMsgHandler, MqttCallback{}
+        extends IApplMsgHandler, org.eclipse.paho.client.mqttv3.MqttCallback{}
 
 
 
@@ -578,12 +578,16 @@ Osserviamo che il framework:
 
 Abbiamo già introdotto :ref:`TcpContextServer` come implementazione di :ref:`IContext`
 che utilizza librerie per la gestione di *Socket*.
-
 La realizzazione di analoghi ContextServer per MQTT e CoAP si basa sulle citate :ref:`librerie<librerieprotocolli>`.
 
 +++++++++++++++++++++++++++++++++++++++
-ContextServer per MQTT
+MqttContextServer
 +++++++++++++++++++++++++++++++++++++++
+
+Il ContextServer per MQTT riceve nel costruttore due argomenti:
+
+- ``String clientId``: rappresenta l'indentificativo del client che si connetterà al Broker;
+- ``String topic``: rappresenta la 'porta di ingresso' (entry-topic) per i messaggi inivati al server.
 
 .. code:: java
 
@@ -594,60 +598,45 @@ ContextServer per MQTT
     private String topic;
 
     public MqttContextServer(String clientId, String topic) {
-		  this.clientId = clientId;
-		  this.topic    = topic;		
-     }
-      ...
-	  @Override
-	  public void activate() {
-		  mqtt = MqttConnection.createSupport( clientId, topic );
-		  mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
-      mqtt.subscribe( topic, ctxMsgHandler );	
-   	}
-	  @Override
-	  public void addComponent(String name, IApplMsgHandler h) {
-		  ctxMsgHandler.addComponent(name, h);	
-	  }
-    ...
+      this.clientId = clientId;
+      this.topic    = topic;		
+    }
 
+Al momento della attivazione il server crea:
 
-.. Un ContextServer per MQTT richiede che un client di classe ``org.eclipse.paho.client.mqttv3.MqttClient``  si connetta al nodo facendo una subscribe alla  *topic* specificata dal parametro ``entry``.
-
-Il server crea, al momento della attivazione:
-
-- un oggetto (``mqtt``) di tipo :ref:`MqttConnection<MqttConnection>` ) per le comunicazioni che viene 
+- un oggetto (``mqtt``) di tipo :ref:`MqttConnection<MqttConnection>`  per le comunicazioni, che viene 
   subito utilizzato per connettersi al Broker;
-- un oggetto (``ctxMsgHandler``) per la gestione di sistema dei messaggi.
- 
+- un oggetto (``ctxMsgHandler``) di tipo  :ref:`ContextMqttMsgHandler` per la gestione di sistema dei messaggi.
+
+.. code:: java
+
+  @Override
+  public void activate() {
+    ctxMsgHandler = new ContextMqttMsgHandler("ctxH");
+    mqtt = MqttConnection.createSupport( clientId, topic );
+    mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
+    mqtt.subscribe( topic, ctxMsgHandler );	
+  }
+
+  @Override
+  public void addComponent(String name, IApplMsgHandler h) {
+    ctxMsgHandler.addComponent(name, h);	
+  }
+
+Come :ref:`ContextMsgHandler<ContextMsgHandler>`, il gestore ``ctxMsgHandler`` memorizza i (riferimenti ai) componenti di 
+gestione applicativa dei messaggi (di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`).  
+
 
 
 .. image:: ./_static/img/Architectures/frameworkMqtt.PNG
    :align: center  
    :width: 70%
 
+A differenza di :ref:`ContextMsgHandler<ContextMsgHandler>`, il gestore ``ctxMsgHandler`` funge anche da callback
+utilizzato dal supporto ``mqtt`` quando viene ricevuto un messaggio pubblicato sulla entry-topic.
 
-La ``topic`` specificata nel costruttore  rappresenta la 'porta di ingresso' (entry-topic) dei messaggi 
-che il server gestisce delegandoli al ``ctxMsgHandler``.
-Questo gestore (a differenza di :ref:`ContextMsgHandler<ContextMsgHandler>`) implementa la interfaccia 
-``org.eclipse.paho.client.mqttv3.MqttCallback``  per la gestione
-asincrona dei messaggi in arrivo mediante il metodo:
-
-.. code:: java
-
-    @Override  //from MqttCallback
-    public void messageArrived(String topic, MqttMessage message)   {
-      	ApplMessage msgInput = new ApplMessage(message.toString());
-				elaborate(msgInput, MqttConnection.getSupport());
-
-    }
-
-Infatti ``ctxMsgHandler``  implementa l'interfaccia
-:ref:`IContextMsgHandlerMqtt` che estende :ref:`IContextMsgHandler` con :ref:`IApplMsgHandlerMqtt`
-
-.. code:: java
-
-  public interface IContextMsgHandlerMqtt 
-      extends IContextMsgHandler, IApplMsgHandlerMqtt{}
+Notiamo infatti che il gestore ``ctxMsgHandler`` implementa l'interfaccia
+:ref:`IContextMsgHandlerMqtt` che estende :ref:`IContextMsgHandler` con :ref:`IApplMsgHandlerMqtt`:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 IContextMsgHandlerMqtt
@@ -655,44 +644,54 @@ IContextMsgHandlerMqtt
 
 .. code:: java
 
-  public interface IApplMsgHandlerMqtt 
-    extends IApplMsgHandler, MqttCallback{ }
+  public interface IContextMsgHandlerMqtt 
+        extends IContextMsgHandler, IApplMsgHandlerMqtt{}
+
  
+.. Un ContextServer per MQTT richiede che un client di classe ``org.eclipse.paho.client.mqttv3.MqttClient``  si connetta al nodo facendo una subscribe alla  *topic* specificata dal parametro ``entry``.
 
 
-  
+
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ContextMqttMsgHandler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La rappresentazione in forma di String del messaggio ricevuto di tipo ``org.eclipse.paho.client.mqttv3.MqttMessage``
-deve avere la struttura introdotta in :ref:`msgApplicativi`:
+La rappresentazione in forma di String di un messaggio (di tipo ``org.eclipse.paho.client.mqttv3.MqttMessage``)
+ricevuto sulla entry-topic deve avere la struttura introdotta in :ref:`msgApplicativi`:
 
 .. code:: java
 
   msg(MSGID,MSGTYPE,SENDER,RECEIVER,CONTENT,SEQNUM)
 
-Pertanto deve essere possibile eseguire il mapping in un oggetto di tipo :ref:`ApplMessage` senza generare eccezioni:
-
-
-
-Il gestore di sistema dei messaggi realizza 
+Pertanto deve essere possibile eseguire il mapping della stringa in un oggetto di tipo :ref:`ApplMessage<ApplMessage>`,
+senza generare eccezioni.
+Il gestore di sistema dei messaggi  realizza questo mapping nel  metodo ``messageArrived``:
 
 .. code:: java
 
   public class ContextMqttMsgHandler extends ApplMsgHandler 
                               implements IContextMsgHandlerMqtt{
-    ...
-  @Override
-  public void addComponent( String devName, IApplMsgHandler h) { ... }
+ 
+    @Override  //from MqttCallback
+    public void messageArrived(String topic, MqttMessage message)   {
+      	ApplMessage msgInput = new ApplMessage(message.toString());
+				elaborate(msgInput, MqttConnection.getSupport());
+    }
+
+L'elaborazione di sistema consiste, come nel caso di :ref:`ContextMsgHandler<ContextMsgHandler>`, nella invocazione
+del gestore applicativo che corrisponde al nome del destinatario :
+
+
+.. code:: java
 
   @Override
   public void elaborate( ApplMessage msg, Interaction2021 conn ) {
     String dest          = msg.msgReceiver();
-		IApplMsgHandler  h   = handlerMap.get(dest);
-	  h.elaborate( msg , conn);	
-   }
+    IApplMsgHandler  h   = handlerMap.get(dest);
+    h.elaborate( msg , conn);	
+  }
 
   @Override
   public void elaborate(String message, Interaction2021 conn) { 
@@ -701,40 +700,9 @@ Il gestore di sistema dei messaggi realizza
   }
 
   @Override
-  public void messageArrived(String topic, MqttMessage message){ 
-      ApplMessage msgInput = new ApplMessage(message.toString());
-      elaborate(msgInput, MqttConnection.getSupport());
-  }
-
-
-
-.. code:: java
-
-  ApplMessage msgInput = new ApplMessage(message.toString());
-
-Queste trasformazioni sono quindi di pertinenza del gestore di sistema dei messaggi in arrivo
-(``ctxMsgHandler``) che viene definito in modo da fungere anche da callBack MQTT in quanto implementa
-una interfaccia :ref:`IContextMsgHandlerMqtt` che estende  :ref:`IContextMsgHandler<IContextMsgHandler>`.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-MqttContextServer
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+  public void addComponent( String devName, IApplMsgHandler h) { ... }
  
 
-
- 
-
-.. code:: java
-
-	public void subscribe(String clientid, String topic, MqttCallback callback) {
-		try {
- 			client.setCallback( callback );	
-			client.subscribe(topic);			
- 		} catch (MqttException e) {
-			ColorsOut.outerr("MqttConnection  | subscribe Error:" + e.getMessage());
-		}
-	}
 
  
 
@@ -748,8 +716,16 @@ tutte le interazioni client/server come uno scambio di rappresentazioni di risor
 funzioni di accesso e interazione come quelle di HTTP: PUT, POST, GET, DELETE.
 
 Si tratta quindi di utilizzare un oggetto di `californium`_ (libreria di riferimento) di classe ``CoapServer``
-  in cui si siano aggiunte tutte le risorse che corrispondono ai componenti destinatari di messaggi (ad
-  esempio, una risorsa per il Led e una per il Sonar)
+in cui si siano aggiunte tutte le risorse che corrispondono ai componenti destinatari di messaggi (ad
+esempio, una risorsa per il Led e una per il Sonar)
+
+
+.. image:: ./_static/img/Radar/CoapRadarResources.PNG
+   :align: center  
+   :width: 70%
+
+ 
+
 
 La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
 
@@ -758,11 +734,40 @@ La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato 
 - abstract class ``ApplResourceCoap`` extends CoapResource implements :ref:`IApplMsgHandler`
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapApplServer2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+
+  public class CoapApplServer extends CoapServer implements IContext{
+  private static CoapResource root      = new CoapResource("devices");
+  private static CoapApplServer server  = null;
+	
+  public final static String outputDeviceUri = "devices/output";
+  public final static String lightsDeviceUri = outputDeviceUri+"/lights";
+  public final static String inputDeviceUri  = "devices/input";
+	
+  public static CoapApplServer getTheServer() {
+    if( server == null ) server = new CoapApplServer();
+    return server;
+  }
+
+ 
+
 La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
 In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 
 al sistema tramite ``CoapApplServer`` che la ``Context2021.create()`` riduce a ``CoapServer`` in cui 
 sono registrate le risorse.
 
 
+.. code:: java
 
+  public class CoapContextServer implements IContext{
+  @Override
+  public void activate() {
+		CoapApplServer.getTheServer();
+  }
+
+  }
 
