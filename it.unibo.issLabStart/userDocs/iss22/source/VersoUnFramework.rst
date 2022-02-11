@@ -673,11 +673,10 @@ Il gestore di sistema dei messaggi  realizza questo mapping nel  metodo ``messag
 
   public class ContextMqttMsgHandler extends ApplMsgHandler 
                               implements IContextMsgHandlerMqtt{
- 
     @Override  //from MqttCallback
     public void messageArrived(String topic, MqttMessage message)   {
-      	ApplMessage msgInput = new ApplMessage(message.toString());
-				elaborate(msgInput, MqttConnection.getSupport());
+      ApplMessage msgInput = new ApplMessage(message.toString());
+      elaborate(msgInput, MqttConnection.getSupport());
     }
 
 L'elaborazione di sistema consiste, come nel caso di :ref:`ContextMsgHandler<ContextMsgHandler>`, nella invocazione
@@ -695,8 +694,8 @@ del gestore applicativo che corrisponde al nome del destinatario :
 
   @Override
   public void elaborate(String message, Interaction2021 conn) { 
-			ApplMessage msg      = new ApplMessage(message);
-			elaborate( msg.toString(), conn);
+    ApplMessage msg      = new ApplMessage(message);
+    elaborate( msg.toString(), conn);
   }
 
   @Override
@@ -729,6 +728,13 @@ esempio, una risorsa per il Led e una per il Sonar)
 
 La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
 
+La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
+In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 
+al sistema tramite ``CoapApplServer`` che la ``Context2021.create()`` di :ref:`Context2021` 
+
+.. riduce a ``CoapServer`` in cui sono registrate le risorse.
+
+
 - ``CoapApplServer`` extends CoapServer implements :ref:`IContext`
 - class ``CoapSupport`` implements :ref:`Interaction2021`
 - abstract class ``ApplResourceCoap`` extends CoapResource implements :ref:`IApplMsgHandler`
@@ -755,10 +761,7 @@ CoapApplServer2
 
  
 
-La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
-In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 
-al sistema tramite ``CoapApplServer`` che la ``Context2021.create()`` riduce a ``CoapServer`` in cui 
-sono registrate le risorse.
+
 
 
 .. code:: java
