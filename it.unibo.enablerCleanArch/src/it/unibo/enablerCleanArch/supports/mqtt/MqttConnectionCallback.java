@@ -9,11 +9,11 @@ import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 
 public class MqttConnectionCallback implements MqttCallback{
  	private BlockingQueue<String> blockingQueue = null;
-	private IApplMsgHandler handler = null;
+//	private IApplMsgHandler handler = null;
 
-	public MqttConnectionCallback( IApplMsgHandler handler ) {
- 		this.handler       = handler;
-	}
+//	public MqttConnectionCallback( IApplMsgHandler handler ) {
+// 		this.handler       = handler;
+//	}
 	public MqttConnectionCallback( BlockingQueue<String> blockingQueue ) {
  		this.blockingQueue = blockingQueue;
 	}
@@ -31,7 +31,7 @@ public class MqttConnectionCallback implements MqttCallback{
 		public void messageArrived(String topic, MqttMessage message) throws Exception {
 			ColorsOut.outappl("MqttSupportCallback | messageArrived:" + message, ColorsOut.ANSI_PURPLE );
 			if( blockingQueue != null ) blockingQueue.put( message.toString() );	
-			else if( handler != null ) handler.elaborate(message.toString(), null);  //TODO 
+//			else if( handler != null ) handler.elaborate(message.toString(), null);  //TODO 
 //			Colors.outappl("MqttSupportCallback | messageArrived:"+message + " for " + clientName 
 //					+ " topic=" + topic + " bqsize="+blockingQueue.size(), Colors.ANSI_PURPLE);
 		}

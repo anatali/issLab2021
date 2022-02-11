@@ -24,7 +24,7 @@ private String topic;
 	}
 	@Override
 	public void activate() {
-		mqtt = MqttConnection.createSupport( clientId, topic );
+		mqtt = MqttConnection.createSupport( clientId ); //, topic 
 		mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
 		//mqtt.subscribe(clientId, topic, ctxMsgHandler);   //?????
 		mqtt.subscribe( topic, ctxMsgHandler );	

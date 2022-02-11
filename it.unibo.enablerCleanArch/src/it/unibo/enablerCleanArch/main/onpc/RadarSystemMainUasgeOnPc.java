@@ -66,7 +66,8 @@ private String serverHost = "";
 				serverEntry = "" +RadarSystemConfig.ctxServerPort; 
 			}
 			if(Utils.isMqtt() ) { 
- 				MqttConnection.createSupport( mqttCurClient,mqttAnswerTopic );
+				MqttConnection conn = MqttConnection.createSupport( mqttCurClient ); //,mqttAnswerTopic
+ 				conn.subscribe( mqttCurClient, mqttAnswerTopic );
 				serverHost  = RadarSystemConfig.mqttBrokerAddr;  //dont'care
 				serverEntry = mqttAnswerTopic; 
 			}				

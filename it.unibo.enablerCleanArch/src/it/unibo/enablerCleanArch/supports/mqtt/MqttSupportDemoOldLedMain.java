@@ -41,7 +41,7 @@ protected void endMqttSupport() {
 }
 
 public void doJob() {
- 	mqtt = MqttConnection.createSupport("demoLed",MqttConnection.topicInput);
+ 	mqtt = MqttConnection.createSupport("demoLed");//,MqttConnection.topicInput
  	//ctxH = mqtt.getHandler();   //NO: suoerato Feb10
 	
 	//Configure the system (proxy site)

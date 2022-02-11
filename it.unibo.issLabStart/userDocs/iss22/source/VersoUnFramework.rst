@@ -45,35 +45,254 @@ Con maggior dettaglio, questa architettura si basa sugli elementi costitutivi di
 La domanda che ci poniamo ora è se questa organizzazione possa essere riusata nel caso in cui si voglia sostituire
 al protocolllo TCP un altro protocollo, tra quelli indicati in :ref:`ProtocolType`.
 
----------------------------------------
-Il caso UDP
----------------------------------------
-
-La possibilità di sostituire TCP con UDP è  resa possibile dalla libreria  ``unibonoawtsupports.jar`` sviluppata
-in anni passati. Il compito non si è rivelato troppo difficle, visto la relativa vicinanza operazionale tra le
-librerie dei due protocolli.
-
----------------------------------
-Il caso HTTP
----------------------------------
-
-Affronteremo l'uso di questo protocollo più avanti, in relazione alla costruzione di un componente  Web GUI.
-
-.. code:: Java
-
-  HttpURLConnection con =
-  IssHttpSupport
-
+- Il caso ``UDP``: la possibilità di sostituire TCP con UDP è  resa possibile dalla libreria  ``unibonoawtsupports.jar`` sviluppata
+  in anni passati. Il compito non si è rivelato troppo difficle, visto la relativa vicinanza operazionale tra le
+  librerie dei due protocolli.
+- Il caso ``HTTP``: affronteremo l'uso di questo protocollo più avanti, in relazione alla costruzione di un componente  
+  Web GUI (se veda IssHttpSupport).
+ 
 Più arduo sembra invece il caso di un protocollo di tipo publish-subscribe come MQTT o di un protocollo REST come CoAP
-che cambiano l'impostazione logica della interazione.
+che cambiano l'impostazione logica della interazione. 
+
+In ogni caso, dovremo costruire le nostre astrazioni utilizzando le librerie disponibili.
+
+------------------------------------
+Liberie di riferimento
+------------------------------------
+
+Come librerie di riferimento useremo le seguenti:
+
+- per MQTT: la libreria `paho`_
+- per CoAP: la libreria `californium`_
+
+
+---------------------------------------------------------
+I supporti per :ref:`Interaction2021<Interaction2021>`
+---------------------------------------------------------
+
+Il :ref:`tcpsupportClient` crea l'implemetazione TCP di :ref:`Interaction2021<Interaction2021>` 
+introdotta a suo tempo, come oggetto di classe :ref:`TcpConnection<TcpConnection>`.
+
+La creazione di analoghi supporti per MQTT e CoAP  parte dalle seguenti osservazioni:
+
+- per MQTT si tratta di creare una connessione con un broker che media la interazione tra mittente
+  e destinatario
+- per CoAP si tratta di utilizzare un oggetto  
+  di classe ``CoapClient`` di `californium`_, che richiede come argomento l'``URL`` della risorsa
+  a cui ci si vuole connettere, che ha la forma:
+
+  .. code:: 
+
+    "coap://"+host + ":5683/"+ entry
+
+.. _MqttConnection:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+``MqttConnection`` implementa :ref:`Interaction2021<Interaction2021>`
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Come :ref:`TcpConnection`, la classe ``MqttConnection`` implementa :ref:`Interaction2021` 
+e quindi realizza il concetto di connessione tenendo conto delle seguenti caratteristiche del protocollo
+MQTT e della libreiria `paho`_:
+
+- non vi è più (come in TCP)  una connessione punto-a-punto con il nodo destinatario ma una connessione punto-a-punto
+  con un Broker (il cui indirizzo sarà nel parametro di configurazione ``RadarSystemConfig.mqttBrokerAddr``);
+- la connessione col Broker viene effettuata da un client  di classe ``org.eclipse.paho.client.mqttv3.MqttClient``
+  che deve avere un preciso ``clientId`` (di tipo ``String``). Il Broker accetta una sola connessione per volta
+  da un dato ``clientId`` e dunque la ``MqttConnection`` fornisce un singleton.
+
+.. code:: java
+
+  public class MqttConnection implements Interaction2021
+  public static final String topicInput = "topicCtxMqtt";   
+  protected static MqttConnection mqttSup ;  //for singleton
+
+  protected BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<String>(10);
+  protected String clientid;
+
+    //Factory method
+    public static synchronized MqttConnection getSupport( ){ ... }
+    //Get the singleton
+    public static MqttConnection getSupport() { return mqttSup; }
+    
+    //Hidden costructor
+    protected MqttConnection( String clientName ) {
+      connectToBroker(clientName, RadarSystemConfig.mqttBrokerAddr);	   	
+    }
+    public void connectToBroker(String clientid,  String brokerAddr) { 
+      ... 
+      client  = new MqttClient(brokerAddr, clientid);
+    }
+
+
+Il costruttore del singleton  ``MqttConnection``crea un ``MqttClient`` con ``clientId``, 
+il quale si connette al Broker.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+publish e subscribe
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+- ``MqttConnection`` realizza l'invio di un messaggio invocando l'operazione ``publish`` su una topic;
+- la ricezione di un messaggio si realizza attraverso la ``subscribe`` ad una topic; i messaggi pubblicati su
+  questa topic posssono essere gestiti associando al client (col metodo ``setCallback``) un oggetto di classe 
+  ``org.eclipse.paho.client.mqttv3.MqttCallback`` 
+
+ 
+.. code:: java 
+
+    public void publish(String topic, String msg, int qos, boolean retain) {
+		MqttMessage message = new MqttMessage();
+      if (qos == 0 || qos == 1 || qos == 2) {
+        //qos=0 fire and forget; qos=1 at least once(default);qos=2 exactly once
+        message.setQos(qos);
+      }
+      try {
+        message.setPayload(msg.toString().getBytes());		 
+        client.publish(topic, message);
+      } catch (MqttException e) { ...  }
+	  }
+
+    //To receive and handle a messagge (command or request)
+    public void subscribe ( String topic, IApplMsgHandlerMqtt handler) {
+      subscribe(clientid, topic, handler);    
+    }
+    protected void subscribe(String clientid, String topic, MqttCallback callback) {
+      try {
+        client.setCallback( callback );	
+        client.subscribe( topic );			
+      } catch (MqttException e) { ...		}
+	  }
+
+Poichè la gestione di un messaggio è competenza del livello applicativo, l'handler passato alla
+``subscribe`` deve rispettare un contratto imposto sia dal nostro framework sia dalla libreria.
+Per questo l'oggetto di callback deve implementare una interfaccia che estende :ref:`IApplMsgHandler`.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IApplMsgHandlerMqtt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+
+   public interface IApplMsgHandlerMqtt extends IApplMsgHandler, MqttCallback{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il metodo forward  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+
+  @Override
+  public void forward(String msg) throws Exception {
+		try{
+      new ApplMessage(msg); //no exception => we can publish
+    }catch( Exception e ) { //The message is not structured
+      ApplMessage msgAppl = Utils.buildDispatch("mqtt", "cmd", msg, "unknown");
+    }				
+    publish(topicInput, msg, 2, false);	
+	}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Connessione come coppia di topic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Una connessione di tipo :ref:`Interaction2021` viene da noi realizzata usando due topic: 
+una per ricevere messaggi e una per inviare risposte relative ai messaggi di richiesta. 
+
+Se la topic di ricezione ha nome ``t1``, la topic per le risposte deve avere il nome ``t1CXanswer`` 
+ove ``CX`` è il nome del client che ha inviato una richiesta su ``t1``. 
+Ad esempio, un proxyclient di nome ``ledPxy`` che usa la topic ``ctxEntry`` per inviare comandi e richieste al 
+ContextServer,  fa una subscribe su ``ctxEntryledPxyanswer`` per ricevere le risposte.
+
+.. code:: java
+
+  //To receive and handle an answer
+  public void subscribe(String clientid, String answertopic) {
+    subscribe( clientid, answertopic, 
+      new MqttConnectionCallback(client.getClientId(), blockingQueue)
+    );
+  }
+
+Per permettere al livello applicativo di ricevere una risposta, l'handler di callback associato alla 
+answertopic (``MqttConnectionCallback``) provvede a inserire il messaggio nella ``blockingQueue`` del supporto.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il metodo request  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo ``request`` di :ref:`Interaction2021<Interaction2021>` viene implementato facendo una ``publish`` sulla entry-topic
+del nodo destinatario per poi far attendere la risposta a un nuovo client temporaneo appositamente creato per 
+sottosrviversi sulla answertopic.
+
+.. code:: java
+
+  //To send a request and wait for the answer
+  @Override
+  public String request(String msg) throws Exception { 
+    ApplMessage requestMsg = new ApplMessage(msg);
+
+    //Preparo per ricevere la risposta
+    String sender = requestMsg.msgSender();
+    String reqid  = requestMsg.msgId();
+    String answerTopicName = "answ_"+reqid+"_"+sender;
+    MqttClient clientAnswer = setupConnectionFroAnswer(answerTopicName);
+
+    //publish(topicInput, requestMsg.toString(), 2, false); //qos=2 !
+    forward( requestMsg.toString() );
+		String answer = receiveMsg();
+		clientAnswer.disconnect();
+		clientAnswer.close();
+  }
+ 
+Il metodo ``waitFroAnswerBlocking`` attende la risposta sulla  ``blockingQueue`` e, quando questa
+arriva, disattiva il client temporaneo.
+
+.. code:: java
+
+  @Override
+  public String receiveMsg() throws Exception {		
+    String answer = blockingQueue.take();
+    ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured
+    answer = msgAnswer.msgContent(); 		
+    return answer;
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il metodo reply  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo reply viene implementato facendo una public sulla answertopic, il cui nome viene costruito
+ai partire dai dati contenuti nel messaggio
+
+.. code:: java
+
+	public void reply(String msg) throws Exception {
+		try {
+			ApplMessage m = new ApplMessage(msg);
+			String dest   = m.msgReceiver();
+			String reqid  = m.msgId();
+			String answerTopicName = "answ_"+reqid+"_"+dest;
+			publish(answerTopicName,msg,2,false); //"xxx"
+ 		}catch(Exception e) { ... 		}
+	}
+
+
+
+
+.. image:: ./_static/img/Radar/MqttConn.PNG
+   :align: center  
+   :width: 70%
+
+
 
 ---------------------------------
 I ContextServer
 ---------------------------------
 
 Come primo passo per la definizione di un nostro framework di supporto alle applicazioni distribuite, 
-introduciamo un contratto per 
-il concetto di ContextServer che imponga metodi per attivare/disattivare il server e per
+introduciamo un contratto per il concetto di ContextServer che imponga metodi per attivare/disattivare il server e per
 aggiungere/rimuovere componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
 
 
@@ -198,14 +417,6 @@ Il lavoro che ora dobbiamo compiere ora consiste nel definire un Proxy client e 
 
 .. _libreriaProtocolli:
 
-+++++++++++++++++++++++++++++++
-Liberie di riferimento
-+++++++++++++++++++++++++++++++
-
-Questo lavoro richiede la disponibilità di opportune librerie, tra le quali noi useremo le seguenti:
-
-- per MQTT: la libreria `paho`_
-- per CoAP: la libreria `californium`_
 
 
 .. _ProxyAsClientEsteso:
@@ -242,7 +453,7 @@ ciasuno realizza l'idea di connessione, implementando l'interf:ref:`Interaction2
       break;
     }
     case mqtt : {
-      conn = MqttSupport.getSupport();					
+      conn = MqttConnection.getSupport();					
       break;
     }	
     default :{
@@ -250,24 +461,7 @@ ciasuno realizza l'idea di connessione, implementando l'interf:ref:`Interaction2
     }
   }
 
----------------------------------------------------------
-I supporti per :ref:`Interaction2021<Interaction2021>`
----------------------------------------------------------
 
-Il :ref:`tcpsupportClient` crea l'implemetazione TCP di :ref:`Interaction2021<Interaction2021>` 
-introdotta a suo tempo, come oggetto di classe :ref:`TcpConnection<TcpConnection>`.
-
-La creazione di analoghi supporti per MQTT e CoAP  parte dalle seguenti osservazioni:
-
-- per MQTT si tratta di creare una connessione con un broker che media la interazione tra mittente
-  e destinatario
-- per CoAP si tratta di utilizzare un oggetto  
-  di classe ``CoapClient`` di `californium`_, che richiede come argomento l'``URL`` della risorsa
-  a cui ci si vuole connettere, che ha la forma:
-
-  .. code:: 
-
-    "coap://"+host + ":5683/"+ entry
 
 ---------------------------------------
 I nuovi ContextServer
@@ -289,7 +483,7 @@ si connetta al nodo facendo una subscribe alla  *topic* specificata dal parametr
 Il server crea, al momento della costruzione:
 
 - un oggetto (``ctxMsgHandler``) per la gestione dei messaggi di sistema
-- un oggetto (``mqtt`` di tipo :ref:`MqttSupport` ) che realizza l'astrazione connessione implementando 
+- un oggetto (``mqtt`` di tipo :ref:`MqttConnection` ) che realizza l'astrazione connessione implementando 
   :ref:`Interaction2021`.
 
 
@@ -335,8 +529,7 @@ IContextMsgHandlerMqtt
   public interface IContextMsgHandlerMqtt 
       extends IContextMsgHandler, IApplMsgHandlerMqtt{}
 
-  public interface IApplMsgHandlerMqtt extends IApplMsgHandler, MqttCallback{}
-
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ContextMqttMsgHandler
@@ -367,7 +560,7 @@ MqttContextServer
 .. code:: java
 
     public class MqttContextServer implements IContext{
-    private MqttSupport mqtt ; //Singleton
+    private MqttConnection mqtt ; //Singleton
     private IContextMsgHandlerMqtt ctxMsgHandler;
 
     public MqttContextServer(String clientId, String topic) {
@@ -377,7 +570,7 @@ MqttContextServer
       ...
 	  @Override
 	  public void activate() {
-		  mqtt = MqttSupport.createSupport( clientId, topic );
+		  mqtt = MqttConnection.createSupport( clientId, topic );
 		  mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
       mqtt.subscribe( topic, ctxMsgHandler );	
    	}
@@ -387,7 +580,7 @@ MqttContextServer
 	  }
       ...
 
-Il metodo ``activate`` del ContextServer per MQTT, crea il singleton ``MqttSupport`` 
+Il metodo ``activate`` del ContextServer per MQTT, crea il singleton ``MqttConnection`` 
 e lo utilizza per fare una subscribe sulla ``topic``.
 Il ``ctxMsgHandler`` come 
 gestore dei messaggi in arrivo.
@@ -402,7 +595,7 @@ associata al
  			client.setCallback( callback );	
 			client.subscribe(topic);			
  		} catch (MqttException e) {
-			ColorsOut.outerr("MqttSupport  | subscribe Error:" + e.getMessage());
+			ColorsOut.outerr("MqttConnection  | subscribe Error:" + e.getMessage());
 		}
 	}
 
@@ -412,47 +605,6 @@ associata al
 
 
  
-.. _MqttSupport:
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-``MqttSupport`` implementa :ref:`Interaction2021<Interaction2021>`
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-``MqttSupport`` implementa :ref:`Interaction2021` e quindi realizza il concetto di connessione come segue:
-
-- una connessione è realizzata usando due topic: una per ricevere messaggi e una per inviare risposte relative
-  a messaggi di richiesta. Se la topic di ricezione ha nome ``t1``, la seconda ha nome ``t1CXanswer``
-  ove ``CX`` è il nome del client che ha inviato una richiesta su ``t1``. 
-  
-  Ad esempio, un proxyclient di nome ``ledPxy`` che usa la topic ``ctxEntry`` per inviare comandi e richieste al 
-  ContextServer,  fa una subscribe su ``ctxEntryledPxyanswer`` per ricevere le risposte.
-
-
-
-
-Il costruttore del singleton  ``MqttSupport``:
-
-- crea un ``MqttClient`` con ``clientId``, il quale si connette al Broker e fa una subscribe a a ``topic``;
-- crea un oggetto che implementa l'estensione :ref:`IContextMsgHandlerMqtt<IContextMsgHandlerMqtt>` 
-  di :ref:`IContextMsgHandler<IContextMsgHandler>`. Questo oggetto realizza la gestione di sistema dei messaggi,
-  che consiste nel loro reindirizzamento (dispathing) al componente applicativo il cui nome è
-  menzionatio come ``RECEIVER`` nel messaggio.
-
-.. code:: java
-
-  public class MqttSupport implements Interaction2021
-  
-    ...
-    protected MqttSupport(String clientName, String topicToSubscribe) {
-      connectToBroker(clientName, RadarSystemConfig.mqttBrokerAddr);	   	
-      handler = new ContextMqttMsgHandler( "ctxH"  );
-      subscribe(topicToSubscribe, handler);
-    }
-
-
-.. image:: ./_static/img/Radar/MqttConn.PNG
-   :align: center  
-   :width: 70%
 
 
 
