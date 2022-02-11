@@ -17,13 +17,12 @@ private String topic;
 
 	public MqttContextServer(String clientId, String topic) {
 		this.clientId = clientId;
-		this.topic    = topic;
-		ctxMsgHandler = new ContextMqttMsgHandler("ctxH");
-		
+		this.topic    = topic;		
 		ColorsOut.out("MqttContextServer CREATED");
 	}
 	@Override
 	public void activate() {
+		ctxMsgHandler = new ContextMqttMsgHandler("ctxH");
 		mqtt = MqttConnection.createSupport( clientId ); //, topic 
 		mqtt.connectToBroker(clientId,  RadarSystemConfig.mqttBrokerAddr);
 		//mqtt.subscribe(clientId, topic, ctxMsgHandler);   //?????

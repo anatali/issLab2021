@@ -56,6 +56,8 @@ che cambiano l'impostazione logica della interazione.
 
 In ogni caso, dovremo costruire le nostre astrazioni utilizzando le librerie disponibili.
 
+.. _librerieprotocolli:
+
 ------------------------------------
 Liberie di riferimento
 ------------------------------------
@@ -399,13 +401,61 @@ Il metodo di invio di una risposta è già realizzato dalla infrastruutura CoAP 
 	}
 
 
+Una volta realizzati i nuovi supporti per :ref:`Interaction2021<Interaction2021>`, possiamo
+fare in modo che la classe dei Proxy crei un supporto diverso per ogni protocollo, utilizzando
+il tipo appropriato di connessione.
+ 
 
+
+.. _ProxyAsClientEsteso:
+
+--------------------------------------------------------
+Estensione della classe :ref:`ProxyAsClient`
+--------------------------------------------------------
+
+.. code:: java
+
+  public class ProxyAsClient {
+  private Interaction2021 conn; 
+    public ProxyAsClient( 
+      String name, String host, String entry, ProtocolType protocol ){ 
+        ... 
+        setConnection(host, entry, protocol);
+      }  
+   
+Il metodo ``setConnection`` invocato dal costruttore crea un supporto diverso per ogni protocollo, utilizzando
+il tipo appropriato di connessione che implementa :ref:`Interaction2021<Interaction2021>`.
+
+
+.. code:: java
+
+  protected void setConnection( String host, String entry, 
+                ProtocolType protocol  ) throws Exception {
+    switch( protocol ) {
+    case tcp : {
+      int port = Integer.parseInt(entry);
+      int numOfAttempts = 10;
+      conn = TcpClientSupport.connect(host,port,numOfAttempts);  
+      break;
+    }
+    case coap : {
+      conn = new CoapConnection( host,entry );//entry is uri path
+      break;
+    }
+    case mqtt : {
+      conn = MqttConnection.getSupport();					
+      break;
+    }	
+    default :{
+      ColorsOut.outerr(name + " | Protocol unknown");
+    }
+  }
 
 ---------------------------------
 I ContextServer
 ---------------------------------
 
-Poichè dovremo definire un ContextServer per ogni protocollo, faccaimo in modo che ciascuno di essi
+Poichè dovremo definire un ContextServer per ogni protocollo, facciamo in modo che ciascuno di essi
 rispetti uno stesso contratto, che imponga metodi per attivare/disattivare il server e per
 aggiungere/rimuovere componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
 
@@ -492,7 +542,7 @@ IContextMsgHandler
 +++++++++++++++++++++++++++++++
 
 Ogni ContextServer si avvale di un gestore di sistema dei messaggi  come il 
-:ref:`ContextMsgHandler<ContextMsgHandler>` già definito per il TCP.
+:ref:`ContextMsgHandler<ContextMsgHandler>`.
 
 Introduciamo anche per questo gestore un contratto che imponga la implementazione di metodi per
 aggiungere/rimuovere oggetti applicativi di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`
@@ -521,165 +571,32 @@ Osserviamo che il framework:
 
 :remark:`realizza una infrastruttura di comunicazione`
 
-:remark:`permette di creare componenti applicativi capaci di intergire in rete`
+:remark:`fornisce ai componenti applicativi la capacità di intergire in rete`
 
 :remark:`impone che ogni componente applicativo abbia un nome univoco`
 
- 
-Il lavoro che ora dobbiamo compiere ora consiste nel definire un Proxy client e un ContextServer relativo a ogni protocollo. 
-
-.. _libreriaProtocolli:
-
-
-
-.. _ProxyAsClientEsteso:
-
---------------------------------------------------------
-Estensione della classe :ref:`ProxyAsClient`
---------------------------------------------------------
- 
-Il metodo ``setConnection`` invocato dal costruttore crea un supporto diverso per ogni protocollo, ma 
-ciasuno realizza l'idea di connessione, implementando l'interf:ref:`Interaction2021<Interaction2021>`.
-
-
-.. code:: java
-
-  public class ProxyAsClient {
-  private Interaction2021 conn; 
-    public ProxyAsClient( 
-      String name, String host, String entry, ProtocolType protocol ){ 
-        ... 
-        setConnection(host, entry, protocol);
-      }  
-   ....
-  protected void setConnection( String host, String entry, 
-                ProtocolType protocol  ) throws Exception {
-    switch( protocol ) {
-    case tcp : {
-      int port = Integer.parseInt(entry);
-      int numOfAttempts = 10;
-      conn = TcpClientSupport.connect(host,port,numOfAttempts);  
-      break;
-    }
-    case coap : {
-      conn = new CoapSupport("CoapSupport_"+name, host,entry);//entry is uri path
-      break;
-    }
-    case mqtt : {
-      conn = MqttConnection.getSupport();					
-      break;
-    }	
-    default :{
-      ColorsOut.outerr(name + " | Protocol unknown");
-    }
-  }
-
-
-
----------------------------------------
-I nuovi ContextServer
----------------------------------------
 
 Abbiamo già introdotto :ref:`TcpContextServer` come implementazione di :ref:`IContext`
 che utilizza librerie per la gestione di *Socket*.
 
-La creazione di analoghi ContextServer per MQTT e CoAP parte dalla disponibilità 
-delle citate :ref:`librerie<libreriaProtocolli>`.
+La realizzazione di analoghi ContextServer per MQTT e CoAP si basa sulle citate :ref:`librerie<librerieprotocolli>`.
 
 +++++++++++++++++++++++++++++++++++++++
 ContextServer per MQTT
 +++++++++++++++++++++++++++++++++++++++
-
-Un ContextServer per MQTT richiede che un client di classe ``org.eclipse.paho.client.mqttv3.MqttClient`` 
-si connetta al nodo facendo una subscribe alla  *topic* specificata dal parametro ``entry``.
-
-Il server crea, al momento della costruzione:
-
-- un oggetto (``ctxMsgHandler``) per la gestione dei messaggi di sistema
-- un oggetto (``mqtt`` di tipo :ref:`MqttConnection` ) che realizza l'astrazione connessione implementando 
-  :ref:`Interaction2021`.
-
-
-.. image:: ./_static/img/Architectures/frameworkMqtt.PNG
-   :align: center  
-   :width: 70%
-
-La libreria `paho`_ (come molte altre) permette di gestire i messaggi inviati su questa entry-topic 
-mediamte un oggetto che implementa l'interfaccia  ``org.eclipse.paho.client.mqttv3.MqttCallback``.
-Il metodo che contiene il codice di gestione dei messaggi ha la signature che segue:
-
-.. code:: java
-
-    @Override  //from MqttCallback
-    public void messageArrived(String topic, MqttMessage message)   {
-      ...
-    }
-
-La rappresentazione in forma di String del messaggio ricevuto di tipo ``org.eclipse.paho.client.mqttv3.MqttMessage``
-deve avere la struttura introdotta in :ref:`msgApplicativi`:
-
-.. code:: java
-
-  msg(MSGID,MSGTYPE,SENDER,RECEIVER,CONTENT,SEQNUM)
-
-Pertanto deve essere possibile eseguire il mapping in un oggetto di tipo :ref:`ApplMessage` senza generare eccezioni:
-
-.. code:: java
-
-  ApplMessage msgInput = new ApplMessage(message.toString());
-
-Queste trasformazioni sono quindi di pertinenza del gestore di sistema dei messaggi in arrivo
-(``ctxMsgHandler``) che viene definito in modo da fungere anche da callBack MQTT in quanto implementa
-una interfaccia :ref:`IContextMsgHandlerMqtt` che estende  :ref:`IContextMsgHandler<IContextMsgHandler>`.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-IContextMsgHandlerMqtt
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-.. code:: java
-
-  public interface IContextMsgHandlerMqtt 
-      extends IContextMsgHandler, IApplMsgHandlerMqtt{}
-
- 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-ContextMqttMsgHandler
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-.. code:: java
-
-  public class ContextMqttMsgHandler extends ApplMsgHandler 
-                              implements IContextMsgHandlerMqtt{
-    ...
-  @Override
-  public void addComponent( String devName, IApplMsgHandler h) { ... }
-
-  @Override
-  public void elaborate( ApplMessage msg, Interaction2021 conn ) { ... }
-
-  @Override
-  public void elaborate(String message, Interaction2021 conn) { ... }
-
-  @Override
-  public void messageArrived(String topic, MqttMessage message){ ... }
-  }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-MqttContextServer
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: java
 
     public class MqttContextServer implements IContext{
     private MqttConnection mqtt ; //Singleton
     private IContextMsgHandlerMqtt ctxMsgHandler;
+    private String clientId;
+    private String topic;
 
     public MqttContextServer(String clientId, String topic) {
-      ...
-      ctxMsgHandler = new ContextMqttMsgHandler("ctxH");
-    }
+		  this.clientId = clientId;
+		  this.topic    = topic;		
+     }
       ...
 	  @Override
 	  public void activate() {
@@ -691,15 +608,122 @@ MqttContextServer
 	  public void addComponent(String name, IApplMsgHandler h) {
 		  ctxMsgHandler.addComponent(name, h);	
 	  }
-      ...
+    ...
 
-Il metodo ``activate`` del ContextServer per MQTT, crea il singleton ``MqttConnection`` 
-e lo utilizza per fare una subscribe sulla ``topic``.
-Il ``ctxMsgHandler`` come 
-gestore dei messaggi in arrivo.
 
-Infatti la libreria `paho`_ (come molte altre) gestisce i messaggi ricevuti attraverso una callback
-associata al 
+.. Un ContextServer per MQTT richiede che un client di classe ``org.eclipse.paho.client.mqttv3.MqttClient``  si connetta al nodo facendo una subscribe alla  *topic* specificata dal parametro ``entry``.
+
+Il server crea, al momento della attivazione:
+
+- un oggetto (``mqtt``) di tipo :ref:`MqttConnection<MqttConnection>` ) per le comunicazioni che viene 
+  subito utilizzato per connettersi al Broker;
+- un oggetto (``ctxMsgHandler``) per la gestione di sistema dei messaggi.
+ 
+
+
+.. image:: ./_static/img/Architectures/frameworkMqtt.PNG
+   :align: center  
+   :width: 70%
+
+
+La ``topic`` specificata nel costruttore  rappresenta la 'porta di ingresso' (entry-topic) dei messaggi 
+che il server gestisce delegandoli al ``ctxMsgHandler``.
+Questo gestore (a differenza di :ref:`ContextMsgHandler<ContextMsgHandler>`) implementa la interfaccia 
+``org.eclipse.paho.client.mqttv3.MqttCallback``  per la gestione
+asincrona dei messaggi in arrivo mediante il metodo:
+
+.. code:: java
+
+    @Override  //from MqttCallback
+    public void messageArrived(String topic, MqttMessage message)   {
+      	ApplMessage msgInput = new ApplMessage(message.toString());
+				elaborate(msgInput, MqttConnection.getSupport());
+
+    }
+
+Infatti ``ctxMsgHandler``  implementa l'interfaccia
+:ref:`IContextMsgHandlerMqtt` che estende :ref:`IContextMsgHandler` con :ref:`IApplMsgHandlerMqtt`
+
+.. code:: java
+
+  public interface IContextMsgHandlerMqtt 
+      extends IContextMsgHandler, IApplMsgHandlerMqtt{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IContextMsgHandlerMqtt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+
+  public interface IApplMsgHandlerMqtt 
+    extends IApplMsgHandler, MqttCallback{ }
+ 
+
+
+  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ContextMqttMsgHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La rappresentazione in forma di String del messaggio ricevuto di tipo ``org.eclipse.paho.client.mqttv3.MqttMessage``
+deve avere la struttura introdotta in :ref:`msgApplicativi`:
+
+.. code:: java
+
+  msg(MSGID,MSGTYPE,SENDER,RECEIVER,CONTENT,SEQNUM)
+
+Pertanto deve essere possibile eseguire il mapping in un oggetto di tipo :ref:`ApplMessage` senza generare eccezioni:
+
+
+
+Il gestore di sistema dei messaggi realizza 
+
+.. code:: java
+
+  public class ContextMqttMsgHandler extends ApplMsgHandler 
+                              implements IContextMsgHandlerMqtt{
+    ...
+  @Override
+  public void addComponent( String devName, IApplMsgHandler h) { ... }
+
+  @Override
+  public void elaborate( ApplMessage msg, Interaction2021 conn ) {
+    String dest          = msg.msgReceiver();
+		IApplMsgHandler  h   = handlerMap.get(dest);
+	  h.elaborate( msg , conn);	
+   }
+
+  @Override
+  public void elaborate(String message, Interaction2021 conn) { 
+			ApplMessage msg      = new ApplMessage(message);
+			elaborate( msg.toString(), conn);
+  }
+
+  @Override
+  public void messageArrived(String topic, MqttMessage message){ 
+      ApplMessage msgInput = new ApplMessage(message.toString());
+      elaborate(msgInput, MqttConnection.getSupport());
+  }
+
+
+
+.. code:: java
+
+  ApplMessage msgInput = new ApplMessage(message.toString());
+
+Queste trasformazioni sono quindi di pertinenza del gestore di sistema dei messaggi in arrivo
+(``ctxMsgHandler``) che viene definito in modo da fungere anche da callBack MQTT in quanto implementa
+una interfaccia :ref:`IContextMsgHandlerMqtt` che estende  :ref:`IContextMsgHandler<IContextMsgHandler>`.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MqttContextServer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ 
+
+
+ 
 
 .. code:: java
 
