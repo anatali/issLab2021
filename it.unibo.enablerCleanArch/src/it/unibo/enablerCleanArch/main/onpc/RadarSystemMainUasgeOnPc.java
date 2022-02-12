@@ -100,8 +100,8 @@ private String serverHost = "";
 		
 	}
 	public void execute() {
-	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
 	    useLedAndSonar();
+	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
 //	    controller 	= Controller.create( led, sonar );
 //		controller.start(endFun, 10);
 	    

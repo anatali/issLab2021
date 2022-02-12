@@ -11,12 +11,14 @@ import it.unibo.enablerCleanArch.supports.IContext;
 
 public class CoapApplServer extends CoapServer implements IContext{
 	
-	private static CoapResource root      = new CoapResource("devices");
-	private static CoapApplServer server  = null;
 	
 	public final static String outputDeviceUri = "devices/output";
 	public final static String lightsDeviceUri = outputDeviceUri+"/lights";
 	public final static String inputDeviceUri  = "devices/input";
+
+	private static CoapResource root      = new CoapResource("devices");
+	private static CoapApplServer server  = null;
+
 	
 	public static CoapApplServer getTheServer() {
 		if( server == null ) server = new CoapApplServer();

@@ -48,18 +48,19 @@ public abstract class ApplResourceCoap extends CoapResource implements IApplMsgH
 	public void handleGET(CoapExchange exchange) {
  		//examineGETOptions(exchange);
 		String query = exchange.getQueryParameter("q"); 
-		if( query == null ) {
+		String answer = "";
+		if( query == null ) { //per observer
 			ColorsOut.out( getName() + " handleGET request=" + exchange.getRequestText() );
-			String answer = elaborateGet( exchange.getRequestText(), exchange.getSourceAddress() );
+			answer = elaborateGet( exchange.getRequestText(), exchange.getSourceAddress() );
 			ColorsOut.out( getName() + " handleGET request answer=" + answer  );
-			exchange.respond(answer);			
 		}else{  //query != null
  			ColorsOut.out( getName() + " handleGET query=" + query);
- 			String answer = elaborateGet( exchange.getQueryParameter("q"), exchange.getSourceAddress() );
-   			if( answer.length() < 1000) ColorsOut.out( getName() + "handleGET q-query answer=" + answer , ColorsOut.GREEN );
- 			else ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED );
- 			exchange.respond(answer);
+ 			answer = elaborateGet( exchange.getQueryParameter("q"), exchange.getSourceAddress() );
+//   			if( answer.length() < 1000) ColorsOut.out( getName() + "handleGET q-query answer=" + answer , ColorsOut.GREEN );
+// 			else ColorsOut.out( getName() + "handleGET q-long answer=" + answer.length() , ColorsOut.RED );
+// 			exchange.respond(answer);
 		}		
+		exchange.respond(answer);			
 	}
 
 /*

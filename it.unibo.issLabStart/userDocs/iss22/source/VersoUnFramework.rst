@@ -560,7 +560,13 @@ L'operazione ``getHandler`` (che va ora aggiunta a :ref:`ContextMsgHandler<Conte
 permette di ottenere il riferimento a un oggetto applicativo 'registrato' nel contesto, 
 dato il nome dell'oggetto.
 
+.. _schemaFramework:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Schema generale del framework
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 La situazione, generalizzata con le interfacce, si presenta ora come segue:
+
 
 
 .. image:: ./_static/img/Architectures/framework1.PNG
@@ -709,68 +715,422 @@ del gestore applicativo che corrisponde al nome del destinatario :
 CoapContextServer
 +++++++++++++++++++++++++++++++++++++++
 
-CoAP mira a modellizzare
-tutte le interazioni client/server come uno scambio di rappresentazioni di risorse. L'obiettivo
-è quello di realizzare una infrastruttura di gestione delle risorse remote tramite alcune semplici
-funzioni di accesso e interazione come quelle di HTTP: PUT, POST, GET, DELETE.
 
-Si tratta quindi di utilizzare un oggetto di `californium`_ (libreria di riferimento) di classe ``CoapServer``
-in cui si siano aggiunte tutte le risorse che corrispondono ai componenti destinatari di messaggi (ad
-esempio, una risorsa per il Led e una per il Sonar)
+#. CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
+   implica schemi architetturali e di progettazione molto simili a quelli di applicazioni Web basate su ``HTTP``;
+#. l'uso di CoAP modifica il modello concettuale di riferimento per le interazioni, in quanto propone
+   l'idea di accesso in lettura (GET) o modifica (PUT) a :blue:`risorse` identificate da ``URI`` attraverso un 
+   unico server (che `californium`_ offre nella classe :blue:`org.eclipse.californium.core.CoapServer`).
+
+    
+   .. image:: ./_static/img/Architectures/CoapResources.png 
+     :align: center
+     :width: 40%
+
+  Il ContextServer del nostro framework potrà quindi essere introdotto come una specializzazione del ``CoapServer``:
+
+  .. code:: java
+
+    public class CoapApplServer extends CoapServer implements IContext{ ... }
+
+#. le risorse CoAP sono organizzate in una gerarchia ad albero, come nell'esempio della figura che segue:
+
+   .. image:: ./_static/img/Radar/CoapRadarResources.PNG
+    :align: center  
+    :width: 70%
+
+  La definizione di una risorsa applicativa può essere definita come specializzazione della classe 
+  :blue:`org.eclipse.californium.core.CoapResource` di `californium`_, così che noi possiamo introdurre
+  componenti-CoAP compatibili col framework introducendo una classe astratta che specializza ``CoapResource``:
+
+  .. code:: java
+
+    public abstract class ApplResourceCoap 
+                extends CoapResource implements IApplMsgHandler { ... }
+
+Siamo dunque di fronte a un  modello simile allo  :ref:`schemaFramework`, ma con
+una forte forma di :blue:`standardizzazione` sia a livello di 'verbi' di interazione (GET/PUT/...) sia a livello di 
+organizzazione del codice applicativo (come gerarchia di risorse).
+
+Per utilizzare il framework con protocollo CoAP non dovremo quindi scrivere molto codice.
 
 
-.. image:: ./_static/img/Radar/CoapRadarResources.PNG
-   :align: center  
-   :width: 70%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapApplServer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il server ``CoapApplServer`` viene defiito come una estensione di ``CoapServer`` 
+che realizza un **singleton** capace di registare nuove risorse del dominio, ciascuna 
+intesa come un dispositivo, o di input o di output.
+
+
+.. code:: Java
+
+    public class CoapApplServer extends CoapServer{
+    public final static String outputDeviceUri = "devices/output";
+    public final static String lightsDeviceUri = outputDeviceUri+"/lights";
+    public final static String inputDeviceUri  = "devices/input";
+	
+    private static CoapResource root      = new CoapResource("devices");
+    private static CoapApplServer server  = null;
+		
+    public static CoapApplServer getServer() {
+         if( server == null ) server = new CoapApplServer();
+         return server;
+    }	
+
+    public static void stopTheServer() { ... }
+
+    //Hidden constructor
+    private CoapApplServer(){
+      CoapResource outputRes= new CoapResource("output");
+      outputRes.add( new CoapResource("lights"));
+      root.add(outputRes);
+      root.add(new CoapResource("input"));
+      add( root );
+      start();
+    }
+
+Il metodo statico ``getServer`` è un factory method che restituisce il singleton, creandolo ed
+attivandolo, se già non lo fosse.
+
+Il metodo per aggiungere risorse è così definito:
+
+.. code:: Java		
+
+	public  void addCoapResource( CoapResource resource, String fatherUri  )   {
+         Resource res = getResource("/"+fatherUri);
+         if( res != null ) res.add( resource );
+	}
+
+Il metodo statico ``getResource`` restituisce (il riferimento a) una risorsa, dato il suo ``URI``, 
+avvalendosi di una ricerca *depth-first* nell'albero delle risorse:
+
+.. code:: Java	
+
+    public static Resource getResource( String uri ) {
+      return getResource( root, uri );
+    }
+
+    private static Resource getResource(Resource root, String uri) {
+      if( root != null ) {
+        Collection<Resource> rootChilds = root.getChildren();
+        Iterator<Resource> iter         = rootChilds.iterator();
+            while( iter.hasNext() ) {
+                Resource curRes = iter.next();
+                String curUri   = curRes.getURI();
+                if( curUri.equals(uri) ){ return  curRes;
+                }else {  //explore sons
+                    Resource subRes = getResource(curRes,uri); 
+                    if( subRes != null ) return subRes;					               
+                 }
+            }//while
+      }
+      return null;			
+    }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ApplResourceCoap
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La classe astratta ``CoapDeviceResource`` è una  ``CoapResource`` che realizza la gestione delle richieste GET e PUT 
+demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` delle classi specializzate.
+
+.. code:: Java
+
+  public abstract class ApplResourceCoap 
+                    extends CoapResource implements IApplMsgHandler {
+  protected abstract String elaborateGet(String req);
+  protected abstract String elaborateGet(String req, InetAddress callerAddr);
+  protected abstract void elaboratePut(String req);	
+  protected abstract void elaboratePut(String req, InetAddress callerAddr);
+
+    @Override
+    public void handleGET(CoapExchange exchange) {
+      String query = exchange.getQueryParameter("q"); 
+      String answer = "";
+      if( query == null ) { //per observer
+        answer = elaborateGet( 
+            exchange.getRequestText(), exchange.getSourceAddress() );
+      }else{  //query != null
+        answer = elaborateGet( 
+            exchange.getQueryParameter("q"), exchange.getSourceAddress() );
+       }		
+      exchange.respond(answer);			
+    }
+    @Override
+    public void handlePUT(CoapExchange exchange) {
+      String arg = exchange.getRequestText() ;
+      elaboratePut( arg, exchange.getSourceAddress() );
+      changed();  //IMPORTANT to notify the observers
+      exchange.respond(CHANGED);
+    }
+    @Override
+    public void handleDELETE(CoapExchange exchange) {
+       delete();
+       exchange.respond(DELETED);
+    }
+    @Override
+    public void handlePOST(CoapExchange exchange) {}
+  }
+
+La risorsa viene creata come :blue:`risorsa osservabile` da un costruttore che provvede ad  
+aggiungerla al :ref:`ServerCoap<CoapApplServer>`, attivandolo - se già non lo fosse.
+
+
+.. code:: Java
+
+  //COSTRUTTORE  }
+  public ApplResourceCoap(String name, DeviceType dtype)  {
+    super(name);
+    setObservable(true); //La risorsa è osservabile
+    CoapApplServer coapServer = CoapApplServer.getServer(); //SINGLETION
+    if( dtype==DeviceType.input )        
+      coapServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
+    else if( dtype==DeviceType.output )  
+      coapServer.addCoapResource( this, CoapApplServer.outputDeviceUri);
+    }
+  }
+
+.. _LedResourceCoap:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Una risorsa per il Led
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La risorsa CoAP  per il Led è una specializzazione di `ApplResourceCoap`_ che 
+incorpora un Led e ridirige a questo Led le richieste GET di lettura dello stato e i comandi 
+PUT di attivazione/disativazione.
+
+.. code:: Java
+
+  public class LedResourceCoap extends ApplResourceCoap {
+  private String curDistance="0";  //Initial state
+  private IApplInterpreter sonarLogic;
+
+     public LedResourceCoap(String name, IApplInterpreter sonarLogic ) {
+       super(name, DeviceType.output);
+       this.led = led;
+     }
+     @Override
+     protected String elaborateGet(String req) { return ""+led.getState(); }
+     
+     @Override
+     protected void elaboratePut(String req) {
+      if( req.equals( "on") ) led.turnOn();
+      else if( req.equals("off") ) led.turnOff();		
+     }  
+   }
+
+.. _SonarResourceCoap:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Una risorsa per il Sonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+
+La risorsa CoAP  per il Sonar è una specializzazione di `ApplResourceCoap`_ che 
+incorpora un Sonar, a cui ridirige le richieste GET di lettura dello stato e del valore
+corrente di didatnza e i comandi PUT di attivazione/disativazione.
+
+
+
+.. code:: Java
+
+  public class SonarResourceCoap extends ApplResourceCoap  {
+  private String curDistance="0";  //Initial state
+  private IApplInterpreter sonarIntrprt;
+
+     public SonarResourceCoap(String name, IApplInterpreter sonarIntrprt) {
+      super(name, DeviceType.input);
+      this.sonarIntrprt = sonarLogic;
+    }
 
  
+    @Override
+    protected String elaborateGet(String req) {
+      String answer = "";
+      if( req == null || req.isEmpty() ) { //query by observers
+        answer = curDistance;
+      }
+      try {
+        ApplMessage msg = new ApplMessage( req );
+        answer = sonarIntrprt.elaborate( msg  );			
+      }catch( Exception e) { //Unstructured req
+          answer = sonarIntrprt.elaborate( req  );
+      }		
+      return answer; 
+    }
 
-
-La libreria ``org.eclipse.californium`` offre ``CoapServer`` che viene decorato da ``CoapApplServer``.
-
-La classe ``CoapResource`` viene decorata da ``ApplResourceCoap`` per implementare ``IApplMsgHandler``.
-In questo modo una specializzazione come ``LedResourceCoap`` può operare come componente da aggiungere 
-al sistema tramite ``CoapApplServer`` che la ``Context2021.create()`` di :ref:`Context2021` 
-
-.. riduce a ``CoapServer`` in cui sono registrate le risorse.
-
-
-- ``CoapApplServer`` extends CoapServer implements :ref:`IContext`
-- class ``CoapSupport`` implements :ref:`Interaction2021`
-- abstract class ``ApplResourceCoap`` extends CoapResource implements :ref:`IApplMsgHandler`
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-CoapApplServer2
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-.. code:: java
-
-  public class CoapApplServer extends CoapServer implements IContext{
-  private static CoapResource root      = new CoapResource("devices");
-  private static CoapApplServer server  = null;
-	
-  public final static String outputDeviceUri = "devices/output";
-  public final static String lightsDeviceUri = outputDeviceUri+"/lights";
-  public final static String inputDeviceUri  = "devices/input";
-	
-  public static CoapApplServer getTheServer() {
-    if( server == null ) server = new CoapApplServer();
-    return server;
+    @Override
+    protected void elaboratePut(String arg) {
+      String result = sonarIntrprt.elaborate(arg);
+      if( result.equals("activate_done")) getSonarValues(); //per CoAP observers
+    }
+    @Override
+    protected void elaboratePut(String req, InetAddress callerAddr) {
+      elaboratePut(req);
+    }			
   }
 
+In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valore corrente 
+``curDistance`` della distanza misurata e notifica tutti gli observer.
+
+.. code:: Java			
+			
+  protected void getSonarValues() {
+    new Thread() {
+      public void run() {
+        if( ! sonarActive() ) sonarIntrprt.elaborate("activate");
+        while( sonarActive() ) {
+          String v = sonarIntrprt.elaborate("getDistance");
+          elaborateAndNotify(  v );
+          Utils.delay(RadarSystemConfig.sonarDelay);
+        }
+      }
+    }.start();
+  }
+  protected void elaborateAndNotify(String arg) {
+    curDistance =  arg;
+    changed();	// notify all CoAP observers
+  }		
  
 
+----------------------------------------------------
+Testing del framework
+----------------------------------------------------
 
+Per eseguire le prime prove di funzionamento del framwork lavoriamo utilizzando il solo PC 
+con due programmi:
 
+- ``RadarSystemMainDevsOnPc``: crea un Led e un Sonar simulati e li rende accessibili tramite uno dei protocolli
+  supportati dal framework (TCP, MQTT,CoAP).
+- ``RadarSystemMainUasgeOnPc``: utlizza il Led e il Sonar attraverso :ref:`Proxy clients<ProxyAsClientEsteso>`.
 
-.. code:: java
+Di questi programmi riportiamo qui solo le fasi di configurazione, per evidenziare come un application designer
+possa costruire l'architettura del sistema.
 
-  public class CoapContextServer implements IContext{
-  @Override
-  public void activate() {
-		CoapApplServer.getTheServer();
++++++++++++++++++++++++++++++++++++++++++++++
+RadarSystemMainDevsOnPc
++++++++++++++++++++++++++++++++++++++++++++++
+
+Definiamo una :ref:`IApplication<IApplication>` che:
+
+#. Crea i dispostivi simulati: un Sonar (osservabile) e un Led.  
+#. Crea il ContxtServer.
+#. Crea i gestori applicativi dei messaggi rivolti ai dispositivi.
+#. Aggiunge i dispositivi al ContxtServer dando a ciascuno un precisono :blue:`nome`.
+#. Attiva l'applicazione nel monento in cui crea il ContxtServer
+
+.. code:: Java
+
+  public class RadarSystemMainDevsOnPc implements IApplication{
+  private ISonar sonar;
+  private ILed  led ;
+  private IContext ctx;
+
+    ...
+    protected void configure() {
+    //1) CREAZIONE DEI DISPOSITIVI
+      if( RadarSystemConfig.sonarObservable ) {
+        sonar = DeviceFactory.createSonarObservable();		
+        //Introduzione opzionale di un observer locale per il Sonar
+        //IObserver sonarObs  = new SonarObserver( "sonarObs" ) ;
+        //((ISonarObservable)sonar).register( sonarObs );			
+      }else sonar  = DeviceFactory.createSonar();
+	  
+      led = DeviceFactory.createLed();
+
+    //2) CREAZIONE DEL ContxtServer
+      String id 	 = "";
+      String entry = "";
+      switch( RadarSystemConfig.protcolType ) {
+        case tcp :  { id="rasp";  
+                      entry=""+RadarSystemConfig.ctxServerPort; break; }
+        case coap : {  break; }
+        case mqtt : { id="rasp";  
+                      entry=MqttConnection.topicInput; break; }
+        default:
+      };
+      ctx  = Context2021.create(id,entry);
+      
+      //3) CREAZIONE DEI GESTORI APPLICATIVI
+      IApplMsgHandler sonarHandler = SonarApplHandler.create("sonarH",sonar); 
+      IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  
+
+      //4) AGGIUNTA DEI DISPOSITIVI AL CONTESTO
+      ctx.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
+      ctx.addComponent("led",   ledHandler);  //led NAME mandatory
+    }
   }
 
++++++++++++++++++++++++++++++++++++++++++++++
+RadarSystemMainUasgeOnPc
++++++++++++++++++++++++++++++++++++++++++++++
+Definiamo una :ref:`IApplication<IApplication>` che:
+
+#. Crea un :ref:`ProxyAsClient` per il Led e per il Sonar tenendo conto del protocollo.
+#. Crea (opzionalmente) un Controller per l'applicazione :ref:`RadarSystem`. 
+#. Crea (opzionalmente, nel caso di CoAP)  un CoAP-observer della risorsa Sonar che potrebbe realizzare le funzioni
+   del Controller in modo data-driven
+#. Attiva l'applicazione attivando il Sonar oppure attivando il Controller (che attiva il Sonar)
+
+.. code:: Java
+
+  public class RadarSystemMainUasgeOnPc implements IApplication{
+  private ISonar sonar;
+  private ILed  led ;
+  private Controller controller;
+
+    protected void configure() {
+      if(Utils.isCoap() ) { 
+        serverHost       = RadarSystemConfig.raspHostAddr;
+        String ledPath   = CoapApplServer.lightsDeviceUri+"/led"; 
+        String sonarPath = CoapApplServer.inputDeviceUri+"/sonar"; 
+        
+        //CREAZIONE DEI PROXY per CoAP
+        led   = new LedProxyAsClient("ledPxy", serverHost, ledPath );
+        sonar = new SonarProxyAsClient("sonarPxy",  serverHost, sonarPath  );
+        
+        //Introduzione di un observer CoAP per il Sonar
+        CoapClient  client = new CoapClient( 
+            "coap://localhost:5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
+        //CoapObserveRelation obsrelation = 
+            client.observe( new SonarObserverCoap("sonarObs") );
+      }else { //MQTT o TCP
+        String serverEntry = "";
+        if(Utils.isTcp() ) { 
+          serverHost  = RadarSystemConfig.raspHostAddr;
+          serverEntry = "" +RadarSystemConfig.ctxServerPort; 
+        }
+        if(Utils.isMqtt() ) { 
+          MqttConnection conn = MqttConnection.createSupport( mqttCurClient );  
+          conn.subscribe( mqttCurClient, mqttAnswerTopic );
+          serverHost  = RadarSystemConfig.mqttBrokerAddr;  //dont'care
+          serverEntry = mqttAnswerTopic; 
+        }				
+
+        //CREAZIONE DEI PROXY per TCP o MQTT  
+        led   = new LedProxyAsClient("ledPxy",      serverHost, serverEntry );
+        sonar = new SonarProxyAsClient("sonarPxy",  serverHost, serverEntry );
+      }
+
+      //CREAZIONE DI UN Controller 
+      controller 	= Controller.create( led, sonar );
+
+      //ATTIVAZIONE DEL SISTEMA
+      ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
+      controller.start(endFun, 10);
+    }
+
   }
 
+
++++++++++++++++++++++++++++++++++++++++++++++
+Esecuzione del sistema
++++++++++++++++++++++++++++++++++++++++++++++
+
+#. Si seleziona uno stesso protocollo in ciascuna delle due applicazioni
+#. Si lancia ``RadarSystemMainDevsOnPc`` che attiva il ContextServer
+#. Si lancia ``RadarSystemMainUasgeOnPc`` che si collega al ContextServer ed opera 

@@ -8,26 +8,26 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 public class SonarResourceCoap extends ApplResourceCoap  {
-String curDistance="0";  //Initial state
-private IApplInterpreter sonarLogic;
+private String curDistance="0";  //Initial state
+private IApplInterpreter sonarIntrprt;
  
 		public SonarResourceCoap(String name, IApplInterpreter sonarLogic) {
 			super(name, DeviceType.input);
-			this.sonarLogic = sonarLogic;
+			this.sonarIntrprt = sonarLogic;
 			ColorsOut.out( getName() + " |  SonarResourceCoap CREATED"   );	
 	 	}
 		
 		private boolean sonarActive() {
-			return sonarLogic.elaborate("isActive").equals("true");
+			return sonarIntrprt.elaborate("isActive").equals("true");
 		}
   			
 		private void getSonarValues() {
 			ColorsOut.out( getName() + " |  SonarResourceCoap getSonarValues for observers"   );
 			new Thread() {
 				public void run() {
-					if( ! sonarActive() ) sonarLogic.elaborate("activate");
+					if( ! sonarActive() ) sonarIntrprt.elaborate("activate");
 					while( sonarActive() ) {
-						String v = sonarLogic.elaborate("getDistance");
+						String v = sonarIntrprt.elaborate("getDistance");
 		 				//ColorsOut.out( getName() + " | SonarResourceCoap v=" + v , ColorsOut.BgYellow  );		
 						elaborateAndNotify(  v );
 						Utils.delay(RadarSystemConfig.sonarDelay);
@@ -48,11 +48,11 @@ private IApplInterpreter sonarLogic;
 				}
 				try {
 					ApplMessage msg = new ApplMessage( req );
-					answer = sonarLogic.elaborate( msg  );			
+					answer = sonarIntrprt.elaborate( msg  );			
 				}catch( Exception e) {
-					answer = sonarLogic.elaborate( req  );
+					answer = sonarIntrprt.elaborate( req  );
 				}		
-				return answer; //sonarLogic.elaborate(req);
+				return answer;  
 				/*
 				if( req.equals("getDistance")) {
 					//String answer = curDistance;  
@@ -74,7 +74,7 @@ private IApplInterpreter sonarLogic;
 			protected void elaboratePut(String arg) {
 	 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
 	 			
-	 			String result = sonarLogic.elaborate(arg);
+	 			String result = sonarIntrprt.elaborate(arg);
 	 			if( result.equals("activate_done")) getSonarValues(); //per CoAP observers
 	 			/*
 	 			if( arg.equals("activate")) getSonarValues();
