@@ -21,7 +21,6 @@ iss22
    RadarSystemTcp
    VersoUnFramework
    RadarSystemMqtt
-   RadarSystemCoap
    RadarGuiCoap
    msenabler
    ApproccioTopDown

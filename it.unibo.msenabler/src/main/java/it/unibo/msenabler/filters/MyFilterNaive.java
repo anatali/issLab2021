@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
 
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 
 //@Component
@@ -23,7 +23,7 @@ public class MyFilterNaive extends HttpFilter{
 	@Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, 
     		FilterChain chain) throws IOException, ServletException {
-		Colors.out(getFilterName() + " " + request.getAuthType(), Colors.BgGreen);
+		ColorsOut.out(getFilterName() + " " + request.getAuthType(), ColorsOut.BgGreen);
 		//UsernamePasswordToken token = extractUsernameAndPasswordFrom(request);  // (1)
 		chain.doFilter(request, response); // (4)
 	}

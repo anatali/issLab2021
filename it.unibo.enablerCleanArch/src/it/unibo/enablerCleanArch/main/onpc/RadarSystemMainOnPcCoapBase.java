@@ -1,9 +1,6 @@
-package it.unibo.enablerCleanArch.main.coap;
+package it.unibo.enablerCleanArch.main.onpc;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Base64;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -13,30 +10,23 @@ import org.eclipse.californium.core.coap.Request;
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
+import it.unibo.enablerCleanArch.supports.http.HttpClientSupport;
 
 
 /*
  * DA usare su PC con i dispositivi attivi su Raspberry (RadaSystemMainCoap)
  */
 
-public class RadarSystemMainOnPcCoapBase implements IApplicationFacade{
-private ISonar sonar    		   = null;
+public class RadarSystemMainOnPcCoapBase implements IApplicationFacadeWithWebcam{
 private ILed led        		   = null;
 private IRadarDisplay radar 	   = null;
-private boolean useProxyClient 	   = true;
-private ISonar clientSonarProxy    = null;
-private CoapClient clientObs 	   = null;
-private CoapObserveRelation relObs = null;
-private IObserver obsfortesting;
 private CoapConnection coapSonarSup   = null;
-private CoapConnection coapLedSup     = null;
 private CoapConnection coapWebCamSup  = null;
 private CoapObserveRelation rel1   = null;
 private final int ampl             = 3;
@@ -61,14 +51,14 @@ private boolean ledblinking        = false;
 	
 	
 	/*
-	 * Ogni proxyclient introduce un CoapSupport per la sua risorsa
+	 * Ogni proxyclient introduce un CoapConnection per la sua risorsa
 	 */
 	protected void configureUsingProxy() {
  		String host      = RadarSystemConfig.raspHostAddr;
 
  		String sonarUri  = CoapApplServer.inputDeviceUri+"/sonar";
  		SonarProxyAsClient sonarProxy = new SonarProxyAsClient("sonarProxyCoap", host, sonarUri, ProtocolType.coap );
-  		sonar            = sonarProxy;
+  		ISonar sonar     = sonarProxy;
  		
   		//Extract the support for the sonar, in order to set an observer 
   		coapSonarSup     = (CoapConnection) sonarProxy.getConn();
@@ -80,12 +70,11 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 		rel1            = coapSonarSup.observeResource( obs );
 		
  		String webcamUri = CoapApplServer.inputDeviceUri+"/webcam";
- 		//coapWebCamSup    = new CoapConnection("coapWebCamSup",RadarSystemConfig.raspHostAddr, webcamUri);
-		coapWebCamSup    = new CoapConnection( RadarSystemConfig.raspHostAddr, webcamUri);
+ 		coapWebCamSup    = new CoapConnection( RadarSystemConfig.raspHostAddr, webcamUri);
 		     
 	}
 
-	public CoapConnection getSonarCoapSupport() {
+	public CoapConnection getSonarCoapConnection() {
 		return coapSonarSup;
 	}
 	
@@ -106,6 +95,18 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 		ColorsOut.out("ledState=" +led.getState() );
 		
 		
+		HttpClientSupport httpSup = new HttpClientSupport( "http://192.168.1.132"  );
+		String answer = httpSup.requestSynch("photo");
+		ColorsOut.out("answer=" +answer );
+		
+//		sonar.activate();
+//		Utils.delay(10000);
+ 		
+/*		String photoFName = "zzz.jpg";
+		takePhoto(photoFName);
+		//String photoBase64 = getImage(photoFName); //
+		//storeImage(photoBase64,"zzzCopy.jpg");
+*/		
 		//Terminate
 //		sonarDectivate() ;	//termina il Sonar
 		coapSonarSup.close();
@@ -115,15 +116,15 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 	}
 	
 	public void entryorMainOnPc( ) {
-		RadarSystemConfig.raspHostAddr = "192.168.1.9";
+//		RadarSystemConfig.raspHostAddr = "192.168.1.9";
 		RadarSystemConfig.protcolType  = ProtocolType.coap;
 		RadarSystemConfig.DLIMIT       = 10*ampl;
 		RadarSystemConfig.simulation   = false;
 		RadarSystemConfig.withContext  = false;
 		RadarSystemConfig.sonarDelay   = 250;
 		radar  = DeviceFactory.createRadarGui(); //since it is called on PC
-		configureUsingCoapSupport();
-		executeCoapUsingCoapSupport();
+		configureUsingCoapConnection();
+		executeCoapUsingCoapConnection();
 		//Terminate
 		sonarDectivate() ;	//termina il Sonar
 		if(rel1 != null ) rel1.proactiveCancel();
@@ -131,13 +132,12 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 	}
 
 	/*
-	 * NO: Meglio usare i supporti creati entro i proxy, anche se bisogna poi 'estrarre' il CoapSupport
+	 * NO: Meglio usare i supporti creati entro i proxy, anche se bisogna poi 'estrarre' il CoapConnection
 	 * per costruire un coap observer
 	 */	
-	protected void configureUsingCoapSupport() {
+	protected void configureUsingCoapConnection() {
  		String sonarUri = CoapApplServer.inputDeviceUri+"/sonar";
- 		//coapSonarSup    = new CoapConnection("coapSonarSup",RadarSystemConfig.raspHostAddr, sonarUri);
- 		coapSonarSup    = new CoapConnection( RadarSystemConfig.raspHostAddr, sonarUri );
+ 		coapSonarSup    = new CoapConnection( RadarSystemConfig.raspHostAddr, sonarUri);
  		//Colors.out("............. coapSonarSup=" + coapSonarSup);
  		String ledUri   = CoapApplServer.lightsDeviceUri+"/led";
  		led             = new LedProxyAsClient("ledProxyCoap", RadarSystemConfig.raspHostAddr, ledUri, ProtocolType.coap );
@@ -148,7 +148,7 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 	/*
 	 * Da usare quando lo si lancia su PC
 	 */
-	protected void executeCoapUsingCoapSupport() {
+	protected void executeCoapUsingCoapConnection() {
 		//led.turnOff();
 		ledActivate(true);
 		ColorsOut.out("ledState=" +led.getState() );
@@ -163,7 +163,7 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 		/*
 		for( int i=1; i<=3; i++) {
 			String d = coapSonarSup.request("getDistance");  
-			Colors.outappl("RadarSystemMainOnPcCoapBase | executeCoap with CoapSupport i=" + i + " d="+d, Colors.ANSI_PURPLE);
+			Colors.outappl("RadarSystemMainOnPcCoapBase | executeCoap with CoapConnection i=" + i + " d="+d, Colors.ANSI_PURPLE);
 			Utils.delay(500);
 		}	 
 		*/
@@ -282,8 +282,8 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 	}
 	
 	public static void main( String[] args) throws Exception {
-		//new RadarSystemMainOnPcCoapBase().entryorMainOnPc();//   
-		new RadarSystemMainOnPcCoapBase("192.168.1.9").entryMainAsApplInGui();
+		new RadarSystemMainOnPcCoapBase("localhost").entryorMainOnPc();//   
+		//new RadarSystemMainOnPcCoapBase("192.168.1.9").entryMainAsApplInGui();
 
 	}
 

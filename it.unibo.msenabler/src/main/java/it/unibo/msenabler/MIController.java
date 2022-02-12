@@ -1,6 +1,6 @@
 package it.unibo.msenabler;
 
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
 import org.springframework.util.StringUtils;
@@ -26,7 +26,7 @@ public class MIController {
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         try {
             byte[] imgContent = multipartFile.getBytes();
-            Colors.out("MachineEnablerController | elaborate " + msg
+            ColorsOut.out("MachineEnablerController | elaborate " + msg
                     + " ContentType:" + multipartFile.getContentType()
                     + " filename:" + fileName
                     + " content length=" + imgContent.length
@@ -39,7 +39,7 @@ public class MIController {
             propagatePhoto(imgContent, fileName);
             
         }catch(Exception e){
-            Colors.outerr("elaborate ERROR:"+ e.getMessage());
+            ColorsOut.outerr("elaborate ERROR:"+ e.getMessage());
         }
         return ("Going to manage photo:" + msg + " " + fileName  );
     }
@@ -49,13 +49,13 @@ public class MIController {
         new Thread() {
         	public void run() {
         		try {
-        			Colors.out(" --- STORE THE PHOTO  in " + fileName );
+        			ColorsOut.out(" --- STORE THE PHOTO  in " + fileName );
         			storeImage(imgContent,fileName);
         			Utils.delay(1000);
-        			Colors.out(" --- PROPAGATE THE PHOTO AFTER SOME TIME --- ");
+        			ColorsOut.out(" --- PROPAGATE THE PHOTO AFTER SOME TIME --- ");
 					wshandler.sendBinaryToAll( imgContent   );
 				} catch (IOException e) {
-					Colors.outerr("elaborate propagate photo ERROR:"+ e.getMessage());
+					ColorsOut.outerr("elaborate propagate photo ERROR:"+ e.getMessage());
 				}
         	} 
         }.start();    	
@@ -63,10 +63,10 @@ public class MIController {
     public void storeImage(byte[] decodedBytes, String fName) {
         try {
             //byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
-            Colors.out("MachineEnablerController | storeImage decodedBytes.length=" + decodedBytes.length);
+            ColorsOut.out("MachineEnablerController | storeImage decodedBytes.length=" + decodedBytes.length);
             FileUtils.writeByteArrayToFile(new File(fName), decodedBytes);
         } catch (Exception e) {
-            Colors.outerr("RadarSystemMainOnPcCoapBase | storeImage " + e.getMessage());
+            ColorsOut.outerr("RadarSystemMainOnPcCoapBase | storeImage " + e.getMessage());
         }
     }
 }

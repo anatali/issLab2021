@@ -174,7 +174,7 @@ avvalendosi di una ricerca *depth-first* nell'aòbero delle risorse:
 
 
 ------------------------------------------------
-Una risorsa per il Led
+Unaaa risorsa per il Led
 ------------------------------------------------
 La risorsa CoAP  per il Led è una specializzazione di `CoapDeviceResource`_ che 
 incorpora un Led e ridirige a questo Led le richieste GET e PUT.
@@ -346,7 +346,7 @@ Terminazione
 
 
 ------------------------------------------------
-Una risorsa per il Sonar
+Unaaa risorsa per il Sonar
 ------------------------------------------------
 La risorsa CoAP  per il Sonar è una specializzazione di `CoapDeviceResource`_ che 
 incorpora un Sonar, a cui ridirige le richieste GET di lettura  e i comandi 

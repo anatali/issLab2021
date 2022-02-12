@@ -1,53 +1,55 @@
 package it.unibo.enablerCleanArch.main.onpc;
 
 import org.eclipse.californium.core.CoapClient;
-
-import it.unibo.enablerCleanArch.domain.*;
+import it.unibo.enablerCleanArch.domain.IApplicationFacade;
+import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.SonarProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
-import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
-import it.unibo.enablerCleanArch.supports.context.Context2021;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 
-/*
- * Applicazione che va in coppia con RadarSystemMainDevsCtxOnRasp
- */
+public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
+	public static final String mqttAnswerTopic  = "pctopic";
+	public static final String mqttCurClient    = "pc4";
 
-public class RadarSystemMainUasgeOnPc implements IApplication{
+	protected ISonar sonar;
+	protected ILed  led ;
+	protected final int ampl             = 3;
+	protected boolean ledblinking        = false;
 
-public static final String mqttAnswerTopic  = "pctopic";
-public static final String mqttCurClient    = "pc4";
-
-protected ISonar sonar;
-protected ILed  led ;
-protected Controller controller;
-
-private String serverHost = "";
-
-
+	protected String serverHost = "";
+	
+	public RadarSystemMainEntryOnPc( String addr){
+		RadarSystemConfig.raspHostAddr = addr;		
+	}
+	
+	 
+	public void doJob(String configFileName) {
+		setUp( configFileName );
+		configure();
+	}
 	
 	@Override
-	public String getName() {	 
-		return "RadarSystemMainUasgeOnPc";
-	}
-
-	public void setup(   )  {
- 	      RadarSystemConfig.protcolType       = ProtocolType.coap;
+	public void setUp(String configFile) {
+		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+		else {
+	      RadarSystemConfig.protcolType       = ProtocolType.tcp;
 		  RadarSystemConfig.raspHostAddr      = "localhost"; //"192.168.1.9";
- 		  RadarSystemConfig.ctxServerPort     = 8018;
+		  RadarSystemConfig.ctxServerPort     = 8018;
 		  RadarSystemConfig.sonarDelay        = 1500;
 		  RadarSystemConfig.withContext       = true; //MANDATORY: to use ApplMessage
 		  RadarSystemConfig.DLIMIT            = 40;
- 		  RadarSystemConfig.testing           = false;
+		  RadarSystemConfig.testing           = false;
 		  RadarSystemConfig.tracing           = true;
 		  RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  "tcp://localhost:1883" 	
-	}
-	
+		}
+	}	
+
 	protected void configure() {
 		if(Utils.isCoap() ) { 
 			serverHost       = RadarSystemConfig.raspHostAddr;
@@ -74,57 +76,73 @@ private String serverHost = "";
 			led   = new LedProxyAsClient("ledPxy", serverHost, serverEntry );
 			sonar = new SonarProxyAsClient("sonarPxy",  serverHost, serverEntry  );
 		}
+ 
  	}
-	
- 	
-	
-	protected void useLedAndSonar() {
-	    led.turnOn();
-	    Utils.delay(1000);
-	    boolean ledState = led.getState();
-	    ColorsOut.outappl("led state=" + ledState, ColorsOut.MAGENTA);
- 	    led.turnOff();
-		ColorsOut.outappl("led state=" + led.getState(), ColorsOut.MAGENTA);
-		
-		boolean sonarState = sonar.isActive();
-		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
- 		
-//		sonar.activate(); 
-//		ColorsOut.outappl("sonar state=" + sonar.isActive(), ColorsOut.GREEN);
-//		Utils.delay(1000);
 
-		
-//		int d = sonar.getDistance().getVal();
-//		ColorsOut.outappl("sonar distance=" + d, ColorsOut.GREEN);
-		//Utils.delay(1000);
-		 
-		terminate();
-		
-	}
-	public void execute() {
- 	    useLedAndSonar();    
-// 	    controller 	= Controller.create( led, sonar );
-//	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-// 		controller.start(endFun, 10);
- 	}
- 
-	public void terminate() {
-		led.turnOff();
- 		sonar.deactivate();
-		ColorsOut.outappl("BYE", ColorsOut.GREEN);
-		Utils.delay(3000);
-		System.exit(0);
-	}
- 
 	@Override
-	public void doJob(String configFileName) {
-		setup( );
-		configure();
-		execute();
+	public String getName() {	 
+		return "RadarSystemMainEntryOnPc";
 	}
 	
+	
+ 	@Override
+	public void ledActivate(boolean v) {
+		//Colors.out("RadarSystemMainOnPcCoapBase ledActivate " + v );
+ 		if( v ) led.turnOn();else led.turnOff();
+	}
+ 	
+	@Override
+	public String ledState() {
+ 		return ""+led.getState();//coapLedSup.request("ledState"); //payload don't care
+	}
+	
+	@Override
+	public void doLedBlink() {
+		new Thread() {
+			public void run() {
+				ledblinking = true;
+				while( ledblinking ) {
+					ledActivate(true);
+					Utils.delay(500);
+					ledActivate(false);
+					Utils.delay(500);
+				}
+			}
+		}.start();		
+		
+	}
+	
+	
+	@Override
+	public void stopLedBlink() {
+		ledblinking = false;		
+	}
+	
+	@Override
+	public void sonarActivate() {
+		ColorsOut.out("RadarSystemMainOnPcCoapBase | sonarActivate");
+ 		sonar.activate();
+		
+	}
+	@Override
+	public boolean sonarIsactive() {
+		return sonar.isActive();
+	}
+	@Override
+	public void sonarDectivate() {
+		sonar.deactivate();
+	}
+	@Override
+	public String sonarDistance() {
+ 		return ""+sonar.getDistance().getVal();
+	}
+
+ 	
 	public static void main( String[] args) throws Exception {
-		new RadarSystemMainUasgeOnPc().doJob(null);
- 	}
+		new RadarSystemMainEntryOnPc("").doJob(null);
+	}
+
+
+
 
 }

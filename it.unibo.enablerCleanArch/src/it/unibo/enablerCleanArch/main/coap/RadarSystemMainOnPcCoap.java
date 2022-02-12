@@ -12,7 +12,7 @@ import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.coap.CoapConnection;
 import it.unibo.enablerCleanArch.supports.context.Context2021;
  
-public class RadarSystemMainOnPcCoap implements IApplicationFacade{
+public class RadarSystemMainOnPcCoap implements IApplicationFacadeWithWebcam{
 	
 private ISonar sonar    		   = null;
 private ILed led        		   = null;

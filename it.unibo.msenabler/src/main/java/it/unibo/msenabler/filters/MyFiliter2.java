@@ -3,7 +3,7 @@ package it.unibo.msenabler.filters;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 
 import java.io.IOException;
 
@@ -30,9 +30,9 @@ public class MyFiliter2 implements Filter{
  	 
 	        HttpServletRequest req  = (HttpServletRequest) request;
 	        HttpServletResponse res = (HttpServletResponse) response;
-	        Colors.out( "MyFiliter2 req:"+ req.getMethod() +  " " + req.getRequestURI(), Colors.BgYellow );
+	        ColorsOut.out( "MyFiliter2 req:"+ req.getMethod() +  " " + req.getRequestURI(), ColorsOut.BgYellow );
 	        chain.doFilter(request, response);
-	        Colors.out( "MyFiliter2 res:"+  res.getContentType()) ;
+	        ColorsOut.out( "MyFiliter2 res:"+  res.getContentType()) ;
 		
 	}
 

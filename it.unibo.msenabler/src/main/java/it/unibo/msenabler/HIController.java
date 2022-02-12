@@ -3,7 +3,7 @@ package it.unibo.msenabler;
 
 import it.unibo.enablerCleanArch.domain.IApplicationFacade;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
-import it.unibo.enablerCleanArch.supports.Colors;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
+//import it.unibo.enablerCleanArch.main.RadarSystemDevicesOnRaspMqtt;
 
 import java.io.File;
 import java.util.Base64;
@@ -43,8 +43,8 @@ public class HIController {
         model.addAttribute("ledstate", ledState+"(perhaps)");
         model.addAttribute("arg", appName);
         model.addAttribute("ledgui","ledOff");
-        Colors.out("HumanEnablerController welcomePage" + model + " sysClient=" + appl);
-        //Colors.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
+        ColorsOut.out("HumanEnablerController welcomePage" + model + " sysClient=" + appl);
+        //ColorsOut.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
         //appl.sonarActivate();
         //allOnRasp = false;
         setModelValues(model,"entry");
@@ -57,11 +57,12 @@ public class HIController {
                                              String addr , Model viewmodel )  {
     	if( ! addr.equals( "localhost" ) ){
             //viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
-            Colors.out("HumanEnablerController setApplAddress " + addr  );
+            ColorsOut.out("HumanEnablerController setApplAddress " + addr  );
             raspAddr = addr;
 
-            if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
-            else appl = MsenablerApplication.startSystemCoap(raspAddr);
+//            if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+//            else 
+            	appl = MsenablerApplication.startSystemCoap(raspAddr);
             applStarted = true;
             //setModelValues(viewmodel, "startAppl");
 
@@ -81,8 +82,9 @@ public class HIController {
     @PostMapping(path = "/startAppl")
     public String startAppl(@RequestParam(name="cmd", required=false, defaultValue="")
                                        String value , Model viewmodel ) {
-        if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
-        else appl = MsenablerApplication.startSystemCoap(raspAddr);
+//        if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+//        else 
+        	appl = MsenablerApplication.startSystemCoap(raspAddr);
         applStarted = true;
         setModelValues(viewmodel, "startAppl");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
@@ -95,11 +97,11 @@ LED
     @PostMapping( path = "/on" )
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
-    	Colors.out("HumanEnablerController doOn " + appl  );
+    	ColorsOut.out("HumanEnablerController doOn " + appl  );
         if( appl != null ){
             appl.ledActivate(true);
             ledState = appl.ledState();
-            Colors.out("HumanEnablerController doOn ledState=" + ledState  );
+            ColorsOut.out("HumanEnablerController doOn ledState=" + ledState  );
             model.addAttribute("ledgui","ledOn");
             model.addAttribute("ledstate", ledState);
             
@@ -119,7 +121,7 @@ LED
         if( appl != null ){
             appl.ledActivate(false);
             ledState = appl.ledState();
-            Colors.out("HumanEnablerController doOff ledState=" + ledState  );
+            ColorsOut.out("HumanEnablerController doOff ledState=" + ledState  );
             model.addAttribute("ledgui","ledOff");
             model.addAttribute("ledstate", ledState);
             
@@ -144,7 +146,7 @@ LED
         if( appl != null ) appl.stopLedBlink( );
         model.addAttribute("ledstate","no led blink");
 //        String ledState = appl.ledState();
-//        Colors.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
+//        ColorsOut.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
           //model.addAttribute("arg", appName+" After Led stop blink");
 //        if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
 //        else model.addAttribute("ledgui","ledOff");
@@ -157,11 +159,11 @@ LED
     public String distance(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
         String d = "unknown";
-        Colors.out("HumanEnablerController DISTANCE - sonar active=" + appl.sonarIsactive()  );
+        ColorsOut.out("HumanEnablerController DISTANCE - sonar active=" + appl.sonarIsactive()  );
         if( appl != null ){
             if( ! appl.sonarIsactive() ) appl.sonarActivate();
             d = appl.sonarDistance();
-            Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
+            ColorsOut.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
         }            	
         model.addAttribute("sonardistance",d);
         setModelValues(model,"Distance");
@@ -171,7 +173,7 @@ LED
     @PostMapping( path = "/sonardataon" )
     public String sonardataon(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
-         Colors.out("HumanEnablerController sonardataon - sonar active=" + appl.sonarIsactive()  );
+         ColorsOut.out("HumanEnablerController sonardataon - sonar active=" + appl.sonarIsactive()  );
         if( appl != null ){
             if( ! appl.sonarIsactive() ) appl.sonarActivate();
         }
@@ -187,26 +189,26 @@ LED
         setModelValues(model,"sonardataoff");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
-
+/*
     @PostMapping( path = "/takephoto" )
     public String getPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
                                        String moveName, Model model) {
-        Colors.out("HumanEnablerController takephoto-0 "    );
+        ColorsOut.out("HumanEnablerController takephoto-0 "    );
         appl.takePhoto(photoFName);
         //Si dovrebbe gestire una risposta ...
         //Utils.delay(2000);
         //appl.sendCurrentPhoto();  //riceve una POST NON VA
-        /*
+
          * Raspberry fa la foto e la invia al server con una POST
          * Il MachineEnablerController del server memorizza la foto sul file curPhoto.jpg
          * e poi invia la foto su tutte le connessioni correnti della ws.
          * Tutti ricevono la foto, tranne in browser che ha originato il processo.
          * a meno di non ritardare l'aggiornamento della ws
-         */
-        //Colors.out("HumanEnablerController takephoto-1 "    );
+
+        //ColorsOut.out("HumanEnablerController takephoto-1 "    );
         //Occorre fare richiesta e attendere risposta
         //String photoBase64 = appl.getImage(photoFName);
-        //Colors.out("HumanEnablerController photoBase64 length=" + photoBase64.length()  );
+        //ColorsOut.out("HumanEnablerController photoBase64 length=" + photoBase64.length()  );
         //appl.storeImage(photoBase64,photoFName);
         //File f = new File(photoFName);
         //leggo il contenuto del file (image) e lo invio alla zona output della pagina
@@ -215,11 +217,13 @@ LED
         setModelValues(model,"takephoto");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
+
+
     @PostMapping( path = "/showphoto" )
     public String showPhoto(@RequestParam(name="cmd", required=false, defaultValue="")
                                    String moveName, Model model) {
         //String photoBase64 = appl.getImage(photoFName);
-        //Colors.out("HumanEnablerController showPhoto: " + photoBase64  );
+        //ColorsOut.out("HumanEnablerController showPhoto: " + photoBase64  );
         //appl.storeImage(photoBase64,"curPhoto.jpg");
         //model.addAttribute("photo", "PHOTO in "+photoFName);
         appl.sendCurrentPhoto();
@@ -247,7 +251,7 @@ LED
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
-
+*/
 protected void setModelValues(Model model, String info){
     model.addAttribute("arg", appName+" - action=" + info);
     model.addAttribute("applicationAddr",  raspAddr);
@@ -281,13 +285,13 @@ protected void setModelValues(Model model, String info){
             	public void run() {
                     while( appl.sonarIsactive() && sonarDataOn ) {
                     	String d = appl.sonarDistance();
-                    	Colors.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
+                    	ColorsOut.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
                         Utils.delay(RadarSystemConfig.sonarDelay);
                         //update on ws
                         try {
 							h.sendToAll( d );
 						} catch (Exception e) {
- 							Colors.outerr("ws update ERROR:" + e.getMessage());
+ 							ColorsOut.outerr("ws update ERROR:" + e.getMessage());
  							sonarDataOn = false;
  							appl.sonarDectivate();
 						}
