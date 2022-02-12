@@ -8,6 +8,9 @@
 
 .. _paho: https://www.eclipse.org/paho/
 
+.. _Mosquitto: https://mosquitto.org/download/
+
+
 ==================================================
 Verso un framework
 ==================================================
@@ -67,6 +70,10 @@ Come librerie di riferimento useremo le seguenti:
 - per MQTT: la libreria `paho`_
 - per CoAP: la libreria `californium`_
 
+Come Broker MQTT useremo `Mosquitto`_ installato su un nostro PC (o su Raspberry) o uno dei Broker disponibili in rete:
+  
+- "tcp://broker.hivemq.com"  
+- "tcp://test.mosquitto.org"
 
 ---------------------------------------------------------
 Nuovi supporti :ref:`Interaction2021<Interaction2021>`
@@ -1063,6 +1070,10 @@ Definiamo una :ref:`IApplication<IApplication>` che:
       ctx.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
       ctx.addComponent("led",   ledHandler);  //led NAME mandatory
     }
+
+    public static void main( String[] args) throws Exception {
+      new RadarSystemMainDevsOnPc().doJob( null );
+    }
   }
 
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -1135,3 +1146,82 @@ Esecuzione del sistema
 #. Si seleziona uno stesso protocollo in ciascuna delle due applicazioni
 #. Si lancia ``RadarSystemMainDevsOnPc`` che attiva il ContextServer
 #. Si lancia ``RadarSystemMainUasgeOnPc`` che si collega al ContextServer ed opera 
+
+----------------------------------------------
+Il sistema distribuito
+----------------------------------------------
+
++++++++++++++++++++++++++++++++++++++++++++++
+RadarSystemMainDevsOnRasp
++++++++++++++++++++++++++++++++++++++++++++++
+
+Definiamo una :ref:`IApplication<IApplication>` che:
+
+#. Crea i dispostivi reali sul RaspberryPi: un Sonar (osservabile) e un Led.  
+#. Crea il ContxtServer.
+#. Crea i gestori applicativi dei messaggi rivolti ai dispositivi.
+#. Aggiunge i dispositivi al ContxtServer, dando a ciascuno un precisono :blue:`nome`.
+#. Attiva l'applicazione nel monento in cui crea il ContxtServer
+
+Questa applicazione è del tutto identica a :ref:`RadarSystemMainDevsOnPc`: basta fare riferimento
+a un file di configurazione ``RadarSystemConfig``.
+
+.. code:: Java
+
+  @Override
+  public void setUp(String configFile) {
+		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+		else { 
+      //Configurazione cabalata nel programma
+		}
+	}	
+
+  protected void configure() { //Come in RadarSystemMainDevsOnPc
+    ...
+  }
+
+  public void doJob( String configFileName ) {
+    setUp( configFileName );
+    configure();
+    }
+
+  public static void main( String[] args) throws Exception {
+    new RadarSystemMainDevsOnRasp().doJob( "RadarSystemConfig.json" );
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+File di configurazione per il RaspberryPi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+  {
+  "simulation"       : "false",
+  "pcHostAddr"       : "192.168.1.xxx",
+  "raspHostAddr"     : "192.168.1.yyy",
+  "mqttBrokerAddr"   : "tcp://broker.hivemq.com",  //oppure "tcp://test.mosquitto.org"
+  "withContext"      : "true",
+  "radarGuiPort"     : "8014",
+  "ledPort"          : "8010",
+  "ctxServerPort"    : "8018",
+  "sonarDelay"       : "500",
+  "sonarDistanceMax" : "150",
+  "DLIMIT"           : "40",
+  "tracing"          : "false",
+  "serverTimeOut"    : "600000",
+
+  "ControllerRemote" : "false",
+  "LedRemote"        : "false",
+  "SonareRemote"     : "false",
+  "RadarGuiRemote"   : "false",
+  "protocolType"     : "coap",
+  "ledGui"           : "false",
+  "sonarPort"        : "8012",
+  "sonarObservable"  : "false",
+  "serverTimeOut"    : "600000",
+  "controllerPort"   : "8016",
+  "applStartdelay"   : "3000",
+  "webCam"           : "true",
+  "testing"          : "false"
+  }
+

@@ -21,7 +21,6 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 	protected ILed  led ;
 	protected final int ampl             = 3;
 	protected boolean ledblinking        = false;
-
 	protected String serverHost = "";
 	
 	public RadarSystemMainEntryOnPc( String addr){

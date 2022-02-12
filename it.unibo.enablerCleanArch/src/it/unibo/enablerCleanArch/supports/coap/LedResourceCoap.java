@@ -9,11 +9,11 @@ import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
 
 public class LedResourceCoap extends ApplResourceCoap   {
- 	private IApplInterpreter ledLogic;
+ 	private IApplInterpreter ledInterpr;
 	
- 	public LedResourceCoap(String name, IApplInterpreter ledLogic   ) {
+ 	public LedResourceCoap(String name, IApplInterpreter ledInterpr   ) {
 		super(name, DeviceType.output);
-		this.ledLogic = ledLogic;
+		this.ledInterpr = ledInterpr;
 		ColorsOut.out( getName() + " | LedResourceCoap CREATED"      );
    	}
 
@@ -23,9 +23,9 @@ public class LedResourceCoap extends ApplResourceCoap   {
 		String answer = "";
 		try {
 			ApplMessage msg = new ApplMessage( req );
-			answer = ledLogic.elaborate( msg  );			
+			answer = ledInterpr.elaborate( msg  );			
 		}catch( Exception e) {
-			answer = ledLogic.elaborate( req  );
+			answer = ledInterpr.elaborate( req  );
 		}		 
  		return  answer;
 	}
@@ -37,9 +37,17 @@ public class LedResourceCoap extends ApplResourceCoap   {
 	@Override
 	protected void elaboratePut(String req) {
 		ColorsOut.out( getName() + " |  before elaboratePut req:" + req   );
+		String answer = "";
+		try {
+			ApplMessage msg = new ApplMessage( req );
+			answer = ledInterpr.elaborate( msg  );			
+		}catch( Exception e) {
+			answer = ledInterpr.elaborate( req  );
+		}		 
+ 		 
+		
 //		if( req.equals( "on") ) led.turnOn();
 //		else if( req.equals("off") ) led.turnOff();		
-		ledLogic.elaborate( req  );
 		//Colors.out( getName() + " |  after elaboratePut :" + led.getState()  );
 	}  
 	@Override

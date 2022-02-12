@@ -89,13 +89,13 @@ private String serverHost = "";
 		boolean sonarState = sonar.isActive();
 		ColorsOut.outappl("sonar state=" + sonarState, ColorsOut.GREEN);
  		
-//		sonar.activate(); 
-//		ColorsOut.outappl("sonar state=" + sonar.isActive(), ColorsOut.GREEN);
-//		Utils.delay(1000);
+		sonar.activate(); 
+		ColorsOut.outappl("sonar state=" + sonar.isActive(), ColorsOut.GREEN);
+		Utils.delay(1000);
 
 		
-//		int d = sonar.getDistance().getVal();
-//		ColorsOut.outappl("sonar distance=" + d, ColorsOut.GREEN);
+		int d = sonar.getDistance().getVal();
+		ColorsOut.outappl("sonar distance=" + d, ColorsOut.GREEN);
 		//Utils.delay(1000);
 		 
 		terminate();

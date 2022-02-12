@@ -1,4 +1,4 @@
-package it.unibo.enablerCleanArch.main.onpc;
+package it.unibo.enablerCleanArch.main.onrasp;
 
 import it.unibo.enablerCleanArch.domain.*;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -15,7 +15,7 @@ import it.unibo.enablerCleanArch.supports.context.Context2021;
  * Applicazione che va in coppia con RadarSystemMainUasgeOnPc
  */
 
-public class RadarSystemMainDevsOnPc implements IApplication{
+public class RadarSystemMainDevsOnRasp implements IApplication{
 	private ISonar sonar;
 	private ILed  led ;
  	private IContext ctx;
@@ -25,19 +25,14 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 		return "RadarSystemMainDevsOnPc";
 	}
 
-	public void setup(   )  {
- 			RadarSystemConfig.ctxServerPort     = 8018;
-			RadarSystemConfig.withContext       = true;
-		    RadarSystemConfig.protcolType       = ProtocolType.coap;
- 			RadarSystemConfig.sonarDelay        = 200;
- 			RadarSystemConfig.simulation   		= true;
-			RadarSystemConfig.DLIMIT      		= 55;  
-			RadarSystemConfig.ledGui            = true;
-			RadarSystemConfig.testing           = false;
-			RadarSystemConfig.tracing           = true;
-			RadarSystemConfig.sonarObservable   = true;
-			RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  "tcp://localhost:1883" 	
- 	}
+	  
+	  public void setUp(String configFile) {
+		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+		else { 
+				//Configurazione cabalata nel programma
+	         
+			}
+	  }	
 	
  	
 	 	
@@ -78,12 +73,12 @@ public class RadarSystemMainDevsOnPc implements IApplication{
 	}
 
 	public void doJob( String configFileName ) {
-		setup( );
+		setUp( configFileName );
 		configure();
  	}
 	
 	public static void main( String[] args) throws Exception {
- 		new RadarSystemMainDevsOnPc().doJob( null );
+ 		new RadarSystemMainDevsOnRasp().doJob( "RadarSystemConfig.json" );
  	}
 
 }
