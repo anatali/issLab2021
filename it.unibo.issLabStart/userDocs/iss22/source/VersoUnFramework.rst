@@ -1131,6 +1131,7 @@ Definiamo una :ref:`IApplication<IApplication>` che:
 Esecuzione del sistema
 +++++++++++++++++++++++++++++++++++++++++++++
 
+#. Si pone ``RadarSystemConfig.tracing = true;`` volendo avere dettagli sul comportamento interno.
 #. Si seleziona uno stesso protocollo in ciascuna delle due applicazioni
 #. Si lancia ``RadarSystemMainDevsOnPc`` che attiva il ContextServer
 #. Si lancia ``RadarSystemMainUasgeOnPc`` che si collega al ContextServer ed opera 

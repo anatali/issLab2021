@@ -74,6 +74,7 @@ private String serverHost = "";
 			led   = new LedProxyAsClient("ledPxy", serverHost, serverEntry );
 			sonar = new SonarProxyAsClient("sonarPxy",  serverHost, serverEntry  );
 		}
+ 	    controller 	= Controller.create( led, sonar );
  	}
 	
  	
@@ -100,11 +101,9 @@ private String serverHost = "";
 		
 	}
 	public void execute() {
-	    useLedAndSonar();
+//	    useLedAndSonar();    
 	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-//	    controller 	= Controller.create( led, sonar );
-//		controller.start(endFun, 10);
-	    
+ 		controller.start(endFun, 10);
  	}
  
 	public void terminate() {
