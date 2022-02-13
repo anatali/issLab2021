@@ -13,14 +13,17 @@ import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.coap.CoapApplServer;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
 
+/*
+ * Applicazione usata da Spring quando gira su PC
+ */
+
 public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 	public static final String mqttAnswerTopic  = "pctopic";
 	public static final String mqttCurClient    = "pc4";
 
 	protected ISonar sonar;
 	protected ILed  led ;
-	protected final int ampl             = 3;
-	protected boolean ledblinking        = false;
+ 	protected boolean ledblinking        = false;
 	protected String serverHost = "";
 	
 	public RadarSystemMainEntryOnPc( String addr){
@@ -78,10 +81,10 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
  
  	}
 
-	@Override
-	public String getName() {	 
-		return "RadarSystemMainEntryOnPc";
-	}
+//	@Override
+//	public String getName() {	 
+//		return "RadarSystemMainEntryOnPc";
+//	}
 	
 	
  	@Override

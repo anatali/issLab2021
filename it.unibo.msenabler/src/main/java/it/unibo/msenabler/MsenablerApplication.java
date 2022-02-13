@@ -11,8 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MsenablerApplication {
 //public static RadarSystemDevicesOnRaspMqtt sysMqtt ;
 //public static RadarSystemMainOnPcCoapBase sysCoap ;
-	public static RadarSystemMainEntryOnPc sysAppl;
-public static final boolean allOnRasp = false;   //when true, this appl must run on Raspberry
+//public static RadarSystemMainEntryOnPc sysAppl;
+public static IApplicationFacade sysAppl;
+//public static final boolean allOnRasp = false;   //when true, this appl must run on Raspberry
 /*
  * This operation is called when the application runs over Raspberry
  */
@@ -36,7 +37,8 @@ public static final boolean allOnRasp = false;   //when true, this appl must run
      */
     public static IApplicationFacade startSystemCoap(String raspAddr) {
     	sysAppl = new RadarSystemMainEntryOnPc(raspAddr);
-    	sysAppl.doJob("RadarSystemConfig.json");
+    	//sysAppl.doJob("RadarSystemConfig.json");
+		sysAppl.setUp("RadarSystemConfig.json");
         WebSocketHandler h  = WebSocketHandler.getWebSocketHandler();
     	//CoapConnection sonarCoapSupport = sysCoap.getSonarCoapConnection();
     	//sonarCoapSupport.observeResource(new SonarDataObserver(h) );

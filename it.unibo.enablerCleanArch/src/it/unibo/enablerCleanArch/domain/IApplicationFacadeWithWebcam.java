@@ -1,7 +1,7 @@
 package it.unibo.enablerCleanArch.domain;
   
 
-public interface IApplicationFacadeWithWebcam extends IApplicationFacade{ // IApplication
+public interface IApplicationFacadeWithWebcam extends IApplicationFacade{  
  	public void takePhoto( String fName  );	
 	public void sendCurrentPhoto();
 	public void startWebCamStream(   );	

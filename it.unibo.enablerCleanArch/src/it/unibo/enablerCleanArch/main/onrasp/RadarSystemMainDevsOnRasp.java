@@ -29,8 +29,7 @@ public class RadarSystemMainDevsOnRasp implements IApplication{
 	  public void setUp(String configFile) {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
 		else { 
-				//Configurazione cabalata nel programma
-	         
+				//Configurazione cabalata nel programma	         
 			}
 	  }	
 	

@@ -22,10 +22,10 @@ private CoapObserveRelation relObs = null;
 private final int ampl             = 3;
 private boolean ledblinking        = false;
  
-	@Override
-	public String getName() {
-		return "RadarSystemMainOnPcCoap";
-	}
+//	@Override
+//	public String getName() {
+//		return "RadarSystemMainOnPcCoap";
+//	}
 	
 	
 	public void doJob(String configFileName) {

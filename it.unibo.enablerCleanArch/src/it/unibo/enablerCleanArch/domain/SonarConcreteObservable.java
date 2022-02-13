@@ -24,9 +24,9 @@ public class SonarConcreteObservable extends SonarModelObservable   {
 		ColorsOut.out("SonarConcreteObservable | activate p=" + p, ColorsOut.GREEN);
  		if( p == null ) {
  			try { 
-				p          = Runtime.getRuntime().exec("sudo ./SonarAlone");
+				p      = Runtime.getRuntime().exec("sudo ./SonarAlone");
 		        ColorsOut.out("SonarConcreteObservable | sonarSetUp p="+p, ColorsOut.GREEN);
-		        reader     = new BufferedReader( new InputStreamReader(p.getInputStream()));	
+		        reader = new BufferedReader( new InputStreamReader(p.getInputStream()));	
  	       	}catch( Exception e) {
  	       		ColorsOut.outerr("SonarConcreteObservable | sonarSetUp ERROR " + e.getMessage() );
  	    	}

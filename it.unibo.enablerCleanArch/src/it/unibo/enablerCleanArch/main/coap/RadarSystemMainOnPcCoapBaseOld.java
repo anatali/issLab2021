@@ -45,10 +45,10 @@ private boolean ledblinking        = false;
     public RadarSystemMainOnPcCoapBaseOld(String addr) {
     	RadarSystemConfig.raspHostAddr = addr;
     }
-	@Override
-	public String getName() {
-		return "RadarSystemMainOnPcCoap";
-	}
+//	@Override
+//	public String getName() {
+//		return "RadarSystemMainOnPcCoap";
+//	}
 	
 	@Override
 	public void setUp( String configFile )  {			
