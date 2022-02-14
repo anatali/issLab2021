@@ -13,7 +13,7 @@ public class MsenablerApplication {
 //public static RadarSystemMainOnPcCoapBase sysCoap ;
 //public static RadarSystemMainEntryOnPc sysAppl;
 public static IApplicationFacade sysAppl;
-//public static final boolean allOnRasp = false;   //when true, this appl must run on Raspberry
+public static final boolean allOnRasp = false;   //when true, this appl must run on Raspberry
 /*
  * This operation is called when the application runs over Raspberry
  */
