@@ -16,11 +16,6 @@
 
 .. _CleanArchitecture: https://clevercoder.net/2018/09/08/clean-architecture-summary-review
 
-.. _Buster: https://www.raspberrypi.com/news/buster-the-new-version-of-raspbian/
-
-.. _Bullseye: https://www.raspberrypi.com/news/raspberry-pi-os-debian-bullseye/
-
-
 ==================================
 RadarSystem WebGui
 ==================================  
@@ -44,23 +39,14 @@ Per il nostro legame con Java, può essere opportuno, per ora, fare
 riferimento a `Springio`_. Tuttavia, una adeguata alternativa potrebbe essere l'uso di framework basati su 
 `Node.js`_ ed `Express`_.
 
-++++++++++++++++++++++++++++++++++++
-Una possibile pagina-utente
-++++++++++++++++++++++++++++++++++++
-
 La WebGUI si potrebbe presentare, sia al master, sia a un utente observer, come segue:
 
 .. image:: ./_static/img/Radar/msenablerGuiNoWebcam.PNG
    :align: center
    :width: 60%
 
-La SetUp Area sarebbe utlizzabile solo dal master, così come i pulsanti di comando per il Led e per il Sonar;  
-l'utente potrebbe però vedere tutto ciò che vede il master; in particolare, il campo ``action`` riporta 
-l'ultime azione invocata dal master.
-
-.. , ed eventualmente chiedere quale sia la distanza corrente misurata dal sonar.
-
-Naturalmente, la struttura finale della pagina sarà stabilita in accordo con il committente.
+L'utente potrebbe quindi vedere tutto ciò che vede il master, senza avere però la possibilità di inviare comandi.
+Naturalmente, la struttura finale della pagina sarà stabilita in coooperazione con il committente.
 
 ++++++++++++++++++++++++++++++++++++
 Architettura del sistema WebGui
@@ -68,7 +54,7 @@ Architettura del sistema WebGui
 
 Dal punto di vista architetturale, il WebServer dell'applicazione Spring potrebbe eseere organizzato in due modi:
 
-#. **caso locale**: essere attivato sul Raspberry (basato su `Buster`_ o ??`Bullseye`_ e su ``Java11``) ed interagire 
+#. **caso locale**: essere attivato sul Raspberry (basato su **Buster**, che utilizza ``Java11``) ed interagire 
    con una applicazione Java locale;
       
 #. **caso remoto**: essere attivato su un PC ed interagire con una applicazione Java remota operante sul Raspberry,
@@ -97,41 +83,43 @@ in accordo al principio della `inversione delle dipendenze <https://en.wikipedia
 Con queste premesse, il compito che ci attende è quello di realizzare la parte 
 **Presenter** in modo da continuare a tenere separati i casi d'uso dall'interfaccia utente.
 
-Come ogni applicazione SpringBoot, gli elementi salienti sono:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Caso remoto
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-- Un WebServer Controller che si occupa della Human-Interaction  (qui denominato **HIController**) 
-  che presenta all'end user una pagina HTML come quella indicata in :ref:`Una possibile pagina-utente`
-- Una pagina HTML (RadarSystemUserGui.hyml) che include campi il cui valore può essere definito attraverso
-  un oggetto ``org.springframework.ui.Model`` che viene trasferito a  ``HIController`` dalla infrastruttura
-  Spring e gestito mediante la Java template engine ``Theamleaf``.
-- Un file JavaScript (``wsNoStomp.js``) che include funzioni utili per la gestione della pagina lato client.
-- Un file per l'uso delle `WebSocket`_  (``WebSocketConfiguration.java``)  che implementa l'interfaccia ``WebSocketConfigurer`` 
-  di  *org.springframework.web.socket.config.annotation*.
+Abbiamo già osservato come l'applicazione :ref:`RadarSystemMainDevsOnRasp` possa essere
+riusata come referente remoto di un WebServer allocato su PC. Il WebServer potrebbe dunque avvalersi
+della applicazione :ref:`RadarSystemMainEntryOnPc` per inviare ed ottenere dal Raspberry 
+(usando TCP, MQTT o CoAP) le informazioni legate alla attività del **Presenter**.
 
-.. - La pagina che utilillza Bootstrap è ``RadarSystemUserConsole.html``
+Il compito del Controller-Spring che si occupa della Human-Interaction (``HIController``) sarà quello di
+utilizzare questa applicazione per inviare i comandi immessi dal master mediante la GUI (una pagina html)
+e per introdurre nella pagina html le informazioni ricevute.
 
 Il requisito :blue:`observe` può essere ottenuto in due modi diversi:
 
   - ``HIController`` può inviare **richieste** di informazione al Raspberry (ad esempio ``getDistance`` o ``getState``)
-    e presentare all'utente un nuova pagina con le risposte ottenute;
+    e presentare all'utente un nuova pagina con le risposte ottenute
   - utilizzando il meccanismo delle `WebSocket`_, che permette l'aggiornamento automatico della pagina attraverso
     la introduzione di un observer. In questo caso, l'uso di CoAP o MQTT può rendere il compito più agevole rispetto
-    a TCP, in quanto nella versione TCP abiamo introdotto solo observer locali. Con CoAP o MQTT invece non è complicato
+    a TCP, in quanto in precedenza abiamo introdotto solo observer locali. Con CoAP o MQTT invece non è complicato
     introdurre presso il WebServer Spring un observer che riceve dati emessi dal Raspberry.
+
+
+.. image:: ./_static/img/Architectures/portAdapterArch.png
+   :width: 70% 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Caso locale
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Nel **caso locale**, si può pensare che il Presenter possa avvalersi di una applicazione ad-hoc
-(:ref:`RadarSystemMainEntryOnRasp`) che accede direttamente ai dispositivi reali connessi al Raspberry.
+(:ref:`RadarSystemMainEntryOnRasp`) che acceda ai dispositivi reali connessi al Raspberry.
  
-   .. image:: ./_static/img/Radar/hexagonalOnRaspOnly.PNG
+   .. image:: ./_static/img/Radar/ArchWebGuiOnRasp.PNG
       :align: center
-      :width: 60%
-
-.. Sembra molto lento, in particolare quando si attiva la webcam.
-
+      :width: 40%
+      
 Prima di realizzare questa nuova applicazione, conviene però fare in modo che sia ``HIController`` a indicare
 l'insieme di operazioni di cui necessita.
 
@@ -141,10 +129,10 @@ IApplicationFacade
 ++++++++++++++++++++++++++++++++++++
 
 In quanto componente applicativo primario, 
-il Controller-Spring relativo alla Human-interaction (``HIController``) e anche quello
-relativo a una probabile futura Machine-interaction (``MIController``) impone 
-che il componente di cui farà uso per realizzare i suoi use-cases obbedisca ad una
-precisa interfaccia, che viene al monento definita come segue:
+il Controller-Spring realtivo alla Human-interaction (``HIController``) e anche quello
+relativo a una probabile futura Machine-interaction (``MIController``) impone che 
+il componente di cui farà uso per realizzare i suoi use-cases obbedisca una interfaccia 
+definita come segue:
 
 .. code:: java 
 
@@ -158,14 +146,8 @@ precisa interfaccia, che viene al monento definita come segue:
       public String sonarDistance(   );	
       public void doLedBlink();
       public void stopLedBlink();
-      void activateObserver(IObserver h);  
    }
 
-Notiamo:
-
-- la introduzione di una nuova funzionalità per il blinking del Led;
-- la possibilità di attivare un observer che riceve in ingresso un oggetto (``IObserver h``) mediante il 
-  quale il Controller Spring può ricevere dati da propagare usando la WebSocket.
 
 ++++++++++++++++++++++++++++++++++++++
 RadarSystemMainEntryOnRasp
@@ -188,12 +170,11 @@ La realizzazione della nuova risorsa necessaria per il :ref:`Caso locale` è fac
             led  = DeviceFactory.createLed();
         }
         @Override
-        public void ledActivate(boolean v) {
-            if( v ) led.turnOn();else led.turnOff();} 	
+        public String getName() { return "RadarSystemMainEntryOnPc"; }
+        @Override
+        public void ledActivate(boolean v) {if( v ) led.turnOn();else led.turnOff();} 	
         @Override
         public String ledState() { return ""+led.getState(); }
-        @Override
-        public void doLedBlink() { ... }
         @Override
         public void stopLedBlink() {ledblinking = false;}	
         @Override
@@ -203,28 +184,14 @@ La realizzazione della nuova risorsa necessaria per il :ref:`Caso locale` è fac
         @Override
         public void sonarDectivate() { sonar.deactivate(); }
         @Override
-        public String sonarDistance() {
-             return ""+sonar.getDistance().getVal(); }
+        public String sonarDistance() { return ""+sonar.getDistance().getVal(); }
     }//RadarSystemMainEntryOnRasp
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Caso remoto
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Abbiamo già osservato come l'applicazione :ref:`RadarSystemMainDevsOnRasp` possa essere
-riusata come referente remoto di un WebServer allocato su PC. Il WebServer potrebbe dunque avvalersi
-della applicazione :ref:`RadarSystemMainEntryOnPc` per inviare ed ottenere dal Raspberry 
-(usando TCP, MQTT o CoAP) le informazioni necessarie alla attività del **Presenter**.
-
-Il compito del Controller-Spring che si occupa della Human-Interaction (``HIController``) sarà quello di
-utilizzare :ref:`RadarSystemMainEntryOnPc` per inviare i comandi immessi dal master mediante la GUI-HTML
-e per introdurre nella pagina HTML le informazioni ricevute.
-
-.. image:: ./_static/img/Radar/hexagonal.PNG
-    :align: center
-    :width: 70% 
  
+
+
 
 
 
@@ -237,6 +204,40 @@ e per introdurre nella pagina HTML le informazioni ricevute.
 
 
 .. una WebGui alla porta ``8081`` che permette di comandare il Led e il Sonar. 
+
+
+.. image:: ./_static/img/Radar/ArchWebGui0.PNG
+   :align: center
+   :width: 60%
+
+
+
+
+ 
+
+Come ogni applicazione SpringBoot, gli elementi salienti sono:
+
+- Un controller (denominato ``HumanEnablerController``) che presenta all'end user una pagina 
+- La pagina che utilillza Bootstrap è ``RadarSystemUserConsole.html``
+- WebSocketConfiguration
+
+Sembra molto lento, in particolare quando si attiva la webcam.
+
+ 
+
+Su Raspberry, attiviamo 7 (RadarSystemDevicesOnRasp) e su PC 9 (RadarSystemMainOnPcCoap)
+all'interno di una applicazione SpringBoot.
+
+
+#. Costruiamo una risorsa accessibile via rete mediante CoaP che aggiorna uno stato
+#. Costruiamo una applicazione RadarGuiCoap che osserva le variazioni di stato della risorsa e modifica il RadarDisplay
+#. Costruiamo radarGui rendendo accessibile RadarGuiCoap via rete con SpringBoot / HTTP in modo RESTFUL 
+#. Facciamo il deployment su docker rendendo accessibile sia la risorsa sia la radarGui
+
+
+----------------------------------------------------------
+Progetto e realizzazione della parte applicativa
+----------------------------------------------------------
 
 
 
@@ -266,39 +267,32 @@ RadarSystemMainEntryOnPc
     }
     @Override
     public void setUp(String configFile) {
-        if(configFile!=null) RadarSystemConfig.setTheConfiguration(configFile);
+        if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
         else {
             RadarSystemConfig.protcolType       = ProtocolType.tcp;
-            RadarSystemConfig.raspHostAddr      = "192.168.1.9";  
+            RadarSystemConfig.raspHostAddr      = "localhost"; //"192.168.1.9";
             RadarSystemConfig.ctxServerPort     = 8018;
             RadarSystemConfig.sonarDelay        = 1500;
-            RadarSystemConfig.withContext       = true; //MANDATORY 
+            RadarSystemConfig.withContext       = true; //MANDATORY: to use ApplMessage
             RadarSystemConfig.DLIMIT            = 40;
             RadarSystemConfig.testing           = false;
             RadarSystemConfig.tracing           = true;
-            RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com";
+            RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; 
                                     //: 1883  or  "tcp://localhost:1883" 	
         }
     }	
-
-	@Override
-	public void activateObserver(IObserver h) {
-        if( Utils.isCoap()) {
-            CoapClient  cli  = new CoapClient( 
-                "coap://"+RadarSystemConfig.raspHostAddr+":5683/"+
-                CoapApplServer.inputDeviceUri+"/sonar" );
-            //CoapObserveRelation obsrelation = 
-                cli.observe( new SonarObserverCoap("sonarObsCoap", h) );
-        }else if( Utils.isMqtt() ) { ... }
-	}
 
     protected void configure() {
         if(Utils.isCoap() ) { 
             serverHost       = RadarSystemConfig.raspHostAddr;
             String ledPath   = CoapApplServer.lightsDeviceUri+"/led"; 
             String sonarPath = CoapApplServer.inputDeviceUri+"/sonar"; 
-            led     = new LedProxyAsClient("ledPxy", serverHost, ledPath );
-            sonar   = new SonarProxyAsClient("sonarPxy",serverHost,sonarPath);
+            led              = new LedProxyAsClient("ledPxy", serverHost, ledPath );
+            sonar            = new SonarProxyAsClient("sonarPxy",  serverHost, sonarPath  );
+            CoapClient  client = new CoapClient( "coap://localhost:5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
+            //CoapObserveRelation obsrelation = 
+            client.observe( new SonarObserverCoap("sonarObs") );
+            //cancelObserverRelation(obsrelation);
         }else {
             String serverEntry = "";
             if(Utils.isTcp() ) { 
@@ -306,16 +300,19 @@ RadarSystemMainEntryOnPc
                 serverEntry = "" +RadarSystemConfig.ctxServerPort; 
             }
             if(Utils.isMqtt() ) { 
-                MqttConnection conn = MqttConnection.createSupport(mqttCurClient);
+                MqttConnection conn = MqttConnection.createSupport( mqttCurClient ); //,mqttAnswerTopic
                 conn.subscribe( mqttCurClient, mqttAnswerTopic );
                 serverHost  = RadarSystemConfig.mqttBrokerAddr;  //dont'care
                 serverEntry = mqttAnswerTopic; 
-            }				
-            led   = new LedProxyAsClient("ledPxy", serverHost, serverEntry);
-            sonar = new SonarProxyAsClient("sonarPxy",  serverHost, serverEntry);
+			}				
+            led   = new LedProxyAsClient("ledPxy", serverHost, serverEntry );
+        sonar = new SonarProxyAsClient("sonarPxy",  serverHost, serverEntry  );
         }
     }//configure
 
+	
+	
+	
     @Override
     public void doLedBlink() {
     new Thread() {
@@ -331,8 +328,9 @@ RadarSystemMainEntryOnPc
     }.start();			
     }
     @Override
-    public void ledActivate(boolean v) {
-            if( v ) led.turnOn();else led.turnOff();}
+    public String getName() { return "RadarSystemMainEntryOnPc"; }
+    @Override
+    public void ledActivate(boolean v) {if( v ) led.turnOn();else led.turnOff();} 	
     @Override
     public String ledState() { return ""+led.getState(); }
     @Override
@@ -344,44 +342,14 @@ RadarSystemMainEntryOnPc
     @Override
     public void sonarDectivate() { sonar.deactivate(); }
     @Override
-    public String sonarDistance() {return ""+sonar.getDistance().getVal();}
+    public String sonarDistance() { return ""+sonar.getDistance().getVal(); }
   	
-    }//RadarSystemMainEntryOnPc 
+     }//RadarSystemMainEntryOnPc 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Testing svincolato
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Notiamo che questa parte applicativa di cui il Controller-Spring si avvale, può essere testata
-senza dover attivare l'applicazione Spring.
-
-Per ottenere questo scopo possiamo ad esempio aggiungere il codice che segue ed attivare il main
-da PC:
-
-.. code:: java 
-
-    public void entryLocalTest(   ) {		
-        ledActivate(true);
-        Utils.delay(1000);
-        ledActivate(false);
-
-        sonar.activate();
-        Utils.delay(2000);
-		
-        int d = sonar.getDistance().getVal();
-        ColorsOut.out("RadarSystemMainEntryOnPc | d="+d);
-		
-        terminate();
-	}	
-    public void terminate() {
-        sonar.deactivate();
-        System.exit(0);
-    }
-
-    public static void main( String[] args) throws Exception {
-        new RadarSystemMainEntryOnPc("192.168.1.9", null).entryLocalTest( );
-    }
+--------------------------------------------------------
+L'applicazione Spring
+--------------------------------------------------------
 
 
 

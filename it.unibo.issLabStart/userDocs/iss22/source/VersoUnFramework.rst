@@ -1136,7 +1136,7 @@ Definiamo una :ref:`IApplication<IApplication>` che:
     }
 
   }
-
+ 
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Esecuzione del sistema
@@ -1158,10 +1158,10 @@ RadarSystemMainDevsOnRasp
 Definiamo una :ref:`IApplication<IApplication>` che:
 
 #. Crea i dispostivi reali sul RaspberryPi: un Sonar (osservabile) e un Led.  
-#. Crea il ContxtServer.
+#. Crea il ContextServer.
 #. Crea i gestori applicativi dei messaggi rivolti ai dispositivi.
-#. Aggiunge i dispositivi al ContxtServer, dando a ciascuno un precisono :blue:`nome`.
-#. Attiva l'applicazione nel monento in cui crea il ContxtServer
+#. Aggiunge i dispositivi al ContextServer, dando a ciascuno un precisono :blue:`nome`.
+#. Attiva l'applicazione nel monento in cui crea il ContextServer
 
 Questa applicazione è del tutto identica a :ref:`RadarSystemMainDevsOnPc`: basta fare riferimento
 a un file di configurazione ``RadarSystemConfig``.
@@ -1170,11 +1170,12 @@ a un file di configurazione ``RadarSystemConfig``.
 
   @Override
   public void setUp(String configFile) {
-		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else { 
+    if( configFile != null ) 
+      RadarSystemConfig.setTheConfiguration(configFile);
+    else { 
       //Configurazione cabalata nel programma
-		}
-	}	
+    }
+  }	
 
   protected void configure() { //Come in RadarSystemMainDevsOnPc
     ...
@@ -1199,7 +1200,7 @@ File di configurazione per il RaspberryPi
   "simulation"       : "false",
   "pcHostAddr"       : "192.168.1.xxx",
   "raspHostAddr"     : "192.168.1.yyy",
-  "mqttBrokerAddr"   : "tcp://broker.hivemq.com",  //oppure "tcp://test.mosquitto.org"
+  "mqttBrokerAddr"   : "tcp://broker.hivemq.com",//"tcp://test.mosquitto.org"
   "withContext"      : "true",
   "radarGuiPort"     : "8014",
   "ledPort"          : "8010",
@@ -1225,3 +1226,8 @@ File di configurazione per il RaspberryPi
   "testing"          : "false"
   }
 
+A questa applicazione possiamo fare corrispondere su PC
+
+- ``RadarSystemMainUasgeOnPc`` : una aplicazione che agisce sui dispositivi remoti usando i Proxy.
+- ``RadarSystemMainEntryOnPc`` : una applicazione che verrà usata come componente di dominio in una 
+  applicazione Spring (si veda :doc:`RadarSystemWebgui`).
