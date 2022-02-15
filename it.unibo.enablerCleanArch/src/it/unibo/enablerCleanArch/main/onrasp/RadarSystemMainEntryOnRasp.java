@@ -22,13 +22,6 @@ public class RadarSystemMainEntryOnRasp implements IApplicationFacade{
  	@Override
 	public void setUp(String configFile) {
  		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else { 
-				//Configurazione cabalata nel programma	         
-			}
- 		configure();
-	  }	
-	 	
-	protected void configure() {
 		//Dispositivi di Input
 		if( RadarSystemConfig.sonarObservable ) {
 			sonar  = DeviceFactory.createSonarObservable();		
@@ -72,7 +65,7 @@ public class RadarSystemMainEntryOnRasp implements IApplicationFacade{
 // 	}	
 //	@Override
 //	public String getName() {	 
-//		return "RadarSystemMainEntryOnPc";
+//		return "RadarSystemMainEntryOnRasp";
 //	}		
  	@Override
 	public void ledActivate(boolean v) {

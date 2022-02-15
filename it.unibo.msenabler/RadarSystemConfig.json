@@ -6,7 +6,7 @@
 "RadarGuiRemote"   : "false",
 "protocolType"     : "coap",
 "pcHostAddr"       : "192.168.1.132",
-"raspHostAddr"     : "192.168.1.132",
+"raspHostAddr"     : "192.168.1.9",
 "radarGuiPort"     : "8014",
 "ledPort"          : "8010",
 "ledGui"           : "false",
@@ -22,7 +22,7 @@
 "ctxServerPort"    : "8018",
 "webCam"           : "true",
 "mqttBrokerAddr"   : "tcp://broker.hivemq.com",
-"tracing"          : "false",
+"tracing"          : "true",
 "testing"          : "false"
 
 }

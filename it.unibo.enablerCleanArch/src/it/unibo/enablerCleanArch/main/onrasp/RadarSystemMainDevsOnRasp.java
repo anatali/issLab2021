@@ -22,7 +22,7 @@ public class RadarSystemMainDevsOnRasp implements IApplication{
 
 	@Override
 	public String getName() {	 
-		return "RadarSystemMainDevsOnPc";
+		return "RadarSystemMainDevsOnRasp";
 	}
 
 	  

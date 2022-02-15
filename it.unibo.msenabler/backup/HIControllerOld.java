@@ -22,19 +22,16 @@ import java.io.File;
 import java.util.Base64;
 
 
-@Controller
-public class HIController {
+//@Controller
+public class HIControllerOld {
 	private boolean allOnRasp   = MsenablerApplication.allOnRasp;
-//	private boolean sonarDataOn = false;
-//	private String raspAddr     = "unkown";
-//    private boolean webCamActive= false;
-//    private boolean applStarted = false;
-//    private String ledState     = "false";
-//    private String photoFName   = "curPhoto.jpg";
-    
-    private AdapterGui gui      = new AdapterGui();
+	private boolean sonarDataOn = false;
+	private String raspAddr     = "unkown";
+    private boolean webCamActive= false;
+    private boolean applStarted = false;
+    private String ledState     = "false";
+    private String photoFName   = "curPhoto.jpg";
     public static IApplicationFacade appl; //RadarSystemDevicesOnRaspMqtt appl;
-    
 
     @Value("${unibo.application.name}")
     String appName;
@@ -42,26 +39,58 @@ public class HIController {
     @GetMapping("/")
     //@RequestMapping("/")
     public String welcomePage(Model model) {    	
-//        model.addAttribute("ledstate", ledState+"(perhaps)");
-//        model.addAttribute("arg", appName);
-//        model.addAttribute("ledgui","ledOff");
-        gui.setApplName(model,appName);
+        //if( appl == null ){  appl = allOnRasp ? MsenablerApplication.sysMqtt : MsenablerApplication.sysCoap; }
+        model.addAttribute("ledstate", ledState+"(perhaps)");
+        model.addAttribute("arg", appName);
+        model.addAttribute("ledgui","ledOff");
+        ColorsOut.out("HumanEnablerController welcomePage" + model + " sysClient=" + appl);
+        //ColorsOut.out("HumanEnablerController sonar active=" + appl.sonarIsactive()  );
+        //appl.sonarActivate();
+        //allOnRasp = false;
+        setModelValues(model,"entry");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
 
     @PostMapping(path = "/setApplAddress")
     public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")
-                                             String addr , Model  model )  {
+                                             String addr , Model viewmodel )  {
     	if( ! addr.equals( "localhost" ) ){
-            appl = MsenablerApplication.startSystem(addr);
-            gui.setApplStarted( model, addr);        
-    	}
+            //viewmodel.addAttribute("viewmodelarg", "configured with basicrobot addr="+addr);
+            ColorsOut.out("HumanEnablerController setApplAddress " + addr  );
+            raspAddr = addr;
+
+//            if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+//            else 
+            	appl = MsenablerApplication.startSystem(raspAddr);
+            applStarted = true;
+            //setModelValues(viewmodel, "startAppl");
+
+
+            //if( appl == null ){
+                //if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+                //else appl = MsenablerApplication.startSystemCoap(addr);
+                //}
+          }else{
+            //viewmodel.addAttribute("viewmodelarg", "localhost not allowed");
+        }
+        setModelValues(viewmodel,"setApplAddress");
     	if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
 
- 
+    @PostMapping(path = "/startAppl")
+    public String startAppl(@RequestParam(name="cmd", required=false, defaultValue="")
+                                       String value , Model viewmodel ) {
+//        if( allOnRasp ) appl = MsenablerApplication.startSystemMqtt();
+//        else 
+        	appl = MsenablerApplication.startSystem(raspAddr);
+        applStarted = true;
+        setModelValues(viewmodel, "startAppl");
+        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+
+    }
+
 /*
 LED
  */
@@ -69,10 +98,17 @@ LED
     public String doOn( @RequestParam(name="cmd", required=false, defaultValue="")
                     String moveName, Model model){
     	ColorsOut.out("HumanEnablerController doOn " + appl  );
-        appl.ledActivate(true);
-        gui.setLedState(model, "true", "ledOn"); //appl.ledState()
-        //setModelValues(model,"Led on");
-        if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
+        if( appl != null ){
+            appl.ledActivate(true);
+            ledState = appl.ledState();
+            ColorsOut.out("HumanEnablerController doOn ledState=" + ledState  );
+            model.addAttribute("ledgui","ledOn");
+            model.addAttribute("ledstate", ledState);
+            
+            //appl.sonarActivate();  //useful in debug ...
+        }
+        setModelValues(model,"Led on");
+         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
 
@@ -80,29 +116,42 @@ LED
     @PostMapping( path = "/off" )
     public String doOff(@RequestParam(name="cmd", required=false, defaultValue="")
                         String moveName, Model model){
-         appl.ledActivate(false);
-         gui.setLedState(model, appl.ledState(), "ledOff");            
-         //setModelValues(model,"Led off");
+        //activateTheClient();
+        //if( sysClient == null ){ sysClient = MsenablerApplication.sys; }
+        if( appl != null ){
+            appl.ledActivate(false);
+            ledState = appl.ledState();
+            ColorsOut.out("HumanEnablerController doOff ledState=" + ledState  );
+            model.addAttribute("ledgui","ledOff");
+            model.addAttribute("ledstate", ledState);
+            
+            //appl.sonarDectivate(); //useful in debug ...
+        }
+        setModelValues(model,"Led off");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/doLedBlink" )
     public String doBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                 String moveName, Model model){
-        appl.doLedBlink( );
-        //model.addAttribute("ledstate","ledBlinking ...");
-        gui.setLedState(model, "unknown", "ledBlink" );
-        //setModelValues(model,"Led blink");
+        if( appl != null ) appl.doLedBlink( );
+        model.addAttribute("ledstate","ledBlinking ...");
+        setModelValues(model,"Led blink");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/stopLedBlink" )
     public String stopLedBlink(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){
-        appl.stopLedBlink( );
-        gui.setLedState(model, "unknown", "ledBlinkStop" );
-//        model.addAttribute("ledstate","no led blink");
-//        setModelValues(model,"Led blink stop");
+        if( appl != null ) appl.stopLedBlink( );
+        model.addAttribute("ledstate","no led blink");
+//        String ledState = appl.ledState();
+//        ColorsOut.out("HumanEnablerController stopLedBlink ledState=" + ledState  );
+          //model.addAttribute("arg", appName+" After Led stop blink");
+//        if(ledState.equals("true"))  model.addAttribute("ledgui","ledOn");
+//        else model.addAttribute("ledgui","ledOff");
+//        model.addAttribute("ledstate",ledState);
+        setModelValues(model,"Led blink stop");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
@@ -111,30 +160,33 @@ LED
                                   String moveName, Model model){
         String d = "unknown";
         ColorsOut.out("HumanEnablerController DISTANCE - sonar active=" + appl.sonarIsactive()  );
-        if( ! appl.sonarIsactive() ) appl.sonarActivate();
-        d = appl.sonarDistance();
-        ColorsOut.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
-//         model.addAttribute("sonardistance",d);
-//        setModelValues(model,"Distance");
+        if( appl != null ){
+            if( ! appl.sonarIsactive() ) appl.sonarActivate();
+            d = appl.sonarDistance();
+            ColorsOut.out("HumanEnablerController sonar d=" + d + " sonarDelay=" + RadarSystemConfig.sonarDelay );
+        }            	
+        model.addAttribute("sonardistance",d);
+        setModelValues(model,"Distance");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 
     @PostMapping( path = "/sonardataon" )
     public String sonardataon(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
-        ColorsOut.out("HumanEnablerController sonardataon - sonar active=" + appl.sonarIsactive()  );
-        if( ! appl.sonarIsactive() ) appl.sonarActivate();
-        gui.setSonarOn(model);
-        //setModelValues(model,"sonardataon");
+         ColorsOut.out("HumanEnablerController sonardataon - sonar active=" + appl.sonarIsactive()  );
+        if( appl != null ){
+            if( ! appl.sonarIsactive() ) appl.sonarActivate();
+        }
+        setModelValues(model,"sonardataon");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
     
     @PostMapping( path = "/sonardataoff" )
     public String sonardataoff(@RequestParam(name="cmd", required=false, defaultValue="")
                                   String moveName, Model model){      
-     	appl.sonarDectivate();
-    	 gui.setSonarOff(model);
-        //setModelValues(model,"sonardataoff");
+    	//sonarDataOn = false;
+    	appl.sonarDectivate();
+        setModelValues(model,"sonardataoff");
         if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";
     }
 /*
@@ -200,14 +252,19 @@ LED
     }
 
 */
-    
-    
+protected void setModelValues(Model model, String info){
+    model.addAttribute("arg", appName+" - action=" + info);
+    model.addAttribute("applicationAddr",  raspAddr);
+    model.addAttribute("webCamActive",  webCamActive);
+    model.addAttribute("applStarted",  applStarted);
+    model.addAttribute("ledState",  ledState);
+}
 
     
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        return new ResponseEntity( "HIController ERROR " + ex.getMessage(),
+        return new ResponseEntity( "HumanEnablerController ERROR " + ex.getMessage(),
                 responseHeaders, HttpStatus.CREATED);
     }
 

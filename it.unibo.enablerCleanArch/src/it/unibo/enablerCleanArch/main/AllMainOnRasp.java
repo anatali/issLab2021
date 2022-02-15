@@ -6,6 +6,7 @@ import it.unibo.enablerCleanArch.main.coap.RadarSystemDevicesOnRaspCoap;
 import it.unibo.enablerCleanArch.main.context.tcp.RadarSystemMainDevsCtxTcpOnRasp;
 import it.unibo.enablerCleanArch.main.local.RadarSystemMainLocal;
 import it.unibo.enablerCleanArch.main.mqtt.RadarSystemDevicesOnRaspMqtt;
+import it.unibo.enablerCleanArch.main.onrasp.RadarSystemMainDevsOnRasp;
 import it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import java.io.BufferedReader;
@@ -28,7 +29,7 @@ public HashMap<String,IApplication> programs = new HashMap<String,IApplication>(
 			programs.put("3", new RadarSystemMainDevsCtxTcpOnRasp()); 	//with RadarSystemMainWithCtxTcpOnPc
 			programs.put("4", new RadarSystemDevicesOnRaspMqtt());		//with RadarSystemMainOnPcMqtt
 			programs.put("5", new RadarSystemDevicesOnRaspCoap());		//with RadarSystemMainOnPcCoap
-			
+			programs.put("6", new RadarSystemMainDevsOnRasp	());		
 			programs.put("a", new RadarSystemDevicesOnRaspAllProtocols()); 	//with RadarSystemMainOnPcAllProtocols
  		/*
 			programs.put("1", new LedUsageMain());

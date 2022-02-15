@@ -16,6 +16,11 @@
 
 .. _CleanArchitecture: https://clevercoder.net/2018/09/08/clean-architecture-summary-review
 
+.. _Buster: https://www.raspberrypi.com/news/buster-the-new-version-of-raspbian/
+
+.. _Bullseye: https://www.raspberrypi.com/news/raspberry-pi-os-debian-bullseye/
+
+
 ==================================
 RadarSystem WebGui
 ==================================  
@@ -39,14 +44,23 @@ Per il nostro legame con Java, può essere opportuno, per ora, fare
 riferimento a `Springio`_. Tuttavia, una adeguata alternativa potrebbe essere l'uso di framework basati su 
 `Node.js`_ ed `Express`_.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Una possibile pagina-utente
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 La WebGUI si potrebbe presentare, sia al master, sia a un utente observer, come segue:
 
 .. image:: ./_static/img/Radar/msenablerGuiNoWebcam.PNG
    :align: center
    :width: 60%
 
-L'utente potrebbe quindi vedere tutto ciò che vede il master, senza avere però la possibilità di inviare comandi.
-Naturalmente, la struttura finale della pagina sarà stabilita in coooperazione con il committente.
+La SetUp Area sarebbe utlizzabile solo dal master, così come i pulsanti di comando per il Led e per il Sonar;  
+l'utente potrebbe però vedere tutto ciò che vede il master; in particolare, il campo ``action`` riporta 
+l'ultime azione invocata dal master.
+
+.. , ed eventualmente chiedere quale sia la distanza corrente misurata dal sonar.
+
+Naturalmente, la struttura finale della pagina sarà stabilita in accordo con il committente.
 
 ++++++++++++++++++++++++++++++++++++
 Architettura del sistema WebGui
@@ -54,7 +68,7 @@ Architettura del sistema WebGui
 
 Dal punto di vista architetturale, il WebServer dell'applicazione Spring potrebbe eseere organizzato in due modi:
 
-#. **caso locale**: essere attivato sul Raspberry (basato su **Buster**, che utilizza ``Java11``) ed interagire 
+#. **caso locale**: essere attivato sul Raspberry (basato su `Buster`_ o ??`Bullseye`_ e su ``Java11``) ed interagire 
    con una applicazione Java locale;
       
 #. **caso remoto**: essere attivato su un PC ed interagire con una applicazione Java remota operante sul Raspberry,
@@ -82,6 +96,21 @@ in accordo al principio della `inversione delle dipendenze <https://en.wikipedia
 
 Con queste premesse, il compito che ci attende è quello di realizzare la parte 
 **Presenter** in modo da continuare a tenere separati i casi d'uso dall'interfaccia utente.
+
+Come ogni applicazione SpringBoot, gli elementi salienti sono:
+
+- Un WebServer Controller che si occupa della Human-Interaction  (qui denominato ``HIController``) 
+  che presenta all'end user una pagina HTML come quella indicata in :ref:`Una possibile pagina-utente`
+- Una pagina HTML (RadarSystemUserGui.hyml) che include campi il cui valore può essere definito attraverso
+  un oggetto ``org.springframework.ui.Model`` che viene trasferito a  ``HIController`` dalla infrastruttura
+  Spring e gestito dalla Java template engine ``Theamleaf`` 
+- Un file JavaScript (``wsNoStomp.js``) che include funzioni utili per la gestione della pagina lati client.
+- Un file per l'uso delle `WebSocket`_  (``WebSocketConfiguration.java``)  che implementa l'interfaccia ``WebSocketConfigurer`` 
+  di  **org.springframework.web.socket.config.annotation** .
+
+.. - La pagina che utilillza Bootstrap è ``RadarSystemUserConsole.html``
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Caso remoto
@@ -119,7 +148,10 @@ Nel **caso locale**, si può pensare che il Presenter possa avvalersi di una app
    .. image:: ./_static/img/Radar/ArchWebGuiOnRasp.PNG
       :align: center
       :width: 40%
-      
+
+Sembra molto lento, in particolare quando si attiva la webcam.
+
+
 Prima di realizzare questa nuova applicazione, conviene però fare in modo che sia ``HIController`` a indicare
 l'insieme di operazioni di cui necessita.
 
@@ -170,11 +202,12 @@ La realizzazione della nuova risorsa necessaria per il :ref:`Caso locale` è fac
             led  = DeviceFactory.createLed();
         }
         @Override
-        public String getName() { return "RadarSystemMainEntryOnPc"; }
-        @Override
-        public void ledActivate(boolean v) {if( v ) led.turnOn();else led.turnOff();} 	
+        public void ledActivate(boolean v) {
+            if( v ) led.turnOn();else led.turnOff();} 	
         @Override
         public String ledState() { return ""+led.getState(); }
+	    @Override
+	    public void doLedBlink() { ... }
         @Override
         public void stopLedBlink() {ledblinking = false;}	
         @Override
@@ -184,7 +217,8 @@ La realizzazione della nuova risorsa necessaria per il :ref:`Caso locale` è fac
         @Override
         public void sonarDectivate() { sonar.deactivate(); }
         @Override
-        public String sonarDistance() { return ""+sonar.getDistance().getVal(); }
+        public String sonarDistance() {
+             return ""+sonar.getDistance().getVal(); }
     }//RadarSystemMainEntryOnRasp
 
 
@@ -215,13 +249,6 @@ La realizzazione della nuova risorsa necessaria per il :ref:`Caso locale` è fac
 
  
 
-Come ogni applicazione SpringBoot, gli elementi salienti sono:
-
-- Un controller (denominato ``HumanEnablerController``) che presenta all'end user una pagina 
-- La pagina che utilillza Bootstrap è ``RadarSystemUserConsole.html``
-- WebSocketConfiguration
-
-Sembra molto lento, in particolare quando si attiva la webcam.
 
  
 
@@ -310,9 +337,6 @@ RadarSystemMainEntryOnPc
         }
     }//configure
 
-	
-	
-	
     @Override
     public void doLedBlink() {
     new Thread() {
@@ -327,8 +351,6 @@ RadarSystemMainEntryOnPc
         }
     }.start();			
     }
-    @Override
-    public String getName() { return "RadarSystemMainEntryOnPc"; }
     @Override
     public void ledActivate(boolean v) {if( v ) led.turnOn();else led.turnOff();} 	
     @Override

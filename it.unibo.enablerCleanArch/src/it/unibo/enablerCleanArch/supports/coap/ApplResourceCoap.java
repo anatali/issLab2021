@@ -75,7 +75,7 @@ public abstract class ApplResourceCoap extends CoapResource implements IApplMsgH
  		String arg = exchange.getRequestText() ;
 		elaboratePut( arg, exchange.getSourceAddress() );
 		//changed();
-		ColorsOut.out(getName() + " | handlePUT arg=" + arg + " CHANGED="+ CHANGED );
+		ColorsOut.out(getName() + " | after handlePUT arg=" + arg + " CHANGED="+ CHANGED );
 		exchange.respond(""+CHANGED);
 	}
 

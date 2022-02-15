@@ -26,12 +26,14 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
  	protected boolean ledblinking        = false;
 	protected String serverHost = "";
 	
-	public RadarSystemMainEntryOnPc( String addr){
+	public RadarSystemMainEntryOnPc( String addr, String configFile){
+		setUp(  configFile );
 		RadarSystemConfig.raspHostAddr = addr;		
+		configure();
 	}
 	
 	 
-	public void doJob(String configFileName) {
+	public void entryLocalTest(String configFileName) {
 		setUp( configFileName );
 		configure();
 	}
@@ -141,7 +143,7 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 
  	
 	public static void main( String[] args) throws Exception {
-		new RadarSystemMainEntryOnPc("").doJob(null);
+		new RadarSystemMainEntryOnPc("","").entryLocalTest(null);
 	}
 
 

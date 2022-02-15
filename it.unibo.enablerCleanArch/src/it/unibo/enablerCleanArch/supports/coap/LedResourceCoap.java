@@ -14,7 +14,7 @@ public class LedResourceCoap extends ApplResourceCoap   {
  	public LedResourceCoap(String name, IApplInterpreter ledInterpr   ) {
 		super(name, DeviceType.output);
 		this.ledInterpr = ledInterpr;
-		ColorsOut.out( getName() + " | LedResourceCoap CREATED"      );
+		ColorsOut.out( getName() + " | LedResourceCoap CREATED ledInterpr="  + ledInterpr   );
    	}
 
 	@Override
@@ -36,7 +36,7 @@ public class LedResourceCoap extends ApplResourceCoap   {
 
 	@Override
 	protected void elaboratePut(String req) {
-		ColorsOut.out( getName() + " |  before elaboratePut req:" + req   );
+		ColorsOut.out( getName() + " |  elaboratePut req:" + req   );
 		String answer = "";
 		try {
 			ApplMessage msg = new ApplMessage( req );

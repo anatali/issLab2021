@@ -35,10 +35,10 @@ public static final boolean allOnRasp = false;   //when true, this appl must run
     /*
      * This operation is called when the application runs on PC
      */
-    public static IApplicationFacade startSystemCoap(String raspAddr) {
-    	sysAppl = new RadarSystemMainEntryOnPc(raspAddr);
+    public static IApplicationFacade startSystem(String raspAddr) {
+    	sysAppl = new RadarSystemMainEntryOnPc(raspAddr,"RadarSystemConfig.json"); 
     	//sysAppl.doJob("RadarSystemConfig.json");
-		sysAppl.setUp("RadarSystemConfig.json");
+		//sysAppl.setUp("RadarSystemConfig.json");
         WebSocketHandler h  = WebSocketHandler.getWebSocketHandler();
     	//CoapConnection sonarCoapSupport = sysCoap.getSonarCoapConnection();
     	//sonarCoapSupport.observeResource(new SonarDataObserver(h) );

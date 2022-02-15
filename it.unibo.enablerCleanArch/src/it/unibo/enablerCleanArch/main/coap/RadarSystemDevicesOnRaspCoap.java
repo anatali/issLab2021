@@ -44,7 +44,7 @@ protected IObserver obsfortesting;
 
 	@Override //IApplication
 	public String getName() {
-		return "RadaSystemMainCoap";
+		return "RadarSystemDevicesOnRaspCoap";
 	}
  
 	public void setUp(String fName) {
