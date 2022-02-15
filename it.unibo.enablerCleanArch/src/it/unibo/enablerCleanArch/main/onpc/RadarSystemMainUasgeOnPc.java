@@ -55,10 +55,10 @@ private String serverHost = "";
 			String sonarPath = CoapApplServer.inputDeviceUri+"/sonar"; 
 			led              = new LedProxyAsClient("ledPxy", serverHost, ledPath );
 			sonar            = new SonarProxyAsClient("sonarPxy",  serverHost, sonarPath  );
-			CoapClient  client = new CoapClient( "coap://localhost:5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
-			//CoapObserveRelation obsrelation = 
-					client.observe( new SonarObserverCoap("sonarObs") );
-			//cancelObserverRelation(obsrelation);
+//			CoapClient  client = new CoapClient( "coap://localhost:5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
+//			//CoapObserveRelation obsrelation = 
+//					client.observe( new SonarObserverCoap("sonarObs") );
+//			//cancelObserverRelation(obsrelation);
 		}else {
 			String serverEntry = "";
 			if(Utils.isTcp() ) { 

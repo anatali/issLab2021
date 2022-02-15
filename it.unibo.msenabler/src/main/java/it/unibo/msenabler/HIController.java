@@ -53,8 +53,13 @@ public class HIController {
     @PostMapping(path = "/setApplAddress")
     public String setApplAddress(@RequestParam(name="cmd", required=false, defaultValue="")
                                              String addr , Model  model )  {
-    	if( ! addr.equals( "localhost" ) ){
+    	if( ! addr.equals( "localhost" ) ){ //NON siamo nel caso local
             appl = MsenablerApplication.startSystem(addr);
+            if( Utils.isCoap() ) {
+            	appl.activateObserver(WebSocketHandler.getWebSocketHandler());
+            }else if( Utils.isMqtt() ) {
+            	
+            }
             gui.setApplStarted( model, addr);        
     	}
     	if( ! allOnRasp ) return "RadarSystemUserGui"; else return "RadarSystemUserConsole";

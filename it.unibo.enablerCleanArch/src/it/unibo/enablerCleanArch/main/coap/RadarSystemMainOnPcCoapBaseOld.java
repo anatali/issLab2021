@@ -287,6 +287,12 @@ ColorsOut.out("........................................ coapSonarSup=" + coapSon
 
 	}
 
+	@Override
+	public void activateObserver(IObserver h) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
  
 

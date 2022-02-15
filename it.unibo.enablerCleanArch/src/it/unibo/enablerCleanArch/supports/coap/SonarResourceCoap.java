@@ -21,7 +21,7 @@ private IApplInterpreter sonarIntrprt;
 			return sonarIntrprt.elaborate("isActive").equals("true");
 		}
   			
-		private void getSonarValues() {
+		private void getSonarValues(SonarResourceCoap r) {
 			ColorsOut.out( getName() + " |  SonarResourceCoap getSonarValues for observers"   );
 			new Thread() {
 				public void run() {
@@ -29,7 +29,7 @@ private IApplInterpreter sonarIntrprt;
 					while( sonarActive() ) {
 						String v = sonarIntrprt.elaborate("getDistance");
 		 				//ColorsOut.out( getName() + " | SonarResourceCoap v=" + v , ColorsOut.BgYellow  );		
-						elaborateAndNotify(  v );
+						r.elaborateAndNotify(  v );
 						Utils.delay(RadarSystemConfig.sonarDelay);
 					}
 				}
@@ -75,7 +75,7 @@ private IApplInterpreter sonarIntrprt;
 	 			ColorsOut.out( getName() + " |  elaboratePut:" + arg, ColorsOut.GREEN  );
 	 			
 	 			String result = sonarIntrprt.elaborate(arg);
-	 			if( result.equals("activate_done")) getSonarValues(); //per CoAP observers
+	 			if( result.equals("activate_done")) getSonarValues(this); //per CoAP observers
 	 			/*
 	 			if( arg.equals("activate")) getSonarValues();
 	 			else if( arg.equals("deactivate")) sonar.deactivate(); 	

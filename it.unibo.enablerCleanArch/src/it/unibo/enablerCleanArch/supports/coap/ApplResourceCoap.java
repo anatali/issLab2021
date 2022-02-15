@@ -17,12 +17,10 @@ import java.util.List;
 
 
 public abstract class ApplResourceCoap extends CoapResource implements IApplMsgHandler {
-//private IApplMsgHandler handler;
 
 	public ApplResourceCoap(String name, DeviceType dtype )  {
 		super(name);
 		setObservable(true); 
-		//this.handler = handler;
 		CoapApplServer coapServer            = CoapApplServer.getTheServer();  //SINGLETION
  		if( dtype==DeviceType.input )        coapServer.addCoapResource( this, CoapApplServer.inputDeviceUri);
  		else if( dtype==DeviceType.output )  coapServer.addCoapResource( this, CoapApplServer.lightsDeviceUri);

@@ -178,6 +178,7 @@ definita come segue:
       public String sonarDistance(   );	
       public void doLedBlink();
       public void stopLedBlink();
+      void activateObserver(IObserver h);  
    }
 
 

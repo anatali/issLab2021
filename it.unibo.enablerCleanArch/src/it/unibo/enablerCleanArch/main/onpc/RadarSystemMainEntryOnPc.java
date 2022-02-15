@@ -3,6 +3,7 @@ package it.unibo.enablerCleanArch.main.onpc;
 import org.eclipse.californium.core.CoapClient;
 import it.unibo.enablerCleanArch.domain.IApplicationFacade;
 import it.unibo.enablerCleanArch.domain.ILed;
+import it.unibo.enablerCleanArch.domain.IObserver;
 import it.unibo.enablerCleanArch.domain.ISonar;
 import it.unibo.enablerCleanArch.enablers.LedProxyAsClient;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
@@ -32,18 +33,13 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 		configure();
 	}
 	
-	 
-	public void entryLocalTest(String configFileName) {
-		setUp( configFileName );
-		configure();
-	}
-	
 	@Override
 	public void setUp(String configFile) {
 		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
-		else {
-	      RadarSystemConfig.protcolType       = ProtocolType.tcp;
-		  RadarSystemConfig.raspHostAddr      = "localhost"; //"192.168.1.9";
+ 		else {
+		  RadarSystemConfig.simulation        = false;
+	      RadarSystemConfig.protcolType       = ProtocolType.coap;
+		  RadarSystemConfig.raspHostAddr      = "192.168.1.9"; //"192.168.1.9";
 		  RadarSystemConfig.ctxServerPort     = 8018;
 		  RadarSystemConfig.sonarDelay        = 1500;
 		  RadarSystemConfig.withContext       = true; //MANDATORY: to use ApplMessage
@@ -51,8 +47,20 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 		  RadarSystemConfig.testing           = false;
 		  RadarSystemConfig.tracing           = true;
 		  RadarSystemConfig.mqttBrokerAddr    = "tcp://broker.hivemq.com"; //: 1883  OPTIONAL  "tcp://localhost:1883" 	
-		}
+ 		}
 	}	
+	
+	@Override
+	public void activateObserver(IObserver h) {
+		if( Utils.isCoap()) {
+			CoapClient  cli  = new CoapClient( "coap://"+RadarSystemConfig.raspHostAddr+":5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
+			//CoapObserveRelation obsrelation = 
+					cli.observe( new SonarObserverCoap("sonarObsCoap", h) );
+			//cancelObserverRelation(obsrelation);		
+		}else if( Utils.isMqtt() ) {
+			
+		}
+	}
 
 	protected void configure() {
 		if(Utils.isCoap() ) { 
@@ -61,10 +69,6 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 			String sonarPath = CoapApplServer.inputDeviceUri+"/sonar"; 
 			led              = new LedProxyAsClient("ledPxy", serverHost, ledPath );
 			sonar            = new SonarProxyAsClient("sonarPxy",  serverHost, sonarPath  );
-			CoapClient  client = new CoapClient( "coap://localhost:5683/"+CoapApplServer.inputDeviceUri+"/sonar" );
-			//CoapObserveRelation obsrelation = 
-					client.observe( new SonarObserverCoap("sonarObs") );
-			//cancelObserverRelation(obsrelation);
 		}else {
 			String serverEntry = "";
 			if(Utils.isTcp() ) { 
@@ -91,7 +95,7 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 	
  	@Override
 	public void ledActivate(boolean v) {
-		//Colors.out("RadarSystemMainOnPcCoapBase ledActivate " + v );
+		//Colors.out("RadarSystemMainEntryOnPc ledActivate " + v );
  		if( v ) led.turnOn();else led.turnOff();
 	}
  	
@@ -124,7 +128,7 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 	
 	@Override
 	public void sonarActivate() {
-		ColorsOut.out("RadarSystemMainOnPcCoapBase | sonarActivate");
+		ColorsOut.out("RadarSystemMainEntryOnPc | sonarActivate");
  		sonar.activate();
 		
 	}
@@ -141,9 +145,32 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
  		return ""+sonar.getDistance().getVal();
 	}
 
- 	
+//----------------------------------------------------------------------
+	/*
+	 * NON VIENE USATA DAL Controller STRING - è fuori da IApplicationFacade
+	 */
+	public void entryLocalTest(   ) {
+ 		
+		ledActivate(true);
+		Utils.delay(1000);
+		ledActivate(false);
+		
+		sonar.activate();
+		Utils.delay(2000);
+		
+		int d = sonar.getDistance().getVal();
+		ColorsOut.out("RadarSystemMainEntryOnPc | d="+d);
+		
+		terminate();
+	}	
+	public void terminate() {
+		//Utils.delay(1000);  //For the testing ...
+		sonar.deactivate();
+		System.exit(0);
+	}
+
 	public static void main( String[] args) throws Exception {
-		new RadarSystemMainEntryOnPc("","").entryLocalTest(null);
+		new RadarSystemMainEntryOnPc("192.168.1.9", null).entryLocalTest( );
 	}
 
 

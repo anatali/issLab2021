@@ -193,6 +193,12 @@ private boolean ledblinking        = false;
 
 	}
 
+	@Override
+	public void activateObserver(IObserver h) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 

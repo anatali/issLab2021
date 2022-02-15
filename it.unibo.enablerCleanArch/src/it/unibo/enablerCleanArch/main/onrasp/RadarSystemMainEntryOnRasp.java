@@ -1,7 +1,9 @@
 package it.unibo.enablerCleanArch.main.onrasp;
 
 import it.unibo.enablerCleanArch.domain.*;
+import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.main.all.SonarObserver;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IContext;
 import it.unibo.enablerCleanArch.supports.Utils;
@@ -25,8 +27,8 @@ public class RadarSystemMainEntryOnRasp implements IApplicationFacade{
 		//Dispositivi di Input
 		if( RadarSystemConfig.sonarObservable ) {
 			sonar  = DeviceFactory.createSonarObservable();		
-//			IObserver sonarObs  = new SonarObserver( "sonarObs" ) ;
-//			((ISonarObservable)sonar).register( sonarObs );			
+			IObserver sonarObs  = new SonarObserver( "sonarObs" ) ;
+			((ISonarObservable)sonar).register( sonarObs );			
 		}else{
 			sonar = DeviceFactory.createSonar();
 		}
@@ -59,10 +61,6 @@ public class RadarSystemMainEntryOnRasp implements IApplicationFacade{
 		System.exit(0);
 	}
 	
-//	public void doJob( String configFileName ) {
-//		setUp( configFileName );
-//		configure();
-// 	}	
 //	@Override
 //	public String getName() {	 
 //		return "RadarSystemMainEntryOnRasp";
@@ -114,7 +112,13 @@ public class RadarSystemMainEntryOnRasp implements IApplicationFacade{
 	
 	
 	public static void main( String[] args) throws Exception {
-// 		new RadarSystemMainEntryOnRasp().doJob( "RadarSystemConfig.json" );
+  		//new RadarSystemMainEntryOnRasp().testLocal( "RadarSystemConfig.json" );
  	}
+
+	@Override
+	public void activateObserver(IObserver h) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

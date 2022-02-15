@@ -3,7 +3,6 @@ package it.unibo.enablerCleanArch.domain;
 
 public interface IApplicationFacade {  
 	public void setUp( String configFile );
-//	public String getName();
 	public void ledActivate( boolean v );	
 	public String ledState(   );
 	public void sonarActivate(   );
@@ -12,4 +11,5 @@ public interface IApplicationFacade {
 	public String sonarDistance(   );	
  	public void doLedBlink();
  	public void stopLedBlink();
+	void activateObserver(IObserver h);
 }
