@@ -44,6 +44,42 @@ Per il nostro legame con Java, può essere opportuno, per ora, fare
 riferimento a `Springio`_. Tuttavia, una adeguata alternativa potrebbe essere l'uso di framework basati su 
 `Node.js`_ ed `Express`_.
 
+Sappiamo che l'uso di un framework 'risolve' problemi ricorrenti in un dominio e 
+impone precise regole per l'introduzione di componenti applicativi 
+nel contesto dello schema architetturale che il framework utilizza per supportare le sue funzionalità.
+
+Nel caso dei framework nel dominio delle applicazioni Web, trovaimo un insieme di concetti e modi di operare comuni:
+
+- l'uso di un WebServer (spesso Apache Tomcat) che rimane nascosto al livello applicativo;
+- l'uso di una infrastruttura che abilita le comunicazioni Client-Server mediante il protocollo HTTP 
+  e gli schemi REST di interazione;
+- la possibilità di definire componenti applicati 'innestabili' nel framework seocndo precisi meccanismi. 
+  SpringBoot si basa principalmente sul meccanismo delle annotazioni Java;
+- il concetto di Controller come elemento-base per la gestione dei messaggi;
+- l'uso di tools che agevolano la creazione dinamica di pagine HTML a partire da template con 'parametri'
+  che possono essere fissati dal Controller;
+- l'abilitazione all'uso delle WebSocket per interazioni asincrone con i Client  
+
+Lo schema di funzionamento può essere rissaunto come segue:
+
+#. un operatire umano usa un Browser per collegarsi via HTTP a una certa porta di un nodo remoto, usata come porta
+   di ingresso dal WebServer
+#. l'infrastruttura del framework effettua una prima gestione del messaggio in arrivo in modo da confezionare
+   oggetti computazionali (richieste e/o risposte) da trasferire ad opportuni metodi del Controller applicativo 
+   per agevolare la stesura del codice di gestione da parte dell'Application Designer. Spesso la perte infrastrutturale
+   è organizzata secondo una pipeline che permette all'Application Designer di introdurre parti di elaborazione
+   a questo livello
+#. i metodi del Controller realizzano la gestione dei messaggi in funzione dei i 'verbi' HTTP (GET,PUT,POST,DELETE) 
+   con cui sono stati inviati e prepara una pagina HTML di risposta, sfruttando opportuni template predefiniti di pagine.
+   I parametri dei template vengono fissati utilizzando un oggetto Modello della pagina secondo un classico schema MVC.
+#. il Controller restituisce la pagina alla parte infrastruttrale che l'aveva chiamato, la quale provvede a inviare
+   la pagina al Client che aveva effettuato la richiesta HTTP;
+#. se l'operatore umano è sostituito da una macchina (in questo caso si parla di Machine-To-Machine itneraction)
+   i messaggi vengono girati a un Controller specializato per inviare ripsoste in forma di dati, molto spesso 
+   in formato XML o JSon.
+
+
+
 ++++++++++++++++++++++++++++++++++++
 Una possibile pagina-utente
 ++++++++++++++++++++++++++++++++++++

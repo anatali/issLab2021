@@ -9,15 +9,15 @@ sphinks-quickstart  //TUTTO ATTACCATO
 
 .. _tcpsupprt:
 
-.. .. list-table::
-   :width: 100%
-   :widths: 70,30
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
 
-   * - L'idea è che l'`enabler` dovrebbe svolgere rispetto all'oggetto embedded una funzione analoga alle tute  
-       in stile 'IronMan', in modo da costruire un microservizio.
-     -  .. image:: ./_static/img/Radar/TutaVolo.jpg 
-           :width: 100%
-
+  * - a1
+    - a2
+  * - b1
+    - b2
+    
 ``  ``
 
 :doc:`RadarGuiCoap`
