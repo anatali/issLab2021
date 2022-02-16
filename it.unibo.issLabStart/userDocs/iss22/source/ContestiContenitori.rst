@@ -93,24 +93,20 @@ nel modo descritto. La classe si avvale del supporto del tuProlog_.
     protected String msgReceiver = "";
     protected String msgContent  = "";
     protected int msgNum         = 0;
-
     public ApplMessage( String MSGID, String MSGTYPE,  
           String SENDER, String RECEIVER, String CONTENT, String SEQNUM ) {
       ...
     }
-
     public ApplMessage( String msg ) {
       Struct msgStruct = (Struct) Term.createTerm(msg);
       setFields(msgStruct);
     }  
-
     public String msgId() {   return msgId; }
     public String msgType() { return msgType; }
     public String msgSender() { return msgSender; }
     public String msgReceiver() { return msgReceiver;  }
     public String msgContent() { return msgContent;  }
     public String msgNum() { return "" + msgNum; }
-
     public boolean isEvent(){ 
       return msgType == ApplMessageType.event.toString(); }
     ...
@@ -178,12 +174,10 @@ che realizzano la gestione di livello applicativo dei messaggi di tipo `ApplMess
   public class TcpContextServer extends TcpServer{
   private static boolean activated = false;
   private ContextMsgHandler ctxMsgHandler;
-
     public TcpContextServer(String name, int port ) {
       super(name, port, new ContextMsgHandler("ctxH"));
       this.ctxMsgHandler = (ContextMsgHandler) userDefHandler;
     } 
-
     public void addComponent( String name, IApplMsgHandler h) {
       ctxMsgHandler.addComponent(name,h);
     }
@@ -210,7 +204,6 @@ interna che associa un :blue:`identificativo univoco` (il nome del destinatario)
                            new HashMap<String,IApplMsgHandler>();
 
     public ContextMsgHandler(String name) { super(name); }
-
     @Override
     public void elaborate(String message) {
       //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )

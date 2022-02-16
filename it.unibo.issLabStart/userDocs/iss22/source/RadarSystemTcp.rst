@@ -13,7 +13,7 @@ Ridefinizione degli handler
 -------------------------------------------------------
 
 All'interno di ogni handler applicativo, occorre ora definire il codice del metodo `elaborate` 
-quando il messggio di input è di tipo :ref:`ApplMessage`.
+quando il messggio di input è di tipo :ref:`ApplMessage<ApplMessage>`.
 
 ++++++++++++++++++++++++++++++++++++++++++
 elaborate di :ref:`LedApplHandler` 

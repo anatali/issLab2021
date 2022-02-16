@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>RadarSystem deployment &#8212; iss22 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Un approccio top-down al processo" href="ApproccioTopDown.html" />
+    <link rel="prev" title="RadarGuiCoap" href="RadarGuiCoap.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="radarsystem-deployment">
+<h1>RadarSystem deployment<a class="headerlink" href="#radarsystem-deployment" title="Permalink to this headline">¶</a></h1>
+<section id="it-unibo-msenabler">
+<span id="msenabler"></span><h2>it.unibo.msenabler<a class="headerlink" href="#it-unibo-msenabler" title="Permalink to this headline">¶</a></h2>
+<p>Il progetto <em>it.unibo.msenabler</em>  è sviluppato in <code class="docutils literal notranslate"><span class="pre">Java11</span></code> e utilizza SpringBoot per fornire
+una WebGui alla porta <code class="docutils literal notranslate"><span class="pre">8081</span></code> che permette di comandare il Led e il Sonar.</p>
+<p>La GUI si presenta come segue:</p>
+<a class="reference internal image-reference" href="_images/msenablerGui.PNG"><img alt="_images/msenablerGui.PNG" class="align-center" src="_images/msenablerGui.PNG" style="width: 60%;" /></a>
+<p>L’applicazione Spring alla base di <em>it.unibo.msenabler</em> potrebbe operare in due modi diversi:</p>
+<ol class="arabic simple">
+<li><p><em>caso locale</em>: essere attivata su un Raspberry basato su <strong>Buster</strong>, che utilizza <code class="docutils literal notranslate"><span class="pre">Java11</span></code> ed
+utlizzare l’applicazione <strong>a</strong> che fa riferimento ai dispositivi reali connessi al Raspberry.
+Aprendo un browser su  <code class="docutils literal notranslate"><span class="pre">http://&lt;RaspberryIP&gt;:8081</span></code>, un uente può inviare comandi al Led e ricevere i dati
+del Sonar in due modi diversi:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>inviando al sonar il comando getDistance</p></li>
+<li><p>utilizzando una websocket (con URI=/radarsocket). Per questa parte, si consiglia la lettura preliminare
+di <span class="xref std std-ref">WebSockets</span>.</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>caso remoto: essere attivata su un PC ed utlizzare l’applicazione <strong>A</strong> (o 9) per inviare e ricevere informazione
+via MQTT dalla parte applicativa ( <strong>a</strong> o 7)  operante sul Raspberry.</p></li>
+</ol>
+<section id="caso-locale">
+<h3>Caso locale<a class="headerlink" href="#caso-locale" title="Permalink to this headline">¶</a></h3>
+<p>Come ogni applicazione SpringBoot, gli elementi salienti sono:</p>
+<ul class="simple">
+<li><p>Un controller (denominato <code class="docutils literal notranslate"><span class="pre">HumanEnablerController</span></code>) che presenta all’end user una pagina</p></li>
+<li><p>La pagina che utilillza Bootstrap è <code class="docutils literal notranslate"><span class="pre">RadarSystemUserConsole.html</span></code></p></li>
+<li><p>WebSocketConfiguration</p></li>
+</ul>
+<p>Sembra molto lento, in particolare quando si attiva la webcam.</p>
+</section>
+<section id="caso-remoto">
+<h3>Caso remoto<a class="headerlink" href="#caso-remoto" title="Permalink to this headline">¶</a></h3>
+<p>Su Raspberry, attiviamo 7 (RadarSystemDevicesOnRasp) e su PC 9 (RadarSystemMainOnPcCoap)
+all’interno di una applicazione SpringBoot.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-unibo.gif" alt="Logo"/>
+    
+    <h1 class="logo logo-name">iss22</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduzione.html">Costruire software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Indicazioni.html">Indicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystem.html">RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemAnalisi.html">Analisi del problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProdottiAnalisi.html">Prodotti della analisi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProgetto.html">Progettazione e sviluppo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemSupporti.html">Supporti per comunicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Enablers.html">Abilitatori di comunicazione</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContestiContenitori.html">Contesti-contenitori</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemTcp.html">Il RadarSystem con TCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="VersoUnFramework.html">Verso un framework per la interazione distribuita</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemMqtt.html">Il RadarSystem con MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemCoap.html">Il RadarSystem con CoAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarGuiCoap.html">RadarGuiCoap</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RadarSystem deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#it-unibo-msenabler">it.unibo.msenabler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#caso-locale">Caso locale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#caso-remoto">Caso remoto</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ApproccioTopDown.html">Un approccio top-down al processo</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="RadarGuiCoap.html" title="previous chapter">RadarGuiCoap</a></li>
+      <li>Next: <a href="ApproccioTopDown.html" title="next chapter">Un approccio top-down al processo</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Antonio Natali.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/RadarSystemDeploy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

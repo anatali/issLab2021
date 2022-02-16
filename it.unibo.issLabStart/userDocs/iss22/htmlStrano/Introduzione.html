@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Costruire software &#8212; iss22 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Indicazioni" href="Indicazioni.html" />
+    <link rel="prev" title="iss22" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="costruire-software">
+<h1>Costruire software<a class="headerlink" href="#costruire-software" title="Permalink to this headline">¶</a></h1>
+<p>Il software puo essere definito come:</p>
+<ul class="simple">
+<li><p>l’insieme di <em>frasi espresse in un qualche linguaggio formale</em> al fine di istruire un elaboratore
+o una rete di elaboratori,</p></li>
+</ul>
+<p>Il <span class="blue">software non ha consistenza fisica</span>; può consumare energia ed altre risorse,
+produrre effetti utili o dannosi, avere conseguenze rilevanti sul piano economico e sociale,
+ma il software è del tutto privo di massa.</p>
+<p>Le conseguenze di questa caratteristica sono molteplici, sia sul piano pragmatico che sul piano filosofico.
+Limitando il discorso al contesto della produzione industriale, si è diffusa la convinzione che
+la costruzione del software non richieda, per sua natura, processi di produzione tipici dell’ingegneria tradizionale.</p>
+<p>Nell’<strong>ingegneria tradizionale</strong> (meccanica, edile, etc) il costo del materiale costituisce spesso più del 50%
+del costo totale di un progetto, mentre nella produzione del software è il costo del lavoro ad essere preponderante:
+si parte dal 70% fino a giungere quasi al 100%. L’ingegneria tradizionale ha anche sperimentato che un cambiamento
+di costo 1 in fase di analisi potrebbe costare 1000 in fase di produzione.
+Per questo l’ingegneria classica diversifica le fasi di produzione delineando un ben noto flusso di lavoro
+(<em>workflow</em>) costituito da un insieme di passi (o tasks):</p>
+<ol class="arabic simple">
+<li><p>definizione dei requisiti,</p></li>
+<li><p>analisi del problema,</p></li>
+<li><p>progetto della soluzione,</p></li>
+<li><p>realizzazione del prodotto,</p></li>
+<li><p>collaudo</p></li>
+<li><p>messa in opera</p></li>
+</ol>
+<p>spesso eseguiti uno dopo l’altro, in un classico <span class="blue">processo di sviluppo sequenziale o a cascata</span>.</p>
+<p>Nella produzione industriale del software è invece piuttosto comune cercare di abbattere i costi
+di progetto e di sviluppo, anche limitando le dimensioni del gruppo di lavoro,
+e aggredire il mercato prefissando una data di distribuzione del prodotto, che viene di frequente
+rilasciato non completamente finito, accollando all’utente parte dell’onere di collaudo.</p>
+<p>Sotto la spinta di stringenti vincoli di <em>time to market</em> (TTM) molte aziende adottano uno schema del tipo
+“scrivi, prova e correggi”, mirando alla produzione di codice al minor “costo immediato” possibile.
+Le <span class="blue">fasi di analisi e progetto</span> anche se accuratamente svolte, non sempre sono adeguatamente documentate,
+e <em>quasi mai corralete in modo sistematico con il codice prodotto</em>.</p>
+<p>Il processo di costruzione del sofware è quindi <span class="blue">influenzato da una potente forza</span>,
+legata alla natura stessa del software: la spinta a impostare la costruzione di un prodotto in modo <strong>bottom-up</strong>,
+a partire da una specifica tecnologia costituita da un linguaggio di programmazione,
+o da un framework applicativo o da una piattafforma operativa.</p>
+<p>La principale conseguenza negativa di questa forza è l’assenza di una esplicita descrizione di progetto
+che permetta di anticipare la valutazione dei rischi e le potenziali difficoltà connesse allo sviluppo.
+In molti casi adeguate fasi di analisi e di progettazione hanno luogo, anche in modo sistematico;
+ma ciò putroppo quasi sempre accade solo nella mente dei costruttori;
+nel codice finale non vi è più traccia alcuna di queste fasi, se non qualche debole segnale legato a sporadici commenti.</p>
+<p>Tuttavia, anche se il codice fosse accuratamente documentato sia in relazione all’analisi sia in relazione
+alle scelte di progetto, la <strong>riduzione del prodotto al solo codice sarebbe non accettabile</strong>,
+se non nel caso di sistemi software semplici.</p>
+<p>All’aumentare della complessità infatti, la <span class="blue">mente umana ha bisogno</span>,
+per comprendere, di decomporre il problema in parti di ampiezza limitata,
+<span class="blue">articolando la descrizione in livelli di astrazione diversi</span>;
+poiché il codice deve inevitabilmente esprimere il sistema finale nei suoi minimi dettagli,
+la maggior parte delle persone sarebbe incapace di leggerlo con profitto anche se a conoscenza
+delle regole sintattiche del linguaggio di programmazione.</p>
+<section id="la-crisi-del-software">
+<h2>La crisi del software<a class="headerlink" href="#la-crisi-del-software" title="Permalink to this headline">¶</a></h2>
+<p>Impostare un processo di produzione in assenza di descrizioni del sistema che permettano di anticipare
+la valutazione dei rischi espone il processo stesso a un potenziale fallimento;
+non meraviglia dunque che si senta spesso parlare di crisi del software.</p>
+<p>La letteratura [Glass97], [ Software_engineering_disasters] riporta casi di fallimento di un numero
+sorprendentemente rilevante di progetti software, evidenziando un insieme di cause principali:</p>
+<ul class="simple">
+<li><p>Cattiva specifica e gestione dei requisiti.</p></li>
+<li><p>Comunicazioni ambigue ed imprecise tra i diversi attori del processo di produzione
+(utenti, manager, analisti, progettisti, implementatori).</p></li>
+<li><p>Architetture finali del sistema fragili (non robuste).</p></li>
+<li><p>Inconsistenze tra requisiti, progetto e realizzazione.</p></li>
+<li><p>Collaudi inadeguati o insufficienti.</p></li>
+<li><p>Inadeguata capacità di valutare e gestire i rischi e di controllare la propagazione dei cambiamenti.</p></li>
+</ul>
+<p>Queste potenziali fonti di insuccesso hanno amplificato la loro influenza nel momento in cui
+l’intera disciplina ha vissuto la <span class="blue">transizione</span> da una dimensione prevalentemente <span class="blue">algorimtico-trasformazionale</span>
+a un dimensione fortemente <span class="blue">sistemistico-architetturale</span>.</p>
+</section>
+<section id="il-ruolo-dell-architettura">
+<h2>Il ruolo dell’architettura<a class="headerlink" href="#il-ruolo-dell-architettura" title="Permalink to this headline">¶</a></h2>
+<p>La moderna costruzione del software riconosce all’architettura del sistema un ruolo strategico,
+nonostante il termine <em>architettura</em> sia tra i vocaboli più sovraccarichi di significato.</p>
+<p>Normalmente, si parla di architettura di un sistema quando ci si vuole riferire all’insieme delle
+macro-parti in cui il sistema si articola, includendo le loro responsabilità, relazioni e interconnessioni.</p>
+<p>Per molti, il termine <em>architettura</em> potrebbe però evocare l’immagine di uno schema in cui compare una rete
+di blocchi e linee di connessione; questa visione andrebbe meglio indicata col termine mappa o “topologia”.</p>
+<p>Per altri, l’<em>architettura</em> evoca l’idea di uno schema concettuale di soluzione riferito a un certo dominio applicativo,
+come ad esempio nella frase architetture web; in questo caso sarebbe più appropriato utilizzare il termine framework.</p>
+<p>L’Open Group Architectural Framework definisce architettura:</p>
+<ul class="simple">
+<li><p>“a set of elements depicted in an architectural model and a specification of how these elements are connected
+to meet the overall requirements of an information system”.</p></li>
+</ul>
+<p>In [BCK03] si dice che:</p>
+<ul class="simple">
+<li><p>“the software architecture of a program or computing system is the structure
+or structures of the system, which comprises software components, the externally-visible properties
+of these components and the relationships among them”.</p></li>
+</ul>
+<p>La IEEE Computer society definisce (nel 2000) l’architettura:</p>
+<ul class="simple">
+<li><p>“the fundamental organization of a
+system embodied in its components their relationships to each other and to the environment,
+and the principles guiding its design and evaluation”.</p></li>
+</ul>
+<p>Tra le altre accezioni possibili, una delle più curiose, su cui vale la pena di riflettere, è quella per cui:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>l’architettura è ciò che rimane di un sistema quando non si può più togliere nulla,
+continuando a comprenderne la struttura e il funzionamento.</p></li>
+</ul>
+</div></blockquote>
+<p>Le prime esperienze collettive nello studio delle architetture software possono essere fatte
+risalire al workshop OOPSLA del 1981 guidato da Bruce Anderson che mirava allo sviluppo
+di un “architecture handbook”.
+A questo periodo può anche essere fatto risalire l’idea di pattern culminata nella pubblicazione
+nel 1995 dell’ormai famoso testo sui Design Pattern [GHJV95] della così detta
+GoF (Gang-of-Four: Erich Gamma, Richard Helm, Ralph Johnson e John Vlissides).
+Da allora si sono susseguiti molte altre conferenze e lavori.
+I riferimenti più noti sono i cinque testi sulle Patten Software Architectures
+([POSA1], [POSA2], [POSA3], [POSA4], [POSA5] ) e i convegni PLoP (Pattern Languages of Programming).</p>
+</section>
+<section id="dimensioni">
+<h2>Dimensioni<a class="headerlink" href="#dimensioni" title="Permalink to this headline">¶</a></h2>
+<p>Sia nella fase di analisi che in quella di progetto, la descrizione di un sistema software può avvenire
+focalizzando l’attenzione su almeno tre diversi punti di vista:
+- l’organizzazione del sistema in parti (struttura);
+- il modo in cui le diverse parti scambiano informazione implicita o esplicita tra loro (interazione);
+- il funzionamento del tutto e di ogni singola parte (comportamento).
+ù
+Questi punti di vista costituiscono tre indispensabili dimensioni in cui articolare lo spazio della descrizione
+del sistema, qualunque sia il linguaggio utilizzato per esprimere questa descrizione.
+Costrutti per esprimere strutture (di dati e di controllo), forme di comportamento e meccanismi di interazione
+sono presenti in tutti i linguaggi di programmazione.
+Un punto importante consiste nel capire fino a che punto i costrutti di un linguaggio debbano influenzare
+il progettista (se non lo stesso analista).
+Fino alla fine degli anni 90 il linguaggio di programmazione è stato il veicolo principale per introdurre
+nuovi concetti sia sul piano computazionale sia sul sul piano della organizzazione del software.</p>
+<p>L’avvento della programmazione ad oggetti sembra avere segnato il culmine di questo processo;
+un motivo può certo essere il raggiungimento di una sufficiente maturità nella capacità espressiva
+in ciascuna delle dimensioni citate. Tuutavia, il motivo principale della relativa (apparente)
+stagnazione nello sviluppo di nuovi linguaggi può essere ricondotto all’idea che un linguaggio
+non deve essere necessariamente accompagnato da una sintassi concreta ma può essere suffciente
+definire una sintassi astratta utilizzando un meta-linguaggio come ad esempio MOF
+(si veda Meta Object Facility) unitamente alla semantica del linguaggio e a un framework (oo) di supporto.</p>
+<p>Questa idea è sviluppata oggi con riferimento ai domain specific languages.</p>
+<section id="struttura">
+<h3>Struttura<a class="headerlink" href="#struttura" title="Permalink to this headline">¶</a></h3>
+<p>Per impostare in modo sistematico la definzione a livello strutturale di un elemento può essere conveniente,
+sia in fase di analisi sia in fase di progetto, cercare di dare risposta ad alcune domande quali:</p>
+<ul class="simple">
+<li><p>l’elemento è atonico o composto? Nel caso sia composto quali sono le parti che lo formano?</p></li>
+<li><p>l’elemento è dotato di stato modificabile? In caso affermativo, quali sono le operazioni di modifica dello stato?
+(si veda la sezione sul comportamento)</p></li>
+<li><p>quali sono le proprietà dell’elemento, cioè quali attributi lo caratterizzano ?</p></li>
+<li><p>da quali altri elementti dipende e secondo quale forma di dipendenza?</p></li>
+</ul>
+<p>Si noti che un elemento composto implica la definizione ricorsiva della struttura di ogni parte e
+la definizione di operazioni denominate selettori.
+Notiamo anche che l’individuazione di una struttura composta porta spesso alla individuazione
+di un insieme di operazioni primitive sulla base delle quali costruire ogni altra operazione
+di manipolazione/gestione dell’elemento.</p>
+</section>
+<section id="interazione">
+<h3>Interazione<a class="headerlink" href="#interazione" title="Permalink to this headline">¶</a></h3>
+<p>Le interazioni possono essere sincrone o asincrone e riguardare informazioni o stream di dati.
+In questo secondo caso esse possono essere anche isocrone.</p>
+<p>In una interazione asincrona la comunicazione è “bufferizzata” senza alcuna
+limitazione sulle dimensioni del buffer.
+L’emittente non deve attendere alcuna informazione di ritorno anche quando invia informazione
+ad uno specifico destinatario. Il ricevente attende solo quando il buffer è vuoto.
+Nel caso di stream, non vi sono vincoli di tempo per la ricezione.
+In una interazione sincrona la comunicazione avviene senza l’uso di alcun buffer.
+L’emittente e il desinatario scambiano informazione unificando concettualmente le proprie attività.
+Nel caso di stream, il destinatario si aspetta di ricevere i dati con un ritardo (delay)
+che non supera un massimo prefissato.
+Una interazione isocrona riguarda solo stream; il destinatario si aspetta di ricevere i dati
+con un delay compreso tra un minimo e un massimo.</p>
+<p>Per impostare in modo sistematico la dimensione interazione è opportuno chiarire le diverse forme che questa può assumere.
+Nel seguito faremo riferimento alla seguente terminologia:</p>
+<ul class="simple">
+<li><p>Evento (event): informazione emessa (più o meno consapevolmente) in modo asincrono da una sorgente
+senza alcuna particolare nozione di ricevente e senza alcuna aspettativa da parte dell’emittente.</p></li>
+<li><p>Segnale (signal): informazione inviata in modo asincrono a N (N&gt;=1) destinatari, noti o meno all’emittente,
+con l’aspettativa che venga ricevuta da qualcuno, al fine di eseguire un’azione che potrebbe portare vantaggio
+all’emittente e/o al sistema nel suo complesso.</p></li>
+<li><p>Messaggio (message): informazione inviata in modo asincrono a N (N&gt;=1) specifici destinatari,
+noti alla emittaente, con l’aspettativa che questi lo ricevano e lo elaborino,
+senza attesa di una risposta esplicita.</p></li>
+<li><p>Invito (invitation): messaggio inviato a N (N&gt;=1) destinatari, con l’aspettativa che almeno uno lo riceva
+e invii al mittente un messaggio di conferma.</p></li>
+<li><p>Richiesta (request): messaggio inviato a uno specifico receiver; il contenuto del messaggio
+rappresenta la richiesta di esecuzione di una attività, con aspettativa da parte del sender
+che questa attività si concluda con una risposta pertinente alla richiesta.</p></li>
+<li><p>Conferma (reply, acknowledgment): messaggio inviato da un receiver al sender di un invito.
+Il contenuto del messaggio rappresenta un riconoscimento di avvenuta ricezione.</p></li>
+<li><p>Risposta (response): messaggio inviato da un receiver al sender di una richiesta.
+il contenuto del messaggio rappresenta la risposta alla richiesta.</p></li>
+<li><p>Risultato (result): messaggio inviato dal receiver di una richiesta ad uno o più destinataori,
+noti e meno; il contenuto del messaggio rappresenta la risposta alla richiesta.</p></li>
+</ul>
+<p>Le interazioni vengono spesso suddivise secondo quattro pattern [POSA3]; con riferimento alla terminologia precedente; :</p>
+<ul class="simple">
+<li><p>Fire and forget: il caso di invio di eventi, segnali, messaggi.</p></li>
+<li><p>Sync with server: il caso di invio di invitation.</p></li>
+<li><p>Poll objects: il sender invia una request delegando ad un oggetto (poll object) la responsabilità
+di ricevere la risposta. Il sender usa il poll object per verificare ed acquisire la disponibilità della risposta.</p></li>
+<li><p>Result callback: il sender invia una request specificando un oggetto (callback object) che implementa
+un metodo che verrà invocato dal supporto non appena il receiver invierà la risposta.</p></li>
+</ul>
+</section>
+<section id="comportamento">
+<h3>Comportamento<a class="headerlink" href="#comportamento" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="modelli">
+<h2>Modelli<a class="headerlink" href="#modelli" title="Permalink to this headline">¶</a></h2>
+<p>Nel linguaggio comune, il termine modello è spesso usato per denotare un’astrazione
+di qualcosa che esiste nella realtà, come ad esempio il modello che posa per un artista,
+una riproduzione in miniatura, un esempio di modo di svolgere un’attività, una forma
+da cui ricavare vestiti, un ideale da seguire, etc..</p>
+<p>Alcuni (tra cui gli ingegneri) intendono per modello un sistema matematico o fisico che ubbidisce
+a specifici vincoli e che può essere utilizzato per descrivere e comprendere un sistema
+(fisico, biologico, sociale, etc.) attraverso relazioni di analogia.</p>
+<p>Nel contesto dei processi di costruzione del software, il termine modello va primariamente
+inteso come un insieme di concetti e proprietà volti a catturare aspetti essenziali di un sistema,
+collocandosi in un preciso spazio concettuale.</p>
+<p>Per l’ingegnere del software quindi un modello costituisce una visione semplificata di un sistema
+che rende il sistema stesso più accessibile alla comprensione e alla valutazione e facilita
+il trasferimento di informazione e la collaborazione tra persone,
+soprattutto quando è espresso in forma visuale.</p>
+<p>Nel concepire un modello come visione semplificata di un sistema software si assume che il sistema
+abbia già una sua esistenza concreta.
+In alcune fasi di lavoro (in particolare nella fase di analisi) il sistema è il modello;
+un raffinamento o una variazione del modello corrisponde in questo caso ad una variazione del sistema.</p>
+<p>La produzione esplicita di modelli si rivela utile in quanto i diversi attori di un processo
+di produzione di software (committenti, analisti, progettisti, utenti, etc)
+operano a diversi livelli di astrazione.
+Definendo opportuni modelli del sistema da realizzare, in ogni fase del processo di produzione
+l’attenzione può essere focalizzata sugli aspetti rilevanti in quella fase, utilizzando una
+forma di comunicazione comprensibile ad attori diversi.
+Per garantire coesione e interoperabilità, si cerca di individuare regole di corrispondenza
+e di trasformazione automatica tra modelli</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-unibo.gif" alt="Logo"/>
+    
+    <h1 class="logo logo-name">iss22</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Costruire software</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#la-crisi-del-software">La crisi del software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#il-ruolo-dell-architettura">Il ruolo dell’architettura</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dimensioni">Dimensioni</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#struttura">Struttura</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interazione">Interazione</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comportamento">Comportamento</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#modelli">Modelli</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Indicazioni.html">Indicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystem.html">RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemAnalisi.html">Analisi del problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProdottiAnalisi.html">Prodotti della analisi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProgetto.html">Progettazione e sviluppo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemSupporti.html">Supporti per comunicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Enablers.html">Abilitatori di comunicazione</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContestiContenitori.html">Contesti-contenitori</a></li>
+<li class="toctree-l1"><a class="reference internal" href="VersoUnFramework.html">Verso un framework per la interazione distribuita</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemTcp.html">Il RadarSystem con TCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemMqtt.html">Il RadarSystem con MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemCoap.html">Il RadarSystem con CoAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarGuiCoap.html">RadarGuiCoap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemDeploy.html">RadarSystem deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ApproccioTopDown.html">Un approccio top-down al processo</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">iss22</a></li>
+      <li>Next: <a href="Indicazioni.html" title="next chapter">Indicazioni</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Antonio Natali.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Introduzione.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

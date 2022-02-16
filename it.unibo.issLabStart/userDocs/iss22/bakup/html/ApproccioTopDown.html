@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Un approccio top-down al processo &#8212; iss22 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="RadarSystem deployment" href="RadarSystemDeploy.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="un-approccio-top-down-al-processo">
+<h1>Un approccio top-down al processo<a class="headerlink" href="#un-approccio-top-down-al-processo" title="Permalink to this headline">¶</a></h1>
+<p>Nell’impostare l’analisi del problema posto dai requisiti, partiamo ora considerando il sistema nel suo
+complesso e non dai singoli dispositivi (di input/output).</p>
+<p>Questo ‘ribaltamento’ di impostazione ci induce a focalizzare l’attenzione su tre dimensioni fondamentali:</p>
+<ul class="simple">
+<li><p>la <span class="blue">struttura</span> del sistema, cioè di quali parti è composto;</p></li>
+<li><p>la <span class="blue">connessione/interazione</span> tra le parti del sistema in modo da formare un ‘tutto’ con precise proprietà
+non (completamente) riducibili a quelle delle singole parti;</p></li>
+<li><p>il <span class="blue">comportamento</span> (autonomo o indotto) di ogni singola parte in modo che siano assicurate le interazioni
+volute.</p></li>
+</ul>
+<p>Un modo per considerare in modo unitario queste tre dimensioni è quello di impostare l’<span class="blue">architettura</span>
+del sistema, cerando di dare risposta a un insieme di domande fondamentali:</p>
+<section id="quali-componenti">
+<h2>Quali componenti?<a class="headerlink" href="#quali-componenti" title="Permalink to this headline">¶</a></h2>
+<p>Quali componenti fanno sicuramente parte del sistema, considerando i requisiti?</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il sistema deve possedere parti software capaci di gestire il <span class="blue">Sonar</span>, il <span class="blue">RadarDisplay</span> e il <span class="blue">Led</span>.
+Questi componenti rappresentano dispositivi di input/ouput ovvero sensori ed attuatori.
+Ma un dispostivo di I/O non dovrebbe mai includere codice relativo alla logica applicativa.</p>
+<p>Dunque la nostra analisi ci induce a introdurre un altro componente, che denominiamo  <span class="blue">Controller</span>,
+con l’idea i dispositivi di I/O possano  essere riusati, senza varuazioni, per fomare molti sistemi diversi
+modificando in modo opportuno solo il <code class="docutils literal notranslate"><span class="pre">Controller</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="oggetti-o-enti-attivi">
+<h2>Oggetti o enti attivi?<a class="headerlink" href="#oggetti-o-enti-attivi" title="Permalink to this headline">¶</a></h2>
+<p>Considerando (il software relativo a) ciascun componente, questo può/deve essere visto come un <span class="blue">oggetto</span>
+che definisce operazioni attivabili con chiamate di procedura o come un
+<span class="blue">ente attivo</span> capace di comportamento autonomo?</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Analizzando il software disponibile, possiamo dire che:</p>
+<ul>
+<li><p>il <code class="docutils literal notranslate"><span class="pre">Sonar</span></code> è un ente attivo che scrive dati su un dispositivo standard di output</p></li>
+<li><p>il <code class="docutils literal notranslate"><span class="pre">Led</span></code> è un oggetto  che implementa l’interfaccia</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="nc">ILed</span> <span class="p">{</span>
+     <span class="kt">void</span> <span class="nf">turnOn</span><span class="p">()</span>
+     <span class="kt">void</span> <span class="nf">turnOff</span><span class="p">()</span>
+     <span class="kt">boolean</span> <span class="nf">isOn</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>il <code class="docutils literal notranslate"><span class="pre">radarSupport</span></code> è un oggetto singleton che può essere usato invocando il metodo <code class="docutils literal notranslate"><span class="pre">update</span></code></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Se anche il <code class="docutils literal notranslate"><span class="pre">RadarDisplay</span></code> fosse sul RaspberryPi, il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> potrebbe essere definito come segue:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">True</span> <span class="p">:</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="n">Sonar</span><span class="p">.</span><span class="na">getVal</span><span class="p">()</span>
+  <span class="n">radarSupport</span><span class="p">.</span><span class="na">update</span><span class="p">(</span> <span class="n">d</span><span class="p">,</span><span class="mi">90</span> <span class="p">)</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">d</span> <span class="o">&lt;</span>  <span class="n">DLIMIT</span> <span class="p">)</span>  <span class="n">then</span> <span class="n">Led</span><span class="p">.</span><span class="na">turnOn</span><span class="p">()</span> <span class="k">else</span> <span class="n">Led</span><span class="p">.</span><span class="na">TurnOff</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Da un punto di vista logico, il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> è un ente attivo
+che può operare sul PC o sul RaspberryPi (un terzo nodo è escluso).</p>
+<ul class="simple">
+<li><p>Nel caso il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> operi sul PC, lo schema precedente non va più bene,
+perchè il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> deve poter interagire via rete con il <code class="docutils literal notranslate"><span class="pre">Sonar``e</span> <span class="pre">con</span> <span class="pre">il</span> <span class="pre">``Led</span></code>.
+Inoltre, il <code class="docutils literal notranslate"><span class="pre">Sonar``e</span> <span class="pre">il</span> <span class="pre">``Led</span></code> devono essere <span class="blue">embedded</span> in qualche altro componente
+capace di ricevere/trasmettere messaggi.</p></li>
+<li><p>Nel caso il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> operi sul RaspberryPi, lo schema precedente non va più bene,
+perchè il <code class="docutils literal notranslate"><span class="pre">Controller</span></code>  deve poter interagire via rete con il <code class="docutils literal notranslate"><span class="pre">RadarDisplay</span></code>.
+In questo caso il  <code class="docutils literal notranslate"><span class="pre">RadarDisplay</span></code> si presenta logicamente come un ente attivo capace di ricevere/trasmetter messaggi
+utilizzando poi <code class="docutils literal notranslate"><span class="pre">radarSupport</span></code> per visualizzare l’informazione ricevuta dal <code class="docutils literal notranslate"><span class="pre">Controller</span></code>.</p></li>
+</ul>
+</section>
+<section id="quali-interazioni">
+<h2>Quali interazioni?<a class="headerlink" href="#quali-interazioni" title="Permalink to this headline">¶</a></h2>
+<p>Come punto saliente della analisi condotta fino a questo punto possiamo affermare che:</p>
+<p><span class="remark">Il problema ci induce a parlare di interazioni basate su messaggi.</span></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Di fronte alla necessità di progettare e realizzare <em>sistemi software distribuiti</em>,
+la programmazione ad oggetti comincia a mostrare i suoi limiti
+e si richiede un <span class="blue">ampliamento dello spazio concettuale di riferimento</span>.</p>
+<p>A questo riguardo, può essere opportuno affrontare il passaggio <span class="blue">dagli oggetti agli attori</span> come
+passaggio preliminare per il passaggio <em>da sistemi concentrati a sistemi distribuiti</em>.</p>
+<p>Affronteremo più avanti questo passaggio, dopo avere cercato di realizzare il sistema impostando
+ancora un sistema ad oggetti che utilizzano opportuni protocolli di comunicazione.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="sincrone-o-asincrone">
+<h3>Sincrone o asincrone?<a class="headerlink" href="#sincrone-o-asincrone" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="dirette-o-mediate">
+<h3>Dirette o mediate?<a class="headerlink" href="#dirette-o-mediate" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="quali-comportamenti">
+<h2>Quali comportamenti?<a class="headerlink" href="#quali-comportamenti" title="Permalink to this headline">¶</a></h2>
+<p>Il comportamento di ciascun componente ha ora l’obiettivo principale di <span class="blue">realizzare le interazioni</span> che
+permettono alle ‘parti’  di agire in modo da formare un ‘tutto’ (il sistema) capace di soddifare i requisiti
+funzionali attraverso opportune elaborazioni delle informazioni ricevute e tramesse tra i componenti stessi.</p>
+<p>Il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> potrebbe essere ora definito come segue:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">True</span> <span class="p">:</span>
+  <span class="n">invia</span> <span class="n">al</span> <span class="n">Sonar</span> <span class="n">la</span> <span class="n">richiesta</span> <span class="n">di</span> <span class="n">un</span> <span class="n">valore</span> <span class="n">d</span>
+  <span class="n">invia</span> <span class="n">d</span> <span class="n">al</span> <span class="n">RadarDisplay</span> <span class="n">in</span> <span class="n">modo</span> <span class="n">che</span> <span class="n">lo</span> <span class="n">visualizzi</span>
+  <span class="nf">if</span><span class="p">(</span> <span class="n">d</span> <span class="o">&lt;</span>  <span class="n">DLIMIT</span> <span class="p">)</span> <span class="n">invia</span> <span class="n">al</span> <span class="n">Led</span> <span class="n">un</span> <span class="n">comando</span> <span class="n">di</span> <span class="n">accensione</span>
+  <span class="k">else</span> <span class="n">invia</span> <span class="n">al</span> <span class="n">Led</span> <span class="n">un</span> <span class="n">comando</span> <span class="n">di</span> <span class="n">spegnimento</span>
+</pre></div>
+</div>
+<p>Il comportamento dei disposivi è una conseguenza logica di questo.</p>
+<section id="message-driven-o-state-based">
+<h3>Message-driven o state-based?<a class="headerlink" href="#message-driven-o-state-based" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="quale-architettura">
+<h2>Quale architettura?<a class="headerlink" href="#quale-architettura" title="Permalink to this headline">¶</a></h2>
+<p>Partiamo dalla architettura logica definita dall’analisi del problema.</p>
+<ul class="simple">
+<li><p>Il <code class="docutils literal notranslate"><span class="pre">Controller</span></code> usa i disposiitivi mediante le loro interfacce (<code class="docutils literal notranslate"><span class="pre">ISonar</span></code>, <code class="docutils literal notranslate"><span class="pre">ILed</span></code>, <code class="docutils literal notranslate"><span class="pre">IRadarGui</span></code>) indipendentemente dal fatto
+che essi siano locali o remoti.</p></li>
+<li><p>Nel caso il Sonar sia remoto, l’oggetto che implementa <code class="docutils literal notranslate"><span class="pre">ISonar</span></code> deve essere ‘di tipo server’, cioè un oggetto attivo
+che riceve i dati via rete e li rende disponibili al <code class="docutils literal notranslate"><span class="pre">Controller</span></code> con il metodo <code class="docutils literal notranslate"><span class="pre">getVal()</span></code>.</p></li>
+<li><p>Nel caso il Led sia remoto, l’oggetto che implementa <code class="docutils literal notranslate"><span class="pre">ILed</span></code> deve essere ‘di tipo client’, cioè un oggetto
+che trasmette via rete i comandi (<code class="docutils literal notranslate"><span class="pre">turnOn</span></code>, <code class="docutils literal notranslate"><span class="pre">turnOff</span></code>) del <code class="docutils literal notranslate"><span class="pre">Controller</span></code> .</p></li>
+</ul>
+<section id="tipi-di-componenti">
+<h3>Tipi di componenti<a class="headerlink" href="#tipi-di-componenti" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><span class="blue">Object (POJO)</span>: un oggetto convenzionale della oop</p></li>
+<li><p><span class="blue">Active Object</span>: oggetto con un Thread interno</p></li>
+<li><p><span class="blue">Actor</span>: un oggetto attivo con coda di messaggi</p></li>
+<li><p><span class="blue">Server</span>: un componente che offre servizi in rete</p></li>
+<li><p><span class="blue">RestResource</span>: una risorsa REST accessibile via HTTP o CoAP</p></li>
+</ul>
+</td>
+<td><a class="reference internal image-reference" href="_images/legendComponets.PNG"><img alt="_images/legendComponets.PNG" class="align-center" src="_images/legendComponets.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="la-problematica-della-interazione">
+<h2>La problematica della interazione<a class="headerlink" href="#la-problematica-della-interazione" title="Permalink to this headline">¶</a></h2>
+<section id="tipi-di-protocollo">
+<h3>Tipi di protocollo<a class="headerlink" href="#tipi-di-protocollo" title="Permalink to this headline">¶</a></h3>
+<p>La interazione tra componenti può avvenire utilizzando diversi tipi di protocollo, che possiamo
+diviedere in due categorie:</p>
+<ul class="simple">
+<li><p>protocolli <span class="blue">punto-a-punto</span> che stabiliscono un <em>canale bidirezionale</em> tra il client e il server. Esempi
+di questo tipo di protocolli sono <code class="docutils literal notranslate"><span class="pre">UDP,</span> <span class="pre">TCP,</span> <span class="pre">HTTP</span> <span class="pre">e</span> <span class="pre">CoAP</span></code>.</p></li>
+<li><p>protocolli <span class="blue">publish-subscribe</span> che si avvalgono di un mediatore (broker) tra client e server. Esempio
+di questo tipo di protocollo è sono <code class="docutils literal notranslate"><span class="pre">MQTT</span></code> che viene supportato da broker come <code class="docutils literal notranslate"><span class="pre">Mosquitto</span> <span class="pre">e</span> <span class="pre">RabbitMQ</span></code>.</p></li>
+</ul>
+<p>In questa fase ci concentremo su <strong>protocolli punto-a-punto</strong>, ponendoci anche l’obiettivo di
+costruire una infrastruttura software che permetta di astrarre dai dettagli dei specifici protocolli e
+di stabilire una connessione di alto livello per l’invio e la ricezione dei messsaggi.</p>
+<p>In questo modo:</p>
+<ul class="simple">
+<li><p>la logica applicativa risulterà indipendente dai dettagli del codice necessari per implementare interazioni
+basaate su uno specifico protocollo;</p></li>
+<li><p>si facilita la possibilità di modificare il protocollo di interazione lasciando inalterato il codice che
+esprime la logica applicativa;</p></li>
+<li><p>si contribuisce alla definizione di un <code class="docutils literal notranslate"><span class="pre">modello</span></code> implementabile con linguaggi di programmazione diversi e quindi utilizzabile
+in diversi contesti applicativi.</p></li>
+</ul>
+</section>
+<section id="tipi-di-messaggio">
+<h3>Tipi di messaggio<a class="headerlink" href="#tipi-di-messaggio" title="Permalink to this headline">¶</a></h3>
+<p>I messaggi scambiati verranno logicamente suddivisi in diverse categorie:</p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><span class="blue">dispatch</span>: un messaggio inviato a un preciso destinatario senza attesa  di una risposta
+(in modo detto anche  <cite>fire-and-forget</cite>);</p></li>
+<li><p><span class="blue">invitation</span>: un messaggio inviato a un preciso destinatario aspettandosi un ‘ack’ da parte di questi;</p></li>
+<li><p><span class="blue">request</span>: un messaggio inviato a un preciso destinatario aspettandosi da parte di questi una
+<span class="blue">response/reply</span> logicamente correlata alla richiesta;</p></li>
+<li><p><span class="blue">event</span>: un messaggio inviato a chiunque sia in grado di elaborarlo.</p></li>
+</ul>
+</td>
+<td><a class="reference internal image-reference" href="_images/legendMessages.PNG"><img alt="_images/legendMessages.PNG" class="align-center" src="_images/legendMessages.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="una-interfaccia-per-l-interazione">
+<h3>Una interfaccia per l’interazione<a class="headerlink" href="#una-interfaccia-per-l-interazione" title="Permalink to this headline">¶</a></h3>
+<p>Una connessione punto-a-punto sarà rappresentata da un oggetto che implements la seguente interfaccia, che permette di
+inviare/ricevere messaggi astraendo dallo specifico protocollo:</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="nc">Interaction2021</span>  <span class="p">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">forward</span><span class="p">(</span>  <span class="n">String</span> <span class="n">msg</span> <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">;</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">receiveMsg</span><span class="p">(</span>  <span class="p">)</span>  <span class="kd">throws</span> <span class="n">Exception</span><span class="p">;</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="p">(</span> <span class="p">)</span>  <span class="kd">throws</span> <span class="n">Exception</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Il metodo di invio è denominato <code class="docutils literal notranslate"><span class="pre">forward</span></code> per rendere più evidente il fatto che si tatta di una trasmissione
+di tipo  <cite>fire-and-forget</cite>. La stringa restituita dal metodo <code class="docutils literal notranslate"><span class="pre">receiveMsg</span></code> può rappresentare un
+<em>dispatch/invitation/event</em> oppure un <em>ack/reply</em>.</p>
+<p>Si noti che l’informazione scambiata è rappresenta da una <code class="docutils literal notranslate"><span class="pre">String</span></code> che è un tipo di dato presente in tutti
+i linguaggi di programmazione.
+Non viene definito un tipo (Java)  <code class="docutils literal notranslate"><span class="pre">Message</span></code> perchè si vuole permettere la interazione tra client e server
+scritti in linguaggi diversi.</p>
+</section>
+<section id="messaggi-di-livello-applicativo">
+<h3>Messaggi di livello applicativo<a class="headerlink" href="#messaggi-di-livello-applicativo" title="Permalink to this headline">¶</a></h3>
+<p>Ovviamente componenti scritti in linguaggi diversi potrenno comprendersi solo condividendo il modo di
+interpretazione delle stringhe.</p>
+<p>Per agevolare la interoperabilità dei componenti si introduce una precisa struttura delle stringhe
+che rappresentano i messaggi di livello applicativo:</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="p">(</span> <span class="n">MSGID</span><span class="p">,</span> <span class="n">MSGTYPE</span><span class="p">,</span> <span class="n">SENDER</span><span class="p">,</span> <span class="n">RECEIVER</span><span class="p">,</span> <span class="n">CONTENT</span><span class="p">,</span> <span class="n">SEQNUM</span> <span class="p">)</span>
+
+<span class="o">-</span> <span class="n">MSGID</span><span class="p">:</span><span class="n">identificativo</span> <span class="n">del</span> <span class="n">messaggio</span>
+<span class="o">-</span> <span class="n">MSGTYPE</span><span class="p">:</span> <span class="n">tipo</span> <span class="n">del</span> <span class="nf">message</span> <span class="p">(</span><span class="n">Dispatch</span><span class="p">,</span> <span class="n">Invitation</span><span class="p">,</span><span class="n">Request</span><span class="p">,</span><span class="n">Reply</span><span class="p">,</span><span class="n">Event</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">SENDER</span><span class="p">:</span> <span class="n">nome</span> <span class="n">del</span> <span class="n">componente</span> <span class="n">che</span> <span class="n">invia</span> <span class="n">il</span> <span class="n">messaggio</span>
+<span class="o">-</span> <span class="n">CONTENT</span><span class="p">:</span> <span class="n">contenuto</span> <span class="n">applicativo</span> <span class="n">del</span> <span class="nf">messaggio</span> <span class="p">(</span><span class="n">detto</span> <span class="n">anche</span> <span class="n">payload</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">RECEIVER</span><span class="p">:</span>  <span class="n">nome</span> <span class="n">del</span> <span class="n">componente</span> <span class="n">chi</span> <span class="n">riceve</span> <span class="n">il</span> <span class="n">messaggio</span>
+<span class="o">-</span> <span class="n">SEQNUM</span><span class="p">:</span> <span class="n">numero</span> <span class="n">di</span> <span class="n">sequenza</span> <span class="n">del</span> <span class="n">messaggio</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="architettura-adapter-port">
+<h2>Architettura adapter-port<a class="headerlink" href="#architettura-adapter-port" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/cleanArch.jpg"><img alt="_images/cleanArch.jpg" class="align-center" src="_images/cleanArch.jpg" style="width: 60%;" /></a>
+<section id="adapter-di-tipo-server">
+<h3>Adapter di tipo server<a class="headerlink" href="#adapter-di-tipo-server" title="Permalink to this headline">¶</a></h3>
+<p>La classe astratta <code class="docutils literal notranslate"><span class="pre">EnablerAsServer</span></code> fattorizza le proprietà di tutti gli abilitatori ‘di tipo server’.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">EnablerAsServer</span> <span class="kd">extends</span> <span class="n">ApplMessageHandler</span><span class="p">{</span>
+      <span class="kd">public</span> <span class="nf">EnablerAsServer</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+        <span class="c1">//Invoca il metodo che inizializza il server e il supporto al protocollo da utilizzare</span>
+        <span class="k">try</span> <span class="p">{</span>
+          <span class="n">setProtocolServer</span><span class="p">(</span> <span class="n">port</span>  <span class="p">);</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s">&quot; ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">()</span> <span class="p">);</span> <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">setProtocolServer</span><span class="p">(</span> <span class="kt">int</span> <span class="n">port</span> <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">;</span>
+      <span class="nd">@Override</span> <span class="c1">//from ApplMessageHandler</span>
+      <span class="c1">//Questo metodo deve essere definito dall&#39;Application designer per gestire i messaggi ricevuti</span>
+      <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La classe <code class="docutils literal notranslate"><span class="pre">ApplMessageHandler</span></code> è una  classe astratta che definisce il metodo abstract <code class="docutils literal notranslate"><span class="pre">elaborate(</span> <span class="pre">String</span> <span class="pre">message</span> <span class="pre">)</span></code>.
+Questo metodo dovrà essere definito nelle estensioni ella classe per realizzare la voluta  gestione dei messaggi.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">ApplMessageHandler</span> <span class="kd">implements</span> <span class="n">CoapHandler</span><span class="p">{</span>
+<span class="kd">protected</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">;</span>               <span class="c1">//Injected</span>
+<span class="kd">protected</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+  <span class="p">...</span>
+  <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span> <span class="n">String</span> <span class="n">message</span> <span class="p">)</span> <span class="p">;</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setConn</span><span class="p">(</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">conn</span> <span class="o">=</span> <span class="n">conn</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Le istanze di questa classe ricevono per <em>injection</em> (col metodo <code class="docutils literal notranslate"><span class="pre">setConn</span></code>)
+una connessione di tipo <code class="docutils literal notranslate"><span class="pre">Interaction2021</span></code> che l’application designer
+potrà utilizzare  nel metodo <em>elaborate</em> per l’invio di messaggi <em>ack/reply</em>.</p>
+</section>
+<section id="adapter-di-tipo-client">
+<h3>Adapter  di tipo client<a class="headerlink" href="#adapter-di-tipo-client" title="Permalink to this headline">¶</a></h3>
+<p>La classe astratta <code class="docutils literal notranslate"><span class="pre">EnablerAsClient</span></code> fattorizza le proprietà di tutti gli abilitatori ‘di tipo client’.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">EnablerAsClient</span> <span class="p">{</span>
+  <span class="kd">private</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">;</span>
+  <span class="kd">protected</span> <span class="n">String</span> <span class="n">name</span> <span class="p">;</span>
+
+    <span class="kd">public</span> <span class="nf">EnablerAsClient</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">String</span> <span class="n">host</span><span class="p">,</span> <span class="kt">int</span> <span class="n">port</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">setProtocolClient</span><span class="p">(</span><span class="n">host</span><span class="p">,</span>  <span class="n">port</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span> <span class="n">name</span><span class="o">+</span><span class="s">&quot;  |  ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>             <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">Interaction2021</span> <span class="nf">setProtocolClient</span><span class="p">(</span> <span class="n">String</span> <span class="n">host</span><span class="p">,</span> <span class="kt">int</span> <span class="n">port</span>  <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">;</span>
+
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">sendValueOnConnection</span><span class="p">(</span> <span class="n">String</span> <span class="n">val</span> <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+      <span class="n">conn</span><span class="p">.</span><span class="na">forward</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">Interaction2021</span> <span class="nf">getConn</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">conn</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="il-caso-del-sonar">
+<h3>Il caso del sonar<a class="headerlink" href="#il-caso-del-sonar" title="Permalink to this headline">¶</a></h3>
+<p>Ad esempio, nel caso del sonar, definiamo un adapter che estende <code class="docutils literal notranslate"><span class="pre">EnablerAsServer</span></code> realizzando al contempo
+l’interfaccia <code class="docutils literal notranslate"><span class="pre">ISonar</span></code>.</p>
+<p>Il metodo <em>setProtocolServer</em> deve attivare un server passandogli <span class="blue">this</span> in modo
+che il server possa invocare il metodo <em>elaborate</em> per ogni dato ricevuto.
+L’elaborazione del dato consiste nel renderlo disponibile al <code class="docutils literal notranslate"><span class="pre">Controller</span></code> che ha invocato una <em>getVal</em> bloccante.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SonarAdapterServer</span> <span class="kd">extends</span> <span class="n">EnablerAsServer</span> <span class="kd">implements</span> <span class="n">ISonar</span><span class="p">{</span>
+  <span class="kd">public</span> <span class="nf">SonarAdapterServer</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">port</span> <span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="nd">@Override</span> <span class="c1">//from EnablerAsServer</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setProtocolServer</span><span class="p">(</span> <span class="kt">int</span> <span class="n">port</span> <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+      <span class="c1">//Attiva il server sulla port usando un certo protocollo (ad es. TCP)</span>
+      <span class="c1">//Alla ricezione dei dati del sonar, il server chiama il metodo elaborate</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>  <span class="c1">//from ApplMessageHandler</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//Elabora il valore corrente del sonar ricevuto dal server</span>
+      <span class="c1">//rendendolo disponibile a chi invoca il metodo ISonar.getVal</span>
+    <span class="p">}</span>
+
+    <span class="c1">//METODI DI ISonar</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">activate</span><span class="p">(){</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deactivate</span><span class="p">(){</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getVal</span><span class="p">(){</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isActive</span><span class="p">(){</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="il-caso-del-led">
+<h3>Il caso del led<a class="headerlink" href="#il-caso-del-led" title="Permalink to this headline">¶</a></h3>
+<p>Ad esempio, nel caso del Led, definiamo un adapter che estende <code class="docutils literal notranslate"><span class="pre">EnablerAsClient</span></code> realizzando al contempo
+l’interfaccia <code class="docutils literal notranslate"><span class="pre">ILed</span></code>.</p>
+</section>
+</section>
+<section id="dagli-oggetti-alle-risorse">
+<h2>Dagli oggetti alle risorse<a class="headerlink" href="#dagli-oggetti-alle-risorse" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Gli oggetti passivi non hanno proprietà utili per la progettazione e costruzione di sistemi distributi.</p></li>
+<li><p>L’uso dei protocolli di comunicazione e di oggetti ‘attivi’ con Thread permette di colmare la lacuna
+(l’abstraction gap) ma richiede tempo e sposta l’attenzione del progettista su aspetti infrastrutturali,
+distraendolo dalle problematiche applicative.</p></li>
+<li><p>Lo sforzo di costruire infrastrutture di supporto alla comuncazione può essere ridotto
+cercando di costruire elementi riusabili in più applicazioni o veri e propri <span class="blue">framework</span>.</p></li>
+<li><p>Una volta comprese le problematiche ricorrenti, si può introdurre una nuova astrazione come elemento
+di riferimento per la organizzazione di sistemi distribuiti. Un primo esempio è il concetto di <span class="blue">risorsa RESTful</span>
+(<em>REpresentational State Transfer</em>).</p></li>
+</ul>
+<section id="risorse-rest">
+<h3>Risorse REST<a class="headerlink" href="#risorse-rest" title="Permalink to this headline">¶</a></h3>
+<p>Un concetto importante in REST è l’esistenza di <span class="blue">risorse</span>, intese come fonti di informazione
+a cui si può accedere tramite un identificatore detto <span class="blue">URI</span>.</p>
+<p>Per utilizzare le risorse, i componenti software comunicano attraverso un’interfaccia standard
+(di norma HTTP) per scambiare rappresentazioni di queste risorse, ovvero il documento che trasmette le informazioni.</p>
+<p>I  ‘verbi’ HTTP sono tipicamente usati in una API RESTful come segue:</p>
+<ul class="simple">
+<li><p><span class="blue">GET</span> : restituisce una rappresentazione di una risorsa o di una parte di essa, in un formato di dato (<strong>media type</strong>) appropriato.</p></li>
+<li><p><span class="blue">PUT</span> : modifica una risorsa o un parte di essa o, se non esiste, lo crea</p></li>
+<li><p><span class="blue">POST</span> : crea una risorsa</p></li>
+<li><p><span class="blue">DELETE</span> :  elimina una risorsa o una parte di essa</p></li>
+</ul>
+</section>
+<section id="risorse-coap">
+<h3>Risorse CoAP<a class="headerlink" href="#risorse-coap" title="Permalink to this headline">¶</a></h3>
+<p>In questa sezione faremo riferimento al concetto di <span class="blue">CoapResource</span> che rappresenta una risorsa REST
+cui è possibile inviare (utilizzando il protocollo  <span class="blue">CoAP</span>) i diversi tipi di richieste REST,
+cui corrispondono i seguenti metodi:</p>
+<ul class="simple">
+<li><p>handleGET( … )</p></li>
+<li><p>handlePOST( … )</p></li>
+<li><p>handlePUT( … )</p></li>
+<li><p>handleDELETE( … )</p></li>
+</ul>
+<p>Nella inplementazione <em>org.eclipse.californium.core</em> che useremo,
+ciascun metodo ha una implementazione di default che risponde con il codice <span class="blue">4.05 (Method Not Allowed)</span>.
+Inoltre ciascun metodo si presenta in due forme:</p>
+<ul class="simple">
+<li><p>con parametro <span class="blue">Exchange</span>: usato internamente da <em>californium</em>;</p></li>
+<li><p>con parametro  <span class="blue">CoAPExchange</span>: usato dagli sviluppatori
+perchè “<em>provides a save and user-friendlier API that can be used to respond to a request</em>”.</p></li>
+</ul>
+</section>
+</section>
+<section id="architettura-del-radarsystem">
+<h2>Architettura del RadarSystem<a class="headerlink" href="#architettura-del-radarsystem" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Il RaspberryPi ospita le risorse LedResource (come dispositivo di ouput) e SonarResource (come dispositivo di input).</p></li>
+<li><p>Il Controller su PC accedede ai dispositivi attraverso adapter che realizzano le interfacce ILed e ISonar.</p></li>
+<li><p>L’adapter per accedere al Led include un CoapClient, mentre l’adapter per il Sonar è un CoAP observer.</p></li>
+</ul>
+<section id="ledresource">
+<h3>LedResource<a class="headerlink" href="#ledresource" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="sonarresource">
+<h3>SonarResource<a class="headerlink" href="#sonarresource" title="Permalink to this headline">¶</a></h3>
+<p>See <code class="docutils literal notranslate"><span class="pre">CoapSonarResource</span></code> for testing.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-unibo.gif" alt="Logo"/>
+    
+    <h1 class="logo logo-name">iss22</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="RadarSystem.html">RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemAnalisi.html">Analisi del problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProdottiAnalisi.html">Prodotti della analisi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProgetto.html">Progettazione e sviluppo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemSupporti.html">Supporti per comunicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Enablers.html">Abilitatori di comunicazione</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContestiContenitori.html">Contesti-contenitori</a></li>
+<li class="toctree-l1"><a class="reference internal" href="VersoUnFramework.html">Verso un framework per la interazione distribuita</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemTcp.html">Il RadarSystem con TCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemMqtt.html">Il RadarSystem con MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemCoap.html">Il RadarSystem con CoAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarGuiCoap.html">RadarGuiCoap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemDeploy.html">RadarSystem deployment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Un approccio top-down al processo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quali-componenti">Quali componenti?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oggetti-o-enti-attivi">Oggetti o enti attivi?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quali-interazioni">Quali interazioni?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sincrone-o-asincrone">Sincrone o asincrone?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dirette-o-mediate">Dirette o mediate?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quali-comportamenti">Quali comportamenti?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#message-driven-o-state-based">Message-driven o state-based?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quale-architettura">Quale architettura?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tipi-di-componenti">Tipi di componenti</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#la-problematica-della-interazione">La problematica della interazione</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tipi-di-protocollo">Tipi di protocollo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tipi-di-messaggio">Tipi di messaggio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#una-interfaccia-per-l-interazione">Una interfaccia per l’interazione</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#messaggi-di-livello-applicativo">Messaggi di livello applicativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#architettura-adapter-port">Architettura adapter-port</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adapter-di-tipo-server">Adapter di tipo server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adapter-di-tipo-client">Adapter  di tipo client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#il-caso-del-sonar">Il caso del sonar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#il-caso-del-led">Il caso del led</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dagli-oggetti-alle-risorse">Dagli oggetti alle risorse</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#risorse-rest">Risorse REST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#risorse-coap">Risorse CoAP</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#architettura-del-radarsystem">Architettura del RadarSystem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ledresource">LedResource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sonarresource">SonarResource</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="RadarSystemDeploy.html" title="previous chapter">RadarSystem deployment</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Antonio Natali.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/ApproccioTopDown.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

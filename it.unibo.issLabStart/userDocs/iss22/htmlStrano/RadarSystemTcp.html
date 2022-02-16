@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Il RadarSystem con TCP &#8212; iss22 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Verso un framework per la interazione distribuita" href="VersoUnFramework.html" />
+    <link rel="prev" title="Contesti-contenitori" href="ContestiContenitori.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="il-radarsystem-con-tcp">
+<h1>Il RadarSystem con TCP<a class="headerlink" href="#il-radarsystem-con-tcp" title="Permalink to this headline">¶</a></h1>
+<section id="ridefinizione-degli-handler">
+<h2>Ridefinizione degli handler<a class="headerlink" href="#ridefinizione-degli-handler" title="Permalink to this headline">¶</a></h2>
+<p>All’interno di ogni handler applicativo, occorre ora definire il codice del metodo <cite>elaborate</cite>
+quando il messggio di input è di tipo <a class="reference internal" href="ContestiContenitori.html#applmessage"><span class="std std-ref">La classe ApplMessage</span></a>.</p>
+<section id="elaborate-di-ledapplhandler">
+<h3>elaborate di <a class="reference internal" href="Enablers.html#ledapplhandler"><span class="std std-ref">LedApplHandler</span></a><a class="headerlink" href="#elaborate-di-ledapplhandler" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span> <span class="n">ApplMessage</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="n">String</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="na">msgContent</span><span class="p">();</span>
+              <span class="k">if</span><span class="p">(</span> <span class="n">message</span><span class="p">.</span><span class="na">isRequest</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+                      <span class="k">if</span><span class="p">(</span><span class="n">payload</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;getState&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+                              <span class="n">String</span> <span class="n">ledstate</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">led</span><span class="p">.</span><span class="na">getState</span><span class="p">();</span>
+      <span class="n">ApplMessage</span> <span class="n">reply</span> <span class="o">=</span> <span class="n">prepareReply</span><span class="p">(</span> <span class="n">message</span><span class="p">,</span> <span class="n">ledstate</span><span class="p">);</span>
+                              <span class="n">sendAnswerToClient</span><span class="p">(</span><span class="n">reply</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+                      <span class="p">}</span>
+              <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">message</span><span class="p">.</span><span class="na">isReply</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+
+              <span class="p">}</span><span class="k">else</span> <span class="n">elaborate</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">conn</span><span class="p">);</span> <span class="c1">//call to previous version</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="metodo-elaborate-di-sonarapplhandler">
+<h3>Metodo elaborate di <a class="reference internal" href="Enablers.html#sonarapplhandler"><span class="std std-ref">SonarApplHandler</span></a><a class="headerlink" href="#metodo-elaborate-di-sonarapplhandler" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span> <span class="n">ApplMessage</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="p">)</span> <span class="p">{</span>
+<span class="n">String</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="na">msgContent</span><span class="p">();</span>
+                      <span class="k">if</span><span class="p">(</span> <span class="n">message</span><span class="p">.</span><span class="na">isRequest</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+                              <span class="k">if</span><span class="p">(</span><span class="n">payload</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;getDistance&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+                                      <span class="n">String</span> <span class="n">vs</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">sonar</span><span class="p">.</span><span class="na">getDistance</span><span class="p">().</span><span class="na">getVal</span><span class="p">();</span>
+                                      <span class="n">ApplMessage</span> <span class="n">reply</span> <span class="o">=</span> <span class="n">prepareReply</span><span class="p">(</span> <span class="n">message</span><span class="p">,</span> <span class="n">vs</span><span class="p">);</span>
+                                      <span class="n">sendAnswerToClient</span><span class="p">(</span><span class="n">reply</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+
+                              <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">payload</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;isActive&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+                                      <span class="n">String</span> <span class="n">sonarState</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">sonar</span><span class="p">.</span><span class="na">isActive</span><span class="p">();</span>
+                                      <span class="n">ApplMessage</span> <span class="n">reply</span> <span class="o">=</span> <span class="n">prepareReply</span><span class="p">(</span> <span class="n">message</span><span class="p">,</span> <span class="n">sonarState</span><span class="p">);</span> <span class="c1">//Utils.buildReply(&quot;sonar&quot;, &quot;sonarstate&quot;, sonarState, message.msgSender()) ;</span>
+                                      <span class="n">sendAnswerToClient</span><span class="p">(</span><span class="n">reply</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+                              <span class="p">}</span>
+                      <span class="p">}</span><span class="k">else</span> <span class="n">elaborate</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">conn</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="il-metodo-preparereply">
+<h3>Il metodo prepareReply<a class="headerlink" href="#il-metodo-preparereply" title="Permalink to this headline">¶</a></h3>
+<p>Il metodo <code class="docutils literal notranslate"><span class="pre">prepareReply</span></code> viene introdotto in <a class="reference internal" href="RadarSystemSupporti.html#applmsghandler"><span class="std std-ref">ApplMsgHandler</span></a> in modo che:</p>
+<ul class="simple">
+<li><p>l’identificativo del messaggio di risposta coincida con quello della richiesta</p></li>
+<li><p>l’identificativo del destinatario sia il mittente della richiesta</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="n">ApplMessage</span> <span class="nf">prepareReply</span><span class="p">(</span><span class="n">ApplMessage</span> <span class="n">message</span><span class="p">,</span> <span class="n">String</span> <span class="n">answer</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">String</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="na">msgContent</span><span class="p">();</span>
+            <span class="n">String</span> <span class="n">sender</span>  <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="na">msgSender</span><span class="p">();</span>
+            <span class="n">String</span> <span class="n">receiver</span><span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="na">msgReceiver</span><span class="p">();</span>
+            <span class="n">String</span> <span class="n">reqId</span>   <span class="o">=</span> <span class="n">message</span><span class="p">.</span><span class="na">msgId</span><span class="p">();</span>
+            <span class="n">ApplMessage</span> <span class="n">reply</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span> <span class="n">message</span><span class="p">.</span><span class="na">isRequest</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="c1">//The msgId of the reply must be the id of the request !!!!</span>
+                    <span class="n">reply</span> <span class="o">=</span> <span class="n">Utils</span><span class="p">.</span><span class="na">buildReply</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">reqId</span><span class="p">,</span> <span class="n">answer</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="na">msgSender</span><span class="p">())</span> <span class="p">;</span>
+            <span class="p">}</span><span class="k">else</span> <span class="p">{</span> <span class="c1">//DEFENSIVE</span>
+                    <span class="n">ColorsOut</span><span class="p">.</span><span class="na">outerr</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; | ApplMsgHandler prepareReply ERROR: message not a request&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">reply</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="ridefinizione-dei-client-proxy">
+<h2>Ridefinizione dei client Proxy<a class="headerlink" href="#ridefinizione-dei-client-proxy" title="Permalink to this headline">¶</a></h2>
+<p>Introduciamo un nuovo parametro di configurazione per indicare l’uso del  <a class="reference internal" href="ContestiContenitori.html#tcpcontextserver"><span class="std std-ref">Il TcpContextServer</span></a>:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">withContext</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Ridefiniamo i client definiti in precedenza (come ad esempio <a class="reference internal" href="Enablers.html#sonarproxyasclientnocontext"><span class="std std-ref">SonarProxyAsClient</span></a>)
+in modo  da inviare messaggi di tipo <a class="reference internal" href="ContestiContenitori.html#applmessage"><span class="std std-ref">La classe ApplMessage</span></a>, quando la configurazione
+<em>RadarSystemConfig.withContext</em> specifica che usiamo il  <a class="reference internal" href="ContestiContenitori.html#tcpcontextserver"><span class="std std-ref">Il TcpContextServer</span></a>:</p>
+<p>Ad esempio, ridefiniamo il Proxy del Led (il caso del Sonar è analogo) tenendo anche conto
+dei protocolli CoAP e MQTT :</p>
+<div class="highlight-java notranslate" id="ledproxyasclient"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LedProxyAsClient</span> <span class="kd">extends</span> <span class="n">ProxyAsClient</span> <span class="kd">implements</span> <span class="n">ILed</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="nf">LedProxyAsClient</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">String</span> <span class="n">host</span><span class="p">,</span> <span class="n">String</span> <span class="n">entry</span><span class="p">,</span>
+                     <span class="n">ProtocolType</span> <span class="n">protocol</span>  <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">super</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="n">entry</span><span class="p">,</span> <span class="n">protocol</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnOn</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">tcp</span>
+          <span class="o">&amp;&amp;</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">withContext</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span><span class="n">Utils</span><span class="p">.</span><span class="na">turnOnLed</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">mqtt</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span><span class="n">Utils</span><span class="p">.</span><span class="na">turnOnLed</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">coap</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span> <span class="s">&quot;on&quot;</span> <span class="p">);</span>
+    <span class="p">}</span><span class="k">else</span> <span class="c1">//CASO DI DEFAULT</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span> <span class="s">&quot;on&quot;</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnOff</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">tcp</span>
+        <span class="o">&amp;&amp;</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">withContext</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span><span class="n">Utils</span><span class="p">.</span><span class="na">turnOffLed</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">mqtt</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span><span class="n">Utils</span><span class="p">.</span><span class="na">turnOffLed</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">coap</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span> <span class="s">&quot;off&quot;</span> <span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span>  <span class="c1">//CASO DI DEFAULT</span>
+      <span class="n">sendCommandOnConnection</span><span class="p">(</span> <span class="s">&quot;off&quot;</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">getState</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">String</span> <span class="n">answer</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">tcp</span>
+        <span class="o">&amp;&amp;</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">withContext</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">answer</span> <span class="o">=</span> <span class="n">sendRequestOnConnection</span><span class="p">(</span>
+        <span class="n">Utils</span><span class="p">.</span><span class="na">buildRequest</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;query&quot;</span><span class="p">,</span> <span class="s">&quot;getState&quot;</span><span class="p">,</span> <span class="s">&quot;led&quot;</span><span class="p">).</span><span class="na">toString</span><span class="p">())</span> <span class="p">;</span>
+    <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">protcolType</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">mqtt</span><span class="p">)</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">sendRequestOnConnection</span><span class="p">(</span>
+          <span class="n">Utils</span><span class="p">.</span><span class="na">buildRequest</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;query&quot;</span><span class="p">,</span> <span class="s">&quot;getState&quot;</span><span class="p">,</span> <span class="s">&quot;led&quot;</span><span class="p">).</span><span class="na">toString</span><span class="p">());</span>
+    <span class="k">else</span> <span class="p">{</span> <span class="c1">//CASO DI DEFAULT</span>
+      <span class="n">answer</span> <span class="o">=</span> <span class="n">sendRequestOnConnection</span><span class="p">(</span> <span class="s">&quot;getState&quot;</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">answer</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>I metodi <code class="docutils literal notranslate"><span class="pre">sendCommandOnConnection</span></code> e <code class="docutils literal notranslate"><span class="pre">sendRequestOnConnection</span></code> sono definiti in <a class="reference internal" href="RadarSystemSupporti.html#proxyasclient"><span class="std std-ref">ProxyAsClient</span></a>.</p>
+<section id="definizione-dei-messaggi-come-applmessage">
+<span id="messaggiappl"></span><h3>Definizione dei messaggi come <code class="docutils literal notranslate"><span class="pre">ApplMessage</span></code><a class="headerlink" href="#definizione-dei-messaggi-come-applmessage" title="Permalink to this headline">¶</a></h3>
+<p>La classe <code class="docutils literal notranslate"><span class="pre">Utils</span></code> fornisce metodi per la creazione dei messaggi usati dagli handler del Led e dal Sonar
+usando un <code class="docutils literal notranslate"><span class="pre">dispatch</span></code> per i comandi e un  <code class="docutils literal notranslate"><span class="pre">request</span></code> per le richieste
+di informazione.</p>
+<blockquote>
+<div><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">//Definizione dei Messaggi</span>
+<span class="n">ApplMessage</span> <span class="n">turnOnLed</span>    <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg( turn, dispatch, system, led, on, 2 )&quot;</span><span class="p">);</span>
+<span class="n">ApplMessage</span> <span class="n">turnOffLed</span>   <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg( turn, dispatch, system, led, off, 3 )&quot;</span><span class="p">);</span>
+<span class="n">ApplMessage</span> <span class="n">sonarActivate</span> <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg( sonarcmd, dispatch,system,sonar, activate,4)&quot;</span><span class="p">);</span>
+<span class="n">ApplMessage</span> <span class="n">getDistance</span>  <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg(sonarcmd,request,system,sonar, getDistance,5)&quot;</span><span class="p">);</span>
+<span class="n">ApplMessage</span> <span class="n">getLedState</span>  <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg(ledcmd,request,system,led,getState, 6)&quot;</span><span class="p">);</span>
+<span class="c1">//For simulation:</span>
+<span class="n">ApplMessage</span> <span class="n">fardistance</span>  <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg( distance, dispatch, system, sonar, 36, 0 )&quot;</span><span class="p">);</span>
+<span class="n">ApplMessage</span> <span class="n">neardistance</span> <span class="o">=</span>
+  <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="s">&quot;msg( distance, dispatch, system, sonar, 10, 1 )&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="architettura-del-primo-prototipo">
+<span id="primoprototipo"></span><h2>Architettura del primo prototipo<a class="headerlink" href="#architettura-del-primo-prototipo" title="Permalink to this headline">¶</a></h2>
+<p>Avvaledoci dei componenti introdotti in precedenza, costruiamo un sistema che abbia il Controller (e il radar) su PC
+e i dispositivi sul Raspberry, secondo l’architettura mostrata in figura:</p>
+<a class="reference internal image-reference" href="_images/sysDistr1.PNG"><img alt="_images/sysDistr1.PNG" class="align-center" src="_images/sysDistr1.PNG" style="width: 70%;" /></a>
+<p>I dispositivi sul Raspberry sono incspsulati in  handler che gestiscono i <a class="reference internal" href="#messaggiappl"><span class="std std-ref">Messaggi applicativi</span></a> inviati
+loro dal <a class="reference internal" href="ContestiContenitori.html#tcpcontextserver"><span class="std std-ref">TcpContextServer</span></a>.</p>
+<p>Si veda:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RadarSystemMainDevsCtxOnRasp</span></code> : da attivare sul Raspberry</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RadarSystemMainWithCtxOnPc</span></code> : da attivare sul PC</p></li>
+</ul>
+</section>
+<section id="deployoment-del-primo-prototipo">
+<h2>Deployoment del primo prototipo<a class="headerlink" href="#deployoment-del-primo-prototipo" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gradle</span> <span class="n">build</span> <span class="n">jar</span> <span class="o">-</span><span class="n">x</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>Crea il file <cite>builddistributionsit.unibo.enablerCleanArch-1.0.zip</cite> che contiene la directory bin</p>
+<p>La distribuzione del <em>RadarSystem</em> assume due forme:</p>
+<ul class="simple">
+<li><p>la forma di una libreria di nome <code class="docutils literal notranslate"><span class="pre">it.unibo.enablerCleanArch-1.0.jar</span></code> prodotta dal progetto <a class="reference internal" href="#it-unibo-enablercleanarch">it.unibo.enablerCleanArch</a></p></li>
+<li><p>la forma di una applicazione web (che utiliza la libreria precedente) prodotta dal progetto <code class="docutils literal notranslate"><span class="pre">it.unibo.msenabler</span></code></p></li>
+</ul>
+<section id="it-unibo-enablercleanarch">
+<span id="enablercleanarch"></span><h3>it.unibo.enablerCleanArch<a class="headerlink" href="#it-unibo-enablercleanarch" title="Permalink to this headline">¶</a></h3>
+<p>Il progetto <em>it.unibo.enablerCleanArch</em> è sviluppato in <code class="docutils literal notranslate"><span class="pre">Java8</span></code> e fornisce il programma
+<code class="docutils literal notranslate"><span class="pre">AllMainRadarLed</span></code> che permette di selezionare ed eseguire diverse configurazioni applicative.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>    <span class="n">LedUsageMain</span>
+<span class="n">a</span>    <span class="n">RadarSystemDevicesOnRaspMqtt</span>
+<span class="n">A</span>    <span class="n">RadarSystemMainOnPcMqtt</span>
+<span class="mi">2</span>    <span class="n">SonarUsageMainWithEnablerTcp</span>
+<span class="mi">3</span>    <span class="n">SonarUsageMainWithContextTcp</span>
+<span class="mi">4</span>    <span class="n">SonarUsageMainWithContextMqtt</span>
+<span class="mi">5</span>    <span class="n">SonarUsageMainCoap</span>
+<span class="mi">6</span>    <span class="n">RadarSystemAllOnPc</span>
+<span class="mi">7</span>    <span class="n">RadarSystemDevicesOnRasp</span>
+<span class="mi">8</span>    <span class="n">RadaSystemMainCoap</span>
+<span class="mi">9</span>    <span class="n">RadarSystemMainOnPcCoap</span>
+</pre></div>
+</div>
+<p>Selezionando <strong>a</strong> si esegue la parte di applicazione che attiva i dispositivi Led e Sonar sul Raspberry.
+A queta parte corrisponde la parte di applicazione  <strong>A</strong>, da eseguire sul PC per inviare comandi ai dispositivi remoti
+e per ricevere informazioni sul loro stato.
+Le due parti interagiscono via MQTT usando il broker di indirizzo <code class="docutils literal notranslate"><span class="pre">tcp://broker.hivemq.com</span></code>.</p>
+<section id="caso-8-uso-di-coap-sistema-tutto-su-raspberry">
+<h4>Caso 8 uso di Coap - sistema tutto su Raspberry<a class="headerlink" href="#caso-8-uso-di-coap-sistema-tutto-su-raspberry" title="Permalink to this headline">¶</a></h4>
+<p>Il sistema su Raspberry attiva un unico server (<strong>CoapApplServer</strong>) e aggiunge come risorse
+il Led ( devices/output/lights/led ) e il Sonar (devices/input/sonar).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;simulation&quot;</span>       <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ControllerRemote&quot;</span> <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;LedRemote&quot;</span>        <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;SonareRemote&quot;</span>     <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;RadarGuiRemote&quot;</span>   <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;protocolType&quot;</span>     <span class="p">:</span> <span class="s2">&quot;coap&quot;</span><span class="p">,</span>
+<span class="s2">&quot;withContext&quot;</span>      <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarDelay&quot;</span>       <span class="p">:</span> <span class="s2">&quot;200&quot;</span><span class="p">,</span>
+<span class="o">........................................</span>
+<span class="s2">&quot;pcHostAddr&quot;</span>       <span class="p">:</span> <span class="s2">&quot;192.168.1.9&quot;</span><span class="p">,</span>
+<span class="s2">&quot;raspHostAddr&quot;</span>     <span class="p">:</span> <span class="s2">&quot;192.168.1.24&quot;</span><span class="p">,</span>
+<span class="s2">&quot;radarGuiPort&quot;</span>     <span class="p">:</span> <span class="s2">&quot;8014&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ledPort&quot;</span>          <span class="p">:</span> <span class="s2">&quot;8010&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ledGui&quot;</span>           <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarPort&quot;</span>        <span class="p">:</span> <span class="s2">&quot;8012&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarObservable&quot;</span>  <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;controllerPort&quot;</span>   <span class="p">:</span> <span class="s2">&quot;8016&quot;</span><span class="p">,</span>
+<span class="s2">&quot;serverTimeOut&quot;</span>    <span class="p">:</span> <span class="s2">&quot;600000&quot;</span><span class="p">,</span>
+<span class="s2">&quot;applStartdelay&quot;</span>   <span class="p">:</span> <span class="s2">&quot;3000&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarDistanceMax&quot;</span> <span class="p">:</span> <span class="s2">&quot;150&quot;</span><span class="p">,</span>
+<span class="s2">&quot;DLIMIT&quot;</span>           <span class="p">:</span> <span class="s2">&quot;12&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ctxServerPort&quot;</span>    <span class="p">:</span> <span class="s2">&quot;8018&quot;</span><span class="p">,</span>
+<span class="s2">&quot;mqttBrokerAddr&quot;</span>   <span class="p">:</span> <span class="s2">&quot;tcp://broker.hivemq.com&quot;</span><span class="p">,</span>
+<span class="s2">&quot;testing&quot;</span>          <span class="p">:</span> <span class="s2">&quot;false&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="caso-8-uso-di-coap-dispositivi-su-raspberry">
+<h4>Caso 8 uso di Coap - dispositivi su Raspberry<a class="headerlink" href="#caso-8-uso-di-coap-dispositivi-su-raspberry" title="Permalink to this headline">¶</a></h4>
+<p>Condifguriamo il sistema su Raspberry specificando che il controller è remoto.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;simulation&quot;</span>       <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ControllerRemote&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>A questo punto attiviamo il programma 9 su PC</p>
+</section>
+<section id="caso-9-uso-di-coap-controller-su-pc">
+<h4>Caso 9 uso di Coap - Controller su PC<a class="headerlink" href="#caso-9-uso-di-coap-controller-su-pc" title="Permalink to this headline">¶</a></h4>
+<p>Questo programma nasce per usare CoAP e quindi fissa in modo diretto i parametri di configurazione
+che gli interessano:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">raspHostAddr</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.xxx&quot;</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">DLIMIT</span>       <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">simulation</span>   <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">withContext</span>  <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">sonarDelay</span>   <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>     <span class="o">//</span><span class="n">come</span> <span class="n">quello</span> <span class="k">del</span> <span class="n">Raspberry</span>
+</pre></div>
+</div>
+<p>Il programma può operare anche definendo il Controller come un observer della risorsa Sonar,
+ponendo</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">useProxyClient</span> <span class="o">=</span> <span class="n">false</span>
+</pre></div>
+</div>
+<p>In caso contrario, il Controller opera con un convenzionale ciclo <strong>read-eval-print</strong>.</p>
+</section>
+</section>
+</section>
+<section id="problemi-ancora-aperti">
+<h2>Problemi ancora aperti<a class="headerlink" href="#problemi-ancora-aperti" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Un handler lento o che si blocca, rallenta o blocca la gestione dei messaggi da parte del
+<code class="docutils literal notranslate"><span class="pre">ContextMsgHandler</span></code> e quindi del <a class="reference internal" href="ContestiContenitori.html#tcpcontextserver"><span class="std std-ref">TcpContextServer</span></a>.</p></li>
+<li><p>Nel caso di componenti con stato utlizzabili da più clienti, vi possono essere problemi di concorrenza.</p></li>
+</ul>
+<p>Per un esempio, si consideri un contatore (POJO) che effettua una operazione di decremento rilasciando il controllo
+prima del completamento della operazione.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CounterWithDelay</span> <span class="p">{</span>
+  <span class="kd">private</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">inc</span><span class="p">()</span> <span class="p">{</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dec</span><span class="p">(</span><span class="kt">int</span> <span class="n">dt</span><span class="p">)</span> <span class="p">{</span>   <span class="c1">//synchronized required BUT other clients delayed</span>
+    <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">ColorsOut</span><span class="p">.</span><span class="na">delay</span><span class="p">(</span><span class="n">dt</span><span class="p">);</span>  <span class="c1">//the control is given to another client</span>
+    <span class="n">ColorsOut</span><span class="p">.</span><span class="na">out</span><span class="p">(</span><span class="s">&quot;Counter resumes v= &quot;</span> <span class="o">+</span> <span class="n">v</span><span class="p">);</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">ColorsOut</span><span class="p">.</span><span class="na">out</span><span class="p">(</span><span class="s">&quot;Counter new value after dec= &quot;</span> <span class="o">+</span> <span class="n">n</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/CounterWithDelay.PNG"><img alt="_images/CounterWithDelay.PNG" class="align-center" src="_images/CounterWithDelay.PNG" style="width: 60%;" /></a>
+<p>L’handler che</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CounterHandler</span> <span class="kd">extends</span> <span class="n">ApplMsgHandler</span> <span class="p">{</span>
+<span class="kd">private</span> <span class="n">CounterWithDelay</span> <span class="n">c</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CounterWithDelay</span><span class="p">();</span>
+
+<span class="kd">public</span> <span class="nf">CounterHandler</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span> <span class="p">)</span> <span class="p">{</span> <span class="kd">super</span><span class="p">(</span><span class="n">name</span><span class="p">);</span> <span class="p">}</span>
+
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">ApplMessage</span> <span class="n">msg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+    <span class="n">String</span> <span class="n">cmd</span>      <span class="o">=</span> <span class="n">msg</span><span class="p">.</span><span class="na">msgContent</span><span class="p">();</span>
+                      <span class="n">Struct</span> <span class="n">cmdT</span>     <span class="o">=</span> <span class="p">(</span><span class="n">Struct</span><span class="p">)</span> <span class="n">Term</span><span class="p">.</span><span class="na">createTerm</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span>
+                      <span class="n">String</span> <span class="n">cmdName</span>  <span class="o">=</span> <span class="n">cmdT</span><span class="p">.</span><span class="na">getName</span><span class="p">();</span>
+                      <span class="k">if</span><span class="p">(</span> <span class="n">cmdName</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;dec&quot;</span><span class="p">))</span> <span class="p">{</span>
+                              <span class="n">elaborateDec</span><span class="p">(</span><span class="n">cmdT</span><span class="p">);</span>
+                              <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="p">.</span><span class="na">isRequest</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+                                      <span class="n">String</span> <span class="n">reply</span> <span class="o">=</span> <span class="s">&quot;answer_from_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">;</span>
+                                      <span class="n">ColorsOut</span><span class="p">.</span><span class="na">out</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; | reply=&quot;</span><span class="o">+</span><span class="n">reply</span> <span class="p">);</span>
+                                      <span class="c1">//sendMsgToClient( msg.msgId(),   &quot;replyToDec&quot;, msg.msgSender(), reply);</span>
+                                      <span class="n">sendMsgToClient</span><span class="p">(</span>  <span class="n">reply</span><span class="p">,</span> <span class="n">conn</span> <span class="p">)</span> <span class="p">;</span>
+                              <span class="p">}</span>
+              <span class="p">}</span>
+              <span class="p">}</span><span class="k">catch</span><span class="p">(</span> <span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+                      <span class="n">Struct</span> <span class="n">cmdT</span>     <span class="o">=</span> <span class="p">(</span><span class="n">Struct</span><span class="p">)</span> <span class="n">Term</span><span class="p">.</span><span class="na">createTerm</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+                      <span class="n">elaborateDec</span><span class="p">(</span>   <span class="n">cmdT</span> <span class="p">);</span>
+              <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span> <span class="n">ApplMessage</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+
+      <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">elaborateDec</span><span class="p">(</span> <span class="n">Struct</span> <span class="n">cmdT</span> <span class="p">)</span> <span class="p">{</span>
+              <span class="kt">int</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">.</span><span class="na">parseInt</span><span class="p">(</span><span class="n">cmdT</span><span class="p">.</span><span class="na">getArg</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">toString</span><span class="p">());</span>
+              <span class="n">ColorsOut</span><span class="p">.</span><span class="na">out</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; | dec delay=&quot;</span><span class="o">+</span><span class="n">delay</span><span class="p">);</span>
+              <span class="n">c</span><span class="p">.</span><span class="na">dec</span><span class="p">(</span><span class="n">delay</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendAnswerToClient</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio <code class="docutils literal notranslate"><span class="pre">msg(</span> <span class="pre">cmd,</span> <span class="pre">dispatch,</span> <span class="pre">main,</span> <span class="pre">counter,</span> <span class="pre">dec(DELAY),</span> <span class="pre">1)</span></code>
+con <code class="docutils literal notranslate"><span class="pre">DELAY</span></code> fissato a un certo valore.
+Ad esempio:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">String</span> <span class="n">delay</span> <span class="o">=</span> <span class="s">&quot;500&quot;</span><span class="p">;</span>
+<span class="n">ApplMessage</span> <span class="n">msgDec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ApplMessage</span><span class="p">(</span>
+    <span class="s">&quot;msg( cmd, dispatch, main, DEST, dec(DELAY), 1 )&quot;</span>
+    <span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;DEST&quot;</span><span class="p">,</span> <span class="n">resourceName</span><span class="p">).</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;DELAY&quot;</span><span class="p">,</span> <span class="n">delay</span><span class="p">));</span>
+
+<span class="k">new</span> <span class="n">ProxyAsClient</span><span class="p">(</span><span class="s">&quot;client1&quot;</span><span class="p">,</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">ctxServerPort</span><span class="p">,</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">tcp</span><span class="p">).</span>
+    <span class="n">sendCommandOnConnection</span><span class="p">(</span><span class="n">msgDec</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>Il programma <code class="docutils literal notranslate"><span class="pre">SharedCounterExampleMain</span></code> crea due chiamate di questo tipo una di seguito all’alltra.
+Con delay basso (ad esempio <code class="docutils literal notranslate"><span class="pre">delay</span> <span class="pre">=</span> <span class="pre">&quot;50&quot;</span></code>) il comportamento è corretto (e il contatore va a 0),
+ma con <code class="docutils literal notranslate"><span class="pre">delay</span> <span class="pre">=</span> <span class="pre">&quot;500&quot;</span></code> si vede che il decremento non avviene (il contatore si fissa a 1).</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-unibo.gif" alt="Logo"/>
+    
+    <h1 class="logo logo-name">iss22</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduzione.html">Costruire software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Indicazioni.html">Indicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystem.html">RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemAnalisi.html">Analisi del problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProdottiAnalisi.html">Prodotti della analisi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProgetto.html">Progettazione e sviluppo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemSupporti.html">Supporti per comunicazioni</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Enablers.html">Abilitatori di comunicazione</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContestiContenitori.html">Contesti-contenitori</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Il RadarSystem con TCP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ridefinizione-degli-handler">Ridefinizione degli handler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#elaborate-di-ledapplhandler">elaborate di <span class="xref std std-ref">LedApplHandler</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#metodo-elaborate-di-sonarapplhandler">Metodo elaborate di <span class="xref std std-ref">SonarApplHandler</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#il-metodo-preparereply">Il metodo prepareReply</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ridefinizione-dei-client-proxy">Ridefinizione dei client Proxy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#definizione-dei-messaggi-come-applmessage">Definizione dei messaggi come <code class="docutils literal notranslate"><span class="pre">ApplMessage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#architettura-del-primo-prototipo">Architettura del primo prototipo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deployoment-del-primo-prototipo">Deployoment del primo prototipo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#it-unibo-enablercleanarch">it.unibo.enablerCleanArch</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#caso-8-uso-di-coap-sistema-tutto-su-raspberry">Caso 8 uso di Coap - sistema tutto su Raspberry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caso-8-uso-di-coap-dispositivi-su-raspberry">Caso 8 uso di Coap - dispositivi su Raspberry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caso-9-uso-di-coap-controller-su-pc">Caso 9 uso di Coap - Controller su PC</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#problemi-ancora-aperti">Problemi ancora aperti</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="VersoUnFramework.html">Verso un framework per la interazione distribuita</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemMqtt.html">Il RadarSystem con MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemCoap.html">Il RadarSystem con CoAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarGuiCoap.html">RadarGuiCoap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemDeploy.html">RadarSystem deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ApproccioTopDown.html">Un approccio top-down al processo</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ContestiContenitori.html" title="previous chapter">Contesti-contenitori</a></li>
+      <li>Next: <a href="VersoUnFramework.html" title="next chapter">Verso un framework per la interazione distribuita</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Antonio Natali.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/RadarSystemTcp.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
