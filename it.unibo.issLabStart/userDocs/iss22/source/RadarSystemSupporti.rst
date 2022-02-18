@@ -109,8 +109,8 @@ Nel seguito, incapsuleremo il codice applicativo  entro oggetti che implementano
   public interface IApplMsgHandler {
     public String getName(); 
     public  void elaborate( String message, Interaction2021 conn ) ;	 
-    public void sendMsgToClient( String message, Interaction2021 conn  );
-    public void sendAnswerToClient( String message, Interaction2021 conn  );
+    public void sendMsgToClient(String message, Interaction2021 conn);
+    public void sendAnswerToClient(String message, Interaction2021 conn);
   }
 
 
@@ -118,7 +118,7 @@ Il costruttore del TCP server avrà quindi la seguente signature:
 
 .. code:: Java
 
-  public TcpServer(String name,int port, IApplMsgHandler userDefHandler) 
+  public TcpServer(String name,int port,IApplMsgHandler userDefHandler) 
 
 cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di:
 
@@ -148,17 +148,17 @@ dei messaggi in ingresso.
     
     public Interaction2021 getName(  ) {  return name;  }
     @Override
-    public void sendMsgToClient( String message, Interaction2021 conn  ) {
+    public void sendMsgToClient( String message, Interaction2021 conn) {
       try {  
         conn.forward( message );
       }catch(Exception e){ ... }
     } 
     @Override
-    public void sendAnswerToClient( String reply, Interaction2021 conn   ) {
+    public void sendAnswerToClient( String reply, Interaction2021 conn) {
         sendMsgToClient(reply, conn);
     }
     
-    public abstract void elaborate( String message, Interaction2021 conn ) ;
+    public abstract void elaborate(String message,Interaction2021 conn) ;
    }
 
 .. image:: ./_static/img/Architectures/ApplMessageHandler.png 
@@ -208,7 +208,7 @@ e il metodo ``run`` che ne specifica il funzionamento.
       stopped = true;
       serversock.close();
     }catch (IOException e) {
-      Colors.outerr(getName() + " | ERROR: " + e.getMessage());	 
+      Colors.outerr(getName() + " | ERROR: " + e.getMessage());	
     }
   }
 
@@ -267,7 +267,8 @@ nel costruttore.
 .. code:: Java
 
   public class TcpApplMessageHandler extends Thread{
-  public TcpApplMessageHandler(IApplMsgHandler handler,Interaction2021 conn){ 
+  public TcpApplMessageHandler(
+        IApplMsgHandler handler,Interaction2021 conn){ 
     @Override
     public void run() {
       ...
@@ -312,7 +313,7 @@ I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TC
 
   @Before
   public void up() {
-		server = new TcpServer("tcpServer",testPort, new NaiveHandler("naiveH") );
+    server = new TcpServer("tcpServer",testPort, new NaiveHandler("naiveH") );
     server.activate();		
   }
 
@@ -406,10 +407,10 @@ Test per l'interazione client-server
 
 .. code:: Java
 
-	@Test 
-	public void testSingleClient() {
+  @Test 
+  public void testSingleClient() {
     new ClientForTest().doWorkWithServerOn( "client1",10  );		
-	}
+  }
  
 	
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -418,8 +419,8 @@ Test con più clienti
 
 .. code:: Java
 
-	@Test 
-	public void testManyClients() {
+  @Test 
+  public void testManyClients() {
     new ClientForTest().doWorkWithServerOn("client1",10  );
     new ClientForTest().doWorkWithServerOn("client2",1 );
     new ClientForTest().doWorkWithServerOn("client3",1 );
@@ -497,7 +498,7 @@ il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)`
 
 - **setConnection**: stabilire una connessione con un server remoto dato un protocollo;
 - **sendCommandOnConnection**: inviare un comando al server;
-- **sendCommandOnConnection**: inviare una richiesta al server e attendere la risposta;
+- **sendRequestOnConnection**: inviare una richiesta al server e attendere la risposta;
 
 Il metodo ``setConnection`` effettua la connessione al server remoto in funzione del tipo di
 protocollo specificato:
@@ -517,7 +518,7 @@ protocollo specificato:
 .. che definiremo più avanti e che restituisce un oggetto di tipo ``Interaction2021`` 
 .. come nel caso di TCP/UDP.
 
-Il caso di Proxy per altri protocolli sarà affrontato in :doc:`VersoUnFramework`.
+Il caso di Proxy per protocolli diversi da TCP sarà affrontato in :doc:`VersoUnFramework`.
 
 Con riferimento ai :ref:`TipiInterazione` introdotti nella fase di analisi,
 il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* e un metodo per inviare

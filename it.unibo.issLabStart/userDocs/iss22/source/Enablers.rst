@@ -103,7 +103,7 @@ Notiamo che:
 
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
-- si prevede anche la possibilità di utilizzare altri protocolli
+- si prevede anche la possibilità di utilizzare altri protocolli.
 
  
 .. _IApplIntepreterNoCtx:
@@ -121,7 +121,8 @@ L'handler deve quindi fare fronte a due compiti:
 #. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar
 #. inviare al mittente la risposta, in caso il messaggio sia una richiesta
 
-Facendo riferimento al single responsibility principle (SRP), conviene delegare il primo compito ad
+Facendo riferimento al *single responsibility principle* (SRP, si veda 
+`SOLID <https://it.wikipedia.org/wiki/SOLID>`_), conviene delegare il primo compito ad
 un componente che non 'sappia nulla' della *dimensione interazione* e che si occupi solo della
 interpretazione del messaggio. Introduciamo una interfaccia per componenti di questo tipo: 
 
@@ -155,7 +156,7 @@ una  `grammatica regolare`_ che può essere definita mediante le seguenti regole
 
 Concettualmente, dobbiamo fare ora riferimento al `pattern interpreter`_ .
 Tuttavia, la semplicità di questo linguaggio non richiede al momento approfondimenti di tecniche
-per il riconoscimento e la esecuzione di frasi: basteranno dei semplici ``if``,
+per il riconoscimento e la esecuzione di frasi: basteranno dei semplici test su stringhe,
 come vederemo nelle sezioni successive.
 
 Occorre però segnalare un punto importante: stiamo introducendo l'idea che si possa interagire 
@@ -183,7 +184,8 @@ invocando il dispositivo rappresentato da un POJO di interfaccia :ref:`ILed<ILed
     public LedApplIntepreter(  ILed led) { this.led = led; }
 
     public String elaborate( String message ) {
-      //Analizza message e invoca il led, restituendo un risultato o una risposta
+      //Analizza message e invoca il led,
+      //restituendo un risultato o una risposta
       if( message.equals("getState") ) return ""+led.getState() ;
       else if( message.equals("on")) led.turnOn();
       else if( message.equals("off") ) led.turnOff();	
