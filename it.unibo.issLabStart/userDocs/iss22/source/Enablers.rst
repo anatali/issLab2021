@@ -104,8 +104,8 @@ Notiamo che:
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
 - si prevede anche la possibilità di utilizzare altri protocolli
-  .. un supporto per il protocollo CoAP (:doc:`RadarSystemCoap`), di cui parleremo nella sezione :doc:`RadarGuiCoap`.
 
+ 
 .. _IApplIntepreterNoCtx:
 
 ------------------------------------------

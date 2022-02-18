@@ -40,11 +40,15 @@ Un modo per *valutare la qualità* di una architettura logica e la *coerenza con
 - Se nel modello **non compaiono** entità corrispondenti a termini definiti nel glossario, 
   quale è la motivazione della loro mancanza? Siamo di fronte a una dimenticanza 
   o vi sono ragioni reali per non includere questi elementi?
-- Le dipendenze tra le parti sono state impostate a livello logico o riflettono (erroneamente) 
+- Le dipendenze tra le parti sono state impostate a livello logico o riflettono (erroneamente, in questa fase) 
   una *visione implementativa*?
 - E' possibile addentrarsi nei dettagli dell'architettura procedendo :blue:`incrementalmente` 
   a livelli di astrazione via via descrescenti (con tecniche di raffinamento e :blue:`zooming`) 
-  o siamo di fornte a un ammasso non organizzato di parti?
+  o siamo di fronte a un ammasso non organizzato di parti, come quello della figura?
+
+  .. image:: ./_static/img/Architectures/bigballofmud.png
+   :align: center
+   :width: 30%
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Architettura ad oggetti
@@ -75,8 +79,9 @@ sull’uso del componente.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Modello ad oggetti del dominio
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 I modelli iniziali dei componenti descritti da interfacce Java per il *Led,
-il Sonar e il RadarDisplay* costuiscono il nostro :blue:`modello del dominio`. 
+il Sonar e il RadarDisplay* costuiscono il nostro attuale :blue:`modello del dominio`. 
 Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 
 :remark:`il modello del dominio sarà al centro della architettura del sistema`
@@ -155,9 +160,8 @@ ma solo metodi per fornirne una rappresentazione in termini di tipi primitivi, t
 il metodo che fornisce una rappresentazione in termini di **String**.
 
 
-Notiamo che, invece, per il Led abbiamo 'ridotto' il concetto di stato del Led al 
-tipo predefinito  ``boolean``. Questa diverso modo di procedere potrebbe avere conseguenze, che verranno
-poste meglio in luce in seguito.
+Notiamo invece che, per il Led, abbiamo 'ridotto' il concetto di stato del Led al 
+tipo predefinito  ``boolean`` in quanto questo tipo di dato è aderente alla logica del problema.
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Architettura logica del sistema
@@ -170,7 +174,7 @@ La :blue:`architettura logica` suggerita dal problema è rappresentabile con la 
    :width: 50%
 
  
-:remark:`Non vi sono situazioni di uso concorrente di risorse.`
+:remark:`Non vi sono (al momento) situazioni di uso concorrente di risorse.`
 
 .. _controllerLogic:
 
@@ -193,7 +197,7 @@ A questo punto possiamo anche esprimere il funzionamento logico del ``Controller
     IDistance d = sonar.getDistance(); //Acquisizione di un dato dal sonar
     if( d.getDistance().getVal()) < DLIMIT )        //Elaborazione del dato
       Led.turnOn() else Led.turnOff  //Gestione del Led
-    radar.update( ""+d.getDistance().getVal(), "90")    //Visualizzazione su RadarDisplay
+    radar.update( ""+d.getDistance().getVal(), "90") //Visualizzazione su RadarDisplay
   }
 
 .. Questa impostazione astrae completamente dal fatto che il sistema sia distribuito, in quanto vuole 
@@ -242,6 +246,9 @@ implementare i componenti in modo che possano scambiare informazione via rete.
 - La **Facade** è un'interfaccia di livello superiore (più semplice) per un sottosistema 
   di una o più classi.  
 
+- Il **Singleton** evita di creare più di una istanza di una classe e può risultare utile per creare supporti 
+  alla comunicazione.
+
 .. _concettodienabler:  
 
 +++++++++++++++++++++++++++++++++++++++
@@ -274,7 +281,7 @@ Tuttavia, come analisti, riteniamo sia opportuno  limitare il traffico di rete,
 evitando di inviare i dati del sonar anche quando non
 sono richiesti dal sever.  Per cui, una architettura migliore è porre sul PC, ad uso
 del ``Controller``, due  *proxy tipo-client*, uno per il Led e uno per il Sonar, che interagiranno cone due
-*enabler tipo-server* complementari posti sul RaspberryPi, inviando:
+*enabler tipo-server* complementari posti sul RaspberryPi, inviando su :ref:`Interaction2021`:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
 - messaggi interpretabili cone :blue:`richieste` (ad esempio ``getDistance``, ``getState``)

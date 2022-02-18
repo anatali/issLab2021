@@ -56,6 +56,8 @@ di implementazione, conviene introdurre una **Factory**:
     public static IRadarGui createRadarGui() { ... }
   }
 
+.. _RadarSystemConfig:
+
 Ciasun metodo di ``DeviceFactory`` restitusce una istanza di dispositivo reale o Mock in accordo alle specifiche
 contenute in un file di Configurazione (``RadarSystemConfig.json``) che qui ipotizziamo scritto in JSon:
 
@@ -75,7 +77,7 @@ che inizializza variabili ``static`` accessibili all'applicazione:
 .. code::  java
 
   public class RadarSystemConfig {
-    public static boolean simulation = true;  //overridden by setTheConfiguration
+    public static boolean simulation; //set by setTheConfiguration
     ...
     public static void setTheConfiguration( String resourceName ) { 
       ... 
@@ -93,8 +95,8 @@ La classe ``ColorsOut``
 
 La classe :blue:`ColorsOut` è una utility per scrivere su standard ouput messaggi colorati. 
 Il metodo ``ColorsOut.outerr`` visualizza un messaggio in colore rosso, 
-mentre ``ColorsOut.out`` lo fa con il colore blu o con un colore specificato esplicitamente come parametro
-quando il paramtero di configurazione 
+mentre ``ColorsOut.out`` lo fa (con colore blu o con un colore specificato esplicitamente come parametro)
+quando il parametro di configurazione "tracing" vale "true".
 
 .. code:: 
 
@@ -177,7 +179,7 @@ In pratica il ``LedModel`` è già un ``LedMock``, in quanto tiene traccia dello
 ``state``. 
 
 Poichè il metodo ``ledActivate`` ha la responsabilità di definire il codice specifico per
-accedendere/spegenre il Led, a livello di Mock possiamo rendere visibile lo stato del Led
+accedendere/spegnere il Led, a livello di Mock possiamo rendere visibile lo stato del Led
 sullo standard output. 
  
 
@@ -223,7 +225,7 @@ del software reso disponibile dal committente:
 Testing del dispositivo Led
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Un test automatizzato di tipo unit-testing sul Led può essere espresso usando JUnit come segue:
+Un test automatizzato di tipo Unit-testing sul Led può essere espresso usando JUnit come segue:
 
 .. code-block:: java
 
@@ -286,7 +288,7 @@ La classe astratta SonarModel
 
 La classe astratta relativa al Sonar introduce due metodi :blue:`abstract`,  uno per specificare il modo di inizializzare il sonar 
 (metodo ``sonarSetUp``) e uno per specificare il modo di produzione dei dati (metodo ``sonarProduce``).
-Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods per un sonar Mock e un sonar reale.
+Inoltre, essa definisce due metodi ``create`` che costituiscono Factory-methods per un sonar Mock e un sonar reale.
 
 .. code:: java 
 
@@ -301,8 +303,8 @@ Inoltre, essa definisce due metodi ``create`` che costituiscono factory-methods 
     protected SonarModel() { //hidden costructor, to force setup
       sonarSetUp();
     }
-    public static ISonar createSonarMock() { return new SonarMock(); }
-    public static ISonar createSonarConcrete() { return new SonarConcrete(); }
+    public static ISonar createSonarMock(){return new SonarMock();}
+    public static ISonar createSonarConcrete(){return new SonarConcrete();}
 
 
 Il Sonar viene modellato come un processo che produce dati di un tipo 
@@ -320,7 +322,8 @@ motivi di flessibilità e di interoperabilità per la seconda.
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La classe Distance
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-La classe che implementa ``IDistance`` viene definita come segue:
+
+La classe che implementa :ref:`IDistance<IDistance>` viene definita come segue:
 
 .. code:: java
 
@@ -332,6 +335,9 @@ La classe che implementa ``IDistance`` viene definita come segue:
     @Override
     public String toString(){ return ""+v; }
   }
+
+Ricordiamo che l'interfaccia :ref:`IDistance<IDistance>` non prevede metodi per modificare un dato di questo tipo,
+una volta creato.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 La produzione dei dati
@@ -422,7 +428,9 @@ Si noti che:
   parametro ``testingDistance``. Ciò al fine di controllare il Sonar come emettitore di un dato noto.
 - viene definito un nuovo parametro di configurazione ``sonarDelay`` per un rallentamento
   della frequenza di generazione dei dati.
- 
+
+Il file  :ref:`RadarSystemConfig.json<RadarSystemConfig>` si arricchisce di specifiche:
+
 .. code:: java
 
   {
@@ -460,10 +468,10 @@ si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
   @Override
   public void activate() {
     if( p == null ) { 
-      try {
-        p = Runtime.getRuntime().exec("sudo ./SonarAlone");
-        reader  = new BufferedReader( new InputStreamReader(p.getInputStream()));
- 		  }catch( Exception e) { ... }
+    try {
+      p=Runtime.getRuntime().exec("sudo ./SonarAlone");
+      reader=new BufferedReader( new InputStreamReader(p.getInputStream()));
+    }catch( Exception e) { ... }
     }
     super.activate();
   }
@@ -552,7 +560,7 @@ Una TestUnit automatizzata per il ``SonarMock`` può essere quindi definita in J
     ISonar sonar = DeviceFactory.createSonar();
     new SonarConsumerForTesting( sonar, delta ).start();   
     sonar.activate();
-    while( sonar.isActive() ) { Utils.delay(100);}  //to avoid premature exit
+    while( sonar.isActive() ) {Utils.delay(100);}  //avoid premature exit
   }
 
 Una TestUnit per il ``SonarConcrete`` è simile, una volta fissato il valore :math:`delta=\epsilon` 
@@ -613,8 +621,8 @@ che implementa l'interfaccia ``IDistanceMeasured``:
   public interface IDistanceMeasured extends IDistance{
     public void setVal( IDistance d );
     public IDistance getDistance(   );
-    public void addObserver(Observer obs);   //implemented by Observable 
-    public void deleteObserver(Observer obs);//implemented by Observable 
+    public void addObserver(Observer obs);   //implemented by Observable
+    public void deleteObserver(Observer obs);//implemented by Observable
   }
 
 La casse :blue:`DistanceMeasured` che realizza il concetto di :blue:`distanza misurata osservabile` può essere definita
@@ -661,11 +669,11 @@ Il ``SonarModelObservable`` viene definito cone una specializzazione del precede
     else  return new SonarConcreteObservable();		
   }
   @Override
-  public IDistance getDistance() { return observableDistance; }
+  public IDistance getDistance(){ return observableDistance; }
   @Override
-  public void register(IObserver obs) { observableDistance.addObserver(obs); }
+  public void register(IObserver obs){ observableDistance.addObserver(obs);}
   @Override
-  public void unregister(IObserver obs) {observableDistance.deleteObserver(obs);}
+  public void unregister(IObserver obs){observableDistance.deleteObserver(obs);}
   @Override
   protected void updateDistance(int d){observableDistance.setVal(new Distance(d));}	
   }
@@ -707,7 +715,7 @@ SonarConcreteObservable
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Analogamente, la versione osservabile del `SonarConcrete`_ si ottiene ridefinendo (in assenza di ereditarietà
-multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``. Inoltre 
+multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``. 
 
 .. _SonarConcreteObservable:
 
@@ -909,7 +917,7 @@ Nel codice che segue realizzeremo ciascun requisito con un componente specifico:
 
 Il Controller riceve in ingresso i (riferimenti ai) componenti del sistema e può essere attivato 
 invocando il metodo ``start`` il cui argomento ``n`` fissa un limite massimo al numero delle iterazioni
-e il cui argomento ``endFun`` è una funzione di callback (che verrà invocata
+e il cui argomento ``endFun`` è una **funzione di callback** (che verrà invocata
 al termine delle attività) e che implementa la seguente interfaccia:
 
 .. code:: java
@@ -1045,9 +1053,9 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
   private ILed led            = null;
   private IRadarDisplay radar = null;
   private Controller controller;
-
-	@Override
-	public String getName() {	return "RadarSystemMainLocal";  }
+  
+  @Override
+  public String getName() {	return "RadarSystemMainLocal";  }
 
   @Override
   public void doJob(String configFileName) {
@@ -1057,8 +1065,9 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
   }
     ...
   public static void main( String[] args) throws Exception {
-      new RadarSystemMainAllOnPc().doJob(null); //su PC
-      //new RadarSystemMainAllOnPc().doJob("RadarSystemConfig.json"); //su Rasp
+    new RadarSystemMainAllOnPc().doJob(null); //su PC
+    //su Rasp:
+    //new RadarSystemMainAllOnPc().doJob("RadarSystemConfig.json");
   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1182,7 +1191,7 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
       boolean ledState = sys.getLed().getState();
       int radarDisplayedDistance = radar.getCurDistance();
       assertTrue(  ledState == ledStateExpected
-	 	    		&& radarDisplayedDistance == RadarSystemConfig.testingDistance);
+        && radarDisplayedDistance == RadarSystemConfig.testingDistance);
 		};	
     sys.getController().start( endFun, 1 ); //one-shot
     Utils.delay(1000) ; //give time to work ... 		

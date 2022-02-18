@@ -11,6 +11,7 @@ iss22
    
    Introduzione
    Indicazioni
+   Architetture
    RadarSystem 
    RadarSystemAnalisi
    RadarSystemProdottiAnalisi
