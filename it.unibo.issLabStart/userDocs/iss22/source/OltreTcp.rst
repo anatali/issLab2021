@@ -361,7 +361,7 @@ e si pone l'obiettivo di realizzare una infrastruttura di gestione di risorse re
 funzioni di accesso e interazione come quelle di ``HTTP``: ``PUT, POST, GET, DELETE``.
 
 La classe ``CoapConnection``  implementa :ref:`Interaction2021<Interaction2021>` 
-e quindi realizza il concetto di connessione, tenendo conto delle seguenti caratteristiche del protocollo
+e quindi realizza il 'nostro' concetto di connessione, tenendo conto delle seguenti caratteristiche del protocollo
 CoAP e della libreria `californium`_:
 
 - per interagire con una risorsa remota si può usare un oggetto di classe ``org.eclipse.californium.core.CoapClient`` 
@@ -392,7 +392,6 @@ CoAP e della libreria `californium`_:
       client.useExecutor(); //To be shutdown
       client.setTimeout( 1000L );		 		
     }
-
   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -404,10 +403,9 @@ Il metodo di invio di un messaggio si traduce in una operazione PUT effettuata d
 .. code:: java 
 
   @Override
-  	public void forward(String msg)   {
-			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
- 		} 
-	}
+  public void forward(String msg)   {
+    CoapResponse resp=client.put(msg, MediaTypeRegistry.TEXT_PLAIN); 
+  } 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -420,16 +418,15 @@ Il metodo di invio di una richiesta si traduce in una operazione GET effettuata 
 
   @Override
   public String request( String query )   {
-		String param = query.isEmpty() ? "" :  "?q="+query;
-		client.setURI(url+param);
-		CoapResponse respGet = client.get(  );
-		if( respGet != null ) {
-			return respGet.getResponseText();
-		}else {
-			return "0";
-		}
-	}
-
+    String param = query.isEmpty() ? "" :  "?q="+query;
+    client.setURI(url+param);
+    CoapResponse respGet = client.get(  );
+    if( respGet != null ) {
+      return respGet.getResponseText();
+    }else {
+      return "0";
+    }
+  }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -442,7 +439,7 @@ Il metodo di ricezione di un messaggio è già realizzato dalla infrastruutura C
 
 	@Override
 	public String receiveMsg() throws Exception {
- 		throw new Exception(name + " | receiveMsg not allowed");
+    throw new Exception(name + " | receiveMsg implicit");
 	}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -454,7 +451,7 @@ Il metodo di invio di una risposta è già realizzato dalla infrastruutura CoAP 
 
 	@Override
 	public String reply() throws Exception {
- 		throw new Exception(name + " | reply not allowed");
+    throw new Exception(name + " | implicit");
 	}
 
 
@@ -478,7 +475,7 @@ Estensione della classe :ref:`ProxyAsClient`
       String name, String host, String entry, ProtocolType protocol ){ 
         ... 
         setConnection(host, entry, protocol);
-      }  
+    }  
    
 Il metodo ``setConnection`` invocato dal costruttore crea un supporto diverso per ogni protocollo, utilizzando
 il tipo appropriato di connessione che implementa :ref:`Interaction2021<Interaction2021>`.
@@ -569,7 +566,7 @@ I parametri ``id`` ed ``entry`` da specificare nel costruttore nei vari casi son
 
 
 Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto coorelato al  
-``CoapServer``di ``org.eclipse.californium``.
+``CoapServer`` di ``org.eclipse.californium``.
  
 
 
@@ -577,7 +574,7 @@ Il :ref:`CoapContextServer` non ha bisogno di parametri in quanto coorelato al
 IContextMsgHandler
 +++++++++++++++++++++++++++++++
 
-Ogni ContextServer si avvale di un gestore di sistema dei messaggi  come il 
+Il ContextServer relativo ad un protocollo, si avvale di un gestore di sistema dei messaggi  come il 
 :ref:`ContextMsgHandler<ContextMsgHandler>`.
 
 Introduciamo anche per questo gestore un contratto che imponga la implementazione di metodi per
@@ -609,7 +606,7 @@ La situazione, generalizzata con le interfacce, si presenta ora come segue:
    :align: center  
    :width: 70%
 
-Osserviamo che il framework:
+Osserviamo che stiamo costruendo un framework che:
 
 :remark:`realizza una infrastruttura di comunicazione`
 
@@ -620,7 +617,8 @@ Osserviamo che il framework:
 
 Abbiamo già introdotto :ref:`TcpContextServer` come implementazione di :ref:`IContext`
 che utilizza librerie per la gestione di *Socket*.
-La realizzazione di analoghi ContextServer per MQTT e CoAP si basa sulle citate :ref:`librerie<librerieprotocolli>`.
+La realizzazione di analoghi ContextServer per MQTT e CoAP si basa sulle citate nuove
+:ref:`librerie<librerieprotocolli>`.
 
 +++++++++++++++++++++++++++++++++++++++
 MqttContextServer
@@ -629,7 +627,7 @@ MqttContextServer
 Il ContextServer per MQTT riceve nel costruttore due argomenti:
 
 - ``String clientId``: rappresenta l'indentificativo del client che si connetterà al Broker;
-- ``String topic``: rappresenta la 'porta di ingresso' (entry-topic) per i messaggi inivati al server.
+- ``String topic``: rappresenta la 'porta di ingresso' (entry-topic) per i messaggi inviati al server.
 
 .. code:: java
 
@@ -692,10 +690,6 @@ IContextMsgHandlerMqtt
  
 .. Un ContextServer per MQTT richiede che un client di classe ``org.eclipse.paho.client.mqttv3.MqttClient``  si connetta al nodo facendo una subscribe alla  *topic* specificata dal parametro ``entry``.
 
-
-
- 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ContextMqttMsgHandler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -752,24 +746,25 @@ CoapContextServer
 +++++++++++++++++++++++++++++++++++++++
 
 
-#. CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
+- CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
    implica schemi architetturali e di progettazione molto simili a quelli di applicazioni Web basate su ``HTTP``;
-#. l'uso di CoAP modifica il modello concettuale di riferimento per le interazioni, in quanto propone
+- l'uso di CoAP modifica il modello concettuale di riferimento per le interazioni, in quanto propone
    l'idea di accesso in lettura (GET) o modifica (PUT) a :blue:`risorse` identificate da ``URI`` attraverso un 
    unico server (che `californium`_ offre nella classe :blue:`org.eclipse.californium.core.CoapServer`).
+   
+  .. image:: ./_static/img/Architectures/CoapResources.png 
+      :align: center
+      :width: 40%
 
-    
-   .. image:: ./_static/img/Architectures/CoapResources.png 
-     :align: center
-     :width: 40%
-
-  Il ContextServer del nostro framework potrà quindi essere introdotto come una specializzazione del ``CoapServer``:
+Il ContextServer del nostro framework potrà quindi essere introdotto come una specializzazione del ``CoapServer``:
 
   .. code:: java
 
-    public class CoapApplServer extends CoapServer implements IContext{ ... }
+    public class CoapApplServer extends CoapServer implements IContext{ 
+       ... 
+    }
 
-#. le risorse CoAP sono organizzate in una gerarchia ad albero, come nell'esempio della figura che segue:
+- le risorse CoAP sono organizzate in una gerarchia ad albero, come nell'esempio della figura che segue:
 
    .. image:: ./_static/img/Radar/CoapRadarResources.PNG
     :align: center  
@@ -782,13 +777,13 @@ CoapContextServer
   .. code:: java
 
     public abstract class ApplResourceCoap 
-                extends CoapResource implements IApplMsgHandler { ... }
+            extends CoapResource implements IApplMsgHandler{ ... }
 
 Siamo dunque di fronte a un  modello simile allo  :ref:`schemaFramework`, ma con
 una forte forma di :blue:`standardizzazione` sia a livello di 'verbi' di interazione (GET/PUT/...) sia a livello di 
 organizzazione del codice applicativo (come gerarchia di risorse).
 
-Per utilizzare il framework con protocollo CoAP non dovremo quindi scrivere molto codice.
+Per utilizzare il framework con protocollo CoAP non dovremo quindi scrivere molto altro codice.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -834,7 +829,7 @@ Il metodo per aggiungere risorse è così definito:
 
 .. code:: Java		
 
-	public  void addCoapResource( CoapResource resource, String fatherUri  )   {
+	public  void addCoapResource(CoapResource resource, String fatherUri){
          Resource res = getResource("/"+fatherUri);
          if( res != null ) res.add( resource );
 	}
@@ -871,8 +866,8 @@ avvalendosi di una ricerca *depth-first* nell'albero delle risorse:
 ApplResourceCoap
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La classe astratta ``CoapDeviceResource`` è una  ``CoapResource`` che realizza la gestione delle richieste GET e PUT 
-demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` delle classi specializzate.
+La classe astratta ``ApplResourceCoap`` è una  ``CoapResource`` che realizza la gestione delle richieste GET e PUT 
+demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` di classi specializzate.
 
 .. code:: Java
 
@@ -889,7 +884,7 @@ demandandole rispettivamente ai metodi ``elaborateGet`` ed  ``elaboratePut`` del
       String answer = "";
       if( query == null ) { //per observer
         answer = elaborateGet( 
-            exchange.getRequestText(), exchange.getSourceAddress() );
+          exchange.getRequestText(),exchange.getSourceAddress());
       }else{  //query != null
         answer = elaborateGet( 
             exchange.getQueryParameter("q"), exchange.getSourceAddress() );
@@ -937,28 +932,44 @@ Una risorsa per il Led
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 La risorsa CoAP  per il Led è una specializzazione di `ApplResourceCoap`_ che 
-incorpora un Led e ridirige a questo Led le richieste GET di lettura dello stato e i comandi 
+incorpora un interpreter per il Led e ridirige a le richieste GET di lettura dello stato e i comandi 
 PUT di attivazione/disativazione.
 
 .. code:: Java
 
   public class LedResourceCoap extends ApplResourceCoap {
   private String curDistance="0";  //Initial state
-  private IApplInterpreter sonarLogic;
+  private IApplInterpreter ledInterpr;
 
-     public LedResourceCoap(String name, IApplInterpreter sonarLogic ) {
-       super(name, DeviceType.output);
-       this.led = led;
-     }
-     @Override
-     protected String elaborateGet(String req) { return ""+led.getState(); }
+    public LedResourceCoap(String name, IApplInterpreter ledInterpr ) {
+      super(name, DeviceType.output);
+      this.ledInterpr = ledInterpr;
+    }
+    @Override
+    protected String elaborateGet(String req){ return elaborateGet(req);}
+    @Override
+    protected String elaborateGet(String req) {
+    String answer = "";
+    try {
+			ApplMessage msg = new ApplMessage( req );
+			answer = ledInterpr.elaborate( msg  );			
+    }catch( Exception e) {//Unstructured req
+      answer = ledInterpr.elaborate( req  );
+    }		 
+    return  answer;
+  	}
      
-     @Override
-     protected void elaboratePut(String req) {
-      if( req.equals( "on") ) led.turnOn();
-      else if( req.equals("off") ) led.turnOff();		
-     }  
-   }
+    @Override
+    protected void elaboratePut(String req) {
+    String answer = "";
+    try {
+      ApplMessage msg = new ApplMessage( req );
+      answer = ledInterpr.elaborate( msg  );			
+    }catch( Exception e) {//Unstructured req
+      answer = ledInterpr.elaborate( req  );
+    }		 
+    }  
+  }
 
 .. _SonarResourceCoap:
 
@@ -970,8 +981,6 @@ La risorsa CoAP  per il Sonar è una specializzazione di `ApplResourceCoap`_ che
 incorpora un Sonar, a cui ridirige le richieste GET di lettura dello stato e del valore
 corrente di didatnza e i comandi PUT di attivazione/disativazione.
 
-
-
 .. code:: Java
 
   public class SonarResourceCoap extends ApplResourceCoap  {
@@ -980,14 +989,12 @@ corrente di didatnza e i comandi PUT di attivazione/disativazione.
 
      public SonarResourceCoap(String name, IApplInterpreter sonarIntrprt) {
       super(name, DeviceType.input);
-      this.sonarIntrprt = sonarLogic;
+      this.sonarIntrprt = sonarIntrprt;
     }
-
- 
     @Override
     protected String elaborateGet(String req) {
       String answer = "";
-      if( req == null || req.isEmpty() ) { //query by observers
+      if( req == null || req.isEmpty() ){//query by observers
         answer = curDistance;
       }
       try {
@@ -1002,7 +1009,7 @@ corrente di didatnza e i comandi PUT di attivazione/disativazione.
     @Override
     protected void elaboratePut(String arg) {
       String result = sonarIntrprt.elaborate(arg);
-      if( result.equals("activate_done")) getSonarValues(); //per CoAP observers
+      if( result.equals("activate_done")) getSonarValues();//per CoAP observers
     }
     @Override
     protected void elaboratePut(String req, InetAddress callerAddr) {
@@ -1010,7 +1017,7 @@ corrente di didatnza e i comandi PUT di attivazione/disativazione.
     }			
   }
 
-In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valore corrente 
+In quanto produttore di dati, il Sonar modifica (metodo ``elaborateAndNotify``) il valore corrente 
 ``curDistance`` della distanza misurata e notifica tutti gli observer.
 
 .. code:: Java			
@@ -1018,7 +1025,7 @@ In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valo
   protected void getSonarValues() {
     new Thread() {
       public void run() {
-        if( ! sonarActive() ) sonarIntrprt.elaborate("activate");
+        if(! sonarActive()) sonarIntrprt.elaborate("activate");
         while( sonarActive() ) {
           String v = sonarIntrprt.elaborate("getDistance");
           elaborateAndNotify(  v );
@@ -1037,7 +1044,7 @@ In quanto produttore di dati, il Sonar modifica (``elaborateAndNotify``) il valo
 Testing del framework
 ----------------------------------------------------
 
-Per eseguire le prime prove di funzionamento del framwork lavoriamo utilizzando il solo PC 
+Per eseguire le prime prove di funzionamento del framwework, lavoriamo utilizzando il solo PC 
 con due programmi:
 
 - ``RadarSystemMainDevsOnPc``: crea un Led e un Sonar simulati e li rende accessibili tramite uno dei protocolli
@@ -1106,7 +1113,7 @@ Definiamo una :ref:`IApplication<IApplication>` che:
   }
 
 +++++++++++++++++++++++++++++++++++++++++++++
-RadarSystemMainUasgeOnPc
+RadarSystemMainUsageOnPc
 +++++++++++++++++++++++++++++++++++++++++++++
 Definiamo una :ref:`IApplication<IApplication>` che:
 

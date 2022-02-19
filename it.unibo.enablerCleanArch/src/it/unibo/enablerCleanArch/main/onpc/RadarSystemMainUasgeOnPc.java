@@ -102,10 +102,10 @@ private String serverHost = "";
 		
 	}
 	public void execute() {
- 	    useLedAndSonar();    
-// 	    controller 	= Controller.create( led, sonar );
-//	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-// 		controller.start(endFun, 10);
+// 	    useLedAndSonar();    
+ 	    controller 	= Controller.create( led, sonar );
+	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
+ 		controller.start(endFun, 10);
  	}
  
 	public void terminate() {

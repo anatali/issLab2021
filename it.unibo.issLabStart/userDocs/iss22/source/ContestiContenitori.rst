@@ -211,7 +211,7 @@ interna che associa un :blue:`identificativo univoco` (il nome del destinatario)
       try {
         ApplMessage msg  = new ApplMessage(message);
         elaborate( msg, conn );
-		  }catch(Exception e) { ...	}
+      }catch(Exception e) { ...	}
     }
     @Override
     public void elaborate(ApplMessage msg,Interaction2021 conn) {

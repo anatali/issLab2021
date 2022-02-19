@@ -4,7 +4,6 @@ import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContext;
-import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandlerMqtt;
 import it.unibo.enablerCleanArch.supports.mqtt.ContextMqttMsgHandler;
 import it.unibo.enablerCleanArch.supports.mqtt.MqttConnection;
