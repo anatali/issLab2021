@@ -217,7 +217,7 @@ questa topic posssono essere gestiti associando  (col metodo ``setCallback``) a 
       try {
         client.setCallback( callback );	
         client.subscribe( topic );			
-      } catch (MqttException e) { ...		}
+      } catch (MqttException e) { ...	}
     }
 
 Poichè la gestione di un messaggio è competenza del livello applicativo, l'handler passato alla
@@ -262,13 +262,34 @@ ContextServer,  fa una subscribe su ``ctxEntryledPxyanswer`` per ricevere le ris
 Per permettere al livello applicativo di ricevere una risposta, l'handler di callback associato alla 
 answertopic (``MqttConnectionCallback``) provvede a inserire il messaggio nella ``blockingQueue`` del supporto.
 
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+MqttConnectionCallback
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.. code:: java
+
+  public class MqttConnectionCallback implements MqttCallback{
+  private BlockingQueue<String> blockingQueue = null;
+
+    public MqttConnectionCallback( BlockingQueue<String> blockingQueue ) {
+      this.blockingQueue = blockingQueue;
+    }
+    ...
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+      if( blockingQueue != null ) blockingQueue.put( message.toString() );	
+    }
+  }
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 MqttConnection request  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il metodo ``request`` di :ref:`Interaction2021<Interaction2021>` viene implementato facendo una ``publish`` sulla entry-topic
 del nodo destinatario per poi far attendere la risposta a un nuovo client temporaneo appositamente creato per 
-sottoscrivversi alla answertopic.
+sottoscrivversi alla ``answertopic``.
 
 .. code:: java
 
@@ -303,7 +324,7 @@ Il metodo ``receiveMsg`` attende un messaggio sulla  ``blockingQueue`` .
   @Override
   public String receiveMsg() throws Exception {		
     String answer = blockingQueue.take();
-    ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured
+    ApplMessage msgAnswer = new ApplMessage(answer); 
     answer = msgAnswer.msgContent(); 		
     return answer;
   }
@@ -324,7 +345,7 @@ ai partire dai dati contenuti nel messaggio di richiesta come specificato in :re
       String reqid  = m.msgId();
       String answerTopicName = "answ_"+reqid+"_"+dest;
       publish(answerTopicName,msg,2,false);  
- 		}catch(Exception e) { ... 		}
+    }catch(Exception e) { ... }
     }
 
 .. image:: ./_static/img/Radar/MqttConn.PNG
