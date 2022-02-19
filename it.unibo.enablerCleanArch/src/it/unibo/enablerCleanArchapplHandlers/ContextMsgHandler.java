@@ -2,15 +2,11 @@ package it.unibo.enablerCleanArchapplHandlers;
 
 import java.util.HashMap;
 import it.unibo.enablerCleanArch.domain.ApplMessage;
-import it.unibo.enablerCleanArch.domain.ILed;
-import it.unibo.enablerCleanArch.enablers.ProtocolType;
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.IApplMsgHandler;
 import it.unibo.enablerCleanArch.supports.IContextMsgHandler;
 import it.unibo.enablerCleanArch.supports.Interaction2021;
-import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 
 /*
   * Il ContextMsgHandler viene invocato dal TcpContextServer (un singleton).
@@ -42,20 +38,15 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 		IApplMsgHandler h    = handlerMap.get(dest);
 		ColorsOut.out(name +  " | elaborate  h="+h );
 		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest );
-		if( dest != null && (! msg.isReply()) ) h.elaborate( msg , conn);			
+		if( dest != null && (! msg.isReply()) ) h.elaborate(msg,conn);			
 	}
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn);
 		try {
- 			ApplMessage msg      = new ApplMessage(message);
+ 			ApplMessage msg  = new ApplMessage(message);
 			elaborate( msg, conn );
-	//		String dest          = msg.msgReceiver();
-	//		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
-	//		IApplMsgHandler h    = handlerMap.get(dest);
-	//		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN);
-	//		if( dest != null && (! msg.isReply()) ) h.elaborate(msg.msgContent(), conn);	
 		}catch(Exception e) {
 			ColorsOut.outerr(name +  " | elaborate ERROR " + e.getMessage());
 		}

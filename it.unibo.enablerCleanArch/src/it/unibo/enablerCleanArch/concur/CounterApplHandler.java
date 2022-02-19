@@ -33,7 +33,7 @@ private CounterWithDelay counter
 				ColorsOut.out(name + " | dec delay="+delay);
 				counter.dec(delay);	
 				answer = ""+counter.getVal();
-		}
+			}
 		}catch( Exception e) {
  		}	
 		return answer;

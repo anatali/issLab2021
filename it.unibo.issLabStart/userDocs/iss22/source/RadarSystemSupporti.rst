@@ -313,7 +313,8 @@ I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TC
 
   @Before
   public void up() {
-    server = new TcpServer("tcpServer",testPort, new NaiveHandler("naiveH") );
+    server = new TcpServer(
+        "tcpServer",testPort, new NaiveHandler("naiveH") );
     server.activate();		
   }
 

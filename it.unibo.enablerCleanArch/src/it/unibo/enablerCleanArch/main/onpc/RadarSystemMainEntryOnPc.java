@@ -86,13 +86,7 @@ public class RadarSystemMainEntryOnPc  implements IApplicationFacade{
 		}
  
  	}
-
-//	@Override
-//	public String getName() {	 
-//		return "RadarSystemMainEntryOnPc";
-//	}
-	
-	
+ 	
  	@Override
 	public void ledActivate(boolean v) {
 		//Colors.out("RadarSystemMainEntryOnPc ledActivate " + v );

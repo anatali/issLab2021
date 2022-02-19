@@ -16,6 +16,7 @@
 
 .. _test di Turing : https://it.wikipedia.org/wiki/Test_di_Turing
 
+.. _coroutine Kotlin : https://kotlinlang.org/docs/coroutines-overview.html
 
 =====================================================
 Abilitatori di comunicazione
@@ -51,7 +52,7 @@ rappresentata come segue:
    :align: center
    :width: 50%
 
-.. _Enabler:
+.. _EnablerAsServer:
 
 ------------------------------------------------
 Enabler tipo-server
@@ -118,8 +119,8 @@ i comandi o le richieste ricevute dal sever in forma di messaggi.
 
 L'handler deve quindi fare fronte a due compiti:
 
-#. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar
-#. inviare al mittente la risposta, in caso il messaggio sia una richiesta
+#. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar;
+#. inviare al mittente la risposta, in caso il messaggio sia una richiesta.
 
 Facendo riferimento al *single responsibility principle* (SRP, si veda 
 `SOLID <https://it.wikipedia.org/wiki/SOLID>`_), conviene delegare il primo compito ad
@@ -210,7 +211,8 @@ il dispositivo rappresentato da un POJO di interfaccia :ref:`ISonar<ISonar>`.
     public SonarApplIntepreter(ISonar sonar) { this.sonar = sonar; }    
     @Override
       public String elaborate(String message) {
-      //Analizza message e invoca il Sonar restituendo un risultato o una risposta
+      //Analizza message e invoca il Sonar 
+      //restituendo un risultato o una risposta
       ...
       }
   }
@@ -238,9 +240,9 @@ Enabler per il Sonar
 
   * - .. image::  ./_static/img/Radar/EnablerAsServerSonar.PNG
          :align: center 
-         :width: 80%
-    - L'*enabler tipo server* per il Sonar è un ``EnablerAsServer`` connesso un gestore 
-      applicativo ``SonarApplHandler`` che si avvale di :ref:`SonarApplIntepreterNoCtx` per 
+         :width: 90%
+    - L'*enabler tipo server* per il Sonar è un :ref:`EnablerAsServer<EnablerAsServer>` connesso un gestore 
+      applicativo :ref:`SonarApplHandler<SonarApplHandlerNoContext>` che si avvale di :ref:`SonarApplIntepreterNoCtx` per 
       trasformare messaggi in chiamate di metodi:
       
 .. di tipo ``IApplMsgHandler`` che estende  la classe :ref:`ApplMsgHandler<ApplMsgHandler>` fornendo un metodo che elabora:
@@ -259,17 +261,18 @@ SonarApplHandler
 .. code:: java
 
   public class SonarApplHandler extends ApplMsgHandler  {
-  private IApplIntepreter sonarLogic;
+  private IApplIntepreter sonarIntepr;
 
     public SonarApplHandler(String name, ISonar sonar) {
       super(name);
-      sonarLogic = new SonarApplIntepreter(sonar);
+      sonarIntepr = new SonarApplIntepreter(sonar);
     }
 
     @Override
     public void elaborate(String message, Interaction2021 conn) {
-      if( message.equals("getDistance") || message.equals("isActive")  ) {
-      }else sonarLogic.elaborate(message);
+      if( message.equals("getDistance") || message.equals("isActive")) {
+        sendMsgToClient( sonarIntepr.elaborate(message), conn );
+      }else sonarIntepr.elaborate(message);
     }
   }
 
@@ -285,9 +288,9 @@ Proxy per il Sonar
 
   * - .. image::  ./_static/img/Radar/SonarProxyAsClient.PNG
          :align: center 
-         :width: 70%
+         :width: 90%
     - Il '*proxy tipo client* per il Sonar è una specializzazione di  :ref:`ProxyAsClient` che implementa i 
-      metodi di ``ISonar`` inviando comandi o richieste all'*enabler tipo server* sulla connessione 
+      metodi di :ref:`ISonar<ISonar>` inviando comandi o richieste all'*enabler tipo server* sulla connessione 
       :ref:`Interaction2021<Interaction2021>`:
 
 
@@ -296,7 +299,7 @@ Proxy per il Sonar
   public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
     public SonarProxyAsClient( 
          String name, String host, String entry, ProtocolType protocol ) {
-    super( name,  host,  entry, protocol );
+      super( name,  host,  entry, protocol );
     }
     @Override
     public void activate() { sendCommandOnConnection("activate"); }
@@ -337,17 +340,18 @@ LedApplHandler
 .. code:: Java
 
   public class LedApplHandler extends ApplMsgHandler   {
-  private IApplIntepreter ledLogic;
+  private IApplIntepreter ledIntepr;
 
     public LedApplHandler(String name, ILed led) {
       super(name);
-      ledLogic = new LedApplIntepreter(led) ;
+      ledIntepr = new LedApplIntepreter(led) ;
     }
     
     @Override
     public void elaborate(String message, Interaction2021 conn) {
-      if( message.equals("getState") ) sendMsgToClient( ledLogic.elaborate(message), conn );
-      else ledLogic.elaborate(message);
+      if( message.equals("getState") ) 
+        sendMsgToClient( ledIntepr.elaborate(message), conn );
+      else ledIntepr.elaborate(message);
     }
   }
 
@@ -369,7 +373,6 @@ La procedura si setup (configurazione) del testing crea gli elementi della archi
   public class TestEnablersTcp {
   @Before
   public void setup() {
-    RadarSystemConfig.withContext= false; 
     RadarSystemConfig.simulation = true;
     RadarSystemConfig.ledGui     = true;
     RadarSystemConfig.ledPort    = 8015;
@@ -383,9 +386,11 @@ La procedura si setup (configurazione) del testing crea gli elementi della archi
     led     = DeviceFactory.createLed();
 		
     //I server
-    sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,
+    sonarServer = new EnablerAsServer("sonarSrv",
+                RadarSystemConfig.sonarPort,
                 protocol, new SonarApplHandler("sonarH", sonar) );
-    ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort, 
+    ledServer   = new EnablerAsServer("ledSrv",  
+                RadarSystemConfig.ledPort, 
                 protocol, new LedApplHandler("ledH", led)  );
  
     //I proxy
@@ -409,6 +414,8 @@ Il test simula il comportamento del Controller, senza RadarDisplay:
 
 	@Test 
 	public void testEnablers() {
+    RadarSystemConfig.DLIMIT=30;
+
 		sonarServer.start();
 		ledServer.start();
 		System.out.println(" ==================== testEnablers "  );
@@ -422,7 +429,6 @@ Il test simula il comportamento del Controller, senza RadarDisplay:
 		
 		while( sonarPxy.isActive() ) {
 			int v = sonarPxy.getDistance().getVal();
-			ColorsOut.out("testEnablers getVal="+v, ColorsOut.GREEN);
 			//Utils.delay(500);
 			if( v < RadarSystemConfig.DLIMIT ) {
 				ledPxy.turnOn();
@@ -448,7 +454,7 @@ emergere al termine di una SPRINT-review:
   gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`;
 - i POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
   negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`;
-- i gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<Enabler>`) 
+- i gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<EnablerAsServer>`) 
   che forniscono una infrastruttura per le comunicazioni via rete. Il codice
   che realizza gli enabler e i proxy può essere riutilizzato in altre applicazioni;
 - l'attenzione dell':blue:`Application Designer` si concentra sulla definizione del metodo 
@@ -468,11 +474,11 @@ il punto 4 del nostro :ref:`piano di lavoro<PianoLavoro>`
 
 Tuttavia emerge un punto critico:
 
-:remark:`introdurre un serverTCP per ogni componente potrebbe essere, in generale, troppo costoso`
+:remark:`introdurre un serverTCP per ogni componente potrebbe essere troppo costoso`
 
 Un serverTCP richiede infatti la creazione di un nuovo Thread. Anche se il costo di questa
 operazione potrebbe essere (notevolmente) ridotto sostituendo il Thread Java con la 
-coroutine Kotlin, il team di sviluppo osserva che lo si può evitare con una modifica 
+`coroutine Kotlin`_, il team di sviluppo osserva che lo si può evitare con una modifica 
 non troppo complessa.
 
 

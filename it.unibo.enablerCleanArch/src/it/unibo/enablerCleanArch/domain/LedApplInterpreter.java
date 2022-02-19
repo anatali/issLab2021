@@ -27,11 +27,9 @@ ILed led;
    
  	public String elaborate( String message ) {
 		ColorsOut.out("LedApplInterpreter | elaborate String=" + message  + " led="+led, ColorsOut.GREEN);
-
 	 		if( message.equals("getState") ) return ""+led.getState() ;
 	 		else if( message.equals("on")) led.turnOn();
 	 		else if( message.equals("off") ) led.turnOff();	
- 
  		return message+"_done";
 	}
 }

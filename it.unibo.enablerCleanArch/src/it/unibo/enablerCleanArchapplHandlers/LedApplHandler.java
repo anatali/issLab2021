@@ -13,11 +13,8 @@ import it.unibo.enablerCleanArch.supports.Interaction2021;
 import it.unibo.enablerCleanArch.supports.coap.LedResourceCoap;
 import it.unibo.enablerCleanArch.supports.Utils;
  
-/*
- * TODO: il Led dovrebbe essere injected con un metodo o una annotation
- */
 public class LedApplHandler extends ApplMsgHandler {
-private IApplInterpreter ledLogic;
+private IApplInterpreter ledInterpr;
 
 	public static IApplMsgHandler create(String name, ILed led) {
 		if( Utils.isCoap() ) {
@@ -29,7 +26,7 @@ private IApplInterpreter ledLogic;
  
 	public LedApplHandler(String name, ILed led) {
 		super(name);
-		ledLogic = new LedApplInterpreter(led) ;
+		ledInterpr = new LedApplInterpreter(led) ;
  	}
 	
 
@@ -37,19 +34,20 @@ private IApplInterpreter ledLogic;
 	public void elaborate( ApplMessage message, Interaction2021 conn ) {
 		ColorsOut.out(name + " | elaborate ApplMessage=" + message + " conn=" + conn , ColorsOut.GREEN);
 		if( message.isRequest() ) {
-			String answer = ledLogic.elaborate(message);
+			String answer = ledInterpr.elaborate(message);
 			if( Utils.isMqtt() ) sendAnswerToClient( answer  );
 			else sendMsgToClient( answer, conn );
 		}else {
-			ledLogic.elaborate( message.msgContent() ); //non devo inviare risposta
+			ledInterpr.elaborate( message.msgContent() ); //non devo inviare risposta
 		}	
 	}
 	
  	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		ColorsOut.out(name + " | elaborate message=" + message + " conn=" + conn , ColorsOut.GREEN);
- 		if( message.equals("getState") ) sendMsgToClient( ledLogic.elaborate(message), conn );
- 		else ledLogic.elaborate(message);
+ 		if( message.equals("getState") ) 
+ 			sendMsgToClient( ledInterpr.elaborate(message), conn );
+ 		else ledInterpr.elaborate(message);
 	}
 
 }

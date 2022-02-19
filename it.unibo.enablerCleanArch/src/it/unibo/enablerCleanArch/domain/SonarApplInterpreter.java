@@ -1,6 +1,4 @@
 package it.unibo.enablerCleanArch.domain;
-
-import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 
@@ -13,8 +11,7 @@ private	ISonar sonar;
 
 	@Override
 	public String elaborate(ApplMessage message) {
-		ColorsOut.out( "SonarApplInterpreter | elaborate ApplMessage " + message  , ColorsOut.BLUE);
-		 
+		ColorsOut.out( "SonarApplInterpreter | elaborate ApplMessage " + message  , ColorsOut.BLUE);		 
 		String payload = message.msgContent();
 		if( message.isRequest() ) {
 			if(payload.equals("getDistance") ) {
@@ -31,7 +28,6 @@ private	ISonar sonar;
 				return reply.toString();
 			}else return "request_unknown";
 		}else return elaborate( payload );			
- 
 	}
 
 	@Override

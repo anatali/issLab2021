@@ -35,13 +35,14 @@ public class TestEnablers {
 	private ILed led;
 	private EnablerAsServer ledServer;
 	private EnablerAsServer sonarServer;	
- 	private ILed ledClient;
-	private ISonar sonarClient;
+ 	private ILed ledPxy;
+	private ISonar sonarPxy;
 	private ProtocolType protocol = ProtocolType.tcp;
 	
 	@Before
 	public void setup() {
 		RadarSystemConfig.simulation = true;
+		RadarSystemConfig.ledGui     = true;
 		RadarSystemConfig.ledPort    = 8015;
 		RadarSystemConfig.sonarPort  = 8011;
 		RadarSystemConfig.sonarDelay = 100;
@@ -53,19 +54,21 @@ public class TestEnablers {
 		/*
 		 * I server
 		 */
- 	 	sonarServer = new EnablerAsServer("sonarSrv",RadarSystemConfig.sonarPort,protocol, new SonarApplHandler("sonarH", sonar) );
-	 	ledServer   = new EnablerAsServer("ledSrv",  RadarSystemConfig.ledPort,  protocol, new LedApplHandler("ledH", led)  );
+ 	 	sonarServer = new EnablerAsServer("sonarSrv",
+ 	 			RadarSystemConfig.sonarPort,protocol, new SonarApplHandler("sonarH", sonar) );
+	 	ledServer   = new EnablerAsServer("ledSrv",  
+	 			RadarSystemConfig.ledPort,  protocol, new LedApplHandler("ledH", led)  );
  
 		/*
 		 * I client
 		 */		
 		String sonarUri   = CoapApplServer.inputDeviceUri+"/sonar";
 		String entrySonar = protocol==ProtocolType.coap ? sonarUri : ""+RadarSystemConfig.sonarPort;
- 		sonarClient = new SonarProxyAsClient("sonarClient", "localhost",entrySonar, protocol );
+ 		sonarPxy = new SonarProxyAsClient("sonarClient", "localhost",entrySonar, protocol );
 		
 		String ledUri     = CoapApplServer.outputDeviceUri+"/led";
 		String entryLed   = protocol==ProtocolType.coap ? ledUri : ""+RadarSystemConfig.ledPort;
-		ledClient = new LedProxyAsClient("ledClient", "localhost", entryLed, protocol );	
+		ledPxy = new LedProxyAsClient("ledClient", "localhost", entryLed, protocol );	
 
 	}
 
@@ -82,42 +85,41 @@ public class TestEnablers {
 		protocol = ProtocolType.tcp;
 		ledServer.start();
 		
-		ledClient.turnOn();
+		ledPxy.turnOn();
 		Utils.delay(500);
-		assertTrue( ledClient.getState() );
-		ledClient.turnOff();		
+		assertTrue( ledPxy.getState() );
+		ledPxy.turnOff();		
 		Utils.delay(500);
-		assertTrue( ! ledClient.getState() );
+		assertTrue( ! ledPxy.getState() );
 		Utils.delay(500);
 	}
 	
 	@Test 
 	public void testEnablers() {
- 		sonar.activate();
+ 		RadarSystemConfig.DLIMIT=30;
+ 		
+		sonar.activate();
 		sonarServer.start();
 		ledServer.start();
 		
-		RadarSystemConfig.testing=false; //true => oneshot
-		RadarSystemConfig.sonarDelay=250;
-		RadarSystemConfig.DLIMIT=30;
 		
 		//Simulo il Controller
  		Utils.delay(500);		
-		System.out.println("testEnablers " + sonarClient.isActive());
+		System.out.println("testEnablers " + sonarPxy.isActive());
 		
 		
-		while( sonarClient.isActive() ) {
-			int v = sonarClient.getDistance().getVal();
+		while( sonarPxy.isActive() ) {
+			int v = sonarPxy.getDistance().getVal();
 			ColorsOut.out("testEnablers getVal="+v, ColorsOut.GREEN);
 			//Utils.delay(500);
 			if( v < RadarSystemConfig.DLIMIT ) {
-				ledClient.turnOn();
-				boolean ledState = ledClient.getState();
+				ledPxy.turnOn();
+				boolean ledState = ledPxy.getState();
 				assertTrue( ledState );	
 			}
 			else {
-				ledClient.turnOff();
-				boolean ledState = ledClient.getState();
+				ledPxy.turnOff();
+				boolean ledState = ledPxy.getState();
 				assertTrue( ! ledState );	
 			}
 		}		

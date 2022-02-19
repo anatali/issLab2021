@@ -12,7 +12,7 @@ Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su un
 
 .. image::  ./_static/img/Radar/EnablersLedSonar.PNG
   :align: center 
-  :width: 20%
+  :width: 70%
 
 
 Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
@@ -45,9 +45,9 @@ Introduciamo dunque una  estensione sulla struttura dei messaggi, che ci darà d
     msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 
   - MSGID:    identificativo del messaggio
-  - MSGTYPE:  tipo del message (Dispatch, Invitation,Request,Reply,Event)  
+  - MSGTYPE:  tipo del msg (Dispatch, Invitation,Request,Reply,Event)  
   - SENDER:   nome del componente che invia il messaggio
-  - CONTENT:  contenuto applicativo del messaggio (detto anche payload)
+  - CONTENT:  contenuto applicativo (payload) del messaggio 
   - RECEIVER: nome del componente chi riceve il messaggio 
   - SEQNUM:   numero di sequenza del messaggio
 
@@ -93,8 +93,8 @@ nel modo descritto. La classe si avvale del supporto del tuProlog_.
     protected String msgReceiver = "";
     protected String msgContent  = "";
     protected int msgNum         = 0;
-    public ApplMessage( String MSGID, String MSGTYPE,  
-          String SENDER, String RECEIVER, String CONTENT, String SEQNUM ) {
+    public ApplMessage( String MSGID, String MSGTYPE, String SENDER, 
+          String RECEIVER, String CONTENT, String SEQNUM ) {
       ...
     }
     public ApplMessage( String msg ) {
@@ -131,7 +131,10 @@ livello applicativo.
     public void elaborate( ApplMessage message, Interaction2021 conn ); 
   }
 
- 
+Di conseguenza, introduciamo nella classe astratta :ref:`ApplMsgHandler<ApplMsgHandler>`  
+un nuovo metodo ``abstract  elaborate( ApplMessage message, Interaction2021 conn )`` 
+che dovrà essere definto dalle classi specializzate.
+
 
 .. _IApplIntepreterEsteso:
 
@@ -199,18 +202,23 @@ interna che associa un :blue:`identificativo univoco` (il nome del destinatario)
  .. code:: java
 
   public class ContextMsgHandler extends IApplMsgHandler{
-  //MAPPA
   private HashMap<String,IApplMsgHandler> handlerMap = 
                            new HashMap<String,IApplMsgHandler>();
-
     public ContextMsgHandler(String name) { super(name); }
     @Override
-    public void elaborate(String message) {
+    public void elaborate(String message,Interaction2021 conn) {
       //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
-      ApplMessage msg   = new ApplMessage(message);
+      try {
+        ApplMessage msg  = new ApplMessage(message);
+        elaborate( msg, conn );
+		  }catch(Exception e) { ...	}
+    }
+    @Override
+    public void elaborate(ApplMessage msg,Interaction2021 conn) {
       String dest       = msg.msgReceiver();
       IApplMsgHandler h = handlerMap.get( dest );
-      if( dest != null ) h.elaborate(msg.msgContent(), conn);
+      if( dest!=null && (! msg.isReply()) ) 
+        h.elaborate(msg.msgContent(), conn);
     }
     public void addComponent( String name, IApplMsgHandler h) {
       handlerMap.put(name, h);
@@ -229,6 +237,7 @@ interna che associa un :blue:`identificativo univoco` (il nome del destinatario)
 
 :remark:`I componenti IApplMsgHandler acquisiscono dal contesto la capacità di interazione`
 
+ 
  
 
   
