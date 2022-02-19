@@ -1,2 +1,1 @@
 item(qaappl,nostate,msg(cmd,dispatch,any,qaappl,cmd(w),2)).
-item(qaappl,nostate,msg(alarm,event,qaappl,none,alarm(fire),3)).

@@ -45,7 +45,8 @@ dependencies {
     compile name: '2p301'
     compile name: 'uniboInterfaces'
     compile name: 'unibonoawtsupports'
-
+	compile name: 'it.unibo.qakactor-2.4'
+	
 	//RADAR (support and GUI)
 	compile name: 'radarPojo'
 	// https://mvnrepository.com/artifact/org.pushingpixels/trident
@@ -53,6 +54,11 @@ dependencies {
 //IMAGES	
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 	implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.13'
+
+
+//COROUTINE
+    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-common', version: '1.1.0'
+    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.1.0'
 	
 }
 

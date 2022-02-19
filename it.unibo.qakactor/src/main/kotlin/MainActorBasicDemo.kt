@@ -2,8 +2,10 @@
  MainActorBasicDemo
  */
 package it.unibo.kactor
+
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import java.io.File
 
 
@@ -17,8 +19,16 @@ override suspend fun actorBody(msg : ApplMessage){
 fun main() = runBlocking {
 	println("MainActorBasicDemo START")
 	sysUtil.logMsgs = true
-	val qaappl = ApplActor("qaappl", this)
-	MsgUtil.sendMsg("cmd", "cmd(w)", qaappl)
-	qaappl.emit("alarm", "alarm(fire)")
+	//val qaappl = ApplActor("qaappl", this)
+	//MsgUtil.sendMsg("cmd", "cmd(w)", qaappl)
+	//qaappl.emit("alarm", "alarm(fire)")
+
+	val a = Demo("demo",this)
+	delay(500)
+	MsgUtil.sendMsg("msg1", "msg1(hello)", a)
+	delay(1000)
+	MsgUtil.sendMsg("msg2", "msg2(helloAgain)", a)
+	delay(1000)
 	println("MainActorBasicDemo END")
+	System.exit(0)
 }
