@@ -75,6 +75,30 @@ Come Broker MQTT useremo `Mosquitto`_ installato su un nostro PC (o su Raspberry
 - "tcp://broker.hivemq.com"  
 - "tcp://test.mosquitto.org"
 
+
+Poichè dovremo definire un ContextServer per ogni protocollo, facciamo in modo che ciascuno di essi
+rispetti uno stesso contratto, con metodi per attivare/disattivare il server e per
+aggiungere/rimuovere componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
+
+
+++++++++++++++++++++++++++++++++++++++++++++++
+IContext
+++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+  public interface IContext {
+    public void addComponent( String name, IApplMsgHandler h);
+    public void removeComponent( String name );
+    public void activate();
+    public void deactivate();
+  }
+
+Questo contratto è già rispettato da :ref:`TcpContextServer`, così che possiamo estendere la sua definizione come segue: 
+
+  public class TcpContextServer extends TcpServer **implements IContext**
+
+
 ---------------------------------------------------------
 Nuovi supporti :ref:`Interaction2021<Interaction2021>`
 ---------------------------------------------------------
@@ -84,8 +108,8 @@ introdotta a suo tempo, come oggetto di classe :ref:`TcpConnection<TcpConnection
 
 La creazione di analoghi supporti per MQTT e CoAP  parte dalle seguenti osservazioni:
 
-- per MQTT si tratta di creare una connessione fisica con un broker che media la interazione tra mittente
-  e destinatario e una connessione logica utilizzando le topic;
+- per MQTT si tratta di creare una **connessione fisica** con un broker che media la interazione tra mittente
+  e destinatario e una **connessione logica** utilizzando le topic;
 - per CoAP si tratta di utilizzare un oggetto  
   di classe ``CoapClient`` di `californium`_, che richiede come argomento l'``URI`` della risorsa
   a cui ci si vuole connettere.
@@ -133,11 +157,14 @@ MQTT e della libreria `paho`_:
     }
 
 
-Il costruttore del singleton  ``MqttConnection``crea un ``MqttClient`` con ``clientId``, 
+Il costruttore del singleton  ``MqttConnection`` crea un ``MqttClient`` con ``clientId``, 
 il quale si connette al Broker.
 
+Le operazioni-base di invio e ricezione di messaggi sono correlate alle operazioni ``publish`` e 
+``subscribe`` che il client è capace di eseguire. 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-publish
+MqttConnection publish
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ``MqttConnection`` realizza l'invio di un messaggio invocando l'operazione ``publish`` su una topic;
@@ -145,7 +172,7 @@ publish
 .. code:: java 
 
     public void publish(String topic, String msg, int qos, boolean retain) {
-		MqttMessage message = new MqttMessage();
+      MqttMessage message = new MqttMessage();
       if (qos == 0 || qos == 1 || qos == 2) {
         //qos=0 fire and forget; qos=1 at least once(default);qos=2 exactly once
         message.setQos(qos);
@@ -154,9 +181,10 @@ publish
         message.setPayload(msg.toString().getBytes());		 
         client.publish(topic, message);
       } catch (MqttException e) { ...  }
-	  }
+    }
 
-Il metodo ``publish`` viene usato per la implementazione del motodo ``forward`` dei messaggi strutturati.
+Il metodo ``publish`` viene usato per la implementazione del motodo ``forward`` dei messaggi strutturati
+di tipo :ref:`ApplMessage<ApplMessage>`.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 MqttConnection forward  
@@ -168,14 +196,14 @@ MqttConnection forward
   public void forward(String msg) throws Exception {
     new ApplMessage(msg); //no exception => we can publish
     publish(topicInput, msg, 2, false);	
-	}
+  }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subscribe
+MqttConnection subscribe
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 La ricezione di un messaggio si realizza attraverso la ``subscribe`` ad una topic; i messaggi pubblicati su
-questa topic posssono essere gestiti associando al client (col metodo ``setCallback``) un oggetto di classe 
+questa topic posssono essere gestiti associando  (col metodo ``setCallback``) a ``client`` un oggetto di classe 
 ``org.eclipse.paho.client.mqttv3.MqttCallback`` 
 
 .. code:: java  
@@ -184,12 +212,13 @@ questa topic posssono essere gestiti associando al client (col metodo ``setCallb
     public void subscribe ( String topic, IApplMsgHandlerMqtt handler) {
       subscribe(clientid, topic, handler);    
     }
-    protected void subscribe(String clientid, String topic, MqttCallback callback) {
+    protected void subscribe(
+        String clientid, String topic, MqttCallback callback) {
       try {
         client.setCallback( callback );	
         client.subscribe( topic );			
       } catch (MqttException e) { ...		}
-	  }
+    }
 
 Poichè la gestione di un messaggio è competenza del livello applicativo, l'handler passato alla
 ``subscribe`` deve rispettare un contratto imposto sia dal nostro framework sia dalla libreria.
@@ -462,27 +491,6 @@ il tipo appropriato di connessione che implementa :ref:`Interaction2021<Interact
 I ContextServer
 ---------------------------------
 
-Poichè dovremo definire un ContextServer per ogni protocollo, facciamo in modo che ciascuno di essi
-rispetti uno stesso contratto, che imponga metodi per attivare/disattivare il server e per
-aggiungere/rimuovere componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
-
-
-++++++++++++++++++++++++++++++++++++++++++++++
-IContext
-++++++++++++++++++++++++++++++++++++++++++++++
-
-.. code:: java
-
-  public interface IContext {
-    public void addComponent( String name, IApplMsgHandler h);
-    public void removeComponent( String name );
-    public void activate();
-    public void deactivate();
-  }
-
-Questo contratto è già rispettato da :ref:`TcpContextServer`, così che possiamo estendere la sua definizione come segue: 
-
-  public class TcpContextServer extends TcpServer **implements IContext**
 
 Dobbiamo ora introdurre un ContextServer per MQTT (che denominiamo :ref:`MqttContextServer`) 
 e per CoAP (che denominiamo :ref:`CoapContextServer`).
