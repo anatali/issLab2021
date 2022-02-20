@@ -21,11 +21,11 @@ protected ProtocolType protocol ;
  
 	public ProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		try {
-			ColorsOut.out(name+"  | CREATING entry= "+entry+" protocol=" + protocol );
+			ColorsOut.out(name+"  | CREATING entry= "+entry+" protocol=" + protocol, ColorsOut.BLUE );
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
-			ColorsOut.out(name+"  | CREATED entry= "+entry+" conn=" + conn );
+			ColorsOut.out(name+"  | CREATED entry= "+entry+" conn=" + conn, ColorsOut.BLUE );
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  |  ERROR " + e.getMessage());		}
 	}
@@ -37,7 +37,7 @@ protected ProtocolType protocol ;
 				int port = Integer.parseInt(entry);
 				//conn = new TcpConnection( new Socket( host, port ) ) ; //non fa attempts
 				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
-				ColorsOut.out(name + " |  setConnection "  + conn );		
+				ColorsOut.out(name + " |  setConnection "  + conn, ColorsOut.BLUE );		
 				break;
 			}
 			case coap : {

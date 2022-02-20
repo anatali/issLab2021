@@ -18,7 +18,7 @@ protected boolean stopped = true;
 		super(name);
 	      try {
 	  		this.userDefHandler   = userDefHandler;
-	  		ColorsOut.out(getName() + " | costructor port=" + port  );  
+	  		ColorsOut.out(getName() + " | costructor port=" + port, ColorsOut.BLUE  );  
 			this.name             = getName();
 		    serversock            = new ServerSocket( port );
 		    serversock.setSoTimeout(RadarSystemConfig.serverTimeOut);
@@ -30,12 +30,12 @@ protected boolean stopped = true;
 	@Override
 	public void run() {
 	      try {
-		  	ColorsOut.out(getName() + " | STARTING ... "  );
+		  	ColorsOut.out(getName() + " | STARTING ... ", ColorsOut.BLUE  );
 			while( ! stopped ) {
 				//Accept a connection				 
 				//ColorsOut.out(getName() + " | waits on server port=" + port + " serversock=" + serversock );	 
 		 		Socket sock          = serversock.accept();	
-				ColorsOut.out(getName() + " | accepted connection  "   );  
+				ColorsOut.out(getName() + " | accepted connection  ", ColorsOut.BLUE   );  
 		 		Interaction2021 conn = new TcpConnection(sock);
 		 		//Create a message handler on the connection
 		 		new TcpApplMessageHandler( userDefHandler, conn );			 		

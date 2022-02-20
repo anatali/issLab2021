@@ -30,20 +30,20 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 
 	@Override
 	public void elaborate( ApplMessage msg, Interaction2021 conn ) {
-		ColorsOut.out(name+" | elaborateeeeee ApplMessage:" + msg + " conn=" + conn);
+		ColorsOut.out(name+" | elaborateeeeee ApplMessage:" + msg + " conn=" + conn, ColorsOut.BLUE);
 		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
  		String dest  = msg.msgReceiver();
 		//ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
-		ColorsOut.out(name +  " | elaborate  dest="+dest );
+		ColorsOut.out(name +  " | elaborate  dest="+dest, ColorsOut.BLUE );
 		IApplMsgHandler h    = handlerMap.get(dest);
-		ColorsOut.out(name +  " | elaborate  h="+h );
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest );
+		ColorsOut.out(name +  " | elaborate  h="+h, ColorsOut.BLUE );
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.BLUE );
 		if( dest != null && (! msg.isReply()) ) h.elaborate(msg,conn);			
 	}
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn);
+		ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.BLUE);
 		try {
  			ApplMessage msg  = new ApplMessage(message);
 			elaborate( msg, conn );
@@ -53,11 +53,11 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 	}
 
 	public void addComponent( String devname, IApplMsgHandler h) {
-		ColorsOut.out(name +  " | added:" + devname);
+		ColorsOut.out(name +  " | added:" + devname, ColorsOut.BLUE);
 		handlerMap.put(devname, h);
 	}
 	public void removeComponent( String devname ) {
-		ColorsOut.out(name +  " | removed:" + devname);
+		ColorsOut.out(name +  " | removed:" + devname, ColorsOut.BLUE);
 		handlerMap.remove( devname );
 	}
 

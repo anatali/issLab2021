@@ -26,7 +26,7 @@ ApplMessage msgDec = new ApplMessage(
 	public void execute() throws Exception {
 		ProxyAsClient client1 = new ProxyAsClient("client1","localhost", ""+ctxServerPort, ProtocolType.tcp);
  		ProxyAsClient client2 = new ProxyAsClient("client2","localhost", ""+ctxServerPort, ProtocolType.tcp);
-		client1.sendCommandOnConnection(msgDec.toString()); //TODO: msg-related operators
+		client1.sendCommandOnConnection(msgDec.toString());  
  		client2.sendCommandOnConnection(msgDec.toString());		
 	}
  
@@ -34,10 +34,10 @@ ApplMessage msgDec = new ApplMessage(
 	public static void main( String[] args) throws Exception {		
 		SharedCounterExampleMain sys = new SharedCounterExampleMain();
 		RadarSystemConfig.withContext = true;
-		RadarSystemConfig.tracing     = true;
+		RadarSystemConfig.tracing     = false;
 		sys.configure();
 		sys.execute();
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		System.exit(0);
 	}
 }

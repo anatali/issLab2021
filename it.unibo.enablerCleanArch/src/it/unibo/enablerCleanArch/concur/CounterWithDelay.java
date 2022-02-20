@@ -1,6 +1,7 @@
 package it.unibo.enablerCleanArch.concur;
 
 import it.unibo.enablerCleanArch.supports.ColorsOut;
+import it.unibo.enablerCleanArch.supports.Utils;
 
 public class CounterWithDelay {
 private String name;
@@ -16,11 +17,11 @@ private int n = 2;
 		int v = n;
 		v = v - 1;
 		if( dt > 0 ) {
-			ColorsOut.delay(dt);   //the control is given to another client
-			ColorsOut.out(name + " | resumes v= " + v, ColorsOut.BLACK);
+			Utils.delay(dt);   //the control is given to another client
+			ColorsOut.outappl(name + " | resumes v= " + v, ColorsOut.BLACK);
 		}
 		n = v;
-		ColorsOut.out(name + " | new value after dec= " + n, ColorsOut.BLACK);
+		ColorsOut.outappl(name + " | new value after dec= " + n, ColorsOut.BLACK);
 	}
 	public int getVal() {
 		return n;
