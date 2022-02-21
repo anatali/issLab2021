@@ -71,7 +71,7 @@ Al termine del corso lo studente:
   virtuali sia dispositivi reali costruibili utilizzando elaboratori a basso costo quali RaspberryPi e Arduino;
 - è in grado di :blue:`applicare` i concetti, i dispositivi, e gli strumenti sviluppati in modo concreto ed operativo 
   durante il corso per lo sviluppo di una :blue:`applicazione finale` che utilizza uno o più dispositivi IOT 'situati', 
-  con particolare riferimento a Differental Drive Robots (DDR) con sensori 
+  con particolare riferimento a *Differental Drive Robots* (DDR) con sensori 
   che possono agire in modo relativamente autonomo in :blue:`diversi` ambienti virtuali o reali, 
   senza modificare il software che esprime la 'business logic' del problema.
 
@@ -83,7 +83,7 @@ FASE1
 
 :remark:`Dalla OOP ai sistemi software distribuiti eterogenei a scambio di messggi.`
 
-- Sviluppo di un sistema (:doc:`RadarSystem`) basato su un PC e su un RaspberryPi uando TCP e seguendo un 
+- Sviluppo di un sistema basato su un PC e su un RaspberryPi uando TCP e seguendo un 
   processo di sviluppo agile ed evolutivo (ispirato a `SCRUM`_) di tipo :blue:`bottom-up`.
 - Primi approfondimenti sulla fase di analisi dei requisiti e sulla analisi del problema. 
   Il ruolo della *architettura logica* (come artefatto della analisi) per l'analisi dei rischi e per la pianificazione dei lavori.
@@ -165,9 +165,11 @@ Su PC
 Su RaspberryPi
 +++++++++++++++++++++++++++++++++++
 
-#. Acquisire RaspberryPi 3 Model B+, SONAR Led
- 
-
+#. Acquisire RaspberryPi 3 Model B+, 
+#. Sarebbe bene acquisire anche HC-SR04 Distance Sensor e qualche Led che useremo nella FASE1
+#. Al termine della FASE1 faremo anche uso di una (usb) WebCam
+#. Per il software si veda :doc:`RaspberrySoftware`  (Installazione-base 2022)
+#. Per i robot si veda  `robot reali`_
 
 -------------------------------------------
 Valutazione finale

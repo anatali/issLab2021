@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Supporti per TCP (SPRINT1) &#8212; iss22 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Enablers (SPRINT2)" href="Enablers.html" />
+    <link rel="prev" title="Progettazione e sviluppo incrementali" href="RadarSystemProgetto.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="supporti-per-tcp-sprint1">
+<span id="tcpsupport"></span><h1>Supporti per TCP (SPRINT1)<a class="headerlink" href="#supporti-per-tcp-sprint1" title="Permalink to this headline">¶</a></h1>
+<p>Il secondo punto del piano di lavoro (si veda <a class="reference internal" href="RadarSystemProdottiAnalisi.html#pianolavoro"><span class="std std-ref">Piano di lavoro</span></a>) prevede:</p>
+<ol class="arabic simple">
+<li><p>definizione di alcuni supporti TCP per componenti lato client e lato server, con l’obiettivo di
+formare un insieme riusabile anche in applicazioni future;</p></li>
+</ol>
+<p>Abbiamo detto che la creazione di questi supporti non è indispensabile, ma può costituire un
+elemento strategico a livello aziendale, per evitare di rifare ogni volta il codice
+che permette di scambiare informazioni via rete.</p>
+<p>Inizieremo focalizzando l’attenzione sul protocollo TCP, per verificare poi, al termine
+del lavoro, la possibilità di estendere anche ad altri protocolli i supporti creati.</p>
+<p><span class="remark">il software relativo ai supporti sarà scritto in un package dedicato xxx.supports</span></p>
+<section id="tcpclient">
+<span id="tcpsupportclient"></span><h2>TCPClient<a class="headerlink" href="#tcpclient" title="Permalink to this headline">¶</a></h2>
+<p>Introduciamo la classe <code class="docutils literal notranslate"><span class="pre">TcpClient</span></code> con cui istanziare oggetti che stabilisccono una connessione
+su un data coppia <code class="docutils literal notranslate"><span class="pre">IP,Port</span></code>. Il metodo  static <code class="docutils literal notranslate"><span class="pre">connect</span></code> restiruisce un oggetto
+che implementa l’interfaccia  <a class="reference internal" href="RadarSystemAnalisi.html#conn2021"><span class="std std-ref">Interaction2021</span></a>
+e che potrà essere usato per inviare-ricevere messaggi sulla connessione.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TcpClient</span> <span class="p">{</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Interaction2021</span> <span class="nf">connect</span><span class="p">(</span>
+            <span class="n">String</span> <span class="n">host</span><span class="p">,</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span><span class="kt">int</span> <span class="n">nattempts</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">nattempts</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="n">Socket</span> <span class="n">socket</span>        <span class="o">=</span>  <span class="k">new</span> <span class="n">Socket</span><span class="p">(</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span> <span class="p">);</span>
+        <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">TcpConnection</span><span class="p">(</span> <span class="n">socket</span> <span class="p">);</span>
+        <span class="k">return</span> <span class="n">conn</span><span class="p">;</span>
+      <span class="p">}</span><span class="k">catch</span><span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Colors</span><span class="p">.</span><span class="na">out</span><span class="p">(</span><span class="s">&quot;Attempt to connect:&quot;</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s">&quot; port=&quot;</span> <span class="o">+</span> <span class="n">port</span><span class="p">);</span>
+        <span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span><span class="c1">//for</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="n">Exception</span><span class="p">(</span><span class="s">&quot;Unable to connect to host:&quot;</span> <span class="o">+</span> <span class="n">host</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Si noti che il client fa un certo numero di tentativi prima di segnalare la impossibilità di connessione.</p>
+</section>
+<section id="tcpconnection-implementa-interaction2021">
+<span id="tcpconnection"></span><h2><code class="docutils literal notranslate"><span class="pre">TcpConnection</span></code> implementa <code class="docutils literal notranslate"><span class="pre">Interaction2021</span></code><a class="headerlink" href="#tcpconnection-implementa-interaction2021" title="Permalink to this headline">¶</a></h2>
+<p>La classe <code class="docutils literal notranslate"><span class="pre">TcpConnection</span></code> costituisce una implementazione della interfaccia
+<a class="reference internal" href="RadarSystemAnalisi.html#conn2021"><span class="std std-ref">Interaction2021</span></a>
+e quindi realizza i metodi di supporto per la ricezione e la trasmissione di
+messaggi applicativi sulla connessione fornita da una <code class="docutils literal notranslate"><span class="pre">Socket</span></code>.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TcpConnection</span> <span class="kd">implements</span> <span class="n">Interaction2021</span><span class="p">{</span>
+  <span class="p">...</span>
+<span class="kd">public</span> <span class="nf">TcpConnection</span><span class="p">(</span> <span class="n">Socket</span> <span class="n">socket</span>  <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Le implementazione delle operazioni si riduce alla scrittura/lettura di informazione sulla Socket
+e si rimanda quindi direttamente al codice.</p>
+</section>
+<section id="tcp-server">
+<span id="tcpsupportserver"></span><h2>TCP Server<a class="headerlink" href="#tcp-server" title="Permalink to this headline">¶</a></h2>
+<p>Alla semplicità del supporto lato client si contrappone una maggior complessità lato server, in quanto
+occorre:</p>
+<ul class="simple">
+<li><p>permettere di stabilire connenessioni con più client;</p></li>
+<li><p>fare in modo che si stabilisca una diversa connessione con ciascun client;</p></li>
+<li><p>fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno
+codice applicativo.</p></li>
+</ul>
+<section id="l-interfaccia-iapplmsghandler">
+<span id="iapplmsghandler"></span><h3>L’interfaccia <code class="docutils literal notranslate"><span class="pre">IApplMsgHandler</span></code><a class="headerlink" href="#l-interfaccia-iapplmsghandler" title="Permalink to this headline">¶</a></h3>
+<p>Nel seguito, incapsuleremo il codice applicativo  entro oggetti che implementano l’interfaccia
+<code class="docutils literal notranslate"><span class="pre">IApplMessageHandler</span></code>.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">IApplMsgHandler</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="p">();</span>
+  <span class="kd">public</span>  <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span> <span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="p">)</span> <span class="p">;</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendMsgToClient</span><span class="p">(</span> <span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span>  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Il costruttore del TCP server avrà quindi la seguente signature:</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="nf">TcpServer</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span> <span class="n">IApplMessageHandler</span> <span class="n">userDefHandler</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>cioè riceverà un oggetto di livello applicativo (<code class="docutils literal notranslate"><span class="pre">userDefHandler</span></code>) capace di:</p>
+<ul class="simple">
+<li><p>gestire i messaggi ricevutisulla connessione <a class="reference internal" href="RadarSystemAnalisi.html#conn2021"><span class="std std-ref">Interaction2021</span></a> che il server avrà stabilito con i clienti</p></li>
+<li><p>inviare risposte ai clienti sulla stessa connessione.</p></li>
+</ul>
+</section>
+<section id="applmessagehandler-implementa-iapplmsghandler">
+<span id="applmessagehandler"></span><h3><code class="docutils literal notranslate"><span class="pre">ApplMessageHandler</span></code> implementa <code class="docutils literal notranslate"><span class="pre">IApplMsgHandler</span></code><a class="headerlink" href="#applmessagehandler-implementa-iapplmsghandler" title="Permalink to this headline">¶</a></h3>
+<p>Per agevolare il lavoro dell’application designer, viene definita una classe astratta che
+implementa la interfaccia <a class="reference internal" href="#iapplmsghandler"><span class="std std-ref">IApplMsgHandler</span></a>.
+Questa classe realizza l’invio di messaggi ai clienti, ma
+delega alle classi specializzate il compito di definire il metodo  <code class="docutils literal notranslate"><span class="pre">elaborate</span></code> per la gestione
+dei messaggi in ingresso.</p>
+<div class="highlight-Java notranslate" id="msgh"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">ApplMessageHandler</span> <span class="kd">implements</span> <span class="n">IApplMsgHandler</span><span class="p">{</span>
+<span class="kd">protected</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+  <span class="kd">public</span> <span class="nf">ApplMessageHandler</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span> <span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">Interaction2021</span> <span class="nf">getName</span><span class="p">(</span>  <span class="p">)</span> <span class="p">{</span>  <span class="k">return</span> <span class="n">name</span><span class="p">;</span>  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendMsgToClient</span><span class="p">(</span> <span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span>  <span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>  <span class="n">conn</span><span class="p">.</span><span class="na">forward</span><span class="p">(</span> <span class="n">message</span> <span class="p">);</span>
+    <span class="p">}</span><span class="k">catch</span><span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span><span class="n">Colors</span><span class="p">.</span><span class="na">outerr</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; | ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());}</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span> <span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="p">)</span> <span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/ApplMessageHandler.png"><img alt="_images/ApplMessageHandler.png" class="align-center" src="_images/ApplMessageHandler.png" style="width: 60%;" /></a>
+</section>
+<section id="il-tcpserver-come-oggetto-attivo">
+<span id="tcpserver"></span><h3>Il TCPserver come oggetto attivo<a class="headerlink" href="#il-tcpserver-come-oggetto-attivo" title="Permalink to this headline">¶</a></h3>
+<p>Il <code class="docutils literal notranslate"><span class="pre">TcpServer</span></code> viene definito come un Thread che definisce  metodi per essere attivato e disattivato
+e il metodo <code class="docutils literal notranslate"><span class="pre">run</span></code> che ne specifica il funzionamento.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TcpServer</span>  <span class="kd">extends</span> <span class="n">Thread</span><span class="p">{</span>
+<span class="kd">private</span> <span class="kt">boolean</span> <span class="n">stopped</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="kd">private</span> <span class="n">IApplMsgHandler</span> <span class="n">userDefHandler</span><span class="p">;</span>
+<span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span><span class="p">;</span>
+<span class="kd">private</span> <span class="n">ServerSocket</span> <span class="n">serversock</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="nf">TcpServer</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span><span class="n">IApplMessageHandler</span> <span class="n">userDefHandler</span><span class="p">){</span>
+  <span class="kd">super</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="na">port</span>        <span class="o">=</span> <span class="n">port</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="na">applHandler</span> <span class="o">=</span> <span class="n">applHandler</span><span class="p">;</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">serversock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="p">(</span> <span class="n">port</span> <span class="p">);</span>
+    <span class="n">serversock</span><span class="p">.</span><span class="na">setSoTimeout</span><span class="p">(</span><span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">serverTimeOut</span><span class="p">);</span>
+  <span class="p">}</span><span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Colors</span><span class="p">.</span><span class="na">outerr</span><span class="p">(</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; | ERROR: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">activate</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">stopped</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">stopped</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">deactivate</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">stopped</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="n">serversock</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+  <span class="p">}</span><span class="k">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Colors</span><span class="p">.</span><span class="na">outerr</span><span class="p">(</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; | ERROR: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<section id="il-funzionamento-del-tcpserver">
+<h4>Il funzionamento del TCPserver<a class="headerlink" href="#il-funzionamento-del-tcpserver" title="Permalink to this headline">¶</a></h4>
+<p>Il metodo <code class="docutils literal notranslate"><span class="pre">run</span></code> che specifica il funzionamento del server, opera come segue:</p>
+<ol class="arabic simple">
+<li><p>attende una richiesta di connessione;</p></li>
+<li><p>all’arrivo della richiesta, creae un oggetto (attivo)
+di classe <a class="reference internal" href="#tcpmsgh"><span class="std std-ref">TcpMessageHandler</span></a> passandondogli l’<a class="reference internal" href="#msgh"><span class="std std-ref">ApplMessageHandler</span></a>
+ricevuto nel costruttore e la connessione (di tipo <a class="reference internal" href="RadarSystemAnalisi.html#conn2021"><span class="std std-ref">Interaction2021</span></a>) appena stabilita.
+Questo oggetto attende messaggi sulla nuova connessione
+e ne delega la gestione all’<a class="reference internal" href="#msgh"><span class="std std-ref">ApplMessageHandler</span></a> ricevuto;</p></li>
+<li><p>torna in fase di attesa di conessione con un altro client.</p></li>
+</ol>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="k">while</span><span class="p">(</span> <span class="o">!</span> <span class="n">stopped</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Accept a connection</span>
+    <span class="n">Socket</span> <span class="n">sock</span>  <span class="o">=</span> <span class="n">serversock</span><span class="p">.</span><span class="na">accept</span><span class="p">();</span>       <span class="c1">//1</span>
+    <span class="n">Interaction2021</span> <span class="n">conn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TcpConnection</span><span class="p">(</span><span class="n">sock</span><span class="p">);</span>
+    <span class="n">applHandler</span><span class="p">.</span><span class="na">setConn</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
+    <span class="c1">//Create a message handler on the connection</span>
+    <span class="k">new</span> <span class="n">TcpApplMessageHandler</span><span class="p">(</span> <span class="n">userDefHandler</span><span class="p">,</span> <span class="n">conn</span> <span class="p">);</span> <span class="c1">//2</span>
+  <span class="p">}</span><span class="c1">//while</span>
+<span class="p">}</span><span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{...}</span>
+</pre></div>
+</div>
+<p>La figura che segue mostra l’architettura che si realizza in seguito a chiamate
+da parte di due client diversi</p>
+<a class="reference internal image-reference" href="_images/ServerAndConnections.png"><img alt="_images/ServerAndConnections.png" class="align-center" src="_images/ServerAndConnections.png" style="width: 80%;" /></a>
+<p><span class="remark">Notiamo che vi può essere concorrenza nell’uso di oggetti condivisi.</span></p>
+</section>
+<section id="tcpmessagehandler">
+<h4>TcpMessageHandler<a class="headerlink" href="#tcpmessagehandler" title="Permalink to this headline">¶</a></h4>
+<p>La classe <code class="docutils literal notranslate"><span class="pre">TcpMessageHandler</span></code> definisce oggetti (dotati di un Thread interno) che si occupano
+di ricevere messaggi su una data connessione
+<a class="reference internal" href="RadarSystemAnalisi.html#conn2021"><span class="std std-ref">Interaction2021</span></a>, delegandone la gestione all’<a class="reference internal" href="#msgh"><span class="std std-ref">ApplMessageHandler</span></a> ricevuto
+nel costruttore.</p>
+<div class="highlight-Java notranslate" id="tcpmsgh"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TcpApplMessageHandler</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="p">{</span>
+<span class="kd">public</span> <span class="nf">TcpApplMessageHandler</span><span class="p">(</span><span class="n">IApplMsgHandler</span> <span class="n">handler</span><span class="p">,</span><span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">){</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">while</span><span class="p">(</span> <span class="kc">true</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">String</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="na">receiveMsg</span><span class="p">();</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">msg</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">conn</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span><span class="p">{</span> <span class="n">handler</span><span class="p">.</span><span class="na">elaborate</span><span class="p">(</span> <span class="n">msg</span><span class="p">,</span> <span class="n">conn</span> <span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="una-testunit">
+<h2>Una TestUnit<a class="headerlink" href="#una-testunit" title="Permalink to this headline">¶</a></h2>
+<p>Una TestUnit può essere utile sia come esempio d’uso dei suppporti, sia per chiarire le
+interazioni client-server.</p>
+<p>Per impostare la TestUnit, seguiamo le seguente <span class="blue">user-story</span>:</p>
+<blockquote class="epigraph">
+<div><p><span class="blue">User-story TCP</span>: come TCP-client mi aspetto di poter inviare una richiesta di connessione al TCP-server
+e di usare la connessione per inviare un messaggio e per ricevere una risposta.
+Mi aspetto anche che altri TCP-client possano agire allo stesso modo senza che le
+loro informazioni interferiscano con le mie.</p>
+</div></blockquote>
+<section id="metodi-before-after">
+<h3>Metodi before/after<a class="headerlink" href="#metodi-before-after" title="Permalink to this headline">¶</a></h3>
+<p>I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TCPServer:</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestTcpSupports</span> <span class="p">{</span>
+<span class="kd">private</span> <span class="n">TcpServer</span> <span class="n">server</span><span class="p">;</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">testPort</span> <span class="o">=</span> <span class="mi">8111</span><span class="p">;</span>
+
+<span class="nd">@Before</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">up</span><span class="p">()</span> <span class="p">{</span>
+              <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TcpServer</span><span class="p">(</span><span class="s">&quot;tcpServer&quot;</span><span class="p">,</span><span class="n">testPort</span><span class="p">,</span> <span class="k">new</span> <span class="n">NaiveHandler</span><span class="p">(</span><span class="s">&quot;naiveH&quot;</span><span class="p">)</span> <span class="p">);</span>
+  <span class="n">server</span><span class="p">.</span><span class="na">activate</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nd">@After</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">down</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">server</span> <span class="o">!=</span> <span class="kc">null</span> <span class="p">)</span> <span class="n">server</span><span class="p">.</span><span class="na">deactivate</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="l-handler-dei-messaggi-applicativi-naivehandler">
+<h3>L’handler dei messaggi applicativi <code class="docutils literal notranslate"><span class="pre">NaiveHandler</span></code><a class="headerlink" href="#l-handler-dei-messaggi-applicativi-naivehandler" title="Permalink to this headline">¶</a></h3>
+<p>L’ <a class="reference internal" href="#applmessagehandler">ApplMessageHandler</a> associato al server è molto semplice: visualizza il messaggio ricevuto
+sulla connessione e invia una risposta avvalendosi
+della connessione ereditata da ‘<a class="reference internal" href="#msgh"><span class="std std-ref">ApplMessageHandler</span></a>.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">NaiveHandler</span> <span class="kd">extends</span> <span class="n">ApplMsgHandler</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="nf">NaiveHandler</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span> <span class="kd">super</span><span class="p">(</span><span class="n">name</span><span class="p">);</span> <span class="p">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s">&quot; | elaborates: &quot;</span><span class="o">+</span><span class="n">message</span><span class="p">);</span>
+    <span class="n">sendMsgToClient</span><span class="p">(</span><span class="s">&quot;answerTo_&quot;</span><span class="o">+</span><span class="n">message</span><span class="p">,</span> <span class="n">conn</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">elaborate</span><span class="p">(</span><span class="n">ApplMessage</span> <span class="n">message</span><span class="p">,</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="un-semplice-client-per-i-test">
+<h3>Un semplice client per i test<a class="headerlink" href="#un-semplice-client-per-i-test" title="Permalink to this headline">¶</a></h3>
+<p>Un semplice client di testing viene definito in modo che (metodo <code class="docutils literal notranslate"><span class="pre">doWorkWithServerOn</span></code>) il client :</p>
+<ol class="arabic simple">
+<li><p>si connette al server</p></li>
+<li><p>invia un messaggio</p></li>
+<li><p>attende la risposta del server</p></li>
+<li><p>controlla che la risposta sia quella attesa</p></li>
+</ol>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">ClientForTest</span><span class="p">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doWorkWithServerOn</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ntimes</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="n">Interaction2021</span> <span class="n">conn</span>  <span class="o">=</span>
+        <span class="n">TcpClient</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="n">TestTcpSupports</span><span class="p">.</span><span class="na">testPort</span><span class="p">,</span><span class="n">ntimes</span><span class="p">);</span><span class="c1">//1</span>
+      <span class="n">String</span> <span class="n">request</span> <span class="o">=</span> <span class="s">&quot;hello from&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">;</span>
+      <span class="n">conn</span><span class="p">.</span><span class="na">forward</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>              <span class="c1">//2</span>
+      <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="na">receiveMsg</span><span class="p">();</span>  <span class="c1">//3</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; | receives the answer: &quot;</span> <span class="o">+</span><span class="n">answer</span> <span class="p">);</span>
+      <span class="n">assertTrue</span><span class="p">(</span> <span class="n">answer</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;answerTo_&quot;</span><span class="o">+</span> <span class="n">request</span><span class="p">));</span> <span class="c1">//4</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">fail</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Il metodo  <code class="docutils literal notranslate"><span class="pre">doWorkWithServerOn</span></code> controlla che un client esegua un certo numero di tentativi ogni volta
+che tenta di connettersi a un server:</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doWorkWithServerOff</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ntimes</span>  <span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">connect</span><span class="p">(</span><span class="n">ntimes</span><span class="p">);</span>
+    <span class="n">fail</span><span class="p">();</span> <span class="c1">//non deve connttersi ...</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ColorsOut</span><span class="p">.</span><span class="na">outerr</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; | ERROR (expected)&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="test-per-l-interazione-senza-server">
+<h3>Test per l’interazione senza server<a class="headerlink" href="#test-per-l-interazione-senza-server" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testClientNoServer</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">server</span><span class="p">.</span><span class="na">deactivate</span><span class="p">();</span> <span class="c1">//il server deve essere down</span>
+  <span class="k">new</span> <span class="n">ClientForTest</span><span class="p">().</span><span class="na">doWorkWithServerOff</span><span class="p">(</span> <span class="s">&quot;clientNoServer&quot;</span><span class="p">,</span> <span class="mi">3</span>  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="test-per-l-interazione-client-server">
+<h3>Test per l’interazione client-server<a class="headerlink" href="#test-per-l-interazione-client-server" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span>    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSingleClient</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">new</span> <span class="n">ClientForTest</span><span class="p">().</span><span class="na">doWorkWithServerOn</span><span class="p">(</span> <span class="s">&quot;client1&quot;</span><span class="p">,</span><span class="mi">10</span>  <span class="p">);</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="test-con-piu-clienti">
+<h3>Test con più clienti<a class="headerlink" href="#test-con-piu-clienti" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span>      <span class="nd">@Test</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testManyClients</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">new</span> <span class="n">ClientForTest</span><span class="p">().</span><span class="na">doWorkWithServerOn</span><span class="p">(</span><span class="s">&quot;client1&quot;</span><span class="p">,</span><span class="mi">10</span>  <span class="p">);</span>
+  <span class="k">new</span> <span class="n">ClientForTest</span><span class="p">().</span><span class="na">doWorkWithServerOn</span><span class="p">(</span><span class="s">&quot;client2&quot;</span><span class="p">,</span><span class="mi">1</span> <span class="p">);</span>
+  <span class="k">new</span> <span class="n">ClientForTest</span><span class="p">().</span><span class="na">doWorkWithServerOn</span><span class="p">(</span><span class="s">&quot;client3&quot;</span><span class="p">,</span><span class="mi">1</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="radarsystem-distribuito">
+<h2>RadarSystem distribuito<a class="headerlink" href="#radarsystem-distribuito" title="Permalink to this headline">¶</a></h2>
+<p>Una prima versione distribuita del <code class="docutils literal notranslate"><span class="pre">RadarSystem</span></code> consiste nell’attivare tutto il sistema
+sul Raspberry, lasciando sul PC solo il <code class="docutils literal notranslate"><span class="pre">RadarDisplay</span></code>.</p>
+<p>Per ottenere lo scopo, si può ricorrere al  <a class="reference external" href="https://it.wikipedia.org/wiki/Proxy_pattern">pattern-proxy</a> e fare in modo che
+l’oggetto che realizza il caso d’uso <a class="reference internal" href="RadarSystemProgetto.html#radarguiusecase"><span class="std std-ref">RadarGuiUsecase</span></a> (nella versione
+<a class="reference internal" href="RadarSystemProgetto.html#radarsystemmainlocal"><span class="std std-ref">Il sistema in locale</span></a> ) riceva come argomento <code class="docutils literal notranslate"><span class="pre">radar</span></code> un Proxy per
+il <em>RadarDisplay</em> realizzato da un TCP client che interagisce con
+un TCP-Server posto sul PC e che gestisce il  <em>RadarDisplay</em>.</p>
+<a class="reference internal image-reference" href="_images/RadarOnPc.PNG"><img alt="_images/RadarOnPc.PNG" class="align-center" src="_images/RadarOnPc.PNG" style="width: 60%;" /></a>
+<section id="proxyasclient">
+<h3>ProxyAsClient<a class="headerlink" href="#proxyasclient" title="Permalink to this headline">¶</a></h3>
+<p>Introduciamo la classe <code class="docutils literal notranslate"><span class="pre">ProxyAsClient</span></code> che riceve nel costruttore:</p>
+<ul class="simple">
+<li><p>l’host a cui connettersi</p></li>
+<li><p>la porta espressa da una <em>String</em> denominata lo``entry``</p></li>
+<li><p>il tipo di protocollo (<a class="reference internal" href="RadarSystemAnalisi.html#protocoltype"><span class="std std-ref">Tipi di protocollo</span></a>) da usare</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/ProxyAsClient.PNG"><img alt="_images/ProxyAsClient.PNG" class="align-center" src="_images/ProxyAsClient.PNG" style="width: 40%;" /></a>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ProxyAsClient</span> <span class="p">{</span>
+  <span class="kd">private</span> <span class="n">Interaction2021</span> <span class="n">conn</span><span class="p">;</span>
+  <span class="kd">protected</span> <span class="n">String</span> <span class="n">name</span> <span class="p">;</span>             <span class="c1">//could be a uri</span>
+  <span class="kd">protected</span> <span class="n">ProtocolType</span> <span class="n">protocol</span> <span class="p">;</span>
+
+  <span class="kd">public</span> <span class="nf">ProxyAsClient</span><span class="p">(</span>
+        <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">String</span> <span class="n">host</span><span class="p">,</span> <span class="n">String</span> <span class="n">entry</span><span class="p">,</span> <span class="n">ProtocolType</span> <span class="n">protocol</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">name</span>     <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">protocol</span> <span class="o">=</span> <span class="n">protocol</span><span class="p">;</span>
+      <span class="n">setConnection</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">protocol</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{...}</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">Interaction2021</span> <span class="nf">getConn</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">conn</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Il fatto di denotare la porta del server con una <em>String</em> invece che con un <em>int</em> ci darà
+la possibilità di gestire anche comunicazioni basate su CoAP; in questo secondo caso,
+il parametro <code class="docutils literal notranslate"><span class="pre">entry</span></code> denoterà un <span class="blue">Uniform Resource Identifier (URI)</span>.</p>
+<p>Il metodo <code class="docutils literal notranslate"><span class="pre">setConnection</span></code> effettua la connessione al server remoto in funzione del tipo di
+protocollo specificato:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setConnection</span><span class="p">(</span>
+      <span class="n">String</span> <span class="n">host</span><span class="p">,</span><span class="n">String</span> <span class="n">entry</span><span class="p">,</span><span class="n">ProtocolType</span> <span class="n">protocol</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">protocol</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">tcp</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">TcpClient</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">host</span><span class="p">,</span>  <span class="n">Integer</span><span class="p">.</span><span class="na">parseInt</span><span class="p">(</span><span class="n">entry</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+  <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">protocol</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">coap</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CoapSupport</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">entry</span> <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Nel caso di CoAP, il metodo <code class="docutils literal notranslate"><span class="pre">setConnection</span></code> si avvale di un supporto   <code class="docutils literal notranslate"><span class="pre">CoapSupport</span></code>
+che definiremo più avanti e che restituisce un oggetto di tipo <code class="docutils literal notranslate"><span class="pre">Interaction2021</span></code>
+come nel caso di TCP/UDP.</p>
+<p>Con riferimento ai <a class="reference internal" href="RadarSystemAnalisi.html#tipiinterazione"><span class="std std-ref">Tipi di interazione</span></a> introdotti nella fase di analisi,
+il <em>proxy tipo-client</em> definisce anche un metodo per inviare <em>dispatch</em> un metodo per inviare
+<em>request</em> con attesa di response/ack:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">sendCommandOnConnection</span><span class="p">(</span> <span class="n">String</span> <span class="n">cmd</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">conn</span><span class="p">.</span><span class="na">forward</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{...}</span>
+<span class="p">}</span>
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">sendRequestOnConnection</span><span class="p">(</span> <span class="n">String</span> <span class="n">request</span> <span class="p">)</span>  <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="na">request</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">answer</span><span class="p">;</span>
+  <span class="p">}</span><span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="p">...;</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="remark">Il ProxyAsClient così definito realizza request-response sincrone (bloccanti)</span></p>
+</section>
+<section id="refactoring-del-codice-su-raspberry">
+<h3>Refactoring del codice su Raspberry<a class="headerlink" href="#refactoring-del-codice-su-raspberry" title="Permalink to this headline">¶</a></h3>
+<p>La fase di configurazione della versione <a class="reference internal" href="RadarSystemProgetto.html#radarsystemmainlocal"><span class="std std-ref">Il sistema in locale</span></a> su Raspberry
+può ora essere modificata in modo da associare alla variabile <em>radar</em> un ProxyClient:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="p">()</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="n">radar</span> <span class="o">=</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">RadarGuiRemote</span> <span class="o">?</span>
+            <span class="k">new</span>  <span class="n">ProxyAsClient</span><span class="p">(</span><span class="s">&quot;radarPxy&quot;</span><span class="p">,</span> <span class="n">RadarSystemConfig</span><span class="p">.</span><span class="na">pcHostAddr</span><span class="p">,</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">tcp</span><span class="p">)</span>
+            <span class="p">:</span> <span class="n">DeviceFactory</span><span class="p">.</span><span class="na">createRadarGui</span><span class="p">();</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Si veda:</p>
+<ul class="simple">
+<li><p><em>it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar</em>  (main che implementa <a class="reference internal" href="RadarSystemProgetto.html#iapplication"><span class="std std-ref">L’interfaccia IApplication</span></a>)</p></li>
+</ul>
+<p>Per completare il sistema non rimane che definire il TCPServer da attivare sul PC</p>
+</section>
+<section id="un-server-per-il-radardisplay">
+<h3>Un server per il RadarDisplay<a class="headerlink" href="#un-server-per-il-radardisplay" title="Permalink to this headline">¶</a></h3>
+<p>Si veda:</p>
+<ul class="simple">
+<li><p><em>it.unibo.enablerCleanArch.supports.TcpServer</em></p></li>
+<li><p><em>it.unibo.enablerCleanArch.supports.TcpApplMessageHandler</em></p></li>
+<li><p><em>it.unibo.enablerCleanArchapplHandler.RadarApplHandler</em></p></li>
+<li><p><em>it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainDisplayOnPc</em>  (main che implementa <a class="reference internal" href="RadarSystemProgetto.html#iapplication"><span class="std std-ref">L’interfaccia IApplication</span></a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="supporti-per-altri-protocolli">
+<h2>Supporti per altri protocolli<a class="headerlink" href="#supporti-per-altri-protocolli" title="Permalink to this headline">¶</a></h2>
+<p>Udp, Bluetooth  <code class="docutils literal notranslate"><span class="pre">unibonoawtsupports.jar</span></code></p>
+<section id="la-libreria-unibonoawtsupports-jar">
+<h3>La libreria <code class="docutils literal notranslate"><span class="pre">unibonoawtsupports.jar</span></code><a class="headerlink" href="#la-libreria-unibonoawtsupports-jar" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="supporti-per-http">
+<h2>Supporti per HTTP<a class="headerlink" href="#supporti-per-http" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="n">HttpURLConnection</span> <span class="n">con</span> <span class="o">=</span>
+<span class="n">IssHttpSupport</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-unibo.gif" alt="Logo"/>
+    
+    <h1 class="logo logo-name">iss22</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="RadarSystem.html">RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemAnalisi.html">Analisi del problema RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProdottiAnalisi.html">Prodotti al termine della analisi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProgetto.html">Progettazione e sviluppo incrementali</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Supporti per TCP (SPRINT1)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tcpclient">TCPClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tcpconnection-implementa-interaction2021"><code class="docutils literal notranslate"><span class="pre">TcpConnection</span></code> implementa <code class="docutils literal notranslate"><span class="pre">Interaction2021</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tcp-server">TCP Server</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#l-interfaccia-iapplmsghandler">L’interfaccia <code class="docutils literal notranslate"><span class="pre">IApplMsgHandler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#applmessagehandler-implementa-iapplmsghandler"><code class="docutils literal notranslate"><span class="pre">ApplMessageHandler</span></code> implementa <code class="docutils literal notranslate"><span class="pre">IApplMsgHandler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#il-tcpserver-come-oggetto-attivo">Il TCPserver come oggetto attivo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#il-funzionamento-del-tcpserver">Il funzionamento del TCPserver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tcpmessagehandler">TcpMessageHandler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#una-testunit">Una TestUnit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#metodi-before-after">Metodi before/after</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#l-handler-dei-messaggi-applicativi-naivehandler">L’handler dei messaggi applicativi <code class="docutils literal notranslate"><span class="pre">NaiveHandler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#un-semplice-client-per-i-test">Un semplice client per i test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-per-l-interazione-senza-server">Test per l’interazione senza server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-per-l-interazione-client-server">Test per l’interazione client-server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-con-piu-clienti">Test con più clienti</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#radarsystem-distribuito">RadarSystem distribuito</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#proxyasclient">ProxyAsClient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#refactoring-del-codice-su-raspberry">Refactoring del codice su Raspberry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#un-server-per-il-radardisplay">Un server per il RadarDisplay</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#supporti-per-altri-protocolli">Supporti per altri protocolli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#la-libreria-unibonoawtsupports-jar">La libreria <code class="docutils literal notranslate"><span class="pre">unibonoawtsupports.jar</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#supporti-per-http">Supporti per HTTP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Enablers.html">Enablers (SPRINT2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContextServer.html">Il concetto di contesto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarGuiCoap.html">RadarGuiCoap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemCoap.html">Il RadarSystem basato su CoAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemDeploy.html">RadarSystem deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ApproccioTopDown.html">Un approccio top-down al processo</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="RadarSystemProgetto.html" title="previous chapter">Progettazione e sviluppo incrementali</a></li>
+      <li>Next: <a href="Enablers.html" title="next chapter">Enablers (SPRINT2)</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Antonio Natali.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/RadarSystemSupporti.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

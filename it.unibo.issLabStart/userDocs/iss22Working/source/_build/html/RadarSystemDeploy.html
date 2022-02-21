@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>RadarSystem deployment &#8212; iss22 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Il RadarSystem basato su CoAP" href="RadarSystemCoap.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="radarsystem-deployment">
+<h1>RadarSystem deployment<a class="headerlink" href="#radarsystem-deployment" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gradle</span> <span class="n">build</span> <span class="n">jar</span> <span class="o">-</span><span class="n">x</span> <span class="n">test</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Crea il file <cite>builddistributionsit.unibo.enablerCleanArch-1.0.zip</cite> che contiene la directory bin</p>
+<p>La distribuzione del <em>RadarSystem</em> assume due forme:</p>
+<ul class="simple">
+<li><p>la forma di una libreria di nome <code class="docutils literal notranslate"><span class="pre">it.unibo.enablerCleanArch-1.0.jar</span></code> prodotta dal progetto <a class="reference internal" href="#it-unibo-enablercleanarch">it.unibo.enablerCleanArch</a></p></li>
+<li><p>la forma di una applicazione web (che utiliza la libreria precedente) prodotta dal progetto <a class="reference internal" href="#it-unibo-msenabler">it.unibo.msenabler</a></p></li>
+</ul>
+<section id="it-unibo-enablercleanarch">
+<span id="enablercleanarch"></span><h2>it.unibo.enablerCleanArch<a class="headerlink" href="#it-unibo-enablercleanarch" title="Permalink to this headline">¶</a></h2>
+<p>Il progetto <em>it.unibo.enablerCleanArch</em> è sviluppato in <code class="docutils literal notranslate"><span class="pre">Java8</span></code> e fornisce il programma
+<code class="docutils literal notranslate"><span class="pre">AllMainRadarLed</span></code> che permette di selezionare ed eseguire diverse configurazioni applicative.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>    <span class="n">LedUsageMain</span>
+<span class="n">a</span>    <span class="n">RadarSystemDevicesOnRaspMqtt</span>
+<span class="n">A</span>    <span class="n">RadarSystemMainOnPcMqtt</span>
+<span class="mi">2</span>    <span class="n">SonarUsageMainWithEnablerTcp</span>
+<span class="mi">3</span>    <span class="n">SonarUsageMainWithContextTcp</span>
+<span class="mi">4</span>    <span class="n">SonarUsageMainWithContextMqtt</span>
+<span class="mi">5</span>    <span class="n">SonarUsageMainCoap</span>
+<span class="mi">6</span>    <span class="n">RadarSystemAllOnPc</span>
+<span class="mi">7</span>    <span class="n">RadarSystemDevicesOnRasp</span>
+<span class="mi">8</span>    <span class="n">RadaSystemMainCoap</span>
+<span class="mi">9</span>    <span class="n">RadarSystemMainOnPcCoap</span>
+</pre></div>
+</div>
+<p>Selezionando <strong>a</strong> si esegue la parte di applicazione che attiva i dispositivi Led e Sonar sul Raspberry.
+A queta parte corrisponde la parte di applicazione  <strong>A</strong>, da eseguire sul PC per inviare comandi ai dispositivi remoti
+e per ricevere informazioni sul loro stato.
+Le due parti interagiscono via MQTT usando il broker di indirizzo <code class="docutils literal notranslate"><span class="pre">tcp://broker.hivemq.com</span></code>.</p>
+<section id="i-diversi-scenari">
+<h3>I diversi scenari<a class="headerlink" href="#i-diversi-scenari" title="Permalink to this headline">¶</a></h3>
+<section id="caso-8-uso-di-coap-sistema-tutto-su-raspberry">
+<h4>Caso 8 uso di Coap - sistema tutto su Raspberry<a class="headerlink" href="#caso-8-uso-di-coap-sistema-tutto-su-raspberry" title="Permalink to this headline">¶</a></h4>
+<p>Il sistema su Raspberry attiva un unico server (<strong>CoapApplServer</strong>) e aggiunge come risorse
+il Led ( devices/output/lights/led ) e il Sonar (devices/input/sonar).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;simulation&quot;</span>       <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ControllerRemote&quot;</span> <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;LedRemote&quot;</span>        <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;SonareRemote&quot;</span>     <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;RadarGuiRemote&quot;</span>   <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;protocolType&quot;</span>     <span class="p">:</span> <span class="s2">&quot;coap&quot;</span><span class="p">,</span>
+<span class="s2">&quot;withContext&quot;</span>      <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarDelay&quot;</span>       <span class="p">:</span> <span class="s2">&quot;200&quot;</span><span class="p">,</span>
+<span class="o">........................................</span>
+<span class="s2">&quot;pcHostAddr&quot;</span>       <span class="p">:</span> <span class="s2">&quot;192.168.1.9&quot;</span><span class="p">,</span>
+<span class="s2">&quot;raspHostAddr&quot;</span>     <span class="p">:</span> <span class="s2">&quot;192.168.1.24&quot;</span><span class="p">,</span>
+<span class="s2">&quot;radarGuiPort&quot;</span>     <span class="p">:</span> <span class="s2">&quot;8014&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ledPort&quot;</span>          <span class="p">:</span> <span class="s2">&quot;8010&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ledGui&quot;</span>           <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarPort&quot;</span>        <span class="p">:</span> <span class="s2">&quot;8012&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarObservable&quot;</span>  <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;controllerPort&quot;</span>   <span class="p">:</span> <span class="s2">&quot;8016&quot;</span><span class="p">,</span>
+<span class="s2">&quot;serverTimeOut&quot;</span>    <span class="p">:</span> <span class="s2">&quot;600000&quot;</span><span class="p">,</span>
+<span class="s2">&quot;applStartdelay&quot;</span>   <span class="p">:</span> <span class="s2">&quot;3000&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sonarDistanceMax&quot;</span> <span class="p">:</span> <span class="s2">&quot;150&quot;</span><span class="p">,</span>
+<span class="s2">&quot;DLIMIT&quot;</span>           <span class="p">:</span> <span class="s2">&quot;12&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ctxServerPort&quot;</span>    <span class="p">:</span> <span class="s2">&quot;8018&quot;</span><span class="p">,</span>
+<span class="s2">&quot;mqttBrokerAddr&quot;</span>   <span class="p">:</span> <span class="s2">&quot;tcp://broker.hivemq.com&quot;</span><span class="p">,</span>
+<span class="s2">&quot;testing&quot;</span>          <span class="p">:</span> <span class="s2">&quot;false&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="caso-8-uso-di-coap-dispositivi-su-raspberry">
+<h4>Caso 8 uso di Coap - dispositivi su Raspberry<a class="headerlink" href="#caso-8-uso-di-coap-dispositivi-su-raspberry" title="Permalink to this headline">¶</a></h4>
+<p>Condifguriamo il sistema su Raspberry specificando che il controller è remoto.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;simulation&quot;</span>       <span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ControllerRemote&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>A questo punto attiviamo il programma 9 su PC</p>
+</section>
+<section id="caso-9-uso-di-coap-controller-su-pc">
+<h4>Caso 9 uso di Coap - Controller su PC<a class="headerlink" href="#caso-9-uso-di-coap-controller-su-pc" title="Permalink to this headline">¶</a></h4>
+<p>Questo programma nasce per usare CoAP e quindi fissa in modo diretto i parametri di configurazione
+che gli interessano:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">raspHostAddr</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.xxx&quot;</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">DLIMIT</span>       <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">simulation</span>   <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">withContext</span>  <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+        <span class="n">RadarSystemConfig</span><span class="o">.</span><span class="n">sonarDelay</span>   <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>     <span class="o">//</span><span class="n">come</span> <span class="n">quello</span> <span class="k">del</span> <span class="n">Raspberry</span>
+</pre></div>
+</div>
+<p>Il programma può operare anche definendo il Controller come un observer della risorsa Sonar,
+ponendo</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">useProxyClient</span> <span class="o">=</span> <span class="n">false</span>
+</pre></div>
+</div>
+<p>In caso contrario, il Controller opera con un convenzionale ciclo <strong>read-eval-print</strong>.</p>
+</section>
+</section>
+</section>
+<section id="it-unibo-msenabler">
+<span id="msenabler"></span><h2>it.unibo.msenabler<a class="headerlink" href="#it-unibo-msenabler" title="Permalink to this headline">¶</a></h2>
+<p>Il progetto <em>it.unibo.msenabler</em>  è sviluppato in <code class="docutils literal notranslate"><span class="pre">Java11</span></code> e utilizza SpringBoot per fornire
+una WebGui alla porta <code class="docutils literal notranslate"><span class="pre">8081</span></code> che permette di comandare il Led e il Sonar.</p>
+<p>La GUI si presenta come segue:</p>
+<a class="reference internal image-reference" href="_images/msenablerGui.PNG"><img alt="_images/msenablerGui.PNG" class="align-center" src="_images/msenablerGui.PNG" style="width: 60%;" /></a>
+<p>L’applicazione Spring alla base di <em>it.unibo.msenabler</em> potrebbe operare in due modi diversi:</p>
+<ol class="arabic simple">
+<li><p><em>caso locale</em>: essere attivata su un Raspberry basato su <strong>Buster</strong>, che utilizza <code class="docutils literal notranslate"><span class="pre">Java11</span></code> ed
+utlizzare l’applicazione <strong>a</strong> che fa riferimento ai dispositivi reali connessi al Raspberry.
+Aprendo un browser su  <code class="docutils literal notranslate"><span class="pre">http://&lt;RaspberryIP&gt;:8081</span></code>, un uente può inviare comandi al Led e ricevere i dati
+del Sonar in due modi diversi:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>inviando al sonar il comando getDistance</p></li>
+<li><p>utilizzando una websocket (con URI=/radarsocket). Per questa parte, si consiglia la lettura preliminare
+di <span class="xref std std-ref">WebSockets</span>.</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>caso remoto: essere attivata su un PC ed utlizzare l’applicazione <strong>A</strong> (o 9) per inviare e ricevere informazione
+via MQTT dalla parte applicativa ( <strong>a</strong> o 7)  operante sul Raspberry.</p></li>
+</ol>
+<section id="caso-locale">
+<h3>Caso locale<a class="headerlink" href="#caso-locale" title="Permalink to this headline">¶</a></h3>
+<p>Come ogni applicazione SpringBoot, gli elementi salienti sono:</p>
+<ul class="simple">
+<li><p>Un controller (denominato <code class="docutils literal notranslate"><span class="pre">HumanEnablerController</span></code>) che presenta all’end user una pagina</p></li>
+<li><p>La pagina che utilillza Bootstrap è <code class="docutils literal notranslate"><span class="pre">RadarSystemUserConsole.html</span></code></p></li>
+<li><p>WebSocketConfiguration</p></li>
+</ul>
+<p>Sembra molto lento, in particolare quando si attiva la webcam.</p>
+</section>
+<section id="caso-remoto">
+<h3>Caso remoto<a class="headerlink" href="#caso-remoto" title="Permalink to this headline">¶</a></h3>
+<p>Su Raspberry, attiviamo 7 (RadarSystemDevicesOnRasp) e su PC 9 (RadarSystemMainOnPcCoap)
+all’interno di una applicazione SpringBoot.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-unibo.gif" alt="Logo"/>
+    
+    <h1 class="logo logo-name">iss22</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="RadarSystem.html">RadarSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemAnalisi.html">Analisi del problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProdottiAnalisi.html">Prodotti al termine della analisi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemProgetto.html">Progettazione e sviluppo incrementali</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemSupporti.html">Supporti per TCP (SPRINT1)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EnablersTCP.html">Enablers per TCP (SPRINT2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemEnablers.html">Enablers per i componenti del RadarSystems (SPRINT2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContextServer.html">Il concetto di contesto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarGuiCoap.html">RadarGuiCoap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RadarSystemCoap.html">Il RadarSystem basato su CoAP</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RadarSystem deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#it-unibo-enablercleanarch">it.unibo.enablerCleanArch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#i-diversi-scenari">I diversi scenari</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#caso-8-uso-di-coap-sistema-tutto-su-raspberry">Caso 8 uso di Coap - sistema tutto su Raspberry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caso-8-uso-di-coap-dispositivi-su-raspberry">Caso 8 uso di Coap - dispositivi su Raspberry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caso-9-uso-di-coap-controller-su-pc">Caso 9 uso di Coap - Controller su PC</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#it-unibo-msenabler">it.unibo.msenabler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#caso-locale">Caso locale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#caso-remoto">Caso remoto</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="RadarSystemCoap.html" title="previous chapter">Il RadarSystem basato su CoAP</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Antonio Natali.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/RadarSystemDeploy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,15 +1,13 @@
+.. contents:: Overview
+   :depth: 3
 .. role:: red
-.. role:: blue  
-.. role:: remark   
+.. role:: blue 
+.. role:: remark
 
-======================================
-Indicazioni
-====================================== 
  
--------------------------------------
-Il motto 
--------------------------------------
-
+======================================
+Dal motto all'azione
+======================================
 
 :remark:`Non c'è codice senza progetto.`
 

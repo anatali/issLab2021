@@ -1,0 +1,149 @@
+in anaconda 
+lsvirtualenv -l
+sphinks-quickstart  //TUTTO ATTACCATO
+
+.. _test di Turing : https://it.wikipedia.org/wiki/Test_di_Turing
+
+:remark:`
+.. epigraph:: 
+
+.. _tcpsupprt:
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - a1
+    - a2
+  * - b1
+    - b2
+
+``  ``
+
+:doc:`RadarGuiCoap`
+
+.. _My target:
+
+`My target`_.
+
+:ref:`SonarModel<SonarModel>`
+
+===
+---
++++
+%%%
+&&&
+
+
+ Il delay qualificato cone **'HORRIBLE EFFECT'**  potrebbe ripercuotersi sui client 
+in modo inaccettabile e mettere in crisi un sistema. Si veda ad esempio
+
+.. _HorribleEffetcts:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Sperimentazione di effetti indesiderati
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Gli effetti dei ritardi indotti dagli observer POJO possono essere sperimentati invocando, ad esempio,
+``SonarUsageMainWithContextTcp`` dopo avere tolto il commento sul delay nel metodo update di
+ `SonarObserverFortesting`_.
+
+
+==================================================
+Il concetto di contesto
+==================================================
+
+.. include:: ContextServer.rst 
+
+==================================================
+Da TCP a CoAP
+==================================================
+
+.. include:: DaTcpACoAP.rst 
+
+
+==================================================
+WebSockets
+==================================================
+
+.. include:: WebSockets.rst 
+
+
+
+==================================
+Distribuzione del RadarSystem
+==================================  
+
+.. include:: RadarSystemDeploy.rst  
+
+Il metodo ``elaborate`` con argomento :ref:`ApplMessage<ApplMessage>` viene presentato subito qui,
+ma verrà introdotto solo più avanti
+(si veda :ref:`IApplMsgHandler<IApplMsgHandlerEsteso>` in :doc:`ContestiContenitori`) quando avremo la necessità di 
+introdurre nei messaggi anche informazioni relative al nome del mittente e del destinatario.
+
+
+
+===========================   ===========================    =========================== 
+     Server                              id                        entry
+---------------------------   ---------------------------   ---------------------------
+:ref:`TcpContextServer`               nome host                 port
+:ref:`MqttContextServer`              id del client              nome topic     
+:ref:`CoapContextServer`                    -                      -
+===========================   ===========================    ===========================   
+
+
+
+ 
+.. Test funzionale
+.. Si veda :doc:`ContextServer`.
+
+La distribuzione del *RadarSystem* assume due forme:
+
+- la forma di una libreria di nome ``it.unibo.enablerCleanArch-1.0.jar`` prodotta dal progetto it.unibo.enablerCleanArch_
+- la forma di una applicazione web (che utiliza la libreria precedente) prodotta dal progetto ``it.unibo.msenabler``
+
+
+.. _enablerCleanArch:
+
+Alcune webcam hanno la funzione di bilanciare automaticamente la loro luminosità. 
+Ad esempio, in una stanza buia percepiscono che la luminosità deve essere aumentata mentre in un'area luminosa, 
+la luminosità potrebbe dover essere ridotta. 
+La fotocamera lo fa esaminando i propri fotogrammi e analizzandoli.
+Quando si verifica una cattura di un'immagine subito dopo l'inizializzazione della fotocamera, 
+non ha visto dati sufficienti per sapere quanto sia luminoso l'ambiente e sembra che presuppone 
+che l'ambiente sia SUPER luminoso e riduce al minimo il controllo dell'esposizione (risultando in un'immagine nera). 
+Man mano che vengono esaminati più fotogrammi, la fotocamera regola rapidamente le impostazioni di esposizione.
+
+Per utilizzare fswebcam, possiamo fornirgli l'opzione la -S <num>cui opzione è il numero di fotogrammi 
+che la fotocamera dovrebbe "vedere" e "saltare" prima di acquisire l'immagine desiderata. 
+Trovo che se fornisco un salto della 20fotocamera ha avuto abbastanza fotogrammi per regolare automaticamente 
+la sua esposizione e poiché stiamo elaborando 30 fotogrammi al secondo, 
+è ancora meno di un secondo di ritardo per catturare 1 fotogramma. 
+Per lo streaming video, non dovremmo avere il problema in quanto la fotocamera verrà inizializzata 
+e rimarrà inizializzata.
+
+
+
+
+Per impostare in modo sistematico la dimensione interazione è opportuno chiarire le diverse forme che questa può assumere. 
+Nel seguito faremo riferimento alla seguente terminologia:
+
+- Evento (event): informazione emessa (più o meno consapevolmente) in modo asincrono da una sorgente 
+  senza alcuna particolare nozione di ricevente e senza alcuna aspettativa da parte dell'emittente.
+- Segnale (signal): informazione inviata in modo asincrono a N (N>=1) destinatari, noti o meno all'emittente, 
+  con l'aspettativa che venga ricevuta da qualcuno, al fine di eseguire un'azione che potrebbe portare vantaggio 
+  all'emittente e/o al sistema nel suo complesso.
+- Messaggio (message): informazione inviata in modo asincrono a N (N>=1) specifici destinatari, 
+  noti alla emittaente, con l'aspettativa che questi lo ricevano e lo elaborino, 
+  senza attesa di una risposta esplicita.
+- Invito (invitation): messaggio inviato a N (N>=1) destinatari, con l'aspettativa che almeno uno lo riceva 
+  e invii al mittente un messaggio di conferma.
+- Richiesta (request): messaggio inviato a uno specifico receiver; il contenuto del messaggio 
+  rappresenta la richiesta di esecuzione di una attività, con aspettativa da parte del sender 
+  che questa attività si concluda con una risposta pertinente alla richiesta.
+- Conferma (reply, acknowledgment): messaggio inviato da un receiver al sender di un invito. 
+  Il contenuto del messaggio rappresenta un riconoscimento di avvenuta ricezione.
+- Risposta (response): messaggio inviato da un receiver al sender di una richiesta.
+  il contenuto del messaggio rappresenta la risposta alla richiesta.
+- Risultato (result): messaggio inviato dal receiver di una richiesta ad uno o più destinataori, 
+  noti e meno; il contenuto del messaggio rappresenta la risposta alla richiesta.
