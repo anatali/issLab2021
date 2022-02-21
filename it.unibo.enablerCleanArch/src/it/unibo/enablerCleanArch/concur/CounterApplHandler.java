@@ -31,7 +31,7 @@ private CounterActorWithDelay ca;
 		ColorsOut.outappl(name + " | elaborate ApplMessage: "+msg, ColorsOut.GREEN);
 		
  		String answer = elaborate( msg.msgContent() );
-		ColorsOut.outappl(name + " | elaborate ApplMessage answer: "+answer, ColorsOut.GREEN);
+		//ColorsOut.outappl(name + " | elaborate ApplMessage answer: "+answer, ColorsOut.GREEN);
 		if( msg.isRequest() ) {
 			ApplMessage  reply = Utils.prepareReply(msg, answer);
 			sendAnswerToClient(reply.toString());			
@@ -46,7 +46,7 @@ private CounterActorWithDelay ca;
 		String cmdName  = cmdT.getName();
 		if( cmdName.equals("dec")) {
 			int delay = Integer.parseInt(cmdT.getArg(0).toString());
-			ColorsOut.outappl(name + " | dec delay="+delay, ColorsOut.GREEN);
+			//ColorsOut.outappl(name + " | dec delay="+delay, ColorsOut.GREEN);
 			return delay;
  		}else return 0;		
 	}

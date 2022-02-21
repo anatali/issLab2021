@@ -2,285 +2,190 @@
 .. role:: blue  
 .. role:: remark   
 
+
+.. _SEDisasters : Software_engineering_disasters
+.. _OpenGroupArch : Open Group Architectural Framework
+.. _Design Pattern : Design Pattern
+.. _Patten Software Architectures : ppp 
+.. _SitoWebIssUnibo : https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/468003
+.. _GitHubIss2022 : https://github.com/anatali/issLab2022
+.. _VideoStudenti : https://unibo.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%222f957969-7f72-4609-a690-aca900aeba02%22
+
  
+.. _DockerRepo : https://hub.docker.com/repositories
+
+.. _Dispense Ingegneria del software : ./NatMolBook/bookEntry.html  
+
+.. _robot reali: _static/devsDdr.html
+
+.. _template2022 : _static/templateToFill.html
+
+.. _SCRUM : 
+
 ======================================
-Costruire software
+Introduzione
 ======================================
-Il software puo essere definito come:
 
-- l'insieme di *frasi espresse in un qualche linguaggio formale* al fine di istruire un elaboratore 
-  o una rete di elaboratori, 
 
-Il :blue:`software non ha consistenza fisica`; può consumare energia ed altre risorse, 
-produrre effetti utili o dannosi, avere conseguenze rilevanti sul piano economico e sociale, 
-ma il software è del tutto privo di massa.
+.. image:: ./_static/img/Intro/fig0-2022.png 
+   :align: center
+   :width: 90%
 
-Le conseguenze di questa caratteristica sono molteplici, sia sul piano pragmatico che sul piano filosofico. 
-Limitando il discorso al contesto della produzione industriale, si è diffusa la convinzione che 
-la costruzione del software non richieda, per sua natura, processi di produzione tipici dell'ingegneria tradizionale.
 
-Nell'**ingegneria tradizionale** (meccanica, edile, etc) il costo del materiale costituisce spesso più del 50% 
-del costo totale di un progetto, mentre nella produzione del software è il costo del lavoro ad essere preponderante: 
-si parte dal 70% fino a giungere quasi al 100%. L'ingegneria tradizionale ha anche sperimentato che un cambiamento 
-di costo 1 in fase di analisi potrebbe costare 1000 in fase di produzione. 
-Per questo l'ingegneria classica diversifica le fasi di produzione delineando un ben noto flusso di lavoro 
-(*workflow*) costituito da un insieme di passi (o tasks): 
+--------------------------------------
+Contenuti del corso
+--------------------------------------
 
-#. definizione dei requisiti,
-#. analisi del problema, 
-#. progetto della soluzione, 
-#. realizzazione del prodotto, 
-#. collaudo 
-#. messa in opera 
+Riportiamo qui quanto si legge nel Sito Web del corso :  
+https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/468003.
 
-spesso eseguiti uno dopo l'altro, in un classico :blue:`processo di sviluppo sequenziale o a cascata`.
 
-Nella produzione industriale del software è invece piuttosto comune cercare di abbattere i costi 
-di progetto e di sviluppo, anche limitando le dimensioni del gruppo di lavoro, 
-e aggredire il mercato prefissando una data di distribuzione del prodotto, che viene di frequente 
-rilasciato non completamente finito, accollando all'utente parte dell'onere di collaudo. 
+Al termine del corso lo studente:
 
-Sotto la spinta di stringenti vincoli di *time to market* (TTM) molte aziende adottano uno schema del tipo 
-"scrivi, prova e correggi", mirando alla produzione di codice al minor "costo immediato" possibile. 
-Le :blue:`fasi di analisi e progetto` anche se accuratamente svolte, non sempre sono adeguatamente documentate, 
-e *quasi mai corralete in modo sistematico con il codice prodotto*.
+- è in grado di impostare :blue:`processi di sviluppo cooperativo` del software basati su approcci agili 
+  (in particolare SCRUM) avvalendosi anche di modelli eseguibili, espressi mediante meta-modelli custom;
+- è' in grado di progettare e sviluppare sistemi software e relativi piani di testing in modo :blue:`incrementale 
+  ed evolutivo`, partendo dal problema e dal dominio applicativo piuttosto che dalla tecnologia realizzativa, 
+  attraverso la definizione di modelli eseguibili dell':blue:`analisi dei requisiti e dell'analisi del problema`;
+- è in grado di blue:`valutare in modo critico` le continua evoluzione delle tecnologie informatiche, 
+  sia a livello computazionale, sia livello di sviluppo-software, acquisendo :blue:`conoscenze teorico-operative` 
+  su linguaggi, metododologie e strumenti quali *Kotlin, Gradle, SCRUM, SpringBoot, Devops, Docker*;
+- è in grado di comprendere il ruolo dei diversi blue:`stili di architetture software` 
+  (layers, client-server, pipeline, microkernel, service-based, event-driven, space-based, microservices) 
+  e di come :blue:`scegliere lo stile architetturale più opportuno` per i diversi sotto-sistemi individuati;
+- è in grado di affrontare l'analisi, il progetto e la costruzione di applicazioni distribuite ed eterogenee 
+  di tipo proattivo e/o reattivo (unitamente a loro possibili piattaforme di sviluppo e di supporto run-time) 
+  con particolare riferimento a :blue:`modelli computazionali a scambio di messaggi e ad eventi`;
+- è in grado di realizzare le :blue:`interazioni a scambio di messaggi` tra componenti distribuiti utilizzando 
+  modelli logici di alto livello e implementazioni basate su protocolli diversi (TCP, UDP, HTTP, CoAP, MQTT);
+- è in grado di comprendere come sia possibile progettare e costruire ambienti di sviluppo custom capaci 
+  di :blue:`generazione automatica di codice` (Software Factories in 'ecosistemi' come Eclipse/IntelliJ), 
+  basandosi su Model Driven Software Development (MDSD) e sull'uso di Domain Specific Languages (DSL);
+- è in grado di sviluppare applicazioni :blue:`capaci di combinare` aspetti di alto livello (in particolare di AI) 
+  con aspetti di basso livello relativi a dispositivi di Internet of Things (IOT), utilizzando sia ambienti 
+  virtuali sia dispositivi reali costruibili utilizzando elaboratori a basso costo quali RaspberryPi e Arduino;
+- è in grado di :blue:`applicare` i concetti, i dispositivi, e gli strumenti sviluppati in modo concreto ed operativo 
+  durante il corso per lo sviluppo di una :blue:`applicazione finale` che utilizza uno o più dispositivi IOT 'situati', 
+  con particolare riferimento a Differental Drive Robots (DDR) con sensori 
+  che possono agire in modo relativamente autonomo in :blue:`diversi` ambienti virtuali o reali, 
+  senza modificare il software che esprime la 'business logic' del problema.
 
-Il processo di costruzione del sofware è quindi :blue:`influenzato da una potente forza`, 
-legata alla natura stessa del software: la spinta a impostare la costruzione di un prodotto in modo **bottom-up**, 
-a partire da una specifica tecnologia costituita da un linguaggio di programmazione, 
-o da un framework applicativo o da una piattafforma operativa.
+Pe raggiungere questi obiettivi, il corso 2021-2022 si articolerà in tre fasi:
 
-La principale conseguenza negativa di questa forza è l'assenza di una esplicita descrizione di progetto 
-che permetta di anticipare la valutazione dei rischi e le potenziali difficoltà connesse allo sviluppo. 
-In molti casi adeguate fasi di analisi e di progettazione hanno luogo, anche in modo sistematico; 
-ma ciò putroppo quasi sempre accade solo nella mente dei costruttori; 
-nel codice finale non vi è più traccia alcuna di queste fasi, se non qualche debole segnale legato a sporadici commenti.
+++++++++++++++++++++++++++++++++
+FASE1
+++++++++++++++++++++++++++++++++
 
-Tuttavia, anche se il codice fosse accuratamente documentato sia in relazione all'analisi sia in relazione 
-alle scelte di progetto, la **riduzione del prodotto al solo codice sarebbe non accettabile**, 
-se non nel caso di sistemi software semplici. 
+:remark:`Dalla OOP alla costruzione di sistemi software distribuiti eterogenei a scambio di messggi.`
 
-All'aumentare della complessità infatti, la :blue:`mente umana ha bisogno`, 
-per comprendere, di decomporre il problema in parti di ampiezza limitata, 
-:blue:`articolando la descrizione in livelli di astrazione diversi`; 
-poiché il codice deve inevitabilmente esprimere il sistema finale nei suoi minimi dettagli, 
-la maggior parte delle persone sarebbe incapace di leggerlo con profitto anche se a conoscenza 
-delle regole sintattiche del linguaggio di programmazione.
+- Sviluppo di un sistema (:doc:`RadarSystem`) basato su un PC e su un RaspberryPi uando TCP e seguendo un 
+  processo di sviluppo agile ed evolutivo (ispirato a SCRUM) di tipo :blue:`bottom-up`.
+- Primi approfondimenti sulla fase di analisi dei requisiti e sulla analisi del problema. 
+  Il ruolo della architettura logica (come artefatto della analisi) per l'analisi dei rischi e per la pianificazione dei lavori.
+- Il ruolo del Testing e della pianificazione di test automatizzabili (con JUnit).
+- Refactoring del sistema a fronte dell'uso di altri protocolli: MQTT e CoAP. 
+- Come rendere il software applicativo indipendente dal protocollo.
+- Come dotare l'applicazione di una WebGui usando SpringBoot.
+- Costruzione di un primo prototipo e suo deployment.
 
--------------------------------------
-La crisi del software 
--------------------------------------
+++++++++++++++++++++++++++++++++
+FASE2
+++++++++++++++++++++++++++++++++
+:remark:`Degli oggetti ad attori che interagiscono a messaggi.`
 
-Impostare un processo di produzione in assenza di descrizioni del sistema che permettano di anticipare 
-la valutazione dei rischi espone il processo stesso a un potenziale fallimento; 
-non meraviglia dunque che si senta spesso parlare di crisi del software.
+- Il modello di programmazione a scambio di messaggi portato a livello di componenti.
+- Introduzione al linguaggio Kotlin.
+- Dalle coroutine agli atttori
+- Da attori message-driven ad attori message-based che operano come automi a stati finiti
+- Definizione di una infrastruttura per attori capaci di formare sistemi software distribuiti ed eterogeni.
+   
 
-La letteratura [Glass97], [ Software_engineering_disasters] riporta casi di fallimento di un numero 
-sorprendentemente rilevante di progetti software, evidenziando un insieme di cause principali:
+++++++++++++++++++++++++++++++++
+FASE3
+++++++++++++++++++++++++++++++++
 
-- Cattiva specifica e gestione dei requisiti.
-- Comunicazioni ambigue ed imprecise tra i diversi attori del processo di produzione 
-  (utenti, manager, analisti, progettisti, implementatori).
-- Architetture finali del sistema fragili (non robuste).
-- Inconsistenze tra requisiti, progetto e realizzazione.
-- Collaudi inadeguati o insufficienti.
-- Inadeguata capacità di valutare e gestire i rischi e di controllare la propagazione dei cambiamenti.
+:remark:`Da bottom-up a top-down: il ruolo dei modelli.`
 
-Queste potenziali fonti di insuccesso hanno amplificato la loro influenza nel momento in cui 
-l'intera disciplina ha vissuto la :blue:`transizione` da una dimensione prevalentemente :blue:`algorimtico-trasformazionale` 
-a un dimensione fortemente :blue:`sistemistico-architetturale`.
+- Definizione di una linguaggio/metamodello custom (Qakctor) per la costruzione di sistemi basati su attori
+- Applicazione di quanto sviluppato per lo sviluppo incrementale di una applicazione finale IOT che utilizza 
+  dispositivi robotici virtuali e/o  `robot reali`_, costruiti estendendo il sistema della FASE1. 
+- Il vantaggio dell'uso di modelli eseguibili nelle fasi di analisi dei requisiti e del problema e come premessa
+  per l'abbattimento dei costi (e degli imprevisti) di produzione.
 
--------------------------------------
-Il ruolo dell'architettura
--------------------------------------
 
-La moderna costruzione del software riconosce all'architettura del sistema un ruolo strategico, 
-nonostante il termine *architettura* sia tra i vocaboli più sovraccarichi di significato.
-
-Normalmente, si parla di architettura di un sistema quando ci si vuole riferire all'insieme delle 
-macro-parti in cui il sistema si articola, includendo le loro responsabilità, relazioni e interconnessioni. 
-
-Per molti, il termine *architettura* potrebbe però evocare l'immagine di uno schema in cui compare una rete 
-di blocchi e linee di connessione; questa visione andrebbe meglio indicata col termine mappa o "topologia". 
-
-Per altri, l'*architettura* evoca l'idea di uno schema concettuale di soluzione riferito a un certo dominio applicativo, 
-come ad esempio nella frase architetture web; in questo caso sarebbe più appropriato utilizzare il termine framework.
-
-L'Open Group Architectural Framework definisce architettura:
-
-- "a set of elements depicted in an architectural model and a specification of how these elements are connected 
-  to meet the overall requirements of an information system".
-
-In [BCK03] si dice che:
-
-- "the software architecture of a program or computing system is the structure 
-  or structures of the system, which comprises software components, the externally-visible properties 
-  of these components and the relationships among them".
-
-La IEEE Computer society definisce (nel 2000) l'architettura:
-
-- "the fundamental organization of a 
-  system embodied in its components their relationships to each other and to the environment, 
-  and the principles guiding its design and evaluation".
-
-Tra le altre accezioni possibili, una delle più curiose, su cui vale la pena di riflettere, è quella per cui:
+.. image:: ./_static/img/Intro/mbotIot.png 
+   :align: center
+   :width: 70%
  
- - l'architettura è ciò che rimane di un sistema quando non si può più togliere nulla, 
-   continuando a comprenderne la struttura e il funzionamento.
 
-Le prime esperienze collettive nello studio delle architetture software possono essere fatte 
-risalire al workshop OOPSLA del 1981 guidato da Bruce Anderson che mirava allo sviluppo 
-di un "architecture handbook". 
-A questo periodo può anche essere fatto risalire l'idea di pattern culminata nella pubblicazione 
-nel 1995 dell'ormai famoso testo sui Design Pattern [GHJV95] della così detta 
-GoF (Gang-of-Four: Erich Gamma, Richard Helm, Ralph Johnson e John Vlissides). 
-Da allora si sono susseguiti molte altre conferenze e lavori. 
-I riferimenti più noti sono i cinque testi sulle Patten Software Architectures 
-([POSA1], [POSA2], [POSA3], [POSA4], [POSA5] ) e i convegni PLoP (Pattern Languages of Programming).
+--------------------------------------
+Propedeuticità
+--------------------------------------
 
--------------------------------------
-Dimensioni
--------------------------------------
+`Dispense Ingegneria del software`_
 
 
-Sia nella fase di analisi che in quella di progetto, la descrizione di un sistema software può avvenire 
-focalizzando l'attenzione su almeno tre diversi punti di vista:
-- l'organizzazione del sistema in parti (struttura);
-- il modo in cui le diverse parti scambiano informazione implicita o esplicita tra loro (interazione);
-- il funzionamento del tutto e di ogni singola parte (comportamento).
-ù
-Questi punti di vista costituiscono tre indispensabili dimensioni in cui articolare lo spazio della descrizione 
-del sistema, qualunque sia il linguaggio utilizzato per esprimere questa descrizione.
-Costrutti per esprimere strutture (di dati e di controllo), forme di comportamento e meccanismi di interazione 
-sono presenti in tutti i linguaggi di programmazione. 
-Un punto importante consiste nel capire fino a che punto i costrutti di un linguaggio debbano influenzare 
-il progettista (se non lo stesso analista). 
-Fino alla fine degli anni 90 il linguaggio di programmazione è stato il veicolo principale per introdurre 
-nuovi concetti sia sul piano computazionale sia sul sul piano della organizzazione del software.
+--------------------------------------
+Link utili
+--------------------------------------
 
-L'avvento della programmazione ad oggetti sembra avere segnato il culmine di questo processo; 
-un motivo può certo essere il raggiungimento di una sufficiente maturità nella capacità espressiva 
-in ciascuna delle dimensioni citate. Tuutavia, il motivo principale della relativa (apparente) 
-stagnazione nello sviluppo di nuovi linguaggi può essere ricondotto all'idea che un linguaggio 
-non deve essere necessariamente accompagnato da una sintassi concreta ma può essere suffciente 
-definire una sintassi astratta utilizzando un meta-linguaggio come ad esempio MOF 
-(si veda Meta Object Facility) unitamente alla semantica del linguaggio e a un framework (oo) di supporto.
+- `SitoWebIssUnibo`_: https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/468003
+- GITHUB del corso `GitHubIss2022`_:  https://github.com/anatali/issLab2022
+- Template  `template2022`_
+- Video tema finale studenti (Panopto) `VideoStudenti`_
+- books.html
+   
+--------------------------------------
+Tools su PC
+--------------------------------------
 
-Questa idea è sviluppata oggi con riferimento ai domain specific languages.
+#. Installare GIT
+ 
+#. Clonare https://github.com/anatali/issLab2022 in una directory vuota e.g. C:/.../iss2022
 
+#. Installare Gradle
 
-++++++++++++++++++++++++++++++++++++++++++++++
-Struttura
-++++++++++++++++++++++++++++++++++++++++++++++
-Per impostare in modo sistematico la definzione a livello strutturale di un elemento può essere conveniente, 
-sia in fase di analisi sia in fase di progetto, cercare di dare risposta ad alcune domande quali:
+#. Installare IntelliJ
 
-- l'elemento è atonico o composto? Nel caso sia composto quali sono le parti che lo formano?
-- l'elemento è dotato di stato modificabile? In caso affermativo, quali sono le operazioni di modifica dello stato? 
-  (si veda la sezione sul comportamento)
-- quali sono le proprietà dell'elemento, cioè quali attributi lo caratterizzano ?
-- da quali altri elementti dipende e secondo quale forma di dipendenza?
+#. Installare Eclipse IDE for Java and DSL Developers (2021 06)  
 
-Si noti che un elemento composto implica la definizione ricorsiva della struttura di ogni parte e 
-la definizione di operazioni denominate selettori.
-Notiamo anche che l'individuazione di una struttura composta porta spesso alla individuazione 
-di un insieme di operazioni primitive sulla base delle quali costruire ogni altra operazione 
-di manipolazione/gestione dell'elemento.  
+#. Installare Docker
 
+#. Installare Node.js
 
-++++++++++++++++++++++++++++++++++++++++++++++
-Interazione
-++++++++++++++++++++++++++++++++++++++++++++++
-Le interazioni possono essere sincrone o asincrone e riguardare informazioni o stream di dati. 
-In questo secondo caso esse possono essere anche isocrone.
+--------------------------------------
+Materiale di laboratorio
+--------------------------------------
 
-In una interazione asincrona la comunicazione è "bufferizzata" senza alcuna 
-limitazione sulle dimensioni del buffer. 
-L'emittente non deve attendere alcuna informazione di ritorno anche quando invia informazione 
-ad uno specifico destinatario. Il ricevente attende solo quando il buffer è vuoto. 
-Nel caso di stream, non vi sono vincoli di tempo per la ricezione.
-In una interazione sincrona la comunicazione avviene senza l'uso di alcun buffer. 
-L'emittente e il desinatario scambiano informazione unificando concettualmente le proprie attività. 
-Nel caso di stream, il destinatario si aspetta di ricevere i dati con un ritardo (delay) 
-che non supera un massimo prefissato.
-Una interazione isocrona riguarda solo stream; il destinatario si aspetta di ricevere i dati 
-con un delay compreso tra un minimo e un massimo.
-
-
-Per impostare in modo sistematico la dimensione interazione è opportuno chiarire le diverse forme che questa può assumere. 
-Nel seguito faremo riferimento alla seguente terminologia:
-
-- Evento (event): informazione emessa (più o meno consapevolmente) in modo asincrono da una sorgente 
-  senza alcuna particolare nozione di ricevente e senza alcuna aspettativa da parte dell'emittente.
-- Segnale (signal): informazione inviata in modo asincrono a N (N>=1) destinatari, noti o meno all'emittente, 
-  con l'aspettativa che venga ricevuta da qualcuno, al fine di eseguire un'azione che potrebbe portare vantaggio 
-  all'emittente e/o al sistema nel suo complesso.
-- Messaggio (message): informazione inviata in modo asincrono a N (N>=1) specifici destinatari, 
-  noti alla emittaente, con l'aspettativa che questi lo ricevano e lo elaborino, 
-  senza attesa di una risposta esplicita.
-- Invito (invitation): messaggio inviato a N (N>=1) destinatari, con l'aspettativa che almeno uno lo riceva 
-  e invii al mittente un messaggio di conferma.
-- Richiesta (request): messaggio inviato a uno specifico receiver; il contenuto del messaggio 
-  rappresenta la richiesta di esecuzione di una attività, con aspettativa da parte del sender 
-  che questa attività si concluda con una risposta pertinente alla richiesta.
-- Conferma (reply, acknowledgment): messaggio inviato da un receiver al sender di un invito. 
-  Il contenuto del messaggio rappresenta un riconoscimento di avvenuta ricezione.
-- Risposta (response): messaggio inviato da un receiver al sender di una richiesta.
-  il contenuto del messaggio rappresenta la risposta alla richiesta.
-- Risultato (result): messaggio inviato dal receiver di una richiesta ad uno o più destinataori, 
-  noti e meno; il contenuto del messaggio rappresenta la risposta alla richiesta.
-
-Le interazioni vengono spesso suddivise secondo quattro pattern [POSA3]; con riferimento alla terminologia precedente; :
-
-- Fire and forget: il caso di invio di eventi, segnali, messaggi.
-- Sync with server: il caso di invio di invitation.
-- Poll objects: il sender invia una request delegando ad un oggetto (poll object) la responsabilità 
-  di ricevere la risposta. Il sender usa il poll object per verificare ed acquisire la disponibilità della risposta.
-- Result callback: il sender invia una request specificando un oggetto (callback object) che implementa 
-  un metodo che verrà invocato dal supporto non appena il receiver invierà la risposta.
-
-
-
-++++++++++++++++++++++++++++++++++++++++++++++
-Comportamento
-++++++++++++++++++++++++++++++++++++++++++++++
+#. RaspberryPi 3 Model B+
+#. devsDdr.html
 
 
 -------------------------------------
-Modelli
+Il motto 
 -------------------------------------
 
 
-Nel linguaggio comune, il termine modello è spesso usato per denotare un'astrazione 
-di qualcosa che esiste nella realtà, come ad esempio il modello che posa per un artista, 
-una riproduzione in miniatura, un esempio di modo di svolgere un'attività, una forma 
-da cui ricavare vestiti, un ideale da seguire, etc.. 
+:remark:`Non c'è codice senza progetto.`
 
-Alcuni (tra cui gli ingegneri) intendono per modello un sistema matematico o fisico che ubbidisce 
-a specifici vincoli e che può essere utilizzato per descrivere e comprendere un sistema 
-(fisico, biologico, sociale, etc.) attraverso relazioni di analogia.
+:remark:`Non c'è progetto senza analisi del problema.`
 
-Nel contesto dei processi di costruzione del software, il termine modello va primariamente 
-inteso come un insieme di concetti e proprietà volti a catturare aspetti essenziali di un sistema, 
-collocandosi in un preciso spazio concettuale. 
+:remark:`Non c'è problema senza requisiti.`
 
-Per l'ingegnere del software quindi un modello costituisce una visione semplificata di un sistema 
-che rende il sistema stesso più accessibile alla comprensione e alla valutazione e facilita 
-il trasferimento di informazione e la collaborazione tra persone, 
-soprattutto quando è espresso in forma visuale.
 
-Nel concepire un modello come visione semplificata di un sistema software si assume che il sistema 
-abbia già una sua esistenza concreta. 
-In alcune fasi di lavoro (in particolare nella fase di analisi) il sistema è il modello; 
-un raffinamento o una variazione del modello corrisponde in questo caso ad una variazione del sistema.
+---------------------------
+Il template
+---------------------------
+Il documento ``template2021.html`` costituisce un punto di riferimento ma è
+'process agnostic', cioè non indica il processo di sviluppo che adottiamo
+per costruirlo.
 
-La produzione esplicita di modelli si rivela utile in quanto i diversi attori di un processo 
-di produzione di software (committenti, analisti, progettisti, utenti, etc) 
-operano a diversi livelli di astrazione. 
-Definendo opportuni modelli del sistema da realizzare, in ogni fase del processo di produzione 
-l'attenzione può essere focalizzata sugli aspetti rilevanti in quella fase, utilizzando una 
-forma di comunicazione comprensibile ad attori diversi. 
-Per garantire coesione e interoperabilità, si cerca di individuare regole di corrispondenza 
-e di trasformazione automatica tra modelli 
 
-.. (si veda Architecture model-driven).
+
+------------------------------------------
+Passi operativi
+------------------------------------------
+#. Costruire un repository GIT del progetto
+#. Definire un primo modello del sistema come risultato della analisi del problema (e non del progetto della soluzione)
+#. Includere nel documento di analisi gli appropriati riferimenti al modello
+#. Definire qualche testplan significativo (cioè legato ai casi di uso) basato sul modello

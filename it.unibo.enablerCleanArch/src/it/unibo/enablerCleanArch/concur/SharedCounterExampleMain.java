@@ -5,11 +5,12 @@ import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.context.TcpContextServer;
+import kotlinx.coroutines.GlobalScope;
 
 
 public class SharedCounterExampleMain  {
 private int ctxServerPort   = 7070;
-private String delay        = "50"; //con delay = 0 funziona
+private String delay        = "1000"; //con delay = 0 funziona
 
 ApplMessage msgDec = new ApplMessage(
 	      "msg( cmd, dispatch, main, counter, dec(DELAY), 1 )"
@@ -31,13 +32,14 @@ ApplMessage msgDec = new ApplMessage(
 	}
  
  
-	public static void main( String[] args) throws Exception {		
+	public static void main( String[] args) throws Exception {	
+		//GlobalScope.INSTANCE.getCoroutineContext().r
 		SharedCounterExampleMain sys = new SharedCounterExampleMain();
 		RadarSystemConfig.withContext = true;
 		RadarSystemConfig.tracing     = false;
 		sys.configure();
 		sys.execute();
-		Thread.sleep(3000);
-		System.exit(0);
+//		Thread.sleep(3000);
+//		System.exit(0);
 	}
 }

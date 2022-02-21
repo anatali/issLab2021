@@ -47,7 +47,7 @@ dependencies {
     compile name: '2p301'
     compile name: 'uniboInterfaces'
     compile name: 'unibonoawtsupports'
-	compile name: 'it.unibo.qakactor-2.4'
+	compile name: 'it.unibo.qakactor-2.5'
 	
 	//RADAR (support and GUI)
 	compile name: 'radarPojo'
