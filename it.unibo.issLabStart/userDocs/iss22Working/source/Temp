@@ -125,25 +125,4 @@ e rimarrà inizializzata.
 
 
 
-Per impostare in modo sistematico la dimensione interazione è opportuno chiarire le diverse forme che questa può assumere. 
-Nel seguito faremo riferimento alla seguente terminologia:
-
-- Evento (event): informazione emessa (più o meno consapevolmente) in modo asincrono da una sorgente 
-  senza alcuna particolare nozione di ricevente e senza alcuna aspettativa da parte dell'emittente.
-- Segnale (signal): informazione inviata in modo asincrono a N (N>=1) destinatari, noti o meno all'emittente, 
-  con l'aspettativa che venga ricevuta da qualcuno, al fine di eseguire un'azione che potrebbe portare vantaggio 
-  all'emittente e/o al sistema nel suo complesso.
-- Messaggio (message): informazione inviata in modo asincrono a N (N>=1) specifici destinatari, 
-  noti alla emittaente, con l'aspettativa che questi lo ricevano e lo elaborino, 
-  senza attesa di una risposta esplicita.
-- Invito (invitation): messaggio inviato a N (N>=1) destinatari, con l'aspettativa che almeno uno lo riceva 
-  e invii al mittente un messaggio di conferma.
-- Richiesta (request): messaggio inviato a uno specifico receiver; il contenuto del messaggio 
-  rappresenta la richiesta di esecuzione di una attività, con aspettativa da parte del sender 
-  che questa attività si concluda con una risposta pertinente alla richiesta.
-- Conferma (reply, acknowledgment): messaggio inviato da un receiver al sender di un invito. 
-  Il contenuto del messaggio rappresenta un riconoscimento di avvenuta ricezione.
-- Risposta (response): messaggio inviato da un receiver al sender di una richiesta.
-  il contenuto del messaggio rappresenta la risposta alla richiesta.
-- Risultato (result): messaggio inviato dal receiver di una richiesta ad uno o più destinataori, 
-  noti e meno; il contenuto del messaggio rappresenta la risposta alla richiesta.
+ 

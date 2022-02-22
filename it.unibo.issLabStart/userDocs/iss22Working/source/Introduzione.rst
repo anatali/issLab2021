@@ -17,7 +17,7 @@
 .. _Dispense Ingegneria del software : ./NatMolBook/bookEntry.html  
 
 .. _robot reali: _static/devsDdr.html
-.. _libri: _static/devsDdr.html
+.. _libri: _static/books.html
 .. _template2022 : _static/templateToFill.html
 
 .. _SCRUM : https://it.wikipedia.org/wiki/Scrum_(informatica)

@@ -6,19 +6,15 @@
 .. _SEDisasters : https://www.rankred.com/biggest-software-failures/
 .. _OpenGroupArch : https://it.wikipedia.org/wiki/The_Open_Group_Architecture_Framework
 .. _Design Pattern : https://it.wikipedia.org/wiki/Design_pattern
-.. _Patten Software Architectures : ppp 
 .. _SitoWebIssUnibo : https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/468003
 .. _GitHubIss2022 : https://github.com/anatali/issLab2022
 .. _VideoStudenti : https://unibo.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%222f957969-7f72-4609-a690-aca900aeba02%22
-
- 
 .. _DockerRepo : https://hub.docker.com/repositories
-
- 
 .. _Dispense Ingegneria del software : ./NatMolBook/bookEntry.html  
-
 .. _SCRUM :  https://hub.docker.com/repositories
-
+.. _FSM : https://en.wikipedia.org/wiki/Finite-state_machine
+.. _MealyMachines : https://en.wikipedia.org/wiki/Mealy_machine
+.. _MooreMAchines : https://en.wikipedia.org/wiki/Moore_machine
  
 ======================================
 Costruire software
@@ -39,7 +35,7 @@ la costruzione del software non richieda, per sua natura, processi di produzione
 
 .. image:: ./_static/img/Intro/ScienzaEIng.PNG
    :align: center
-   :width: 60%
+   :width: 80%
 
 
 
@@ -68,24 +64,24 @@ spesso eseguiti uno dopo l'altro, in un classico :blue:`processo di sviluppo seq
 
 .. image:: ./_static/img/Intro/WaterFall.PNG
    :align: center
-   :width: 60%
+   :width: 80%
 
 ------------------------------------------------
 Programmatori = (non) ingegneri?
 ------------------------------------------------
 
 Nella produzione industriale del software è piuttosto comune cercare di abbattere i costi 
-di progetto e di sviluppo, anche limitando le dimensioni del gruppo di lavoro, 
-e aggredire il mercato prefissando una data di distribuzione del prodotto, che viene di frequente 
+di progetto e di sviluppo, anche limitando le dimensioni del gruppo di lavoro. 
+Spesso si cerca anche diverse aggredire il mercato prefissando una data di distribuzione del prodotto, che viene di frequente 
 rilasciato non completamente finito, accollando all'utente parte dell'onere di collaudo. 
 
-Sotto la spinta di stringenti vincoli di *time to market* (TTM) molte aziende adottano uno schema del tipo 
+Sotto la spinta di stringenti vincoli di *time to market* (**TTM**) molte aziende adottano uno schema del tipo 
 :blue:`"scrivi, prova e correggi"`, mirando alla produzione di codice al minor "costo immediato" possibile. 
 Le :blue:`fasi di analisi e progetto` anche se accuratamente svolte, non sempre sono adeguatamente documentate, 
 e *quasi mai corralete in modo sistematico con il codice prodotto*.
 
 Il processo di costruzione del sofware è quindi :blue:`influenzato da una potente forza`, 
-legata alla natura stessa del software: la spinta a impostare la costruzione di un prodotto in modo **bottom-up**, 
+legata alla natura stessa del software: la spinta a impostare la costruzione  in modo **bottom-up**, 
 a partire da una specifica tecnologia costituita da un linguaggio di programmazione, 
 o da un framework applicativo o da una piattafforma operativa.
 
@@ -93,13 +89,14 @@ o da un framework applicativo o da una piattafforma operativa.
    :align: center
    :width: 50%
 
-La principale conseguenza negativa di questa forza è molto spesso l'assenza di una esplicita descrizione di progetto 
+La principale conseguenza negativa di questa forza è molto spesso la mancata valutazione di alternative tecnologiche 
+in fase di analisi del problema e l'assenza di una esplicita descrizione di progetto 
 che permetta di anticipare la valutazione dei rischi e le potenziali difficoltà connesse allo sviluppo. 
 In molti casi adeguate fasi di analisi e di progettazione hanno luogo, anche in modo sistematico; 
-ma ciò putroppo quasi sempre accade solo nella mente dei costruttori; 
+ma ciò putroppo quasi sempre accade **solo nella mente dei programmatori**; 
 nel codice finale non vi è più traccia alcuna di queste fasi, se non qualche debole segnale legato a sporadici commenti.
 
-Tuttavia, anche se il codice fosse accuratamente documentato sia in relazione all'analisi sia in relazione 
+Tuttavia, anche se il codice fosse accuratamente documentato, sia in relazione all'analisi, sia in relazione 
 alle scelte di progetto, la **riduzione del prodotto al solo codice sarebbe non accettabile**, 
 se non nel caso di sistemi software semplici o di software molto ben fatto. 
 
@@ -110,12 +107,10 @@ poiché il codice deve inevitabilmente esprimere il sistema finale nei suoi mini
 la maggior parte delle persone sarebbe incapace di leggerlo con profitto anche se a conoscenza 
 delle regole sintattiche del linguaggio di programmazione.
 
-Per questo si parla spesso di modelli, che vengono espressi con opportuni linguaggi, spesso grafiici.
+Per questo si parla spesso di **modelli**, che vengono espressi con opportuni linguaggi, di solito in forma grafica.
 
 
-.. image:: ./_static/img/Intro/Modello.PNG 
-   :align: center
-   :width: 50%
+
 
 
 -------------------------------------
@@ -135,6 +130,10 @@ a specifici vincoli e che può essere utilizzato per descrivere e comprendere un
 Nel contesto dei processi di costruzione del software, il termine modello va primariamente 
 inteso come un insieme di concetti e proprietà volti a catturare aspetti essenziali di un sistema, 
 collocandosi in un preciso spazio concettuale. 
+
+.. image:: ./_static/img/Intro/Modello.PNG 
+   :align: center
+   :width: 60%
 
 Per l'ingegnere del software quindi un modello costituisce una visione semplificata di un sistema 
 che rende il sistema stesso più accessibile alla comprensione e alla valutazione e facilita 
@@ -161,7 +160,7 @@ Definendo opportuni modelli del sistema da realizzare, in ogni fase del processo
 l'attenzione può essere focalizzata sugli aspetti rilevanti in quella fase, utilizzando una 
 forma di comunicazione comprensibile ad attori diversi. 
 Per garantire coesione e interoperabilità, si cerca di individuare regole di corrispondenza 
-e di trasformazione automatica tra modelli 
+e di trasformazione automatica tra modelli.
 
 
 
@@ -172,9 +171,9 @@ La crisi del software
 Impostare un processo di produzione in assenza di descrizioni del sistema che permettano di 
 :blue:`anticipare la valutazione dei rischi` 
 espone il processo stesso a un potenziale fallimento; 
-non meraviglia dunque che si senta spesso parlare di crisi del software.
+non meraviglia dunque che si senta spesso parlare di **crisi del software**.
 
-La letteratura  (si veda ad esempio`SEDisasters`_) riporta casi di fallimento di un numero 
+La letteratura  (si veda ad esempio `SEDisasters`_) riporta casi di fallimento di un numero 
 sorprendentemente rilevante di progetti software, evidenziando un insieme di cause principali:
 
 - Cattiva specifica e gestione dei requisiti.
@@ -207,10 +206,10 @@ Normalmente, si parla di :blue:`architettura di un sistema` quando ci si vuole r
 macro-parti in cui il sistema si articola, includendo le loro responsabilità, relazioni e interconnessioni. 
 
 Per molti, il termine *architettura* potrebbe però evocare l'immagine di uno schema in cui compare una rete 
-di blocchi e linee di connessione; questa visione andrebbe meglio indicata col termine mappa o "topologia". 
+di blocchi e linee di connessione; questa visione andrebbe meglio indicata col termine **mappa**. 
 
 Per altri, l'*architettura* evoca l'idea di uno schema concettuale di soluzione riferito a un certo dominio applicativo, 
-come ad esempio nella frase architetture web; in questo caso sarebbe più appropriato utilizzare il termine framework.
+come ad esempio nella frase *architetture web*; in questo caso sarebbe più appropriato utilizzare il termine **framework**.
 
 L' Open Group Architectural Framework (`OpenGroupArch`_) definisce architettura:
 
@@ -239,21 +238,26 @@ Tra le altre accezioni possibili, una delle più curiose, su cui vale la pena di
 Le prime esperienze collettive nello studio delle architetture software possono essere fatte 
 risalire al workshop OOPSLA del 1981 guidato da Bruce Anderson che mirava allo sviluppo 
 di un "architecture handbook". 
-A questo periodo può anche essere fatto risalire l'idea di :blue:`pattern` culminata nella pubblicazione 
+
++++++++++++++++++++++++++++++++++++++++++++++
+Design patterns
++++++++++++++++++++++++++++++++++++++++++++++
+
+Agli anni 90 del secolo scorso può anche essere fatto risalire l'idea di :blue:`pattern`, culminata nella pubblicazione 
 nel 1995 dell'ormai famoso testo sui `Design Pattern`_  della così detta 
 **GoF** (*Gang-of-Four*: *Erich Gamma, Richard Helm, Ralph Johnson e John Vlissides*). 
 
 .. image:: ./_static/img/Intro/DesignPatternGof.PNG 
    :align: center
-   :width: 60%
+   :width: 80%
 
 Da allora si sono susseguiti molte altre conferenze e lavori. 
-I riferimenti più noti sono i cinque testi POSA sulle *Pattern Software Architectures*
+I riferimenti più noti sono i cinque testi POSA sulle *Pattern oriented Software Architectures*
 e i convegni PLoP (*Pattern Languages of Programming*).
 
 .. image:: ./_static/img/Intro/Posa.PNG
    :align: center
-   :width: 60%
+   :width: 80%
 
 
 -------------------------------------
@@ -264,13 +268,17 @@ Dimensioni
 Sia nella fase di analisi che in quella di progetto, la descrizione di un sistema software può avvenire 
 focalizzando l'attenzione su almeno tre diversi punti di vista:
 
-- l'organizzazione del sistema in parti (**struttura**);
-- il modo in cui le diverse parti scambiano informazione implicita o esplicita tra loro ((**interazione(**);
-- il funzionamento del tutto e di ogni singola parte ((**comportamento(**).
 
 .. image:: ./_static/img/Architectures/Dimensioni.png 
    :align: center
-   :width: 60%
+   :width: 80%
+
+
+- l'organizzazione del sistema in parti (**struttura**);
+- il modo in cui le diverse parti scambiano informazione implicita o esplicita tra loro (**interazione**);
+- il funzionamento del tutto e di ogni singola parte ((**comportamento(**).
+
+
  
 
 Questi punti di vista costituiscono tre indispensabili dimensioni in cui articolare lo spazio della descrizione 
@@ -285,20 +293,22 @@ nuovi concetti sia sul piano computazionale sia sul sul piano della organizzazio
 
 .. image:: ./_static/img/Intro/historyHLPL.png 
    :align: center
-   :width: 40%
+   :width: 60%
 
 
 L'avvento della programmazione ad oggetti sembra avere segnato il culmine di questo processo; 
 un motivo può certo essere il raggiungimento di una sufficiente maturità nella capacità espressiva 
-in ciascuna delle dimensioni citate. Tuutavia, il motivo principale della relativa (apparente) 
+in ciascuna delle dimensioni citate. 
+
+Tuttavia, il motivo principale della relativa (apparente) 
 stagnazione nello sviluppo di nuovi linguaggi può essere ricondotto all'idea che un linguaggio 
 non deve essere necessariamente accompagnato da una sintassi concreta ma può essere suffciente 
-definire una sintassi astratta utilizzando un :blue:`meta-linguaggio` come ad esempio ``MOF``
-(si veda Meta Object Facility) unitamente alla semantica del linguaggio e a un framework (oo) di supporto.
+definire una **sintassi astratta** utilizzando un :blue:`meta-linguaggio` come ad esempio ``MOF``
+(si veda Meta Object Facility) unitamente alla semantica del linguaggio e a un framework di supporto.
 
 .. image:: ./_static/img/Intro/mofUml.PNG 
    :align: center
-   :width: 60%
+   :width: 80%
 
 
 
@@ -310,19 +320,19 @@ Questa idea è sviluppata oggi con riferimento ai *Domain Specific Languages*.
 Struttura
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Per impostare in modo sistematico la definzione a livello strutturale di un elemento può essere conveniente, 
+Per impostare in modo sistematico la definzione a livello strutturale di un elemento, può essere conveniente, 
 sia in fase di analisi sia in fase di progetto, cercare di dare risposta ad alcune domande quali:
 
 - l'elemento è :blue:`atomico o composto`? Nel caso sia composto quali sono le parti che lo formano?
-- l'elemento è dotato di :blue:`stato modificabile:`? In caso affermativo, quali sono le operazioni di modifica dello stato? 
-  (si veda la sezione sul comportamento)
-- quali sono le :blue:`proprietà dell'elemento`, cioè quali attributi lo caratterizzano ?
+- l'elemento è dotato di :blue:`stato modificabile`? In caso affermativo, quali sono le operazioni di modifica dello stato? 
+- quali sono le :blue:`proprietà dell'elemento`, cioè quali attributi lo caratterizzano?
 - da quali altri elementti dipende e secondo quale :blue:`tipo di dipendenza`?
 
-Si noti che un elemento composto implica la definizione ricorsiva della struttura di ogni parte e 
-la definizione di operazioni denominate selettori.
+Si noti che un elemento composto implica la *definizione ricorsiva della struttura di ogni parte* e 
+la definizione di operazioni denominate **selettori**.
+
 Notiamo anche che l'individuazione di una struttura composta porta spesso alla individuazione 
-di un insieme di operazioni primitive sulla base delle quali costruire ogni altra operazione 
+di un insieme di **operazioni primitive** sulla base delle quali costruire ogni altra operazione 
 di manipolazione/gestione dell'elemento.  
 
 
@@ -349,7 +359,7 @@ con un delay compreso tra un minimo e un massimo.
 
 
 
-Le interazioni vengono spesso suddivise secondo quattro pattern principali:
+Le interazioni vengono anche spesso suddivise secondo quattro pattern principali:
 
 - **Fire and forget**: il caso di invio di  messaggi.
 - **Sync with server**: il caso request-response.
@@ -359,6 +369,43 @@ Le interazioni vengono spesso suddivise secondo quattro pattern principali:
   un metodo che verrà invocato dal supporto non appena il receiver invierà la risposta.
 
 Torneremo diffusamente su questi punti, che costituiscono il cuore del passaggio da OOP a message-passing.
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Terminologia di riferimento
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Nel seguito, faremo riferimento alla seguente terminologia:
+
+
+- **Messaggio** (:blue:`message`): termne generico per denotare informazione da trasmettere in rete.
+- **Dispaccio** (:blue:`dispatch`): messaggio inviato in modo asincrono a N (N>=1) specifici destinatari, 
+  noti alla emittente, con l'aspettativa che questi lo ricevano e lo elaborino; l'emittente non si aspetta 
+  alcuna informazione di ritorno.  
+- **Invito** (:blue:`invitation`): messaggio inviato a N (N>=1) destinatari, con l'aspettativa che almeno uno lo riceva 
+  e invii al mittente un messaggio di *conferma*.
+- **Conferma** (:blue:`ack`): messaggio inviato al mittente di un *invitation*. 
+  Il contenuto del messaggio rappresenta un riconoscimento di avvenuta ricezione.
+- **Richiesta** (:blue:`request`): messaggio inviato a uno specifico destinatario; il contenuto del messaggio 
+  rappresenta la richiesta di esecuzione di una attività, con aspettativa da parte del mittente 
+  che questa attività si concluda con una risposta pertinente alla richiesta.
+- **Risposta** (:blue:`reply, response`): messaggio inviato da un destinatario al mittente di una richiesta.
+  il contenuto del messaggio rappresenta informazione pertinente alla richiesta.
+- **Evento** (:blue:`event`): messaggio emessa (più o meno consapevolmente) in modo asincrono da una sorgente 
+  senza alcuna particolare nozione di destinatario e senza alcuna aspettativa da parte dell'emittente.
+- **Segnale** (:blue:`signal`): messaggio inviato in modo asincrono a N (N>=1) destinatari, noti o meno all'emittente, 
+  con l'aspettativa che venga ricevuta da qualcuno, al fine di eseguire un'azione che potrebbe portare vantaggio 
+  all'emittente e/o al sistema nel suo complesso.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Un problema 'applicativo'
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Discutere la forma di interazione in cui un componente A invia una *request* X a un componente B e questi risponde
+solo dopo avere ricevuto da A risposta a una *request* Y.
+
+Esempio: A chiede a B di inviargli la fattura di un ordine ma non gli dice a quale indirizzo, per cui B lo chiede ad A
+prima di rispondere.
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -371,8 +418,8 @@ Per esprimere il comportamento di un componente software, si distinguono classic
 - funzionale
 - logico-dichiarativo
   
-Spesso si fa anche riferimento a tipi diversi di macchine astratte, iniziando dalla Macchina di Turing (TM), che individua,
-in stile imperativo, le moose elementari di un automa che permette di realizzare qualunque calcolo. 
+Spesso si fa anche riferimento a tipi diversi di **macchine astratte**, iniziando dalla Macchina di Turing (TM), che individua,
+in stile imperativo, le mosse-base (*primitive*) di un automa che permette di realizzare qualunque calcolo. 
 
 .. image:: ./_static/img/Intro/TuringMachine.PNG
    :align: center
@@ -385,10 +432,57 @@ Macchina di Minsky:
    :align: center
    :width: 60%
 
-Un tipo di automa meno potente, ma che avrà per noi un ruolo fondamentale è 
-l'automa a stati finiti (FSM) che costituisce una parte della TM.
 
-Va sottolieata a questo punto la distanza tra le mosse elementari di base e quelle necessarie per affrontare
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Automi a stati finiti
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+Un tipo di automa meno potente della TM, ma che ne costituisce una parte  e che 
+avrà per noi un ruolo fondamentale è l'automa a stati finiti (*Finite State Machine* - **FSM**)
+il cui funzionamento può essere formalmente descritto da una 5-tuple (``States, Inputs, Outputs, Transitions, InitialState``):
+
+- **States**: insieme di possibili stati (*States*) in cui l'automa si può trovare   .
+- **Inputs**: insieme delle informazioni di ingresso, denotabili attraverso un *input alphabet* (Inputs); nel nostro caso 
+  possiamo pensare che ogni simbolo dell'alfabeto  denoti un messggio.
+- **Outputs**: insieme della informazioni di uscita, denotabili attraverso un *output alphabet* (Outputs);   nel nostro caso 
+  possiamo pensare che ogni simbolo dell'alfabeto denoti una **azione** che l'automa svolge )
+- **InitialState**: lo stato iniziale (unico) in cui l'automa si trova quando viene creato.
+- **Transizione**: definisce il nuovo stato e l'output dell'automa in funzione dello stato corrente e del simbolo corrente in ingresso.
+  E' spesso espressa da una coppia di funzioni:
+
+   .. code ::
+
+      nextState:      States x Inputs -> States
+      output:         States x Inputs -> Outputs
+
+Normalmente, gli automi a stati finiti si suddividono in due grandi categorie:
+
+- `MealyMachines`_: una FSM il cui output è determinato sia dallo stato corrente sia dall'input corrente.
+- `MooreMachines`_: una FSM il cui output dipende unicamente dallo stato corrente (``SCUR``) in cui l'automa si trova.
+
+
+Nel seguito, imposteremo spesso il comportamento dei componenti software come `MooreMachines`_ che, quando si trova in uno
+stato ``SCUR``:
+
+#. esegue una sequenza (che **deve terminare**) di azioni 
+#. al termine della sequenza di azioni controlla che vi sia almeno un input capace di attivare una delle transizioni verso
+   un ulteriore stato (``SNEXT``)
+#. attiva una delle transioni possibili pasando dallo stato ``SCUR`` allo stato ``SNEXT`` (che potrebbe anche coincidere
+   con ``SCUR``)
+#. se non vi sono transizioni attivabili, rimane nello stato ``SCUR`` da cui potrà sbloccarsi solo in conseguenza di un 
+   ulteriore input   
+
+
+++++++++++++++++++++++++++++++++++++++++++++++
+Abstraction GAP
+++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Va sottolieata, a questo punto, la distanza tra le mosse elementari di base e quelle necessarie per affrontare
 in modo adeguato un problema applicativo, una distanza cui faremo riferimento col termine :blue:`abstraction gap`.
 
 .. image:: ./_static/img/Intro/TopDownBottomUp.PNG
