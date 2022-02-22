@@ -5,7 +5,7 @@ import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
 import it.unibo.enablerCleanArch.supports.context.TcpContextServer;
-import kotlinx.coroutines.GlobalScope;
+
 
 
 public class SharedCounterExampleMain  {
@@ -17,10 +17,15 @@ ApplMessage msgDec = new ApplMessage(
 	      .replace("DELAY", delay));
  
 	public void configure(  ) {
-		CounterWithDelay counter         = new CounterWithDelay("counter");
+		//CounterWithDelay counter         = new CounterWithDelay("counter");
+		//CounterActorWithDelay ca         = new CounterActorWithDelay("ca");
 		TcpContextServer contextServer   = new TcpContextServer("TcpContextServer",  ctxServerPort );
-		CounterApplHandler counterH      = new CounterApplHandler("counterH", counter);
-		contextServer.addComponent(counter.getName(),counterH);	 
+		//CounterApplHandler counterH      = new CounterApplHandler("counterH", counter);
+		//CounterApplHandler counterH      = new CounterApplHandler("counterH", ca);
+		//contextServer.addComponent(counter.getName(),counterH);	 
+		
+		CounterActorWithDelayHandler cah   = new CounterActorWithDelayHandler("cah");
+		contextServer.addComponent("counter",cah);
 		contextServer.activate();   
  	}
 	

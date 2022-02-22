@@ -17,27 +17,23 @@ private CounterActorWithDelay ca;
 	public CounterApplHandler( String name, CounterWithDelay counter ) {
 		 super(name);
 		 this.counter = counter;
-		 ca = new CounterActorWithDelay("ca");
+ 	}
+	public CounterApplHandler( String name, CounterActorWithDelay counter ) {
+		 super(name);
+ 		 ca = counter;
 	}
 	
 	@Override
 	public void elaborate(String cmd, Interaction2021 conn) {		
 		ColorsOut.out(name + " | (not used) elaborate cmd: "+cmd);
- 		elaborate( cmd );
 	} 
 	
 	@Override
 	public void elaborate( ApplMessage msg, Interaction2021 conn ) {
 		ColorsOut.outappl(name + " | elaborate ApplMessage: "+msg, ColorsOut.GREEN);
 		
- 		String answer = elaborate( msg.msgContent() );
-		//ColorsOut.outappl(name + " | elaborate ApplMessage answer: "+answer, ColorsOut.GREEN);
-		if( msg.isRequest() ) {
-			ApplMessage  reply = Utils.prepareReply(msg, answer);
-			sendAnswerToClient(reply.toString());			
-		}
-		
-		elaborateForActor( msg );
+		if( counter != null ) elaborate( msg );
+		if( ca != null ) elaborateForActor( msg );
 
 	}
 	
@@ -51,14 +47,20 @@ private CounterActorWithDelay ca;
  		}else return 0;		
 	}
 	
-	protected String elaborate( String cmd ) {
+	protected void elaborate( ApplMessage msg  ) {
 		String answer=null;
 		try {
- 			int delay = getDecDelayArg(cmd);
+			String cmd =  msg.msgContent();
+ 			int delay   = getDecDelayArg(cmd);
  			counter.dec(delay);	
 			answer = ""+counter.getVal();
+			//ColorsOut.outappl(name + " | elaborate ApplMessage answer: "+answer, ColorsOut.GREEN);
+			if( msg.isRequest() ) {
+				ApplMessage  reply = Utils.prepareReply(msg, answer);
+				sendAnswerToClient(reply.toString());			
+			}
 		}catch( Exception e) {}	
-		return answer;
+
 	}
 	
 	protected void elaborateForActor( ApplMessage cmd ) {
