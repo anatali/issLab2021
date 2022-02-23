@@ -263,7 +263,7 @@ il server può anche inviare messaggi ai client.
 Conviene dunque introdurre una terminologia per le interazioni a scambio di messggi:
 
 - :blue:`fire-and-forget`: il messaggio (che chiamiamo anche :blue:`dispatch`) è inviato con l'aspettativa che sia ricevuto 
-   ed elaborato, ma senza alcuna attesa di informazione di ritorno da parte del server;
+  ed elaborato, ma senza alcuna attesa di informazione di ritorno da parte del server;
 - :blue:`request-ack`: il messaggio è inviato con l'aspettativa di ricevere indicazione dell'avvenuta ricezione 
   (un acknowledgement) da parte del server;
 - :blue:`request-response`: il messaggio è inviato con l'aspettativa di ricevere una risposta, di livello
