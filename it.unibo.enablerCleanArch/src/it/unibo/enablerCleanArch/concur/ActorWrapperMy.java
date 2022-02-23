@@ -8,9 +8,10 @@ import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.GlobalScope;
 
 public abstract class ActorWrapperMy extends ActorBasic{
-	
+private static 	GlobalScope scope = GlobalScope.INSTANCE;
+
 	public ActorWrapperMy( String name  ) {
-		super(name, GlobalScope.INSTANCE, false,false, false,50);
+		super(name, scope, false,false, false,50);
 	}
 	@Override
 	public Object actorBody(ApplMessage msg, Continuation<? super Unit> arg1) {

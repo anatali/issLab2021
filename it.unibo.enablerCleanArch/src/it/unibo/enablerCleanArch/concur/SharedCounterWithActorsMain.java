@@ -4,52 +4,72 @@ import it.unibo.enablerCleanArch.domain.ApplMessage;
 import it.unibo.enablerCleanArch.enablers.ProtocolType;
 import it.unibo.enablerCleanArch.enablers.ProxyAsClient;
 import it.unibo.enablerCleanArch.main.RadarSystemConfig;
+import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.enablerCleanArch.supports.context.TcpContextServer;
+import it.unibo.kactor.ActorBasic;
+import it.unibo.kactor.ActorWrapper;
+import it.unibo.kactor.MsgUtil;
+
 
 /*
- * Un oggetto contatore di nome 'counter' (classe CounterWithDelay) con valore iniziale 2 
+ * Un ATTORE contatore di nome 'counter' (classe CounterActorWithDelay) con valore iniziale 2 
  * esegue l'operazione dec rilasciando il controllo per un certo tempo.
  * Questo contatore viene reso capace di gestire messaggi da un CounterApplHandler che lo incapsula.
- * Due client inviano il comando (dispatch) dec a 'counter', che però non va a 0
- * Il sistema attiva 4 thread (main, TcpContextSerer e due client)
+ * Due client inviano il comando (dispatch) dec a 'counter', che VA A 0
+ * Il sistema attiva 5 thread 
+ * (main, TcpContextSerer, due client e UN SOLO Thread per tutti gli attori )
  */
-public class SharedCounterExampleMain  {
+ 
+public class SharedCounterWithActorsMain  {
 private int ctxServerPort   = 7070;
 private String delay        = "1000"; //con delay = 0 funziona
 
 ApplMessage msgDec = new ApplMessage(
-	      "msg( dec, dispatch, main, counter, dec(DELAY), 1 )"
+	      "msg( cmd, dispatch, main, counter, dec(DELAY), 1 )"
 	      .replace("DELAY", delay));
  
 	public void configure(  ) {
  		Utils.aboutThreads("Before configure - ");
-		CounterWithDelay counter         = new CounterWithDelay("counter");
- 		TcpContextServer contextServer   = new TcpContextServer("TcpContextServer",  ctxServerPort );
+ 		CounterActorWithDelay counter    = new CounterActorWithDelay("counter");
+		TcpContextServer contextServer   = new TcpContextServer("TcpContextServer",  ctxServerPort );
 		CounterApplHandler counterH      = new CounterApplHandler("counterH", counter);
 		contextServer.addComponent(counter.getName(),counterH);	
- 		contextServer.activate();    
- 		Utils.aboutThreads("After configure - ");
+		contextServer.activate();    
  	}
 	
 	public void execute() throws Exception {
 		ProxyAsClient client1 = new ProxyAsClient("client1","localhost", ""+ctxServerPort, ProtocolType.tcp);
  		ProxyAsClient client2 = new ProxyAsClient("client2","localhost", ""+ctxServerPort, ProtocolType.tcp);
+ 		Utils.aboutThreads("After client creation - ");
  		client1.sendCommandOnConnection(msgDec.toString());  
  		client2.sendCommandOnConnection(msgDec.toString());		
- 		Utils.aboutThreads("After client send - ");
+ 		workWithOtherCounterActors();
 	}
+	
+	protected void workWithOtherCounterActors() {
+		//Attivo altri attori counter
+		ActorWrapper.Companion.setTrace();
+		ColorsOut.outappl("---------------------------------------------------", ColorsOut.CYAN);
+		for( int i=1; i<=5; i++) {
+			String actorName = "ca"+i;
+			ActorBasic a = new CounterActorWithDelay( actorName );
+			it.unibo.kactor.ApplMessage msgDec = 
+					MsgUtil.buildDispatch("main", "dec", "1000", actorName);
+			MsgUtil.sendMsg(msgDec, a, null);
+		}		
+ 	}
  
  
 	public static void main( String[] args) throws Exception {	
-		SharedCounterExampleMain sys = new SharedCounterExampleMain();
+		SharedCounterWithActorsMain sys = new SharedCounterWithActorsMain();
 		RadarSystemConfig.withContext = true;
 		RadarSystemConfig.tracing     = false;
 		
 		sys.configure();
 		sys.execute();
- 		Thread.sleep(2500);
+// 		Thread.sleep(2500);
  		Utils.aboutThreads("Before end - ");
-		System.exit(0);
+//		System.exit(0);
 	}
 }

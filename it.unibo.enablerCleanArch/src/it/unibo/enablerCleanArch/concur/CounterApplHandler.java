@@ -30,11 +30,8 @@ private CounterActorWithDelay ca;
 	
 	@Override
 	public void elaborate( ApplMessage msg, Interaction2021 conn ) {
-		ColorsOut.outappl(name + " | elaborate ApplMessage: "+msg, ColorsOut.GREEN);
-		
-		if( counter != null ) elaborate( msg );
+		if( counter != null ) elaborateForObject( msg );
 		if( ca != null ) elaborateForActor( msg );
-
 	}
 	
 	protected int getDecDelayArg(String cmd) throws Exception{
@@ -47,7 +44,8 @@ private CounterActorWithDelay ca;
  		}else return 0;		
 	}
 	
-	protected void elaborate( ApplMessage msg  ) {
+	protected void elaborateForObject( ApplMessage msg  ) {
+		ColorsOut.outappl(name + " | elaborateForObject ApplMessage: "+msg, ColorsOut.GREEN);		
 		String answer=null;
 		try {
 			String cmd =  msg.msgContent();
@@ -60,15 +58,15 @@ private CounterActorWithDelay ca;
 				sendAnswerToClient(reply.toString());			
 			}
 		}catch( Exception e) {}	
-
 	}
 	
 	protected void elaborateForActor( ApplMessage cmd ) {
+		ColorsOut.outappl(name + " | elaborateForActor ApplMessage: "+cmd, ColorsOut.GREEN);		
  		try {
  			int delay = getDecDelayArg(cmd.msgContent());
  			String msgContent =  ""+delay;
  			it.unibo.kactor.ApplMessage decCmd = MsgUtil.buildDispatch("main","dec",msgContent,"ca");	
- 			ColorsOut.out("elaborateForActor sends:" + decCmd);
+ 			ColorsOut.out(name + " | elaborateForActor sends:" + decCmd);
  			MsgUtil.sendMsg(decCmd, ca, null);
 			 
 		}catch( Exception e) {}	

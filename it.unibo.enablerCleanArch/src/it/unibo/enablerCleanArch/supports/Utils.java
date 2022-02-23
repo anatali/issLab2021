@@ -145,6 +145,12 @@ public class Utils {
 				e.printStackTrace();
 		}
 	}
+	
+	public static void aboutThreads(String msg)   { 
+		String tname    = Thread.currentThread().getName();
+		String nThreads = ""+Thread.activeCount() ;
+		ColorsOut.outappl( msg + " curthread=T n=N".replace("T", tname).replace("N", nThreads), ColorsOut.YELLOW );
+	}
 
 //------------------------------------------------------
 	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM

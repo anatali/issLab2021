@@ -12,6 +12,7 @@ import it.unibo.kactor.MsgUtil;
 
 /*
  * Un actor che offre anche una interfaccia come handler per il TcpContextServer
+ * Si può fare ma è molto discutibile ... 
  */
 
 public class CounterActorWithDelayHandler extends ActorWrapper implements IApplMsgHandler{ 
@@ -23,7 +24,7 @@ public class CounterActorWithDelayHandler extends ActorWrapper implements IApplM
 
 	@Override
 	public void doJob( ApplMessage msg ) {
- 		//ColorsOut.outappl( arg1.toString(), ColorsOut.BLACK );
+ 		Utils.aboutThreads(getName() + " | Before doJob");
 		ColorsOut.outappl( getName() + " | " + msg.toString(), ColorsOut.MAGENTA );
  		if( msg.msgId().equals("inc")) { n = n + 1; }
  		else if( msg.msgId().equals("dec")) {

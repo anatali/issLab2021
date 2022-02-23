@@ -25,6 +25,7 @@ public class CounterActorWithDelay extends ActorWrapper{
  		    ColorsOut.outappl(getName() + " | resumes v= " + v, ColorsOut.MAGENTA);
  		    n = v;
  		    ColorsOut.outappl(getName() + " | new value after dec= " + n, ColorsOut.MAGENTA);
+ 	 		Utils.aboutThreads(getName() + " | CounterWithDelay after dec - ");
  		}
  	}
 

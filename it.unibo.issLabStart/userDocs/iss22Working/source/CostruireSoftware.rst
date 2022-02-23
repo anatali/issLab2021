@@ -308,7 +308,7 @@ definire una **sintassi astratta** utilizzando un :blue:`meta-linguaggio` come a
 
 .. image:: ./_static/img/Intro/mofUml.PNG 
    :align: center
-   :width: 80%
+   :width: 870%
 
 
 

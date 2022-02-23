@@ -61,6 +61,8 @@ abstract class  ActorBasic(  name:         String,
         isObservable     = true
         logo             = "       ActorBasic(Resource) $name "
         ActorResourceRep = "$logo | created  "
+ 		sysUtil.aboutThreads("$name CREATED - ")
+
     }
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi

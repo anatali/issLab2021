@@ -1,14 +1,26 @@
 package it.unibo.kactor
 
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
+ 
+ 
+@kotlinx.coroutines.ObsoleteCoroutinesApi
+abstract class ActorWrapper( name: String) :
+	ActorBasic(name, scope, false, true, false, 50) {
 
-abstract class ActorWrapper(name: String) :
-    ActorBasic(name, GlobalScope, false, false, false, 50) {
-
+    companion object {
+		val d = newSingleThreadContext("single")
+		private val scope = CoroutineScope( d  )
+        fun setTrace(){
+            sysUtil.trace=true;
+            sysUtil.aboutThreads("ActorWrapper - ");
+        }
+    }
+	
     override
     suspend fun actorBody( msg: ApplMessage ){
-        doJob(msg)
+          doJob(msg)
     }
+
 
     protected abstract fun doJob(msg: ApplMessage?)
 }

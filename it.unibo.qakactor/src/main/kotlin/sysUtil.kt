@@ -288,7 +288,11 @@ object sysUtil{
 	fun updateLogfile( fname: String, msg : String, dir : String = "logs" ){
 		if( logMsgs ) File("$userDirectory/$dir/$fname").appendText("${msg}\n")
 	}
-
+	fun aboutThreads(info: String){
+		val tname    = Thread.currentThread().getName();
+		val nThreads = ""+Thread.activeCount() ;
+		traceprintln("$info thread=$tname n=$nThreads"  )
+	}
 	fun waitUser(prompt: String, tout: Long = 2000   ) {
 			try {
 				print(">>>  $prompt (tout=$tout) >>>  ")
