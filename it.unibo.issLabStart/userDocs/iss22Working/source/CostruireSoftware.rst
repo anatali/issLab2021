@@ -11,7 +11,8 @@
 .. _VideoStudenti : https://unibo.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%222f957969-7f72-4609-a690-aca900aeba02%22
 .. _DockerRepo : https://hub.docker.com/repositories
 .. _Dispense Ingegneria del software : ./NatMolBook/bookEntry.html  
-.. _SCRUM :  https://hub.docker.com/repositories
+.. _SCRUM :   https://scrumguides.org/
+.. _Sprint review : https://www.agileway.it/sprint-review-meeting/
 .. _FSM : https://en.wikipedia.org/wiki/Finite-state_machine
 .. _MealyMachines : https://en.wikipedia.org/wiki/Mealy_machine
 .. _MooreMAchines : https://en.wikipedia.org/wiki/Moore_machine
@@ -63,6 +64,8 @@ Per questo l'ingegneria classica diversifica le fasi di produzione delineando un
 
 spesso eseguiti uno dopo l'altro, in un classico :blue:`processo di sviluppo sequenziale o a cascata`.
 
+.. _waterfall:
+
 .. image:: ./_static/img/Intro/WaterFall.PNG
    :align: center
    :width: 80%
@@ -85,6 +88,8 @@ Il processo di costruzione del sofware è quindi :blue:`influenzato da una poten
 legata alla natura stessa del software: la spinta a impostare la costruzione  in modo **bottom-up**, 
 a partire da una specifica tecnologia costituita da un linguaggio di programmazione, 
 o da un framework applicativo o da una piattafforma operativa.
+
+.. _bottomUp:
 
 .. image:: ./_static/img/Intro/bottomUp.png 
    :align: center
@@ -492,37 +497,116 @@ in modo adeguato un problema applicativo, una distanza cui faremo riferimento co
 -----------------------------------------------
 Indicazioni sul processo di produzione
 -----------------------------------------------
+
+Il riferimento ormai universalemente accettato è quello di un processo di sviluppo agile,
+che pone al centro il concetto di :blue:`modello del dominio` applicativo.
+
+.. image:: ./_static/img/Intro/agileEMDE.PNG
+   :align: center
+   :width: 70%
+
+Come già osservato i processi  `waterfall`_ dell'ingegneria tradizionale, lasciano il posto a processi
+di tipo iterativo e incrementale.
+
+
+.. image:: ./_static/img/Intro/Spiral.PNG
+   :align: center
+   :width: 60%
+
+
+Idealmente, vi sono motli motivi per impostare un processo di tipo :blue:`TopDown` che parte dal problema e dalla sua
+analisi al fine di individuare le tecnologie più opportune per risolverlo.
+
+.. list-table:: 
+  :widths: 35,65
+  :width: 100%
+
+  * - Design first 
+    - TopDown process
+  * - .. image:: ./_static/img/Intro/topDown.png 
+    - .. image:: ./_static/img/Intro/TopDownHowWhat.png
+
+Sappiamo però che in molti casi si segue un approccio `bottomUp`_ e quindi porremo molta attenzione nel capire le
+strategie migliori per invertire il processo e le motivazioni per fare questa inversione. 
+
+Supponendo che le nostre attività di laboratorio siano non troppo dissimili a quanto avviene concretamente nel
+mondo del lavoro, faremo riferimento a `SCRUM`_ che oggi costitusice un diffuso framework per lo sviluppo e il 
+mantenimento di prodotti complessi (non solo software).
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SCRUM
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: ./_static/img/Intro/AgileDevelop.PNG 
+   :align: center
+   :width: 90%
+
  
+
+Un approccio INCREMENTALE (in stile SCRUM, ma non solo) è utile per 
+aggredire la complessità del problema e per
+mettere in luce in primis LE COSE
+PIU' IMPORTANTI e PIU' CRITICHE senza perdersi in dettagli che possono distogliere
+l'attenzione per formare un quadro generale di riferimento.
+
+I vari SPRINT dovrebbero effettuare uno ZOOMING entro MACRO-COMPONENTI
+innescando un processo ITERATIVO di analisi, progetto , sviluppo e testing di
+quel componente o del SOTTOSISTEMA  che lo SPRINT vuole costruire.
+
+Per questo può essere opportuno impostare ogni sprint come un 'sottoprogetto'
+con sua propria spiegazione e testing. 
+
+Lo sprint :math:`n+1` dovrebbe partire dai
+risultati dello sprint :math:`n` e preparare un sottosistema (funzionante) 
+che sarà l'input dello sprint :math:`n+2`.
+
+Di particolare rilevanza saranno le fasi di `Sprint review`_ i cui meeting saranno un nuovo modo di concepire le ore di 
+ricevimento-studenti.
+
+
+
+
 +++++++++++++++++++++++
 Il motto 
 +++++++++++++++++++++++
 
+Per focalizzare l'attenzione sulla nostra metodologia di costruzione, cercheremo di tenere fede al seguente motto:
 
-:remark:`Non c'è codice senza progetto.`
 
-:remark:`Non c'è progetto senza analisi del problema.`
 
-:remark:`Non c'è problema senza requisiti.`
+.. image:: ./_static/img/Intro/Motto.PNG 
+   :align: center
+   :width: 50%
 
+ 
 
 +++++++++++++++++++++++
 Il template
 +++++++++++++++++++++++
 
-Il documento `template2022`_ costituisce un punto di riferimento 
-'process agnostic', cioè non indica il processo di sviluppo che adottiamo
-per costruirlo.
+Il documento `template2022`_ costituisce lo strumento che useremo per rendere esplcite le conoscenze, le decisioni 
+e i modelli introdotte nelle fasi di analisi.
 
-+++++++++++++++++++++++++++++++++++
+Questo documento intende costituire un punto di riferimento 
+'process agnostic', cioè non ancorato ad alcun specifico processo di sviluppo adottatao per costruirlo.
+
+In altre parole, cercheremo anche di capire il ruolo delle documentazione e le metodologie più adeguate per realizzarla
+in modo utile, costruttivo e senpre correlati allo stato corrente del codice.
+
+Anticipiamo qui alcuni aspetti che svilupperemo in modo più approfondito lungo tutto il corso.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'analisi dei requisiti
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 L'analisi dei requisiti mira a:
 
 :remark:`definire/chiarire COSA il committente intende.`
 
 Occorre fare una analisi del testo che precisi in modo non ambiguo
 il significato dei termini usati e le informazioni non esplicitamente espresse.
-La costruzione di un *dizionario*  in linguaggio naturale è utile ma non risolutiva, 
+La costruzione di un :blue:`dizionario`  in linguaggio naturale è utile ma non risolutiva, 
 in quanto esprime informazione ancora affetta da ambiguità se non da incoeranza e inconsistenza.
 
 Dunque, le informazioni date in linguaggio naturale servono solo in una fase preliminare
@@ -531,19 +615,18 @@ Occorre esprimere le informazioni in modo 'formale', cioè in modo
 **comprensible alla macchina**.
 
 
-A tal fine sono utili i linguaggi che permettono di definire :red:`modelli`
+A tal fine sono utili i linguaggi che permettono di definire :ref:`modelli`
 capaci di catturare gli aspetti essenziali, lasciando sullo sfondo dettagli 
 anche importanti, ma non rilevanti nelle prime fasi.
 
-Gli *Usecases* possono essere utili come linea-guida per definire una o più `TestUnits` funzionali.
+Gli :blue:`Usecases` possono essere utili come linea-guida per definire una o più :blue:`TestUnits` funzionali.
 Le specifiche degli *Usecases* espresse in linguaggio naturali possono essere inserite
-come commenti in tali `TestUnits`.
+come commenti in tali *TestUnits*.
 
-Le :blue:`domande` da porre al committente mirano a chiarire:
+Le :blue:`domande` da porre al committente mirano a **chiarire**:
 
 -  la natura delle entità, cioè se dal punto di vista software, 
-   una entità è (modellabile come un) 
-   oggetto (POJO), un servizio, un processo, un attore
+   una entità è (modellabile come un) oggetto (POJO), un servizio, un processo, un attore, etc.
 
 - se le varie entità devono essere distribuite su diversi nodi computazionali
 
@@ -553,14 +636,13 @@ Le :blue:`domande` da porre al committente mirano a chiarire:
 - le interazioni (a procedure-call, a messaggi, sincrone, asincrone) tra le diverse entità 
 
 Al termine della analisi dei requisiti dovrebbe essere definito 
-un modello del sistema che mette in lune i macro-componenti 
-(entità) e le loro interazioni, cioè
-una prima :red:`architetture logica` del sistema.
+un modello del sistema che mette in luce i macro-componenti 
+e le loro interazioni, cioè una prima :blue:`architetture logica` del sistema.
 
 
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'analisi del problema
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 L'analisi del problema mira a:
 
@@ -568,8 +650,8 @@ L'analisi del problema mira a:
 
 :remark:`fornire informazioni utili sui costi/tempi/risorse necessari.`
 
-L'analisi del problema :red:`NON IMPLICA ancora alcuna progettazione`,
-ma mira a fornire un quadro delle possibili soluzioni tecnologighe
+L'analisi del problema :blue:`NON IMPLICA ancora alcuna progettazione`,
+ma mira a fornire un **quadro delle possibili soluzioni tecnologighe**
 individuando quelle più utili per il superamento delle problematiche poste dai requisiti.
 La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro
 della indagine - ricordiamo che siamo in un :blue:`processo iterativo a spirale` ).
@@ -583,8 +665,8 @@ il committente
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Architettura logica
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+L'architettura logica
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il risultato della analsi può essere sintetizzato nella definizione di una 
@@ -600,25 +682,7 @@ L'analista potrebbe/dovrebbe dare uno sguardo complessivo al problema,
 cercando anche di organizzare tutte le funzionalità per importanza, e come queste
 funzionalità debbano essere  distribuite tra i vari MACRO-componenti.
 
-+++++++++++++++++++++++++
-Sviluppo incrementale
-+++++++++++++++++++++++++
 
-Un approccio INCREMENTALE (in stile SCRUM, ma non solo) è utile per 
-aggredire la complessità del problema e per
-mettere in luce in primis LE COSE
-PIU' IMPORTANTI e PIU' CRITICHE senza perdersi in dettagli che possono distogliere
-l'attenzione per formarsi un quadro generale di riferimento.
-
-I vari SPRINT dovrebbero effettuare uno ZOOMING entro MACRO-COMPONENTI
-innescando un processo ITERATIVO di analisi, progetto , sviluppo e testing di
-quel componente o del SOTTOSISTEMA  che lo sprint vuole costruire.
-Per questo può essere opportuno impostare ogni sprint come un 'sottoprogetto'
-con sua propria spiegazione e testing. 
-
-Lo sprint :math:`n+1` dovrebbe partire dai
-risultati dello sprint :math:`n` e preparare un sottosistema (funzionante) 
-che sarà l'input dello sprint :math:`n+2`.
 
 +++++++++++++++++++++++++
 Uso di modelli
@@ -641,11 +705,18 @@ fasi di analisi dei requsiti, analisi del problema e progetto.
 
 
 
-+++++++++++++++++++++++++
-Passi operativi
-+++++++++++++++++++++++++
++++++++++++++++++++++++++++++
+Passi operativi 'a regime' 
++++++++++++++++++++++++++++++
+
+Anticipiamo qui le azioni principali che svolgeremo nella :ref:`FASE3`, dopo avere sperimentato il modo di 
+procedere consueto nella :ref:`FASE1` ed esserci costruiti il nostro ambiente di sviluppo custom nella :ref:`FASE2`:
+
 #. Costruire un repository GIT del progetto
 #. Definire un primo modello del sistema come risultato della analisi del problema (e non del progetto della soluzione)
 #. Includere nel documento di analisi gli appropriati riferimenti al modello
 #. Definire qualche testplan significativo (cioè legato ai casi di uso) basato sul modello
+#. Impostare il progetto 
+#. Impostare la codifica
+#. Impostare il deployment
 

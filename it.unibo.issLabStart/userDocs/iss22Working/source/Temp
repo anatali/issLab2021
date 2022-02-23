@@ -91,7 +91,12 @@ introdurre nei messaggi anche informazioni relative al nome del mittente e del d
 :ref:`CoapContextServer`                    -                      -
 ===========================   ===========================    ===========================   
 
-
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+  
+  * - Il committente fornisce software relativo al Led ?
+    - Si, ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh`` (progetto *it.unibo.rasp2021*)
 
  
 .. Test funzionale
