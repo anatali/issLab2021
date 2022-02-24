@@ -13,6 +13,7 @@ iss22
    CostruireSoftware
    RadarSystem
    RadarSystemAnalisi
+   RaspberryPi
    RaspberrySoftware
 
 

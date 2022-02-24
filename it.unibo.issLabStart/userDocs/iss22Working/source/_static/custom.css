@@ -18,3 +18,10 @@ body {
       line-height: 1.4;
     border-radius: 25px;
   }
+
+  .worktodo{
+    background-color: #E3F2FD;
+      margin: 0px;
+      line-height: 1.4;
+    border-radius: 20px;
+  }

@@ -7,17 +7,21 @@
 #define TRIG 0
 #define ECHO 2
 
+//The pin 25 is physical 22 and Wpi 6.
+#define LED 6
+
 #define CLOSE 18
 #define MEDIUM 21
 #define FAR 60
+#define DLIMIT 12
 
 #define POS_LEFT 0.055
 #define POS_RIGHT 0.24
 #define POS_FORWARD 0.14
 using namespace std;
 /*
-g++  SonarAlone.c -l wiringPi -o  SonarAlone
- */
+g++  LedSonar.c -l wiringPi -o  LedSonar
+*/
 void setup() {
 	//cout << "setUp " << endl;
 	wiringPiSetup();
@@ -25,6 +29,8 @@ void setup() {
 	pinMode(ECHO, INPUT);
 	//TRIG pin must start LOW
 	digitalWrite(TRIG, LOW);
+	//
+	pinMode(LED, OUTPUT);
 	delay(30);
 }
 
@@ -52,7 +58,12 @@ int main(void) {
 	int cm ;
 	setup();
 	while(1) {
- 		cm = getCM(); 		
+ 		cm = getCM();
+ 		
+ 		if( cm < DLIMIT ) digitalWrite(LED, HIGH);
+ 		else digitalWrite(LED, LOW);
+ 		
+ 		
 		cout <<  cm   << endl ;  //flush after ending a new line
 		delay(30);
 	}
