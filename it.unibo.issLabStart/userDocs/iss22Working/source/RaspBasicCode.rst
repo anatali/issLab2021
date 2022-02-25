@@ -4,7 +4,7 @@
 .. role:: worktodo
 
 ======================================
-RaspberryPi
+RaspBasicCode
 ======================================
 
 .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png 
@@ -262,19 +262,37 @@ Si veda: `SonarAlone.c <./_static/code/SonarAlone.c>`_
 +++++++++++++++++++++++++++++++++++++++++++
 Accendiamo il LED se qualcosa si avvicina 
 +++++++++++++++++++++++++++++++++++++++++++
+
 Consideriamo il seguente requisito:
 
-:remark:`Accendere il LED se il SONAR rileva una distanza inferiore a un limite prefissato.`
+(requisito :blue:`LedSonar`) : Accendere il Led se il Sonar rileva una distanza inferiore a un limite prefissato.
 
-Si tratta di realizzare una prima semplice catena *input-elaborazione-output*.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Soluzione in C
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. raw:: html
+
+   <hr>
+   
 :worktodo:`WORKTODO: LedSonar`
 
 - Scrivere un programma ``LedSonar.c`` che risolve il problema estendendo il comportamento del programma 
-  `SonarAlone.c <./_static/code/SonarAlone.c>`_
+  `SonarAlone.c <./_static/code/SonarAlone.c>`_.
 
-I dati emessi dal sonar sullo dispositivo standard di uscita possono essere acquisiti
-da un altro programma attraverso il meccansimo delle pipe di Linux/Unix.
+.. raw:: html
+
+   <hr>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Soluzione in Python
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Si tratta di realizzare una prima semplice catena *input-elaborazione-output*;
+i dati emessi dal sonar sullo dispositivo standard di uscita possono essere acquisiti
+da un altro programma attraverso il meccanismo delle **pipe** di Linux/Unix.
 
 Definiamo quindi un semplice programma Python che legge da standard input e scrivere quanto 
 letto su standard output.
@@ -328,10 +346,20 @@ Concateniamo i programmi:
    python sonar.py | python LedControl.py 
 
 
+.. raw:: html
 
-.. Mettte le immagini fianco a fianco
-.. .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png
-..   :width: 20%
-.. .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png
-..   :width: 20%   ``
+   <hr>
+
+:worktodo:`WORKTODO: blinking the Led`
+
+- Scrivere un programma ``LedBlinkSonar`` che attiva il blinking del Led quando
+  il Sonar rileva una distanza inferiore a un limite prefissato.
+
+.. raw:: html
+
+   <hr>
+
+
+
+
 

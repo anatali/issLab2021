@@ -108,7 +108,7 @@ FASE2
 
 - Il modello di programmazione a scambio di messaggi portato a livello di componenti.
 - Introduzione al linguaggio Kotlin.
-- Dalle coroutine Kotlin agli atttori Kotlin.
+- Dalle coroutine Kotlin agli attori Kotlin.
 - Da attori message-driven ad attori message-based che operano come automi a stati finiti.
 - Definizione di una infrastruttura per attori come supporto alla costruzione di software distribuiti ed eterogeni.
    
@@ -123,7 +123,7 @@ FASE3
 - Il vantaggio dell'uso di modelli eseguibili nelle fasi di analisi dei requisiti e del problema e come premessa
   per l'abbattimento dei costi (e degli imprevisti) di produzione.
 - Applicazione di quanto sviluppato per lo sviluppo incrementale di una **applicazione finale IOT** che utilizza 
-   `robot reali`_, costruiti estendendo il sistema della FASE1. 
+  `robot reali`_, costruiti estendendo il sistema della FASE1. 
 
 
 

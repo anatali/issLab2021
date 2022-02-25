@@ -16,6 +16,20 @@
 .. _FSM : https://en.wikipedia.org/wiki/Finite-state_machine
 .. _MealyMachines : https://en.wikipedia.org/wiki/Mealy_machine
 .. _MooreMAchines : https://en.wikipedia.org/wiki/Moore_machine
+.. _libri: _static/books.html
+.. _Linguaggi di programmazione: https://it.wikipedia.org/wiki/Linguaggio_di_programmazione
+.. _Meta Object Facility: https://it.wikipedia.org/wiki/Meta-Object_Facility
+.. _Domain Specific Languages: https://www.jetbrains.com/mps/concepts/domain-specific-languages/
+.. _Linguaggio assembly : https://it.wikipedia.org/wiki/Linguaggio_assembly
+.. _Minsky Machine : https://en.wikipedia.org/wiki/Counter_machine
+.. _Turing Machine : https://plato.stanford.edu/entries/turing-machine/
+.. _Automa a stati finiti : https://it.wikipedia.org/wiki/Automa_a_stati_finiti
+.. _Raspberry Pi TM : https://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/turing-machine/one.html
+.. _UML : https://it.wikipedia.org/wiki/Unified_Modeling_Language
+.. _Use Cases Diagrams : https://it.wikipedia.org/wiki/Use_Case_Diagram
+.. _User Stories : https://en.wikipedia.org/wiki/User_story
+.. _Software testing : https://www.ibm.com/it-it/topics/software-testing
+.. _DevOps : https://it.wikipedia.org/wiki/DevOps
 .. _template2022 : _static/templateToFill.html
  
 ======================================
@@ -39,7 +53,10 @@ la costruzione del software non richieda, per sua natura, processi di produzione
    :align: center
    :width: 80%
 
+Per meglio comprendere questa differenza e anche la profonda relazione tra scienza e ingegneria
+possiamo riflettere sul seguente problema: 
 
+:remark:`costruire un sistema software che operi come una mente unama`
 
 ------------------------------------------------
 Ingegneria
@@ -70,13 +87,14 @@ spesso eseguiti uno dopo l'altro, in un classico :blue:`processo di sviluppo seq
    :align: center
    :width: 80%
 
+
 ------------------------------------------------
 Programmatori = (non) ingegneri?
 ------------------------------------------------
 
 Nella produzione industriale del software è piuttosto comune cercare di abbattere i costi 
 di progetto e di sviluppo, anche limitando le dimensioni del gruppo di lavoro. 
-Spesso si cerca anche diverse aggredire il mercato prefissando una data di distribuzione del prodotto, che viene di frequente 
+Spesso si cerca anche di aggredire il mercato prefissando una data di distribuzione del prodotto, che viene di frequente 
 rilasciato non completamente finito, accollando all'utente parte dell'onere di collaudo. 
 
 Sotto la spinta di stringenti vincoli di *time to market* (**TTM**) molte aziende adottano uno schema del tipo 
@@ -160,7 +178,7 @@ un raffinamento o una variazione del modello corrisponde in questo caso ad una v
 
 La produzione esplicita di modelli si rivela utile in quanto i diversi attori di un processo 
 di produzione di software (committenti, analisti, progettisti, utenti, etc) 
-operano a diversi livelli di astrazione. 
+operano a diversi livelli di astrazione e con fini diversi. 
 
 Definendo opportuni modelli del sistema da realizzare, in ogni fase del processo di produzione 
 l'attenzione può essere focalizzata sugli aspetti rilevanti in quella fase, utilizzando una 
@@ -191,7 +209,7 @@ sorprendentemente rilevante di progetti software, evidenziando un insieme di cau
 - Inadeguata capacità di valutare e gestire i rischi e di controllare la propagazione dei cambiamenti.
 
 Queste potenziali fonti di insuccesso hanno amplificato la loro influenza nel momento in cui 
-l'intera disciplina ha vissuto la :blue:`transizione` da una dimensione prevalentemente :blue:`algorimtico-trasformazionale` 
+l'intera disciplina ha vissuto la :blue:`transizione` da una dimensione prevalentemente :blue:`algoritmico-trasformazionale` 
 a un dimensione fortemente :blue:`sistemistico-architetturale`.
 
 --------------------------------------
@@ -258,7 +276,7 @@ nel 1995 dell'ormai famoso testo sui `Design Pattern`_  della così detta
    :width: 80%
 
 Da allora si sono susseguiti molte altre conferenze e lavori. 
-I riferimenti più noti sono i cinque testi POSA sulle *Pattern oriented Software Architectures*
+I riferimenti più noti sono i cinque testi POSA (si veda in `libri`_ ) sulle *Pattern oriented Software Architectures*
 e i convegni PLoP (*Pattern Languages of Programming*).
 
 .. image:: ./_static/img/Intro/Posa.PNG
@@ -274,15 +292,13 @@ Dimensioni
 Sia nella fase di analisi che in quella di progetto, la descrizione di un sistema software può avvenire 
 focalizzando l'attenzione su almeno tre diversi punti di vista:
 
+- l'organizzazione del sistema in parti (**struttura**);
+- il modo in cui le diverse parti scambiano informazione implicita o esplicita tra loro (**interazione**);
+- il funzionamento del tutto e di ogni singola parte (**comportamento**).
 
 .. image:: ./_static/img/Architectures/Dimensioni.png 
    :align: center
    :width: 80%
-
-
-- l'organizzazione del sistema in parti (**struttura**);
-- il modo in cui le diverse parti scambiano informazione implicita o esplicita tra loro (**interazione**);
-- il funzionamento del tutto e di ogni singola parte ((**comportamento(**).
 
 
  
@@ -290,12 +306,16 @@ focalizzando l'attenzione su almeno tre diversi punti di vista:
 Questi punti di vista costituiscono tre indispensabili dimensioni in cui articolare lo spazio della descrizione 
 del sistema, qualunque sia il linguaggio utilizzato per esprimere questa descrizione.
 Costrutti per esprimere strutture (di dati e di controllo), forme di comportamento e meccanismi di interazione 
-sono presenti in tutti i linguaggi di programmazione. 
+sono presenti in tutti i `Linguaggi di programmazione`_.
 
 Un punto importante consiste nel capire fino a che punto i costrutti di un linguaggio debbano influenzare 
 il progettista (se non lo stesso analista). 
 Fino alla fine degli anni 90 il linguaggio di programmazione è stato il veicolo principale per introdurre 
 nuovi concetti sia sul piano computazionale sia sul sul piano della organizzazione del software.
+
+La figura che segue mostra una visione sintetica dello sviluppo nel tempo di questa evoluzione linguistica,
+con riferimento ad alcuni dei linguaggi più noti (in `Linguaggi di programmazione`_ si dice che oggi
+si usano più di 2500 linguaggi di programmazione).
 
 .. image:: ./_static/img/Intro/historyHLPL.png 
    :align: center
@@ -306,11 +326,11 @@ L'avvento della programmazione ad oggetti sembra avere segnato il culmine di que
 un motivo può certo essere il raggiungimento di una sufficiente maturità nella capacità espressiva 
 in ciascuna delle dimensioni citate. 
 
-Tuttavia, il motivo principale della relativa (apparente) 
-stagnazione nello sviluppo di nuovi linguaggi può essere ricondotto all'idea che un linguaggio 
+Tuttavia, il motivo principale di una relativa (e solo apparente) 
+stagnazione nello sviluppo di nuovi linguaggi, può essere ricondotto all'idea che un linguaggio 
 non deve essere necessariamente accompagnato da una sintassi concreta ma può essere suffciente 
 definire una **sintassi astratta** utilizzando un :blue:`meta-linguaggio` come ad esempio ``MOF``
-(si veda Meta Object Facility) unitamente alla semantica del linguaggio e a un framework di supporto.
+(si veda `Meta Object Facility`_) unitamente alla semantica del linguaggio e a un framework di supporto.
 
 .. image:: ./_static/img/Intro/mofUml.PNG 
    :align: center
@@ -318,7 +338,7 @@ definire una **sintassi astratta** utilizzando un :blue:`meta-linguaggio` come a
 
 
 
-Questa idea è sviluppata oggi con riferimento ai *Domain Specific Languages*.
+Questa idea è sviluppata oggi con riferimento ai `Domain Specific Languages`_.
 
 
 
@@ -326,7 +346,7 @@ Questa idea è sviluppata oggi con riferimento ai *Domain Specific Languages*.
 Struttura
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Per impostare in modo sistematico la definzione a livello strutturale di un elemento, può essere conveniente, 
+Per impostare in modo sistematico la definizione a livello strutturale di un elemento, può essere conveniente, 
 sia in fase di analisi sia in fase di progetto, cercare di dare risposta ad alcune domande quali:
 
 - l'elemento è :blue:`atomico o composto`? Nel caso sia composto quali sono le parti che lo formano?
@@ -409,10 +429,10 @@ Un problema 'applicativo'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Discutere la forma di interazione in cui un componente A invia una *request* X a un componente B e questi risponde
-solo dopo avere ricevuto da A risposta a una *request* Y.
+solo dopo avere ricevuto da A la risposta a una sua *request* Y.
 
 Esempio: A chiede a B di inviargli la fattura di un ordine ma non gli dice a quale indirizzo, per cui B lo chiede ad A
-prima di rispondere.
+prima di rispondergli con il documento richiesto.
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -425,15 +445,18 @@ Per esprimere il comportamento di un componente software, si distinguono classic
 - funzionale
 - logico-dichiarativo
   
-Spesso si fa anche riferimento a tipi diversi di **macchine astratte**, iniziando dalla Macchina di Turing (TM), che individua,
+Spesso si fa anche riferimento a tipi diversi di **macchine astratte**, iniziando dalla 
+`Turing Machine`_ (**TM**), che individua,
 in stile imperativo, le mosse-base (*primitive*) di un automa che permette di realizzare qualunque calcolo. 
 
 .. image:: ./_static/img/Intro/TuringMachine.PNG
    :align: center
    :width: 60%
-   
-Un automa equivalente che ottiene lo stesso risultato con una sorta di linguaggio assembler minimale è la
-Macchina di Minsky:
+
+Si veda `Raspberry Pi TM`_
+
+Un automa equivalente che ottiene lo stesso risultato con una sorta di `Linguaggio assembly`_ minimale è la
+`Minsky Machine`_ (nota anche come *Counter Machine*):
 
 .. image:: ./_static/img/Intro/MinskyMachine.PNG
    :align: center
@@ -445,14 +468,14 @@ Automi a stati finiti
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Un tipo di automa meno potente della TM, ma che ne costituisce una parte  e che 
-avrà per noi un ruolo fondamentale è l'automa a stati finiti (*Finite State Machine* - **FSM**)
+avrà per noi un ruolo fondamentale è l'`Automa a stati finiti`_ (*Finite State Machine* - **FSM**)
 il cui funzionamento può essere formalmente descritto da una 5-tuple (``States, Inputs, Outputs, Transitions, InitialState``):
 
-- **States**: insieme di possibili stati (*States*) in cui l'automa si può trovare   .
-- **Inputs**: insieme delle informazioni di ingresso, denotabili attraverso un *input alphabet* (Inputs); nel nostro caso 
+- **States**: insieme di possibili stati in cui l'automa si può trovare.
+- **Inputs**: insieme delle informazioni di ingresso, denotabili attraverso un *input alphabet*; nel nostro caso 
   possiamo pensare che ogni simbolo dell'alfabeto  denoti un messggio.
-- **Outputs**: insieme della informazioni di uscita, denotabili attraverso un *output alphabet* (Outputs);   nel nostro caso 
-  possiamo pensare che ogni simbolo dell'alfabeto denoti una **azione** che l'automa svolge )
+- **Outputs**: insieme della informazioni di uscita, denotabili attraverso un *output alphabet*;   nel nostro caso 
+  possiamo pensare che ogni simbolo dell'alfabeto denoti una **azione**.
 - **InitialState**: lo stato iniziale (unico) in cui l'automa si trova quando viene creato.
 - **Transizione**: definisce il nuovo stato e l'output dell'automa in funzione dello stato corrente e del simbolo corrente in ingresso.
   E' spesso espressa da una coppia di funzioni:
@@ -471,13 +494,13 @@ Normalmente, gli automi a stati finiti si suddividono in due grandi categorie:
 Nel seguito, imposteremo spesso il comportamento dei componenti software come `MooreMachines`_ che, quando si trova in uno
 stato ``SCUR``:
 
-#. esegue una sequenza (che **deve terminare**) di azioni 
-#. al termine della sequenza di azioni controlla che vi sia almeno un input capace di attivare una delle transizioni verso
-   un ulteriore stato (``SNEXT``)
-#. attiva una delle transioni possibili pasando dallo stato ``SCUR`` allo stato ``SNEXT`` (che potrebbe anche coincidere
-   con ``SCUR``)
+#. esegue una sequenza (che **deve terminare**) di azioni;
+#. al termine della sequenza di azioni controlla che vi sia almeno un input (messaggio) 
+   capace di attivare una delle transizioni verso un ulteriore stato (``SNEXT``);
+#. attiva una delle transizioni possibili pasando dallo stato ``SCUR`` allo stato ``SNEXT`` (che potrebbe anche coincidere
+   con ``SCUR``);
 #. se non vi sono transizioni attivabili, rimane nello stato ``SCUR`` da cui potrà sbloccarsi solo in conseguenza di un 
-   ulteriore input   
+   ulteriore input.
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -514,8 +537,10 @@ di tipo iterativo e incrementale.
    :width: 60%
 
 
-Idealmente, vi sono motli motivi per impostare un processo di tipo :blue:`TopDown` che parte dal problema e dalla sua
-analisi al fine di individuare le tecnologie più opportune per risolverlo.
+Esistono molti validi motivi per impostare il processo di produzione in modo :blue:`TopDown`
+(si veda :ref:`La crisi del software`), partendo dal problema e dalla sua
+analisi, in modo che le tecnologie più opportune per risolverlo siano un risultato di questa analisi
+e non un assunto a-priori.
 
 .. list-table:: 
   :widths: 35,65
@@ -526,7 +551,7 @@ analisi al fine di individuare le tecnologie più opportune per risolverlo.
   * - .. image:: ./_static/img/Intro/topDown.png 
     - .. image:: ./_static/img/Intro/TopDownHowWhat.png
 
-Sappiamo però che in molti casi si segue un approccio `bottomUp`_ e quindi porremo molta attenzione nel capire le
+Sappiamo però che, in molti casi, si segue un approccio `bottomUp`_ e quindi porremo molta attenzione nel capire le
 strategie migliori per invertire il processo e le motivazioni per fare questa inversione. 
 
 Supponendo che le nostre attività di laboratorio siano non troppo dissimili a quanto avviene concretamente nel
@@ -554,17 +579,14 @@ I vari SPRINT dovrebbero effettuare uno ZOOMING entro MACRO-COMPONENTI
 innescando un processo ITERATIVO di analisi, progetto , sviluppo e testing di
 quel componente o del SOTTOSISTEMA  che lo SPRINT vuole costruire.
 
-Per questo può essere opportuno impostare ogni sprint come un 'sottoprogetto'
+Per questo sarà opportuno impostare ogni SPRINT come un 'sottoprogetto'
 con sua propria spiegazione e testing. 
-
 Lo sprint :math:`n+1` dovrebbe partire dai
 risultati dello sprint :math:`n` e preparare un sottosistema (funzionante) 
 che sarà l'input dello sprint :math:`n+2`.
 
 Di particolare rilevanza saranno le fasi di `Sprint review`_ i cui meeting saranno un nuovo modo di concepire le ore di 
 ricevimento-studenti.
-
-
 
 
 +++++++++++++++++++++++
@@ -586,13 +608,13 @@ Il template
 +++++++++++++++++++++++
 
 Il documento `template2022`_ costituisce lo strumento che useremo per rendere esplcite le conoscenze, le decisioni 
-e i modelli introdotte nelle fasi di analisi.
+e i modelli introdotte nelle fasi di analisi e di progetto.
 
 Questo documento intende costituire un punto di riferimento 
-'process agnostic', cioè non ancorato ad alcun specifico processo di sviluppo adottatao per costruirlo.
+'process agnostic', cioè non ancorato ad alcun specifico processo di sviluppo adottato per costruirlo.
 
-In altre parole, cercheremo anche di capire il ruolo delle documentazione e le metodologie più adeguate per realizzarla
-in modo utile, costruttivo e senpre correlati allo stato corrente del codice.
+Cercheremo quindi anche di capire il ruolo delle documentazione e le metodologie più adeguate per realizzarla
+in modo utile, costruttivo e sistematicamente correlato allo stato corrente del codice.
 
 Anticipiamo qui alcuni aspetti che svilupperemo in modo più approfondito lungo tutto il corso.
 
@@ -619,8 +641,9 @@ A tal fine sono utili i linguaggi che permettono di definire :ref:`modelli`
 capaci di catturare gli aspetti essenziali, lasciando sullo sfondo dettagli 
 anche importanti, ma non rilevanti nelle prime fasi.
 
-Gli :blue:`Usecases` possono essere utili come linea-guida per definire una o più :blue:`TestUnits` funzionali.
-Le specifiche degli *Usecases* espresse in linguaggio naturali possono essere inserite
+Gli `Use Cases Diagrams`_ utilizzati in `UML`_ e le più recenti `User Stories`_ possono essere utili 
+come linea-guida per definire una o più :blue:`TestUnits` funzionali.
+Le specifiche degli *Use Cases* espresse in linguaggio naturali possono essere inserite
 come commenti in tali *TestUnits*.
 
 Le :blue:`domande` da porre al committente mirano a **chiarire**:
@@ -667,7 +690,7 @@ il committente
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 L'architettura logica
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Il risultato della analsi può essere sintetizzato nella definizione di una 
 :red:`architettura logica` (che specializza/esetende quella scaturita dai requisiti )
@@ -675,7 +698,7 @@ che definisce la NATURA (oggetti, processi, servizi, attori, database, etc.)
 dei MACRO-COMPONENTI del sistema e della loro interazione, 
 NON COME SOLUZIONE DI PROGETTO, ma come VINCOLI IMPLICATI dal problema.
 
-:remark:`Il risultato della analisi del problema dovrebbe essere condiviso .`
+:remark:`Il risultato della analisi del problema dovrebbe essere (del tutto) condiviso`
  
 
 L'analista potrebbe/dovrebbe dare uno sguardo complessivo al problema,
@@ -690,18 +713,44 @@ Uso di modelli
 
 L'uso dei modelli è utile (per non dire indispensabile) PER CONCENTRARE
 l'attenzione SUGLI ASPETTI RITENUTI SALIENTI (tenendo conto anche
-dei tempi, delle tecnologie disponibili  e dei costi):
+dei tempi, delle tecnologie disponibili  e dei costi).
 
-L'architettura logica espressa mediante un modello eseguibile può essere il riferimento per la impostazione di
+Come già previsto da `UML`_, è opportuno definire modelli come risultato delle 
+fasi di analisi dei requisiti (*Use Case Diagrams*), analisi del problema 
+e progetto (*class diagrams, sequence diagrams*, *activity diagrams*, *statechart diagram* ) 
+e anche per la distribuzione del prodotto (*deployment diagrams*).
+
+L'architettura logica espressa mediante un modello può essere il riferimento per la impostazione di
 PIANI di testing (unit, integration, functional, acceptance) espressi in MODO
 NON discorsivo (formale), comprensibile a una macchina. 
 
-Per questo noi abbiamo perseguito l'idea di modelli eseguibili, sviluppando
-una meta-modello in modo custom, visto che si trova ancora
-nulla di questo tipo in rete.
+Noi seguiremo questa idea con lo sviluppo (si veda :ref:`FASE2`) di
+un meta-modello custom che permette la definizione di modelli eseguibili di sistemi distributi.
 
-Come già previsto da UML, è opportuno definire modelli come risultato delle 
-fasi di analisi dei requsiti, analisi del problema e progetto.
+
+++++++++++++++++++++++++++++++++
+Dal testing a DevOps
+++++++++++++++++++++++++++++++++
+
+La fase di testing del software è  attività imprescindibile per garantirne la qualità ed è anche 
+indispensabile per garantire all’utente una *user experience* soddisfacente. 
+
+In `Software testing`_  leggiamo che:
+
+- Esistono molti tipi diversi di test del software, ciascuno con obiettivi e strategie specifici.
+- Negli anni '90 c'è stata una transizione dai test a un processo più completo denominato 
+  :blue:`controllo di qualità`, che copre l'intero ciclo di sviluppo del software e riguarda 
+  i processi di pianificazione, progettazione, creazione ed esecuzione di casi di test. 
+- I test del software sono stati tradizionalmente separati dal resto dello sviluppo, ma
+  molti team di sviluppo  usano ora una metodologia nota come :blue:`test continuo`. 
+  
+Il *test continuo* è parte dell'approccio `DevOps`_, in cui sviluppo e operazioni collaborano 
+per l'intero ciclo di vita del prodotto. L'obiettivo è quello di accelerare la fornitura del software, 
+bilanciando al tempo stesso i costi, la qualità e i rischi.   
+
+Noi porremo particolare attenzione al fatto che la definizione di test (autmatizzabili) può essere vista come
+la formalizzazione delle `User Stories`_ e che l'uso dei modelli (esguibili) può permettere 
+di anticipare questa formalizzazione fin dalle fasi di analisi.
 
 
 
@@ -709,14 +758,17 @@ fasi di analisi dei requsiti, analisi del problema e progetto.
 Passi operativi 'a regime' 
 +++++++++++++++++++++++++++++
 
-Anticipiamo qui le azioni principali che svolgeremo nella :ref:`FASE3`, dopo avere sperimentato il modo di 
-procedere consueto nella :ref:`FASE1` ed esserci costruiti il nostro ambiente di sviluppo custom nella :ref:`FASE2`:
+Anticipiamo qui le azioni principali che svolgeremo nella :ref:`FASE3`, dopo avere sperimentato 
+nella :ref:`FASE1` il modo di procedere oggi più diffuso 
+ed esserci costruiti un nostro ambiente di sviluppo custom nella :ref:`FASE2`:
 
-#. Costruire un repository GIT del progetto
-#. Definire un primo modello del sistema come risultato della analisi del problema (e non del progetto della soluzione)
-#. Includere nel documento di analisi gli appropriati riferimenti al modello
-#. Definire qualche testplan significativo (cioè legato ai casi di uso) basato sul modello
-#. Impostare il progetto 
+#. Costruire un repository GIT del progetto.
+#. Definire un primo modello del sistema come risultato della analisi del problema 
+   (e non del progetto della soluzione).
+#. Includere nel documento di analisi gli appropriati riferimenti al modello.
+#. Utilizzare il modello per definire  **Piani di Testing** significativi in relazione alle `User Stories`_ 
+#. Realizzare il progetto 
 #. Impostare la codifica
-#. Impostare il deployment
+#. Impostare il deployment e la manutenzione (in prospettiva `DevOps`_)
+
 

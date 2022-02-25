@@ -34,9 +34,23 @@ sphinks-quickstart  //TUTTO ATTACCATO
 %%%
 &&&
 
+:emphasize-lines: 8,10,16
+
+
+
+.. Mettte le immagini fianco a fianco
+.. .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png
+..   :width: 20%
+.. .. image:: ./_static/img/rasp/Raspberry-Pi-GPIO-Layout-Model-B-Plus.png
+..   :width: 20%   ``
+
+
+
+
 
  Il delay qualificato cone **'HORRIBLE EFFECT'**  potrebbe ripercuotersi sui client 
 in modo inaccettabile e mettere in crisi un sistema. Si veda ad esempio
+
 
 .. _HorribleEffetcts:
 
