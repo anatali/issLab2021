@@ -3,6 +3,8 @@
 .. role:: remark
 .. role:: worktodo
 
+.. _wiringpi:  http://wiringpi.com/
+
 ======================================
 RaspBasicCode
 ======================================
@@ -18,9 +20,9 @@ RaspBasicCode
 ------------------
 wiringpi
 ------------------
-``WiringPi`` include un'utilità da riga di comando 
-``gpio`` che può essere utilizzata per programmare 
-e configurare i pin GPIO. 
+
+`wiringPi`_ include un'utilità da riga di comando ``gpio`` che può essere utilizzata per programmare 
+e configurare i pin GPIO.  
 
 .. code::
 
@@ -31,6 +33,10 @@ e configurare i pin GPIO.
         Type: Model B+, Revision: 02, Memory: 512MB, Maker: Sony
         * Device tree is enabled.
         * This Raspberry Pi supports user-level GPIO access.
+
+Per usare wiringpi su Bullseye si veda :ref:`wiringpi on Bullseye`.
+
+.. code::
 
    Esempi di uso:
         gpio unexportall
@@ -310,7 +316,7 @@ Testiamo il programma facendo visualizzare il programma stesso:
 
    cat ReadInput.py | python ReadInput.py
 
-A questo punto ridiregiamo i dati generati dal sonar al nostro programma: 
+A questo punto ridirigiamo i dati generati dal sonar al nostro programma: 
 
 .. code::
 
