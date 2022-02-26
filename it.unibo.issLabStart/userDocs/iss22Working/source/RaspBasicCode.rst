@@ -4,6 +4,7 @@
 .. role:: worktodo
 
 .. _wiringpi:  http://wiringpi.com/
+.. _pipe : https://linuxaria.com/article/pipes-linux?lang=it
 
 ======================================
 RaspBasicCode
@@ -243,7 +244,8 @@ Attiviamo il sonar usando Python
       #print ('Distance:',distance,'cm')
       print ( distance )
       sys.stdout.flush()   #Importante!
-   #GPIO.cleanup()
+      time.sleep(0.25)
+
 
 Questo codice visualizza sul dispositivo standard di output l'informazione sulla distanza rilevata.
  
@@ -298,7 +300,7 @@ Soluzione in Python
 
 Si tratta di realizzare una prima semplice catena *input-elaborazione-output*;
 i dati emessi dal sonar sullo dispositivo standard di uscita possono essere acquisiti
-da un altro programma attraverso il meccanismo delle **pipe** di Linux/Unix.
+da un altro programma attraverso il meccanismo delle `pipe`_ di Linux/Unix.
 
 Definiamo quindi un semplice programma Python che legge da standard input e scrivere quanto 
 letto su standard output.
@@ -358,7 +360,7 @@ Concateniamo i programmi:
 
 :worktodo:`WORKTODO: blinking the Led`
 
-- Scrivere un programma ``LedBlinkSonar`` che attiva il blinking del Led quando
+- Scrivere un programma ``LedBlinkSonar`` che attiva il :blue:`blinking` del Led quando
   il Sonar rileva una distanza inferiore a un limite prefissato.
 
 .. raw:: html
