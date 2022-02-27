@@ -775,31 +775,31 @@ Un  piano di testing  ha di solito lo scopo di stabilire la gerarchia con cui i 
 i metodi di esecuzione, i criteri di accettazione e prevede diverse tipologie di test, tra cui:
 
 
-- Unit test (Test di unità o di modulo)
+- **Unit test** (Test di unità o di modulo)
   Ha l’obiettivo di individuare gli errori nel singolo modulo software. 
   Si verifica che il software esegua correttamente le operazioni. 
   Viene effettuato dal programmatore che ha sviluppato il modulo e documentato riportando i requisiti funzionali 
   da soddisfare. 
   (peso sul piano di testing 15%)
 
-- Integration Test (Test di integrazione)
+- **Integration Test** (Test di integrazione)
   Ha l’obiettivo di individuare gli errori nel software quando tutti i moduli che compongono un sottosistema 
   o l’intero sistema vengono fatti lavorare assieme. 
   Viene effettuato congiuntamente dal gruppo dei programmatori che hanno sviluppato i vari moduli. 
   (peso sul piano di testing 20%)
 
-- System Test (Test di sistema)
+- **System Test** (Test di sistema)
   Ha l’obiettivo di garantire che il prodotto software nel suo complesso soddisfi completamente 
   i requisiti iniziali, è un collaudo interno. 
   (peso sul piano di testing 45%)
 
-- User Acceptance Test (Test di accettazione)
+- **User Acceptance Test** (Test di accettazione)
   Ha l’obiettivo di valutare la rispondenza dell’applicazione software rispetto ai requisiti 
   espressi inizialmente nel contratto e di ottenere l’accettazione formale del cliente di quanto realizzato. 
   Il test viene effettuato dal cliente nel suo ambiente di test, e da un gruppo di utenti. 
   (peso sul piano di testing 20%)
 
-- Alpha test e Beta test
+- **Alpha test e Beta test**
   Un alpha test è un test preliminare di un’applicazione software anche non ancora completa, 
   eseguito da alcuni potenziali utenti rappresentati da un team. 
   Un beta test ha l’obiettivo di far valutare al cliente, prima del roll-out ufficiale del sistema, 
@@ -808,11 +808,11 @@ i metodi di esecuzione, i criteri di accettazione e prevede diverse tipologie di
   su questo documento appena la versione stabile dell’app verrà completata, in modo da rendere la raccolta dei dati più
   adatta alle funzionalità finali e dettagli per completare e rendere pi`u funzionale il frontend.
 
-- Regression Test (test di non regressione)
+- **Regression Test** (test di non regressione)
   Ha l’obiettivo di verificare a valle di una manutenzione correttiva, dopo che il bug è stato individuato e corretto 
   e sono stati eseguiti esattamente gli stessi test che erano stati effettuati quando era stato individuato il problema.
 
-- Stress test (test di carico)
+- **Stress test** (test di carico)
   Lo stress test fa parte dei test di sistema e ha l’obiettivo di determinare il punto di rottura di un sistema software, 
   oltre il quale si verificano instabilità del sistema, perdita dei dati o interruzione del servizio.
 
