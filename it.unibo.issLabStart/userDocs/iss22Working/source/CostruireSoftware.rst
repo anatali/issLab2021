@@ -25,6 +25,7 @@
 .. _Minsky Machine : https://en.wikipedia.org/wiki/Counter_machine
 .. _Turing Machine : https://plato.stanford.edu/entries/turing-machine/
 .. _Automa a stati finiti : https://it.wikipedia.org/wiki/Automa_a_stati_finiti
+.. _pushdown automaton : https://it.wikipedia.org/wiki/Automa_a_pila
 .. _Raspberry Pi TM : https://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/turing-machine/one.html
 .. _UML : https://it.wikipedia.org/wiki/Unified_Modeling_Language
 .. _Use Cases Diagrams : https://it.wikipedia.org/wiki/Use_Case_Diagram
