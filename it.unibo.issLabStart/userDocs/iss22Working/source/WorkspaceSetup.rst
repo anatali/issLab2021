@@ -150,10 +150,13 @@ Per quanto riguarda il nostro progetto:
 Creazione di un repository remoto   
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#. Creaiamo su `github`_ un repository personale (pubblico) di nome ``userxyz``:
+#. Supponendo di avere accesso su `github`_ come user di nome ``userxyz``, creiamo un repository personale di nome ``iss2022``, 
+   selezionando il tipo **public**, con *README* file e   **Add .gitignore** (*template Java*). Quindi aggiungiamo
+   il nostro progetto al repo:
+
     .. code::
 
-        git remote add origin https://github.com/userxyz/reponame 
+        git remote add origin https://github.com/userxyz/iss2022 
         git remote -v   //osservo
 
 #. Posizionato sulla directory ``issLab2022``, salvo il progetto corrente sul repository remoto.
