@@ -4,7 +4,9 @@
 
 .. _rst editor: http://rst.ninjs.org/
 
+.. _Domain Driven Design : https://it.wikipedia.org/wiki/Domain-driven_design
 .. _gradle: https://gradle.org/ 
+.. _GradleIntro: ../../../../../GradleIntro/userdocs/Gradle.intro.html
 .. _IntelliJ: https://www.jetbrains.com/idea/
 .. _template2022: _static/templateToFill.html
 .. _Eclipse IDE for Java and DSL Developers: https://www.eclipse.org/downloads/packages/release/juno/sr2/eclipse-ide-java-and-dsl-developers
@@ -24,9 +26,17 @@ WorkspaceSetup
 
 .. _it.unibo.radarSystem22:
 
+ 
 ----------------------------------
 Creazione progetto con Gradle
 ----------------------------------
+Gradle è uno strumento open source per automatizzare la costruzione (build) del software.
+
+Gradle è ormai uno standard di fatto in questo settore ed è interessante non solo in quanto
+strumento, ma anche perchè applica i principi del `Domain Driven Design`_ (**DDD**) 
+per modellare il suo proprio  domain-building software.
+
+Per un approfondimento su Gradle si veda  `GradleIntro`_.
 
 Iniziamo creando un progetto con l'aiuto di `Gradle`_
 
@@ -243,6 +253,8 @@ Verso l'applicazione
 ----------------------------------
 Uso di GIT
 ----------------------------------
+Una volta creato il progetto, è opportuno salvarlo su un nostro repository GIT.
+
 
 Per un aiuto ad usare GIT può essere utile consultare `Basic Git commands`_
 e/o guardare il video `Video on GIT`_ di cui  riportiamo l'inizio di alcuni punti salienti:
@@ -310,111 +322,4 @@ Creazione di un repository remoto
 
 
 
------------------------------------
-TODO
------------------------------------
-#. Accedo a https://github.com/ e creo sito GIT con nome  ``myNameIss2``
-#. Apro sul PC la mia directory di lavoro (ad esempio ``issLab2022``) e mi posiziono in essa
-#. Clono il sito GIT  
-#. Scelgo ``issLab2022`` come workspace
-#. Creo progetto di nome `it.unibo.radarSystem22`
-#. Creo un file di nome build.gradle con il seguente contenuto
-
-   .. code::
-
-     plugins {
-      id 'java'
-      id 'eclipse'
-      id 'application'
-    }
-
-    version '1.0'
-    sourceCompatibility = 1.8
-    repositories {
-        mavenCentral()
-        jcenter()
-        flatDir {   dirs '../unibolibs'	 }
-    }
-
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    //KOTLIN
-        implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.6.10'
-    //MQTT
-    // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
-      implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
-    //JSON
-        // https://mvnrepository.com/artifact/org.json/json
-        compile group: 'org.json', name: 'json', version: '20160810'
-    //COAP
-      // https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
-      compile group: 'org.eclipse.californium', name: 'californium-core', version: '2.0.0-M12'
-      // https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
-      compile group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
-    //LOG4j	//required by Californium
-      //compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25' 
-      ext['log4j2.version'] = '2.17.0'
-    //CUSTOM
-        compile name: '2p301'
-        compile name: 'uniboInterfaces'
-        compile name: 'unibonoawtsupports'
-      compile name: 'it.unibo.qakactor-2.5'
-      
-      //RADAR (support and GUI)
-      compile name: 'radarPojo'
-      // https://mvnrepository.com/artifact/org.pushingpixels/trident
-      compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
-    //IMAGES	
-      implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-      implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.13'
-
-
-    //COROUTINE
-        compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-common', version: '1.1.0'
-        compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.1.0'
-      
-    }
-
-
-    sourceSets {
-        main.java.srcDirs += 'src'
-        main.java.srcDirs += 'resources'
-        test.java.srcDirs += 'test'		//test is specific
-    }
-
-    //Avoid duplication of src 
-    eclipse {
-        classpath {
-            sourceSets -= [sourceSets.main, sourceSets.test]	
-        }		
-    }
-    
-
-    mainClassName = 'it.unibo.enablerCleanArch.main.AllMainOnRasp'
-
-    jar {
-        println("building jar ...")
-        from sourceSets.main.allSource	
-        manifest {
-            attributes 'Main-Class': "$mainClassName"
-        }
-    }
-
-    /*
-    distZip {
-        into(project.name) {
-            from '.'
-            include 'config/RadarSystemConfig.json'
-        }
-    } 
-    */
-    distributions {
-        main {
-            //distributionBaseName = 'xxx'
-            contents {
-                from './RadarSystemConfig.json'
-            }
-        }
-    }
-
-
+ 
