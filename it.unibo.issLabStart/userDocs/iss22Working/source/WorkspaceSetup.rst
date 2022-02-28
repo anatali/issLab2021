@@ -11,14 +11,16 @@
 .. _Basic Git commands: https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
 .. _Video on GIT: https://www.youtube.com/watch?v=HVsySz-h9r4
 .. _github: https://github.com/
+.. _opinionated: https://govdevsecopshub.com/2021/02/26/opinionated-software-what-it-is-and-how-it-enables-devops/
 
 ======================================
 WorkspaceSetup
 ======================================    
 
 - :ref:`Creazione progetto con Gradle`
-- :ref:`Uso di GIT`
- 
+- :ref:`Creazione di un progetto vuoto`
+- :ref:`Verso l'applicazione`
+- :ref:`Uso di GIT` 
 
 .. _it.unibo.radarSystem22:
 
@@ -29,12 +31,15 @@ Creazione progetto con Gradle
 Iniziamo creando un progetto con l'aiuto di `Gradle`_
 
 #. Apro sul PC una directory di lavoro (ad esempio **issLab2022**) e mi posiziono in essa.
-#. Creo una directory per il progetto di nome :blue:`it.unibo.radarSystem22` e mi posiziono in essa.
+#. Creo una directory per il progetto di nome :blue:`prova` e mi posiziono in essa.
 #. Eseguo il comando
   
    .. code::
 
       gradle init (select 2, 3, 1, 2, 1, -, -)
+   
+   La risposta ``2`` alla prima domanda, implica che Gradle costruisca una applicazione-base che possiamo subito 
+   eseguire e testare.
 
 #. Eseguo il codice generato:
 
@@ -54,12 +59,8 @@ Iniziamo creando un progetto con l'aiuto di `Gradle`_
 
 #. Apro il progetto in `IntelliJ`_, noto le directories ``main`` e ``test`` 
    
-   .. image:: ./_static/img/Intro/projectntelliJ.PNG 
-      :align: center
-      :width: 60%
 
-#. Osservo il contenuto di 
-   ``app/build.gradle.kts``:
+#. Osservo il contenuto di  ``app/build.gradle.kts``:
 
     .. code::
 
@@ -83,12 +84,16 @@ Iniziamo creando un progetto con l'aiuto di `Gradle`_
             // Define the main class for the application.
             mainClass.set("it.unibo.radarSystem22.App")
         }
+#. Osservo il contenuto del file ``.gitignore``:
 
+    .. code::
+ 
+       # Ignore Gradle project-specific cache directory
+       .gradle
+       # Ignore Gradle build output directory
+       build
 
-
-
-
-#. Eseguo (posso usare il Terminal di `IntelliJ`) i test:
+#. Eseguo i test (usando una command shell o il Terminal di ``IntelliJ``):
 
    .. code::
 
@@ -98,12 +103,149 @@ Iniziamo creando un progetto con l'aiuto di `Gradle`_
 #. Osservo ``app/build/reports/tests/test/index.html``
 
 
+Se rieseguiamo ``gradle init`` dando  ``1`` come risposta alla prima domanda, Gradle costruisce una 
+struttura più scarna (meno "`opinionated`_") da cui conviene partire in questo nostro lavoro.
+
+----------------------------------
+Creazione di un progetto vuoto
+----------------------------------
+
+
+#. Apro sul PC la directory di lavoro (**issLab2022**) e mi posiziono in essa.
+#. Creo la directory **unibolibs**, che conterrà le librerie (file ``.jar``) da noi sviluppate.
+   Per il momento, inserisco le seguenti librerie:
+
+   -  ``2p301.jar``
+   - ``uniboInterfaces.jar``
+   - ``unibonoawtsupports.jar``
+   - ``radarPojo.jar``
+#. Creo una directory di nome :blue:`it.unibo.radarSystem22` per il progetto  e mi posiziono in essa.
+#. Eseguo il comando
+  
+   .. code::
+
+      gradle init (select 1, 1, - )
+
+#. Notiamo che viene creato un file ``build.gradle`` vuoto; inseriamo in questo file il seguente contenuto:
+
+   .. code::
+
+    plugins {
+        id 'java'
+        id 'eclipse'
+        id 'application'
+	    id 'jacoco'
+    }
+
+    version '1.0'
+    sourceCompatibility = 1.8
+
+    repositories {
+        jcenter()
+        flatDir { dirs '../unibolibs' }  
+    }
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    //CUSTOM unibo
+        compile name: '2p301'
+        compile name: 'uniboInterfaces'
+        compile name: 'unibonoawtsupports'
+        //RADAR (support and GUI)
+        compile name: 'radarPojo'
+        compile group: 'org.pushingpixels', name: 'trident', version: '1.3'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src'
+        main.java.srcDirs += 'resources'
+        test.java.srcDirs += 'test'		 
+    }
+
+    //Avoid duplication of src in Eclipse
+    eclipse {
+        classpath {
+            sourceSets -= [sourceSets.main, sourceSets.test]	
+        }		
+    }
+
+    mainClassName = 'it.unibo.xxx'  //TODO
+
+    jar {
+        from sourceSets.main.allSource	
+        manifest {
+            attributes 'Main-Class': "$mainClassName"
+        }
+    }
+    distributions {
+        main {
+            contents {
+                from './RadarSystemConfig.json'
+            }
+        }
+    }
+
+#. Apro una command shell su ``...issLab2022/it.unibo.radarSystem22`` ed eseguo 
+
+   .. code::
+
+      gradlew eclipse
+
+   Noto che vengono creati i files ``.classpath`` e ``.project`` che descrivono il progetto in Eclipse.
+
+
+----------------------------------
+Verso l'applicazione
+----------------------------------
+ 
+#. Apro `Eclipse IDE for Java and DSL Developers`_ (2021 06) sul workspace ``issLab2022``.
+#. Importo nel workspace il progetto `it.unibo.radarSystem22`
+#. Seleziono :blue:`versione 1.8` del **compilatore Java** e della  **jre Java**
+#. Creo directory ``userDocs`` e ``resources``
+#. Inserisco in ``userDocs`` copia del file  `template2022`_ con la mia foto, 
+   ridenominandolo `radarSytem22.html` 
+   e copio i requisiti dati dal committente.
+#. Creo la sourceDirectory ``src`` e ``test`` e noto che vengono inserite in *Java Build Path*
+#. Inserisco in ``src`` i packages
+
+   .. code::
+
+      it.unibo.radarSystem22.interfaces
+      it.unibo.radarSystem22.domain
+      it.unibo.radarSystem22.main
+
+#. Inserisco nel package ``it.unibo.radarSystem22.main`` una classe di prova:
+
+   .. code::
+
+    package it.unibo.radarSystem22.main;
+    import radarPojo.radarSupport;
+
+    public class RadarUsageMain {
+ 	public void doJob() {
+		System.out.println("start");
+		radarSupport.setUpRadarGui();
+ 		radarSupport.update( "40", "60");
+ 	}
+	public static void main(String[] args) {
+		new RadarUsageMain().doJob();
+	}
+    }
+
+#. Inserisco in ``test`` il package
+
+   .. code::
+
+      it.unibo.radarSystem22 
+ 
+
 ----------------------------------
 Uso di GIT
 ----------------------------------
 
 Per un aiuto ad usare GIT può essere utile consultare `Basic Git commands`_
-e/o guardare il video `Video on GIT`_ di cui  riportiamo i tempi di alcuni punti salienti:
+e/o guardare il video `Video on GIT`_ di cui  riportiamo l'inizio di alcuni punti salienti:
 
 .. code::
 
@@ -131,7 +273,7 @@ Per quanto riguarda il nostro progetto:
        git init  //creates the directory .git	
        git status
 
-#. Osservo il contenuto del file generato ``.gitignore`` con il comando:
+#. Osservo il contenuto del file generato ``.gitignore`` :
 
    .. code::
  
@@ -150,9 +292,9 @@ Per quanto riguarda il nostro progetto:
 Creazione di un repository remoto   
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#. Supponendo di avere accesso su `github`_ come user di nome ``userxyz``, creiamo un repository personale di nome ``iss2022``, 
-   selezionando il tipo **public**, con *README* file e   **Add .gitignore** (*template Java*). Quindi aggiungiamo
-   il nostro progetto al repo:
+#. Supponendo di avere accesso su `github`_ come user di nome ``userxyz``, creiamo un repository personale di nome 
+   ``iss2022``, selezionando il tipo **public**, con *README* file e   **Add .gitignore** (*template Java*). 
+   Quindi aggiungiamo il nostro progetto al repository:
 
     .. code::
 
@@ -166,15 +308,7 @@ Creazione di un repository remoto
        git push origin master
 
 
-----------------------------------
-Verso l'applicazione
-----------------------------------
-All'interno del progetto `it.unibo.radarSystem22`_:
 
-#. Seleziono :blue:`versione 1.8` del **compilatore Java** e della  **jre Java**
-#. Creo directory ``userDocs`` 
-#. Inserisco in ``userDocs`` copia del file  `template2022`_ con mia foto, ridenominandolo `radarSytem22.html` 
-   e copio i requisiti dati dal committente
 
 -----------------------------------
 TODO
@@ -182,7 +316,6 @@ TODO
 #. Accedo a https://github.com/ e creo sito GIT con nome  ``myNameIss2``
 #. Apro sul PC la mia directory di lavoro (ad esempio ``issLab2022``) e mi posiziono in essa
 #. Clono il sito GIT  
-#. Apro `Eclipse IDE for Java and DSL Developers`_ (2021 06)
 #. Scelgo ``issLab2022`` come workspace
 #. Creo progetto di nome `it.unibo.radarSystem22`
 #. Creo un file di nome build.gradle con il seguente contenuto
