@@ -58,7 +58,7 @@ di implementazione, conviene introdurre una **Factory**:
 
 .. _RadarSystemConfig:
 
-Ciasun metodo di ``DeviceFactory`` restitusce una istanza di dispositivo reale o Mock in accordo alle specifiche
+Ciascun metodo di ``DeviceFactory`` restitusce una istanza di dispositivo reale o Mock in accordo alle specifiche
 contenute in un file di Configurazione (``RadarSystemConfig.json``) che qui ipotizziamo scritto in JSon:
 
 .. code::  
@@ -69,7 +69,8 @@ contenute in un file di Configurazione (``RadarSystemConfig.json``) che qui ipot
   "DLIMIT"           : "15"
   }
 
-Si noti che questo file contiene anche la specifica di ``DLIMIT`` come richiesto in fase di analisi dei requisiti.
+Si noti che questo file contiene anche la specifica di ``DLIMIT`` come richiesto in fase di 
+analisi dei requisiti.
 
 Questo file di configurazione viene letto dal metodo *setTheConfiguration* di un singleton ``RadarSystemConfig``
 che inizializza variabili ``static`` accessibili all'applicazione:

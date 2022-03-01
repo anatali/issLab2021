@@ -17,7 +17,7 @@
 .. _Dispense Ingegneria del software : ./NatMolBook/bookEntry.html  
 
 .. _robot reali: _static/devsDdr.html
-.. _libri: _static/devsDdr.html
+.. _libri: _static/books.html
 .. _template2022 : _static/templateToFill.html
 
 .. _SCRUM : https://it.wikipedia.org/wiki/Scrum_(informatica)
@@ -71,7 +71,7 @@ Al termine del corso lo studente:
   virtuali sia dispositivi reali costruibili utilizzando elaboratori a basso costo quali RaspberryPi e Arduino;
 - è in grado di :blue:`applicare` i concetti, i dispositivi, e gli strumenti sviluppati in modo concreto ed operativo 
   durante il corso per lo sviluppo di una :blue:`applicazione finale` che utilizza uno o più dispositivi IOT 'situati', 
-  con particolare riferimento a Differental Drive Robots (DDR) con sensori 
+  con particolare riferimento a *Differental Drive Robots* (DDR) con sensori 
   che possono agire in modo relativamente autonomo in :blue:`diversi` ambienti virtuali o reali, 
   senza modificare il software che esprime la 'business logic' del problema.
 
@@ -83,7 +83,7 @@ FASE1
 
 :remark:`Dalla OOP ai sistemi software distribuiti eterogenei a scambio di messggi.`
 
-- Sviluppo di un sistema (:doc:`RadarSystem`) basato su un PC e su un RaspberryPi uando TCP e seguendo un 
+- Sviluppo di un sistema basato su un PC e su un RaspberryPi uando TCP e seguendo un 
   processo di sviluppo agile ed evolutivo (ispirato a `SCRUM`_) di tipo :blue:`bottom-up`.
 - Primi approfondimenti sulla fase di analisi dei requisiti e sulla analisi del problema. 
   Il ruolo della *architettura logica* (come artefatto della analisi) per l'analisi dei rischi e per la pianificazione dei lavori.
@@ -108,7 +108,7 @@ FASE2
 
 - Il modello di programmazione a scambio di messaggi portato a livello di componenti.
 - Introduzione al linguaggio Kotlin.
-- Dalle coroutine Kotlin agli atttori Kotlin.
+- Dalle coroutine Kotlin agli attori Kotlin.
 - Da attori message-driven ad attori message-based che operano come automi a stati finiti.
 - Definizione di una infrastruttura per attori come supporto alla costruzione di software distribuiti ed eterogeni.
    
@@ -123,7 +123,7 @@ FASE3
 - Il vantaggio dell'uso di modelli eseguibili nelle fasi di analisi dei requisiti e del problema e come premessa
   per l'abbattimento dei costi (e degli imprevisti) di produzione.
 - Applicazione di quanto sviluppato per lo sviluppo incrementale di una **applicazione finale IOT** che utilizza 
-   `robot reali`_, costruiti estendendo il sistema della FASE1. 
+  `robot reali`_, costruiti estendendo il sistema della FASE1. 
 
 
 
@@ -165,9 +165,11 @@ Su PC
 Su RaspberryPi
 +++++++++++++++++++++++++++++++++++
 
-#. Acquisire RaspberryPi 3 Model B+, SONAR Led
- 
-
+#. Acquisire RaspberryPi 3 Model B+, 
+#. Sarebbe bene acquisire anche HC-SR04 Distance Sensor e qualche Led che useremo nella FASE1
+#. Al termine della FASE1 faremo anche uso di una (usb) WebCam
+#. Per il software si veda :doc:`RaspberrySoftware`  (Installazione-base 2022)
+#. Per i robot si veda  `robot reali`_
 
 -------------------------------------------
 Valutazione finale
@@ -243,15 +245,16 @@ Riportiamo qui un elenco di possibili domande finali durante i colloqui orali:
   Se no, perchè non lo ritiene possibile?
 - Immagino che come linguaggio di codifica si sia usato principlamente Java e/o Kotlin, 
   insieme a qualche parte scritta in C, C++, Python, JavaScript, etc). 
-  Nella fase di analisi del problema, è stato evidenziato qualche macroscopico gap rispetto queste tecnologie? Se sì' come si è pensato di colmare questo 'abstracton gap'?
+  Nella fase di analisi del problema, è stato evidenziato qualche macroscopico gap rispetto queste tecnologie? 
+  Se sì' come si è pensato di colmare questo 'abstraction gap'?
 - Fino a che punto è utile introdurre diagrammmi UML e per quali scopi? 
   Quali sono le motivazioni che possono indurre una software-house a definire linguaggi 
-  (o metamodelli) Doamin-specific?
+  (o metamodelli) Domain-specific?
 - In ambiente industriale non è possibile pensare che sia possibile utilizzare il metamodello QActor. 
   Ma di certo è diffuso l'uso delle librerie. Secondo lei sarebbe possibile affrontare lo sviluppo 
   di applicazioni distribuite usando solo la libreria it.unibo.qakactor-2.5.jar e quelle ad essa necessarie?
 - Ha trovato un qualche vantaggio nell'uso dei QActor attraverso un linguaggio custom (di ispirazione DSL) 
-  dotato di un suo proprio IDE? Ha una idea di come sia stato prodotto l'IDE per i qak in ambiente Eclipse?
+  dotato di un suo proprio IDE? Ha una idea di come sia stato prodotto l'IDE per i QActor in ambiente Eclipse?
 - Le mostro l'architettura logica proposta dal gruppo xyz. Trova questa architettura logica concordante 
   con la sua o è possibile evidenziare macroscopiche differenze?. 
   Se nota differenze, le possiamo tollerare o no?
@@ -266,9 +269,9 @@ Riportiamo qui un elenco di possibili domande finali durante i colloqui orali:
   In altre parole, sono state trovate situazioni che l'analista non aveva previsto o aveva affrontato 
   in modo incompleto? Se sì, ha qualche esempio? E come si è procduto in questo caso?
 - E' possibilie sapere, per ciascun componente del team, di quali aspetti del sistema si è 
-  specificatmante occupato? Quando sono state definite e da chi queste ripartizioni dello sviluppo?
+  specificatamente occupato? Quando sono state definite e da chi queste ripartizioni dello sviluppo?
 - In quale fase dello sviluppo sono stati impostati programmi per il testing? 
-  Quali tipi di test (unit, integration, functional,...) sono stati pensati e quali effettivamente realizzati?
+  Quali tipi di test (unit, integration, ...) sono stati pensati e quali effettivamente realizzati?
 - L'architettura finale del sistema mostra qualche pattern architetturale riconoscibile 
   (ad es. client-server, layer, clean ...) e in quale fase dello sviluppo (analisi/progetto) 
   è stato deciso di introdurlo? E perchè? Queste motivazioni sono riportate/discusse in qualche documento?

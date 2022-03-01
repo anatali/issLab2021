@@ -11,6 +11,7 @@ iss22
    
    Introduzione
    CostruireSoftware
+   WorkspaceSetup
    Architetture
    RadarSystem 
    RadarSystemAnalisi
@@ -24,6 +25,8 @@ iss22
    RadarSystemWebgui
    WebSockets
    ApproccioTopDown
+   RaspberrySoftware
+   RaspBasicCode
    Riferimenti 
 
 

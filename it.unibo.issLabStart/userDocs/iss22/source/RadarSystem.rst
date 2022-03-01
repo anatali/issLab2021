@@ -1,7 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
- 
+.. role:: worktodo 
 
 .. ``  https://bashtage.github.io/sphinx-material/rst-cheatsheet/rst-cheatsheet.html
 
@@ -19,14 +19,23 @@
 
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 
+.. _SonarAlone.c : ../../../../../issLab2022/it.unibo.raspIntro2022/code/c/SonarAlone.c
+.. _LedSonar.c : ../../../../../issLab2022/it.unibo.raspIntro2022/code/c/LedSonar.c
+.. _led25GpioTurnOn.sh : ../../../../../issLab2022/it.unibo.raspIntro2022/code/bash/led25GpioTurnOn.sh
+.. _led25GpioTurnOff.sh : ../../../../../issLab2022/it.unibo.raspIntro2022/code/bash/led25GpioTurnOff.sh
+.. _radarPojo.jar : _static/code/radarPojo.jar
 
+.. _pipe : https://it.wikipedia.org/wiki/Pipe_(informatica)
+
+.. _template2022 : _static/templateToFill.html
 
 ======================================
 RadarSystem
 ======================================
 
+.. CostruireSoftware.html#indicazioni-sul-processo-di-produzione
 
-Tetendo conto di quanto detto in :doc:`Introduzione` e in :doc:`Indicazioni`,
+Tetendo conto di quanto detto in *Indicazioni-sul-processo-di-produzione* (:doc:`CostruireSoftware`),
 impostiamo un processo di produzione del software partendo da un insieme di requisiti.
 
 
@@ -38,14 +47,18 @@ Requisiti
 
 Si desidera costruire un'applicazione software capace di: 
 
-- (requisito :blue:`radarGui`) mostrare le distanze rilevate da un sensore ``HC-SR04`` connesso a un RaspberryPi 
-  su un display (``RadarDisplay``) a forma di radar connesso a un PC
+.. _radarGui:
+
+- (requisito :blue:`radarGui`) mostrare le distanze rilevate da un sensore Sonar``HC-SR04`` connesso a un RaspberryPi 
+  su un display (``RadarDisplay``) a forma di radar connesso a un PC.
   
 .. image:: ./_static/img/Radar/radarDisplay.png 
    :align: center
    :width: 20%
-   
-- (requisito :blue:`ledAlarm`) accendere un LED se la distanza rilevata è inferiore a un valore limite prefissato
+
+.. _ledAlarm:
+
+- (requisito :blue:`ledAlarm`) accendere un Led se la distanza rilevata dal Sonar è inferiore a un valore limite prefissato
   denominato ``DLIMIT``.
 
 --------------------------------------
@@ -125,12 +138,12 @@ Domande al committente
   :width: 100%
 
   * - Il committente fornisce software relativo al Led ?
-    - Si, ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh`` (progetto *it.unibo.rasp2021*)
+    - Si, `led25GpioTurnOn.sh`_ e `led25GpioTurnOff.sh`_ (progetto *it.unibo.rasp2022*)
   * - Il committente fornisce software per il Sonar ?
-    - Si, ``SonarAlone.c`` (progetto *it.unibo.rasp2021*)
+    - Si, `SonarAlone.c`_ (progetto *it.unibo.rasp2022*)
   * - Il committente fornisce qualche libreria per la costruzione del RadarDisplay ?
-    - Si, viene reso disponibile (progetto *it.unibo.java.radar*)  il supporto  ``radarPojo.jar`` 
-      che fornisce un singleton JAVA ``radarSupport`` capace di creare una GUI in 'stile radar' 
+    - Si, viene reso disponibile (progetto *it.unibo.java.radar*)  il supporto  `radarPojo.jar`_,
+      che fornisce un **singleton JAVA** ``radarSupport`` capace di creare una GUI in 'stile radar' 
       e di visualizzare su di essa un valore di distanza intero fornito come ``String``:
 
       .. code:: java
@@ -147,7 +160,7 @@ Domande al committente
   * - Il LED può/deve essere connesso allo stesso RaspberryPi del sonar? 
     - Al momento si. In futuro però il LED potrebbe essere connesso a un diverso nodo di elaborazione.
   * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
-      definibile in modo configurabile dall'utente finale?
+      definibile in modo configurabile dall'utente finale?  
     - L'utente finale deve essere in grado di specificare in un 'file di configurazione' 
       il valore di questa distanza.
  
@@ -166,6 +179,55 @@ In sintesi
 
 Il sistema comprende un dispositivo di input (il Sonar) e due dispositivi di output (il Led e il RadarDisplay)
 
+Al momento ci fermiamo qui, ma in futuro cerchremo di formalizzare meglio il risultato della nostra analisi,
+definendo, se possibile, un modello del sistema da costruire, in cui sono evidenti i componenti e le loro relazioni
+(si veda :ref:`L'architettura logica`).
 
- 
+Prima di procedere alla analisi del problema, proviamo però a vedere cosa potrebbe accadere se cercassimo
+di individuare subito una qualche soluzione, passando al HOW senza approfondire il WHAT (si ricordi :ref:`SCRUM`) e 
+senza impostare  :ref:`Progettazione e sviluppo come processo evolutivo`.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Se non fosse distribuito ...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Osserviamo che, in assenza del requisito `radarGui`_, si potrebbe pensare di soddisfare il requisito `ledAlarm`_
+introducendo una semplice modifica nel codice di `SonarAlone.c`_ .
+
+Trattandosi di un programma ``C``, la modifica potrebbe consistere nella introduzione di una funzione come la seguente:
+
+.. code:: c
+
+  void updateTheLed( int cm ) {
+    if( cm < DLIMIT ) digitalWrite(LED, HIGH);
+    else digitalWrite(LED, LOW);
+  }
+
+Questa funzione andrebbe invocata ad ogni iterazione del ciclo principale nel ``main``, come ad esempio in: `LedSonar.c`_.
+
+Il punto critico di questa impostazione è che la parte strutturale del sistema risulta 'annegata' nel programma che 
+esprime il funzionamento. In particolare, i requisiti parlano di Led e Sonar,
+ma a questi dispositivi non corrisponde alcun codice specifico, gestibile in modo separato dal codice che
+realizza la logica applicativa.
+
+Tutto funziona, ma le dimensioni architetturali relative alla **struttura** del sistema in termini di componenti e
+alla loro **interazione** :blue:`non sono esplicitamente espresse`.  
+
+Più strutturata da punto di vista architetturale è la :ref:`Soluzione in Python` basata su `pipe`_ che potrebbe essere
+rappresentata come segue:
+
+.. image:: ./_static/img/Architectures/pipe.png 
+   :align: center
+   :width: 40%
+
+Ma anche questa si presta a critiche ...
+
+:worktodo:`WORKTODO: Anche la pipe "non va bene" perchè ...`
+
+------------------------------------------
+Impostazione del workspace
+------------------------------------------
+
+Prima di procedere con lo sviluppo del software, è opportuno creare un appropriato ambiente di lavoro.
+A tal fine si veda :doc:`WorkspaceSetup`.
