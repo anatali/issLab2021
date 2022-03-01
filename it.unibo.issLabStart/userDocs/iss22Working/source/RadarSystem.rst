@@ -1,7 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
- 
+.. role:: worktodo 
 
 .. ``  https://bashtage.github.io/sphinx-material/rst-cheatsheet/rst-cheatsheet.html
 
@@ -179,6 +179,15 @@ In sintesi
 
 Il sistema comprende un dispositivo di input (il Sonar) e due dispositivi di output (il Led e il RadarDisplay)
 
+Al momento ci fermiamo qui, ma in futuro cerchremo di formalizzare meglio il risultato della nostra analisi,
+definendo, se possibile, un modello del sistema da costruire, in cui sono evidenti i componenti e le loro relazioni
+(si veda :ref:`L'architettura logica`).
+
+Prima di procedere alla analisi del problema, proviamo però a vedere cosa potrebbe accadere se cercassimo
+di individuare subito una qualche soluzione, passando al HOW senza approfondire il WHAT (si ricordi :ref:`SCRUM`) e 
+senza impostare  :ref:`Progettazione e sviluppo come processo evolutivo`.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Se non fosse distribuito ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -211,6 +220,10 @@ rappresentata come segue:
 .. image:: ./_static/img/Architectures/pipe.png 
    :align: center
    :width: 40%
+
+Ma anche questa si presta a critiche ...
+
+:worktodo:`WORKTODO: Anche la pipe "non va bene" perchè ...`
 
 ------------------------------------------
 Impostazione del workspace
