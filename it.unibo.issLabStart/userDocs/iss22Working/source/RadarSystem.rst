@@ -193,7 +193,7 @@ Se non fosse distribuito ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Osserviamo che, in assenza del requisito `radarGui`_, si potrebbe pensare di soddisfare il requisito `ledAlarm`_
-introducendo una semplice modifica nel condice di `SonarAlone.c`_ .
+introducendo una semplice modifica nel codice di `SonarAlone.c`_ .
 
 Trattandosi di un programma ``C``, la modifica potrebbe consistere nella introduzione di una funzione come la seguente:
 
