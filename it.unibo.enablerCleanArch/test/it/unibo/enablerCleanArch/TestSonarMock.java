@@ -1,5 +1,5 @@
 package it.unibo.enablerCleanArch;
-import static org.junit.Assert.assertTrue;
+ 
 import org.junit.*;
 import it.unibo.enablerCleanArch.domain.DeviceFactory;
 import it.unibo.enablerCleanArch.domain.ISonar;

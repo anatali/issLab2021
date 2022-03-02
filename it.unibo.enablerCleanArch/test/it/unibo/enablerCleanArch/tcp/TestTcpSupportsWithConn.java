@@ -18,7 +18,7 @@ import it.unibo.enablerCleanArchapplHandlers.NaiveApplHandler;
  */
 
 /*
- * A client that performs a request on a connnection woth the server 
+ * A client that performs a request on a connnection with the server 
  * and waits for the answer
  */
 class ClientForTestWithConn{

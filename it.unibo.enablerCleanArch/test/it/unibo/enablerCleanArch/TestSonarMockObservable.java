@@ -19,7 +19,7 @@ public class TestSonarMockObservable {
 	
 	@After
 	public void down() {
-		System.out.println("down");		
+		ColorsOut.out("down");		
 	}	
 	
 	@Test 
@@ -33,7 +33,7 @@ public class TestSonarMockObservable {
 		//sonar.register( new SonarObserverFortesting("obs2",sonar,oneShot) );	 
 		Utils.delay(500);  //setup
 		int v0 = sonar.getDistance().getVal();
- 		System.out.println("testSingleshotSonarObservableMock v0=" + v0);
+		ColorsOut.out("testSingleshotSonarObservableMock v0=" + v0);
  		assertTrue(  v0 == RadarSystemConfig.testingDistance );
 	}
 	
