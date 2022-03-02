@@ -46,7 +46,6 @@ IApplMessage msgDec = new ApplMessage(
 	public static void main( String[] args) throws Exception {	
 		SharedCounterExampleMain sys = new SharedCounterExampleMain();
 		CommSystemConfig.withContext = true;
-		CommSystemConfig.tracing     = false;
 		
 		sys.configure();
 		sys.execute();

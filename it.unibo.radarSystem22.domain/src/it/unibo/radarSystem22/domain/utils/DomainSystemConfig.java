@@ -40,7 +40,6 @@ public class DomainSystemConfig {
 	public static boolean tracing         = false;	
 	public static boolean testing         = false;			
 	
-//	public static ProtocolType protcolType = ProtocolType.tcp;
 
 	public static void setTheConfiguration(  ) {
 		setTheConfiguration("../RadarSystemConfig.json");
@@ -86,11 +85,6 @@ public class DomainSystemConfig {
 	        tracing          = object.getBoolean("tracing");
 	        testing          = object.getBoolean("testing");
 	        
-//	        switch( object.getString("protocolType") ) {
-//		        case "tcp"  : protcolType = ProtocolType.tcp; break;
-//		        case "coap" : protcolType = ProtocolType.coap; break;
-//		        case "mqtt" : protcolType = ProtocolType.mqtt; break;
-//	        }
  	        
 		} catch (FileNotFoundException e) {
  			ColorsOut.outerr("setTheConfiguration ERROR " + e.getMessage() );
