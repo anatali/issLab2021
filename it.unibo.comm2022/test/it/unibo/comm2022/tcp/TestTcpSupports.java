@@ -7,14 +7,15 @@ import org.junit.Test;
  
 
 public class TestTcpSupports {
-private TcpServer server;
 public static final int testPort = 8112; 
+private TcpServer server;
+
 
 
 	@Before
 	public void up() {
 		System.out.println(" =============== ACTIVATING SERVER  " );
-		server = new TcpServer("tcpServer",testPort, new NaiveHandler("naiveH") );
+		server = new TcpServer("tcpServer",testPort, new NaiveApplHandler("naiveH") );
 		server.activate();		
 	}
 	

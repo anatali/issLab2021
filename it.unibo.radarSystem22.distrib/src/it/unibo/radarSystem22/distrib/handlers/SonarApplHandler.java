@@ -1,0 +1,50 @@
+package it.unibo.radarSystem22.distrib.handlers;
+
+ 
+import it.unibo.comm2022.ApplMsgHandler;
+import it.unibo.comm2022.interfaces.IApplInterpreter;
+import it.unibo.comm2022.interfaces.IApplMessage;
+import it.unibo.comm2022.interfaces.IApplMsgHandler;
+import it.unibo.comm2022.interfaces.Interaction2021;
+import it.unibo.radarSystem22.distrib.intepreters.SonarApplInterpreter;
+import it.unibo.radarSystem22.domain.utils.ColorsOut;
+import it.unibo.radarSystem22.interfaces.ISonar;
+import it.unibo.comm2022.utils.CommUtils;
+ 
+
+public class SonarApplHandler extends ApplMsgHandler  {
+ 
+private IApplInterpreter sonarIntepr;
+
+public static IApplMsgHandler create(String name, ISonar sonar) {
+//	if( CommUtils.isCoap() ) {
+//		return new SonarResourceCoap("sonar",  new SonarApplInterpreter(sonar) );
+//	}else  
+		return new SonarApplHandler(name, sonar);
+	 
+}
+		public SonarApplHandler(String name, ISonar sonar) {
+			super(name);
+			sonarIntepr = new SonarApplInterpreter(sonar);
+			ColorsOut.out(name+ " | SonarApplHandler CREATED with sonar= " + sonar, ColorsOut.BLUE);
+	 	}
+ 
+		@Override
+		public void elaborate( IApplMessage message, Interaction2021 conn ) {
+			ColorsOut.out(name+ " | elaborate ApplMessage " + message + " conn=" + conn, ColorsOut.BLUE);
+			String payload = message.msgContent();
+			if( message.isRequest() ) {
+				String answer = sonarIntepr.elaborate(message);
+				if( CommUtils.isMqtt() ) sendAnswerToClient( answer  );
+				else sendMsgToClient( answer, conn );
+			}else sonarIntepr.elaborate( message.msgContent() ); //non devo inviare risposta
+		}
+		
+ 			@Override
+			public void elaborate(String message, Interaction2021 conn) {
+ 				ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
+ 				if( message.equals("getDistance") || message.equals("isActive")  ) {
+ 					sendMsgToClient( sonarIntepr.elaborate(message), conn );
+   				}else sonarIntepr.elaborate(message);
+ 			}
+}

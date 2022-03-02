@@ -7,5 +7,10 @@ public interface IApplMessage {
     public String msgReceiver();
     public String msgContent();
     public String msgNum();
+    public boolean isEvent();
+    public boolean isDispatch();
+    public boolean isRequest();
+    public boolean isInvitation();
+    public boolean isReply();
 
 }

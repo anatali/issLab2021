@@ -7,11 +7,9 @@ import org.junit.*;
 import it.unibo.radarSystem22.domain.ActionFunction;
 import it.unibo.radarSystem22.domain.RadarDisplay;
 import it.unibo.radarSystem22.main.local.RadarSystemMainLocal;
-import it.unibo.radarSystem22.supports.BasicUtils;
-import it.unibo.radarSystem22.supports.ColorsOut;
-import it.unibo.radarSystem22.supports.RadarSystemConfig;
-
- 
+import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
+import it.unibo.radarSystem22.domain.utils.ColorsOut;
+import it.unibo.radarSystem22.domain.utils.BasicUtils; 
 
 public class TestBehaviorLocal {
 private RadarSystemMainLocal sys;
@@ -22,23 +20,23 @@ private RadarSystemMainLocal sys;
 		try {
 			sys = new RadarSystemMainLocal();
 			sys.setup( null );
-			RadarSystemConfig.testing    		= true;   
-			RadarSystemConfig.tracing    		= true; 
+			DomainSystemConfig.testing    		= true;   
+			DomainSystemConfig.tracing    		= true; 
 			//sys = new RadarSystemMainOnPc();
 //			
-//			//Set system configuration (we don't read RadarSystemConfig.json)
-//			RadarSystemConfig.simulation 		= true;    
+//			//Set system configuration (we don't read DomainSystemConfig.json)
+//			DomainSystemConfig.simulation 		= true;    
 //			//we must do testing work with mock devices (local or remote) ???
 //			//mock devices are 'almost identical' to concrete devices 
-//			RadarSystemConfig.testing    		= true;    		
-//			RadarSystemConfig.ControllerRemote	= false;    		
-//			RadarSystemConfig.LedRemote  		= false;    		
-//			RadarSystemConfig.SonareRemote  	= false;    		
-//			RadarSystemConfig.RadarGuiRemote  	= false;    	
-//			RadarSystemConfig.pcHostAddr        = "localhost";
-//			RadarSystemConfig.protcolType       = ProtocolType.tcp;
-//			//sys.buildAndRun(RadarSystemConfig.protcolType);
-//			sys.doJob("RadarSystemConfig.json");
+//			DomainSystemConfig.testing    		= true;    		
+//			DomainSystemConfig.ControllerRemote	= false;    		
+//			DomainSystemConfig.LedRemote  		= false;    		
+//			DomainSystemConfig.SonareRemote  	= false;    		
+//			DomainSystemConfig.RadarGuiRemote  	= false;    	
+//			DomainSystemConfig.pcHostAddr        = "localhost";
+//			DomainSystemConfig.protcolType       = ProtocolType.tcp;
+//			//sys.buildAndRun(DomainSystemConfig.protcolType);
+//			sys.doJob("DomainSystemConfig.json");
 //			Utils.delay(2000);
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
@@ -53,18 +51,18 @@ private RadarSystemMainLocal sys;
 	
 	@Test 
 	public void testFarDistance() {
-		RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT +20;
+		DomainSystemConfig.testingDistance = DomainSystemConfig.DLIMIT +20;
 		testTheDistance( false );
  	}	
 	
 	@Test 
 	public void testNearDistance( ) {
- 		RadarSystemConfig.testingDistance = RadarSystemConfig.DLIMIT - 1;
+ 		DomainSystemConfig.testingDistance = DomainSystemConfig.DLIMIT - 1;
 		testTheDistance( true );
 	}	
 	
 	protected void testTheDistance( boolean ledStateExpected ) {
-		System.out.println("testDistance " + RadarSystemConfig.testingDistance );
+		System.out.println("testDistance " + DomainSystemConfig.testingDistance );
 		RadarDisplay radar = RadarDisplay.getRadarDisplay();  //singleton
 		
 		ActionFunction endFun = (n) -> { 
@@ -74,7 +72,7 @@ private RadarSystemMainLocal sys;
 			
 			ColorsOut.out("ledState=" + ledState + " radarDisplayedDistance=" + radarDisplayedDistance, ColorsOut.MAGENTA);
 	 	    assertTrue(  ledState == ledStateExpected
-	 	    		&& radarDisplayedDistance == RadarSystemConfig.testingDistance);
+	 	    		&& radarDisplayedDistance == DomainSystemConfig.testingDistance);
 		};
 		
 		sys.getController().start( endFun, 1 ); //one-shot

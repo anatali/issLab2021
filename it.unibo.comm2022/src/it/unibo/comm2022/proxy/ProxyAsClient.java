@@ -1,5 +1,5 @@
 package it.unibo.comm2022.proxy;
-import java.net.Socket;
+ 
 
 import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.interfaces.Interaction2021;

@@ -5,7 +5,7 @@ import it.unibo.radarSystem22.domain.ActionFunction;
 import it.unibo.radarSystem22.domain.Controller;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.interfaces.*;
-import it.unibo.radarSystem22.supports.RadarSystemConfig;
+import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 
 
 /*
@@ -24,20 +24,20 @@ private Controller controller;
 	}
 
 	public void setup( String configFile )  {
-		if( configFile != null ) RadarSystemConfig.setTheConfiguration(configFile);
+		if( configFile != null ) DomainSystemConfig.setTheConfiguration(configFile);
 		else {
-  			RadarSystemConfig.testing      		= false;			
-			RadarSystemConfig.sonarDelay        = 200;
+  			DomainSystemConfig.testing      		= false;			
+			DomainSystemConfig.sonarDelay        = 200;
 			//Su PC
-			RadarSystemConfig.simulation   		= true;
-			RadarSystemConfig.DLIMIT      		= 40;  
-			RadarSystemConfig.ledGui            = true;
-			RadarSystemConfig.RadarGuiRemote    = false;
+			DomainSystemConfig.simulation   		= true;
+			DomainSystemConfig.DLIMIT      		= 40;  
+			DomainSystemConfig.ledGui            = true;
+			DomainSystemConfig.RadarGuiRemote    = false;
 		//Su Raspberry (nel file di configurazione)
-//			RadarSystemConfig.simulation   		= false;
-//			RadarSystemConfig.DLIMIT      		= 12;  
-//			RadarSystemConfig.ledGui            = false;
-//			RadarSystemConfig.RadarGuiRemote    = true;
+//			DomainSystemConfig.simulation   		= false;
+//			DomainSystemConfig.DLIMIT      		= 12;  
+//			DomainSystemConfig.ledGui            = false;
+//			DomainSystemConfig.RadarGuiRemote    = true;
 		}
 		configure();
  	}
@@ -57,7 +57,7 @@ private Controller controller;
 	    sonar      = DeviceFactory.createSonar();
 	    //Dispositivi di Output
 	    led        = DeviceFactory.createLed();
-	    radar      = RadarSystemConfig.RadarGuiRemote ? null : DeviceFactory.createRadarGui();
+	    radar      = DomainSystemConfig.RadarGuiRemote ? null : DeviceFactory.createRadarGui();
 	    //Controller
 	    controller = Controller.create(led, sonar, radar);	 
 	}
