@@ -26,7 +26,7 @@ class QakContextServer(val ctx: QakContext, scope: CoroutineScope,
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    override suspend fun actorBody(msg : ApplMessage){
+    override suspend fun actorBody(msg : IApplMessage){
         println("               %%% QakContextServer $name | READY TO RECEIVE TCP CONNS on ${ctx.portNum} ")
         waitForConnection()
     }
@@ -96,7 +96,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun propagateEvent(event : ApplMessage){
+    suspend fun propagateEvent(event : IApplMessage){
          ctx.actorMap.forEach{
              //sysUtil.traceprintln("       QakContextServer $name | in ${ctx.name} propag $event to ${it.key} in ${it.value.context.name}")
              val a = it.value

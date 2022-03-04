@@ -11,7 +11,7 @@ import kotlinx.coroutines.delay
  */
 
 class CoapToActor( name : String, val exchange: CoapExchange,
-                   val owner: ActorBasic, val extmsg : ApplMessage) : ActorBasic( name ){
+                   val owner: ActorBasic, val extmsg : IApplMessage) : ActorBasic( name ){
 var answer = "noanswer" 	
  	init{
         this.context = owner.context
@@ -23,7 +23,7 @@ var answer = "noanswer"
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-     override suspend fun actorBody(msg : ApplMessage){
+     override suspend fun actorBody(msg : IApplMessage){
 //		if( msg.msgId() == "start") {
 //	        sysUtil.traceprintln("$tt $name | map PUT in request to ${owner.name}:  $extmsg "  )
 // 			request( extmsg.msgId(), extmsg.msgContent(), owner)

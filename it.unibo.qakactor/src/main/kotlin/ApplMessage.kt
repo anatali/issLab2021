@@ -4,14 +4,12 @@ import alice.tuprolog.Struct
 import alice.tuprolog.Term
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 
-enum class ApplMessageType{
-    event, dispatch, request, reply, invitation
-}
 
-open class ApplMessage  {
+
+open class ApplMessage:  IApplMessage{
     //msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
     protected var msgId: String = ""
-    protected var msgType: String? = null
+    protected var msgType: String = ""
     protected var msgSender: String = ""
     protected var msgReceiver: String = ""
     protected var msgContent: String = ""
@@ -20,14 +18,23 @@ open class ApplMessage  {
     var conn : IConnInteraction? = null   //Oct2019
 
     val term: Term
-        get() = if (msgType == null)
+        get() = if (msgType == "")
             Term.createTerm("msg(none,none,none,none,none,0)")
         else
             Term.createTerm(msgContent)
-
-    //@Throws(Exception::class)
+    constructor(MSGID: String, MSGTYPE: String, SENDER: String, RECEIVER: String,
+                CONTENT: String, SEQNUM: String)   {
+        msgId = MSGID
+        msgType = MSGTYPE
+        msgSender = SENDER
+        msgReceiver = RECEIVER
+        msgContent = envelope(CONTENT)
+        msgNum = Integer.parseInt(SEQNUM)
+        conn   = null
+     }
+        //@Throws(Exception::class)
     constructor( MSGID: String, MSGTYPE: String, SENDER: String, RECEIVER: String,
-                 CONTENT: String, SEQNUM: String, connection : IConnInteraction? = null ) {
+                 CONTENT: String, SEQNUM: String, connection : IConnInteraction )  {
         msgId = MSGID
         msgType = MSGTYPE
         msgSender = SENDER
@@ -40,7 +47,7 @@ open class ApplMessage  {
     }
 
     //@Throws(Exception::class)
-    constructor(msg: String) {
+    constructor(msg: String)   {
         val msgStruct = Term.createTerm(msg) as Struct
         setFields(msgStruct)
     }
@@ -54,27 +61,27 @@ open class ApplMessage  {
         msgNum = Integer.parseInt(msgStruct.getArg(5).toString())
     }
 
-    fun msgId(): String {
+    override fun msgId(): String {
         return msgId
     }
 
-    fun msgType(): String? {
+    override fun msgType(): String {
         return msgType
     }
 
-    fun msgSender(): String {
+    override fun msgSender(): String {
         return msgSender
     }
 
-    fun msgReceiver(): String {
+    override fun msgReceiver(): String {
         return msgReceiver
     }
 
-    fun msgContent(): String {
+    override fun msgContent(): String {
         return msgContent
     }
 
-    fun msgNum(): String {
+    override fun msgNum(): String {
         return "" + msgNum
     }
 
@@ -82,19 +89,22 @@ open class ApplMessage  {
         return getDefaultRep()
     }
 
-    fun isEvent(): Boolean{
+    override fun isEvent(): Boolean{
         return msgType == ApplMessageType.event.toString()
     }
-    fun isDispatch(): Boolean{
+    override fun isDispatch(): Boolean{
         return msgType == ApplMessageType.dispatch.toString()
     }
-    fun isRequest(): Boolean{
+    override fun isRequest(): Boolean{
         return msgType == ApplMessageType.request.toString()
     }
-    fun isReply(): Boolean{
+    override fun isReply(): Boolean{
         return msgType == ApplMessageType.reply.toString()
     }
-
+    override fun isInvitation(): Boolean{
+        return msgType == ApplMessageType.invitation.toString()
+    }
+    /**/
     fun getDefaultRep(): String {
         return if (msgType == null)
             "msg(none,none,none,none,none,0)"

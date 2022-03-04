@@ -4,6 +4,7 @@ import it.unibo.enablerCleanArch.supports.ColorsOut;
 import it.unibo.enablerCleanArch.supports.Utils;
 import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import kotlin.*;
 import kotlin.coroutines.*;
@@ -17,11 +18,11 @@ public class QakTest extends ActorBasic {
 	}
 
 	@Override
-	public Object actorBody(ApplMessage msg, Continuation<? super Unit> arg1) {
+	public Object actorBody(IApplMessage msg, Continuation<? super Unit> arg1) {
 //		createMsglogFile();
  		ColorsOut.out( msg.toString() );
  		if( msg.msgContent().equals("msg1(hello2)")) {
- 			ApplMessage m = MsgUtil.buildDispatch("a","msg2","msg2(hello)","a");
+ 			IApplMessage m = MsgUtil.buildDispatch("a","msg2","msg2(hello)","a");
  			this.autoMsg( m, arg1 );			
  		}
 		return null;

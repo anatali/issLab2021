@@ -16,26 +16,26 @@ enum class Protocol {
 object MsgUtil {
 var count = 1;
 @JvmStatic    fun buildDispatch( actor: String, msgId : String ,
-                       content : String, dest: String ) : ApplMessage {
+                       content : String, dest: String ) : IApplMessage {
         return ApplMessage(msgId, ApplMessageType.dispatch.toString(),
             actor, dest, "$content", "${count++}")
     }
 @JvmStatic    fun buildRequest( actor: String, msgId : String ,
-                       content : String, dest: String ) : ApplMessage {
+                       content : String, dest: String ) : IApplMessage {
         return ApplMessage(msgId, ApplMessageType.request.toString(),
             actor, dest, "$content", "${count++}")
     }
 @JvmStatic    fun buildReply( actor: String, msgId : String ,
-                      content : String, dest: String ) : ApplMessage {
+                      content : String, dest: String ) : IApplMessage {
         return ApplMessage(msgId, ApplMessageType.reply.toString(),
             actor, dest, "$content", "${count++}")
     }
 @JvmStatic    fun buildReplyReq( actor: String, msgId : String ,
-                    content : String, dest: String ) : ApplMessage {
+                    content : String, dest: String ) : IApplMessage {
         return ApplMessage(msgId, ApplMessageType.request.toString(),
             actor, dest, "$content", "${count++}")
     }
-@JvmStatic    fun buildEvent( actor: String, msgId : String , content : String  ) : ApplMessage {
+@JvmStatic    fun buildEvent( actor: String, msgId : String , content : String  ) : IApplMessage {
         return ApplMessage(msgId, ApplMessageType.event.toString(),
             actor, "none", "$content", "${count++}")
     }
@@ -57,7 +57,7 @@ var count = 1;
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-@JvmStatic    suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasic) {
+@JvmStatic    suspend fun sendMsg(msg: IApplMessage, destActor: ActorBasic) {
         destActor.actor.send(msg)
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi

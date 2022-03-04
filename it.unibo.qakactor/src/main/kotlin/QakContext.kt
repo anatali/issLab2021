@@ -76,7 +76,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
 		ctxserver.actor.close()
 	}
 
-    override suspend fun actorBody(msg : ApplMessage){
+    override suspend fun actorBody(msg : IApplMessage){
         sysUtil.traceprintln( "               %%% QakContext $name |  receives $msg " )
     }
 

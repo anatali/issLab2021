@@ -10,7 +10,7 @@ import java.io.File
 
 
 class ApplActor( name:String, scope: CoroutineScope) : ActorBasic(name, scope){
-override suspend fun actorBody(msg : ApplMessage){
+override suspend fun actorBody(msg : IApplMessage){
  			File("${name}_MsgLog.txt").appendText("${msg}\n")
 	}	
 }

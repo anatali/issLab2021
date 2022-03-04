@@ -17,10 +17,10 @@ abstract class ActorWrapper( name: String) :
     }
 	
     override
-    suspend fun actorBody( msg: ApplMessage ){
+    suspend fun actorBody( msg: IApplMessage ){
           doJob(msg)
     }
 
 
-    protected abstract fun doJob(msg: ApplMessage?)
+    protected abstract fun doJob(msg: IApplMessage)
 }

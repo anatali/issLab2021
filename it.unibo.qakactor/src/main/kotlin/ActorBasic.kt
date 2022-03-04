@@ -48,7 +48,7 @@ abstract class  ActorBasic(  name:         String,
  
 //    private var timeAtStart: Long = 0
 
-    internal val requestMap : MutableMap<String, ApplMessage > = mutableMapOf<String,ApplMessage>()  //Oct2019
+    internal val requestMap : MutableMap<String, IApplMessage > = mutableMapOf<String,IApplMessage>()  //Oct2019
 
     private   var logo             : String 	        //Coap Jan2020
     protected var ActorResourceRep : String 			//Coap Jan2020
@@ -90,7 +90,7 @@ Message-driven kactor
 		}else println("ActorBasic $name | WARNING: createMsglogFileInContext you should never be here")	
 	}
 	
- 	open fun writeMsgLog( msg: ApplMessage ){ //APR2020
+ 	open fun writeMsgLog( msg: IApplMessage ){ //APR2020
           if( context !== null ){ 
         	  //Update the log of the context
  			   sysUtil.updateLogfile(context!!.ctxLogfileName, "item($name,nostate,$msg).", dir=msgLogNoCtxDir )
@@ -101,7 +101,7 @@ Message-driven kactor
 	
     @kotlinx.coroutines.ExperimentalCoroutinesApi
     @kotlinx.coroutines.ObsoleteCoroutinesApi
-    val actor = scope.actor<ApplMessage>( dispatcher, capacity=channelSize ) {
+    val actor = scope.actor<IApplMessage>( dispatcher, capacity=channelSize ) {
         //println("ActorBasic $name |  RUNNING IN $dispatcher"  )
         for( msg in channel ) {
             sysUtil.traceprintln("$tt ActorBasic  $name |  msg= $msg "  )
@@ -115,7 +115,7 @@ Message-driven kactor
 	
 	
     //To be overridden by the application designer
-    abstract suspend fun actorBody(msg : ApplMessage)
+    abstract suspend fun actorBody(msg : IApplMessage)
  
 	
 	
@@ -154,7 +154,7 @@ Messaging
  */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend open fun autoMsg(  msg : ApplMessage) {
+    suspend open fun autoMsg(  msg : IApplMessage) {
      //println("ActorBasic $name | autoMsg $msg actor=${actor}")
      actor.send( msg )
     }
@@ -176,7 +176,7 @@ Messaging
     //Oct2019
 @kotlinx.coroutines.ObsoleteCoroutinesApi 
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun sendMessageToActor( msg : ApplMessage , destName: String, conn : IConnInteraction? = null ) {
+    suspend fun sendMessageToActor( msg : IApplMessage , destName: String, conn : IConnInteraction? = null ) {
         //println("$tt ActorBasic sendMessageToActor | destName=$destName  ")
         if( context == null ){  //Defensive programming
             sysUtil.traceprintln("$tt ActorBasic sendMessageToActor |  no QakContext for the current actor")
@@ -225,7 +225,7 @@ Messaging
          
     }
 
-    fun attemptToSendViaMqtt( ctx : QakContext, msg : ApplMessage, destName : String) : Boolean{
+    fun attemptToSendViaMqtt( ctx : QakContext, msg : IApplMessage, destName : String) : Boolean{
         //sysUtil.traceprintln("$tt ActorBasic attemptToSendViaMqtt | $msg}" )
         if( ctx.mqttAddr.length > 0  ) {
             if( ! mqttConnected ){
@@ -270,7 +270,7 @@ Messaging
         val destName = reqMsg.msgSender()
         //println("$tt ActorBasic $name | answer destName=$destName  }")
         val m = MsgUtil.buildReply(name, msgId, msg, destName)
-        sendMessageToActor( m, destName, reqMsg.conn )
+        sendMessageToActor( m, destName, (reqMsg as ApplMessage).conn )
     }//answer
 
 /*
@@ -291,7 +291,7 @@ Messaging
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun emit( ctx: QakContext, event : ApplMessage ) {  //used by NodeProxy
+    suspend fun emit( ctx: QakContext, event : IApplMessage ) {  //used by NodeProxy
          sysUtil.traceprintln("$tt ActorBasic $name | emit from proxy ctx= ${ctx.name} ")
          ctx.actorMap.forEach {
 			val ctxName  = it.key
@@ -316,7 +316,7 @@ Messaging
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun emit( event : ApplMessage, avatar : Boolean = false ) {
+    suspend fun emit( event : IApplMessage, avatar : Boolean = false ) {
 	//avatar=true means that the emitter is able to sense the event that emits
         if( context == null ){
              println("$tt ActorBasic $name | WARNING emit: actor has no QakContext. ")
@@ -405,7 +405,7 @@ Messaging
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun emitLocalStreamEvent(v: ApplMessage ){
+    suspend fun emitLocalStreamEvent(v: IApplMessage ){
         subscribers.forEach {
             sysUtil.traceprintln(" $tt ActorBasic $name | emitLocalStreamEvent $it $v " );
             it.actor.send(v)
@@ -570,7 +570,7 @@ KNOWLEDGE BASE
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    fun fromPutToMsg( msg : ApplMessage, exchange: CoapExchange ) {
+    fun fromPutToMsg( msg : IApplMessage, exchange: CoapExchange ) {
         sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
         if( msg.isDispatch() || msg.isEvent() ) {
             scope.launch { autoMsg(msg) }

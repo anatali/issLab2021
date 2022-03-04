@@ -1,11 +1,14 @@
 package it.unibo.radarSystem22.actors.counter;
 
- 
 import it.unibo.kactor.ActorWrapper;
 import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
+/*
+ * 
+ */
 public class CounterActorWithDelay extends ActorWrapper{ 
 	private int n = 2;
 	
@@ -14,7 +17,7 @@ public class CounterActorWithDelay extends ActorWrapper{
 	}
 
 	@Override
-	public void doJob( ApplMessage msg ) {
+	public void doJob( IApplMessage msg ) {
  		//ColorsOut.outappl( arg1.toString(), ColorsOut.BLACK );
 		ColorsOut.outappl( getName() + " | " + msg.toString(), ColorsOut.MAGENTA );
  		if( msg.msgId().equals("inc")) { n = n + 1; }
@@ -29,5 +32,7 @@ public class CounterActorWithDelay extends ActorWrapper{
  		   BasicUtils.aboutThreads(getName() + " | CounterWithDelay after dec - ");
  		}
  	}
+
+ 
 
 }

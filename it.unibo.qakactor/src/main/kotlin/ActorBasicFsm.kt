@@ -42,7 +42,7 @@ class State(val stateName : String, val scope: CoroutineScope ) {
     }
 
     //Get the appropriate Edge for the Message
-    fun getTransitionForMessage(msg: ApplMessage): Transition? {
+    fun getTransitionForMessage(msg: IApplMessage): Transition? {
         //println("State $name       | getTransitionForMessage  $msg  list=${edgeList.size} ")
         val first = edgeList.firstOrNull { it.canHandleMessage(msg) }
         return first
@@ -56,7 +56,7 @@ class State(val stateName : String, val scope: CoroutineScope ) {
  */
 class Transition(val edgeName: String, val targetState: String) {
 
-    lateinit var edgeEventHandler: ( ApplMessage ) -> Boolean  //MsgId previous: String
+    lateinit var edgeEventHandler: ( IApplMessage ) -> Boolean  //MsgId previous: String
     private val actionList = mutableListOf<(Transition) -> Unit>()
 
     fun action(action: (Transition) -> Unit) { //MEALY?
@@ -71,7 +71,7 @@ class Transition(val edgeName: String, val targetState: String) {
         return retrieveState(targetState)
     }
 
-    fun canHandleMessage(msg: ApplMessage): Boolean {
+    fun canHandleMessage(msg: IApplMessage): Boolean {
         //println("Transition  | canHandleMessage: ${msg}  ${msg is Message.Event}" )
         return edgeEventHandler( msg  ) //msg.msgId()
     }
@@ -95,13 +95,13 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     private var isStarted = false
     protected var myself : ActorBasicFsm
     protected lateinit var currentState: State	//inherited
-    protected var currentMsg       = NoMsg
+    protected var currentMsg : IApplMessage      = NoMsg
     protected var msgToReply       = NoMsg
     lateinit protected var mybody: ActorBasicFsm.() -> Unit
     var stateTimer : TimerActor?   = null
 
     private val stateList = mutableListOf<State>()
-    private val msgQueueStore = mutableListOf<ApplMessage>()
+    private val msgQueueStore = mutableListOf<IApplMessage>()
  
     //================================== STRUCTURAL =======================================
     fun state(stateName: String, build: State.() -> Unit) {
@@ -135,7 +135,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     }
 
 	//Now there is a state ....
- 	override  fun writeMsgLog( msg: ApplMessage ){ //APR2020
+ 	override  fun writeMsgLog( msg: IApplMessage ){ //APR2020
 		//Update the log of the actor
          sysUtil.updateLogfile(actorLogfileName,  "item($name,${currentState.stateName},$msg).", dir=msgLogDir )  
 		//Update the log of the context
@@ -145,14 +145,14 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    override suspend fun actorBody(msg: ApplMessage) {
+    override suspend fun actorBody(msg: IApplMessage) {
          if ( !isStarted && msg.msgId() == autoStartMsg.msgId() ) fsmStartWork( msg )
          else  fsmwork(msg)
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun fsmStartWork( msg: ApplMessage ) {
+    suspend fun fsmStartWork( msg: IApplMessage ) {
         isStarted = true
         //println("ActorBasicFsm $name | fsmStartWork in STATE ${currentState.stateName}")
         currentMsg = msg
@@ -169,7 +169,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-     suspend fun fsmwork(msg: ApplMessage) {
+     suspend fun fsmwork(msg: IApplMessage) {
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
         var nextState = checkTransition(msg)
         var b         = handleCurrentMessage(msg, nextState)
@@ -198,7 +198,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
         }
     }
 
-     fun handleCurrentMessage(msg: ApplMessage, nextState: State?, memo: Boolean = true): Boolean {
+     fun handleCurrentMessage(msg: IApplMessage, nextState: State?, memo: Boolean = true): Boolean {
         sysUtil.traceprintln("$tt ActorBasicFsmmmm $name | handleCurrentMessage in ${currentState.stateName} msg=${msg.msgId()} memo=$memo")
         if (nextState is State) {
             currentMsg   = msg
@@ -252,7 +252,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
         return false
 	}
 
-    private fun checkTransition(msg: ApplMessage): State? {
+    private fun checkTransition(msg: IApplMessage): State? {
         val trans = currentState.getTransitionForMessage(msg)
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | checkTransition, $msg, curState=${currentState.stateName}, trans=$trans")
         return if (trans != null) {
