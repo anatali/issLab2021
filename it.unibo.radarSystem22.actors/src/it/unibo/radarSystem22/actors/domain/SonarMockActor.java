@@ -1,10 +1,12 @@
 package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.ActorWrapper;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
+import it.unibo.radarSystem22.actors.context.ActorLocalContext;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.interfaces.ISonar;
 
@@ -34,7 +36,7 @@ private ISonar sonar;
 		String msgCmd = msg.msgContent();
 		//ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.BLUE); 
 		switch( msgCmd ) {
-			case "activate"  : sonar.activate();break;
+			case "activate"    : sonar.activate();break;
 			case "deactivate"  : sonar.deactivate();break;
  			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
 		}
@@ -54,7 +56,8 @@ private ISonar sonar;
 				int d = sonar.getDistance().getVal();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender());
 				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);			
-				//MsgUtil.sendMsg(reply, getContext(), null);
+				ActorBasic dest = ActorLocalContext.getActor(msg.msgSender());
+				MsgUtil.sendMsg(reply, dest, null);
 				break;
 			}
  			default: ColorsOut.outerr(getName()  + " | unknown " + msgReq);
