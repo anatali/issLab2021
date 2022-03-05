@@ -1,12 +1,8 @@
 package it.unibo.radarSystem22.actors.counter;
 
-import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.kactor.ActorWrapper;
-import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
-import it.unibo.kactor.MsgUtil;
-import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
 /*
@@ -51,30 +47,14 @@ public class CounterActor extends ActorWrapper  {
 		if( msg.msgId().equals("dec")) {
  			int dt = Integer.parseInt( msg.msgContent() );
  			counter.dec( dt );  //ha delay
-			String msgOutStr = decReplyTemplate
+			String replyStr = decReplyTemplate
 					.replace("SENDER", getName())
 					.replace("RECEIVER", msg.msgSender())
 					.replace("VALUE", ""+counter.getVal());
-			ColorsOut.outappl( getName() + " | msgOutStr " + msgOutStr, ColorsOut.GREEN );
-			//IApplMessage  msgOut = new ApplMessage(msgOutStr);
-			//Invio risposta al caller
-			//MsgUtil.sendMsg(msgOut, a, null);
-			if( handler != null ) handler.sendAnswerToClient( msgOutStr );
+			ColorsOut.outappl( getName() + " | msgOutStr " + replyStr, ColorsOut.GREEN );
+ 			if( handler != null ) handler.sendAnswerToClient( replyStr );
 		}
 	}
 	
-//	protected void updateCounter( String dtStr ) {
-// 		int dt = Integer.parseInt( dtStr );
-////		int v = n;
-////		v = v - 1;
-////		BasicUtils.delay(dt);  //the control is given to another client
-////		ColorsOut.outappl(getName() + " | resumes v= " + v, ColorsOut.MAGENTA);
-////		n = v;
-////		ColorsOut.outappl(getName() + " | new value after dec= " + n, ColorsOut.MAGENTA);
-//		counter.dec( dt );  //ha delay
-//		BasicUtils.aboutThreads(getName() + " | CounterWithDelay after dec - ");		
-//	}
-
- 
   
 }

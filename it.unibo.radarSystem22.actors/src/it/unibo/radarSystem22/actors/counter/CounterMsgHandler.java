@@ -9,10 +9,14 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
 /*
- * 
+ * CounterMsgHandler usa un attore CounterActor e non un POJO
+ * I messaggi che gli sono passati dal TcpContextserver sono rediretti all'attore
+ * che riceve l'handler al momento della costruzione.
+ * L'attore esegue i messaggi (comandi/richieste) uno alla volta, anche se il
+ * contatore rilascia il controllo e usa l'handler per inviare la risposta a
+ * un caller remoto ( SI VEDA CounterActorCaller ).
  */
 public class CounterMsgHandler  extends ApplMsgHandler implements IApplMsgHandlerForActor{ 
-//	private int n = 2;
 	String decReplyTemplate = "msg( dec, reply, SENDER, RECEIVER, VALUE, 1 )";
 	
 	private CounterActor ca;
@@ -23,43 +27,7 @@ public class CounterMsgHandler  extends ApplMsgHandler implements IApplMsgHandle
 		ca = new CounterActor("ca", this);
 	}
 
-/* 	
-	protected void elabCommand( IApplMessage msg ) {
- 		ColorsOut.outappl( getName() + " | elabCommand " + msg.toString(), ColorsOut.GREEN );
- 		if( msg.msgId().equals("inc")) { 
- 			n = n + 1; 
- 		}else if( msg.msgId().equals("dec")) {
- 			updateCounter( msg.msgContent() );
- 		}
-	}	
-	
-	protected void elabRequest( IApplMessage msg, Interaction2021 conn ) {
- 		ColorsOut.outappl( getName() + " | elabRequest " + msg.toString(), ColorsOut.GREEN );
-		if( msg.msgId().equals("dec")) {
-			updateCounter( msg.msgContent() );
-			String msgOutStr = decReplyTemplate
-					.replace("SENDER", getName())
-					.replace("RECEIVER", msg.msgSender())
-					.replace("VALUE", ""+n);
-			//IApplMessage  msgOut = new ApplMessage(msgOutStr);
-			//Invio risposta al caller
-			//MsgUtil.sendMsg(msgOut, a, null);
-			sendAnswerToClient(msgOutStr,conn);
-		}
-	}
-	
-	protected void updateCounter( String dtStr ) {
-		int dt = Integer.parseInt( dtStr );
-		int v = n;
-		v = v - 1;
-		BasicUtils.delay(dt);  //the control is given to another client
-		ColorsOut.outappl(getName() + " | resumes v= " + v, ColorsOut.MAGENTA);
-		n = v;
-		ColorsOut.outappl(getName() + " | new value after dec= " + n, ColorsOut.MAGENTA);
-		BasicUtils.aboutThreads(getName() + " | CounterWithDelay after dec - ");		
-	}
-*/
-	@Override
+ 	@Override
 	public void elaborate(String msg, Interaction2021 arg1) {
  		ColorsOut.outappl( getName() + " | NEVER HERE - elaborate String" + msg, ColorsOut.GREEN );		
 	}
@@ -68,10 +36,7 @@ public class CounterMsgHandler  extends ApplMsgHandler implements IApplMsgHandle
 	public void elaborate(IApplMessage msg, Interaction2021 conn) {
  		ColorsOut.outappl( getName() + " | elaborate " + msg + " conn="+conn, ColorsOut.GREEN );
  		this.conn = conn;
- 		MsgUtil.sendMsg(msg, ca, null); //null è continuation
-//		if( msg.isRequest() )  elabRequest(msg,conn);
-//		else if( msg.isDispatch() )  elabCommand(msg);
-		
+ 		MsgUtil.sendMsg(msg, ca, null); //null è continuation		
 	}
 	@Override
 	public void sendMsgToClient(String msg) {
