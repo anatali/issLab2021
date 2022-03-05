@@ -6,23 +6,21 @@ import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.DeviceFactory;
-import it.unibo.radarSystem22.domain.utils.BasicUtils;
-import it.unibo.radarSystem22.interfaces.ILed;
+import it.unibo.radarSystem22.interfaces.ISonar;
 
 /*
- * Funge da interprete di 
+ * ActorWrapper senza contesto non è in grado di inviare risposte
  */
-public class LedMockActor extends ActorWrapper{
-private ILed led;
+public class SonarMockActor extends ActorWrapper{
+private ISonar sonar;
 
-	public LedMockActor(String name) {
+	public SonarMockActor(String name) {
 		super(name);
-		led = DeviceFactory.createLed();
+		sonar = DeviceFactory.createSonar();
 	}
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		String msgId = msg.msgId();
 		switch( msgId ) {
@@ -34,29 +32,32 @@ private ILed led;
 
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
-		//ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.BLUE);
- 
+		//ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.BLUE); 
 		switch( msgCmd ) {
-			case "turnOn"  : led.turnOn();break;
-			case "turnOff" : led.turnOff();break;
-			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
+			case "activate"  : sonar.activate();break;
+			case "deactivate"  : sonar.deactivate();break;
+ 			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
 		}
 	}
- 
+
 	protected void elabRequest(IApplMessage msg) {
 		String msgReq = msg.msgContent();
 		//ColorsOut.outappl( getName()  + " | elabRequest " + msgCmd, ColorsOut.BLUE);
- 
 		switch( msgReq ) {
 			case "getState"  :{
-				boolean b = led.getState();
-				IApplMessage reply = MsgUtil.buildReply(getName(), "ledState", ""+b, msg.msgSender());
-				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);
-				
+				boolean b = sonar.isActive();
+				IApplMessage reply = MsgUtil.buildReply(getName(), "sonarState", ""+b, msg.msgSender());
+				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);				
+				break;
+			}
+			case "distance"  :{
+				int d = sonar.getDistance().getVal();
+				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender());
+				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);			
+				//MsgUtil.sendMsg(reply, getContext(), null);
 				break;
 			}
  			default: ColorsOut.outerr(getName()  + " | unknown " + msgReq);
 		}
 	}
-
 }

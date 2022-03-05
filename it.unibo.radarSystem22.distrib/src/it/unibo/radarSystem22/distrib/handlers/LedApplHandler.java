@@ -1,13 +1,13 @@
 package it.unibo.radarSystem22.distrib.handlers;
 
-import it.unibo.comm2022.ApplMsgHandler;
-import it.unibo.comm2022.interfaces.IApplInterpreter;
-import it.unibo.comm2022.interfaces.IApplMessage;
-import it.unibo.comm2022.interfaces.IApplMsgHandler;
-import it.unibo.comm2022.interfaces.Interaction2021;
+import it.unibo.actorComm.ApplMsgHandler;
+import it.unibo.actorComm.interfaces.IApplInterpreter;
+import it.unibo.actorComm.interfaces.IApplMsgHandler;
+import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.radarSystem22.distrib.intepreters.LedApplInterpreter;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
-import it.unibo.comm2022.utils.CommUtils;
+import it.unibo.actorComm.utils.CommUtils;
+import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.interfaces.ILed;
 
 public class LedApplHandler extends ApplMsgHandler {

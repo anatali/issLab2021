@@ -4,12 +4,12 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="output" path="bin/default"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/"/>
-	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/it.unibo.radarSystem22.distrib/libs/it.unibo.radarSystem22.domain.jar">
+	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/it.unibo.radarSystem22.distrib/libs/it.unibo.radarSystem22.domain-1.0.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/it.unibo.radarSystem22.distrib/libs/it.unibo.comm2022.jar">
+	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/it.unibo.radarSystem22.distrib/libs/it.unibo.actorComm-1.0.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value=""/>
 		</attributes>
@@ -25,6 +25,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/unibolibs/unibonoawtsupports.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/unibolibs/it.unibo.qakactor-2.5.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value=""/>
 		</attributes>

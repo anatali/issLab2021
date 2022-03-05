@@ -1,7 +1,7 @@
 package it.unibo.radarSystem22.distrib.intepreters;
-import it.unibo.comm2022.interfaces.IApplInterpreter;
-import it.unibo.comm2022.interfaces.IApplMessage;
-import it.unibo.comm2022.utils.CommUtils;
+import it.unibo.actorComm.interfaces.IApplInterpreter;
+import it.unibo.actorComm.utils.CommUtils;
+import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.interfaces.ISonar;
 

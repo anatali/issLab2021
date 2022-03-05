@@ -20,13 +20,14 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 
 //CUSTOM RadarSystem
-	implementation name: 'it.unibo.radarSystem22.domain'
-	implementation name: 'it.unibo.comm2022'
+	implementation name: 'it.unibo.radarSystem22.domain-1.0'
+	implementation name: 'it.unibo.actorComm-1.0'
 	
 //CUSTOM unibo
     implementation name: '2p301'
     implementation name: 'uniboInterfaces'
     implementation name: 'unibonoawtsupports'
+	implementation name: 'it.unibo.qakactor-2.5'
 	
 	//RADAR (support and GUI)
 	implementation name: 'radarPojo'

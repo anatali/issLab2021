@@ -1,7 +1,7 @@
 package it.unibo.radarSystem22.distrib.main;
 
-import it.unibo.comm2022.ProtocolType;
-import it.unibo.comm2022.utils.CommSystemConfig;
+import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.radarSystem22.distrib.IApplication;
 import it.unibo.radarSystem22.distrib.proxy.LedProxyAsClient;
 import it.unibo.radarSystem22.distrib.proxy.SonarProxyAsClient;

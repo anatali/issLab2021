@@ -1,13 +1,13 @@
 package it.unibo.radarSystem22.distrib.main;
 
-import it.unibo.comm2022.ProtocolType;
-import it.unibo.comm2022.context.TcpContextServer;
-import it.unibo.comm2022.interfaces.IApplMsgHandler;
+import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.context.TcpContextServer;
+import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22.distrib.IApplication;
 import it.unibo.radarSystem22.distrib.handlers.LedApplHandler;
 import it.unibo.radarSystem22.distrib.handlers.SonarApplHandler;
 import it.unibo.radarSystem22.interfaces.*;
-import it.unibo.comm2022.utils.CommSystemConfig;
+import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 

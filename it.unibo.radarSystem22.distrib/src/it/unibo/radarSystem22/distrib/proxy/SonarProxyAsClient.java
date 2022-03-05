@@ -1,13 +1,13 @@
 package it.unibo.radarSystem22.distrib.proxy;
-import it.unibo.comm2022.ApplMessage;
-import it.unibo.comm2022.ProtocolType;
-import it.unibo.comm2022.interfaces.IApplMessage;
-import it.unibo.comm2022.proxy.ProxyAsClient;
+import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.radarSystem22.domain.Distance;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.interfaces.IDistance;
 import it.unibo.radarSystem22.interfaces.ISonar;
-import it.unibo.comm2022.utils.CommSystemConfig;
+import it.unibo.actorComm.utils.CommSystemConfig;
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
 
 
 public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
