@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.actors.domain;
+package it.unibo.radarSystem22.actors.domain.support;
 
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;

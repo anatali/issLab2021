@@ -1,6 +1,9 @@
-package it.unibo.radarSystem22.actors.domain;
+package it.unibo.radarSystem22.actors.domain.support;
 
 import it.unibo.kactor.ActorBasic;
+import it.unibo.radarSystem22.actors.domain.LedMockActor;
+import it.unibo.radarSystem22.actors.domain.RadarDisplayActor;
+import it.unibo.radarSystem22.actors.domain.SonarMockActor;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 
