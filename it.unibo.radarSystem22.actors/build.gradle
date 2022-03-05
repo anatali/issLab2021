@@ -54,7 +54,7 @@ dependencies {
 
 //CUSTOM RadarSystem
 	implementation name: 'it.unibo.radarSystem22.domain-1.0'
-	implementation name: 'it.unibo.comm2022-1.0'
+	implementation name: 'it.unibo.actorComm-1.0'
 
 
 

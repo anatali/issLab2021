@@ -43,8 +43,9 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 		ColorsOut.out(name +  " | elaborate  h="+h, ColorsOut.GREEN );
 		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.BLUE );
 		if( dest != null && (! msg.isReply()) ) {
-			if( h instanceof ActorWrapper ) elaborateForActor(msg, (ActorWrapper)h);
-			else h.elaborate(msg,conn);			
+//			if( h instanceof ActorWrapper ) elaborateForActor(msg, (ActorWrapper)h);
+//			else 
+				h.elaborate(msg,conn);			
 		}
 	}
 
@@ -74,10 +75,15 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 	}
 	
 //-----------------------------------------------------------------
-	protected void elaborateForActor( IApplMessage cmd, ActorWrapper dest ) {
-		ColorsOut.outappl(name + " | elaborateForActor ApplMessage: "+cmd, ColorsOut.GREEN);		
+	protected void elaborateForActor( IApplMessage msg, ActorWrapper dest ) {
+		ColorsOut.outappl(name + " | elaborateForActor ApplMessage: "+msg, ColorsOut.GREEN);		
  		try {
- 			MsgUtil.sendMsg(cmd, dest, null);			 
+ 			if( msg.isReply() ) {
+ 				
+ 			}else {
+ 				//TODO usare la interfaccia IApplMsgHandler
+ 				MsgUtil.sendMsg(msg, dest, null);			 
+ 			}
 		}catch( Exception e) {}	
 	}
 

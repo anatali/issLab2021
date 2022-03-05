@@ -50,7 +50,7 @@ protected boolean stopped = true;
 	public void activate() {
 		if( stopped ) {
 			stopped = false;
-			ColorsOut.out(getName()+" |  ACTIVATE serversock=" +  serversock);
+			ColorsOut.out(getName()+" |  ACTIVATE userDefHandler=" + userDefHandler + " PORT=" + serversock.getLocalPort());
 			this.start();
 		}//else already activated
 	}
