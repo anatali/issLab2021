@@ -3,10 +3,8 @@ package it.unibo.radarSystem22.actors.domain;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.Actor22;
-import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
-import it.unibo.radarSystem22.actors.context.ActorLocalContext;
 import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.interfaces.ISonar;
@@ -24,7 +22,7 @@ private ISonar sonar;
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
+		//ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		String msgId = msg.msgId();
 		switch( msgId ) {
 			case DeviceLang.cmd : elabCmd(msg);break;
@@ -57,7 +55,7 @@ private ISonar sonar;
 				int d = sonar.getDistance().getVal();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender());
 				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);			
-				ActorBasic dest = ActorLocalContext.getActor(msg.msgSender());
+				ActorBasic dest = Actor22.getActor(msg.msgSender());
 				MsgUtil.sendMsg(reply, dest, null);
 				break;
 			}

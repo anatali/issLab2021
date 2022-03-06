@@ -2,7 +2,6 @@ package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
-import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
@@ -35,8 +34,7 @@ private ILed led;
 
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
-		//ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.BLUE);
- 
+		//ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.BLUE); 
 		switch( msgCmd ) {
 			case "turnOn"  : led.turnOn();break;
 			case "turnOff" : led.turnOff();break;

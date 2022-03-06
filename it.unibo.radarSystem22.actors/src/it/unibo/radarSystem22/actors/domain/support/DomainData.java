@@ -3,7 +3,7 @@ package it.unibo.radarSystem22.actors.domain.support;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 
-public class DomainMsg {
+public class DomainData {
 	public static final String ledName        = "led";
 	public static final String sonarName 	  = "sonar";
 	public static final String radarName 	  = "radar";
@@ -19,4 +19,5 @@ public class DomainMsg {
 
 	public static final  IApplMessage controllerActivate   = MsgUtil.buildDispatch("main", DeviceLang.cmd, "activate", controllerName);
 
+	public static int DLIMIT = 60;
 }

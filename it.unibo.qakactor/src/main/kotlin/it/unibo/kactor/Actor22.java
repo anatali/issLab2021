@@ -6,9 +6,21 @@ import kotlinx.coroutines.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+
 import static kotlinx.coroutines.ThreadPoolDispatcherKt.newSingleThreadContext;
 
 public abstract class Actor22 extends ActorBasic {
+    private static HashMap<String,ActorBasic> ctxMap = new HashMap<String,ActorBasic>();
+
+    public static void addActor(ActorBasic a) {
+        ctxMap.put(a.getName(), a);
+        System.out.println("REGISTERD actor with name " + a.getName()  );
+
+    }
+    public static ActorBasic getActor(String actorName) {
+        return ctxMap.get(actorName);
+    }
 
     private static CoroutineScope createScope(){
         ExecutorCoroutineDispatcher d = newSingleThreadContext("single");
@@ -29,6 +41,8 @@ public abstract class Actor22 extends ActorBasic {
 
     public Actor22(@NotNull String name ) {
         super(name, createScope(), false, true, false, 50);
+        if( getActor(name) == null ) addActor( this );
+        else System.out.println("WARNING: an actor with name " + name + " already exixts");
     }
 
     @Nullable
