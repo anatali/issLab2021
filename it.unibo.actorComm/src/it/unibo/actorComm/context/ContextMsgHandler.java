@@ -51,10 +51,11 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
-		ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.GREEN);
 		try {
- 			IApplMessage msg  = new ApplMessage(message);
-			elaborate( msg, conn );
+			ColorsOut.out(name+" | elaborate:" + message  , ColorsOut.GREEN);
+			//ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.GREEN);
+			IApplMessage msg  = new ApplMessage(message);
+			elaborate( msg, conn );  
 		}catch(Exception e) {
 			ColorsOut.outerr(name +  " | elaborate ERROR " + e.getMessage());
 		}

@@ -1,7 +1,7 @@
 package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
-import it.unibo.kactor.ActorWrapper;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
@@ -13,7 +13,7 @@ import it.unibo.radarSystem22.interfaces.ILed;
 /*
  * Funge da interprete di 
  */
-public class LedMockActor extends ActorWrapper{
+public class LedMockActor extends Actor22{
 private ILed led;
 
 	public LedMockActor(String name) {

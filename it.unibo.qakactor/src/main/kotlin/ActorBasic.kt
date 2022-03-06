@@ -30,6 +30,7 @@ abstract class  ActorBasic(  name:         String,
                            val ioBound :     Boolean = false,
                            val channelSize : Int = 50
                         ) : CoapResource(name), MqttCallback {
+
     //val cpus = Runtime.getRuntime().availableProcessors();
 
     val tt      = "               %%% "
@@ -165,13 +166,7 @@ Messaging
         actor.send( MsgUtil.buildDispatch(name, msgId, msg, this.name) )
     }
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
-     suspend fun forward( msgId : String, msg: String, destActor: ActorBasic) {
-        //println("       ActorBasic $name | forward $msgId:$msg to ${destActor.name} in ${sysUtil.curThread() }")
-        destActor.actor.send(
-            MsgUtil.buildDispatch(name, msgId, msg, destActor.name ) )
-     }
+
 
     //Oct2019
 @kotlinx.coroutines.ObsoleteCoroutinesApi 

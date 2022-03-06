@@ -1,8 +1,9 @@
 package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ActorBasic;
-import it.unibo.kactor.ActorWrapper;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
@@ -10,7 +11,7 @@ import it.unibo.radarSystem22.actors.domain.support.DomainMsg;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 
-public class ControllerActor extends ActorWrapper{
+public class ControllerActor extends Actor22{
 private ActorBasic led;
 private ActorBasic sonar;
 
@@ -38,12 +39,12 @@ private ActorBasic sonar;
 		ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.GREEN);
 		switch( msgCmd ) {
 			case "activate" : {
-				MsgUtil.sendMsg(DomainMsg.sonarActivate, sonar, null); //null è continuation.
+				Actor22.sendMsg(DomainMsg.sonarActivate, sonar );  
 				doControllerWork();
 				break;
 			}
 			case "stop" : {
-				MsgUtil.sendMsg(DomainMsg.sonarDeactivate, sonar, null); //null è continuation.
+				Actor22.sendMsg(DomainMsg.sonarDeactivate, sonar );  
 				break;
 			}
 		}		
@@ -51,7 +52,7 @@ private ActorBasic sonar;
 	
 	protected void doControllerWork() {
 		//Chiedo la distanza. Quando doJob riceve la risposta proseguo in elabAnswer
-		MsgUtil.sendMsg(DomainMsg.sonarDistance, sonar, null); //null è continuation.		
+		Actor22.sendMsg(DomainMsg.sonarDistance, sonar );  		
 	}
 	
 	
@@ -61,14 +62,14 @@ private ActorBasic sonar;
 		String answer = msg.msgContent();
 		int d = Integer.parseInt(answer);
 		if( d < DomainSystemConfig.DLIMIT ) {
-			MsgUtil.sendMsg(DomainMsg.ledOn, led, null); //null è continuation.
-		}else MsgUtil.sendMsg(DomainMsg.ledOff, led, null);
+			Actor22.sendMsg(DomainMsg.ledOn, led );  
+		}else Actor22.sendMsg(DomainMsg.ledOff, led );
 		BasicUtils.delay(DomainSystemConfig.sonarDelay*3);  //Intervengo ogni 3 dati generati
 		if( d > DomainSystemConfig.DLIMIT - 10) {
-			MsgUtil.sendMsg(DomainMsg.sonarDistance, sonar, null);
+			Actor22.sendMsg(DomainMsg.sonarDistance, sonar );
 		}else {
-			MsgUtil.sendMsg(DomainMsg.ledOff, led, null);
-			MsgUtil.sendMsg(DomainMsg.sonarDeactivate, sonar, null); //null è continuation.
+			Actor22.sendMsg(DomainMsg.ledOff, led );
+			Actor22.sendMsg(DomainMsg.sonarDeactivate, sonar );  
 		}		
 	}
 

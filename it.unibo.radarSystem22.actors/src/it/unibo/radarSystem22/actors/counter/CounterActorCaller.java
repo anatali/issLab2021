@@ -3,7 +3,6 @@ package it.unibo.radarSystem22.actors.counter;
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.actorComm.utils.BasicUtils;
-import it.unibo.kactor.ActorWrapper;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
@@ -25,10 +24,7 @@ public class CounterActorCaller  {
  		pxyCaller = new ProxyAsClient("pxyCaller","localhost", 
  				""+SharedCounterMain.ctxServerPort, ProtocolType.tcp);
  	}
-	
- 
-	
- 	
+		
 	public void doCommand(   ) {
 		IApplMessage msg = new ApplMessage( decCmdStr.replace("NAME", name));
 		if( isRemote( msg.msgReceiver() ) ) {
@@ -55,6 +51,8 @@ public class CounterActorCaller  {
 		CounterActorCaller ac1 = new CounterActorCaller("ac1") ;
 		ac1.doCommand();
  		ac1.doRequest();
+		//BasicUtils.delay(3000);
+  		ColorsOut.outappl( "CounterActorCaller | BYE"  , ColorsOut.CYAN);		
   	}
 
 

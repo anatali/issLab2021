@@ -1,14 +1,20 @@
 package it.unibo.radarSystem22.actors.counter;
 
+ 
 import it.unibo.actorComm.interfaces.Interaction2021;
-import it.unibo.kactor.ActorWrapper;
+import it.unibo.kactor.Actor22;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
 /*
- * 
+ * CounterActor (come Actor22) attiva doJob quando gli si manda un msg
+ * Nel caso attuale può ricevere un comando dec o una richiesta dec
+ * L'attore usa il POJO CounterWithDelay per eseguire il comando e la richiesta
+ * Nel caso di richiesta utilizza l'handler che gli è stato dato nel costruttore
+ * per inviare la risposta
  */
-public class CounterActor extends ActorWrapper  { 
+public class CounterActor extends Actor22  { 
 	private CounterWithDelay counter;
 	private CounterMsgHandler handler;
 	
@@ -36,7 +42,6 @@ public class CounterActor extends ActorWrapper  {
  		if( msg.msgId().equals("inc")) { 
  			counter.inc(); 
  		}else if( msg.msgId().equals("dec")) {
- 			//updateCounter( msg.msgContent() );
  			int dt = Integer.parseInt( msg.msgContent() );
  			counter.dec( dt );  //ha delay
  		}
@@ -55,6 +60,5 @@ public class CounterActor extends ActorWrapper  {
  			if( handler != null ) handler.sendAnswerToClient( replyStr );
 		}
 	}
-	
-  
+
 }

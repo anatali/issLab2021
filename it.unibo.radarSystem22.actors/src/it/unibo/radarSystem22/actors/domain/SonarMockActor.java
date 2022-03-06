@@ -2,7 +2,7 @@ package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.ActorBasic;
-import it.unibo.kactor.ActorWrapper;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
@@ -12,9 +12,9 @@ import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.interfaces.ISonar;
 
 /*
- * ActorWrapper senza contesto non è in grado di inviare risposte
+ * Actor22 senza contesto non è in grado di inviare risposte
  */
-public class SonarMockActor extends ActorWrapper{
+public class SonarMockActor extends Actor22{
 private ISonar sonar;
 
 	public SonarMockActor(String name) {

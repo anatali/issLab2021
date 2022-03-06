@@ -29,6 +29,7 @@ public static final int ctxServerPort   = 7070;
 		CommSystemConfig.tracing=false;
  		SharedCounterMain sys = new SharedCounterMain();
  		sys.configure();
+ 		BasicUtils.delay(2000);
   		BasicUtils.aboutThreads("Before end - ");
 	}
 }

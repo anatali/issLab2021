@@ -46,6 +46,7 @@ dependencies {
     implementation name: 'uniboInterfaces'
     implementation name: 'unibonoawtsupports'
 	implementation name: 'it.unibo.qakactor-2.5'
+	implementation name: 'it.unibo.actorComm-1.0'
 	
 	//RADAR (support and GUI)
 	implementation name: 'radarPojo'
@@ -54,8 +55,7 @@ dependencies {
 
 //CUSTOM RadarSystem
 	implementation name: 'it.unibo.radarSystem22.domain-1.0'
-	implementation name: 'it.unibo.actorComm-1.0'
-
+ 
 
 
 

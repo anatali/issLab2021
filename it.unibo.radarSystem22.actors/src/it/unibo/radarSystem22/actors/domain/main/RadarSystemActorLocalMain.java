@@ -1,6 +1,7 @@
 package it.unibo.radarSystem22.actors.domain.main;
 
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
@@ -39,7 +40,8 @@ public class RadarSystemActorLocalMain {
 	}
 	
 	protected void execute() {
-		MsgUtil.sendMsg(DomainMsg.controllerActivate, controller, null); //null è continuation.
+		//MsgUtil.sendMsg(DomainMsg.controllerActivate, controller, null); //null è continuation.
+		Actor22.sendMsg(DomainMsg.controllerActivate, controller);
 	} 
 	
  	

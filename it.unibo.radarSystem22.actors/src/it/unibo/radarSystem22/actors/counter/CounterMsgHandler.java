@@ -3,6 +3,7 @@ package it.unibo.radarSystem22.actors.counter;
 import it.unibo.actorComm.ApplMsgHandler;
 import it.unibo.actorComm.interfaces.IApplMsgHandlerForActor;
 import it.unibo.actorComm.interfaces.Interaction2021;
+import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
@@ -24,7 +25,7 @@ public class CounterMsgHandler  extends ApplMsgHandler implements IApplMsgHandle
 	
 	public CounterMsgHandler( String name  ) {
 		super( name );
-		ca = new CounterActor("ca", this);
+		ca = new CounterActor("counter", this);
 	}
 
  	@Override
@@ -36,7 +37,8 @@ public class CounterMsgHandler  extends ApplMsgHandler implements IApplMsgHandle
 	public void elaborate(IApplMessage msg, Interaction2021 conn) {
  		ColorsOut.outappl( getName() + " | elaborate " + msg + " conn="+conn, ColorsOut.GREEN );
  		this.conn = conn;
- 		MsgUtil.sendMsg(msg, ca, null); //null è continuation		
+ 		//MsgUtil.sendMsg(msg, ca, null); //null è continuation		
+ 		Actor22.sendMsg(msg, ca);
 	}
 	@Override
 	public void sendMsgToClient(String msg) {
