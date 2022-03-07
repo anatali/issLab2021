@@ -5,12 +5,11 @@ import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
-import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.interfaces.ISonar;
 
 /*
- * Actor22 senza contesto non è in grado di inviare risposte
+ * L'invio di risposta a un actore remoto deve essere fatto da MsgHandlerForActor
  */
 public class SonarMockActor extends Actor22{
 private ISonar sonar;
@@ -22,13 +21,10 @@ private ISonar sonar;
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		//ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
-		String msgId = msg.msgId();
-		switch( msgId ) {
-			case DeviceLang.cmd : elabCmd(msg);break;
-			case DeviceLang.req : elabRequest(msg);break;
-			default: ColorsOut.outerr(getName()  + " | unknown " + msgId);
-		}		
+		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
+		if( msg.isRequest() ) elabRequest(msg);
+		else if( msg.isDispatch() ) elabCmd(msg);
+		else ColorsOut.outerr(getName()  + " | unknown " + msg.msgId());
 	}
 
 	protected void elabCmd(IApplMessage msg) {
@@ -45,21 +41,31 @@ private ISonar sonar;
 		String msgReq = msg.msgContent();
 		//ColorsOut.outappl( getName()  + " | elabRequest " + msgCmd, ColorsOut.BLUE);
 		switch( msgReq ) {
-			case "getState"  :{
+			case "isActive"  :{
 				boolean b = sonar.isActive();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "sonarState", ""+b, msg.msgSender());
-				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);				
+				sendAnswer(msg,reply);			
 				break;
 			}
 			case "distance"  :{
 				int d = sonar.getDistance().getVal();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender());
-				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);			
-				ActorBasic dest = Actor22.getActor(msg.msgSender());
-				MsgUtil.sendMsg(reply, dest, null);
+				sendAnswer(msg,reply);		
 				break;
 			}
- 			default: ColorsOut.outerr(getName()  + " | unknown " + msgReq);
+ 			default: ColorsOut.outerr(getName()  + " | elabRequest unknown " + msgReq);
+		}
+	}
+	
+	protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
+		ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);			
+		ActorBasic dest = Actor22.getActor(msg.msgSender());
+		//MsgUtil.sendMsg(reply, dest, null);	
+		if(dest!=null) Actor22.sendMsg(reply, dest);
+		else {
+			ActorBasic ar = Actor22.getActor("ar"+msg.msgSender());
+			if(ar !=null) Actor22.sendMsg(reply, ar);
+			else ColorsOut.outerr(getName()  + " | ERROR Reply to a remote destination "  );
 		}
 	}
 }

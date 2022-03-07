@@ -41,7 +41,7 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 		ColorsOut.out(name +  " | elaborate  dest="+dest, ColorsOut.GREEN );
 		IApplMsgHandler h    = handlerMap.get(dest);
 		ColorsOut.out(name +  " | elaborate  h="+h, ColorsOut.GREEN );
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.BLUE );
+		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN );
 		if( dest != null && (! msg.isReply()) ) {
 //			if( h instanceof ActorWrapper ) elaborateForActor(msg, (ActorWrapper)h);
 //			else 

@@ -5,6 +5,7 @@ import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
 
 /*
  * TODO: omettere la parte MqttCallback che viene realizzata da ContextMqttMsgHandler
@@ -31,9 +32,9 @@ protected String name;
 		}
  	} 
  	
- 	public void sendMsgToClient( ApplMessage message, Interaction2021 conn  ) {
- 		sendMsgToClient( message.toString(), conn );
- 	}
+// 	public void sendMsgToClient( IApplMessage message, Interaction2021 conn  ) {
+// 		sendMsgToClient( message.toString(), conn );
+// 	}
 	
  	@Override
  	public void sendAnswerToClient( String reply, Interaction2021 conn   ) {

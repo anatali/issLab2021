@@ -29,7 +29,7 @@ private ActorBasic radar;
 */
 	public ControllerActor(String name, String ledName, String sonarName, String radarName) {
 		this( name, Actor22.getActor(ledName), Actor22.getActor(sonarName),Actor22.getActor(radarName) );
-		ActorBasic a = Actor22.getActor(ledName);
+//		ActorBasic a = Actor22.getActor(ledName);
 //		if( a != null ) this.led = a;
 //		else ColorsOut.outerr("NOT FOUND Actor with name " + ledName );
 //		a = Actor22.getActor(sonarName);
@@ -47,7 +47,7 @@ private ActorBasic radar;
 		}else {
 			String msgId = msg.msgId();
 			switch( msgId ) {
-				case DeviceLang.cmd    : elabCmd(msg);break;
+				case DeviceLang.cmd  : elabCmd(msg);break;
  				default: ColorsOut.outerr(getName()  + " | unknown " + msgId);
 			}		
 		}
@@ -58,7 +58,7 @@ private ActorBasic radar;
 		ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.GREEN);
 		switch( msgCmd ) {
 			case "activate" : {
-				Actor22.sendMsg(DomainData.sonarActivate, sonar );  
+				Actor22.sendMsg(DomainData.sonarActivate, sonar );
 				doControllerWork();
 				break;
 			}
