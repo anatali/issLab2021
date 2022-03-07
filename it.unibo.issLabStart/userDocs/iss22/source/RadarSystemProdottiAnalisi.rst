@@ -247,17 +247,12 @@ implementare i componenti in modo che possano scambiare informazione via rete.
   di una o più classi.  
 
 - Il **Singleton** evita di creare più di una istanza di una classe e può risultare utile per creare supporti 
+
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 L'interfaccia ``Interaction2021``
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-La necessità di  inviare e ricevere messaggi via rete segnala un :blue:`gap`  tra il livello tecnologico 
-dei componenti software resi disponibili dal committente e le necessità del problema.
-
-Coma analisti, osserviamo che un *gap* relativo alle comunicazioni di rete **si può presentare in modo sistematico
-in tutte le applicazioni distribuite**. Sarebbe dunque opportuno cercare di colmare questo *gap* in modo non episodico,
-introducendo :blue:`componenti riusabili` che possano 'sopravvivere' all'applicazione che stiamo costruendo
-per poter essere impiegati in futuro in altre applicazioni distribuite.
 
 Astraendo dallo specifico protocollo, osserviamo che tutti i principali protocolli punto-a-punto 
 sono in grado di stabilire una :blue:`connessione` stabile sulla quale inviare e ricevere messaggi.
