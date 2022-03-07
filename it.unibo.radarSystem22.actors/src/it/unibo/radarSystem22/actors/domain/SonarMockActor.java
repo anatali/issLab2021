@@ -44,28 +44,18 @@ private ISonar sonar;
 			case "isActive"  :{
 				boolean b = sonar.isActive();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "sonarState", ""+b, msg.msgSender());
-				sendAnswer(msg,reply);			
+				sendAnswer(msg,reply);	//in Actor22	
 				break;
 			}
 			case "distance"  :{
 				int d = sonar.getDistance().getVal();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender());
-				sendAnswer(msg,reply);		
+				sendAnswer(msg,reply);	//in Actor22		
 				break;
 			}
  			default: ColorsOut.outerr(getName()  + " | elabRequest unknown " + msgReq);
 		}
 	}
 	
-	protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
-		ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);			
-		ActorBasic dest = Actor22.getActor(msg.msgSender());
-		//MsgUtil.sendMsg(reply, dest, null);	
-		if(dest!=null) Actor22.sendMsg(reply, dest);
-		else {
-			ActorBasic ar = Actor22.getActor("ar"+msg.msgSender());
-			if(ar !=null) Actor22.sendMsg(reply, ar);
-			else ColorsOut.outerr(getName()  + " | ERROR Reply to a remote destination "  );
-		}
-	}
+
 }
