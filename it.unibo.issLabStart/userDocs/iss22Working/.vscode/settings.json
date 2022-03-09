@@ -1,3 +1,5 @@
 {
-    "restructuredtext.confPath": "${workspaceFolder}\\source"
+    "restructuredtext.confPath": "${workspaceFolder}\\source",
+    "esbonio.sphinx.confDir": "c:\\Didattica2021\\issLab2021\\it.unibo.issLabStart\\userDocs\\iss22Working\\source",
+    "esbonio.server.enabled": true
 }

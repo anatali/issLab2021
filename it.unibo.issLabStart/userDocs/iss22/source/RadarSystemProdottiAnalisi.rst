@@ -86,7 +86,16 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 
 :remark:`il modello del dominio sarà al centro della architettura del sistema`
 
-:remark:`il software relativo dominio sarà scritto in un package dedicato (xxx.domain)`
+:remark:`il software relativo dominio sarà scritto in un progetto dedicato`
+
+.. code::  
+    it.unibo.radarSystem22.domain
+
+
+:remark:`il software dell'applicazione sarà scritto in un progetto dedicato`
+
+.. code::  
+    it.unibo.radarSystem22
 
 
 .. _ILed:

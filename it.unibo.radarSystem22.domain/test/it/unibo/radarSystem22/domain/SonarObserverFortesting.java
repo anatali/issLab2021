@@ -4,10 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Observable;
 
+import it.unibo.radarSystem22.domain.interfaces.IObserver;
+import it.unibo.radarSystem22.domain.interfaces.ISonarObservable;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.interfaces.IObserver;
-import it.unibo.radarSystem22.interfaces.ISonarObservable;
 
 
 
@@ -17,11 +17,11 @@ class SonarObserverFortesting implements IObserver{
 	private boolean oneShot = false;
 	private int v0          = -1;
 	private int delta       =  1;
-	private ISonarObservable sonar;
+//	private ISonarObservable sonar;
 	
 	public SonarObserverFortesting(String name, ISonarObservable sonar, boolean oneShot) {
 		this.name    = name;
-		this.sonar   = sonar;
+//		this.sonar   = sonar;
 		this.oneShot = oneShot;
 	}
 	@Override

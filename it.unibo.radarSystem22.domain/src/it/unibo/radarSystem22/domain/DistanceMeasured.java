@@ -3,9 +3,9 @@ package it.unibo.radarSystem22.domain;
 import java.util.Observable;
 import java.util.Observer;
 
+import it.unibo.radarSystem22.domain.interfaces.IDistance;
+import it.unibo.radarSystem22.domain.interfaces.IDistanceMeasured;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
-import it.unibo.radarSystem22.interfaces.IDistance;
-import it.unibo.radarSystem22.interfaces.IDistanceMeasured;
  
 
 /*

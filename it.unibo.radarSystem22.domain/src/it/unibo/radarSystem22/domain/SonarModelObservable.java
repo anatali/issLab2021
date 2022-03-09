@@ -1,12 +1,14 @@
 package it.unibo.radarSystem22.domain;
 
  
+import it.unibo.radarSystem22.domain.concrete.SonarConcreteObservable;
+import it.unibo.radarSystem22.domain.interfaces.IDistance;
+import it.unibo.radarSystem22.domain.interfaces.IDistanceMeasured;
+import it.unibo.radarSystem22.domain.interfaces.IObserver;
+import it.unibo.radarSystem22.domain.interfaces.ISonarObservable;
+import it.unibo.radarSystem22.domain.mock.SonarMockObservable;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.interfaces.IDistance;
-import it.unibo.radarSystem22.interfaces.IDistanceMeasured;
-import it.unibo.radarSystem22.interfaces.IObserver;
-import it.unibo.radarSystem22.interfaces.ISonarObservable;
 
 public abstract class SonarModelObservable extends SonarModel implements ISonarObservable  {
 	protected IDistanceMeasured observableDistance ; 
