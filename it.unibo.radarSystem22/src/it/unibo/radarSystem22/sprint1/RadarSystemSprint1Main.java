@@ -11,7 +11,7 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  *  
  */
 
-public class RadarSystemMainLocal implements IApplication{
+public class RadarSystemSprint1Main implements IApplication{
 private IRadarDisplay radar;
 private ISonar sonar;
 private ILed  led ;
@@ -19,7 +19,7 @@ private Controller controller;
 
 	@Override
 	public String getName() {	 
-		return "RadarSystemMainLocal";
+		return "RadarSystemSprint1Main";
 	}
 
 	public void setup( String configFile )  {
@@ -79,7 +79,7 @@ private Controller controller;
 	
 	public static void main( String[] args) throws Exception {
 		BasicUtils.aboutThreads("At INIT | ");
-		new RadarSystemMainLocal().doJob(null);
+		new RadarSystemSprint1Main().doJob(null);
 		
  	}
 

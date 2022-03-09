@@ -3,6 +3,7 @@
 .. role:: remark
 
 .. _Principio di singola responsabilità: https://it.wikipedia.org/wiki/Principio_di_singola_responsabilit%C3%A0
+
 .. _DigitalTwin : https://en.wikipedia.org/wiki/Digital_twin
 
 ===========================================

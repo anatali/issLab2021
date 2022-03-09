@@ -11,13 +11,13 @@ import it.unibo.radarSystem22.domain.interfaces.IRadarDisplay;
 import it.unibo.radarSystem22.domain.utils.BasicUtils; 
 
 public class TestSystemAtSprint1 {
-private RadarSystemMainLocal sys;
+private RadarSystemSprint1Main sys;
 
 	@Before
 	public void setUp() {
 		System.out.println("setUp");
 		try {
-			sys = new RadarSystemMainLocal();
+			sys = new RadarSystemSprint1Main();
 			sys.setup( null );
 			sys.configure();
 			DomainSystemConfig.testing    		= true;   
