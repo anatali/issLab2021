@@ -1018,6 +1018,10 @@ componente che riceve i dati dal Sonar non appena vengono prodotti.
 
 .. Prima di affrontare il refactoring del sistema in questo senso, impostiamo l'esecuzione e il testing del sistema nella versione attuale.
 
+:worktodo:`WORKTODO: Sonar osservabile`
+
+- Definire un componente ``SonarObservable`` seconfo quanto prospettato in :ref:`patternObserver` e il relativo (piano di) test.
+
 
 .. _sonarOsservabile: 
 
