@@ -1,7 +1,7 @@
 package it.unibo.radarSystem22.domain.mock;
 
 import it.unibo.radarSystem22.domain.DistanceMeasured;
-import it.unibo.radarSystem22.domain.SonarModelObservable;
+import it.unibo.radarSystem22.domain.models.SonarModelObservable;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;

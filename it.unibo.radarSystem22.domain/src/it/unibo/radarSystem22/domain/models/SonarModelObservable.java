@@ -1,6 +1,7 @@
-package it.unibo.radarSystem22.domain;
+package it.unibo.radarSystem22.domain.models;
 
  
+import it.unibo.radarSystem22.domain.Distance;
 import it.unibo.radarSystem22.domain.concrete.SonarConcreteObservable;
 import it.unibo.radarSystem22.domain.interfaces.IDistance;
 import it.unibo.radarSystem22.domain.interfaces.IDistanceMeasured;
