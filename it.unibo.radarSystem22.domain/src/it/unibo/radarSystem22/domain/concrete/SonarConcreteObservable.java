@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 
 import it.unibo.radarSystem22.domain.Distance;
 import it.unibo.radarSystem22.domain.DistanceMeasured;
-import it.unibo.radarSystem22.domain.SonarModelObservable;
+import it.unibo.radarSystem22.domain.models.SonarModelObservable;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  
