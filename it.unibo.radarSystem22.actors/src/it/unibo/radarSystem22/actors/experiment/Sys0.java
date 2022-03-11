@@ -2,11 +2,9 @@ package it.unibo.radarSystem22.actors.experiment;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
-import it.unibo.kactor.QakContext;
-import it.unibo.kactor.sysUtil;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import kotlinx.coroutines.GlobalScope;
+
 
 public class Sys0 {
 	

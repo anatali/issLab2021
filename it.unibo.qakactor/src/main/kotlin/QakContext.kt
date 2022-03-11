@@ -2,11 +2,9 @@ package it.unibo.kactor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.net.InetAddress
+import kotlinx.coroutines.newSingleThreadContext
 import org.eclipse.californium.core.CoapServer
-import kotlinx.coroutines.runBlocking
+import java.net.InetAddress
 
 open class QakContext(name: String, val hostAddr: String, val portNum: Int, var mqttAddr : String = "",
                       val external: Boolean=false, val gui : Boolean = false   ) : ActorBasic(name){
@@ -20,22 +18,39 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
  	lateinit var ctxLogfileName : String
 	
     companion object {
-        val workTime = 1000L * 6000 //100 min	 
+        val workTime = 1000L * 6000 //100 min
+        lateinit var scope22 : CoroutineScope
         enum class CtxMsg { attach, remove }
 
         fun getActor( actorName : String ) : ActorBasic? {
             return sysUtil.getActor(actorName)
         }
-//Called by generated code main of ctx
+
+
+        fun createScope(): CoroutineScope{
+            if( ! this::scope22.isInitialized ) {
+                println("               %%% QakContext | createScope  ++++++++++++++++++++++++++++++++++  ")
+                val d = newSingleThreadContext("single");
+                scope22 = CoroutineScope(d);
+            }
+            return scope22;
+        }
+
+        fun createContexts(hostName: String, desrFilePath: String, rulesFilePath: String) {
+        }
+
+        //Called by generated code main of ctx
          fun createContexts(hostName: String, scope: CoroutineScope ,
                            desrFilePath: String, rulesFilePath: String) {
             sysUtil.createContexts(hostName, desrFilePath, rulesFilePath)
-
-            if( sysUtil.ctxOnHost.size == 0 ){
+             if( sysUtil.ctxOnHost.size == 0 ){
                 val ip = InetAddress.getLocalHost().getHostAddress()
                 sysUtil.traceprintln("               %%% QakContext | CREATING NO ACTORS on $hostName ip=${ip.toString()}")
             }
-            else println("               %%% QakContext | CREATING THE ACTORS on $hostName ")
+            else{
+                 sysUtil.aboutThreads("QakContext scope=$scope BEFORE createContexts on $hostName " );
+                 //println("               %%% QakContext | CREATING THE ACTORS on $hostName ")
+            }
 //			runBlocking {
             sysUtil.ctxOnHost.forEach { ctx -> sysUtil.createTheActors(ctx, scope)  }
             //Avoid premature termination
@@ -45,7 +60,8 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
 //            }
 //			(scope as Job).join()
 //			}
- 			println("               %%% QakContext | createContexts on $hostName ENDS " )
+            sysUtil.aboutThreads("QakContext AFTER createContexts on $hostName " );
+ 			//println("               %%% QakContext | createContexts on $hostName ENDS " )
         }
     }
 
@@ -54,15 +70,17 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         //OCT2019 --> NOV2019 Create a QakContextServer also when we use MQTT
         resourceCtx = CoapResourceCtx( name, this )   //must be ininitialized here
         if( ! external ){
-            println("               %%% QakContext |  $hostAddr:$portNum INIT ")
-            ctxserver = QakContextServer( this, GlobalScope, "server$name", Protocol.TCP )
+            sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapResourceCtx  " );
+            //println("               %%% QakContext |  $hostAddr:$portNum INIT ")
+            ctxserver = QakContextServer( this, createScope(), "server$name", Protocol.TCP ) //
             //CoAP: Jan2020
               try{
                   val coapPort    =  portNum
                   serverCoap      =  CoapServer(coapPort)
                   serverCoap.add(  resourceCtx )
                   serverCoap.start()
-                  println( "               %%% QakContext $name |  serverCoap started on port: $coapPort" )
+                  sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapServer on port: $coapPort " );
+                  //println( "               %%% QakContext $name |  serverCoap started on port: $coapPort" )
             }catch(e : Exception){
                 println( "               %%% QakContext $name |  serverCoap error: ${e.message}" )
             }

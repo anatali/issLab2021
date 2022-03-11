@@ -5,11 +5,18 @@ import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.net.InetAddress;
 import java.util.HashMap;
 
 import static kotlinx.coroutines.ThreadPoolDispatcherKt.newSingleThreadContext;
+//import kotlinx.coroutines.runBlocking;
+
+/*
+28
+
+Kotlin coroutines are implemented with a compiler transformation to the code
+Java cannot use Kotlin's coroutines mechanic since it is a compile-time feature
+ */
 
 public abstract class Actor22 extends ActorBasic {
     private static HashMap<String,ActorBasic> ctxMap = new HashMap<String,ActorBasic>();
@@ -19,11 +26,11 @@ public abstract class Actor22 extends ActorBasic {
         //QakContext qkaCtx = new QakContext(name,   hostAddr,   port, "", false, false);
             //QakContext.Companion.createContexts( hostAddr,"localhost", null, sysDescrFilename, "sysRules.pl");
         //}
+            QakContext.Companion.createContexts(hostAddr, QakContext.Companion.createScope(), sysDescrFilename, "sysRules.pl");
+            //QakContextServer ctxserver = QakContextServer( this, GlobalScope.INSTANCE, name, Protocol.TCP );
+            //sysUtil.INSTANCE.createContexts(hostAddr, sysDescrFilename, "sysRules.pl");
+            //sysUtil.INSTANCE.traceprintln("%%% QakContext | CREATING NO ACTORS on $hostName ip=${ip.toString()}");
 
-        QakContext.Companion.createContexts(hostAddr, GlobalScope.INSTANCE, sysDescrFilename, "sysRules.pl");
-        //QakContextServer ctxserver = QakContextServer( this, GlobalScope.INSTANCE, name, Protocol.TCP );
-        //sysUtil.INSTANCE.createContexts(hostAddr, sysDescrFilename, "sysRules.pl");
-        //sysUtil.INSTANCE.traceprintln("%%% QakContext | CREATING NO ACTORS on $hostName ip=${ip.toString()}");
     }
 
     public static void addActor(ActorBasic a) {
@@ -35,11 +42,7 @@ public abstract class Actor22 extends ActorBasic {
         return ctxMap.get(actorName);
     }
 
-    private static CoroutineScope createScope(){
-        ExecutorCoroutineDispatcher d = newSingleThreadContext("single");
-        CoroutineScope scope = CoroutineScopeKt.MainScope();
-        return scope;
-    }
+
 
     public static void sendMsg(String msgId,  String msg, ActorBasic destActor ){
         //null for kotlin.coroutines.Continuation<? super Unit> $completion
@@ -53,7 +56,7 @@ public abstract class Actor22 extends ActorBasic {
 
 
     public Actor22(@NotNull String name ) {
-        super(name, createScope(), false, true, false, 50);
+        super(name, QakContext.Companion.createScope(), false, true, false, 50);
         if( getActor(name) == null ) addActor( this );
         else System.out.println("WARNING: an actor with name " + name + " already exixts");
     }

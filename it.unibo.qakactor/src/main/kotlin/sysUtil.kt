@@ -291,7 +291,7 @@ object sysUtil{
 	fun aboutThreads(info: String){
 		val tname    = Thread.currentThread().getName();
 		val nThreads = ""+Thread.activeCount() ;
-		traceprintln("$info thread=$tname n=$nThreads"  )
+		traceprintln("               %%% $info thread=$tname n=$nThreads"  )
 	}
 	fun waitUser(prompt: String, tout: Long = 2000   ) {
 			try {

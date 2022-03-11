@@ -21,6 +21,7 @@ class QakContextServer(val ctx: QakContext, scope: CoroutineScope,
         scope.launch(Dispatchers.IO) {
             autoMsg( "start", "startQakContextServer" )
         }
+        sysUtil.aboutThreads("QakContextServer $name scope=$scope | AFTER init   " );
     }
 
 

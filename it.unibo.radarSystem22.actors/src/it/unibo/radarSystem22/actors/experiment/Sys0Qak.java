@@ -1,18 +1,28 @@
 package it.unibo.radarSystem22.actors.experiment;
 
+import static kotlinx.coroutines.ThreadPoolDispatcherKt.newSingleThreadContext;
+
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.QakContext;
 import it.unibo.kactor.sysUtil;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
+import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.CoroutineScopeKt;
+import kotlinx.coroutines.ExecutorCoroutineDispatcher;
 import kotlinx.coroutines.GlobalScope;
 
 public class Sys0Qak {
+    private static CoroutineScope createScope(){
+        ExecutorCoroutineDispatcher d = newSingleThreadContext("single");
+        CoroutineScope scope          = CoroutineScopeKt.MainScope();
+        return scope;
+    } 
 	
-	public void doJob() {
-		ColorsOut.outappl("Sys0 | Start", ColorsOut.BLUE);
- 	    QakContext.Companion.createContexts("localhost", GlobalScope.INSTANCE, "sys0Qak.pl", "sysRules.pl" );
+	public void doJob() {		
+		ColorsOut.outappl("Sys0Qak | Start", ColorsOut.BLUE);
+ 	    QakContext.Companion.createContexts("localhost", createScope(), "sys0Qak.pl", "sysRules.pl" );
 		BasicUtils.aboutThreads("Before execute - ");
 		//BasicUtils.waitTheUser();
 		//execute();

@@ -19,7 +19,8 @@ class CoapResourceCtx(name: String, val ctx : QakContext) : CoapResource(name) {
 
     init {
         isObservable = true
-        println("               %%% CoapResourceCtx $name | created  ")
+        sysUtil.aboutThreads("CoapResourceCtx $name | AFTER init   " );
+        //println("               %%% CoapResourceCtx $name | created  ")
     }
 
     override fun handleGET(exchange: CoapExchange) {
