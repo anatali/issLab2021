@@ -27,7 +27,7 @@ private Controller controller;
 			DomainSystemConfig.setTheConfiguration(domainConfig);
 		}
 		if( systemConfig != null ) {
-			RadarSystemConfig.setTheConfiguration(systemConfig);
+			RadarSystemConfig.setTheConfiguration(systemConfig); 
 		}
 		if( domainConfig == null && systemConfig == null) {
   			DomainSystemConfig.testing      	= false;			

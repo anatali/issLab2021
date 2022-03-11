@@ -16,7 +16,7 @@ import it.unibo.radarSystem22.domain.utils.ColorsOut;
  */
 public class CounterActor extends Actor22  { 
 	private CounterWithDelay counter;
-	private CounterMsgHandler handler;
+	private CounterApplHandler handler;
 	
 	String decReplyTemplate = "msg( dec, reply, SENDER, RECEIVER, VALUE, 1 )";
 	
@@ -24,7 +24,7 @@ public class CounterActor extends Actor22  {
 		super( name );
 		counter = new CounterWithDelay("counterWithDelay");
 	}
-	public CounterActor( String name, CounterMsgHandler handler  ) {
+	public CounterActor( String name, CounterApplHandler handler  ) {
 		super( name );
 		this.handler = handler;
 		counter = new CounterWithDelay("counterWithDelay");

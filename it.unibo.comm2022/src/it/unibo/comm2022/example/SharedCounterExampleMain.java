@@ -18,7 +18,7 @@ import it.unibo.comm2022.utils.CommSystemConfig;
  */
 public class SharedCounterExampleMain  {
 private int ctxServerPort   = 7070;
-private String delay        = "1000"; //con delay = 0 funziona
+private String delay        = "50"; //con delay = 0 funziona
 
 IApplMessage msgDec = new ApplMessage(
 	      "msg( dec, dispatch, main, counter, dec(DELAY), 1 )"
@@ -46,8 +46,8 @@ IApplMessage msgDec = new ApplMessage(
 	public static void main( String[] args) throws Exception {	
 		SharedCounterExampleMain sys = new SharedCounterExampleMain();
 		CommSystemConfig.withContext = true;
-		
-		sys.configure();
+		CommSystemConfig.tracing     = false;
+ 		sys.configure();
 		sys.execute();
  		Thread.sleep(2500);
  		BasicUtils.aboutThreads("Before end - ");

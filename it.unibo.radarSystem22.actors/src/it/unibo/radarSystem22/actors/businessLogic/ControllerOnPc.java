@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.actors.domain;
+package it.unibo.radarSystem22.actors.businessLogic;
 
 import it.unibo.radarSystem22.domain.ActionFunction;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
@@ -13,6 +13,9 @@ private ISonar sonar;
 private IRadarDisplay radar;
 private ActionFunction endFun;
 
+/*
+ * Controller che interagisce con dispositivi Proxy o actor embedded
+ */
 	public static ControllerOnPc create(ILed led, ISonar sonar,IRadarDisplay radar ) {
 		return new ControllerOnPc( led,  sonar, radar  );
 	}

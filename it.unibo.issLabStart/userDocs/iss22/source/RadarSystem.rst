@@ -160,8 +160,11 @@ Domande al committente
   * - Il LED può/deve essere connesso allo stesso RaspberryPi del sonar? 
     - Al momento si. In futuro però il LED potrebbe essere connesso a un diverso nodo di elaborazione.
   * - Il valore ``DLIMIT`` deve essere cablato nel sistema o è bene sia 
-      definibile in modo configurabile dall'utente finale?  
-    - L'utente finale deve essere in grado di specificare in un 'file di configurazione' 
+      definibile in modo configurabile dall'utente finale?
+    - 
+      .. _configDLIMIT:
+
+      L'utente finale deve essere in grado di specificare in un 'file di configurazione' 
       il valore di questa distanza.
  
 Dai requisiti possiamo asserire che:

@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.actors.domain;
+package it.unibo.radarSystem22.actors.businessLogic;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
@@ -10,6 +10,10 @@ import it.unibo.radarSystem22.actors.domain.support.DomainData;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 
+
+/*
+ * Controller che interagisce con dispositivi-actors
+ */
 public class ControllerActor extends Actor22{
 private ActorBasic led;
 private ActorBasic sonar;

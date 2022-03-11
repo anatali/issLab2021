@@ -4,6 +4,8 @@
 
 .. _Principio di singola responsabilità: https://it.wikipedia.org/wiki/Principio_di_singola_responsabilit%C3%A0
 
+.. _DigitalTwin : https://en.wikipedia.org/wiki/Digital_twin
+
 ===========================================
 Analisi del problema
 ===========================================
@@ -33,6 +35,7 @@ situazione elencando *ciò che abbiamo e disposizione* e le :blue:`problematiche
 La necessità di integrare i componenti disponibili *fa sorgere altre problematiche*:
 
    #. è opportuno incapsulare i componenti disponibli entro altri componenti capaci di interagire via rete?
+      Una fonte di ispirazione in questo senso è il concetto di `DigitalTwin`_;
    #. dove è più opportuno inserire la 'businenss logic'? In un oggetto che estende il sonar o il ``radarSupport``?
       Oppure è meglio introdurre un terzo componente?
    #. quale forma di interazione è più opportuna? diretta/mediata, sincrona/asincrona?.
@@ -59,8 +62,8 @@ E' molto probabile che la maggior marte delle persone sia propensa a seguire (al
 approccio bottom-up, essendo l'approccio top-down meno legato a enti subito concretamente usabili come 
 'building blocks'. 
 
-Osserviamo però che il compito della analisi del problema non è quello di trovare una soluzione, 
-ma quello di porre in luce le problematiche in gioco (il :blue:`cosa` si deve fare) e capire con quali risorse 
+Osserviamo però che il compito de :ref:`L'analisi del problema` *non è quello di definire una soluzione*, 
+ma quello di **porre in luce le problematiche in gioco** (il :blue:`cosa` si deve fare) e capire con quali risorse 
 (tempo, persone, denaro, etc. )  queste problematiche debbano/possano essere affrontate e risolte.
 Sarà compito dei progettisti quello di trovare il modo (il :blue:`come`) pervenire ad una soluzione 'ottimale'
 date le premesse dell'analisi e le risorse a disposizione.
@@ -282,7 +285,7 @@ In ogni caso, la possibilità che il server possa inviare messaggi al client, im
 
 :remark:`un client deve essere anche capace di agire come ricevitore di messaggi.`
 
-.. _Interaction2021:
+ 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Un primo abstraction gap

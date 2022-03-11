@@ -21,7 +21,8 @@ public class CommSystemConfig {
 	public static  int ctxServerPort     = 8048;
 	public static  String mqttBrokerAddr = "tcp://localhost:1883"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
  	
-	public static int serverTimeOut       =  600000;  //10 minuti
+	public static int serverTimeOut      =  600000;  //10 minuti
+	public static  boolean tracing       = false;
 	
  	public static ProtocolType protcolType = ProtocolType.tcp;
 
@@ -40,6 +41,8 @@ public class CommSystemConfig {
 	        JSONTokener tokener = new JSONTokener(fis);
 	        JSONObject object   = new JSONObject(tokener);
 	        
+	        withContext      = object.getBoolean("withContext");
+	        tracing          = object.getBoolean("tracing");
 	        pcHostAddr       = object.getString("pcHostAddr");
 	        raspHostAddr     = object.getString("raspHostAddr");
 
