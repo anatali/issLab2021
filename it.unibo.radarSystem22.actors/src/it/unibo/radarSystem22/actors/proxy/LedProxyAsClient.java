@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.actors.distributed;
+package it.unibo.radarSystem22.actors.proxy;
 
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.proxy.ProxyAsClient;

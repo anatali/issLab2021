@@ -316,7 +316,7 @@ prima del completamento della operazione.
   
 .. image:: ./_static/img/Radar/CounterWithDelay.PNG
    :align: center  
-   :width: 80%
+   :width: 70%
 
 
 
@@ -324,35 +324,56 @@ prima del completamento della operazione.
 .. code:: java
 
   public class CounterApplHandler extends ApplMsgHandler {
-  private CounterWithDelay c = new CounterWithDelay();
+  private CounterWithDelay counter;
 
-  public CounterApplHandler( String name ) { super(name); }
-
-  @Override
-	public void elaborate(ApplMessage message, Interaction2021 conn) {
-    String answer = elaborate( msg.msgContent() );
-    if( msg.isRequest() ) {
-      ApplMessage  reply = Utils.prepareReply(msg, answer);
-      sendAnswerToClient(reply.toString());			
-    }
+  public CounterApplHandler( String name ) { 
+    super(name);
+    this.counter = counter;
   }
+
   @Override
   public void elaborate(String message, Interaction2021 conn) {
-    try {
-      Struct cmdT     = (Struct) Term.createTerm(cmd);
-      String cmdName  = cmdT.getName();
-      if( cmdName.equals("dec")) {
-        int delay = Integer.parseInt(cmdT.getArg(0).toString());
-        counter.dec(delay);	
-        answer = ""+counter.getVal();
-			}
-    }catch( Exception e) {... }	
-  } 
- 
+    ColorsOut.out(name + " | (not used) elaborate cmd: "+cmd);  
+  }
+  @Override
+  public void elaborate(ApplMessage message, Interaction2021 conn) {
+    elaborateForObject( msg );
+  }
+
+  protected void elaborateForObject( IApplMessage msg  ) {
+  String answer=null;
+  try {
+    String cmd =  msg.msgContent();
+    int delay   = getDecDelayArg(cmd);
+    counter.dec(delay);	
+    answer = ""+counter.getVal();
+    if( msg.isRequest() ) {
+      IApplMessage  reply = CommUtils.prepareReply(msg, answer);
+      sendAnswerToClient(reply.toString());			
+    }
+  }catch( Exception e) {}	
+  }
+
+  /*
+  Il messaggio completo è
+    msg( dec, dispatch, main, counter, dec(DELAY), 1)
+  Quindi il payload è una String che denita un termine Prolog
+    dec(DELAY)
+  */
+  protected int getDecDelayArg(String cmd) throws Exception{
+    Struct cmdT     = (Struct) Term.createTerm(cmd);
+    String cmdName  = cmdT.getName();
+    if( cmdName.equals("dec")) {
+      int delay = Integer.parseInt(cmdT.getArg(0).toString());
+      return delay;
+    }else return 0;		
   }
 
 
-La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio ``msg( cmd, dispatch, main, counter, dec(DELAY), 1)``
+La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio
+   
+   ``msg( cmd, dispatch, main, counter, dec(DELAY), 1)``
+
 con ``DELAY`` fissato a un certo valore.
 Ad esempio:
 
@@ -360,16 +381,20 @@ Ad esempio:
 
   String delay = "50"; 
   ApplMessage msgDec = new ApplMessage(
-      "msg( cmd, dispatch, main, counter, dec(DELAY), 1 )"
+      "msg( dec, dispatch, main, counter, dec(DELAY), 1)"
       .replace("DELAY", delay));
 
   ProxyAsClient client1 = 
-    new ProxyAsClient("1","localhost",""+ctxServerPort,ProtocolType.tcp).
+    new ProxyAsClient("client1","localhost",""+ctxServerPort,ProtocolType.tcp).
   client1.sendCommandOnConnection(msgDec.toString());
 
 Il programma ``SharedCounterExampleMain`` crea due chiamate di questo tipo una di seguito all'altra. 
 Con delay basso (ad esempio ``delay="0";``) il comportamento è corretto (e il contatore va a 0), 
 ma con ``delay="50";`` si vede che il decremento non avviene (il contatore si fissa a 1).
  
+Questi problemi possono essere evitati sostituendo il POJO ``CounterWithDelay`` con un 
+ACTOR:
 
-
+.. image:: ./_static/img/Radar/CounterWithDelayActor.PNG
+   :align: center  
+   :width: 70%

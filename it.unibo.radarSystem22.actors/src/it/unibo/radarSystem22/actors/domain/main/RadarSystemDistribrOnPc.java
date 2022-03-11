@@ -2,10 +2,11 @@ package it.unibo.radarSystem22.actors.domain.main;
 
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.utils.ColorsOut;
-import it.unibo.radarSystem22.actors.distributed.LedProxyAsClient;
-import it.unibo.radarSystem22.actors.distributed.SonarProxyAsClient;
-import it.unibo.radarSystem22.actors.domain.ControllerOnPc;
-import it.unibo.radarSystem22.domain.DeviceFactory;
+import it.unibo.radarSystem22.actors.businessLogic.ControllerOnPc;
+import it.unibo.radarSystem22.actors.proxy.LedProxyAsClient;
+import it.unibo.radarSystem22.actors.proxy.SonarProxyAsClient;
+//import it.unibo.radarSystem22.domain.DeviceFactory;
+import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
 import it.unibo.radarSystem22.domain.ActionFunction;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
@@ -35,8 +36,8 @@ public class RadarSystemDistribrOnPc {
 	protected void configure() {
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, ProtocolType.tcp );
   		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, ProtocolType.tcp );
-		radar      = DeviceFactory.createRadarGui();
-		controller = ControllerOnPc.create(led, sonar,radar );
+		radar       = DeviceActorFactory.createRadarGui();
+		controller  = ControllerOnPc.create(led, sonar,radar );
 			
 	}
 	
@@ -63,8 +64,6 @@ public class RadarSystemDistribrOnPc {
 /*
  * Thread per
  *    main
- *    sonar
- *    ledgui
  *    2 per radar  
  *    Actor22
  */

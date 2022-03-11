@@ -19,7 +19,7 @@ public static final int ctxServerPort   = 7070;
 	public void configure(  ) {
  		BasicUtils.aboutThreads("SharedCounterWithActorsMain | Before configure - ");
 		TcpContextServer contextServer = new TcpContextServer("TcpContextServer",  ctxServerPort );
-		CounterMsgHandler ch           = new CounterMsgHandler("counterHandler");
+		CounterApplHandler ch           = new CounterApplHandler("counterHandler");
  		contextServer.addComponent("counter",ch);	
  		contextServer.activate();    
  	}

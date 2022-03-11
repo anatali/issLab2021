@@ -25,7 +25,7 @@ Importanti prodotti, al termine della fase di analisi dei requisiti e del proble
 Architettura logica come modello di riferimento
 ------------------------------------------------------------
 
-L'architettura logica di un sistema costituisce un :blue:`modello del sistema` ispirato dai requisiti funzionali 
+:ref:`L'architettura logica` di un sistema costituisce un :blue:`modello del sistema` ispirato dai requisiti funzionali 
 e dalle forze in gioco nel dominio applicativo o nella specifica applicazione e mira ad identificare 
 i macro-sottosistemi in cui il **problema stesso** suggerisce di articolare il sistema risolvente. 
 
@@ -89,15 +89,16 @@ Ispirandoci agli schemi port-adapter_ e clean-architecture_:
 :remark:`il software relativo dominio sarà scritto in un progetto dedicato`
 
 .. code::  
+
     it.unibo.radarSystem22.domain
 
 
 :remark:`il software dell'applicazione sarà scritto in un progetto dedicato`
 
 .. code::  
+
     it.unibo.radarSystem22
-
-
+    
 .. _ILed:
 
 .. _IRadarDisplay:
@@ -221,7 +222,7 @@ può acquisire i dati del Sonar in  modi diversi:
   #. agendo come un componente *observer* di un Sonar *observable*;
   #. agendo com un *subscriber* su una *topic* di un broker su cui il Sonar pubblica i suoi dati.
 
-Poichè abbiamo in precedenza escluso forme di interazione *publish-subscribe*, ci concentrimao al momento
+Poichè abbiamo in precedenza escluso forme di interazione *publish-subscribe*, ci concentriamo al momento
 sui casi 2.1 e 2.2. 
 
 Questo modello sembra portare intrinsecamente in sè l'idea di una classica applicazione   
@@ -256,7 +257,9 @@ implementare i componenti in modo che possano scambiare informazione via rete.
   di una o più classi.  
 
 - Il **Singleton** evita di creare più di una istanza di una classe e può risultare utile per creare supporti 
+  alla comunicazione.
 
+.. _Interaction2021:
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 L'interfaccia ``Interaction2021``
@@ -300,8 +303,6 @@ pensare alla costruzione di componenti software che possano ridurre il costo del
 
 
 
-
-
 .. _concettodienabler:  
 
 +++++++++++++++++++++++++++++++++++++++
@@ -334,7 +335,7 @@ Tuttavia, come analisti, riteniamo sia opportuno  limitare il traffico di rete,
 evitando di inviare i dati del sonar anche quando non
 sono richiesti dal sever.  Per cui, una architettura migliore è porre sul PC, ad uso
 del ``Controller``, due  *proxy tipo-client*, uno per il Led e uno per il Sonar, che interagiranno cone due
-*enabler tipo-server* complementari posti sul RaspberryPi, inviando su :ref:`Interaction2021`:
+*enabler tipo-server* complementari posti sul RaspberryPi, inviando su  `Interaction2021`_:
 
 - messaggi interpretabili come :blue:`comandi` (ad esempio ``activate``, ``turnOff``)
 - messaggi interpretabili cone :blue:`richieste` (ad esempio ``getDistance``, ``getState``)

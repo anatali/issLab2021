@@ -17,13 +17,13 @@ import it.unibo.radarSystem22.domain.utils.ColorsOut;
  * contatore rilascia il controllo e usa l'handler per inviare la risposta a
  * un caller remoto ( SI VEDA CounterActorCaller ).
  */
-public class CounterMsgHandler  extends ApplMsgHandler implements IApplMsgHandlerForActor{ 
+public class CounterApplHandler  extends ApplMsgHandler implements IApplMsgHandlerForActor{ 
 	String decReplyTemplate = "msg( dec, reply, SENDER, RECEIVER, VALUE, 1 )";
 	
 	private CounterActor ca;
 	private Interaction2021 conn;
 	
-	public CounterMsgHandler( String name  ) {
+	public CounterApplHandler( String name  ) {
 		super( name );
 		ca = new CounterActor("counter", this);
 	}
