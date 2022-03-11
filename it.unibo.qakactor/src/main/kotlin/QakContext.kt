@@ -26,8 +26,8 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         fun getActor( actorName : String ) : ActorBasic? {
             return sysUtil.getActor(actorName)
         }
-//Called by genrated code main of ctx
-        suspend fun createContexts(hostName: String, scope: CoroutineScope ,
+//Called by generated code main of ctx
+         fun createContexts(hostName: String, scope: CoroutineScope ,
                            desrFilePath: String, rulesFilePath: String) {
             sysUtil.createContexts(hostName, desrFilePath, rulesFilePath)
 

@@ -6,12 +6,25 @@ import kotlinx.coroutines.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 
 import static kotlinx.coroutines.ThreadPoolDispatcherKt.newSingleThreadContext;
 
 public abstract class Actor22 extends ActorBasic {
     private static HashMap<String,ActorBasic> ctxMap = new HashMap<String,ActorBasic>();
+
+    public static void createActorSystem(String name, String hostAddr, int port, String sysDescrFilename ){
+        //runBlocking{
+        //QakContext qkaCtx = new QakContext(name,   hostAddr,   port, "", false, false);
+            //QakContext.Companion.createContexts( hostAddr,"localhost", null, sysDescrFilename, "sysRules.pl");
+        //}
+
+        QakContext.Companion.createContexts(hostAddr, GlobalScope.INSTANCE, sysDescrFilename, "sysRules.pl");
+        //QakContextServer ctxserver = QakContextServer( this, GlobalScope.INSTANCE, name, Protocol.TCP );
+        //sysUtil.INSTANCE.createContexts(hostAddr, sysDescrFilename, "sysRules.pl");
+        //sysUtil.INSTANCE.traceprintln("%%% QakContext | CREATING NO ACTORS on $hostName ip=${ip.toString()}");
+    }
 
     public static void addActor(ActorBasic a) {
         ctxMap.put(a.getName(), a);

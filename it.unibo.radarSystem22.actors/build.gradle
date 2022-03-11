@@ -30,6 +30,9 @@ dependencies {
 
 //MQTT (required by actors)
 	implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
+//LOG4j	
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+	implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25' 
 //COAP (required by actors)
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
 	implementation group: 'org.eclipse.californium', name: 'californium-core', version: '2.0.0-M12'
