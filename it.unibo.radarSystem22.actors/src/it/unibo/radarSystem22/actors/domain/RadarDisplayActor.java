@@ -32,9 +32,10 @@ private String angle = "90";
 	public void update(String d, String angle) {
 		ColorsOut.outappl( getName()  + " | update distance " + d + " angle="+angle , ColorsOut.BLUE);
 		this.angle = angle;  //SIDE EFFECT on POJO
-		IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
+		this.forwardToSelf(DeviceLang.cmd, ""+d);
+		//IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
 		//updateRadarGui : msg(cmd,dispatch,radarDisplay,radar,d,N)
-		Actor22.sendMsg(updateRadarGui, this );  
+		//Actor22.sendMsg(updateRadarGui, this );  
 	}
 
 }

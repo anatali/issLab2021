@@ -74,16 +74,22 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
             //println("               %%% QakContext |  $hostAddr:$portNum INIT ")
             ctxserver = QakContextServer( this, createScope(), "server$name", Protocol.TCP ) //
             //CoAP: Jan2020
+            /*
               try{
+                  sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
+                  sysUtil.waitUser("Starting CoapServer", 20000);
+                  sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
                   val coapPort    =  portNum
                   serverCoap      =  CoapServer(coapPort)
                   serverCoap.add(  resourceCtx )
                   serverCoap.start()
                   sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapServer on port: $coapPort " );
-                  //println( "               %%% QakContext $name |  serverCoap started on port: $coapPort" )
+                                    //println( "               %%% QakContext $name |  serverCoap started on port: $coapPort" )
             }catch(e : Exception){
                 println( "               %%% QakContext $name |  serverCoap error: ${e.message}" )
             }
+
+             */
          }
      }
 	

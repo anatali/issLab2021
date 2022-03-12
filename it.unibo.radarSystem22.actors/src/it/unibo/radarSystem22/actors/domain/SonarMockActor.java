@@ -6,6 +6,7 @@ import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.DeviceFactory;
+import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.interfaces.ISonar;
 
 /*
@@ -21,7 +22,8 @@ private ISonar sonar;
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
+		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+		//ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		if( msg.isRequest() ) elabRequest(msg);
 		else if( msg.isDispatch() ) elabCmd(msg);
 		else ColorsOut.outerr(getName()  + " | unknown " + msg.msgId());

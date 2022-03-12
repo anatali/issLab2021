@@ -20,13 +20,13 @@ public class RadarSystemConfig {
 	public static  String mqttBrokerAddr = "tcp://localhost:1883"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
  	
 	public static int serverTimeOut       =  600000;  //10 minuti
+
+	public static int DLIMIT              =  70;
+	public static  boolean withRadarGui   = false;
 	
  	public static ProtocolType protcolType = ProtocolType.tcp;
 
-	public static void setTheConfiguration(  ) {
-		setTheConfiguration("../CommSystemConfig.json");
-	}
-	public static void setTheConfiguration( String resourceName ) {
+ 	public static void setTheConfiguration( String resourceName ) {
 		//Nella distribuzione resourceName è in una dir che include la bin  
 		FileInputStream fis = null;
 		try {

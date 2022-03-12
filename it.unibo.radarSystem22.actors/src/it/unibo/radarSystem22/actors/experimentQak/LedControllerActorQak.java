@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.actors.experiment;
+package it.unibo.radarSystem22.actors.experimentQak;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
@@ -18,32 +18,31 @@ import static kotlinx.coroutines.ThreadPoolDispatcherKt.newSingleThreadContext;
 /*
  * Controller di prova per il led qak
  */
-public class LedControllerActor22 extends Actor22{ //extends ActorBasic
-//    private static CoroutineScope createScope(){
-//        ExecutorCoroutineDispatcher d = newSingleThreadContext("single");
-//        CoroutineScope scope = CoroutineScopeKt.MainScope();
-//        return scope;
-//    } 
+public class LedControllerActorQak extends ActorBasic{  
+    private static CoroutineScope createScope(){
+        ExecutorCoroutineDispatcher d = newSingleThreadContext("single");
+        CoroutineScope scope = CoroutineScopeKt.MainScope();
+        return scope;
+    } 
 	
  /*
  * Costruttore che riceve i riferimenti agli attori componenti il sistema
  */
-	public LedControllerActor22( String name ) {
-		//super(name,createScope(), false, true, false, 50);
-		super(name);
-		IApplMessage controllerActivate   = 
+	public LedControllerActorQak( String name ) {
+		super(name,createScope(), false, true, false, 50);
+ 		IApplMessage controllerActivate   = 
 				MsgUtil.buildDispatch("main", DeviceLang.cmd, "activate", name);
 		Actor22.sendMsg( controllerActivate, this);
 		//this.autoMsg(DeviceLang.cmd, "activate", null);  //
  	}
 	
-//	@Override
-//	public Object actorBody(IApplMessage msg, Continuation<? super Unit> arg1) {
-//		doJob(msg);
-// 		return null; 
-//	}
+	@Override
+	public Object actorBody(IApplMessage msg, Continuation<? super Unit> arg1) {
+		doJob(msg);
+ 		return null; 
+	}
 	
-	@Override 
+ 
 	protected void doJob(IApplMessage msg) { 
  		String msgId = msg.msgId();
 		switch( msgId ) {

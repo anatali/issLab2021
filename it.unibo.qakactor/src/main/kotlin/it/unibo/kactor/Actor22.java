@@ -42,6 +42,11 @@ public abstract class Actor22 extends ActorBasic {
         return ctxMap.get(actorName);
     }
 
+    public static void showActors22(){
+        System.out.println("-------------------------------------------------------");
+        ctxMap.forEach((k,v) -> { System.out.println("name: "+k+" also in Qak:"+ QakContext.Companion.getActor(k) ); } );
+        System.out.println("-------------------------------------------------------");
+    }
 
 
     public static void sendMsg(String msgId,  String msg, ActorBasic destActor ){
@@ -67,7 +72,15 @@ public abstract class Actor22 extends ActorBasic {
         doJob(msg);
         return null;
     }
-
+    public void forwardToSelf(String msgId,  String msg ){
+        this.autoMsg(msgId, msg,null);
+    }
+    public void forward(String msgId,  String msg, String dest ){
+        this.forward(msgId, msg, dest, null);
+    }
+    public void request( String msgId,  String msg, String dest ){
+        this.request(msgId, msg, dest, null);
+    }
     protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
         System.out.println( getName()  + " | reply= " + reply );
         ActorBasic dest = getActor(msg.msgSender());
