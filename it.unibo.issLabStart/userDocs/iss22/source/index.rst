@@ -21,6 +21,7 @@ iss22
    Enablers
    ContestiContenitori
    RadarSystemTcp
+   Attori
    OltreTcp
    RadarSystemWebgui
    WebSockets

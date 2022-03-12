@@ -1016,6 +1016,10 @@ Un sistema più reattivo
 L'uso di un Sonar osservabile permette di eseguire la business logic del Controller all'interno di un
 componente che riceve i dati dal Sonar non appena vengono prodotti.
 
-.. Prima di affrontare il refactoring del sistema in questo senso, impostiamo l'esecuzione e il testing del sistema nella versione attuale.
+.. xxx Prima di affrontare il refactoring del sistema in questo senso, impostiamo l'esecuzione e il testing del sistema nella versione attuale.
+
+:worktodo:`WORKTODO: Sonar osservabile`
+
+- Definire un componente ``SonarObservable`` seconfo quanto prospettato in :ref:`patternObserver` e il relativo (piano di) test.
 
 
