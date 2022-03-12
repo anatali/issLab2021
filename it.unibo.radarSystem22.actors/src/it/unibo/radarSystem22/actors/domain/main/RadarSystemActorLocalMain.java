@@ -10,7 +10,10 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.interfaces.IRadarDisplay;
  
-
+/*
+ * Questo sistema NON usa la infrastruttura Qak per gli attori
+ * ma solo Actor22
+ */
 public class RadarSystemActorLocalMain {
 	
 	private ActorBasic led ;
@@ -57,12 +60,13 @@ public class RadarSystemActorLocalMain {
 		BasicUtils.aboutThreads("Before end - ");
 	}
 /*
- * Thread per
- *    main
- *    sonar
- *    ledgui
- *    2 per radar  
+ * Threads  
+ *    main		1
+ *    sonar		1 (simulator from Domain)
+ *    ledgui	1
+ *    radar   	2
  *    Actor22
+ *    In tutto 6
  */
 	
 }

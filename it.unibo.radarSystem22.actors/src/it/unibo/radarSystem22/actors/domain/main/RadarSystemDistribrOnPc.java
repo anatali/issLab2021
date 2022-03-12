@@ -13,7 +13,11 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.interfaces.*;
  
  
-
+/*
+ * Questo sistema NON usa la infrastruttura Qak per gli attori
+ * ma solo Actor22 e TcpContextServer/proxy per abilitare la distribuzione.
+ * Fa coppia con RadarSystemDistribrOnRasp  
+ */
 public class RadarSystemDistribrOnPc {
 	
 	private ILed led ;

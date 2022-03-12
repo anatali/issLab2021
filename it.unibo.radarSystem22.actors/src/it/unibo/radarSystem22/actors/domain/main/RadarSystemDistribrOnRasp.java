@@ -11,7 +11,11 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  
-
+/*
+ * Questo sistema NON usa la infrastruttura Qak per gli attori
+ * ma solo Actor22 e TcpContextServer/proxy per abilitare la distribuzione.
+ * Fa coppia con   RadarSystemDistribrOnPc
+ */
 public class RadarSystemDistribrOnRasp {
 	
 	private ActorBasic led ;

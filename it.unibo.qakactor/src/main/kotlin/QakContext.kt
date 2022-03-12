@@ -12,7 +12,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
     internal val actorMap : MutableMap<String, ActorBasic> = mutableMapOf<String, ActorBasic>()
     internal val proxyMap:  MutableMap<String, NodeProxy> = mutableMapOf<String, NodeProxy>()  //cannot be static
     //lateinit private var serverCoap  :  CoapServer      //CoAP: Jan2020
-    private var resourceCtx : CoapResourceCtx
+    lateinit var resourceCtx : CoapResourceCtx
 	lateinit var ctxserver  : QakContextServer
 	lateinit var serverCoap : CoapServer
  	lateinit var ctxLogfileName : String
@@ -68,17 +68,16 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
     init{
   		 ctxLogfileName    = "${name}_MsLog.txt"	//APR2020
         //OCT2019 --> NOV2019 Create a QakContextServer also when we use MQTT
-        resourceCtx = CoapResourceCtx( name, this )   //must be ininitialized here
+        resourceCtx = CoapResourceCtx( name, this )   //must be ininitialized here  ENABLE
         if( ! external ){
             sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapResourceCtx  " );
             //println("               %%% QakContext |  $hostAddr:$portNum INIT ")
             ctxserver = QakContextServer( this, createScope(), "server$name", Protocol.TCP ) //
             //CoAP: Jan2020
-            /*
+
               try{
-                  sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
-                  sysUtil.waitUser("Starting CoapServer", 20000);
-                  sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
+                  //sysUtil.waitUser("Starting CoapServer", 20000);
+                  //sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
                   val coapPort    =  portNum
                   serverCoap      =  CoapServer(coapPort)
                   serverCoap.add(  resourceCtx )
@@ -89,7 +88,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
                 println( "               %%% QakContext $name |  serverCoap error: ${e.message}" )
             }
 
-             */
+
          }
      }
 	
@@ -118,7 +117,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         actorMap.put( actor.name, actor )
         actor.checkMqtt()
         //sysUtil.traceprintln("               %%% QakContext $name | addActor ${actor.name}")
-        resourceCtx.addActorResource( actor )             //CoAP: Jan2020
+        if( this::resourceCtx.isInitialized  ) resourceCtx.addActorResource( actor )   //CoAP: Jan2020
     }
 
     fun addInternalActor( actor: ActorBasic ) {

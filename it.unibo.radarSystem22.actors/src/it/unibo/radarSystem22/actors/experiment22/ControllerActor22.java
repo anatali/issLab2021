@@ -36,6 +36,7 @@ public class ControllerActor22 extends Actor22{
  		String msgId = msg.msgId();
 		switch( msgId ) {
 			case DeviceLang.cmd     : elabCmd(msg);break;
+			case "distance"         : elabAnswer(msg);break;	//ABUSO ...
   		    default: ColorsOut.outerr(getName()  + " | unknown " + msgId);
 		}		
   	}

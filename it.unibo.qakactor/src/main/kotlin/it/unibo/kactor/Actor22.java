@@ -84,11 +84,15 @@ public abstract class Actor22 extends ActorBasic {
     protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
         System.out.println( getName()  + " | reply= " + reply );
         ActorBasic dest = getActor(msg.msgSender());
-        if(dest!=null) sendMsg(reply, dest);
+        if(dest != null) sendMsg(reply, dest);
         else {
             ActorBasic ar = getActor("ar"+msg.msgSender());
             if(ar !=null) sendMsg(reply, ar);
-            else System.out.println(getName()  + " | ERROR Reply to a remote destination "  );
+            else {
+                System.out.println(getName() + " | Reply to a remote destination Qak");
+                forward(reply.msgId(), reply.msgContent(), reply.msgReceiver());
+                //this.answer(msg.msgId(),reply.msgId(),reply.toString(),null);
+            }
         }
     }
 

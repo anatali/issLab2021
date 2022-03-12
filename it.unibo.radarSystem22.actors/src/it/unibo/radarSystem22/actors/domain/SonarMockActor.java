@@ -41,17 +41,19 @@ private ISonar sonar;
 
 	protected void elabRequest(IApplMessage msg) {
 		String msgReq = msg.msgContent();
-		//ColorsOut.outappl( getName()  + " | elabRequest " + msgCmd, ColorsOut.BLUE);
+		ColorsOut.outappl( getName()  + " | elabRequest " + msg, ColorsOut.BLUE);
 		switch( msgReq ) {
 			case "isActive"  :{
 				boolean b = sonar.isActive();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "sonarState", ""+b, msg.msgSender());
+				ColorsOut.outappl( getName()  + " | sendAnswer reply=" + reply, ColorsOut.BLUE);
 				sendAnswer(msg,reply);	//in Actor22	
 				break;
 			}
 			case "distance"  :{
 				int d = sonar.getDistance().getVal();
-				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender());
+				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender()); //"distance"
+				ColorsOut.outappl( getName()  + " | sendAnswer reply=" + reply, ColorsOut.BLUE);
 				sendAnswer(msg,reply);	//in Actor22		
 				break;
 			}
