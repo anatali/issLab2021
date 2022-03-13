@@ -43,21 +43,18 @@ public class RadarSysSprint2ControllerOnPcMain implements IApplication{
 		DomainSystemConfig.sonarDelay       = 200;
 		//Su PC
 		DomainSystemConfig.simulation   	= true;
-		DomainSystemConfig.DLIMIT      		= 40;  
-		DomainSystemConfig.ledGui           = true;
+		DomainSystemConfig.DLIMIT      		= 70;  
 		
-		RadarSysConfigSprint2.RadarGuiRemote    = false;		
-		RadarSysConfigSprint2.serverPort  = 8023;		
-		RadarSysConfigSprint2.hostAddr    = "localhost";
-	}
+		RadarSysConfigSprint2.RadarGuiRemote = false;		
+ 	}
 	
 	public void configure(  )  {	
-		String host = RadarSysConfigSprint2.hostAddr;
-		String port = ""+RadarSysConfigSprint2.serverPort;
-		ProtocolType protocol = ProtocolType.tcp;
+ 		ProtocolType protocol = ProtocolType.tcp;
 		
- 		led    		= new LedProxyAsClient("ledPxy",     host, port, protocol );
-  		sonar  		= new SonarProxyAsClient("sonarPxy", host, port, protocol );
+ 		led    		= new LedProxyAsClient("ledPxy",     
+ 				RadarSysConfigSprint2.raspAddr, ""+RadarSysConfigSprint2.ledPort, protocol );
+  		sonar  		= new SonarProxyAsClient("sonarPxy", 
+  				RadarSysConfigSprint2.raspAddr, ""+RadarSysConfigSprint2.sonarPort, protocol);
   		radar  		= DeviceFactory.createRadarGui();
  
 	    //Controller

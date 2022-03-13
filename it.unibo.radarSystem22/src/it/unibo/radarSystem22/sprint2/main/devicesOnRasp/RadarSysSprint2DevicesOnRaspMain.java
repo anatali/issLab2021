@@ -10,6 +10,7 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
 import it.unibo.radarSystem22.sprint2.handlers.LedApplHandler;
+import it.unibo.radarSystem22.sprint2.handlers.SonarApplHandler;
  
  
 /*
@@ -19,7 +20,8 @@ import it.unibo.radarSystem22.sprint2.handlers.LedApplHandler;
 public class RadarSysSprint2DevicesOnRaspMain implements IApplication{
 	private ISonar sonar;
 	private ILed  led ;
-	private TcpServer server ;
+	private TcpServer ledServer ;
+	private TcpServer sonarServer ;
 
 	@Override
 	public void doJob(String domainConfig, String systemConfig) {
@@ -33,25 +35,27 @@ public class RadarSysSprint2DevicesOnRaspMain implements IApplication{
     	DomainSystemConfig.testing     = false;			
     	DomainSystemConfig.tracing     = false;			
 		DomainSystemConfig.sonarDelay  = 200;
-    	DomainSystemConfig.ledGui      = true;			
+    	DomainSystemConfig.ledGui      = true;		//se siamo su PC	
 
+		RadarSysConfigSprint2.tracing           = false;		
 		RadarSysConfigSprint2.RadarGuiRemote    = true;		
-		RadarSysConfigSprint2.serverPort        = 8023;		
-		RadarSysConfigSprint2.hostAddr          = "localhost";
-
+ 
 	}
 	protected void configure() {		
- 	    sonar      = DeviceFactory.createSonar();
- 	    led        = DeviceFactory.createLed();
-
+ 	   led        = DeviceFactory.createLed();
  	   IApplMsgHandler ledh = LedApplHandler.create("ledh", led);
-	   int port   = RadarSysConfigSprint2.serverPort;
-	   server     = new TcpServer("raspServer",port,ledh );
-	
+ 	   ledServer     = new TcpServer("ledServer",RadarSysConfigSprint2.ledPort,ledh );
+
+	   sonar      = DeviceFactory.createSonar();
+ 	   IApplMsgHandler sonarh = SonarApplHandler.create("sonarh", sonar);
+ 	   sonarServer   = new TcpServer("sonarServer",RadarSysConfigSprint2.sonarPort,sonarh );
+
+ 	   
 	}
 	
-	protected void execute() {
-		server.activate();
+	protected void execute() {		
+		ledServer.activate();
+		sonarServer.activate();
 	}
 	
 	@Override

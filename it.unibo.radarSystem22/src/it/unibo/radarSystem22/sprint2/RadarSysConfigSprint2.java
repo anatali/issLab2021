@@ -10,5 +10,9 @@ public class RadarSysConfigSprint2 {
 	public static boolean  RadarGuiRemote = false;
 	public static int serverPort          = 8023;
 	public static String hostAddr         = "localhost";		
- 
+
+	public static String raspAddr         = "localhost";		
+	public static int ledPort             = 8010;
+	public static int sonarPort           = 8012;
+
 }

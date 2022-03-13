@@ -10,6 +10,7 @@ import it.unibo.radarSystem22.domain.utils.ColorsOut;
  
 
 public class LedApplHandler extends ApplMsgHandler {
+private ILed led;
 
 	public static IApplMsgHandler create(String name, ILed led) {
  		return new LedApplHandler(name,led);		 
@@ -17,6 +18,7 @@ public class LedApplHandler extends ApplMsgHandler {
  
 	public LedApplHandler(String name, ILed led) {
 		super(name);
+		this.led = led;
  	}
 	
 
@@ -28,7 +30,10 @@ public class LedApplHandler extends ApplMsgHandler {
 	public void elaborate(String message, Interaction2021 conn) {
 		ColorsOut.out(name + " | elaborate message=" + message + " conn=" + conn , ColorsOut.GREEN);
  		if( message.equals("getState") ) {
- 		}else {}
+ 			this.sendMsgToClient(""+led.getState(), conn);
+ 		}
+ 		else if( message.equals("on") ) { led.turnOn(); }
+ 		else if( message.equals("off") ) { led.turnOff(); }
 	}
 
 }
