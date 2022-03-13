@@ -1,23 +1,13 @@
 package it.unibo.radarSystem22.sprint2.main.sysOnRasp;
 
-
-import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.interfaces.IApplMsgHandler;
 import it.unibo.comm2022.tcp.TcpServer;
 import it.unibo.radarSystem22.IApplication;
 import it.unibo.radarSystem22.domain.DeviceFactory;
-import it.unibo.radarSystem22.domain.interfaces.ILed;
 import it.unibo.radarSystem22.domain.interfaces.IRadarDisplay;
-import it.unibo.radarSystem22.domain.interfaces.ISonar;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
-import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.sprint1.ActionFunction;
-import it.unibo.radarSystem22.sprint1.Controller;
 import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
-import it.unibo.radarSystem22.sprint2.handlers.LedApplHandler;
 import it.unibo.radarSystem22.sprint2.handlers.RadarApplHandler;
-import it.unibo.radarSystem22.sprint2.proxy.LedProxyAsClient;
-import it.unibo.radarSystem22.sprint2.proxy.SonarProxyAsClient;
 
 /*
  * Attiva il Controller (vedi sprint1) e il RadarDisplay (vedi domain)

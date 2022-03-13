@@ -979,16 +979,16 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
     Utils.delay(1000) ; //give time to work ... 		
   }
 
-.. _RadarSystemMainLocalOnRasp:
+
+
  
 --------------------------------------
-Il sistema su RaspberryPi
+Deployment su RaspberryPi
 --------------------------------------
 
-:worktodo:`WORKTODO: Esecuzione su RaspberryPi`
+Per fare il deployment del sistema su RaspberryPi ed eseguire l'applicazione :ref:`RadarSystemSprint1Main`  
+dobbiamo eseguire quanto riportato qui di seguito:
 
-- Fare il deployment del sistema su RaspberryPi ed eseguire l'applicazione :ref:`RadarSystemSprint1Main`  
-  seguendo quanto riportato qui di seguito:
 
 #. Impostazione del main file in ``build.gradle``
  

@@ -36,7 +36,7 @@ Il programma di lavoro può essere così riassunto:
 
     .. image:: ./_static/img/Architectures/TCPServerAndApplHandler.png 
       :align: center
-      :width: 60%
+      :width: 80%
   
   All'arrivo di una richiesta, il Server creae un oggetto (attivo)
   di classe :ref:`TcpApplMessageHandler<tcpmsgh>` passandondogli l'``applHandler``  
@@ -637,33 +637,71 @@ può ora essere modificata in modo da associare alla variabile *radar* un ProxyC
 
   public class RadarSysSprint2ControllerOnRaspMain 
                                    implements IApplication{
+
+  public void setup( String domainConfig, String systemConfig )  {
+    DomainSystemConfig.simulation  = true;
+    DomainSystemConfig.testing     = false;			
+    DomainSystemConfig.tracing     = false;			
+    DomainSystemConfig.sonarDelay  = 200;
+    DomainSystemConfig.ledGui      = true;			
+    DomainSystemConfig.DLIMIT      = 75;
+    	
+    RadarSysConfigSprint2.RadarGuiRemote    = true;		
+    RadarSysConfigSprint2.serverPort        = 8023;		
+    RadarSysConfigSprint2.hostAddr          = "localhost";
+  }                                   
   protected void configure() {
     ...
-	    radar = new  RadarGuiProxyAsClient("radarPxy", 
+    radar = new  RadarGuiProxyAsClient("radarPxy", 
                 RadarSysConfigSprint2.hostAddr, 
                 ""+RadarSysConfigSprint2.serverPort, 
                 ProtocolType.tcp);
-      ...
+    ...
   }
 
-Si veda:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Proxy per il radar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-- *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar*  (main che implementa :ref:`IApplication`)
+.. code:: java  
 
-Per completare il sistema non rimane che definire il TCPServer da attivare sul PC
+  public class RadarGuiProxyAsClient 
+                extends ProxyAsClient implements IRadarDisplay {
+ 
+  public RadarGuiProxyAsClient( 
+       String name,String host,String entry,ProtocolType protocol){
+    super( name, host, entry,protocol );
+ 	}
+
+  @Override  //from IRadarDisplay
+  public void update(String d, String a) {		 
+    String msg= "{ \"distance\" : D , \"angle\" : A }".replace("D",d).replace("A",a);
+    try {
+      sendCommandOnConnection(msg);
+    } catch (Exception e) { ...	}   
+  }
+
+  @Override
+  public int getCurDistance() {
+    String answer = sendRequestOnConnection("");
+    return Integer.parseInt(answer);
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Nuovo Deployment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Nel package ``it.unibo.radarSystem22.sprint2.main.sysOnRasp`` definiamo le parti di sistema da attivare
+sul PC e sul RaspberryPi:
+
+- ``RadarSysSprint2RadarOnPcMain``  : parte da attivare (per prima) sul PC
+- ``RadarSysSprint2ControllerOnRaspMain``  : parte da attivare sul RaspberryPi
+
+Il deployment della parte di sistema che gira sul RaspberryPi può avvenire secondo gli stessi passi 
+riportati in :ref:`Deployment su RaspberryPi` dello Sprint1.
 
 
-+++++++++++++++++++++++++++++++++++++++++
-Un server per il RadarDisplay
-+++++++++++++++++++++++++++++++++++++++++
+:worktodo:`WORKTODO: Controller sul PC`
 
-Si veda:
-
-- *it.unibo.enablerCleanArch.supports.TcpServer*
-- *it.unibo.enablerCleanArch.supports.TcpApplMessageHandler*
-- *it.unibo.enablerCleanArchapplHandler.RadarApplHandler*
-- *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainDisplayOnPc*  (main che implementa :ref:`IApplication`)
-
-
-
-
+- Redifinire il sistema in modo che il Controller sia allocato sul PC, lasciando sul RaspberryPi
+  solo il software relativo al Led e al Sonar.
