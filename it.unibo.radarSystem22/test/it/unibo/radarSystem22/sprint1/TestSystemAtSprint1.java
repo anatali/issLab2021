@@ -21,8 +21,8 @@ private RadarSystemSprint1Main sys;
 			sys.setup( null,null );
 			sys.configure();
 			DomainSystemConfig.testing    		= true;   
-			DomainSystemConfig.tracing    		= true; 
-			RadarSystemConfig.tracing    		= true; 
+//			DomainSystemConfig.tracing    		= false; 
+//			RadarSystemConfig.tracing    		= false; 
 		} catch (Exception e) {
 			fail("setup ERROR " + e.getMessage() );
  		}

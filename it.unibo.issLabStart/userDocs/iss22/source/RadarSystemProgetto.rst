@@ -787,11 +787,11 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
   private Controller controller;
   
   @Override
-  public String getName() {	return "RadarSystemSprint1Main";  }
+  public String getName() {	return this.getClass().getName();  }
 
   @Override
-  public void doJob(String configFileName) {
-    setup(configFileName);
+  public void doJob(String configFileName, String systemConfig) {
+    setup(configFileName,systemConfig);
     configure();
 	    ActionFunction endFun = (n) -> { 
 	    	System.out.println(n); 
@@ -808,9 +808,12 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
 	}
     ...
   public static void main( String[] args) throws Exception {
-    new RadarSystemSprint1Main().doJob(null); //su PC
+    new RadarSystemSprint1Main().doJob(null,null); //su PC
+    /*
     //su Rasp:
-    //new RadarSystemSprint1Main().doJob("DomainSystemConfig.json");
+      new RadarSystemSprint1Main().doJob(
+         "DomainSystemConfig.json","RadarSystemConfig.json");
+    */
   }
 
 
@@ -828,12 +831,15 @@ delle versioni del sistema dovrà implementare l'interfaccia che segue.
 .. code:: java
 
   public interface IApplication {
-    public void doJob(String configFileName);
+    public void doJob(String domainConfig, String systemConfig);
     public String getName();
   }
 
 Ogni versione del sistema dovrà duque fornire un nome (con cui potrà essere selezionata) e un metodo ``doJob`` 
-che riceve in ingresso il file di configurazione, per essere eseguita.  
+che riceve in ingresso, per essere eseguita, due file di configurazione:
+
+- **domainConfig** : definisce le configurazioni relative al dominio applicativo.
+- **systemConfig** : definisce le configurazioni relative alla speciifca applicazione.
 
 :worktodo:`WORKTODO: Programma di selezione applicazioni`
 
@@ -855,27 +861,32 @@ Osserviamo che:
 
 .. code:: java
 
-  public class RadarSystemMainLocal implements IApplication{
+  public class RadarSystemSprint1Main implements IApplication{
 
-  public void setup( String configFile )  {
-    if( configFile != null ) DomainSystemConfig.setTheConfiguration(configFile);
-    else {
-      DomainSystemConfig.testing         = false;			
-      DomainSystemConfig.sonarDelay      = 200;
-    //Su PC
-      DomainSystemConfig.simulation      = true;
-      DomainSystemConfig.DLIMIT          = 40;  
-      DomainSystemConfig.ledGui          = true;
-      DomainSystemConfig.RadarGuiRemote  = false;
-    //Su Raspberry (nel file di configurazione)
-      //DomainSystemConfig.simulation    = false;
-      //DomainSystemConfig.DLIMIT        = 12;  
-      //DomainSystemConfig.ledGui        = false;
-      //DomainSystemConfig.RadarGuiRemote = true;
+  public void setup( String domainConfig, String systemConfig  )  {
+    if( domainConfig != null ) {
+      DomainSystemConfig.setTheConfiguration(domainConfig);
     }
-  }//setup
+    if( systemConfig != null ) {
+      RadarSystemConfig.setTheConfiguration(systemConfig); 
+    }
+    if( domainConfig == null && systemConfig == null) {
+      DomainSystemConfig.testing    = false;			
+      DomainSystemConfig.sonarDelay = 200;
+    //Su PC
+      DomainSystemConfig.simulation   	= true;
+      DomainSystemConfig.DLIMIT      		= 40;  
+      DomainSystemConfig.ledGui           = true;
+      RadarSystemConfig.RadarGuiRemote    = false;
+    //Su Raspberry (nel file di configurazione)
+//			DomainSystemConfig.simulation   	= false;
+//			DomainSystemConfig.DLIMIT      		= 12;  
+//			DomainSystemConfig.ledGui         = false;
+//			RadarSystemConfig.RadarGuiRemote  = true;
+		}
+ 	}
    ...
-  }//RadarSystemMainLocal
+  }//RadarSystemSprint1Main
 
 +++++++++++++++++++++++++++++++
 Fase di configurazione
@@ -936,11 +947,12 @@ La testUnit introduce un metodo di setup per definire i parametri di configurazi
     public void setUp() {
       System.out.println("setUp");
       try {
-        sys = new RadarSystemMainLocal();
-        sys.setup( null );  //non usiamo il file di configurazione
+        sys = new RadarSystemSprint1Main();
+        sys.setup( null,null );
         sys.configure();
-        DomainSystemConfig.testing    		= true;   
-        DomainSystemConfig.tracing    		= true; 
+        DomainSystemConfig.testing   = true;   
+        DomainSystemConfig.tracing   = true; 
+        RadarSystemConfig.tracing    = true; 
       } catch (Exception e) {
         fail("setup ERROR " + e.getMessage() );
       }
@@ -983,14 +995,14 @@ Il sistema su RaspberryPi
 
 :worktodo:`WORKTODO: Esecuzione su RaspberryPi`
 
-- Fare il deployment del sistema su RaspberryPi ed eseguire l'applicazione :ref:`RadarSystemMainLocal`  seguendo quanto riportato qui di seguito.
-
+- Fare il deployment del sistema su RaspberryPi ed eseguire l'applicazione :ref:`RadarSystemSprint1Main`  
+  seguendo quanto riportato qui di seguito:
 
 #. Impostazione del main file in ``build.gradle``
  
    .. code::  
 
-     mainClassName = 'it.unibo.radarSystem22-0.1.xxx'
+     mainClassName = 'it.unibo.radarSystem22.sprint1.RadarSystemSprint1Main'
 
 #. Creazione del file di distribuzione
  
@@ -1001,7 +1013,8 @@ Il sistema su RaspberryPi
 #. Trasferimento del file ``it.unibo.radarSystem22-0.1.zip`` su RaspberryPi e unzipping 
 #. Posizionamento nella directory di lavoro:  ``it.unibo.radarSystem22-0.1/bin``
 #. Copia nella directory di lavoro del codice richiesto per l'uso dei dispositivi concreti
-#. Impostazione dei parametri di configurazione nel file ``DomainSystemConfig.json`` nella directory di lavoro
+#. Impostazione dei parametri di configurazione nei file ``DomainSystemConfig.json`` 
+   e  ``RadarSystemConfig.json`` nella directory di lavoro
 #. Esecuzione di ``./it.unibo.radarSystem22-0.1``
 
 

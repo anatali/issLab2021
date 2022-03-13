@@ -163,7 +163,7 @@ dei messaggi in ingresso.
 
 .. image:: ./_static/img/Architectures/ApplMessageHandler.png 
     :align: center
-    :width: 60%
+    :width: 70%
 
 
 
@@ -546,16 +546,31 @@ Refactoring del codice su Raspberry
 +++++++++++++++++++++++++++++++++++++++++
 
 La fase di configurazione della versione :ref:`RadarSystemMainLocal` su Raspberry 
-può ora essere modificata in modo da associare alla variabile *radar* un ProxyClient:
+può ora essere modificata in modo da associare alla variabile *radar* un ProxyClient.
 
 .. code:: java  
+  //Per semplicità CABLIAMO la configurazione nel codice
+  public void setup( String domainConfig, String systemConfig )  {
+    DomainSystemConfig.simulation  = true;
+    DomainSystemConfig.testing     = false;			
+    DomainSystemConfig.tracing     = false;			
+    DomainSystemConfig.sonarDelay  = 200;
+    DomainSystemConfig.ledGui      = true;			
+    DomainSystemConfig.DLIMIT      = 75;
+    	
+    RadarSysConfigSprint2.RadarGuiRemote    = true;		
+    RadarSysConfigSprint2.serverPort        = 8023;		
+    RadarSysConfigSprint2.hostAddr          = "localhost";
+	}
+
 
   protected void configure() {
     ...
-    radar = RadarSystemConfig.RadarGuiRemote ?
-              new  ProxyAsClient("radarPxy", RadarSystemConfig.pcHostAddr, ProtocolType.tcp)
-              : DeviceFactory.createRadarGui();
-  ...
+    radar = new  RadarGuiProxyAsClient("radarPxy", 
+	    		      RadarSysConfigSprint2.hostAddr, 
+                ""+RadarSysConfigSprint2.serverPort, 
+                ProtocolType.tcp);
+    ...
   }
 
 Si veda:

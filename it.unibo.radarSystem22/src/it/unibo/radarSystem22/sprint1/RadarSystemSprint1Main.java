@@ -19,7 +19,7 @@ private Controller controller;
 
 	@Override
 	public String getName() {	 
-		return "RadarSystemSprint1Main";
+		return this.getClass().getName();
 	}
 
 	public void setup( String domainConfig, String systemConfig  )  {
@@ -34,7 +34,7 @@ private Controller controller;
 			DomainSystemConfig.sonarDelay       = 200;
 			//Su PC
 			DomainSystemConfig.simulation   	= true;
-			DomainSystemConfig.DLIMIT      		= 40;  
+			DomainSystemConfig.DLIMIT      		= 70;  
 			DomainSystemConfig.ledGui           = true;
 			RadarSystemConfig.RadarGuiRemote    = false;
 		//Su Raspberry (nel file di configurazione)

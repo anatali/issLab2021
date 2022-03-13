@@ -617,7 +617,7 @@ sul Raspberry, lasciando sul PC solo il ``RadarDisplay``.
 
 Per ottenere lo scopo, si può ricorrere al  pattern-proxy_ e fare in modo che
 l'oggetto che realizza il caso d'uso :ref:`RadarGuiUsecase` (nella versione
-:ref:`RadarSystemMainLocal` ) riceva come argomento ``radar`` un Proxy per 
+:ref:`RadarSystemSprint1Main` ) riceva come argomento ``radar`` un Proxy per 
 il *RadarDisplay* realizzato da un TCP client che interagisce con 
 un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
 
@@ -630,17 +630,20 @@ un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
 Refactoring del codice su Raspberry
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-La fase di configurazione della versione :ref:`RadarSystemMainLocal` su Raspberry 
+La fase di configurazione della versione :ref:`RadarSystemSprint1Main` su Raspberry 
 può ora essere modificata in modo da associare alla variabile *radar* un ProxyClient:
 
 .. code:: java  
 
+  public class RadarSysSprint2ControllerOnRaspMain 
+                                   implements IApplication{
   protected void configure() {
     ...
-    radar = RadarSystemConfig.RadarGuiRemote ?
-              new  ProxyAsClient("radarPxy", RadarSystemConfig.pcHostAddr, ProtocolType.tcp)
-              : DeviceFactory.createRadarGui();
-  ...
+	    radar = new  RadarGuiProxyAsClient("radarPxy", 
+                RadarSysConfigSprint2.hostAddr, 
+                ""+RadarSysConfigSprint2.serverPort, 
+                ProtocolType.tcp);
+      ...
   }
 
 Si veda:

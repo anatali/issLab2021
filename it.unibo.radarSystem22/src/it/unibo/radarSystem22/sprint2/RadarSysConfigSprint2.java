@@ -1,9 +1,9 @@
-package it.unibo.radarSystem22.sprint2.proxy;
+package it.unibo.radarSystem22.sprint2;
 
  import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
 
-public class RadarSystemConfigSprint2 {
+public class RadarSysConfigSprint2 {
  	public static boolean tracing         = false;	
 	public static boolean testing         = false;			
 	

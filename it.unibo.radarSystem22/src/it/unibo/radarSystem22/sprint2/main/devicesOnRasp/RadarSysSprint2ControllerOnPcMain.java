@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.sprint2.proxy;
+package it.unibo.radarSystem22.sprint2.main.devicesOnRasp;
 
 
 import it.unibo.comm2022.ProtocolType;
@@ -11,9 +11,16 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint1.ActionFunction;
 import it.unibo.radarSystem22.sprint1.Controller;
-import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
+import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
+import it.unibo.radarSystem22.sprint2.proxy.LedProxyAsClient;
+import it.unibo.radarSystem22.sprint2.proxy.SonarProxyAsClient;
 
-public class RadarSystemSprint2OnPcMain implements IApplication{
+/*
+ * Attiva il Controller (vedi sprint1) e il RadarDisplay (vedi domain)
+ * e due proxy al Led e al Sonar.
+ * 
+ */
+public class RadarSysSprint2ControllerOnPcMain implements IApplication{
 	private IRadarDisplay radar;
 	private ISonar sonar;
 	private ILed  led ;
@@ -39,14 +46,14 @@ public class RadarSystemSprint2OnPcMain implements IApplication{
 		DomainSystemConfig.DLIMIT      		= 40;  
 		DomainSystemConfig.ledGui           = true;
 		
-		RadarSystemConfigSprint2.RadarGuiRemote    = false;		
-		RadarSystemConfigSprint2.serverPort  = 8023;		
-		RadarSystemConfigSprint2.hostAddr    = "localhost";
+		RadarSysConfigSprint2.RadarGuiRemote    = false;		
+		RadarSysConfigSprint2.serverPort  = 8023;		
+		RadarSysConfigSprint2.hostAddr    = "localhost";
 	}
 	
 	public void configure(  )  {	
-		String host = RadarSystemConfigSprint2.hostAddr;
-		String port = ""+RadarSystemConfigSprint2.serverPort;
+		String host = RadarSysConfigSprint2.hostAddr;
+		String port = ""+RadarSysConfigSprint2.serverPort;
 		ProtocolType protocol = ProtocolType.tcp;
 		
  		led    		= new LedProxyAsClient("ledPxy",     host, port, protocol );
@@ -69,6 +76,6 @@ public class RadarSystemSprint2OnPcMain implements IApplication{
 
 	public static void main( String[] args) throws Exception {
 		BasicUtils.aboutThreads("At INIT with NO CONFIG files| ");
-		new RadarSystemSprint2OnPcMain().doJob( null,null );
+		new RadarSysSprint2ControllerOnPcMain().doJob( null,null );
   	}	
 }
