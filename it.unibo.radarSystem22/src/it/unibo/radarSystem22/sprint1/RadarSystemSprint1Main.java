@@ -31,16 +31,17 @@ private Controller controller;
 		}
 		if( domainConfig == null && systemConfig == null) {
   			DomainSystemConfig.testing      	= false;			
+ 			DomainSystemConfig.tracing      	= false;			
 			DomainSystemConfig.sonarDelay       = 200;
 			//Su PC
 			DomainSystemConfig.simulation   	= true;
 			DomainSystemConfig.DLIMIT      		= 70;  
 			DomainSystemConfig.ledGui           = true;
-			RadarSystemConfig.RadarGuiRemote    = false;
+			RadarSystemConfig.RadarGuiRemote    = false; //se true non attiva radarGui
 		//Su Raspberry (nel file di configurazione)
-//			DomainSystemConfig.simulation   		= false;
+//			DomainSystemConfig.simulation   	= false;
 //			DomainSystemConfig.DLIMIT      		= 12;  
-//			DomainSystemConfig.ledGui            = false;
+//			DomainSystemConfig.ledGui           = false;
 //			RadarSystemConfig.RadarGuiRemote    = true;
 		}
  	}
@@ -87,7 +88,11 @@ private Controller controller;
 		new RadarSystemSprint1Main().doJob(null,null);
 //		BasicUtils.aboutThreads("At INIT with  CONFIG files| ");
 //		new RadarSystemSprint1Main().doJob("DomainSystemConfig.json","RadarSystemConfig.json");
-		
+	    /*
+	    //su Rasp:
+	    new RadarSystemSprint1Main().doJob(
+	           "DomainSystemConfig.json","RadarSystemSprint1Main");
+	    */		
  	}
 
 }
