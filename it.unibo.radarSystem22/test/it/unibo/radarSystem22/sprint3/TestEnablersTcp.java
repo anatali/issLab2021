@@ -11,11 +11,11 @@ import it.unibo.comm2022.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
-import it.unibo.radarSystem22.sprint2.handlers.LedApplHandler;
-import it.unibo.radarSystem22.sprint2.handlers.SonarApplHandler;
 import it.unibo.radarSystem22.domain.DeviceFactory;
-import it.unibo.radarSystem22.sprint2.proxy.LedProxyAsClient;
-import it.unibo.radarSystem22.sprint2.proxy.SonarProxyAsClient;
+import it.unibo.radarSystem22.sprint3.handlers.LedApplHandler;
+import it.unibo.radarSystem22.sprint3.handlers.SonarApplHandler;
+import it.unibo.radarSystem22.sprint3.proxy.LedProxyAsClient;
+import it.unibo.radarSystem22.sprint3.proxy.SonarProxyAsClient;
 
 /*
  * 	un Sonar Server sulla porta 8011

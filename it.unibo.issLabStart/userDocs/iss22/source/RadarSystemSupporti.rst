@@ -4,6 +4,7 @@
 .. role:: worktodo
 
 .. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
+.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
 
 .. _tcpsupport:
 
@@ -23,7 +24,7 @@ che permette di scambiare informazioni via rete.
 Inizieremo focalizzando l'attenzione sul protocollo TCP, per verificare poi, al termine
 del lavoro, la possibilità di estendere anche ad altri protocolli i supporti creati.
 
-:remark:`il software relativo ai supporti sarà scritto in un progetto dedicato` ``it.cunibo.comm22``
+:remark:`il software dei supporti sarà scritto in un progetto dedicato` ``it.unibo.comm2022``
 
 Il programma di lavoro può essere così riassunto:
 
@@ -41,10 +42,10 @@ Il programma di lavoro può essere così riassunto:
   All'arrivo di una richiesta, il Server creae un oggetto (attivo)
   di classe :ref:`TcpApplMessageHandler<tcpmsgh>` passandondogli l'``applHandler``  
   e la connessione (di tipo :ref:`Interaction2021<conn2021>`) appena stabilita. Questo oggetto attende messaggi sulla connessione 
-  e ne delega la gestione all'``applHandler`` ;
+  e ne delega la gestione all'``applHandler``.
 
 - Definizione di una classe astratta :ref:`ApplMsgHandler<ApplMsgHandler>` che implementa :ref:`IApplMsgHandler<IApplMsgHandler>`  
-  delegando a classi speciallizate la gestione di un messaggio ricevuto, in modo che l'*Application Designer* possa 
+  delegando a classi specializzate la gestione di un messaggio ricevuto, in modo che l'*Application Designer* possa 
   ignorare completamente i dettagli relativi alla comunicazione, avendo al contempo la possibilità di invocare un metodo che invia 
   informazioni (risposte) al caller (clent remoto).
  
@@ -118,6 +119,17 @@ occorre:
 
 :remarK:`Il TCPServer non deve includere codice applicativo, ma USARLO.`
 
+:remarK:`Il TCPServer deve seguire regole fissate dal livello applicativo`
+
+
+Ricordando la proposta delle architetture  `port-adapter`_,  decidiamo, come progettisti,
+di proseguire lo sviluppo del supporto con riferimento ad una architettura a livelli
+rappresentata come segue:
+
+
+.. image:: ./_static/img/Architectures/cleanArchCone.jpg 
+   :align: center
+   :width: 55%
 
 .. _IApplMsgHandler:
 
@@ -132,9 +144,9 @@ Nel seguito, incapsuleremo il codice applicativo  entro oggetti che implementano
 
   public interface IApplMsgHandler {
     public String getName(); 
-    public  void elaborate( String message, Interaction2021 conn ) ;	 
+    public  void elaborate( String message, Interaction2021 conn );	 
     public void sendMsgToClient(String message, Interaction2021 conn);
-    public void sendAnswerToClient(String message, Interaction2021 conn);
+    public void sendAnswerToClient(String message,Interaction2021 conn);
   }
 
 
@@ -172,17 +184,17 @@ dei messaggi in ingresso.
     
     public Interaction2021 getName(  ) {  return name;  }
     @Override
-    public void sendMsgToClient( String message, Interaction2021 conn) {
+    public void sendMsgToClient(String message, Interaction2021 conn){
       try {  
         conn.forward( message );
       }catch(Exception e){ ... }
     } 
     @Override
-    public void sendAnswerToClient( String reply, Interaction2021 conn) {
+    public void sendAnswerToClient(String reply,Interaction2021 conn){
         sendMsgToClient(reply, conn);
     }
     
-    public abstract void elaborate(String message,Interaction2021 conn) ;
+    public abstract void elaborate(String message,Interaction2021 conn);
    }
 
 .. image:: ./_static/img/Architectures/ApplMessageHandler.png 
@@ -210,7 +222,8 @@ e il metodo ``run`` che ne specifica il funzionamento.
   private int port;
   private ServerSocket serversock;
 
-  public TcpServer(String name,int port,IApplMsgHandler userDefHandler){
+  public TcpServer(
+        String name,int port,IApplMsgHandler userDefHandler){
     super(name);
     this.port        = port;
     this.applHandler = applHandler;
@@ -246,7 +259,7 @@ Il funzionamento del TCPserver
 Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
 
 #.  attende una richiesta di connessione;  
-#.  all'arrivo della richiesta, creae un oggetto (attivo)
+#.  all'arrivo della richiesta, crea un oggetto (attivo)
     di classe :ref:`TcpApplMessageHandler<tcpmsgh>` passandondogli l':ref:`ApplMessageHandler<msgh>` 
     ricevuto nel costruttore e la connessione (di tipo :ref:`Interaction2021<conn2021>`) appena stabilita.
     Questo oggetto attende messaggi sulla nuova connessione 
@@ -271,7 +284,7 @@ Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
 La figura che segue mostra l'architettura che si realizza in seguito a chiamate 
 da parte di due client diversi
 
-.. image:: ./_static/img/Architectures/ServerAndConnections.png 
+.. image:: ./_static/img/Architectures/ServerAndConnections.PNG 
     :align: center
     :width: 80%
  
@@ -389,8 +402,8 @@ Un semplice client di testing viene definito in modo che (metodo ``doWorkWithSer
   class ClientForTest{
     public void doWorkWithServerOn(String name, int ntimes ) {
       try {
-        Interaction2021 conn  = 
-          TcpClientSupport.connect("localhost",TestTcpSupports.testPort,ntimes);//1
+        Interaction2021 conn  = TcpClientSupport.connect(
+            "localhost",TestTcpSupports.testPort,ntimes);//1
         String request = "hello from" + name;
         conn.forward(request);              //2
         String answer = conn.receiveMsg();  //3
@@ -473,9 +486,7 @@ Per agevolare il lavoro dell'Application Designer, introduciamo la classe ``Prox
 - la porta espressa da una *String* denominata ``entry``
 - il tipo di protocollo (:ref:`ProtocolType`) da usare
 
-.. image:: ./_static/img/Radar/ProxyAsClient.PNG
-    :align: center
-    :width: 40%
+
 
 
 .. code:: java
@@ -486,7 +497,7 @@ Per agevolare il lavoro dell'Application Designer, introduciamo la classe ``Prox
     protected ProtocolType protocol ;
 
     public ProxyAsClient( 
-          String name, String host, String entry, ProtocolType protocol ) {
+          String name,String host,String entry,ProtocolType protocol){
       try {
         this.name     = name;
         this.protocol = protocol;        
@@ -519,7 +530,7 @@ protocollo specificato:
     protected void setConnection(
           String host,String entry,ProtocolType protocol) throws Exception{
       if( protocol == ProtocolType.tcp) {
-        conn = TcpClientSupport.connect(host,  Integer.parseInt(entry), 10);
+        conn = TcpClientSupport.connect(host,Integer.parseInt(entry),10);
       }else if( protocol == ... ) {
         conn = ...	
       }
@@ -529,7 +540,7 @@ protocollo specificato:
 .. che definiremo più avanti e che restituisce un oggetto di tipo ``Interaction2021`` 
 .. come nel caso di TCP/UDP.
 
-Il caso di Proxy per protocolli diversi da TCP sarà affrontato in :doc:`VersoUnFramework`.
+Il caso di Proxy per protocolli diversi da TCP sarà affrontato in :doc:`OltreTcp`.
 
 +++++++++++++++++++++++++++++++++++++
 sendCommandOnConnection
@@ -578,25 +589,25 @@ definire un componente che implementa l'interfaccia :ref:`ILed<ILed>` in modo da
 .. code:: java 
 
   public class LedProxyAsClient extends ProxyAsClient implements ILed {
-    public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
+    public LedProxyAsClient( 
+        String name,String host,String entry,ProtocolType protocol){
       super(name,host,entry, protocol);
     }
 
 	  @Override
     public void turnOn() { 
-  		  sendCommandOnConnection( "on" );
+      sendCommandOnConnection( "on" );
     }
-	  @Override
-	  public boolean getState() {   
+    @Override
+    public boolean getState() {   
       String answer=sendRequestOnConnection( "getState" );
       return answer.equals("true");
     }
-
     ...
   }
 
 ++++++++++++++++++++++++++++++++++++++
-Comm22: Deployment
+Comm2022: Deployment
 ++++++++++++++++++++++++++++++++++++++
 
 Generiamo una libreria che ci permetta di utilizzare il codice sviluppato in questo progetto 
@@ -673,19 +684,63 @@ Proxy per il radar
     super( name, host, entry,protocol );
  	}
 
+  @Override //from IRadarDisplay
+  public int getCurDistance() {
+    String answer = sendRequestOnConnection("getCurDistance");
+    return Integer.parseInt(answer);
+  }
+  
   @Override  //from IRadarDisplay
   public void update(String d, String a) {		 
-    String msg= "{ \"distance\" : D , \"angle\" : A }".replace("D",d).replace("A",a);
+    String msg= "{ \"distance\" : D , \"angle\" : A }"
+            .replace("D",d).replace("A",a);
     try {
       sendCommandOnConnection(msg);
     } catch (Exception e) { ...	}   
   }
 
-  @Override
-  public int getCurDistance() {
-    String answer = sendRequestOnConnection("");
-    return Integer.parseInt(answer);
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RadarApplHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java  
+
+  public class RadarApplHandler extends ApplMsgHandler {
+  private IRadarDisplay radar;
+  private int curDistance = 0;
+
+    public RadarApplHandler(String name, IRadarDisplay radar) {
+      super(name);
+      this.radar = radar; 
+    }
+   
+    @Override
+    public void elaborate(String message, Interaction2021 conn) {
+      if( message.equals("getCurDistance")) {
+        try {
+          conn.reply(""+curDistance);
+        } catch (Exception e) { ... }
+        return;
+      }
+      //{ "distance" : 90 , "angle" : 90 }
+      JSONObject jsonObj   = new JSONObject(message);	
+      String distance = ""+jsonObj.getInt("distance");
+      radar.update( distance, "90" );
+    }
   }
+
+
+
+
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SPRINT2: Deployment

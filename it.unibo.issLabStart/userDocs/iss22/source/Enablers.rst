@@ -92,9 +92,44 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
 Notiamo che:
 
 - un ``EnablerAsServer`` incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
-- si prevede anche la possibilità di introdurre server basati su altri protocolli;
+- si prevede anche la possibilità di introdurre :blue:`server basati su altri protocolli`;
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
+
+
+++++++++++++++++++++++++++++++++++++++++
+Testing di ``EnablerAsServer``
+++++++++++++++++++++++++++++++++++++++++
+
+Introduciamo  il codice della classe ``EnablerAsServer`` nel progetto ``it.unibo.comm2022``
+e impostiamo un semplice test  molto simile a quanto proposto in :ref:`testingProxy`.
+
+.. code:: java
+ 
+  public class TestEnablers {	
+ 	private EnablerAsServer enabler;	
+ 	private int port = 8056; 	
+ 	private ProtocolType protocol = ProtocolType.tcp;
+	private ProxyAsClient aproxy;	
+    @Before
+    public void setup() { 		
+        enabler = new EnablerAsServer("sonarSrv",port,protocol, 
+            new NaiveApplHandler("naiveH" ) );
+        aproxy = new ProxyAsClient("sonarPxy", "localhost", ""+port, protocol );		 
+    }
+    @After
+    public void down() {
+      enabler.stop();
+    }	
+    @Test 
+    public void testEnablers() {
+      enabler.start();
+      String req = "aRequest";
+      String answer = aproxy.sendRequestOnConnection(req);
+      ColorsOut.out(answer, ColorsOut.MAGENTA);
+      assertTrue( answer.equals("answerTo_"+ req));		
+    }
+  }
 
  
 .. _IApplIntepreterNoCtx:
@@ -214,8 +249,13 @@ il dispositivo rappresentato da un POJO di interfaccia :ref:`ISonar<ISonar>`.
 
 
 ------------------------------------------
-SPRINT3: Realizzazione degli enablers  
+SPRINT3: Usiamo gli enablers  
 ------------------------------------------
+
+Inseriamo un nuovo package ``it.unibo.radarSystem22.sprint`` nel progetto 
+``it.unibo.radarSystem22`` che contiene la nostra applicazione e introduciamo 
+in quato package gli enablers e i proxy per il Sonar e il Led.
+
 
 ++++++++++++++++++++++++++++++++++++++++
 Il caso del Sonar
@@ -471,21 +511,37 @@ Da POJO a gestori di messaggi
 
 Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti:
 
-- i nuovi componenti-base di livello applicativo non sono più POJO, ma sono
-  gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`;
-- i POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
-  negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`;
-- i gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<EnablerAsServer>`) 
-  che forniscono una infrastruttura per le comunicazioni via rete. Il codice
-  che realizza gli enabler e i proxy può essere riutilizzato in altre applicazioni;
-- l'attenzione dell':blue:`Application Designer` si concentra sulla definizione del metodo 
+- I nuovi componenti-base di livello applicativo non sono più POJO, ma sono
+  gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`.
+- I POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
+  negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`.
+- I gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<EnablerAsServer>`) 
+  che forniscono una infrastruttura per le comunicazioni via rete. 
+  Riportiamo una rappresentazione della architettura del sistema nel caso in cui il Controller voglia
+  interagire con il Led remoto:
+  
+  .. image::  ./_static/img/Radar/Sprint3LedRemote.PNG
+         :align: center 
+         :width: 80%
+  
+- Il codice  che realizza gli enabler e i proxy può essere riutilizzato in altre applicazioni;
+- L'attenzione dell':blue:`Application Designer` si concentra sulla definizione del metodo 
   ``elaborate`` di componenti-gestori di tipo :ref:`ApplMsgHandler<ApplMsgHandler>` 
   (come :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`)
   che ricevono dalla  infrastruttura-enabler un oggetto (di tipo  :ref:`Interaction2021<Interaction2021>`) 
-  che abilita alle interazioni via rete;
-- i messaggi gestiti dagli handler sono  ``String`` la cui struttura  è nota a un interpreter.
+  che abilita alle interazioni via rete.
+- I messaggi gestiti dagli handler sono  ``String`` la cui struttura  è nota a un interpreter.
 
 .. notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati,  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
+
+
+
+
+ 
+
+++++++++++++++++++++++++++++++++++++++++++
+Un punto  critico
+++++++++++++++++++++++++++++++++++++++++++
 
 In questa impostazione, emerge un punto critico:
 

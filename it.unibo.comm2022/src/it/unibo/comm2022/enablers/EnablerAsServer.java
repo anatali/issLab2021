@@ -4,12 +4,8 @@ import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.interfaces.IApplMsgHandler;
 import it.unibo.comm2022.tcp.TcpServer;
 import it.unibo.comm2022.utils.ColorsOut;
-
 /*
  * Attiva un server relativo al protocollo specificato (se non null)
- * lasciando la gestione dei messaggi inviati dai client alle classi specializzate
- * che si possono avvalere del metodo sendCommandToClient 
- * per inviare comandi e/o risposte a un client
  */
  
 public class EnablerAsServer   {  
@@ -19,8 +15,7 @@ protected ProtocolType protocol;
 protected TcpServer serverTcp;
 protected boolean isactive = false;
 
-	public EnablerAsServer( 
-			String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { 
+	public EnablerAsServer( String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { 
  		try {
 			this.name     			= name;
 			this.protocol 			= protocol;
@@ -37,15 +32,12 @@ protected boolean isactive = false;
 			serverTcp = new TcpServer( "EnabSrvTcp_"+count++, port,  handler );
 			ColorsOut.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol + " handler="+handler);
 		}else if( protocol == ProtocolType.coap ) {
-//			CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
-//			ColorsOut.out(name+" |  CREATED  CoapApplServer"  );
+			//CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
+			ColorsOut.out(name+" |  CREATED  CoapApplServer"  );
 		}
- 		else if( protocol == ProtocolType.mqtt ) { //String clientid, String topic, String brokerAddr
-//			//MqttSupport.getTheSupport().connectAsEnablerMqtt( name, handler );
-//			MqttSupport mqtt = new MqttSupport();
-//			mqtt.connectMqtt(name, handler);
-//			Colors.out(name+" |  CREATED  MqttSupport  handler="+handler);
- 		}
+		else if( protocol == ProtocolType.mqtt ) {  
+			ColorsOut.out(name+" |  Do nothing for mqtt" );
+		}
 	}	
  	
  	public String getName() {
