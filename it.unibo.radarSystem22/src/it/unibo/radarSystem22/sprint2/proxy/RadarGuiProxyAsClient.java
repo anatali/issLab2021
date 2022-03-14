@@ -11,6 +11,12 @@ public class RadarGuiProxyAsClient extends ProxyAsClient implements IRadarDispla
 		super( name, host, entry,protocol );
  	}
 
+	@Override
+	public int getCurDistance() {
+		String answer = sendRequestOnConnection("getCurDistance");
+ 		return Integer.parseInt(answer);
+	}
+	
 	@Override  //from IRadarDisplay
 	public void update(String d, String a) {		 
  		String msg= "{ \"distance\" : D , \"angle\" : A }".replace("D",d).replace("A",a);
@@ -21,10 +27,6 @@ public class RadarGuiProxyAsClient extends ProxyAsClient implements IRadarDispla
 		}   
  	}
 
-	@Override
-	public int getCurDistance() {
-		String answer = sendRequestOnConnection("");
- 		return Integer.parseInt(answer);
-	}
+
  	
 }

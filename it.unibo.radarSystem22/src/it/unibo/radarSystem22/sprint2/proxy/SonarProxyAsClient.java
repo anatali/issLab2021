@@ -1,7 +1,6 @@
 package it.unibo.radarSystem22.sprint2.proxy;
 
 import it.unibo.comm2022.ProtocolType;
-import it.unibo.comm2022.interfaces.IApplMessage;
 import it.unibo.comm2022.proxy.ProxyAsClient;
 import it.unibo.radarSystem22.domain.Distance;
 import it.unibo.radarSystem22.domain.interfaces.IDistance;

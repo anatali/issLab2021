@@ -3,7 +3,6 @@ package it.unibo.radarSystem22.sprint2.handlers;
  
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.comm2022.ApplMsgHandler;
-import it.unibo.comm2022.interfaces.IApplMessage;
 import it.unibo.comm2022.interfaces.IApplMsgHandler;
 import it.unibo.comm2022.interfaces.Interaction2021;
 import it.unibo.radarSystem22.domain.interfaces.ISonar;
@@ -22,9 +21,6 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
  			ColorsOut.out(name+ " | SonarApplHandler CREATED with sonar= " + sonar, ColorsOut.BLUE);
 	 	}
  
-		@Override
-		public void elaborate( IApplMessage message, Interaction2021 conn ) {
- 		}
 		
  		@Override
 		public void elaborate(String message, Interaction2021 conn) {

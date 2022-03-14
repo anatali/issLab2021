@@ -1,6 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
+.. role:: worktodo
 
 .. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
 
@@ -22,7 +23,30 @@ che permette di scambiare informazioni via rete.
 Inizieremo focalizzando l'attenzione sul protocollo TCP, per verificare poi, al termine
 del lavoro, la possibilità di estendere anche ad altri protocolli i supporti creati.
 
-:remark:`il software relativo ai supporti sarà scritto in un package dedicato xxx.supports`
+:remark:`il software relativo ai supporti sarà scritto in un progetto dedicato` ``it.cunibo.comm22``
+
+Il programma di lavoro può essere così riassunto:
+
+- Definizione di un supporto (:ref:`TcpClientSupport`) che permette la connessione TCP con un server remoto e l'invio-ricezione di messaggi
+  usando un oggetto-connessione che implementa :ref:`Interaction2021<conn2021>`.
+- Definizione di una interfaccia  (:ref:`IApplMsgHandler<IApplMsgHandler>`) che costituisce il 'contratto' tra il Server e il codice
+  applicativo. 
+- Definizione di un supporto (:ref:`TCP Server`) che riceve in ingresso un oggetto (``applHandler``) che implementa :ref:`IApplMsgHandler<IApplMsgHandler>`. 
+  Lo scopo del Server è accettare richieste di connessione da parte dei client. 
+
+    .. image:: ./_static/img/Architectures/TCPServerAndApplHandler.png 
+      :align: center
+      :width: 80%
+  
+  All'arrivo di una richiesta, il Server creae un oggetto (attivo)
+  di classe :ref:`TcpApplMessageHandler<tcpmsgh>` passandondogli l'``applHandler``  
+  e la connessione (di tipo :ref:`Interaction2021<conn2021>`) appena stabilita. Questo oggetto attende messaggi sulla connessione 
+  e ne delega la gestione all'``applHandler`` ;
+
+- Definizione di una classe astratta :ref:`ApplMsgHandler<ApplMsgHandler>` che implementa :ref:`IApplMsgHandler<IApplMsgHandler>`  
+  delegando a classi speciallizate la gestione di un messaggio ricevuto, in modo che l'*Application Designer* possa 
+  ignorare completamente i dettagli relativi alla comunicazione, avendo al contempo la possibilità di invocare un metodo che invia 
+  informazioni (risposte) al caller (clent remoto).
  
 
 .. _tcpsupportClient:
@@ -92,7 +116,7 @@ occorre:
 - fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
   codice applicativo.
 
-
+:remarK:`Il TCPServer non deve includere codice applicativo, ma USARLO.`
 
 
 .. _IApplMsgHandler:
@@ -120,7 +144,7 @@ Il costruttore del TCP server avrà quindi la seguente signature:
 
   public TcpServer(String name,int port,IApplMsgHandler userDefHandler) 
 
-cioè riceverà un oggetto di livello applicativo (``userDefHandler``) capace di:
+cioè riceverà un **oggetto di livello applicativo** (``userDefHandler``) capace di:
 
 - gestire i messaggi ricevuti sulla connessione :ref:`Interaction2021<conn2021>` che il server avrà stabilito con i clienti 
 - inviare risposte (o altri messagi) ai clienti sulla stessa connessione.
@@ -163,7 +187,7 @@ dei messaggi in ingresso.
 
 .. image:: ./_static/img/Architectures/ApplMessageHandler.png 
     :align: center
-    :width: 70%
+    :width: 60%
 
 
 
@@ -284,9 +308,10 @@ nel costruttore.
 
 
 
-----------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++
 Una TestUnit
-----------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++
+
 Una TestUnit può essere utile sia come esempio d'uso dei suppporti, sia per chiarire le
 interazioni client-server.
 
@@ -299,9 +324,9 @@ Per impostare la TestUnit, seguiamo le seguente :blue:`user-story`:
   Mi aspetto anche che altri TCP-client possano agire allo stesso modo senza che le
   loro informazioni interferiscano con le mie.
 
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Metodi before/after
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TCPServer: 
 
@@ -323,11 +348,13 @@ I metodi che la JUnit esegue prima e dopo ogni test attivano e disattivano il TC
     if( server != null ) server.deactivate();
   }	
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-L'handler dei messaggi applicativi ``NaiveHandler``
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _NaiveHandler:
 
-L' `ApplMsgHandler`_ associato al server è molto semplice: visualizza il messaggio ricevuto
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L'handler dei messaggi applicativi ``NaiveHandler``
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'`ApplMsgHandler`_ associato al server è molto semplice: visualizza il messaggio ricevuto
 sulla connessione e invia una risposta avvalendosi  
 della connessione ereditata da ':ref:`ApplMessageHandler<msgh>`.
 
@@ -346,9 +373,9 @@ della connessione ereditata da ':ref:`ApplMessageHandler<msgh>`.
 
  
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Un semplice client per i test
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Un semplice client di testing viene definito in modo che (metodo ``doWorkWithServerOn``) il client :
 
@@ -375,7 +402,7 @@ Un semplice client di testing viene definito in modo che (metodo ``doWorkWithSer
     }
   }
 
-Il metodo  ``doWorkWithServerOn`` controlla che un client esegua un certo numero di tentativi ogni volta
+Il metodo  ``doWorkWithServerOff`` controlla che un client esegua un certo numero di tentativi ogni volta
 che tenta di connettersi a un server:
 
 .. code:: Java
@@ -390,9 +417,9 @@ che tenta di connettersi a un server:
   }
 
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Test per l'interazione senza server
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 
@@ -402,9 +429,9 @@ Test per l'interazione senza server
     new ClientForTest().doWorkWithServerOff( "clientNoServer", 3  );	
   }
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Test per l'interazione client-server
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 
@@ -414,9 +441,9 @@ Test per l'interazione client-server
   }
  
 	
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Test con più clienti
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 
@@ -428,43 +455,22 @@ Test con più clienti
   }	
 
 
-.. L'errore da indagare:
-.. .. code:: Java
-.. oneClientServer | ERROR: Socket operation on nonsocket: configureBlocking
 
 
-
----------------------------------
-RadarSystem distribuito
----------------------------------
-
-Una prima versione distribuita del ``RadarSystem`` consiste nell'attivare tutto il sistema
-sul Raspberry, lasciando sul PC solo il ``RadarDisplay``.
-
-Per ottenere lo scopo, si può ricorrere al  pattern-proxy_ e fare in modo che
-l'oggetto che realizza il caso d'uso :ref:`RadarGuiUsecase` (nella versione
-:ref:`RadarSystemMainLocal` ) riceva come argomento ``radar`` un Proxy per 
-il *RadarDisplay* realizzato da un TCP client che interagisce con 
-un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
-
-
-.. image:: ./_static/img/radar/RadarOnPc.PNG 
-    :align: center
-    :width: 60%
-
-
- 
-
-
-+++++++++++++++++++++++++++++++++++++++++
+---------------------------------------
 ProxyAsClient
-+++++++++++++++++++++++++++++++++++++++++
+---------------------------------------
 
+Nelle applicazioni distribuite, accade spesso di dover interagire con un componente allocato su nodo remoto 
+e reso accessibile attraverso un Server, come ad esempio il :ref:`TCPserver<TCPserver>`.
 
-Introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
+Per ottenere questo scopo, si può ricorrere al  pattern-proxy_ che permette di accedere alla connessione di rete 
+(nel nostro caso un oggetto che implementa :ref:`Interaction2021<Interaction2021>`).
+
+Per agevolare il lavoro dell'Application Designer, introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
 
 - l'host a cui connettersi 
-- la porta espressa da una *String* denominata lo``entry``
+- la porta espressa da una *String* denominata ``entry``
 - il tipo di protocollo (:ref:`ProtocolType`) da usare
 
 .. image:: ./_static/img/Radar/ProxyAsClient.PNG
@@ -491,15 +497,19 @@ Introduciamo la classe ``ProxyAsClient`` che riceve nel costruttore:
     public Interaction2021 getConn() { return conn; }
 
 Il fatto di denotare la porta del server con una *String* invece che con un *int* ci darà
-la possibilità di gestire anche comunicazioni basate su altri protocolli; ad esempio per CoAP 
+la possibilità di gestire anche comunicazioni basate su altri protocolli oltre TCP; ad esempio per CoAP 
 il parametro ``entry`` denoterà un :blue:`Uniform Resource Identifier (URI)` 
 (si veda :ref:`ProxyAsClientEsteso`).
 
-``ProxyAsClient`` definisce le seguenti operazioni:
+Con riferimento ai :ref:`TipiInterazione` introdotti nella fase di analisi, ``ProxyAsClient`` definisce le seguenti operazioni:
 
-- **setConnection**: stabilire una connessione con un server remoto dato un protocollo;
-- **sendCommandOnConnection**: inviare un comando al server;
-- **sendRequestOnConnection**: inviare una richiesta al server e attendere la risposta;
+- **setConnection**: stabilisce una connessione con un server remoto dato un protocollo;
+- **sendCommandOnConnection**: invia un comando (un **dispatch**) al server;
+- **sendRequestOnConnection**: invia una richiesta (un **request**) al server e attendere la risposta/ack;
+
++++++++++++++++++++++++++++++++++++++
+setConnection
++++++++++++++++++++++++++++++++++++++
 
 Il metodo ``setConnection`` effettua la connessione al server remoto in funzione del tipo di
 protocollo specificato:
@@ -521,9 +531,9 @@ protocollo specificato:
 
 Il caso di Proxy per protocolli diversi da TCP sarà affrontato in :doc:`VersoUnFramework`.
 
-Con riferimento ai :ref:`TipiInterazione` introdotti nella fase di analisi,
-il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* e un metodo per inviare
-*request* con attesa di response/ack:
++++++++++++++++++++++++++++++++++++++
+sendCommandOnConnection
++++++++++++++++++++++++++++++++++++++
 
 .. code:: java    
 
@@ -532,6 +542,13 @@ il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* e un met
       conn.forward(cmd);
     } catch (Exception e) {...}
   }  
+
++++++++++++++++++++++++++++++++++++++
+sendRequestOnConnection
++++++++++++++++++++++++++++++++++++++
+
+.. code:: java    
+
   public String sendRequestOnConnection( String request )  {
     try {
       String answer = conn.request(request);
@@ -541,15 +558,86 @@ il *proxy tipo-client* definisce anche un metodo per inviare *dispatch* e un met
 
 :remark:`Il ProxyAsClient così definito realizza request-response sincrone (bloccanti)`
 
-+++++++++++++++++++++++++++++++++++++++++
-Refactoring del codice su Raspberry
-+++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++
+Testing del :ref:`ProxyAsClient`
+++++++++++++++++++++++++++++++++++++++++
 
-La fase di configurazione della versione :ref:`RadarSystemMainLocal` su Raspberry 
-può ora essere modificata in modo da associare alla variabile *radar* un ProxyClient.
+:worktodo:`WORKTODO: realizzare una TestUnit per il proxy`
+
+- La TestUnit deve attivare un TCPServer con il semplice :ref:`NaiveHandler<NaiveHandler>`, creare un :ref:`ProxyAsClient` a quel server, 
+  inviare una richiesta e controllare che la risposta arrivi e sia quella attesa.
+
+++++++++++++++++++++++++++++++++++++++++
+Uso del :ref:`ProxyAsClient`
+++++++++++++++++++++++++++++++++++++++++
+
+Come esempio d'uso, riportiamo la definizione di una versione specializzata di :ref:`ProxyAsClient` per
+definire un componente che implementa l'interfaccia :ref:`ILed<ILed>` in modo da utilizzare un Led remoto 
+
+
+.. code:: java 
+
+  public class LedProxyAsClient extends ProxyAsClient implements ILed {
+    public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
+      super(name,host,entry, protocol);
+    }
+
+	  @Override
+    public void turnOn() { 
+  		  sendCommandOnConnection( "on" );
+    }
+	  @Override
+	  public boolean getState() {   
+      String answer=sendRequestOnConnection( "getState" );
+      return answer.equals("true");
+    }
+
+    ...
+  }
+
+++++++++++++++++++++++++++++++++++++++
+Comm22: Deployment
+++++++++++++++++++++++++++++++++++++++
+
+Generiamo una libreria che ci permetta di utilizzare il codice sviluppato in questo progetto 
+``it.unibo.comm2022`` nelle nostre future applicazioni distribuite.
+
+.. code:: 
+
+    gradlew jar   
+
+Questo comando genera il file ``it.unibo.comm2022\build\libs\it.unibo.comm2022-1.0.jar``.
+
+---------------------------------
+SPRINT2: RadarSystem distribuito
+---------------------------------
+
+Una prima versione distribuita del ``RadarSystem`` consiste nell'attivare tutto il sistema
+sul Raspberry, lasciando sul PC solo il ``RadarDisplay``.
+
+Per ottenere lo scopo, si può ricorrere al  pattern-proxy_ e fare in modo che
+l'oggetto che realizza il caso d'uso :ref:`RadarGuiUsecase` (nella versione
+:ref:`RadarSystemSprint1Main` ) riceva come argomento ``radar`` un Proxy per 
+il *RadarDisplay* realizzato da un TCP client che interagisce con 
+un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
+
+
+.. image:: ./_static/img/radar/RadarOnPc.PNG 
+    :align: center
+    :width: 80%
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Refactoring del codice su Raspberry
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+La fase di configurazione della versione :ref:`RadarSystemSprint1Main` su Raspberry 
+può ora essere modificata in modo da associare alla variabile *radar* un ProxyClient:
 
 .. code:: java  
-  //Per semplicità CABLIAMO la configurazione nel codice
+
+  public class RadarSysSprint2ControllerOnRaspMain 
+                                   implements IApplication{
+
   public void setup( String domainConfig, String systemConfig )  {
     DomainSystemConfig.simulation  = true;
     DomainSystemConfig.testing     = false;			
@@ -561,36 +649,65 @@ può ora essere modificata in modo da associare alla variabile *radar* un ProxyC
     RadarSysConfigSprint2.RadarGuiRemote    = true;		
     RadarSysConfigSprint2.serverPort        = 8023;		
     RadarSysConfigSprint2.hostAddr          = "localhost";
-	}
-
-
+  }                                   
   protected void configure() {
     ...
     radar = new  RadarGuiProxyAsClient("radarPxy", 
-	    		      RadarSysConfigSprint2.hostAddr, 
+                RadarSysConfigSprint2.hostAddr, 
                 ""+RadarSysConfigSprint2.serverPort, 
                 ProtocolType.tcp);
     ...
   }
 
-Si veda:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Proxy per il radar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-- *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainRaspWithoutRadar*  (main che implementa :ref:`IApplication`)
+.. code:: java  
 
-Per completare il sistema non rimane che definire il TCPServer da attivare sul PC
+  public class RadarGuiProxyAsClient 
+                extends ProxyAsClient implements IRadarDisplay {
+ 
+  public RadarGuiProxyAsClient( 
+       String name,String host,String entry,ProtocolType protocol){
+    super( name, host, entry,protocol );
+ 	}
+
+  @Override  //from IRadarDisplay
+  public void update(String d, String a) {		 
+    String msg= "{ \"distance\" : D , \"angle\" : A }".replace("D",d).replace("A",a);
+    try {
+      sendCommandOnConnection(msg);
+    } catch (Exception e) { ...	}   
+  }
+
+  @Override
+  public int getCurDistance() {
+    String answer = sendRequestOnConnection("");
+    return Integer.parseInt(answer);
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SPRINT2: Deployment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Nel package ``it.unibo.radarSystem22.sprint2.main.sysOnRasp`` definiamo le parti di sistema da attivare
+sul PC e sul RaspberryPi:
+
+- ``RadarSysSprint2RadarOnPcMain``  : parte da attivare (per prima) sul PC
+- ``RadarSysSprint2ControllerOnRaspMain``  : parte da attivare sul RaspberryPi
+
+Il deployment della parte di sistema che gira sul RaspberryPi può avvenire secondo gli stessi passi 
+riportati in :ref:`SPRINT1: Deployment su RaspberryPi`.
 
 
-+++++++++++++++++++++++++++++++++++++++++
-Un server per il RadarDisplay
-+++++++++++++++++++++++++++++++++++++++++
+:worktodo:`WORKTODO: Controller sul PC`
 
-Si veda:
+- Redifinire il sistema in modo che il Controller sia allocato sul PC, lasciando sul RaspberryPi
+  solo il software relativo al Led e al Sonar.
 
-- *it.unibo.enablerCleanArch.supports.TcpServer*
-- *it.unibo.enablerCleanArch.supports.TcpApplMessageHandler*
-- *it.unibo.enablerCleanArchapplHandler.RadarApplHandler*
-- *it.unibo.enablerCleanArch.main.remotedisplay.RadarSystemMainDisplayOnPc*  (main che implementa :ref:`IApplication`)
+  Strategia di soluzione:
 
-
-
-
+  - sul Raspberry attiviamo due *TCPServer*: uno per il Led e uno per Sonar
+  - sul Pc creiamo due *Proxy*: uno per il Led e uno per il Sonar
+  - il Controller su PC **non cambia** rispetto alla  :ref:`versione precedente<controller>`

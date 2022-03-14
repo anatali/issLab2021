@@ -983,7 +983,7 @@ il Sonar produca un valore ``d>DLIMIT`` e un altro test per il Sonar che produce
 
  
 --------------------------------------
-Deployment su RaspberryPi
+SPRINT1: Deployment su RaspberryPi
 --------------------------------------
 
 Per fare il deployment del sistema su RaspberryPi ed eseguire l'applicazione :ref:`RadarSystemSprint1Main`  

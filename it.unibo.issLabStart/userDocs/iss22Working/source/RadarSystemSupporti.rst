@@ -4,6 +4,7 @@
 .. role:: worktodo
 
 .. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
+.. _port-adapter: https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)
 
 .. _tcpsupport:
 
@@ -116,8 +117,19 @@ occorre:
 - fare in modo che i messaggi ricevuti su una specifica connessione siano elaborati da opportuno 
   codice applicativo.
 
+:remarK:`Il TCPServer non deve includere codice applicativo, ma USARLO.`
+
+:remarK:`Il TCPServer deve seguire regole fissate dal livello applicativo`
 
 
+Ricordando la proposta delle architetture  `port-adapter`_,  decidiamo, come progettisti,
+di proseguire lo sviluppo del supporto con riferimento ad una architettura a livelli
+rappresentata come segue:
+
+
+.. image:: ./_static/img/Architectures/cleanArchCone.jpg 
+   :align: center
+   :width: 55%
 
 .. _IApplMsgHandler:
 
@@ -473,9 +485,7 @@ Per agevolare il lavoro dell'Application Designer, introduciamo la classe ``Prox
 - la porta espressa da una *String* denominata ``entry``
 - il tipo di protocollo (:ref:`ProtocolType`) da usare
 
-.. image:: ./_static/img/Radar/ProxyAsClient.PNG
-    :align: center
-    :width: 40%
+
 
 
 .. code:: java
@@ -572,7 +582,7 @@ Uso del :ref:`ProxyAsClient`
 ++++++++++++++++++++++++++++++++++++++++
 
 Come esempio d'uso, riportiamo la definizione di una versione specializzata di :ref:`ProxyAsClient` per
-definire un componente che implementa l'interfaccia :ref:`ILed` in modo da utilizzare un Led remoto 
+definire un componente che implementa l'interfaccia :ref:`ILed<ILed>` in modo da utilizzare un Led remoto 
 
 
 .. code:: java 
@@ -596,11 +606,11 @@ definire un componente che implementa l'interfaccia :ref:`ILed` in modo da utili
   }
 
 ++++++++++++++++++++++++++++++++++++++
-Deployment
+Comm22: Deployment
 ++++++++++++++++++++++++++++++++++++++
 
-Generiamo una libreria che ci permetta di utilizzare il codice sviluppato in questo progetto ``it.unibo.comm2022`` nelle 
-nostre future applicazioni distribuite.
+Generiamo una libreria che ci permetta di utilizzare il codice sviluppato in questo progetto 
+``it.unibo.comm2022`` nelle nostre future applicazioni distribuite.
 
 .. code:: 
 
@@ -624,7 +634,7 @@ un TCP-Server posto sul PC e che gestisce il  *RadarDisplay*.
 
 .. image:: ./_static/img/radar/RadarOnPc.PNG 
     :align: center
-    :width: 60%
+    :width: 80%
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Refactoring del codice su Raspberry
@@ -673,22 +683,66 @@ Proxy per il radar
     super( name, host, entry,protocol );
  	}
 
+  @Override //from IRadarDisplay
+  public int getCurDistance() {
+    String answer = sendRequestOnConnection("getCurDistance");
+    return Integer.parseInt(answer);
+  }
+  
   @Override  //from IRadarDisplay
   public void update(String d, String a) {		 
-    String msg= "{ \"distance\" : D , \"angle\" : A }".replace("D",d).replace("A",a);
+    String msg= "{ \"distance\" : D , \"angle\" : A }"
+            .replace("D",d).replace("A",a);
     try {
       sendCommandOnConnection(msg);
     } catch (Exception e) { ...	}   
   }
 
-  @Override
-  public int getCurDistance() {
-    String answer = sendRequestOnConnection("");
-    return Integer.parseInt(answer);
-  }
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Nuovo Deployment
+RadarApplHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java  
+
+  public class RadarApplHandler extends ApplMsgHandler {
+  private IRadarDisplay radar;
+  private int curDistance = 0;
+
+    public RadarApplHandler(String name, IRadarDisplay radar) {
+      super(name);
+      this.radar = radar; 
+    }
+   
+    @Override
+    public void elaborate(String message, Interaction2021 conn) {
+      if( message.equals("getCurDistance")) {
+        try {
+          conn.reply(""+curDistance);
+        } catch (Exception e) { ... }
+        return;
+      }
+      //{ "distance" : 90 , "angle" : 90 }
+      JSONObject jsonObj   = new JSONObject(message);	
+      String distance = ""+jsonObj.getInt("distance");
+      radar.update( distance, "90" );
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SPRINT2: Deployment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Nel package ``it.unibo.radarSystem22.sprint2.main.sysOnRasp`` definiamo le parti di sistema da attivare
@@ -698,10 +752,16 @@ sul PC e sul RaspberryPi:
 - ``RadarSysSprint2ControllerOnRaspMain``  : parte da attivare sul RaspberryPi
 
 Il deployment della parte di sistema che gira sul RaspberryPi può avvenire secondo gli stessi passi 
-riportati in :ref:`Deployment su RaspberryPi` dello Sprint1.
+riportati in :ref:`SPRINT1: Deployment su RaspberryPi`.
 
 
 :worktodo:`WORKTODO: Controller sul PC`
 
 - Redifinire il sistema in modo che il Controller sia allocato sul PC, lasciando sul RaspberryPi
   solo il software relativo al Led e al Sonar.
+
+  Strategia di soluzione:
+
+  - sul Raspberry attiviamo due *TCPServer*: uno per il Led e uno per Sonar
+  - sul Pc creiamo due *Proxy*: uno per il Led e uno per il Sonar
+  - il Controller su PC **non cambia** rispetto alla  :ref:`versione precedente<controller>`

@@ -2,6 +2,7 @@ package it.unibo.radarSystem22.sprint2.main.sysOnRasp;
 
 import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.tcp.TcpServer;
+import it.unibo.comm2022.utils.ColorsOut;
 import it.unibo.radarSystem22.IApplication;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.*;
@@ -62,10 +63,14 @@ public class RadarSysSprint2ControllerOnRaspMain implements IApplication{
 	    	System.out.println(n); 
 	    	terminate(); 
 	    };
+		int d = radar.getCurDistance();
+		ColorsOut.outappl("CURRENT DISTANCE answer=" + d,ColorsOut.MAGENTA );
 		controller.start(endFun, 30);		
 	}
 	public void terminate() {
 		//Utils.delay(1000);  //For the testing ...
+		int d = radar.getCurDistance();
+		ColorsOut.outappl("CURRENT DISTANCE answer=" + d,ColorsOut.MAGENTA );		
 		sonar.deactivate();
 		System.exit(0);
 	}	

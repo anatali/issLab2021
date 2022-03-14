@@ -41,16 +41,9 @@ impostare una architettura come quella rappresentata in figura:
 
 .. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
    :align: center
-   :width: 50%
-
-Ricordando la proposta delle architetture  `port-adapter`_,  decidiamo, come progettisti,
-di proseguire lo sviluppo del software del sistema con riferimento ad una architettura a livelli
-rappresentata come segue:
+   :width: 65%
 
 
-.. image:: ./_static/img/Architectures/cleanArchCone.jpg 
-   :align: center
-   :width: 50%
 
 .. _EnablerAsServer:
 
@@ -60,10 +53,6 @@ Enabler tipo-server
 
 Iniziamo con il definire un enabler *tipo-server* che demanda la gestione dei messaggi ricevuti 
 ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
-
-.. image:: ./_static/img/Radar/EnablerAsServer.PNG
-   :align: center 
-   :width: 60%
  
 .. code:: java
 
@@ -102,9 +91,10 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
 
 Notiamo che:
 
+- un ``EnablerAsServer`` incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
+- si prevede anche la possibilità di introdurre server basati su altri protocolli;
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
-- si prevede anche la possibilità di utilizzare altri protocolli.
 
  
 .. _IApplIntepreterNoCtx:
@@ -113,8 +103,9 @@ Notiamo che:
 Interpreti
 ------------------------------------------
 
-Ogni enabler deve ricevere in ingresso un gestore  applicativo (handler) che implementa :ref:`IApplMsgHandler` estendendo 
-la classe :ref:`ApplMsgHandler<ApplMsgHandler>`. L'handler deve definire il metodo ``elaborate`` che gestisce
+Ogni enabler deve ricevere in ingresso un gestore  applicativo (handler) che implementa 
+:ref:`IApplMsgHandler` (estendendo la classe :ref:`ApplMsgHandler<ApplMsgHandler>`). 
+L'handler deve definire il metodo ``elaborate`` che gestisce
 i comandi o le richieste ricevute dal sever in forma di messaggi.
 
 L'handler deve quindi fare fronte a due compiti:
@@ -138,7 +129,7 @@ interpretazione del messaggio. Introduciamo una interfaccia per componenti di qu
 .. _LinguaggioComando:
 
 ++++++++++++++++++++++++++++++++++++++
-Linguaggio di comando
+Linguaggio-base di comando
 ++++++++++++++++++++++++++++++++++++++
 
 In questo nostro semplice sistema, la String message rappresenta un comando o una richiesta e segue la sintassi di
@@ -223,17 +214,24 @@ il dispositivo rappresentato da un POJO di interfaccia :ref:`ISonar<ISonar>`.
 
 
 ------------------------------------------
-Componenti per il Sonar 
+SPRINT3: Realizzazione degli enablers  
 ------------------------------------------
+
+++++++++++++++++++++++++++++++++++++++++
+Il caso del Sonar
+++++++++++++++++++++++++++++++++++++++++
+
+Definiamo i supporti (un enabler e un proxy) che permettono l'uso di un Sonar 
+remoto.
 
 .. image::  ./_static/img/Radar/EnablerProxySonar.PNG
          :align: center 
          :width: 60%
 
 
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Enabler per il Sonar
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 .. list-table::
   :widths: 30,70
   :width: 100%
@@ -254,9 +252,9 @@ Enabler per il Sonar
 
 .. _SonarApplHandlerNoContext:
 
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SonarApplHandler
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: java
 
@@ -278,9 +276,9 @@ SonarApplHandler
 
 .. _SonarProxyAsClientNoContext:
 
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Proxy per il Sonar
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. list-table::
   :widths: 30,70
@@ -317,12 +315,12 @@ Proxy per il Sonar
     }
   }
 
+++++++++++++++++++++++++++++++++++++++++
+Il caso del Led
+++++++++++++++++++++++++++++++++++++++++
  
-
------------------------------------------
-Componenti per il Led
------------------------------------------
-Il caso del Led è simile al caso del Sonar, sia per quanto riguarda l'enabler, sia per quanto riguarda il proxy.
+ Il caso del Led è simile al caso del Sonar, sia per quanto riguarda l'enabler, 
+ sia per quanto riguarda il proxy.
 
 .. image::  ./_static/img/Radar/EnablerProxyLed.PNG
          :align: center 
@@ -333,9 +331,9 @@ Riportiamo qui solo la struttura dell'handler che realizza la logica applicativa
 
 .. _LedApplHandlerNoContext:
 
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 LedApplHandler
-+++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 
@@ -355,11 +353,12 @@ LedApplHandler
     }
   }
 
+
 .. _testingEnablers:
 
------------------------------------------
-Testing degli enabler
------------------------------------------
+++++++++++++++++++++++++++++++++++++++++
+SPRINT3: Testing degli enabler
+++++++++++++++++++++++++++++++++++++++++
 
 La procedura si setup (configurazione) del testing crea gli elementi della architettura di figura:
 
@@ -443,12 +442,34 @@ Il test simula il comportamento del Controller, senza RadarDisplay:
 		}		
 	}
 
+
+
+++++++++++++++++++++++++++++++++++++++++
+SPRINT3: deployoment
+++++++++++++++++++++++++++++++++++++++++
+
+Il :ref:`testing degli enablers<testingEnablers>`   mostra come sia possibile affrontare 
+il punto 4 del nostro :ref:`piano di lavoro<PianoLavoro>` 
+
+-  assemblaggio dei componenti  per formare il sistema distribuito.
+
+Volendo procedere in questo senso, potremmo introdurre un 
+package ``it.unibo.radarSystem22.sprint3.main`` in cui definire le parti di sistema da attivare
+sul PC e sul RaspberryPi:
+
+- ``RadarSysSprint3CDevicesOnRaspMain``  : parte da attivare (per prima)  sul RaspberryPi
+- ``RadarSysSprint3ControllerOnPcMain``  : parte da attivare sul PC
+
+Il deployment della parte di sistema che gira sul RaspberryPi può avvenire secondo gli stessi passi 
+riportati in :ref:`SPRINT1: Deployment su RaspberryPi`.
+
+Tuttavia conviene fermarci un momento e fare la nostra SPRINT-review.
+
 -----------------------------------------
 Da POJO a gestori di messaggi
 -----------------------------------------
 
-Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti, che potrebbero
-emergere al termine di una SPRINT-review:
+Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti:
 
 - i nuovi componenti-base di livello applicativo non sono più POJO, ma sono
   gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`;
@@ -459,20 +480,14 @@ emergere al termine di una SPRINT-review:
   che realizza gli enabler e i proxy può essere riutilizzato in altre applicazioni;
 - l'attenzione dell':blue:`Application Designer` si concentra sulla definizione del metodo 
   ``elaborate`` di componenti-gestori di tipo :ref:`ApplMsgHandler<ApplMsgHandler>` 
-  che ricevono dalla
-  infrastruttura-enabler un oggetto (di tipo  :ref:`Interaction2021<Interaction2021>`) 
+  (come :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`)
+  che ricevono dalla  infrastruttura-enabler un oggetto (di tipo  :ref:`Interaction2021<Interaction2021>`) 
   che abilita alle interazioni via rete;
-- i messaggi gestiti dagli handler sono  ``String`` di struttura non meglio specificata;
+- i messaggi gestiti dagli handler sono  ``String`` la cui struttura  è nota a un interpreter.
 
 .. notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati,  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
 
-
-Il :ref:`testing degli enablers<testingEnablers>`  ha già mostrato come sia possibile affrontare 
-il punto 4 del nostro :ref:`piano di lavoro<PianoLavoro>` 
-
--  assemblaggio dei componenti  per formare il sistema distribuito.
-
-Tuttavia emerge un punto critico:
+In questa impostazione, emerge un punto critico:
 
 :remark:`introdurre un serverTCP per ogni componente potrebbe essere troppo costoso`
 
