@@ -14,5 +14,7 @@ public class RadarSysConfigSprint2 {
 	public static String raspAddr         = "localhost";		
 	public static int ledPort             = 8010;
 	public static int sonarPort           = 8012;
+	
+	public static int DLIMIT              = 70;
 
 }

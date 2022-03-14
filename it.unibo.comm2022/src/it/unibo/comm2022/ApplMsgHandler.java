@@ -30,10 +30,7 @@ protected String name;
 		}
  	} 
  	
- 	public void sendMsgToClient( ApplMessage message, Interaction2021 conn  ) {
- 		sendMsgToClient( message.toString(), conn );
- 	}
-	
+ 	
  	@Override
  	public void sendAnswerToClient( String reply, Interaction2021 conn   ) {
 		sendMsgToClient(reply, conn);		

@@ -32,8 +32,7 @@ public class ColorsOut {
 	public static final String prefix   = "		";
  	
 	public static void out( String m, String color ) {	
-		if( CommSystemConfig.tracing ) 
-			System.out.println(  prefix + BACKGROUND + color + m + ANSI_RESET);
+		System.out.println(  prefix + BACKGROUND + color + m + ANSI_RESET);
 	}
 	
 	public static void outappl( String m, String color  ) {		 
