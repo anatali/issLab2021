@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.sprint3.handlers;
+package it.unibo.radarSystem22.sprint2a.handlers;
 
  
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
@@ -24,7 +24,7 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
 		
  		@Override
 		public void elaborate(String message, Interaction2021 conn) {
- 			ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.MAGENTA);
+ 			ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
  			if( message.equals("getDistance")  ) {
  				String answer = ""+sonar.getDistance().getVal();
  				sendMsgToClient( answer, conn );

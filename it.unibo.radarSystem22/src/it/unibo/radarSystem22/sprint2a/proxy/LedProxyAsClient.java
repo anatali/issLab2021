@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.sprint3.proxy;
+package it.unibo.radarSystem22.sprint2a.proxy;
 
 import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.proxy.ProxyAsClient;

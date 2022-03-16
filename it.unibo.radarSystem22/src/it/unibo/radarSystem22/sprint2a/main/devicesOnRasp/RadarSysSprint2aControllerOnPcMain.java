@@ -2,6 +2,7 @@ package it.unibo.radarSystem22.sprint2a.main.devicesOnRasp;
 
 
 import it.unibo.comm2022.ProtocolType;
+import it.unibo.comm2022.utils.CommSystemConfig;
 import it.unibo.radarSystem22.IApplication;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.ILed;
@@ -12,8 +13,8 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint1.ActionFunction;
 import it.unibo.radarSystem22.sprint1.Controller;
 import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
-import it.unibo.radarSystem22.sprint3.proxy.LedProxyAsClient;
-import it.unibo.radarSystem22.sprint3.proxy.SonarProxyAsClient;
+import it.unibo.radarSystem22.sprint2a.proxy.LedProxyAsClient;
+import it.unibo.radarSystem22.sprint2a.proxy.SonarProxyAsClient;
 
 /*
  * Attiva il Controller (vedi sprint1) e il RadarDisplay (vedi domain)
@@ -43,10 +44,13 @@ public class RadarSysSprint2aControllerOnPcMain implements IApplication{
 		DomainSystemConfig.sonarDelay       = 200;
 		//Su PC
 		DomainSystemConfig.simulation   	= true;
-		DomainSystemConfig.DLIMIT      		= 70;  
 		
+		RadarSystemConfig.DLIMIT      		= 70;  
 		RadarSystemConfig.RadarGuiRemote    = false;		
-		RadarSystemConfig.raspAddr          = "192.168.1.9";		 	}
+		RadarSystemConfig.raspAddr          = "localhost"; //"192.168.1.9";		 	
+		
+		CommSystemConfig.tracing            = false;
+	}
 	
 	public void configure(  )  {	
  		ProtocolType protocol = ProtocolType.tcp;

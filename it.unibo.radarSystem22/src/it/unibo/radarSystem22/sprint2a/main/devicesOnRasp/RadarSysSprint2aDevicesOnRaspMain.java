@@ -3,14 +3,15 @@ package it.unibo.radarSystem22.sprint2a.main.devicesOnRasp;
  
 import it.unibo.comm2022.interfaces.IApplMsgHandler;
 import it.unibo.comm2022.tcp.TcpServer;
+import it.unibo.comm2022.utils.CommSystemConfig;
 import it.unibo.radarSystem22.IApplication;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
-import it.unibo.radarSystem22.sprint3.handlers.LedApplHandler;
-import it.unibo.radarSystem22.sprint3.handlers.SonarApplHandler;
+import it.unibo.radarSystem22.sprint2a.handlers.LedApplHandler;
+import it.unibo.radarSystem22.sprint2a.handlers.SonarApplHandler;
  
  
 /*
@@ -32,6 +33,7 @@ public class RadarSysSprint2aDevicesOnRaspMain implements IApplication{
 	
 	public void setup( String domainConfig, String systemConfig )  {
 	    BasicUtils.aboutThreads(getName() + " | Before setup ");
+	    CommSystemConfig.tracing            = true;
 		if( domainConfig != null ) {
 			DomainSystemConfig.setTheConfiguration(domainConfig);
 		}
