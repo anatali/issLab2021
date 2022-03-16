@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.sprint2.main.devicesOnRasp;
+package it.unibo.radarSystem22.sprint2a.main.devicesOnRasp;
 
  
 import it.unibo.comm2022.interfaces.IApplMsgHandler;
@@ -8,7 +8,7 @@ import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
+import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
 import it.unibo.radarSystem22.sprint3.handlers.LedApplHandler;
 import it.unibo.radarSystem22.sprint3.handlers.SonarApplHandler;
  
@@ -17,7 +17,7 @@ import it.unibo.radarSystem22.sprint3.handlers.SonarApplHandler;
  * Attiva il TCPServer.
  * 
  */
-public class RadarSysSprint2DevicesOnRaspMain implements IApplication{
+public class RadarSysSprint2aDevicesOnRaspMain implements IApplication{
 	private ISonar sonar;
 	private ILed  led ;
 	private TcpServer ledServer ;
@@ -31,24 +31,33 @@ public class RadarSysSprint2DevicesOnRaspMain implements IApplication{
 	}
 	
 	public void setup( String domainConfig, String systemConfig )  {
-		DomainSystemConfig.simulation  = true;
-    	DomainSystemConfig.testing     = false;			
-    	DomainSystemConfig.tracing     = false;			
-		DomainSystemConfig.sonarDelay  = 200;
-    	DomainSystemConfig.ledGui      = true;		//se siamo su PC	
-
-		RadarSysConfigSprint2.tracing           = false;		
-		RadarSysConfigSprint2.RadarGuiRemote    = true;		
+	    BasicUtils.aboutThreads(getName() + " | Before setup ");
+		if( domainConfig != null ) {
+			DomainSystemConfig.setTheConfiguration(domainConfig);
+		}
+		if( systemConfig != null ) {
+			RadarSystemConfig.setTheConfiguration(systemConfig);
+		}
+		if( domainConfig == null && systemConfig == null) {
+			DomainSystemConfig.simulation  = true;
+	    	DomainSystemConfig.testing     = false;			
+	    	DomainSystemConfig.tracing     = false;			
+			DomainSystemConfig.sonarDelay  = 200;
+	    	DomainSystemConfig.ledGui      = true;		//se siamo su PC	
+	
+			RadarSystemConfig.tracing           = false;		
+			RadarSystemConfig.RadarGuiRemote    = true;		
+		}
  
 	}
 	protected void configure() {		
  	   led        = DeviceFactory.createLed();
  	   IApplMsgHandler ledh = LedApplHandler.create("ledh", led);
- 	   ledServer     = new TcpServer("ledServer",RadarSysConfigSprint2.ledPort,ledh );
+ 	   ledServer     = new TcpServer("ledServer",RadarSystemConfig.ledPort,ledh );
 
 	   sonar      = DeviceFactory.createSonar();
  	   IApplMsgHandler sonarh = SonarApplHandler.create("sonarh", sonar);
- 	   sonarServer   = new TcpServer("sonarServer",RadarSysConfigSprint2.sonarPort,sonarh );
+ 	   sonarServer   = new TcpServer("sonarServer",RadarSystemConfig.sonarPort,sonarh );
 
  	   
 	}
@@ -65,6 +74,6 @@ public class RadarSysSprint2DevicesOnRaspMain implements IApplication{
 
 	public static void main( String[] args) throws Exception {
 		BasicUtils.aboutThreads("At INIT with NO CONFIG files| ");
-		new RadarSysSprint2DevicesOnRaspMain().doJob(null,null);
+		new RadarSysSprint2aDevicesOnRaspMain().doJob(null,null);
   	}
 }

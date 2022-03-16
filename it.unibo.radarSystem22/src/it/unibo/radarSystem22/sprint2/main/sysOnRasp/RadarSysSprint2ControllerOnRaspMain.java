@@ -10,7 +10,7 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint1.ActionFunction;
 import it.unibo.radarSystem22.sprint1.Controller;
-import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
+import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
 import it.unibo.radarSystem22.sprint2.proxy.RadarGuiProxyAsClient;
  
  
@@ -34,23 +34,32 @@ public class RadarSysSprint2ControllerOnRaspMain implements IApplication{
 	}
 	
 	public void setup( String domainConfig, String systemConfig )  {
-		DomainSystemConfig.simulation  = true;
-    	DomainSystemConfig.testing     = false;			
-    	DomainSystemConfig.tracing     = false;			
-		DomainSystemConfig.sonarDelay  = 200;
-    	DomainSystemConfig.ledGui      = true;			
-    	DomainSystemConfig.DLIMIT      = 75;
-    	
-		RadarSysConfigSprint2.RadarGuiRemote    = true;		
-		RadarSysConfigSprint2.serverPort        = 8023;		
-		RadarSysConfigSprint2.hostAddr          = "localhost";
+	    BasicUtils.aboutThreads(getName() + " | Before setup ");
+		if( domainConfig != null ) {
+			DomainSystemConfig.setTheConfiguration(domainConfig);
+		}
+		if( systemConfig != null ) {
+			RadarSystemConfig.setTheConfiguration(systemConfig);
+		}
+		if( domainConfig == null && systemConfig == null) {
+			DomainSystemConfig.simulation  = true;
+	    	DomainSystemConfig.testing     = false;			
+	    	DomainSystemConfig.tracing     = false;			
+			DomainSystemConfig.sonarDelay  = 200;
+	    	DomainSystemConfig.ledGui      = true;			
+	    	
+			RadarSystemConfig.RadarGuiRemote    = true;		
+			RadarSystemConfig.serverPort        = 8080;		
+			RadarSystemConfig.hostAddr          = "localhost";
+	    	RadarSystemConfig.DLIMIT            = 75;
+		}
 	}
 	protected void configure() {		
  	    sonar      = DeviceFactory.createSonar();
  	    led        = DeviceFactory.createLed();
 	    radar      = new  RadarGuiProxyAsClient("radarPxy", 
-	    		      RadarSysConfigSprint2.hostAddr, 
-		              ""+RadarSysConfigSprint2.serverPort, 
+	    		      RadarSystemConfig.hostAddr, 
+		              ""+RadarSystemConfig.serverPort, 
 		              ProtocolType.tcp);
 	    //Controller
 	    controller = Controller.create(led, sonar, radar);	 		
@@ -64,13 +73,13 @@ public class RadarSysSprint2ControllerOnRaspMain implements IApplication{
 	    	terminate(); 
 	    };
 		int d = radar.getCurDistance();
-		ColorsOut.outappl("CURRENT DISTANCE answer=" + d,ColorsOut.MAGENTA );
+		ColorsOut.outappl(getName() + " | CURRENT DISTANCE answer=" + d,ColorsOut.MAGENTA );
 		controller.start(endFun, 30);		
 	}
 	public void terminate() {
 		//Utils.delay(1000);  //For the testing ...
 		int d = radar.getCurDistance();
-		ColorsOut.outappl("CURRENT DISTANCE answer=" + d,ColorsOut.MAGENTA );		
+		ColorsOut.outappl(getName() + " |CURRENT DISTANCE answer=" + d,ColorsOut.MAGENTA );		
 		sonar.deactivate();
 		System.exit(0);
 	}	

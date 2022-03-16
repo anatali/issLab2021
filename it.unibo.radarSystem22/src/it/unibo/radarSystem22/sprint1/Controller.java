@@ -42,6 +42,7 @@ private ActionFunction endFun;
  		new Thread() {
 			public void run() { 
 				try {
+					BasicUtils.aboutThreads("Controller activate | ");
   					boolean sonarActive = sonar.isActive();
 					if( sonarActive ) {
 						for( int i=1; i<=limit; i++) {

@@ -11,7 +11,7 @@ plugins {
 	id 'jacoco'
 }
 
-version '0.1'
+version '0.2'
 sourceCompatibility = 1.8
 
 repositories {
@@ -56,7 +56,8 @@ eclipse {
     }
 }
 
-mainClassName = 'it.unibo.radarSystem22.sprint1.RadarSystemSprint1Main' 
+//mainClassName = 'it.unibo.radarSystem22.sprint1.RadarSystemSprint1Main' 
+mainClassName = 'it.unibo.radarSystem22.sprint2.MainSelectOnRasp'
 
 jar {
     from sourceSets.main.allSource

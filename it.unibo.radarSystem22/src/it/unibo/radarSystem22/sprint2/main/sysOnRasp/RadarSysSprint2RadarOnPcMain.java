@@ -6,7 +6,7 @@ import it.unibo.radarSystem22.IApplication;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.IRadarDisplay;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
-import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
+import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
 import it.unibo.radarSystem22.sprint2.handlers.RadarApplHandler;
 
 /*
@@ -26,12 +26,12 @@ public class RadarSysSprint2RadarOnPcMain implements IApplication{
 	}
 	
 	public void setup(  )  {	
- 		RadarSysConfigSprint2.serverPort        = 8023;		
-		RadarSysConfigSprint2.hostAddr          = "localhost";
+ 		RadarSystemConfig.serverPort        = 8080;		
+ 		RadarSystemConfig.hostAddr          = "localhost";
 	}
 	
 	public void configure(  )  {	
- 		int port = RadarSysConfigSprint2.serverPort;		
+ 		int port = RadarSystemConfig.serverPort;		
    		radar  	 = DeviceFactory.createRadarGui();
   	    IApplMsgHandler radarh = new RadarApplHandler("radarh", radar);
  	    server  = new TcpServer("pcServer",port,radarh );

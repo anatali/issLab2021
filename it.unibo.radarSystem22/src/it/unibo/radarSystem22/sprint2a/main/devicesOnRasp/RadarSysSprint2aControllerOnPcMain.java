@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.sprint2.main.devicesOnRasp;
+package it.unibo.radarSystem22.sprint2a.main.devicesOnRasp;
 
 
 import it.unibo.comm2022.ProtocolType;
@@ -11,7 +11,7 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint1.ActionFunction;
 import it.unibo.radarSystem22.sprint1.Controller;
-import it.unibo.radarSystem22.sprint2.RadarSysConfigSprint2;
+import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
 import it.unibo.radarSystem22.sprint3.proxy.LedProxyAsClient;
 import it.unibo.radarSystem22.sprint3.proxy.SonarProxyAsClient;
 
@@ -20,7 +20,7 @@ import it.unibo.radarSystem22.sprint3.proxy.SonarProxyAsClient;
  * e due proxy al Led e al Sonar.
  * 
  */
-public class RadarSysSprint2ControllerOnPcMain implements IApplication{
+public class RadarSysSprint2aControllerOnPcMain implements IApplication{
 	private IRadarDisplay radar;
 	private ISonar sonar;
 	private ILed  led ;
@@ -45,16 +45,16 @@ public class RadarSysSprint2ControllerOnPcMain implements IApplication{
 		DomainSystemConfig.simulation   	= true;
 		DomainSystemConfig.DLIMIT      		= 70;  
 		
-		RadarSysConfigSprint2.RadarGuiRemote = false;		
- 	}
+		RadarSystemConfig.RadarGuiRemote    = false;		
+		RadarSystemConfig.raspAddr          = "192.168.1.9";		 	}
 	
 	public void configure(  )  {	
  		ProtocolType protocol = ProtocolType.tcp;
 		
  		led    		= new LedProxyAsClient("ledPxy",     
- 				RadarSysConfigSprint2.raspAddr, ""+RadarSysConfigSprint2.ledPort, protocol );
+ 				RadarSystemConfig.raspAddr, ""+RadarSystemConfig.ledPort, protocol );
   		sonar  		= new SonarProxyAsClient("sonarPxy", 
-  				RadarSysConfigSprint2.raspAddr, ""+RadarSysConfigSprint2.sonarPort, protocol);
+  				RadarSystemConfig.raspAddr, ""+RadarSystemConfig.sonarPort, protocol);
   		radar  		= DeviceFactory.createRadarGui();
  
 	    //Controller
@@ -62,7 +62,7 @@ public class RadarSysSprint2ControllerOnPcMain implements IApplication{
 	}
 	public void terminate() {
  		BasicUtils.aboutThreads("Before deactivation | ");
-		//sonar.deactivate();
+		sonar.deactivate();
 		System.exit(0);
 	}	
 	
@@ -73,6 +73,6 @@ public class RadarSysSprint2ControllerOnPcMain implements IApplication{
 
 	public static void main( String[] args) throws Exception {
 		BasicUtils.aboutThreads("At INIT with NO CONFIG files| ");
-		new RadarSysSprint2ControllerOnPcMain().doJob( null,null );
+		new RadarSysSprint2aControllerOnPcMain().doJob( null,null );
   	}	
 }

@@ -24,7 +24,7 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
 		
  		@Override
 		public void elaborate(String message, Interaction2021 conn) {
- 			ColorsOut.outappl(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.MAGENTA);
+ 			ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.MAGENTA);
  			if( message.equals("getDistance")  ) {
  				String answer = ""+sonar.getDistance().getVal();
  				sendMsgToClient( answer, conn );

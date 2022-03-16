@@ -38,7 +38,7 @@ private Controller controller;
 			DomainSystemConfig.DLIMIT      		= 70;  
 			DomainSystemConfig.ledGui           = true;
 			RadarSystemConfig.RadarGuiRemote    = false; //se true non attiva radarGui
-		//Su Raspberry (nel file di configurazione)
+		//Su Raspberry (nei file di configurazione)
 //			DomainSystemConfig.simulation   	= false;
 //			DomainSystemConfig.DLIMIT      		= 12;  
 //			DomainSystemConfig.ledGui           = false;
