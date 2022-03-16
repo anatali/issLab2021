@@ -37,7 +37,7 @@ public class CounterApplHandler  extends ApplMsgHandler implements IApplMsgHandl
 	public void elaborate(IApplMessage msg, Interaction2021 conn) {
  		ColorsOut.outappl( getName() + " | elaborate " + msg + " conn="+conn, ColorsOut.GREEN );
  		this.conn = conn;
- 		Actor22.sendMsg(msg, ca);
+ 		Actor22.sendAMsg(msg, ca);
 	}
 	@Override
 	public void sendMsgToClient(String msg) {

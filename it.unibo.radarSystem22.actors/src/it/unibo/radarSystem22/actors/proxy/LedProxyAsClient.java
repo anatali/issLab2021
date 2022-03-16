@@ -2,11 +2,11 @@ package it.unibo.radarSystem22.actors.proxy;
 
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.proxy.ProxyAsClient;
-import it.unibo.radarSystem22.interfaces.ILed;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
+import it.unibo.radarSystem22.domain.interfaces.*;
  
 
 /*

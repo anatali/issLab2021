@@ -45,17 +45,12 @@ dependencies {
     implementation name: '2p301'
     implementation name: 'uniboInterfaces'
     implementation name: 'unibonoawtsupports'
-	implementation name: 'it.unibo.qakactor-2.5'
+	implementation name: 'it.unibo.qakactor-2.6'
 	
 	//RADAR (support and GUI)
 	implementation name: 'radarPojo'
 	// https://mvnrepository.com/artifact/org.pushingpixels/trident
 	implementation group: 'org.pushingpixels', name: 'trident', version: '1.3'
-
-
-
-
-
 
 }
 

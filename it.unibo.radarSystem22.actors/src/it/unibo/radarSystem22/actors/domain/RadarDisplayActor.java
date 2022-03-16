@@ -5,11 +5,12 @@ import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
-import it.unibo.radarSystem22.interfaces.IRadarDisplay;
 import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
 import it.unibo.radarSystem22.actors.domain.support.DomainData;
-import it.unibo.radarSystem22.domain.RadarDisplay;
+import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
+import it.unibo.radarSystem22.domain.concrete.RadarDisplay;
+
 /*
  * Funge da interprete di 
  */
@@ -23,7 +24,7 @@ private String angle = "90";
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.MAGENTA);
 		radar.update(msg.msgContent(),angle);		
 	}
@@ -36,6 +37,11 @@ private String angle = "90";
 		//IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
 		//updateRadarGui : msg(cmd,dispatch,radarDisplay,radar,d,N)
 		//Actor22.sendMsg(updateRadarGui, this );  
+	}
+
+	@Override
+	public int getCurDistance() {
+		return radar.getCurDistance();
 	}
 
 }

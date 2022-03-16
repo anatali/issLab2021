@@ -7,7 +7,7 @@ import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
-import it.unibo.radarSystem22.interfaces.ISonar;
+import it.unibo.radarSystem22.domain.interfaces.*;
 
 /*
  * L'invio di risposta a un actore remoto deve essere fatto da MsgHandlerForActor
@@ -22,7 +22,7 @@ private ISonar sonar;
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		//ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		if( msg.isRequest() ) elabRequest(msg);
 		else if( msg.isDispatch() ) elabCmd(msg);

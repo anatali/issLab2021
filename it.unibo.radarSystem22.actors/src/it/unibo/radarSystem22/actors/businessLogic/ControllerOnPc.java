@@ -1,11 +1,11 @@
 package it.unibo.radarSystem22.actors.businessLogic;
 
-import it.unibo.radarSystem22.domain.ActionFunction;
+ 
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.interfaces.*;
-import it.unibo.radarSystem22.usecases.*;
+import it.unibo.radarSystem22.domain.interfaces.*;
+ 
 
 public class ControllerOnPc {
 private ILed led;

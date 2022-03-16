@@ -6,8 +6,9 @@ import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
 import it.unibo.radarSystem22.domain.DeviceFactory;
+import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
-import it.unibo.radarSystem22.interfaces.ILed;
+
 
 /*
  * Funge da interprete di 
@@ -22,7 +23,7 @@ private ILed led;
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		String msgId = msg.msgId();
 		switch( msgId ) {

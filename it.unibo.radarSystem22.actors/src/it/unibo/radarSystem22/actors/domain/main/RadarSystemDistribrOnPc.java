@@ -2,15 +2,16 @@ package it.unibo.radarSystem22.actors.domain.main;
 
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.radarSystem22.actors.businessLogic.ActionFunction;
 import it.unibo.radarSystem22.actors.businessLogic.ControllerOnPc;
 import it.unibo.radarSystem22.actors.proxy.LedProxyAsClient;
 import it.unibo.radarSystem22.actors.proxy.SonarProxyAsClient;
 //import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
-import it.unibo.radarSystem22.domain.ActionFunction;
+import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.interfaces.*;
+ 
  
  
 /*

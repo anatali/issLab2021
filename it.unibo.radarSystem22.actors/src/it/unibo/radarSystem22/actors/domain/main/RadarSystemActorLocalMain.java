@@ -6,9 +6,10 @@ import it.unibo.kactor.ActorBasic;
 import it.unibo.radarSystem22.actors.businessLogic.ControllerActor;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
 import it.unibo.radarSystem22.actors.domain.support.DomainData;
+import it.unibo.radarSystem22.domain.interfaces.IRadarDisplay;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.interfaces.IRadarDisplay;
+ 
  
 /*
  * Questo sistema NON usa la infrastruttura Qak per gli attori
@@ -42,7 +43,8 @@ public class RadarSystemActorLocalMain {
 	
 	protected void execute() {
 		//MsgUtil.sendMsg(DomainMsg.controllerActivate, controller, null); //null è continuation.
-		Actor22.sendMsg(DomainData.controllerActivate, controller);
+		Actor22.sendAMsg( DomainData.controllerActivate, controller);
+		 
 	} 
 	
  	

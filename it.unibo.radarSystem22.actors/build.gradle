@@ -13,7 +13,7 @@ plugins {
 repositories {
     jcenter()
     flatDir { dirs '../unibolibs' }
-    flatDir { dirs './libs' }
+    //flatDir { dirs './libs' }
 }
 
 version '1.0'
@@ -48,7 +48,7 @@ dependencies {
     implementation name: '2p301'
     implementation name: 'uniboInterfaces'
     implementation name: 'unibonoawtsupports'
-	implementation name: 'it.unibo.qakactor-2.5'
+	implementation name: 'it.unibo.qakactor-2.6'
 	implementation name: 'it.unibo.actorComm-1.0'
 	
 	//RADAR (support and GUI)

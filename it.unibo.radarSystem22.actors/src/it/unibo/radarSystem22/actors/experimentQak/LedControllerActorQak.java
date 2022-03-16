@@ -32,7 +32,7 @@ public class LedControllerActorQak extends ActorBasic{
 		super(name,createScope(), false, true, false, 50);
  		IApplMessage controllerActivate   = 
 				MsgUtil.buildDispatch("main", DeviceLang.cmd, "activate", name);
-		Actor22.sendMsg( controllerActivate, this);
+		Actor22.sendAMsg( controllerActivate, this);
 		//this.autoMsg(DeviceLang.cmd, "activate", null);  //
  	}
 	

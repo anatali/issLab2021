@@ -2,24 +2,20 @@ package it.unibo.kactor;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-import kotlinx.coroutines.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.net.InetAddress;
 import java.util.HashMap;
 
-import static kotlinx.coroutines.ThreadPoolDispatcherKt.newSingleThreadContext;
-//import kotlinx.coroutines.runBlocking;
+
 
 /*
-28
-
 Kotlin coroutines are implemented with a compiler transformation to the code
 Java cannot use Kotlin's coroutines mechanic since it is a compile-time feature
  */
 
 public abstract class Actor22 extends ActorBasic {
     private static HashMap<String,ActorBasic> ctxMap = new HashMap<String,ActorBasic>();
+    protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 
     public static void createActorSystem(String name, String hostAddr, int port, String sysDescrFilename ){
         //runBlocking{
@@ -48,16 +44,20 @@ public abstract class Actor22 extends ActorBasic {
         System.out.println("-------------------------------------------------------");
     }
 
-
-    public static void sendMsg(String msgId,  String msg, ActorBasic destActor ){
+    public static void sendAMsg(String msgId,  String msg, ActorBasic destActor ){
         //null for kotlin.coroutines.Continuation<? super Unit> $completion
-        destActor.forward(msgId,    msg,   destActor.getName(),null);
+        if( destActor instanceof Actor22 ){
+            destActor.forward(msgId,    msg,   destActor.getName(),((Actor22) destActor).mycompletion);
+        }
+        else destActor.forward(msgId,    msg,   destActor.getName(),null);
     }
-    public static void sendMsg(IApplMessage msg, ActorBasic destActor ){
+    public static void sendAMsg(IApplMessage msg, ActorBasic destActor ){
+        if( destActor instanceof Actor22 ){
+            destActor.autoMsg(msg,((Actor22) destActor).mycompletion);
+        }
         //System.out.println("Actor22 | sendMsg " + msg + " dest=" + destActor.getName());
-        destActor.autoMsg(msg,null);
+        else destActor.autoMsg(msg,null);
     }
-//private static CoroutineScope scope = createScope();
 
 
     public Actor22(@NotNull String name ) {
@@ -69,18 +69,36 @@ public abstract class Actor22 extends ActorBasic {
     @Nullable
     @Override
     public Object actorBody(@NotNull IApplMessage msg, @NotNull Continuation<? super Unit> $completion) {
+        mycompletion = $completion;
+        //System.out.println(getName()+ " $$$ mycompletion= "+ mycompletion + " msg=" + msg);
         doJob(msg);
         return null;
     }
+    public void forwardToSelf( IApplMessage msg ){
+        this.autoMsg( msg, mycompletion);
+    }
     public void forwardToSelf(String msgId,  String msg ){
-        this.autoMsg(msgId, msg,null);
+        this.autoMsg(msgId, msg, mycompletion);
     }
     public void forward(String msgId,  String msg, String dest ){
-        this.forward(msgId, msg, dest, null);
+        this.forward(msgId, msg, dest, mycompletion);
     }
     public void request( String msgId,  String msg, String dest ){
-        this.request(msgId, msg, dest, null);
+        this.request(msgId, msg, dest, mycompletion);
     }
+    public void autoMsg( IApplMessage msg ){
+        this.autoMsg(msg, mycompletion);
+    }
+
+    public void sendMsg(IApplMessage msg, ActorBasic destActor ){
+        //System.out.println("Actor22 | sendMsg " + msg + " dest=" + destActor.getName());
+        //destActor.autoMsg( msg, mycompletion);
+        destActor.forward( msg.msgId(), msg.msgContent(), destActor.getName(), mycompletion);
+    }
+    public void sendMsg(String msgId,  String msg, ActorBasic destActor ){
+        destActor.forward(msgId, msg, destActor.getName(),mycompletion);
+    }
+
     protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
         System.out.println( getName()  + " | reply= " + reply );
         ActorBasic dest = getActor(msg.msgSender());

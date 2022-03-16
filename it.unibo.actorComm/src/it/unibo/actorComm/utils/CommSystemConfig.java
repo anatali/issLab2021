@@ -3,23 +3,21 @@ package it.unibo.actorComm.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 import it.unibo.actorComm.ProtocolType;
  
+
+
 public class CommSystemConfig {
 	
-	public static  boolean withContext   = true;
-	public static  boolean tracing       = false;
-	public static  String pcHostAddr     = "192.168.1.132";
-	public static  String raspHostAddr   = "192.168.1.4";
-	
- 	public static  int ctxServerPort     = 8048;
 	public static  String mqttBrokerAddr = "tcp://localhost:1883"; //: 1883  OPTIONAL  tcp://broker.hivemq.com
- 	
-	public static int serverTimeOut       =  600000;  //10 minuti
-	
+	public static int serverTimeOut        =  600000;  //10 minuti	
  	public static ProtocolType protcolType = ProtocolType.tcp;
+ 	public static boolean tracing          = false;
 
 	public static void setTheConfiguration(  ) {
 		setTheConfiguration("../CommSystemConfig.json");
@@ -33,15 +31,13 @@ public class CommSystemConfig {
 			if(  fis == null ) {
  				 fis = new FileInputStream(new File(resourceName));
 			}
-	        JSONTokener tokener = new JSONTokener(fis);
+	        //JSONTokener tokener = new JSONTokener(fis);
+			Reader reader       = new InputStreamReader(fis);
+			JSONTokener tokener = new JSONTokener(reader);      
 	        JSONObject object   = new JSONObject(tokener);
 	        
-	        pcHostAddr       = object.getString("pcHostAddr");
-	        raspHostAddr     = object.getString("raspHostAddr");
-
- 	        
-	        ctxServerPort    = object.getInt("ctxServerPort");
 	        mqttBrokerAddr   = object.getString("mqttBrokerAddr");
+	        tracing          = object.getBoolean("tracing");
 	        
 	        switch( object.getString("protocolType") ) {
 		        case "tcp"  : protcolType = ProtocolType.tcp; break;
