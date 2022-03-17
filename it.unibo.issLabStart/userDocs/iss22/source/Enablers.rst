@@ -93,8 +93,8 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
     public EnablerAsServer(String name, int port,  
                        ProtocolType protocol, IApplMsgHandler handler ) {
     try {
-      this.name     			= name;
-      this.protocol 			= protocol;
+      this.name     = name;
+      this.protocol = protocol;
       if( protocol != null ) setServerSupport( port, protocol, handler );
       }catch (Exception e) { ... }
     }	
@@ -117,10 +117,12 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
     }   
   }
 
-Notiamo che:
+Notiamo che un ``EnablerAsServer``:
 
-- un ``EnablerAsServer`` incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
-- si prevede anche la possibilità di introdurre :blue:`server basati su altri protocolli`;
+- **non è un server**, ma incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
+- opera in modo da fornire a un handler di tipo  :ref:`IApplMsgHandler<IApplMsgHandler>` la capacità di essere
+  attivato da un messaggio e di inviare risposte al mottente;
+- prevede la possibilità di introdurre :blue:`server basati su altri protocolli`;
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
 
