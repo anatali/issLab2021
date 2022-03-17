@@ -48,7 +48,30 @@ Il programma di lavoro può essere così riassunto:
   delegando a classi specializzate la gestione di un messaggio ricevuto, in modo che l'*Application Designer* possa 
   ignorare completamente i dettagli relativi alla comunicazione, avendo al contempo la possibilità di invocare un metodo che invia 
   informazioni (risposte) al caller (clent remoto).
- 
+
+Finita questa parte di lavoro, realizzeremo due diverse configurazioni del RadarSystem:
+
+-------------------------------------------------
+RadarDisplay su PC
+-------------------------------------------------
+
+
+.. image:: ./_static/img/radar/RadarOnPc.PNG 
+    :align: center
+    :width: 80%
+
+Si veda :ref:`SPRINT2: RadarSystem distribuito`
+
+
+-------------------------------------------------
+Controller e RadarDisplay su PC
+-------------------------------------------------
+
+.. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
+   :align: center
+   :width: 70%
+
+Si veda `sprint2a`_
 
 .. _tcpsupportClient:
 
@@ -569,6 +592,8 @@ sendRequestOnConnection
 
 :remark:`Il ProxyAsClient così definito realizza request-response sincrone (bloccanti)`
 
+.. _testingProxy:
+
 ++++++++++++++++++++++++++++++++++++++++
 Testing del :ref:`ProxyAsClient`
 ++++++++++++++++++++++++++++++++++++++++
@@ -756,7 +781,9 @@ Il deployment della parte di sistema che gira sul RaspberryPi può avvenire seco
 riportati in :ref:`SPRINT1: Deployment su RaspberryPi`.
 
 
-:worktodo:`WORKTODO: Controller sul PC`
+.. _sprint2a:
+
+:worktodo:`WORKTODO: SPRINT2a - Controller sul PC`
 
 - Redifinire il sistema in modo che il Controller sia allocato sul PC, lasciando sul RaspberryPi
   solo il software relativo al Led e al Sonar.
