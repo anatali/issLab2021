@@ -18,6 +18,8 @@
 
 .. _coroutine Kotlin : https://kotlinlang.org/docs/coroutines-overview.html
 
+.. _injection: https://en.wikipedia.org/wiki/Dependency_injection
+
 =====================================================
 Abilitatori di comunicazione
 =====================================================
@@ -31,19 +33,45 @@ di ricezione/trasmissione di informazione su rete a un nucleo di
 Nell'ambito di un processo di sviluppo bottom-up in cui il procollo TCP è
 la tecnologia di riferimento per le comunicazioni, risulta naturale pensare subito a 
 un enabler *tipo-server* capace di ricevere richieste  da parte di client remoti (normalmente
-dei Proxy).
+dei *Proxy*).
 
-.. due tipi di enabler: uno per ricevere (diciamo un enabler *tipo-server*) e uno per trasmettere (diciamo un enabler *tipo-client*).
+Prima di procedere, è però opportuno approfondire l'analisi del probleama.
+
+---------------------------------------------
+Approfondimento della analisi del problema
+---------------------------------------------
+Un componente capace di abilitare un altro componente (diciamo un POJO) alle comunicazioni via rete
+deve essere capace di comprendere diversi 'linguaggi' (qui il termine è usato in senso lato):
+
+- il **linguaggio del protocollo** usato come tecnologia-base. Poichè abbiamo prospettato l'uso di diversi
+  protocolli  un *enabler* deve rendere possibile l'uso  di tutti i protocolli citati in 
+  :ref:`Tipi di protocollo`;
+- il **linguaggio** usato per descrivere il **payload** di un messaggio inviato/ricevuto mediante l'uso 
+  di un protocollo. Ad esempio, per accendere un Led si potrebbe scrivere il comando in
+  molti modi diversi:
+
+    .. code::
+
+      on
+      turnOn
+      led( cmd, on )
+      ...
+- il **linguaggio** usato per descrivere la **risposta** ad un messaggio di richiesta, che l'enabler deve 
+  poter inviare al mittente in modo trasparente al livello applicativo. Ad esempio per conoscere lo stato del
+  Led, il mittente può inviare la richiesta ``getLedState(nomeLed)`` e aspettarsi una risposta 
+  ``state(nomeLed,V)`` con ``V=on/off`` o altro.
+
+Mentre l'enabler è chiamato a comprendere il   *linguaggio del protocollo*, la interpretazione del
+*linguaggio del payload* e del *linguaggio della risposta* deve essere demandata al codice scitto 
+dall'application designer.
+
+Inoltre è anche ovvio che l'enabler non deve includere codice relativo alla gestione di un messaggio,
+ma solo **usare** codice fornito dal livello applicativo, mediante - ad esempio -
+la tecnica dell'`injection`_ (alla costruzione o a run time).
  
-Come suggerito nell'analisi, ponendo il ``Controller`` su PC, 
-possiamo  (senza modificare il codice introdotto in :ref:`Controller<controller>`)
-impostare una architettura come quella rappresentata in figura:
 
-.. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
-   :align: center
-   :width: 65%
-
-
+Nel passare alla fase di progetto/realizzazione, ci concentrimo per ora sul solo protocollo TCP,
+riservando l'estensione ad altri protocolli a uno Sprint successivo.
 
 .. _EnablerAsServer:
 
@@ -65,8 +93,8 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
     public EnablerAsServer(String name, int port,  
                        ProtocolType protocol, IApplMsgHandler handler ) {
     try {
-      this.name     			= name;
-      this.protocol 			= protocol;
+      this.name     = name;
+      this.protocol = protocol;
       if( protocol != null ) setServerSupport( port, protocol, handler );
       }catch (Exception e) { ... }
     }	
@@ -89,10 +117,12 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
     }   
   }
 
-Notiamo che:
+Notiamo che un ``EnablerAsServer``:
 
-- un ``EnablerAsServer`` incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
-- si prevede anche la possibilità di introdurre :blue:`server basati su altri protocolli`;
+- **non è un server**, ma incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
+- opera in modo da fornire a un handler di tipo  :ref:`IApplMsgHandler<IApplMsgHandler>` la capacità di essere
+  attivato da un messaggio e di inviare risposte al mottente;
+- prevede la possibilità di introdurre :blue:`server basati su altri protocolli`;
 - nel caso ``protocol==null``, non viene creato alcun supporto. 
   Questo caso sarà applicato più avanti, nella sezione  :doc:`ContestiContenitori`.
 
@@ -113,9 +143,9 @@ e impostiamo un semplice test  molto simile a quanto proposto in :ref:`testingPr
 	private ProxyAsClient aproxy;	
     @Before
     public void setup() { 		
-        enabler = new EnablerAsServer("sonarSrv",port,protocol, 
+        enabler = new EnablerAsServer("aSrv",port,protocol, 
             new NaiveApplHandler("naiveH" ) );
-        aproxy = new ProxyAsClient("sonarPxy", "localhost", ""+port, protocol );		 
+        aproxy = new ProxyAsClient("aPxy", "localhost", ""+port, protocol );		 
     }
     @After
     public void down() {
@@ -145,7 +175,7 @@ i comandi o le richieste ricevute dal sever in forma di messaggi.
 
 L'handler deve quindi fare fronte a due compiti:
 
-#. interpretare un messagio e tradurlo in un comando o richiesta al dispositivo Sonar;
+#. interpretare un messagio e tradurlo in un comando o richiesta al componente destinario;
 #. inviare al mittente la risposta, in caso il messaggio sia una richiesta.
 
 Facendo riferimento al *single responsibility principle* (SRP, si veda 
@@ -254,7 +284,7 @@ SPRINT3: Usiamo gli enablers
 
 Inseriamo un nuovo package ``it.unibo.radarSystem22.sprint`` nel progetto 
 ``it.unibo.radarSystem22`` che contiene la nostra applicazione e introduciamo 
-in quato package gli enablers e i proxy per il Sonar e il Led.
+in questo package gli enablers e i proxy per il Sonar e il Led.
 
 
 ++++++++++++++++++++++++++++++++++++++++

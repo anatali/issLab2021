@@ -206,3 +206,10 @@ ponendo
 
 In caso contrario, il Controller opera con un convenzionale ciclo **read-eval-print**.
 
+Come suggerito nell'analisi, ponendo il ``Controller`` su PC, 
+possiamo  (senza modificare il codice introdotto in :ref:`Controller<controller>`)
+impostare una architettura come quella rappresentata in figura:
+
+.. image:: ./_static/img/Radar/ArchLogicaOOPEnablersBetter.PNG 
+   :align: center
+   :width: 65%

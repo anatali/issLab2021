@@ -591,6 +591,8 @@ sendRequestOnConnection
 
 :remark:`Il ProxyAsClient così definito realizza request-response sincrone (bloccanti)`
 
+.. _testingProxy:
+
 ++++++++++++++++++++++++++++++++++++++++
 Testing del :ref:`ProxyAsClient`
 ++++++++++++++++++++++++++++++++++++++++
