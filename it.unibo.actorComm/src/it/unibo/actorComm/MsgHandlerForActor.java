@@ -21,12 +21,12 @@ protected ActorForReply ar;
 
 	@Override
 	public void elaborate(IApplMessage message, Interaction2021 conn) {		
-		if( message.isDispatch() || message.isEvent() )  Actor22.sendMsg(message, actor);
+		if( message.isDispatch() || message.isEvent() )  Actor22.sendAMsg(message, actor);
 		else if( message.isRequest() ) {
 			ColorsOut.out(name + " | Handling the request " + message, ColorsOut.GREEN);
 			//Attivo un attore che riceve la risposta
 			ar = new ActorForReply("ar"+message.msgSender(), this, conn);
-			Actor22.sendMsg(message, actor); //invio il msg all'attore locale
+			Actor22.sendAMsg(message, actor); //invio il msg all'attore locale
 		}
 		else if( message.isInvitation() ) {
 			
@@ -45,7 +45,7 @@ protected ActorForReply ar;
  	public void sendMsgToClient( IApplMessage message, Interaction2021 conn  ) {
  		String destName = message.msgReceiver();
  		ActorBasic dest = Actor22.getActor(destName);
- 		if( dest != null ) Actor22.sendMsg(message, dest);
+ 		if( dest != null ) Actor22.sendAMsg(message, dest);
  		else ColorsOut.outerr("SORRY: destination actor not local:" + destName);
  	}
 }

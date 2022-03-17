@@ -298,7 +298,6 @@ Il metodo ``run`` che specifica il funzionamento del server, opera come segue:
       //Accept a connection				 
       Socket sock  = serversock.accept();	//1
       Interaction2021 conn = new TcpConnection(sock);
-      applHandler.setConn(conn);
       //Create a message handler on the connection
       new TcpApplMessageHandler( userDefHandler, conn ); //2			 		
     }//while
