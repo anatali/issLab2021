@@ -12,7 +12,8 @@ public class ExampleAnnotationUtil {
         try {
            ColorsOut.outappl("getActorName element=" + element, ColorsOut.BLUE);
            Annotation[] classAnnotations = element.getAnnotations();
-            for (Annotation annotation : classAnnotations) {
+           ColorsOut.outappl("getActorName length=" + classAnnotations.length, ColorsOut.GREEN);
+           for (Annotation annotation : classAnnotations) {
                 if (annotation instanceof ISSActorSpec) {
                     ISSActorSpec info = (ISSActorSpec) annotation;
                     return  info.actorName();
@@ -29,7 +30,8 @@ public class ExampleAnnotationUtil {
         ColorsOut.outappl("initializeObject object=" + object, ColorsOut.BLUE);
         Class<?> clazz = object.getClass();
         for (Method method : clazz.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(InitSpec.class)) {
+            ColorsOut.outappl("initializeObject clazz =" + clazz.getName() + " method=" + method.getName(), ColorsOut.GREEN);
+           if (method.isAnnotationPresent(InitSpec.class)) {
                 method.setAccessible(true);
                 try{
                     ColorsOut.outappl("initializeObject invoke " + method, ColorsOut.BLUE);

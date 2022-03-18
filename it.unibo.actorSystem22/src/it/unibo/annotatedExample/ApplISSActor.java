@@ -7,13 +7,15 @@
  */
 package it.unibo.annotatedExample;
 
-
-@ISSActorSpec( actorName = "actor0" )
+/*
+ * Classe che specializza una classe annotata ereditando l'annotazione
+ * a livello di costruttore
+ */
+//@ISSActorSpec( actorName = "actor0" )
 public class ApplISSActor extends ISSActor{
 
     //@InitSpec
     public void show(){
-        //super.show();
         System.out.println( myname + " ApplISSActor | myname= " + myname);
     }
 

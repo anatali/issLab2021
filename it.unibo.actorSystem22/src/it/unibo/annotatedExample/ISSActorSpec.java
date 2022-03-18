@@ -2,7 +2,10 @@ package it.unibo.annotatedExample;
 
 import java.lang.annotation.*;
 
-@Target(value = { ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.TYPE })
+/*
+ * Annotazione ereditabile applicabile al costruttore e ai metodi di una classe
+ */
+@Target(value = { ElementType.TYPE })   //ElementType.CONSTRUCTOR, ElementType.METHOD, 
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public  @interface ISSActorSpec {
