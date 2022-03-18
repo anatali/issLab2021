@@ -1,11 +1,11 @@
 package it.unibo.actorComm;
 
 import it.unibo.actorComm.interfaces.Interaction2021;
-import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
+import it.unibo.actorComm.utils.ColorsOut;
 
 /*
  * L'attore passato al costruttore ha un nome

@@ -165,7 +165,7 @@ al gestore applicativo, sulla base dell'attributo  ``RECEIVER``.
 
 .. image:: ./_static/img/Architectures/MessageHandlers.PNG
    :align: center 
-   :width: 50%
+   :width: 70%
 
 Per ottenere questo scopo, il ``TcpContextServer``
 definisce metodi per aggiungere al  (ed eliminare dal)  `ContextMsgHandler`_  oggetti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` 
@@ -239,5 +239,7 @@ interna che associa un :blue:`identificativo univoco` (il nome del destinatario)
 
  
  
-
+.. image:: ./_static/img/Architectures/ContestiEComponenti.PNG
+   :align: center 
+   :width: 80%
   
