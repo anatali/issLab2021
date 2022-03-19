@@ -252,7 +252,7 @@ Verso gli attori
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 I componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` potrebbero essere realizzati come 
-enti attivi dotati di una coda di messaggi, denominati **attori**
+enti attivi dotati di una coda di messaggi, denominati **attori**:
 
 .. image:: ./_static/img/Architectures/ContestiEComponenti.PNG
    :align: center 

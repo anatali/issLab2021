@@ -19,7 +19,7 @@ public class RadarSystemConfig {
  	public static String hostAddr         = "localhost";		
 	public static String raspAddr         = "localhost";		
 	public static int serverPort          = 8080;
-//Aggiunte dello SPRINT2a 	
+//Aggiunte dello SPRINT2a e 3
 	public static int ledPort             = 8010;
 	public static int sonarPort           = 8015;
 	

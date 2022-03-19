@@ -257,7 +257,7 @@ di informazione.
 .. _primoPrototipo: 
 
 ------------------------------------------
-Architettura del primo prototipo
+Architettura con contesto
 ------------------------------------------
 
 
@@ -267,7 +267,7 @@ e i dispositivi sul Raspberry, secondo l'architettura mostrata in figura:
 
 .. image:: ./_static/img/Radar/sysDistr1.PNG
    :align: center 
-   :width: 70%
+   :width: 80%
 
 I dispositivi sul Raspberry sono incapsulati in  handler che gestiscono i :ref:`Messaggi applicativi<messaggiAppl>` inviati 
 loro dal :ref:`TcpContextServer<TcpContextServer>`.
@@ -278,7 +278,7 @@ Si veda:
 - ``RadarSystemMainWithCtxOnPc`` : da attivare sul PC
  
 --------------------------------------------
-Deployoment del primo prototipo
+Deployoment del prototipo con contesto
 --------------------------------------------
 
 .. code:: 
@@ -314,7 +314,7 @@ prima del completamento della operazione.
     }
   }
   
-.. image:: ./_static/img/Radar/CounterWithDelay.PNG
+.. image:: ./_static/img/Radar/CounterDelayHandler.PNG
    :align: center  
    :width: 70%
 

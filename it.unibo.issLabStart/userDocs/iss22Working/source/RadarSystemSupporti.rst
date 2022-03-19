@@ -591,6 +591,8 @@ sendRequestOnConnection
 
 :remark:`Il ProxyAsClient così definito realizza request-response sincrone (bloccanti)`
 
+.. _testingProxy:
+
 ++++++++++++++++++++++++++++++++++++++++
 Testing del :ref:`ProxyAsClient`
 ++++++++++++++++++++++++++++++++++++++++
@@ -778,7 +780,12 @@ Il deployment della parte di sistema che gira sul RaspberryPi può avvenire seco
 riportati in :ref:`SPRINT1: Deployment su RaspberryPi`.
 
 
-.. _sprint2a:
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SPRINT2a 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 :worktodo:`WORKTODO: SPRINT2a - Controller sul PC`
 

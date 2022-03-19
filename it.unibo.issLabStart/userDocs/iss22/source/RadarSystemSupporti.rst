@@ -780,7 +780,12 @@ Il deployment della parte di sistema che gira sul RaspberryPi può avvenire seco
 riportati in :ref:`SPRINT1: Deployment su RaspberryPi`.
 
 
-.. _sprint2a:
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SPRINT2a 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 :worktodo:`WORKTODO: SPRINT2a - Controller sul PC`
 
