@@ -9,7 +9,6 @@ import it.unibo.radarSystem22_4.appl.handler.SonarApplHandler;
 import it.unibo.radarSystem22_4.comm.context.TcpContextServer;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
-import it.unibo.radarSystem22_4.comm.tcp.TcpServer;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
 import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 import it.unibo.radarSystem22.domain.DeviceFactory;
@@ -23,7 +22,7 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	
 	@Override
 	public String getName() {
-		return this.getClass().getName() ; //"RadarSystemSprint2OnPcMain";
+		return this.getClass().getName() ; 
 	}
 	@Override
 	public void doJob(String domainConfig, String systemConfig ) {
@@ -34,7 +33,7 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	
 	public void setup( String domainConfig, String systemConfig )  {
 	    BasicUtils.aboutThreads(getName() + " | Before setup ");
-	    CommSystemConfig.tracing            = true;
+	    CommSystemConfig.tracing  = true;
 		if( domainConfig != null ) {
 			DomainSystemConfig.setTheConfiguration(domainConfig);
 		}
@@ -48,9 +47,7 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 			DomainSystemConfig.sonarDelay  = 200;
 	    	DomainSystemConfig.ledGui      = true;		//se siamo su PC	
 	    	
- 	
-			RadarSystemConfig.tracing           = false;		
-			RadarSystemConfig.RadarGuiRemote    = true;		
+ 			RadarSystemConfig.RadarGuiRemote   = true;		
 		}
  
 	}
@@ -60,8 +57,8 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
    
  	   contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort);
 		//Registrazione dei componenti presso il contesto
- 	   IApplMsgHandler sonarHandler = new SonarApplHandler("sonarH",sonar); 
-	   IApplMsgHandler ledHandler   = new LedApplHandler("ledH",led);		  
+ 	   IApplMsgHandler sonarHandler = SonarApplHandler.create("sonarH",sonar); 
+	   IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  
 	   contextServer.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
 	   contextServer.addComponent("led",   ledHandler);		//led NAME mandatory
 	}

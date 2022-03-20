@@ -530,7 +530,7 @@ Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti:
 - I nuovi componenti-base di livello applicativo non sono più POJO, ma sono
   gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`.
 - I POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
-  negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`.
+  negli handler (che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`).
 - I gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<EnablerAsServer>`) 
   che forniscono una infrastruttura per le comunicazioni via rete. 
   Riportiamo una rappresentazione della architettura del sistema nel caso in cui il Controller voglia

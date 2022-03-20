@@ -11,7 +11,6 @@ protected String name;
    
  	public ApplMsgHandler( String name  ) {  
 		this.name = name;
-		//Colors.out(name + " | CREATING ... ", Colors.BLUE );
 	}
  	
  	public String getName() {

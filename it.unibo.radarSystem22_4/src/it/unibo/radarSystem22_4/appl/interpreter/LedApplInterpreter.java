@@ -20,9 +20,10 @@ private ILed led;
     @Override
  	public String elaborate( IApplMessage message ) {
 		ColorsOut.out("LedApplInterpreter | elaborate String=" + message  + " led="+led, ColorsOut.GREEN);
-	 		if( message.equals("getState") ) return ""+led.getState() ;
-	 		else if( message.equals("on")) led.turnOn();
-	 		else if( message.equals("off") ) led.turnOff();	
- 		return message+"_done";
+	 	String payload = message.msgContent();
+		if( payload.equals("getState") ) return ""+led.getState() ;
+	 	else if( payload.equals("turnOn"))   led.turnOn();
+	 	else if( payload.equals("turnOff") ) led.turnOff();	
+ 		return payload+"_done";
 	}
 }

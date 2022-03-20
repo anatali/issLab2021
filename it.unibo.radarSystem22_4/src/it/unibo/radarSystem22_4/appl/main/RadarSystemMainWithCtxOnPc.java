@@ -13,6 +13,7 @@ import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.context.TcpContextServer;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
+import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 
 public class RadarSystemMainWithCtxOnPc implements IApplication{
 	private IRadarDisplay radar;
@@ -22,7 +23,7 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 	
 	@Override
 	public String getName() {
-		return this.getClass().getName() ; //"RadarSystemSprint2OnPcMain";
+		return this.getClass().getName() ; 
 	}
 	@Override
 	public void doJob(String domainConfig, String systemConfig ) {
@@ -32,7 +33,8 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 	}
 	
 	public void setup( String domainConfig, String systemConfig )  {
-		
+		RadarSystemConfig.DLIMIT    = 80;
+		CommSystemConfig.protcolType = ProtocolType.tcp;
 	}
 	
 	protected void configure() {		
@@ -42,7 +44,7 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
   		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
   		radar  		= DeviceFactory.createRadarGui();
-  	controller 	= Controller.create(led, sonar, radar);
+  		controller 	= Controller.create(led, sonar, radar);
 	}
 	
 
@@ -55,4 +57,10 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 		sonar.deactivate();
 		System.exit(0);
 	}	
+	
+	public static void main( String[] args) throws Exception {
+		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
+		new RadarSystemMainWithCtxOnPc().doJob(null,null);
+ 	}
+	
 }

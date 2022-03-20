@@ -259,4 +259,4 @@ enti attivi dotati di una coda di messaggi, denominati **attori**
    :width: 80%
 
 
-La trasformazione di un componente-gestore in attore sarà introdotta nella sezione :doc:`Attori`.
+La trasformazione di un componente-gestore in attore sarà introdotta nella sezione  :doc:`Attori`.

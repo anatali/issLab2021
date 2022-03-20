@@ -13,9 +13,9 @@ import it.unibo.radarSystem22_4.comm.utils.CommUtils;
  * Adapter for the output device  Led
  */
 public class LedProxyAsClient extends ProxyAsClient implements ILed {
-	public static final IApplMessage turnOnLed    = new ApplMessage("msg( turn,   dispatch, system, led, on, 2 )");
-	public static final IApplMessage turnOffLed   = new ApplMessage("msg( turn,   dispatch, system, led, off, 3 )");
- 	public static final IApplMessage getLedState  = new ApplMessage("msg( ledcmd, request,  system, led, getState, 6 )");
+	public static final IApplMessage turnOnLed    = new ApplMessage("msg( cmd, dispatch, system, led, turnOn, 0 )");
+	public static final IApplMessage turnOffLed   = new ApplMessage("msg( cmd, dispatch, system, led, turnOff, 0 )");
+ 	public static final IApplMessage getLedState  = new ApplMessage("msg( cmd, request,  system, led, getState, 0 )");
 
 
  	public LedProxyAsClient( String name, String host, String entry  ) {		
@@ -44,7 +44,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 	@Override
 	public void turnOff() {   
 	     if( CommSystemConfig.protcolType==ProtocolType.tcp   ) {
- 			sendCommandOnConnection( "off" );
+ 			sendCommandOnConnection( turnOffLed.toString());
 	     }
  	}
 

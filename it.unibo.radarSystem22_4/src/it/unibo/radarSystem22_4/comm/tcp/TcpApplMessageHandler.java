@@ -1,5 +1,7 @@
 package it.unibo.radarSystem22_4.comm.tcp;
 
+import it.unibo.radarSystem22_4.comm.ApplMessage;
+import it.unibo.radarSystem22_4.comm.interfaces.IApplMessage;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.interfaces.Interaction2021;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
@@ -31,7 +33,8 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    	break;
 			    } else{ 
 			    	//Creare ApplMessage
-			    	//handler.elaborate( msg, conn ); 
+			    	IApplMessage m = new ApplMessage(msg);
+			    	handler.elaborate( m, conn ); 
 			    }
 			}
 			ColorsOut.out(name + " | BYE"   );

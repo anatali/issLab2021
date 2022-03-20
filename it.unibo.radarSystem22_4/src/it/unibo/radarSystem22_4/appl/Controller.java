@@ -1,6 +1,5 @@
 package it.unibo.radarSystem22_4.appl;
 
-import it.unibo.radarSystem22.domain.*;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
@@ -25,6 +24,7 @@ private ActionFunction endFun;
 		this.led    = led;
 		this.sonar  = sonar;
 		this.radar  = radar;
+  		led.turnOff();
 	}
 		
 	public void start( ActionFunction endFun, int limit ) {
