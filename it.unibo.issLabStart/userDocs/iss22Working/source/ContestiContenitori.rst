@@ -8,28 +8,65 @@
 Contesti-contenitori
 ==================================================
 
-Nella versione attuale, ogni enabler *tipo server* attiva un ``TCPServer`` su una propria porta.
+Nella versione attuale, ogni :ref:`enable<EnablerAsServer>` attiva un ``TCPServer`` su una propria porta.
 
 .. image::  ./_static/img/Radar/EnablersLedSonar.PNG
   :align: center 
   :width: 70%
 
 
-Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
-computazionale. Questo server (che denominiamo ``TcpContextServer``) 
-verrebbe a costituire una sorta di ``Facade`` comune a tutti gli :ref:`ApplMsgHandler<IApplMsgHandler>` 
-disponibili su quel nodo.
 
-.. *enabler-server* attivati nello stesso :blue:`contesto` rappresentato da quel  nodo.
+Una ottimizzazione delle risorse può essere ottenuta introducendo :blue:`un solo TCPServer` per ogni nodo
+computazionale. 
+
+----------------------------------------------
+Analisi del concetto di Contesto
+----------------------------------------------
+
+Introdurre un solo server per nodo computazionale significa introdurre un componente con due responabilità
+principali:
+
+- permettere che 'client' allocati su altri nodi computazionali possano inviare messaggi al nodo e gestire 
+  tali messaggi a 'livello di sistema';
+- fungere da contenitore di componenti  capaci di gestire i messaggi a livello applicativo.
+
+D'ora in poi denomineremo col termone generico ``Contesto`` un componente di questo tipo, lasciando
+indeterminata la sua natura.
+
+Tuttavia, in questa fase dello sviluppo, è opportuno realizzare la nuova idea riusando il software sviluppato 
+negli SPRINT precedenti. In questa prospettiva:
+
+- il contesto potrà essere implementato da una classe (denominata :ref:`TcpContextServer<TcpContextServer>`) che specializza
+  la classe  :ref:`TcpServer<TcpServer>`;
+- componenti applicativi gestori dei messaggi potrano essere definiti da classi che specializzano la classe 
+  :ref:`ApplMsgHandler<ApplMsgHandler>`  e implementano :ref:`IApplMsgHandler`;
+- la 'businnss logic' del contesto consiste nel reindirizzare un messaggio ricevuto ad uno specificato
+  componente applicativo (come :ref:`LedApplHandler` e :ref:`SonarApplHandler`) può essere delegata 
+  a un oggetto di tipo :ref:`IApplMsgHandler` (si veda :ref:`ContextMsgHandler`) che funhe da 
+  contenitore di componenti e da gestore  a 'livello di sistema' dei messaggi.
+
 
 .. image::  ./_static/img/Radar/TcpContextServerSonarLed.PNG
   :align: center 
   :width: 50%
 
+
+In questo quadro:
+
+:remark:`il ContextMsgHandler deve sapere a quale componente è destinato un messaggio`
+
+Occorre quindi superare l'idea che un messaggio sia una String interpretabile dal
+solo dal livello applicativo (si veda :ref:`Interpreti`).
+
+Più specificatamente, occorre definire una estensione sulla struttura dei messaggi, 
+che ci darà  anche uno 
+:blue:`standard interno` sulla struttura delle informazioni scambiate via rete:
+
+Parti di questa estensione dovranno essere interpretate dal :ref:`ContextMsgHandler`,
+che svolge il ruolo di un 'interprete di sistema'  che implementa l'operazione
+``elaborate(String message)`` effettuando il voluto reindirizzamento del messaggio
+a uno dei componenti applicativi memorizzati.
  
-Per realizzare questa ottimizzazione, il ``TcpContextServer`` deve essere capace di sapere per quale
-componente è destinato un messaggio, per poi invocarne l'appropriato :ref:`IApplMsgHandler<IApplMsgHandler>`
-(come :ref:`LedApplHandler` e :ref:`SonarApplHandler`).
 
 .. _msgApplicativi:
 
