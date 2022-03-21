@@ -67,9 +67,7 @@ protected ProtocolType protocol ;
 		try {
 			String answer = conn.request(request);
 			ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer, ColorsOut.BLUE  );
-			return  answer  ;
-			//return CommUtils.getContent( answer );
- 		
+			return  answer  ;		
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
 			return null;

@@ -5,13 +5,9 @@ import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22_4.appl.ActionFunction;
 import it.unibo.radarSystem22_4.appl.Controller;
 import it.unibo.radarSystem22_4.appl.RadarSystemConfig;
-import it.unibo.radarSystem22_4.appl.handler.LedApplHandler;
-import it.unibo.radarSystem22_4.appl.handler.SonarApplHandler;
 import it.unibo.radarSystem22_4.appl.proxy.LedProxyAsClient;
 import it.unibo.radarSystem22_4.appl.proxy.SonarProxyAsClient;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
-import it.unibo.radarSystem22_4.comm.context.TcpContextServer;
-import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
 import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 

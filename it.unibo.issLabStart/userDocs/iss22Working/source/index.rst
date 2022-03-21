@@ -19,6 +19,7 @@ iss22
    RadarSystemSupporti
    Enablers
    ContestiContenitori
+   Attori
    RaspberrySoftware
    RaspBasicCode
 

@@ -45,7 +45,8 @@ private Socket socket;
 		String answer = receiveMsg();
 		return answer;
 	}
-	
+
+
 	@Override
 	public void reply(String msg) throws Exception {
 		forward(msg);

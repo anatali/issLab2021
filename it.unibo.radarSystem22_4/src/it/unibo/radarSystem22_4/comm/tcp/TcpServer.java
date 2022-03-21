@@ -32,7 +32,7 @@ protected boolean stopped = true;
 	@Override
 	public void run() {
 	      try {
-		  	ColorsOut.out(getName() + " | STARTING ... ", ColorsOut.BLUE  );
+		  	ColorsOut.outappl(getName() + " | STARTING ... ", ColorsOut.BLUE  );
 			while( ! stopped ) {
 				//Accept a connection				 
 				//ColorsOut.out(getName() + " | waits on server port=" + port + " serversock=" + serversock );	 

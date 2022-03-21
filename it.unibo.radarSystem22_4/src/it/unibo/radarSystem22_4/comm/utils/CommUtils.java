@@ -31,7 +31,7 @@ public class CommUtils {
 	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
 	private static int msgNum=0;	
 
-	public static ApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
+	public static IApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.dispatch.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
@@ -40,7 +40,7 @@ public class CommUtils {
 		}
 	}
 	
-	public static ApplMessage buildRequest(String sender, String msgId, String payload, String dest) {
+	public static IApplMessage buildRequest(String sender, String msgId, String payload, String dest) {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.request.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
@@ -48,7 +48,7 @@ public class CommUtils {
 			return null;
 		}
 	}
-	public static ApplMessage buildReply(String sender, String msgId, String payload, String dest) {
+	public static IApplMessage buildReply(String sender, String msgId, String payload, String dest) {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
@@ -56,11 +56,11 @@ public class CommUtils {
 			return null;
 		}
 	}	
-	public static ApplMessage prepareReply(ApplMessage requestMsg, String answer) {
+	public static IApplMessage prepareReply(IApplMessage requestMsg, String answer) {
 		String sender  = requestMsg.msgSender();
 		String receiver= requestMsg.msgReceiver();
 		String reqId   = requestMsg.msgId();
-		ApplMessage reply = null;
+		IApplMessage reply = null;
 		if( requestMsg.isRequest() ) { //DEFENSIVE
 			//The msgId of the reply must be the id of the request !!!!
  			reply = buildReply(receiver, reqId, answer, sender) ;
