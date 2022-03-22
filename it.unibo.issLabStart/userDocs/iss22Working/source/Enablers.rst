@@ -1,6 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
+.. role:: worktodo 
 
 .. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
 
@@ -558,12 +559,29 @@ Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti:
   che abilita alle interazioni via rete.
 - I messaggi gestiti dagli *handler* sono  ``String`` la cui struttura  è nota a un interpreter definito dall'ApplicationDesigner.
 
-.. notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati,  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
+:remark:`Connessioni su UDP realizzate da Loris Giannatempo`
 
+Lo SPRINT3 del progetto ``it.unibo.radarSystem22`` utilizza la versione 2.0 del supporto alle comunicazioni
+(file  ``it.unibo.comm2022-2.0.jar``)
+che permette a un :ref:`enabler<EnablerAsServer>` di utilizzare il protocollo **UDP**. Coerentemente, la classe :ref:`ProxyAsClient` è stata estesa
+in modo da permettere connessioni basate su **UDP**.
 
-
+Il supporto a **UDP** è definito nel package ``it.unibo.comm2022.udp.giannatempo`` del progetto ``it.unibo.comm2022``.
 
  
+ 
+
++++++++++++++++++++++++++++++++++++++++++++++
+Richieste multiple
++++++++++++++++++++++++++++++++++++++++++++++
+
+:worktodo:`WORKTODO: richieste multiple in parallelo`
+
+- Definire un componente (``caller``) che invia due richieste diverse a uno stesso destinatario 
+  attivando per ciascuna di esse un Thread diverso.
+- Definire un componente destinatario  (``service``) che attende le richieste del  ``caller`` e risponde 
+  elaborando ciascuna di esse in un *handler* che fornisce le risposte in un tempo random.
+- Osservare che una risposta potrebbero arrivare al Thread che non l'aspetta. 
 
 ++++++++++++++++++++++++++++++++++++++++++
 Un punto  critico
@@ -587,4 +605,9 @@ per nodo computazionale?
 La prossima sezione sarà dedicata alla realizzazione di questa idea, che ci farà fare
 un ulteriore passo in avanti nella transizione dal paradigma ad oggetti al paradigma
 a messaggi.
+
+
+ 
+
+
 

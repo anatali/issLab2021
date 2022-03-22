@@ -1,7 +1,8 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
-  
+.. role:: worktodo 
+
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 .. _Prolog: https://it.wikipedia.org/wiki/Prolog
 
@@ -31,17 +32,16 @@ principali:
   tali messaggi a 'livello di sistema';
 - fungere da contenitore di componenti  capaci di gestire i messaggi a livello applicativo.
 
-D'ora in poi denomineremo col termine generico ``Contesto`` un componente di questo tipo, lasciando
-indeterminata la sua natura.
+D'ora in poi denomineremo col termine generico **Contesto** un componente di questo tipo.
 
-In questa fase dello sviluppo, è tuttavia opportuno realizzare la nuova idea riusando il software sviluppato 
+In questa fase dello sviluppo, cercheremo di realizzare l'idea di *Contesto* riusando il software sviluppato 
 negli SPRINT precedenti. In questa prospettiva:
 
 - il contesto potrà essere implementato da una classe (denominata :ref:`TcpContextServer<TcpContextServer>`) che specializza
   la classe  :ref:`TcpServer<TcpServer>`;
 - componenti applicativi gestori dei messaggi potrano essere definiti da classi che specializzano la classe 
   :ref:`ApplMsgHandler<ApplMsgHandler>`  e implementano :ref:`IApplMsgHandler`;
-- il contesto deve nel reindirizzare un messaggio ad uno specifico
+- il contesto deve reindirizzare un messaggio ad uno specifico
   componente applicativo (come :ref:`LedApplHandler` e :ref:`SonarApplHandler`). Questa 
   gestione  a 'livello di sistema' dei messaggi può essere delegato
   a un oggetto :ref:`ContextMsgHandler<ContextMsgHandler>` di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` 
@@ -155,11 +155,8 @@ e gestire poi le risposte man mano arriveranno, in un ordine qualsiasi.
 Occorre quindi che tale componente possa sapere, quando riceve una ``reply``, a quale richiesta
 corrisponde.
 
-Osserviamo che un problema del genere si pone anche nel sistema attuale, in quanto un componente
-potrebbe inviare più richieste a uno stesso destinatario invocando
-il metodo ``request`` di :ref:`TcpConnection<TcpConnection>` all'interno di un Thread.
-In generale infatti, non si può assumere che il destinatario risponda in modo FIFO a due richieste
-che provengono dallo stesso componente.
+Osserviamo che un problema del genere si può porre anche nel sistema attuale: si veda :ref:`Richieste multiple`, 
+
 
 
 +++++++++++++++++++++++++++++++
@@ -185,9 +182,6 @@ SPRINT4: il progetto del SystemDesigner
 -------------------------------------------------------
 
 
-
-
-
 .. _ApplMessage:
  
 ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -200,7 +194,7 @@ in forma di String a una rappresentazione interna manipolabile da programma e vi
 
  .. code:: java
 
-   public class ApplMessage {
+   public class ApplMessage implements IApplMessage {
     protected String msgId       = "";
     protected String msgType     = null;
     protected String msgSender   = "";
@@ -227,15 +221,30 @@ in forma di String a una rappresentazione interna manipolabile da programma e vi
     public String toString() { ... }
   }
 
-:remark:`messaggi standard di sistema`
+.. _IApplMessage:
 
-- D'ora in poi il metodo ``elaborate`` con argomento ``IApplMessage<IApplMessage>`` diventerà il metodo di riferimento
-  per la gestione dei messaggi. In altre parole, tutte le nostre applicazioni distribuite 
-  invieranno messaggi della forma:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Interfaccia  ``IApplMessage``
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  .. code:: java
+ .. code:: java
 
-     msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+  public interface IApplMessage {
+      public String msgId();
+      public String msgType();
+      public String msgSender();
+      public String msgReceiver();
+      public String msgContent();
+      public String msgNum();
+      public boolean isDispatch();
+      public boolean isRequest();
+      public boolean isReply();
+      public boolean isEvent();
+  }
+
+
+
+
 
 
 .. _IApplMsgHandlerEsteso:
@@ -244,8 +253,8 @@ in forma di String a una rappresentazione interna manipolabile da programma e vi
 Estensione della interfaccia :ref:`IApplMsgHandler<IApplMsgHandler>`
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In relazione alla nuova esigenza, provvediamo a modificare il contratto relativo ai gestori dei messaggi di
-livello applicativo che sono ora di tipo :ref:`ApplMessage<ApplMessage>`.
+Provvediamo a modificare il contratto relativo ai gestori dei messaggi di
+livello applicativo, che sono ora di tipo :ref:`IApplMessage<IApplMessage>`.
 
 .. code:: Java
 
@@ -254,6 +263,15 @@ livello applicativo che sono ora di tipo :ref:`ApplMessage<ApplMessage>`.
     public void elaborate( IApplMessage message, Interaction2021 conn ); 
   }
 
+:remark:`messaggi standard di sistema`
+
+- D'ora in poi il metodo ``elaborate`` con argomento :ref:`IApplMessage<IApplMessage>` diventerà il metodo di riferimento
+  per la gestione dei messaggi. In altre parole, tutte le nostre applicazioni distribuite 
+  invieranno messaggi della forma:
+
+  .. code:: java
+
+     msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Modifica della classe :ref:`ApplMsgHandler<ApplMsgHandler>`
@@ -265,7 +283,7 @@ che dovrà essere definito dalle classi specializzate.
 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-prepareReply
+Il meotdo ``prepareReply``
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Per associare le risposte alle richieste, viene introdotto il  metodo ``prepareReply`` che
