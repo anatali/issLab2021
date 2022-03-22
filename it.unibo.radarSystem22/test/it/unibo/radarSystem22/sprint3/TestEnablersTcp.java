@@ -46,10 +46,10 @@ public class TestEnablersTcp {
 	  //I server
 	  sonarServer = new EnablerAsServer("sonarSrv",
 	              RadarSystemConfig.sonarPort,
-	              protocol, new SonarApplHandler("sonarH", sonar) );
+	              protocol, SonarApplHandler.create("sonarH", sonar) );
 	  ledServer   = new EnablerAsServer("ledSrv",
 	              RadarSystemConfig.ledPort,
-	              protocol, new LedApplHandler("ledH", led)  );
+	              protocol, LedApplHandler.create("ledH", led)  );
 
 	  //I proxy
 	  sonarPxy = new SonarProxyAsClient( "sonarPxy", "localhost",
@@ -72,7 +72,7 @@ public class TestEnablersTcp {
        System.out.println(" ==================== testEnablers "  );
 
        //Simulo il Controller
-       BasicUtils.delay(500);
+       //BasicUtils.delay(500);
 
        //Attivo il sonar
        sonarPxy.activate();

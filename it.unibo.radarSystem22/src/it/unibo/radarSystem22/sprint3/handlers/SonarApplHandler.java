@@ -15,11 +15,7 @@ public class SonarApplHandler extends ApplMsgHandler  {
 private IApplInterpreter sonarIntepr;
 
 public static IApplMsgHandler create(String name, ISonar sonar) {
-//	if( CommUtils.isCoap() ) {
-//		return new SonarResourceCoap("sonar",  new SonarApplInterpreter(sonar) );
-//	}else  
-		return new SonarApplHandler(name, sonar);
-	 
+		return new SonarApplHandler(name, sonar);	 
 }
 		public SonarApplHandler(String name, ISonar sonar) {
 			super(name);

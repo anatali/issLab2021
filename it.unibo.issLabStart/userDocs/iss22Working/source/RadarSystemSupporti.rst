@@ -214,9 +214,10 @@ dei messaggi in ingresso.
     } 
     @Override
     public void sendAnswerToClient(String reply,Interaction2021 conn){
-        sendMsgToClient(reply, conn);
-    }
-    
+      try {
+        conn.reply(reply);
+      } catch (Exception e) { ... }
+    }    
     public abstract void elaborate(String message,Interaction2021 conn);
    }
 

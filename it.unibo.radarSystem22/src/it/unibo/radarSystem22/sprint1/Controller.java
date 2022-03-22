@@ -54,7 +54,7 @@ private ActionFunction endFun;
 	 						BasicUtils.delay(DomainSystemConfig.sonarDelay);  //Al ritmo della generazione ...
 	 					}
 					}				
-					//ColorsOut.outappl("Controller | BYE", ColorsOut.BLUE  );
+					//ColorsOut.outappl("Controller | BYE", ColorsOut.BLUE  );					 
 					sonar.deactivate();
 					endFun.run("Controller | BYE ");
 					//System.exit(0);

@@ -1,7 +1,8 @@
-package it.unibo.radarSystem22.sprint2a.main.devicesOnRasp;
+package it.unibo.radarSystem22.sprint3.main.devicesOnRasp;
 
 
 import it.unibo.comm2022.ProtocolType;
+import it.unibo.comm2022.proxy.ProxyAsClient;
 import it.unibo.comm2022.utils.CommSystemConfig;
 import it.unibo.radarSystem22.IApplication;
 import it.unibo.radarSystem22.domain.DeviceFactory;
@@ -21,7 +22,7 @@ import it.unibo.radarSystem22.sprint2a.proxy.SonarProxyAsClient;
  * e due proxy al Led e al Sonar.
  * 
  */
-public class RadarSysSprint2aControllerOnPcMain implements IApplication{
+public class RadarSysSprint3ControllerOnPcMain implements IApplication{
 	private IRadarDisplay radar;
 	private ISonar sonar;
 	private ILed  led ;
@@ -48,13 +49,13 @@ public class RadarSysSprint2aControllerOnPcMain implements IApplication{
 		RadarSystemConfig.DLIMIT      		= 70;  
 		RadarSystemConfig.RadarGuiRemote    = false;		
 		RadarSystemConfig.raspAddr          = "localhost"; //"192.168.1.9";		 	
+		RadarSystemConfig.protcolType       = ProtocolType.udp;	
 		
 		CommSystemConfig.tracing            = false;
 	}
 	
 	public void configure(  )  {	
- 		//ProtocolType protocol = ProtocolType.tcp;
- 		ProtocolType protocol = ProtocolType.tcp;
+  		ProtocolType protocol = RadarSystemConfig.protcolType ;
 		
  		led    		= new LedProxyAsClient("ledPxy",     
  				RadarSystemConfig.raspAddr, ""+RadarSystemConfig.ledPort, protocol );
@@ -65,9 +66,12 @@ public class RadarSysSprint2aControllerOnPcMain implements IApplication{
 	    //Controller
 	    controller = Controller.create(led, sonar, radar);	 		
 	}
+	
 	public void terminate() {
  		BasicUtils.aboutThreads("Before deactivation | ");
-		sonar.deactivate();
+ 		((ProxyAsClient) led).close();
+ 		//((ProxyAsClient) sonar).close();  //Lo fa già deactivate
+		//sonar.deactivate(); //lo fa il Controller
 		System.exit(0);
 	}	
 	
@@ -78,6 +82,6 @@ public class RadarSysSprint2aControllerOnPcMain implements IApplication{
 
 	public static void main( String[] args) throws Exception {
 		BasicUtils.aboutThreads("At INIT with NO CONFIG files| ");
-		new RadarSysSprint2aControllerOnPcMain().doJob( null,null );
+		new RadarSysSprint3ControllerOnPcMain().doJob( null,null );
   	}	
 }

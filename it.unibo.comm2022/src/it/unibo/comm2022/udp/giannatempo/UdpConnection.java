@@ -10,6 +10,7 @@ import it.unibo.comm2022.utils.ColorsOut;
 public class UdpConnection implements Interaction2021{
 	
 public static final int MAX_PACKET_LEN = 1025;
+public static final String closeMsg    = "@+-systemUdpClose@+-";
 protected DatagramSocket socket;
 protected UdpEndpoint endpoint;
 protected boolean closed;
@@ -58,6 +59,9 @@ protected boolean closed;
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
 				line = new String(packet.getData(), 0, packet.getLength());
+				if( line.equals(closeMsg)) {
+					close();
+				}
 				packet = null;
 			}
  			return line;		
@@ -69,7 +73,13 @@ protected boolean closed;
 
 	@Override
 	public void close() {
+		try {
+			forward(closeMsg);
+		} catch (Exception e) {
+			ColorsOut.outerr( "UdpConnection | close ERROR  " + e.getMessage() );	
+		}
 		closed = true;
+		ColorsOut.out( "UdpConnection | closing   ", ColorsOut.ANSI_YELLOW );
 		socket.close();
 	}
 

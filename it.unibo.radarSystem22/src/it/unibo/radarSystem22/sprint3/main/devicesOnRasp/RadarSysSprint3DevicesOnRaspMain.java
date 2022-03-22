@@ -1,7 +1,8 @@
-package it.unibo.radarSystem22.sprint2a.main.devicesOnRasp;
+package it.unibo.radarSystem22.sprint3.main.devicesOnRasp;
 
  
 import it.unibo.comm2022.ProtocolType;
+import it.unibo.comm2022.enablers.EnablerAsServer;
 import it.unibo.comm2022.interfaces.IApplMsgHandler;
 import it.unibo.comm2022.tcp.TcpServer;
 import it.unibo.comm2022.udp.giannatempo.UdpServer;
@@ -20,13 +21,12 @@ import it.unibo.radarSystem22.sprint2a.handlers.SonarApplHandler;
  * Attiva il TCPServer.
  * 
  */
-public class RadarSysSprint2aDevicesOnRaspMain implements IApplication{
+public class RadarSysSprint3DevicesOnRaspMain implements IApplication{
 	private ISonar sonar;
 	private ILed  led ;
-	private TcpServer ledServer ;
-	private TcpServer sonarServer ;
-	private UdpServer ledServerUdp ;
-	private UdpServer sonarServerUdp ;
+	private EnablerAsServer ledEnabler ;
+	private EnablerAsServer sonarEnabler ;
+ 
 
 	@Override
 	public void doJob(String domainConfig, String systemConfig) {
@@ -53,37 +53,27 @@ public class RadarSysSprint2aDevicesOnRaspMain implements IApplication{
 	
 			RadarSystemConfig.tracing           = false;		
 			RadarSystemConfig.RadarGuiRemote    = true;		
-			RadarSystemConfig.protcolType       = ProtocolType.tcp;		
+			RadarSystemConfig.protcolType       = ProtocolType.udp;		
 		}
  
 	}
 	protected void configure() {		
-	  ProtocolType protocol = RadarSystemConfig.protcolType;
-	   led        = DeviceFactory.createLed();
- 	   IApplMsgHandler ledh = LedApplHandler.create("ledh", led);
- 	   switch( protocol ) {
- 	   	case tcp :  { ledServer     = new TcpServer("ledServer",RadarSystemConfig.ledPort,ledh );break;}
- 	   	case udp:   { ledServerUdp  = new UdpServer("ledServerUdp",RadarSystemConfig.ledPort,ledh);break;}
- 	   	default: break;
- 	   }
-// 	   ledServer     = new TcpServer("ledServer",RadarSystemConfig.ledPort,ledh );
-  	  
+	   ProtocolType protocol = RadarSystemConfig.protcolType;
+	   led                   = DeviceFactory.createLed();
+ 	   IApplMsgHandler ledh  = LedApplHandler.create("ledh", led);
 	   sonar      = DeviceFactory.createSonar();
  	   IApplMsgHandler sonarh = SonarApplHandler.create("sonarh", sonar);
-// 	   sonarServer   = new TcpServer("sonarServer",RadarSystemConfig.sonarPort,sonarh );
- 	   switch( protocol ) {
-	   	case tcp : { sonarServer   = new TcpServer("sonarServer",RadarSystemConfig.sonarPort,sonarh);break;}
-	   	case udp:  { sonarServerUdp= new UdpServer("sonarServerUdp",RadarSystemConfig.sonarPort,sonarh);break;}
-	   	default: break;
-	   }
- 	}
+	   
+ 	  //Gli enablers
+ 	  sonarEnabler = new EnablerAsServer("sonarSrv", RadarSystemConfig.sonarPort,
+ 	              protocol, sonarh );
+ 	  ledEnabler   = new EnablerAsServer("ledSrv", RadarSystemConfig.ledPort,
+ 	              protocol, ledh  );
+  	}
 	
 	protected void execute() {		
-		switch( RadarSystemConfig.protcolType ) {
-			case tcp : { ledServer.activate();    sonarServer.activate();    break;}
-			case udp : { ledServerUdp.activate(); sonarServerUdp.activate(); break;}
-			default: break;
-		}
+		ledEnabler.start();
+		sonarEnabler.start();
 	}
 	
 	@Override
@@ -93,6 +83,6 @@ public class RadarSysSprint2aDevicesOnRaspMain implements IApplication{
 
 	public static void main( String[] args) throws Exception {
 		BasicUtils.aboutThreads("At INIT with NO CONFIG files| ");
-		new RadarSysSprint2aDevicesOnRaspMain().doJob(null,null);
+		new RadarSysSprint3DevicesOnRaspMain().doJob(null,null);
   	}
 }
