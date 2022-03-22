@@ -13,7 +13,8 @@ public class NaiveApplHandler extends ApplMsgHandler {
 	@Override
 	public void elaborate(String message, Interaction2021 conn) {
 		System.out.println(name + " | elaborate " + message + " conn=" + conn);
-		this.sendMsgToClient("answerTo_"+message, conn);
+		//this.sendMsgToClient("answerTo_"+message, conn);  //MODIFIED for udp 
+		sendAnswerToClient("answerTo_"+message, conn);
   	}
 
 }

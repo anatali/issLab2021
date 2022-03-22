@@ -19,8 +19,6 @@ public static final int testPort = 8112;
 		System.out.println(" =============== ACTIVATING SERVER  " );
 		server = new TcpServer("tcpServer",testPort, new NaiveApplHandler("naiveH") );		
 		server.activate();		
-		
-		
 	}
 	
 	@After

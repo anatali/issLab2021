@@ -5,6 +5,7 @@ import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.interfaces.Interaction2021;
 import it.unibo.comm2022.utils.ColorsOut;
 import it.unibo.comm2022.tcp.TcpClientSupport;
+import it.unibo.comm2022.udp.UdpClientSupport;
  
 public class ProxyAsClient {
 private Interaction2021 conn; 
@@ -37,6 +38,11 @@ protected ProtocolType protocol ;
 				ColorsOut.out(name + " |  setConnection "  + conn, ColorsOut.BLUE );		
 				break;
 			}
+			case udp : {
+				int port = Integer.parseInt(entry);
+ 				conn = UdpClientSupport.connect(host,  port, 10); //10 = num of attempts ; 
+				break;
+			}
 			case coap : {
  				//conn = new CoapConnection( host,  entry );
 				break;
@@ -55,7 +61,7 @@ protected ProtocolType protocol ;
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {
- 		//ColorsOut.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, ColorsOut.BLUE );
+ 		ColorsOut.outappl( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, ColorsOut.BLUE );
 		try {
 			conn.forward(cmd);
 		} catch (Exception e) {
@@ -64,10 +70,10 @@ protected ProtocolType protocol ;
 	}
 	
 	public String sendRequestOnConnection( String request )  {
- 		ColorsOut.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn );
+ 		ColorsOut.out( name+"  | sendRequestOnConnection request=" + request + " conn=" + conn, ColorsOut.BLUE );
 		try {
 			String answer = conn.request(request);
-			ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer  );
+			ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer, ColorsOut.BLUE  );
 			return  answer  ;
 			//return CommUtils.getContent( answer );
  		
