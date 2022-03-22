@@ -53,7 +53,8 @@ public class RadarSysSprint2aControllerOnPcMain implements IApplication{
 	}
 	
 	public void configure(  )  {	
- 		ProtocolType protocol = ProtocolType.tcp;
+ 		//ProtocolType protocol = ProtocolType.tcp;
+ 		ProtocolType protocol = ProtocolType.udp;
 		
  		led    		= new LedProxyAsClient("ledPxy",     
  				RadarSystemConfig.raspAddr, ""+RadarSystemConfig.ledPort, protocol );

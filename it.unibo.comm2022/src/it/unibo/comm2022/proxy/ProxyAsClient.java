@@ -5,7 +5,7 @@ import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.interfaces.Interaction2021;
 import it.unibo.comm2022.utils.ColorsOut;
 import it.unibo.comm2022.tcp.TcpClientSupport;
-import it.unibo.comm2022.udp.UdpClientSupport;
+import it.unibo.comm2022.udp.giannatempo.UdpClientSupport;
  
 public class ProxyAsClient {
 private Interaction2021 conn; 
@@ -40,7 +40,7 @@ protected ProtocolType protocol ;
 			}
 			case udp : {
 				int port = Integer.parseInt(entry);
- 				conn = UdpClientSupport.connect(host,  port, 10); //10 = num of attempts ; 
+ 				conn = UdpClientSupport.connect(host,  port );  
 				break;
 			}
 			case coap : {
