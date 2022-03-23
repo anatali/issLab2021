@@ -3,6 +3,9 @@ package it.unibo.actorComm.tcp;
 import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
+ 
 
 /*
  * Ente attivo per la ricezione di messaggi su una connessione Interaction2021
@@ -29,7 +32,10 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;
-			    } else{ handler.elaborate( msg, conn ); }
+			    } else{ 
+			    	IApplMessage m = new ApplMessage(msg);
+			    	handler.elaborate( m, conn ); 
+			    }
 			}
 			ColorsOut.out(name + " | BYE"   );
 		}catch( Exception e) {

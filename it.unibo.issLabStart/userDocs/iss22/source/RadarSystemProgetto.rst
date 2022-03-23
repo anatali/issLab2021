@@ -488,7 +488,7 @@ Il file  :ref:`DomainSystemConfig.json<DomainSystemConfig>` si arricchisce di sp
 Il SonarConcrete
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il componente che realizza la gestione di un Sonar concreto, conesso a un RaspberryPi,
+Il componente che realizza la gestione di un Sonar concreto, connesso a un RaspberryPi,
 si può avvalere del programma ``SonarAlone.c`` fornito dal committente.
 
 
@@ -643,7 +643,8 @@ nella fase di analisi (:ref:`controllerLogic`) , attivando un Thread che realizz
   private ActionFunction endFun;
 
   //Factory method
-  public static Controller create(ILed led, ISonar sonar,IRadarDisplay radar) {
+  public static Controller create(
+        ILed led, ISonar sonar,IRadarDisplay radar) {
     return new Controller( led,  sonar, radar );
   }
 	
@@ -657,7 +658,7 @@ nella fase di analisi (:ref:`controllerLogic`) , attivando un Thread che realizz
   public void start( ActionFunction endFun, int limit  ) {
     this.endFun = endFun;
     sonar.activate( limit );
-    activate( );
+    activate( limit );
   }
 
 Il Controller riceve in ingresso i (riferimenti ai) componenti del sistema e può essere attivato 
@@ -703,14 +704,14 @@ Il metodo ``start`` attiva il Sonar e lancia un Thread interno di lavoro.
             sonar.activate();
             //while( sonarActive() ) {
             if( sonar.isActive() ) {
-              for( int i=1; i<=limit; i++) { //meglio per il testing ...
+              for( int i=1; i<=limit; i++) { //meglio per il testing
                 IDistance d = sonar.getDistance();  
-                if( radar != null)  RadarGuiUsecase.doUseCase(radar,d);	 
+                if( radar != null) RadarGuiUsecase.doUseCase(radar,d);
                 LedAlarmUsecase.doUseCase( led,  d  );   
               }
             }
             sonar.deactivate();
-            endFun.run("Controller | BYE ");  //CALLBACK
+            endFun.run("Controller | BYE ");//CALLBACK
           } catch (Exception e) { ...  }					
         }
       }.start();
@@ -759,16 +760,6 @@ RadarGuiUsecase
     }	 
   }
 
-
-
-
-
-.. Il sistema in locale Esecuzione su Pc e su Raspberry
- 
-
-
-
-
 .. _RadarSystemSprint1Main:
 
 --------------------------------------
@@ -790,8 +781,8 @@ La prima, semplice versione del sistema da eseguire e testare lavora su un singo
   public String getName(){ return this.getClass().getName(); }
 
   @Override
-  public void doJob(String configFileName) {
-    setup(configFileName);
+  public void doJob(String domainConfig, String systemConfig) {
+    setup(domainConfig, systemConfig);
     configure();
     ActionFunction endFun = (n) -> { 
       System.out.println(n); 
@@ -836,7 +827,7 @@ delle versioni del sistema dovrà implementare l'interfaccia che segue.
   }
 
 Ogni versione del sistema dovrà duque fornire un nome (con cui potrà essere selezionata) e un metodo ``doJob`` 
-che riceve in ingresso il file di configurazione, per essere eseguita.  
+che riceve in ingresso il file di configurazione del dominio e il file di configurazione del sistema.  
 
 :worktodo:`WORKTODO: Programma di selezione applicazioni`
 
@@ -847,7 +838,7 @@ che riceve in ingresso il file di configurazione, per essere eseguita.
 Fase di setup
 +++++++++++++++++++++++++++++++
 
-Il metodo ``setup`` del Main applicativo fissa i parametri di  configurazione leggendo il file ``DomainSystemConfig.json``
+Il metodo ``setup`` del Main applicativo fissa i parametri di  configurazione leggendo i file di configurazione
 oppure assegnando loro un valore a livello di programma.
 Osserviamo che:
 
@@ -858,24 +849,27 @@ Osserviamo che:
 
 .. code:: java
 
-  public class RadarSystemMainLocal implements IApplication{
+  public class RadarSystemSprint1Main implements IApplication{
 
-  public void setup( String configFile )  {
-    if( configFile != null ) 
-      DomainSystemConfig.setTheConfiguration(configFile);
-    else {
-      DomainSystemConfig.testing         = false;			
-      DomainSystemConfig.sonarDelay      = 200;
-    //Su PC
-      DomainSystemConfig.simulation      = true;
-      DomainSystemConfig.DLIMIT          = 70;  
-      DomainSystemConfig.ledGui          = true;
-      DomainSystemConfig.RadarGuiRemote  = false;
-    //Su Raspberry (nel file di configurazione)
+  public void setup(String domainConfig,String systemConfig ) {
+    if( domainConfig != null ){ 
+      DomainSystemConfig.setTheConfiguration(domainConfig);
+		}if( systemConfig != null ) {
+			RadarSystemConfig.setTheConfiguration(systemConfig); 
+		}
+    if( domainConfig == null && systemConfig == null) {
+      DomainSystemConfig.testing      	= false;			
+      DomainSystemConfig.sonarDelay       = 200;
+      //Su PC
+      DomainSystemConfig.simulation   	= true;
+      DomainSystemConfig.DLIMIT      		= 70;  
+      DomainSystemConfig.ledGui           = true;
+      RadarSystemConfig.RadarGuiRemote    = false;
+    //Su Raspberry (nei files di configurazione)
       //DomainSystemConfig.simulation    = false;
       //DomainSystemConfig.DLIMIT        = 12;  
       //DomainSystemConfig.ledGui        = false;
-      //DomainSystemConfig.RadarGuiRemote = true;
+      //RadarSystemConfig.RadarGuiRemote = true;
     }
   }//setup
    ...
@@ -895,12 +889,12 @@ configurazione.
       sonar      = DeviceFactory.createSonar();
     //Dispositivi di Output
       led        = DeviceFactory.createLed();
-      radar      = DomainSystemConfig.RadarGuiRemote ? 
+      radar      = RadarSystemConfig.RadarGuiRemote ? 
                        null : DeviceFactory.createRadarGui();
     BasicUtils.aboutThreads("Before Controller creation | ");
     //Controller
     ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-    controller = Controller.create(led, sonar, radar, endFun);	 
+    controller = Controller.create(led, sonar, radar );	 
   }
 
 
@@ -942,7 +936,7 @@ La testUnit introduce un metodo di setup per definire i parametri di configurazi
       System.out.println("setUp");
       try {
         sys = new RadarSystemSprint1Main();
-        sys.setup( null,null );  //non usiamo il file di configurazione
+        sys.setup(null,null);//non usiamo i files di config
         sys.configure();
         DomainSystemConfig.testing   = true;   
       } catch (Exception e) {

@@ -3,7 +3,6 @@ package it.unibo.actorComm;
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ActorBasic;
-import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.actorComm.utils.ColorsOut;
 
@@ -33,19 +32,12 @@ protected ActorForReply ar;
 		}
 	}
 
-	@Override
-	public void elaborate(String message, Interaction2021 conn) {
-		try {
-			IApplMessage msg = new ApplMessage(message);
-			elaborate(msg,conn);
-		}catch(Exception e) {
-			ColorsOut.outerr("ERROR: not structured message " + message);
-		}		
-	}
+
  	public void sendMsgToClient( IApplMessage message, Interaction2021 conn  ) {
  		String destName = message.msgReceiver();
  		ActorBasic dest = Actor22.getActor(destName);
  		if( dest != null ) Actor22.sendAMsg(message, dest);
  		else ColorsOut.outerr("SORRY: destination actor not local:" + destName);
  	}
+ 
 }

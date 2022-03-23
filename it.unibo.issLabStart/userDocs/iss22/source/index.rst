@@ -20,7 +20,6 @@ iss22
    RadarSystemSupporti
    Enablers
    ContestiContenitori
-   RadarSystemTcp
    Attori
    OltreTcp
    RadarSystemWebgui

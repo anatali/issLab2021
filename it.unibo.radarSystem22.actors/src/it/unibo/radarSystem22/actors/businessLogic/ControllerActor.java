@@ -76,6 +76,7 @@ private ActorBasic radar;
 	protected void doControllerWork() {
 		//Chiedo la distanza. Quando doJob riceve la risposta proseguo in elabAnswer
 		//sendMsg( DomainData.sonarDistance, sonar );  
+		ColorsOut.outappl( getName()  + " | doControllerWork "  , ColorsOut.GREEN);
 		sendMsg(DomainData.sonarDistance, sonar);
 	}
 	

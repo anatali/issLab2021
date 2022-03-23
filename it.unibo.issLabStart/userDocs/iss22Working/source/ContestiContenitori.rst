@@ -1,8 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
-.. role:: worktodo 
-
+  
 .. _tuProlog: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 .. _Prolog: https://it.wikipedia.org/wiki/Prolog
 
@@ -32,9 +31,10 @@ principali:
   tali messaggi a 'livello di sistema';
 - fungere da contenitore di componenti  capaci di gestire i messaggi a livello applicativo.
 
-D'ora in poi denomineremo col termine generico **Contesto** un componente di questo tipo.
+D'ora in poi denomineremo col termine generico ``Contesto`` un componente di questo tipo, lasciando
+indeterminata la sua natura.
 
-In questa fase dello sviluppo, cercheremo di realizzare l'idea di *Contesto* riusando il software sviluppato 
+In questa fase dello sviluppo, è tuttavia opportuno realizzare la nuova idea riusando il software sviluppato 
 negli SPRINT precedenti. In questa prospettiva:
 
 - il contesto potrà essere implementato da una classe (denominata :ref:`TcpContextServer<TcpContextServer>`) che specializza
@@ -140,7 +140,7 @@ Il problema delle risposte
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Nella versione strutturata dei messaggi, il tipo di messaggio  ``reply`` 
-denota che il messaggio è una **risposta** relativa a una precedente *richiesta* (``request``).
+denota che il messaggio è una **risposta**, relativa a una precedente *richiesta* (``request``).
 
 L'attuale implementazione dell'invio di una richiesta è fatta in modo **sincrono** dal metodo ``request`` di 
 :ref:`TcpConnection<TcpConnection>` (che implementa :ref:`Interaction2021<Interaction2021>`).
@@ -155,8 +155,11 @@ e gestire poi le risposte man mano arriveranno, in un ordine qualsiasi.
 Occorre quindi che tale componente possa sapere, quando riceve una ``reply``, a quale richiesta
 corrisponde.
 
-Osserviamo che un problema del genere si può porre anche nel sistema attuale: si veda :ref:`Richieste multiple`, 
-
+Osserviamo che un problema del genere si pone anche nel sistema attuale, in quanto un componente
+potrebbe inviare più richieste a uno stesso destinatario invocando
+il metodo ``request`` di :ref:`TcpConnection<TcpConnection>` all'interno di un Thread.
+In generale infatti, non si può assumere che il destinatario risponda in modo FIFO a due richieste
+che provengono dallo stesso componente.
 
 
 +++++++++++++++++++++++++++++++
@@ -182,6 +185,9 @@ SPRINT4: il progetto del SystemDesigner
 -------------------------------------------------------
 
 
+
+
+
 .. _ApplMessage:
  
 ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -194,7 +200,7 @@ in forma di String a una rappresentazione interna manipolabile da programma e vi
 
  .. code:: java
 
-   public class ApplMessage implements IApplMessage {
+   public class ApplMessage implements IApplMessage{
     protected String msgId       = "";
     protected String msgType     = null;
     protected String msgSender   = "";
@@ -221,31 +227,25 @@ in forma di String a una rappresentazione interna manipolabile da programma e vi
     public String toString() { ... }
   }
 
-.. _IApplMessage:
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Interfaccia  ``IApplMessage``
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++++++++++++++++++
+IApplMessage
+++++++++++++++++++++++++++++++++++++++++++++++++
 
  .. code:: java
 
-  public interface IApplMessage {
-      public String msgId();
-      public String msgType();
-      public String msgSender();
-      public String msgReceiver();
-      public String msgContent();
-      public String msgNum();
-      public boolean isDispatch();
-      public boolean isRequest();
-      public boolean isReply();
-      public boolean isEvent();
-  }
+   public interface IApplMessage {
+    public String msgId();
+    public String msgType();
+    public String msgSender();
+    public String msgReceiver();
+    public String msgContent();
+    public String msgNum();
 
-
-
-
-
+    public boolean isDispatch();
+    public boolean isRequest();
+    public boolean isReply();
+    public boolean isEvent();
+}
 
 .. _IApplMsgHandlerEsteso:
 
@@ -254,7 +254,7 @@ Estensione della interfaccia :ref:`IApplMsgHandler<IApplMsgHandler>`
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Provvediamo a modificare il contratto relativo ai gestori dei messaggi di
-livello applicativo, che sono ora di tipo :ref:`IApplMessage<IApplMessage>`.
+livello applicativo che sono ora di tipo :ref:`ApplMessage<ApplMessage>`.
 
 .. code:: Java
 
@@ -265,7 +265,7 @@ livello applicativo, che sono ora di tipo :ref:`IApplMessage<IApplMessage>`.
 
 :remark:`messaggi standard di sistema`
 
-- D'ora in poi il metodo ``elaborate`` con argomento :ref:`IApplMessage<IApplMessage>` diventerà il metodo di riferimento
+- D'ora in poi il metodo ``elaborate`` con argomento ``IApplMessage<IApplMessage>`` diventerà il metodo di riferimento
   per la gestione dei messaggi. In altre parole, tutte le nostre applicazioni distribuite 
   invieranno messaggi della forma:
 
@@ -273,17 +273,18 @@ livello applicativo, che sono ora di tipo :ref:`IApplMessage<IApplMessage>`.
 
      msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Modifica della classe :ref:`ApplMsgHandler<ApplMsgHandler>`
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Di conseguenza, introduciamo nella classe astratta :ref:`ApplMsgHandler<ApplMsgHandler>`  
-la spefica del metodo ``abstract  elaborate( ApplMessage message, Interaction2021 conn )`` 
+la specifica del metodo ``abstract  elaborate( ApplMessage message, Interaction2021 conn )`` 
 che dovrà essere definito dalle classi specializzate.
 
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-Il meotdo ``prepareReply``
+prepareReply
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 Per associare le risposte alle richieste, viene introdotto il  metodo ``prepareReply`` che
@@ -321,10 +322,6 @@ In modo analogo, modifichiamo il contratto relativo alla interpretazione dei mes
   public interface IApplIntepreter {
      public String elaborate( IApplMessage message );    
   }
-
-
-
-
 
 
 .. _TcpContextServer:
@@ -459,7 +456,7 @@ elaborate di :ref:`LedApplInterpreter<LedApplIntepreterNoCtx>`
     public String elaborate( String message ) { ... }
 
     @Override
-    public String elaborate( ApplMessage message ) {
+    public String elaborate( IApplMessage message ) {
     String payload = message.msgContent();
       if(  message.isRequest() ) {
         if(payload.equals("getState") ) {
@@ -482,7 +479,7 @@ elaborate di :ref:`LedApplHandler`
   public class LedApplHandler extends ApplMsgHandler {
   ...
   @Override
-  public void elaborate( ApplMessage message, Interaction2021 conn ) {
+  public void elaborate( IApplMessage message, Interaction2021 conn ) {
     if( message.isRequest() ) {
       String answer = ledInterpr.elaborate(message);
       sendMsgToClient( answer, conn );
@@ -561,7 +558,7 @@ elaborate di :ref:`SonarApplInterpreter<SonarApplIntepreterNoCtx>`
   public String elaborate(String message) { ... }
 
   @Override
-  public String elaborate(ApplMessage message) {
+  public String elaborate(IApplMessage message) {
     String payload = message.msgContent();
     if( message.isRequest() ) {
       if(payload.equals("getDistance") ) {
@@ -588,7 +585,7 @@ Metodo elaborate di :ref:`SonarApplHandler`
   public class SonarApplHandler extends ApplMsgHandler {    
   ...
   @Override
-  public void elaborate( ApplMessage message, Interaction2021 conn ) {
+  public void elaborate( IApplMessage message, Interaction2021 conn ) {
     String payload = message.msgContent();
       if( message.isRequest() ) {
         String answer = sonarIntepr.elaborate(message);
@@ -661,7 +658,7 @@ Si veda (nel package ``it.unibo.radarSystem22_4.appl.main``):
 Deployoment del prototipo con contesto
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Simile a quanto fatto in :ref:` SPRINT1: Deployment su RaspberryPi`. Il comando:
+Simile a quanto fatto in :ref:`SPRINT1: Deployment su RaspberryPi`. Il comando:
 
 .. code:: 
 

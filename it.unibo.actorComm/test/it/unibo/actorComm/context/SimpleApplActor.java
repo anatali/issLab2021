@@ -22,10 +22,7 @@ public class SimpleApplActor extends ActorWrapper implements IApplMsgHandler{
 		ColorsOut.outappl( getName() + " | " + msg.toString(), ColorsOut.MAGENTA );
 	}
 
-	@Override
-	public void elaborate(String message, Interaction2021 conn) {
- 		
-	}
+ 
 
 	@Override
 	public void elaborate(IApplMessage message, Interaction2021 conn) {

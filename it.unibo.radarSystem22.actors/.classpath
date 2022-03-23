@@ -74,7 +74,7 @@
 			<attribute name="gradle_used_by_scope" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/unibolibs/it.unibo.actorComm-1.0.jar">
+	<classpathentry kind="lib" path="C:/Didattica2021/issLab2021/unibolibs/it.unibo.actorComm-1.1.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value=""/>
 		</attributes>

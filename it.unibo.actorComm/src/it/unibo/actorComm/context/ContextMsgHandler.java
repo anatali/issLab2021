@@ -49,17 +49,17 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 		}
 	}
 
-	@Override
-	public void elaborate(String message, Interaction2021 conn) {
-		try {
-			ColorsOut.out(name+" | elaborate:" + message  , ColorsOut.GREEN);
-			//ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.GREEN);
-			IApplMessage msg  = new ApplMessage(message);
-			elaborate( msg, conn );  
-		}catch(Exception e) {
-			ColorsOut.outerr(name +  " | elaborate ERROR " + e.getMessage());
-		}
-	}
+//	@Override
+//	public void elaborate(String message, Interaction2021 conn) {
+//		try {
+//			ColorsOut.out(name+" | elaborate:" + message  , ColorsOut.GREEN);
+//			//ColorsOut.out(name+" | elaborate:" + message + " conn=" + conn, ColorsOut.GREEN);
+//			IApplMessage msg  = new ApplMessage(message);
+//			elaborate( msg, conn );  
+//		}catch(Exception e) {
+//			ColorsOut.outerr(name +  " | elaborate ERROR " + e.getMessage());
+//		}
+//	}
 
 	public void addComponent( String devname, IApplMsgHandler h) {
 		ColorsOut.out(name +  " | added:" + devname, ColorsOut.GREEN);

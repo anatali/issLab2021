@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.actorComm.utils.CommUtils;
+import it.unibo.kactor.IApplMessage;
 
  
 /*
@@ -27,14 +29,14 @@ private Interaction2021 conn;
 		conn  = TcpClientSupport.connect("localhost", TestTcpSupports.testPort,ntimes);
 		
 	}
-	public void doWorkWithServerOn( String name, int ntimes  ) {
+	public void doWorkWithServerOn( String name, String dest, int ntimes  ) {
 		try {
 			connect(ntimes);                    //1
- 			String request = "hello_from_" + name;
-			conn.forward(request);				//2
+ 			IApplMessage m = CommUtils.buildRequest(name, "req", "hello", dest);
+			conn.forward(m.toString());				//2
 			String answer = conn.receiveMsg();	//3
 			ColorsOut.out(name + " | receives the answer: " +answer );	
-			assertTrue( answer.equals("answerTo_"+ request));
+			assertTrue( answer.equals("answerTo_"+ m));
 		} catch (Exception e) {
 			ColorsOut.outerr(name + " | ERROR " + e.getMessage());	
 			fail();

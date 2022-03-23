@@ -28,10 +28,7 @@ public class CounterApplHandler  extends ApplMsgHandler implements IApplMsgHandl
 		ca = new CounterActor("counter", this);
 	}
 
- 	@Override
-	public void elaborate(String msg, Interaction2021 arg1) {
- 		ColorsOut.outappl( getName() + " | NEVER HERE - elaborate String" + msg, ColorsOut.GREEN );		
-	}
+ 
 
 	@Override
 	public void elaborate(IApplMessage msg, Interaction2021 conn) {

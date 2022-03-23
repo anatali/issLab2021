@@ -23,7 +23,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  	}
  	@Override
 	public void activate() {
- 		if( CommSystemConfig.protcolType == ProtocolType.tcp && CommSystemConfig.withContext )  
+ 		if( CommSystemConfig.protcolType == ProtocolType.tcp   )  
  			sendCommandOnConnection( sonarActivate.toString());
 //  		else if( CommSystemConfig.protcolType == ProtocolType.mqtt)  
 //  			sendCommandOnConnection( sonarActivate.toString());
@@ -35,7 +35,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 
 	@Override
 	public void deactivate() {
- 		if( CommSystemConfig.protcolType == ProtocolType.tcp && CommSystemConfig.withContext )  
+ 		if( CommSystemConfig.protcolType == ProtocolType.tcp   )  
  			sendCommandOnConnection( sonarDeactivate.toString() );
 //  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
 //  			sendCommandOnConnection(Utils.sonarDeactivate.toString());
@@ -49,7 +49,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	public IDistance getDistance() {
 		String answer="";
 		//Colors.out( name + " | getDistance ", Colors.ANSI_PURPLE);
-		if( CommSystemConfig.protcolType == ProtocolType.tcp && CommSystemConfig.withContext ) 
+		if( CommSystemConfig.protcolType == ProtocolType.tcp   ) 
 			answer = sendRequestOnConnection(  getDistance.toString() ) ;
 //  		else if( CommSystemConfig.protcolType == ProtocolType.mqtt)  
 //  			answer = sendRequestOnConnection(Utils.getDistance.toString().replace("system", name)) ;
@@ -66,10 +66,11 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	@Override
 	public boolean isActive() {
 		String answer = "";
-		if( CommSystemConfig.withContext )  answer = sendRequestOnConnection( isActive.toString()) ;
-//  		else if( CommSystemConfig.protcolType == ProtocolType.mqtt)  
-//  			answer = sendRequestOnConnection(Utils.isActive.toString().replace("system", name)) ;
-		else   answer=sendRequestOnConnection("isActive");
+//		if( CommSystemConfig.withContext )  answer = sendRequestOnConnection( isActive.toString()) ;
+////  		else if( CommSystemConfig.protcolType == ProtocolType.mqtt)  
+////  			answer = sendRequestOnConnection(Utils.isActive.toString().replace("system", name)) ;
+//		else   
+			 answer=sendRequestOnConnection("isActive");
 		//ColorsOut.out( name + " | isActive-answer=" + answer, Colors.ANSI_PURPLE);
 		try {
 			IApplMessage reply = new ApplMessage(answer);

@@ -13,8 +13,8 @@ import it.unibo.actorComm.utils.ColorsOut;
 public class RadarSystemConfig {
 	public static  boolean withContext   = true;
 	public static  boolean tracing       = false;
-	public static  String pcHostAddr     = "192.168.1.132";
-	public static  String raspHostAddr   = "192.168.1.4";
+	public static  String pcHostAddr     = "loclahost";//"192.168.1.132";
+	public static  String raspHostAddr   = "loclahost";//"192.168.1.4";
 	
  	public static  int ctxServerPort     = 8048;
 	public static  String mqttBrokerAddr = "tcp://localhost:1883"; //: 1883  OPTIONAL  tcp://broker.hivemq.com

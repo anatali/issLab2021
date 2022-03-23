@@ -25,7 +25,7 @@ public class TestTcpContext {
 // 		SimpleApplHandler applH = new SimpleApplHandler("applH");
  		SimpleApplActor applH = new SimpleApplActor("applActor");
  		
-		contextServer           = new TcpContextServer("TcpContextServer",  ctxServerPort );
+		contextServer = new TcpContextServer("TcpContextServer",  ctxServerPort );
  		contextServer.addComponent(applH.getName(),applH);	
  		contextServer.activate();    		
 	}

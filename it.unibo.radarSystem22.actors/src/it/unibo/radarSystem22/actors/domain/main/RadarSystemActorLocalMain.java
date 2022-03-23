@@ -1,6 +1,8 @@
 package it.unibo.radarSystem22.actors.domain.main;
 
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.actorComm.utils.CommSystemConfig;
+import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ActorBasic;
 import it.unibo.radarSystem22.actors.businessLogic.ControllerActor;
@@ -28,6 +30,7 @@ public class RadarSystemActorLocalMain {
 		configure();
 		BasicUtils.aboutThreads("Before execute - ");
 		//BasicUtils.waitTheUser();
+		CommSystemConfig.tracing = true;
 		execute();
 	}
 	
@@ -36,14 +39,17 @@ public class RadarSystemActorLocalMain {
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
 		//for( int i=1; i<=3; i++ ) { DeviceActorFactory.createLed("led"+i); }
 		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
-		radar      = DeviceActorFactory.createRadarGui();
-		controller = new ControllerActor(DomainData.controllerName, led, sonar,(ActorBasic)radar);
+//		radar      = DeviceActorFactory.createRadarGui();
+//		controller = new ControllerActor(DomainData.controllerName, led, sonar,(ActorBasic)radar);
 			
 	}
 	
 	protected void execute() {
 		//MsgUtil.sendMsg(DomainMsg.controllerActivate, controller, null); //null è continuation.
-		Actor22.sendAMsg( DomainData.controllerActivate, controller);
+		//Actor22.sendAMsg( DomainData.controllerActivate, controller);
+		Actor22.sendAMsg( DomainData.ledOn, led);
+		CommUtils.delay(1000);
+		Actor22.sendAMsg( DomainData.ledOff, led);
 		 
 	} 
 	

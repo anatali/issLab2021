@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import it.unibo.actorComm.common.NaiveApplHandler;
+
 
 public class TestTcpSupports {
 public static final int testPort = 8112; 
@@ -24,7 +26,7 @@ private TcpServer server;
 		System.out.println(" =============== SERVER DEACTIVATED" );
 	}	
 		
-	@Test 
+	//@Test 
 	public void testClientNoServer() {
 		server.deactivate();
 		System.out.println(" ---------------- testClientNoServer" );
@@ -37,16 +39,16 @@ private TcpServer server;
 		//startTheServer("oneClientServer");
 		System.out.println(" ---------------- tesSingleClient");
 		//Create a connection
- 		new ClientForTest().doWorkWithServerOn( "client1",10  );		
+ 		new ClientForTest().doWorkWithServerOn( "client1","naiveH",10  );		
 		System.out.println("tesSingleClient BYE");
 	}
 	
-	@Test 
+	//@Test 
 	public void testManyClients() {
  		System.out.println(" ---------------- testManyClients");
-  		new ClientForTest().doWorkWithServerOn("client1",10  );
-		new ClientForTest().doWorkWithServerOn("client2",1 );
-		new ClientForTest().doWorkWithServerOn("client3",1 );
+  		new ClientForTest().doWorkWithServerOn("client1","naiveH",10  );
+		new ClientForTest().doWorkWithServerOn("client2","naiveH",1 );
+		new ClientForTest().doWorkWithServerOn("client3","naiveH",1 );
 		System.out.println("testManyClients BYE");
 	}	
 	

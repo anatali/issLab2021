@@ -1,6 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
+.. role:: worktodo 
 
 .. _pattern-proxy: https://it.wikipedia.org/wiki/Proxy_pattern
 
@@ -80,7 +81,7 @@ Enabler tipo-server
 ------------------------------------------------
 
 Dfiniamo un *enabler tipo-server* che demanda la gestione dei messaggi ricevuti 
-ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
+ad oggetti (*handler*) di una classe che implementa :ref:`IApplMsgHandler`.
  
 .. code:: java
 
@@ -120,7 +121,7 @@ ad oggetti di una classe che implementa :ref:`IApplMsgHandler`.
 Notiamo che un ``EnablerAsServer``:
 
 - **non è un server**, ma incapsula il :ref:`TCPServer<TCPServer>` introdotto in precedenza;
-- opera in modo da fornire a un handler di tipo  :ref:`IApplMsgHandler<IApplMsgHandler>` la capacità di essere
+- opera in modo da fornire a un *handler* di tipo  :ref:`IApplMsgHandler<IApplMsgHandler>` la capacità di essere
   attivato da un messaggio e di inviare risposte al mottente;
 - prevede la possibilità di introdurre :blue:`server basati su altri protocolli`.
 
@@ -170,7 +171,7 @@ e impostiamo un semplice test  molto simile a quanto proposto in :ref:`testingPr
 Interpreti
 ------------------------------------------
 
-Ogni enabler deve ricevere in ingresso un gestore  applicativo (handler) che implementa 
+Ogni enabler deve ricevere in ingresso un gestore  applicativo (*handler*) che implementa 
 :ref:`IApplMsgHandler` (estendendo la classe :ref:`ApplMsgHandler<ApplMsgHandler>`). 
 L'handler deve definire il metodo ``elaborate`` che gestisce
 i comandi o le richieste ricevute dal sever in forma di messaggi.
@@ -233,7 +234,7 @@ più articolato dell'attuale, tanto da porci di fronte a questioni come il famos
 Un interpreter per il Led
 +++++++++++++++++++++++++++++++++++++
 
-L'intepreter per il Led riconosce frasi generate dal non-terminale``LEDMSG`` del `LinguaggioComando`_
+L'intepreter per il Led riconosce frasi generate dal non-terminale ``LEDMSG`` del `LinguaggioComando`_
 ed esegue queste frasi invocando il dispositivo rappresentato da un POJO di interfaccia :ref:`ILed<ILed>`.
 
 .. code:: java
@@ -264,7 +265,7 @@ il dispositivo rappresentato da un POJO di interfaccia :ref:`ISonar<ISonar>`.
 .. code:: java
 
   public class SonarApplIntepreter implements IApplIntepreter{
-  private	ISonar sonar;
+  private ISonar sonar;
 
     public SonarApplIntepreter(ISonar sonar) { this.sonar = sonar; }    
     @Override
@@ -332,6 +333,11 @@ SonarApplHandler
   public class SonarApplHandler extends ApplMsgHandler  {
   private IApplIntepreter sonarIntepr;
 
+    //Factory Method
+    public static IApplMsgHandler create(String name, ISonar sonar) {
+      return new SonarApplHandler(name, sonar);	 
+    }
+
     public SonarApplHandler(String name, ISonar sonar) {
       super(name);
       sonarIntepr = new SonarApplIntepreter(sonar);
@@ -361,7 +367,7 @@ Ora possiamo precisare meglio questo obiettivo.
   * - .. image::  ./_static/img/Radar/SonarProxyAsClient.PNG
          :align: center 
          :width: 90%
-    - Il '*proxy tipo client* per il Sonar è una specializzazione di  :ref:`ProxyAsClient` che implementa i 
+    - Il *proxy tipo client* per il Sonar è una specializzazione di  :ref:`ProxyAsClient` che implementa i 
       metodi di :ref:`ISonar<ISonar>` inviando comandi o richieste all'*enabler tipo server* sulla connessione 
       :ref:`Interaction2021<Interaction2021>`:
 
@@ -393,8 +399,8 @@ Ora possiamo precisare meglio questo obiettivo.
 Il caso del Led
 ++++++++++++++++++++++++++++++++++++++++
  
- Il caso del Led è simile al caso del Sonar, sia per quanto riguarda l'enabler, 
- sia per quanto riguarda il proxy.
+Il caso del Led è simile al caso del Sonar, sia per quanto riguarda l'enabler, 
+sia per quanto riguarda il proxy.
 
 .. image::  ./_static/img/Radar/EnablerProxyLed.PNG
          :align: center 
@@ -413,6 +419,11 @@ LedApplHandler
 
   public class LedApplHandler extends ApplMsgHandler   {
   private IApplIntepreter ledIntepr;
+
+    //Factory Method
+    public static IApplMsgHandler create(String name, ILed led) {
+      return new LedApplHandler(name,led);
+	  }
 
     public LedApplHandler(String name, ILed led) {
       super(name);
@@ -434,7 +445,7 @@ LedApplHandler
 SPRINT3: Testing degli enabler
 ++++++++++++++++++++++++++++++++++++++++
 
-La procedura si setup (configurazione) del testing crea gli elementi della architettura di figura:
+La procedura di setup (configurazione) del testing crea gli elementi della architettura di figura:
 
 .. image::  ./_static/img/Radar/TestEnablers.PNG
          :align: center 
@@ -530,8 +541,8 @@ Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti:
 - I nuovi componenti-base di livello applicativo non sono più POJO, ma sono
   gestori di messaggi, come ad esempio :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`.
 - I POJO originali (come :ref:`Sonar<Sonar>` e :ref:`Led<Led>`) sono stati incapsulati 
-  negli handler (che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`).
-- I gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<EnablerAsServer>`) 
+  negli handler che specializzano la  classe :ref:`ApplMsgHandler<ApplMsgHandler>`.
+- Gli *handler* gestori di messaggi lavorano all'interno di componenti (:ref:`Enabler<EnablerAsServer>`) 
   che forniscono una infrastruttura per le comunicazioni via rete. 
   Riportiamo una rappresentazione della architettura del sistema nel caso in cui il Controller voglia
   interagire con il Led remoto:
@@ -546,14 +557,31 @@ Al termine di questa fase dello sviluppo, poniamo in evidenza alcuni punti:
   (come :ref:`SonarApplHandlerNoContext`  e :ref:`LedApplHandlerNoContext`)
   che ricevono dalla  infrastruttura-enabler un oggetto (di tipo  :ref:`Interaction2021<Interaction2021>`) 
   che abilita alle interazioni via rete.
-- I messaggi gestiti dagli handler sono  ``String`` la cui struttura  è nota a un interpreter.
+- I messaggi gestiti dagli *handler* sono  ``String`` la cui struttura  è nota a un interpreter definito dall'ApplicationDesigner.
 
-.. notiamo però che gli handler sono già predisposti per gestire messaggi più strutturati,  rappresentati  dalla classe  ``ApplMessage`` (si veda :ref:`ApplMessage`).
+:remark:`Connessioni su UDP realizzate da Loris Giannatempo`
 
+Lo SPRINT3 del progetto ``it.unibo.radarSystem22`` utilizza la versione 2.0 del supporto alle comunicazioni
+(file  ``it.unibo.comm2022-2.0.jar``)
+che permette a un :ref:`enabler<EnablerAsServer>` di utilizzare il protocollo **UDP**. Coerentemente, la classe :ref:`ProxyAsClient` è stata estesa
+in modo da permettere connessioni basate su **UDP**.
 
-
+Il supporto a **UDP** è definito nel package ``it.unibo.comm2022.udp.giannatempo`` del progetto ``it.unibo.comm2022``.
 
  
+ 
+
++++++++++++++++++++++++++++++++++++++++++++++
+Richieste multiple
++++++++++++++++++++++++++++++++++++++++++++++
+
+:worktodo:`WORKTODO: richieste multiple in parallelo`
+
+- Definire un componente (``caller``) che invia due richieste diverse a uno stesso destinatario 
+  attivando per ciascuna di esse un Thread diverso.
+- Definire un componente destinatario  (``service``) che attende le richieste del  ``caller`` e risponde 
+  elaborando ciascuna di esse in un *handler* che fornisce le risposte in un tempo random.
+- Osservare che una risposta potrebbero arrivare al Thread che non l'aspetta. 
 
 ++++++++++++++++++++++++++++++++++++++++++
 Un punto  critico
@@ -577,4 +605,9 @@ per nodo computazionale?
 La prossima sezione sarà dedicata alla realizzazione di questa idea, che ci farà fare
 un ulteriore passo in avanti nella transizione dal paradigma ad oggetti al paradigma
 a messaggi.
+
+
+ 
+
+
 

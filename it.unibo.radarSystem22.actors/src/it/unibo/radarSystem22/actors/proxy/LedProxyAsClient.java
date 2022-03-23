@@ -26,7 +26,7 @@ public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispat
 
 	@Override
 	public void turnOn() { 
-  		if( CommSystemConfig.withContext || CommUtils.isMqtt() || CommUtils.isCoap() ) {
+  		if(   CommUtils.isMqtt() || CommUtils.isCoap() ) {
  			sendCommandOnConnection(  turnOnLed.toString());
 // 		}
 // 		else if( Utils.isMqtt() ) {
@@ -40,7 +40,7 @@ public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispat
 
 	@Override
 	public void turnOff() {   
-  		if( CommSystemConfig.withContext || CommUtils.isMqtt() || CommUtils.isCoap() ) {
+  		if(   CommUtils.isMqtt() || CommUtils.isCoap() ) {
  			sendCommandOnConnection( turnOffLed.toString());
 // 		}
 // 		else if( Utils.isMqtt() ) {
@@ -55,7 +55,7 @@ public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispat
 	@Override
 	public boolean getState() {   
 		String answer="";
-		if( CommUtils.isTcp() && CommSystemConfig.withContext ) {
+		if( CommUtils.isTcp()   ) {
 			answer = sendRequestOnConnection(CommUtils.buildRequest(name, "query", "getState", "led").toString()) ;
 		}
 //  		else if( Utils.isMqtt() )  

@@ -1,4 +1,4 @@
-package it.unibo.actorComm.context;
+package it.unibo.actorComm.common;
 
 
 import it.unibo.actorComm.ApplMsgHandler;
@@ -6,16 +6,17 @@ import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.IApplMessage;
 
-public class SimpleApplHandler extends ApplMsgHandler {
+public class NaiveApplHandler extends ApplMsgHandler {
 
-	public SimpleApplHandler(String name) {
+	public NaiveApplHandler(String name) {
 		super(name);
+		ColorsOut.out(name + " | CREATED "  );
 	}
  
 	@Override
 	public void elaborate( IApplMessage message, Interaction2021 conn ) {
-		ColorsOut.outappl(name + " | elaborate " + message + " conn=" + conn, ColorsOut.MAGENTA);
-		
+ 		ColorsOut.out(name + " | elaborate " + message + " conn=" + conn);
+ 		sendMsgToClient("answerTo_"+message , conn);		
 	}
 
 //	@Override
