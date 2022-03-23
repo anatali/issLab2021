@@ -59,15 +59,17 @@ private ActorBasic radar;
 	
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
-		ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.GREEN);
+		ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd, ColorsOut.GREEN);
 		switch( msgCmd ) {
 			case "activate" : {
-				sendMsg(DomainData.sonarActivate, sonar );
+				//sendMsg(DomainData.sonarActivate, sonar );
+				Actor22.sendAMsg( DomainData.sonarActivate, sonar);
 				doControllerWork();
 				break;
 			}
 			case "stop" : {
-				sendMsg(DomainData.sonarDeactivate, sonar );  
+				//sendMsg(DomainData.sonarDeactivate, sonar );  
+				Actor22.sendAMsg( DomainData.sonarDeactivate, sonar);
 				break;
 			}
 		}		
@@ -77,7 +79,8 @@ private ActorBasic radar;
 		//Chiedo la distanza. Quando doJob riceve la risposta proseguo in elabAnswer
 		//sendMsg( DomainData.sonarDistance, sonar );  
 		ColorsOut.outappl( getName()  + " | doControllerWork "  , ColorsOut.GREEN);
-		sendMsg(DomainData.sonarDistance, sonar);
+		//sendMsg(DomainData.sonarDistance, sonar);
+		Actor22.sendAMsg( DomainData.sonarDistance, sonar);
 	}
 	
 	
@@ -90,19 +93,27 @@ private ActorBasic radar;
 		//RADAR
 		if( radar != null ) {
 			IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
-			sendMsg(updateRadarGui, radar );  
+			//sendMsg(updateRadarGui, radar );  
+			Actor22.sendAMsg( updateRadarGui, radar);
 		}
 		//LED
 		if( d < DomainData.DLIMIT ) {
-			sendMsg(DomainData.ledOn, led );  
-		}else sendMsg(DomainData.ledOff, led );
+			//sendMsg(DomainData.ledOn, led );  
+			Actor22.sendAMsg( DomainData.ledOn, led );
+		}else {
+			//sendMsg(DomainData.ledOff, led );
+			Actor22.sendAMsg( DomainData.ledOff, led );
+		}
 		BasicUtils.delay(DomainSystemConfig.sonarDelay*3);  //Intervengo ogni 3 dati generati
 		//CONTROL
 		if( d > DomainData.DLIMIT - 10) {
-			sendMsg(DomainData.sonarDistance, sonar );
+			//sendMsg(DomainData.sonarDistance, sonar );
+			Actor22.sendAMsg( DomainData.sonarDistance, sonar);
 		}else {
-			sendMsg(DomainData.ledOff, led );
-			sendMsg(DomainData.sonarDeactivate, sonar );  
+			//sendMsg(DomainData.ledOff, led );
+			//sendMsg(DomainData.sonarDeactivate, sonar );  
+			Actor22.sendAMsg( DomainData.ledOff, led );
+			Actor22.sendAMsg( DomainData.sonarDeactivate, sonar);
 		}		
 	}
 
