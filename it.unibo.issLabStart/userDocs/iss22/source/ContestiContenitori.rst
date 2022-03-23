@@ -240,12 +240,11 @@ IApplMessage
     public String msgReceiver();
     public String msgContent();
     public String msgNum();
-
     public boolean isDispatch();
     public boolean isRequest();
     public boolean isReply();
     public boolean isEvent();
-}
+  }
 
 .. _IApplMsgHandlerEsteso:
 

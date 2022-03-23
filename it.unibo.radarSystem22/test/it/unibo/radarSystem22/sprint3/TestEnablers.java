@@ -5,10 +5,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import it.unibo.comm2022.ProtocolType;
 import it.unibo.comm2022.enablers.EnablerAsServer;
-import it.unibo.comm2022.proxy.ProxyAsClient;
 import it.unibo.comm2022.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.interfaces.ILed;
 import it.unibo.radarSystem22.domain.interfaces.ISonar;
@@ -20,7 +18,7 @@ import it.unibo.radarSystem22.sprint3.handlers.LedApplHandler;
 import it.unibo.radarSystem22.sprint3.handlers.SonarApplHandler;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 
-public class TestEnablersTcp {
+public class TestEnablers {
 	private ISonar sonar;
 	private ILed  led ;
 	private EnablerAsServer sonarServer, ledServer;
@@ -32,11 +30,12 @@ public class TestEnablersTcp {
  	  DomainSystemConfig.simulation = true;
  	  DomainSystemConfig.ledGui     = true;
  	  RadarSystemConfig.ledPort     = 8015;
- 	  RadarSystemConfig.sonarPort   = 8011;
-	  RadarSystemConfig.DLIMIT      = 70;
+ 	  RadarSystemConfig.sonarPort   = 8011;	  
 	  DomainSystemConfig.sonarDelay = 100;
+	  
+	  RadarSystemConfig.DLIMIT      = 70;
+ 	  RadarSystemConfig.tracing    = false;
 //	  RadarSystemConfig.testing    = false;
-//	  RadarSystemConfig.tracing    = false;
 
 	  ProtocolType protocol = ProtocolType.tcp;
 	  //I devices

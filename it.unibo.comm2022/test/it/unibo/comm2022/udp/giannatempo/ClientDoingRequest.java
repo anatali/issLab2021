@@ -15,7 +15,7 @@ public class ClientDoingRequest {
 	
 	public void doWork( String name ) {
 		try {
-			Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupportsForRequest.testPort);
+			Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupports.testPort);
 			String request = "hello_from_" + name;
 			System.out.println(name + " | forward the request=" + request + " on conn:" + conn);	 
 			conn.forward(request);

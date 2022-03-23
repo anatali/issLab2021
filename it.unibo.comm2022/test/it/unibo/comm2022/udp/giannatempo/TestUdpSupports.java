@@ -13,7 +13,7 @@ import it.unibo.comm2022.utils.BasicUtils;
 import it.unibo.comm2022.utils.ColorsOut;
 
 
-public class TestUdpSupportsForRequest {
+public class TestUdpSupports {
 private UdpServer server;
 public static final int testPort = 8111; 
 
@@ -32,56 +32,63 @@ public static final int testPort = 8111;
 	
 	@Test 
 	public void testManyConns() {
-		server = new UdpServer("", testPort, new NaiveApplHandler("naiveH") 
+		ColorsOut.out(" -------------- testManyConns");
+//		server = new UdpServer("udpSrv", testPort, new NaiveApplHandler("naiveH") 
 //		{
 //			@Override
 //			public void elaborate(String message, Interaction2021 conn) {
 //				ColorsOut.out( "naiveH received " + message);
 //			}
 //		}
-		);
-		server.activate();				
+//		);
+//		server.activate();		
+		
+		startTheServer("manyConnsServer");
 		 try {
-		     Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupportsForRequest.testPort);
+		     Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupports.testPort);
 			 for( int i=1; i<=3;i++) {
 				//Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupportsForRequest.testPort);
 				String msg = "hello"+i  ;
 				System.out.println("testManyConns | forward the msg=" + msg + " on conn:" + conn);	 
 				conn.forward(msg);
-				delay(100);
+				BasicUtils.delay(100);
 				String answer = conn.receiveMsg();
 				System.out.println("testManyConns | fanswer=" + answer + " on conn:" + conn);	 
-				delay(100);
+				BasicUtils.delay(100);
 			 }//for
 		 } catch (Exception e) {
 			 fail();
 		 }
-		System.out.println("testManyConns BYE");
-		delay(1000);
+		BasicUtils.delay(1000);
 		stopTheServer();
+		ColorsOut.out(" -------------- testManyConns BYE");
 	}
-	//@Test 
+	
+	@Test 
 	public void testSingleClient() {
+		ColorsOut.out(" -------------- testSingleClient");
  		startTheServer("oneClientServer");
  		//Create a connection
 		new ClientDoingRequest().doWork("client1");		
-		System.out.println("tesSingleClient BYE");
 		stopTheServer();
+		ColorsOut.out(" -------------- testSingleClient BYE");
 	}
 	
 	
-	//@Test 
+	@Test 
 	public void testManyClients() {
+		ColorsOut.out(" -------------- testManyClients");
  		startTheServer("manyClientsServer");
 		new ClientDoingRequest().doWork("client1");
 		new ClientDoingRequest().doWork("client2");
 		new ClientDoingRequest().doWork("client3");
-		System.out.println("testManyClients BYE");
 		stopTheServer();
+		ColorsOut.out(" -------------- testManyClients BYE");
 	}
 	
-	//@Test
+	@Test
 	public void testManyRequests() {
+		ColorsOut.out(" -------------- testManyRequests");
 		try {
 			NaiveApplHandler handler = new NaiveApplHandler("naiveHMod") {
 				int i = 0;
@@ -99,7 +106,7 @@ public static final int testPort = 8111;
 			server = new UdpServer("manyRequestsServer", testPort, handler );
 			server.activate();
 			
-			Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupportsForRequest.testPort);
+			Interaction2021 conn  = UdpClientSupport.connect("localhost", TestUdpSupports.testPort);
 			
 			for(int i=0; i<4; i++) {
 				String request = "hello_"+i;
@@ -122,18 +129,21 @@ public static final int testPort = 8111;
 			BasicUtils.delay(10);
 			assertEquals(1,server.getNumConnections()); //this connection has still not been closed by the server
 			
+			stopTheServer();
+			ColorsOut.out(" -------------- testManyRequests BYE");
+			
 		} catch (Exception e) {
 			System.out.println("client1" + " | ERROR " + e.getMessage());
 		}
 	}
 	
 
-	private void delay( int dt ) {
-		try {
-			Thread.sleep(dt);
-		} catch (InterruptedException e) {
-				e.printStackTrace();
-		}		
-	}
+//	private void delay( int dt ) {
+//		try {
+//			Thread.sleep(dt);
+//		} catch (InterruptedException e) {
+//				e.printStackTrace();
+//		}		
+//	}
 	
 }

@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "issLab2021"
-include("app")
+
