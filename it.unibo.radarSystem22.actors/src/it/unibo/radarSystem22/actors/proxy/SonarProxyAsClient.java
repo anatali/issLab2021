@@ -23,24 +23,16 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  	}
  	@Override
 	public void activate() {
- 		if( CommSystemConfig.protcolType == ProtocolType.tcp   )  
+ 		if( CommSystemConfig.protcolType == ProtocolType.tcp || CommSystemConfig.protcolType == ProtocolType.udp  )  
  			sendCommandOnConnection( sonarActivate.toString());
-//  		else if( CommSystemConfig.protcolType == ProtocolType.mqtt)  
-//  			sendCommandOnConnection( sonarActivate.toString());
-// 		else if( CommSystemConfig.protcolType == ProtocolType.coap) 
-//   			sendCommandOnConnection("activate");  //PUT
  		else //CASO DI DEFAULT
  			sendCommandOnConnection("activate");		
 	}
 
 	@Override
 	public void deactivate() {
- 		if( CommSystemConfig.protcolType == ProtocolType.tcp   )  
+ 		if( CommSystemConfig.protcolType == ProtocolType.tcp || CommSystemConfig.protcolType == ProtocolType.udp   )  
  			sendCommandOnConnection( sonarDeactivate.toString() );
-//  		else if( RadarSystemConfig.protcolType == ProtocolType.mqtt)  
-//  			sendCommandOnConnection(Utils.sonarDeactivate.toString());
-//		else if( RadarSystemConfig.protcolType == ProtocolType.coap) 
-// 			sendCommandOnConnection("deactivate");
  		else //CASO DI DEFAULT
  			sendCommandOnConnection("deactivate");		
 	}
@@ -49,10 +41,8 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	public IDistance getDistance() {
 		String answer="";
 		//Colors.out( name + " | getDistance ", Colors.ANSI_PURPLE);
-		if( CommSystemConfig.protcolType == ProtocolType.tcp   ) 
+		if( CommSystemConfig.protcolType == ProtocolType.tcp  || CommSystemConfig.protcolType == ProtocolType.udp ) 
 			answer = sendRequestOnConnection(  getDistance.toString() ) ;
-//  		else if( CommSystemConfig.protcolType == ProtocolType.mqtt)  
-//  			answer = sendRequestOnConnection(Utils.getDistance.toString().replace("system", name)) ;
 		else  //CASO DI DEFAULT
 			answer = sendRequestOnConnection("getDistance");
 			ColorsOut.out( name + " | getDistance answer="+answer, ColorsOut.ANSI_PURPLE);

@@ -1,6 +1,7 @@
 package it.unibo.actorComm.enablers;
 
 import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.context.ContextMsgHandler;
 import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.tcp.TcpServer;
 import it.unibo.actorComm.utils.ColorsOut;
@@ -8,14 +9,14 @@ import it.unibo.actorComm.utils.ColorsOut;
  * Attiva un server relativo al protocollo specificato (se non null)
  */
  
-public class EnablerAsServer   {  
+public class EnablerServer   {  
 private static int count=1;
 protected String name;
 protected ProtocolType protocol;
 protected TcpServer serverTcp;
 protected boolean isactive = false;
 
-	public EnablerAsServer( String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { 
+	public EnablerServer( String name, int port, ProtocolType protocol, IApplMsgHandler handler )   { 
  		try {
 			this.name     			= name;
 			this.protocol 			= protocol;
@@ -25,6 +26,9 @@ protected boolean isactive = false;
 		} catch (Exception e) {
 			ColorsOut.outerr(name+" |  CREATE Error: " + e.getMessage()  );
 		}
+	}
+	public EnablerServer( String name, int port, ProtocolType protocol  )   { 
+		this(name,port,protocol, new ContextMsgHandler("ctxH") );
 	}
 	
  	protected void setServerSupport( int port, ProtocolType protocol, IApplMsgHandler handler   ) throws Exception{

@@ -66,8 +66,8 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
    
  	   //contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort);
  	   
-	   contextServer = new EnablerContext("",""+RadarSystemConfig.ctxServerPort,
- 			  RadarSystemConfig.protcolType, new ContextMsgHandler("ctxH"));
+	   contextServer = new EnablerContext("ctx",""+RadarSystemConfig.ctxServerPort,
+ 			                  RadarSystemConfig.protcolType, new ContextMsgHandler("ctxH"));
 		//Registrazione dei componenti presso il contesto
  	   IApplMsgHandler sonarHandler = SonarApplHandler.create("sonarH",sonar); 
 	   IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  

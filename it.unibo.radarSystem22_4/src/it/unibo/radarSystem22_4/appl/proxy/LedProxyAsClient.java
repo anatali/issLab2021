@@ -5,6 +5,7 @@ import it.unibo.radarSystem22_4.comm.ApplMessage;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMessage;
 import it.unibo.radarSystem22_4.comm.proxy.ProxyAsClient;
+import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
 import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 import it.unibo.radarSystem22_4.comm.utils.CommUtils;
 
@@ -44,9 +45,9 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 	@Override
 	public boolean getState() {   
 		String answer = ""; 
-	    if( protocol == ProtocolType.tcp   ) {
+	    if( protocol == ProtocolType.tcp ||  protocol == ProtocolType.udp   ) {
 	    	answer = sendRequestOnConnection( getLedState.toString() );
-			//ColorsOut.out(name+" |  getState answer=" + answer, ColorsOut.BLUE );
+			//ColorsOut.outappl(name+" |  getState answer=" + answer, ColorsOut.BLUE );
 	    }
 	    //ALTRI PROTOCOLLI ...	 
 		return answer.equals("true");

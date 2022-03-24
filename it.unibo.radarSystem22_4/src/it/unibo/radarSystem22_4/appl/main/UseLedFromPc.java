@@ -33,7 +33,7 @@ public class UseLedFromPc implements IApplication{
 		String host           = RadarSystemConfig.raspAddr;
 		ProtocolType protocol = CommSystemConfig.protcolType;
 		String ctxport        = ""+RadarSystemConfig.ctxServerPort;
-		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
+		led    		          = new LedProxyAsClient("ledPxy", host, ctxport, protocol );
  	}
 	
 
@@ -41,8 +41,15 @@ public class UseLedFromPc implements IApplication{
 		ColorsOut.out("turnOn");
 		led.turnOn();
 		BasicUtils.delay(1000);
+		//BasicUtils.waitTheUser();
+		boolean ledState = led.getState();
+		ColorsOut.out("ledState after on="+ledState);
+		BasicUtils.delay(1000);
+		//BasicUtils.waitTheUser();
 		ColorsOut.out("turnOff");
 		led.turnOff();
+		ledState = led.getState();
+		ColorsOut.out("ledState after off="+ledState);
    	}
 
 	public void terminate() {

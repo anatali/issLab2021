@@ -1,5 +1,6 @@
 package it.unibo.radarSystem22.actors.counter;
-import it.unibo.actorComm.context.TcpContextServer;
+import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.context.EnablerContext;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
@@ -18,8 +19,9 @@ public static final int ctxServerPort   = 7070;
  */
 	public void configure(  ) {
  		BasicUtils.aboutThreads("SharedCounterWithActorsMain | Before configure - ");
-		TcpContextServer contextServer = new TcpContextServer("TcpContextServer",  ctxServerPort );
-		CounterApplHandler ch           = new CounterApplHandler("counterHandler");
+//		TcpContextServer contextServer = new TcpContextServer("TcpContextServer",  ctxServerPort );
+		EnablerContext contextServer = new EnablerContext("ctxEnblr", ctxServerPort, ProtocolType.tcp );
+		CounterApplHandler ch        = new CounterApplHandler("counterHandler");
  		contextServer.addComponent("counter",ch);	
  		contextServer.activate();    
  	}
