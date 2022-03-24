@@ -6,9 +6,13 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22_4.appl.RadarSystemConfig;
 import it.unibo.radarSystem22_4.appl.handler.LedApplHandler;
 import it.unibo.radarSystem22_4.appl.handler.SonarApplHandler;
+import it.unibo.radarSystem22_4.comm.ProtocolType;
+import it.unibo.radarSystem22_4.comm.context.ContextMsgHandler;
 import it.unibo.radarSystem22_4.comm.context.TcpContextServer;
+import it.unibo.radarSystem22_4.comm.enablers.EnablerContext;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
+import it.unibo.radarSystem22_4.comm.interfaces.IContext;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
 import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 import it.unibo.radarSystem22.domain.DeviceFactory;
@@ -18,7 +22,10 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	private ILed  led ;
  
  
- 	private TcpContextServer contextServer;
+ 	//private TcpContextServer contextServer;
+ 	
+ 	private IContext contextServer;
+
 	
 	@Override
 	public String getName() {
@@ -43,11 +50,13 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 		if( domainConfig == null && systemConfig == null) {
 			DomainSystemConfig.simulation  = true;
 	    	DomainSystemConfig.testing     = false;			
-	    	DomainSystemConfig.tracing     = false;			
+	    	DomainSystemConfig.tracing     = true;			
 			DomainSystemConfig.sonarDelay  = 200;
 	    	DomainSystemConfig.ledGui      = true;		//se siamo su PC	
 	    	
  			RadarSystemConfig.RadarGuiRemote   = true;		
+ 			RadarSystemConfig.ctxServerPort    = 8756;
+ 			RadarSystemConfig.protcolType      = ProtocolType.udp;
 		}
  
 	}
@@ -55,7 +64,10 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
  	   led   = DeviceFactory.createLed(); 
 	   sonar = DeviceFactory.createSonar();
    
- 	   contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort);
+ 	   //contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort);
+ 	   
+	   contextServer = new EnablerContext("",""+RadarSystemConfig.ctxServerPort,
+ 			  RadarSystemConfig.protcolType, new ContextMsgHandler("ctxH"));
 		//Registrazione dei componenti presso il contesto
  	   IApplMsgHandler sonarHandler = SonarApplHandler.create("sonarH",sonar); 
 	   IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  

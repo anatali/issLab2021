@@ -16,10 +16,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 	protected static IApplMessage turnOffLed;  
 	protected static IApplMessage getLedState;  
 	 
- 	
- 	public LedProxyAsClient( String name, String host, String entry  ) {		
-		this(name, host, entry, ProtocolType.tcp);
-	}
+ 
 
 	public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
 		super(name,host,entry, protocol);
@@ -30,7 +27,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 
 	@Override
 	public void turnOn() { 
-	     if( protocol == ProtocolType.tcp   ) {
+	     if( protocol == ProtocolType.tcp  ||  protocol == ProtocolType.udp) {
 	         sendCommandOnConnection(turnOnLed.toString());
 	     }
 	     //ALTRI PROTOCOLLI ...	     
@@ -38,7 +35,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 
 	@Override
 	public void turnOff() {   
-	    if( protocol == ProtocolType.tcp   ) {
+	    if( protocol == ProtocolType.tcp  ||  protocol == ProtocolType.udp ) {
 	    	sendCommandOnConnection( turnOffLed.toString());
 	    }
 	   //ALTRI PROTOCOLLI ...	 

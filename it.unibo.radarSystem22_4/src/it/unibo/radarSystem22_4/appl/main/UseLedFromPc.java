@@ -1,23 +1,17 @@
 package it.unibo.radarSystem22_4.appl.main;
 
-import it.unibo.radarSystem22.domain.*;
 import it.unibo.radarSystem22.domain.interfaces.*;
-import it.unibo.radarSystem22_4.appl.ActionFunction;
-import it.unibo.radarSystem22_4.appl.Controller;
 import it.unibo.radarSystem22_4.appl.RadarSystemConfig;
 import it.unibo.radarSystem22_4.appl.proxy.LedProxyAsClient;
-import it.unibo.radarSystem22_4.appl.proxy.SonarProxyAsClient;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
+import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
 import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 
-public class RadarSystemMainWithCtxOnPc implements IApplication{
-	private IRadarDisplay radar;
-	private ISonar sonar;
-	private ILed  led ;
-	private Controller controller;
-	
+public class UseLedFromPc implements IApplication{
+ 	private ILed  led ;
+ 	
 	@Override
 	public String getName() {
 		return this.getClass().getName() ; 
@@ -31,7 +25,6 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 	
 	public void setup( String domainConfig, String systemConfig )  {
 		RadarSystemConfig.DLIMIT           = 80;
-		RadarSystemConfig.tracing          = true;
 		RadarSystemConfig.ctxServerPort    = 8756;
 		CommSystemConfig.protcolType = ProtocolType.udp;
 	}
@@ -41,26 +34,24 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 		ProtocolType protocol = CommSystemConfig.protcolType;
 		String ctxport        = ""+RadarSystemConfig.ctxServerPort;
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
-  		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
-  		radar  		= DeviceFactory.createRadarGui();
-  		controller 	= Controller.create(led, sonar, radar);
-	}
+ 	}
 	
 
 	public void execute() {
-	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-		controller.start(endFun, 30);
- 	}
+		ColorsOut.out("turnOn");
+		led.turnOn();
+		BasicUtils.delay(1000);
+		ColorsOut.out("turnOff");
+		led.turnOff();
+   	}
 
 	public void terminate() {
-		//BasicUtils.delay(20000);
-		sonar.deactivate();
-		System.exit(0);
+  		System.exit(0);
 	}	
 	
 	public static void main( String[] args) throws Exception {
 		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
-		new RadarSystemMainWithCtxOnPc().doJob(null,null);
+		new UseLedFromPc().doJob(null,null);
  	}
 	
 }

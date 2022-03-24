@@ -22,8 +22,8 @@ private ILed led;
 		ColorsOut.out("LedApplInterpreter | elaborate String=" + message  + " led="+led, ColorsOut.GREEN);
 	 	String payload = message.msgContent();
 		if( payload.equals("getState") ) return ""+led.getState() ;
-	 	else if( payload.equals("turnOn"))   led.turnOn();
-	 	else if( payload.equals("turnOff") ) led.turnOff();	
+	 	else if( payload.equals("on"))   led.turnOn();
+	 	else if( payload.equals("off") ) led.turnOff();	
  		return payload+"_done";
 	}
 }

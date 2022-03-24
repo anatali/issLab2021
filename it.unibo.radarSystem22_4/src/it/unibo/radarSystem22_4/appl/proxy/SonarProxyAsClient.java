@@ -16,10 +16,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	public static    IApplMessage getDistance  ; 
 	public static    IApplMessage isActive     ; 
   	
-	public SonarProxyAsClient( String name, String host, String entry  ) {		
-		this(name, host, entry, ProtocolType.tcp);
-	}
-	public SonarProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
+ 	public SonarProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		super( name,  host,  entry, protocol );
 		sonarActivate   = CommUtils.buildDispatch(name,"cmd", "activate",   "sonar");
 		sonarDeactivate = CommUtils.buildDispatch(name,"cmd", "deactivate", "sonar");
@@ -28,7 +25,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
  	}
  	@Override
 	public void activate() {
-	     if( protocol == ProtocolType.tcp  ) {
+	     if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp ) {
  			sendCommandOnConnection(sonarActivate.toString());	
 	     }
 	   //ALTRI PROTOCOLLI ...	
@@ -36,7 +33,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 
 	@Override
 	public void deactivate() {
-	     if( protocol == ProtocolType.tcp   ) {
+	     if( protocol == ProtocolType.tcp  || protocol == ProtocolType.udp  ) {
  			sendCommandOnConnection(sonarDeactivate.toString());		
 	     }
 	}
@@ -44,7 +41,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	@Override
 	public IDistance getDistance() {
 		String answer = "0";
-	    if( protocol == ProtocolType.tcp  ) {
+	    if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp  ) {
 			answer = sendRequestOnConnection(getDistance.toString());
 			ColorsOut.out( name + " | getDistance answer="+answer, ColorsOut.ANSI_PURPLE);
 	     }
@@ -54,7 +51,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	@Override
 	public boolean isActive() {
 		String answer = "false";
-	    if( protocol == ProtocolType.tcp  ) {
+	    if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp  ) {
 			answer = sendRequestOnConnection(isActive.toString());
 			ColorsOut.out( name + " | isActive-answer=" + answer, ColorsOut.ANSI_PURPLE);
 	    }

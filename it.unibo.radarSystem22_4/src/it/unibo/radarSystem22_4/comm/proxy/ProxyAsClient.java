@@ -1,9 +1,10 @@
 package it.unibo.radarSystem22_4.comm.proxy;
 
 import it.unibo.radarSystem22_4.comm.ProtocolType;
+import it.unibo.radarSystem22_4.comm.tcp.*;
+import it.unibo.radarSystem22_4.comm.udp.*;
 import it.unibo.radarSystem22_4.comm.interfaces.Interaction2021;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
-import it.unibo.radarSystem22_4.comm.tcp.TcpClientSupport;
 
 public class ProxyAsClient {
 private Interaction2021 conn; 
@@ -17,7 +18,7 @@ protected ProtocolType protocol ;
  
 	public ProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		try {
-			ColorsOut.out(name+"  | CREATING entry= "+entry+" protocol=" + protocol, ColorsOut.BLUE );
+			ColorsOut.outappl(name+"  | CREATING entry= "+entry+" protocol=" + protocol, ColorsOut.BLUE );
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
@@ -34,6 +35,11 @@ protected ProtocolType protocol ;
 				//conn = new TcpConnection( new Socket( host, port ) ) ; //non fa attempts
 				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
 				ColorsOut.out(name + " |  setConnection "  + conn, ColorsOut.BLUE );		
+				break;
+			}
+			case udp : {
+				int port = Integer.parseInt(entry);
+ 				conn = UdpClientSupport.connect(host,  port );  
 				break;
 			}
 			case coap : {
@@ -67,7 +73,9 @@ protected ProtocolType protocol ;
 		try {
 			String answer = conn.request(request);
 			ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer, ColorsOut.BLUE  );
-			return  answer  ;		
+			return  answer  ;
+			//return CommUtils.getContent( answer );
+ 		
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
 			return null;
@@ -80,7 +88,7 @@ protected ProtocolType protocol ;
 	public void close() {
 		try {
 			conn.close();
-			ColorsOut.out(name + " |  CLOSED " + conn  );
+			ColorsOut.out(name + " |  CLOSED " + conn   );
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		}
 	}
