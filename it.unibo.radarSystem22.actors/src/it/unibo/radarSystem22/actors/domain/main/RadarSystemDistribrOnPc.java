@@ -4,6 +4,7 @@ import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommSystemConfig;
+import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.radarSystem22.actors.businessLogic.ActionFunction;
 import it.unibo.radarSystem22.actors.businessLogic.ControllerOnPc;
 import it.unibo.radarSystem22.actors.proxy.LedProxyAsClient;
@@ -46,21 +47,28 @@ public class RadarSystemDistribrOnPc {
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
   		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
-		radar       = DeviceActorFactory.createRadarGui();
-		controller  = ControllerOnPc.create(led, sonar,radar );
+//		radar       = DeviceActorFactory.createRadarGui();
+//		controller  = ControllerOnPc.create(led, sonar,radar );
 			
 	}
 	
 	protected void execute() {
 		ColorsOut.outappl("RadarSystemDistribrOnPc | execute", ColorsOut.MAGENTA);
- 	    led.turnOff();
- 	    boolean b = led.getState();
- 	    ColorsOut.outappl("RadarSystemDistribrOnPc | b="+b, ColorsOut.MAGENTA);
- 	    ActionFunction endFun = (n) -> { 
- 	    	System.out.println(n); 
- 	    	terminate(); 
- 	    };
- 		controller.start(endFun, 50);
+		for( int i=1; i<=2; i++) {
+	 	    led.turnOn();
+	 	    boolean b = led.getState();
+	 	    ColorsOut.outappl("RadarSystemDistribrOnPc | b ON="+b, ColorsOut.MAGENTA);
+	 	    CommUtils.delay(500);
+	 	    led.turnOff();
+	 	    b = led.getState();
+	 	    ColorsOut.outappl("RadarSystemDistribrOnPc | b OFF="+b, ColorsOut.MAGENTA);
+	 	    CommUtils.delay(500);
+		}
+// 	    ActionFunction endFun = (n) -> { 
+// 	    	System.out.println(n); 
+// 	    	terminate(); 
+// 	    };
+// 		controller.start(endFun, 50);
 	} 
 	
 	public void terminate() {

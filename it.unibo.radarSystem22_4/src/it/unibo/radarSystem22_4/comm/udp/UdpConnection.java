@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import it.unibo.radarSystem22_4.comm.interfaces.Interaction2021;
+import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
   
 
@@ -57,7 +58,9 @@ protected boolean closed;
 			}else {
 				byte[] buf = new byte[UdpConnection.MAX_PACKET_LEN];
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
-				socket.receive(packet);
+			    //BasicUtils.aboutThreads( " | UdpConnection Before Receive  " );  
+				socket.receive(packet);  //CREA UN Thread
+			    //BasicUtils.aboutThreads( " | UdpConnection After Receive  "  );  
 				line = new String(packet.getData(), 0, packet.getLength());
 				if( line.equals(closeMsg)) {
 					close();

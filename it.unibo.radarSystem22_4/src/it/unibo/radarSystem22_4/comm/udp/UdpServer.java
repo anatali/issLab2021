@@ -6,10 +6,9 @@ import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import it.unibo.radarSystem22_4.comm.ApplMessage;
-import it.unibo.radarSystem22_4.comm.interfaces.IApplMessage;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
+
 
 
 
@@ -37,10 +36,10 @@ protected boolean stopped = true;
 	@Override
 	public void run() {
 	      try {
-		  	ColorsOut.out( "UdpServer | STARTING ... "  );
+		  	ColorsOut.out( "UdpServer | STARTING ... ", ColorsOut.BLUE  );
 			while( ! stopped ) {
 				//Wait a packet				 
-				ColorsOut.out( "UdpServer | waits a packet "  );	 
+				ColorsOut.out( "UdpServer | waits a packet ", ColorsOut.BLUE  );	 
 				buf = new byte[UdpConnection.MAX_PACKET_LEN];
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
@@ -48,21 +47,22 @@ protected boolean stopped = true;
 	            int port = packet.getPort();
 	            UdpEndpoint client = new UdpEndpoint(address, port);
 	            //String received = new String(packet.getData(), 0, packet.getLength());
-	            ColorsOut.out( "UdpServer | received " + packet +" from " + client   ); 
+	            ColorsOut.out( "UdpServer | received packet from " + client, ColorsOut.BLUE   ); 
 	            UdpServerConnection conn = connectionsMap.get(client);
 	            if(conn == null) {
 	            	conn = new UdpServerConnection(socket, client, connectionsMap);
 	            	connectionsMap.put(client, conn);
-	            }else {
-	            	 ColorsOut.outappl("UdpServer | CONNECTION ALREADY SET with " + client, ColorsOut.GREEN   ); 
+			 		//Create HERE a message handler on the connection !!!
+			 		new UdpApplMessageHandler( userDefHandler, conn );		 	 		
+            }else {
+	            	 ColorsOut.outappl("UdpServer | CONNECTION ALREADY SET conn= " + conn + " client="+ client, ColorsOut.BLUE   ); 
 	            }
-	            //IApplMessage m = new ApplMessage( packet.toString() );
-	            conn.handle( packet );		 
-		 		//Create a message handler on the connection
-		 		new UdpApplMessageHandler( userDefHandler, conn );			 		
+	            conn.handle(packet);		 
+		 		//Create a message handler on the connection NOT HERE!!
+		 		//new UdpApplMessageHandler( userDefHandler, conn );			 		
 			}//while
 		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
-			  ColorsOut.out( "UdpServer |  probably socket closed: " + e.getMessage(), ColorsOut.GREEN);		 
+			  ColorsOut.out( "UdpServer |  probably socket closed: " + e.getMessage(), ColorsOut.BLUE);		 
 		  }
 	}
 	
@@ -75,7 +75,7 @@ protected boolean stopped = true;
  
 	public void deactivate() {
 		try {
-			ColorsOut.out( "UdpServer |  DEACTIVATE serversock=" +  socket);
+			ColorsOut.out( "UdpServer |  DEACTIVATE serversock=" +  socket, ColorsOut.BLUE);
 			stopped = true;
 			socket.close();
 			connectionsMap.clear();

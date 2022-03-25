@@ -15,8 +15,7 @@ private Interaction2021 conn;
 	public ActorForReply(String name, IApplMsgHandler h, Interaction2021 conn) {
 		super(name);
 		this.h = h;
-		this.conn = conn;
-		 
+		this.conn = conn;		 
 	}
 
 	@Override

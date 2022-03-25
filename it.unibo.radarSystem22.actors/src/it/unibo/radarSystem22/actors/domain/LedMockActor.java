@@ -25,7 +25,7 @@ private ILed led;
 	@Override
 	protected void doJob(IApplMessage msg) {
 		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
-		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
+		//ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.CYAN);
 		String msgId = msg.msgId();
 		if( msg.isRequest() ) elabRequest(msg);
 		else elabCmd(msg);
@@ -33,8 +33,7 @@ private ILed led;
 
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
-		//ColorsOut.outappl( getName()  + " | elabCmd " + msgCmd, ColorsOut.BLUE); 
-		switch( msgCmd ) {
+ 		switch( msgCmd ) {
 			case "turnOn"  : led.turnOn();break;
 			case "turnOff" : led.turnOff();break;
 			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
@@ -49,12 +48,8 @@ private ILed led;
 			case "getState"  :{
 				boolean b = led.getState();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "ledState", ""+b, msg.msgSender());
-				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);
-				//WARNING: il caller non è locale => Actor22.getActor fails!
-				//Invio reply al nodo PC. Come sfrutto le connessioni? 
-				//Ctx di Actor22 può tenere traccia delle richieste
-				//ActorBasic ar = Actor22.getActor("ar"+msg.msgSender()) ;
-				Actor22.sendReply(msg, reply );
+				//ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.CYAN);
+ 				Actor22.sendReply(msg, reply );
 				
 				break;
 			}

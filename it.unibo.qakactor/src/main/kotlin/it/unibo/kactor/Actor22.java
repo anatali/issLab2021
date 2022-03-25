@@ -76,7 +76,7 @@ public abstract class Actor22 extends ActorBasic {
     public Actor22(@NotNull String name ) {
         super(name, QakContext.Companion.createScope(), false, true, false, 50);
         if( getActor(name) == null ) addActor( this );
-        else System.out.println("WARNING: an actor with name " + name + " already exists");
+        else System.out.println("Actor22 WARNING: an actor with name " + name + " already exists");
     }
 
     @Nullable

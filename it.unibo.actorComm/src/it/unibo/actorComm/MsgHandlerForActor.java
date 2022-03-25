@@ -22,13 +22,14 @@ protected ActorForReply ar;
 	public void elaborate(IApplMessage message, Interaction2021 conn) {		
 		if( message.isDispatch() || message.isEvent() )  Actor22.sendAMsg(message, actor);
 		else if( message.isRequest() ) {
-			ColorsOut.out(name + " | Handling the request " + message, ColorsOut.GREEN);
+			ColorsOut.outappl(name + " | Handling the request " + message, ColorsOut.CYAN);
 			//Attivo un attore che riceve la risposta
-			ar = new ActorForReply("ar"+message.msgSender(), this, conn);
+			String actorRepyName = "ar"+message.msgSender();
+			if( Actor22.getActor(actorRepyName) == null ) {
+				ColorsOut.outappl(name + " | CREATE ACTOR FOR REPLY " + message, ColorsOut.MAGENTA);
+				new ActorForReply(actorRepyName, this, conn);
+			}
 			Actor22.sendAMsg(message, actor); //invio il msg all'attore locale
-		}
-		else if( message.isInvitation() ) {
-			
 		}
 	}
 

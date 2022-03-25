@@ -65,13 +65,14 @@ private Socket socket;
 	}
 
 	@Override
-	public void close() { 
-		try {
-			socket.close();
-			ColorsOut.out( "TcpConnection | CLOSED  " );
-		} catch (IOException e) {
-			ColorsOut.outerr( "TcpConnection | close ERROR " + e.getMessage());	
-		}
+	public void close() throws Exception { 
+		closeConnection();
+//		try {
+//			socket.close();
+//			ColorsOut.out( "TcpConnection | CLOSED  " );
+//		} catch (IOException e) {
+//			ColorsOut.outerr( "TcpConnection | close ERROR " + e.getMessage());	
+//		}
 	}
 
 	@Override
@@ -107,8 +108,12 @@ private Socket socket;
 
 	@Override
 	public void closeConnection() throws Exception {
-		// TODO Auto-generated method stub
-		
+//		try {
+			socket.close();
+			ColorsOut.out( "TcpConnection | CLOSED  " );
+//		} catch (IOException e) {
+//			ColorsOut.outerr( "TcpConnection | close ERROR " + e.getMessage());	
+//		}
 	}
 
 

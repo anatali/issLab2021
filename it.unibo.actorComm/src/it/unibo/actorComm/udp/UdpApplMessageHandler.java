@@ -12,22 +12,23 @@ import it.unibo.kactor.IApplMessage;
 public class UdpApplMessageHandler extends Thread{
 private  IApplMsgHandler handler ;
 private Interaction2021 conn;
+ 
 
 public UdpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 		this.handler = handler;
 		this.conn    = conn;
- 		this.start();
+        this.start();
 	}
  	
 	@Override 
 	public void run() {
 		String name = handler.getName();
 		try {
-			ColorsOut.out( "UdpApplMessageHandler | STARTS with handler=" + name + " conn=" + conn, ColorsOut.BLUE );
+			ColorsOut.outappl( "UdpApplMessageHandler | STARTS with handler=" + name + " conn=" + conn, ColorsOut.MAGENTA );
 			while( true ) {
 				//ColorsOut.out(name + " | waits for message  ...");
 			    String msg = conn.receiveMsg();
-			    ColorsOut.out(name + "  | UdpApplMessageHandler received:" + msg + " handler="+handler, ColorsOut.GREEN );
+			    ColorsOut.outappl(name + "  | UdpApplMessageHandler received:" + msg + " handler="+handler, ColorsOut.GREEN );
 			    if( msg == null || msg.equals(UdpConnection.closeMsg) ) {
 			    	conn.close();
 			    	break;

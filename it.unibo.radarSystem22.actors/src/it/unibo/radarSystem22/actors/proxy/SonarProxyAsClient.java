@@ -11,17 +11,21 @@ import it.unibo.kactor.IApplMessage;
 
 
 public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
-	public static final  IApplMessage sonarActivate     = new ApplMessage("msg( cmd, dispatch, system, sonar, activate,    0)");
-	public static final  IApplMessage sonarDeactivate   = new ApplMessage("msg( cmd, dispatch, system, sonar, deactivate,  0)");
-	public static final  IApplMessage getDistance       = new ApplMessage("msg( cmd, request,  system, sonar, getDistance, 0)");
-	public static final  IApplMessage isActive          = new ApplMessage("msg( cmd, request,  system, sonar, isActive,    0)");
+	protected    IApplMessage sonarActivate    ;//  
+	protected    IApplMessage sonarDeactivate  ;//
+	protected    IApplMessage getDistance      ;//
+	protected    IApplMessage isActive         ;//
  	
 	public SonarProxyAsClient( String name, String host, String entry  ) {		
 		this(name, host, entry, CommSystemConfig.protcolType);
 	}
 	public SonarProxyAsClient( String name, String host, String entry, ProtocolType protocol ) {
 		super( name,  host,  entry, protocol );
- 	}
+		sonarActivate   = CommUtils.buildDispatch(name, "cmd", "activate", "sonar");
+		sonarDeactivate = CommUtils.buildDispatch(name, "cmd", "deactivate", "sonar");
+		getDistance     = CommUtils.buildRequest(name,  "req", "getDistance", "sonar");
+		isActive        = CommUtils.buildRequest(name,  "req", "isActive", "sonar");
+	}
  	@Override
 	public void activate() {
  		if( CommUtils.isTcp() || CommUtils.isUdp() )  

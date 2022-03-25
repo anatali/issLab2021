@@ -17,7 +17,8 @@ private DatagramPacket packet = null;
 private Semaphore waitToEnterNewPacket   = new Semaphore(1); //handle() waits until a packet is still waiting for being processed
 private Semaphore waitToConsumeNewPacket = new Semaphore(0); //receiveMsg() waits until a packet have arrived
 
-	public UdpServerConnection( DatagramSocket socket, UdpEndpoint client, Map<UdpEndpoint,UdpServerConnection> connMap ) throws Exception {
+	public UdpServerConnection( DatagramSocket socket, UdpEndpoint client, 
+			Map<UdpEndpoint,UdpServerConnection> connMap ) throws Exception {
 		super(socket, client);
 		this.connMap = connMap;
 	}

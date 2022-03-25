@@ -30,7 +30,7 @@ private ISonar sonar;
 
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
-		ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd, ColorsOut.BLUE); 
+		//ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd, ColorsOut.CYAN); 
 		switch( msgCmd ) {
 			case "activate"    : sonar.activate();break;
 			case "deactivate"  : sonar.deactivate();break;
@@ -40,19 +40,19 @@ private ISonar sonar;
 
 	protected void elabRequest(IApplMessage msg) {
 		String msgReq = msg.msgContent();
-		ColorsOut.outappl( getName()  + " | elabRequest " + msg, ColorsOut.BLUE);
+		//ColorsOut.outappl( getName()  + " | elabRequest " + msg, ColorsOut.CYAN);
 		switch( msgReq ) {
 			case "isActive"  :{
 				boolean b = sonar.isActive();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "sonarState", ""+b, msg.msgSender());
-				ColorsOut.outappl( getName()  + " | sendAnswer reply=" + reply, ColorsOut.BLUE);
+				//ColorsOut.outappl( getName()  + " | sendAnswer reply=" + reply, ColorsOut.CYAN);
  				Actor22.sendReply( msg,reply );
 				break;
 			}
 			case "getDistance"  :{
 				int d = sonar.getDistance().getVal();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "distance", ""+d, msg.msgSender()); //"distance"
-				ColorsOut.outappl( getName()  + " | sendAnswer reply=" + reply, ColorsOut.BLUE);
+				//ColorsOut.outappl( getName()  + " | sendAnswer reply=" + reply, ColorsOut.CYAN);
 				Actor22.sendReply( msg,reply );
 				break;
 			}

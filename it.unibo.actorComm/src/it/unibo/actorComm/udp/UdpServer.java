@@ -34,10 +34,10 @@ protected boolean stopped = true;
 	@Override
 	public void run() {
 	      try {
-		  	ColorsOut.out( "UdpServer | STARTING ... "  );
+		  	ColorsOut.out( "UdpServer | STARTING ... ", ColorsOut.BLUE  );
 			while( ! stopped ) {
 				//Wait a packet				 
-				ColorsOut.out( "UdpServer | waits a packet "  );	 
+				ColorsOut.out( "UdpServer | waits a packet", ColorsOut.BLUE   );	 
 				buf = new byte[UdpConnection.MAX_PACKET_LEN];
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
@@ -45,20 +45,20 @@ protected boolean stopped = true;
 	            int port = packet.getPort();
 	            UdpEndpoint client = new UdpEndpoint(address, port);
 	            //String received = new String(packet.getData(), 0, packet.getLength());
-	            ColorsOut.out( "UdpServer | received packet from " + client   ); 
+	            ColorsOut.out( "UdpServer | received packet from " + client, ColorsOut.BLUE   ); 
 	            UdpServerConnection conn = connectionsMap.get(client);
 	            if(conn == null) {
 	            	conn = new UdpServerConnection(socket, client, connectionsMap);
 	            	connectionsMap.put(client, conn);
+			 		//Create a message handler on the connection   !!!!!!
+			 		new UdpApplMessageHandler( userDefHandler, conn );			 		
 	            }else {
-	            	 ColorsOut.outappl("UdpServer | CONNECTION ALREADY SET with " + client, ColorsOut.GREEN   ); 
+	            	 ColorsOut.out("UdpServer | CONNECTION ALREADY SET with " + client, ColorsOut.BLUE   ); 
 	            }
 	            conn.handle(packet);		 
-		 		//Create a message handler on the connection
-		 		new UdpApplMessageHandler( userDefHandler, conn );			 		
 			}//while
 		  }catch (Exception e) {  //Scatta quando la deactive esegue: serversock.close();
-			  ColorsOut.out( "UdpServer |  probably socket closed: " + e.getMessage(), ColorsOut.GREEN);		 
+			  ColorsOut.out( "UdpServer |  probably socket closed: " + e.getMessage(), ColorsOut.BLUE);		 
 		  }
 	}
 	

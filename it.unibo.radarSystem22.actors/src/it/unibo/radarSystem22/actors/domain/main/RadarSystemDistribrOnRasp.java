@@ -34,7 +34,15 @@ public class RadarSystemDistribrOnRasp {
 	
 	
 	protected void configure() {
+		CommSystemConfig.tracing        = false;
+		DomainSystemConfig.tracing      = false;			
+		DomainSystemConfig.sonarDelay   = 150;
+		//Su PC
+		DomainSystemConfig.simulation   = true;
+		DomainSystemConfig.DLIMIT      	= 80;  
+		DomainSystemConfig.ledGui       = true;
 		ProtocolType protocol = ProtocolType.udp;
+		
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
  		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
  	    ctxServer  = new EnablerContext("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
@@ -52,13 +60,6 @@ public class RadarSystemDistribrOnRasp {
 	
  	
 	public static void main( String[] args) {
-		CommSystemConfig.tracing        = true;
-		DomainSystemConfig.tracing      = false;			
-		DomainSystemConfig.sonarDelay   = 150;
-		//Su PC
-		DomainSystemConfig.simulation   = true;
-		DomainSystemConfig.DLIMIT      	= 80;  
-		DomainSystemConfig.ledGui       = true;
  
 		BasicUtils.aboutThreads("Before start - ");
 		new RadarSystemDistribrOnRasp().doJob();

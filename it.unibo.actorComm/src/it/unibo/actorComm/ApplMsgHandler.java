@@ -30,23 +30,27 @@ protected String name;
  	
  	@Override
  	public void sendAnswerToClient( String reply, Interaction2021 conn   ) {
-		sendMsgToClient(reply, conn);		
+ 		try {
+			conn.reply(reply);
+		} catch (Exception e) {
+			ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient ERROR " + e.getMessage() );
+		}
  	}
  	
  	//@Override
- 	public void sendAnswerToClient( String reply  ) {
-		ColorsOut.out(name + " | ApplMsgHandler sendAnswerToClient reply=" + reply, ColorsOut.BLUE);
-		try {
-			if( CommSystemConfig.protcolType == ProtocolType.mqtt) {
-				//TODO
-			}else {
-				ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient not implemented for  " 
-							+ CommSystemConfig.protcolType);
-			}
-		} catch (Exception e) {
-			ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient ERROR " + e.getMessage());
- 		}
-  	}
+// 	public void sendAnswerToClient( String reply  ) {
+//		ColorsOut.out(name + " | ApplMsgHandler sendAnswerToClient reply=" + reply, ColorsOut.BLUE);
+//		try {
+//			if( CommSystemConfig.protcolType == ProtocolType.mqtt) {
+//				//TODO
+//			}else {
+//				ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient not implemented for  " 
+//							+ CommSystemConfig.protcolType);
+//			}
+//		} catch (Exception e) {
+//			ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient ERROR " + e.getMessage());
+// 		}
+//  	}
  	
  	public abstract void elaborate(IApplMessage message, Interaction2021 conn) ;
  	

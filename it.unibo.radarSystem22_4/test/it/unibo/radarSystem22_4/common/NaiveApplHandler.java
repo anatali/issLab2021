@@ -14,7 +14,7 @@ public class NaiveApplHandler extends ApplMsgHandler {
 
 	@Override
 	public void elaborate(IApplMessage message, Interaction2021 conn) {
-		ColorsOut.out(name + " | elaborate " + message + " conn=" + conn);
+		ColorsOut.out(name + " | elaborate " + message + " conn=" + conn, ColorsOut.BLUE);
 		//this.sendMsgToClient("answerTo_"+message, conn);  //MODIFIED for udp 
 		sendAnswerToClient("answerTo_"+message, conn);
   	}

@@ -7,14 +7,16 @@ import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.interfaces.*;
+import it.unibo.radarSystem22.domain.utils.ColorsOut;
  
 
 /*
  * Adapter for the output device  Led
  */
 public class LedProxyAsClient extends ProxyAsClient implements ILed {
-public static final IApplMessage turnOnLed   = new ApplMessage("msg( cmd, dispatch, system, led, turnOn, 0 )");
-public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispatch, system, led, turnOff, 0 )");
+	protected   IApplMessage turnOnLed  ;  
+	protected   IApplMessage turnOffLed ;
+	protected   IApplMessage getState ;
 
  	public LedProxyAsClient( String name, String host, String entry  ) {		
 		this(name, host, entry, CommSystemConfig.protcolType);
@@ -22,6 +24,9 @@ public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispat
 
 	public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
 		super(name,host,entry, protocol);
+		turnOnLed  = CommUtils.buildDispatch(name, "cmd", "turnOn",  "led");
+		turnOffLed = CommUtils.buildDispatch(name, "cmd", "turnOff", "led");
+		getState   = CommUtils.buildRequest(name,  "req", "getState","led");
 	}
 
 	@Override
@@ -40,10 +45,12 @@ public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispat
 
 	@Override
 	public boolean getState() {   
+		String answerMsg="";
 		String answer="";
 		if( CommUtils.isTcp() || CommUtils.isUdp()   ) {
-			answer = sendRequestOnConnection(
-					CommUtils.buildRequest(name, "query", "getState", "led").toString()) ;
+			answerMsg = sendRequestOnConnection( getState.toString()) ;
+			answer    = new ApplMessage( answerMsg ).msgContent();
+			ColorsOut.outappl("answer=" + answer , ColorsOut.MAGENTA);
 		}
  		return answer.equals("true");
 	}

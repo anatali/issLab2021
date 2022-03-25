@@ -1,9 +1,9 @@
 package it.unibo.actorComm.udp;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import it.unibo.actorComm.interfaces.Interaction2021;
+import it.unibo.actorComm.utils.BasicUtils;
 import it.unibo.actorComm.utils.ColorsOut;
   
 
@@ -23,17 +23,19 @@ protected boolean closed;
 	
 	@Override
 	public void forward(String msg)  throws Exception {
-		//ColorsOut.out( "UdpConnection | sendALine  " + msg + " to " + client, ColorsOut.ANSI_YELLOW );	 
-		if (closed) { throw new Exception("The connection has been previously closed"); }
-		try {
-			byte[] buf = msg.getBytes();
-			DatagramPacket packet = new DatagramPacket(buf, buf.length, endpoint.getAddress(), endpoint.getPort());
-	        socket.send(packet);
-			//ColorsOut.out( "UdpConnection | has sent   " + msg, ColorsOut.ANSI_YELLOW );	 
-		} catch (IOException e) {
-			//ColorsOut.outerr( "UdpConnection | sendALine ERROR " + e.getMessage());	 
-			throw e;
-		}	
+		ColorsOut.outappl( " | UdpConnection forward=" + msg, ColorsOut.GREEN);
+		sendALine(msg);
+//		//ColorsOut.out( "UdpConnection | sendALine  " + msg + " to " + client, ColorsOut.ANSI_YELLOW );	 
+//		if (closed) { throw new Exception("The connection has been previously closed"); }
+//		try {
+//			byte[] buf = msg.getBytes();
+//			DatagramPacket packet = new DatagramPacket(buf, buf.length, endpoint.getAddress(), endpoint.getPort());
+//	        socket.send(packet);
+//			//ColorsOut.out( "UdpConnection | has sent   " + msg, ColorsOut.ANSI_YELLOW );	 
+//		} catch (IOException e) {
+//			//ColorsOut.outerr( "UdpConnection | sendALine ERROR " + e.getMessage());	 
+//			throw e;
+//		}	
 	}
 
 	@Override
@@ -45,13 +47,74 @@ protected boolean closed;
 	
 	@Override
 	public void reply(String msg) throws Exception {
-		forward(msg);
+		ColorsOut.outappl( " | UdpConnection reply=" + msg, ColorsOut.GREEN);
+		sendALine(msg);
 	} 
 	
 	@Override
-	public String receiveMsg()  {
+	public String receiveMsg() throws Exception {
+		return receiveALine();
+//		String line;
+// 		try {
+//			if(closed) {
+//				line = null; //UdpApplMessageHandler will terminate
+//			}else {
+//				byte[] buf = new byte[UdpConnection.MAX_PACKET_LEN];
+//				DatagramPacket packet = new DatagramPacket(buf, buf.length);
+//				socket.receive(packet);
+//				line = new String(packet.getData(), 0, packet.getLength());
+//				if( line.equals(closeMsg)) {
+//					close();
+//				}
+//				packet = null;
+//			}
+// 			return line;		
+//		} catch ( Exception e ) {
+//			ColorsOut.outerr( "UdpConnection | receiveMsg ERROR  " + e.getMessage() );	
+//	 		return null;
+//		}		
+	}
+
+	@Override
+	public void close() throws Exception{
+		closeConnection();
+//		try {
+//			forward(closeMsg);
+//		} catch (Exception e) {
+//			ColorsOut.outerr( "UdpConnection | close ERROR  " + e.getMessage() );	
+//		}
+//		closed = true;
+//		ColorsOut.out( "UdpConnection | closing   ", ColorsOut.ANSI_YELLOW );
+//		socket.close();
+	}
+
+	@Override
+	public void sendALine(String msg) throws Exception {
+		ColorsOut.outappl( " | UdpConnection sendALine=" + msg, ColorsOut.GREEN);
+
+		BasicUtils.aboutThreads( " | UdpConnection  sendALine - ");  
+
+		//ColorsOut.out( "UdpConnection | sendALine  " + msg + " to " + client, ColorsOut.ANSI_YELLOW );	 
+		if (closed) { throw new Exception("The connection has been previously closed"); }
+//		try {
+			byte[] buf = msg.getBytes();
+			DatagramPacket packet = new DatagramPacket(buf, buf.length, endpoint.getAddress(), endpoint.getPort());
+	        socket.send(packet);
+			//ColorsOut.out( "UdpConnection | has sent   " + msg, ColorsOut.ANSI_YELLOW );	 
+//		} catch (IOException e) {
+//			//ColorsOut.outerr( "UdpConnection | sendALine ERROR " + e.getMessage());	 
+//			throw e;
+//		}	
+	}
+
+	@Override
+	public void sendALine(String msg, boolean isAnswer) throws Exception {
+	}
+
+	@Override
+	public String receiveALine() throws Exception {
 		String line;
- 		try {
+// 		try {
 			if(closed) {
 				line = null; //UdpApplMessageHandler will terminate
 			}else {
@@ -65,46 +128,18 @@ protected boolean closed;
 				packet = null;
 			}
  			return line;		
-		} catch ( Exception e ) {
-			ColorsOut.outerr( "UdpConnection | receiveMsg ERROR  " + e.getMessage() );	
-	 		return null;
-		}		
-	}
-
-	@Override
-	public void close() {
-		try {
-			forward(closeMsg);
-		} catch (Exception e) {
-			ColorsOut.outerr( "UdpConnection | close ERROR  " + e.getMessage() );	
-		}
-		closed = true;
-		ColorsOut.out( "UdpConnection | closing   ", ColorsOut.ANSI_YELLOW );
-		socket.close();
-	}
-
-	@Override
-	public void sendALine(String msg) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendALine(String msg, boolean isAnswer) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String receiveALine() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+//		} catch ( Exception e ) {
+//			ColorsOut.outerr( "UdpConnection | receiveMsg ERROR  " + e.getMessage() );	
+//	 		return null;
+//		}		
 	}
 
 	@Override
 	public void closeConnection() throws Exception {
-		// TODO Auto-generated method stub
-		
+		forward(closeMsg);
+		closed = true;
+		ColorsOut.out( "UdpConnection | closing   ", ColorsOut.ANSI_YELLOW );
+		socket.close();
 	}
 
 
