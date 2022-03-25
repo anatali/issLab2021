@@ -1,12 +1,13 @@
 package it.unibo.radarSystem22.actors.domain.main;
 
 import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.radarSystem22.actors.businessLogic.ActionFunction;
 import it.unibo.radarSystem22.actors.businessLogic.ControllerOnPc;
 import it.unibo.radarSystem22.actors.proxy.LedProxyAsClient;
 import it.unibo.radarSystem22.actors.proxy.SonarProxyAsClient;
-//import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
@@ -30,7 +31,7 @@ public class RadarSystemDistribrOnPc {
 	private String ctxport = ""+RadarSystemConfig.ctxServerPort;
  
 	public void doJob() {
-		ColorsOut.outappl("RadarSystemActorLocalMain | Start", ColorsOut.BLUE);
+		ColorsOut.outappl("RadarSystemDistribrOnPc | Start", ColorsOut.BLUE);
 		configure();
 		BasicUtils.aboutThreads("Before execute - ");
 		//BasicUtils.waitTheUser();
@@ -39,29 +40,37 @@ public class RadarSystemDistribrOnPc {
 	
 	
 	protected void configure() {
-		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, ProtocolType.tcp );
-  		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, ProtocolType.tcp );
+		DomainSystemConfig.tracing      = false;			
+ 		CommSystemConfig.protcolType    = ProtocolType.udp;
+		CommSystemConfig.tracing        = false;
+		ProtocolType protocol 		    = CommSystemConfig.protcolType;
+		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
+  		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
 		radar       = DeviceActorFactory.createRadarGui();
 		controller  = ControllerOnPc.create(led, sonar,radar );
 			
 	}
 	
 	protected void execute() {
- 	    ActionFunction endFun = (n) -> { 
- 	    	System.out.println(n); //terminate(); 
- 	    };
+		ColorsOut.outappl("RadarSystemDistribrOnPc | execute", ColorsOut.MAGENTA);
  	    led.turnOff();
+ 	    boolean b = led.getState();
+ 	    ColorsOut.outappl("RadarSystemDistribrOnPc | b="+b, ColorsOut.MAGENTA);
+ 	    ActionFunction endFun = (n) -> { 
+ 	    	System.out.println(n); 
+ 	    	terminate(); 
+ 	    };
  		controller.start(endFun, 50);
 	} 
 	
 	public void terminate() {
 		sonar.deactivate();
+		((ProxyAsClient) led).close();
+		((ProxyAsClient) sonar).close();
 		System.exit(0);
 	}
 	
 	public static void main( String[] args) {
-		DomainSystemConfig.tracing      = false;			
-		DomainSystemConfig.DLIMIT       = 60;
 		BasicUtils.aboutThreads("Before start - ");
 		new RadarSystemDistribrOnPc().doJob();
  		BasicUtils.aboutThreads("Before end - ");

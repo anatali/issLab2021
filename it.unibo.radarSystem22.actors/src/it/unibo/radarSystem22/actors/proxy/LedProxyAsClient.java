@@ -26,44 +26,25 @@ public static final IApplMessage turnOffLed  = new ApplMessage("msg( cmd, dispat
 
 	@Override
 	public void turnOn() { 
-  		if(   CommUtils.isMqtt() || CommUtils.isCoap() ) {
+  		if(   CommUtils.isTcp() || CommUtils.isUdp() ) {
  			sendCommandOnConnection(  turnOnLed.toString());
-// 		}
-// 		else if( Utils.isMqtt() ) {
-// 			sendCommandOnConnection(Utils.turnOnLed.toString());
-// 		}
-// 		else if( Utils.isCoap()) {
-// 			sendCommandOnConnection( "on" );
- 		}else //CASO DI DEFAULT
- 			sendCommandOnConnection( "on" );
+  		}
  	}
 
 	@Override
 	public void turnOff() {   
-  		if(   CommUtils.isMqtt() || CommUtils.isCoap() ) {
+  		if(  CommUtils.isTcp() || CommUtils.isUdp() ) {
  			sendCommandOnConnection( turnOffLed.toString());
-// 		}
-// 		else if( Utils.isMqtt() ) {
-// 			sendCommandOnConnection(Utils.turnOffLed.toString());
-// 		}
-// 		else if( Utils.isCoap() ) {
-// 			sendCommandOnConnection( "off" );
- 		} else  //CASO DI DEFAULT
- 			sendCommandOnConnection( "off" );
- 	}
+  		}
+  	}
 
 	@Override
 	public boolean getState() {   
 		String answer="";
-		if( CommUtils.isTcp()   ) {
-			answer = sendRequestOnConnection(CommUtils.buildRequest(name, "query", "getState", "led").toString()) ;
+		if( CommUtils.isTcp() || CommUtils.isUdp()   ) {
+			answer = sendRequestOnConnection(
+					CommUtils.buildRequest(name, "query", "getState", "led").toString()) ;
 		}
-//  		else if( Utils.isMqtt() )  
-//  			answer = sendRequestOnConnection(Utils.buildRequest(name, "query", "getState", "led").toString());
-		else { //CASO DI DEFAULT
-			answer = sendRequestOnConnection( "getState" );
-			//ColorsOut.out(name+" |  getState answer=" + answer, ColorsOut.BLUE );
-		}
-		return answer.equals("true");
+ 		return answer.equals("true");
 	}
 }

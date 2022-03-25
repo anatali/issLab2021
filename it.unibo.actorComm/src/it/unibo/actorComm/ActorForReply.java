@@ -23,7 +23,7 @@ private Interaction2021 conn;
 	protected void doJob(IApplMessage msg) {
 		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
-		if( msg.isReply() ) h.sendMsgToClient(msg.toString(), conn);		
+		if( msg.isReply() ) h.sendAnswerToClient(msg.toString(), conn);		
 	}
 
 }

@@ -37,12 +37,12 @@ protected boolean isactive = false;
  	protected void setServerSupport( String portStr, ProtocolType protocol, IContextMsgHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp  ) {
 			int port = Integer.parseInt(portStr);
-			serverTcp = new TcpServer( "ctxTcp" , port,  handler );
+			serverTcp = new TcpServer( name+"Tcp" , port,  handler );
 			ColorsOut.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol + " handler="+handler);
 		}
 		else if( protocol == ProtocolType.udp ) {  
 			int port = Integer.parseInt(portStr);
-			serverUdp = new UdpServer("ctxUdp" ,port,handler);
+			serverUdp = new UdpServer(name+"Udp" ,port,handler);
 		}
 		else if( protocol == ProtocolType.coap ) {
 			//CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
@@ -59,25 +59,6 @@ protected boolean isactive = false;
  	public boolean isActive() {
  		return isactive;
  	}
-//	public void  start() {
-//		switch( protocol ) {
-// 	   		case tcp :  { serverTcp.activate();break;}
-// 	   		case udp:   { serverUdp.activate();break;}
-// 	   		default: break;
-// 	    }
-//		isactive = true;
-// 	}
-// 
-// 	public void stop() {
-// 		//Colors.out(name+" |  deactivate  "  );
-//		switch( protocol ) {
-//	   		case tcp :  { serverTcp.deactivate();break;}
-//	   		case udp:   { serverUdp.deactivate();break;}
-//	   		default: break;
-//	    }
-//		isactive = false;
-// 	}
-
 	public void addComponent( String devname, IApplMsgHandler h) {
 		ctxMsgHandler.addComponent(devname, h);
 	}

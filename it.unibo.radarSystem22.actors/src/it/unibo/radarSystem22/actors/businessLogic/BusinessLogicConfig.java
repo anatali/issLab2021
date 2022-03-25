@@ -11,24 +11,14 @@ import org.json.JSONTokener;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
 
-public class RadarSystemConfig {
+public class BusinessLogicConfig {
  	public static boolean tracing         = false;	
 	public static boolean testing         = false;			
-	public static int DLIMIT              =  15;     	
-	public static boolean  RadarGuiRemote = false;
-	
-//Aggiunte dello SPRINT2	
- 	public static String hostAddr         = "localhost";		
-	public static String raspAddr         = "localhost";		
-	public static int serverPort          = 8023;
-//Aggiunte dello SPRINT2a 	
-	public static int ledPort             = 8010;
-	public static int sonarPort           = 8015;
+	public static int DLIMIT              = 70;     	
  	
 	
-	
 	public static void setTheConfiguration(  ) {
-		setTheConfiguration("../RadarSystemConfig.json");
+		setTheConfiguration("../BusinessLogicConfig.json");
 	}
 	
 	public static void setTheConfiguration( String resourceName ) {
@@ -46,16 +36,8 @@ public class RadarSystemConfig {
 	 		
    	        tracing          = object.getBoolean("tracing");
 	        testing          = object.getBoolean("testing");
-	        RadarGuiRemote   = object.getBoolean("RadarGuiRemote");
-	        DLIMIT           = object.getInt("DLIMIT");	
-//Aggiunte dello SPRINT2	
-	        serverPort		= object.getInt("serverPort");
- 	        hostAddr 		= object.getString("hostAddr");
-	        raspAddr 		= object.getString("raspAddr");
-//Aggiunte dello SPRINT2a
-	        ledPort         = object.getInt("ledPort");
-	        sonarPort       = object.getInt("sonarPort");
-	        
+ 	        DLIMIT           = object.getInt("DLIMIT");	
+ 	        
 		} catch (FileNotFoundException e) {
  			ColorsOut.outerr("setTheConfiguration ERROR " + e.getMessage() );
 		}

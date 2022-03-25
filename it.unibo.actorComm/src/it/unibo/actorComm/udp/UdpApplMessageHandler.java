@@ -28,7 +28,7 @@ public UdpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 				//ColorsOut.out(name + " | waits for message  ...");
 			    String msg = conn.receiveMsg();
 			    ColorsOut.out(name + "  | UdpApplMessageHandler received:" + msg + " handler="+handler, ColorsOut.GREEN );
-			    if( msg == null ) {
+			    if( msg == null || msg.equals(UdpConnection.closeMsg) ) {
 			    	conn.close();
 			    	break;
 			    } else{ 
@@ -38,7 +38,7 @@ public UdpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			}
 			ColorsOut.out(name + " | BYE"   );
 		}catch( Exception e) {
-			ColorsOut.outerr( name + "  | ERROR:" + e.getMessage()  );
+			ColorsOut.outerr( name + " UdpApplMessageHandler | ERROR:" + e.getMessage()  );
 		}	
 	}
 }

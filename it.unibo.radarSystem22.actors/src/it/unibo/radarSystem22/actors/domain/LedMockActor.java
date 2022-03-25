@@ -2,6 +2,7 @@ package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
+import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
@@ -26,11 +27,8 @@ private ILed led;
 		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		String msgId = msg.msgId();
-		switch( msgId ) {
-			case DeviceLang.cmd : elabCmd(msg);break;
-			case DeviceLang.req : elabRequest(msg);break;
-			default: ColorsOut.outerr(getName()  + " | unknown " + msgId);
-		}		
+		if( msg.isRequest() ) elabRequest(msg);
+		else elabCmd(msg);
 	}
 
 	protected void elabCmd(IApplMessage msg) {
@@ -52,6 +50,11 @@ private ILed led;
 				boolean b = led.getState();
 				IApplMessage reply = MsgUtil.buildReply(getName(), "ledState", ""+b, msg.msgSender());
 				ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.BLUE);
+				//WARNING: il caller non è locale => Actor22.getActor fails!
+				//Invio reply al nodo PC. Come sfrutto le connessioni? 
+				//Ctx di Actor22 può tenere traccia delle richieste
+				//ActorBasic ar = Actor22.getActor("ar"+msg.msgSender()) ;
+				Actor22.sendReply(msg, reply );
 				
 				break;
 			}

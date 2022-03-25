@@ -37,7 +37,7 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    	handler.elaborate( m, conn ); 
 			    }
 			}
-			ColorsOut.out(name + " | BYE"   );
+			ColorsOut.out(name + " TcpApplMessageHandler | BYE"   );
 		}catch( Exception e) {
 			ColorsOut.outerr( name + "  | ERROR:" + e.getMessage()  );
 		}	

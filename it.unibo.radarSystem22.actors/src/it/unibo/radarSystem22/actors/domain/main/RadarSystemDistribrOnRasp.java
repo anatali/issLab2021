@@ -22,7 +22,7 @@ public class RadarSystemDistribrOnRasp {
 	private ActorBasic led ;
 	private ActorBasic sonar ;
  	//private TcpContextServer contextServer;
-	private EnablerContext contextServer;
+	private EnablerContext ctxServer;
 	
 	public void doJob() {
 		ColorsOut.outappl("RadarSystemDistribrOnRasp | Start", ColorsOut.BLUE);
@@ -34,19 +34,20 @@ public class RadarSystemDistribrOnRasp {
 	
 	
 	protected void configure() {
+		ProtocolType protocol = ProtocolType.udp;
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
  		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
- 	    contextServer  = new EnablerContext("TcpCtxServer",RadarSystemConfig.ctxServerPort,ProtocolType.tcp);
+ 	    ctxServer  = new EnablerContext("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
 		//Registrazione dei componenti presso il contesto
 		 IApplMsgHandler ledHandler   = new MsgHandlerForActor( led ); 
 		 IApplMsgHandler sonarHandler = new MsgHandlerForActor( sonar ); 
-		 contextServer.addComponent(led.getName(),   ledHandler);
-		 contextServer.addComponent(sonar.getName(), sonarHandler);
+		 ctxServer.addComponent(DomainData.ledName,   ledHandler);
+		 ctxServer.addComponent(DomainData.sonarName, sonarHandler);
 			
 	}
 	
 	protected void execute() {
-		contextServer.activate();
+		ctxServer.activate();
  	} 
 	
  	

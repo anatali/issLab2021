@@ -59,6 +59,19 @@ public abstract class Actor22 extends ActorBasic {
         else destActor.autoMsg(msg,null);
     }
 
+    public static void sendReply(IApplMessage msg, IApplMessage reply) {
+        System.out.println(   "Actor22 sendReply | reply= " + reply );
+        ActorBasic dest = getActor(msg.msgSender());
+        if(dest != null) sendAMsg(reply, dest);
+        else {
+            ActorBasic ar = getActor("ar"+msg.msgSender());
+            if(ar !=null) sendAMsg(reply, ar);
+            else {
+                System.out.println("Actor22 sendReply | Reply IMPOSSIBLE");
+             }
+        }
+    }
+
 
     public Actor22(@NotNull String name ) {
         super(name, QakContext.Companion.createScope(), false, true, false, 50);
@@ -107,8 +120,8 @@ public abstract class Actor22 extends ActorBasic {
             ActorBasic ar = getActor("ar"+msg.msgSender());
             if(ar !=null) sendMsg(reply, ar);
             else {
-                System.out.println(getName() + " | Reply to a remote destination Qak");
-                forward(reply.msgId(), reply.msgContent(), reply.msgReceiver());
+                System.out.println(getName() + " | Reply IMPOSSIBLE");
+                //forward(reply.msgId(), reply.msgContent(), reply.msgReceiver());
                 //this.answer(msg.msgId(),reply.msgId(),reply.toString(),null);
             }
         }

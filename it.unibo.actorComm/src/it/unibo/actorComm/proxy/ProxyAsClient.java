@@ -6,7 +6,8 @@ import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.actorComm.tcp.TcpClientSupport;
- 
+import it.unibo.actorComm.udp.UdpClientSupport;
+
 public class ProxyAsClient {
 private Interaction2021 conn; 
 protected String name ;		//could be a uri
@@ -36,6 +37,11 @@ protected ProtocolType protocol ;
 				//conn = new TcpConnection( new Socket( host, port ) ) ; //non fa attempts
 				conn = TcpClientSupport.connect(host,  port, 10); //10 = num of attempts
 				ColorsOut.out(name + " |  setConnection "  + conn, ColorsOut.BLUE );		
+				break;
+			}
+			case udp : {
+				int port = Integer.parseInt(entry);
+ 				conn = UdpClientSupport.connect(host,  port );  
 				break;
 			}
 			case coap : {

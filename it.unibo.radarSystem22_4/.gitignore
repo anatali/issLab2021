@@ -5,6 +5,8 @@
 build
 bin
 
+# Ignore Eclipse data
+
 .metadata
 .classpath
 .project
