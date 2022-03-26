@@ -47,8 +47,8 @@ public class RadarSystemDistribrOnPc {
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
   		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
-//		radar       = DeviceActorFactory.createRadarGui();
-//		controller  = ControllerOnPc.create(led, sonar,radar );
+		radar       = DeviceActorFactory.createRadarGui();
+		controller  = ControllerOnPc.create(led, sonar,radar );
 			
 	}
 	
@@ -64,11 +64,11 @@ public class RadarSystemDistribrOnPc {
 	 	    ColorsOut.outappl("RadarSystemDistribrOnPc | b OFF="+b, ColorsOut.MAGENTA);
 	 	    CommUtils.delay(500);
 		}
-// 	    ActionFunction endFun = (n) -> { 
-// 	    	System.out.println(n); 
-// 	    	terminate(); 
-// 	    };
-// 		controller.start(endFun, 50);
+ 	    ActionFunction endFun = (n) -> { 
+ 	    	System.out.println(n); 
+ 	    	terminate(); 
+ 	    };
+ 		controller.start(endFun, 50);
 	} 
 	
 	public void terminate() {

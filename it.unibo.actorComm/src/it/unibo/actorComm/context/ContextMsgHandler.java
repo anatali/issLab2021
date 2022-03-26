@@ -1,11 +1,17 @@
 package it.unibo.actorComm.context;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import it.unibo.actorComm.ActorForReply;
 import it.unibo.actorComm.ApplMsgHandler;
 import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.interfaces.IContextMsgHandler;
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.kactor.Actor22;
+import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.ActorWrapper;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
@@ -25,30 +31,65 @@ import it.unibo.kactor.MsgUtil;
  */
 
 public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHandler{
-	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>();
+	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>(); //OLD
+	private Map<String,Interaction2021> requestConnectionsMap;  
 
  	
 	public ContextMsgHandler(String name) {
 		super(name);
+		requestConnectionsMap = new ConcurrentHashMap<String,Interaction2021>();
  	}
 
 	@Override
 	public void elaborate( IApplMessage msg, Interaction2021 conn ) {
 		ColorsOut.out(name+" | elaborateeeeee ApplMessage:" + msg + " conn=" + conn, ColorsOut.GREEN);
 		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
+		
+		/*
  		String dest  = msg.msgReceiver();
-		//ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " dest="+dest, ColorsOut.ANSI_PURPLE);
-		ColorsOut.out(name +  " | elaborate  dest="+dest, ColorsOut.GREEN );
+ 		ColorsOut.out(name +  " | elaborate  dest="+dest, ColorsOut.GREEN );
 		IApplMsgHandler h    = handlerMap.get(dest);
 		ColorsOut.out(name +  " | elaborate  h="+h, ColorsOut.GREEN );
 		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN );
 		if( dest != null && (! msg.isReply()) ) {
-//			if( h instanceof ActorWrapper ) elaborateForActor(msg, (ActorWrapper)h);
-//			else 
 				h.elaborate(msg,conn);			
 		}
+		*/
+		
+		
+    	if( msg.isRequest() ) {
+    		String sender = msg.msgSender();
+    		Interaction2021 yetconn = requestConnectionsMap.get(sender);
+    		if( yetconn == null ) requestConnectionsMap.put(sender, conn);
+			//Attivo un attore che riceve la risposta
+			String actorRepyName = "ar"+msg.msgSender();
+			if( Actor22.getActor(actorRepyName) == null ) {
+				ColorsOut.outappl(name + " | CREATE ACTOR FOR REPLY " + msg, ColorsOut.MAGENTA);
+				new ActorForReply(actorRepyName, this, conn);
+			}
+    	}//else { //Invia il msg all'attore
+    		String receiver = msg.msgReceiver();
+    		ActorBasic a = Actor22.getActor(receiver);
+    		if( a != null ) {
+    			Actor22.sendAMsg(msg, a);
+    		}
+
+//    	}
+
 	}
 
+	/*
+			    	IApplMessage m = new ApplMessage(msg);
+			    	if( m.isRequest() ) {
+			    		String sender = m.msgSender();
+			    		Interaction2021 yetconn = requestConnectionsMap.get(sender);
+			    		if( yetconn == null ) requestConnectionsMap.put(sender, conn);
+			    		//Memorizzo connessione per nome sender
+			    	}else { //Invia il msg all'attore
+			    		
+			    	}
+
+	 */
 
 	public void addComponent( String devname, IApplMsgHandler h) {
 		ColorsOut.out(name +  " | added:" + devname, ColorsOut.GREEN);

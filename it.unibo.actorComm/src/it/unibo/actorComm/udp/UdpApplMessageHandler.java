@@ -1,5 +1,8 @@
 package it.unibo.actorComm.udp;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
@@ -12,11 +15,15 @@ import it.unibo.kactor.IApplMessage;
 public class UdpApplMessageHandler extends Thread{
 private  IApplMsgHandler handler ;
 private Interaction2021 conn;
+//private Map<String,Interaction2021> requestConnectionsMap;  
  
-
+/*
+ * Gestione dei messaggi in ingresso sulla connessione
+ */
 public UdpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 		this.handler = handler;
 		this.conn    = conn;
+		//requestConnectionsMap = new ConcurrentHashMap<String,Interaction2021>();
         this.start();
 	}
  	
@@ -33,8 +40,16 @@ public UdpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    	conn.close();
 			    	break;
 			    } else{ 
-			    	IApplMessage m = new ApplMessage(msg);
-			    	handler.elaborate( m, conn ); 
+ 			    	IApplMessage m = new ApplMessage(msg);
+//			    	if( m.isRequest() ) {
+//			    		String sender = m.msgSender();
+//			    		Interaction2021 yetconn = requestConnectionsMap.get(sender);
+//			    		if( yetconn == null ) requestConnectionsMap.put(sender, conn);
+//			    		//Memorizzo connessione per nome sender
+//			    	}else { //Invia il msg all'attore
+//			    		
+//			    	}
+			    	handler.elaborate( m, conn );   //chiama  ctxH
 			    }
 			}
 			ColorsOut.out(name + " | BYE"   );

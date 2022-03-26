@@ -34,9 +34,9 @@ public class RadarSystemDistribrOnRasp {
 	
 	
 	protected void configure() {
-		CommSystemConfig.tracing        = false;
 		DomainSystemConfig.tracing      = false;			
 		DomainSystemConfig.sonarDelay   = 150;
+		CommSystemConfig.tracing        = true;
 		//Su PC
 		DomainSystemConfig.simulation   = true;
 		DomainSystemConfig.DLIMIT      	= 80;  
@@ -47,10 +47,10 @@ public class RadarSystemDistribrOnRasp {
  		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
  	    ctxServer  = new EnablerContext("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
 		//Registrazione dei componenti presso il contesto
-		 IApplMsgHandler ledHandler   = new MsgHandlerForActor( led ); 
-		 IApplMsgHandler sonarHandler = new MsgHandlerForActor( sonar ); 
-		 ctxServer.addComponent(DomainData.ledName,   ledHandler);
-		 ctxServer.addComponent(DomainData.sonarName, sonarHandler);
+//		 IApplMsgHandler ledHandler   = new MsgHandlerForActor( led ); 
+//		 IApplMsgHandler sonarHandler = new MsgHandlerForActor( sonar ); 
+//		 ctxServer.addComponent(DomainData.ledName,   ledHandler);
+//		 ctxServer.addComponent(DomainData.sonarName, sonarHandler);
 			
 	}
 	
