@@ -31,7 +31,7 @@ public abstract class Actor22 extends ActorBasic {
 
     public static void addActor(ActorBasic a) {
         ctxMap.put(a.getName(), a);
-        System.out.println("REGISTERD actor with name " + a.getName()  );
+        //System.out.println("REGISTERED actor with name " + a.getName()  );
 
     }
     public static ActorBasic getActor(String actorName) {
@@ -60,7 +60,7 @@ public abstract class Actor22 extends ActorBasic {
     }
 
     public static void sendReply(IApplMessage msg, IApplMessage reply) {
-        System.out.println(   "Actor22 sendReply | reply= " + reply );
+        //System.out.println(   "Actor22 sendReply | reply= " + reply );
         ActorBasic dest = getActor(msg.msgSender());
         if(dest != null) sendAMsg(reply, dest);
         else {

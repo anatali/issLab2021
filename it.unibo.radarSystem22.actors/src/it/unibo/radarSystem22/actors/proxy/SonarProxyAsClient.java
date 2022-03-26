@@ -41,7 +41,7 @@ public class SonarProxyAsClient extends ProxyAsClient implements ISonar{
 	@Override
 	public IDistance getDistance() {
 		String answer="";
-		ColorsOut.outappl( name + " | getDistance ", ColorsOut.ANSI_PURPLE);
+		ColorsOut.out( name + " | getDistance ", ColorsOut.BLUE);
 		if( CommUtils.isTcp() || CommUtils.isUdp() ) 
 			answer = sendRequestOnConnection(  getDistance.toString() ) ;
  		if( answer.startsWith("msg")){ //structured msg

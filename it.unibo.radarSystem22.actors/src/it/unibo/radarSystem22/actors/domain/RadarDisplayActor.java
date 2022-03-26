@@ -25,13 +25,13 @@ private String angle = "90";
 	@Override
 	protected void doJob(IApplMessage msg) {
 		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
-		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.MAGENTA);
+		ColorsOut.out( getName()  + " | doJob " + msg, ColorsOut.BLUE);
 		radar.update(msg.msgContent(),angle);		
 	}
 
 	@Override
 	public void update(String d, String angle) {
-		ColorsOut.outappl( getName()  + " | update distance " + d + " angle="+angle , ColorsOut.BLUE);
+		ColorsOut.out( getName()  + " | update distance " + d + " angle="+angle , ColorsOut.BLUE);
 		this.angle = angle;  //SIDE EFFECT on POJO
 		this.forwardToSelf(DeviceLang.cmd, ""+d);
 		//IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		

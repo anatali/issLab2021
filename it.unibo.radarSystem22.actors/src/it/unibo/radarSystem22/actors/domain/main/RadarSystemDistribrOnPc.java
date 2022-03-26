@@ -42,7 +42,7 @@ public class RadarSystemDistribrOnPc {
 	
 	protected void configure() {
 		DomainSystemConfig.tracing      = false;			
- 		CommSystemConfig.protcolType    = ProtocolType.udp;
+ 		CommSystemConfig.protcolType    = ProtocolType.tcp;
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );

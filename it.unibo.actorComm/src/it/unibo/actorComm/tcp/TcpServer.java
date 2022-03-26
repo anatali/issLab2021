@@ -50,14 +50,14 @@ protected boolean stopped = true;
 	public void activate() {
 		if( stopped ) {
 			stopped = false;
-			ColorsOut.out(getName()+" |  ACTIVATE userDefHandler=" + userDefHandler + " PORT=" + serversock.getLocalPort());
+			ColorsOut.out(getName()+" |  ACTIVATE userDefHandler=" + userDefHandler + " PORT=" + serversock.getLocalPort(), ColorsOut.BLUE);
 			this.start();
 		}//else already activated
 	}
  
 	public void deactivate() {
 		try {
-			ColorsOut.out(getName()+" |  DEACTIVATE serversock=" +  serversock);
+			ColorsOut.out(getName()+" |  DEACTIVATE serversock=" +  serversock, ColorsOut.BLUE);
 			stopped = true;
             serversock.close();
 		} catch (Exception e) {

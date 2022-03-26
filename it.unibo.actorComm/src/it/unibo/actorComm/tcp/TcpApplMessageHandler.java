@@ -34,12 +34,12 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    	break;
 			    } else{ 
 			    	IApplMessage m = new ApplMessage(msg);
-			    	handler.elaborate( m, conn ); 
+			    	handler.elaborate( m, conn ); //chiama  ctxH
 			    }
 			}
-			ColorsOut.out(name + " TcpApplMessageHandler | BYE"   );
+			ColorsOut.out("TcpApplMessageHandler  |  BYE", ColorsOut.BLUE   );
 		}catch( Exception e) {
-			ColorsOut.outerr( name + "  | ERROR:" + e.getMessage()  );
+			ColorsOut.outerr( "TcpApplMessageHandler | ERROR:" + e.getMessage()  );
 		}	
 	}
 }

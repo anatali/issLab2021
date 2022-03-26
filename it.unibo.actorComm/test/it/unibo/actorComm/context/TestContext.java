@@ -14,7 +14,7 @@ import it.unibo.kactor.IApplMessage;
 
 public class TestContext {
 	private int ctxServerPort   = 7070;
-	private EnablerContext contextServer ;
+	private EnablerContextForActors contextServer ;
 	
 	private IApplMessage info = new ApplMessage(
 		      "msg( info, dispatch, main, applActor, hello, 1 )" );
@@ -26,9 +26,9 @@ public class TestContext {
 // 		SimpleApplHandler applH = new SimpleApplHandler("applH");
  		SimpleApplActor applH = new SimpleApplActor("applActor");
  		
-		contextServer = new EnablerContext("ctxEnblr",  ""+ctxServerPort, 
+		contextServer = new EnablerContextForActors("ctxEnblr",  ""+ctxServerPort, 
 				CommSystemConfig.protcolType, new ContextMsgHandler("ctxH"));
- 		contextServer.addComponent(applH.getName(),applH);	
+// 		contextServer.addComponent(applH.getName(),applH);	
  		contextServer.activate();    		
 	}
 	

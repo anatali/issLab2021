@@ -50,7 +50,7 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 		if( CommUtils.isTcp() || CommUtils.isUdp()   ) {
 			answerMsg = sendRequestOnConnection( getState.toString()) ;
 			answer    = new ApplMessage( answerMsg ).msgContent();
-			ColorsOut.outappl("answer=" + answer , ColorsOut.MAGENTA);
+			ColorsOut.out("answer=" + answer , ColorsOut.MAGENTA);
 		}
  		return answer.equals("true");
 	}

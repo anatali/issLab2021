@@ -3,7 +3,6 @@ package it.unibo.actorComm;
 import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.actorComm.utils.ColorsOut;
-import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.kactor.IApplMessage;
 
 public abstract class ApplMsgHandler  implements IApplMsgHandler {  

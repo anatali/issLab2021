@@ -71,7 +71,7 @@ protected boolean stopped = true;
  
 	public void deactivate() {
 		try {
-			ColorsOut.out( "UdpServer |  DEACTIVATE serversock=" +  socket);
+			ColorsOut.out( "UdpServer |  DEACTIVATE serversock=" +  socket, ColorsOut.BLUE);
 			stopped = true;
 			socket.close();
 			connectionsMap.clear();

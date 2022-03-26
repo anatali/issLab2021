@@ -30,41 +30,29 @@ import it.unibo.kactor.MsgUtil;
  *  ma il RECEIVER non sarebbe più quello usato nella versione precedente.
  */
 
-public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHandler{
+public class ContextMsgHandler extends ApplMsgHandler implements IApplMsgHandler{// IContextMsgHandler{
 	protected HashMap<String,IApplMsgHandler> handlerMap = new HashMap<String,IApplMsgHandler>(); //OLD
-	private Map<String,Interaction2021> requestConnectionsMap;  
+//	private Map<String,Interaction2021> requestConnectionsMap;  
 
  	
 	public ContextMsgHandler(String name) {
 		super(name);
-		requestConnectionsMap = new ConcurrentHashMap<String,Interaction2021>();
+//		requestConnectionsMap = new ConcurrentHashMap<String,Interaction2021>();
  	}
 
 	@Override
 	public void elaborate( IApplMessage msg, Interaction2021 conn ) {
-		ColorsOut.out(name+" | elaborateeeeee ApplMessage:" + msg + " conn=" + conn, ColorsOut.GREEN);
+		ColorsOut.out(name+" | elaborateee ApplMessage:" + msg + " conn=" + conn, ColorsOut.GREEN);
 		//msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM )
 		
-		/*
- 		String dest  = msg.msgReceiver();
- 		ColorsOut.out(name +  " | elaborate  dest="+dest, ColorsOut.GREEN );
-		IApplMsgHandler h    = handlerMap.get(dest);
-		ColorsOut.out(name +  " | elaborate  h="+h, ColorsOut.GREEN );
-		ColorsOut.out(name +  " | elaborate " + msg.msgContent() + " redirect to handler="+h.getName() + " since dest="+dest, ColorsOut.GREEN );
-		if( dest != null && (! msg.isReply()) ) {
-				h.elaborate(msg,conn);			
-		}
-		*/
-		
-		
-    	if( msg.isRequest() ) {
+     	if( msg.isRequest() ) {
     		String sender = msg.msgSender();
-    		Interaction2021 yetconn = requestConnectionsMap.get(sender);
-    		if( yetconn == null ) requestConnectionsMap.put(sender, conn);
+//    		Interaction2021 yetconn = requestConnectionsMap.get(sender);
+//    		if( yetconn == null ) requestConnectionsMap.put(sender, conn);
 			//Attivo un attore che riceve la risposta
 			String actorRepyName = "ar"+msg.msgSender();
 			if( Actor22.getActor(actorRepyName) == null ) {
-				ColorsOut.outappl(name + " | CREATE ACTOR FOR REPLY " + msg, ColorsOut.MAGENTA);
+				ColorsOut.out(name + " | CREATE ACTOR FOR REPLY " + msg, ColorsOut.BLUE);
 				new ActorForReply(actorRepyName, this, conn);
 			}
     	}//else { //Invia il msg all'attore
@@ -78,44 +66,31 @@ public class ContextMsgHandler extends ApplMsgHandler implements IContextMsgHand
 
 	}
 
-	/*
-			    	IApplMessage m = new ApplMessage(msg);
-			    	if( m.isRequest() ) {
-			    		String sender = m.msgSender();
-			    		Interaction2021 yetconn = requestConnectionsMap.get(sender);
-			    		if( yetconn == null ) requestConnectionsMap.put(sender, conn);
-			    		//Memorizzo connessione per nome sender
-			    	}else { //Invia il msg all'attore
-			    		
-			    	}
+// 	public void addComponent( String devname, IApplMsgHandler h) {
+//		ColorsOut.out(name +  " | added:" + devname, ColorsOut.GREEN);
+//		handlerMap.put(devname, h);
+//	}
+//	public void removeComponent( String devname ) {
+//		ColorsOut.out(name +  " | removed:" + devname, ColorsOut.GREEN);
+//		handlerMap.remove( devname );
+//	}
 
-	 */
-
-	public void addComponent( String devname, IApplMsgHandler h) {
-		ColorsOut.out(name +  " | added:" + devname, ColorsOut.GREEN);
-		handlerMap.put(devname, h);
-	}
-	public void removeComponent( String devname ) {
-		ColorsOut.out(name +  " | removed:" + devname, ColorsOut.GREEN);
-		handlerMap.remove( devname );
-	}
-
-	@Override
-	public IApplMsgHandler getHandler(String name) {
-		return handlerMap.get(name);
-	}
+//	@Override
+//	public IApplMsgHandler getHandler(String name) {
+//		return handlerMap.get(name);
+//	}
 	
 //-----------------------------------------------------------------
-	protected void elaborateForActor( IApplMessage msg, ActorWrapper dest ) {
-		ColorsOut.outappl(name + " | elaborateForActor ApplMessage: "+msg, ColorsOut.GREEN);		
- 		try {
- 			if( msg.isReply() ) {
- 				
- 			}else {
- 				MsgUtil.sendMsg(msg, dest, null);			 
- 			}
-		}catch( Exception e) {}	
-	}
+//	protected void elaborateForActor( IApplMessage msg, ActorWrapper dest ) {
+//		ColorsOut.outappl(name + " | elaborateForActor ApplMessage: "+msg, ColorsOut.GREEN);		
+// 		try {
+// 			if( msg.isReply() ) {
+// 				
+// 			}else {
+// 				MsgUtil.sendMsg(msg, dest, null);			 
+// 			}
+//		}catch( Exception e) {}	
+//	}
 
 	
 }

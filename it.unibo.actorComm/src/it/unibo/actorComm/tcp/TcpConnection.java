@@ -28,15 +28,6 @@ private Socket socket;
 	@Override
 	public void forward(String msg)  throws Exception {
 		sendALine( msg );
-//		ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
-//		try {
-//			outputChannel.writeBytes( msg+"\n" );
-//			outputChannel.flush();
-//			//Colors.out( "TcpConnection | has sent   " + msg, Colors.ANSI_YELLOW );	 
-//		} catch (IOException e) {
-//			//Colors.outerr( "TcpConnection | sendALine ERROR " + e.getMessage());	 
-//			throw e;
-//	    }	
 	}
 
 	@Override
@@ -54,25 +45,11 @@ private Socket socket;
 	@Override
 	public String receiveMsg() throws Exception {
 		return receiveALine();
-// 		try {
-//			//socket.setSoTimeout(timeOut)
-//			String	line = inputChannel.readLine() ; //blocking =>
-// 			return line;		
-//		} catch ( Exception e   ) {
-//			ColorsOut.outerr( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
-//	 		return null;
-//		}		
 	}
 
 	@Override
 	public void close() throws Exception { 
 		closeConnection();
-//		try {
-//			socket.close();
-//			ColorsOut.out( "TcpConnection | CLOSED  " );
-//		} catch (IOException e) {
-//			ColorsOut.outerr( "TcpConnection | close ERROR " + e.getMessage());	
-//		}
 	}
 
 	@Override
@@ -96,24 +73,14 @@ private Socket socket;
 
 	@Override
 	public String receiveALine() throws Exception {
-// 		try {
-			//socket.setSoTimeout(timeOut)
-			String	line = inputChannel.readLine() ; //blocking =>
- 			return line;		
-//		} catch ( Exception e   ) {
-//			ColorsOut.outerr( "TcpConnection | receiveMsg ERROR  " + e.getMessage() );	
-//	 		return null;
-//		}		
+		String	line = inputChannel.readLine() ; //blocking =>
+ 		return line;		
 	}
 
 	@Override
 	public void closeConnection() throws Exception {
-//		try {
-			socket.close();
-			ColorsOut.out( "TcpConnection | CLOSED  " );
-//		} catch (IOException e) {
-//			ColorsOut.outerr( "TcpConnection | close ERROR " + e.getMessage());	
-//		}
+		socket.close();
+		ColorsOut.out( "TcpConnection | CLOSED  ", ColorsOut.BLUE );
 	}
 
 

@@ -5,6 +5,7 @@ import it.unibo.actorComm.interfaces.Interaction2021;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
+import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 
 /*
@@ -16,24 +17,23 @@ import it.unibo.radarSystem22.domain.utils.ColorsOut;
  */
 public class CounterActor extends Actor22  { 
 	private CounterWithDelay counter;
-	private CounterApplHandler handler;
-	
-	String decReplyTemplate = "msg( dec, reply, SENDER, RECEIVER, VALUE, 1 )";
+ 	
+//	String decReplyTemplate = "msg( dec, reply, SENDER, RECEIVER, VALUE, 1 )";
 	
 	public CounterActor( String name  ) {
 		super( name );
 		counter = new CounterWithDelay("counterWithDelay");
 	}
-	public CounterActor( String name, CounterApplHandler handler  ) {
-		super( name );
-		this.handler = handler;
-		counter = new CounterWithDelay("counterWithDelay");
-	}
+//	public CounterActor( String name, CounterApplHandler handler  ) {
+//		super( name );
+//		this.handler = handler;
+//		counter = new CounterWithDelay("counterWithDelay");
+//	}
 
 	@Override
 	public void doJob( IApplMessage msg ) {
  		ColorsOut.outappl( getName() + " | doJob " + msg.toString(), ColorsOut.GREEN );
-		if( msg.isRequest() )  elabRequest(msg, null);
+		if( msg.isRequest() )  elabRequest( msg );
 		else if( msg.isDispatch() )  elabCommand(msg);
  	}
 	
@@ -47,17 +47,23 @@ public class CounterActor extends Actor22  {
  		}
 	}	
 	
-	protected void elabRequest( IApplMessage msg, Interaction2021 conn ) {
+	protected void elabRequest( IApplMessage msg  ) {
  		ColorsOut.outappl( getName() + " | elabRequest " + msg.toString(), ColorsOut.GREEN );
 		if( msg.msgId().equals("dec")) {
  			int dt = Integer.parseInt( msg.msgContent() );
  			counter.dec( dt );  //ha delay
-			String replyStr = decReplyTemplate
-					.replace("SENDER", getName())
-					.replace("RECEIVER", msg.msgSender())
-					.replace("VALUE", ""+counter.getVal());
-			ColorsOut.outappl( getName() + " | msgOutStr " + replyStr, ColorsOut.GREEN );
- 			if( handler != null ) handler.sendAnswerToClient( replyStr );
+//			String replyStr = decReplyTemplate
+//					.replace("SENDER", getName())
+//					.replace("RECEIVER", msg.msgSender())
+//					.replace("VALUE", ""+counter.getVal());
+//			ColorsOut.outappl( getName() + " | msgOutStr " + replyStr, ColorsOut.GREEN );
+ 			//if( handler != null ) handler.sendAnswerToClient( replyStr );
+
+			IApplMessage reply = MsgUtil.buildReply(getName(), "dec", ""+counter.getVal(), msg.msgSender());
+			ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.CYAN);
+			Actor22.sendReply(msg, reply );
+		
+		
 		}
 	}
 

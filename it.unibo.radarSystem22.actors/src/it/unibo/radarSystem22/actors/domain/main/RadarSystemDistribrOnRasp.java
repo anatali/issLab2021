@@ -1,8 +1,7 @@
 package it.unibo.radarSystem22.actors.domain.main;
 
-import it.unibo.actorComm.MsgHandlerForActor;
 import it.unibo.actorComm.ProtocolType;
-import it.unibo.actorComm.context.EnablerContext;
+import it.unibo.actorComm.context.EnablerContextForActors;
 import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.kactor.ActorBasic;
@@ -21,8 +20,7 @@ public class RadarSystemDistribrOnRasp {
 	
 	private ActorBasic led ;
 	private ActorBasic sonar ;
- 	//private TcpContextServer contextServer;
-	private EnablerContext ctxServer;
+	private EnablerContextForActors ctxServer;
 	
 	public void doJob() {
 		ColorsOut.outappl("RadarSystemDistribrOnRasp | Start", ColorsOut.BLUE);
@@ -36,16 +34,16 @@ public class RadarSystemDistribrOnRasp {
 	protected void configure() {
 		DomainSystemConfig.tracing      = false;			
 		DomainSystemConfig.sonarDelay   = 150;
-		CommSystemConfig.tracing        = true;
+		CommSystemConfig.tracing        = false;
 		//Su PC
 		DomainSystemConfig.simulation   = true;
 		DomainSystemConfig.DLIMIT      	= 80;  
 		DomainSystemConfig.ledGui       = true;
-		ProtocolType protocol = ProtocolType.udp;
+		ProtocolType protocol = ProtocolType.tcp;
 		
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
  		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
- 	    ctxServer  = new EnablerContext("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
+ 	    ctxServer  = new EnablerContextForActors("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
 		//Registrazione dei componenti presso il contesto
 //		 IApplMsgHandler ledHandler   = new MsgHandlerForActor( led ); 
 //		 IApplMsgHandler sonarHandler = new MsgHandlerForActor( sonar ); 

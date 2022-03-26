@@ -8,8 +8,8 @@ import it.unibo.actorComm.tcp.TcpServer;
 import it.unibo.actorComm.udp.UdpServer;
 import it.unibo.actorComm.utils.ColorsOut;
 
-public class EnablerContext  implements IContext {  
-private IContextMsgHandler ctxMsgHandler;
+public class EnablerContextForActors  implements IContext {  
+private IApplMsgHandler ctxMsgHandler;
  
 protected String name;
 protected ProtocolType protocol;
@@ -17,11 +17,11 @@ protected TcpServer serverTcp;
 protected UdpServer serverUdp;
 protected boolean isactive = false;
 
-	public EnablerContext( String name, int port, ProtocolType protocol  )   { 
+	public EnablerContextForActors( String name, int port, ProtocolType protocol  )   { 
 		this(name,""+port,protocol, new ContextMsgHandler("ctxH") );
 	}
 
-	public EnablerContext( String name, String port, ProtocolType protocol, IContextMsgHandler handler )   { 
+	public EnablerContextForActors( String name, String port, ProtocolType protocol, IApplMsgHandler handler )   { 
  		try {
 			this.name     			= name;
 			this.protocol 			= protocol;
@@ -34,11 +34,10 @@ protected boolean isactive = false;
 		}
 	}
 	
- 	protected void setServerSupport( String portStr, ProtocolType protocol, IContextMsgHandler handler   ) throws Exception{
+ 	protected void setServerSupport( String portStr, ProtocolType protocol, IApplMsgHandler handler   ) throws Exception{
 		if( protocol == ProtocolType.tcp  ) {
 			int port = Integer.parseInt(portStr);
 			serverTcp = new TcpServer( name+"Tcp" , port,  handler );
-			ColorsOut.out(name+" |  CREATED  on port=" + port + " protocol=" + protocol + " handler="+handler);
 		}
 		else if( protocol == ProtocolType.udp ) {  
 			int port = Integer.parseInt(portStr);
@@ -46,10 +45,10 @@ protected boolean isactive = false;
 		}
 		else if( protocol == ProtocolType.coap ) {
 			//CoapApplServer.getTheServer();	//Le risorse sono create alla configurazione del sistema
-			ColorsOut.out(name+" |  CREATED  CoapApplServer"  );
+			ColorsOut.out(name+" |  CREATED  CoapApplServer", ColorsOut.BLUE  );
 		}
 		else if( protocol == ProtocolType.mqtt ) {  
-			ColorsOut.out(name+" |  Do nothing for mqtt" );
+			ColorsOut.out(name+" |  Do nothing for mqtt", ColorsOut.BLUE );
 		}
 	}	
  	
@@ -59,15 +58,15 @@ protected boolean isactive = false;
  	public boolean isActive() {
  		return isactive;
  	}
-	public void addComponent( String devname, IApplMsgHandler h) {
-		ctxMsgHandler.addComponent(devname, h);
-	}
-	public void removeComponent( String devname ) {
-		ctxMsgHandler.removeComponent( devname );
-	}
+//	public void addComponent( String devname, IApplMsgHandler h) {
+//		ctxMsgHandler.addComponent(devname, h);
+//	}
+//	public void removeComponent( String devname ) {
+//		ctxMsgHandler.removeComponent( devname );
+//	}
 	@Override
 	public void activate() {
-		ColorsOut.out(name+" |  activate ..." );
+		ColorsOut.out(name+" |  activate ...", ColorsOut.BLUE );
 		switch( protocol ) {
 	   		case tcp :  { serverTcp.activate();break;}
 	   		case udp:   { serverUdp.activate();break;}
