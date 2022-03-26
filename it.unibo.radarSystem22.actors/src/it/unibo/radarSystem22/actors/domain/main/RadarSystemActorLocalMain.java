@@ -4,7 +4,7 @@ import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.Actor22;
-import it.unibo.kactor.ActorBasic;
+import it.unibo.kactor.Actor22;
 import it.unibo.radarSystem22.actors.businessLogic.ControllerActorForLocal;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
 import it.unibo.radarSystem22.actors.domain.support.DomainData;
@@ -19,10 +19,10 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  */
 public class RadarSystemActorLocalMain {
 	
-	private ActorBasic led ;
-	private ActorBasic sonar ;
-	private IRadarDisplay radar;
-	private ActorBasic controller;
+	private Actor22 led ;
+	private Actor22 sonar ;
+	private Actor22 radar;
+	private Actor22 controller;
 	
  
 	public void doJob() {
@@ -40,8 +40,8 @@ public class RadarSystemActorLocalMain {
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
 		//for( int i=1; i<=3; i++ ) { DeviceActorFactory.createLed("led"+i); }
 		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
-		radar      = DeviceActorFactory.createRadarGui();
-		controller = new ControllerActorForLocal(DomainData.controllerName, led, sonar,(ActorBasic)radar);
+		radar      = DeviceActorFactory.createRadarActor();
+		controller = new ControllerActorForLocal(DomainData.controllerName, led, sonar,(Actor22)radar);
 			
 	}
 	

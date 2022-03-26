@@ -1,17 +1,17 @@
 package it.unibo.radarSystem22.actors.domain.support;
 
-import it.unibo.kactor.ActorBasic;
+import it.unibo.kactor.Actor22;
 import it.unibo.radarSystem22.actors.domain.LedMockActor;
-import it.unibo.radarSystem22.actors.domain.RadarDisplayActor;
+import it.unibo.radarSystem22.actors.domain.RadarActor;
 import it.unibo.radarSystem22.actors.domain.SonarMockActor;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
-import it.unibo.radarSystem22.domain.interfaces.*;
+
 
 
 public class DeviceActorFactory {
 
-	public static ActorBasic createLed(String name) {
+	public static Actor22 createLed(String name) {
 		//Colors.out("DeviceFactory | createLed simulated="+RadarSystemConfig.simulation);
 		if( DomainSystemConfig.simulation)  {
 			 return new LedMockActor(name);
@@ -24,7 +24,7 @@ public class DeviceActorFactory {
 		else  createSonar(name);
 	}
 
-	public static ActorBasic createSonar(String name) {
+	public static Actor22 createSonar(String name) {
 		//Colors.out("DeviceFactory | createSonar simulated="+RadarSystemConfig.simulation);
 		if( DomainSystemConfig.simulation)  {
 			return new SonarMockActor(name);
@@ -42,8 +42,8 @@ public class DeviceActorFactory {
 	}
 	
 	//We do not have mock for RadarGui
-	public static IRadarDisplay createRadarGui() {
-		return new RadarDisplayActor("radarDisplay");
+	public static Actor22 createRadarActor() {
+		return new RadarActor("radar");
 	}
 	
 }

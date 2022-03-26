@@ -14,7 +14,7 @@ Java cannot use Kotlin's coroutines mechanic since it is a compile-time feature
  */
 
 public abstract class Actor22 extends ActorBasic {
-    private static HashMap<String,ActorBasic> ctxMap = new HashMap<String,ActorBasic>();
+    private static HashMap<String,Actor22> ctxMap = new HashMap<String,Actor22>();
     protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 
 
@@ -30,12 +30,12 @@ public abstract class Actor22 extends ActorBasic {
 
     }
 
-    public static void addActor(ActorBasic a) {
+    public static void addActor(Actor22 a) {
         ctxMap.put(a.getName(), a);
         //System.out.println("REGISTERED actor with name " + a.getName()  );
 
     }
-    public static ActorBasic getActor(String actorName) {
+    public static Actor22 getActor(String actorName) {
         return ctxMap.get(actorName);
     }
 
@@ -61,20 +61,21 @@ public abstract class Actor22 extends ActorBasic {
         //System.out.println("Actor22 | sendMsg " + msg + " dest=" + destActor.getName());
         else destActor.autoMsg(msg,null);
     }
+    /*
     public static void sendAMsg(IApplMessage msg, String destActorName, String entry, String protocol){
-        ActorBasic a = Actor22.getActor(destActorName);
-        if( a != null ) a.autoMsg(msg,((Actor22) a).mycompletion);
+        Actor22 a = Actor22.getActor(destActorName);
+        if( a != null ) a.autoMsg(msg,a.mycompletion);
         else{
         //ctxport, protocol
         }
       }
-
+    */
     public static void sendReply(IApplMessage msg, IApplMessage reply) {
         //System.out.println(   "Actor22 sendReply | reply= " + reply );
-        ActorBasic dest = getActor(msg.msgSender());
+        Actor22 dest = getActor(msg.msgSender());
         if(dest != null) sendAMsg(reply, dest);
         else {
-            ActorBasic ar = getActor("ar"+msg.msgSender());
+            Actor22 ar = getActor("ar"+msg.msgSender());
             if(ar !=null) sendAMsg(reply, ar);
             else {
                 System.out.println("Actor22 sendReply | Reply IMPOSSIBLE");
@@ -127,10 +128,10 @@ public abstract class Actor22 extends ActorBasic {
 
     protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
         System.out.println( getName()  + " | reply= " + reply );
-        ActorBasic dest = getActor(msg.msgSender());
+        Actor22 dest = getActor(msg.msgSender());
         if(dest != null) sendMsg(reply, dest);
         else {
-            ActorBasic ar = getActor("ar"+msg.msgSender());
+            Actor22 ar = getActor("ar"+msg.msgSender());
             if(ar !=null) sendMsg(reply, ar);
             else {
                 System.out.println(getName() + " | Reply IMPOSSIBLE");

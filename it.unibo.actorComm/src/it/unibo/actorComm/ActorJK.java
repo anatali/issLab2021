@@ -1,11 +1,9 @@
 package it.unibo.actorComm;
 
-import kotlin.Unit;
+
 import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.*;
- 
-
 import java.util.HashMap;
 
 
@@ -13,20 +11,8 @@ import java.util.HashMap;
  
 
 public  class ActorJK   {
-    private static HashMap<String,ActorBasic> actorMap    = new HashMap<String,ActorBasic>();
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
-    public static void createActorSystem(String name, String hostAddr, int port, String sysDescrFilename ){
-        //runBlocking{
-        //QakContext qkaCtx = new QakContext(name,   hostAddr,   port, "", false, false);
-            //QakContext.Companion.createContexts( hostAddr,"localhost", null, sysDescrFilename, "sysRules.pl");
-        //}
-            QakContext.Companion.createContexts(hostAddr, QakContext.Companion.createScope(), sysDescrFilename, "sysRules.pl");
-            //QakContextServer ctxserver = QakContextServer( this, GlobalScope.INSTANCE, name, Protocol.TCP );
-            //sysUtil.INSTANCE.createContexts(hostAddr, sysDescrFilename, "sysRules.pl");
-            //sysUtil.INSTANCE.traceprintln("%%% QakContext | CREATING NO ACTORS on $hostName ip=${ip.toString()}");
-
-    }
 
     public static void setActorAsRemote(String actorName, String entry, String host, ProtocolType protocol ) {
     	if( ! proxyMap.containsKey(actorName)   ) { //defensive
@@ -35,19 +21,10 @@ public  class ActorJK   {
     	}   	
     }
     
-    public static void addActor(ActorBasic a) {
-        actorMap.put(a.getName(), a);
-        //System.out.println("REGISTERED actor with name " + a.getName()  );
 
-    }
-    public static ActorBasic getActor(String actorName) {
-        return actorMap.get(actorName);
-    }
 
     public static void showActors22(){
-        System.out.println("-------------------------------------------------------");
-        actorMap.forEach((k,v) -> { System.out.println("name: "+k+" also in Qak:"+ QakContext.Companion.getActor(k) ); } );
-        System.out.println("-------------------------------------------------------");
+    	Actor22.showActors22();
     }
 
     public static void sendAMsg(String msgId,  String msg, ActorBasic destActor ){
@@ -75,19 +52,25 @@ public  class ActorJK   {
 		}
     	
     }
+    
+    public static void sendAMsg( IApplMessage msg ){
+    	sendAMsg( msg, msg.msgReceiver() );
+    }
+    
     public static void sendAMsg(IApplMessage msg, String destActorName){
-        Actor22 a = (Actor22) ActorJK.getActor(destActorName);
+        Actor22 a = (Actor22) Actor22.getActor(destActorName);
+		ColorsOut.out("sendAMsg to" + a , ColorsOut.MAGENTA);
         if( a != null ) {
         	autoMsg(a,msg);
-        }else{ //invio di un msg ad un attire non locale : cerco in proxyMap
+        }else{ //invio di un msg ad un attore non locale : cerco in proxyMap
 			ProxyAsClient pxy = proxyMap.get(destActorName);
 			if( pxy != null ) {
 				if( msg.isRequest() ) {
 					String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
 					IApplMessage reply= new ApplMessage( answerMsg );
 					ColorsOut.out("answer=" + reply.msgContent() , ColorsOut.MAGENTA);
-					Actor22 sender = (Actor22) ActorJK.getActor(msg.msgSender());
-					autoMsg( sender,reply); //WARNING: the sender must handle the rely as msg
+					Actor22 sender = Actor22.getActor(msg.msgSender());
+					autoMsg( sender,reply); //WARNING: the sender must handle the reply as msg
 				}else {
 					pxy.sendCommandOnConnection(msg.toString());
 				}
@@ -97,10 +80,10 @@ public  class ActorJK   {
 
     public static void sendReply(IApplMessage msg, IApplMessage reply) {
         //System.out.println(   "Actor22 sendReply | reply= " + reply );
-        ActorBasic dest = getActor(msg.msgSender());
+        Actor22 dest = Actor22.getActor(msg.msgSender());
         if(dest != null) sendAMsg(reply, dest);
         else {
-            ActorBasic ar = getActor("ar"+msg.msgSender());
+        	Actor22 ar = Actor22.getActor("ar"+msg.msgSender());
             if(ar !=null) sendAMsg(reply, ar);
             else {
                 System.out.println("Actor22 sendReply | Reply IMPOSSIBLE");

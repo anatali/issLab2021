@@ -44,12 +44,7 @@ public class RadarSystemDistribrOnRasp {
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
  		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
  	    ctxServer  = new EnablerContextForActors("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
-		//Registrazione dei componenti presso il contesto
-//		 IApplMsgHandler ledHandler   = new MsgHandlerForActor( led ); 
-//		 IApplMsgHandler sonarHandler = new MsgHandlerForActor( sonar ); 
-//		 ctxServer.addComponent(DomainData.ledName,   ledHandler);
-//		 ctxServer.addComponent(DomainData.sonarName, sonarHandler);
-			
+		//Registrazione dei componenti presso il contesto: NO MORE ...
 	}
 	
 	protected void execute() {

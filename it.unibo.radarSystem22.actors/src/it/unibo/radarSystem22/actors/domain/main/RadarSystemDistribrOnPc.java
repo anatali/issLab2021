@@ -10,6 +10,7 @@ import it.unibo.radarSystem22.actors.businessLogic.ControllerOnPc;
 import it.unibo.radarSystem22.actors.proxy.LedProxyAsClient;
 import it.unibo.radarSystem22.actors.proxy.SonarProxyAsClient;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
+import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
@@ -47,7 +48,7 @@ public class RadarSystemDistribrOnPc {
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		led    		= new LedProxyAsClient("ledPxy",     host, ctxport, protocol );
   		sonar  		= new SonarProxyAsClient("sonarPxy", host, ctxport, protocol );
-		radar       = DeviceActorFactory.createRadarGui();
+		radar       = DeviceFactory.createRadarGui();
 		controller  = ControllerOnPc.create(led, sonar,radar );
 			
 	}
