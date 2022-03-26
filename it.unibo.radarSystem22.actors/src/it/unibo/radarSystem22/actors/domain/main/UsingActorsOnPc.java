@@ -22,7 +22,6 @@ public class UsingActorsOnPc {
 	
 //	 ILed ISonar ARE NO MORE NECESSARY
 	private Actor22 radar;
-//	private ControllerActorForLocal controller;
 	IApplMessage turnOnLed  = CommUtils.buildDispatch("controller", "cmd", "turnOn",  "led");
 	IApplMessage turnOffLed = CommUtils.buildDispatch("controller", "cmd", "turnOff", "led");
 
@@ -45,13 +44,16 @@ public class UsingActorsOnPc {
 		execute();
 	}
 	
-	
 	protected void configure() {
 		DomainSystemConfig.tracing      = false;			
- 		CommSystemConfig.protcolType    = ProtocolType.tcp;
+ 		CommSystemConfig.protcolType    = ProtocolType.udp;
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
   		radar                           = DeviceActorFactory.createRadarActor();
+  		/*
+  		 * IMPOSTAZIONE CABLATA
+  		 * TODO: Usare annotazioni
+  		 */
 		ActorJK.setActorAsRemote("led",   ctxport, host, protocol);
 		ActorJK.setActorAsRemote("sonar", ctxport, host, protocol);
  	}
@@ -69,10 +71,6 @@ public class UsingActorsOnPc {
 	} 
 	
 //	public void terminate() {
-////		CommUtils.delay(10000); //TODO: attendere la fine del controller
-////		sonar.deactivate();
-////		((ProxyAsClient) led).close();
-////		((ProxyAsClient) sonar).close();
 //		System.exit(0);
 //	}
 	
@@ -81,8 +79,9 @@ public class UsingActorsOnPc {
 		new UsingActorsOnPc().doJob();
  		BasicUtils.aboutThreads("Before end - ");
 	}
-/*
- * Thread per
- */
-	
+
 }
+
+/*
+ * Threads:
+ */

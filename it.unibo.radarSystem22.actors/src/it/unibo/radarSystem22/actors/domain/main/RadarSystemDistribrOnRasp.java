@@ -39,7 +39,7 @@ public class RadarSystemDistribrOnRasp {
 		DomainSystemConfig.simulation   = true;
 		DomainSystemConfig.DLIMIT      	= 80;  
 		DomainSystemConfig.ledGui       = true;
-		ProtocolType protocol = ProtocolType.tcp;
+		ProtocolType protocol = ProtocolType.udp;
 		
 		led        = DeviceActorFactory.createLed(DomainData.ledName);
  		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
