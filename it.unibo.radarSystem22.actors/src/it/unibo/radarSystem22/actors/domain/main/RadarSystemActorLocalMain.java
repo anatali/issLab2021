@@ -5,7 +5,7 @@ import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.ActorBasic;
-import it.unibo.radarSystem22.actors.businessLogic.ControllerActor;
+import it.unibo.radarSystem22.actors.businessLogic.ControllerActorForLocal;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
 import it.unibo.radarSystem22.actors.domain.support.DomainData;
 import it.unibo.radarSystem22.domain.interfaces.IRadarDisplay;
@@ -41,7 +41,7 @@ public class RadarSystemActorLocalMain {
 		//for( int i=1; i<=3; i++ ) { DeviceActorFactory.createLed("led"+i); }
 		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
 		radar      = DeviceActorFactory.createRadarGui();
-		controller = new ControllerActor(DomainData.controllerName, led, sonar,(ActorBasic)radar);
+		controller = new ControllerActorForLocal(DomainData.controllerName, led, sonar,(ActorBasic)radar);
 			
 	}
 	

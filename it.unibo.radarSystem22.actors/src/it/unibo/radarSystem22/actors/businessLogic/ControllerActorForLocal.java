@@ -14,7 +14,7 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 /*
  * Controller che interagisce con dispositivi-actors
  */
-public class ControllerActor extends Actor22{
+public class ControllerActorForLocal extends Actor22{
 private ActorBasic led;
 private ActorBasic sonar;
 private ActorBasic radar;
@@ -22,16 +22,16 @@ private ActorBasic radar;
 /*
  * Costruttore che riceve i riferimenti agli attori componenti il sistema
  */
-	public ControllerActor(String name, ActorBasic led, ActorBasic sonar, ActorBasic radar) {
+	public ControllerActorForLocal(String name, ActorBasic led, ActorBasic sonar, ActorBasic radar) {
 		super(name);
-		this.led   = led;
+		if( led != null ) this.led   = led;
 		this.sonar = sonar;
 		this.radar = radar;
 	}
 /*
 * Costruttore che riceve i NOMI degli attori componenti  
 */
-	public ControllerActor(String name, String ledName, String sonarName, String radarName) {
+	public ControllerActorForLocal(String name, String ledName, String sonarName, String radarName) {
 		this( name, Actor22.getActor(ledName), Actor22.getActor(sonarName),Actor22.getActor(radarName) );
 //		ActorBasic a = Actor22.getActor(ledName);
 //		if( a != null ) this.led = a;
