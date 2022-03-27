@@ -11,26 +11,52 @@ Attori
 ======================================
 
 
-++++++++++++++++++++++++++++++++++++++++++++++++++
-it.unibo.actorComm
-++++++++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------
+Progetto it.unibo.actorComm
+---------------------------------
 
-- libreria: **it.unibo.actorComm-1.1.jar**
-- definisce: ``public interface Interaction2021 extends IConnInteraction``
-- usa: ``it.unibo.kactor.IApplMessage`` e  ``it.unibo.kactor.ApplMessage``
-- usa ``it.unibo.kactor.Actor22`` e ``it.unibo.kactor.ActorBasic``
+- realizza un contesto che permette comunicazioni ``TCP/UDP`` con componenti ``Actor22`` (attori versione 2022)
+- produce la libreria: **it.unibo.actorComm-1.1.jar**
+- dipende dalla libreria **it.unibo.qakactor-2.6** di cui usa;
+  
+  .. code::  java
+
+    interface it.unibo.kactor.IApplMessage   
+    class it.unibo.kactor.ApplMessage 
+              implements it.unibo.kactor.IApplMessage
+    class it.unibo.kactor.Actor22 
+              extends it.unibo.kactor.ActorBasic
+
+- definisce: 
+ 
+  .. code::  java
+
+     public interface Interaction2021 
+            extends it.unibo.is.interfaces.protocols.IConnInteraction
+     public  class ActorJK
+
+++++++++++++++++++++++++
+ActorJK
+++++++++++++++++++++++++
+
+- ActorJK : classe Java che fornisce metodi **static** per l'uso di Attori-kotlin 2020  
 
 
-
-++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+ 
+++++++++++++++++++++++++
 Actor22
-++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++
 
-- Actor22 : classe Java che permette di usare attori senza descrizione di sistema, quaindi senza interazioni remote.
+- Actor22 : classe Java che specializza la classe-base degli attori-kotlin 2020 per la usabilità nella versione 2022.
 
-++++++++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------
 it.unibo.radarSystem22.actors
-++++++++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------
+
+.. image:: ./_static/img/Radar/RadarSystemActor0.PNG 
+    :align: center
+    :width: 60%
 
 ---------------------------------
 La visione
