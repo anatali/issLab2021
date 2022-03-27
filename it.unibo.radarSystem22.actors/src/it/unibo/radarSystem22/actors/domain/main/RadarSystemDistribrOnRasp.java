@@ -4,11 +4,7 @@ import it.unibo.actorComm.ActorJK;
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.annotations.ActorLocal;
 import it.unibo.actorComm.context.EnablerContextForActors;
-import it.unibo.actorComm.interfaces.IApplMsgHandler;
 import it.unibo.actorComm.utils.CommSystemConfig;
-import it.unibo.kactor.ActorBasic;
-import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
-import it.unibo.radarSystem22.actors.domain.support.DomainData;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
@@ -52,7 +48,7 @@ public class RadarSystemDistribrOnRasp {
 //		led        = DeviceActorFactory.createLed(DomainData.ledName);
 // 		sonar      = DeviceActorFactory.createSonar(DomainData.sonarName);
 
-		ActorJK.createLocalActors(this);
+		ActorJK.handleLocalActorDecl(this);
 		ctxServer  = new EnablerContextForActors("CtxServer",RadarSystemConfig.ctxServerPort,protocol);
 		//Registrazione dei componenti presso il contesto: NO MORE ...
 	}

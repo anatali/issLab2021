@@ -9,7 +9,6 @@ import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
-import it.unibo.radarSystem22.actors.businessLogic.ControllerActor;
 import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
@@ -20,12 +19,17 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  * Questo sistema ipotizza che led e sonar siano attori 
  * con cui interagaire  a scambio di messaggi
  */
-@ActorLocal(name = {"controller"}, implement = {it.unibo.radarSystem22.actors.businessLogic.ControllerActor.class})
-@ActorRemote(name = {"led","sonar"}, host={"localhost","localhost"}, port={"8048","8048"}, protocol={"UDP","UDP"})
+@ActorLocal(name =     {"controller", "radar"}, 
+           implement = {it.unibo.radarSystem22.actors.businessLogic.ControllerActor.class,
+        		        it.unibo.radarSystem22.actors.domain.RadarActor.class})
+@ActorRemote(name =   {"led","sonar"}, 
+             host=    {"localhost","localhost"}, 
+             port=    {"8048","8048"}, 
+             protocol={"UDP","UDP"})
 public class UsingActorsOnPc {
 	
 //	 ILed ISonar ARE NO MORE NECESSARY
-	private Actor22 radar;
+//	private Actor22 radar;
 	IApplMessage turnOnLed  = CommUtils.buildDispatch("controller", "cmd", "turnOn",  "led");
 	IApplMessage turnOffLed = CommUtils.buildDispatch("controller", "cmd", "turnOff", "led");
 
@@ -37,8 +41,8 @@ public class UsingActorsOnPc {
 	IApplMessage activateCrtl    = CommUtils.buildDispatch("main", "cmd", "activate", "controller");
 
 	
-	private String host    = "localhost";
-	private String ctxport = ""+RadarSystemConfig.ctxServerPort;
+//	private String host    = "localhost";
+//	private String ctxport = ""+RadarSystemConfig.ctxServerPort;
  
 	public void doJob() {
 		ColorsOut.outappl("UsingActorsOnPc | Start", ColorsOut.BLUE);
@@ -54,15 +58,15 @@ public class UsingActorsOnPc {
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		
-   		radar                           = DeviceActorFactory.createRadarActor();
+//   		DeviceActorFactory.createRadarActor();  //created by annotated
+		ActorJK.handleLocalActorDecl(this);
   		/*
-  		 * IMPOSTAZIONE CABLATA
+  		 * IMPOSTAZIONE CABLATA per creazione dei proxy per attori remoti
   		 * TODO: Usare annotazioni
   		 */
 //		ActorJK.setActorAsRemote("led",   ctxport, host, protocol);
-//		ActorJK.setActorAsRemote("sonar", ctxport, host, protocol);
-   		
-		ActorJK.createRemoteActors(this);
+//		ActorJK.setActorAsRemote("sonar", ctxport, host, protocol);  		
+		ActorJK.handleRemoteActorDecl(this);
  	}
 	
 	protected void execute() {
@@ -76,7 +80,6 @@ public class UsingActorsOnPc {
 		
 		
 //		new ControllerActor("controller"); //Attore locale
-		ActorJK.createLocalActors(this);
 		ActorJK.sendAMsg( activateCrtl );
 	} 
 	

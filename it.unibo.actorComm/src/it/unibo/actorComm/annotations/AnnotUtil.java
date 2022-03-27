@@ -40,7 +40,7 @@ RELATED TO Actor22
          }
 		
 	}
-	public static void  createActorRemote(Object element) {
+	public static void  createProxyForRemoteActors(Object element) {
         Class<?> clazz            = element.getClass();
         Annotation[] annotations  = clazz.getAnnotations();
         for (Annotation annot : annotations) {

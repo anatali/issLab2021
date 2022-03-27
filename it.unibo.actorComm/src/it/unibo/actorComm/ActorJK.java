@@ -10,18 +10,18 @@ import java.util.HashMap;
 public  class ActorJK   {
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
-    public static void createLocalActors(Object element) {
+    public static void handleLocalActorDecl(Object element) {
     	AnnotUtil.createActorLocal(element);
     }
-    public static void createRemoteActors(Object element) {
-     	AnnotUtil.createActorRemote(element);
+    public static void handleRemoteActorDecl(Object element) {
+     	AnnotUtil.createProxyForRemoteActors(element);
     }
 
     public static void handleActorDeclaration(Object element) {
     	AnnotUtil.createActorLocal(element);
-    	AnnotUtil.createActorRemote(element);
+    	AnnotUtil.createProxyForRemoteActors(element);
     }
-    
+   
     public static void setActorAsRemote(String actorName, String entry, String host, ProtocolType protocol ) {
     	if( ! proxyMap.containsKey(actorName)   ) { //defensive
     		ProxyAsClient pxy = new ProxyAsClient(actorName+"Pxy", host, entry, protocol);
