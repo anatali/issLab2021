@@ -31,8 +31,8 @@ Progetto it.unibo.actorComm
  
   .. code::  java
 
-     public interface Interaction2021 
-            extends it.unibo.is.interfaces.protocols.IConnInteraction
+     public interface Interaction2021  extends 
+          it.unibo.is.interfaces.protocols.IConnInteraction //libreria uniboInterfaces.jar
      public  class ActorJK
 
 ++++++++++++++++++++++++
