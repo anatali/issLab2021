@@ -11,10 +11,10 @@ import it.unibo.radarSystem22.domain.interfaces.*;
 /*
  * L'invio di risposta a un actore remoto deve essere fatto da MsgHandlerForActor
  */
-public class SonarMockActor extends Actor22{
+public class SonarActor extends Actor22{
 private ISonar sonar;
 
-	public SonarMockActor(String name) {
+	public SonarActor(String name) {
 		super(name);
 		sonar = DeviceFactory.createSonar();
 	}

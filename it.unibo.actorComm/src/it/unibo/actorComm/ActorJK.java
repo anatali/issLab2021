@@ -1,19 +1,27 @@
 package it.unibo.actorComm;
 
 
+import it.unibo.actorComm.annotations.AnnotUtil;
 import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.*;
 import java.util.HashMap;
 
-
-
- 
-
 public  class ActorJK   {
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
+    public static void createLocalActors(Object element) {
+    	AnnotUtil.createActorLocal(element);
+    }
+    public static void createRemoteActors(Object element) {
+     	AnnotUtil.createActorRemote(element);
+    }
 
+    public static void handleActorDeclaration(Object element) {
+    	AnnotUtil.createActorLocal(element);
+    	AnnotUtil.createActorRemote(element);
+    }
+    
     public static void setActorAsRemote(String actorName, String entry, String host, ProtocolType protocol ) {
     	if( ! proxyMap.containsKey(actorName)   ) { //defensive
     		ProxyAsClient pxy = new ProxyAsClient(actorName+"Pxy", host, entry, protocol);

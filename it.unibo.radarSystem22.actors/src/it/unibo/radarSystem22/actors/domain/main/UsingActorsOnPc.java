@@ -2,6 +2,8 @@ package it.unibo.radarSystem22.actors.domain.main;
 
 import it.unibo.actorComm.ActorJK;
 import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.annotations.ActorLocal;
+import it.unibo.actorComm.annotations.ActorRemote;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
@@ -18,6 +20,8 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  * Questo sistema ipotizza che led e sonar siano attori 
  * con cui interagaire  a scambio di messaggi
  */
+@ActorLocal(name = {"controller"}, implement = {it.unibo.radarSystem22.actors.businessLogic.ControllerActor.class})
+@ActorRemote(name = {"led","sonar"}, host={"localhost","localhost"}, port={"8048","8048"}, protocol={"UDP","UDP"})
 public class UsingActorsOnPc {
 	
 //	 ILed ISonar ARE NO MORE NECESSARY
@@ -49,13 +53,16 @@ public class UsingActorsOnPc {
  		CommSystemConfig.protcolType    = ProtocolType.udp;
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
-  		radar                           = DeviceActorFactory.createRadarActor();
+		
+   		radar                           = DeviceActorFactory.createRadarActor();
   		/*
   		 * IMPOSTAZIONE CABLATA
   		 * TODO: Usare annotazioni
   		 */
-		ActorJK.setActorAsRemote("led",   ctxport, host, protocol);
-		ActorJK.setActorAsRemote("sonar", ctxport, host, protocol);
+//		ActorJK.setActorAsRemote("led",   ctxport, host, protocol);
+//		ActorJK.setActorAsRemote("sonar", ctxport, host, protocol);
+   		
+		ActorJK.createRemoteActors(this);
  	}
 	
 	protected void execute() {
@@ -66,7 +73,10 @@ public class UsingActorsOnPc {
 	 	    ActorJK.sendAMsg(turnOffLed, "led"  );
 	 	    CommUtils.delay(500);
 		}
-		new ControllerActor("controller");
+		
+		
+//		new ControllerActor("controller"); //Attore locale
+		ActorJK.createLocalActors(this);
 		ActorJK.sendAMsg( activateCrtl );
 	} 
 	

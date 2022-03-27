@@ -14,10 +14,10 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 /*
  * Funge da interprete di 
  */
-public class LedMockActor extends Actor22{
+public class LedActor extends Actor22{
 private ILed led;
 
-	public LedMockActor(String name) {
+	public LedActor(String name) {
 		super(name);
 		led = DeviceFactory.createLed();
 	}
