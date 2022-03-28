@@ -27,8 +27,9 @@ public class UseLedFromPc implements IApplication{
 	public void setup( String domainConfig, String systemConfig )  {
 		ColorsOut.outappl(" === " + getName() + " ===", ColorsOut.MAGENTA);
 		RadarSystemConfig.DLIMIT           = 80;
+		RadarSystemConfig.raspAddr         = "192.168.1.90";
 		RadarSystemConfig.ctxServerPort    = 8756;
-		CommSystemConfig.protcolType = ProtocolType.udp;
+		CommSystemConfig.protcolType = ProtocolType.tcp;
 	}
 	
 	protected void configure() {		

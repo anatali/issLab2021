@@ -8,7 +8,6 @@ import it.unibo.radarSystem22_4.appl.handler.LedApplHandler;
 import it.unibo.radarSystem22_4.appl.handler.SonarApplHandler;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.context.ContextMsgHandler;
-import it.unibo.radarSystem22_4.comm.context.TcpContextServer;
 import it.unibo.radarSystem22_4.comm.enablers.EnablerContext;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMsgHandler;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
@@ -20,10 +19,7 @@ import it.unibo.radarSystem22.domain.DeviceFactory;
 public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	private ISonar sonar;
 	private ILed  led ;
- 
- 
- 	//private TcpContextServer contextServer;
- 	
+  	
  	private IContext contextServer;
 
 	
@@ -57,7 +53,7 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 
 		    RadarSystemConfig.RadarGuiRemote   = true;		
  			RadarSystemConfig.ctxServerPort    = 8756;
- 			RadarSystemConfig.protcolType      = ProtocolType.udp;
+ 			RadarSystemConfig.protcolType      = ProtocolType.tcp;
 		}
  
 	}
@@ -65,8 +61,7 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
  	   led   = DeviceFactory.createLed(); 
 	   sonar = DeviceFactory.createSonar();
    
- 	   //contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort);
- 	   
+ 	   //contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort); 	   
 	   contextServer = new EnablerContext("ctx",""+RadarSystemConfig.ctxServerPort,
  			                  RadarSystemConfig.protcolType, new ContextMsgHandler("ctxH"));
 		//Registrazione dei componenti presso il contesto

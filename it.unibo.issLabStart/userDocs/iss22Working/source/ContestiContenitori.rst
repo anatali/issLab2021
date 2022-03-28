@@ -367,9 +367,9 @@ livello applicativo che sono ora di tipo :ref:`ApplMessage<ApplMessage>`.
     public void elaborate( IApplMessage message, Interaction2021 conn ); 
   }
 
-:remark:`messaggi standard di sistema`
+:remark:`messaggi standard di sistema come IApplMessage`
 
-- D'ora in poi il metodo ``elaborate`` con argomento ``IApplMessage<IApplMessage>`` diventerà il metodo di riferimento
+- D'ora in poi il metodo ``elaborate`` con argomento :ref:`IApplMessage<IApplMessage>` diventerà il metodo di riferimento
   per la gestione dei messaggi. In altre parole, tutte le nostre applicazioni distribuite 
   invieranno messaggi della forma:
 
@@ -396,7 +396,7 @@ Modifica della classe :ref:`ApplMsgHandler<ApplMsgHandler>`
 Di conseguenza, introduciamo nella classe astratta :ref:`ApplMsgHandler<ApplMsgHandler>`  
 la specifica del metodo
 
-  ``abstract  elaborate( ApplMessage message, Interaction2021 conn )`` 
+  ``abstract  elaborate( IApplMessage message, Interaction2021 conn )`` 
 
 che dovrà essere definito dalle classi specializzate.
 
@@ -406,7 +406,7 @@ che dovrà essere definito dalle classi specializzate.
 Metodo ``prepareReply``
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Per associare le risposte alle richieste, viene introdotto il  metodo ``prepareReply`` che
+Per associare le risposte alle richieste, viene introdotto (nella classe ``CommUtils``) il  metodo ``prepareReply`` che
 generare un messaggio strutturato ``msg/6`` tale che:
 
 - l'identificativo del messaggio di risposta sia l'identificativo del messaggio di richiesta;
@@ -414,14 +414,15 @@ generare un messaggio strutturato ``msg/6`` tale che:
  
 .. code:: java
 
-    protected ApplMessage prepareReply(ApplMessage message, String answer) {
+    protected ApplMessage prepareReply(IApplMessage message, String answer) {
     String payload = message.msgContent();
     String sender  = message.msgSender();
     String receiver= message.msgReceiver();
     String reqId   = message.msgId();
     ApplMessage reply = null;
       if( message.isRequest() ) {
-         reply = CommUtils.buildReply(receiver,reqId,answer,message.msgSender());
+         reply = CommUtils.buildReply(
+            receiver,reqId,answer,message.msgSender());
       }else { //DEFENSIVE
         ColorsOut.outerr(name + " | ApplMsgHandler prepareReply ERROR...");
       }
@@ -811,7 +812,7 @@ Architettura con contesto
 
 Avvalendoci dei componenti introdotti in precedenza, costruiamo un sistema che abbia  i dispositivi sul Raspberry 
 e la business logic su PC. Ad esempio, la figura che segue illuistra l'architettura di un sistema che 
-
+pone sul PC un gestore del Led remoto (si veda la classe ``UseLedFromPc.java``).
 
 .. image:: ./_static/img/Radar/LedUsageWithCtx.PNG
    :align: center 

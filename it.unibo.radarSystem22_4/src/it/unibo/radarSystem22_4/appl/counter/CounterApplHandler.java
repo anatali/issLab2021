@@ -19,7 +19,20 @@ private CounterWithDelay counter;
 	
 	@Override
 	public void elaborate( IApplMessage msg, Interaction2021 conn ) {
-		if( counter != null ) elaborateForObject( msg );
+//		if( counter != null ) elaborateForObject( msg );
+		ColorsOut.outappl(name + " | elaborate msg="+msg, ColorsOut.GREEN);		
+		String answer=null;
+		try {
+			String cmd =  msg.msgContent();
+ 			int delay   = getDecDelayArg(cmd);
+ 			counter.dec(delay);	
+			answer = ""+counter.getVal();
+			//ColorsOut.outappl(name + " | elaborate ApplMessage answer: "+answer, ColorsOut.GREEN);
+			if( msg.isRequest() ) {
+				IApplMessage  reply = CommUtils.prepareReply(msg, answer);
+				sendAnswerToClient(reply.toString());			
+			}
+		}catch( Exception e) {}	
 	}
 	
 	protected int getDecDelayArg(String cmd) throws Exception{

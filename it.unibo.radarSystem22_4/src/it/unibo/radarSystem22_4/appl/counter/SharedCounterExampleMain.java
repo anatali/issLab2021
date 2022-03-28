@@ -3,8 +3,11 @@ package it.unibo.radarSystem22_4.appl.counter;
 import it.unibo.radarSystem22_4.appl.RadarSystemConfig;
 import it.unibo.radarSystem22_4.comm.ApplMessage;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
+import it.unibo.radarSystem22_4.comm.context.ContextMsgHandler;
 import it.unibo.radarSystem22_4.comm.context.TcpContextServer;
+import it.unibo.radarSystem22_4.comm.enablers.EnablerContext;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMessage;
+import it.unibo.radarSystem22_4.comm.interfaces.IContext;
 import it.unibo.radarSystem22_4.comm.proxy.ProxyAsClient;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
 
@@ -18,24 +21,27 @@ import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
 public class SharedCounterExampleMain  {
 private int ctxServerPort   = 7070;
 private String delay        = "100"; //con delay = 0 funziona
-
+private ProtocolType protocol;
 IApplMessage msgDec = new ApplMessage(
 	      "msg( dec, dispatch, main, counter, dec(DELAY), 1 )"
 	      .replace("DELAY", delay));
  
 	public void configure(  ) {
  		BasicUtils.aboutThreads("Before configure - ");
+ 		protocol = ProtocolType.tcp;
 		CounterWithDelay counter         = new CounterWithDelay("counter");
- 		TcpContextServer contextServer   = new TcpContextServer("TcpContextServer",  ctxServerPort );
-		CounterApplHandler counterH      = new CounterApplHandler("counterH", counter);
-		contextServer.addComponent(counter.getName(),counterH);	
+ 		CounterApplHandler counterH      = new CounterApplHandler("counterH", counter);
+// 		TcpContextServer contextServer   = new TcpContextServer("TcpContextServer",  ctxServerPort );
+		IContext  contextServer = new EnablerContext("ctx",""+ctxServerPort,protocol,
+	                 new ContextMsgHandler("ctxH"));		
+ 		contextServer.addComponent(counter.getName(),counterH);	
  		contextServer.activate();    
  		BasicUtils.aboutThreads("After configure - ");
  	}
 	
 	public void execute() throws Exception {
-		ProxyAsClient client1 = new ProxyAsClient("client1","localhost", ""+ctxServerPort, ProtocolType.tcp);
- 		ProxyAsClient client2 = new ProxyAsClient("client2","localhost", ""+ctxServerPort, ProtocolType.tcp);
+		ProxyAsClient client1 = new ProxyAsClient("client1","localhost", ""+ctxServerPort, protocol);
+ 		ProxyAsClient client2 = new ProxyAsClient("client2","localhost", ""+ctxServerPort, protocol);
  		client1.sendCommandOnConnection(msgDec.toString());  
  		client2.sendCommandOnConnection(msgDec.toString());		
  		BasicUtils.aboutThreads("After client send - ");
@@ -43,10 +49,7 @@ IApplMessage msgDec = new ApplMessage(
  
  
 	public static void main( String[] args) throws Exception {	
-		SharedCounterExampleMain sys = new SharedCounterExampleMain();
-//		RadarSystemConfig.withContext = true;
-		RadarSystemConfig.tracing     = false;
-		
+		SharedCounterExampleMain sys = new SharedCounterExampleMain();		
 		sys.configure();
 		sys.execute();
  		Thread.sleep(2500);
