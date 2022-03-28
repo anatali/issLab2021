@@ -1,6 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
+.. role:: worktodo 
   
 .. _tuPrologNew: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
 .. _tuProlog: http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf
@@ -301,6 +302,7 @@ Ad esempio, consideriamo il seguente messaggio in forma di String:
    
    ``msg( cmd, dispatch, main, led, turn(off), 1)``
 
+.. _accesso al payload usando Prolog:
 
 Volendo accedere al payload del messaggio, possiamo definire il seguente codice (come 
 *TestUnit*, nel file ``it.unibo.radarSystem22_4.prolog.TestProlog``):
@@ -506,7 +508,7 @@ Il gestore di sistema dei messaggi
 
 Il gestore dei sistema dei messaggi (eseguito all'interno di :ref:`TcpConnection<TcpConnection>` o equivalente)
 attua il reindirizzamento del messaggio, consultando una mappa
-interna che associa un **identificativo univoco** (il nome del destinatario) a un handler.
+interna che associa un **identificativo univoco** (il nome del destinatario) a un handler applicativo.
 
 
  .. code:: java
@@ -540,19 +542,19 @@ interna che associa un **identificativo univoco** (il nome del destinatario) a u
 
 
 
-I componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
-
-- :remark:`sono gestori di messaggi`
-- :remark:`acquisiscono dal contesto la capacità di comunicazione`
  
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Verso gli attori 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`:
 
-I componenti di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` sono attualmente POJO,
-ma potrebbero essere realizzati come 
-enti attivi dotati di una coda di messaggi, denominati **attori**:
+- :remark:`sono POJO gestori di messaggi`
+- :remark:`acquisiscono dal contesto la capacità di comunicazione`
+
+
+I componenti applicativi che gestiscono messaggi potrebbero non essere più POJO,
+ma enti attivi, denominati **attori**, dotati essi stessi di una coda di messaggi in ingresso:
 
 .. image:: ./_static/img/Architectures/ContestiEComponenti.PNG
    :align: center 
@@ -570,7 +572,8 @@ SPRINT4: il progetto dell' ApplicationDesigner
 Ridefinizione degli handler
 
 All'interno di ogni handler applicativo, occorre ora definire il codice del metodo `elaborate` 
-di :ref:`ApplMsgHandler<ApplMsgHandler>`, quando il messaggio di input è di tipo :ref:`ApplMessage<ApplMessage>`.
+di :ref:`ApplMsgHandler<ApplMsgHandler>`, quando il messaggio di input è di tipo :ref:`IApplMessage<IApplMessage>`, 
+implementato dalla classe :ref:`ApplMessage<ApplMessage>`.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Refactoring per il Led
@@ -578,64 +581,67 @@ Refactoring per il Led
 
 .. _LedApplIntepreterWithCtx:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elaborate di :ref:`LedApplInterpreter<LedApplIntepreterNoCtx>` 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+rafactor elaborate di :ref:`LedApplInterpreter<LedApplIntepreterNoCtx>` 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-L'interpretazione dei messaggi inviati al Led distingue ora tra comandi (*dispatch*) e richieste
-e si avvale del meotodo ``elaborate`` introdotto in :ref:`Un interpreter per il Led` per la elaborazione del payload.
-
-Si noti chen nel caso di richiesta, viene generato un messaggio di tipo :ref:`IApplMessage`
-usando il metodo :ref:`prepareReply<prepareReply>`.
-
+L'interpretazione dei messaggi inviati al Led distingue ora tra comandi (*dispatch*) e richieste.
+I comandi vengono eseguiti senza produrre risposte, mentre, nel caso di richiesta, viene generato un messaggio 
+di tipo :ref:`IApplMessage` usando il metodo :ref:`prepareReply<prepareReply>`.
+ 
 .. code:: java
 
   public class LedApplInterpreter implements IApplInterpreter  {
-    ...
     @Override
-    protected String elaborate( String payload ) { 
-      ... 
+    public void elaborate( IApplMessage message, Interaction2021 conn ) {
+      String answer = null; //no answer
+      if(  message.isRequest() ) answer = elabRequest(message);
+      else elabCommand(message); //command => no answer
+      return answer; 
     }
-
-    @Override
-    public String elaborate( IApplMessage message ) {
-    String payload = message.msgContent();
-      if(  message.isRequest() ) {
-        if(payload.equals("getState") ) {
-          String ledstate = ""+led.getState();
-          IApplMessage reply = CommUtils.prepareReply( message, ledstate);
-          return (reply.toString() ); //msg(...)
-        }else return "request_unknown";
-      }else return elaborate( payload );  
+    protected void elabCommand( IApplMessage message ) {
+      String payload = message.msgContent();
+      if( payload.equals("on"))   led.turnOn();
+      else if( payload.equals("off") ) led.turnOff();			
+    }
+    
+    protected String elabRequest( IApplMessage message ) {
+      String payload = message.msgContent();
+      String answer  = "request_unknown";
+      if(payload.equals("getState") ) answer = ""+led.getState();
+      IApplMessage reply = CommUtils.prepareReply( message, answer);
+      return (reply.toString() ); //msg(...)
     }
   }
+
+Il metodo ``elaborate`` di ``LedApplInterpreter`` viene invocato dal componente applicativo ``LedApplHandler``, a sua volta
+invocato dall'oggetto di tipo :ref:`Interaction2021<Interaction2021>` creato dal server relativo al protocollo usato.
+
 
 .. _LedApplHandlerWithCtx:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elaborate di :ref:`LedApplHandler` 
+refactor elaborate di :ref:`LedApplHandler` 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: java
 
   public class LedApplHandler extends ApplMsgHandler {
-  ...
-  @Override
-  public void elaborate( IApplMessage message, Interaction2021 conn ) {
-    if( message.isRequest() ) {
-      String answer = ledInterpr.elaborate(message);
-      sendAnswerToClient( answer, conn );
-    }else {
-      ledInterpr.elaborate( message.msgContent() ); 
-    }	
+    private IApplInterpreter ledInterpr;
+    ...
+    @Override
+    public void elaborate(IApplMessage message, Interaction2021 conn) {
+      if( message.isRequest() ) 
+        sendAnswerToClient( ledInterpr.elaborate(message), conn );
+      else ledInterpr.elaborate(message);
+    }
   }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-LedProxyAsClient
+LedProxy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-.. _LedProxyAsClient:
+Come al solito, il proxy traduce invocazioni di metodi in invio di messaggi.
 
 .. code::   java
 
@@ -654,7 +660,7 @@ LedProxyAsClient
 
     @Override
     public void turnOn() { 
-	     if( protocol == ProtocolType.tcp   ) {
+      if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
         sendCommandOnConnection(turnOnLed.toString());
       }
       //ALTRI PROTOCOLLI ...	
@@ -662,7 +668,7 @@ LedProxyAsClient
 
     @Override
     public void turnOff() {   
-      if( protocol == ProtocolType.tcp  ){
+      if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp){
         sendCommandOnConnection(turnOffLed.toString());
       }
       //ALTRI PROTOCOLLI ...	
@@ -671,9 +677,10 @@ LedProxyAsClient
     @Override
     public boolean getState() {   
       String answer="";
-      if( protocol == ProtocolType.tcp ){
-        answer = sendRequestOnConnection(getLedState.toString()) ;
-      }
+	    if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
+	    	String reply = sendRequestOnConnection( getLedState.toString() );	    	
+	    	answer = new ApplMessage(reply).msgContent();
+	    }	    
       //ALTRI PROTOCOLLI ...	
       return answer.equals("true");
     }
@@ -689,61 +696,73 @@ Refactoring per il Sonar
 
 .. _SonarApplIntepreterWithCtx:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elaborate di :ref:`SonarApplInterpreter<SonarApplIntepreterNoCtx>` 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+rafactor elaborate di :ref:`SonarApplInterpreter<SonarApplIntepreterNoCtx>` 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'interpretazione dei messaggi inviati al Led distingue ora tra comandi (*dispatch*) e richieste.
+I comandi vengono eseguiti senza produrre risposte, mentre, nel caso di richiesta, viene generato un messaggio 
+di tipo :ref:`IApplMessage` usando il metodo :ref:`prepareReply<prepareReply>`.
 
 .. code:: java
 
   public class SonarApplInterpreter implements IApplInterpreter{
-  ...
-  @Override
-  public void elaborate(String message) { ... }
-
-  @Override
-  public String elaborate(IApplMessage message) {
-    String payload = message.msgContent();
-    if( message.isRequest() ) {
-      if(payload.equals("getDistance") ) {
-        String vs = ""+sonar.getDistance().getVal();
-        ApplMessage reply = CommUtils.prepareReply( message, vs);  
-        return reply.toString();
-      }else if(payload.equals("isActive") ) {
-        String sonarState = ""+sonar.isActive();
-        ApplMessage reply = CommUtils.prepareReply( message, sonarState);  
-        return reply.toString();
-      }else return "request_unknown";
-    }else{
-      elaborate( payload );
-      return null;
-    }			
+  private	ISonar sonar;
+    ...
+    @Override
+    public String elaborate(IApplMessage message) {
+      String answer = null; //no answer
+        if(  message.isRequest() )  answer = elabRequest(message);
+        else elabCommand(message); //command => no answer
+        return answer; 
+    }    
+    protected void elabCommand( IApplMessage message ) {
+      String payload = message.msgContent();
+      if( payload.equals("activate")) sonar.activate();
+      else if( payload.equals("deactivate")) sonar.deactivate();
+    }
+    protected String elabRequest( IApplMessage message ) {
+      String answer  = "request_unknown";
+      String payload = message.msgContent();
+      if( payload.equals("getDistance")) {
+        answer = ""+sonar.getDistance().getVal();
+      }else if( payload.equals("isActive")) {
+        answer = ""+sonar.isActive();
+      }
+      IApplMessage reply = CommUtils.prepareReply( message, answer);
+      return reply.toString();
+    }	
   }
+
+
+Il metodo ``elaborate`` di ``SonarApplInterpreter`` viene invocato dal componente applicativo ``SonarApplHandler``, a sua volta
+invocato dall'oggetto di tipo :ref:`Interaction2021<Interaction2021>` creato dal server relativo al protocollo usato.
 
 
 .. _SonarApplHandlerWithCtx:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Metodo elaborate di :ref:`SonarApplHandler` 
+refactor elaborate di :ref:`SonarApplHandler` 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: java
 
   public class SonarApplHandler extends ApplMsgHandler {    
+  private IApplInterpreter sonarIntepr;
   ...
   @Override
-  public void elaborate( IApplMessage message, Interaction2021 conn ) {
-    String payload = message.msgContent();
-      if( message.isRequest() ) {
+  public void elaborate( IApplMessage message, Interaction2021 conn ){
+    if( message.isRequest() ) {
         String answer = sonarIntepr.elaborate(message);
         sendAnswerToClient( answer, conn );
-      }else sonarIntepr.elaborate( message.msgContent() ); 
+    }else sonarIntepr.elaborate( message.msgContent() ); 
   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SonarProxyAsClient
+SonarProxy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Simile al caso del Led.
+Come al solito, il proxy traduce invocazioni di metodi in invio di messaggi.
 
 .. code:: java
 
@@ -767,7 +786,7 @@ Simile al caso del Led.
     }
     @Override
     public void activate() {
-      if( protocol == ProtocolType.tcp  ) {
+      if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
         sendCommandOnConnection(sonarActivate.toString());	
       }
       //ALTRI PROTOCOLLI ...	
@@ -775,34 +794,35 @@ Simile al caso del Led.
     ...
     @Override
     public boolean isActive() {
-      String answer = "false";
-      if( protocol == ProtocolType.tcp  ) {
-        answer = sendRequestOnConnection(isActive.toString());
+      String answer = "";
+      if( protocol == ProtocolType.tcp || protocol == ProtocolType.udp) {
+ 	    	String reply = sendRequestOnConnection( isActive.toString() );	    	
+	    	answer = new ApplMessage(reply).msgContent();
       }
       return answer.equals( "true" );
     }
-
   }
 
  
-
 +++++++++++++++++++++++++++++++++++++++++++++++
 Architettura con contesto
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Avvalendoci dei componenti introdotti in precedenza, costruiamo un sistema che abbia il Controller (e il radar) su PC
-e i dispositivi sul Raspberry, secondo l'architettura mostrata in figura:
+Avvalendoci dei componenti introdotti in precedenza, costruiamo un sistema che abbia  i dispositivi sul Raspberry 
+e la business logic su PC. Ad esempio, la figura che segue illuistra l'architettura di un sistema che 
 
 
-.. image:: ./_static/img/Radar/sysDistr1.PNG
+.. image:: ./_static/img/Radar/LedUsageWithCtx.PNG
    :align: center 
    :width: 80%
 
-Si veda (nel package ``it.unibo.radarSystem22_4.appl.main``):
+Il package ``it.unibo.radarSystem22_4.appl.main`` contiene i seguenti programmi
 
-- ``RadarSystemMainDevsCtxOnRasp`` : da attivare sul Raspberry 
-- ``RadarSystemMainWithCtxOnPc`` : da attivare sul PC
+- ``RadarSystemMainDevsCtxOnRasp`` :  attiva il contesto e i dispositivi su Raspberry 
+- ``UseLedFromPc`` : invia da PC comandi e richieste relative al Led 
+- ``UseSonarFromPc`` : invia da PC comandi e richieste relative al Sonar 
+- ``RadarSystemMainWithCtxOnPc`` : attiva Controller e radar sul PC
  
 +++++++++++++++++++++++++++++++++++++++++++++++
 Deployoment del prototipo con contesto
@@ -810,7 +830,7 @@ Deployoment del prototipo con contesto
 
 Simile a quanto fatto in :ref:`SPRINT1: Deployment su RaspberryPi`. Il comando:
 
-.. code:: 
+.. code:: java
 
   gradle distZip jar -x test
 
@@ -821,8 +841,10 @@ crea il file `build\distributions\it.unibo.radarSystem22_4-1.0.zip`.
 Problemi ancora aperti  
 -----------------------------------------------
 
-- Un handler lento o che si blocca, rallenta o blocca la gestione dei messaggi da parte del
-  ``ContextMsgHandler`` e quindi del :ref:`EnablerContext`.
+- Un handler applicativo lento o che si blocca, potrebbe avere le seguenti conseguenze:
+  
+  :worktodo:`WORKTODO: discutere le conseguenze di un handler applicativo che si blocca`
+
 - Nel caso di componenti con stato utlizzabili da più clienti, vi possono essere problemi di concorrenza.
   
 Per un esempio, si consideri un contatore (POJO) che effettua una operazione di decremento rilasciando il controllo 
@@ -842,18 +864,12 @@ prima del completamento della operazione.
       ColorsOut.out("Counter new value after dec= " + n);
     }
   }
-  
-.. image:: ./_static/img/Radar/CounterDelayHandler.PNG
-   :align: center  
-   :width: 70%
-
 
 La chiamata al contatore può essere effettuata da un Proxy che invia un messaggio
    
    ``msg( cmd, dispatch, main, counter, dec(DELAY), 1)``
 
-con ``DELAY`` fissato a un certo valore.
-Ad esempio:
+con ``DELAY`` fissato a un certo valore. Ad esempio:
 
 .. code:: java
 
@@ -861,10 +877,13 @@ Ad esempio:
   ApplMessage msgDec = new ApplMessage(
       "msg( dec, dispatch, main, counter, dec(DELAY), 1)"
       .replace("DELAY", delay));
-
   ProxyAsClient client1 = 
-    new ProxyAsClient("client1","localhost",""+ctxServerPort,ProtocolType.tcp).
+      new ProxyAsClient("client1","localhost",""+ctxServerPort,ProtocolType.tcp).
   client1.sendCommandOnConnection(msgDec.toString());
+
+.. image:: ./_static/img/Radar/CounterDelayHandler.PNG
+   :align: center  
+   :width: 70%
 
 
 .. code:: java
@@ -888,24 +907,17 @@ Ad esempio:
 
   protected void elaborateForObject( IApplMessage msg  ) {
   String answer=null;
-  try {
-    String cmd =  msg.msgContent();
-    int delay   = getDecDelayArg(cmd);
-    counter.dec(delay);	
-    answer = ""+counter.getVal();
-    if( msg.isRequest() ) {
-      IApplMessage  reply = CommUtils.prepareReply(msg, answer);
-      sendAnswerToClient(reply.toString());			
-    }
-  }catch( Exception e) {}	
+    try {
+      String cmd =  msg.msgContent();
+      int delay   = getDecDelayArg(cmd);
+      counter.dec(delay);	
+      answer = ""+counter.getVal();
+      if( msg.isRequest() ) {
+        IApplMessage  reply = CommUtils.prepareReply(msg, answer);
+        sendAnswerToClient(reply.toString());			
+      }
+    }catch( Exception e) {}	
   }
-
-  /*
-  Il messaggio completo è
-    msg( dec, dispatch, main, counter, dec(DELAY), 1)
-  Quindi il payload è una String che denita un termine Prolog
-    dec(DELAY)
-  */
   protected int getDecDelayArg(String cmd) throws Exception{
     Struct cmdT     = (Struct) Term.createTerm(cmd);
     String cmdName  = cmdT.getName();
@@ -915,9 +927,18 @@ Ad esempio:
     }else return 0;		
   }
 
+Il messaggio completo è
+
+    ``msg( dec, dispatch, main, counter, dec(DELAY), 1)``
+
+Quindi il payload è una String che denota un termine Prolog
+    
+    ``dec(DELAY)`` 
+
+Il metodo ``getDecDelayArg`` restituisce il valore di DELAY secondo quanto discusso in `accesso al payload usando Prolog`_
 
 
-Il programma ``SharedCounterExampleMain`` crea due chiamate di questo tipo una di seguito all'altra. 
+Il programma ``SharedCounterExampleMain`` crea due chiamate una di seguito all'altra. 
 Con delay basso (ad esempio ``delay="0";``) il comportamento è corretto (e il contatore va a 0), 
 ma con ``delay="50";`` si vede che il decremento non avviene (il contatore si fissa a 1).
  

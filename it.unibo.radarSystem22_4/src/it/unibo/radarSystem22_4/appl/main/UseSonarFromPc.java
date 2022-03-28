@@ -1,23 +1,18 @@
 package it.unibo.radarSystem22_4.appl.main;
 
-import it.unibo.radarSystem22.domain.*;
 import it.unibo.radarSystem22.domain.interfaces.*;
-import it.unibo.radarSystem22_4.appl.ActionFunction;
-import it.unibo.radarSystem22_4.appl.Controller;
+import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22_4.appl.RadarSystemConfig;
-import it.unibo.radarSystem22_4.appl.proxy.LedProxy;
 import it.unibo.radarSystem22_4.appl.proxy.SonarProxy;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
+import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
 import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 
-public class RadarSystemMainWithCtxOnPc implements IApplication{
-	private IRadarDisplay radar;
-	private ISonar sonar;
-	private ILed  led ;
-	private Controller controller;
-	
+public class UseSonarFromPc implements IApplication{
+ 	private ISonar  sonar ;
+ 	
 	@Override
 	public String getName() {
 		return this.getClass().getName() ; 
@@ -27,11 +22,12 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 		setup(domainConfig,systemConfig);
 		configure();
 		execute();		
+		terminate();
 	}
 	
 	public void setup( String domainConfig, String systemConfig )  {
+		ColorsOut.outappl(" === " + getName() + " ===", ColorsOut.MAGENTA);
 		RadarSystemConfig.DLIMIT           = 80;
-		RadarSystemConfig.tracing          = true;
 		RadarSystemConfig.ctxServerPort    = 8756;
 		CommSystemConfig.protcolType = ProtocolType.udp;
 	}
@@ -40,27 +36,33 @@ public class RadarSystemMainWithCtxOnPc implements IApplication{
 		String host           = RadarSystemConfig.raspAddr;
 		ProtocolType protocol = CommSystemConfig.protcolType;
 		String ctxport        = ""+RadarSystemConfig.ctxServerPort;
-		led    		= new LedProxy("ledPxy",     host, ctxport, protocol );
-  		sonar  		= new SonarProxy("sonarPxy", host, ctxport, protocol );
-  		radar  		= DeviceFactory.createRadarGui();
-  		controller 	= Controller.create(led, sonar, radar);
-	}
+		sonar    		      = new SonarProxy("sonarPxy", host, ctxport, protocol );
+ 	}
 	
 
 	public void execute() {
-	    ActionFunction endFun = (n) -> { System.out.println(n); terminate(); };
-		controller.start(endFun, 30);
- 	}
+		ColorsOut.out("activate the sonar");
+		sonar.activate();
+		BasicUtils.delay(1000);
+		//BasicUtils.waitTheUser();
+		boolean sonarActive = sonar.isActive();
+		ColorsOut.out("sonarActive="+sonarActive);
+		if( sonarActive ) {
+			for( int i=1; i<=3; i++ ) {
+				int d = sonar.getDistance().getVal();
+				ColorsOut.out("sonar distance="+d);
+				BasicUtils.delay(1000);			
+			}
+		}
+    }
 
 	public void terminate() {
-		//BasicUtils.delay(20000);
 		sonar.deactivate();
-		System.exit(0);
+  		//System.exit(0);
 	}	
 	
 	public static void main( String[] args) throws Exception {
-		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
-		new RadarSystemMainWithCtxOnPc().doJob(null,null);
+		new UseSonarFromPc().doJob(null,null);
  	}
 	
 }

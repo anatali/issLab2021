@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import it.unibo.radarSystem22_4.comm.interfaces.Interaction2021;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
+import it.unibo.radarSystem22_4.comm.utils.CommUtils;
   
 
 public class UdpConnection implements Interaction2021{
@@ -77,6 +78,7 @@ protected boolean closed;
 	@Override
 	public void close() {
 		try {
+			//CommUtils.buildDispatch("", "closeUdpConn", closeMsg, "system");
 			forward(closeMsg);
 		} catch (Exception e) {
 			ColorsOut.outerr( "UdpConnection | close ERROR  " + e.getMessage() );	

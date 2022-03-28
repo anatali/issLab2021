@@ -2,7 +2,7 @@ package it.unibo.radarSystem22_4.appl.main;
 
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22_4.appl.RadarSystemConfig;
-import it.unibo.radarSystem22_4.appl.proxy.LedProxyAsClient;
+import it.unibo.radarSystem22_4.appl.proxy.LedProxy;
 import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplication;
 import it.unibo.radarSystem22_4.comm.utils.BasicUtils;
@@ -20,10 +20,12 @@ public class UseLedFromPc implements IApplication{
 	public void doJob(String domainConfig, String systemConfig ) {
 		setup(domainConfig,systemConfig);
 		configure();
-		execute();		
+		execute();	
+		terminate();
 	}
 	
 	public void setup( String domainConfig, String systemConfig )  {
+		ColorsOut.outappl(" === " + getName() + " ===", ColorsOut.MAGENTA);
 		RadarSystemConfig.DLIMIT           = 80;
 		RadarSystemConfig.ctxServerPort    = 8756;
 		CommSystemConfig.protcolType = ProtocolType.udp;
@@ -33,7 +35,8 @@ public class UseLedFromPc implements IApplication{
 		String host           = RadarSystemConfig.raspAddr;
 		ProtocolType protocol = CommSystemConfig.protcolType;
 		String ctxport        = ""+RadarSystemConfig.ctxServerPort;
-		led    		          = new LedProxyAsClient("ledPxy", host, ctxport, protocol );
+		led    		          = new LedProxy("ledPxy", host, ctxport, protocol );
+		//WARNING: il LedProxy va chiuso con un casting perchè ILed non ha deactivate
  	}
 	
 
@@ -53,11 +56,11 @@ public class UseLedFromPc implements IApplication{
    	}
 
 	public void terminate() {
-  		System.exit(0);
+		((LedProxy)led).close();
+  		//System.exit(0);
 	}	
 	
 	public static void main( String[] args) throws Exception {
-		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
 		new UseLedFromPc().doJob(null,null);
  	}
 	

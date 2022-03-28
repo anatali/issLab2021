@@ -29,7 +29,7 @@ private IApplInterpreter ledInterpr;
 	public void elaborate(IApplMessage message, Interaction2021 conn) {
 		ColorsOut.out(name + " | elaborate message=" + message + " conn=" + conn , ColorsOut.GREEN);
  		if( message.isRequest() ) 
- 			sendMsgToClient( ledInterpr.elaborate(message), conn );
+ 			sendAnswerToClient( ledInterpr.elaborate(message), conn );
  		else ledInterpr.elaborate(message);
 	}
 

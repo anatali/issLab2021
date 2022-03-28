@@ -40,7 +40,6 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	
 	public void setup( String domainConfig, String systemConfig )  {
 	    BasicUtils.aboutThreads(getName() + " | Before setup ");
-	    CommSystemConfig.tracing  = true;
 		if( domainConfig != null ) {
 			DomainSystemConfig.setTheConfiguration(domainConfig);
 		}
@@ -50,11 +49,13 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 		if( domainConfig == null && systemConfig == null) {
 			DomainSystemConfig.simulation  = true;
 	    	DomainSystemConfig.testing     = false;			
-	    	DomainSystemConfig.tracing     = true;			
+	    	DomainSystemConfig.tracing     = false;			
 			DomainSystemConfig.sonarDelay  = 200;
 	    	DomainSystemConfig.ledGui      = true;		//se siamo su PC	
 	    	
- 			RadarSystemConfig.RadarGuiRemote   = true;		
+		    CommSystemConfig.tracing       = true;
+
+		    RadarSystemConfig.RadarGuiRemote   = true;		
  			RadarSystemConfig.ctxServerPort    = 8756;
  			RadarSystemConfig.protcolType      = ProtocolType.udp;
 		}

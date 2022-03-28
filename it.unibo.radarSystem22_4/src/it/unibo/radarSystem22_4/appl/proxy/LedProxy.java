@@ -6,24 +6,21 @@ import it.unibo.radarSystem22_4.comm.ProtocolType;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMessage;
 import it.unibo.radarSystem22_4.comm.proxy.ProxyAsClient;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
-import it.unibo.radarSystem22_4.comm.utils.CommSystemConfig;
 import it.unibo.radarSystem22_4.comm.utils.CommUtils;
 
 /*
  * Adapter for the output device  Led
  */
-public class LedProxyAsClient extends ProxyAsClient implements ILed {
+public class LedProxy extends ProxyAsClient implements ILed {
 	protected static IApplMessage turnOnLed ; 
 	protected static IApplMessage turnOffLed;  
 	protected static IApplMessage getLedState;  
-	 
- 
 
-	public LedProxyAsClient( String name, String host, String entry, ProtocolType protocol  ) {
+	public LedProxy( String name, String host, String entry, ProtocolType protocol  ) {
 		super(name,host,entry, protocol);
    	    turnOnLed   = CommUtils.buildDispatch(name,"cmd", "on",      "led");
    	    turnOffLed  = CommUtils.buildDispatch(name,"cmd", "off",     "led");
-   	    getLedState = CommUtils.buildRequest(name, "req", "getState","led");
+   	    getLedState = CommUtils.buildRequest(name, "ask", "getState","led");
 	}
 
 	@Override
@@ -46,9 +43,10 @@ public class LedProxyAsClient extends ProxyAsClient implements ILed {
 	public boolean getState() {   
 		String answer = ""; 
 	    if( protocol == ProtocolType.tcp ||  protocol == ProtocolType.udp   ) {
-	    	answer = sendRequestOnConnection( getLedState.toString() );
-			//ColorsOut.outappl(name+" |  getState answer=" + answer, ColorsOut.BLUE );
-	    }
+	    	String reply = sendRequestOnConnection( getLedState.toString() );	    	
+	    	ColorsOut.outappl(name+" |  getState reply=" + reply, ColorsOut.GREEN );
+	    	answer = new ApplMessage(reply).msgContent();
+	    }	    
 	    //ALTRI PROTOCOLLI ...	 
 		return answer.equals("true");
 	}

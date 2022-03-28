@@ -1,6 +1,5 @@
 package it.unibo.radarSystem22_4.appl.interpreter;
 
- 
 import it.unibo.radarSystem22.domain.interfaces.ILed;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplInterpreter;
@@ -17,32 +16,31 @@ private ILed led;
 	public LedApplInterpreter(  ILed led) {
  		this.led = led;
 	}
-   
- 	protected String elaborate( String payload ) {
-		ColorsOut.out("LedApplInterpreter | elaborate payload=" + payload  + " led="+led, ColorsOut.GREEN);
- 		if( payload.equals("getState") ) return ""+led.getState() ;
-	 	else if( payload.equals("on"))   led.turnOn();
-	 	else if( payload.equals("off") ) led.turnOff();	
- 		return  payload+"_unknown";
- 		
- 		
- 		
-	}
+
  	@Override
     public String elaborate( IApplMessage message ) {
-    String payload = message.msgContent();
+ 	 String answer = null; //no answer
       if(  message.isRequest() ) {
-        if(payload.equals("getState") ) {
-          String ledstate = ""+led.getState();
-          IApplMessage reply = CommUtils.prepareReply( message, ledstate);
-          return (reply.toString() ); //msg(...)
-        }else {
-     		String answer = "request_unknown";
-            IApplMessage reply = CommUtils.prepareReply( message, answer);
-    		return reply.toString();
-         }
-      }else { //command
-    	  return null; //answer not handled
+    	  answer = elabRequest(message);
+      }else { //command => no answer
+          elabCommand(message);
       }
+  	  return answer; 
     }   
+ 	
+ 	protected void elabCommand( IApplMessage message ) {
+ 		String payload = message.msgContent();
+	 	if( payload.equals("on"))   led.turnOn();
+	 	else if( payload.equals("off") ) led.turnOff();			
+ 	}
+ 	
+ 	protected String elabRequest( IApplMessage message ) {
+ 	    String payload = message.msgContent();
+ 	    String answer  = "request_unknown";
+        if(payload.equals("getState") ) {
+            answer = ""+led.getState();
+        }
+        IApplMessage reply = CommUtils.prepareReply( message, answer);
+        return (reply.toString() ); //msg(...)
+ 	}
 }
