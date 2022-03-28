@@ -31,7 +31,7 @@ public static IApplMsgHandler create(String name, ISonar sonar) {
  			ColorsOut.out(name+ " | elaborate " + message + " conn=" + conn, ColorsOut.MAGENTA);
  			if( message.isRequest() ) {
  				String answer = sonarIntepr.elaborate(message);
- 				sendMsgToClient( answer, conn );
+ 				sendAnswerToClient( answer, conn );
    			}else sonarIntepr.elaborate(message);
  		}
 }

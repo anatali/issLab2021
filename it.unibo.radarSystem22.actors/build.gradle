@@ -92,4 +92,7 @@ distributions {
         }
     }
 }
+
+git rm --cached .project
+git rm --cached .classpath
 */

@@ -9,8 +9,7 @@ import it.unibo.radarSystem22_4.comm.udp.UdpServer;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
 
 public class EnablerContext  implements IContext {  
-private IContextMsgHandler ctxMsgHandler;
- 
+protected IContextMsgHandler ctxMsgHandler; 
 protected String name;
 protected ProtocolType protocol;
 protected TcpServer serverTcp;
@@ -55,28 +54,11 @@ protected boolean isactive = false;
  	public boolean isActive() {
  		return isactive;
  	}
-//	public void  start() {
-//		switch( protocol ) {
-// 	   		case tcp :  { serverTcp.activate();break;}
-// 	   		case udp:   { serverUdp.activate();break;}
-// 	   		default: break;
-// 	    }
-//		isactive = true;
-// 	}
-// 
-// 	public void stop() {
-// 		//Colors.out(name+" |  deactivate  "  );
-//		switch( protocol ) {
-//	   		case tcp :  { serverTcp.deactivate();break;}
-//	   		case udp:   { serverUdp.deactivate();break;}
-//	   		default: break;
-//	    }
-//		isactive = false;
-// 	}
-
+ 	@Override
 	public void addComponent( String devname, IApplMsgHandler h) {
 		ctxMsgHandler.addComponent(devname, h);
 	}
+ 	@Override
 	public void removeComponent( String devname ) {
 		ctxMsgHandler.removeComponent( devname );
 	}

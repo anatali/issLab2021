@@ -1,6 +1,6 @@
-.classpath
-.project
-.metadata
+/.classpath
+/.project
+ /.settings
 
 # Ignore Gradle project-specific cache directory
 .gradle

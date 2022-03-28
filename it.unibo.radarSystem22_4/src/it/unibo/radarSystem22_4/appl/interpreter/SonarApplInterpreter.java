@@ -4,6 +4,7 @@ import it.unibo.radarSystem22.domain.interfaces.ISonar;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplInterpreter;
 import it.unibo.radarSystem22_4.comm.interfaces.IApplMessage;
 import it.unibo.radarSystem22_4.comm.utils.ColorsOut;
+import it.unibo.radarSystem22_4.comm.utils.CommUtils;
  
 
 public class SonarApplInterpreter implements IApplInterpreter{
@@ -17,19 +18,24 @@ private	ISonar sonar;
 	@Override
 	public String elaborate(IApplMessage message) {
 		ColorsOut.out("SonarApplInterpreter | elaborate " + message, ColorsOut.BLUE);
-		String payloead = message.msgContent();
-		if( payloead.equals("getDistance")) {
+		String payload = message.msgContent();
+		if( payload.equals("getDistance")) {
 			//ColorsOut.out(name+ " | elaborate getDistance="  , ColorsOut.BLUE);
-			return ""+sonar.getDistance().getVal();
- 		}else if( payloead.equals("activate")) {
+			String answer = ""+sonar.getDistance().getVal();
+	        IApplMessage reply = CommUtils.prepareReply( message, answer);
+			return reply.toString();
+ 		}else if( payload.equals("activate")) {
 			sonar.activate();
-		}else if( payloead.equals("deactivate")) {
+		}else if( payload.equals("deactivate")) {
 			sonar.deactivate();
-		}else if( payloead.equals("isActive")) {
+		}else if( payload.equals("isActive")) {
 			ColorsOut.out("SonarApplInterpreter | isActive " + sonar.isActive(), ColorsOut.BLUE);
-			return ""+sonar.isActive();
+			String answer = ""+sonar.isActive();
+	        IApplMessage reply = CommUtils.prepareReply( message, answer);
+			return reply.toString();
  		}
- 		return payloead+"_done";
+		//else
+ 		return null;
 	}
 	
 
