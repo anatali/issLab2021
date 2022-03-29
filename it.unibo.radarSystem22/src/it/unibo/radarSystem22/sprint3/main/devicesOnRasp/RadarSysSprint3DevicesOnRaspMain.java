@@ -13,8 +13,9 @@ import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import it.unibo.radarSystem22.sprint1.RadarSystemConfig;
-import it.unibo.radarSystem22.sprint2a.handlers.LedApplHandler;
-import it.unibo.radarSystem22.sprint2a.handlers.SonarApplHandler;
+import it.unibo.radarSystem22.sprint3.handlers.LedApplHandler;
+import it.unibo.radarSystem22.sprint3.handlers.SonarApplHandler;
+ 
  
  
 /*
@@ -53,7 +54,9 @@ public class RadarSysSprint3DevicesOnRaspMain implements IApplication{
 	
 			RadarSystemConfig.tracing           = false;		
 			RadarSystemConfig.RadarGuiRemote    = true;		
-			RadarSystemConfig.protcolType       = ProtocolType.udp;		
+			RadarSystemConfig.protcolType       = ProtocolType.tcp;		
+			RadarSystemConfig.ledPort           = 8010;		
+			RadarSystemConfig.sonarPort         = 8015;		
 		}
  
 	}

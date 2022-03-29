@@ -10,6 +10,39 @@
 Attori 
 ======================================
 
+Al termine de :ref:`Lo SPRINT4` abbiamo costruito un sistema la cui architettura è basata sul seguente schema-base:
+
+
+.. image:: ./_static/img/Architectures/EnablerContext.PNG
+   :align: center 
+   :width: 70%
+
+Come conseguenza, risulta possibile che lo stesso componente applicativo di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` possa
+essere utilizzato da due o più clienti remoti. 
+
+Il caso di studio introdotto in :ref:`Problemi ancora aperti`  pone in evidenza comportamenti erronei che potrebbero derivare
+da questa condivisione e la difficoltà di concepire test unit in grado di fare emergere le situazioni che li generano.
+
+Non merviglia che, per evitare alla radice il problema, molti propongano di vincolare i componenti applicativi ad un modello 
+di computazione puramente funzionale, privandoli di fatto di uno stato interno modificabile.
+
+Abbiamo anche 'teorizzato' che la trasformazione di un componente applicativo da POJO ad ente attivo Attore potrebbe evitare
+questo vincolo, sostituendo alla interazione basata su procedure-call una interazione basata sullo scambio di messaggi.
+
+.. image:: ./_static/img/Architectures/ContestiEComponenti.PNG
+   :align: center 
+   :width: 80%
+
+
+In questo modo, il 'macro-cosmo' rappresentato dalla applicazioni distribuite di rete troverebbe una sua reificazione anche a livello 
+del 'micro-cosmo' rappresentato dalla interazioni di componenti interni al sistema.
+
+Questa uniformità concettuale introduce di fatto un nuovo paradigma di programmazione che potrebbe trovare un ostacolo nella prolificazione
+di Thread dovuta alla trasformazione dei POJO in attori.
+
+Ma fortunatamente è oggi possibile evitare questa prolificazione. In questa parte vedremo come.
+
+
 
 ---------------------------------
 Progetto it.unibo.actorComm

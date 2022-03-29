@@ -26,7 +26,7 @@ class SonarObserverFortesting implements IObserver{
 	}
 	@Override
 	public void update(Observable source, Object data) {
-		 //Colors.out( name + " | update data=" + data ); //+ " from " + source	
+		 ColorsOut.outappl( name + " | update data=" + data, ColorsOut.GREEN ); //+ " from " + source	
 		 update( data.toString() );
 	}
 

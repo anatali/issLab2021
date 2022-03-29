@@ -1,8 +1,44 @@
+.. role:: red 
+.. role:: blue 
+.. role:: remark
+.. role:: worktodo 
+
+.. _mvc: https://it.wikipedia.org/wiki/Model-view-controller
+
+.. _MVP: https://www.nexsoft.it/model-view-presenter/
+
+=============================================
+SonarObservable
+=============================================
+
+Tenendo conto di quanto detto in *Indicazioni-sul-processo-di-produzione* (:doc:`CostruireSoftware`), 
+impostiamo un processo di produzione del software relativo a un nuovo insieme di requisiti
+
+
+.. _requirements:
+
+--------------------------------------
+SonarObservable: Requisiti
+--------------------------------------
+
+Si desidera realizzare una versione osservabile (*SonarObservable*) del dispositivo Sonar introdotto in :ref:`Il Sonar` che soddisfi i seguenti 
+requisiti:
+
+- il *SonarObservable* deve inviare informazioni a tutti componenti software interessati alla rilevazione dei valori di distanza;
+- il *SonarObservable* deve fornire valori di distanza solo quando questi si modificano in modo significativo;
+- i componenti interessati ai valori di distanza prodotti dal *SonarObservable* sono denominati *Observers* e pssono risiedere
+  sullo stesso nodo del *SonarObservable* (cioè sul RaspberryPi) o su un nodo remoto (ad esempio sul PC);
+- il funzionamento del *SonarObservable* deve essere testato in modo automatizzato ponendo un ostacolo a distanza fissa ``DTESTING1`` davanti
+  ad esso, controllando che tutti gli *Observers* ricevano il valore ``DTESTING1``. Dopo un qualche tempo, si modifica
+  la posizione dell'ostacolo a una nuova distanza ``DTESTING2`` e si controlla che gli tutti gli *Observers* ricevano il valore ``DTESTING2``.
+
+
+
 .. _sonarOsservabile: 
 
-++++++++++++++++++++++++++++++++++++
-Il Sonar osservabile
-++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++
+SonarObservable: analisi del problema
++++++++++++++++++++++++++++++++++++++++++++
 
 La transizione ad un Sonar osservabile prospettata in :ref:`patternObserver` può essere affrontata pensando il nuovo dispositivo in due modi:
 
@@ -86,7 +122,7 @@ SonarModelObservable
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il ``SonarModelObservable`` viene definito cone una specializzazione del precedente 
-`SonarModel`_, che implementa i metodi di registrazione ridiregendoli alla distanza osservabile.
+:ref:`SonarModel`, che implementa i metodi di registrazione ridiregendoli alla distanza osservabile.
 
 .. code:: java
 
@@ -145,7 +181,7 @@ relativo alla produzione dei dati in modo analogo a quanto fatto per il Sonar:
 SonarConcreteObservable
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Analogamente, la versione osservabile del `SonarConcrete`_ si ottiene ridefinendo (in assenza di ereditarietà
+Analogamente, la versione osservabile del :ref:`SonarConcrete<Il SonarConcrete>` si ottiene ridefinendo (in assenza di ereditarietà
 multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``. 
 
 .. _SonarConcreteObservable:
@@ -203,7 +239,7 @@ multipla) i metodi astratti  di ``setUp`` e ``sonarProduce``.
 Aggiornamento di DeviceFactory
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La nascita del nuovo tipo di Sonar ci induce a introdurre nuovi metodi in `DeviceFactory`_:
+La nascita del nuovo tipo di Sonar ci induce a introdurre nuovi metodi in :ref:`DeviceFactory<DeviceFactory>`:
 
 .. code:: java
 

@@ -76,6 +76,7 @@ protected boolean isactive = false;
 	@Override
 	public void deactivate() {
  		//ColorsOut.out(name+" |  deactivate  "  );
+		if( ! isactive ) return;
 		switch( protocol ) {
 	   		case tcp :  { serverTcp.deactivate();break;}
 	   		case udp:   { serverUdp.deactivate();break;}

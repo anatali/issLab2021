@@ -821,8 +821,8 @@ pone sul PC un gestore del Led remoto (si veda la classe ``UseLedFromPc.java``).
 Il package ``it.unibo.radarSystem22_4.appl.main`` contiene i seguenti programmi
 
 - ``RadarSystemMainDevsCtxOnRasp`` :  attiva il contesto e i dispositivi su Raspberry 
-- ``UseLedFromPc`` : invia da PC comandi e richieste relative al Led 
-- ``UseSonarFromPc`` : invia da PC comandi e richieste relative al Sonar 
+- ``UseLedFromPc`` : invia da PC comandi e richieste relative al Led; è usabile come tester 
+- ``UseSonarFromPc`` : invia da PC comandi e richieste relative al Sonar; è usabile come tester  
 - ``RadarSystemMainWithCtxOnPc`` : attiva Controller e radar sul PC
  
 +++++++++++++++++++++++++++++++++++++++++++++++

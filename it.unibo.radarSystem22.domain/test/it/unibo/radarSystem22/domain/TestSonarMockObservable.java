@@ -20,7 +20,7 @@ public class TestSonarMockObservable {
 		System.out.println("down");		
 	}	
 	
-	@Test 
+	//@Test 
 	public void testSingleshotSonarObservableMock() {
  		DomainSystemConfig.testing = true;
 		boolean oneShot           = true;			
@@ -35,7 +35,7 @@ public class TestSonarMockObservable {
  		assertTrue(  v0 == DomainSystemConfig.testingDistance );
 	}
 	
-	//@Test 
+	@Test 
 	public void testSonarObservableMock() {
 		DomainSystemConfig.testing    = false;
  		DomainSystemConfig.sonarDelay = 10;		//quite fast generation ...
@@ -48,9 +48,9 @@ public class TestSonarMockObservable {
 		IObserver obs2          = new SonarObserverFortesting("obs2",sonar,oneShot);
 		
 		sonar.register( obs1 );	//add an observer
-		//sonar.register( obs2 );	//add an observer
+		sonar.register( obs2 );	//add an observer
 
-		//new SonarConsumerForTesting( sonar, delta ).start();  //consuma
+		new SonarConsumerForTesting( sonar, delta ).start();  //consuma
 
 		sonar.activate();
 		while( sonar.isActive() ) { BasicUtils.delay(100);}
