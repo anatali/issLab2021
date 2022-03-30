@@ -53,6 +53,7 @@ public class RadarSystemConfig {
 	        sonarPort       = object.getInt("sonarPort");
 	        
 	        switch( object.getString("protocolType") ) {
+	        	case "udp"  : protcolType = ProtocolType.udp; break;
 		        case "tcp"  : protcolType = ProtocolType.tcp; break;
 		        case "coap" : protcolType = ProtocolType.coap; break;
 		        case "mqtt" : protcolType = ProtocolType.mqtt; break;
