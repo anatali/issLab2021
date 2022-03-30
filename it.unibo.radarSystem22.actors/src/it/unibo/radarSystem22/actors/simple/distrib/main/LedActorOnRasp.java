@@ -1,22 +1,25 @@
-package it.unibo.radarSystem22.actors.simple.main;
+package it.unibo.radarSystem22.actors.simple.distrib.main;
 
-import it.unibo.actorComm.ActorJK;
+ 
+import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommSystemConfig;
-import it.unibo.radarSystem22.actors.domain.LedActor;
+import it.unibo.radarSystem22.actors.domain.main.RadarSystemConfig;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
- 
- 
+import it.unibo.actorComm.context.EnablerContextForActors; 
+import it.unibo.radarSystem22.actors.domain.support.DeviceActorFactory;
+import it.unibo.radarSystem22.actors.simple.main.ApplData; 
  
 /*
  * Sistema che usa led e controller come attori locali
  */
  
-public class ControllerUsingLedOnPc {
-   
+public class LedActorOnRasp {
+private EnablerContextForActors ctx;
+
 	public void doJob() {
-		ColorsOut.outappl("ControllerUsingLedOnPc | Start", ColorsOut.BLUE);
+		ColorsOut.outappl("LedActorOnRasp | Start", ColorsOut.BLUE);
 		configure();
 		BasicUtils.aboutThreads("Before execute - ");
 		//BasicUtils.waitTheUser();
@@ -29,14 +32,19 @@ public class ControllerUsingLedOnPc {
 		DomainSystemConfig.ledGui       = true;			
 		DomainSystemConfig.tracing      = false;					
 		CommSystemConfig.tracing        = true;
+		
+//		RadarSystemConfig.ctxServerPort = ApplData.ctxPort;
+//		ProtocolType protocol           = ProtocolType.tcp;
 
-		new LedActor(ApplData.ledName);
-		new ControllerActorForLed( ApplData.controllerName );
+		ctx = new EnablerContextForActors( "ctx",ApplData.ctxPort,ApplData.protocol);
+		DeviceActorFactory.createLed(ApplData.ledName);
+ 		//new LedActor(ApplData.ledName);
+ 		//Registrazione dei componenti presso il contesto: NO MORE ... 
   	}
 	
 	protected void execute() {
-		ColorsOut.outappl("ControllerUsingLedOnPc | execute", ColorsOut.MAGENTA);
-  		ActorJK.sendAMsg( ApplData.activateCrtl );
+		ColorsOut.outappl("LedActorOnRasp | execute", ColorsOut.MAGENTA);
+		ctx.activate();
 	} 
 
 	public void terminate() {
@@ -47,7 +55,7 @@ public class ControllerUsingLedOnPc {
 	
 	public static void main( String[] args) {
 		BasicUtils.aboutThreads("Before start - ");
-		new ControllerUsingLedOnPc().doJob();
+		new LedActorOnRasp().doJob();
  		BasicUtils.aboutThreads("Before end - ");
 	}
 

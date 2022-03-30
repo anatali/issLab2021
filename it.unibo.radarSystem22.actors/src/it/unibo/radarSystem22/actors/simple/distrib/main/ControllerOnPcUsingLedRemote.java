@@ -1,9 +1,13 @@
-package it.unibo.radarSystem22.actors.simple.main;
+package it.unibo.radarSystem22.actors.simple.distrib.main;
 
 import it.unibo.actorComm.ActorJK;
+import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommSystemConfig;
-import it.unibo.radarSystem22.actors.domain.LedActor;
+import it.unibo.actorComm.utils.CommUtils;
+import it.unibo.radarSystem22.actors.domain.main.RadarSystemConfig;
+import it.unibo.radarSystem22.actors.simple.main.ApplData;
+import it.unibo.radarSystem22.actors.simple.main.ControllerActorForLed;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  
@@ -13,10 +17,10 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  * Sistema che usa led e controller come attori locali
  */
  
-public class ControllerUsingLedOnPc {
+public class ControllerOnPcUsingLedRemote {
    
 	public void doJob() {
-		ColorsOut.outappl("ControllerUsingLedOnPc | Start", ColorsOut.BLUE);
+		ColorsOut.outappl("ControllerOnPcUsingLedRemote | Start", ColorsOut.BLUE);
 		configure();
 		BasicUtils.aboutThreads("Before execute - ");
 		//BasicUtils.waitTheUser();
@@ -29,25 +33,28 @@ public class ControllerUsingLedOnPc {
 		DomainSystemConfig.ledGui       = true;			
 		DomainSystemConfig.tracing      = false;					
 		CommSystemConfig.tracing        = true;
-
-		new LedActor(ApplData.ledName);
+		
+ 		RadarSystemConfig.raspHostAddr  = "localhost";
+                 
+		ActorJK.setActorAsRemote( 
+				ApplData.ledName, ""+ApplData.ctxPort,RadarSystemConfig.raspHostAddr, ApplData.protocol);
 		new ControllerActorForLed( ApplData.controllerName );
   	}
 	
 	protected void execute() {
-		ColorsOut.outappl("ControllerUsingLedOnPc | execute", ColorsOut.MAGENTA);
+		ColorsOut.outappl("ControllerOnPcUsingLedRemote | execute", ColorsOut.MAGENTA);
   		ActorJK.sendAMsg( ApplData.activateCrtl );
 	} 
 
 	public void terminate() {
 		BasicUtils.aboutThreads("Before exit - ");
-// 	    CommUtils.delay(5000);
+  	    CommUtils.delay(5000);
 //		System.exit(0);
 	}
 	
 	public static void main( String[] args) {
 		BasicUtils.aboutThreads("Before start - ");
-		new ControllerUsingLedOnPc().doJob();
+		new ControllerOnPcUsingLedRemote().doJob();
  		BasicUtils.aboutThreads("Before end - ");
 	}
 

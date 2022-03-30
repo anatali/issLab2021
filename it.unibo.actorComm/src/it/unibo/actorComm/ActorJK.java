@@ -66,17 +66,19 @@ public  class ActorJK   {
     }
     
     public static void sendAMsg(IApplMessage msg, String destActorName){
+		ColorsOut.out("AcorJK | sendAMsg " + msg  , ColorsOut.GREEN);
         Actor22 a = (Actor22) Actor22.getActor(destActorName);
-		ColorsOut.out("sendAMsg " + msg + " to:" + a.getName() , ColorsOut.MAGENTA);
         if( a != null ) { //attore locale
-        	autoMsg(a,msg);
+    		ColorsOut.out("AcorJK | sendAMsg " + msg + " to:" + a.getName() , ColorsOut.GREEN);
+    		autoMsg(a,msg);
         }else{ //invio di un msg ad un attore non locale : cerco in proxyMap
 			ProxyAsClient pxy = proxyMap.get(destActorName);
+    		ColorsOut.out("AcorJK | sendAMsg " + msg + " using:" + pxy , ColorsOut.GREEN);
 			if( pxy != null ) {
 				if( msg.isRequest() ) {
 					String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
 					IApplMessage reply= new ApplMessage( answerMsg );
-					ColorsOut.out("answer=" + reply.msgContent() , ColorsOut.MAGENTA);
+					ColorsOut.out("AcorJK | answer=" + reply.msgContent() , ColorsOut.GREEN);
 					Actor22 sender = Actor22.getActor(msg.msgSender());
 					autoMsg( sender,reply); //WARNING: the sender must handle the reply as msg
 				}else {
