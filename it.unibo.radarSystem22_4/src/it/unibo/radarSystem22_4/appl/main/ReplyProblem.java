@@ -34,7 +34,7 @@ private EnablerContext server;
 	}
  
 	protected void execute() {
-	    BasicUtils.aboutThreads( "Before execute   "  );
+	    BasicUtils.aboutThreads( "Before execute  "  );
 		//Attivo due Thread di richiesta		
 		new Thread() {
 			public void run() {

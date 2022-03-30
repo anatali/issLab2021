@@ -4,7 +4,25 @@
 
 
 
-.. _BlokingQueue: https://www.baeldung.com/java-blocking-queue
+.. _BlokingQueue: https://www.baeldung.com/java-blocking-
+.. _Programmazione funzionale: https://it.wikipedia.org/wiki/Programmazione_funzionale
+.. _Paradigma di programmazione: https://it.wikipedia.org/wiki/
+.. _Modello computazionale ad attori: https://en.wikipedia.org/wiki/Actor_model
+.. _CSP: https://en.wikipedia.org/wiki/Communicating_sequential_processes
+.. _Hewitt: https://en.wikipedia.org/wiki/Carl_Hewitt
+.. _Akka: https://akka.io/
+.. _GOLang: ://www.html.it/guide/go-lang/
+.. _GO: https://go.dev/
+.. _GO doc: https://go.dev/doc/
+.. _Go Manual: https://go.dev/doc/
+.. _Kotlin Actors: https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html#actors
+.. _Kotlin Channel: https://play.kotlinlang.org/hands-on/Introduction%20to%20Coroutines%20and%20Channels/08_Channels
+.. _Akka Actors: https://doc.akka.io//docs/akka/current/typed/guide/actors-motivation.html
+.. _Akka Documentation: https://doc.akka.io//docs/akka/current/index.html
+
+.. http://www-lia.deis.unibo.it/Courses/RetiLM/proposteProgetti/akka_dds_proposal.html
+.. it.unibo.qakactor/userDocs/LabQakPrologUsage2020.html
+
 
 ======================================
 Attori 
@@ -20,13 +38,13 @@ Al termine de :ref:`Lo SPRINT4` abbiamo costruito un sistema la cui architettura
 Come conseguenza, risulta possibile che lo stesso componente applicativo di tipo :ref:`IApplMsgHandler<IApplMsgHandler>` possa
 essere utilizzato da due o più clienti remoti. 
 
-Il caso di studio introdotto in :ref:`Problemi ancora aperti`  pone in evidenza comportamenti erronei che potrebbero derivare
+I casi di studio introdotto in :ref:`Sprint4: esperimenti`  pone in evidenza comportamenti erronei che potrebbero derivare
 da questa condivisione e la difficoltà di concepire test unit in grado di fare emergere le situazioni che li generano.
 
-Non merviglia che, per evitare alla radice il problema, molti propongano di vincolare i componenti applicativi ad un modello 
-di computazione puramente funzionale, privandoli di fatto di uno stato interno modificabile.
+Non merviglia che, per evitare alla radice il problema, molti propongano di vincolare i componenti applicativi 
+ad un modello di `Programmazione funzionale`_, privandoli di uno stato interno modificabile.
 
-Abbiamo anche 'teorizzato' che la trasformazione di un componente applicativo da POJO ad ente attivo Attore potrebbe evitare
+Abbiamo anche detto che la trasformazione di un componente applicativo da POJO ad Attore potrebbe evitare
 questo vincolo, sostituendo alla interazione basata su procedure-call una interazione basata sullo scambio di messaggi.
 
 .. image:: ./_static/img/Architectures/ContestiEComponenti.PNG
@@ -34,14 +52,52 @@ questo vincolo, sostituendo alla interazione basata su procedure-call una intera
    :width: 80%
 
 
-In questo modo, il 'macro-cosmo' rappresentato dalla applicazioni distribuite di rete troverebbe una sua reificazione anche a livello 
-del 'micro-cosmo' rappresentato dalla interazioni di componenti interni al sistema.
+In questo modo, il 'macro-mondo' rappresentato dalla applicazioni distribuite di rete troverebbe una sua reificazione anche a livello 
+del 'micro-mondo' rappresentato dalla interazioni di componenti interni al sistema.
+Questa uniformità concettuale introduce di fatto un nuovo `Paradigma di programmazione`_.
 
-Questa uniformità concettuale introduce di fatto un nuovo paradigma di programmazione che potrebbe trovare un ostacolo nella prolificazione
-di Thread dovuta alla trasformazione dei POJO in attori.
+---------------------------------
+Il paradigma ad Attori
+---------------------------------
+Secondo Carl `Hewitt`_  (uno dei padri fondatori) il modello dell'attore è stato ispirato, 
+a differenza dei precedenti modelli di calcolo,  
+dalla fisica , inclusa la relatività generale e la meccanica quantistica.
 
-Ma fortunatamente è oggi possibile evitare questa prolificazione. In questa parte vedremo come.
+Vi è oggi una ampia gamma di proposte di linguaggi / libreire ad attori Molte oggi sono le libreire , tra cui:
 
+
+ 
+- `Akka`_ : ispirato a `Modello computazionale ad attori`_ di  Hewitt. Per le motivazioni si veda `Akka actors`_.
+- `GO`_ : ispirato a `CSP`_ propone *goroutine* e *CanaliGO*. Per la documentazione si veda `GO doc`_.
+- `Kotlin actors`_ : propone *croutines* e *channels* (si veda `Kotlin channel`_)
+
+.. che potrebbe  però trovare un ostacolo nella prolificazione di Thread dovuta alla trasformazione dei POJO in Attori.
+.. Ma fortunatamente è oggi possibile evitare questa prolificazione, come vedremo più avanti. 
+
+Un motto di riferimento per questo modello è il seguente:
+
+:remark:`Do not communicate by sharing memory; instead, share memory by communicating.`
+
+Prima di addentraci nei dettagli tecnici, può essere conveniente operare ancora come semplici utenti 
+di un qualche supporto/infrastruttura disponibile, 
+in modo da acquisire confidenza con il nuovo modo di organizzare il software implicato dal modello ad attori.
+
+L'infrastruttura che useremo qui è stata sviluppata in Kotlin, per la sua compatibità con Java.
+
+++++++++++++++++++++++++
+Actor20 e Actor22  
+++++++++++++++++++++++++
+
+Per evitare confusioni, indicheremo
+
+- **Actor20** o **ActorQak**: gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.6.jar``
+- **Actor22**: gli attori usabili in Java in questa fase del nostro percorso, grazie a due classi:
+  
+  - :blue:`Actor22.java` : classe che specializza la classe-base degli Actor20  (``ActorBasic.kt``)  per 
+    agevolare l'uso degli Actor20 nell'ambito di applicazioni Java (e non Kotlin).
+  - :blue:`ActorJK.java` : classe  che fornisce metodi **static** di utilità per l'uso di Attor20
+ 
+ 
 
 
 ---------------------------------
@@ -68,20 +124,6 @@ Progetto it.unibo.actorComm
           it.unibo.is.interfaces.protocols.IConnInteraction //libreria uniboInterfaces.jar
      public  class ActorJK
 
-++++++++++++++++++++++++
-ActorJK
-++++++++++++++++++++++++
-
-- ActorJK : classe Java che fornisce metodi **static** per l'uso di Attori-kotlin 2020  
-
-
- 
- 
-++++++++++++++++++++++++
-Actor22
-++++++++++++++++++++++++
-
-- Actor22 : classe Java che specializza la classe-base degli attori-kotlin 2020 per la usabilità nella versione 2022.
 
 ---------------------------------
 it.unibo.radarSystem22.actors

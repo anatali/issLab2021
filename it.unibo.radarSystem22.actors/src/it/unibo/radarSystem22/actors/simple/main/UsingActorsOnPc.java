@@ -1,4 +1,4 @@
-package it.unibo.radarSystem22.actors.domain.main;
+package it.unibo.radarSystem22.actors.simple.main;
 
 import it.unibo.actorComm.ActorJK;
 import it.unibo.actorComm.ProtocolType;
