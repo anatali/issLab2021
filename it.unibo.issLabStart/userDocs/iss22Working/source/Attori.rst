@@ -97,7 +97,26 @@ Per evitare confusioni, indicheremo
     agevolare l'uso degli Actor20 nell'ambito di applicazioni Java (e non Kotlin).
   - :blue:`ActorJK.java` : classe  che fornisce metodi **static** di utilità per l'uso di Attor20
  
+++++++++++++++++++++++++++++++
+UsingLedNoControllerOnPc 
+++++++++++++++++++++++++++++++
+
+Programma Java che usa un Led locale definito come attore, inviandogli comandi di accensione/spegnimento.
+Non ha senso inviare al Led richieste sullo stato perchè il sistema richiede che ci sia un attore capace
+di ricevere la reply.
+
+++++++++++++++++++++++++++++++
+ControllerUsingLedOnPc 
+++++++++++++++++++++++++++++++
+
+Programma Java che crea due attori locali: un Controller e un Led e invia un messaggio di attivazione al Controller, il quale:
  
+- invia messaggi al Led per accenderlo/spegnerlo   per un numero prefissato di volte;
+- i messaggi di accesione/spegnimento non sono inviati all'interno di un ciclo, ma, dopo il primo, solo in conseguenza della ricezione
+  della risposta a una richiesta del valore dello stato del Led.
+
+Infatti tutti gli attori sono gestiti da un unico Thread Java. Se Controller non rilascia il controllo, il Led non può
+essere eseguito.
 
 
 ---------------------------------

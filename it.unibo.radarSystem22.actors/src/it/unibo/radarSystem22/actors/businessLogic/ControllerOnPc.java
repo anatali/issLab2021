@@ -38,9 +38,6 @@ private ActionFunction endFun;
 	 * Il ControllerOnPc riceve dati dal sonar e attiva gli use cases
 	 */
 	protected void activate( int limit ) {
-// 		new Thread() {
-//			public void run() { 
-//				try {
   					boolean sonarActive = sonar.isActive();
 					ColorsOut.outappl("ControllerOnPc | STARTS " + sonarActive , ColorsOut.CYAN);
 					if( sonarActive ) {
@@ -57,10 +54,5 @@ private ActionFunction endFun;
 					sonar.deactivate();
 					endFun.run("ControllerOnPc | BYE ");
 					//System.exit(0);
-//				} catch (Exception e) {
-//		 			ColorsOut.outerr("ERROR"+e.getMessage());
-//				}					
-//			}
-//		}.start();		
 	}
  }

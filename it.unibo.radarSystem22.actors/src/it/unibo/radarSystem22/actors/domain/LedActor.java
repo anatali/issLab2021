@@ -2,10 +2,9 @@ package it.unibo.radarSystem22.actors.domain;
 
 import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.Actor22;
-import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
-import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
+import it.unibo.radarSystem22.actors.simple.main.ApplData;
 import it.unibo.radarSystem22.domain.DeviceFactory;
 import it.unibo.radarSystem22.domain.interfaces.*;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
@@ -24,9 +23,8 @@ private ILed led;
 
 	@Override
 	protected void doJob(IApplMessage msg) {
-		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
-		//ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.CYAN);
-		String msgId = msg.msgId();
+		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+//		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.CYAN);
 		if( msg.isRequest() ) elabRequest(msg);
 		else elabCmd(msg);
 	}
@@ -34,8 +32,8 @@ private ILed led;
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
  		switch( msgCmd ) {
-			case "turnOn"  : led.turnOn();break;
-			case "turnOff" : led.turnOff();break;
+			case ApplData.comdLedon  : led.turnOn();break;
+			case ApplData.comdLedoff : led.turnOff();break;
 			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
 		}
 	}
@@ -45,9 +43,9 @@ private ILed led;
 		//ColorsOut.outappl( getName()  + " | elabRequest " + msgCmd, ColorsOut.BLUE);
  
 		switch( msgReq ) {
-			case "getState"  :{
+			case ApplData.reqLedState  :{
 				boolean b = led.getState();
-				IApplMessage reply = MsgUtil.buildReply(getName(), "ledState", ""+b, msg.msgSender());
+				IApplMessage reply = MsgUtil.buildReply(getName(), ApplData.reqLedState, ""+b, msg.msgSender());
 				//ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.CYAN);
  				Actor22.sendReply(msg, reply );
 				

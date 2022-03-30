@@ -33,15 +33,6 @@ private ActorBasic radar;
 */
 	public ControllerActorForLocal(String name, String ledName, String sonarName, String radarName) {
 		this( name, Actor22.getActor(ledName), Actor22.getActor(sonarName),Actor22.getActor(radarName) );
-//		ActorBasic a = Actor22.getActor(ledName);
-//		if( a != null ) this.led = a;
-//		else ColorsOut.outerr("NOT FOUND Actor with name " + ledName );
-//		a = Actor22.getActor(sonarName);
-//		if( a != null ) this.sonar = a;
-//		else ColorsOut.outerr("NOT FOUND Actor with name " + sonarName );
-//		a = Actor22.getActor(radarName);
-//		if( a != null ) this.radar = a;
-//		else ColorsOut.outerr("NOT FOUND Actor with name " + radarName );		
 	}
 
 	@Override
@@ -96,7 +87,7 @@ private ActorBasic radar;
 			//sendMsg(updateRadarGui, radar );  
 			Actor22.sendAMsg( updateRadarGui, radar);
 		}
-		//LED
+		//LED Control
 		if( d < DomainData.DLIMIT ) {
 			//sendMsg(DomainData.ledOn, led );  
 			Actor22.sendAMsg( DomainData.ledOn, led );
@@ -105,7 +96,7 @@ private ActorBasic radar;
 			Actor22.sendAMsg( DomainData.ledOff, led );
 		}
 		BasicUtils.delay(DomainSystemConfig.sonarDelay*3);  //Intervengo ogni 3 dati generati
-		//CONTROL
+		//CONTROL the Controller
 		if( d > DomainData.DLIMIT - 10) {
 			//sendMsg(DomainData.sonarDistance, sonar );
 			Actor22.sendAMsg( DomainData.sonarDistance, sonar);

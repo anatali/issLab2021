@@ -67,8 +67,8 @@ public  class ActorJK   {
     
     public static void sendAMsg(IApplMessage msg, String destActorName){
         Actor22 a = (Actor22) Actor22.getActor(destActorName);
-		ColorsOut.out("sendAMsg to" + a , ColorsOut.MAGENTA);
-        if( a != null ) {
+		ColorsOut.out("sendAMsg " + msg + " to:" + a.getName() , ColorsOut.MAGENTA);
+        if( a != null ) { //attore locale
         	autoMsg(a,msg);
         }else{ //invio di un msg ad un attore non locale : cerco in proxyMap
 			ProxyAsClient pxy = proxyMap.get(destActorName);
