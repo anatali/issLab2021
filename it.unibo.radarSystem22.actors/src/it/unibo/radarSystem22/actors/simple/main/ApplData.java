@@ -14,7 +14,9 @@ public class ApplData {
 
 	public static final String cmdActivate  = "activate";
 	public static final String cmdDectivate = "deactivate";
-	
+
+	public static final String evEndWork    = "endWork";
+
 	public static final int ctxPort          = 8018;
 	public static final ProtocolType protocol= ProtocolType.tcp;
 	
@@ -24,6 +26,7 @@ public class ApplData {
 	
 	public static final  IApplMessage activateCrtl = CommUtils.buildDispatch("main", "cmd", cmdActivate, controllerName);
 	
+	public static final  IApplMessage endWorkEvent = CommUtils.buildEvent(controllerName, evEndWork, evEndWork );
 	
 	
 }

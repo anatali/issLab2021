@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import it.unibo.actorComm.ProtocolType;
 import it.unibo.actorComm.proxy.ProxyAsClient;
+import it.unibo.actorComm.utils.BasicUtils;
 import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.ApplMessage;
@@ -25,6 +26,8 @@ public class TestContext {
 		CommSystemConfig.protcolType = ProtocolType.tcp;
 // 		SimpleApplHandler applH = new SimpleApplHandler("applH");
  		SimpleApplActor applH = new SimpleApplActor("applActor");
+ 		
+ 		BasicUtils.waitTheUser();
  		
 		contextServer = new EnablerContextForActors("ctxEnblr",  ""+ctxServerPort, 
 				CommSystemConfig.protcolType, new ContextMsgHandler("ctxH"));

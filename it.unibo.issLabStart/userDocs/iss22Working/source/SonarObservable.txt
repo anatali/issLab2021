@@ -52,6 +52,39 @@ notificato agli observer potrebbe essere **int**, **String** o **IDistance**.
 Poichè gli observer potrebbero essere non locali e scritti in linguaggi diversi da Java, optiamo qui
 per notificare dati in forma di **String**, in modo da agevolare l'interoperabilità. 
 
+
+Il pattern observer 'classico' prevede che la sorgente di informazione (ne nostro caso il Sonar o DistanceMeasured)
+offra metodi per la registrazione dei riferimenti agli oggetti Observer interessati agli aggiornamenti.
+Inoltre ogni Observer deve implementare un metodo (``update``) che viene invocato dal Sonar all'interno del suo 
+Thread di lavoro o mediante altro Thread appositamente creato. L'aggiornamento degli Observer pone infatti un
+problema:
+- se la sorgente invoca l'update degli observer nel suo Thread di lavoro, essa può subire un ritardo che 
+  dipende dal tempo di esecuzione dell'Observer; se un Observer entra in loop, la sorgente di blocca;
+- se la sorgente invoca l'update degli observer in un Thread creato ad hoc, vi può essere un prolificazione 
+  non tollerabile di Thread nel caso di molti observer.
+
+Ci sentiamo quindi indotti a introdurre un principio:
+
+:remark:`il funzionamento di una sorgente osservabile non dovrebbe essere influenzato dalla presenza di Observer`
+
+.. In meccanica quantistica, un Observer sembra determinare la natura stessa della sorgente  
+
+Secondo quseto principio, il Sonar non dovrebbe nemmeno diventare osservabile attraverso l'uso di protocollo
+publish-sbuscribe in quanto dovrebbe utilizzare (e quindi dipendere da) un broker.
+
+Da un punto di vista concettuale una sorgente di informazione dovrebbe risultare osservabile quando capace di 
+emettere informazione in modo che possa essere ricevuta da un numero qualsiasi di osservatori interessati
+grazie a meccanismi che non alterano il funzionamento della sorgente.
+
+Questa idea fa sorgere un abstraction gap, in quanto suggerisce un nuovo modello:
+
+:remark:`una sorgente di informazione è osservabile quando emette tale informazione in forma di evento`
+
+Un evento è stato introdotto in :ref:`Terminologia di riferimento` come un messaggio che non ha un preciso destinatario.
+
+
+
+
 In ogni caso, volendo impostare il Sonar come un dispositivo osservabile, 
 introduciamo un nuovo contratto, che estende il precedente:
 

@@ -26,7 +26,7 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
              host=    {"localhost","localhost"}, 
              port=    {"8048","8048"}, 
              protocol={"UDP","UDP"})
-public class UsingActorsOnPc {
+public class UsingActorsWithAnnotOnPc {
 	
 //	 ILed ISonar ARE NO MORE NECESSARY
 //	private Actor22 radar;
@@ -89,7 +89,7 @@ public class UsingActorsOnPc {
 	
 	public static void main( String[] args) {
 		BasicUtils.aboutThreads("Before start - ");
-		new UsingActorsOnPc().doJob();
+		new UsingActorsWithAnnotOnPc().doJob();
  		BasicUtils.aboutThreads("Before end - ");
 	}
 

@@ -21,9 +21,14 @@ public class BasicUtils {
 	}
 	
 	public static void waitTheUser() {
-		try {
-			ColorsOut.outappl("Please hit to restart ", ColorsOut.ANSI_PURPLE);
-			System.in.read();
+		try {			
+			int v = -1;
+			while( v != '0' ) {
+				if( v == 13 || v == 10 )  {}
+				else ColorsOut.outappl("Please hit 0 to restart " , ColorsOut.WHITE_BACKGROUND);
+				v=System.in.read();		
+ 				if( v == '0') break;
+			}
 		} catch (Exception e) {
 				e.printStackTrace();
 		}

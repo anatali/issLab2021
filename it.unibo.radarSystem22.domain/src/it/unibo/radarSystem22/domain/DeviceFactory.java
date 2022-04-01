@@ -1,9 +1,9 @@
 package it.unibo.radarSystem22.domain;
 
 import it.unibo.radarSystem22.domain.concrete.RadarDisplay;
-import it.unibo.radarSystem22.domain.concrete.SonarConcreteObservable;
+import it.unibo.radarSystem22.domain.concrete.SonarConcreteForObs;
 import it.unibo.radarSystem22.domain.interfaces.*;
-import it.unibo.radarSystem22.domain.mock.SonarMockObservable;
+import it.unibo.radarSystem22.domain.mock.SonarMockForObs;
 import it.unibo.radarSystem22.domain.models.LedModel;
 import it.unibo.radarSystem22.domain.models.SonarModel;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
@@ -19,9 +19,12 @@ public class DeviceFactory {
 			return LedModel.createLedConcrete();
 		}
 	}
-	public static ISonar createSonar(boolean observable) {
-		if( observable ) return createSonarObservable();
-		else return createSonar();
+	public static ISonarForObs createSonarForObs( ) {
+		if( DomainSystemConfig.simulation)  {
+			return new SonarMockForObs();
+		}else { 
+			return new SonarConcreteForObs();
+		}
 	}
 
 	public static ISonar createSonar() {
@@ -32,15 +35,7 @@ public class DeviceFactory {
 			return SonarModel.createSonarConcrete();
 		}
 	}
-	public static ISonarObservable createSonarObservable() {
-		ColorsOut.out("DeviceFactory | createSonarObservable simulated="+DomainSystemConfig.simulation);
-		if( DomainSystemConfig.simulation)  {
-			return new SonarMockObservable();
-		}else { 
-			return new SonarConcreteObservable();
-		}	
-	}
-	
+ 
 	//We do not have mock for RadarGui
 	public static IRadarDisplay createRadarGui() {
 		return RadarDisplay.getRadarDisplay();

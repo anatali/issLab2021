@@ -7,7 +7,7 @@ import it.unibo.actorComm.utils.CommSystemConfig;
 import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.radarSystem22.actors.domain.main.RadarSystemConfig;
 import it.unibo.radarSystem22.actors.simple.main.ApplData;
-import it.unibo.radarSystem22.actors.simple.main.ControllerActorForLed;
+import it.unibo.radarSystem22.actors.simple.main.ControllerActorOnPc;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  
@@ -38,7 +38,7 @@ public class ControllerOnPcUsingLedRemote {
                  
 		ActorJK.setActorAsRemote( 
 				ApplData.ledName, ""+ApplData.ctxPort,RadarSystemConfig.raspHostAddr, ApplData.protocol);
-		new ControllerActorForLed( ApplData.controllerName );
+		new ControllerActorOnPc( ApplData.controllerName );
   	}
 	
 	protected void execute() {

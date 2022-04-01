@@ -24,7 +24,7 @@ private ILed led;
 	@Override
 	protected void doJob(IApplMessage msg) {
 		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
-//		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.CYAN);
+		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.CYAN);
 		if( msg.isRequest() ) elabRequest(msg);
 		else elabCmd(msg);
 	}
@@ -47,8 +47,7 @@ private ILed led;
 				boolean b = led.getState();
 				IApplMessage reply = MsgUtil.buildReply(getName(), ApplData.reqLedState, ""+b, msg.msgSender());
 				//ColorsOut.outappl( getName()  + " | reply= " + reply, ColorsOut.CYAN);
- 				Actor22.sendReply(msg, reply );
-				
+ 				Actor22.sendReply(msg, reply );				
 				break;
 			}
  			default: ColorsOut.outerr(getName()  + " | unknown " + msgReq);

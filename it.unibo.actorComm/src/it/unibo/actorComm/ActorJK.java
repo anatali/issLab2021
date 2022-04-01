@@ -2,14 +2,56 @@ package it.unibo.actorComm;
 
 
 import it.unibo.actorComm.annotations.AnnotUtil;
+import it.unibo.actorComm.events.EventMsgHandler;
 import it.unibo.actorComm.proxy.ProxyAsClient;
 import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.actorComm.utils.CommUtils;
 import it.unibo.kactor.*;
 import java.util.HashMap;
 
 public  class ActorJK   {
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
+    public static final String registerForEvent   = "registerForEvent";
+    public static final String unregisterForEvent = "unregisterForEvent";
+    
+	public static void registerAsEventObserver(String observer, String evId) {
+		IApplMessage m =
+				CommUtils.buildDispatch(observer, registerForEvent, evId, EventMsgHandler.myName);
+		sendAMsg( m, EventMsgHandler.myName );
+	}
+    public static void emit(IApplMessage msg) {
+    	if( msg.isEvent() ) {
+    		ColorsOut.outappl( "ActorJK | emit=" + msg  , ColorsOut.GREEN);
+    		sendAMsg( msg, EventMsgHandler.myName);
+    	}   	
+    }
+
+    
+    //TODO: mettere in Actor22
+    protected static HashMap<String,String> eventObserverMap = new HashMap<String,String>();  
+	 
+	public static void handleEvent(IApplMessage msg) {
+		try {
+		ColorsOut.outappl( "ActorJK handleEvent:" + msg, ColorsOut.MAGENTA);
+		if( msg.isDispatch() && msg.msgId().equals(ActorJK.registerForEvent)) {
+			eventObserverMap.put(msg.msgSender(), msg.msgContent());
+		}else if( msg.isEvent()) {
+			eventObserverMap.forEach(
+					( actorName,  evName) -> {
+						System.out.println(actorName + " " + evName); 
+						if( evName.equals(msg.msgId()) ) {
+							ActorJK.sendAMsg(msg, actorName );
+						}
+			} ) ;
+		}else {
+			ColorsOut.outerr( "ActorJK handleEvent: msg unknown");
+		}
+		}catch( Exception e) {
+			ColorsOut.outerr( "ActorJK handleEvent ERROR:" + e.getMessage());
+		}
+	}    
+//---------------------------------------------------------------    
     public static void handleLocalActorDecl(Object element) {
     	AnnotUtil.createActorLocal(element);
     }
@@ -100,6 +142,8 @@ public  class ActorJK   {
              }
         }
     }
+    
+    
 
 /*
     public ActorJK(@NotNull String name ) {

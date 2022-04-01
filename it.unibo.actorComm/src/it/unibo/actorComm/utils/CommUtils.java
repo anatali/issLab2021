@@ -42,10 +42,19 @@ public class CommUtils {
 		try {
 			return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
 		} catch (Exception e) {
-			ColorsOut.outerr("buildRequest ERROR:"+ e.getMessage());
+			ColorsOut.outerr("buildReply ERROR:"+ e.getMessage());
 			return null;
 		}
 	}
+	public static ApplMessage buildEvent( String emitter, String msgId, String payload ) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.event.toString(),emitter,"ANY",payload,""+(msgNum++));
+		} catch (Exception e) {
+			ColorsOut.outerr("buildEvent ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	
 
 	public static ApplMessage prepareReply(IApplMessage requestMsg, String answer) {
 		String sender  = requestMsg.msgSender();

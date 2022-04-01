@@ -8,19 +8,12 @@ import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 
 
-/*
- * Controller che accende-spegne un Led actor locale
- */
-public class ControllerActorForLed extends Actor22{
+public class ControllerActorOnPc extends Actor22{
 	
 	protected int numIter = 0;
  
- 
- 
-/*
-* Costruttore che riceve i NOMI degli attori componenti  
-*/
-	public ControllerActorForLed(String name  ) {
+
+	public ControllerActorOnPc(String name  ) {
 		super(name);
  	}
 
@@ -53,7 +46,11 @@ public class ControllerActorForLed extends Actor22{
 	 	    if( numIter%2 == 1) ActorJK.sendAMsg(ApplData.turnOnLed, ApplData.ledName  );
 	 	    else ActorJK.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
 	 	    ActorJK.sendAMsg(ApplData.getState, ApplData.ledName  );	
-		}else ActorJK.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
+		}else {
+			ActorJK.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
+			ColorsOut.outappl(getName() + " | emit " + ApplData.endWorkEvent, ColorsOut.MAGENTA);
+			ActorJK.emit(ApplData.endWorkEvent);
+		}
    }
 	
 	

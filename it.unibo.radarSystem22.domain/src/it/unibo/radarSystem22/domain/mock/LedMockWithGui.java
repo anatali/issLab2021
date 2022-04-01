@@ -13,11 +13,12 @@ import it.unibo.radarSystem22.domain.utils.BasicUtils;
 
 
 public class LedMockWithGui extends LedMock {  
+	private static int delta        = 0;
+
 private Panel p ; 
 private Frame frame;
 private final Dimension sizeOn  = new Dimension(100,100);
 private final Dimension sizeOff = new Dimension(30,30);
-
 	public static ILed createLed(  ){
 		LedMockWithGui led = new LedMockWithGui( initFrame(150,150) );
 		return led;
@@ -37,6 +38,8 @@ private final Dimension sizeOff = new Dimension(30,30);
 		p.setSize( sizeOff );
 		p.setBackground(Color.red);
 		frame.add(BorderLayout.CENTER,p);
+		delta = delta+50;
+		frame.setLocation(delta, delta);
  		//p.validate();
  		//this.frame.validate();
   	}

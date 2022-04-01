@@ -13,7 +13,8 @@ public class TestLed {
  
 	@Before
 	public void up() {
-		System.out.println("up");
+		DomainSystemConfig.simulation = true; 
+		DomainSystemConfig.ledGui     = true; 
 	}
 	
 	@After
@@ -25,7 +26,6 @@ public class TestLed {
 	public void testLedMock() {
 		
 		System.out.println("testLedMock");
-		DomainSystemConfig.simulation = true; 
 		
 		ILed led = DeviceFactory.createLed();
 		assertTrue( ! led.getState() );
@@ -40,6 +40,12 @@ public class TestLed {
 		
 		BasicUtils.delay(1000);		//to see the ledgui
 	}	
+	
+	@Test 
+	public void testAnotherLedMock() {
+		ILed led = DeviceFactory.createLed();
+		assertTrue( ! led.getState() );
+	}
 	
 	//@Test 
 	public void testLedConcrete() {
