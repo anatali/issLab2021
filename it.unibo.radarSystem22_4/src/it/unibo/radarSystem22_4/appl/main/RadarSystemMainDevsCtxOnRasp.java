@@ -60,11 +60,16 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	protected void configure() {		
  	   led   = DeviceFactory.createLed(); 
 	   sonar = DeviceFactory.createSonar();
-   
+
+	   BasicUtils.aboutThreads("After device creation");
+
  	   //contextServer  = new TcpContextServer("TcpCtxServer",RadarSystemConfig.ctxServerPort); 	   
 	   contextServer = new EnablerContext("ctx",""+RadarSystemConfig.ctxServerPort,
  			                  RadarSystemConfig.protcolType, new ContextMsgHandler("ctxH"));
-		//Registrazione dei componenti presso il contesto
+	   
+	   BasicUtils.aboutThreads("After context creation");
+
+	   //Registrazione dei componenti presso il contesto
  	   IApplMsgHandler sonarHandler = SonarApplHandler.create("sonarH",sonar); 
 	   IApplMsgHandler ledHandler   = LedApplHandler.create("ledH",led);		  
 	   contextServer.addComponent("sonar", sonarHandler);	//sonar NAME mandatory
@@ -73,10 +78,12 @@ public class RadarSystemMainDevsCtxOnRasp implements IApplication{
 	
 	protected void execute() {		
 		contextServer.activate();
+		BasicUtils.aboutThreads("After context activation");
 	}
 	
 	public static void main( String[] args) throws Exception {
 		//ColorsOut.out("Please set RadarSystemConfig.pcHostAddr in RadarSystemConfig.json");
+		BasicUtils.aboutThreads("Before main start up");
 		new RadarSystemMainDevsCtxOnRasp().doJob(null,null);
  	}
 

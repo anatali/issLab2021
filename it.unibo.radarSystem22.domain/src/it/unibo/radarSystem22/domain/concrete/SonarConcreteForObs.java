@@ -2,18 +2,25 @@ package it.unibo.radarSystem22.domain.concrete;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 import it.unibo.radarSystem22.domain.Distance;
 import it.unibo.radarSystem22.domain.DistanceMeasured;
-import it.unibo.radarSystem22.domain.models.SonarModelObservable;
+import it.unibo.radarSystem22.domain.interfaces.IDistanceMeasured;
+import it.unibo.radarSystem22.domain.interfaces.ISonarForObs;
+import it.unibo.radarSystem22.domain.models.SonarModel;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
  
-public class SonarConcreteObservable extends SonarModelObservable   {
+public class SonarConcreteForObs extends SonarModel implements ISonarForObs  {
 	private  BufferedReader reader ;
 	private int lastSonarVal      = 0;
 	private Process p             = null;
-	 
+ 	protected IDistanceMeasured observableDistance ; 
+	
+	@Override
+	public IDistanceMeasured getDistance() {
+		return observableDistance;
+	}
+
 	@Override
 	protected void sonarSetUp() {//called by SonarModel constructor
  		observableDistance = new DistanceMeasured( );
@@ -64,5 +71,7 @@ public class SonarConcreteObservable extends SonarModelObservable   {
 		}
 		super.deactivate();
  	}
+
+
   
 }

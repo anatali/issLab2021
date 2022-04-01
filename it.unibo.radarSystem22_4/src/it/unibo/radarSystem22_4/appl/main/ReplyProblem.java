@@ -18,7 +18,7 @@ private EnablerContext server;
 	public void doJob() {
 		configure();
 		execute();
-		terminate();
+//		terminate();
 	}
 	
 	protected void configure() {
