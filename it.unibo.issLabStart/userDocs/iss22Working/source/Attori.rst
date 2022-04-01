@@ -79,3 +79,52 @@ Un motto di riferimento alquanto significativo per questo modello è il seguente
 
 :remark:`Do not communicate by sharing memory; instead, share memory by communicating.`
 
+Nel nostro modello computazionale, un attore presenta le seguenti proprietà:
+
+- ha un **nome univoco** nell'ambito di tutto il sistema;
+- è logicamente attivo, cioè dotato di flusso di controllo autonomo;
+- nasce, vive e muore in un contesto che può essere comune a (molti) altri attori;
+- è capace di inviare messaggi ad un altro attore, di cui conosce il **nome**, incluso sè stesso;
+- è capace di eseguire elaborazioni autonome o elaborazioni di messaggi;
+- è dotato di una sua **coda locale** in cui sono depositati i messaggi inviategli da altri attori 
+  (o da sè stesso) quando i messaagi arrivano mentre l'attore è impegnato in una fase di elaborazione;
+- elabora i messaggi ricevuti uno alla volta, prelevandoli dalla sua coda in modo FIFO.
+
+Possiamo pensare che questo modello di attore sia realizzato in Java con un Thread e una `BlokingQueue`_, 
+ma motivi di efficienza ci porteranno ad utilizzare le *coroutines* e i *channel* di Kotlin.
+
+
+.. image:: ./_static/img/Architectures/contesti.PNG 
+    :align: center
+    :width: 60%
+
+---------------------------------
+Sistemi ad Attori locali
+---------------------------------
+
+Limitiamoci al momento a considerare un unico nodo di elaborazione in cui vive un certo numero di 
+attori locali che interagiscono tra loro scambiandosi messaggi.
+
+++++++++++++++++++++++++
+Actor20 e Actor22  
+++++++++++++++++++++++++
+
+Nel seguito, per evitare confusioni, useremo i segenti termini:
+
+- **Actor20** (o **ActorQak**): per indicare gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.6.jar``
+  realizzata in anni passati;
+- **Actor22**: per inidicare gli attori che useremo in questa fase del nostro percorso, all'interno di normali programmi Java, 
+  mediante a due classi appositamente definite :
+  
+  - :blue:`Actor22.java` : classe che specializza la classe-base degli Actor20  (``ActorBasic.kt``)  per 
+    agevolare l'uso degli Actor20 nell'ambito di applicazioni Java (senza dover introdurre l'uso di Kotlin).
+  - :blue:`ActorJK.java` : classe  che fornisce metodi **static** di utilità per l'uso di attori ``Actor22``.
+
+Grazie a queste due classi potremo usare gli attori **Actor22** senza dovere, al momento, conoscere Kotlin.
+Ovviamente, in una fase successiva cercheremo di operare avvaledoci dirattemnte di Kotlin.
+
+++++++++++++++++++++++++
+Actor22: creazione  
+++++++++++++++++++++++++
+
+

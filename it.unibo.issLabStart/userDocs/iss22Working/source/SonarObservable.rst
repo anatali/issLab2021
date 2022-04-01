@@ -12,7 +12,7 @@ Il SonarObservable
 =============================================
 
 Tenendo conto di quanto detto in *Indicazioni-sul-processo-di-produzione* (:doc:`CostruireSoftware`), 
-impostiamo un processo di produzione del software relativo a un nuovo insieme di requisiti
+impostiamo un processo di produzione del software relativo a un nuovo insieme di requisiti.
 
 
 .. _requirements:
@@ -126,11 +126,11 @@ SonarObservable: progetto
 
 Il progetto consiste nel realizzare i seguenti componenti:
 
-- :ref:`DistanceMeasured` : implementa :ref:`IDistanceMeasured` utlizzando la classe java.util.Observable per
+- :ref:`DistanceMeasured` : implementa :ref:`IDistanceMeasured` utlizzando la classe ``java.util.Observable`` per
   le gestione degli Observer;
-- :ref:`SonarMockForObs` : specializza la classe :ref:`SonarModel` realizzando un Sonar mock orientato alla 
+- :ref:`SonarMockForObs` : specializza :ref:`SonarModel` realizzando un Sonar mock orientato alla 
   osservabilità dei dati, in quanto produttore di valori di  *distanza misurata osservabile*.  
-- :ref:`SonarConcreteForObs` : specializza la classe :ref:`SonarModel` realizzando un Sonar concreto orientato alla 
+- :ref:`SonarConcreteForObs` : specializza  :ref:`SonarModel` realizzando un Sonar concreto orientato alla 
   osservabilità dei dati, in quanto produttore di valori di  *distanza misurata osservabile*.
 
 
@@ -160,12 +160,12 @@ come segue:
     @Override
     public String toString() { return ""+ getVal(); }
   	@Override
-  	public void addObserver(IObserver obs) {
-			super.addObserver(obs);
-	 	}
+    public void addObserver(IObserver obs) {
+      super.addObserver(obs);
+    }
     @Override
-	  public void deleteObserver(IObserver obs) {
- 		  super.deleteObserver(obs);
+    public void deleteObserver(IObserver obs) {
+      super.deleteObserver(obs);
     }
   }
  
@@ -212,7 +212,8 @@ Il testing sul ``SonarMockObservable`` viene qui impostato nel modo che segue:
     DomainSystemConfig.testingDistance = 22;
     boolean oneShot           = true;			
     ISonarForObs  sonar       = DeviceFactory.createSonarForObs();
-    IObserver obs1            = new SonarObserverFortesting("obs1",sonar,oneShot) ;
+    IObserver obs1            = new SonarObserverFortesting(
+                                    "obs1",sonar,oneShot) ;
     sonar.getDistance().addObserver( obs1 );	 
     sonar.activate();
     BasicUtils.delay(100);   
@@ -286,7 +287,7 @@ per conto di un qualche client.
 Verso gli eventi
 ------------------------------------------
 
-Il classico :ref:`patternObserver` prevede che la sorgente di informazione (ne nostro caso il Sonar o DistanceMeasured)
+Il classico :ref:`patternObserver` prevede che la sorgente di informazione (nel nostro caso :ref:`DistanceMeasured`)
 offra metodi per la registrazione dei riferimenti agli oggetti Observer interessati agli aggiornamenti.
 Inoltre ogni Observer deve implementare un metodo (``update``) che viene invocato dal Sonar all'interno del suo 
 Thread di lavoro o mediante altro Thread appositamente creato. L'aggiornamento degli Observer pone infatti un
@@ -303,16 +304,17 @@ Ci sentiamo quindi indotti a introdurre un principio:
 
 .. In meccanica quantistica, un Observer sembra determinare la natura stessa della sorgente  
 
-Secondo quseto principio, il Sonar non dovrebbe nemmeno diventare osservabile attraverso l'uso di protocollo
-publish-sbuscribe in quanto dovrebbe utilizzare (e quindi dipendere da) un broker.
+Secondo quseto principio, dovremmo escludere anche la possibilità di rendere il Sonar osservabile attraverso l'uso di un protocollo
+publish-sbuscribe, in quanto dovrebbe utilizzare (e quindi dipendere da) un broker.
 
-Da un punto di vista concettuale una sorgente di informazione dovrebbe risultare osservabile quando capace di 
-emettere informazione in modo che possa essere ricevuta da un numero qualsiasi di osservatori interessati
+Da un punto di vista concettuale, una sorgente di informazione dovrebbe risultare osservabile in quanto capace di 
+emettere informazione percebibile da un numero qualsiasi di osservatori interessati,
 grazie a meccanismi che non alterano il funzionamento della sorgente.
 
-Questa idea fa sorgere un abstraction gap, in quanto suggerisce un nuovo modello:
+Questa idea fa sorgere un **abstraction gap**, e suggerisce un nuovo modello:
 
-:remark:`una sorgente è osservabile quando emette informazione in forma di eventi`
+:remark:`una sorgente è osservabile quando emette informazione in forma di evento`
 
-Un evento è stato introdotto in :ref:`Terminologia di riferimento` come un messaggio che non ha un preciso destinatario.
+Il concetto di **evento** è stato introdotto in :ref:`Terminologia di riferimento` 
+come un messaggio che non ha un preciso destinatario.
  

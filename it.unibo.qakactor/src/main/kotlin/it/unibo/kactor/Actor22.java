@@ -54,6 +54,9 @@ public abstract class Actor22 extends ActorBasic {
     }
 
 
+
+
+
     public static void sendAMsg(IApplMessage msg, ActorBasic destActor ){
         if( destActor instanceof Actor22 ){
             destActor.autoMsg(msg,((Actor22) destActor).mycompletion);
@@ -117,12 +120,23 @@ public abstract class Actor22 extends ActorBasic {
         this.autoMsg(msg, mycompletion);
     }
 
-    public void sendMsg(IApplMessage msg, ActorBasic destActor ){
+    //-------------------------------------------------------------------------------
+    //ADDED for Actor22 - April 2022
+    public void sendAMsg(String msgId,  String msg, Actor22 destActor ){
+        destActor.forward(msgId, msg, destActor.getName(), destActor.getmycompletion());
+    }
+    public void sendAMsg(IApplMessage msg, Actor22 destActor ){
+        sendMsg(msg, destActor );
+    }
+
+
+    //-------------------------------------------------------------------------------
+    public void sendMsg(IApplMessage msg, Actor22 destActor ){
         //System.out.println("Actor22 | sendMsg " + msg + " dest=" + destActor.getName());
         //destActor.autoMsg( msg, mycompletion);
         destActor.forward( msg.msgId(), msg.msgContent(), destActor.getName(), mycompletion);
     }
-    public void sendMsg(String msgId,  String msg, ActorBasic destActor ){
+    public void sendMsg(String msgId,  String msg, Actor22 destActor ){
         destActor.forward(msgId, msg, destActor.getName(),mycompletion);
     }
 
