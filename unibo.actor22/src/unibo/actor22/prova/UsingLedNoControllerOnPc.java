@@ -41,16 +41,16 @@ import unibo.actor22.Qak22Util;
 	protected void execute() {
 		ColorsOut.outappl("UsingLedNoControllerOnPc | execute", ColorsOut.MAGENTA);
 		for( int i=1; i<=2; i++) {
-	 	    Qak22Util.sendAMsg(ApplData.turnOnLed, ApplData.ledName  );
+	 	    Qak22Util.sendAMsg( ApplData.turnOnLed  );
 	 	    CommUtils.delay(500);
 // Inviare una request richiede un attore capace di ricevere la reply	 	    
-	 	    //Qak22Util.sendAMsg( getState, ApplData.ledName  );
-	 	    led.elabMsg(getState);   //Richiesta asincrona. Reply inviata a main
+	 	    Qak22Util.sendAMsg( getState   );
+	 	    //led.elabMsg(getState);   //Richiesta asincrona. Reply inviata a main
 	 	    CommUtils.delay(500); 	    
-	 	    //Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
-	 	    led.elabMsg(ApplData.turnOffLed);  //ALTERNATIVA all'uso della utility
+	 	    Qak22Util.sendAMsg( ApplData.turnOffLed  );
+	 	    //led.elabMsg(ApplData.turnOffLed);  //ALTERNATIVA all'uso della utility
 	 	    CommUtils.delay(500);
-	 	    led.elabMsg(getState);   //Richiesta asincrona. Reply inviata a main
+	 	    Qak22Util.sendAMsg( getState   );   //Richiesta asincrona. Reply inviata a main
 		}
  	} 
 

@@ -21,7 +21,7 @@ private ILed led;
 	}
 
 	@Override
-	protected void doJob(IApplMessage msg) {
+	protected void handleMsg(IApplMessage msg) {
 		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
 		ColorsOut.out( getName()  + " | doJob " + msg, ColorsOut.CYAN);
 		if( msg.isRequest() ) elabRequest(msg);

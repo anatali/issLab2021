@@ -21,7 +21,7 @@ protected IApplMessage getStateRequest ;
  	}
 
 	@Override
-	protected void doJob(IApplMessage msg) {  
+	protected void handleMsg(IApplMessage msg) {  
 		if( msg.isReply() ) {
 			elabAnswer(msg);
 		}else { 
@@ -46,12 +46,15 @@ protected IApplMessage getStateRequest ;
 		//ColorsOut.outappl( getName()  + " | numIter=" + numIter  , ColorsOut.GREEN);
    	    //Inviare un treno di messaggi NON VA BENE: mantiene il controllo del Thread degli attori  (qaksingle)
 		if( numIter++ < 5 ) {
-	 	    if( numIter%2 == 1) Qak22Util.sendAMsg(ApplData.turnOnLed, ApplData.ledName  );
-	 	    else Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
-	 	    Qak22Util.sendAMsg(getStateRequest, ApplData.ledName  );	
+	 	    if( numIter%2 == 1) //Qak22Util.sendAMsg(ApplData.turnOnLed, ApplData.ledName  );
+	 	    	forward( ApplData.turnOnLed );
+	 	    else //Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
+	 	    	forward( ApplData.turnOffLed );
+	 	    //Qak22Util.sendAMsg(getStateRequest, ApplData.ledName  );	
+	 	    request(getStateRequest);
 		}else {
-			Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
-			ColorsOut.outappl(getName() + " | emit " + ApplData.endWorkEvent, ColorsOut.MAGENTA);
+			//Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
+			forward( ApplData.turnOffLed );
 		}
    }
 	

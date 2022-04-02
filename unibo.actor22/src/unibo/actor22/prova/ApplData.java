@@ -1,7 +1,10 @@
 package unibo.actor22.prova;
 
 import it.unibo.actorComm.ProtocolType;
+import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.actorComm.utils.CommUtils;
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.ApplMessageType;
 import it.unibo.kactor.IApplMessage;
 
 public class ApplData {
@@ -20,13 +23,64 @@ public class ApplData {
 	public static final int ctxPort          = 8018;
 	public static final ProtocolType protocol= ProtocolType.tcp;
 	
-	public static final IApplMessage turnOnLed    = CommUtils.buildDispatch(controllerName, "cmd", comdLedon,   ledName);
-	public static final IApplMessage turnOffLed   = CommUtils.buildDispatch(controllerName, "cmd", comdLedoff,  ledName);
-//	public static final IApplMessage getState     = CommUtils.buildRequest(controllerName,  "ask", reqLedState, ledName);
+	public static final IApplMessage turnOnLed    = buildDispatch(controllerName, "cmd", comdLedon,   ledName);
+	public static final IApplMessage turnOffLed   = buildDispatch(controllerName, "cmd", comdLedoff,  ledName);
 	
-	public static final  IApplMessage activateCrtl = CommUtils.buildDispatch("main", "cmd", cmdActivate, controllerName);
+	public static final  IApplMessage activateCrtl = buildDispatch("main", "cmd", cmdActivate, controllerName);
 	
-	public static final  IApplMessage endWorkEvent = CommUtils.buildEvent(controllerName, evEndWork, evEndWork );
+	public static final  IApplMessage endWorkEvent = buildEvent(controllerName, evEndWork, evEndWork );
 	
+	
+	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
+	private static int msgNum=0;	
+
+	public static IApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.dispatch.toString(),sender,dest,payload,""+(msgNum++));
+		} catch (Exception e) {
+			ColorsOut.outerr("buildDispatch ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	public static IApplMessage buildRequest(String sender, String msgId, String payload, String dest) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.request.toString(),sender,dest,payload,""+(msgNum++));
+		} catch (Exception e) {
+			ColorsOut.outerr("buildRequest ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	
+	public static IApplMessage buildReply(String sender, String msgId, String payload, String dest) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.reply.toString(),sender,dest,payload,""+(msgNum++));
+		} catch (Exception e) {
+			ColorsOut.outerr("buildReply ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	public static IApplMessage buildEvent( String emitter, String msgId, String payload ) {
+		try {
+			return new ApplMessage(msgId, ApplMessageType.event.toString(),emitter,"ANY",payload,""+(msgNum++));
+		} catch (Exception e) {
+			ColorsOut.outerr("buildEvent ERROR:"+ e.getMessage());
+			return null;
+		}
+	}
+	
+
+	public static IApplMessage prepareReply(IApplMessage requestMsg, String answer) {
+		String sender  = requestMsg.msgSender();
+		String receiver= requestMsg.msgReceiver();
+		String reqId   = requestMsg.msgId();
+		IApplMessage reply = null;
+		if( requestMsg.isRequest() ) { //DEFENSIVE
+			//The msgId of the reply must be the id of the request !!!!
+ 			reply = buildReply(receiver, reqId, answer, sender) ;
+		}else { 
+			ColorsOut.outerr( "Utils | prepareReply ERROR: message not a request");
+		}
+		return reply;
+    }
 	
 }
