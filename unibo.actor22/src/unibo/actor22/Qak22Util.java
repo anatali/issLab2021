@@ -9,7 +9,7 @@ import it.unibo.kactor.*;
 import unibo.actor22.annotations.AnnotUtil;
 import java.util.HashMap;
 
-public  class Actors22Util   {
+public  class Qak22Util   {
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
     public static final String registerForEvent   = "registerForEvent";
@@ -34,14 +34,14 @@ public  class Actors22Util   {
 	public static void handleEvent(IApplMessage msg) {
 		try {
 		ColorsOut.outappl( "Actors22Util handleEvent:" + msg, ColorsOut.MAGENTA);
-		if( msg.isDispatch() && msg.msgId().equals(Actors22Util.registerForEvent)) {
+		if( msg.isDispatch() && msg.msgId().equals(Qak22Util.registerForEvent)) {
 			eventObserverMap.put(msg.msgSender(), msg.msgContent());
 		}else if( msg.isEvent()) {
 			eventObserverMap.forEach(
 					( actorName,  evName) -> {
 						System.out.println(actorName + " " + evName); 
 						if( evName.equals(msg.msgId()) ) {
-							Actors22Util.sendAMsg(msg, actorName );
+							Qak22Util.sendAMsg(msg, actorName );
 						}
 			} ) ;
 		}else {
@@ -74,7 +74,7 @@ public  class Actors22Util   {
 
 
     public static void showActors22(){
-    	Actors22Util.showActors22();
+    	Qak22Util.showActors22();
     }
     
  
@@ -105,33 +105,38 @@ public  class Actors22Util   {
 //    	
 //    }
     
+    
+    
+   
+    
     //Usabile da Java: Distingue tra locale e remoto
     public static void sendAMsg( IApplMessage msg ){
     	sendAMsg( msg, msg.msgReceiver() );
     }
-    
+   
     public static void sendAMsg(IApplMessage msg, String destActorName){
-		ColorsOut.out("AcorJK | sendAMsg " + msg  , ColorsOut.GREEN);
-        Actor22 a = Actor22.getActor(destActorName);
-        if( a != null ) { //attore locale
-    		ColorsOut.out("AcorJK | sendAMsg " + msg + " to:" + a.getName() , ColorsOut.GREEN);
-    		a.autoMsg(msg);
+		//ColorsOut.out("Qak22Util | sendAMsg " + msg  , ColorsOut.GREEN);	  
+        QakActor22 dest = Qak22Context.getActor(destActorName);  
+        if( dest != null ) { //attore locale
+    		ColorsOut.out("Qak22Util | sendAMsg " + msg + " to:" + dest.getName() , ColorsOut.GREEN);
+    		dest.elabMsg(msg);
         }else{ //invio di un msg ad un attore non locale : cerco in proxyMap
 			ProxyAsClient pxy = proxyMap.get(destActorName);
-    		ColorsOut.out("AcorJK | sendAMsg " + msg + " using:" + pxy , ColorsOut.GREEN);
+    		ColorsOut.out("Qak22Util | sendAMsg " + msg + " using:" + pxy , ColorsOut.GREEN);
 			if( pxy != null ) {
 				if( msg.isRequest() ) {
 					String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
 					IApplMessage reply= new ApplMessage( answerMsg );
-					ColorsOut.out("AcorJK | answer=" + reply.msgContent() , ColorsOut.GREEN);
-					Actor22 sender = Actor22.getActor(msg.msgSender());
-					sender.autoMsg(  reply); //WARNING: the sender must handle the reply as msg
+					ColorsOut.out("Qak22Util | answer=" + reply.msgContent() , ColorsOut.GREEN);
+					QakActor22 sender = Qak22Context.getActor(msg.msgSender());
+					sender.elabMsg(reply); //WARNING: the sender must handle the reply as msg
 				}else {
 					pxy.sendCommandOnConnection(msg.toString());
 				}
 			}
         }
-      }
+ 
+		}
 
     //sendAnswer(IApplMessage msg, IApplMessage reply) in Actor22
 //    public static void sendReply(IApplMessage msg, IApplMessage reply) {

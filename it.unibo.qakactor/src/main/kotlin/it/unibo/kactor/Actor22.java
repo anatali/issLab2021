@@ -44,8 +44,8 @@ public abstract class Actor22 extends ActorBasic {
         ctxMap.forEach((k,v) -> { System.out.println("name: "+k+" also in Qak:"+ QakContext.Companion.getActor(k) ); } );
         System.out.println("-------------------------------------------------------");
     }
-
-    public static void sendAMsg(String msgId,  String msg, ActorBasic destActor ){
+/*
+    public static void sendAMsg(String msgId,  String msg, Actor22 destActor ){
         //null for kotlin.coroutines.Continuation<? super Unit> $completion
         if( destActor instanceof Actor22 ){
             destActor.forward(msgId,    msg,   destActor.getName(),((Actor22) destActor).mycompletion);
@@ -53,17 +53,13 @@ public abstract class Actor22 extends ActorBasic {
         else destActor.forward(msgId,    msg,   destActor.getName(),null);
     }
 
-
-
-
-
-    public static void sendAMsg(IApplMessage msg, ActorBasic destActor ){
+    public static void sendAMsg(IApplMessage msg, Actor22 destActor ){
         if( destActor instanceof Actor22 ){
             destActor.autoMsg(msg,((Actor22) destActor).mycompletion);
         }
         //System.out.println("Actor22 | sendMsg " + msg + " dest=" + destActor.getName());
         else destActor.autoMsg(msg,null);
-    }
+    }*/
     /*
     public static void sendAMsg(IApplMessage msg, String destActorName, String entry, String protocol){
         Actor22 a = Actor22.getActor(destActorName);
@@ -76,10 +72,10 @@ public abstract class Actor22 extends ActorBasic {
     public static void sendReply(IApplMessage msg, IApplMessage reply) {
         //System.out.println(   "Actor22 sendReply | reply= " + reply );
         Actor22 dest = getActor(msg.msgSender());
-        if(dest != null) sendAMsg(reply, dest);
+        if(dest != null) dest.sendAMsg(reply, dest);
         else {
             Actor22 ar = getActor("ar"+msg.msgSender());
-            if(ar !=null) sendAMsg(reply, ar);
+            if(ar !=null) dest.sendAMsg(reply, ar);
             else {
                 System.out.println("Actor22 sendReply | Reply IMPOSSIBLE");
              }

@@ -157,7 +157,7 @@ Messaging
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend open fun autoMsg(  msg : IApplMessage) {
      //println("ActorBasic $name | autoMsg $msg actor=${actor}")
-     actor.send( msg )
+        actor.send( msg )
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi

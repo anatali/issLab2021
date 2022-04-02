@@ -99,36 +99,134 @@ ma motivi di efficienza ci porteranno ad utilizzare le *coroutines* e i *channel
     :width: 60%
 
 ---------------------------------
-Sistemi ad Attori locali
+Sistemi locali ad Attori 
 ---------------------------------
 
 Limitiamoci al momento a considerare un unico nodo di elaborazione in cui vive un certo numero di 
 attori locali che interagiscono tra loro scambiandosi messaggi.
 
 ++++++++++++++++++++++++
-Actor20 e Actor22  
+ActorQak e QakActor22  
 ++++++++++++++++++++++++
 
 Nel seguito, per evitare confusioni, useremo i segenti termini:
 
-- **Actor20** (o **ActorQak**): per indicare gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.6.jar``
+- **ActorQak**: per indicare gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.6.jar``
   realizzata in anni passati;
-- **Actor22**: per inidicare gli attori che useremo in questa fase del nostro percorso, all'interno di normali programmi Java, 
-  mediante a due classi appositamente definite nel progetto it.unibo.actorComm:
+- **QakActor22**: per inidicare gli attori che useremo in questa fase del nostro percorso, all'interno di normali programmi Java, 
+  mediante a due classi appositamente definite .. nel progetto ``unibo.actor22``:
   
-  - :blue:`Actor22.java` : classe che specializza la classe-base degli Actor20  (``ActorBasic.kt``)  per 
+  - :blue:`QakActor22.java` : classe che specializza la classe-base (``ActorBasic.kt``) degli ActorQak per 
     agevolare l'uso degli Actor20 nell'ambito di applicazioni Java (senza dover introdurre l'uso di Kotlin).
-  - :blue:`ActorJK.java` : classe  che fornisce metodi **static** di utilità per l'uso di attori ``Actor22``.
+  - :blue:`Qak22Util.java` : classe  che fornisce metodi **static** di utilità per l'uso di attori ``QakActor22``.
 
-Grazie a queste due classi potremo usare gli attori **Actor22** senza dovere, al momento, conoscere Kotlin.
+Grazie a queste due classi potremo usare gli attori  ``QakActor22`` senza dovere, al momento, conoscere Kotlin.
 Ovviamente, in una fase successiva cercheremo di operare avvaledoci dirattemnte di Kotlin.
 
+Per introdurci all'uso di queste classi, vediamo come definire ed usare un attore relativo al Led.
+
++++++++++++++++++++++++++++++++
+LedActor extends QakActor22
++++++++++++++++++++++++++++++++
+
+Un attore relativo al Led è un componente attivo che specializza la classe astratta ``QakActor22``. 
+
+.. code:: java
+
+  public class LedActor extends QakActor22{
+  private ILed led;
+    public LedActor(String name) {
+      super(name);
+      led = DeviceFactory.createLed();
+    }
+
++++++++++++++++++++++++++++++
+QakActor22: il costruttore
++++++++++++++++++++++++++++++
+
+Al momento della creazione dell'attore viene invocato il costruttore definito in ``QakActor22`` che 
+
+.. code:: java
+
+	public QakActor22(@NotNull String name ) {      
+		super(name, QakContext.Companion.createScope(), false, true, false, 50);
+        if( Qak22Context.getActor(name) == null ) {
+        	Qak22Context.addActor( this );
+        	ColorsOut.outappl( getName()  + " | CREATED " , ColorsOut.CYAN);
+        }
+        else ColorsOut.outerr("QakActor22 | WARNING: an actor with name " + name + " already exists");	
+	}
+
+
+Il dispositivo di tipo :ref:`ILed<ILed>` gestito dal core-code (si veda :ref:`concettodienabler`)
+viene, al solito, incapsulato (**embedded**) all'interno dell'attore, il quale  
+gestisce (interpretandoli) comandi e richieste di tipo ``it.unibo.kactor.IApplMessage`` specializzando il meotodo doJob
+
+.. code:: java
+
+	@Override
+	protected void doJob(IApplMessage msg) {
+		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+		if( msg.isRequest() ) elabRequest(msg);
+		else elabCmd(msg);
+	}
+
+Si noti che l'interfaccia ``IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.6.jar``,
+così da riutilizzare il codice già sviluppato negli anni scorsi.
+
+La intepretazione ed elaborazione dei comandi è molto semplice e identica a quanto fatto in :ref:`LedApplHandler`:
+
+.. code:: java
+
+	protected void elabCmd(IApplMessage msg) {
+		String msgCmd = msg.msgContent();
+ 		switch( msgCmd ) {
+			case ApplData.comdLedon  : led.turnOn();break;
+			case ApplData.comdLedoff : led.turnOff();break;
+			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
+		}
+	}
+
+La intepretazione ed elaborazione delle richieste è ancora del tutto simile a quanto fatto in :ref:`LedApplHandler`
+
+.. code:: java
+
+	protected void elabRequest(IApplMessage msg) {
+		String msgReq = msg.msgContent();
+		switch( msgReq ) {
+			case ApplData.reqLedState  :{
+				boolean b = led.getState();
+				IApplMessage reply = MsgUtil.buildReply(getName(), ApplData.reqLedState, ""+b, msg.msgSender());
+ 				sendReply(msg, reply );				
+				break;
+			}
+ 			default: ColorsOut.outerr(getName()  + " | unknown " + msgReq);
+		}
+	}
+
 ++++++++++++++++++++++++
-Actor22: creazione  
+QakActor22: sendReply
 ++++++++++++++++++++++++
 
 
-new LedActor(ApplData.ledName);
+Il metodo ``sendReply`` viene erediato dalla classe ``QakActor22`` e viene definito come segue:
+
+.. code:: java
+
+	protected void sendReply(IApplMessage msg, IApplMessage reply) {
+    QakActor22 dest = Qak22Context.getActor( msg.msgSender() );
+    if(dest != null) dest.elabMsg( reply );
+    else { //ci potrebbe essere un attore ad hoc per ricevere la risposta
+      QakActor22 ar = Qak22Context.getActor("ar"+msg.msgSender());  
+      if(ar !=null) dest.elabMsg( reply );
+      else { ColorsOut.outerr("QakActor22 | WARNING: reply IMPOSSIBLE");
+      }
+    }
+  }	
+
+++++++++++++++++++++++++
+Qak22Context
+++++++++++++++++++++++++
 
  
 
