@@ -1,5 +1,9 @@
 #
+<<<<<<< HEAD
 #Fri Apr 01 15:53:18 CEST 2022
+=======
+#Fri Apr 01 10:14:49 CEST 2022
+>>>>>>> a6adf3b5669f4ff43419b83ed18598a288d15932
 org.eclipse.jdt.core.compiler.codegen.methodParameters=do not generate
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 org.eclipse.jdt.core.compiler.debug.localVariable=generate

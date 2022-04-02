@@ -12,6 +12,7 @@ import java.util.HashMap;
 public  class ActorJK   {
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
+
     public static final String registerForEvent   = "registerForEvent";
     public static final String unregisterForEvent = "unregisterForEvent";
     

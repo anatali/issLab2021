@@ -126,11 +126,19 @@ SonarObservable: progetto
 
 Il progetto consiste nel realizzare i seguenti componenti:
 
+<<<<<<< HEAD
 - :ref:`DistanceMeasured` : implementa :ref:`IDistanceMeasured` utlizzando la classe ``java.util.Observable`` per
   le gestione degli Observer;
 - :ref:`SonarMockForObs` : specializza :ref:`SonarModel` realizzando un Sonar mock orientato alla 
   osservabilità dei dati, in quanto produttore di valori di  *distanza misurata osservabile*.  
 - :ref:`SonarConcreteForObs` : specializza  :ref:`SonarModel` realizzando un Sonar concreto orientato alla 
+=======
+- :ref:`DistanceMeasured` : implementa :ref:`IDistanceMeasured` utlizzando la classe java.util.Observable per
+  le gestione degli Observer;
+- :ref:`SonarMockForObs` : specializza la classe :ref:`SonarModel` realizzando un Sonar mock orientato alla 
+  osservabilità dei dati, in quanto produttore di valori di  *distanza misurata osservabile*.  
+- :ref:`SonarConcreteForObs` : specializza la classe :ref:`SonarModel` realizzando un Sonar concreto orientato alla 
+>>>>>>> a6adf3b5669f4ff43419b83ed18598a288d15932
   osservabilità dei dati, in quanto produttore di valori di  *distanza misurata osservabile*.
 
 
@@ -160,12 +168,21 @@ come segue:
     @Override
     public String toString() { return ""+ getVal(); }
   	@Override
+<<<<<<< HEAD
     public void addObserver(IObserver obs) {
       super.addObserver(obs);
     }
     @Override
     public void deleteObserver(IObserver obs) {
       super.deleteObserver(obs);
+=======
+  	public void addObserver(IObserver obs) {
+			super.addObserver(obs);
+	 	}
+    @Override
+	  public void deleteObserver(IObserver obs) {
+ 		  super.deleteObserver(obs);
+>>>>>>> a6adf3b5669f4ff43419b83ed18598a288d15932
     }
   }
  
@@ -212,8 +229,12 @@ Il testing sul ``SonarMockObservable`` viene qui impostato nel modo che segue:
     DomainSystemConfig.testingDistance = 22;
     boolean oneShot           = true;			
     ISonarForObs  sonar       = DeviceFactory.createSonarForObs();
+<<<<<<< HEAD
     IObserver obs1            = new SonarObserverFortesting(
                                     "obs1",sonar,oneShot) ;
+=======
+    IObserver obs1            = new SonarObserverFortesting("obs1",sonar,oneShot) ;
+>>>>>>> a6adf3b5669f4ff43419b83ed18598a288d15932
     sonar.getDistance().addObserver( obs1 );	 
     sonar.activate();
     BasicUtils.delay(100);   
@@ -287,7 +308,11 @@ per conto di un qualche client.
 Verso gli eventi
 ------------------------------------------
 
+<<<<<<< HEAD
 Il classico :ref:`patternObserver` prevede che la sorgente di informazione (nel nostro caso :ref:`DistanceMeasured`)
+=======
+Il classico :ref:`patternObserver` prevede che la sorgente di informazione (ne nostro caso il Sonar o DistanceMeasured)
+>>>>>>> a6adf3b5669f4ff43419b83ed18598a288d15932
 offra metodi per la registrazione dei riferimenti agli oggetti Observer interessati agli aggiornamenti.
 Inoltre ogni Observer deve implementare un metodo (``update``) che viene invocato dal Sonar all'interno del suo 
 Thread di lavoro o mediante altro Thread appositamente creato. L'aggiornamento degli Observer pone infatti un
@@ -303,6 +328,7 @@ Ci sentiamo quindi indotti a introdurre un principio:
 :remark:`una sorgente osservabile non dovrebbe essere influenzata dalla presenza di Observer`
 
 .. In meccanica quantistica, un Observer sembra determinare la natura stessa della sorgente  
+
 
 Secondo quseto principio, dovremmo escludere anche la possibilità di rendere il Sonar osservabile attraverso l'uso di un protocollo
 publish-sbuscribe, in quanto dovrebbe utilizzare (e quindi dipendere da) un broker.

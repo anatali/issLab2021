@@ -114,7 +114,7 @@ Nel seguito, per evitare confusioni, useremo i segenti termini:
 - **Actor20** (o **ActorQak**): per indicare gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.6.jar``
   realizzata in anni passati;
 - **Actor22**: per inidicare gli attori che useremo in questa fase del nostro percorso, all'interno di normali programmi Java, 
-  mediante a due classi appositamente definite :
+  mediante a due classi appositamente definite nel progetto it.unibo.actorComm:
   
   - :blue:`Actor22.java` : classe che specializza la classe-base degli Actor20  (``ActorBasic.kt``)  per 
     agevolare l'uso degli Actor20 nell'ambito di applicazioni Java (senza dover introdurre l'uso di Kotlin).
@@ -127,4 +127,8 @@ Ovviamente, in una fase successiva cercheremo di operare avvaledoci dirattemnte 
 Actor22: creazione  
 ++++++++++++++++++++++++
 
+
+new LedActor(ApplData.ledName);
+
+ 
 
