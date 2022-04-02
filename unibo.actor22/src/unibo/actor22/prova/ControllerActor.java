@@ -17,7 +17,7 @@ protected IApplMessage getStateRequest ;
 
 	public ControllerActor(String name  ) {
 		super(name);
-		getStateRequest  = CommUtils.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
+		getStateRequest  = ApplData.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
  	}
 
 	@Override

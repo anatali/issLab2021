@@ -1,7 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
-
+.. role:: worktodo
 
 
 .. _BlokingQueue: https://www.baeldung.com/java-blocking-
@@ -177,7 +177,7 @@ QakActor22: handleMsg
 La classe ``QakActor22`` è astratta in quanto lascia alle classi specilizzate il compito di definire il metodo ``handleMsg`` 
 con cui un attore applicativo gestisce (interpretandoli) comandi e richieste di tipo ``it.unibo.kactor.IApplMessage``.
 
-Si noti che l'interfaccia ``IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.6.jar``,
+Si noti che l'interfaccia c`IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.6.jar``,
 così da riutilizzare il codice già sviluppato negli anni scorsi.
 
 +++++++++++++++++++++++++++++++++++++++
@@ -192,6 +192,13 @@ Nel caso del Led possiamo scrivere ``handleMsg`` come segue:
     if( msg.isRequest() ) elabRequest(msg);
     else elabCommand(msg);
   }
+
+Il metodo ``handleMsg`` viene invocato dalla infrastruttura di supporto quando (almeno) un messaggio è disponibile nella
+coda di ingresso associata all'attore.
+
+Nella implementazione attuale:
+
+:remark:`Tutti gli attori sono eseguiti all'interno di uno stesso Thread Java`
 
 +++++++++++++++++++++++++++++++++++++++++++++
 LedActor: esecuzione di comandi
@@ -362,5 +369,145 @@ Se un attore vuole inviare un messaggio a sè stesso può utilizzare il metodo `
   }
 
 
+------------------------------------------------
+UsingLedAndControllerOnPc
+------------------------------------------------
+
+Il programma ``UsingLedAndControllerOnPc`` del package ``unibo.actor22.prova`` del progetto ``unibo.actor22`` 
+relaiiza il sistema rappresentato nella figura che segue, costituito da un attore Controller che invia
+comandi e richieste a un attore Led.
 
 
+.. image:: ./_static/img/Radar/ControllerLedActorLocal.PNG 
+    :align: center
+    :width: 60%
+
+La configurazione del sistema si riduce alla creazione dei due attori, mentre l'esecuzione si attiva inviando un dispatch al Controller:
+
+.. code:: java
+
+  protected void configure() {
+    new LedActor( ApplData.ledName );
+    new ControllerActor( ApplData.controllerName );
+  }
+  protected void execute() {
+    Qak22Util.sendAMsg( ApplData.activateCrtl );
+  } 
+
+Per comprendere (e poi progettare) il comportamento del sistema, si tenga conto dei seguenti **vincoli**:
+
+:remark:`Tutti gli attori vengono eseguiti all'interno di un unico Thread`
+
+Pertanto, affinchè ogni attore possa essere eseguito e affinchè un attore possa elaborare un altro messaggio:
+
+:remark:`Un attore deve cedere il controllo`
+
+In altre parole, solo quando il metodo **handleMsg termina** restituendo il controllo alla infrastruttura che lo ha invocato,
+si apre la possibilità che altri attori possano essere eseguiti e che l'attore stesso possa elaborare un altro messaggio.
+
+
+
++++++++++++++++++++++++++++++++++++++++++
+ControllerActor
++++++++++++++++++++++++++++++++++++++++++
+
+
+Al momento della costruzione, ControllerActor prepara un messaggio di richiesta sullo stato del Led
+
+.. code:: java
+
+  public class ControllerActor extends QakActor22{
+  protected int numIter = 0;
+  protected IApplMessage getStateRequest ;
+
+  public ControllerActor(String name  ) {
+    super(name);
+    getStateRequest  = 
+      ApplData.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
+    }
+
+La gestione dei messaggi del ``ControllerActor`` riguarda i seguenti messaggi:
+
+- il comando di attivazione ``ApplData.activateCrtl``  
+- la risposta ad ua sua richiesta al Led sullo stato
+
+.. code:: java
+
+	@Override
+	protected void handleMsg(IApplMessage msg) {  
+		if( msg.isReply() ) elabAnswer(msg);
+		else elabCmd(msg) ;	
+ 	}
+	
+	protected void elabCmd(IApplMessage msg) {
+		String msgCmd = msg.msgContent();
+		switch( msgCmd ) {
+			case ApplData.cmdActivate : {
+				doControllerWork();
+	 			break;
+			}
+			default:break;
+		}		
+	}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ControllerActor: comportamento
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Alla ricezione del messaggio di attivazione, il ``ControllerActor`` esegue il primo passo della sua BusinessLogic
+inviando al Led un comando di accensione o spegnimento  
+seguito da una richiesta sullo stato del Led;  poi cede il controllo.
+
+.. code:: java
+
+  protected void doControllerWork() {
+    if( numIter++ < 5 ) {
+      if( numIter%2 == 1)  forward( ApplData.turnOnLed ); //accesione
+      else forward( ApplData.turnOffLed ); //spegnimento
+      request(getStateRequest);
+    }else	forward( ApplData.turnOffLed );
+   }
+	
+All'arrivo della risposta del Led, il ``ControllerActor``  esegue un altro passo della sua BusinessLogic:
+
+.. code:: java
+
+  protected void elabAnswer(IApplMessage msg) {
+    CommUtils.delay(500);
+    doControllerWork();
+  }
+
+:worktodo:`WORKTODO: riprogettare il sistema inserendo un SonarActor`
+
+
+---------------------------------------------------
+Dal locale al distribuito
+---------------------------------------------------
+
+Ora che abbiamo esplorato i meccanismi-base del modello ad attori in ambiente locale, poniamoci il problema 
+di distribuire gli attori in nodi diversi.
+
+.. image:: ./_static/img/Radar/RadarSystemActor0.PNG 
+    :align: center
+    :width: 60%
+
++++++++++++++++++++++++++++++++++++++++++
+Progetto it.unibo.actorComm
++++++++++++++++++++++++++++++++++++++++++
+
+Questo progetto realizza una nuova versione del concetto di contesto introdotto in :ref:`Contesti-contenitori`
+con le seguenti caratteristiche:
+
+- utilizza una nuova versione del :ref:`ContextMsgHandler` **non memorizza più** (riferimenti a) POJO di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`
+  ma fa riferimento ad attori di tipo ``QakActor22``  
+
+- è un :ref:`EnablerContext` che permette comunicazioni ``TCP/UDP`` con componenti ``QakActor22``  
+- dipende dalla libreria *it.unibo.qakactor-2.6*  e produce la libreria: **it.unibo.actorComm-1.1.jar**,  
+- definisce: 
+ 
+  .. code::  java
+
+     public interface Interaction2021  extends 
+        it.unibo.is.interfaces.protocols.IConnInteraction 
+        //libreria uniboInterfaces.jar
+     
