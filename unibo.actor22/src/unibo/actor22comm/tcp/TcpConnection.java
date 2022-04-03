@@ -10,6 +10,7 @@ import java.net.Socket;
 
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22comm.utils.CommUtils;
   
 
 public class TcpConnection implements Interaction2021{
@@ -54,13 +55,13 @@ private Socket socket;
 
 	@Override
 	public void sendALine(String msg) throws Exception {
-		ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
+		//ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
-			//Colors.out( "TcpConnection | has sent   " + msg, Colors.ANSI_YELLOW );	 
+			//ColorsOut.outappl( "TcpConnection | has sent   " + msg, ColorsOut.CYAN );	 
 		} catch (IOException e) {
-			//Colors.outerr( "TcpConnection | sendALine ERROR " + e.getMessage());	 
+			//ColorsOut.outerr( "TcpConnection | sendALine ERROR " + e.getMessage());	 
 			throw e;
 	    }	
 	}

@@ -26,7 +26,7 @@ private EnablerContextForActors ctx;
 		DomainSystemConfig.simulation   = true;			
 		DomainSystemConfig.ledGui       = true;			
 		DomainSystemConfig.tracing      = false;					
-		CommSystemConfig.tracing        = true;
+		CommSystemConfig.tracing        = false;
   
 		ctx = new EnablerContextForActors( "ctx",ApplData.ctxPort,ApplData.protocol);
 		new LedActor( ApplData.ledName );

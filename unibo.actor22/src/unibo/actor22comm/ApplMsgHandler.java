@@ -18,7 +18,7 @@ protected String name;
    	
   	public void sendMsgToClient( String message, Interaction2021 conn  ) {
  		try {
- 			ColorsOut.out(name + " | ApplMsgHandler sendMsgToClient message=" + message + " conn=" + conn, ColorsOut.BLUE);
+ 			//ColorsOut.out(name + " | ApplMsgHandler sendMsgToClient message=" + message + " conn=" + conn, ColorsOut.BLUE);
 			conn.forward( message );
 		} catch (Exception e) {
  			ColorsOut.outerr(name + " | ApplMsgHandler sendMsgToClient ERROR " + e.getMessage());;
@@ -28,6 +28,7 @@ protected String name;
  	@Override
  	public void sendAnswerToClient( String reply, Interaction2021 conn   ) {
  		try {
+			//ColorsOut.outappl(name + " | ApplMsgHandler sendAnswerToClient reply " + reply, ColorsOut.YELLOW_BACKGROUND );
 			conn.reply(reply);
 		} catch (Exception e) {
 			ColorsOut.outerr(name + " | ApplMsgHandler sendAnswerToClient ERROR " + e.getMessage() );

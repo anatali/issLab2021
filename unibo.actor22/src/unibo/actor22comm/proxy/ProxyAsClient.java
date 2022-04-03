@@ -4,7 +4,6 @@ import unibo.actor22comm.ProtocolType;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.tcp.TcpClientSupport;
-import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.udp.UdpClientSupport;
 
 public class ProxyAsClient {
@@ -63,7 +62,7 @@ protected ProtocolType protocol ;
 	}
   	
 	public void sendCommandOnConnection( String cmd )  {
- 		ColorsOut.out( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, ColorsOut.BLUE );
+ 		//ColorsOut.outappl( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, ColorsOut.WHITE_BACKGROUND );
 		try {
 			conn.forward(cmd);
 		} catch (Exception e) {
@@ -71,12 +70,11 @@ protected ProtocolType protocol ;
 		}
 	}
 	public String sendRequestOnConnection( String request )  {
- 		ColorsOut.out( name+"  | sendRequestOnConnection " + request + " conn=" + conn, ColorsOut.BLUE  );
+ 		//ColorsOut.outappl( name+"  | sendRequestOnConnection " + request + " conn=" + conn, ColorsOut.WHITE_BACKGROUND  );
 		try {
 			String answer = conn.request(request);
-			ColorsOut.out( name+"  | sendRequestOnConnection-answer=" + answer, ColorsOut.BLUE   );
-			return answer; //CommUtils.getContent( answer );
- 		
+			//ColorsOut.outappl( name+"  | sendRequestOnConnection-answer=" + answer, ColorsOut.WHITE_BACKGROUND   );
+			return answer;  	
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
 			return null;

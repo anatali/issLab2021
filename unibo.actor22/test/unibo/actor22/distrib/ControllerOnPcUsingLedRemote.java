@@ -1,5 +1,6 @@
 package unibo.actor22.distrib;
 
+import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.Qak22Context;
@@ -31,7 +32,7 @@ public class ControllerOnPcUsingLedRemote {
 		DomainSystemConfig.simulation   = true;			
 		DomainSystemConfig.ledGui       = true;			
 		DomainSystemConfig.tracing      = false;					
-		CommSystemConfig.tracing        = true;
+		CommSystemConfig.tracing        = false;
 		
  		String raspHostAddr             = "localhost";
                  
@@ -44,11 +45,20 @@ public class ControllerOnPcUsingLedRemote {
 	protected void execute() {
 		ColorsOut.outappl("ControllerOnPcUsingLedRemote | execute", ColorsOut.MAGENTA);
   		Qak22Util.sendAMsg( ApplData.activateCrtl );
+  		//askLedStateForTesting();
 	} 
+	
+	protected void askLedStateForTesting() {
+		IApplMessage getStateRequest  = ApplData.buildRequest("main","ask", ApplData.reqLedState, ApplData.ledName);
+		for( int i=1; i<=3; i++) {
+	 		ColorsOut.outappl( "ControllerOnPcUsingLedRemote  | doRequest "  , ColorsOut.YELLOW_BACKGROUND  );
+			Qak22Util.sendAMsg( getStateRequest );
+  		}		
+	}
 
 	public void terminate() {
-		BasicUtils.aboutThreads("Before exit - ");
-  	    CommUtils.delay(5000);
+  	    CommUtils.delay(6000);
+		CommUtils.aboutThreads("Before exit - ");
 //		System.exit(0);
 	}
 	
