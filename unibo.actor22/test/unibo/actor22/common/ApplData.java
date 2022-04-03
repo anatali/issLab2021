@@ -1,4 +1,4 @@
-package unibo.actor22.prova;
+package unibo.actor22.common;
 
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.ApplMessageType;
@@ -30,7 +30,7 @@ public class ApplData {
 	public static final  IApplMessage endWorkEvent = buildEvent(controllerName, evEndWork, evEndWork );
 	
 	
-	//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
+//String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
 	private static int msgNum=0;	
 
 	public static IApplMessage buildDispatch(String sender, String msgId, String payload, String dest) {

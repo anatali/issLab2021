@@ -1,13 +1,15 @@
-package unibo.actor22.prova;
+package unibo.actor22.local;
 
-import it.unibo.actorComm.utils.ColorsOut;
-import it.unibo.actorComm.utils.CommSystemConfig;
-import it.unibo.actorComm.utils.CommUtils;
+ 
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.Qak22Util;
- 
+import unibo.actor22.prova.ApplData;
+import unibo.actor22.prova.LedActor;
+import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22comm.utils.CommSystemConfig;
+import unibo.actor22comm.utils.CommUtils; 
  
 /*
  * Sistema che usa led come attore locale

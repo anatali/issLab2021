@@ -1,14 +1,11 @@
 package unibo.actor22;
 
-import java.util.HashMap;
-
 import org.jetbrains.annotations.NotNull;
-
-import it.unibo.actorComm.proxy.ProxyAsClient;
-import it.unibo.actorComm.utils.ColorsOut;
 import it.unibo.kactor.*;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import unibo.actor22comm.proxy.ProxyAsClient;
+import unibo.actor22comm.utils.ColorsOut;
 
 public abstract class QakActor22 extends ActorBasic{
 
@@ -42,53 +39,63 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 /*
  * INVIO MESSAGGI	 
  */
-//	protected void sendMessageToActor(IApplMessage msg, String destName ) {
-//			//,IConnInteraction conn, @NotNull  Continuation<? super Unit> $completion ) {
-//		ColorsOut.out("QakActor22 | sendMessageToActor " + msg + " to:" + destName , ColorsOut.CYAN);
-//		super.sendMessageToActor( msg, destName, null, mycompletion); //null is IConnInteraction
-//	}
+ 
 	
 	protected void sendMsg( IApplMessage msg ){
-		sendMsg(msg,msg.msgReceiver());
-	}
-	
-    protected void sendMsg(IApplMessage msg, String destActorName){
+     	String destActorName=msg.msgReceiver();
 		//ColorsOut.out("Qak22Util | sendAMsg " + msg  , ColorsOut.GREEN);	  
         QakActor22 dest = Qak22Context.getActor(destActorName);  
         if( dest != null ) { //attore locale
     		ColorsOut.out("QakActor22 | sendAMsg " + msg + " to:" + dest.getName() , ColorsOut.GREEN);
     		dest.queueMsg(msg);
-        }else{ //invio di un msg ad un attore non locale : cerco in proxyMap
-//			ProxyAsClient pxy = proxyMap.get(destActorName);
-//    		ColorsOut.out("QakActor22 | sendAMsg " + msg + " using:" + pxy , ColorsOut.GREEN);
-//			if( pxy != null ) {
-//				if( msg.isRequest() ) {
-//					String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
-//					IApplMessage reply= new ApplMessage( answerMsg );
-//					ColorsOut.out("QakActor22 | answer=" + reply.msgContent() , ColorsOut.GREEN);
-//					QakActor22 sender = Qak22Context.getActor(msg.msgSender());
-//					sender.elabMsg(reply); //WARNING: the sender must handle the reply as msg
-//				}else {
-//					pxy.sendCommandOnConnection(msg.toString());
-//				}
-//			}
-        }
+        }else{  
+        	sendMsgToRemoteActor(msg);
+         }
+	}
+	
+	protected void sendMsgToRemoteActor( IApplMessage msg ) {
+		String destActorName = msg.msgReceiver();
+		//Occorre un proxy al contesto
+		ProxyAsClient pxy    = Qak22Context.getProxy(destActorName);
+		ColorsOut.out("QakActor22 | sendAMsg " + msg + " using:" + pxy , ColorsOut.GREEN);
+		if( pxy == null ) {
+			ColorsOut.outerr("Perhaps no setActorAsRemote for " + destActorName );
+			return;
+		}
+ 		if( msg.isRequest() ) { doRequest(msg,pxy);
+		}else { pxy.sendCommandOnConnection(msg.toString());
+		}	
+	}
+	
+	protected void doRequest(IApplMessage msg,  ProxyAsClient pxy ) {
+  		new Thread() {
+			public void run() {
+				String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
+				//Attende la risposta  
+				IApplMessage reply= new ApplMessage( answerMsg );
+				ColorsOut.out("QakActor22 | answer=" + reply.msgContent() , ColorsOut.GREEN);
+				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
+				sender.queueMsg(reply); //the sender must handle the reply as msg				 
+			}			
+		}.start();
+		ColorsOut.out("QakActor22 | acivateRequestViaProxy ENDS" , ColorsOut.GREEN);
 	}
 	
 	
-    public void autoMsg( IApplMessage msg ){
+	protected void autoMsg( IApplMessage msg ){
     	//WARNING: il sender di msg potrebbe essere qualsiasi
-     	if( msg.msgReceiver().equals( getName() )) sendMsg(msg,msg.msgReceiver());
+     	if( msg.msgReceiver().equals( getName() )) sendMsg( msg );
     		//sendMessageToActor(msg,msg.msgReceiver()); 
     	else ColorsOut.outerr("QakActor22 | autoMsg wrong receiver");
     }
-	public void forward( IApplMessage msg ){
+    
+	protected  void forward( IApplMessage msg ){
 		ColorsOut.outappl( "QakActor22 forward:" + msg, ColorsOut.CYAN);
 		if( msg.isDispatch() ) sendMsg( msg ); //sendMessageToActor(msg, msg.msgReceiver());
 		else ColorsOut.outerr("QakActor22 | forward requires a dispatch");
 	}
  
-    public void request( IApplMessage msg ){
+	protected void request( IApplMessage msg ){
     	if( msg.isRequest() ) sendMsg( msg );//sendMessageToActor(msg, msg.msgReceiver());
     	else ColorsOut.outerr("QakActor22 | forward requires a request");
     }

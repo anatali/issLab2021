@@ -8,9 +8,9 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import it.unibo.actorComm.ActorJK;
-import it.unibo.actorComm.ProtocolInfo;
-import it.unibo.actorComm.utils.ColorsOut;
+import unibo.actor22comm.ProtocolInfo;
+import unibo.actor22comm.utils.ColorsOut;
+ 
 
 public class AnnotUtil {
 /*
@@ -51,7 +51,7 @@ RELATED TO Actor22
         			 String host     = a.host()[i];
         			 String port     = a.port()[i];
         			 String protocol = a.protocol()[i];        			 
-        			 ActorJK.setActorAsRemote(name, port, host, ProtocolInfo.getProtocol(protocol));
+//xxx        			 ActorJK.setActorAsRemote(name, port, host, ProtocolInfo.getProtocol(protocol));
             		 ColorsOut.outappl(
             				 "CREATE REMOTE ACTOR PROXY:"+ name + " host:" + host + " port:"+port
             						 + " protocol:" + protocol, ColorsOut.MAGENTA);        			 

@@ -1,4 +1,4 @@
-package unibo.actor22.prova;
+package unibo.actor22.common;
  
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.BasicUtils;
@@ -41,10 +41,16 @@ protected IApplMessage getStateRequest ;
 	}
 	
     protected void doControllerWork() {
-		BasicUtils.aboutThreads(getName()  + " |  Before doControllerWork - ");
+//		CommUtils.aboutThreads(getName()  + " |  Before doControllerWork - ");
+//		forward( ApplData.turnOffLed );
+//		CommUtils.delay(500);
+//		forward( ApplData.turnOnLed );
+//		CommUtils.delay(500);		
+// 		request(getStateRequest);
+// 		forward( ApplData.turnOffLed );
 		//ColorsOut.outappl( getName()  + " | numIter=" + numIter  , ColorsOut.GREEN);
    	    //Inviare un treno di messaggi NON VA BENE: mantiene il controllo del Thread degli attori  (qaksingle)
-		if( numIter++ < 5 ) {
+ 		if( numIter++ < 3 ) {
 	 	    if( numIter%2 == 1) //Qak22Util.sendAMsg(ApplData.turnOnLed, ApplData.ledName  );
 	 	    	forward( ApplData.turnOnLed );
 	 	    else //Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
@@ -55,12 +61,11 @@ protected IApplMessage getStateRequest ;
 			//Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
 			forward( ApplData.turnOffLed );
 		}
-   }
-	
-	
+ 
+	}
 	
 	protected void elabAnswer(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | elabAnswer " + msg, ColorsOut.GREEN);
+		ColorsOut.outappl( getName()  + " | elabAnswer " + msg, ColorsOut.MAGENTA);
 		CommUtils.delay(500);
 		doControllerWork();
 	}

@@ -138,6 +138,8 @@ Un attore relativo al Led è un componente attivo che specializza la classe astr
 Il dispositivo di tipo :ref:`ILed<ILed>` gestito dal core-code (si veda :ref:`concettodienabler`)
 viene incapsulato (**embedded**) all'interno dell'attore.
 
+.. _QakActor22:
+
 ---------------------------------
 QakActor22: il costruttore
 ---------------------------------
@@ -326,6 +328,8 @@ L'invio di un messaggio di richiesta ad un attore da parte di normale codice Jav
 il sender potrebbe avere un nome qualsiasi (ad esempio ``main``), e  la richiesta viene eseguita,
 ma il messaggio di risposta non trova alcun attore destinatario e quindi genera un segnale di errore.
 
+.. _sendMsgFromActor:
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Invio di messaggi da attore
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -335,22 +339,31 @@ A questo fine, la classe ``QakActor22`` definisce il seguente metodo:
 
 .. code:: java
 
-  protected void sendMsg( IApplMessage msg  ) { ... }
+  protected void sendMsg( IApplMessage msg  ) { 
+    String destActorName = msg.msgReceiver();
+    QakActor22 dest = Qak22Context.getActor(destActorName);  
+    if( dest != null )   dest.queueMsg(msg); //attore locale
+    else sendMsgToRemoteActor(msg);  //attore non locale
+  }
 
-La implementazione di questo metodo prevede l'uso di canali e coroutines Kotlin. Ne rimandiamo quindi 
+	protected void queueMsg(IApplMessage msg) {
+		...
+	}
+
+La implementazione del metodo ``queueMsg`` prevede l'uso di canali e coroutines Kotlin. Ne rimandiamo quindi 
 la descrizione a quando esamineremo i dettagli della implementazione Kotlin.
 
-Dal punto di vista dell'Application Designer, il metodo  ``sendMsg `` può anche essere ignorato, in quanto ``QakActor22``  
-definisce metodi di invio messaggi al  livello di astrazione applicativo:
+Dal punto di vista dell'Application Designer, il metodo  ``sendMsg`` può anche essere ignorato, 
+in quanto ``QakActor22`` definisce metodi di invio messaggi al giusto livello di astrazione applicativo:
 
 .. code:: java
 
-  public void forward( IApplMessage msg ){
+  protected void forward( IApplMessage msg ){
     if( msg.isDispatch() ) sendMsg( msg );
     else ColorsOut.outerr("QakActor22 | forward requires a dispatch");
   }
  
-  public void request( IApplMessage msg ){
+  protected void request( IApplMessage msg ){
     if( msg.isRequest() ) sendMsg( msg );
     else ColorsOut.outerr("QakActor22 | forward requires a request");
   }
@@ -359,11 +372,11 @@ definisce metodi di invio messaggi al  livello di astrazione applicativo:
 autoMsg
 +++++++++++++++++++++++++++++++++++++++++++++
 
-Se un attore vuole inviare un messaggio a sè stesso può utilizzare il metodo ``autoMsg``:
+Se un attore vuole inviare un messaggio a sè stesso, può utilizzare il metodo ``autoMsg``:
 
 .. code:: java
 
-  public void autoMsg( IApplMessage msg ){
+  protected void autoMsg( IApplMessage msg ){
     if( msg.msgReceiver().equals( getName() )) sendMsg( msg );
     else ColorsOut.outerr("QakActor22 | autoMsg wrong receiver");
   }
@@ -492,22 +505,104 @@ di distribuire gli attori in nodi diversi.
     :width: 60%
 
 +++++++++++++++++++++++++++++++++++++++++
-Progetto it.unibo.actorComm
+Package ``unibo.actor22Comm``
 +++++++++++++++++++++++++++++++++++++++++
 
-Questo progetto realizza una nuova versione del concetto di contesto introdotto in :ref:`Contesti-contenitori`
-con le seguenti caratteristiche:
+In questo package inseriamo la realizzazione una nuova versione del concetto di contesto 
+introdotto in :ref:`Contesti-contenitori` tenendo conto di quanto già fatto 
+nello :ref:`Sprint4<Lo SPRINT4>` e dei seguenti punti:
 
-- utilizza una nuova versione del :ref:`ContextMsgHandler` **non memorizza più** (riferimenti a) POJO di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`
-  ma fa riferimento ad attori di tipo ``QakActor22``  
+- il codice dipende dalla libreria *it.unibo.qakactor-2.6*  e viene distribuito nella libreria
+  **unibo.actor22-1.0.jar**;
 
-- è un :ref:`EnablerContext` che permette comunicazioni ``TCP/UDP`` con componenti ``QakActor22``  
-- dipende dalla libreria *it.unibo.qakactor-2.6*  e produce la libreria: **it.unibo.actorComm-1.1.jar**,  
-- definisce: 
+- l'astrazione :ref:`connessione<Interaction2021>` viene definita
+  come una estensione di quanto introdotto nel supporto agli attori :ref:`ActorQak<ActorQak e QakActor22>`: 
  
   .. code::  java
 
-     public interface Interaction2021  extends 
-        it.unibo.is.interfaces.protocols.IConnInteraction 
-        //libreria uniboInterfaces.jar
-     
+    public interface Interaction2021  extends 
+      it.unibo.is.interfaces.protocols.IConnInteraction {//in uniboInterfaces.jar
+        public void forward(  String msg ) throws Exception;
+        public String request(  String msg ) throws Exception;
+        public void reply(  String reqid ) throws Exception;
+        public String receiveMsg(  ) throws Exception ;
+        public void close( )  throws Exception;
+    }
+
+- il contesto è realizzato come un :ref:`EnablerContext` che attiva
+  una elaborazione di sistema dei messaggi in ingresso specializzata per gli attori
+  avvalendosi  di una nuova versione del :ref:`ContextMsgHandler<ContextMsgHandler>`;
+
+
+
++++++++++++++++++++++++++++++++++++++++++
+ContextMsgHandler per attori
++++++++++++++++++++++++++++++++++++++++++
+
+Il nuovo gestore di sistema dei messaggi  **non memorizza più**  (riferimenti a) POJO 
+di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`,
+ma si avvale di :ref:`Qak22Context` per reindirizzare i messaggi che non siano richieste agli attori 
+:ref:`QakActor22<ActorQak e QakActor22>`  locali al nodo:
+
+.. code::  java
+
+  public class ContextMsgHandler 
+      extends ApplMsgHandler implements IApplMsgHandler{
+    @Override
+    public void elaborate( IApplMessage msg, Interaction2021 conn ) {
+      if( msg.isRequest() ) elabRequest(msg,conn);
+      else  elabNonRequest(msg,conn);
+    }
+    protected void elabNonRequest( IApplMessage msg, Interaction2021 conn ) {
+      QakActor22 a = Qak22Context.getActor( msg.msgReceiver());
+      if( a != null )  Qak22Util.sendAMsg( msg );		 
+      else ColorsOut.outerr(name + " | I should not be here .. "+msg.msgReceiver());
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Gestione di richieste
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Se un messaggio pervenuto è una richiesta, il gestore di sistema dei messaggi predispone 
+un attore capace di ricevere il messaggio di risposta prodotto dall'attore destinatario
+e inviarlo all'attore richiedente:
+
+.. code::  java
+
+  protected void elabRequest( IApplMessage msg, Interaction2021 conn ) {
+    String senderName = msg.msgSender();
+    String actorRepyName = "ar"+senderName;
+    if( Qak22Context.getActor(actorRepyName) == null ) { //non esiste già
+      new ActorForReply(actorRepyName, this, conn);
+    }		
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ActorForReply
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'attore (dinamicamente creato) che gestisce l'invio di una risposta attende il messaggio e 
+poi lo invia sulla connessione ricevuta. Quindi si auto-elimina dal sistema.
+
+.. code::  java
+
+  public class ActorForReply extends QakActor22{
+    private IApplMsgHandler h;
+    private Interaction2021 conn;
+    public ActorForReply(String name, IApplMsgHandler h, Interaction2021 conn) {
+      super(name);
+      this.h = h;
+      this.conn = conn;		 
+    }
+    @Override
+    protected void handleMsg(IApplMessage msg) { 
+      if( msg.isReply() ) h.sendAnswerToClient(msg.toString(), conn);		
+
+    }
+  }
+
++++++++++++++++++++++++++++++++++++++++++
+Invio di messaggi ad attori remoti
++++++++++++++++++++++++++++++++++++++++++
+
+Il metodo :ref:`sendMsg<sendMsgFromActor>` di :ref:`QakActor22<QakActor22>` va ora esteso

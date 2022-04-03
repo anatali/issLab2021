@@ -15,7 +15,7 @@ repositories {
     flatDir { dirs '../unibolibs' }
 }
 
-version '2.0'
+version '1.0'
 sourceCompatibility = 1.8
 
 dependencies {
@@ -45,7 +45,6 @@ dependencies {
     implementation name: 'uniboInterfaces'
     implementation name: 'unibonoawtsupports'
 	implementation name: 'it.unibo.qakactor-2.6'
-	implementation name: 'it.unibo.actorComm-2.0'
 	
 	//RADAR (support and GUI)
 	implementation name: 'radarPojo'

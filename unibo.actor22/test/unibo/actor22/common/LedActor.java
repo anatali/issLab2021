@@ -1,4 +1,4 @@
-package unibo.actor22.prova;
+package unibo.actor22.common;
  
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;

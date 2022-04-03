@@ -13,8 +13,8 @@ Kotlin coroutines are implemented with a compiler transformation to the code
 Java cannot use Kotlin's coroutines mechanic since it is a compile-time feature
  */
 
-public abstract class Actor22 extends ActorBasic {
-    private static HashMap<String,Actor22> ctxMap = new HashMap<String,Actor22>();
+public abstract class Actor22Old extends ActorBasic {
+    private static HashMap<String, Actor22Old> ctxMap = new HashMap<String, Actor22Old>();
     protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 
 
@@ -30,12 +30,12 @@ public abstract class Actor22 extends ActorBasic {
 
     }
 
-    public static void addActor(Actor22 a) {
+    public static void addActor(Actor22Old a) {
         ctxMap.put(a.getName(), a);
         //System.out.println("REGISTERED actor with name " + a.getName()  );
 
     }
-    public static Actor22 getActor(String actorName) {
+    public static Actor22Old getActor(String actorName) {
         return ctxMap.get(actorName);
     }
 
@@ -71,10 +71,10 @@ public abstract class Actor22 extends ActorBasic {
     */
     public static void sendReply(IApplMessage msg, IApplMessage reply) {
         //System.out.println(   "Actor22 sendReply | reply= " + reply );
-        Actor22 dest = getActor(msg.msgSender());
+        Actor22Old dest = getActor(msg.msgSender());
         if(dest != null) dest.sendAMsg(reply, dest);
         else {
-            Actor22 ar = getActor("ar"+msg.msgSender());
+            Actor22Old ar = getActor("ar"+msg.msgSender());
             if(ar !=null) dest.sendAMsg(reply, ar);
             else {
                 System.out.println("Actor22 sendReply | Reply IMPOSSIBLE");
@@ -83,7 +83,7 @@ public abstract class Actor22 extends ActorBasic {
     }
 
 
-    public Actor22(@NotNull String name ) {
+    public Actor22Old(@NotNull String name ) {
         super(name, QakContext.Companion.createScope(), false, true, false, 50);
         if( getActor(name) == null ) addActor( this );
         else System.out.println("Actor22 WARNING: an actor with name " + name + " already exists");
@@ -118,30 +118,30 @@ public abstract class Actor22 extends ActorBasic {
 
     //-------------------------------------------------------------------------------
     //ADDED for Actor22 - April 2022
-    public void sendAMsg(String msgId,  String msg, Actor22 destActor ){
+    public void sendAMsg(String msgId,  String msg, Actor22Old destActor ){
         destActor.forward(msgId, msg, destActor.getName(), destActor.getmycompletion());
     }
-    public void sendAMsg(IApplMessage msg, Actor22 destActor ){
+    public void sendAMsg(IApplMessage msg, Actor22Old destActor ){
         sendMsg(msg, destActor );
     }
 
 
     //-------------------------------------------------------------------------------
-    public void sendMsg(IApplMessage msg, Actor22 destActor ){
+    public void sendMsg(IApplMessage msg, Actor22Old destActor ){
         //System.out.println("Actor22 | sendMsg " + msg + " dest=" + destActor.getName());
         //destActor.autoMsg( msg, mycompletion);
         destActor.forward( msg.msgId(), msg.msgContent(), destActor.getName(), mycompletion);
     }
-    public void sendMsg(String msgId,  String msg, Actor22 destActor ){
+    public void sendMsg(String msgId,  String msg, Actor22Old destActor ){
         destActor.forward(msgId, msg, destActor.getName(),mycompletion);
     }
 
     protected void sendAnswer(IApplMessage msg, IApplMessage reply) {
         System.out.println( getName()  + " | reply= " + reply );
-        Actor22 dest = getActor(msg.msgSender());
+        Actor22Old dest = getActor(msg.msgSender());
         if(dest != null) sendMsg(reply, dest);
         else {
-            Actor22 ar = getActor("ar"+msg.msgSender());
+            Actor22Old ar = getActor("ar"+msg.msgSender());
             if(ar !=null) sendMsg(reply, ar);
             else {
                 System.out.println(getName() + " | Reply IMPOSSIBLE");

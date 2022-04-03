@@ -1,12 +1,14 @@
-package unibo.actor22.prova;
-
-import it.unibo.actorComm.events.EventMsgHandler;
-import it.unibo.actorComm.utils.BasicUtils;
-import it.unibo.actorComm.utils.ColorsOut;
-import it.unibo.actorComm.utils.CommSystemConfig;
+package unibo.actor22.local;
+ 
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.*;
+import unibo.actor22.prova.ApplData;
+import unibo.actor22.prova.ControllerActor;
+import unibo.actor22.prova.LedActor;
+import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22comm.utils.CommSystemConfig;
+import unibo.actor22comm.utils.CommUtils;
  
 
 /*
@@ -19,7 +21,7 @@ public class UsingLedAndControllerOnPc {
 	public void doJob() {
 		ColorsOut.outappl("ControllerUsingLedOnPc | Start", ColorsOut.BLUE);
 		configure();
-		BasicUtils.aboutThreads("Before execute - ");
+		CommUtils.aboutThreads("Before execute - ");
 		//BasicUtils.waitTheUser();
 		execute();
 	}
@@ -48,16 +50,16 @@ public class UsingLedAndControllerOnPc {
 	} 
 
 	public void terminate() {
-		BasicUtils.aboutThreads("Before exit - ");
- 	    BasicUtils.delay(3000);
+		CommUtils.aboutThreads("Before exit - ");
+		CommUtils.delay(3000);
 		System.exit(0);
 	}
 
 
 	public static void main( String[] args) {
-		BasicUtils.aboutThreads("Before start - ");
+		CommUtils.aboutThreads("Before start - ");
 		new UsingLedAndControllerOnPc().doJob();
- 		BasicUtils.aboutThreads("Before end - ");
+		CommUtils.aboutThreads("Before end - ");
 	}
 
  
