@@ -10,6 +10,7 @@ public class Qak22Context {
 	private static HashMap<String,QakActor22> ctxMap      = new HashMap<String,QakActor22>();
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
+    public static final String actorReplyPrefix = "arp_";
     
     public static void setActorAsRemote(
     		String actorName, String entry, String host, ProtocolType protocol ) {

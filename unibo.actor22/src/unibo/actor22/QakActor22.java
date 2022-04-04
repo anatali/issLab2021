@@ -63,15 +63,16 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 			ColorsOut.outerr("Perhaps no setActorAsRemote for " + destActorName );
 			return;
 		}
- 		if( msg.isRequest() ) { doRequest(msg,pxy);
-		}else { pxy.sendMsgOnConnection(msg.toString());
-		}	
+		pxy.sendMsgOnConnection( msg.toString() ) ;
+// 		if( msg.isRequest() ) { doRequest(msg,pxy);
+//		}else { pxy.sendMsgOnConnection(msg.toString());
+//		}	
 	}
 	
-	protected void doRequest(IApplMessage msg,  ProxyAsClient pxy ) {
-		pxy.sendMsgOnConnection( msg.toString() ) ;
-		CommUtils.aboutThreads("QakActor22 After doRequest - ");
-	}
+//	protected void doRequest(IApplMessage msg,  ProxyAsClient pxy ) {
+//		pxy.sendMsgOnConnection( msg.toString() ) ;
+//		CommUtils.aboutThreads("QakActor22 After doRequest - ");
+//	}
 	
 	
 	protected void autoMsg( IApplMessage msg ){
@@ -97,11 +98,13 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 	protected void sendReply(IApplMessage msg, IApplMessage reply) {
 		QakActor22 dest = Qak22Context.getActor( msg.msgSender() );
         if(dest != null) dest.queueMsg( reply );
-        else { //ci potrebbe essere un attore costruito ad hoc per ricevere la risposta
-        	QakActor22 ar = Qak22Context.getActor("ar"+msg.msgSender());  
-            if(ar !=null) ar.queueMsg( reply );
-            else ColorsOut.outerr("QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");
-        }
+        else replyToRemoteCaller(msg,reply);
     }	
+	
+	protected void replyToRemoteCaller(IApplMessage msg, IApplMessage reply) {
+    	QakActor22 ar = Qak22Context.getActor(Qak22Context.actorReplyPrefix+msg.msgSender());  
+        if(ar !=null) ar.queueMsg( reply );
+        else ColorsOut.outerr("QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");		
+	}
 	
 }

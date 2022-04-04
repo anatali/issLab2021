@@ -312,13 +312,14 @@ viene ereditato dalla classe ``QakActor22`` e viene definito come segue:
   protected void sendReply(IApplMessage msg, IApplMessage reply) {
     QakActor22 dest = Qak22Context.getActor( msg.msgSender() );
     if(dest != null) dest.queueMsg( reply );  //(1)    
-    else { //sender non locale
-      ...
-    }
-  }	
+    else replyToRemoteCaller(msg,reply)
+   }	
+
+
 
 Quando  ``sendReply`` non riesce a trovare il *sender* della richiesta nel contesto, vuol dire che il 
-*sender* è un attore non locale. Vedremo più avanti (in :ref:`Risposte ad attori remoti`) come gestire questo caso.
+*sender* è un attore non locale. Vedremo  :ref:`più avanti<QakActor22: replyToRemoteCaller>` come 
+definire il memtodo ``replyToRemoteCaller``.
 
 In questa fase, approfondiamo invece i meccanismi relativi all'invio di un messaggio
 ad un attore locale, di cui abbiamo un esempio alla linea **(1)** .
@@ -348,7 +349,12 @@ Ad esempio, per accendere il Led, un programma può eseguire:
 
     Qak22Util.sendAMsg( ApplData.turnOnLed  );
 
-Esempi di questo tipo si trovano in ``UsingLedNoControllerOnPc`` del package ``unibo.actor22.prova`` del progetto ``unibo.actor22``.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+UsingLedNoControllerOnPc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Esempi di questo tipo si trovano in ``UsingLedNoControllerOnPc`` del package ``unibo.actor22.local`` 
+(directory test del progetto ``unibo.actor22``).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Invio di richieste da programma
@@ -434,7 +440,7 @@ Se un attore vuole inviare un messaggio a sè stesso, può utilizzare il metodo 
 UsingLedAndControllerOnPc
 ------------------------------------------------
 
-Il programma ``UsingLedAndControllerOnPc`` del package ``unibo.actor22.prova`` del progetto ``unibo.actor22`` 
+Il programma ``UsingLedAndControllerOnPc`` del package ``unibo.actor22.local`` (directory test del progetto ``unibo.actor22``)
 relaiiza il sistema rappresentato nella figura che segue, costituito da un attore Controller che invia
 comandi e richieste a un attore Led.
 
@@ -494,22 +500,22 @@ La gestione dei messaggi del ``ControllerActor`` riguarda i seguenti messaggi:
 
 .. code:: java
 
-	@Override
-	protected void handleMsg(IApplMessage msg) {  
-		if( msg.isReply() ) elabAnswer(msg);
-		else elabCmd(msg) ;	
- 	}
+  @Override
+  protected void handleMsg(IApplMessage msg) {  
+    if( msg.isReply() ) elabAnswer(msg);
+    else elabCmd(msg) ;	
+  }
 	
-	protected void elabCmd(IApplMessage msg) {
+  protected void elabCmd(IApplMessage msg) {
     String msgCmd = msg.msgContent();
     switch( msgCmd ) {
       case ApplData.cmdActivate : {
         doControllerWork();
-         break;
+        break;
       }
       default:break;
     }		
-  }
+   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ControllerActor: comportamento
@@ -563,7 +569,7 @@ Un sistema distribuito è di norma formato da due o più contesti, ciascuno dei 
 - implementa l'invio di un messaggio da parte di un attore locale ``a`` ad un attore NON locale ``b`` 
   avvaledosi della sua conoscenza sulla dislocazione degli attori nel sistema e del protocollo 
   di comunicazione usato dal contesto di ``b``;
-- implementa la ricezione di un messaggio utilizzando il nome del destinatario  
+- implementa la ricezione di un messaggio utilizzando il nome del destinatario.
 
 
 .. _setActorAsRemote:
@@ -595,8 +601,8 @@ Vedremo in seguito forme più evolute di dichiarazione.
 La classe :ref:`Qak22Context` definisce ora anche tabella (``proxyMap``) che tiene memoria
 dei proxy ai contesti remoti.
 
-Per ogni attore non locale, viene definito (se non già creato) un proxy per il nodo (contesto) remoto indicato 
-dai parametri ``host`` e ``protocol``.
+Per l'attore non locale il cui nome è dato come input a ``setActorAsRemote``, viene costruito (se non già creato) 
+un proxy per il nodo (contesto) remoto indicato dai parametri ``host`` e ``protocol``.
 
 
 
@@ -616,8 +622,8 @@ nello :ref:`Sprint4<Lo SPRINT4>` e dei seguenti punti:
  
   .. code::  java
 
-    public interface Interaction2021  extends 
-      it.unibo.is.interfaces.protocols.IConnInteraction {//in uniboInterfaces.jar
+    public interface Interaction2021  extends //from uniboInterfaces.jar
+      it.unibo.is.interfaces.protocols.IConnInteraction {
         public void forward(  String msg ) throws Exception;
         public String request(  String msg ) throws Exception;
         public void reply(  String reqid ) throws Exception;
@@ -626,8 +632,8 @@ nello :ref:`Sprint4<Lo SPRINT4>` e dei seguenti punti:
     }
 
 - il contesto è realizzato come un :ref:`EnablerContext` che attiva
-  una elaborazione di sistema dei messaggi in ingresso specializzata per gli attori
-  avvalendosi  di una nuova versione del :ref:`ContextMsgHandler<ContextMsgHandler>`;
+  una elaborazione di sistema dei messaggi in ingresso specializzata per gli attori,
+  grazie ad una nuova versione del :ref:`ContextMsgHandler<ContextMsgHandler>`;
 
 +++++++++++++++++++++++++++++++++++++++++
 ContextMsgHandler per attori
@@ -635,7 +641,7 @@ ContextMsgHandler per attori
 
 Il nuovo gestore di sistema dei messaggi  **non memorizza più**  (riferimenti a) POJO 
 di tipo :ref:`IApplMsgHandler<IApplMsgHandler>`,
-ma si avvale di :ref:`Qak22Context` per reindirizzare i messaggi che non siano richieste agli attori 
+ma si avvale di :ref:`Qak22Context` per reindirizzare i messaggi agli attori 
 :ref:`QakActor22<ActorQak e QakActor22>`  locali al nodo:
 
 .. code::  java
@@ -654,30 +660,74 @@ ma si avvale di :ref:`Qak22Context` per reindirizzare i messaggi che non siano r
     }
 
 
+Notiamo che per i messaggi di richiesta viene invocato un metodo diverso dalla gestione di tutti gli
+altri tipi di messggio (*dispatch* e *reply*).
+Ciò in quanto si vuole dare alla infrastruttura anche il compito di inviare al mittente la risposta
+prodotta dall'attore destinatario a livello applicativo.
 
 +++++++++++++++++++++++++++++++++++++++++
-Messaggi ad attori remoti
+Gestione di richieste 
 +++++++++++++++++++++++++++++++++++++++++
 
-Nel caso di comunicazioni tra due attori allocati su contesti diversi, dobbiamo affrontare i
-seguenti problemi:
+Se un messaggio pervenuto è una richiesta, il gestore di sistema dei messaggi predispone 
+un attore temporaneo capace di ricevere il messaggio di risposta prodotto dall'attore destinatario
+e inviarlo all'attore richiedente:
 
-- come realizzare l'invio di un **dispatch** ad un attore remoto 
-- come realizzare l'invio di una **request** ad un attore remoto 
-- come realizzare l'invio di una **reply** all'attore remoto chiamante
-- come gestire la risposta nel contesto dell'attore chiamante
+.. code::  java
+
+  protected void elabRequest( IApplMessage msg, Interaction2021 conn ) {
+    String senderName = msg.msgSender();
+    String actorRepyName = Qak22Context.actorReplyPrefix+senderName;
+    if( Qak22Context.getActor(actorRepyName) == null ) { //non esiste già
+      new ActorForReply(actorRepyName, this, conn);
+    }		
+  }
+
+Il nome dell'attore temporaneo ha un prefisso constante definito in ``Qak22Context.actorReplyPrefix`` 
+seguito dal nome del destinatario.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ActorForReply
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'attore (dinamicamente creato) che gestisce l'invio di una risposta all'attore remoto attende che il livello applicativo
+produca il messaggio di risposta e poi lo invia sulla connessione ricevuta. Quindi si auto-elimina dal sistema.
+
+.. code::  java
+
+  public class ActorForReply extends QakActor22{
+    private IApplMsgHandler h;
+    private Interaction2021 conn;
+    public ActorForReply(String name, 
+            IApplMsgHandler h, Interaction2021 conn) {
+      super(name);
+      this.h = h;
+      this.conn = conn;		 
+    }
+    @Override
+    protected void handleMsg(IApplMessage msg) { 
+      if( msg.isReply() ) h.sendAnswerToClient(msg.toString(), conn);		
+      Qak22Context.removeActor(this);
+    }
+  }
+
+L'attore ad hoc per l'invio di una risposta assume il ruolo di proxy verso il contesto dell'attore
+remoto che ha inviato la richiesta.
 
 
++++++++++++++++++++++++++++++++++++++++++
+Invio di messaggi ad attori remoti
++++++++++++++++++++++++++++++++++++++++++
 
+Per inviare un messaggio (**dispatch**, **request**, **reply**) ad un attore remoto ``dest`` ci si avvale del Proxy al contesto 
+di ``dest``, creato dalla operazione :ref:`setActorAsRemote`.
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Invio di dispatch
+sendMsgToRemoteActor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Per inviare un *dispatch* ad un attore remoto ci si avvale del proxy al nodo creato da 
-:ref:`setActorAsRemote`.
 
 Il metodo :ref:`sendMsgFromActor<sendMsgFromActor>` di :ref:`QakActor22<QakActor22>` introdotto in precedenza 
-può qundi essere definito come segue:
+può quindi essere definito come segue:
  
 .. code::  java
 
@@ -688,13 +738,12 @@ può qundi essere definito come segue:
       ColorsOut.outerr("Perhaps no setActorAsRemote for " + destActorName );
       return;
     }
-    if( msg.isRequest() ) doRequest(msg,pxy);
-    else pxy.sendMsgOnConnection(msg.toString());
+    pxy.sendMsgOnConnection(msg.toString());
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++
 ProxyAsClient in actor22comm
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
++++++++++++++++++++++++++++++++++++++++++
 
 La classe ``ProxyAsClient`` del package ``unibo.actor22comm.proxy`` contiene il codice che 
 permette di creare un proxy ad un contesto remoto, usando un dato protocollo.
@@ -705,7 +754,7 @@ Pertanto il proxy ad un contesto è simile alla versione :ref:`ProxyAsClient`, c
 
 - definisce un unico metodo ``sendMsgOnConnection`` per l'invio di messaggi sulla connessione,
   senza distinguere le richieste;
-- attiva un Thread interno per la ricezione di messaggi di risposta che poi reindirizza all'attore 
+- attiva un Thread interno per la **ricezione** di messaggi di risposta che poi reindirizza all'attore 
   destinatario.
 
 .. code::  java
@@ -717,21 +766,10 @@ Pertanto il proxy ad un contesto è simile alla versione :ref:`ProxyAsClient`, c
     activateReceiver(conn);
   }
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-sendMsgOnConnection
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-.. code::  java
-
-	public synchronized void sendMsgOnConnection( String msg )  {
-		try {
-			conn.forward(msg);
-		} catch (Exception e) { ...	}
-	}
-
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 activateReceiver
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code::  java
 
@@ -752,57 +790,29 @@ activateReceiver
   }
 
 
-
-
-
-
-
- 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Risposte ad attori remoti
+QakActor22: replyToRemoteCaller
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Gestione di richieste
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Se un messaggio pervenuto è una richiesta, il gestore di sistema dei messaggi predispone 
-un attore capace di ricevere il messaggio di risposta prodotto dall'attore destinatario
-e inviarlo all'attore richiedente:
+Per l'invio di una risposta ad un attore remoto, possiamo ora definire il metodo ``replyToRemoteCaller``
+introdotto in :ref:`sendReply<QakActor22: sendReply>`, che utilizza l'attore temporaneo 
+creato da :ref:`elabRequest<Gestione di richieste>`
 
 .. code::  java
 
-  protected void elabRequest( IApplMessage msg, Interaction2021 conn ) {
-    String senderName = msg.msgSender();
-    String actorRepyName = "ar"+senderName;
-    if( Qak22Context.getActor(actorRepyName) == null ) { //non esiste già
-      new ActorForReply(actorRepyName, this, conn);
-    }		
+  protected void replyToRemoteCaller(IApplMessage msg, IApplMessage reply) {
+    QakActor22 ar = Qak22Context.getActor(Qak22Context.actorReplyPrefix+msg.msgSender());  
+      if(ar !=null) ar.queueMsg( reply );
+      else ColorsOut.outerr("QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");		
   }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-ActorForReply
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
++++++++++++++++++++++++++++++++++++++++++
+Esempi
++++++++++++++++++++++++++++++++++++++++++ 
 
-L'attore (dinamicamente creato) che gestisce l'invio di una risposta attende il messaggio e 
-poi lo invia sulla connessione ricevuta. Quindi si auto-elimina dal sistema.
 
-.. code::  java
+Nel package ``unibo.actor22.distrib`` (directory test del progetto ``unibo.actor22``) :
 
-  public class ActorForReply extends QakActor22{
-    private IApplMsgHandler h;
-    private Interaction2021 conn;
-    public ActorForReply(String name, IApplMsgHandler h, Interaction2021 conn) {
-      super(name);
-      this.h = h;
-      this.conn = conn;		 
-    }
-    @Override
-    protected void handleMsg(IApplMessage msg) { 
-      if( msg.isReply() ) h.sendAnswerToClient(msg.toString(), conn);		
-
-    }
-  }
+- ``LedActorOnRasp`` :   attiva un :ref:`LedActor` in un contesto
+- ``ControllerOnPcUsingLedRemote`` :   attiva un :ref:`ControllerActor` in un diverso contesto, io quale usa il Led remoto
 

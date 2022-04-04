@@ -3,9 +3,9 @@ package unibo.actor22.local;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.*;
-import unibo.actor22.prova.ApplData;
-import unibo.actor22.prova.ControllerActor;
-import unibo.actor22.prova.LedActor;
+import unibo.actor22.common.ApplData;
+import unibo.actor22.common.ControllerActor;
+import unibo.actor22.common.LedActor;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
@@ -22,8 +22,9 @@ public class UsingLedAndControllerOnPc {
 		ColorsOut.outappl("ControllerUsingLedOnPc | Start", ColorsOut.BLUE);
 		configure();
 		CommUtils.aboutThreads("Before execute - ");
-		//BasicUtils.waitTheUser();
+		//CommUtils.waitTheUser();
 		execute();
+		terminate();
 	}
 	
 
