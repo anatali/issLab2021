@@ -131,36 +131,24 @@ public  class Qak22Util   {
     			ColorsOut.outerr("Perhaps no setActorAsRemote for " + destActorName );
     			return;
     		}
-     		new Thread() {
-    			public void run() {
+//     		new Thread() {
+//    			public void run() {
     		 		//ColorsOut.outappl( "Qak22Util  | doRequest " + msg + " pxy=" + pxy, ColorsOut.WHITE_BACKGROUND  );
-    				String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
-    				//Attende la risposta  
-    				IApplMessage reply= new ApplMessage( answerMsg );
-    				//ColorsOut.outappl("Qak22Util | answer=" + reply  , ColorsOut.YELLOW_BACKGROUND);
-    				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
-    				if( sender != null )
-    					sender.queueMsg(reply); //the sender must handle the reply as msg				 
-    				else ColorsOut.outerr("Qak22Util | answer " + answerMsg + " for an unknown actor " + msg.msgSender());
-    			}			
-    		}.start();
-			CommUtils.delay(10);  //Per forzare il rescheduling
+    				pxy.sendMsgOnConnection( msg.toString()) ;
+    				//NON Attende la risposta  
+//    				IApplMessage reply= new ApplMessage( answerMsg );
+//    				//ColorsOut.outappl("Qak22Util | answer=" + reply  , ColorsOut.YELLOW_BACKGROUND);
+//    				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
+//    				if( sender != null )
+//    					sender.queueMsg(reply); //the sender must handle the reply as msg				 
+//    				else ColorsOut.outerr("Qak22Util | answer " + answerMsg + " for an unknown actor " + msg.msgSender());
+//    			}			
+//    		}.start();
+			//CommUtils.delay(10);  //Per forzare il rescheduling
      		CommUtils.aboutThreads("Qak22Util After doRequest  - ");
         }
 	}
 
-    //sendAnswer(IApplMessage msg, IApplMessage reply) in Actor22
-//    public static void sendReply(IApplMessage msg, IApplMessage reply) {
-//        //System.out.println(   "Actor22 sendReply | reply= " + reply );
-//        Actor22 dest = Actor22.getActor(msg.msgSender());
-//        if(dest != null)  sendAMsg(reply, dest );
-//        else {
-//        	Actor22 ar = Actor22.getActor("ar"+msg.msgSender());
-//            if(ar !=null) ar.sendAMsg(reply );
-//            else {
-//                System.out.println("Actor22 sendReply | Reply IMPOSSIBLE");
-//             }
-//        }
-//    }
+ 
     
  }

@@ -48,6 +48,8 @@ public class ControllerOnPcUsingLedRemote {
   		//askLedStateForTesting();
 	} 
 	
+	//IL main può fare richieste, ma non è in grado di ricevere risposte
+	//in quanto le richieste adesso sono ASINCRONE
 	protected void askLedStateForTesting() {
 		IApplMessage getStateRequest  = ApplData.buildRequest("main","ask", ApplData.reqLedState, ApplData.ledName);
 		for( int i=1; i<=3; i++) {
@@ -57,9 +59,9 @@ public class ControllerOnPcUsingLedRemote {
 	}
 
 	public void terminate() {
-  	    CommUtils.delay(6000);
+  	    CommUtils.delay(5000);	//TODO terminate when the controller has finished
 		CommUtils.aboutThreads("Before exit - ");
-//		System.exit(0);
+		System.exit(0);
 	}
 	
 	public static void main( String[] args) {

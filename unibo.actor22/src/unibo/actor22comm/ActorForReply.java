@@ -20,7 +20,7 @@ private Interaction2021 conn;
 	@Override
 	protected void handleMsg(IApplMessage msg) {
 		//BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
-		//ColorsOut.out( getName()  + " | handleMsg " + msg, ColorsOut.BLUE);
+		//ColorsOut.outappl( getName()  + " | handleMsg " + msg, ColorsOut.BLUE);
 		if( msg.isReply() ) h.sendAnswerToClient(msg.toString(), conn);		
 		Qak22Context.removeActor(this);
 	}

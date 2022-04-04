@@ -13,10 +13,12 @@ public class Qak22Context {
     
     public static void setActorAsRemote(
     		String actorName, String entry, String host, ProtocolType protocol ) {
-    	if( ! proxyMap.containsKey(actorName)   ) { //defensive
-    		ProxyAsClient pxy = new ProxyAsClient(actorName+"Pxy", host, entry, protocol);
-    		proxyMap.put(actorName, pxy);
-    	}   	
+//    	if( ! proxyMap.containsKey(actorName)   ) { //defensive
+    		if( ! proxyMap.containsKey(actorName+"Pxy")) { //un solo proxy per contesto remoto
+	    		ProxyAsClient pxy = new ProxyAsClient(actorName+"Pxy", host, entry, protocol);
+	    		proxyMap.put(actorName, pxy);
+    		}
+//    	}   	
     }
     
 	public static void addActor(QakActor22 a) {	

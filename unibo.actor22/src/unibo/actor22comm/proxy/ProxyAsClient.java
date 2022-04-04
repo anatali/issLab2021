@@ -1,5 +1,10 @@
 package unibo.actor22comm.proxy;
 
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
+import unibo.actor22.Qak22Util;
+import unibo.actor22.QakActor22;
+import unibo.actor22.Qak22Context;
 import unibo.actor22comm.ProtocolType;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
@@ -21,6 +26,7 @@ protected ProtocolType protocol ;
 			this.name     = name;
 			this.protocol = protocol;			 
 			setConnection(host,  entry,  protocol);
+			activateReceiver(conn);
 			ColorsOut.out(name+"  | CREATED entry= "+entry+" conn=" + conn, ColorsOut.BLUE );
 		} catch (Exception e) {
 			ColorsOut.outerr( name+"  |  ERROR " + e.getMessage());		}
@@ -61,34 +67,48 @@ protected ProtocolType protocol ;
 		}
 	}
   	
-	public void sendCommandOnConnection( String cmd )  {
- 		//ColorsOut.outappl( name+"  | sendCommandOnConnection " + cmd + " conn=" + conn, ColorsOut.WHITE_BACKGROUND );
+	//msg potrebbe essere QUALSISI (anche request)
+	public synchronized void sendMsgOnConnection( String msg )  {
+ 		//ColorsOut.outappl( name+"  | sendMsgOnConnection " + msg + " conn=" + conn, ColorsOut.WHITE_BACKGROUND );
 		try {
-			conn.forward(cmd);
+			conn.forward(msg);
 		} catch (Exception e) {
-			ColorsOut.outerr( name+"  | sendCommandOnConnection ERROR=" + e.getMessage()  );
+			ColorsOut.outerr( name+"  | sendMsgOnConnection ERROR=" + e.getMessage()  );
 		}
 	}
-	public String sendRequestOnConnection( String request )  {
- 		//ColorsOut.outappl( name+"  | sendRequestOnConnection " + request + " conn=" + conn, ColorsOut.WHITE_BACKGROUND  );
-		try {
-			String answer = conn.request(request);
-			//ColorsOut.outappl( name+"  | sendRequestOnConnection-answer=" + answer, ColorsOut.WHITE_BACKGROUND   );
-			return answer;  	
-		} catch (Exception e) {
-			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );
-			return null;
-		}
- 	}	
+ 
 	public Interaction2021 getConn() {
 		return conn;
 	}
+	
 	
 	public void close() {
 		try {
 			conn.close();
 			ColorsOut.out(name + " |  CLOSED " + conn  );
 		} catch (Exception e) {
-			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		}
+			ColorsOut.outerr( name+"  | sendRequestOnConnection ERROR=" + e.getMessage()  );		
+		}
 	}
+	
+//------------------------------------------------
+	protected void activateReceiver( Interaction2021 conn) {
+		new Thread() {
+			public void run() {
+				try {
+					ColorsOut.out(name + " |  activateReceiver STARTED on conn=" + conn  );
+					while(true) {
+						String msgStr    = conn.receiveMsg();
+						IApplMessage msg = new ApplMessage(msgStr);
+						//ColorsOut.out(name + " |  activateReceiver RECEIVES " + msg  );
+						QakActor22 a = Qak22Context.getActor(msg.msgReceiver());
+						if( a != null ) Qak22Util.sendAMsg( msg ); 		
+						else ColorsOut.outerr(name + " | activateReceiver: actor " + msg.msgReceiver() + " non local (I should not be here) ");					
+					}
+				} catch (Exception e) {
+					ColorsOut.outerr( name+"  | activateReceiver ERROR=" + e.getMessage()  );				} 
+				}
+		}.start();
+	}
+
 }

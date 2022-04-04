@@ -1,7 +1,6 @@
 package unibo.actor22.common;
  
 import it.unibo.kactor.IApplMessage;
-import it.unibo.radarSystem22.domain.utils.BasicUtils;
 import unibo.actor22.*;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
@@ -11,8 +10,9 @@ import unibo.actor22comm.utils.CommUtils;
  * (non ha riferimenti ai dispositivi-attori)
  */
 public class ControllerActor extends QakActor22{
-protected int numIter = 0;
+protected int numIter = 1;
 protected IApplMessage getStateRequest ;
+protected boolean on = true;
 
 	public ControllerActor(String name  ) {
 		super(name);
@@ -40,33 +40,34 @@ protected IApplMessage getStateRequest ;
 		}		
 	}
 	
+	protected void wrongBehavior() {
+  	    //WARNING: Inviare un treno di messaggi VA EVITATO
+		//mantiene il controllo del Thread degli attori (qaksingle)		
+		for( int i=1; i<=3; i++) {
+			forward( ApplData.turnOffLed );
+			CommUtils.delay(500);
+			forward( ApplData.turnOnLed );
+			CommUtils.delay(500);		
+		}
+		forward( ApplData.turnOffLed );
+	}
     protected void doControllerWork() {
-//		CommUtils.aboutThreads(getName()  + " |  Before doControllerWork - ");
-//		forward( ApplData.turnOffLed );
-//		CommUtils.delay(500);
-//		forward( ApplData.turnOnLed );
-//		CommUtils.delay(500);		
-// 		request(getStateRequest);
-// 		forward( ApplData.turnOffLed );
-		//ColorsOut.outappl( getName()  + " | numIter=" + numIter  , ColorsOut.GREEN);
-   	    //Inviare un treno di messaggi NON VA BENE: mantiene il controllo del Thread degli attori  (qaksingle)
- 		if( numIter++ < 3 ) {
-	 	    if( numIter%2 == 1) //Qak22Util.sendAMsg(ApplData.turnOnLed, ApplData.ledName  );
-	 	    	forward( ApplData.turnOnLed );
-	 	    else //Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
-	 	    	forward( ApplData.turnOffLed );
-	 	    //Qak22Util.sendAMsg(getStateRequest, ApplData.ledName  );	
-	 	    request(getStateRequest);
+		CommUtils.aboutThreads(getName()  + " |  Before doControllerWork on=" + on );
+		//wrongBehavior();
+  		//ColorsOut.outappl( getName()  + " | numIter=" + numIter  , ColorsOut.GREEN);
+  		if( numIter++ <= 5 ) {
+	 	    if( on )  forward( ApplData.turnOnLed );
+ 	 	    else forward( ApplData.turnOffLed );
+	 	    on = !on;
+ 	 	    request(getStateRequest);
 		}else {
-			//Qak22Util.sendAMsg(ApplData.turnOffLed, ApplData.ledName  );
 			forward( ApplData.turnOffLed );
 		}
- 
 	}
 	
 	protected void elabAnswer(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | elabAnswer " + msg, ColorsOut.MAGENTA);
-		CommUtils.delay(500);
+		ColorsOut.outappl( getName()  + " | elabAnswer numIter=" + numIter + " "+ msg, ColorsOut.MAGENTA);
+ 		CommUtils.delay(500);
 		doControllerWork();
 	}
 

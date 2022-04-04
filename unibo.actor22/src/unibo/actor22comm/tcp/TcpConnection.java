@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
@@ -32,12 +31,13 @@ private Socket socket;
 	}
 
 	@Override
-	public String request(String msg)  throws Exception {
+	public String request(String msg)  throws Exception { //Bloccante
 		forward(  msg );
 		String answer = receiveMsg();
 		return answer;
 	}
 	
+ 	
 	@Override
 	public void reply(String msg) throws Exception {
 		forward(msg);
@@ -55,7 +55,7 @@ private Socket socket;
 
 	@Override
 	public void sendALine(String msg) throws Exception {
-		//ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
+		//ColorsOut.outappl( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
@@ -68,8 +68,7 @@ private Socket socket;
 
 	@Override
 	public void sendALine(String msg, boolean isAnswer) throws Exception {
-		// TODO Auto-generated method stub
-		
+		// REQUIRED BY THE OLD LIBRARY	 (obsolete)
 	}
 
 	@Override

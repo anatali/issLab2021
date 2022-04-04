@@ -16,7 +16,7 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 		super(name, QakContext.Companion.createScope(), false, true, false, 50);
         if( Qak22Context.getActor(name) == null ) {
         	Qak22Context.addActor( this );
-        	ColorsOut.outappl( getName()  + " | CREATED " , ColorsOut.CYAN);
+        	ColorsOut.out( getName()  + " | CREATED " , ColorsOut.CYAN);
         }
         else ColorsOut.outerr("QakActor22 | WARNING: an actor with name " + name + " already exists");	
 	}
@@ -64,25 +64,25 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 			return;
 		}
  		if( msg.isRequest() ) { doRequest(msg,pxy);
-		}else { pxy.sendCommandOnConnection(msg.toString());
+		}else { pxy.sendMsgOnConnection(msg.toString());
 		}	
 	}
 	
 	protected void doRequest(IApplMessage msg,  ProxyAsClient pxy ) {
 		//CommUtils.aboutThreads("QakActor22 Before doRequest - ");
-  		new Thread() {
-			public void run() {
+//  		new Thread() {
+//			public void run() {
 		 		//ColorsOut.out( "QakActor22  | doRequest " + msg + " pxy=" + pxy, ColorsOut.WHITE_BACKGROUND  );
-				String answerMsg  = pxy.sendRequestOnConnection( msg.toString()) ;
-				//Attende la risposta  
-				IApplMessage reply= new ApplMessage( answerMsg );
-				//ColorsOut.outappl("QakActor22 | answer=" + reply  , ColorsOut.WHITE_BACKGROUND);
-				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
-				if( sender != null ) //defensive
-					sender.queueMsg(reply); //the sender must handle the reply as msg	
-				else ColorsOut.outerr("QakActor22 | answer " + answerMsg + " for an unknown actor " + msg.msgSender());
-			}			
-		}.start();
+				pxy.sendMsgOnConnection( msg.toString() ) ;
+				//NON Attende la risposta  
+//				IApplMessage reply= new ApplMessage( answerMsg );
+//				//ColorsOut.outappl("QakActor22 | answer=" + reply  , ColorsOut.WHITE_BACKGROUND);
+//				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
+//				if( sender != null ) //defensive
+//					sender.queueMsg(reply); //the sender must handle the reply as msg	
+//				else ColorsOut.outerr("QakActor22 | answer " + answerMsg + " for an unknown actor " + msg.msgSender());
+//			}			
+//		}.start();
 		CommUtils.aboutThreads("QakActor22 After doRequest - ");
 	}
 	
@@ -95,15 +95,16 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
     }
     
 	protected  void forward( IApplMessage msg ){
-		ColorsOut.outappl( "QakActor22 forward:" + msg, ColorsOut.CYAN);
-		if( msg.isDispatch() ) sendMsg( msg ); //sendMessageToActor(msg, msg.msgReceiver());
+		//ColorsOut.outappl( "QakActor22 forward:" + msg, ColorsOut.CYAN);
+		if( msg.isDispatch() ) sendMsg( msg );  
 		else ColorsOut.outerr("QakActor22 | forward requires a dispatch");
 	}
  
 	protected void request( IApplMessage msg ){
-    	if( msg.isRequest() ) sendMsg( msg );//sendMessageToActor(msg, msg.msgReceiver());
-    	else ColorsOut.outerr("QakActor22 | forward requires a request");
+    	if( msg.isRequest() ) sendMsg( msg ); 
+    	else ColorsOut.outerr("QakActor22 |  requires a request");
     }
+ 
     
     
 	protected void sendReply(IApplMessage msg, IApplMessage reply) {
@@ -112,7 +113,7 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
         else { //ci potrebbe essere un attore costruito ad hoc per ricevere la risposta
         	QakActor22 ar = Qak22Context.getActor("ar"+msg.msgSender());  
             if(ar !=null) ar.queueMsg( reply );
-            else ColorsOut.outerr("QakActor22 | WARNING: reply IMPOSSIBLE");
+            else ColorsOut.outerr("QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");
         }
     }	
 	
