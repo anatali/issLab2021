@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import unibo.actor22.Qak22Context;
 import unibo.actor22comm.ProtocolInfo;
 import unibo.actor22comm.utils.ColorsOut;
  
@@ -51,7 +52,7 @@ RELATED TO Actor22
         			 String host     = a.host()[i];
         			 String port     = a.port()[i];
         			 String protocol = a.protocol()[i];        			 
-//xxx        			 ActorJK.setActorAsRemote(name, port, host, ProtocolInfo.getProtocol(protocol));
+        			 Qak22Context.setActorAsRemote(name, port, host, ProtocolInfo.getProtocol(protocol));
             		 ColorsOut.outappl(
             				 "CREATE REMOTE ACTOR PROXY:"+ name + " host:" + host + " port:"+port
             						 + " protocol:" + protocol, ColorsOut.MAGENTA);        			 

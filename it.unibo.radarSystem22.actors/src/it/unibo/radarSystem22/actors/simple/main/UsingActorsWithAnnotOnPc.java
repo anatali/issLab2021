@@ -24,8 +24,8 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
         		        it.unibo.radarSystem22.actors.domain.RadarActor.class})
 @ActorRemote(name =   {"led","sonar"}, 
              host=    {"localhost","localhost"}, 
-             port=    {"8048","8048"}, 
-             protocol={"UDP","UDP"})
+             port=    {"8018","8018"}, 
+             protocol={"TCP","TCP"})
 public class UsingActorsWithAnnotOnPc {
 	
 //	 ILed ISonar ARE NO MORE NECESSARY
@@ -54,7 +54,7 @@ public class UsingActorsWithAnnotOnPc {
 	
 	protected void configure() {
 		DomainSystemConfig.tracing      = false;			
- 		CommSystemConfig.protcolType    = ProtocolType.udp;
+ 		CommSystemConfig.protcolType    = ProtocolType.tcp;
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		

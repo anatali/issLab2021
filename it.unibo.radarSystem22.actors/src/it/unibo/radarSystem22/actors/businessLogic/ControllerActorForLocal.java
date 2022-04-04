@@ -49,29 +49,29 @@ private ActorBasic radar;
  	}
 	
 	protected void elabCmd(IApplMessage msg) {
-		String msgCmd = msg.msgContent();
-		ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd, ColorsOut.GREEN);
-		switch( msgCmd ) {
-			case "activate" : {
-				//sendMsg(DomainData.sonarActivate, sonar );
-				Actor22.sendAMsg( DomainData.sonarActivate, sonar);
-				doControllerWork();
-				break;
-			}
-			case "stop" : {
-				//sendMsg(DomainData.sonarDeactivate, sonar );  
-				Actor22.sendAMsg( DomainData.sonarDeactivate, sonar);
-				break;
-			}
-		}		
+//		String msgCmd = msg.msgContent();
+//		ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd, ColorsOut.GREEN);
+//		switch( msgCmd ) {
+//			case "activate" : {
+//				//sendMsg(DomainData.sonarActivate, sonar );
+//				Actor22.sendAMsg( DomainData.sonarActivate, sonar);
+//				doControllerWork();
+//				break;
+//			}
+//			case "stop" : {
+//				//sendMsg(DomainData.sonarDeactivate, sonar );  
+//				Actor22.sendAMsg( DomainData.sonarDeactivate, sonar);
+//				break;
+//			}
+//		}		
 	}
 	
 	protected void doControllerWork() {
-		//Chiedo la distanza. Quando doJob riceve la risposta proseguo in elabAnswer
-		//sendMsg( DomainData.sonarDistance, sonar );  
-		ColorsOut.outappl( getName()  + " | doControllerWork "  , ColorsOut.GREEN);
-		//sendMsg(DomainData.sonarDistance, sonar);
-		Actor22.sendAMsg( DomainData.sonarDistance, sonar);
+//		//Chiedo la distanza. Quando doJob riceve la risposta proseguo in elabAnswer
+//		//sendMsg( DomainData.sonarDistance, sonar );  
+//		ColorsOut.outappl( getName()  + " | doControllerWork "  , ColorsOut.GREEN);
+//		//sendMsg(DomainData.sonarDistance, sonar);
+//		Actor22.sendAMsg( DomainData.sonarDistance, sonar);
 	}
 	
 	
@@ -79,33 +79,33 @@ private ActorBasic radar;
 	protected void elabAnswer(IApplMessage msg) {
 		ColorsOut.outappl( getName()  + " | elabAnswer " + msg, ColorsOut.GREEN);
 		//SONAR DATA
-		String answer = msg.msgContent();
-		int d = Integer.parseInt(answer);
-		//RADAR
-		if( radar != null ) {
-			IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
-			//sendMsg(updateRadarGui, radar );  
-			Actor22.sendAMsg( updateRadarGui, radar);
-		}
-		//LED Control
-		if( d < DomainData.DLIMIT ) {
-			//sendMsg(DomainData.ledOn, led );  
-			Actor22.sendAMsg( DomainData.ledOn, led );
-		}else {
-			//sendMsg(DomainData.ledOff, led );
-			Actor22.sendAMsg( DomainData.ledOff, led );
-		}
-		BasicUtils.delay(DomainSystemConfig.sonarDelay*3);  //Intervengo ogni 3 dati generati
-		//CONTROL the Controller
-		if( d > DomainData.DLIMIT - 10) {
-			//sendMsg(DomainData.sonarDistance, sonar );
-			Actor22.sendAMsg( DomainData.sonarDistance, sonar);
-		}else {
-			//sendMsg(DomainData.ledOff, led );
-			//sendMsg(DomainData.sonarDeactivate, sonar );  
-			Actor22.sendAMsg( DomainData.ledOff, led );
-			Actor22.sendAMsg( DomainData.sonarDeactivate, sonar);
-		}		
+//		String answer = msg.msgContent();
+//		int d = Integer.parseInt(answer);
+//		//RADAR
+//		if( radar != null ) {
+//			IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
+//			//sendMsg(updateRadarGui, radar );  
+//			Actor22.sendAMsg( updateRadarGui, radar);
+//		}
+//		//LED Control
+//		if( d < DomainData.DLIMIT ) {
+//			//sendMsg(DomainData.ledOn, led );  
+//			Actor22.sendAMsg( DomainData.ledOn, led );
+//		}else {
+//			//sendMsg(DomainData.ledOff, led );
+//			Actor22.sendAMsg( DomainData.ledOff, led );
+//		}
+//		BasicUtils.delay(DomainSystemConfig.sonarDelay*3);  //Intervengo ogni 3 dati generati
+//		//CONTROL the Controller
+//		if( d > DomainData.DLIMIT - 10) {
+//			//sendMsg(DomainData.sonarDistance, sonar );
+//			Actor22.sendAMsg( DomainData.sonarDistance, sonar);
+//		}else {
+//			//sendMsg(DomainData.ledOff, led );
+//			//sendMsg(DomainData.sonarDeactivate, sonar );  
+//			Actor22.sendAMsg( DomainData.ledOff, led );
+//			Actor22.sendAMsg( DomainData.sonarDeactivate, sonar);
+//		}		
 	}
 
 }

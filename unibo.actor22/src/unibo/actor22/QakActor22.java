@@ -1,9 +1,11 @@
 package unibo.actor22;
 
+import java.util.HashMap;
 import org.jetbrains.annotations.NotNull;
 import it.unibo.kactor.*;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import unibo.actor22comm.events.EventMsgHandler;
 import unibo.actor22comm.proxy.ProxyAsClient;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
@@ -40,9 +42,7 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 /*
  * INVIO MESSAGGI	 
  */
- 
-	
-	protected void sendMsg( IApplMessage msg ){
+ 	protected void sendMsg( IApplMessage msg ){
      	String destActorName=msg.msgReceiver();
 		//ColorsOut.out("Qak22Util | sendAMsg " + msg  , ColorsOut.GREEN);	  
         QakActor22 dest = Qak22Context.getActor(destActorName);  
@@ -64,15 +64,7 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 			return;
 		}
 		pxy.sendMsgOnConnection( msg.toString() ) ;
-// 		if( msg.isRequest() ) { doRequest(msg,pxy);
-//		}else { pxy.sendMsgOnConnection(msg.toString());
-//		}	
 	}
-	
-//	protected void doRequest(IApplMessage msg,  ProxyAsClient pxy ) {
-//		pxy.sendMsgOnConnection( msg.toString() ) ;
-//		CommUtils.aboutThreads("QakActor22 After doRequest - ");
-//	}
 	
 	
 	protected void autoMsg( IApplMessage msg ){
@@ -93,8 +85,6 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
     	else ColorsOut.outerr("QakActor22 |  requires a request");
     }
  
-    
-    
 	protected void sendReply(IApplMessage msg, IApplMessage reply) {
 		QakActor22 dest = Qak22Context.getActor( msg.msgSender() );
         if(dest != null) dest.queueMsg( reply );
@@ -106,5 +96,38 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
         if(ar !=null) ar.queueMsg( reply );
         else ColorsOut.outerr("QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");		
 	}
+
+//-------------------------------------------------
+	//EVENTS
+    protected static HashMap<String,String> eventObserverMap = new HashMap<String,String>();  
+	
+    protected void emit(IApplMessage msg) {
+    	if( msg.isEvent() ) {
+    		ColorsOut.outappl( "QakActor22 | emit=" + msg  , ColorsOut.GREEN);
+    		Qak22Util.sendAMsg( msg, EventMsgHandler.myName);
+    	}   	
+    }
+    
+    protected void handleEvent(IApplMessage msg) {
+		try {
+		ColorsOut.outappl( "QakActor22 handleEvent:" + msg, ColorsOut.MAGENTA);
+		if( msg.isDispatch() && msg.msgId().equals(Qak22Context.registerForEvent)) {
+			eventObserverMap.put(msg.msgSender(), msg.msgContent());
+		}else if( msg.isEvent()) {
+			eventObserverMap.forEach(
+					( actorName,  evName) -> {
+						ColorsOut.outappl(actorName + " " + evName, ColorsOut.CYAN); 
+						if( evName.equals(msg.msgId()) ) {
+							sendMsg( msg  );
+						}
+			} ) ;
+		}else {
+			ColorsOut.outerr( "QakActor22 handleEvent: msg unknown");
+		}
+		}catch( Exception e) {
+			ColorsOut.outerr( "QakActor22 handleEvent ERROR:" + e.getMessage());
+		}
+	}    
+
 	
 }

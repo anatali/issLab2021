@@ -1,4 +1,4 @@
-package unibo.actor22.common;
+package unibo.radarSystem22.actors;
 
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.ApplMessageType;
@@ -8,6 +8,7 @@ import unibo.actor22comm.utils.ColorsOut;
 
 public class ApplData {
 	public static final String ledName        = "led";
+	public static final String sonarName      = "sonar";
 	public static final String controllerName = "controller";
 	public static final String observerName   = "observer";
 
@@ -26,7 +27,9 @@ public class ApplData {
 	public static final IApplMessage turnOnLed    = buildDispatch(controllerName, "cmd", comdLedon,   ledName);
 	public static final IApplMessage turnOffLed   = buildDispatch(controllerName, "cmd", comdLedoff,  ledName);
 	
-	public static final  IApplMessage activateCrtl = buildDispatch("main", "cmd", cmdActivate, controllerName);
+	public static final  IApplMessage activateCrtl    = buildDispatch("main", "cmd", cmdActivate, controllerName);
+	public static final  IApplMessage activateSonar   = buildDispatch(controllerName, "cmd", cmdActivate, sonarName);
+	public static final  IApplMessage deactivateSonar = buildDispatch(controllerName, "cmd", cmdDectivate, sonarName);
 	
 	public static final  IApplMessage endWorkEvent = buildEvent(controllerName, evEndWork, evEndWork );
 	

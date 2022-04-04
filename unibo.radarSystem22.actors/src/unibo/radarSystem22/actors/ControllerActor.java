@@ -1,4 +1,4 @@
-package unibo.actor22.common;
+package unibo.radarSystem22.actors;
  
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.*;
@@ -33,6 +33,7 @@ protected boolean on = true;
 		ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd, ColorsOut.GREEN);
 		switch( msgCmd ) {
 			case ApplData.cmdActivate : {
+				sendMsg( ApplData.activateSonar);
 				doControllerWork();
 	 			break;
 			}
@@ -63,6 +64,8 @@ protected boolean on = true;
 	    	  forward( ApplData.turnOffLed );
 			  ColorsOut.outappl(getName() + " | emit " + ApplData.endWorkEvent, ColorsOut.MAGENTA);
 	    	  emit( ApplData.endWorkEvent );
+			  sendMsg( ApplData.deactivateSonar);
+
 	      }
 		
 	}
