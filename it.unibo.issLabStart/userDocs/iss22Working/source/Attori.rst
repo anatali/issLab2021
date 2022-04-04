@@ -87,7 +87,7 @@ Nel nostro modello computazionale, un attore presenta le seguenti proprietà:
 - è capace di inviare messaggi ad un altro attore, di cui conosce il **nome**, incluso sè stesso;
 - è capace di eseguire elaborazioni autonome o elaborazioni di messaggi;
 - è dotato di una sua **coda locale** in cui sono depositati i messaggi inviategli da altri attori 
-  (o da sè stesso) quando i messaagi arrivano mentre l'attore è impegnato in una fase di elaborazione;
+  (o da sè stesso) quando i messaggi arrivano mentre l'attore è impegnato in una fase di elaborazione;
 - elabora i messaggi ricevuti uno alla volta, prelevandoli dalla sua coda in modo FIFO.
 
 Possiamo pensare che questo modello di attore sia realizzato in Java con un Thread e una `BlokingQueue`_, 
@@ -116,7 +116,7 @@ Nel seguito, per evitare confusioni, useremo i segenti termini:
   - :blue:`Qak22Context.java` : classe  che realizza il contesto in cui vivono gli attori.
 
 Grazie a queste classi potremo usare gli attori  ``QakActor22`` senza dovere, al momento, conoscere Kotlin.
-Ovviamente, in una fase successiva cercheremo di operare avvaledoci dirattemnte di Kotlin.
+Ovviamente, in una fase successiva cercheremo di operare avvaledoci direttamnte di Kotlin.
 
 Per introdurci all'uso degli attori ``QakActor22``, vediamo come definire ed usare un attore relativo al Led.
 
@@ -150,11 +150,11 @@ controllando che non ce ne sia già un altro con lo stesso nome.
 .. code:: java
 
   public QakActor22(@NotNull String name ) {      
-		  super(name, QakContext.Companion.createScope(), false, true, false, 50);
+    super(name, QakContext.Companion.createScope(),false,true,false,50);
     if( Qak22Context.getActor(name) == null ) {
       Qak22Context.addActor( this );
     }
-    else ColorsOut.outerr("QakActor22 | WARNING: an actor with name " + name + " already exists");	
+    else ColorsOut.outerr("QakActor22 | actor "+name+"already exists");	
 	}
 
 ---------------------------------
@@ -167,13 +167,20 @@ tabella (``ctxMap``) che associa il nome dell'attore al suo riferimento in quant
 .. code:: java
 
   public class Qak22Context {
-  private static HashMap<String,QakActor22> ctxMap = new HashMap<String,QakActor22>();
+  private static HashMap<String,QakActor22> ctxMap = 
+                     new HashMap<String,QakActor22>();
+
++++++++++++++++++++++++
+QakActor22: getActor
++++++++++++++++++++++++
+Il metodo ``getActor`` restituisce il riferimento all'oggetto che implementa l'attore, dato il suo nome.
+
+.. code:: java
 
   public static QakActor22 getActor(String actorName) {
     return ctxMap.get(actorName);
   }
 
-Il metodo ``getActor`` restituisce il riferimento all'oggetto che implementa l'attore, dato il suo nome.
 
 ---------------------------------
 QakActor22: handleMsg
@@ -181,7 +188,7 @@ QakActor22: handleMsg
 La classe ``QakActor22`` è astratta in quanto lascia alle classi specilizzate il compito di definire il metodo ``handleMsg`` 
 con cui un attore applicativo gestisce (interpretandoli) comandi e richieste di tipo ``it.unibo.kactor.IApplMessage``.
 
-Si noti che l'interfaccia c`IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.6.jar``,
+Si noti che l'interfaccia  ``IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.6.jar``,
 così da riutilizzare il codice già sviluppato negli anni scorsi.
 
 +++++++++++++++++++++++++++++++++++++++
@@ -227,7 +234,7 @@ rinunciamo, per semplicità, alla introduzione di un :ref:`LedApplInterpreter<Un
 La classe ApplData
 +++++++++++++++++++++++++++++++++++++++++++++
 Notiamo il ruolo importante della classe di livello applicativo ``ApplData`` che raccoglie le definizioni dei nomi e 
-dei principlali messaggi.
+dei principali messaggi.
 
 .. code:: java
   
@@ -263,13 +270,13 @@ L'elaborazione delle richieste è ancora del tutto simile a quanto fatto in :ref
   protected void elabRequest(IApplMessage msg) {
     String msgReq = msg.msgContent();
     switch( msgReq ) {
-    case ApplData.reqLedState  :{
-      boolean b = led.getState();
-      IApplMessage reply = 
-        MsgUtil.buildReply(getName(), ApplData.reqLedState, ""+b, msg.msgSender());
-      sendReply(msg, reply );				
-      break;
-			}
+      case ApplData.reqLedState:{
+        boolean b = led.getState();
+        IApplMessage reply = MsgUtil.buildReply(getName(), 
+            ApplData.reqLedState, ""+b, msg.msgSender());
+        sendReply(msg, reply );				
+        break;
+      }
     default: ColorsOut.outerr(getName()  + " | unknown " + msgReq);
     }
   }
@@ -325,10 +332,11 @@ L'invio di un messaggio (comando o richiesta) ad un attore come :ref:`LedActor` 
 #. da parte di un altro attore
 
 +++++++++++++++++++++++++++++++++++++++++++++
-Invio di messaggi da programma
+Invio di messaggi da non-attori
 +++++++++++++++++++++++++++++++++++++++++++++
 
-Un programma Java può inviare messaggi ad un attore attraverso il metodo ``sendAMsg`` definito nella classe ``Qak22Util``
+Un programma Java può inviare messaggi ad un attore attraverso il metodo ``sendAMsg`` 
+definito nella classe ``Qak22Util``
 
 .. code:: java
 
@@ -475,8 +483,8 @@ Al momento della costruzione, ControllerActor prepara un messaggio di richiesta 
 
   public ControllerActor(String name  ) {
     super(name);
-    getStateRequest  = 
-      ApplData.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
+    getStateRequest  = ApplData.buildRequest(name,"ask", 
+                ApplData.reqLedState, ApplData.ledName);
     }
 
 La gestione dei messaggi del ``ControllerActor`` riguarda i seguenti messaggi:
@@ -493,15 +501,15 @@ La gestione dei messaggi del ``ControllerActor`` riguarda i seguenti messaggi:
  	}
 	
 	protected void elabCmd(IApplMessage msg) {
-		String msgCmd = msg.msgContent();
-		switch( msgCmd ) {
-			case ApplData.cmdActivate : {
-				doControllerWork();
-	 			break;
-			}
-			default:break;
-		}		
-	}
+    String msgCmd = msg.msgContent();
+    switch( msgCmd ) {
+      case ApplData.cmdActivate : {
+        doControllerWork();
+         break;
+      }
+      default:break;
+    }		
+  }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ControllerActor: comportamento

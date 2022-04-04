@@ -55,14 +55,21 @@ protected boolean on = true;
 		CommUtils.aboutThreads(getName()  + " |  Before doControllerWork on=" + on );
 		//wrongBehavior();
   		//ColorsOut.outappl( getName()  + " | numIter=" + numIter  , ColorsOut.GREEN);
-  		if( numIter++ <= 5 ) {
-	 	    if( on )  forward( ApplData.turnOnLed );
- 	 	    else forward( ApplData.turnOffLed );
-	 	    on = !on;
- 	 	    request(getStateRequest);
-		}else {
-			forward( ApplData.turnOffLed );
-		}
+//  		if( numIter++ <= 5 ) {
+//	 	    if( on )  forward( ApplData.turnOnLed );
+// 	 	    else forward( ApplData.turnOffLed );
+//	 	    on = !on;
+// 	 	    request(getStateRequest);
+//		}else {
+//			forward( ApplData.turnOffLed );
+//		}
+		
+	    if( numIter++ < 5 ) {
+	        if( numIter%2 == 1)  forward( ApplData.turnOnLed ); //accesione
+	        else forward( ApplData.turnOffLed ); //spegnimento
+	        request(getStateRequest);
+	      }else	forward( ApplData.turnOffLed );
+		
 	}
 	
 	protected void elabAnswer(IApplMessage msg) {

@@ -69,20 +69,7 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 	}
 	
 	protected void doRequest(IApplMessage msg,  ProxyAsClient pxy ) {
-		//CommUtils.aboutThreads("QakActor22 Before doRequest - ");
-//  		new Thread() {
-//			public void run() {
-		 		//ColorsOut.out( "QakActor22  | doRequest " + msg + " pxy=" + pxy, ColorsOut.WHITE_BACKGROUND  );
-				pxy.sendMsgOnConnection( msg.toString() ) ;
-				//NON Attende la risposta  
-//				IApplMessage reply= new ApplMessage( answerMsg );
-//				//ColorsOut.outappl("QakActor22 | answer=" + reply  , ColorsOut.WHITE_BACKGROUND);
-//				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
-//				if( sender != null ) //defensive
-//					sender.queueMsg(reply); //the sender must handle the reply as msg	
-//				else ColorsOut.outerr("QakActor22 | answer " + answerMsg + " for an unknown actor " + msg.msgSender());
-//			}			
-//		}.start();
+		pxy.sendMsgOnConnection( msg.toString() ) ;
 		CommUtils.aboutThreads("QakActor22 After doRequest - ");
 	}
 	
