@@ -105,7 +105,7 @@ ActorQak e QakActor22
 
 Nel seguito, per evitare confusioni, useremo i segenti termini:
 
-- **ActorQak**: per indicare gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.6.jar``
+- **ActorQak**: per indicare gli attori implementati in Kotlin dalla libreria ``it.unibo.qakactor-2.7.jar``
   realizzata in anni passati;
 - **QakActor22**: per indicare gli attori che useremo in questa fase del nostro percorso, all'interno di normali programmi Java, 
   utilizzando classi appositamente definite nel progetto ``unibo.actor22``:
@@ -188,7 +188,7 @@ QakActor22: handleMsg
 La classe ``QakActor22`` è astratta in quanto lascia alle classi specilizzate il compito di definire il metodo ``handleMsg`` 
 con cui un attore applicativo gestisce (interpretandoli) comandi e richieste di tipo ``it.unibo.kactor.IApplMessage``.
 
-Si noti che l'interfaccia  ``IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.6.jar``,
+Si noti che l'interfaccia  ``IApplMessage`` è ora definita nel package ``it.unibo.kactor`` della libreria ``it.unibo.qakactor-2.7.jar``,
 così da riutilizzare il codice già sviluppato negli anni scorsi.
 
 +++++++++++++++++++++++++++++++++++++++
@@ -614,8 +614,8 @@ In questo package inseriamo la realizzazione una nuova versione del concetto di 
 introdotto in :ref:`Contesti-contenitori` tenendo conto di quanto già fatto 
 nello :ref:`Sprint4<Lo SPRINT4>` e dei seguenti punti:
 
-- il codice dipende dalla libreria *it.unibo.qakactor-2.6*  e viene distribuito nella libreria
-  **unibo.actor22-1.0.jar**;
+- il codice dipende dalla libreria *it.unibo.qakactor-2.7*  e viene distribuito nella libreria
+  **unibo.actor22-1.1.jar**;
 
 - l'astrazione :ref:`connessione<Interaction2021>` viene definita
   come una estensione di quanto introdotto nel supporto agli attori :ref:`ActorQak<ActorQak e QakActor22>`: 
@@ -670,7 +670,7 @@ Gestione di richieste
 +++++++++++++++++++++++++++++++++++++++++
 
 Se un messaggio pervenuto è una richiesta, il gestore di sistema dei messaggi predispone 
-un attore temporaneo capace di ricevere il messaggio di risposta prodotto dall'attore destinatario
+un **attore temporaneo** capace di ricevere il messaggio di risposta prodotto dall'attore destinatario
 e inviarlo all'attore richiedente:
 
 .. code::  java
@@ -814,5 +814,9 @@ Esempi
 Nel package ``unibo.actor22.distrib`` (directory test del progetto ``unibo.actor22``) :
 
 - ``LedActorOnRasp`` :   attiva un :ref:`LedActor` in un contesto
-- ``ControllerOnPcUsingLedRemote`` :   attiva un :ref:`ControllerActor` in un diverso contesto, io quale usa il Led remoto
+- ``ControllerOnPcUsingLedRemote`` :   attiva un :ref:`ControllerActor` in un diverso contesto, il quale usa il Led remoto.
+
+---------------------------------------------
+Configurazione usando annotazioni
+---------------------------------------------
 

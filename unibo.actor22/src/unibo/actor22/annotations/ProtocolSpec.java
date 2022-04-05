@@ -14,5 +14,5 @@ public @interface ProtocolSpec {
     public enum issProtocol {UDP,TCP,HTTP,MQTT,COAP,WS} ;
     issProtocol protocol() default issProtocol.TCP;
     String url() default "unknown";
-    String configFile() default "IssProtocolConfig.txt";
+    String configFile() default "ProtocolConfig.txt";
 }

@@ -23,6 +23,7 @@ iss22
    Attori
    RaspberrySoftware
    RaspBasicCode
+   Annotazioni
 
 Indices and tables
 -------------------

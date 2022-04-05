@@ -2,6 +2,7 @@ package unibo.actor22.annotations;
 
 import java.io.FileInputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -78,30 +79,61 @@ RELATED TO PROTOCOLS
             String[] items = line.split(",");
 
             String protocol = AnnotUtil.getProtocolConfigInfo("protocol", items[0]);
-            System.out.println("IssAnnotationUtil | protocol=" + protocol);
+            System.out.println("AnnotationUtil | protocol=" + protocol);
 
             String url = AnnotUtil.getProtocolConfigInfo("url", items[1]);
             //System.out.println("IssAnnotationUtil | url=" + url);
              return null;
         } catch (Exception e) {
-            System.out.println("IssAnnotationUtil | WARNING:" + e.getMessage());
+            System.out.println("AnnotationUtil | WARNING:" + e.getMessage());
             return null;
         }
     }
 
     //Quite bad: we will replace with Prolog parser
+    //  line example: http://localHost:8090/api/move
+    //functor era Prolog msg( )
     public static String getProtocolConfigInfo(String functor, String line){
         Pattern pattern = Pattern.compile(functor);
         Matcher matcher = pattern.matcher(line);
+        ColorsOut.outappl("line:                " + line, ColorsOut.CYAN);
         String content = null;
-        if(matcher.find()) {
-            int end = matcher.end() ;
-            content = line.substring( end, line.indexOf(")") )
-                    .replace("\"","")
-                    .replace("(","").trim();
+        if( matcher.find()) {
+            int end   = matcher.end() ;
+            int start = matcher.start();
+            ColorsOut.outappl("start:                   " + start, ColorsOut.CYAN);
+            ColorsOut.outappl("end:                     " + end,   ColorsOut.CYAN);
+            ColorsOut.outappl("group:                     " + matcher.group(),   ColorsOut.CYAN);
+            String a = line.substring(start+1,end-1);
+            ColorsOut.outappl("a:                     " + a,   ColorsOut.CYAN);
+//            content = line.substring( end, line.indexOf(")") )
+//                    .replace("\"","")
+//                    .replace("(","").trim();
         }
         return content;
     }
+    
+    
+    public static void readProtocolAnnotation(Object element) {
+        try {
+            Class<?> clazz            = element.getClass();
+            Annotation[] annotations  = clazz.getAnnotations();
+             for (Annotation annot : annotations) {
+                 if (annot instanceof ProtocolSpec) {
+                	ProtocolSpec p  = (ProtocolSpec) annot;
+                    ColorsOut.outappl("Tipo del protocollo: " + p.protocol(), ColorsOut.CYAN);
+                    ColorsOut.outappl("Url del protocollo:  " + p.url(), ColorsOut.CYAN);
+                    //http://localHost:8090/api/move
+                    String v = getProtocolConfigInfo("\\w*://[a-zA-Z]*:\\d*/\\w*/\\w*", p.url());
+                    ColorsOut.outappl("v:                   " + v, ColorsOut.CYAN);
+               }
+            }
+        } catch (Exception e) {
+        	ColorsOut.outerr("AnnotationUtil | readAnnotation ERROR:" + e.getMessage());
+        }
+    }
+    
+    
 
 
     /*
@@ -149,27 +181,6 @@ RELATED TO ROBOT MOVES
         }
         return Integer.parseInt( content );
     }
-
-
-/*
-METHODS
- */
-    /*
-public static void injectRobotSupport(Object object, IssAppOperations rs)   {
-    //println("injectRobotSupport object=" + object);
-    Class<?> clazz = object.getClass();
-    for (Method method : clazz.getDeclaredMethods()) {
-        System.out.println("injectRobotSupport method=" + method);
-        if (method.isAnnotationPresent(InjectSupportSpec.class)) {
-            method.setAccessible(true);
-            try{
-                //System.out.println("injectRobotSupport invoke " + method);
-                method.invoke(object,rs);   //the first argument is this
-            }catch( Exception e ){
-                e.printStackTrace();
-            }
-        }
-    }
-}
-*/
+ 
+ 
 }

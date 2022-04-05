@@ -46,7 +46,7 @@ public class UsingActorsWithAnnotOnPc {
 		
 		//Qak22Context.initContext();
 		
-		new EventObserver(ApplData.observerName);
+		//new EventObserver(ApplData.observerName);
 		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
 		
 		Qak22Context.handleLocalActorDecl(this);
