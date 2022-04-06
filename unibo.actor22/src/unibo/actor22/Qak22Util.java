@@ -34,21 +34,9 @@ public  class Qak22Util   {
     			ColorsOut.outerr("Qak22Util | Perhaps no setActorAsRemote for " + destActorName );
     			return;
     		}
-//     		new Thread() {
-//    			public void run() {
-    		 		//ColorsOut.outappl( "Qak22Util  | doRequest " + msg + " pxy=" + pxy, ColorsOut.WHITE_BACKGROUND  );
-    				pxy.sendMsgOnConnection( msg.toString()) ;
-    				//NON Attende la risposta  
-//    				IApplMessage reply= new ApplMessage( answerMsg );
-//    				//ColorsOut.outappl("Qak22Util | answer=" + reply  , ColorsOut.YELLOW_BACKGROUND);
-//    				QakActor22 sender = Qak22Context.getActor(msg.msgSender());
-//    				if( sender != null )
-//    					sender.queueMsg(reply); //the sender must handle the reply as msg				 
-//    				else ColorsOut.outerr("Qak22Util | answer " + answerMsg + " for an unknown actor " + msg.msgSender());
-//    			}			
-//    		}.start();
-			//CommUtils.delay(10);  //Per forzare il rescheduling
-     		CommUtils.aboutThreads("Qak22Util After doRequest  - ");
+    		//ColorsOut.outappl( "Qak22Util  | doRequest " + msg + " pxy=" + pxy, ColorsOut.WHITE_BACKGROUND  );
+    		pxy.sendMsgOnConnection( msg.toString()) ;
+     		//CommUtils.aboutThreads("Qak22Util After doRequest  - ");
         }
 	}
 

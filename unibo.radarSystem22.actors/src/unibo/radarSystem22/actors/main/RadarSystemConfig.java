@@ -24,9 +24,12 @@ public class RadarSystemConfig {
  	public static String hostAddr         = "localhost";		
 	public static String raspAddr         = "localhost";		
  
-	//Aggiunte dello SPRINT4 	
+	
 	public static ProtocolType protcolType= ProtocolType.tcp;		
 	public static int  ctxServerPort      = 8018;
+	
+	//Aggiunte dopo Eventi 	
+	public static boolean sonarObservable = true;
 	
 	public static void setTheConfiguration(  ) {
 		setTheConfiguration("../RadarSystemConfig.json");

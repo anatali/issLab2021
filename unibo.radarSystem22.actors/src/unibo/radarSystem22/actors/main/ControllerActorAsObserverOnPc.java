@@ -21,12 +21,12 @@ import unibo.radarSystem22.actors.*;
  * con cui interagire  a scambio di messaggi
  */
 @ActorLocal(name =     {"controller" }, 
-           implement = {unibo.radarSystem22.actors.ControllerActor.class })
+           implement = {unibo.radarSystem22.actors.ControllerActorAsObserver.class })
 @ActorRemote(name =   {"led","sonar"}, 
              host=    {ApplData.raspAddr, ApplData.raspAddr}, 
              port=    { ""+ApplData.ctxRaspPort, ""+ApplData.ctxRaspPort}, 
              protocol={ "TCP" , "TCP" })
-public class ControllerActorOnPc {
+public class ControllerActorAsObserverOnPc {
 	
  
 	public void doJob() {
@@ -70,7 +70,7 @@ public class ControllerActorOnPc {
 	
 	public static void main( String[] args) {
 		CommUtils.aboutThreads("Before start - ");
-		new ControllerActorOnPc().doJob();
+		new ControllerActorAsObserverOnPc().doJob();
 		CommUtils.aboutThreads("Before end - ");
 	}
 

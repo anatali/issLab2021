@@ -6,6 +6,7 @@ import it.unibo.radarSystem22.domain.mock.SonarMock;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.events.EventMsgHandler;
+import unibo.radarSystem22.actors.main.RadarSystemConfig;
 
 /*
  * Agisce come emettitore di eventi di distanza
@@ -19,8 +20,10 @@ private String name;
 	}
 	protected void updateDistance( int d ) {
 		curVal = new Distance( d );
-		distanceEvent = Qak22Util.buildEvent(name, ApplData.evDistance, ""+d );
-		Qak22Util.sendAMsg(distanceEvent, EventMsgHandler.myName);
+		if( RadarSystemConfig.sonarObservable) {
+			distanceEvent = Qak22Util.buildEvent(name, ApplData.evDistance, ""+d );
+			Qak22Util.sendAMsg(distanceEvent, EventMsgHandler.myName);
+		}
 		ColorsOut.out(name + " | updateDistance "+ d, ColorsOut.BLUE);
 	}	
 	

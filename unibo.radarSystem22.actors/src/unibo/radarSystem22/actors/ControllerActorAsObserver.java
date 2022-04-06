@@ -10,23 +10,36 @@ import unibo.radarSystem22.actors.main.RadarSystemConfig;
  * Il controller conosce SOLO I NOMI dei dispositivi 
  * (non ha riferimenti ai dispositivi-attori)
  */
-public class ControllerActor extends QakActor22{
+public class ControllerActorAsObserver extends QakActor22{
 protected int numIter = 1;
 protected IApplMessage getStateRequest ;
 protected boolean on = true;
 
-	public ControllerActor(String name  ) {
+	public ControllerActorAsObserver(String name  ) {
 		super(name);
 		getStateRequest  = Qak22Util.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
  	}
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {  
-		if( msg.isDispatch()) elabCmd(msg) ;	
-		else if( msg.isReply() ) elabReply(msg) ;	
+		if( msg.isEvent() ) elabEvent(msg);
+		else  elabCmd(msg) ;	
  	}
 	
-
+	protected void elabEvent(IApplMessage msg) {
+		ColorsOut.outappl( getName()  + " | elabEvent=" + msg, ColorsOut.GREEN);
+		if( msg.isEvent()  ) {  //defensive
+			String dstr = msg.msgContent();
+			int d       = Integer.parseInt(dstr);
+			if( d <  RadarSystemConfig.DLIMIT ) {
+				forward(ApplData.turnOnLed); 		
+				forward(ApplData.deactivateSonar);
+			}
+			else {
+				forward(ApplData.turnOffLed); 
+			}
+		}
+	}
 	
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
@@ -34,31 +47,10 @@ protected boolean on = true;
 		switch( msgCmd ) {
 			case ApplData.cmdActivate : {
 				sendMsg( ApplData.activateSonar);
-				doControllerWork();
  	 			break;
 			}
 			default:break;
 		}		
 	}
-	
-	protected void elabReply(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | elabReply=" + msg, ColorsOut.GREEN);
-		//if( msg.msgId().equals(ApplData.reqDistance ))
-		String dStr = msg.msgContent();
-		int d = Integer.parseInt(dStr);
-		if( d <  RadarSystemConfig.DLIMIT ) {
-			forward(ApplData.turnOnLed); 		
-			forward(ApplData.deactivateSonar);
-		}
-		else {
-			forward(ApplData.turnOffLed); 
-			doControllerWork();
-		}
-	}
-	
-    protected void doControllerWork() {
-		CommUtils.aboutThreads(getName()  + " |  Before doControllerWork on=" + on );
-		request( ApplData.askDistance );
-	}	
 
 }

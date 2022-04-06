@@ -17,12 +17,13 @@ import unibo.radarSystem22.actors.*;
 		name =      {"led", "sonar"  }, 
 		implement = { LedActor.class,  SonarActor.class }
 )
-@ActorRemote(name =   {"controller" }, 
+/*
+@ActorRemote(name =   {"controller" },   //WARNING: dichiazione da evitare in futuro
 		host=    { ApplData.pcAddr }, 
 		port=    { ""+ApplData.ctxPcPort }, 
 		protocol={ "TCP"   }
 )
-
+*/
 public class DeviceActorsOnRasp {
  
 

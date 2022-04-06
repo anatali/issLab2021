@@ -32,7 +32,7 @@ public class ApplData {
 	public static final IApplMessage turnOnLed    = Qak22Util.buildDispatch(controllerName, "cmd", comdLedon,   ledName);
 	public static final IApplMessage turnOffLed   = Qak22Util.buildDispatch(controllerName, "cmd", comdLedoff,  ledName);
 	
-	public static final  IApplMessage activateCrtl = Qak22Util.buildDispatch("main", "cmd", cmdActivate, controllerName);
+	public static final  IApplMessage activateCrtl    = Qak22Util.buildDispatch("main", "cmd", cmdActivate, controllerName);
 	public static final  IApplMessage activateSonar   = Qak22Util.buildDispatch(controllerName, "cmd", cmdActivate, sonarName);
 	public static final  IApplMessage deactivateSonar = Qak22Util.buildDispatch(controllerName, "cmd", cmdDectivate, sonarName);
 	
