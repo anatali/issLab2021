@@ -3,10 +3,9 @@ package unibo.radarSystem22.actors.main;
  
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.Qak22Context;
+import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.ActorLocal;
-import unibo.actor22.annotations.ActorRemote;
 import unibo.actor22comm.context.EnablerContextForActors;
-import unibo.actor22comm.interfaces.IContext;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
@@ -14,20 +13,13 @@ import unibo.radarSystem22.actors.*;
  
   
 @ActorLocal(
-		name =      {"led", "sonar"  }, 
-		implement = { LedActor.class,  SonarActor.class }
-)
-@ActorRemote(name =   {"controller" }, 
-		host=    { ApplData.pcAddr }, 
-		port=    { ""+ApplData.ctxPcPort }, 
-		protocol={ "TCP"   }
-)
-
-public class DeviceActorsOnRasp {
- 
+		name =      {"led", "sonar", "controller" }, 
+		implement = { LedActor.class,  SonarActor.class,  ControllerActor.class})
+public class AllOnPc {
+private EnablerContextForActors ctx;
 
 	public void doJob() {
-		ColorsOut.outappl("DeviceActorsOnRasp | Start", ColorsOut.BLUE);
+		ColorsOut.outappl("AllOnPc | Start", ColorsOut.BLUE);
 		configure();
 		CommUtils.aboutThreads("Before execute - ");
 		//CommUtils.waitTheUser();
@@ -38,20 +30,24 @@ public class DeviceActorsOnRasp {
 	protected void configure() {
 		DomainSystemConfig.simulation   = true;			
 		DomainSystemConfig.ledGui       = true;			
-		DomainSystemConfig.tracing      = true;					
+		DomainSystemConfig.tracing      = false;					
 		CommSystemConfig.tracing        = false;
-		
-		Qak22Context.handleLocalActorDecl(this); 
- 		Qak22Context.handleRemoteActorDecl(this);
+  
+		//new EventObserver(ApplData.observerName);
 		Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
 
-		IContext ctx = new EnablerContextForActors( "ctxRasp",ApplData.ctxRaspPort,ApplData.protocol);
-		ctx.activate();
+		ctx = new EnablerContextForActors( "ctx",ApplData.ctxPcPort,ApplData.protocol);
 
-	}
+		Qak22Context.handleLocalActorDecl(this);
+		Qak22Util.sendAMsg(ApplData.activateSonar);
+//		new LedActor( ApplData.ledName );
+//		new SonarActor( ApplData.sonarName );
+  	}
 	
 	protected void execute() {
-		ColorsOut.outappl("DeviceActorsOnRasp | execute", ColorsOut.MAGENTA);
+		ColorsOut.outappl("AllOnPc | execute", ColorsOut.MAGENTA);
+		ctx.activate();
+		
 	} 
 
 	public void terminate() {
@@ -62,7 +58,7 @@ public class DeviceActorsOnRasp {
 	
 	public static void main( String[] args) {
 		CommUtils.aboutThreads("Before start - ");
-		new DeviceActorsOnRasp().doJob();
+		new AllOnPc().doJob();
 		CommUtils.aboutThreads("Before end - ");
 	}
 

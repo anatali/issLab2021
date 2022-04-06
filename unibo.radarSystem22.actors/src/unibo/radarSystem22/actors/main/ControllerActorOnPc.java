@@ -8,6 +8,7 @@ import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.ActorLocal;
 import unibo.actor22.annotations.ActorRemote;
 import unibo.actor22comm.ProtocolType;
+import unibo.actor22comm.context.EnablerContextForActors;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
@@ -22,8 +23,8 @@ import unibo.radarSystem22.actors.*;
 @ActorLocal(name =     {"controller" }, 
            implement = {unibo.radarSystem22.actors.ControllerActor.class })
 @ActorRemote(name =   {"led","sonar"}, 
-             host=    {"localhost","localhost"}, 
-             port=    { ""+ApplData.ctxPort, ""+ApplData.ctxPort}, 
+             host=    {ApplData.raspAddr, ApplData.raspAddr}, 
+             port=    { ""+ApplData.ctxRaspPort, ""+ApplData.ctxRaspPort}, 
              protocol={ "TCP" , "TCP" })
 public class ControllerActorOnPc {
 	
@@ -42,24 +43,20 @@ public class ControllerActorOnPc {
  		CommSystemConfig.protcolType    = ProtocolType.tcp;
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
+		RadarSystemConfig.DLIMIT        = 65;
 		
-		new EventObserver(ApplData.observerName);
-		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
+		new EnablerContextForActors( "ctxPc",ApplData.ctxPcPort,ApplData.protocol).activate();
+
 		
+//		new EventObserver(ApplData.observerName);
+//		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
+	
 		Qak22Context.handleLocalActorDecl(this);
  		Qak22Context.handleRemoteActorDecl(this);
  	}
 	
 	protected void execute() {
 		ColorsOut.outappl("UsingActorsWithAnnotOnPc | execute", ColorsOut.MAGENTA);
-//		for( int i=1; i<=2; i++) {
-//			Qak22Util.sendAMsg( ApplData.turnOnLed  );
-//	 	    CommUtils.delay(500);
-//	 	    Qak22Util.sendAMsg( ApplData.turnOffLed  );
-//	 	    CommUtils.delay(500);
-//		}
-//		
-//
 		Qak22Util.sendAMsg( ApplData.activateCrtl );
 	} 
 	

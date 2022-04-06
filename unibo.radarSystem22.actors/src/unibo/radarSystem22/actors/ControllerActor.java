@@ -4,6 +4,7 @@ import it.unibo.kactor.IApplMessage;
 import unibo.actor22.*;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
+import unibo.radarSystem22.actors.main.RadarSystemConfig;
 
 /*
  * Il controller conosce SOLO I NOMI dei dispositivi 
@@ -16,17 +17,29 @@ protected boolean on = true;
 
 	public ControllerActor(String name  ) {
 		super(name);
-		getStateRequest  = ApplData.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
+		getStateRequest  = Qak22Util.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
  	}
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {  
-		if( msg.isReply() ) {
-			elabAnswer(msg);
-		}else { 
-			elabCmd(msg) ;	
-		}
+		if( msg.isEvent() ) elabEvent(msg);
+		else  elabCmd(msg) ;	
  	}
+	
+	protected void elabEvent(IApplMessage msg) {
+		ColorsOut.outappl( getName()  + " | elabEvent=" + msg, ColorsOut.GREEN);
+		if( msg.isEvent()  ) {  //defensive
+			String dstr = msg.msgContent();
+			int d       = Integer.parseInt(dstr);
+			if( d <  RadarSystemConfig.DLIMIT ) {
+				forward(ApplData.turnOnLed); 		
+				forward(ApplData.deactivateSonar);
+			}
+			else {
+				forward(ApplData.turnOffLed); 
+			}
+		}
+	}
 	
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
@@ -34,46 +47,10 @@ protected boolean on = true;
 		switch( msgCmd ) {
 			case ApplData.cmdActivate : {
 				sendMsg( ApplData.activateSonar);
-				doControllerWork();
-	 			break;
+ 	 			break;
 			}
 			default:break;
 		}		
-	}
-	
-	protected void wrongBehavior() {
-  	    //WARNING: Inviare un treno di messaggi VA EVITATO
-		//mantiene il controllo del Thread degli attori (qaksingle)		
-		for( int i=1; i<=3; i++) {
-			forward( ApplData.turnOffLed );
-			CommUtils.delay(500);
-			forward( ApplData.turnOnLed );
-			CommUtils.delay(500);		
-		}
-		forward( ApplData.turnOffLed );
-	}
-    protected void doControllerWork() {
-		CommUtils.aboutThreads(getName()  + " |  Before doControllerWork on=" + on );
-		//wrongBehavior();
-  		//ColorsOut.outappl( getName()  + " | numIter=" + numIter  , ColorsOut.GREEN);		
-	    if( numIter++ < 5 ) {
-	        if( numIter%2 == 1)  forward( ApplData.turnOnLed ); //accesione
-	        else forward( ApplData.turnOffLed ); //spegnimento
-	        request(getStateRequest);
-	      }else {
-	    	  forward( ApplData.turnOffLed );
-			  ColorsOut.outappl(getName() + " | emit " + ApplData.endWorkEvent, ColorsOut.MAGENTA);
-	    	  emit( ApplData.endWorkEvent );
-			  sendMsg( ApplData.deactivateSonar);
-
-	      }
-		
-	}
-	
-	protected void elabAnswer(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | elabAnswer numIter=" + numIter + " "+ msg, ColorsOut.MAGENTA);
- 		CommUtils.delay(500);
-		doControllerWork();
 	}
 
 }

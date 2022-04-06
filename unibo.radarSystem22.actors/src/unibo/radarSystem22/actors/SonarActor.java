@@ -15,7 +15,7 @@ private ISonar sonar;
 
 	public SonarActor(String name) {
 		super(name);
-		sonar = DeviceFactory.createSonar();
+		sonar = SonarForActor.createSonar(name);
 	}
 
 	@Override

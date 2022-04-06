@@ -1,6 +1,5 @@
 package unibo.actor22.common;
 
-import it.unibo.kactor.Actor22;
 import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.DeviceFactory;

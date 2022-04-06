@@ -16,7 +16,7 @@ protected boolean on = true;
 
 	public ControllerActor(String name  ) {
 		super(name);
-		getStateRequest  = ApplData.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
+		getStateRequest  = Qak22Util.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
  	}
 
 	@Override

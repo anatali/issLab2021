@@ -50,7 +50,7 @@ public class Qak22Context {
 	
 //Annotations
 	
-    public static void handleLocalActorDecl(Object element) {
+    public static void handleLocalActorDecl(Object element) {   	
         Class<?> clazz            = element.getClass();
         Annotation[] annotations  = clazz.getAnnotations();
          for (Annotation annot : annotations) {
