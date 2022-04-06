@@ -2,12 +2,10 @@ package unibo.actor22;
 
  
 import it.unibo.kactor.*;
-import unibo.actor22.annotations.AnnotUtil;
 import unibo.actor22comm.proxy.ProxyAsClient;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
-
-import java.util.HashMap;
+ 
 
 public  class Qak22Util   {
 

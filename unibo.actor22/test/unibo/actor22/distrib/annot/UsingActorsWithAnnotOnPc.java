@@ -19,11 +19,12 @@ import unibo.actor22comm.utils.CommUtils;
 /*
  * Questo sistema ipotizza che led e sonar siano attori 
  * con cui interagire  a scambio di messaggi
+ * ATTIVARE LedActorOnRasp
  */
 @ActorLocal(name =     {"controller" }, 
            implement = {unibo.actor22.common.ControllerActor.class })
 @ActorRemote(name =   {"led","sonar"}, 
-             host=    {"localhost","localhost"}, 
+             host=    {ApplData.raspAddr,ApplData.raspAddr}, 
              port=    { ""+ApplData.ctxPort, ""+ApplData.ctxPort}, 
              protocol={ "TCP" , "TCP" })
 public class UsingActorsWithAnnotOnPc {
@@ -44,9 +45,7 @@ public class UsingActorsWithAnnotOnPc {
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		
-		//Qak22Context.initContext();
-		
-		//new EventObserver(ApplData.observerName);
+		new EventObserver(ApplData.observerName);
 		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
 		
 		Qak22Context.handleLocalActorDecl(this);

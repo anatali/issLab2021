@@ -38,9 +38,10 @@ protected HashMap<String,String> eventObserverMap = new HashMap<String,String>()
 	protected void updateTheObservers(IApplMessage msg) {
 		eventObserverMap.forEach(
 				( String actorName,  String evName) -> {
-					ColorsOut.outappl("updateTheObservers:" + actorName + " evName" + evName, ColorsOut.MAGENTA); 
+					ColorsOut.outappl("updateTheObservers:" + actorName + " evName:" + evName, ColorsOut.MAGENTA); 
 					if( evName.equals(msg.msgId()) ) {
 						Qak22Util.sendAMsg( msg,  actorName);
+						//Warning: we must declare a remote observer
 					}
 		} ) ;
 	}

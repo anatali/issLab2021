@@ -19,6 +19,7 @@
 .. _Kotlin Channel: https://play.kotlinlang.org/hands-on/Introduction%20to%20Coroutines%20and%20Channels/08_Channels
 .. _Akka Actors: https://doc.akka.io//docs/akka/current/typed/guide/actors-motivation.html
 .. _Akka Documentation: https://doc.akka.io//docs/akka/current/index.html
+.. _Java annotation: https://en.wikipedia.org/wiki/Java_annotation
 
 .. http://www-lia.deis.unibo.it/Courses/RetiLM/proposteProgetti/akka_dds_proposal.html
 .. it.unibo.qakactor/userDocs/LabQakPrologUsage2020.html
@@ -349,6 +350,9 @@ Ad esempio, per accendere il Led, un programma può eseguire:
 
     Qak22Util.sendAMsg( ApplData.turnOnLed  );
 
+Il parametro è uno solo perchè il messaggio, se non reppresenta un evento
+(si veda :ref:`Eventi`), contiene il nome del destinatario.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 UsingLedNoControllerOnPc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -580,7 +584,7 @@ QakContext: setActorAsRemote
 
 In questa fase, la conoscenza sulla dislocazione degli attori non locali viene 'iniettata' in un contesto 
 dal livello applicativo, attraverso il metodo ``setActorAsRemote``.
-Vedremo in seguito forme più evolute di dichiarazione.
+Vedremo in seguito (ad esempio, in :doc:`Annotazioni`) forme più evolute di dichiarazione.
 
 
 .. code::  java
@@ -820,3 +824,8 @@ Nel package ``unibo.actor22.distrib`` (directory test del progetto ``unibo.actor
 Configurazione usando annotazioni
 ---------------------------------------------
 
+Iniettare la conoscenza sulla dislocazione degli attori non locali attraverso il metodo :ref:`setActorAsRemote`
+segue uno **stile imperativo** tipico di Java.
+
+Per la configurazione di un sistema è però ormai ampiamente diffuso l'uso di uno **stile dichiarativo**
+sfruttando le `Java annotation`_. Per il loro uso nei nostri sistemi si veda :doc:`Annotazioni`.

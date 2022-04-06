@@ -306,8 +306,8 @@ Ci sentiamo quindi indotti a introdurre un principio:
 .. In meccanica quantistica, un Observer sembra determinare la natura stessa della sorgente  
 
 
-Secondo quseto principio, dovremmo escludere anche la possibilità di rendere il Sonar osservabile attraverso l'uso di un protocollo
-publish-sbuscribe, in quanto dovrebbe utilizzare (e quindi dipendere da) un broker.
+Secondo questo principio, dovremmo escludere anche la possibilità di rendere il Sonar osservabile attraverso 
+l'uso di un protocollo *publish-sbuscribe*, in quanto dovrebbe  dipendere da un broker.
 
 Da un punto di vista concettuale, una sorgente di informazione dovrebbe risultare osservabile in quanto capace di 
 emettere informazione percebibile da un numero qualsiasi di osservatori interessati,
