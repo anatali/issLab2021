@@ -44,6 +44,7 @@ public class ControllerActorOnPc {
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		RadarSystemConfig.DLIMIT        = 65;
+//		RadarSystemConfig.sonarObservable = false;
 		
 		//TODO: sarebbe meglio automatizzare
 		new EnablerContextForActors( "ctxPc",ApplData.ctxPcPort,ApplData.protocol).activate();

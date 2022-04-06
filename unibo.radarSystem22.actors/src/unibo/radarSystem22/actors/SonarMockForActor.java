@@ -15,16 +15,16 @@ public class SonarMockForActor extends SonarMock{
 private IApplMessage distanceEvent ;
 private String name;	
 
-	public SonarMockForActor( String name ) {
-		this.name = name;
+	public SonarMockForActor(  ) {
+		this.name = ApplData.sonarName;
 	}
 	protected void updateDistance( int d ) {
 		curVal = new Distance( d );
-		if( RadarSystemConfig.sonarObservable) {
+		if( RadarSystemConfig.sonarObservable ) {
 			distanceEvent = Qak22Util.buildEvent(name, ApplData.evDistance, ""+d );
+			//Molti messaggi non elaborati?
 			Qak22Util.sendAMsg(distanceEvent, EventMsgHandler.myName);
-		}
-		ColorsOut.out(name + " | updateDistance "+ d, ColorsOut.BLUE);
+		}else ColorsOut.outappl(name + " | updateDistance "+ d, ColorsOut.BLUE);
 	}	
 	
 }

@@ -31,15 +31,18 @@ private EnablerContextForActors ctx;
 		DomainSystemConfig.simulation   = true;			
 		DomainSystemConfig.ledGui       = true;			
 		DomainSystemConfig.tracing      = false;					
-		CommSystemConfig.tracing        = false;
+		RadarSystemConfig.DLIMIT        = 65;
+		CommSystemConfig.tracing        = true;
+		RadarSystemConfig.sonarObservable = false;
   
 		//new EventObserver(ApplData.observerName);
-		Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
+		//Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
 
 		ctx = new EnablerContextForActors( "ctx",ApplData.ctxPcPort,ApplData.protocol);
 
 		Qak22Context.handleLocalActorDecl(this);
-		Qak22Util.sendAMsg(ApplData.activateSonar);
+		
+		Qak22Util.sendAMsg(ApplData.activateCrtl);
 //		new LedActor( ApplData.ledName );
 //		new SonarActor( ApplData.sonarName );
   	}

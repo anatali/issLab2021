@@ -17,13 +17,13 @@ import unibo.radarSystem22.actors.*;
 		name =      {"led", "sonar"  }, 
 		implement = { LedActor.class,  SonarActor.class }
 )
-/*
+
 @ActorRemote(name =   {"controller" },   //WARNING: dichiazione da evitare in futuro
 		host=    { ApplData.pcAddr }, 
 		port=    { ""+ApplData.ctxPcPort }, 
 		protocol={ "TCP"   }
 )
-*/
+
 public class DeviceActorsOnRasp {
  
 
@@ -39,12 +39,19 @@ public class DeviceActorsOnRasp {
 	protected void configure() {
 		DomainSystemConfig.simulation   = true;			
 		DomainSystemConfig.ledGui       = true;			
-		DomainSystemConfig.tracing      = true;					
+		DomainSystemConfig.tracing      = false;					
 		CommSystemConfig.tracing        = false;
 		
+		//DECIDE se Sonar observable o no
+		//VA ATTIIVATO PER PRIMO
+		RadarSystemConfig.sonarObservable = true;
+		
 		Qak22Context.handleLocalActorDecl(this); 
- 		Qak22Context.handleRemoteActorDecl(this);
-		Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
+		
+		if( RadarSystemConfig.sonarObservable  ) {
+			Qak22Context.handleRemoteActorDecl(this);
+ 			Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
+		}
 
 		IContext ctx = new EnablerContextForActors( "ctxRasp",ApplData.ctxRaspPort,ApplData.protocol);
 		ctx.activate();

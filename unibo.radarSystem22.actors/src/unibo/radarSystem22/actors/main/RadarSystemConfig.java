@@ -29,7 +29,7 @@ public class RadarSystemConfig {
 	public static int  ctxServerPort      = 8018;
 	
 	//Aggiunte dopo Eventi 	
-	public static boolean sonarObservable = true;
+	public static boolean sonarObservable = false;
 	
 	public static void setTheConfiguration(  ) {
 		setTheConfiguration("../RadarSystemConfig.json");
