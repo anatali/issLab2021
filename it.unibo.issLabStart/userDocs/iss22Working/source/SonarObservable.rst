@@ -320,5 +320,9 @@ Questa idea fa sorgere un **abstraction gap**, e suggerisce un nuovo modello:
 :remark:`una sorgente è osservabile quando emette informazione in forma di evento`
 
 Il concetto di **evento** è stato introdotto in :ref:`Terminologia di riferimento` 
-come un messaggio che non ha un preciso destinatario.
- 
+come un messaggio che non ha un preciso destinatario; una sua implementazione è descritta in :ref:`Eventi`
+
+
+------------------------------------------
+Il Sonar come attore che emette eventi
+------------------------------------------
