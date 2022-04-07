@@ -10,17 +10,6 @@ import unibo.actor22comm.utils.ColorsOut;
 public class SonarActor extends QakActor22{
 ISonar sonar;
 
-//	public static ISonar createSonar(String name) {
-//		if( DomainSystemConfig.simulation )  return createSonarMock( name );
-//		else  return createSonarConcrete(name);		
-//	}
-//
-//	public static ISonar createSonarMock( ) {
-// 		return new SonarMockForActor( );
-//	}	
-//	public static ISonar createSonarConcrete(String name) {
-// 		return new SonarConcreteForActor(name);
-//	}
 
 	public SonarActor(String name) {
 		super(name);
@@ -39,6 +28,7 @@ ISonar sonar;
 		String msgCmd = msg.msgContent();
  		switch( msgCmd ) {
 			case ApplData.cmdActivate  : sonar.activate();break;
+			case ApplData.cmdDectivate : sonar.deactivate();break;
  			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
 		}
 	}

@@ -8,6 +8,7 @@
 .. _Java Type Annotations: https://docs.oracle.com/javase/tutorial/java/annotations/type_annotations.html
 .. _Spring and Spring Boot: https://www.baeldung.com/spring-vs-spring-boot
 .. _Spring Controllers: https://www.baeldung.com/spring-controllers
+.. _Pattern matching: https://www.w3schools.com/java/java_regex.asp
 
 ======================================
 Annotazioni
@@ -112,7 +113,6 @@ Come esempio, definiamo una annotazione per descrivere il modo di accedere ad un
         enum issProtocol {UDP,TCP,HTTP,MQTT,COAP,WS} ;
         issProtocol protocol() default issProtocol.TCP;
         String url() default "unknown";
-        String configFile() default "ProtocolConfig.txt";
     }
 
 La meta-annotation ``@Retention`` dice che l'annotazione ``@AccessSpec`` è visibile a runtime.
@@ -126,7 +126,7 @@ L'annotazione permette di specificare due attributi:
 Annotation: uso  
 ++++++++++++++++++++++++++++++++++++++++
 
-Introduciamo una classe che accede dinamicamente alle annotazioni e le visualizza.
+Introduciamo una classe che introduce l'annotazione ``@AccessSpec`` e accede dinamicamente ad essa, per visualizzarla.
 
 .. code:: Java
 
@@ -139,7 +139,7 @@ Introduciamo una classe che accede dinamicamente alle annotazioni e le visualizz
     public static void readProtocolAnnotation(Object element) { ...}
     
         public AnnotationUsageDemo() {
-            AnnotUtil.readProtocolAnnotation( this );	             
+            readProtocolAnnotation( this );	             
         }
         public static void main( String[] args) {
             new AnnotationUsageDemo();
@@ -147,32 +147,34 @@ Introduciamo una classe che accede dinamicamente alle annotazioni e le visualizz
     }
 
 Definiamo ora il metodo ``readProtocolAnnotation`` in modo da 
-recuperare (usando usando le API di `Java Reflection`_) le informazioni che abbiamo inserito tramite 
+recuperare (usando le API di `Java Reflection`_) le informazioni che abbiamo inserito tramite 
 l'annotazione:
 .
 
 .. code:: Java
 
     public static void readProtocolAnnotation(Object element) {
-        try {
-            Class<?> clazz            = element.getClass();
-            Annotation[] annotations  = clazz.getAnnotations();
-             for (Annotation annot : annotations) {
-                 if (annot instanceof AccessSpec) {
-                	AccessSpec p  = (AccessSpec) annot;
-                    ColorsOut.outappl("Tipo del protocollo: " + p.protocol(), ColorsOut.CYAN);
-                    ColorsOut.outappl("Url del protocollo:  " + p.url(), ColorsOut.CYAN);
-                    String v = getHostAddr("(\\w*)://([a-zA-Z]*):(\\d*)/(\\w*)/(\\w*)", p.url());
-                    ColorsOut.outappl("v:                   " + v, ColorsOut.CYAN);
-               }
-            }
-        } catch (Exception e) {
-        	ColorsOut.outerr("AnnotationUtil | readAnnotation ERROR:" + e.getMessage());
+    try {
+      Class<?> clazz            = element.getClass();
+      Annotation[] annotations  = clazz.getAnnotations();
+      for (Annotation annot : annotations) {
+        if (annot instanceof AccessSpec) {
+          AccessSpec p  = (AccessSpec) annot;
+          ColorsOut.outappl("Tipo del protocollo: " 
+                + p.protocol(), ColorsOut.CYAN);
+          ColorsOut.outappl("Url del protocollo:  " 
+                + p.url(), ColorsOut.CYAN);
+          String v = getHostAddr(
+                "(\\w*)://([a-zA-Z]*):(\\d*)/(\\w*)/(\\w*)", 
+                p.url());
+          ColorsOut.outappl("v: " + v, ColorsOut.CYAN);
         }
+      }
+    } catch (Exception e) {... }
     }
 
 
-Il metodo  ``getHostAddr``  estrae la parte host:port dall'URL usando pattern matching su espressioni regolari:
+Il metodo  ``getHostAddr``  estrae la parte *host:port* dall'URL, usando `Pattern matching`_ su espressioni regolari:
 
 .. code:: Java
 
@@ -183,7 +185,8 @@ Il metodo  ``getHostAddr``  estrae la parte host:port dall'URL usando pattern ma
         String content = null;
         if( matcher.find()) {
             for( int i = 1; i<=5; i++ ) {
-                ColorsOut.outappl("goup " + i + ":" + matcher.group(i),   ColorsOut.CYAN);          	
+                ColorsOut.outappl("goup " + i + ":" + 
+                      matcher.group(i),   ColorsOut.CYAN);          	
             }
             content = matcher.group(2)+":"+matcher.group(3);
          }
@@ -218,18 +221,18 @@ definiamo due annotazioni, una per dichiarare attori locali e una per dichiarare
 
 
 .. list-table:: 
-  :widths: 50,50
+  :widths: 30,70
   :width: 100%
 
   * - @ActorLocal
   
-        .. code:: Java
+      .. code:: Java
 
-          @Retention(RetentionPolicy.RUNTIME) 
-          public @interface ActorLocal {
-            String[] name();
-            Class[]  implement();
-          }  
+        @Retention(RetentionPolicy.RUNTIME) 
+        public @interface ActorLocal {
+          String[] name();
+           Class[]  implement();
+        }  
 
     - La dichiarazione consiste nella specifica di un array di nomi di attori e di un corrispondente
       array di classi di implentazione
@@ -239,17 +242,17 @@ definiamo due annotazioni, una per dichiarare attori locali e una per dichiarare
   
       .. code:: Java
            
-          @Retention(RetentionPolicy.RUNTIME)  
-          public @interface ActorRemote {
-	        String[] name();
-	        String[] host();
-	        String[] port();
-	        String[] protocol();
-          }  
+        @Retention(RetentionPolicy.RUNTIME)  
+        public @interface ActorRemote {
+	      String[] name();
+	      String[] host();
+	      String[] port();
+	      String[] protocol();
+        }  
 
     - La dichiarazione consiste nella specifica di un array di nomi di attori e di  corrispondenti
       array per specificare l'idirizzo (host) la porta (port) e il protocollo (protocol) relativi
-      al :ref:contesto (si veda :ref:`Qak22Context`) in cui sono dichiarati come attori locali.
+      al contesto (si veda :ref:`Qak22Context`) in cui sono dichiarati come attori locali.
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Esempio
@@ -290,21 +293,21 @@ trasferendo al costruttore il nome corrispondente.
 .. code:: Java
 
     public static void handleLocalActorDecl(Object element) {
-        new EventMsgHandler(   );	//attore di sistema
-        Class<?> clazz            = element.getClass();
-        Annotation[] annotations  = clazz.getAnnotations();
-        for (Annotation annot : annotations) {
-            if (annot instanceof ActorLocal) {
-                ActorLocal a = (ActorLocal) annot;
-                for( int i=0; i<a.name().length; i++) {
-                    String name     = a.name()[i];
-                    Class  impl     = a.implement()[i];
-                    try {
-                        impl.getConstructor( String.class ).newInstance( name );
-                    } catch ( Exception e) { ... }
-         		 }
-        	 }
-         }
+    new EventMsgHandler(   );	//attore di sistema
+    Class<?> clazz            = element.getClass();
+    Annotation[] annotations  = clazz.getAnnotations();
+      for (Annotation annot : annotations) {
+        if (annot instanceof ActorLocal) {
+          ActorLocal a = (ActorLocal) annot;
+          for( int i=0; i<a.name().length; i++) {
+            String name     = a.name()[i];
+            Class  impl     = a.implement()[i];
+            try {
+              impl.getConstructor( String.class ).newInstance( name );
+            } catch ( Exception e) { ... }
+          }
+        }
+      }
     }
 
 .. Notamo che in questa fase viene anche creato l'attore di sistema :ref:`EventMsgHandler` per la  gestione degli eventi (si veda :ref:`Eventi`).
@@ -339,3 +342,11 @@ per ciascun attore.
             }
         }
     }
+
+++++++++++++++++++++++++++++++++++++
+Altre annotazioni di configurazione
+++++++++++++++++++++++++++++++++++++
+
+:worktodo:`WORKTODO: proporre altre forme di dichiarazione del sistema mediante annotazioni`
+
+

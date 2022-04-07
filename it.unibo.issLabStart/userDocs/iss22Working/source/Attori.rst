@@ -320,7 +320,7 @@ viene ereditato dalla classe ``QakActor22`` e viene definito come segue:
 
 Quando  ``sendReply`` non riesce a trovare il *sender* della richiesta nel contesto, vuol dire che il 
 *sender* è un attore non locale. Vedremo  :ref:`più avanti<QakActor22: replyToRemoteCaller>` come 
-definire il memtodo ``replyToRemoteCaller``.
+definire il metodo ``replyToRemoteCaller``.
 
 In questa fase, approfondiamo invece i meccanismi relativi all'invio di un messaggio
 ad un attore locale, di cui abbiamo un esempio alla linea **(1)** .
@@ -622,7 +622,7 @@ nello :ref:`Sprint4<Lo SPRINT4>` e dei seguenti punti:
   **unibo.actor22-1.1.jar**;
 
 - l'astrazione :ref:`connessione<Interaction2021>` viene definita
-  come una estensione di quanto introdotto nel supporto agli attori :ref:`ActorQak<ActorQak e QakActor22>`: 
+  come una estensione di quanto introdotto (*IConnInteraction*) nel supporto agli attori :ref:`ActorQak<ActorQak e QakActor22>`: 
  
   .. code::  java
 
@@ -636,8 +636,8 @@ nello :ref:`Sprint4<Lo SPRINT4>` e dei seguenti punti:
     }
 
 - il contesto è realizzato come un :ref:`EnablerContext` che attiva
-  una elaborazione di sistema dei messaggi in ingresso specializzata per gli attori,
-  grazie ad una nuova versione del :ref:`ContextMsgHandler<ContextMsgHandler>`;
+  una elaborazione di sistema dei messaggi in ingresso ,
+  grazie ad una nuova versione del :ref:`ContextMsgHandler<ContextMsgHandler>` specializzata per gli attori;
 
 +++++++++++++++++++++++++++++++++++++++++
 ContextMsgHandler per attori
@@ -805,9 +805,11 @@ creato da :ref:`elabRequest<Gestione di richieste>`
 .. code::  java
 
   protected void replyToRemoteCaller(IApplMessage msg, IApplMessage reply) {
-    QakActor22 ar = Qak22Context.getActor(Qak22Context.actorReplyPrefix+msg.msgSender());  
+    QakActor22 ar = Qak22Context.getActor(
+                Qak22Context.actorReplyPrefix+msg.msgSender());  
       if(ar !=null) ar.queueMsg( reply );
-      else ColorsOut.outerr("QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");		
+      else ColorsOut.outerr(
+          "QakActor22 | WARNING: reply " + msg + " IMPOSSIBLE");		
   }
 
 +++++++++++++++++++++++++++++++++++++++++
@@ -829,3 +831,21 @@ segue uno **stile imperativo** tipico di Java.
 
 Per la configurazione di un sistema è però ormai ampiamente diffuso l'uso di uno **stile dichiarativo**
 sfruttando le `Java annotation`_. Per il loro uso nei nostri sistemi si veda :doc:`Annotazioni`.
+
+
+----------------------------------------
+Evoluzioni del RadarSystem
+----------------------------------------
+
+:worktodo:`WORKTODO: sperimentare RadarSystem ad attori`
+
+
+#. :blue:`RSActor22onPC`: Definire il ReadarSystem ad attori in un unico contesto con 
+   dispositivi simulati e provare su PC.
+#. :blue:`RSActor22onRasp`: Definire il ReadarSystem ad attori in un unico contesto con 
+   dispositivi reali e provare su RaspberryPi.
+#. :blue:`RSActor22Distrib`: Definire il ReadarSystem ad attori in due contesti: 
+   uno con dispostivi reali su RaspberryPi e   uno con Controller e Radar su PC.
+#. :blue:`RSActor22DistSonarObs`: Definire il ReadarSystem ad attori con *SonarObservable* versione 'naive'.
+#. :blue:`RSActor22DistSonarEventEmitter`: Definire il ReadarSystem ad attori con *SonarObservable* 
+   come emettitore di ad :ref:`Eventi`.

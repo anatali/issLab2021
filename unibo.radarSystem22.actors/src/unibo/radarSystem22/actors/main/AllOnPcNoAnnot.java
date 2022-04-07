@@ -12,14 +12,11 @@ import unibo.actor22comm.utils.CommUtils;
 import unibo.radarSystem22.actors.*;
  
   
-@ActorLocal(
-		name =      {"led", "sonar", "controller" }, 
-		implement = { LedActor.class,  SonarActor.class,  ControllerActor.class})
-public class AllOnPc {
+public class AllOnPcNoAnnot {
 private EnablerContextForActors ctx;
 
 	public void doJob() {
-		ColorsOut.outappl("AllOnPc | Start", ColorsOut.BLUE);
+		ColorsOut.outappl("AllOnPcNoAnnot | Start", ColorsOut.BLUE);
 		configure();
 		CommUtils.aboutThreads("Before execute - ");
 		//CommUtils.waitTheUser();
@@ -29,27 +26,33 @@ private EnablerContextForActors ctx;
 	
 	protected void configure() {
 		DomainSystemConfig.simulation   = true;			
+		DomainSystemConfig.sonarDelay   = 250;
 		DomainSystemConfig.ledGui       = true;			
 		DomainSystemConfig.tracing      = false;					
 		RadarSystemConfig.DLIMIT        = 65;
 		CommSystemConfig.tracing        = true;
 		RadarSystemConfig.sonarObservable = false;
+		/*
+		//Sonar as event emitter
+		RadarSystemConfig.sonarObservable = true;
   
-		//new EventObserver(ApplData.observerName);
-		//Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
-
+		if( RadarSystemConfig.sonarObservable ) {
+			//new EventObserver(ApplData.observerName);
+			Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
+		}
+		//End Sonar as event emitter
+		*/
 		ctx = new EnablerContextForActors( "ctx",ApplData.ctxPcPort,ApplData.protocol);
 
-//		new LedActor( ApplData.ledName );
-//		new SonarActor( ApplData.sonarName );
-//		new ControllerActor( ApplData. );
-		Qak22Context.handleLocalActorDecl(this);
-		
+		new LedActor( ApplData.ledName );
+		new SonarActor( ApplData.sonarName );
+		new ControllerActor( ApplData.controllerName );
+ 		
 		Qak22Util.sendAMsg(ApplData.activateCrtl);
   	}
 	
 	protected void execute() {
-		ColorsOut.outappl("AllOnPc | execute", ColorsOut.MAGENTA);
+		ColorsOut.outappl("AllOnPcNoAnnot | execute", ColorsOut.MAGENTA);
 		ctx.activate();
 		
 	} 
@@ -62,7 +65,7 @@ private EnablerContextForActors ctx;
 	
 	public static void main( String[] args) {
 		CommUtils.aboutThreads("Before start - ");
-		new AllOnPc().doJob();
+		new AllOnPcNoAnnot().doJob();
 		CommUtils.aboutThreads("Before end - ");
 	}
 

@@ -22,7 +22,8 @@ protected boolean on = true;
 		super(name);
 		radar = DeviceFactory.createRadarGui();
 		if( ! RadarSystemConfig.sonarObservable) 
-			getStateRequest  = Qak22Util.buildRequest(name,"ask", ApplData.reqLedState, ApplData.ledName);
+			getStateRequest  = Qak22Util.buildRequest(
+					name,"ask", ApplData.reqLedState, ApplData.ledName);
  	}
 
 	@Override
@@ -73,6 +74,7 @@ protected boolean on = true;
 		if( msg.isEvent()  ) {  //defensive
 			String dstr = msg.msgContent();
 			int d       = Integer.parseInt(dstr);
+			radar.update(dstr, "60");
 			if( d <  RadarSystemConfig.DLIMIT ) {
 				forward(ApplData.turnOnLed); 		
 				forward(ApplData.deactivateSonar);

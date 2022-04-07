@@ -1,7 +1,5 @@
 package unibo.actor22.distrib.annot;
 
-
-import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
@@ -45,8 +43,8 @@ public class UsingActorsWithAnnotOnPc {
 		CommSystemConfig.tracing        = false;
 		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		
-		new EventObserver(ApplData.observerName);
-		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
+//		new EventObserver(ApplData.observerName);
+//		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
 		
 		Qak22Context.handleLocalActorDecl(this);
  		Qak22Context.handleRemoteActorDecl(this);
