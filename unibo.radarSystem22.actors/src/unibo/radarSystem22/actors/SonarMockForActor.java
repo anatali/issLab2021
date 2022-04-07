@@ -15,8 +15,8 @@ public class SonarMockForActor extends SonarMock{
 private IApplMessage distanceEvent ;
 private String name;	
 
-	public SonarMockForActor(  ) {
-		this.name = ApplData.sonarName;
+	public SonarMockForActor(  String name ) {
+		this.name = name;
 	}
 	protected void updateDistance( int d ) {
 		curVal = new Distance( d );

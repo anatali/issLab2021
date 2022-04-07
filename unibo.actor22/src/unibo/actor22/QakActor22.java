@@ -47,7 +47,7 @@ protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
 		//ColorsOut.out("Qak22Util | sendAMsg " + msg  , ColorsOut.GREEN);	  
         QakActor22 dest = Qak22Context.getActor(destActorName);  
         if( dest != null ) { //attore locale
-    		ColorsOut.out("QakActor22 | sendAMsg " + msg + " to:" + dest.getName() , ColorsOut.GREEN);
+    		ColorsOut.outappl("QakActor22 | sendAMsg " + msg + " to:" + dest.getName() , ColorsOut.YELLOW);
     		dest.queueMsg(msg);
         }else{  
         	sendMsgToRemoteActor(msg);

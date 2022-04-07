@@ -7,13 +7,17 @@ import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.QakActor22;
 import unibo.actor22comm.utils.ColorsOut;
 
+/*
+ * Il SonarActor riusa gli oggetti del dominio  SonarMock / SonarConcrete
+ * in una forma evoluta che li rende emettitori di eventi ApplData.evDistance
+ */
 public class SonarActor extends QakActor22{
 ISonar sonar;
 
 
 	public SonarActor(String name) {
 		super(name);
-		if( DomainSystemConfig.simulation )  sonar = new SonarMockForActor( );
+		if( DomainSystemConfig.simulation )  sonar = new SonarMockForActor( name );
 		else new SonarConcreteForActor(name);
 	}
 
@@ -27,7 +31,7 @@ ISonar sonar;
 	protected void elabCmd(IApplMessage msg) {
 		String msgCmd = msg.msgContent();
  		switch( msgCmd ) {
-			case ApplData.cmdActivate  : sonar.activate();break;
+			case ApplData.cmdActivate  : sonar.activate();  break;
 			case ApplData.cmdDectivate : sonar.deactivate();break;
  			default: ColorsOut.outerr(getName()  + " | unknown " + msgCmd);
 		}
