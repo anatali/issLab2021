@@ -160,6 +160,11 @@ Messaging
         actor.send( msg )
     }
 
+    //ADDED April 2022 to avoid loop
+    fun sendMsgToMyself( msg : IApplMessage ){
+        scope.launch { autoMsg(msg) }
+    }
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun autoMsg( msgId : String, msg : String) {
@@ -577,6 +582,7 @@ KNOWLEDGE BASE
             CoapToActor("caoproute${count++}", exchange, this, msg)
          }
      }
+
 
 
     fun sendCoapMsg(  url : String, msg : String   ){

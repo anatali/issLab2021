@@ -15,7 +15,7 @@ import unibo.radarSystem22.actors.*;
   
 @ActorLocal(
 		name =      {"led", "sonar"  }, 
-		implement = { LedActor.class,  SonarActor.class }
+		implement = { LedActor.class,  SonarActor22.class }
 )
 
 @ActorRemote(name =   {"controller" },   //WARNING: dichiazione da evitare in futuro

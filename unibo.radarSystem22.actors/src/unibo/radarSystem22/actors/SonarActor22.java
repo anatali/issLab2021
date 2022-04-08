@@ -7,14 +7,13 @@ import it.unibo.kactor.IApplMessage;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.radarSystem22.domain.Distance;
 import it.unibo.radarSystem22.domain.interfaces.IDistance;
-import it.unibo.radarSystem22.domain.interfaces.ISonar;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.Qak22Util;
 import unibo.actor22.QakActor22;
-import unibo.actor22comm.events.EventMsgHandler;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.radarSystem22.actors.main.RadarSystemConfig;
+
 
 /*
  * Il SonarActor22 NON riusa gli oggetti del dominio
@@ -24,7 +23,7 @@ public class SonarActor22 extends QakActor22{
 	private IDistance curVal ;	 
 	private Process p ;
 	private  BufferedReader reader ;
-	private boolean stopped   = true;
+	private boolean stopped   = false;
 	private int delta = 1;
 	
 	public SonarActor22(String name) {
@@ -51,7 +50,7 @@ public class SonarActor22 extends QakActor22{
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {
-		ColorsOut.out( getName()  + " | handleMsg " + msg, ColorsOut.CYAN);
+		//ColorsOut.out( getName()  + " | handleMsgg " + msg);
 		if( msg.isRequest() ) elabRequest(msg);
 		else elabCmd(msg);
 	}
@@ -60,6 +59,7 @@ public class SonarActor22 extends QakActor22{
 * REACTIVE PART	
 */
 	protected void elabCmd(IApplMessage msg) {
+		//ColorsOut.outappl(getName() + " | elabCmd "+ msg, ColorsOut.BLUE);
 		String msgCmd = msg.msgContent();
  		switch( msgCmd ) {
 			case ApplData.cmdActivate  : sonarActivate();  break;
@@ -88,10 +88,6 @@ public class SonarActor22 extends QakActor22{
 	}
 	
 	protected void sonarActivate() {
-//		if( stopped ) {
-//			ColorsOut.out( getName()  + " | SORRY, I'm stooped " , ColorsOut.CYAN);
-//			return;
-//		}
 		if( DomainSystemConfig.simulation ) sonarStepAsMock();
 		else sonarStepAsConcrete();
 	}
@@ -104,8 +100,10 @@ public class SonarActor22 extends QakActor22{
 	protected void sonarStepAsMock() {		
 		int v = curVal.getVal() - delta;
 		updateDistance( v );		
-		CommUtils.delay( DomainSystemConfig.sonarDelay );
-		if( v > 0 ) this.autoMsg(ApplData.activateSonar);  //cedo il controllo
+ 		if( v > 0 && !stopped ) {
+ 	 		CommUtils.delay( DomainSystemConfig.sonarDelay );
+ 			autoMsg(ApplData.activateSonar);   
+ 		}
  	}
 	
 	protected void sonarStepAsConcrete() {
@@ -121,7 +119,7 @@ public class SonarActor22 extends QakActor22{
 			}
 			if( ! stopped ) {
 				stopped = ( v <= 0 );	
-				this.autoMsg(ApplData.activateSonar);  //cedo il controllo
+ 				this.autoMsg(ApplData.activateSonar);  //cedo il controllo ???
 			}
       }catch( Exception e) {
        		ColorsOut.outerr(getName()  + " SonarConcrete |  " + e.getMessage() );

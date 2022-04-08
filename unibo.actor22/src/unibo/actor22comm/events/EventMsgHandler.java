@@ -23,7 +23,7 @@ protected HashMap<String,String> eventObserverMap = new HashMap<String,String>()
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {
-		ColorsOut.outappl(myName + " handles:" + msg + " ", ColorsOut.MAGENTA);
+		//ColorsOut.outappl(myName + " handles:" + msg + " ", ColorsOut.MAGENTA);
 		if( msg.isDispatch() && msg.msgId().equals(Qak22Context.registerForEvent)) {
 			ColorsOut.outappl(myName + " register:" + msg.msgSender() + " for "+ msg.msgContent(), ColorsOut.MAGENTA);
 			eventObserverMap.put(msg.msgSender(), msg.msgContent());
@@ -38,7 +38,7 @@ protected HashMap<String,String> eventObserverMap = new HashMap<String,String>()
 	}  
 
 	protected void updateTheObservers(IApplMessage msg) {
-		ColorsOut.outappl("updateTheObservers:" + msg, ColorsOut.MAGENTA); 
+		//ColorsOut.outappl("updateTheObservers:" + msg, ColorsOut.MAGENTA); 
 		eventObserverMap.forEach(
 				( String actorName,  String evName) -> {
 					//ColorsOut.out("updateTheObservers:" + actorName + " evName:" + evName, ColorsOut.MAGENTA); 
