@@ -87,3 +87,27 @@ Qak22Context.registerAsEventObserver
         }
 
     }
+
+------------------------------
+gestione di un evento
+------------------------------
+
+La gestione di un evento 
+
+.. code:: Java
+  
+  protected static HashMap<String,String> eventObserverMap = new HashMap<String,String>();  
+
+  protected void handleEvent(IApplMessage msg) {
+    try {
+    if( msg.msgId().equals(Qak22Context.registerForEvent)) {
+      eventObserverMap.put(msg.msgSender(), msg.msgContent());
+    }else if( msg.isEvent()) {
+      eventObserverMap.forEach( ( actorName,  evName) -> {
+            if( evName.equals(msg.msgId()) ) {
+              sendMsg( msg  );
+            }
+      } ) ;
+    }else ColorsOut.outerr( "QakActor22 handleEvent: msg unknown");
+		}catch( Exception e) {...	}
+	}    

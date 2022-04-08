@@ -15,7 +15,7 @@ import unibo.radarSystem22.actors.*;
   
 @ActorLocal(
 		name =      {"led", "sonar"  }, 
-		implement = { LedActor.class,  SonarActor.class }
+		implement = { LedActor.class,  SonarActor22.class }
 )
 
 @ActorRemote(name =   {"controller" },   //WARNING: dichiazione da evitare in futuro
@@ -27,39 +27,43 @@ import unibo.radarSystem22.actors.*;
 public class DeviceActorsOnRasp {
  
 
-	public void doJob() {
+	public void doJob(String domainConfig, String sysConfig) {
+		
 		ColorsOut.outappl("DeviceActorsOnRasp | Start", ColorsOut.BLUE);
-		configure();
+		configure(domainConfig,sysConfig);
 		CommUtils.aboutThreads("Before execute - ");
 		//CommUtils.waitTheUser();
 		execute();
 		terminate();
 	}
 	
-	protected void configure() {
-		DomainSystemConfig.simulation   = true;			
-		DomainSystemConfig.ledGui       = true;			
-		DomainSystemConfig.tracing      = false;					
-		CommSystemConfig.tracing        = false;
-		
-		//DECIDE se Sonar observable o no
-		//VA ATTIIVATO PER PRIMO
-		RadarSystemConfig.sonarObservable = true;
-		
+	protected void configure(String domainConfig, String sysConfig) {
+		if( sysConfig != null){
+			RadarSystemConfig.setTheConfiguration(sysConfig);
+ 		}
+		if( domainConfig != null){
+			DomainSystemConfig.setTheConfiguration(domainConfig);
+ 		} 
+		if( domainConfig == null &&  sysConfig == null) {
+			DomainSystemConfig.simulation   = true;			
+			DomainSystemConfig.ledGui       = true;			
+			DomainSystemConfig.tracing      = false;					
+			CommSystemConfig.tracing        = false;
+			
+			RadarSystemConfig.sonarObservable = false; //WARNING: must be the same in ControllerActorOnPC			
+		}
 		Qak22Context.handleLocalActorDecl(this); 
 		
 		if( RadarSystemConfig.sonarObservable  ) {
 			Qak22Context.handleRemoteActorDecl(this);
  			Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
 		}
-
-		IContext ctx = new EnablerContextForActors( "ctxRasp",ApplData.ctxRaspPort,ApplData.protocol);
-		ctx.activate();
-
 	}
 	
 	protected void execute() {
-		ColorsOut.outappl("DeviceActorsOnRasp | execute", ColorsOut.MAGENTA);
+		IContext ctx = new EnablerContextForActors( "ctxRasp",ApplData.ctxRaspPort,ApplData.protocol);
+		ctx.activate();
+		//ColorsOut.outappl("DeviceActorsOnRasp | execute", ColorsOut.MAGENTA);
 	} 
 
 	public void terminate() {
@@ -70,7 +74,8 @@ public class DeviceActorsOnRasp {
 	
 	public static void main( String[] args) {
 		CommUtils.aboutThreads("Before start - ");
-		new DeviceActorsOnRasp().doJob();
+		new DeviceActorsOnRasp().doJob("DomainSystemConfig.json", "RadarSystemConfig.json");
+//		new DeviceActorsOnRasp().doJob(null, null);
 		CommUtils.aboutThreads("Before end - ");
 	}
 

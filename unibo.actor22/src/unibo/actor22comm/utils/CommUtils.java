@@ -108,4 +108,14 @@ public class CommUtils {
 		ColorsOut.outappl( msg + " curthread=T n=N".replace("T", tname).replace("N", nThreads), ColorsOut.YELLOW );
 	}
 	
+	
+	public static void waitTheUser(String msg) {
+		try {
+			ColorsOut.outappl(msg, ColorsOut.ANSI_PURPLE);
+			System.in.read();
+		} catch (Exception e) {
+				e.printStackTrace();
+		}
+	}
+	
 }

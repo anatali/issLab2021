@@ -12,6 +12,6 @@ public class LedMock extends LedModel implements ILed{
 	}
 
 	protected void showState(){
-		ColorsOut.outappl("LedMock state=" + getState(), ColorsOut.MAGENTA );
+		ColorsOut.out("LedMock state=" + getState(), ColorsOut.MAGENTA );
 	}
 } 

@@ -7,7 +7,7 @@
 plugins {
     id 'java'
     id 'eclipse'
-    //id 'application'
+    id 'application'
 	id 'jacoco'
 }
 repositories {
@@ -71,14 +71,14 @@ eclipse {
 }
 
  
-//mainClassName = 'it.unibo.xxx' //TODO
+mainClassName = 'unibo.radarSystem22.actors.main.DeviceActorsOnRasp'  
 
 jar {
     from sourceSets.main.allSource
-    //manifest { attributes 'Main-Class': "$mainClassName" }
+    manifest { attributes 'Main-Class': "$mainClassName" }
 }
 
-/*
+ 
 distributions {
     main {
         contents {
@@ -87,6 +87,5 @@ distributions {
     }
 }
 
-git rm --cached .project
-git rm --cached .classpath
-*/ 
+//git rm --cached .project
+//git rm --cached .classpath

@@ -3,7 +3,7 @@
 "RadarGuiRemote"   : "false",
 "tracing"          : "false",
 "testing"          : "false",
-
+"protocolType"     : "tcp",
 "hostAddr"         : "localhost",
 "raspAddr"         : "localhost",
 "serverPort"       : "8023",

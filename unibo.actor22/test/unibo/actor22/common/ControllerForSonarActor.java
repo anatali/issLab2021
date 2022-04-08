@@ -1,4 +1,4 @@
-package unibo.radarSystem22.actors;
+package unibo.actor22.common;
  
 import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.DeviceFactory;
@@ -6,25 +6,21 @@ import it.unibo.radarSystem22.domain.interfaces.IRadarDisplay;
 import unibo.actor22.*;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
-import unibo.radarSystem22.actors.main.RadarSystemConfig;
+ 
 
 /*
  * Il controller conosce SOLO I NOMI dei dispositivi 
  * (non ha riferimenti ai dispositivi-attori)
  */
-public class ControllerActor extends QakActor22{
-protected int numIter = 1;
-protected IApplMessage getStateRequest ;
+public class ControllerForSonarActor extends QakActor22{
+ 
 protected IRadarDisplay radar;
 protected boolean on = true;
 
-	public ControllerActor(String name  ) {
+	public ControllerForSonarActor(String name  ) {
 		super(name);
 		radar = DeviceFactory.createRadarGui();
-		if( ! RadarSystemConfig.sonarObservable) 
-			getStateRequest  = Qak22Util.buildRequest(
-					name,"ask", ApplData.reqLedState, ApplData.ledName);
- 	}
+  	}
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {  
@@ -39,9 +35,9 @@ protected boolean on = true;
 		String msgCmd = msg.msgContent();
 		ColorsOut.outappl( getName()  + " | elabCmd=" + msgCmd + " obs=" + RadarSystemConfig.sonarObservable, ColorsOut.BLUE);
 		if( msgCmd.equals(ApplData.cmdActivate)  ) {
-				sendMsg( ApplData.activateSonar);
-			doControllerWork();
-		}		
+ 				sendMsg( ApplData.activateSonar);
+				doControllerWork();
+ 		}		
 	}
 	
 	protected void elabReply(IApplMessage msg) {
@@ -53,18 +49,16 @@ protected boolean on = true;
 		radar.update(dStr, "60");
 		//LedUse case
 		if( d <  RadarSystemConfig.DLIMIT ) {
-			forward(ApplData.turnOnLed); 		
+			//forward(ApplData.turnOnLed); 		
 			forward(ApplData.deactivateSonar);
-			CommUtils.delay(2000);
-			System.exit(0);
 		}
 		else {
-			forward(ApplData.turnOffLed); 
-//	    	CommUtils.delay(500);
+			//forward(ApplData.turnOffLed); 
 	    	doControllerWork();
 		}
 	}
 	
+
 	protected void elabEvent(IApplMessage msg) {
 		ColorsOut.outappl( getName()  + " | elabEvent=" + msg, ColorsOut.GREEN);
 		if( msg.isEvent()  ) {  //defensive
@@ -72,11 +66,11 @@ protected boolean on = true;
 			int d       = Integer.parseInt(dstr);
 			radar.update(dstr, "60");
 			if( d <  RadarSystemConfig.DLIMIT ) {
-				forward(ApplData.turnOnLed); 		
+				//forward(ApplData.turnOnLed); 		
 				forward(ApplData.deactivateSonar);
 			}
 			else {
-				forward(ApplData.turnOffLed); 
+				//forward(ApplData.turnOffLed); 
 			}
 		}
 	}

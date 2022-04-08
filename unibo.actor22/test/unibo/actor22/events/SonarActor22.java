@@ -24,7 +24,7 @@ public class SonarActor22 extends QakActor22{
 	private IDistance curVal ;	 
 	private Process p ;
 	private  BufferedReader reader ;
-	private boolean stopped   = true;
+	private boolean stopped   = false;
 	private int delta = 1;
 	
 	public SonarActor22(String name) {
@@ -51,7 +51,7 @@ public class SonarActor22 extends QakActor22{
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {
-		ColorsOut.out( getName()  + " | handleMsg " + msg, ColorsOut.CYAN);
+		ColorsOut.out( getName()  + " | handleMsgg " + msg);
 		if( msg.isRequest() ) elabRequest(msg);
 		else elabCmd(msg);
 	}
@@ -60,7 +60,7 @@ public class SonarActor22 extends QakActor22{
 * REACTIVE PART	
 */
 	protected void elabCmd(IApplMessage msg) {
-		ColorsOut.outappl(getName() + " | elabCmd "+ msg, ColorsOut.BLUE);
+		//ColorsOut.outappl(getName() + " | elabCmd "+ msg, ColorsOut.BLUE);
 		String msgCmd = msg.msgContent();
  		switch( msgCmd ) {
 			case ApplData.cmdActivate  : sonarActivate();  break;
@@ -101,8 +101,11 @@ public class SonarActor22 extends QakActor22{
 	protected void sonarStepAsMock() {		
 		int v = curVal.getVal() - delta;
 		updateDistance( v );		
- 		CommUtils.delay( DomainSystemConfig.sonarDelay );
- 		if( v > 0 ) this.autoMsg(ApplData.activateSonar);  //cedo il controllo
+ 		if( v > 0 && ! stopped) {
+ 	 		CommUtils.delay( DomainSystemConfig.sonarDelay );
+			stopped = ( v <= 0 );	
+			autoMsg(ApplData.activateSonar);   
+ 		}
  	}
 	
 	protected void sonarStepAsConcrete() {
@@ -117,8 +120,7 @@ public class SonarActor22 extends QakActor22{
   	 			updateDistance( v );	 			
 			}
 			if( ! stopped ) {
-				stopped = ( v <= 0 );	
-				this.autoMsg(ApplData.activateSonar);  //cedo il controllo
+ 				autoMsg(ApplData.activateSonar);   
 			}
       }catch( Exception e) {
        		ColorsOut.outerr(getName()  + " SonarConcrete |  " + e.getMessage() );

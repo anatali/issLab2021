@@ -1,7 +1,5 @@
 package unibo.radarSystem22.actors.main;
 
-
-import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.DomainSystemConfig;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
@@ -20,8 +18,8 @@ import unibo.radarSystem22.actors.*;
  * Questo sistema ipotizza che led e sonar siano attori 
  * con cui interagire  a scambio di messaggi
  */
-@ActorLocal(name =     {"controller" }, 
-           implement = {unibo.radarSystem22.actors.ControllerActor.class })
+@ActorLocal(name =     { "controller" }, 
+           implement = { ControllerActor.class })
 @ActorRemote(name =   {"led","sonar"}, 
              host=    {ApplData.raspAddr, ApplData.raspAddr}, 
              port=    { ""+ApplData.ctxRaspPort, ""+ApplData.ctxRaspPort}, 
@@ -42,17 +40,16 @@ public class ControllerActorOnPc {
 		DomainSystemConfig.tracing      = false;			
  		CommSystemConfig.protcolType    = ProtocolType.tcp;
 		CommSystemConfig.tracing        = false;
-		ProtocolType protocol 		    = CommSystemConfig.protcolType;
 		RadarSystemConfig.DLIMIT        = 65;
-//		RadarSystemConfig.sonarObservable = false;
+ 		RadarSystemConfig.sonarObservable = false;  //WARNING: must be the same in DeviceActorsOnRasp
 		
-		//TODO: sarebbe meglio automatizzare
+		 
 		new EnablerContextForActors( "ctxPc",ApplData.ctxPcPort,ApplData.protocol).activate();
 
 		//WARNING: observerName deve essere dichiarato come actor remoto dalla sorgente
 		//PRO:    protezione
 		//CONTRO: sorgente consapevole degli observer
-		
+//Altro observer		
 //		new EventObserver(ApplData.observerName);
 //		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evEndWork);
 	
@@ -66,6 +63,7 @@ public class ControllerActorOnPc {
 	} 
 	
 	public void terminate() {
+		CommUtils.waitTheUser("Please hit to end ");
 		System.exit(0);
 	}
 	

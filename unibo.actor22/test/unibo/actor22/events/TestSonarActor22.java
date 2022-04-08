@@ -8,10 +8,12 @@ import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22.common.ApplData;
 import unibo.actor22.common.EventObserver;
+import unibo.actor22.common.ControllerForSonarActor;
 import unibo.actor22.common.RadarSystemConfig;
 
-@ActorLocal(name =     { ApplData.sonarName }, 
-			implement = {SonarActor22.class }
+
+@ActorLocal(name =     { ApplData.sonarName, ApplData.controllerName }, 
+			implement = {SonarActor22.class, ControllerForSonarActor.class }
 )
 public class TestSonarActor22 {
 	
@@ -23,21 +25,28 @@ public class TestSonarActor22 {
 		DomainSystemConfig.simulation   	= true;			
 		DomainSystemConfig.tracing      	= false;		
 		DomainSystemConfig.sonarDelay   	= 200;
-		CommSystemConfig.tracing        	= true;
-		RadarSystemConfig.sonarObservable 	= true;
+		CommSystemConfig.tracing        	= false;
 		
- 		new EventObserver(ApplData.observerName);
- 		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evDistance);
+		//con false, il ControllerForSonarActor chiede la distanza, 
+		//con true,  il ControllerForSonarActor agisce come observer
+		RadarSystemConfig.sonarObservable 	= false; 
+		
+		//ALTRO Observer oltr il Controller
+// 		new EventObserver(ApplData.observerName);
+// 		Qak22Context.registerAsEventObserver(ApplData.observerName, ApplData.evDistance);
 		
 		Qak22Context.handleLocalActorDecl(this);
+		if( RadarSystemConfig.sonarObservable  ) {
+ 			Qak22Context.registerAsEventObserver(ApplData.controllerName, ApplData.evDistance);
+		}
  	}
 
 	
 	
 	public void doJob() {
-		Qak22Util.sendAMsg( ApplData.activateSonar  );
-		CommUtils.delay(3000);
-		Qak22Util.sendAMsg( ApplData.deactivateSonar );
+		Qak22Util.sendAMsg( ApplData.activateCrtl );
+//		CommUtils.delay(3000);
+//		Qak22Util.sendAMsg( ApplData.deactivateSonar );
 		
 	}
 
