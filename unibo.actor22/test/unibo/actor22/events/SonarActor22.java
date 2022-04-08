@@ -51,7 +51,11 @@ public class SonarActor22 extends QakActor22{
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {
+<<<<<<< HEAD
 		ColorsOut.out( getName()  + " | handleMsgg " + msg);
+=======
+		//ColorsOut.out( getName()  + " | handleMsgg " + msg);
+>>>>>>> 3ef6c58ee93661a27f667dc1aacbc5bf9b7c7d58
 		if( msg.isRequest() ) elabRequest(msg);
 		else elabCmd(msg);
 	}
@@ -103,8 +107,12 @@ public class SonarActor22 extends QakActor22{
 		updateDistance( v );		
  		if( v > 0 && ! stopped) {
  	 		CommUtils.delay( DomainSystemConfig.sonarDelay );
+<<<<<<< HEAD
 			stopped = ( v <= 0 );	
 			autoMsg(ApplData.activateSonar);   
+=======
+ 			autoMsg(ApplData.activateSonar);   
+>>>>>>> 3ef6c58ee93661a27f667dc1aacbc5bf9b7c7d58
  		}
  	}
 	
@@ -120,7 +128,12 @@ public class SonarActor22 extends QakActor22{
   	 			updateDistance( v );	 			
 			}
 			if( ! stopped ) {
+<<<<<<< HEAD
  				autoMsg(ApplData.activateSonar);   
+=======
+				stopped = ( v <= 0 );	
+ 				this.autoMsg(ApplData.activateSonar);  //cedo il controllo ???
+>>>>>>> 3ef6c58ee93661a27f667dc1aacbc5bf9b7c7d58
 			}
       }catch( Exception e) {
        		ColorsOut.outerr(getName()  + " SonarConcrete |  " + e.getMessage() );
