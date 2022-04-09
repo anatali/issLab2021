@@ -10,6 +10,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import it.unibo.radarSystem22.domain.utils.ColorsOut;
+
 public class MoveVirtualRobot {
     private  final String localHostName    = "localhost";
     private  final int port                = 8090;
@@ -64,15 +66,30 @@ public class MoveVirtualRobot {
     public boolean moveLeft(int duration)     { return sendCmd("turnLeft", duration);     }
     public boolean moveRight(int duration)    { return sendCmd("turnRight", duration);    }
     public boolean moveStop(int duration)     { return sendCmd("alarm", duration);        }
+    
+    
+    public void doJob() {
+    	walkForward();
+    }
+    
+    protected void walkForward() {
+    	boolean moveResult = moveForward(3000);
+    	ColorsOut.outappl("RESULT=" + moveResult, ColorsOut.BLUE);
+    }
+    
+    protected void turn() {
+        boolean moveFailed = moveLeft(300);
+        System.out.println( "MoveVirtualRobot | moveLeft  failed= " + moveFailed);
+        moveFailed = moveRight(1300);
+        System.out.println( "MoveVirtualRobot | moveRight failed= " + moveFailed);   	   	
+    }
+    
 /*
 MAIN
 */
     public static void main(String[] args)   {
-        MoveVirtualRobot appl = new MoveVirtualRobot();
-        boolean moveFailed = appl.moveLeft(300);
-        System.out.println( "MoveVirtualRobot | moveLeft  failed= " + moveFailed);
-        moveFailed = appl.moveRight(1300);
-        System.out.println( "MoveVirtualRobot | moveRight failed= " + moveFailed);
+        MoveVirtualRobot sys = new MoveVirtualRobot();
+        sys.doJob();;
     }
 
 }

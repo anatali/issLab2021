@@ -144,17 +144,142 @@ Questo file permette l'attivazione di WEnv attraverso l'uso di docker-compose:
 Scene per WEnv
 ++++++++++++++++++++++++++++++++++++
 
-La scena del WEnv è costruita da una descrizione che può essere facilmente definita da un progettista di applicazioni. Un esempio (relativo alla scena a destra della figura seguente) può essere trovato in sceneConfig.js .
+La scena del WEnv è costruita da una descrizione che può essere facilmente definita da un progettista di applicazioni. 
+Un esempio (relativo alla scena a destra della figura seguente) può essere trovato in ``sceneConfig.js`` .
 
 
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
 
+  * - .. image::  ./_static/img/VirtualRobot/wenvscene.PNG
+         :align: center 
+         :width: 100%
+    - .. image::  ./_static/img/VirtualRobot/wenvscene1.PNG
+         :align: center 
+         :width: 100%
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Scena stanza vuota
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il file ``sceneConfig.js`` che mostra una stanza vuota con il robot virtuale 
+in una posizione:
+
+
+.. code::
+
+    const config = {
+        floor: {
+            size: { x: 31, y: 24                   }
+        },
+        player: {
+            //position: { x: 0.5, y: 0.5 },		//CENTER
+            position: { x: 0.10, y: 0.16 },		//INIT
+            //position: { x: 0.8, y: 0.85 },		//END
+            speed: 0.2
+        },
+        sonars: [
+        ],
+        movingObstacles: [
+        ],
+    staticObstacles: [
+            {
+                name: "plasticBox",
+                centerPosition: { x: 0.15, y: 1.0},
+                size: { x: 0.24, y: 0.07}
+            },	 		 
+            {
+                name: "wallUp",
+                centerPosition: { x: 0.44, y: 0.97},
+                size: { x: 0.88, y: 0.01}
+            },
+            {
+                name: "wallDown",
+                centerPosition: { x: 0.44, y: 0.01},
+                size: { x: 0.85, y: 0.01}
+            },
+            {
+                name: "wallLeft",
+                centerPosition: { x: 0.02, y: 0.48},
+                size: { x: 0.01, y: 0.94}
+            },
+            {
+                name: "wallRight",
+                centerPosition: { x: 1.0, y: 0.5},
+                size: { x: 0.01, y: 0.99}
+            }
+        ]
+    }
+
+    export default config;
+
+E' possibile modificare la scena in modo interattivo con apposti comandi, per poi modificare manualmente il file 
+``sceneConfig.js`` per conservare le modifiche.
+
+
+Il robot virtuale è dotato di due sensori di impatto, uno posto davanti e uno posto nella parte posteriore del robot.
+
+--------------------------------------------
+Comandare il robot
+--------------------------------------------
+
+Il linguaggio per esprimere i comandi (detto *concrete-robot interaction language* o **cril** ) può essere 
+introdotto in modo analogo al :ref:`Linguaggio-base di comando` per i dispostivi del RadarSystem,
+come campi di una stringa JSON della forma che segue:
+
+.. code::
+
+    {"robotmove":"MOVE", "time":T} 
+    
+    MOVE ::= "turnLeft" | "turnRight" | "moveForward" | "moveBackward" | "alarm"
+    T    ::= naturalNum
+
+Ad esempio, il comando 
+
+    ``{"robotmove":"moveForward", "time":300}`` 
+
+muove in avanti il robot per 300 msec. Il significato di **"alarm"** è di fermare il robot (halt).
+
+Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi diversi:
+
+
+- come messaggi HTTP POST inviati sulla porta 8090
+- come messaggi inviati su un websocket alla porta 8091
+
+
+Il robot virtuale utilizza la libreria Node https://github.com/einaros/ws per accettare questi comendi.
+
+++++++++++++++++++++++++++++++++
+Risposte dal robot
+++++++++++++++++++++++++++++++++
+
+Dopo l'esecuzione di un comando, il robot invia al chiamante (sia tramite POST che tramite websocket) una risposta,
+ancora espressa in JSON :
+
+.. code::
+
+    {"endmove":"RESULT", "move":MOVE}   
+    
+    RESULT ::= true | false | halted | notallowed
+
+Il significato dei valori di ``RESULT`` è il seguente:
+
+- **true**: mossa completata con successo
+- **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
+- **halted**: mossa interrotta perchè il robot ha ricevuto un comando
+- **notalloed**: mossa rifiutata (non eseguia) in quanto la mossa precedente non è ancora terminata
 
 
 --------------------------------------------
+Esempi di invio comandi
+--------------------------------------------
+
+
++++++++++++++++++++++++++++++++++++++
 MoveVirtualRobot
---------------------------------------------
-
-- Con jupyter : resources\python\virtualrobotCaller.ipynb
++++++++++++++++++++++++++++++++++++++
+- Con jupyter : ``resources\python\virtualrobotCaller.ipynb``
 - Invio di comandi tramite HTTP. Da rifare con Actor22 e supporti
 
 .. code:: Java
