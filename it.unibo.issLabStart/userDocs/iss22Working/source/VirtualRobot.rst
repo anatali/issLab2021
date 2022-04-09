@@ -7,21 +7,43 @@
 .. _three.js : https://threejs.org/
 .. _Node.js : https://nodejs.org/it/
 .. _Docker Hub: https://hub.docker.com/
+.. _DDR Robot: https://www.youtube.com/watch?v=aE7RQNhwnPQ
+
+.. http://faculty.salina.k-state.edu/tim/robotics_sg/Control/kinematics/unicycle.html
+.. https://www.epfl.ch/labs/la/wp-content/uploads/2018/08/Kappeler.Rapport.pdf.pdf
+.. https://www.youtube.com/watch?v=ZekupxukiOM  Simulatore python  install pygame  https://www.youtube.com/watch?v=zHboXMY45YU
+
+.. _Introduction to Docker and DockerCompose: ./_static/IntroDocker22.html
 
 ==========================================
 VirtualRobot
 ==========================================
 
 Unibo ha sviluppato un ambiente virtuale (denominato ``WEnv`` ) che include un robot 
-che simula un Differential Drive robot reale. 
+che simula un Differential Drive robot (DDRRobot) reale. 
 
 ------------------------------------
 Differential Drive robot 
 ------------------------------------
 
-Un DDRobot possiede due ruote motrici sono sullo stesso asse,e una terza ruota condotta.
-La  tecnica differential drive consiste nel far muovere le ruote del robot a velocità
+Un `DDR Robot`_ possiede due ruote motrici sullo stesso asse e una terza ruota condotta (non motrice).
+La  tecnica *differential drive* consiste nel far muovere le ruote del robot a velocità
 indipendenti l’una dall’altra.  
+
+Nel seguito faremo riferimento a una forma semplificata di DDRobot in cui le possibìili mosse sono:
+
+- muoversi avanti-indietro lungo una direzione costante
+- fermarsi
+- ruotare di 90° a destra o sinistra 
+
+Queste mosse sono realizzate inviando opportuni comandi al robot (simulato o reale).
+
+Per la costruzione di un DDR reale si veda xxx.
+Al momento useremo una versione simulata, che descriviamo nella sezione :ref:`WEnv`.
+
+Lo scopo non è certo quello di affrontare i problemi di progettazione tipci di un corso di robotica, ma quello di
+introdurre casi di studio non banale per la costruzione di sistemi software distributi reattivi, proattivi e 
+situati in un ambiente che può essere fonte di :ref:`Eventi`.
 
 
 ------------------------------------
@@ -43,13 +65,14 @@ Per attivare WEnv:
 WEnv come immagine docker
 ++++++++++++++++++++++++++++++++++++
 
-WEnv viene anche distribuito con l'immagine 
+WEnv viene anche distribuito come immagine Docker.
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Dockerfile e creazione dell'immagine
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    ``docker.io/natbodocker/virtualrobotdisi:2.0``
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dockerfile e creazione immagine
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il file di nome **Dockerfile** nella directory ``it.unibo.virtualRobot2020`` contiene le istruzioni per creare una 
+immagine Docker (per una introduizione a Docker si veda `Introduction to Docker and DockerCompose`_).
 
 .. code::
 
@@ -67,7 +90,7 @@ dockerfile e creazione immagine
     WORKDIR /home/node/WEnv/server/src
     CMD ["node", "WebpageServer"]    
 
-Nella directory che contiene il file, dare il comando
+L'immagine Docker può essere creata sul proprio PC eseguendo il comando (nella directory che contiene il *Dockerfile*):
 
     ``docker build -t virtualrobotdisi:2.0 .``    //Notare il .
 
@@ -75,16 +98,26 @@ Nella directory che contiene il file, dare il comando
 Esecuzione della immagine
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+L'immagine Docker di WEnv può essere attivata sul PC con il comando:
+
 .. code::
 
     docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh
     node WebpageServer.js
 
+Il comando:
+
+    ``docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh``
+
+permette di ispezionare il contenuto della macchina virtuale e di attivare manualmente il sistema.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 virtualRobotOnly2.0.yaml
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-L'immagine viene resa distribuita  su `Docker Hub`_
+L'immagine viene resa distribuita  su `Docker Hub`_ nella immagine ``docker.io/natbodocker/virtualrobotdisi:2.0``
+come risulta nella spefifica del file ``virtualRobotOnly2.0.yaml`` :
 
 .. code::
 
@@ -96,20 +129,16 @@ L'immagine viene resa distribuita  su `Docker Hub`_
         - 8090:8090
         - 8091:8091
 
-.. code::
-
-    docker-compose -f virtualRobotOnly2.0.yaml  up
-     
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Esecuzione con docker-compose
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Questo file permette l'attivazione di WEnv attraverso l'uso di docker-compose:
+
 .. code::
 
-    docker-compose up -d
-    docker-compose down   //per terminare
+    docker-compose -f virtualRobotOnly2.0.yaml  up   //per attivare
+    docker-compose -f virtualRobotOnly2.0.yaml  down //per terminare
 
 ++++++++++++++++++++++++++++++++++++
 Scene per WEnv
