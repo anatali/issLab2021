@@ -73,7 +73,7 @@ public class ClientNaiveUsingPost {
 			ColorsOut.out("turnRight endmove=" + endmove);
 
 			//Now the value of endmove depends on the position of the robot
-			endmove = requestSynch( moveForward(800) );
+			endmove = requestSynch( moveForward(1800) );
 			ColorsOut.out("moveForward endmove=" + endmove);
 			endmove = requestSynch( moveBackward(800) );
 			ColorsOut.out("moveBackward endmove=" + endmove);

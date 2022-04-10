@@ -71,6 +71,11 @@ public class ClientNaiveUsingWs {
             }
         } catch (Exception e) {
         	ColorsOut.outerr("onMessage ERROR for " + message);
+        	try {
+				request( stop(100) );
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
         }
 
     }
@@ -92,33 +97,34 @@ BUSINESS LOGIC
 
     protected void request( String crilCmd ) throws Exception  {
         //ColorsOut.out("ClientNaiveUsingWs | request " + crilCmd);
-        //this.userSession.getAsyncRemote().sendText(crilCmd);
-        this.userSession.getBasicRemote().sendText(crilCmd);    
+        this.userSession.getAsyncRemote().sendText(crilCmd);
+        //this.userSession.getBasicRemote().sendText(crilCmd);    
         //synch: blocks until the message has been transmitted
     }
-    protected void requestDelayed( String crilCmd ) throws Exception  {
-        ColorsOut.out("ClientNaiveUsingWs | requestDelayed " + crilCmd);
-        request(crilCmd);
+    
+    protected void requestSynch( String crilCmd ) throws Exception  {
+        ColorsOut.out("ClientNaiveUsingWs | request " + crilCmd);
+        this.userSession.getBasicRemote().sendText(crilCmd);    
         JSONObject jsonObj = new JSONObject( crilCmd );
         int moveTime       = jsonObj.getInt("time");
         Thread.sleep( moveTime );
-        ColorsOut.out("ClientNaiveUsingWs | requestDelayed resumes"  );
-    	request( stop(10) );
+//      	request( stop(10) );
     }
 
-//    protected void doBasicMoves() throws Exception{
-//        request( turnLeft(300) );
-//        request( turnRight(300) );
-//        request( moveForward(800) );
-//        request( moveBackward(800) );
-//        Thread.sleep(300); //move time of the turnLeft
-//     }
+ 
 
-    protected void doBasicMovesDelayed() throws Exception{
-         requestDelayed( turnLeft(300) );
-         requestDelayed( turnRight(300) );
-         requestDelayed( moveForward(  800) );
-         requestDelayed( moveBackward( 800) );
+    protected void doBasicMoves() throws Exception{
+    	  requestSynch( moveForward(  800) );
+//        requestDelayed( turnLeft(2800) );
+//          request( moveForward(  1800) );
+//          Thread.sleep( 500 );
+//          request( stop(10) );
+//          request( moveBackward(  1000) );
+//          Thread.sleep( 500 );
+//          request( stop(10) );
+//         requestDelayed( turnRight(300) );
+//         requestDelayed( moveForward(  1800) );
+//         requestDelayed( moveBackward( 800) );
 //        this.userSession = null;
     }
 
@@ -129,13 +135,10 @@ MAIN
         try{
     		CommUtils.aboutThreads("Before start - ");
             ClientNaiveUsingWs appl = new ClientNaiveUsingWs("localhost:8091");
-            //appl.doBasicMoves();
-            appl.doBasicMovesDelayed();
-            // give time to receive messages from websocket
-            //Thread.sleep(2000);
-    		CommUtils.aboutThreads("At end - ");
+            appl.doBasicMoves();
+      		CommUtils.aboutThreads("At end - ");
         } catch( Exception ex ) {
-            ColorsOut.outerr("ClientNaiveUsingWs | InterruptedException exception: " + ex.getMessage());
+            ColorsOut.outerr("ClientNaiveUsingWs | main ERROR: " + ex.getMessage());
         }
     }
 }

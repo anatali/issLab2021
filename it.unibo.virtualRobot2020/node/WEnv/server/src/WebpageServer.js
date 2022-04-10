@@ -121,7 +121,7 @@ function doMove(moveTodo, duration, res){
 
 //Updates the mirrors
 function execMoveOnAllConnectedScenes(moveTodo, moveTime){
-    //console.log('$$$ WebpageServer doMove |  updates the mirrors'   );
+    console.log('$$$ WebpageServer doMove |  updates the mirrors'   );
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime) );
 }
 //Updates the controls and the observers (Jan 2021)
