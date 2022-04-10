@@ -3,7 +3,6 @@ package unibo.actor22comm.utils;
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.ApplMessageType;
 import it.unibo.kactor.IApplMessage;
-import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import unibo.actor22comm.ProtocolType;
 
 public class CommUtils {

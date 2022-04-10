@@ -35,6 +35,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
 	implementation group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
 
+//SOCKET.IO (for WEnv)
+	compileOnly group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+    //javax.websocket api is only the specification
+	implementation group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.9'
 
 //JSON
     // https://mvnrepository.com/artifact/org.json/json
@@ -46,7 +50,8 @@ dependencies {
     implementation name: 'unibonoawtsupports'
 	implementation name: 'it.unibo.qakactor-2.7'
 	implementation name: 'unibo.actor22-1.1'
-	
+
+/*	
 	//RADAR (support and GUI)
 	implementation name: 'radarPojo'
 	// https://mvnrepository.com/artifact/org.pushingpixels/trident
@@ -54,7 +59,7 @@ dependencies {
 
 //RadarSystem
 	implementation name: 'it.unibo.radarSystem22.domain-1.0'
-
+*/
 }
 
 sourceSets {
@@ -70,7 +75,7 @@ eclipse {
     }
 }
 
- 
+/* 
 mainClassName = 'unibo.radarSystem22.actors.main.DeviceActorsOnRasp'  
 
 jar {
@@ -86,6 +91,6 @@ distributions {
         }
     }
 }
-
+*/
 //git rm --cached .project
 //git rm --cached .classpath

@@ -14,23 +14,27 @@
 .. https://www.youtube.com/watch?v=ZekupxukiOM  Simulatore python  install pygame  https://www.youtube.com/watch?v=zHboXMY45YU
 
 .. _Introduction to Docker and DockerCompose: ./_static/IntroDocker22.html
+.. _Introduzione a JSON-Java: https://www.baeldung.com/java-org-json
+.. _I WebSocket Comunicazione Asincrona Full-Duplex Per Il Web: http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/
+.. _org.json: https://www.baeldung.com/java-org-json
+.. _ws: https://www.npmjs.com/package/ws
 
 ==========================================
 VirtualRobot
 ==========================================
 
 Unibo ha sviluppato un ambiente virtuale (denominato ``WEnv`` ) che include un robot 
-che simula un Differential Drive robot (DDRRobot) reale. 
+che simula un Differential Drive robot (DDR) reale. 
 
 ------------------------------------
 Differential Drive robot 
 ------------------------------------
 
 Un `DDR Robot`_ possiede due ruote motrici sullo stesso asse e una terza ruota condotta (non motrice).
-La  tecnica *differential drive* consiste nel far muovere le ruote del robot a velocità
+La  tecnica *differential drive* consiste nel far muovere le ruote motrici a velocità
 indipendenti l’una dall’altra.  
 
-Nel seguito faremo riferimento a una forma semplificata di DDRobot in cui le possibìili mosse sono:
+Nel seguito faremo riferimento a una forma semplificata di DDR in cui le possibìili mosse sono:
 
 - muoversi avanti-indietro lungo una direzione costante
 - fermarsi
@@ -42,7 +46,7 @@ Per la costruzione di un DDR reale si veda xxx.
 Al momento useremo una versione simulata, che descriviamo nella sezione :ref:`WEnv`.
 
 Lo scopo non è certo quello di affrontare i problemi di progettazione tipci di un corso di robotica, ma quello di
-introdurre casi di studio non banale per la costruzione di sistemi software distributi reattivi, proattivi e 
+introdurre casi di studio non banali per la costruzione di sistemi software distributi reattivi, proattivi e 
 situati in un ambiente che può essere fonte di :ref:`Eventi`.
 
 
@@ -102,22 +106,25 @@ L'immagine Docker di WEnv può essere attivata sul PC con il comando:
 
 .. code::
 
-    docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh
-    node WebpageServer.js
+    docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0
+    
 
 Il comando:
 
-    ``docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh``
+.. code::
 
-permette di ispezionare il contenuto della macchina virtuale e di attivare manualmente il sistema.
+    docker run -ti -p 8090:8090 
+                  -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh
 
+permette di ispezionare il contenuto della macchina virtuale e di attivare manualmente il sistema
+(eseguendo node ``WebpageServer.js``).
+
+L'immagine viene resa distribuita  su `Docker Hub`_ in ``docker.io/natbodocker/virtualrobotdisi:2.0``
+come risulta nella spefifica del file ``virtualRobotOnly2.0.yaml``:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 virtualRobotOnly2.0.yaml
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-L'immagine viene resa distribuita  su `Docker Hub`_ nella immagine ``docker.io/natbodocker/virtualrobotdisi:2.0``
-come risulta nella spefifica del file ``virtualRobotOnly2.0.yaml`` :
 
 .. code::
 
@@ -133,7 +140,7 @@ come risulta nella spefifica del file ``virtualRobotOnly2.0.yaml`` :
 Esecuzione con docker-compose
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Questo file permette l'attivazione di WEnv attraverso l'uso di docker-compose:
+Il file ``virtualRobotOnly2.0.yaml`` permette l'attivazione di WEnv attraverso l'uso di docker-compose:
 
 .. code::
 
@@ -160,7 +167,7 @@ Un esempio (relativo alla scena a destra della figura seguente) può essere trov
          :width: 100%
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Scena stanza vuota
+sceneConfig.js
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il file ``sceneConfig.js`` che mostra una stanza vuota con il robot virtuale 
@@ -174,8 +181,8 @@ in una posizione:
             size: { x: 31, y: 24                   }
         },
         player: {
-            //position: { x: 0.5, y: 0.5 },		//CENTER
             position: { x: 0.10, y: 0.16 },		//INIT
+            //position: { x: 0.5, y: 0.5 },		//CENTER
             //position: { x: 0.8, y: 0.85 },		//END
             speed: 0.2
         },
@@ -214,17 +221,23 @@ in una posizione:
 
     export default config;
 
-E' possibile modificare la scena in modo interattivo con apposti comandi, per poi modificare manualmente il file 
+E' possibile cambiare la scena in modo interattivo con apposti comandi, per poi modificare manualmente il file 
 ``sceneConfig.js`` per conservare le modifiche.
 
+++++++++++++++++++++++++++++++++++++
+Sensori virtuali
+++++++++++++++++++++++++++++++++++++
 
 Il robot virtuale è dotato di due sensori di impatto, uno posto davanti e uno posto nella parte posteriore del robot.
 
+E' inoltre possibile introdurre sonar virtuali che rilevano la posizione corrente del robot nella scena.
+
 --------------------------------------------
-Comandare il robot
+Comandi-base per il robot (in cril)
 --------------------------------------------
 
-Il linguaggio per esprimere i comandi (detto *concrete-robot interaction language* o **cril** ) può essere 
+Il linguaggio per esprimere comandi di movimento dle robot virtuale 
+(detto *concrete-robot interaction language* o **cril** ) può essere 
 introdotto in modo analogo al :ref:`Linguaggio-base di comando` per i dispostivi del RadarSystem,
 come campi di una stringa JSON della forma che segue:
 
@@ -232,14 +245,16 @@ come campi di una stringa JSON della forma che segue:
 
     {"robotmove":"MOVE", "time":T} 
     
-    MOVE ::= "turnLeft" | "turnRight" | "moveForward" | "moveBackward" | "alarm"
+    MOVE ::= "turnLeft" | "turnRight" | 
+             "moveForward" | "moveBackward" | "alarm"
     T    ::= naturalNum
 
 Ad esempio, il comando 
 
     ``{"robotmove":"moveForward", "time":300}`` 
 
-muove in avanti il robot per 300 msec. Il significato di **"alarm"** è di fermare il robot (halt).
+muove in avanti il robot per 300 msec. Il significato di **"alarm"** è di fermare il robot 
+(non è stato chiamato ``halt`` per motivi 'storici').
 
 Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi diversi:
 
@@ -267,13 +282,141 @@ Il significato dei valori di ``RESULT`` è il seguente:
 
 - **true**: mossa completata con successo
 - **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
-- **halted**: mossa interrotta perchè il robot ha ricevuto un comando
-- **notalloed**: mossa rifiutata (non eseguia) in quanto la mossa precedente non è ancora terminata
+- **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
+- **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente non è ancora terminata
+
+
+++++++++++++++++++++++++++++++++
+Informazioni da WEnv
+++++++++++++++++++++++++++++++++
+
+Il WEnv invia ai client collegati alla porta  8091 :
+
+- Dati emessi dai sonar inclusi nella scena quando rilevano un oggetto (il robot in movimento)
+- Dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo (fisso o mobile). 
+  Per esempio:
+
+  .. code::
+
+    { "sonarName": "sonarName", "distanza": 1, "asse": "x" }
+    { "collision": "false", "move": "moveForward"}
+
+
+++++++++++++++++++++++++++++++++
+Note di implementazione
+++++++++++++++++++++++++++++++++
+
+
+L'implementazione di WEnv si basa su due componenti principali: 
+
+- server: che definisce il ``WebpageServer.js`` scritto con il framework Node express  
+- WebGLScene: che gestisce la scena 
+
+Il ``WebpageServer.js`` utilizza due diversi tipi  di WebSocket:
+
+- un mainSocket basata sulla libreria ``socket.io`` : questo socket viene utilizzato per gestire 
+  l'interazione tra WebpageServer.js e ilWebGLScene.
+
+  :remark:`socket.io non è un'implementazione WebSocket.`
+
+   Sebbene socket.io utilizzi effettivamente WebSocket come trasporto quando possibile, 
+   aggiunge alcuni metadati a ciascun pacchetto: il tipo di pacchetto, lo spazio dei nomi 
+   e l'ID di riconoscimento quando è necessario un riconoscimento del messaggio.
+   Ecco perché un client WebSocket non sarà in grado di connettersi correttamente a un server Socket.IO 
+   e un client Socket.IO non sarà in grado di connettersi a un server WebSocket.
+
+
+- un cmdSocket-8091 basato sulla libreria `ws`_ : questo socket viene utilizzato per gestire comandi 
+  asincroni per spostare il robot inviati da client remoti e per inviare a client remoti informazioni 
+  sullo stato del WEnv.
+
+  Il modulo ws non funziona nel browser, che deve utilizzare l'oggetto WebSocket nativo .
 
 
 --------------------------------------------
-Esempi di invio comandi
+Esempi di uso di comandi-base in Java
 --------------------------------------------
+
+Guardare  C:/Didattica2021/issLab2021/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html
+
+
+++++++++++++++++++++++++++++++++++++
+Comandi via HTTP
+++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 35,75
+  :width: 100%
+
+  * - ClientNaiveUsingPost.java
+    - Esegue le mosse-base del robot con comandi in :ref:`cril<Comandi-base per il robot (in cril)>`.
+  
+      :blue:`Key point`: Request-response sincrona. 
+
+      Richiede 1 thread.
+
+- Il codice di comunicazione è scritto completamente dal progettista dell'applicazione.
+- La gestione delle risposte JSON viene eseguita utilizzando la libreria  `org.json`_ 
+  (vedi anche `Introduzione a JSON-Java`_ ).
+- L'operazione ``doBasicMoves`` esegue correttamente solo la prima mossa, mentre
+  ``doBasicMovesDelayed`` esegue tutte le mosse, poiché inserisce un ritardo appropriato dopo ogni mossa.
+
+++++++++++++++++++++++++++++++++++++
+Comandi via WebSocket
+++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 35,75
+  :width: 100%
+
+  * - ClientNaiveUsingWs.java
+    - Esegue le mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot (in cril)>`.
+
+      :blue:`Key point`: Richiesta Asincrona
+
+      Richiede 4 thread, a causa della libreria ``javax.websocket``.
+
+Il codice di comunicazione è scritto completamente dal progettista dell'applicazione, 
+che deve avere cura di eseguire solo le mosse consentite. 
+
+L'applicazione sfrutta la libreria ``javax.websocket`` 
+(vedi anche `I WebSocket Comunicazione Asincrona Full-Duplex Per Il Web`_ ) 
+che funziona in modo 'event-driven': le informazioni inviate tramite websocket 
+vengono 'iniettate' nell'applicazione tramite una chiamata al metodo annotato con ``@OnMessage``.
+
+--------------------------------------------
+Esempi di uso di comandi-base in Node.js
+--------------------------------------------
+
+.. list-table:: 
+  :widths: 35,75
+  :width: 100%
+
+  * - axiosclientToWenv.js 
+    - Il robot cammina lungo il confine della stanza.
+  
+      :blue:`Key point`: Request-response sincrona e stile funzionale basato su callbacks.
+  * - httpClientToWenv.js 
+    - Il robot cammina lungo il confine della stanza.
+  
+      :blue:`Key point`: Request-response sincrona e utilizzo di variabili di stato e una operazione 
+      (*doBoundary*) che incorpora la business logic.
+  * - wsclientToWenv.js 
+    - Il robot dappprima si muove avanti e indietro. Successivamente, funziona come osservatore.
+      
+      :blue:`Key point`: Interazione asincrona. 
+      sequenza di comandi asincroni inviati con *setTimeout* e messaggi di input gestiti da una richiamata relativa 
+      a ``connection.on('messaggio', funzione(msg){ ... })``.
+         
+  * - wsclientBoundaryToWenv.js
+    - Il robot cammina lungo il confine della stanza.
+      
+      :blue:`Key point`: Interazione asincrona.
+      Programma Modular Node che separa la logica aziendale (``WalkBoundary``)  
+      dall'interazione ws-socket di basso livello. 
+      Questo modulo viene utilizzato anche nella pagina ``HTMLwsclientToWenv.html``
+       
+
 
 
 +++++++++++++++++++++++++++++++++++++
@@ -350,3 +493,34 @@ MoveVirtualRobot
         }
         
     }
+
+
+------------------------------------------------
+Comandi di alto livello (in aril)
+------------------------------------------------
+
+Per agevolare la costruzione di applicazioni, è conveniente introdurre un linguaggio di comando ad alto 
+livello, con cui nascondere i dettagli tecnologici relativi all'uso dei comandi-base e con cui 
+esprimere la interazione con il robot ad un opportuno livello di astrazione.
+
+Indicheremo tale linguaggio con l'acronimo **aril** (*abstract-robot interaction language*) in quanto 
+è il lingyaggio che useremo per interagire con un 'robot logico' che potrà essere realizzato da un robot 
+virtuale o da un robot fisico.
+
+La sintassi del linguaggio è al solito molto semplice e può essere formalmente defiita dalla seguente
+regola di produzione grammaticale di tipo 3:
+
+.. code::
+
+    ARIL ::= w | s | l | r | h
+
+- **w**: significa 'andare avanti', in modo da coprire una lunghezza  **DR**
+- **s**: significa 'andare indietro', in modo da coprire una lunghezza **DR**
+- **h**: significa 'smetti di muoverti'
+- **l**: significa 'girare a sinistra di **90°**'
+- **r**: significa 'svolta a destra di **90°**'
+
+La lunghezza **DR** viene fissata al valore del diametro del cerchio di raggio minimo che circoscrive il robot.
+
+ 
+

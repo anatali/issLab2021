@@ -159,7 +159,7 @@ In quanto ente proattivo, il ``SonarActor22`` emette eventi di distanza-misurata
 	  }
 
 +++++++++++++++++++++++++++++++++
-Parte reattiva    
+SonarActor22: Parte reattiva    
 +++++++++++++++++++++++++++++++++
 
 La parte reattiva consiste nella eleborazione dei comandi di attivazione/deattivazione e di richieste
@@ -184,7 +184,7 @@ sul valore corrente della distanza.
     ...
 
 +++++++++++++++++++++++++++++++++
-Parte proattiva    
+SonarActor22: Parte proattiva    
 +++++++++++++++++++++++++++++++++   
 
 La parte proattiva  consiste nella continua rilevazione della distanza e nella emissione di eventi.
