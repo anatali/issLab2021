@@ -24,10 +24,14 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
 
     eventBus.subscribe( eventBusEvents.sonarActivated, sonarId => socket.emit('sonarActivated', sonarId))
     eventBus.subscribe( eventBusEvents.collision, objectName => { 
-		console.log(`collision: ${objectName}`); 
+		console.log(`SocketIO collision: ${objectName}`);
 		socket.emit('collision', objectName); 	//va al callback del main.js
 		stopMoving(); 
 	})
+   eventBus.subscribe( eventBusEvents.endmove, objectName => {
+ 		console.log(`SocketIO eventbus endmove: ${objectName}`);
+ 		socket.emit('endmove', objectName);
+   })
 
     const keycodes = {
         W: 87,
@@ -35,7 +39,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
         S: 83,
         D: 68,
         R: 82,
-        F: 70
+        F: 70 //April2022: lo uso per stop rotation
     }
         
     let moveForwardTimeoutId
@@ -44,15 +48,24 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     function moveForward(duration) {
         clearTimeout(moveForwardTimeoutId)
         onKeyDown( { keyCode: keycodes.W },5000,true )
-        if(duration >= 0) moveForwardTimeoutId = setTimeout( () => 
-        							onKeyUp( { keyCode: keycodes.W } ), duration )
+        if(duration >= 0) moveForwardTimeoutId = setTimeout( () => {
+        							onKeyUp( { keyCode: keycodes.W } );
+        							//NON emetto segnali al termine della mossa perchè
+        							//ci potrebbe essere stato un ostacolo
+          							eventBus.post(eventBusEvents.endmove, "forward")
+         							//console.log("SocketIO: moveForward done");
+         						}, duration )
     }
+//eventBus.post(eventBusEvents.endmove, "done")  //April 2022
+//socket.emit('endmove', "done");
 
     function moveBackward(duration) {
         clearTimeout(moveBackwardTimeoutId)
         onKeyDown( { keyCode: keycodes.S },5000,true )
-        if(duration >= 0) moveBackwardTimeoutId = setTimeout( () => 
-        							onKeyUp( { keyCode: keycodes.S } ), duration )
+        if(duration >= 0) moveBackwardTimeoutId = setTimeout( () => {
+        							onKeyUp( { keyCode: keycodes.S } )
+        							eventBus.post(eventBusEvents.endmove, "backward")
+        							}, duration )
     }
 
     function turnRight(duration) {
@@ -67,8 +80,10 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
 
     function stopMoving() {
     console.log("stopMoving "  )
-        onKeyUp( { keyCode: keycodes.W } )
+       onKeyUp( { keyCode: keycodes.W } )
         onKeyUp( { keyCode: keycodes.S } )
+        onKeyDown( { keyCode: keycodes.F }, 0, true )
+        //stopRotating()  //from SceneManager
     }
     
 //DEC 2019    

@@ -2,6 +2,8 @@
 PlayerControls
 */
 import * as THREE from '../../node_modules/three/build/three.module.js'
+import eventBus       from '../eventBus/EventBus.js'
+import eventBusEvents from '../eventBus/events.js'
 
 export default (mesh, camera, config, collisionManager, mirror) => {
 	
@@ -19,14 +21,19 @@ export default (mesh, camera, config, collisionManager, mirror) => {
     let rotating = false
 
     setCameraPositionRelativeToMesh(camera, mesh)
-	
+
+	function stopRotating(){ //April2022
+console.log("PlayerControls | stopRotatingggg "  )
+	    rotating = false
+	}
+
     function onKeyDown(keyCode, duration, remote ) {
  console.log("PlayerControls | onKeyDown from remote=" + remote + " keyCode=" + keyCode)
         if(keyCode === keycodes.W)
             forward = true
         else if(keyCode === keycodes.S)
             backward = true
-        
+else if(keyCode === keycodes.F) stopRotating() //April2022
         else if(keyCode === keycodes.D)
             rotate(-Math.PI/2, duration)
         else if(keyCode === keycodes.A)
@@ -34,7 +41,6 @@ export default (mesh, camera, config, collisionManager, mirror) => {
     }
 
     function onKeyUp(keyCode) {
-
         if(keyCode === keycodes.W)
             forward = false
         else if(keyCode === keycodes.S)
@@ -42,17 +48,21 @@ export default (mesh, camera, config, collisionManager, mirror) => {
     }
 
     function rotate(angle, duration = 300) {
+    console.log("rotateee rotating="+rotating)
         duration -= 50
-        if(rotating)
+        if(rotating)  //April2020: la rotazione precedente ancora in corso inibisce la nuova
             return
 
         const finalAngle = mesh.rotation.y + angle
 
         rotating = true
+        var turnMove = ""     //April2022
+        if( angle < 0 ) turnMove="turnRight"
+        else turnMove="turnLeft"
         new TWEEN.Tween(mesh.rotation)
             .to({ y: finalAngle }, duration)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete( () => rotating = false)
+            .onComplete( () => {rotating = false; eventBus.post(eventBusEvents.endmove, turnMove)})
             .start()
     }    
 
@@ -67,7 +77,7 @@ export default (mesh, camera, config, collisionManager, mirror) => {
             const direction = backward ? 1 : -1
             const stepVector = directionVector.multiplyScalar( config.speed * direction )
             const tPosition  = mesh.position.clone().add(stepVector)
-console.log("PlayerControls | update mirror=" + mirror)
+//console.log("PlayerControls | update timeeee =" + time)
             //if( !mirror ){
             	const collision = collisionManager.checkCollision(tPosition, mirror)		
             	if( !collision ) {
@@ -97,6 +107,6 @@ console.log("PlayerControls | update mirror=" + mirror)
         resetPosition,
 		onKeyDown,
 		onKeyUp,
-		update
+		update, stopRotating
 	}
 }

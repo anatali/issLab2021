@@ -54,28 +54,29 @@ public class ClientNaiveUsingWs {
     public void onMessage(String message)  {
         try {
             //{"collision":"true ","move":"..."} or {"sonarName":"sonar2","distance":19,"axis":"x"}
-            ColorsOut.out("ClientNaiveUsingWs | onMessage:" + message);
+            ColorsOut.outappl("ClientNaiveUsingWs | onMessage:" + message, ColorsOut.GREEN);
             JSONObject jsonObj = new org.json.JSONObject(message);
-            if (jsonObj.get("endmove") != null) {
-                String endmove = jsonObj.getString("endmove");
-                String  move   = jsonObj.get("move").toString();
-                ColorsOut.out("ClientNaiveUsingWs | onMessage " + move + " endmove=" + endmove);
-            } else if (jsonObj.get("collision") != null) {
-                boolean collision = jsonObj.get("collision").toString().equals("true");
+            ColorsOut.out("ClientNaiveUsingWs | jsonObj:" + jsonObj);
+            if (jsonObj.has("endmove")) {
+                boolean endmove = jsonObj.getBoolean("endmove");
+                String  move    = jsonObj.getString("move") ;
+                //ColorsOut.out("ClientNaiveUsingWs | onMessage " + move + " endmove=" + endmove);
+            } else if (jsonObj.has("collision")  ) {
+                boolean collision = jsonObj.getBoolean("collision");
                 String move = jsonObj.get("move").toString();
-                ColorsOut.out("ClientNaiveUsingWs | onMessage collision=" + collision + " move=" + move);
-             } else if (jsonObj.get("sonarName") != null) {
-                String sonarNAme = jsonObj.get("sonarName").toString();
+                //ColorsOut.out("ClientNaiveUsingWs | onMessage collision=" + collision + " move=" + move);
+             } else if (jsonObj.has("sonarName")  ) {
+                String sonarNAme = jsonObj.getString("sonarName") ;
                 String distance = jsonObj.get("distance").toString();
-                ColorsOut.out("ClientNaiveUsingWs | onMessage sonaraAme=" + sonarNAme + " distance=" + distance);
+                //ColorsOut.out("ClientNaiveUsingWs | onMessage sonaraAme=" + sonarNAme + " distance=" + distance);
             }
         } catch (Exception e) {
-        	ColorsOut.outerr("onMessage ERROR for " + message);
-        	try {
-				request( stop(100) );
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+        	ColorsOut.outerr("onMessage " + message + " " +e.getMessage());
+//        	try {
+//				request( stop(100) );
+//			} catch (Exception e1) {
+//				e1.printStackTrace();
+//			}
         }
 
     }
@@ -94,6 +95,7 @@ BUSINESS LOGIC
     public String turnLeft(int duration)     { return crilCmd("turnLeft", duration);     }
     public String turnRight(int duration)    { return crilCmd("turnRight", duration);    }
     public String stop(int duration)         { return crilCmd("alarm", duration);        }
+    public String stop( )                    { return crilCmd("alarm", 10);              }
 
     protected void request( String crilCmd ) throws Exception  {
         //ColorsOut.out("ClientNaiveUsingWs | request " + crilCmd);
@@ -103,18 +105,36 @@ BUSINESS LOGIC
     }
     
     protected void requestSynch( String crilCmd ) throws Exception  {
-        ColorsOut.out("ClientNaiveUsingWs | request " + crilCmd);
         this.userSession.getBasicRemote().sendText(crilCmd);    
         JSONObject jsonObj = new JSONObject( crilCmd );
         int moveTime       = jsonObj.getInt("time");
+        ColorsOut.out("ClientNaiveUsingWs | requestSynch " + crilCmd + " moveTime=" + moveTime);
         Thread.sleep( moveTime );
 //      	request( stop(10) );
     }
 
- 
-
     protected void doBasicMoves() throws Exception{
-    	  requestSynch( moveForward(  800) );
+//    	request( moveForward(  1800) );
+//    	Thread.sleep( 500 );
+//    	request( stop( ) );
+    	
+//    	request( moveForward( 400  ) );
+//     	request( moveBackward( 400 ) );
+    	request( turnLeft( 800  ) );
+    	request( stop( ) );
+//    	Thread.sleep( 500 );
+     	request( turnRight( 400 ) );
+     	
+//     	requestSynch(  moveForward( 400  ) );
+//     	requestSynch(  moveBackward( 400  ) );
+     	
+     	Thread.sleep( 2500 );  //Give time to receive msgs from WEnv
+    	
+    }
+
+    protected void doBasicMovesOld() throws Exception{
+//    	  request( stop(10) );
+    	  requestSynch( moveForward(  1400) );
 //        requestDelayed( turnLeft(2800) );
 //          request( moveForward(  1800) );
 //          Thread.sleep( 500 );

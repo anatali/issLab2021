@@ -65,40 +65,10 @@ Per attivare WEnv:
 - In ``it.unibo.virtualRobot2020\node\WEnv\WebGLScene``, eseguire **npm install**
 - In ``it.unibo.virtualRobot2020\node\WEnv\server\src``, eseguire **node WebpageServer.js**
 
-++++++++++++++++++++++++++++++++
-Note di implementazione
-++++++++++++++++++++++++++++++++
 
-L'implementazione di WEnv si basa su due componenti principali: 
-
-- **server**: che definisce il programma ``WebpageServer.js`` scritto con il framework Node express  
-- **WebGLScene**: componente che gestisce la scena 
-
-``WebpageServer.js`` utilizza due diversi tipi  di WebSocket:
-
-- un **mainSocket** basato sulla libreria `socket.io`_ : questo socket viene utilizzato per gestire 
-  l'interazione con **WebGLScene**.
-
-  :remark:`socket.io non è un'implementazione WebSocket.`
-
-  Sebbene socket.io utilizzi effettivamente WebSocket come trasporto quando possibile, 
-  aggiunge alcuni metadati a ciascun pacchetto: il tipo di pacchetto, lo spazio dei nomi  
-  e l'ID di riconoscimento quando è necessario un riconoscimento del messaggio.
-  Ecco perché un client WebSocket non sarà in grado di connettersi correttamente a un server Socket.IO 
-  e un client Socket.IO non sarà in grado di connettersi a un server WebSocket.
-
-
-- un **cmdSocket-8091** basata sulla libreria `ws`_ : questo socket viene utilizzato per gestire comandi 
-  asincroni per spostare il robot inviati da client remoti e per inviare a client remoti informazioni 
-  sullo stato del WEnv.
-
-  WEnv utilizza la libreria Node https://github.com/einaros/ws per accettare questi comendi.
-
-  :remark:`Il modulo ws non funziona nel browser, che deve utilizzare l'oggetto WebSocket nativo.`
-
-++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++
 Usare WEnv 
-++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++
 
 Aprendo un browser su  **localhost:8090**, WEnv mostrerà una scena MASTER in cui sono abilitati i **comandi da tastiera**: :blue:`w,a,s,d,h`.
 
@@ -218,13 +188,14 @@ Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi dive
 - come messaggi HTTP POST inviati sulla porta 8090
 - come messaggi inviati su un websocket alla porta 8091
 
-
 ++++++++++++++++++++++++++++++++
-Risposte dal robot
+Interazioni con HTTP
 ++++++++++++++++++++++++++++++++
 
-Dopo l'esecuzione di un comando, il robot invia al chiamante (sia tramite POST che tramite websocket) una risposta,
-ancora espressa in JSON :
+L'invio di messaggi con HTTP implica una interazione logica di tipo request-response che blocca il 
+chiamante.
+
+Dopo l'esecuzione del comando, WEnv invia al chiamante una :blue:`risposta`, espressa in JSON :
 
 .. code::
 
@@ -236,13 +207,7 @@ Il significato dei valori di ``RESULT`` è il seguente:
 
 - **true**: mossa completata con successo
 - **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
-- **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
-- **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente non è ancora terminata
 
-
-++++++++++++++++++++++++++++++++++++
-Interazioni con il robot via HTTP
-++++++++++++++++++++++++++++++++++++
 
 Riportiamo un esempio di programma Java che esegue le mosse-base del robot mediante 
 comandi in :ref:`cril<Comandi-base per il robot in cril>` contenuti in richieste HTTP (di tipo POST).
@@ -262,14 +227,66 @@ Osserviamo che:
 - Una mossa può terminare prima del tempo indicato nel comando, restituendo la risposta **false**.  
 - La gestione delle risposte JSON viene eseguita utilizzando la libreria  `org.json`_ 
   (vedi anche `Introduzione a JSON-Java`_ ).
-- Non è possibile interrompere l'esecuzione di una mossa.
+- :remark:`Non è possibile interrompere l'esecuzione di una mossa.`
 
-++++++++++++++++++++++++++++++++++++++++++++
-Interazioni con il robot via WebSocket
-++++++++++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++
+Interazioni mediante WS
+++++++++++++++++++++++++++++++++
+
+L'invio di un comando di movimento al robot (mossa) mediante WebSocket `_ws`_  sulla porta  `8091` :
+implica una forma di comunicazione :blue:`asincrona` 
+(*fire-and-forget*) che può essere seguita dall'invio al client sulla connessione ws di informazioni 
+su significative variazione dello stato del 'mondo' dopo l'esecuzione della mossa, quali:
+
+- Dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
+- Dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
+
+Si noti che dati relativi a sonar presenti nella scena possono essere emessi indipendentemente dalla esecuzione
+di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. Esempi di messaggi 
+(che qui denominiamo :blue:`messaggi di ritorno`) sono:
+
+  .. code::
+
+    { "sonarName": "sonarName", "distanza": 1, "asse": "x" }
+    { "collision": true, "move": "moveForward"}
 
 Riportiamo un esempio di programma Java che esegue le mosse-base del robot mediante 
 comandi in :ref:`cril<Comandi-base per il robot in cril>` inviati come Stringhe su ``cmdSocket-8091``
+
+
+Poichè l'invio asincrono di un comando non blocca il chiamante, un client può inivare un nuovo 
+comando prima che il precedente sia terminato. Per gestire situaizoni d questo tipo, WEnv segue la
+regola che segue:
+
+:remark:`E' possibile interrompere l'esecuzione di una mossa solo con il comando alarm.`
+
+I messaggi di ritorno in conseguenza della esecuzione di un comando possono essere
+.. code::
+
+    {"endmove":"RESULT", "move":MOVE}   
+    
+    RESULT ::= halted | notallowed
+
+Il significato dei valori di ``RESULT`` è il seguente:
+
+- **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
+- **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente 
+  non è ancora terminata
+ 
+Supponendo che il metodo ``request( String crilCmd )`` esegua l'invio asincrono di un comando, 
+allora la sequenza di comandi che  segue viene corettemanete eseguito 
+
+.. code:: 
+    public String moveForward(int duration)  { 
+        return crilCmd("moveForward", duration) ;  
+    }
+    public String stop( ){ return crilCmd("alarm",10); }
+
+    request( moveForward(  1800) );
+    Thread.sleep( 500 );
+    request( stop() );
+
 
 
 .. list-table:: 
@@ -287,7 +304,8 @@ Dal punto di vista 'sistemistico', osserviamo che:
 
 - Il codice di comunicazione è scritto completamente dal progettista dell'applicazione, che utilizza 
   la libreria ``javax.websocket``  (vedi anche `I WebSocket Comunicazione Asincrona Full-Duplex Per Il Web`_ )
-- Gli eventi del ciclo di vita dell'endpoint WebSocket sono gestiti mediante :ref:`Annotazioni` secondo lo schema che segue:
+- Gli eventi del ciclo di vita dell'endpoint WebSocket sono gestiti mediante :ref:`Annotazioni` 
+  secondo lo schema che segue:
 
   .. code:: Java
 
@@ -312,7 +330,8 @@ Dal punto di vista 'sistemistico', osserviamo che:
 Dal punto di vista 'applicativo', osserviamo che:
 
 - Il chiamante esegue concettualmente una *fire-and-forget*  
-- La risposta viene 'iniettata' nell'applicazione tramite una chiamata al metodo annotato con ``@OnMessage``
+- Un eventuale messaggio di ritorno viene 'iniettata' nell'applicazione tramite una chiamata al metodo annotato 
+  con ``@OnMessage``
 - E' possibile :blue:`interrompere` la esecuzione di una mossa inviando il comando **alarm** 
 - WEnv non invia risposte al termine della esecuzione 
 - Inviando una nuova richiesta prima che una
@@ -331,16 +350,73 @@ Dal punto di vista 'applicativo', osserviamo che:
 Informazioni da WEnv
 ++++++++++++++++++++++++++++++++
 
-Il WEnv invia ai client collegati su websocket alla porta  `8091` :
+Il WEnv invia ai client collegati su websocket alla 
 
-- Dati emessi dai sonar inclusi nella scena quando rilevano un oggetto (il robot in movimento)
-- Dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo (fisso o mobile). 
-  Per esempio:
 
-  .. code::
 
-    { "sonarName": "sonarName", "distanza": 1, "asse": "x" }
-    { "collision": "false", "move": "moveForward"}
+
+++++++++++++++++++++++++++++++++
+Risposte dal robot
+++++++++++++++++++++++++++++++++
+
+Dopo l'esecuzione di un comando via HTTP, WEnv invia al chiamante una risposta, espressa in JSON :
+
+.. code::
+
+    {"endmove":"RESULT", "move":MOVE}   
+    
+    RESULT ::= true | false | halted | notallowed
+
+Il significato dei valori di ``RESULT`` è il seguente:
+
+- **true**: mossa completata con successo
+- **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
+- **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
+- **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente non è ancora terminata
+
+
+++++++++++++++++++++++++++++++++
+Note di implementazione
+++++++++++++++++++++++++++++++++
+
+L'implementazione di WEnv si basa su due componenti principali: 
+
+- **server**: che definisce il programma ``WebpageServer.js`` scritto con il framework Node express  
+- **WebGLScene**: componente che gestisce la scena 
+
+``WebpageServer.js`` utilizza due diversi tipi  di WebSocket:
+
+- un socket basato sulla libreria `socket.io`_ che viene utilizzato per gestire 
+  l'interazione con **WebGLScene**.
+
+  :remark:`socket.io non è un'implementazione WebSocket.`
+
+  Sebbene `socket.io`_ utilizzi effettivamente WebSocket come trasporto quando possibile, 
+  aggiunge alcuni metadati a ciascun pacchetto: il tipo di pacchetto, lo spazio dei nomi  
+  e l'ID di riconoscimento quando è necessario un riconoscimento del messaggio.
+  Ecco perché un client WebSocket non sarà in grado di connettersi correttamente a un server Socket.IO 
+  e un client `socket.io`_ non sarà in grado di connettersi a un server WebSocket.
+
+
+- un **cmdSocket-8091** basata sulla libreria `ws`_ : questo socket viene utilizzato per gestire comandi 
+  applicativi asincroni per muovere il robot inviati da client remoti e per inviare a client remoti informazioni 
+  sullo stato del WEnv.
+
+  WEnv utilizza la libreria Node https://github.com/einaros/ws per accettare questi comendi.
+
+  :remark:`Il modulo ws non funziona nel browser, che deve utilizzare l'oggetto WebSocket nativo.`
+
+
+ 
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++
+Interazioni con il robot via WebSocket
+++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 
 
 

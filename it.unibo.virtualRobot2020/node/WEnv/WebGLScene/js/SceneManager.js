@@ -14,7 +14,7 @@ import { parseConfiguration, mapConfigurationToGUI } from './utils/SceneConfigUt
 import {injectsceneConstants} from './utils/SceneConfigUtils.js'  					//DEC 2019
 import dat from '../node_modules/dat.gui/build/dat.gui.module.js'
 
-export default (canvas, mirror) => {  //
+export default (canvas, mirror,stopRotating) => {  //
 //alert("SceneManager | mirror= " + mirror)
 	 
     const clock = new THREE.Clock()
@@ -126,19 +126,23 @@ export default (canvas, mirror) => {  //
 
 
     function onKeyDown(keyCode, duration, remote) {
-console.log("onKeyDown from SceneManager keyCode=" + keyCode + " remote=" + remote)
+//console.log("onKeyDown from SceneManager keyCode=" + keyCode + " remote=" + remote)
         controls.onKeyDown(keyCode, duration, remote)
     }
 
     function onKeyUp(keyCode) {
         controls.onKeyUp(keyCode)  
     }
+    function stopRotating( ) {
+        controls.stopRotating( )
+    }
 
     return {
         update,
         onWindowResize,
         onKeyDown,
-        onKeyUp
+        onKeyUp,
+        stopRotating
       }
 }
 

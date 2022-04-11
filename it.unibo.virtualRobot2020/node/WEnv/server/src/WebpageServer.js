@@ -126,8 +126,11 @@ function execMoveOnAllConnectedScenes(moveTodo, moveTime){
 }
 //Updates the controls and the observers (Jan 2021)
 function updateObservers(msgJson){
-    //console.log("WebpageServer | updates the controls: " + msgJson   );
-	Object.keys(wssockets).forEach( key => wssockets[key].send( msgJson ) )
+ 	Object.keys(wssockets).forEach( key => {
+        console.log("WebpageServer | updateObservers key="  + key + " msgJson=" + msgJson);
+        //console.log(  wssockets[key]   );
+        wssockets[key].send( msgJson )
+	} )
 }
 
 /*
@@ -156,12 +159,15 @@ wsServer.on('connection', (ws) => {
   wssockets[key] = ws
 
   ws.on('message', msg => {
-    console.log("       $$$ WebpageServer wssocket | " + wssocketIndex  + " receives: " + msg )
+    console.log("       $$$ WebpageServer wssocket | " +
+        wssocketIndex  + " receives: " + msg + " moveStillRunning=" + moveStillRunning)
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
 
 	if( moveStillRunning.length>0 && moveTodo != "alarm"){
         console.log("       $$$ WebpageServer wssocket | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running:" + moveStillRunning)
+        const info     = { 'endmove' : false, 'move': moveTodo+"_notallowed" }
+        updateObservers( JSON.stringify(info) )
 	    return
 	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
 	    execMoveOnAllConnectedScenes(moveTodo, duration)
@@ -209,7 +215,13 @@ function initSocketIOWebGLScene() {
 		    const info     = { 'collision' : true, 'move': 'unknown'}
 		    updateObservers( JSON.stringify(info) )
  		} )
-        socket.on( 'disconnect',     () => { 
+        socket.on('endmove', (obj)  => {  //April2022
+		    console.log( "WebpageServer WebGLScene  | endmove  " + obj    );
+            moveStillRunning = ""
+  		    const info     = { 'endmove' : true, 'move': obj}
+  		    updateObservers( JSON.stringify(info) )
+         })
+       socket.on( 'disconnect',     () => {
         		delete sockets[key];
           		socketIndex--;
 			    alreadyConnected = ( socketIndex == 0 )
