@@ -143,7 +143,7 @@ Move activated in asynch mode => no answer is needed
 */
 function doMoveAsynch(moveTodo, duration){
     console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
-    if( moveTodo!="alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
+    if( moveTodo != "alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
     else{ moveStillRunning = "" }
     execMoveOnAllConnectedScenes(moveTodo, duration)
 }
@@ -171,7 +171,9 @@ wsServer.on('connection', (ws) => {
 	    return
 	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
 	    execMoveOnAllConnectedScenes(moveTodo, duration)
-	    moveStillRunning = ""
+        const info     = { 'endmove' : false, 'move': moveStillRunning+"_halted" }
+ 	    moveStillRunning = ""
+        updateObservers( JSON.stringify(info) )
 	    return
 	}else doMoveAsynch(moveTodo, duration)
   });

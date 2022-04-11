@@ -9,6 +9,8 @@
 .. _Docker Hub: https://hub.docker.com/
 .. _DDR Robot: https://www.youtube.com/watch?v=aE7RQNhwnPQ
 
+.. _devsDdr: ./_static/devsDdr.html
+
 .. http://faculty.salina.k-state.edu/tim/robotics_sg/Control/kinematics/unicycle.html
 .. https://www.epfl.ch/labs/la/wp-content/uploads/2018/08/Kappeler.Rapport.pdf.pdf
 .. https://www.youtube.com/watch?v=ZekupxukiOM  Simulatore python  install pygame  https://www.youtube.com/watch?v=zHboXMY45YU
@@ -25,7 +27,7 @@ VirtualRobot
 ==========================================
 
 Unibo ha sviluppato un ambiente virtuale (denominato ``WEnv`` ) che include un robot 
-che simula un Differential Drive robot (DDR) reale. 
+che simula un *Differential Drive robot* (**DDR**) reale. 
 
 ------------------------------------
 Differential Drive robot 
@@ -43,12 +45,16 @@ Nel seguito faremo riferimento a una forma semplificata di DDR in cui le possib�
 
 Queste mosse sono realizzate inviando opportuni comandi al robot (simulato o reale).
 
-Per la costruzione di un DDR reale si veda xxx.
+++++++++++++++++++++++++++++++++++++ 
+Robot reali
+++++++++++++++++++++++++++++++++++++ 
+
+Per la costruzione di un DDR reale si veda `devsDdr`_.
 Al momento useremo una versione simulata, che descriviamo nella sezione :ref:`WEnv`.
 
-Lo scopo non è certo quello di affrontare i problemi di progettazione tipci di un corso di robotica, ma quello di
-introdurre casi di studio non banali per la costruzione di sistemi software distributi reattivi, proattivi e 
-situati in un ambiente che può essere fonte di :ref:`Eventi`.
+Lo scopo non è certo quello di affrontare i problemi di progettazione tipici di un corso di robotica, ma quello di
+introdurre casi di studio non banali per la costruzione di sistemi software distribuiti **reattivi**, **proattivi** e 
+**situati** in un ambiente che può essere fonte di :ref:`Eventi`.
 
 
 ------------------------------------
@@ -72,19 +78,19 @@ Usare WEnv
 
 Aprendo un browser su  **localhost:8090**, WEnv mostrerà una scena MASTER in cui sono abilitati i **comandi da tastiera**: :blue:`w,a,s,d,h`.
 
-Se apriamo  *'Strumenti di sviluppo'* del browser, vedremo i messaggi inviati su ``console.log`` dal codice javascript 
+Se apriamo  *'Strumenti di sviluppo'* del browser, vedremo i messaggi inviati su ``console.log`` dal codice Javascript 
 (embedded nel file ``IndexOk.html``) che gestisce la scena e i comandi da tastiera.
 
 La figura che segue mostra:
 
 #. Il comando di attivazione di ``WebpageServer.js``
 #. Il browser con ``console.log``
-#. La console di un programma applicativo (si veda ad esempio :ref:`Interazioni su WebSocket<Interazioni con il robot via WebSocket>`) che invia comandi su ``cmdSocket-8091``.
+#. La console di un programma applicativo.
 
 
 .. image::  ./_static/img/VirtualRobot/vrExplain.PNG
     :align: center 
-    :width: 90%
+    :width: 100%
 
 WEnv si può attivare anche usando una immagine docker; si veda :ref:`WEnv come immagine docker`.
 
@@ -92,7 +98,8 @@ WEnv si può attivare anche usando una immagine docker; si veda :ref:`WEnv come 
 Scene per WEnv
 ++++++++++++++++++++++++++++++++++++
 
-La scena del WEnv è costruita da una descrizione che può essere facilmente definita da un progettista di applicazioni. 
+La scena del WEnv è costruita da una descrizione che può essere facilmente definita da un progettista di applicazioni
+modificando il file ``sceneConfig.js``.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 sceneConfig.js
@@ -120,8 +127,8 @@ Un esempio (relativo alla scena della figura precedente) può essere trovato in 
     staticObstacles: [
             {
                 name: "plasticBox",
-                centerPosition: { x: 0.15, y: 1.0},
-                size: { x: 0.24, y: 0.07}
+                centerPosition: { x: 0.34, y: 0.4},
+                size: { x: 0.03, y: 0.07}
             },	 		 
             {
                 name: "wallUp",
@@ -148,7 +155,7 @@ Un esempio (relativo alla scena della figura precedente) può essere trovato in 
 
     export default config;
 
-E' possibile cambiare la scena in modo interattivo con apposti comandi, per poi modificare manualmente il file 
+E' possibile cambiare la scena in modo interattivo con la console che compare nella scena, per poi modificare manualmente il file 
 ``sceneConfig.js`` per conservare le modifiche.
 
 ++++++++++++++++++++++++++++++++++++
@@ -163,7 +170,7 @@ E' inoltre possibile introdurre sonar virtuali che rilevano la posizione corrent
 Comandi-base per il robot in cril 
 --------------------------------------------
 
-Il linguaggio per esprimere comandi di movimento dle robot virtuale 
+Il linguaggio per esprimere comandi di movimento del robot virtuale 
 (detto *concrete-robot interaction language* o :blue:`cril` ) può essere 
 introdotto in modo analogo al :ref:`Linguaggio-base di comando` per i dispostivi del RadarSystem,
 come campi di una stringa JSON della forma che segue:
@@ -180,13 +187,13 @@ Ad esempio, il comando
 
     ``{"robotmove":"moveForward", "time":800}`` 
 
-muove in avanti il robot per 800 msec. Il significato di **"alarm"** è di fermare il robot 
+muove in avanti il robot per ``800 msec``. Il significato di **"alarm"** è di fermare il robot 
 (non è stato chiamato ``halt`` per motivi 'storici').
 
 Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi diversi:
 
-- come messaggi HTTP POST inviati sulla porta 8090
-- come messaggi inviati su un websocket alla porta 8091
+- come messaggi HTTP POST inviati sulla porta **8090**
+- come messaggi inviati su un websocket alla porta **8091**
 
 ++++++++++++++++++++++++++++++++
 Interazioni con HTTP
@@ -201,7 +208,7 @@ Dopo l'esecuzione del comando, WEnv invia al chiamante una :blue:`risposta`, esp
 
     {"endmove":"RESULT", "move":MOVE}   
     
-    RESULT ::= true | false | halted | notallowed
+    RESULT ::= true | false 
 
 Il significato dei valori di ``RESULT`` è il seguente:
 
@@ -209,7 +216,7 @@ Il significato dei valori di ``RESULT`` è il seguente:
 - **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
 
 
-Riportiamo un esempio di programma Java che esegue le mosse-base del robot mediante 
+Riportiamo (si veda il progetto ``unibo.wenvUsage22``) un esempio di programma Java che esegue le mosse-base del robot mediante 
 comandi in :ref:`cril<Comandi-base per il robot in cril>` contenuti in richieste HTTP (di tipo POST).
 
 .. list-table:: 
@@ -234,34 +241,49 @@ Osserviamo che:
 Interazioni mediante WS
 ++++++++++++++++++++++++++++++++
 
-L'invio di un comando di movimento al robot (mossa) mediante WebSocket `_ws`_  sulla porta  `8091` :
+L'invio di un comando di movimento al robot (mossa) mediante WebSocket `ws`_  sulla porta **8091**  
 implica una forma di comunicazione :blue:`asincrona` 
-(*fire-and-forget*) che può essere seguita dall'invio al client sulla connessione ws di informazioni 
-su significative variazione dello stato del 'mondo' dopo l'esecuzione della mossa, quali:
+(*fire-and-forget*) che può essere seguita dall'invio al client (sulla connessione ws) di informazioni 
+su variazioni dello stato del 'mondo' dopo l'esecuzione della mossa, quali:
 
-- Dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
-- Dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
+- dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
+- dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
 
 Si noti che dati relativi a sonar presenti nella scena possono essere emessi indipendentemente dalla esecuzione
-di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. Esempi di messaggi 
-(che qui denominiamo :blue:`messaggi di ritorno`) sono:
+di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. 
+
+Esempi di messaggi (che qui denominiamo **messaggi di stato**) sono:
 
   .. code::
 
     { "sonarName": "sonarName", "distanza": 1, "asse": "x" }
     { "collision": true, "move": "moveForward"}
 
-Riportiamo un esempio di programma Java che esegue le mosse-base del robot mediante 
-comandi in :ref:`cril<Comandi-base per il robot in cril>` inviati come Stringhe su ``cmdSocket-8091``
 
 
-Poichè l'invio asincrono di un comando non blocca il chiamante, un client può inivare un nuovo 
-comando prima che il precedente sia terminato. Per gestire situaizoni d questo tipo, WEnv segue la
+Poichè l'invio asincrono di un comando non blocca il chiamante, un client può inviare un nuovo 
+comando prima che il precedente sia terminato. Per gestire situazioni di questo tipo, WEnv segue la
 regola che segue:
 
-:remark:`E' possibile interrompere l'esecuzione di una mossa solo con il comando alarm.`
+:remark:`è possibile interrompere l'esecuzione di una mossa solo con il comando alarm.`
 
-I messaggi di ritorno in conseguenza della esecuzione di un comando possono essere
+ 
+Supponendo che il metodo ``request( String crilCmd )`` esegua l'invio asincrono di un comando, 
+allora la sequenza di comandi che  segue viene corettamente eseguita: 
+
+.. code:: 
+
+    public String moveForward(int duration)  { 
+        return crilCmd("moveForward", duration) ;  
+    }
+    public String stop( ){ return crilCmd("alarm",10); }
+
+    request( moveForward(  1800) );
+    Thread.sleep( 500 );
+    request( stop() );
+
+I *messaggi di stato* dopo l'esecuzione di un comando possono essere:
+
 .. code::
 
     {"endmove":"RESULT", "move":MOVE}   
@@ -273,24 +295,14 @@ Il significato dei valori di ``RESULT`` è il seguente:
 - **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
 - **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente 
   non è ancora terminata
- 
-Supponendo che il metodo ``request( String crilCmd )`` esegua l'invio asincrono di un comando, 
-allora la sequenza di comandi che  segue viene corettemanete eseguito 
 
-.. code:: 
-    public String moveForward(int duration)  { 
-        return crilCmd("moveForward", duration) ;  
-    }
-    public String stop( ){ return crilCmd("alarm",10); }
 
-    request( moveForward(  1800) );
-    Thread.sleep( 500 );
-    request( stop() );
-
+Riportiamo (si veda il progetto ``unibo.wenvUsage22``)  un esempio di programma Java che esegue le mosse-base del robot mediante 
+comandi in :ref:`cril<Comandi-base per il robot in cril>` inviati come Stringhe su ``8091``
 
 
 .. list-table:: 
-  :widths: 35,75
+  :widths: 25,75
   :width: 100%
 
   * - ClientNaiveUsingWs.java
@@ -330,49 +342,11 @@ Dal punto di vista 'sistemistico', osserviamo che:
 Dal punto di vista 'applicativo', osserviamo che:
 
 - Il chiamante esegue concettualmente una *fire-and-forget*  
-- Un eventuale messaggio di ritorno viene 'iniettata' nell'applicazione tramite una chiamata al metodo annotato 
+- Un eventuale messaggio di stato viene 'iniettata' nell'applicazione tramite una chiamata al metodo annotato 
   con ``@OnMessage``
 - E' possibile :blue:`interrompere` la esecuzione di una mossa inviando il comando **alarm** 
-- WEnv non invia risposte al termine della esecuzione 
-- Inviando una nuova richiesta prima che una
 
 
- 
-
-- L'operazione ``doBasicMoves`` esegue correttamente solo la prima mossa, mentre
-  ``doBasicMovesDelayed`` esegue tutte le mosse, poiché inserisce un ritardo appropriato dopo ogni mossa.
-
- The IssCommsSupportFactory.java provides a factory method to create the proper communicartion support by using 
- a user-defined Java annotation related to the object given in input.
-
-
-++++++++++++++++++++++++++++++++
-Informazioni da WEnv
-++++++++++++++++++++++++++++++++
-
-Il WEnv invia ai client collegati su websocket alla 
-
-
-
-
-++++++++++++++++++++++++++++++++
-Risposte dal robot
-++++++++++++++++++++++++++++++++
-
-Dopo l'esecuzione di un comando via HTTP, WEnv invia al chiamante una risposta, espressa in JSON :
-
-.. code::
-
-    {"endmove":"RESULT", "move":MOVE}   
-    
-    RESULT ::= true | false | halted | notallowed
-
-Il significato dei valori di ``RESULT`` è il seguente:
-
-- **true**: mossa completata con successo
-- **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
-- **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
-- **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente non è ancora terminata
 
 
 ++++++++++++++++++++++++++++++++
@@ -398,176 +372,13 @@ L'implementazione di WEnv si basa su due componenti principali:
   e un client `socket.io`_ non sarà in grado di connettersi a un server WebSocket.
 
 
-- un **cmdSocket-8091** basata sulla libreria `ws`_ : questo socket viene utilizzato per gestire comandi 
-  applicativi asincroni per muovere il robot inviati da client remoti e per inviare a client remoti informazioni 
-  sullo stato del WEnv.
+- il websocker **8091** basato sulla libreria `ws`_ : questo socket viene utilizzato per gestire comandi 
+  applicativi asincroni per muovere il robot inviati da client remoti e per inviare a client remoti 
+  i *messaggi di stato*.
 
   WEnv utilizza la libreria Node https://github.com/einaros/ws per accettare questi comendi.
 
-  :remark:`Il modulo ws non funziona nel browser, che deve utilizzare l'oggetto WebSocket nativo.`
-
-
- 
-
-
-
-++++++++++++++++++++++++++++++++++++++++++++
-Interazioni con il robot via WebSocket
-++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-
-
-
-
---------------------------------------------
-Esempi di uso di comandi-base in Java
---------------------------------------------
-
-Guardare  C:/Didattica2021/issLab2021/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html
-
-
-
-
-
---------------------------------------------
-Esempi di uso di comandi-base in Node.js
---------------------------------------------
-
-.. list-table:: 
-  :widths: 35,75
-  :width: 100%
-
-  * - axiosclientToWenv.js 
-    - Il robot cammina lungo il confine della stanza.
-  
-      :blue:`Key point`: Request-response sincrona e stile funzionale basato su callbacks.
-  * - httpClientToWenv.js 
-    - Il robot cammina lungo il confine della stanza.
-  
-      :blue:`Key point`: Request-response sincrona e utilizzo di variabili di stato e una operazione 
-      (*doBoundary*) che incorpora la business logic.
-  * - wsclientToWenv.js 
-    - Il robot dappprima si muove avanti e indietro. Successivamente, funziona come osservatore.
-      
-      :blue:`Key point`: Interazione asincrona. 
-      sequenza di comandi asincroni inviati con *setTimeout* e messaggi di input gestiti da una richiamata relativa 
-      a ``connection.on('messaggio', funzione(msg){ ... })``.
-         
-  * - wsclientBoundaryToWenv.js
-    - Il robot cammina lungo il confine della stanza.
-      
-      :blue:`Key point`: Interazione asincrona.
-      Programma Modular Node che separa la logica aziendale (``WalkBoundary``)  
-      dall'interazione ws-socket di basso livello. 
-      Questo modulo viene utilizzato anche nella pagina ``HTMLwsclientToWenv.html``
-       
-
-
-
-+++++++++++++++++++++++++++++++++++++
-MoveVirtualRobot
-+++++++++++++++++++++++++++++++++++++
-- Con jupyter : ``resources\python\virtualrobotCaller.ipynb``
-- Invio di comandi tramite HTTP. Da rifare con Actor22 e supporti
-
-.. code:: Java
-
-    public class MoveVirtualRobot {
-        private  final String localHostName    = "localhost";
-        private  final int port                = 8090;
-        private  final String URL              = "http://"+localHostName+":"+port+"/api/move";
-    
-        public MoveVirtualRobot() { }
-
-        protected boolean sendCmd(String move, int time)  {
-            CloseableHttpClient httpclient = HttpClients.createDefault();
-            try {
-                System.out.println( move + " sendCmd "  );
-                //String json         = "{\"robotmove\":\"" + move + "\"}";
-                String json         = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
-                StringEntity entity = new StringEntity(json);
-                HttpUriRequest httppost = RequestBuilder.post()
-                        .setUri(new URI(URL))
-                        .setHeader("Content-Type", "application/json")
-                        .setHeader("Accept", "application/json")
-                        .setEntity(entity)
-                        .build();
-                CloseableHttpResponse response = httpclient.execute(httppost);
-                //System.out.println( "MoveVirtualRobot | sendCmd response= " + response );
-                boolean collision = checkCollision(response);
-                return collision;
-            } catch(Exception e){
-                System.out.println("ERROR:" + e.getMessage());
-                return true;
-            }
-        }
-
-        protected boolean checkCollision(CloseableHttpResponse response) throws Exception {
-            try{
-                //response.getEntity().getContent() is an InputStream
-                String jsonStr = EntityUtils.toString( response.getEntity() );
-                System.out.println( "MoveVirtualRobot | checkCollision_simple jsonStr= " +  jsonStr );
-                //jsonStr = {"endmove":true,"move":"moveForward"}
-                JSONObject jsonObj = new JSONObject(jsonStr) ;
-                boolean collision = false;
-                if( jsonObj.get("endmove") != null ) {
-                    collision = ! jsonObj.get("endmove").toString().equals("true");
-                    System.out.println("MoveVirtualRobot | checkCollision_simple collision=" + collision);
-                }
-                return collision;
-            }catch(Exception e){
-                System.out.println("MoveVirtualRobot | checkCollision_simple ERROR:" + e.getMessage());
-                throw(e);
-            }
-        }
-
-        public boolean moveForward(int duration)  { return sendCmd("moveForward", duration);  }
-        public boolean moveBackward(int duration) { return sendCmd("moveBackward", duration); }
-        public boolean moveLeft(int duration)     { return sendCmd("turnLeft", duration);     }
-        public boolean moveRight(int duration)    { return sendCmd("turnRight", duration);    }
-        public boolean moveStop(int duration)     { return sendCmd("alarm", duration);        }
-    /*
-    MAIN
-    */
-        public static void main(String[] args)   {
-            MoveVirtualRobot appl = new MoveVirtualRobot();
-            boolean moveFailed = appl.moveLeft(300);
-            System.out.println( "MoveVirtualRobot | moveLeft  failed= " + moveFailed);
-            moveFailed = appl.moveRight(1300);
-            System.out.println( "MoveVirtualRobot | moveRight failed= " + moveFailed);
-        }
-        
-    }
-
-
-------------------------------------------------
-Comandi di alto livello (in aril)
-------------------------------------------------
-
-Per agevolare la costruzione di applicazioni, è conveniente introdurre un linguaggio di comando ad alto 
-livello, con cui nascondere i dettagli tecnologici relativi all'uso dei comandi-base e con cui 
-esprimere la interazione con il robot ad un opportuno livello di astrazione.
-
-Indicheremo tale linguaggio con l'acronimo **aril** (*abstract-robot interaction language*) in quanto 
-è il lingyaggio che useremo per interagire con un 'robot logico' che potrà essere realizzato da un robot 
-virtuale o da un robot fisico.
-
-La sintassi del linguaggio è al solito molto semplice e può essere formalmente defiita dalla seguente
-regola di produzione grammaticale di tipo 3:
-
-.. code::
-
-    ARIL ::= w | s | l | r | h
-
-- **w**: significa 'andare avanti', in modo da coprire una lunghezza  **DR**
-- **s**: significa 'andare indietro', in modo da coprire una lunghezza **DR**
-- **h**: significa 'smetti di muoverti'
-- **l**: significa 'girare a sinistra di **90°**'
-- **r**: significa 'svolta a destra di **90°**'
-
-La lunghezza **DR** viene fissata al valore del diametro del cerchio di raggio minimo che circoscrive il robot.
+  :remark:`Il modulo ws non funziona nel browser: bisogna utilizzare l'oggetto WebSocket nativo.`
 
  
 
@@ -602,7 +413,7 @@ immagine Docker (per una introduizione a Docker si veda `Introduction to Docker 
 
 L'immagine Docker può essere creata sul proprio PC eseguendo il comando (nella directory che contiene il *Dockerfile*):
 
-    ``docker build -t virtualrobotdisi:2.0 .``    //Notare il .
+    ``docker build -t virtualrobotdisi:3.0 .``    //Notare il .
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Esecuzione della immagine
@@ -612,7 +423,7 @@ L'immagine Docker di WEnv può essere attivata sul PC con il comando:
 
 .. code::
 
-    docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:2.0
+    docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:3.0
     
 
 Il comando:
@@ -620,42 +431,69 @@ Il comando:
 .. code::
 
     docker run -ti -p 8090:8090 
-                  -p 8091:8091 --rm  virtualrobotdisi:2.0 /bin/sh
+                  -p 8091:8091 --rm  virtualrobotdisi:3.0 /bin/sh
 
 permette di ispezionare il contenuto della macchina virtuale e di attivare manualmente il sistema
-(eseguendo node ``WebpageServer.js``).
+(eseguendo  ``node WebpageServer.js``).
 
-L'immagine viene resa distribuita  su `Docker Hub`_ in ``docker.io/natbodocker/virtualrobotdisi:2.0``
-come risulta nella spefifica del file ``virtualRobotOnly2.0.yaml``:
+
+        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Modificare la scena nella immagine
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Una volta attivata l'immagine docker, il comando 
+
+  ``dockerps ps -a`` 
+
+restituisce una tabella con 7 campi:
+
+     ``CONTAINERID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES``
+
+Per modificare il file che definisce la scena, si può copiare una nuova versione attraverso il comando ``docker cp`` 
+e rendere permanente la modifica salvando il container.
+
+ 
+.. code::
+
+     //change the scene
+    docker cp sceneConfig.js  CONTAINERID:/home/node/WEnv/WebGLScene/sceneConfig.js
+    //Save the cotainer
+    docker commit  CONTAINERID
+    TAG the new image IMAGEID
+    docker tag  IMAGEID IMGNAME:X.Y
+
+    //Tag and register the image
+    docker tag virtualrobotdisi:3.0 natbodocker/virtualrobotdisi:3.0
+    docker push natbodocker/virtualrobotdisi:3.0
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-virtualRobotOnly2.0.yaml
+Esecuzione con docker-compose
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+L'immagine viene distribuita anche su `Docker Hub`_ in ``docker.io/natbodocker/virtualrobotdisi:3.0``
+come risulta nella spefifica del file ``virtualRobotOnly3.0.yaml``:
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+virtualRobotOnly3.0.yaml
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. code::
 
     version: '3'
     services:
     wenv:
-        image: docker.io/natbodocker/virtualrobotdisi:2.0
+        image: docker.io/natbodocker/virtualrobotdisi:3.0
         ports:
         - 8090:8090
         - 8091:8091
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Esecuzione con docker-compose
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Il file ``virtualRobotOnly2.0.yaml`` permette l'attivazione di WEnv attraverso l'uso di docker-compose:
+Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l'uso di docker-compose:
 
 .. code::
 
-    docker-compose -f virtualRobotOnly2.0.yaml  up   //per attivare
-    docker-compose -f virtualRobotOnly2.0.yaml  down //per terminare
+    docker-compose -f virtualRobotOnly3.0.yaml  up   //per attivare
+    docker-compose -f virtualRobotOnly3.0.yaml  down //per terminare
 
-Questo comando carica un'immagine Docker da docker.io/natbodocker/virtualrobotdisi:2.0 e attiva il Web WebpageServer.js che:
-
-- inizializza ( ``initSocketIOWebGLScene`` ) la gestione dei messaggi sul filemainSocket, dedicato all'interazione con WebGLScene;
-- inizializza ( ``initWs`` ) ilcmdSocket-8091, dedicato all'interazione con i clienti che intendono inviare comandi al robot virtuale 
-  e ricevere informazioni dal WEnv (es. dati sonar);
-- ascolta sulla porta 8090 e mostra i messaggi sulla console verde della figura.

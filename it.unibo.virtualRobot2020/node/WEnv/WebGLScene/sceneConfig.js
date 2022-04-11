@@ -13,15 +13,13 @@ const config = {
     movingObstacles: [
     ],
    staticObstacles: [
-   /*
-   
         {
             name: "plasticBox",
-            centerPosition: { x: 0.15, y: 1.0},
-            size: { x: 0.24, y: 0.07}
+            centerPosition: { x: 0.34, y: 0.4},
+            size: { x: 0.03, y: 0.07}
         },
+   /*
 
-		
         {
             name: "table",
             centerPosition: { x: 0.60, y: 0.40},
