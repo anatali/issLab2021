@@ -5,7 +5,7 @@ Technology-dependent application
 TODO. eliminate the communication details from this level
 ===============================================================
 */
-package unibo.wenvUsage22;
+package unibo.wenvUsage22.naive;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;

@@ -6,7 +6,7 @@
  ===============================================================
  */
 
-package unibo.wenvUsage22;
+package unibo.wenvUsage22.naive;
 import javax.websocket.*; 
 import java.io.IOException;
 import java.net.URI;
