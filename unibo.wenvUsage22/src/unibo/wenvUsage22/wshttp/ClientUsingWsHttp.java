@@ -14,8 +14,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-
-import it.unibo.is.interfaces.IObserver;
+import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
@@ -44,10 +43,16 @@ public class ClientUsingWsHttp implements IObserver{
 	public String stop(int duration)         { return crilCmd("alarm", duration);        }
 	public String stop( )                    { return crilCmd("alarm", 10);        }
 
- 
 	protected void doBasicMoves() throws Exception {
-		//conn = WsHttpConnection.createForWs("localhost:8091" );
-		conn = WsHttpConnection.createForHttp("localhost:8090" );
+		conn = WsHttpConnection.createForWs("localhost:8091" );
+		//conn = WsHttpConnection.createForHttp("localhost:8090" );
+		((WsHttpConnection)conn).addObserver(this);
+		conn.forward( moveForward(2300) );
+	}
+ 
+	protected void doBasicMovesTest() throws Exception {
+		conn = WsHttpConnection.createForWs("localhost:8091" );
+		//conn = WsHttpConnection.createForHttp("localhost:8090" );
 		
 		
 		((WsHttpConnection)conn).addObserver(this);
@@ -55,10 +60,14 @@ public class ClientUsingWsHttp implements IObserver{
 			ColorsOut.out("STARTING doBasicMoves ... ");
 			boolean endmove = false;
 			
+			conn.forward( turnRight(1300) );
+ 			CommUtils.delay(500);
+			conn.forward( stop() );
 			conn.forward( turnLeft(300) );
-			//conn.forward( stop() );
-			CommUtils.delay(500);
-			conn.forward( turnRight(300) );
+ 			CommUtils.delay(200);
+			conn.forward( stop() );
+			//CommUtils.delay(500);
+			conn.forward( moveForward(500) );
 			
 //			endmove = requestSynch( turnLeft(300) );
 //			ColorsOut.out("turnLeft endmove=" + endmove);
@@ -84,8 +93,14 @@ MAIN
 	
 	@Override
 	public void update(Observable source, Object data) {
-		ColorsOut.out("ClientUsingWsHttp update receives:" + data);
+		ColorsOut.out("ClientUsingWsHttp update/2 receives:" + data);
+		JSONObject d = new JSONObject(""+data);
+		ColorsOut.outappl("ClientUsingWsHttp update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
 		
+	}
+	@Override
+	public void update(String data) {
+		ColorsOut.out("ClientUsingWsHttp update receives:" + data);
 	}
 	
  }

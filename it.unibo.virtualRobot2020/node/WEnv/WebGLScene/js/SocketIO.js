@@ -14,7 +14,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     socket.on( 'moveBackward', duration => moveBackward(duration) )
     socket.on( 'turnRight',    duration => turnRight(duration) )
     socket.on( 'turnLeft',     duration => turnLeft(duration) )
-    socket.on( 'alarm',        stopMoving   )
+    socket.on( 'alarm',        stopMoving    )
     socket.on( 'remove',       name => remove( name )  )   //DEC 2019  See WebpageServer.js
     
 	socket.on( 'xxx',        obj => console.log("SocketIO xxxxxxxxxxxxxxxxxxxxxxxx")   )
@@ -39,7 +39,8 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
         S: 83,
         D: 68,
         R: 82,
-        F: 70 //April2022: lo uso per stop rotation
+        F: 70,
+        Z: 90 //April2022: lo uso per stop rotation
     }
         
     let moveForwardTimeoutId
@@ -81,8 +82,8 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     function stopMoving() {
     console.log("stopMoving "  )
        onKeyUp( { keyCode: keycodes.W } )
-        onKeyUp( { keyCode: keycodes.S } )
-        onKeyDown( { keyCode: keycodes.F }, 0, true )
+       onKeyUp( { keyCode: keycodes.S } )
+       onKeyDown( { keyCode: keycodes.Z }, 0, true )
         //stopRotating()  //from SceneManager
     }
     

@@ -19,16 +19,18 @@ export default (mesh, camera, config, collisionManager, mirror) => {
     let forward = false
     let backward = false
     let rotating = false
+    var tween ;
 
     setCameraPositionRelativeToMesh(camera, mesh)
 
 	function stopRotating(){ //April2022
 console.log("PlayerControls | stopRotatingggg "  )
 	    rotating = false
+	    tween.stop();
 	}
 
     function onKeyDown(keyCode, duration, remote ) {
- console.log("PlayerControls | onKeyDown from remote=" + remote + " keyCode=" + keyCode)
+ //console.log("PlayerControls | onKeyDown from remote=" + remote + " keyCode=" + keyCode)
         if(keyCode === keycodes.W)
             forward = true
         else if(keyCode === keycodes.S)
@@ -59,10 +61,13 @@ else if(keyCode === keycodes.F) stopRotating() //April2022
         var turnMove = ""     //April2022
         if( angle < 0 ) turnMove="turnRight"
         else turnMove="turnLeft"
-        new TWEEN.Tween(mesh.rotation)
+        tween = new TWEEN.Tween(mesh.rotation)
             .to({ y: finalAngle }, duration)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete( () => {rotating = false; eventBus.post(eventBusEvents.endmove, turnMove)})
+            .onComplete( () => {
+                rotating = false;
+                eventBus.post(eventBusEvents.endmove, turnMove)
+             })
             .start()
     }    
 

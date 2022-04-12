@@ -2,13 +2,6 @@ package unibo.actor22comm.wshttp;
 
 import java.util.HashMap;
 import java.util.Vector;
-
-import it.unibo.is.interfaces.IObservable;
-import it.unibo.is.interfaces.IObserver;
-import it.unibo.kactor.ApplMessage;
-import it.unibo.kactor.IApplMessage;
- 
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,6 +10,8 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okhttp3.internal.http.RealResponseBody;
+import unibo.actor22comm.interfaces.IObservable;
+import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 
@@ -197,7 +192,8 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
         ColorsOut.out("WsHttpConnection | addObserver " + obs);
 		observers.add( obs);		
 	}
- 
-	
-	
-}
+	@Override
+	public void deleteObserver(IObserver obs) {
+		observers.remove( obs);
+	}
+ }

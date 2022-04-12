@@ -121,7 +121,7 @@ function doMove(moveTodo, duration, res){
 
 //Updates the mirrors
 function execMoveOnAllConnectedScenes(moveTodo, moveTime){
-    console.log('$$$ WebpageServer doMove |  updates the mirrors'   );
+    console.log('$$$ WebpageServer doMove |  execMoveOnAllConnectedScenes '  + moveTodo );
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime) );
 }
 //Updates the controls and the observers (Jan 2021)
@@ -170,7 +170,8 @@ wsServer.on('connection', (ws) => {
         updateObservers( JSON.stringify(info) )
 	    return
 	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
-	    execMoveOnAllConnectedScenes(moveTodo, duration)
+ 	    rotating = false;
+ 	    execMoveOnAllConnectedScenes(moveTodo, duration)
         const info     = { 'endmove' : false, 'move': moveStillRunning+"_halted" }
  	    moveStillRunning = ""
         updateObservers( JSON.stringify(info) )
