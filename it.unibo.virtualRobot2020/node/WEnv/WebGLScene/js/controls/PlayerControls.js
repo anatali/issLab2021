@@ -66,7 +66,7 @@ else if(keyCode === keycodes.F) stopRotating() //April2022
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete( () => {
                 rotating = false;
-                eventBus.post(eventBusEvents.endmove, turnMove)
+                //eventBus.post(eventBusEvents.endmove, turnMove)
              })
             .start()
     }    

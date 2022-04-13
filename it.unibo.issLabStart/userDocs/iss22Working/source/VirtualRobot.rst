@@ -21,6 +21,7 @@
 .. _org.json: https://www.baeldung.com/java-org-json
 .. _ws: https://www.npmjs.com/package/ws
 .. _socket.io: https://socket.io/docs/v4/
+.. _einaros: https://github.com/einaros/ws
 
 ==========================================
 VirtualRobot
@@ -351,10 +352,10 @@ Dal punto di vista 'sistemistico', osserviamo che:
 
 Dal punto di vista 'applicativo', osserviamo che:
 
-- Il chiamante esegue concettualmente una *fire-and-forget*  
-- Un eventuale messaggio di stato viene 'iniettata' nell'applicazione tramite una chiamata al metodo annotato 
-  con ``@OnMessage``
-- E' possibile :blue:`interrompere` la esecuzione di una mossa inviando il comando **alarm** 
+- Il chiamante esegue concettualmente una *fire-and-forget*.
+- Un eventuale messaggio di stato viene 'iniettato' nell'applicazione tramite una chiamata al metodo annotato 
+  con ``@OnMessage``.
+- E' possibile :blue:`interrompere` la esecuzione di una mossa inviando il comando **alarm**.
 
 
 
@@ -386,7 +387,7 @@ L'implementazione di WEnv si basa su due componenti principali:
   applicativi asincroni per muovere il robot inviati da client remoti e per inviare a client remoti 
   i *messaggi di stato*.
 
-  WEnv utilizza la libreria Node https://github.com/einaros/ws per accettare questi comendi.
+  WEnv utilizza la libreria Node `einaros`_ per accettare questi comendi.
 
   :remark:`Il modulo ws non funziona nel browser: bisogna utilizzare l'oggetto WebSocket nativo.`
 
@@ -397,6 +398,31 @@ oltre lo **sceneSocket**.
 
 Questo evento è gestito da un apposito handler (vedi ``initSocketIOWebGLScene`` in ``WebpageServer.js``), 
 che reindirizza le informazioni a tutti i client connessi sulla  ``8091``.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Workflow
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il ``WebPageServer`` quando parte invoca ``initSocketIOWebGLScene`` che usa SocketIO (sceneSocket) per interagire con la scena,
+o meglio con tutte le scene collegate su 8090 da parte di diversi browser.
+La sceneSocket riceverà i messaggi di stato sul cambiamento di WEnv e invierà le info a tutti i callers.
+
+Un client usa ws per inviare un comando su 8091. Risponde ``WebPageServer`` per la parte WS:
+
+  ``WebPageServer -> ws.on('message' -> doMoveAsynch -> execMoveOnAllConnectedScenes -> sceneSocket.emit``
+
+va alle scene del MASTER e dei MIRROR . In ``(SocketIO subscribed to EventBus)`` si esegue:
+
+  ``socket.on( MOVE ) ->  setTimeout( () => {MOVE,eventBus.post(eventBusEvents.endmove, MOVE)}, duration )``
+
+alla terminazione della *duration* della mossa, viene inviata una notifica endmove. Prima però ci potrebbe essere un obstacle.
+In ``(SocketIO subscribed to EventBus)`` si esegue la callback (di collision / endmove ) che fa:
+
+  ``socket.emit ``
+
+che viene gestita dalle callback di ``initSocketIOWebGLScene`` che fa ``updateCallers`` per inviare le info a client
+
+
 
 
 ++++++++++++++++++++++++++++++++++++

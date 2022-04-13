@@ -74,7 +74,7 @@ Defines how to handle POST from browser and from external controls
 			else if( moveStillRunning.length>0 && ! moveStillRunning.includes("_Asynch") ){
 			//the move DOES NOT 'interrupt' a move activated in asynch way
 	            const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
-	            updateObservers( JSON.stringify(answer) )
+	            updateCallers( JSON.stringify(answer) )
                 if( res != null ){
                     res.writeHead(200, { 'Content-Type': 'text/json' });
                     res.statusCode=200
@@ -105,7 +105,7 @@ function doMove(moveTodo, duration, res){
         moveStillRunning = "";       //able to accept other moves
         moveHalted       = false;       //able to halt next move
          //IN ANY CASE: update all the controls / observers
-         updateObservers(answerJson)
+         updateCallers(answerJson)
          if( res != null ){
              res.writeHead(200, { 'Content-Type': 'text/json' });
                 res.statusCode=200
@@ -124,10 +124,11 @@ function execMoveOnAllConnectedScenes(moveTodo, moveTime){
     console.log('$$$ WebpageServer doMove |  execMoveOnAllConnectedScenes '  + moveTodo );
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime) );
 }
+
 //Updates the controls and the observers (Jan 2021)
-function updateObservers(msgJson){
+function updateCallers(msgJson){
  	Object.keys(wssockets).forEach( key => {
-        console.log("WebpageServer | updateObservers key="  + key + " msgJson=" + msgJson);
+        console.log("WebpageServer | updateCallers key="  + key + " msgJson=" + msgJson);
         //console.log(  wssockets[key]   );
         wssockets[key].send( msgJson )
 	} )
@@ -138,15 +139,7 @@ function updateObservers(msgJson){
 Interact with clients over ws (controls that send commands or observers) Jan 2021
 -------------------------------------------------------------------------------------
 */
-/*
-Move activated in asynch mode => no answer is needed
-*/
-function doMoveAsynch(moveTodo, duration){
-    console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
-    if( moveTodo != "alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
-    else{ moveStillRunning = "" }
-    execMoveOnAllConnectedScenes(moveTodo, duration)
-}
+
 
 function initWs(){
 const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) }
@@ -167,14 +160,14 @@ wsServer.on('connection', (ws) => {
 	if( moveStillRunning.length>0 && moveTodo != "alarm"){
         console.log("       $$$ WebpageServer wssocket | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running:" + moveStillRunning)
         const info     = { 'endmove' : false, 'move': moveTodo+"_notallowed" }
-        updateObservers( JSON.stringify(info) )
+        updateCallers( JSON.stringify(info) )
 	    return
 	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
  	    //rotating = false;
  	    execMoveOnAllConnectedScenes(moveTodo, duration)
         const info     = { 'endmove' : false, 'move': moveStillRunning+"_halted" }
  	    moveStillRunning = ""
-        updateObservers( JSON.stringify(info) )
+        updateCallers( JSON.stringify(info) )
 	    return
 	}else doMoveAsynch(moveTodo, duration)
   });
@@ -193,6 +186,17 @@ wsServer.on('connection', (ws) => {
   })
 }); //wsServer.on('connection' ...
 }//initWs
+
+/*
+Move activated in asynch mode => no answer is needed
+*/
+function doMoveAsynch(moveTodo, duration){
+    console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
+    if( moveTodo != "alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
+    else{ moveStillRunning = "" }
+    execMoveOnAllConnectedScenes(moveTodo, duration)
+}
+
 /*
 -------------------------------------------------------------------------------------
 Interact with the MASTER (the mirrors do not send any info)
@@ -210,19 +214,19 @@ function initSocketIOWebGLScene() {
 		socket.on( 'sonarActivated', (obj) => {  //Obj is a JSON object
 			console.log( "&&& WebpageServer WebGLScene | sonarActivated " );
 			console.log(obj) 
-			updateObservers( JSON.stringify(obj) )
+			updateCallers( JSON.stringify(obj) )
 		})
         socket.on( 'collision',     (obj) => { 
 		    console.log( "WebpageServer WebGLScene  | collision detected " + obj + " numOfSockets=" + Object.keys(sockets).length );
 		    target = obj;
 		    const info     = { 'collision' : true, 'move': 'unknown'}
-		    updateObservers( JSON.stringify(info) )
+		    updateCallers( JSON.stringify(info) )
  		} )
         socket.on('endmove', (obj)  => {  //April2022
 		    console.log( "WebpageServer WebGLScene  | endmove  " + obj    );
             moveStillRunning = ""
   		    const info     = { 'endmove' : true, 'move': obj}
-  		    updateObservers( JSON.stringify(info) )
+  		    updateCallers( JSON.stringify(info) )
          })
        socket.on( 'disconnect',     () => {
         		delete sockets[key];

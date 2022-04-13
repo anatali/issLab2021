@@ -9,8 +9,8 @@ import SceneManager from './SceneManager.js'                                    
 export default (onKeyUp, onKeyDown, myonKeyDown) => {
     const socket = io()
         
-    socket.on( 'moveForward',  duration => {console.log("moveForward " + duration); moveForward(duration)} )
-	 
+    socket.on( 'moveForward',  duration => {console.log("moveForward " + duration);
+                                    moveForward(duration)} )
     socket.on( 'moveBackward', duration => moveBackward(duration) )
     socket.on( 'turnRight',    duration => turnRight(duration) )
     socket.on( 'turnLeft',     duration => turnLeft(duration) )
@@ -22,7 +22,8 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
 	
     socket.on( 'disconnect', () => console.log("server disconnected") )
 
-    eventBus.subscribe( eventBusEvents.sonarActivated, sonarId => socket.emit('sonarActivated', sonarId))
+    eventBus.subscribe( eventBusEvents.sonarActivated, sonarId =>
+        socket.emit('sonarActivated', sonarId))
     eventBus.subscribe( eventBusEvents.collision, objectName => { 
 		console.log(`SocketIO collision: ${objectName}`);
 		socket.emit('collision', objectName); 	//va al callback del main.js
@@ -57,8 +58,6 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
          							//console.log("SocketIO: moveForward done");
          						}, duration )
     }
-//eventBus.post(eventBusEvents.endmove, "done")  //April 2022
-//socket.emit('endmove', "done");
 
     function moveBackward(duration) {
         clearTimeout(moveBackwardTimeoutId)

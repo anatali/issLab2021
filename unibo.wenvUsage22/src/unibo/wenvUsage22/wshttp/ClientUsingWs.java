@@ -39,16 +39,20 @@ public class ClientUsingWs implements IObserver{
 	protected void doBasicMoves() throws Exception {
 		conn = WsConnection.create("localhost:8091" );
 		((WsConnection)conn).addObserver(this);
-		boolean endmove = false;
-			 
-			conn.forward( turnRight(300) );
- 			CommUtils.delay(500);
-			conn.forward( stop() );
-			conn.forward( turnLeft(300) );
- 			CommUtils.delay(500);
-			conn.forward( stop() );
-			//CommUtils.delay(500);
-			conn.forward( moveForward(1000) );
+ 
+		conn.forward( turnLeft( 800  ) );
+		conn.forward( stop( ) );
+//    	Thread.sleep( 500 );
+		conn.forward( turnRight( 400 ) );
+
+//			conn.forward( turnRight(300) );
+// 			CommUtils.delay(500);
+//			conn.forward( stop() );
+//			conn.forward( turnLeft(300) );
+// 			CommUtils.delay(500);
+//			conn.forward( stop() );
+//			//CommUtils.delay(500);
+//			conn.forward( moveForward(1000) );
  
 			CommUtils.delay(1500);
 			conn.close();
@@ -57,14 +61,14 @@ public class ClientUsingWs implements IObserver{
 	
 	@Override
 	public void update(Observable source, Object data) {
-		ColorsOut.out("ClientUsingWsHttp update/2 receives:" + data);
+		ColorsOut.out("ClientUsingWs update/2 receives:" + data);
 		JSONObject d = new JSONObject(""+data);
-		ColorsOut.outappl("ClientUsingWsHttp update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
+		ColorsOut.outappl("ClientUsingWs update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
 		
 	}
 	@Override
 	public void update(String data) {
-		ColorsOut.out("ClientUsingWsHttp update receives:" + data);
+		ColorsOut.out("ClientUsingWs update receives:" + data);
 	}	
 /*
 MAIN
