@@ -389,10 +389,20 @@ Parte proattiva
 La parte proattiva  consiste nella continua rilevazione della distanza e nella emissione di eventi con il valore della distanza-misurata.
 Questi eventi assumono la forma che segue:
 
+  ``msg(distance,event,sonar,_,D,N)``
+
+ove ``D`` è il valore della distanza misurata.
+
+Quando il messaggio viene emesso, il campo **receiver** (si veda :ref:`Struttura dei messaggi applicativi`) non è specificato.
+
+L'operazione di emissione :ref:`emit<emit di un evento>` si avvale del componente :ref:`EventMsgHandler` interno della infrastruttura
+per creare tanti messaggi quanti gli ossservatori registrati, ciascuno col campo **receiver** settato al nome del destinatario.
+Questi messaggi hanno la forma:
+
   ``msg(distance,event,sonar,OBSERVER,D,N)``
 
-Dove ``OBSERVER`` è il nome dell'attore-osservatore che ha dichiarato il suo interesse all'evento ``distance`` e 
-``D`` è il valore della distanza misurata.
+Dove ``OBSERVER`` è il nome dell'attore-osservatore che ha dichiarato il suo interesse all'evento ``distance``.
+
 
 .. code:: Java
 

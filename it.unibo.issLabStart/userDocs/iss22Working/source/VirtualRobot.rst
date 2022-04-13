@@ -195,6 +195,16 @@ Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi dive
 - come messaggi HTTP POST inviati sulla porta **8090**
 - come messaggi inviati su un websocket alla porta **8091**
 
+++++++++++++++++++++++++++++++++++++++++++++
+Schema delle interazioni-base con WEnv
+++++++++++++++++++++++++++++++++++++++++++++
+
+.. image::  ./_static/img/VirtualRobot/logicInteraction.PNG
+    :align: center 
+    :width: 80%
+
+
+
 ++++++++++++++++++++++++++++++++
 Interazioni con HTTP
 ++++++++++++++++++++++++++++++++
@@ -360,7 +370,7 @@ L'implementazione di WEnv si basa su due componenti principali:
 
 ``WebpageServer.js`` utilizza due diversi tipi  di WebSocket:
 
-- un socket basato sulla libreria `socket.io`_ che viene utilizzato per gestire 
+- un socket (detto **sceneSocket**) basato sulla libreria `socket.io`_ che viene utilizzato per gestire 
   l'interazione con **WebGLScene**.
 
   :remark:`socket.io non è un'implementazione WebSocket.`
@@ -380,7 +390,14 @@ L'implementazione di WEnv si basa su due componenti principali:
 
   :remark:`Il modulo ws non funziona nel browser: bisogna utilizzare l'oggetto WebSocket nativo.`
 
- 
+
+Quando ``WebvGLScene`` rileva una collisione tra il robot virtuale e un ostacolo, 
+invoca l'utilità ``eventBus.js`` per 'emettere un evento collisione' 
+oltre lo **sceneSocket**. 
+
+Questo evento è gestito da un apposito handler (vedi ``initSocketIOWebGLScene`` in ``WebpageServer.js``), 
+che reindirizza le informazioni a tutti i client connessi sulla  ``8091``.
+
 
 ++++++++++++++++++++++++++++++++++++
 WEnv come immagine docker
@@ -496,4 +513,69 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
 
     docker-compose -f virtualRobotOnly3.0.yaml  up   //per attivare
     docker-compose -f virtualRobotOnly3.0.yaml  down //per terminare
+
+-----------------------------------------------------------------------
+Interaction2021 per HTTP e WS
+-----------------------------------------------------------------------
+
+Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
+per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
+realizzare la nostra :blue:`astrazione  connessione`.
+
+Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
+interazioni con il VirtualRobot:
+
+- ClientNaiveUsingHttp
+- ClientNaiveUsingWs
+
+
+
+
+ 
+
+
+-------------------------------------------------
+Una WebGui di comando
+-------------------------------------------------
+
+Il progetto ``unibo.wenvUsage22`` include un file ``resources/NaiveGui.html`` che permette di interagire con WEnv 
+attraverso un browser. 
+
+Il programma presenta una  interfaccia che permette a un uente di:
+
+- inviare comandi (in :ref:`cril<Comandi-base per il robot in cril>`) al VirtualRobot attraverso un insieme di pulsanti
+- visualizzare nella DisplayArea le informazioni emesse da WEnv
+
+Ad esempio:
+
+.. image::  ./_static/img/VirtualRobot/NaiveGui.PNG
+    :align: center 
+    :width: 80%
+
+Il programma una le WebSocket JavaScript per interagire con WEnv attraverso una connessione sulla porta  ``8091``.
+ 
+
+
+-------------------------------------------------
+xxx
+-------------------------------------------------
+
+ 
+
+Un programma di esempio di uso di WEnv, quale :ref:`Interazioni con HTTP` e :ref:`Interazioni mediante WS` realizza 
+un sistema softwwre che:
+
+- opera in un ambiente ( WEnv )
+- incorpora un dispositivo (il robot virtuale) costruito secondo una tecnologia specifica
+- invia comandi 
+- interagisce con i propri utenti tramite messaggi asincroni (inviati tramite websocket alla porta 8091)
+- è la fonte di informazioni (relative allo stato attuale del robot o del WEnv ) che potrebbero essere utili 
+  per diversi altri componenti oltre al componente che controlla il robot (es.proprietario di robot').
+
+Un obiettivo importante ( requisito non funzionale ) della sua progettazione era quello di realizzare il codice di 
+un'applicazione roboticail più indipendente possibile:
+
+dalla tecnologia robotica, per facilitare la sostituzione di un tipo di robot con un altro
+dal protocollo di interazione, , per catturare l' essenza del flusso di informazioni tra il sistema WEnv e gli altri componenti dell'applicazione
+Gli attori (Kotlin) ci aiutano a progettare e costruire applicazioni basate su WEnv , fornendo in modo del tutto naturale unlivello più astratto di ragionamento e di scrittura del codice.
 

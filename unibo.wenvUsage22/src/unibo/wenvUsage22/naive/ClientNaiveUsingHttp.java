@@ -20,12 +20,12 @@ import unibo.actor22comm.utils.CommUtils;
 
 import java.net.URI;
 
-public class ClientNaiveUsingPost {
+public class ClientNaiveUsingHttp {
 	private  final String localHostName    = "localhost"; //"localhost"; 192.168.1.7
 	private  final int port                = 8090;
 	private  final String URL              = "http://"+localHostName+":"+port+"/api/move";
 	private  CloseableHttpClient httpclient ;
-	public ClientNaiveUsingPost() {
+	public ClientNaiveUsingHttp() {
 		httpclient = HttpClients.createDefault();
 	}
 
@@ -83,7 +83,7 @@ MAIN
  */
 	public static void main(String[] args)   {
 		CommUtils.aboutThreads("Before start - ");
- 		new ClientNaiveUsingPost().doBasicMoves();
+ 		new ClientNaiveUsingHttp().doBasicMoves();
 		CommUtils.aboutThreads("At end - ");
 	}
 	
