@@ -387,7 +387,7 @@ Parte proattiva
 +++++++++++++++++++++++++++++++++   
 
 La parte proattiva  consiste nella continua rilevazione della distanza e nella emissione di eventi con il valore della distanza-misurata.
-Questi eventi assumo la forma che segue:
+Questi eventi assumono la forma che segue:
 
   ``msg(distance,event,sonar,OBSERVER,D,N)``
 
@@ -424,14 +424,15 @@ passo di elaborazione. Ciò per consentire l'esecuzione degli altri attori, in q
 Emissione di eventi    
 +++++++++++++++++++++++++++++++++ 
 
-Il metodo ``updateDistance`` provvede ad emettere eventi che rendoo osservabile la distanza rilevata.
+Il metodo ``updateDistance`` provvede ad emettere eventi che rendono osservabile la distanza rilevata.
 
 .. code:: Java
 
   protected void updateDistance( int d ) {
    curVal = new Distance( d );
    if( RadarSystemConfig.sonarObservable ) {
-      IApplMessage dEvent=Qak22Util.buildEvent(getName() ApplData.evDistance,""+d);
+      IApplMessage dEvent=
+        Qak22Util.buildEvent(getName() ApplData.evDistance,""+d);
       emit(dEvent);
     }	
   }	
