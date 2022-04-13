@@ -170,7 +170,7 @@ wsServer.on('connection', (ws) => {
         updateObservers( JSON.stringify(info) )
 	    return
 	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
- 	    rotating = false;
+ 	    //rotating = false;
  	    execMoveOnAllConnectedScenes(moveTodo, duration)
         const info     = { 'endmove' : false, 'move': moveStillRunning+"_halted" }
  	    moveStillRunning = ""
