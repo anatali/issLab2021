@@ -90,8 +90,10 @@ Defines how to handle POST from browser and from external controls
 //Possible moveResult : true | false | halted | notallowed
 function doMove(moveTodo, duration, res){
 	console.log('$$$ WebpageServer doMove | ' + moveTodo + " duration=" + duration + " moveHalted=" + moveHalted);
+    target           = "notarget"; 	//reset target
 	execMoveOnAllConnectedScenes(moveTodo, duration)
 	moveStillRunning=moveTodo
+
 	setTimeout(function() { //wait for the duration before sending the answer (collision or not)
         if( moveHalted ) moveResult = "halted"
         else moveResult = (target == 'notarget').toString()
@@ -101,7 +103,7 @@ function doMove(moveTodo, duration, res){
         var answer       = { 'endmove' : moveResult , 'move' : moveTodo }  //JSON obj
         const answerJson = JSON.stringify(answer)
         console.log('WebpageServer | doMove  answer= ' + answerJson  );
-        target           = "notarget"; 	//reset target
+        //target           = "notarget"; 	//reset target
         moveStillRunning = "";       //able to accept other moves
         moveHalted       = false;       //able to halt next move
          //IN ANY CASE: update all the controls / observers
@@ -217,8 +219,8 @@ function initSocketIOWebGLScene() {
 			updateCallers( JSON.stringify(obj) )
 		})
         socket.on( 'collision',     (obj) => { 
-		    console.log( "WebpageServer WebGLScene  | collision detected " + obj + " numOfSockets=" + Object.keys(sockets).length );
 		    target         = obj;
+		    console.log( "WebpageServer WebGLScene  | collision detected " + obj + " target=" + target + " numOfSockets=" + Object.keys(sockets).length );
 		    const info     = { 'collision' : true, 'move': 'unknown'}
 		    updateCallers( JSON.stringify(info) )
  		} )
