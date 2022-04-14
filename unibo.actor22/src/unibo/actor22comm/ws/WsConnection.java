@@ -38,8 +38,7 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 //Since IObservable	 
 	
     protected void updateObservers( String msg ){
-        ColorsOut.out("WsConnection | updateObservers " + observers.size() );
-        //observers.forEach( v -> v.send( msg ) );
+        //ColorsOut.out("WsConnection | updateObservers " + observers.size() );
         observers.forEach( v -> v.update(null, msg) );
     }	
 
@@ -96,12 +95,12 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 // Since extends WebSocketListener
     @Override
     public void onOpen(WebSocket webSocket, Response response  ) {
-        ColorsOut.out("WsConnection | onOpen ");
+        ColorsOut.out("WsConnection | onOpen ", ColorsOut.GREEN );
         opened = true;
     }
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason  ) {
-        ColorsOut.out("WsConnection | onClosing ");
+        ColorsOut.out("WsConnection | onClosing ", ColorsOut.GREEN );
         try {
 			close();
 		} catch (Exception e) {
@@ -110,7 +109,7 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
     }
     @Override
     public void onMessage(WebSocket webSocket, String msg  ) {
-        ColorsOut.out("WsConnection | onMessage " + msg );
+        ColorsOut.out("WsConnection | onMessage " + msg, ColorsOut.GREEN );
 //        IApplMessage m = new ApplMessage(msg);
 //        if( m.isReply() ) {
 //        	//resume waiting for reply
@@ -127,14 +126,14 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
                 .url( "ws://"+wsAddr )
                 .build() ;
         myWs = okHttpClient.newWebSocket(request, this);
-        ColorsOut.out("WsConnection | wsconnect myWs=" + myWs);
+        ColorsOut.out("WsConnection | wsconnect myWs=" + myWs, ColorsOut.GREEN );
     }
 
      
 //Since IObservable    
 	@Override
 	public void addObserver(IObserver obs) {
-        ColorsOut.out("WsConnection | addObserver " + obs);
+        ColorsOut.out("WsConnection | addObserver " + obs, ColorsOut.GREEN );
 		observers.add( obs);		
 	}
 	@Override

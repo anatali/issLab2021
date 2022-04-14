@@ -403,9 +403,9 @@ che reindirizza le informazioni a tutti i client connessi sulla  ``8091``.
 Workflow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il ``WebPageServer`` quando parte invoca ``initSocketIOWebGLScene`` che usa SocketIO (sceneSocket) per interagire con la scena,
-o meglio con tutte le scene collegate su 8090 da parte di diversi browser.
-La sceneSocket riceverà i messaggi di stato sul cambiamento di WEnv e invierà le info a tutti i callers.
+Il ``WebPageServer`` quando parte invoca ``initSocketIOWebGLScene`` che usa SocketIO (**sceneSocket**) 
+per interagire con le scene collegate su 8090 da parte di diversi browser.
+La **sceneSocket** riceverà i messaggi di stato sul cambiamento di WEnv e invierà le info a tutti i callers.
 
 Un client usa ws per inviare un comando su 8091. Risponde ``WebPageServer`` per la parte WS:
 
@@ -415,10 +415,11 @@ va alle scene del MASTER e dei MIRROR . In ``(SocketIO subscribed to EventBus)``
 
   ``socket.on( MOVE ) ->  setTimeout( () => {MOVE,eventBus.post(eventBusEvents.endmove, MOVE)}, duration )``
 
-alla terminazione della *duration* della mossa, viene inviata una notifica endmove. Prima però ci potrebbe essere un obstacle.
-In ``(SocketIO subscribed to EventBus)`` si esegue la callback (di collision / endmove ) che fa:
+alla terminazione della *duration* della mossa, viene inviata una notifica endmove. 
+Prima però ci potrebbe essere un obstacle.
+In ``(SocketIO subscribed to EventBus)`` si esegue la callback (di *collision / endmove* ) che fa:
 
-  ``socket.emit ``
+  ``socket.emit``
 
 che viene gestita dalle callback di ``initSocketIOWebGLScene`` che fa ``updateCallers`` per inviare le info a client
 

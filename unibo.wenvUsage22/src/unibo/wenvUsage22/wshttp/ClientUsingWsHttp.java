@@ -18,7 +18,8 @@ import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
-import unibo.actor22comm.wshttp.WsHttpConnection;
+import unibo.actor22comm.ws.*;
+import unibo.actor22comm.http.*;
 
 import java.net.URI;
 import java.util.Observable;
@@ -29,7 +30,7 @@ public class ClientUsingWsHttp implements IObserver{
 	private  final String HttpURL          = "http://"+localHostName+":"+port+"/api/move";
  
 
-	private Interaction2021 conn;
+	private Interaction2021 connWs, connHttp;
 	
 	protected String crilCmd(String move, int time){
 		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
@@ -44,30 +45,26 @@ public class ClientUsingWsHttp implements IObserver{
 	public String stop( )                    { return crilCmd("alarm", 10);        }
 
 	protected void doBasicMoves() throws Exception {
-		conn = WsHttpConnection.createForWs("localhost:8091" );
-		//conn = WsHttpConnection.createForHttp("localhost:8090" );
-		((WsHttpConnection)conn).addObserver(this);
-		conn.forward( moveForward(2300) );
+		connWs   = WsConnection.create("localhost:8091" );
+		connHttp = HttpConnection.create("localhost:8090" );
+		((WsConnection)connWs).addObserver(this);
+		connHttp.forward( moveForward(1000) );
+		//connWs.forward( moveForward(1000) );
 	}
  
 	protected void doBasicMovesTest() throws Exception {
-		conn = WsHttpConnection.createForWs("localhost:8091" );
-		//conn = WsHttpConnection.createForHttp("localhost:8090" );
-		
-		
-		((WsHttpConnection)conn).addObserver(this);
-		
+ 		
 			ColorsOut.out("STARTING doBasicMoves ... ");
 			boolean endmove = false;
 			
-			conn.forward( turnRight(1300) );
+			connWs.forward( turnRight(1300) );
  			CommUtils.delay(500);
-			conn.forward( stop() );
-			conn.forward( turnLeft(300) );
+			connWs.forward( stop() );
+			connWs.forward( turnLeft(300) );
  			CommUtils.delay(200);
-			conn.forward( stop() );
+			connWs.forward( stop() );
 			//CommUtils.delay(500);
-			conn.forward( moveForward(500) );
+			connWs.forward( moveForward(500) );
 			
 //			endmove = requestSynch( turnLeft(300) );
 //			ColorsOut.out("turnLeft endmove=" + endmove);
@@ -79,7 +76,7 @@ public class ClientUsingWsHttp implements IObserver{
 //			ColorsOut.out("moveForward endmove=" + endmove);
 //			endmove = requestSynch( moveBackward(800) );
 			CommUtils.delay(1500);
-			conn.close();
+			connWs.close();
  
 	}
 /*
@@ -93,9 +90,9 @@ MAIN
 	
 	@Override
 	public void update(Observable source, Object data) {
-		ColorsOut.out("ClientUsingWsHttp update/2 receives:" + data);
-		JSONObject d = new JSONObject(""+data);
-		ColorsOut.outappl("ClientUsingWsHttp update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
+		ColorsOut.outappl("ClientUsingWsHttp update/2 receives:" + data, ColorsOut.MAGENTA);
+//		JSONObject d = new JSONObject(""+data);
+//		ColorsOut.outappl("ClientUsingWsHttp update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
 		
 	}
 	@Override

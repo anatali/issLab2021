@@ -6,21 +6,12 @@ TODO. eliminate the communication details from this level
 ===============================================================
 */
 package unibo.wenvUsage22.wshttp;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.http.*;
-import unibo.actor22comm.ws.*;
-import java.net.URI;
 import java.util.Observable;
 
 public class ClientUsingHttp implements IObserver{
@@ -44,7 +35,7 @@ public class ClientUsingHttp implements IObserver{
 	public String stop( )                    { return crilCmd("alarm", 10);        }
 
 	protected void doBasicMoves() throws Exception {
-		int duration = 2300;
+		int duration = 1000;
  		conn = HttpConnection.create("localhost:8090" );
  		String answer = conn.request( moveForward(duration) ); //risposta dopo duration
 		ColorsOut.out("answer= " + answer);
@@ -57,12 +48,12 @@ public class ClientUsingHttp implements IObserver{
 			ColorsOut.out("STARTING doBasicMoves ... ");
 			boolean endmove = false;
 			
-			conn.forward( turnRight(1300) );
- 			CommUtils.delay(500);
-			conn.forward( stop() );
-			conn.forward( turnLeft(300) );
- 			CommUtils.delay(200);
-			conn.forward( stop() );
+//			conn.forward( turnRight(1300) );
+// 			CommUtils.delay(500);
+//			conn.forward( stop() );
+//			conn.forward( turnLeft(300) );
+// 			CommUtils.delay(200);
+//			conn.forward( stop() );
 			//CommUtils.delay(500);
 			conn.forward( moveForward(500) );
 			

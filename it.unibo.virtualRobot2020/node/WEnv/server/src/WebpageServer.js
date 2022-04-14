@@ -193,7 +193,7 @@ Move activated in asynch mode => no answer is needed
 function doMoveAsynch(moveTodo, duration){
     console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
     if( moveTodo != "alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
-    else{ moveStillRunning = "" }
+    else{ moveStillRunning = ""; target="notarget"; }
     execMoveOnAllConnectedScenes(moveTodo, duration)
 }
 
@@ -218,14 +218,16 @@ function initSocketIOWebGLScene() {
 		})
         socket.on( 'collision',     (obj) => { 
 		    console.log( "WebpageServer WebGLScene  | collision detected " + obj + " numOfSockets=" + Object.keys(sockets).length );
-		    target = obj;
+		    target         = obj;
 		    const info     = { 'collision' : true, 'move': 'unknown'}
 		    updateCallers( JSON.stringify(info) )
  		} )
         socket.on('endmove', (obj)  => {  //April2022
-		    console.log( "WebpageServer WebGLScene  | endmove  " + obj    );
+		    console.log( "WebpageServer WebGLScene  | endmove  " + obj + " target="  + target );
             moveStillRunning = ""
   		    const info     = { 'endmove' : true, 'move': obj}
+  		    //Invio update solo se non c'è stato un ostacolo
+  		    if( target == "notarget" )
   		    updateCallers( JSON.stringify(info) )
          })
        socket.on( 'disconnect',     () => {
