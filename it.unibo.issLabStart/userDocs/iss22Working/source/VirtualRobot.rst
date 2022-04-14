@@ -426,6 +426,10 @@ che viene gestita dalle callback di ``initSocketIOWebGLScene`` che fa ``updateCa
 
 
 
+
+
+
+
 ++++++++++++++++++++++++++++++++++++
 WEnv come immagine docker
 ++++++++++++++++++++++++++++++++++++
@@ -583,11 +587,20 @@ Il programma una le WebSocket JavaScript per interagire con WEnv attraverso una 
  
 
 
--------------------------------------------------
-xxx
--------------------------------------------------
 
- 
+++++++++++++++++++++++++++++++++++++++++++++
+Casi di interazione
+++++++++++++++++++++++++++++++++++++++++++++
+
+#. Invio di comandi asincroni su WS mediante programma Java o mediante WebPage
+#. Invio di comandi sincroni su HTTP mediante programma Java o mediante WebPage
+#. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
+
+Attivo una mossa che ha una durata.
+
+Al termine della durata SocketIO invia un msg endmove che viene gestito alla linea 230 di WebPageServer
+Nel frattempo può essere successo 'di tutto' => WebPageServer deve tenere traccia dello stato di ogni mossa, dando a 
+SocketIO l'id della mossa, così che la linea 230 può capire se scartare la info o se propagarla
 
 Un programma di esempio di uso di WEnv, quale :ref:`Interazioni con HTTP` e :ref:`Interazioni mediante WS` realizza 
 un sistema softwwre che:

@@ -33,17 +33,17 @@ public class ClientUsingWs implements IObserver{
 	protected void doBasicMovesTest() throws Exception {
 		conn = WsConnection.create("localhost:8091" );
 		((WsConnection)conn).addObserver(this);
-		conn.forward( moveForward(2300) );
+		//conn.forward( moveForward(2300) );
 	}
  
 	protected void doBasicMoves() throws Exception {
 		conn = WsConnection.create("localhost:8091" );
 		((WsConnection)conn).addObserver(this);
  
-		conn.forward( turnLeft( 800  ) );
-		conn.forward( stop( ) );
-//    	Thread.sleep( 500 );
-		conn.forward( turnRight( 400 ) );
+ 		conn.forward( turnLeft( 800  ) );
+//		conn.forward( stop( ) );
+////    	Thread.sleep( 500 );
+//		conn.forward( turnRight( 400 ) );
 
 //			conn.forward( turnRight(300) );
 // 			CommUtils.delay(500);
@@ -54,16 +54,16 @@ public class ClientUsingWs implements IObserver{
 //			//CommUtils.delay(500);
 //			conn.forward( moveForward(1000) );
  
-			CommUtils.delay(1500);
-			conn.close();
- 
+//			CommUtils.delay(1500);
+//			conn.close();
+// 
 	}
 	
 	@Override
 	public void update(Observable source, Object data) {
 		ColorsOut.out("ClientUsingWs update/2 receives:" + data);
-		JSONObject d = new JSONObject(""+data);
-		ColorsOut.outappl("ClientUsingWs update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
+//		JSONObject d = new JSONObject(""+data);
+//		ColorsOut.outappl("ClientUsingWs update/2 collision=" + d.has("collision"), ColorsOut.MAGENTA);
 		
 	}
 	@Override

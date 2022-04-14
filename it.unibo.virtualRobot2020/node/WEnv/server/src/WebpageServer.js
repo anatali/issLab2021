@@ -23,6 +23,10 @@ var moveStillRunning = ""
 var moveHalted       = false
 var target           = "notarget"   //the current virtual object that collides
 
+//const runningMoves      = {}
+let runningMovesIndex   = -1
+const moveMap = new Map();
+
 app.use(express.static('./../../WebGLScene'))
 
 /*
@@ -115,7 +119,7 @@ function doMove(moveTodo, duration, res){
                 res.write( answerJson  );
                 res.end();
         }
-    }, duration);
+    }, duration+10); //+10 since there is also an emit in SocketIO
 
 
 }
@@ -123,8 +127,12 @@ function doMove(moveTodo, duration, res){
 
 //Updates the mirrors
 function execMoveOnAllConnectedScenes(moveTodo, moveTime){
-    console.log('$$$ WebpageServer doMove |  execMoveOnAllConnectedScenes '  + moveTodo );
-	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime) );
+    runningMovesIndex++
+    console.log('$$$ WebpageServer doMove |  execMoveOnAllConnectedScenes '  + moveTodo + " index=" + runningMovesIndex);
+   // runningMoves[runningMovesIndex] = moveTodo;
+    moveMap.set(runningMovesIndex, moveTodo)
+
+	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime, runningMovesIndex) );
 }
 
 //Updates the controls and the observers (Jan 2021)
@@ -169,6 +177,9 @@ wsServer.on('connection', (ws) => {
  	    execMoveOnAllConnectedScenes(moveTodo, duration)
         const info     = { 'endmove' : false, 'move': moveStillRunning+"_halted" }
  	    moveStillRunning = ""
+
+       // runningMoves[runningMovesIndex]="interrupted"
+        moveMap.set(runningMovesIndex,"interrupted")
         updateCallers( JSON.stringify(info) )
 	    return
 	}else doMoveAsynch(moveTodo, duration)
@@ -220,18 +231,35 @@ function initSocketIOWebGLScene() {
 		})
         socket.on( 'collision',     (obj) => { 
 		    target         = obj;
-		    console.log( "WebpageServer WebGLScene  | collision detected " + obj + " target=" + target + " numOfSockets=" + Object.keys(sockets).length );
-		    const info     = { 'collision' : true, 'move': 'unknown'}
+		    moveStillRunning = "" //indica SUBITO che la mossa corrente non è più running
+		    moveMap[runningMovesIndex]="interrupted"
+		    console.log( "WebpageServer WebGLScene  | collision detected " + obj
+		            + " target=" + target + " numOfSockets=" + Object.keys(sockets).length );
+		    const info     = { 'collision' : true, 'move': target}
 		    updateCallers( JSON.stringify(info) )
+		    target         = "notarget";  //indica  una collisione
+		   // runningMoves[runningMovesIndex]="interrupted"
+		    //NON CI POSSONO ESSERE due mosse running
  		} )
         socket.on('endmove', (obj)  => {  //April2022
-		    console.log( "WebpageServer WebGLScene  | endmove  " + obj + " target="  + target );
+		    console.log( "WebpageServer WebGLScene  | endmove  PRE " + obj + " moveMap.size=" + moveMap.size);
             moveStillRunning = ""
   		    const info     = { 'endmove' : true, 'move': obj}
-  		    //Invio update solo se non c'è stato un ostacolo
-  		    if( target == "notarget" )
-  		    updateCallers( JSON.stringify(info) )
+  		    //April2022: endmove mi deve dare l'index della mossa in obj
+  		    //Invio update solo se non c'è stato un ostacolo o la mossa non è stata halted
+  		    //if( target == "notarget" ) {
+  		    //if( ! runningMoves[obj]=="interrupted" ){
+  		    if( ! moveMap[obj]=="interrupted" ){
+  		        updateCallers( JSON.stringify(info) )
+   		    }//else{
+   		        moveMap.delete(obj)
+   		        //runningMoves[runningMovesIndex]="ended"  //TODO eliminare la mossa dal vettore
+ 		        console.log( "WebpageServer WebGLScene  | endmove  POST " + obj + " moveMap.size=" + moveMap.size  );
+ 		        showMoveMap()
+  		    //}
          })
+
+
        socket.on( 'disconnect',     () => {
         		delete sockets[key];
           		socketIndex--;
@@ -241,6 +269,9 @@ function initSocketIOWebGLScene() {
     })
 }//initSocketIOWebGLScene
 
+function showMoveMap(){
+    moveMap.forEach( (key,v) => console.log("map key=" + key + " v="+v) )
+}
 function startServer() {
     console.log("WebpageServer  | startServer" )
     initSocketIOWebGLScene()

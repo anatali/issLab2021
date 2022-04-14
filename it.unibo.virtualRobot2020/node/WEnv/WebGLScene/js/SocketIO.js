@@ -9,11 +9,10 @@ import SceneManager from './SceneManager.js'                                    
 export default (onKeyUp, onKeyDown, myonKeyDown) => {
     const socket = io()
         
-    socket.on( 'moveForward',  duration => {console.log("moveForward " + duration);
-                                    moveForward(duration)} )
-    socket.on( 'moveBackward', duration => moveBackward(duration) )
-    socket.on( 'turnRight',    duration => turnRight(duration) )
-    socket.on( 'turnLeft',     duration => turnLeft(duration) )
+    socket.on( 'moveForward',  (duration, moveindex)  => {moveForward(duration,moveindex)})
+    socket.on( 'moveBackward', (duration, moveindex) => moveBackward(duration,moveindex) )
+    socket.on( 'turnRight',    (duration, moveindex) => turnRight(duration,moveindex) )
+    socket.on( 'turnLeft',     (duration, moveindex) => { turnLeft(duration,moveindex) })
     socket.on( 'alarm',        stopMoving    )
     socket.on( 'remove',       name => remove( name )  )   //DEC 2019  See WebpageServer.js
     
@@ -47,35 +46,41 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     let moveForwardTimeoutId
     let moveBackwardTimeoutId
 
-    function moveForward(duration) {
+    function moveForward(duration,moveindex) {
         clearTimeout(moveForwardTimeoutId)
         onKeyDown( { keyCode: keycodes.W },5000,true )
         if(duration >= 0) moveForwardTimeoutId = setTimeout( () => {
         							onKeyUp( { keyCode: keycodes.W } );
         							//NON emetto segnali al termine della mossa perchè
         							//ci potrebbe essere stato un ostacolo
-          							eventBus.post(eventBusEvents.endmove, "forward")
+          							//eventBus.post(eventBusEvents.endmove, "moveForward-base-"+moveindex)
+          							eventBus.post(eventBusEvents.endmove, moveindex)
          							//console.log("SocketIO: moveForward done");
          						}, duration )
     }
 
-    function moveBackward(duration) {
+    function moveBackward(duration,moveindex) {
         clearTimeout(moveBackwardTimeoutId)
         onKeyDown( { keyCode: keycodes.S },5000,true )
         if(duration >= 0) moveBackwardTimeoutId = setTimeout( () => {
         							onKeyUp( { keyCode: keycodes.S } )
-        							eventBus.post(eventBusEvents.endmove, "backward")
-        							}, duration )
+        							//eventBus.post(eventBusEvents.endmove, "moveBackward-base-"+moveindex)
+        							eventBus.post(eventBusEvents.endmove,  moveindex)
+        						}, duration )
     }
 
-    function turnRight(duration) {
+    function turnRight(duration,moveindex) {
 	console.log("turnRight from SocketIO "  )
 //induce il movimento simulando onKeyDown 
         onKeyDown( { keyCode: keycodes.D }, duration, true )	//remote=true onKeyDown is in SceneManager
+        eventBus.post(eventBusEvents.endmove,  moveindex)
     }
 
-    function turnLeft(duration) {
+    function turnLeft(duration,moveindex) {
+    	console.log("turnLeft from SocketIO moveindex=" + moveindex )
         onKeyDown( { keyCode: keycodes.A }, duration, true )
+        eventBus.post(eventBusEvents.endmove,  moveindex)
+
     }
 
     function stopMoving() {
