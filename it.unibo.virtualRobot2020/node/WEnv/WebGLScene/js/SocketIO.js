@@ -9,7 +9,7 @@ import SceneManager from './SceneManager.js'                                    
 export default (onKeyUp, onKeyDown, myonKeyDown) => {
     const socket = io()
         
-    socket.on( 'moveForward',  (duration, moveindex)  => {moveForward(duration,moveindex)})
+    socket.on( 'moveForward',  (duration, moveindex) => {moveForward(duration,moveindex)})
     socket.on( 'moveBackward', (duration, moveindex) => moveBackward(duration,moveindex) )
     socket.on( 'turnRight',    (duration, moveindex) => turnRight(duration,moveindex) )
     socket.on( 'turnLeft',     (duration, moveindex) => { turnLeft(duration,moveindex) })
@@ -70,15 +70,15 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     }
 
     function turnRight(duration,moveindex) {
-	console.log("turnRight from SocketIO "  )
+	console.log("turnRight from SocketIO moveindex="+moveindex  )
 //induce il movimento simulando onKeyDown 
-        onKeyDown( { keyCode: keycodes.D }, duration, true )	//remote=true onKeyDown is in SceneManager
+        onKeyDown( { keyCode: keycodes.D }, duration, moveindex )	//remote=true onKeyDown is in PlayerControl
         eventBus.post(eventBusEvents.endmove,  moveindex)
     }
 
     function turnLeft(duration,moveindex) {
     	console.log("turnLeft from SocketIO moveindex=" + moveindex )
-        onKeyDown( { keyCode: keycodes.A }, duration, true )
+        onKeyDown( { keyCode: keycodes.A }, duration, moveindex )
         eventBus.post(eventBusEvents.endmove,  moveindex)
 
     }
@@ -87,8 +87,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     console.log("stopMoving "  )
        onKeyUp( { keyCode: keycodes.W } )
        onKeyUp( { keyCode: keycodes.S } )
-       onKeyDown( { keyCode: keycodes.Z }, 0, true )
-        //stopRotating()  //from SceneManager
+       onKeyDown( { keyCode: keycodes.Z } )   //per fermare rotating in PlayControl (38)
     }
     
 //DEC 2019    

@@ -5,11 +5,11 @@ WebpageServer.js
 ==========================================================================
 */
 
-const app       = require('express')()
-const express   = require('express')
-const hhtpSrv   = require('http').Server(app)
-const socketIO  = require('socket.io')(hhtpSrv)     //interaction with WebGLScene
-const WebSocket = require('ws');                    //interaction with external clients
+const app          = require('express')()
+const express      = require('express')
+const hhtpSrv      = require('http').Server(app)
+const sceneSocket  = require('socket.io')(hhtpSrv)     //interaction with WebGLScene
+const WebSocket    = require('ws');                    //interaction with external clients
 
 const sockets       = {}    //interaction with WebGLScene
 const wssockets     = {}    //interaction with clients
@@ -19,13 +19,16 @@ const serverPort    = 8090
 
 //STATE variables used by cmd handling on wssockets (see initWs)
 var alreadyConnected = false
-var moveStillRunning = ""
+//var moveStillRunning = ""
 var moveHalted       = false
-var target           = "notarget"   //the current virtual object that collides
+//var target           = "notarget"   //the current virtual object that collides
 
 //const runningMoves      = {}
 let runningMovesIndex   = -1
-const moveMap = new Map();
+const moveMap   = new Map();
+var postResult  = null
+
+
 
 app.use(express.static('./../../WebGLScene'))
 
@@ -54,18 +57,19 @@ Defines how to handle POST from browser and from external controls
 	    req.on('data', function (chunk) { data += chunk; }); //accumulate data sent by POST
             req.on('end', function () {	//elaborate data received
 			//{ robotmove: move, time:duration } - robotmove: turnLeft | turnRight | ...
-			console.log('POSTTT /api/move data ' + data  );
+			console.log('POSTTT /api/move data ' + data + " "  + moveMap[runningMovesIndex] );
 			var jsonData = JSON.parse(data)
      		var moveTodo = jsonData.robotmove
      		var duration = jsonData.time
      		if( moveTodo=="alarm"){ //do the halt move
- 	            //execMoveOnAllConnectedScenes(moveTodo, duration) //JULY2021
- 	            Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, duration) );
- 	            if( moveStillRunning.length>0 && moveStillRunning.includes("_Asynch")){
+ 	            execMoveOnAllConnectedScenes(moveTodo, duration) //JULY2021 April 2002
+ 	            //Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, duration) );  //April 2002
+ /*	            //if( moveStillRunning.length>0 && moveStillRunning.includes("_Asynch")){
+ 	            if( moveMap[runningMovesIndex] != "interrupted" )
  	                console.log('$$$ WebpageServer /api/move | ' + moveTodo + " while doing " + moveStillRunning );
  	                moveStillRunning = ""
-                    //moveHalted       = true
-  	            }
+                    moveMap[runningMovesIndex] = "interrupted"
+  	            }*/
                 if( res != null ){
                     res.writeHead(200, { 'Content-Type': 'text/json' });
                     res.statusCode=200
@@ -74,8 +78,12 @@ Defines how to handle POST from browser and from external controls
                     res.write( answerJson  );
                     res.end();
                 }
-            }//the move is not halt
-			else if( moveStillRunning.length>0 && ! moveStillRunning.includes("_Asynch") ){
+                return
+            }//the move is not alarm
+			  //if( moveStillRunning.length>0 && ! moveStillRunning.includes("_Asynch") ){
+			console.log(" runningMovesIndex=" + runningMovesIndex + " " + moveMap[runningMovesIndex] );
+
+			if( moveMap[runningMovesIndex] != undefined && moveMap[runningMovesIndex] != "interrupted" ){
 			//the move DOES NOT 'interrupt' a move activated in asynch way
 	            const answer  = { 'endmove' : "notallowed" , 'move' : moveTodo }
 	            updateCallers( JSON.stringify(answer) )
@@ -94,11 +102,19 @@ Defines how to handle POST from browser and from external controls
 //Possible moveResult : true | false | halted | notallowed
 function doMove(moveTodo, duration, res){
 	console.log('$$$ WebpageServer doMove | ' + moveTodo + " duration=" + duration + " moveHalted=" + moveHalted);
-    target           = "notarget"; 	//reset target
+postResult = res
+    //target           = "notarget"; 	//reset target
+    /*
+    if( moveTodo != "alarm"){
+        runningMovesIndex++
+        moveMap.set(runningMovesIndex, moveTodo)
+    }*/
 	execMoveOnAllConnectedScenes(moveTodo, duration)
-	moveStillRunning=moveTodo
-
+	//moveStillRunning=moveTodo
+/*
 	setTimeout(function() { //wait for the duration before sending the answer (collision or not)
+	//dovrebbe ricevere anche endmove alla 248 => moveMap at runningMovesIndex is empty
+	//map[runningMovesIndex]
         if( moveHalted ) moveResult = "halted"
         else moveResult = (target == 'notarget').toString()
  	    console.log('$$$ WebpageServer endMove | ' + moveTodo +
@@ -110,7 +126,7 @@ function doMove(moveTodo, duration, res){
         //target           = "notarget"; 	//reset target
         moveStillRunning = "";       //able to accept other moves
         moveHalted       = false;       //able to halt next move
-         //IN ANY CASE: update all the controls / observers
+         //IN ANY CASE: update all the controls / observers | LO FA GIA ws?
          updateCallers(answerJson)
          if( res != null ){
              res.writeHead(200, { 'Content-Type': 'text/json' });
@@ -119,19 +135,19 @@ function doMove(moveTodo, duration, res){
                 res.write( answerJson  );
                 res.end();
         }
-    }, duration+10); //+10 since there is also an emit in SocketIO
-
-
-}
+    }, duration+10); //+10 since there is also an emit in sceneSocket
+ */
+ }
 
 
 //Updates the mirrors
 function execMoveOnAllConnectedScenes(moveTodo, moveTime){
-    runningMovesIndex++
-    console.log('$$$ WebpageServer doMove |  execMoveOnAllConnectedScenes '  + moveTodo + " index=" + runningMovesIndex);
-   // runningMoves[runningMovesIndex] = moveTodo;
-    moveMap.set(runningMovesIndex, moveTodo)
-
+    if( moveTodo != "alarm") {
+        runningMovesIndex++
+        console.log('$$$ WebpageServer doMove |  execMoveOnAllConnectedScenes '  + moveTodo + " index=" + runningMovesIndex);
+       // runningMoves[runningMovesIndex] = moveTodo;
+        moveMap.set(runningMovesIndex, moveTodo)
+    }
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime, runningMovesIndex) );
 }
 
@@ -162,24 +178,23 @@ wsServer.on('connection', (ws) => {
   wssockets[key] = ws
 
   ws.on('message', msg => {
-    console.log("       $$$ WebpageServer wssocket | " +
-        wssocketIndex  + " receives: " + msg + " moveStillRunning=" + moveStillRunning)
 	var moveTodo = JSON.parse(msg).robotmove
 	var duration = JSON.parse(msg).time
-
-	if( moveStillRunning.length>0 && moveTodo != "alarm"){
-        console.log("       $$$ WebpageServer wssocket | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running:" + moveStillRunning)
+    var curMove = moveMap.get(runningMovesIndex)
+    console.log("       $$$ WebpageServer wssocket=" + wssocketIndex   + " receives: "
+        + msg  + " curMove="+ curMove )
+	//if( moveStillRunning.length>0 && moveTodo != "alarm"){
+	if( curMove != undefined && curMove != "interrupted" && moveTodo != "alarm"){
+        console.log("$$$ WebpageServer ws | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running:" + curMove)
         const info     = { 'endmove' : false, 'move': moveTodo+"_notallowed" }
         updateCallers( JSON.stringify(info) )
 	    return
-	}else if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
- 	    //rotating = false;
- 	    execMoveOnAllConnectedScenes(moveTodo, duration)
-        const info     = { 'endmove' : false, 'move': moveStillRunning+"_halted" }
- 	    moveStillRunning = ""
-
-       // runningMoves[runningMovesIndex]="interrupted"
+	}else //if( moveStillRunning.length>0 && moveTodo == "alarm" ){  //the alarm move could also be sent via HTTP
+ 	    if( curMove != undefined && curMove != "interrupted" && moveTodo == "alarm" ){
         moveMap.set(runningMovesIndex,"interrupted")
+	    execMoveOnAllConnectedScenes(moveTodo, duration)
+        const info     = { 'endmove' : false, 'move': curMove+"_halted" }
+ 	    //moveStillRunning = ""
         updateCallers( JSON.stringify(info) )
 	    return
 	}else doMoveAsynch(moveTodo, duration)
@@ -201,12 +216,12 @@ wsServer.on('connection', (ws) => {
 }//initWs
 
 /*
-Move activated in asynch mode => no answer is needed
+Move activated in asynch mode => no answer is needed, ONLY updates
 */
 function doMoveAsynch(moveTodo, duration){
     console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
-    if( moveTodo != "alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
-    else{ moveStillRunning = ""; target="notarget"; }
+//    if( moveTodo != "alarm") moveStillRunning = moveTodo+"_Asynch"  //INFO: the alarm move could also be sent via HTTP
+//    else{ moveStillRunning = ""; target="notarget"; }
     execMoveOnAllConnectedScenes(moveTodo, duration)
 }
 
@@ -217,7 +232,7 @@ Interact with the MASTER (the mirrors do not send any info)
 */
 function initSocketIOWebGLScene() {
 	console.log("WebpageServer WebGLScene |  socketIndex="+socketIndex)
-    socketIO.on('connection', socket => {
+    sceneSocket.on('connection', socket => {
         socketIndex++
         console.log("WebpageServer WebGLScene  | connection socketIndex="+socketIndex)
         const key    = socketIndex
@@ -229,34 +244,48 @@ function initSocketIOWebGLScene() {
 			console.log(obj) 
 			updateCallers( JSON.stringify(obj) )
 		})
-        socket.on( 'collision',     (obj) => { 
-		    target         = obj;
-		    moveStillRunning = "" //indica SUBITO che la mossa corrente non è più running
-		    moveMap[runningMovesIndex]="interrupted"
+        socket.on( 'collision',     (obj) => {
+		    //target         = obj;
+		    //moveStillRunning = "" //indica SUBITO che la mossa corrente non è più running
+
+		    var move =   moveMap.get(runningMovesIndex)
 		    console.log( "WebpageServer WebGLScene  | collision detected " + obj
-		            + " target=" + target + " numOfSockets=" + Object.keys(sockets).length );
-		    const info     = { 'collision' : true, 'move': target}
+		            + " runningMovesIndex=" + runningMovesIndex
+		            + " move="+ move
+		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
+
+		    const info     = {  'collision' : move, 'target': obj}
+		    moveMap.set(runningMovesIndex,"interrupted")
 		    updateCallers( JSON.stringify(info) )
-		    target         = "notarget";  //indica  una collisione
-		   // runningMoves[runningMovesIndex]="interrupted"
-		    //NON CI POSSONO ESSERE due mosse running
+		    //target         = "notarget";  //indica  una collisione
+ 		    answerToPost( JSON.stringify(info) );
  		} )
-        socket.on('endmove', (obj)  => {  //April2022
-		    console.log( "WebpageServer WebGLScene  | endmove  PRE " + obj + " moveMap.size=" + moveMap.size);
-            moveStillRunning = ""
-  		    const info     = { 'endmove' : true, 'move': obj}
-  		    //April2022: endmove mi deve dare l'index della mossa in obj
-  		    //Invio update solo se non c'è stato un ostacolo o la mossa non è stata halted
-  		    //if( target == "notarget" ) {
-  		    //if( ! runningMoves[obj]=="interrupted" ){
-  		    if( ! moveMap[obj]=="interrupted" ){
-  		        updateCallers( JSON.stringify(info) )
-   		    }//else{
-   		        moveMap.delete(obj)
-   		        //runningMoves[runningMovesIndex]="ended"  //TODO eliminare la mossa dal vettore
- 		        console.log( "WebpageServer WebGLScene  | endmove  POST " + obj + " moveMap.size=" + moveMap.size  );
- 		        showMoveMap()
-  		    //}
+        socket.on('endmove', (moveIndex)  => {  //April2022
+		    //console.log( "WebpageServer WebGLScene  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
+            //moveStillRunning = ""
+     		var curMove     = moveMap.get(moveIndex)   //nome della mossa o interrupted
+     		var answer       = { 'endmove' : true , 'move' : curMove }
+            const answerJson = JSON.stringify(answer)
+ 		    //const info     = { 'endmove' : true, 'move': moveIndex}
+  		    //April2022: endmove mi deve dare l'index della mossa in moveIndex
+  		    if( curMove != "interrupted" ){
+  		        updateCallers( answerJson )
+   		    }/*
+   		    if( postResult != null ){
+   		        var moveTodo     = moveMap[moveIndex]
+   		        var answer       = { 'endmove' : moveResult , 'move' : moveTodo }
+                const answerJson = JSON.stringify(answer)
+                console.log('WebpageServer | doMove  answer= ' + answerJson  );
+                  postResult.writeHead(200, { 'Content-Type': 'text/json' });
+                  postResult.statusCode=200
+                  postResult.write( answerJson  );
+                  postResult.end();
+   		        postResult = null;
+   		    }*/
+  		    answerToPost( answerJson );
+   	        moveMap.delete(moveIndex)
+  		    console.log( "WebpageServer WebGLScene  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+ 		    showMoveMap()
          })
 
 
@@ -269,8 +298,21 @@ function initSocketIOWebGLScene() {
     })
 }//initSocketIOWebGLScene
 
+
+function answerToPost(  answerJson ){
+   		    if( postResult != null ){
+                console.log('WebpageServer | answerToPost  answer= ' + answerJson  );
+                  postResult.writeHead(200, { 'Content-Type': 'text/json' });
+                  postResult.statusCode=200
+                  postResult.write( answerJson  );
+                  postResult.end();
+   		        postResult = null;
+   		    }
+}
+
+
 function showMoveMap(){
-    moveMap.forEach( (key,v) => console.log("map key=" + key + " v="+v) )
+    moveMap.forEach( (key,v) => console.log("WebPageserver map key=" + key + " v="+v) )
 }
 function startServer() {
     console.log("WebpageServer  | startServer" )

@@ -204,6 +204,10 @@ Schema delle interazioni-base con WEnv
     :align: center 
     :width: 80%
 
+++++++++++++++++++++++++++++++++++++++++++++
+Architettura di WEnv
+++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 ++++++++++++++++++++++++++++++++
@@ -360,9 +364,9 @@ Dal punto di vista 'applicativo', osserviamo che:
 
 
 
-++++++++++++++++++++++++++++++++
+--------------------------------------
 Note di implementazione
-++++++++++++++++++++++++++++++++
+--------------------------------------
 
 L'implementazione di WEnv si basa su due componenti principali: 
 
@@ -396,14 +400,14 @@ Quando ``WebvGLScene`` rileva una collisione tra il robot virtuale e un ostacolo
 invoca l'utilità ``eventBus.js`` per 'emettere un evento collisione' 
 oltre lo **sceneSocket**. 
 
-Questo evento è gestito da un apposito handler (vedi ``initSocketIOWebGLScene`` in ``WebpageServer.js``), 
+Questo evento è gestito da un apposito handler (vedi ``init``sceneSocket``WebGLScene`` in ``WebpageServer.js``), 
 che reindirizza le informazioni a tutti i client connessi sulla  ``8091``.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++
 Workflow
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+++++++++++++++++++++++++++++++++
 
-Il ``WebPageServer`` quando parte invoca ``initSocketIOWebGLScene`` che usa SocketIO (**sceneSocket**) 
+Il ``WebPageServer`` quando parte invoca ``init``sceneSocket``WebGLScene`` che usa ``sceneSocket`` (**sceneSocket**) 
 per interagire con le scene collegate su 8090 da parte di diversi browser.
 La **sceneSocket** riceverà i messaggi di stato sul cambiamento di WEnv e invierà le info a tutti i callers.
 
@@ -411,24 +415,31 @@ Un client usa ws per inviare un comando su 8091. Risponde ``WebPageServer`` per 
 
   ``WebPageServer -> ws.on('message' -> doMoveAsynch -> execMoveOnAllConnectedScenes -> sceneSocket.emit``
 
-va alle scene del MASTER e dei MIRROR . In ``(SocketIO subscribed to EventBus)`` si esegue:
+va alle scene del MASTER e dei MIRROR . In ``(``sceneSocket`` subscribed to EventBus)`` si esegue:
 
   ``socket.on( MOVE ) ->  setTimeout( () => {MOVE,eventBus.post(eventBusEvents.endmove, MOVE)}, duration )``
 
 alla terminazione della *duration* della mossa, viene inviata una notifica endmove. 
 Prima però ci potrebbe essere un obstacle.
-In ``(SocketIO subscribed to EventBus)`` si esegue la callback (di *collision / endmove* ) che fa:
+In ``(``sceneSocket`` subscribed to EventBus)`` si esegue la callback (di *collision / endmove* ) che fa:
 
   ``socket.emit``
 
-che viene gestita dalle callback di ``initSocketIOWebGLScene`` che fa ``updateCallers`` per inviare le info a client
+che viene gestita dalle callback di ``init``sceneSocket``WebGLScene`` che fa ``updateCallers`` per inviare le info a client
 
+++++++++++++++++++++++++++++++++++++
+Interaction2021 per HTTP e WS
+++++++++++++++++++++++++++++++++++++
 
+Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
+per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
+realizzare la nostra :blue:`astrazione  connessione`.
 
+Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
+interazioni con il VirtualRobot:
 
-
-
-
+- ClientNaiveUsingHttp
+- ClientNaiveUsingWs
 
 ++++++++++++++++++++++++++++++++++++
 WEnv come immagine docker
@@ -545,24 +556,7 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
     docker-compose -f virtualRobotOnly3.0.yaml  up   //per attivare
     docker-compose -f virtualRobotOnly3.0.yaml  down //per terminare
 
------------------------------------------------------------------------
-Interaction2021 per HTTP e WS
------------------------------------------------------------------------
 
-Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
-per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
-realizzare la nostra :blue:`astrazione  connessione`.
-
-Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
-interazioni con il VirtualRobot:
-
-- ClientNaiveUsingHttp
-- ClientNaiveUsingWs
-
-
-
-
- 
 
 
 -------------------------------------------------
@@ -598,9 +592,9 @@ Casi di interazione
 
 Attivo una mossa che ha una durata.
 
-Al termine della durata SocketIO invia un msg endmove che viene gestito alla linea 230 di WebPageServer
+Al termine della durata ``sceneSocket`` invia un msg endmove che viene gestito alla linea 230 di WebPageServer
 Nel frattempo può essere successo 'di tutto' => WebPageServer deve tenere traccia dello stato di ogni mossa, dando a 
-SocketIO l'id della mossa, così che la linea 230 può capire se scartare la info o se propagarla
+``sceneSocket`` l'id della mossa, così che la linea 230 può capire se scartare la info o se propagarla
 
 Un programma di esempio di uso di WEnv, quale :ref:`Interazioni con HTTP` e :ref:`Interazioni mediante WS` realizza 
 un sistema softwwre che:
