@@ -196,18 +196,13 @@ Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi dive
 - come messaggi HTTP POST inviati sulla porta **8090**
 - come messaggi inviati su un websocket alla porta **8091**
 
-++++++++++++++++++++++++++++++++++++++++++++
-Schema delle interazioni-base con WEnv
-++++++++++++++++++++++++++++++++++++++++++++
+.. ++++++++++++++++++++++++++++++++++++++++++++
+.. Schema delle interazioni-base con WEnv
+.. ++++++++++++++++++++++++++++++++++++++++++++
 
 .. image::  ./_static/img/VirtualRobot/logicInteraction.PNG
     :align: center 
     :width: 80%
-
-++++++++++++++++++++++++++++++++++++++++++++
-Architettura di WEnv
-++++++++++++++++++++++++++++++++++++++++++++
-
 
 
 ++++++++++++++++++++++++++++++++
@@ -231,6 +226,75 @@ Il significato dei valori di ``RESULT`` è il seguente:
 - **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
 
 
+++++++++++++++++++++++++++++++++
+Interazioni mediante WS
+++++++++++++++++++++++++++++++++
+
+L'invio di un comando di movimento al robot (mossa) mediante WebSocket `ws`_  sulla porta **8091**  
+implica una forma di comunicazione :blue:`asincrona` (*fire-and-forget*).
+
+Poichè l'invio asincrono di un comando non blocca il chiamante, un client può inviare un nuovo 
+comando prima che il precedente sia terminato. Per gestire situazioni di questo tipo, WEnv segue la
+regola che segue:
+
+:remark:`è possibile interrompere l'esecuzione di una mossa solo con il comando alarm.`
+
+I *messaggi di stato* dopo l'esecuzione asincrona di un comando possono essere:
+
+.. code::
+
+    {"endmove":"RESULT", "move":MINFO }      
+    
+    RESULT  ::= true | false   
+    MINFO   ::= MOVEID | MOVEID_halted | MOVEID_notallowed
+    MOVEID_ ::= moveForward | moveBackward | turnLeft | turnRight
+
+Il significato dei valori di ``MINFO`` è il seguente:
+
+- **MOVEID_halted**: mossa ``MOVEID`` interrotta perchè il robot ha ricevuto un comando  ``alarm``
+- **MOVEID_notallowed**: mossa ``MOVEID`` rifiutata (non eseguita) in quanto la mossa relativa al comando precedente 
+  non è ancora terminata
+
+Un cliente connesso a WEnv mediante una connessione WS può ricevere  informazioni 
+su variazioni dello stato del 'mondo' (che qui denominiamo **messaggi di stato**), quali:
+
+- dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
+- dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
+
+Si noti che dati relativi a sonar presenti nella scena possono essere emessi indipendentemente dalla esecuzione
+di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. 
+
+Esempi di messaggi di stato sono:
+
+  .. code::
+
+    {"sonarName": "sonarName", "distanza": 1, "asse": "x" }
+    {"collision":"moveForward","target":"wallDown"}
+
+Ad esempio, se l'invio di un comando ``moveForward`` provoca il contetto con la parete 'sud' delòa stanza, il cliente riceve
+l'inforazione *collision* invece di *endmove*.
+
+
+++++++++++++++++++++++++++++++++++++
+Interaction2021 per HTTP e WS
+++++++++++++++++++++++++++++++++++++
+
+Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
+per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
+realizzare la nostra :blue:`astrazione  connessione`.
+
+
+++++++++++++++++++++++++++++++++++++
+Esempi di uso di WEnv
+++++++++++++++++++++++++++++++++++++
+
+Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
+interazioni con il VirtualRobot:
+
+- ClientNaiveUsingHttp
+- ClientNaiveUsingWs
+
+
 Riportiamo (si veda il progetto ``unibo.wenvUsage22``) un esempio di programma Java che esegue le mosse-base del robot mediante 
 comandi in :ref:`cril<Comandi-base per il robot in cril>` contenuti in richieste HTTP (di tipo POST).
 
@@ -249,67 +313,7 @@ Osserviamo che:
 - Una mossa può terminare prima del tempo indicato nel comando, restituendo la risposta **false**.  
 - La gestione delle risposte JSON viene eseguita utilizzando la libreria  `org.json`_ 
   (vedi anche `Introduzione a JSON-Java`_ ).
-- :remark:`Non è possibile interrompere l'esecuzione di una mossa.`
-
-
-++++++++++++++++++++++++++++++++
-Interazioni mediante WS
-++++++++++++++++++++++++++++++++
-
-L'invio di un comando di movimento al robot (mossa) mediante WebSocket `ws`_  sulla porta **8091**  
-implica una forma di comunicazione :blue:`asincrona` 
-(*fire-and-forget*) che può essere seguita dall'invio al client (sulla connessione ws) di informazioni 
-su variazioni dello stato del 'mondo' dopo l'esecuzione della mossa, quali:
-
-- dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
-- dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
-
-Si noti che dati relativi a sonar presenti nella scena possono essere emessi indipendentemente dalla esecuzione
-di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. 
-
-Esempi di messaggi (che qui denominiamo **messaggi di stato**) sono:
-
-  .. code::
-
-    { "sonarName": "sonarName", "distanza": 1, "asse": "x" }
-    { "collision": true, "move": "moveForward"}
-
-
-
-Poichè l'invio asincrono di un comando non blocca il chiamante, un client può inviare un nuovo 
-comando prima che il precedente sia terminato. Per gestire situazioni di questo tipo, WEnv segue la
-regola che segue:
-
-:remark:`è possibile interrompere l'esecuzione di una mossa solo con il comando alarm.`
-
- 
-Supponendo che il metodo ``request( String crilCmd )`` esegua l'invio asincrono di un comando, 
-allora la sequenza di comandi che  segue viene corettamente eseguita: 
-
-.. code:: 
-
-    public String moveForward(int duration)  { 
-        return crilCmd("moveForward", duration) ;  
-    }
-    public String stop( ){ return crilCmd("alarm",10); }
-
-    request( moveForward(  1800) );
-    Thread.sleep( 500 );
-    request( stop() );
-
-I *messaggi di stato* dopo l'esecuzione di un comando possono essere:
-
-.. code::
-
-    {"endmove":"RESULT", "move":MOVE}   
-    
-    RESULT ::= halted | notallowed
-
-Il significato dei valori di ``RESULT`` è il seguente:
-
-- **halted**: mossa interrotta perchè il robot ha ricevuto un comando  ``alarm``
-- **notallowed**: mossa rifiutata (non eseguita) in quanto la mossa relativa al comando precedente 
-  non è ancora terminata
+- :remark:`Non è possibile interrompere l'esecuzione di una mossa attivata da un comando POST.`
 
 
 Riportiamo (si veda il progetto ``unibo.wenvUsage22``)  un esempio di programma Java che esegue le mosse-base del robot mediante 
@@ -362,16 +366,79 @@ Dal punto di vista 'applicativo', osserviamo che:
 - E' possibile :blue:`interrompere` la esecuzione di una mossa inviando il comando **alarm**.
 
 
+-------------------------------------------------
+Una WebGui di comando
+-------------------------------------------------
+
+Il progetto ``unibo.wenvUsage22`` include un file ``resources/NaiveGui.html`` che permette di interagire con WEnv 
+attraverso un browser. 
+
+Il programma presenta una  interfaccia che permette a un uente di:
+
+- inviare comandi (in :ref:`cril<Comandi-base per il robot in cril>`) al VirtualRobot attraverso un insieme di pulsanti
+- visualizzare nella DisplayArea le informazioni emesse da WEnv
+
+Ad esempio:
+
+.. image::  ./_static/img/VirtualRobot/NaiveGui.PNG
+    :align: center 
+    :width: 80%
+
+Il programma una le WebSocket JavaScript per interagire con WEnv attraverso una connessione sulla porta  ``8091``.
+ 
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++
+Casi di interazione
+++++++++++++++++++++++++++++++++++++++++++++
+
+#. Invio di comandi asincroni su WS mediante programma Java o mediante WebPage
+#. Invio di comandi sincroni su HTTP mediante programma Java o mediante WebPage
+#. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
+
+Attivo una mossa che ha una durata.
+
+Al termine della durata ``sceneSocket`` invia un msg endmove che viene gestito alla linea 230 di WebPageServer
+Nel frattempo può essere successo 'di tutto' => WebPageServer deve tenere traccia dello stato di ogni mossa, dando a 
+``sceneSocket`` l'id della mossa, così che la linea 230 può capire se scartare la info o se propagarla
+
+Un programma di esempio di uso di WEnv, quale :ref:`Interazioni con HTTP` e :ref:`Interazioni mediante WS` realizza 
+un sistema softwwre che:
+
+- opera in un ambiente ( WEnv )
+- incorpora un dispositivo (il robot virtuale) costruito secondo una tecnologia specifica
+- invia comandi 
+- interagisce con i propri utenti tramite messaggi asincroni (inviati tramite websocket alla porta 8091)
+- è la fonte di informazioni (relative allo stato attuale del robot o del WEnv ) che potrebbero essere utili 
+  per diversi altri componenti oltre al componente che controlla il robot (es.proprietario di robot').
+
+Un obiettivo importante ( requisito non funzionale ) della sua progettazione era quello di realizzare il codice di 
+un'applicazione roboticail più indipendente possibile:
+
+dalla tecnologia robotica, per facilitare la sostituzione di un tipo di robot con un altro
+dal protocollo di interazione, , per catturare l' essenza del flusso di informazioni tra il sistema WEnv e gli altri componenti dell'applicazione
+Gli attori (Kotlin) ci aiutano a progettare e costruire applicazioni basate su WEnv , fornendo in modo del tutto naturale unlivello più astratto di ragionamento e di scrittura del codice.
 
 
 --------------------------------------
 Note di implementazione
 --------------------------------------
 
+
 L'implementazione di WEnv si basa su due componenti principali: 
 
 - **server**: che definisce il programma ``WebpageServer.js`` scritto con il framework Node express  
 - **WebGLScene**: componente che gestisce la scena 
+
+++++++++++++++++++++++++++++++++++++++++++++
+Architettura di WEnv
+++++++++++++++++++++++++++++++++++++++++++++
+
+.. image::  ./_static/img/VirtualRobot/WenvArch.PNG
+    :align: center 
+    :width: 80%
+
 
 ``WebpageServer.js`` utilizza due diversi tipi  di WebSocket:
 
@@ -427,19 +494,8 @@ In ``(``sceneSocket`` subscribed to EventBus)`` si esegue la callback (di *colli
 
 che viene gestita dalle callback di ``init``sceneSocket``WebGLScene`` che fa ``updateCallers`` per inviare le info a client
 
-++++++++++++++++++++++++++++++++++++
-Interaction2021 per HTTP e WS
-++++++++++++++++++++++++++++++++++++
 
-Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
-per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
-realizzare la nostra :blue:`astrazione  connessione`.
 
-Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
-interazioni con il VirtualRobot:
-
-- ClientNaiveUsingHttp
-- ClientNaiveUsingWs
 
 ++++++++++++++++++++++++++++++++++++
 WEnv come immagine docker
@@ -559,57 +615,4 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
 
 
 
--------------------------------------------------
-Una WebGui di comando
--------------------------------------------------
-
-Il progetto ``unibo.wenvUsage22`` include un file ``resources/NaiveGui.html`` che permette di interagire con WEnv 
-attraverso un browser. 
-
-Il programma presenta una  interfaccia che permette a un uente di:
-
-- inviare comandi (in :ref:`cril<Comandi-base per il robot in cril>`) al VirtualRobot attraverso un insieme di pulsanti
-- visualizzare nella DisplayArea le informazioni emesse da WEnv
-
-Ad esempio:
-
-.. image::  ./_static/img/VirtualRobot/NaiveGui.PNG
-    :align: center 
-    :width: 80%
-
-Il programma una le WebSocket JavaScript per interagire con WEnv attraverso una connessione sulla porta  ``8091``.
- 
-
-
-
-++++++++++++++++++++++++++++++++++++++++++++
-Casi di interazione
-++++++++++++++++++++++++++++++++++++++++++++
-
-#. Invio di comandi asincroni su WS mediante programma Java o mediante WebPage
-#. Invio di comandi sincroni su HTTP mediante programma Java o mediante WebPage
-#. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
-
-Attivo una mossa che ha una durata.
-
-Al termine della durata ``sceneSocket`` invia un msg endmove che viene gestito alla linea 230 di WebPageServer
-Nel frattempo può essere successo 'di tutto' => WebPageServer deve tenere traccia dello stato di ogni mossa, dando a 
-``sceneSocket`` l'id della mossa, così che la linea 230 può capire se scartare la info o se propagarla
-
-Un programma di esempio di uso di WEnv, quale :ref:`Interazioni con HTTP` e :ref:`Interazioni mediante WS` realizza 
-un sistema softwwre che:
-
-- opera in un ambiente ( WEnv )
-- incorpora un dispositivo (il robot virtuale) costruito secondo una tecnologia specifica
-- invia comandi 
-- interagisce con i propri utenti tramite messaggi asincroni (inviati tramite websocket alla porta 8091)
-- è la fonte di informazioni (relative allo stato attuale del robot o del WEnv ) che potrebbero essere utili 
-  per diversi altri componenti oltre al componente che controlla il robot (es.proprietario di robot').
-
-Un obiettivo importante ( requisito non funzionale ) della sua progettazione era quello di realizzare il codice di 
-un'applicazione roboticail più indipendente possibile:
-
-dalla tecnologia robotica, per facilitare la sostituzione di un tipo di robot con un altro
-dal protocollo di interazione, , per catturare l' essenza del flusso di informazioni tra il sistema WEnv e gli altri componenti dell'applicazione
-Gli attori (Kotlin) ci aiutano a progettare e costruire applicazioni basate su WEnv , fornendo in modo del tutto naturale unlivello più astratto di ragionamento e di scrittura del codice.
 

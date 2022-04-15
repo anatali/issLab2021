@@ -1,3 +1,6 @@
+/*
+SocketIO.js is the sceneSocket
+*/
 import eventBus       from './eventBus/EventBus.js'
 import eventBusEvents from './eventBus/events.js'
 
@@ -24,12 +27,12 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     eventBus.subscribe( eventBusEvents.sonarActivated, sonarId =>
         socket.emit('sonarActivated', sonarId))
     eventBus.subscribe( eventBusEvents.collision, objectName => { 
-		console.log(`SocketIO collision: ${objectName}`);
+		//console.log(`SocketIO collision: ${objectName}`);
 		socket.emit('collision', objectName); 	//va al callback del main.js
 		stopMoving(); 
 	})
-   eventBus.subscribe( eventBusEvents.endmove, objectName => {
- 		console.log(`SocketIO eventbus endmove: ${objectName}`);
+   eventBus.subscribe( eventBusEvents.endmove, objectName => { //objectName is the index of the move
+ 		//console.log(`SocketIO eventbus endmove: ${objectName}`);
  		socket.emit('endmove', objectName);
    })
 
@@ -51,12 +54,8 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
         onKeyDown( { keyCode: keycodes.W },5000,true )
         if(duration >= 0) moveForwardTimeoutId = setTimeout( () => {
         							onKeyUp( { keyCode: keycodes.W } );
-        							//NON emetto segnali al termine della mossa perchè
-        							//ci potrebbe essere stato un ostacolo
-          							//eventBus.post(eventBusEvents.endmove, "moveForward-base-"+moveindex)
           							eventBus.post(eventBusEvents.endmove, moveindex)
-         							//console.log("SocketIO: moveForward done");
-         						}, duration )
+          						}, duration )
     }
 
     function moveBackward(duration,moveindex) {
@@ -64,22 +63,21 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
         onKeyDown( { keyCode: keycodes.S },5000,true )
         if(duration >= 0) moveBackwardTimeoutId = setTimeout( () => {
         							onKeyUp( { keyCode: keycodes.S } )
-        							//eventBus.post(eventBusEvents.endmove, "moveBackward-base-"+moveindex)
-        							eventBus.post(eventBusEvents.endmove,  moveindex)
+         							eventBus.post(eventBusEvents.endmove,  moveindex)
         						}, duration )
     }
 
     function turnRight(duration,moveindex) {
-	console.log("turnRight from SocketIO moveindex="+moveindex  )
-//induce il movimento simulando onKeyDown 
+	    //console.log("turnRight from SocketIO moveindex="+moveindex  )
+        //induce il movimento simulando onKeyDown
         onKeyDown( { keyCode: keycodes.D }, duration, moveindex )	//remote=true onKeyDown is in PlayerControl
-        eventBus.post(eventBusEvents.endmove,  moveindex)
+        //eventBus.post(eventBusEvents.endmove,  moveindex)
     }
 
     function turnLeft(duration,moveindex) {
-    	console.log("turnLeft from SocketIO moveindex=" + moveindex )
+    	//console.log("turnLeft from SocketIO moveindex=" + moveindex )
         onKeyDown( { keyCode: keycodes.A }, duration, moveindex )
-        eventBus.post(eventBusEvents.endmove,  moveindex)
+        //eventBus.post(eventBusEvents.endmove,  moveindex)
 
     }
 

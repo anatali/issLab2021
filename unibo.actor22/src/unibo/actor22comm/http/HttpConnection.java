@@ -99,7 +99,7 @@ public class HttpConnection  implements Interaction2021 {
 
     public String sendHttp( String msgJson){
         try {
-            ColorsOut.out("HttpConnection | sendHttp httpAddr=" + httpAddr);
+            ColorsOut.out("HttpConnection | sendHttp httpAddr=" + httpAddr, ColorsOut.GREEN);
             RequestBody body = RequestBody.create(JSON_MediaType, msgJson);
             Request request = new Request.Builder()
                     .url( "http://"+httpAddr+"/api/move" )   //TODO
@@ -107,7 +107,7 @@ public class HttpConnection  implements Interaction2021 {
                     .build();
             Response response = okHttpClient.newCall(request).execute(); //a stream
             String answer     = ((RealResponseBody) response.body()).string();
-            ColorsOut.out("HttpConnection | response body=" + answer);
+            ColorsOut.out("HttpConnection | response body=" + answer, ColorsOut.GREEN);
             return answer;
         }catch(Exception e){
             return "";

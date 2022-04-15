@@ -35,10 +35,13 @@ public class ClientUsingHttp implements IObserver{
 	public String stop( )                    { return crilCmd("alarm", 10);        }
 
 	protected void doBasicMoves() throws Exception {
-		int duration = 1000;
- 		conn = HttpConnection.create("localhost:8090" );
- 		String answer = conn.request( moveForward(duration) ); //risposta dopo duration
-		ColorsOut.out("answer= " + answer);
+  		conn = HttpConnection.create("localhost:8090" ); //INTERROMPIBILE usando WebGui
+ 		String answer = conn.request( turnLeft(300) );
+		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
+		answer = conn.request( turnRight(1000) );
+		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
+ 		answer = conn.request( moveForward(2000) ); //risposta dopo duration a meno di interruzioni
+		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
 	}
  
 	protected void doBasicMovesTest() throws Exception {

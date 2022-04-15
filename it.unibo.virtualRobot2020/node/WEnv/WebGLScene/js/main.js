@@ -31,12 +31,12 @@ function resizeCanvas() {
 }
 
 function onKeyDown(event, duration, moveIndex) {
-console.log("onKeyDown from main event.keyCode=" + event.keyCode + " moveIndex=" + moveIndex)
+    console.log("onKeyDown from main event.keyCode=" + event.keyCode + " moveIndex=" + moveIndex)
 	sceneManager.onKeyDown(event.keyCode, duration, moveIndex)
 }
 
 function onKeyDownRemote(event, duration, moveIndex) {
-console.log("onKeyDownRemote from main event.keyCode=" + event.keyCode + " moveIndex=" + moveIndex)
+    //console.log("onKeyDownRemote from main event.keyCode=" + event.keyCode + " moveIndex=" + moveIndex)
 	sceneManager.onKeyDown(event.keyCode, duration, moveIndex)
 }
 

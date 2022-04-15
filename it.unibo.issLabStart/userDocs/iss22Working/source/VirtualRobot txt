@@ -731,3 +731,20 @@ docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:3.0 /bin/sh	loca
 
 Register the image on DockerHub
 docker push natbodocker/virtualrobotdisi:3.0
+
+
+
+ 
+Supponendo che il metodo ``request( String crilCmd )`` esegua l'invio asincrono di un comando, 
+allora la sequenza di comandi che  segue viene corettamente eseguita: 
+
+.. code:: 
+
+    public String moveForward(int duration)  { 
+        return crilCmd("moveForward", duration) ;  
+    }
+    public String stop( ){ return crilCmd("alarm",10); }
+
+    request( moveForward(  1800) );
+    Thread.sleep( 500 );
+    request( stop() );
