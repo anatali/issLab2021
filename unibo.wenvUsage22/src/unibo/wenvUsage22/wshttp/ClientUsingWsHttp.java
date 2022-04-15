@@ -48,7 +48,7 @@ public class ClientUsingWsHttp implements IObserver{
 		connWs   = WsConnection.create("localhost:8091" );
 		connHttp = HttpConnection.create("localhost:8090" );
 		((WsConnection)connWs).addObserver(this);
-		String answer = connHttp.request( moveForward(1000) );
+		String answer = connHttp.request( moveForward(2000) );
 		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
 
 	}

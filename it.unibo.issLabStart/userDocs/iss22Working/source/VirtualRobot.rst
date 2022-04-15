@@ -225,6 +225,10 @@ Il significato dei valori di ``RESULT`` è il seguente:
 - **true**: mossa completata con successo
 - **false**: mossa fallita (il robot virtuale ha  incontrato un ostacolo)
 
+:remark:`Non è possibile interrompere l'esecuzione di una mossa attivata da un comando POST con un altro comando POST.`
+
+Tuttavia si può sempre interrompere una mossa in esecuzione inviando un ``alarm`` su WebSocket ``8091``.
+
 
 ++++++++++++++++++++++++++++++++
 Interazioni mediante WS
@@ -271,38 +275,27 @@ Esempi di messaggi di stato sono:
     {"sonarName": "sonarName", "distanza": 1, "asse": "x" }
     {"collision":"moveForward","target":"wallDown"}
 
-Ad esempio, se l'invio di un comando ``moveForward`` provoca il contetto con la parete 'sud' delòa stanza, il cliente riceve
+Ad esempio, se l'invio di un comando ``moveForward`` provoca il contatto con la parete 'sud' delòa stanza, il cliente riceve
 l'inforazione *collision* invece di *endmove*.
 
 
 ++++++++++++++++++++++++++++++++++++
-Interaction2021 per HTTP e WS
+Esempi di uso 'naive' di WEnv 
 ++++++++++++++++++++++++++++++++++++
 
-Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
-per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
-realizzare la nostra :blue:`astrazione  connessione`.
+Il progetto ``unibo.wenvUsage22`` include esempi di programma Java che eseguono mosse-base del robot mediante
+comandi in :ref:`cril<Comandi-base per il robot in cril>` contenuti in richieste HTTP-POST alla porta ``8090``
+o messaggi inivati su WebSocket alla porta ``8091``.
 
-
-++++++++++++++++++++++++++++++++++++
-Esempi di uso di WEnv
-++++++++++++++++++++++++++++++++++++
-
-Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
-interazioni con il VirtualRobot:
-
-- ClientNaiveUsingHttp
-- ClientNaiveUsingWs
-
-
-Riportiamo (si veda il progetto ``unibo.wenvUsage22``) un esempio di programma Java che esegue le mosse-base del robot mediante 
-comandi in :ref:`cril<Comandi-base per il robot in cril>` contenuti in richieste HTTP (di tipo POST).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ClientNaiveUsingHttp
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. list-table:: 
   :widths: 35,75
   :width: 100%
 
-  * - ClientNaiveUsingPost.java
+  * - ClientNaiveUsingHttp.java
     - :blue:`Key point`: Request-response :blue:`sincrona`. 
 
       Richiede 1 thread.
@@ -313,12 +306,12 @@ Osserviamo che:
 - Una mossa può terminare prima del tempo indicato nel comando, restituendo la risposta **false**.  
 - La gestione delle risposte JSON viene eseguita utilizzando la libreria  `org.json`_ 
   (vedi anche `Introduzione a JSON-Java`_ ).
-- :remark:`Non è possibile interrompere l'esecuzione di una mossa attivata da un comando POST.`
 
 
-Riportiamo (si veda il progetto ``unibo.wenvUsage22``)  un esempio di programma Java che esegue le mosse-base del robot mediante 
-comandi in :ref:`cril<Comandi-base per il robot in cril>` inviati come Stringhe su ``8091``
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ClientNaiveUsingWs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. list-table:: 
   :widths: 25,75
@@ -366,14 +359,15 @@ Dal punto di vista 'applicativo', osserviamo che:
 - E' possibile :blue:`interrompere` la esecuzione di una mossa inviando il comando **alarm**.
 
 
+
 -------------------------------------------------
-Una WebGui di comando
+Una WebGui per interagire con WEnv
 -------------------------------------------------
 
 Il progetto ``unibo.wenvUsage22`` include un file ``resources/NaiveGui.html`` che permette di interagire con WEnv 
 attraverso un browser. 
 
-Il programma presenta una  interfaccia che permette a un uente di:
+Il programma presenta una  interfaccia che permette a un utente di:
 
 - inviare comandi (in :ref:`cril<Comandi-base per il robot in cril>`) al VirtualRobot attraverso un insieme di pulsanti
 - visualizzare nella DisplayArea le informazioni emesse da WEnv
@@ -384,41 +378,55 @@ Ad esempio:
     :align: center 
     :width: 80%
 
-Il programma una le WebSocket JavaScript per interagire con WEnv attraverso una connessione sulla porta  ``8091``.
+Il programma usa le WebSocket JavaScript per interagire con WEnv attraverso una connessione sulla porta  ``8091``.
+
+
+---------------------------------------------
+Interaction2021 per HTTP e WS
+---------------------------------------------
+
+Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
+per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
+realizzare la nostra :blue:`astrazione  connessione`.
+
+Ciò consente di riscrivere le applicazioni di esempio precedenti in modo più semplice e compatto.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Esempi di uso di HttpConnection e WsConnection
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Il progetto ``unibo.wenvUsage22`` introduce esempi di uso di questi nuovi tipi di connessione per realizzare 
+interazioni con WEnv:
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+
+  * - ClientUsingHttp.java
+    - Esegue mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot in cril>`
+      su una connessione ``HttpConnection``.
  
+  * - ClientUsingWs
+    - Esegue mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot in cril>`
+      su una connessione ``WsConnection``.
 
-
+  * - ClientUsingWsHttp
+    - Interagisce con WEnv utilizzando sia una connessione ``HttpConnection`` sia una connessione ``WsConnection``,
+      permettendo di verificare come l'applicazione possa agire come observer della evoluzione dello stato del mondo 
+      in seguito alla esecuzione di un comando HTTP-POST al VirtualRobot. 
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Casi di interazione
 ++++++++++++++++++++++++++++++++++++++++++++
 
+Il video xxx mostra un insieme di possibili interazioni:
+
 #. Invio di comandi asincroni su WS mediante programma Java o mediante WebPage
 #. Invio di comandi sincroni su HTTP mediante programma Java o mediante WebPage
 #. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
 
-Attivo una mossa che ha una durata.
 
-Al termine della durata ``sceneSocket`` invia un msg endmove che viene gestito alla linea 230 di WebPageServer
-Nel frattempo può essere successo 'di tutto' => WebPageServer deve tenere traccia dello stato di ogni mossa, dando a 
-``sceneSocket`` l'id della mossa, così che la linea 230 può capire se scartare la info o se propagarla
-
-Un programma di esempio di uso di WEnv, quale :ref:`Interazioni con HTTP` e :ref:`Interazioni mediante WS` realizza 
-un sistema softwwre che:
-
-- opera in un ambiente ( WEnv )
-- incorpora un dispositivo (il robot virtuale) costruito secondo una tecnologia specifica
-- invia comandi 
-- interagisce con i propri utenti tramite messaggi asincroni (inviati tramite websocket alla porta 8091)
-- è la fonte di informazioni (relative allo stato attuale del robot o del WEnv ) che potrebbero essere utili 
-  per diversi altri componenti oltre al componente che controlla il robot (es.proprietario di robot').
-
-Un obiettivo importante ( requisito non funzionale ) della sua progettazione era quello di realizzare il codice di 
-un'applicazione roboticail più indipendente possibile:
-
-dalla tecnologia robotica, per facilitare la sostituzione di un tipo di robot con un altro
-dal protocollo di interazione, , per catturare l' essenza del flusso di informazioni tra il sistema WEnv e gli altri componenti dell'applicazione
-Gli attori (Kotlin) ci aiutano a progettare e costruire applicazioni basate su WEnv , fornendo in modo del tutto naturale unlivello più astratto di ragionamento e di scrittura del codice.
+.. nextstep: attore che riceve messaggi strutturati e permette di usare VirtualRobot o RealRObot
 
 
 --------------------------------------
