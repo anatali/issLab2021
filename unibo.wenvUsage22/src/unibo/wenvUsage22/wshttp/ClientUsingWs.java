@@ -40,7 +40,8 @@ public class ClientUsingWs implements IObserver{
 		conn = WsConnection.create("localhost:8091" );
 		((WsConnection)conn).addObserver(this);
  
- 		conn.forward( turnLeft( 800  ) );
+ 		//conn.forward( turnLeft( 800  ) );
+ 		conn.forward( moveForward(2300) );
 //		conn.forward( stop( ) );
 ////    	Thread.sleep( 500 );
 //		conn.forward( turnRight( 400 ) );
