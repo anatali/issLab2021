@@ -18,7 +18,7 @@ public class SceneObserverMain {
 	private EnablerContextForActors ctx;
 	
 	public void doJob() {
-		CommSystemConfig.tracing = true;
+		CommSystemConfig.tracing = false;
 		ctx = new EnablerContextForActors( "ctx",8030,ProtocolType.tcp);
 		Qak22Context.handleLocalActorDecl(this);
 		ctx.activate();

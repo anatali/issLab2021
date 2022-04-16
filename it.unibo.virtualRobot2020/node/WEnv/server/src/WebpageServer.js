@@ -7,6 +7,8 @@ postResult    != null  //a POST-request pending
 ==========================================================================
 */
 
+
+
 const app          = require('express')()
 const express      = require('express')
 const hhtpSrv      = require('http').Server(app)
@@ -170,6 +172,71 @@ Interact with the MASTER (the mirrors do not send any info)
 -------------------------------------------------------------------------------------
 */
 function sceneSocketInfoHandler() {
+	console.log("SceneOnlyServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
+    sceneSocket.on('connection', socket => {
+        socketIndex++
+        console.log("SceneOnlyServer sceneSocketInfoHandler  | connection socketIndex="+socketIndex)
+        const key    = socketIndex
+        sockets[key] = socket
+        if( socketIndex == 0) console.log("SceneOnlyServer sceneSocketInfoHandler | MASTER-webpage ready")
+		socket.on( 'sonarActivated', (obj) => {  //Obj is a JSON object
+			console.log( "&&& SceneOnlyServer sceneSocketInfoHandler | sonarActivated " );
+			console.log(obj)
+			updateCallers( JSON.stringify(obj) )
+		})
+
+        socket.on( 'collision',     (obj) => {
+		    var move =   moveMap.get(runningMovesIndex)
+		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | collision detected " + obj
+		            + " runningMovesIndex=" + runningMovesIndex
+		            + " move="+ move
+		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
+		    showMoveMap();
+		    const info     = {  'collision' : move, 'target': obj}
+		    //moveMap.delete( runningMovesIndex )
+		    moveMap.set(runningMovesIndex,"interrupted")
+		    showMoveMap();
+		    updateCallers( JSON.stringify(info) )
+ 		    answerToPost( JSON.stringify(info) );
+ 		} )
+        socket.on('endmove', (moveIndex)  => {  //April2022
+		    //console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
+      		if( moveIndex == -1 ){
+ 		        console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
+ 		        showMoveMap();
+     		    return;
+      		}
+      		var curMove  = moveMap.get(moveIndex)   //nome della mossa o interrupted
+      		var answer   = ""
+  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
+  		    if( curMove == "interrupted") {
+  		        answer = { 'endmove' : false , 'move' : curMove }
+  		    }else{
+                //if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove } else
+                answer      = { 'endmove' : true , 'move' : curMove }
+                const answerJson = JSON.stringify(answer)
+                //if( curMove != "interrupted" ){
+                updateCallers( answerJson )
+                //}
+                answerToPost( answerJson );
+            }
+            moveMap.delete(moveIndex)
+            console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+            showMoveMap()
+        })
+
+       socket.on( 'disconnect',     () => {
+        		delete sockets[key];
+          		socketIndex--;
+			    alreadyConnected = ( socketIndex == 0 )
+        		console.log("SceneOnlyServer sceneSocketInfoHandler  | disconnect socketIndex="+socketIndex)
+        })
+    })
+}//sceneSocketInfoHandler
+
+
+/*
+function sceneSocketInfoHandler() {
 	console.log("WebpageServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
     sceneSocket.on('connection', socket => {
         socketIndex++
@@ -182,6 +249,47 @@ function sceneSocketInfoHandler() {
 			console.log(obj) 
 			updateCallers( JSON.stringify(obj) )
 		})
+
+        socket.on( 'collision',     (obj) => {
+		    var move =   moveMap.get(runningMovesIndex)
+		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | collision detected " + obj
+		            + " runningMovesIndex=" + runningMovesIndex
+		            + " move="+ move
+		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
+		    showMoveMap();
+		    const info     = {  'collision' : move, 'target': obj}
+		    //moveMap.delete( runningMovesIndex )
+		    moveMap.set(runningMovesIndex,"interrupted")
+		    showMoveMap();
+		    updateCallers( JSON.stringify(info) )
+ 		    answerToPost( JSON.stringify(info) );
+ 		} )
+        socket.on('endmove', (moveIndex)  => {  //April2022
+		    //console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
+      		if( moveIndex == -1 ){
+ 		        console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
+ 		        showMoveMap();
+     		    return;
+      		}
+      		var curMove  = moveMap.get(moveIndex)   //nome della mossa o interrupted
+      		var answer   = ""
+  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
+  		    if( curMove == "interrupted") {
+  		        answer = { 'endmove' : false , 'move' : curMove }
+  		    }else{
+                //if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove } else
+                answer      = { 'endmove' : true , 'move' : curMove }
+                const answerJson = JSON.stringify(answer)
+                //if( curMove != "interrupted" ){
+                updateCallers( answerJson )
+                //}
+                answerToPost( answerJson );
+            }
+            moveMap.delete(moveIndex)
+            console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+            showMoveMap()
+        })
+		*
         socket.on( 'collision',     (obj) => {
 		    var move =   moveMap.get(runningMovesIndex)
 		    console.log( "WebpageServer sceneSocketInfoHandler  | collision detected " + obj
@@ -208,6 +316,7 @@ function sceneSocketInfoHandler() {
   		    console.log( "WebpageServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
  		    showMoveMap()
          })
+         *
        socket.on( 'disconnect',     () => {
         		delete sockets[key];
           		socketIndex--;
@@ -216,7 +325,7 @@ function sceneSocketInfoHandler() {
         })
     })
 }//sceneSocketInfoHandler
-
+*/
 
 function answerToPost(  answerJson ){
    if( postResult != null ){

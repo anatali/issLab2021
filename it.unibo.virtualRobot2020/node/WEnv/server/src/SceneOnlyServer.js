@@ -11,6 +11,7 @@ const express      = require('express')
 const hhtpSrv      = require('http').Server(app)
 const sceneSocket  = require('socket.io')(hhtpSrv)     //interaction with WebGLScene
 
+
 const sockets       = {}    //interaction with WebGLScene
 let socketIndex     = -1
 
@@ -20,7 +21,7 @@ var actorObserverClient
 //STATE variables used by cmd handling on wssockets (see initWs)
 var alreadyConnected = false
 let runningMovesIndex   = -1
-const moveMap   = new Map();
+const moveMap   = new Map();    //see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/set
 var postResult  = null
 
 app.use(express.static('./../../WebGLScene'))
@@ -93,16 +94,18 @@ function execMoveOnAllConnectedScenes(moveTodo, moveTime){
         runningMovesIndex++
         console.log('$$$ SceneOnlyServer | execMoveOnAllConnectedScenes '  + moveTodo + " index=" + runningMovesIndex);
         moveMap.set(runningMovesIndex, moveTodo)
+        showMoveMap()
     }
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime, runningMovesIndex) );
 }
 
 //Updates the controls and the observers (April 2022)
 function updateCallers(msgJson){
-    console.log("SceneOnlyServer | msgJsonnnnnnnnnnnnnnnnnn=" + msgJson + " " + actorObserverClient);
-    if( actorObserverClient != undefined )
-        actorObserverClient.write(msgJson);
-
+    console.log("SceneOnlyServer | updateCallersssssssssssssssssss" + msgJson + " " + actorObserverClient);
+    if( actorObserverClient != undefined ){
+        msg = "msg(sceneEv,dispatch,scene,sceneObserver,'"+ msgJson +"',0)\n"
+        actorObserverClient.write( msg );
+    }
 }
 
 /*
@@ -123,32 +126,47 @@ function sceneSocketInfoHandler() {
 			console.log(obj) 
 			updateCallers( JSON.stringify(obj) )
 		})
+
         socket.on( 'collision',     (obj) => {
 		    var move =   moveMap.get(runningMovesIndex)
 		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | collision detected " + obj
 		            + " runningMovesIndex=" + runningMovesIndex
 		            + " move="+ move
 		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
+		    showMoveMap();
 		    const info     = {  'collision' : move, 'target': obj}
+		    //moveMap.delete( runningMovesIndex )
 		    moveMap.set(runningMovesIndex,"interrupted")
+		    showMoveMap();
 		    updateCallers( JSON.stringify(info) )
  		    answerToPost( JSON.stringify(info) );
  		} )
         socket.on('endmove', (moveIndex)  => {  //April2022
 		    //console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
-      		var curMove     = moveMap.get(moveIndex)   //nome della mossa o interrupted
-     		var answer
-     		if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove }
-     		else answer      = { 'endmove' : true , 'move' : curMove }
-            const answerJson = JSON.stringify(answer)
-  		    if( curMove != "interrupted" ){
-  		        updateCallers( answerJson )
-   		    }
-  		    answerToPost( answerJson );
-   	        moveMap.delete(moveIndex)
-  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
- 		    showMoveMap()
-         })
+      		if( moveIndex == -1 ){
+ 		        console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
+ 		        showMoveMap();
+     		    return;
+      		}
+      		var curMove  = moveMap.get(moveIndex)   //nome della mossa o interrupted
+      		var answer   = ""
+  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
+  		    if( curMove == "interrupted") {
+  		        answer = { 'endmove' : false , 'move' : curMove }
+  		    }else{
+                //if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove } else
+                answer      = { 'endmove' : true , 'move' : curMove }
+                const answerJson = JSON.stringify(answer)
+                //if( curMove != "interrupted" ){
+                updateCallers( answerJson )
+                //}
+                answerToPost( answerJson );
+            }
+            moveMap.delete(moveIndex)
+            console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+            showMoveMap()
+        })
+
        socket.on( 'disconnect',     () => {
         		delete sockets[key];
           		socketIndex--;
@@ -172,7 +190,11 @@ function answerToPost(  answerJson ){
 
 
 function showMoveMap(){
-    moveMap.forEach( (key,v) => console.log("WARNING: movemap key=" + key + " v="+v) )
+    //moveMap.forEach( (key,v ) => console.log("WARNING: movemap key=" + key + " v="+ v) )
+    moveMap.forEach( logMapElements  )
+}
+function logMapElements(value, key, map) {
+  console.log(`MOVEMAP: moveMap[${key}] = ${value}`);
 }
 
 function setUpActorLocalConnection(actorport){
@@ -190,8 +212,9 @@ console.log("setUpActorLocalConnection TCP to:" +port + " " + actorObserverClien
 actorObserverClient.connect( { port: 8030, host: "localhost" }, function() {
      console.log('TCP connection establishedddddddddddddddddddddddd with the server.');
     // The client can now send data to the server by writing to its socket.
-    actorObserverClient.write("Hello, server.\n");
+    //actorObserverClient.write("Hello, server.\n");
     //actorObserverClient.flush();
+    updateCallers('{"scene","started"}')
 });
 
 // The client can also receive data from the server by reading from its socket.

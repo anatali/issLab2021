@@ -29,7 +29,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     eventBus.subscribe( eventBusEvents.collision, objectName => { 
 		//console.log(`SocketIO collision: ${objectName}`);
 		socket.emit('collision', objectName); 	//va al callback del main.js
-		stopMoving(); 
+		stopMoving(-1);
 	})
    eventBus.subscribe( eventBusEvents.endmove, objectName => { //objectName is the index of the move
  		//console.log(`SocketIO eventbus endmove: ${objectName}`);
@@ -82,7 +82,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     }
 
     function stopMoving(moveindex) {
-    console.log("stopMoving "  )
+       console.log("stopMoving " + moveindex )
        onKeyUp( { keyCode: keycodes.W } )
        onKeyUp( { keyCode: keycodes.S } )
        onKeyDown( { keyCode: keycodes.Z } )   //per fermare rotating in PlayControl (38)

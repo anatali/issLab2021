@@ -36,10 +36,11 @@ public class ClientUsingHttp implements IObserver{
 
 	protected void doBasicMoves() throws Exception {
   		conn = HttpConnection.create("localhost:8090" ); //INTERROMPIBILE usando WebGui
- 		String answer = conn.request( turnLeft(300) );
-		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
-		answer = conn.request( turnRight(300) );
-		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
+  		String answer = "";
+// 		answer = conn.request( turnLeft(300) );
+//		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
+//		answer = conn.request( turnRight(300) );
+//		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
  		answer = conn.request( moveForward(1000) ); 
  		//risposta dopo duration a meno di interruzioni DA ALTRA FONTE
 		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
