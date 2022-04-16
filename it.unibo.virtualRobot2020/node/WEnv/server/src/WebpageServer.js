@@ -27,6 +27,8 @@ let runningMovesIndex   = -1
 const moveMap   = new Map();
 var postResult  = null
 
+var actorObserverClient ;
+
 app.use(express.static('./../../WebGLScene'))
 
 /*
@@ -103,6 +105,13 @@ function execMoveOnAllConnectedScenes(moveTodo, moveTime){
 
 //Updates the controls and the observers (Jan 2021)
 function updateCallers(msgJson){
+
+    console.log("SceneOnlyServer | updateCallersssssssssssssssssss" + msgJson + " " + actorObserverClient);
+    if( actorObserverClient != undefined ){
+        msg = "msg(sceneEv,dispatch,scene,sceneObserver,'"+ msgJson +"',0)\n"
+        actorObserverClient.write( msg );
+    }
+
  	Object.keys(wssockets).forEach( key => {
         console.log("WebpageServer | updateCallers key="  + key + " msgJson=" + msgJson);
         wssockets[key].send( msgJson )
@@ -145,7 +154,7 @@ wsServer.on('connection', (ws) => {
         updateCallers( JSON.stringify(info) )
 	    return
 	}else{
-	    console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
+	    console.log('AAA $$$ WebpageServer | ' + moveTodo + " duration=" + duration )
         execMoveOnAllConnectedScenes(moveTodo, duration)
 	}
   });
@@ -172,22 +181,22 @@ Interact with the MASTER (the mirrors do not send any info)
 -------------------------------------------------------------------------------------
 */
 function sceneSocketInfoHandler() {
-	console.log("SceneOnlyServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
+	console.log("WebpageServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
     sceneSocket.on('connection', socket => {
         socketIndex++
-        console.log("SceneOnlyServer sceneSocketInfoHandler  | connection socketIndex="+socketIndex)
+        console.log("WebpageServer sceneSocketInfoHandler  | connection socketIndex="+socketIndex)
         const key    = socketIndex
         sockets[key] = socket
-        if( socketIndex == 0) console.log("SceneOnlyServer sceneSocketInfoHandler | MASTER-webpage ready")
+        if( socketIndex == 0) console.log("WebpageServer sceneSocketInfoHandler | MASTER-webpage ready")
 		socket.on( 'sonarActivated', (obj) => {  //Obj is a JSON object
-			console.log( "&&& SceneOnlyServer sceneSocketInfoHandler | sonarActivated " );
+			console.log( "&&& WebpageServer sceneSocketInfoHandler | sonarActivated " );
 			console.log(obj)
 			updateCallers( JSON.stringify(obj) )
 		})
 
         socket.on( 'collision',     (obj) => {
 		    var move =   moveMap.get(runningMovesIndex)
-		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | collision detected " + obj
+		    console.log( "WebpageServer sceneSocketInfoHandler  | collision detected " + obj
 		            + " runningMovesIndex=" + runningMovesIndex
 		            + " move="+ move
 		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
@@ -200,28 +209,27 @@ function sceneSocketInfoHandler() {
  		    answerToPost( JSON.stringify(info) );
  		} )
         socket.on('endmove', (moveIndex)  => {  //April2022
-		    //console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
+		    console.log( "WebpageServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex );
+		    showMoveMap()
       		if( moveIndex == -1 ){
- 		        console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
+ 		        console.log( "WebpageServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
  		        showMoveMap();
      		    return;
       		}
       		var curMove  = moveMap.get(moveIndex)   //nome della mossa o interrupted
       		var answer   = ""
-  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
-  		    if( curMove == "interrupted") {
-  		        answer = { 'endmove' : false , 'move' : curMove }
-  		    }else{
-                //if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove } else
-                answer      = { 'endmove' : true , 'move' : curMove }
-                const answerJson = JSON.stringify(answer)
-                //if( curMove != "interrupted" ){
-                updateCallers( answerJson )
-                //}
-                answerToPost( answerJson );
+  		    console.log( "WebpageServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
+  		    if( curMove == "interrupted" || curMove == undefined) { //undefined viene da SocketIO.stopMoving per alarm
+  		        //answer = { 'endmove' : false , 'move' : curMove }
+                moveMap.delete(moveIndex)
+   		    }else{
+              answer      = { 'endmove' : true , 'move' : curMove }
+              const answerJson = JSON.stringify(answer)
+              updateCallers( answerJson )
+              answerToPost( answerJson );
+              moveMap.delete(moveIndex)
             }
-            moveMap.delete(moveIndex)
-            console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+            console.log( "WebpageServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
             showMoveMap()
         })
 
@@ -229,11 +237,43 @@ function sceneSocketInfoHandler() {
         		delete sockets[key];
           		socketIndex--;
 			    alreadyConnected = ( socketIndex == 0 )
-        		console.log("SceneOnlyServer sceneSocketInfoHandler  | disconnect socketIndex="+socketIndex)
+        		console.log("WebpageServer sceneSocketInfoHandler  | disconnect socketIndex="+socketIndex)
         })
     })
 }//sceneSocketInfoHandler
 
+function setUpActorLocalConnection(actorport){
+const Net = require('net');
+// The port number and hostname of the server.
+const host = 'localhost';
+const port = actorport;
+
+// Create a new TCP client.
+actorObserverClient = new Net.Socket();
+// Send a connection request to the server.
+
+console.log("setUpActorLocalConnection TCP to:" +port + " " + actorObserverClient);
+
+actorObserverClient.connect( { port: 8030, host: "localhost" }, function() {
+     console.log('TCP connection establishedddddddddddddddddddddddd with the server.');
+    // The client can now send data to the server by writing to its socket.
+    //actorObserverClient.write("Hello, server.\n");
+    //actorObserverClient.flush();
+    updateCallers('{"scene","started"}')
+});
+
+// The client can also receive data from the server by reading from its socket.
+actorObserverClient.on('data', function(chunk) {
+    console.log(`Data received from the server: ${chunk.toString()}.`);
+    // Request an end to the connection after the data has been received.
+    client.end();
+});
+
+actorObserverClient.on('end', function() {
+    console.log('Requested an end to the TCP connection');
+});
+
+}//setUpActorLocalConnection
 
 /*
 function sceneSocketInfoHandler() {
@@ -252,7 +292,7 @@ function sceneSocketInfoHandler() {
 
         socket.on( 'collision',     (obj) => {
 		    var move =   moveMap.get(runningMovesIndex)
-		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | collision detected " + obj
+		    console.log( "WebpageServer sceneSocketInfoHandler  | collision detected " + obj
 		            + " runningMovesIndex=" + runningMovesIndex
 		            + " move="+ move
 		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
@@ -265,15 +305,15 @@ function sceneSocketInfoHandler() {
  		    answerToPost( JSON.stringify(info) );
  		} )
         socket.on('endmove', (moveIndex)  => {  //April2022
-		    //console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
+		    //console.log( "WebpageServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
       		if( moveIndex == -1 ){
- 		        console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
+ 		        console.log( "WebpageServer sceneSocketInfoHandler  | endmove after collision moveMap.size=" + moveMap.size);
  		        showMoveMap();
      		    return;
       		}
       		var curMove  = moveMap.get(moveIndex)   //nome della mossa o interrupted
       		var answer   = ""
-  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
+  		    console.log( "WebpageServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
   		    if( curMove == "interrupted") {
   		        answer = { 'endmove' : false , 'move' : curMove }
   		    }else{
@@ -286,7 +326,7 @@ function sceneSocketInfoHandler() {
                 answerToPost( answerJson );
             }
             moveMap.delete(moveIndex)
-            console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+            console.log( "WebpageServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
             showMoveMap()
         })
 		*
@@ -345,6 +385,9 @@ function showMoveMap(){
 
 function startServer() {
     console.log("WebpageServer  | startServer" )
+        //Connect with an observer actor
+        setUpActorLocalConnection(8030)
+
     sceneSocketInfoHandler()
     initWs()
     hhtpSrv.listen(serverPort)

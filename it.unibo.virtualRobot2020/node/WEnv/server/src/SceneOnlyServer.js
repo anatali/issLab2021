@@ -151,18 +151,16 @@ function sceneSocketInfoHandler() {
       		var curMove  = moveMap.get(moveIndex)   //nome della mossa o interrupted
       		var answer   = ""
   		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
-  		    if( curMove == "interrupted") {
-  		        answer = { 'endmove' : false , 'move' : curMove }
+  		    if( curMove == "interrupted" || curMove == undefined ) { //undefined viene da SocketIO.stopMoving per alarm
+  		        //answer = { 'endmove' : false , 'move' : curMove }
+  		        moveMap.delete(moveIndex)
   		    }else{
-                //if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove } else
                 answer      = { 'endmove' : true , 'move' : curMove }
                 const answerJson = JSON.stringify(answer)
-                //if( curMove != "interrupted" ){
                 updateCallers( answerJson )
-                //}
                 answerToPost( answerJson );
+                moveMap.delete(moveIndex)
             }
-            moveMap.delete(moveIndex)
             console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
             showMoveMap()
         })

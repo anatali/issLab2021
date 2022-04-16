@@ -20,8 +20,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     socket.on( 'remove',       name => remove( name )  )   //DEC 2019  See WebpageServer.js
     
 	socket.on( 'xxx',        obj => console.log("SocketIO xxxxxxxxxxxxxxxxxxxxxxxx")   )
-		 
-	
+
     socket.on( 'disconnect', () => console.log("server disconnected") )
 
     eventBus.subscribe( eventBusEvents.sonarActivated, sonarId =>
@@ -75,7 +74,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     }
 
     function turnLeft(duration,moveindex) {
-    	//console.log("turnLeft from SocketIO moveindex=" + moveindex )
+    	console.log("turnLeft from SocketIO moveindex=" + moveindex ) //in browser
         onKeyDown( { keyCode: keycodes.A }, duration, moveindex )
         //eventBus.post(eventBusEvents.endmove,  moveindex)
 
