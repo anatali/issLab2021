@@ -1,0 +1,25 @@
+package unibo.wenvUsage22.actors;
+
+import it.unibo.kactor.IApplMessage;
+import unibo.actor22.QakActor22;
+import unibo.actor22.annotations.ActorLocal;
+import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22comm.utils.CommUtils;
+
+@ActorLocal(
+		name =      { "sceneObserver" }, 
+		implement = { SceneObserver.class })
+public class SceneObserver extends QakActor22{
+
+	public SceneObserver(String name) {
+		super(name);
+ 	}
+
+	@Override
+	protected void handleMsg(IApplMessage msg) {
+		ColorsOut.outappl( getName()  + " | handleMsg " + msg, ColorsOut.CYAN);		
+	}
+
+ 
+
+}

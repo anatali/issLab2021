@@ -16,7 +16,7 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
     socket.on( 'moveBackward', (duration, moveindex) => moveBackward(duration,moveindex) )
     socket.on( 'turnRight',    (duration, moveindex) => turnRight(duration,moveindex) )
     socket.on( 'turnLeft',     (duration, moveindex) => { turnLeft(duration,moveindex) })
-    socket.on( 'alarm',        stopMoving    )
+    socket.on( 'alarm',        (duration, moveindex) => stopMoving(moveindex)    )
     socket.on( 'remove',       name => remove( name )  )   //DEC 2019  See WebpageServer.js
     
 	socket.on( 'xxx',        obj => console.log("SocketIO xxxxxxxxxxxxxxxxxxxxxxxx")   )
@@ -81,11 +81,12 @@ export default (onKeyUp, onKeyDown, myonKeyDown) => {
 
     }
 
-    function stopMoving() {
+    function stopMoving(moveindex) {
     console.log("stopMoving "  )
        onKeyUp( { keyCode: keycodes.W } )
        onKeyUp( { keyCode: keycodes.S } )
        onKeyDown( { keyCode: keycodes.Z } )   //per fermare rotating in PlayControl (38)
+       eventBus.post(eventBusEvents.endmove, moveindex)
     }
     
 //DEC 2019    

@@ -1,8 +1,7 @@
 /*
 ==========================================================================
-WebpageServer.js
+SceneOnlyServer.js
 sockets       = {}     //interaction with WebGLScene
-wssockets     = {}     //interaction with clients
 postResult    != null  //a POST-request pending
 ==========================================================================
 */
@@ -11,13 +10,12 @@ const app          = require('express')()
 const express      = require('express')
 const hhtpSrv      = require('http').Server(app)
 const sceneSocket  = require('socket.io')(hhtpSrv)     //interaction with WebGLScene
-const WebSocket    = require('ws');                    //interaction with external clients
 
 const sockets       = {}    //interaction with WebGLScene
-const wssockets     = {}    //interaction with clients
 let socketIndex     = -1
-let wssocketIndex   = -1
+
 const serverPort    = 8090
+var actorObserverClient
 
 //STATE variables used by cmd handling on wssockets (see initWs)
 var alreadyConnected = false
@@ -33,7 +31,7 @@ Defines how to handle GET from browser and from external controls
 -----------------------------------------------------------------------------
 */
     app.get('/', (req, res) => {
-	    console.log("WebpageServer | GET socketIndex="+socketIndex + " alreadyConnected =" + alreadyConnected )
+	    console.log("SceneOnlyServer | GET socketIndex="+socketIndex + " alreadyConnected =" + alreadyConnected )
         if( ! alreadyConnected ){
             alreadyConnected = true;
             res.sendFile('indexOk.html', { root: './../../WebGLScene' })
@@ -81,7 +79,7 @@ Defines how to handle POST from browser and from external controls
                     res.end();
                 }
 			} else{
-	            console.log('$$$ WebpageServer doMove | ' + moveTodo + " duration=" + duration  );
+	            console.log('$$$ SceneOnlyServer doMove | ' + moveTodo + " duration=" + duration  );
                 postResult = res  //MEMO that a POST is running. See
 	            execMoveOnAllConnectedScenes(moveTodo, duration)
 			}
@@ -93,76 +91,19 @@ Defines how to handle POST from browser and from external controls
 function execMoveOnAllConnectedScenes(moveTodo, moveTime){
     if( moveTodo != "alarm") {
         runningMovesIndex++
-        console.log('$$$ WebpageServer | execMoveOnAllConnectedScenes '  + moveTodo + " index=" + runningMovesIndex);
+        console.log('$$$ SceneOnlyServer | execMoveOnAllConnectedScenes '  + moveTodo + " index=" + runningMovesIndex);
         moveMap.set(runningMovesIndex, moveTodo)
     }
 	Object.keys(sockets).forEach( key => sockets[key].emit(moveTodo, moveTime, runningMovesIndex) );
 }
 
-//Updates the controls and the observers (Jan 2021)
+//Updates the controls and the observers (April 2022)
 function updateCallers(msgJson){
- 	Object.keys(wssockets).forEach( key => {
-        console.log("WebpageServer | updateCallers key="  + key + " msgJson=" + msgJson);
-        wssockets[key].send( msgJson )
-	} )
+    console.log("SceneOnlyServer | msgJsonnnnnnnnnnnnnnnnnn=" + msgJson + " " + actorObserverClient);
+    if( actorObserverClient != undefined )
+        actorObserverClient.write(msgJson);
+
 }
-
-/*
--------------------------------------------------------------------------------------
-Interact with clients over ws (controls that send commands or observers) Jan 2021
--------------------------------------------------------------------------------------
-*/
-
-
-function initWs(){
-const wsServer  = new WebSocket.Server( { port: 8091 }  );   // { server: app.listen(8091) }
-console.log("       $$$ WebpageServer | initWs wsServer=" + wsServer)
-
-wsServer.on('connection', (ws) => {
-  wssocketIndex++
-  console.log("     $$$ WebpageServer wssocket | CLIENT CONNECTED wssocketIndex=" + wssocketIndex)
-  const key      = wssocketIndex
-  wssockets[key] = ws
-
-  ws.on('message', msg => {
-	var moveTodo = JSON.parse(msg).robotmove
-	var duration = JSON.parse(msg).time
-    var curMove = moveMap.get(runningMovesIndex)
-    console.log("       $$$ WebpageServer wssocket=" + wssocketIndex   + " receives: "
-        + msg  + " curMove="+ curMove )
-	if( curMove != undefined && curMove != "interrupted" && moveTodo != "alarm"){
-        console.log("$$$ WebpageServer ws | SORRY: cmd " + msg + " NOT POSSIBLE, since I'm running:" + curMove)
-        const info     = { 'endmove' : false, 'move': moveTodo+"_notallowed" }
-        updateCallers( JSON.stringify(info) )
-	    return
-	}else  //the alarm move could also be sent via HTTP
- 	 if( curMove != undefined && curMove != "interrupted" && moveTodo == "alarm" ){
-        moveMap.set(runningMovesIndex,"interrupted")
-	    execMoveOnAllConnectedScenes(moveTodo, duration)
-        const info     = { 'endmove' : false, 'move': curMove+"_halted" }
-        updateCallers( JSON.stringify(info) )
-	    return
-	}else{
-	    console.log('AAA $$$ WebpageServer doMoveAsynch | ' + moveTodo + " duration=" + duration )
-        execMoveOnAllConnectedScenes(moveTodo, duration)
-	}
-  });
-
-  ws.onerror = (error) => {
-	  console.log("     $$$ WebpageServer wssocket | error: ${error}")
-	  delete wssockets[key];
-	  wssocketIndex--
-	  console.log( "        $$$ WebpageServer wssocket | disconnect wssocketIndex=" +  wssocketIndex )
-  }
-
-  ws.on('close', ()=>{
-	  delete wssockets[key];
-	  wssocketIndex--
-	  console.log( "        $$$ WebpageServer wssocket | disconnect wssocketIndex=" +  wssocketIndex )
-  })
-}); //wsServer.on('connection' ...
-}//initWs
-
 
 /*
 -------------------------------------------------------------------------------------
@@ -170,21 +111,21 @@ Interact with the MASTER (the mirrors do not send any info)
 -------------------------------------------------------------------------------------
 */
 function sceneSocketInfoHandler() {
-	console.log("WebpageServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
+	console.log("SceneOnlyServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
     sceneSocket.on('connection', socket => {
         socketIndex++
-        console.log("WebpageServer sceneSocketInfoHandler  | connection socketIndex="+socketIndex)
+        console.log("SceneOnlyServer sceneSocketInfoHandler  | connection socketIndex="+socketIndex)
         const key    = socketIndex
         sockets[key] = socket
-        if( socketIndex == 0) console.log("WebpageServer sceneSocketInfoHandler | MASTER-webpage ready")
+        if( socketIndex == 0) console.log("SceneOnlyServer sceneSocketInfoHandler | MASTER-webpage ready")
 		socket.on( 'sonarActivated', (obj) => {  //Obj is a JSON object
-			console.log( "&&& WebpageServer sceneSocketInfoHandler | sonarActivated " );
+			console.log( "&&& SceneOnlyServer sceneSocketInfoHandler | sonarActivated " );
 			console.log(obj) 
 			updateCallers( JSON.stringify(obj) )
 		})
         socket.on( 'collision',     (obj) => {
 		    var move =   moveMap.get(runningMovesIndex)
-		    console.log( "WebpageServer sceneSocketInfoHandler  | collision detected " + obj
+		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | collision detected " + obj
 		            + " runningMovesIndex=" + runningMovesIndex
 		            + " move="+ move
 		            + " target=" + obj + " numOfSockets=" + Object.keys(sockets).length );
@@ -194,7 +135,7 @@ function sceneSocketInfoHandler() {
  		    answerToPost( JSON.stringify(info) );
  		} )
         socket.on('endmove', (moveIndex)  => {  //April2022
-		    //console.log( "WebpageServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
+		    //console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove  PRE index=" + moveIndex + " moveMap.size=" + moveMap.size);
       		var curMove     = moveMap.get(moveIndex)   //nome della mossa o interrupted
      		var answer
      		if( curMove == "interrupted") answer = { 'endmove' : false , 'move' : curMove }
@@ -205,14 +146,14 @@ function sceneSocketInfoHandler() {
    		    }
   		    answerToPost( answerJson );
    	        moveMap.delete(moveIndex)
-  		    console.log( "WebpageServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
+  		    console.log( "SceneOnlyServer sceneSocketInfoHandler  | endmove index=" + moveIndex + " moveMap.size=" + moveMap.size  );
  		    showMoveMap()
          })
        socket.on( 'disconnect',     () => {
         		delete sockets[key];
           		socketIndex--;
 			    alreadyConnected = ( socketIndex == 0 )
-        		console.log("WebpageServer sceneSocketInfoHandler  | disconnect socketIndex="+socketIndex)
+        		console.log("SceneOnlyServer sceneSocketInfoHandler  | disconnect socketIndex="+socketIndex)
         })
     })
 }//sceneSocketInfoHandler
@@ -220,7 +161,7 @@ function sceneSocketInfoHandler() {
 
 function answerToPost(  answerJson ){
    if( postResult != null ){
-        console.log('WebpageServer | answerToPost  answer= ' + answerJson  );
+        console.log('SceneOnlyServer | answerToPost  answer= ' + answerJson  );
         postResult.writeHead(200, { 'Content-Type': 'text/json' });
         postResult.statusCode=200
         postResult.write( answerJson  );
@@ -234,10 +175,44 @@ function showMoveMap(){
     moveMap.forEach( (key,v) => console.log("WARNING: movemap key=" + key + " v="+v) )
 }
 
+function setUpActorLocalConnection(actorport){
+const Net = require('net');
+// The port number and hostname of the server.
+const host = 'localhost';
+const port = actorport;
+
+// Create a new TCP client.
+actorObserverClient = new Net.Socket();
+// Send a connection request to the server.
+
+console.log("setUpActorLocalConnection TCP to:" +port + " " + actorObserverClient);
+
+actorObserverClient.connect( { port: 8030, host: "localhost" }, function() {
+     console.log('TCP connection establishedddddddddddddddddddddddd with the server.');
+    // The client can now send data to the server by writing to its socket.
+    actorObserverClient.write("Hello, server.\n");
+    //actorObserverClient.flush();
+});
+
+// The client can also receive data from the server by reading from its socket.
+actorObserverClient.on('data', function(chunk) {
+    console.log(`Data received from the server: ${chunk.toString()}.`);
+    // Request an end to the connection after the data has been received.
+    client.end();
+});
+
+actorObserverClient.on('end', function() {
+    console.log('Requested an end to the TCP connection');
+});
+
+}
+
 function startServer() {
-    console.log("WebpageServer  | startServer" )
+    console.log("SceneOnlyServer  | startServer" )
+    //Connect with an observer actor
+    setUpActorLocalConnection(8030)
+
     sceneSocketInfoHandler()
-    initWs()
     hhtpSrv.listen(serverPort)
 }
 //MAIN

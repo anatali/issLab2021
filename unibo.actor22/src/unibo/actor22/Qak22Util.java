@@ -2,6 +2,9 @@ package unibo.actor22;
 
  
 import it.unibo.kactor.*;
+import unibo.actor22comm.ActionFunction;
+import unibo.actor22comm.ActorForRequest;
+import unibo.actor22comm.RequestCallUtilObj;
 import unibo.actor22comm.proxy.ProxyAsClient;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
@@ -40,6 +43,35 @@ public  class Qak22Util   {
         }
 	}
 
+    public static String requestSynch(IApplMessage msg) {
+    	if( !  msg.isRequest()) {
+    		ColorsOut.outerr("Qak22Util | requestSynch: no request: " + msg);
+    		return null;
+    	}
+    	String destActorName = msg.msgReceiver();
+    	QakActor22 dest      = Qak22Context.getActor(destActorName);  
+        if( dest != null ) { //attore locale
+        	RequestCallUtilObj waiter = new RequestCallUtilObj(msg);  
+        	return waiter.getAnswer();
+        }else {
+        	ColorsOut.outerr("Qak22Util | requestSynch: no local dest in:"+ msg); 
+    		return null;      	
+        }   	
+    }
+    
+//    protected synchronized static String doRequestAndAnswer(IApplMessage msg) {
+//    	ColorsOut.outerr("Qak22Util | requestSynch msg:"+ msg);  
+//    	//creo attore temporaneo per fare request
+//    	ActorForRequest caller = new ActorForRequest("caller_"+msg.msgSender());
+//	    ActionFunction endFun = (answer) -> { 
+//	    	System.out.println(answer); 
+//	    	//resume
+//	    };
+//	    WaitAnswerObj waiter = new WaitAnswerObj();
+//    	caller.doRequest(msg, endFun);
+//    	String answer = waiter.getAnswer(msg);
+//    	return answer;
+//    }
     
   //String MSGID, String MSGTYPE, String SENDER, String RECEIVER, String CONTENT, String SEQNUM
   	private static int msgNum=0;	

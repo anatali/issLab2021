@@ -426,6 +426,10 @@ Il video xxx mostra un insieme di possibili interazioni:
 #. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
 
 
+Invio mediante POST prima moveForward e poi alarm DA ALTRA fonte: rcevo come risposta 
+
+  ``{"endmove":false,"move":"interrupted"}``
+
 .. nextstep: attore che riceve messaggi strutturati e permette di usare VirtualRobot o RealRObot
 
 

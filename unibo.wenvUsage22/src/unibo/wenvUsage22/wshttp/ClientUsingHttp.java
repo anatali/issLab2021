@@ -40,9 +40,10 @@ public class ClientUsingHttp implements IObserver{
 		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
 		answer = conn.request( turnRight(300) );
 		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
- 		answer = conn.request( moveForward(2000) ); //risposta dopo duration a meno di interruzioni
+ 		answer = conn.request( moveForward(1000) ); 
+ 		//risposta dopo duration a meno di interruzioni DA ALTRA FONTE
 		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
-	}
+ 	}
  
 	protected void doBasicMovesTest() throws Exception {
 		conn = HttpConnection.create("localhost:8090" );
