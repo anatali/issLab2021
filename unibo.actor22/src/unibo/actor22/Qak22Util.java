@@ -2,8 +2,6 @@ package unibo.actor22;
 
  
 import it.unibo.kactor.*;
-import unibo.actor22comm.ActionFunction;
-import unibo.actor22comm.ActorForRequest;
 import unibo.actor22comm.RequestCallUtilObj;
 import unibo.actor22comm.proxy.ProxyAsClient;
 import unibo.actor22comm.utils.ColorsOut;
@@ -12,10 +10,7 @@ import unibo.actor22comm.utils.CommUtils;
 
 public  class Qak22Util   {
 
-
-    public static void showActors22(){
-    	Qak22Util.showActors22();
-    }
+ 
       
     //Usabile da Java: Distingue tra locale e remoto
     public static void sendAMsg( IApplMessage msg ){

@@ -2,6 +2,7 @@ package unibo.actor22comm;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.QakActor22;
+import unibo.actor22comm.interfaces.ActionFun;
 import unibo.actor22comm.utils.ColorsOut;
  
 /*
@@ -9,7 +10,7 @@ import unibo.actor22comm.utils.ColorsOut;
  * e poi fare una callback per dare la relativa risposta
  */
 public class ActorForRequest extends QakActor22{
-private ActionFunction callback;
+private ActionFun callback;
 
 	public ActorForRequest(String name ) {
 		super(name);
@@ -29,7 +30,7 @@ private ActionFunction callback;
 		}
 	}
 	
-	public void doRequest(IApplMessage msg, ActionFunction callback) {
+	public void doRequest(IApplMessage msg, ActionFun callback) {
 		this.callback = callback;
 	    ColorsOut.out("ActorForRequest | doing request " + msg  , ColorsOut.GREEN);
 		this.request(msg);

@@ -1,6 +1,7 @@
 package unibo.actor22comm;
 
 import it.unibo.kactor.IApplMessage;
+import unibo.actor22comm.interfaces.ActionFun;
 import unibo.actor22comm.utils.ColorsOut;
 
 public class RequestCallUtilObj {
@@ -12,7 +13,7 @@ public class RequestCallUtilObj {
 	
 	protected synchronized void doRequest(IApplMessage msg) {
     	ActorForRequest caller = new ActorForRequest("caller_"+msg.msgSender());
-	    ActionFunction endFun = (answer) -> { 
+	    ActionFun endFun = (answer) -> { 
 	    	System.out.println(answer); 
 	    	this.answer = answer;
 	    };
