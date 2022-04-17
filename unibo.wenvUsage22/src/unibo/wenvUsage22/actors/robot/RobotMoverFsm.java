@@ -1,45 +1,35 @@
 package unibo.wenvUsage22.actors.robot;
 import java.util.Observable;
-
 import org.json.JSONObject;
-
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.Qak22Util;
-import unibo.actor22comm.http.HttpConnection;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.interfaces.StateActionFun;
 import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.actors.QakActor22Fsm;
+import unibo.wenvUsage22.actors.SysData;
 import unibo.wenvUsage22.common.ApplData;
 
 
 public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
- 	private IApplMessage startCmd, moveCmd, haltCmd;
 	private Interaction2021 conn;
 	private static IObserver myself;
 	public RobotMoverFsm(String name) {
 		super(name);
 		myself = this;
-		
-		startCmd = CommUtils.buildDispatch("main", "activate", "activate",name );
-		moveCmd  = CommUtils.buildDispatch("main", "move", "100",name );
-		haltCmd  = CommUtils.buildDispatch("main", "halt", "100",name );
-		
-		initStateMap( );
  	}
   	 
-	protected void initStateMap( ) {
-		stateMap.put("s0", new StateActionFun() {
+	@Override
+	protected void declareTheStates( ) {
+		declareState("s0", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);	
 				//Inizializzo la connessione con WEnv
-				conn = WsConnection.create("localhost:8091" );
-				 
+				conn = WsConnection.create("localhost:8091" );				 
 				//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
 				((WsConnection)conn).addObserver(myself);
 				//Muovo il robot in funzione del comando che mi arriva
@@ -47,27 +37,29 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 				nextState();
 			}			
 		});
-		stateMap.put("moveTheRobot", new StateActionFun() {
+		declareState("moveTheRobot", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);	
-				doMove( msg.msgContent().replaceAll("'","") );
- 
+				doMove( msg.msgContent().replaceAll("'","") ); //remove ' ' 
 				addTransition( "moveTheRobot",  ApplData.robotCmdId );
-				addTransition( "s3", haltCmd.msgId() );
+				addTransition( "s3", SysData.haltSysCmdId );
 				nextState();
 			}			
 		});
-		stateMap.put("s3", new StateActionFun() {
+		declareState("s3", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);
 				outInfo("BYE" );
-				addTransition( "s3", haltCmd.msgId() );
+				addTransition( "s3", SysData.haltSysCmdId );
   			}			
 		});
-		curState = "s0";
-		addExpecetdMsg(curState, startCmd.msgId());
+	}
+	
+	@Override
+	protected void setTheInitialState( ) {
+		declareAsInitialState( "s0" );
 	}
 	
 	protected void doMove(String move) {
@@ -94,7 +86,7 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
  			return;
  		}
         //Otherwise ...
- 			Qak22Util.sendAMsg( haltCmd );	
+ 			autoMsg( SysData.haltSysCmd("main",getName()) );	
 	}
 	
 	@Override

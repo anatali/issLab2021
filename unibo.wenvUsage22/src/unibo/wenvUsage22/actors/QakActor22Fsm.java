@@ -14,18 +14,31 @@ import unibo.actor22comm.utils.CommUtils;
 
 
 public abstract class QakActor22Fsm extends QakActor22{
-	protected HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
+	private HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
 	protected HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
 	protected Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
 	protected Vector< Pair<String, String> > transTab = new Vector< Pair<String, String> >();
-	protected String curState = "";
+	private String curState = "";
   	
 	public QakActor22Fsm(String name) {
 		super(name);
+		declareTheStates( );
+		setTheInitialState( );
+		addExpecetdMsg(curState, SysData.startSysCmdId );
+		autoMsg(SysData.startSysCmd("system",name));
 	}
  	
- 	 
-	protected abstract void initStateMap( );
+ 	
+	protected abstract void declareTheStates( );
+	protected abstract void setTheInitialState( );
+	
+	protected void declareAsInitialState( String stateName ) {
+		curState = stateName;
+	};
+	
+	protected void declareState(String stateName, StateActionFun action) {
+		stateMap.put( stateName, action );
+	}
 	
 	protected void addTransition(String state, String msgId) {
 		ColorsOut.outappl( getName() + " in " + curState + " | transition to " + state + " for " +  msgId, ColorsOut.BLUE);		

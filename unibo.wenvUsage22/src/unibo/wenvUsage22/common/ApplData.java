@@ -24,12 +24,13 @@ public class ApplData {
 
 	public static final String activate( )                { return crilCmd("alarm", 10);        }
 	
-	
-	/*
-	 * MESSAGGI per attori
-	*/		
-	
-	
+	//Per prove
+	public static final String moveCmdId = "move";
+	public static final IApplMessage moveCmd(String sender, String receiver, String payload)   {
+		return CommUtils.buildDispatch(sender, moveCmdId, payload, receiver );
+	}
+ 
+	//Per WEnv
 	public final static String robotCmdId = "move";
 	
 	public static final IApplMessage w(String sender, String receiver)   {
