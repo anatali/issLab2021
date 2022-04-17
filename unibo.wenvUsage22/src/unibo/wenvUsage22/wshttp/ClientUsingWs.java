@@ -6,42 +6,27 @@ TODO. eliminate the communication details from this level
 ===============================================================
 */
 package unibo.wenvUsage22.wshttp;
-import org.json.JSONObject;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.*;
+import unibo.wenvUsage22.common.ApplData;
+
 import java.util.Observable;
 
 public class ClientUsingWs implements IObserver{
  
 	private Interaction2021 conn;
 	
-	protected String crilCmd(String move, int time){
-		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
-		//ColorsOut.out( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd );
-		return crilCmd;
-	}
-	public String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }
-	public String moveBackward(int duration) { return crilCmd("moveBackward", duration); }
-	public String turnLeft(int duration)     { return crilCmd("turnLeft", duration);     }
-	public String turnRight(int duration)    { return crilCmd("turnRight", duration);    }
-	public String stop(int duration)         { return crilCmd("alarm", duration);        }
-	public String stop( )                    { return crilCmd("alarm", 10);        }
 
-	protected void doBasicMovesTest() throws Exception {
-		conn = WsConnection.create("localhost:8091" );
-		((WsConnection)conn).addObserver(this);
-		//conn.forward( moveForward(2300) );
-	}
  
 	protected void doBasicMoves() throws Exception {
 		conn = WsConnection.create("localhost:8091" );
 		((WsConnection)conn).addObserver(this);
  
  		//conn.forward( turnLeft( 800  ) );
- 		conn.forward( moveForward(2300) );
+ 		conn.forward( ApplData.moveForward(2300) );
 //		conn.forward( stop( ) );
 ////    	Thread.sleep( 500 );
 //		conn.forward( turnRight( 400 ) );

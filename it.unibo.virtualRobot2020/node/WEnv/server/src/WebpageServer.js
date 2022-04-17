@@ -386,7 +386,7 @@ function showMoveMap(){
 function startServer() {
     console.log("WebpageServer  | startServer" )
         //Connect with an observer actor
-        setUpActorLocalConnection(8030)
+        //setUpActorLocalConnection(8030)
 
     sceneSocketInfoHandler()
     initWs()

@@ -2,7 +2,6 @@ package unibo.wenvUsage22.actors;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22;
-import unibo.actor22.annotations.ActorLocal;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 

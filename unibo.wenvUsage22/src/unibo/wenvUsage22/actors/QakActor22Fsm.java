@@ -13,55 +13,19 @@ import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 
 
-public  class Actor22Fsm extends QakActor22{
-	private HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
-	private HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
-	private Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
-	private Vector< Pair<String, String> > transTab = new Vector< Pair<String, String> >();
-
-	private  String curState = "";
-	private IApplMessage startCmd, moveCmd, haltCmd;
- 	
-	public Actor22Fsm(String name) {
+public abstract class QakActor22Fsm extends QakActor22{
+	protected HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
+	protected HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
+	protected Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
+	protected Vector< Pair<String, String> > transTab = new Vector< Pair<String, String> >();
+	protected String curState = "";
+  	
+	public QakActor22Fsm(String name) {
 		super(name);
-		startCmd = CommUtils.buildDispatch("main", "activate", "activate",name );
-		moveCmd  = CommUtils.buildDispatch("main", "move", "100",name );
-		haltCmd  = CommUtils.buildDispatch("main", "halt", "100",name );
-		initStateMap( );
 	}
  	
-	
-
-	 
-	protected void initStateMap( ) {
-		stateMap.put("s0", new StateActionFun() {
-			@Override
-			public void run(IApplMessage msg) {
-				outInfo(""+msg);	
-				addTransition( "s1", moveCmd.msgId() );
-				nextState();
-			}			
-		});
-		stateMap.put("s1", new StateActionFun() {
-			@Override
-			public void run(IApplMessage msg) {
-				outInfo(""+msg);	
-				addTransition( "s1", moveCmd.msgId() );
-				addTransition( "s3", haltCmd.msgId() );
-				nextState();
-			}			
-		});
-		stateMap.put("s3", new StateActionFun() {
-			@Override
-			public void run(IApplMessage msg) {
-				outInfo(""+msg);
-				outInfo("BYE" );
-				addTransition( "s3", haltCmd.msgId() );
-  			}			
-		});
-		curState = "s0";
-		addExpecetdMsg(curState, startCmd.msgId());
-	}
+ 	 
+	protected abstract void initStateMap( );
 	
 	protected void addTransition(String state, String msgId) {
 		ColorsOut.outappl( getName() + " in " + curState + " | transition to " + state + " for " +  msgId, ColorsOut.BLUE);		
@@ -100,9 +64,7 @@ public  class Actor22Fsm extends QakActor22{
 		return nextMsgMap.get( msg.msgId() );
 	}
 	
-
- 
-	
+ 	
 	@Override
 	protected void handleMsg(IApplMessage msg) {
 		ColorsOut.outappl(getName() + " | handleMsg " +  msg, ColorsOut.GREEN);
@@ -134,25 +96,6 @@ public  class Actor22Fsm extends QakActor22{
 	
 	
 	
-	public void doJob() {
-		CommSystemConfig.tracing = false;
-		//new EnablerContextForActors( "ctx",8030,ProtocolType.tcp).activate();
-		Qak22Context.showActorNames();
-		CommUtils.delay(1000);
-		//Qak22Util.sendAMsg( startCmd );
-		Qak22Util.sendAMsg( moveCmd );
-		//Qak22Util.sendAMsg( haltCmd );
-		Qak22Util.sendAMsg( moveCmd );
-		Qak22Util.sendAMsg( haltCmd );
-		Qak22Util.sendAMsg( startCmd );
-		CommUtils.delay(2000);
-	}
-	
-	public static void main( String[] args) {
-		CommUtils.aboutThreads("Before start - ");
-		new Actor22Fsm("a1").doJob();
-		CommUtils.aboutThreads("Before end - ");
-		
-	}
-	
+ 	
+ 	
 }
