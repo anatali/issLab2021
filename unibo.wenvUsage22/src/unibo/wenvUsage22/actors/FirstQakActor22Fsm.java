@@ -7,14 +7,15 @@ import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 
 
-public  class DemoQakActor22Fsm extends QakActor22Fsm{
+public  class FirstQakActor22Fsm extends QakActor22Fsm{
  	private IApplMessage startCmd, moveCmd, haltCmd;
  	
-	public DemoQakActor22Fsm(String name) {
+	public FirstQakActor22Fsm(String name) {
 		super(name);
 		startCmd = CommUtils.buildDispatch("main", "activate", "activate",name );
 		moveCmd  = CommUtils.buildDispatch("main", "move", "100",name );
 		haltCmd  = CommUtils.buildDispatch("main", "halt", "100",name );
+		initStateMap( );
  	}
   	 
 	protected void initStateMap( ) {
@@ -47,27 +48,5 @@ public  class DemoQakActor22Fsm extends QakActor22Fsm{
 		addExpecetdMsg(curState, startCmd.msgId());
 	}
 	
-	public void doJob() {
-		CommSystemConfig.tracing = false;
- 		initStateMap( );
-
-		//new EnablerContextForActors( "ctx",8030,ProtocolType.tcp).activate();
-		Qak22Context.showActorNames();
-		CommUtils.delay(1000);
-		//Qak22Util.sendAMsg( startCmd );
-		Qak22Util.sendAMsg( moveCmd );
-		//Qak22Util.sendAMsg( haltCmd );
-		Qak22Util.sendAMsg( moveCmd );
-		Qak22Util.sendAMsg( haltCmd );
-		Qak22Util.sendAMsg( startCmd );
-		CommUtils.delay(2000);
-	}
-	
-	public static void main( String[] args) {
-		CommUtils.aboutThreads("Before start - ");
-		new DemoQakActor22Fsm("a1").doJob();
-		CommUtils.aboutThreads("Before end - ");
-		
-	}
-	
+ 	
 }

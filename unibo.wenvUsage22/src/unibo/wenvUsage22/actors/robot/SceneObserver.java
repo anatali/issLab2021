@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.actors;
+package unibo.wenvUsage22.actors.robot;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22;
