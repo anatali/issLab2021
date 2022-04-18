@@ -13,7 +13,7 @@ import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 
 
-public  class Actor22Fsm extends QakActor22{
+public  class Actor22FsmOld extends QakActor22{
 	private HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
 	private HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
 	private Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
@@ -22,7 +22,7 @@ public  class Actor22Fsm extends QakActor22{
 	private  String curState = "";
 	private IApplMessage startCmd, moveCmd, haltCmd;
  	
-	public Actor22Fsm(String name) {
+	public Actor22FsmOld(String name) {
 		super(name);
 		startCmd = CommUtils.buildDispatch("main", "activate", "activate",name );
 		moveCmd  = CommUtils.buildDispatch("main", "move", "100",name );
@@ -150,7 +150,7 @@ public  class Actor22Fsm extends QakActor22{
 	
 	public static void main( String[] args) {
 		CommUtils.aboutThreads("Before start - ");
-		new Actor22Fsm("a1").doJob();
+		new Actor22FsmOld("a1").doJob();
 		CommUtils.aboutThreads("Before end - ");
 		
 	}

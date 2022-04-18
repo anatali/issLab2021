@@ -9,6 +9,14 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm{
 	public FirstQakActor22Fsm(String name) {
 		super(name);
  	}
+	
+	/*
+    @State @Initial
+    @WhenRequest("t0", "replyToRequest", "whoareyou")
+    suspend fun s0() {
+        actorPrintln("waiting for next request...")
+    }
+    */
   	
 	@Override
 	protected void declareTheStates( ) {

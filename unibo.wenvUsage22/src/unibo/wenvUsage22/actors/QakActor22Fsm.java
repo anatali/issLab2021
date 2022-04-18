@@ -9,8 +9,7 @@ import unibo.actor22.Qak22Util;
 import unibo.actor22.QakActor22;
 import unibo.actor22comm.interfaces.StateActionFun;
 import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommSystemConfig;
-import unibo.actor22comm.utils.CommUtils;
+ 
 
 
 public abstract class QakActor22Fsm extends QakActor22{
