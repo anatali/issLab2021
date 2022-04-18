@@ -24,6 +24,7 @@ public abstract class QakActor22Fsm extends QakActor22{
 		declareTheStates( );
 		setTheInitialState( );
 		addExpecetdMsg(curState, SysData.startSysCmdId );
+		ColorsOut.outappl(getName() + " | autoMsg SysData.startSysCmd", ColorsOut.GREEN);
 		autoMsg(SysData.startSysCmd("system",name));
 	}
  	
@@ -36,6 +37,7 @@ public abstract class QakActor22Fsm extends QakActor22{
 	};
 	
 	protected void declareState(String stateName, StateActionFun action) {
+		ColorsOut.outappl( getName() + " declareState " + stateName, ColorsOut.BLUE);		
 		stateMap.put( stateName, action );
 	}
 	

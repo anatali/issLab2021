@@ -21,6 +21,8 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 		super(name);
 		myself = this;
  	}
+	
+	
   	 
 	@Override
 	protected void declareTheStates( ) {

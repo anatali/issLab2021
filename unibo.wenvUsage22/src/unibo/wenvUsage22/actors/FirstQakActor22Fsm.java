@@ -1,6 +1,7 @@
 package unibo.wenvUsage22.actors;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.interfaces.StateActionFun;
+import unibo.actor22comm.utils.ColorsOut;
 import unibo.wenvUsage22.common.ApplData;
 
 
@@ -18,12 +19,17 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm{
     }
     */
   	
+	protected void s0(IApplMessage msg) {
+		//ColorsOut.outappl( getName()  + " | handleMsg " + msg, ColorsOut.CYAN);	
+		outInfo("uuuuuuuuuuuuuuuuuuuuuuu "+msg);
+	}
+
 	@Override
 	protected void declareTheStates( ) {
 		declareState( "s0", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
-				outInfo(""+msg);	
+				s0(msg);
 				addTransition( "s1", ApplData.moveCmdId );
 				nextState();
 			}			
