@@ -20,7 +20,7 @@ import unibo.wenvUsage22.common.ApplData;
 public class BoundaryWalkerAnnot extends QakActor22FsmAnnot implements IObserver{
 	private Interaction2021 conn;
 	
-	private boolean wallDetected = false;
+//	private boolean wallDetected = false;
 	private String  wallName     = "unknown";
 	private int ncorner          = 0;
 	
@@ -67,7 +67,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot implements IObserver
 	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
 	protected void wallDetected( IApplMessage msg ) {
 		outInfo(""+msg);	
-		wallDetected = false;
+//		wallDetected = false;
 		wallName     = "unknown";
 		ncorner++;
 		if( ncorner == 4 ) //sendMsgToMyself( SysData.haltSysCmd(getName(),getName()) );
@@ -98,7 +98,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot implements IObserver
 		ColorsOut.out(getName() + " |  asObserver receives:" + data);
  		JSONObject d = new JSONObject(""+data);
  		if( d.has("collision") ) {
- 			wallDetected = true;
+// 			wallDetected = true;
  			wallName     = d.getString("target");
  			sendMsgToMyself( ApplData.wallDetected(getName(),wallName ));
  		}else if( d.has("endmove") ) {
@@ -108,25 +108,5 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot implements IObserver
  			}else ColorsOut.outerr(getName() + " |  inconsistent "  );
  		}
 	}
-	
 
 }
-
-
-/*
-	conn = HttpConnection.create("localhost:8090" ); //INTERROMPIBILE usando WebGui
-	String answer = "";
-	boolean obstacle = false;
-	for( int i=1; i<=4; i++ ) {
-		while( ! obstacle ) {
-			answer = conn.request( ApplData.moveForward(500) ); 
-			ColorsOut.outappl(i + " answer= " + answer, ColorsOut.BLACK  );
-			obstacle = answer.contains("collision");
-			CommUtils.delay(500);
-		}
-		obstacle = false;
-		answer = conn.request( ApplData.turnLeft(300) );
-	}
-
-ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
-*/
