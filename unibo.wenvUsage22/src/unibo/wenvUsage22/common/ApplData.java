@@ -5,8 +5,8 @@ import unibo.actor22comm.utils.CommUtils;
 
 public class ApplData {
 	
-	public static String robotName      = "robot";
-	public static String controllerName = "robotCtrl";
+	public static final String robotName      = "robot";
+	public static final String controllerName = "robotCtrl";
 	
 	public static IApplMessage startEv  = CommUtils.buildEvent("main", "maincmd", "activate" );
 

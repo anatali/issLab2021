@@ -11,14 +11,7 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm {
 		super(name);
  	}
 	
-	/*
-    @State @Initial
-    @WhenRequest("t0", "replyToRequest", "whoareyou")
-    suspend fun s0() {
-        actorPrintln("waiting for next request...")
-    }
-    */
-  	
+   	
 	protected void s0(IApplMessage msg) {
 		//ColorsOut.outappl( getName()  + " | handleMsg " + msg, ColorsOut.CYAN);	
 		outInfo("uuuuuuuuuuuuuuuuuuuuuuu "+msg);

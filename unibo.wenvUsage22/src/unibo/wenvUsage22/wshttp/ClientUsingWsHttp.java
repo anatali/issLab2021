@@ -19,6 +19,7 @@ import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.*;
+import unibo.wenvUsage22.common.ApplData;
 import unibo.actor22comm.http.*;
 
 import java.net.URI;
@@ -32,23 +33,23 @@ public class ClientUsingWsHttp implements IObserver{
 
 	private Interaction2021 connWs, connHttp;
 	
-	protected String crilCmd(String move, int time){
-		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
-		//ColorsOut.out( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd );
-		return crilCmd;
-	}
-	public String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }
-	public String moveBackward(int duration) { return crilCmd("moveBackward", duration); }
-	public String turnLeft(int duration)     { return crilCmd("turnLeft", duration);     }
-	public String turnRight(int duration)    { return crilCmd("turnRight", duration);    }
-	public String stop(int duration)         { return crilCmd("alarm", duration);        }
-	public String stop( )                    { return crilCmd("alarm", 10);        }
+//	protected String crilCmd(String move, int time){
+//		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
+//		//ColorsOut.out( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd );
+//		return crilCmd;
+//	}
+//	public String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }
+//	public String moveBackward(int duration) { return crilCmd("moveBackward", duration); }
+//	public String turnLeft(int duration)     { return crilCmd("turnLeft", duration);     }
+//	public String turnRight(int duration)    { return crilCmd("turnRight", duration);    }
+//	public String stop(int duration)         { return crilCmd("alarm", duration);        }
+//	public String stop( )                    { return crilCmd("alarm", 10);        }
 
 	protected void doBasicMoves() throws Exception {
 		connWs   = WsConnection.create("localhost:8091" );
 		connHttp = HttpConnection.create("localhost:8090" );
 		((WsConnection)connWs).addObserver(this);
-		String answer = connHttp.request( moveForward(2000) );
+		String answer = connHttp.request( ApplData.moveForward(2000) );
 		ColorsOut.outappl("answer= " + answer, ColorsOut.BLACK  );
 
 	}
@@ -58,14 +59,14 @@ public class ClientUsingWsHttp implements IObserver{
 			ColorsOut.out("STARTING doBasicMoves ... ");
 			boolean endmove = false;
 			
-			connWs.forward( turnRight(1300) );
+			connWs.forward( ApplData.turnRight(1300) );
  			CommUtils.delay(500);
-			connWs.forward( stop() );
-			connWs.forward( turnLeft(300) );
+			connWs.forward( ApplData.stop() );
+			connWs.forward( ApplData.turnLeft(300) );
  			CommUtils.delay(200);
-			connWs.forward( stop() );
+			connWs.forward( ApplData.stop() );
 			//CommUtils.delay(500);
-			connWs.forward( moveForward(500) );
+			connWs.forward( ApplData.moveForward(500) );
 			
 //			endmove = requestSynch( turnLeft(300) );
 //			ColorsOut.out("turnLeft endmove=" + endmove);
