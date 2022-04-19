@@ -20,8 +20,7 @@ import unibo.wenvUsage22.common.ApplData;
 public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	private Interaction2021 conn;
 	
-//	private boolean wallDetected = false;
-	private String  wallName     = "unknown";
+ 	private String  wallName     = "unknown";
 	private int ncorner          = 0;
 	
 	public BoundaryWalkerAnnot(String name) {
@@ -39,8 +38,9 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	}
 	
 	@State( name = "robotStart", initial=true)
-	@Transition( state = {"robotMoving" }, 
-	             msgId = { ApplData.robotCmdId })
+//	@Transition( state = {"robotMoving" }, 
+//	             msgId = { ApplData.robotCmdId })
+	@Transition( state = "robotMoving" , msgId = ApplData.robotCmdId )
 	protected void robotStart( IApplMessage msg ) {
 		outInfo(""+msg + " connecting (blocking all the actors ) ... ");	
 		//Inizializzo la connessione con WEnv
@@ -53,8 +53,11 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	}
 	
  	@State( name = "robotMoving" )
-	@Transition( state = {"robotMoving",        "wallDetected" }, 
-	             msgId = { ApplData.robotCmdId, ApplData.wallDetectedId })
+//	@Transition( state = {"robotMoving",        "wallDetected" }, 
+//	             msgId = { ApplData.robotCmdId, ApplData.wallDetectedId })
+	@Transition( state = "robotMoving" ,  msgId = ApplData.robotCmdId )
+ 	@Transition( state = "wallDetected" , msgId = ApplData.wallDetectedId )
+ 	@Transition( state = "endWork" ,      msgId = SysData.haltSysCmdId )
 	protected void robotMoving( IApplMessage msg ) {
 		outInfo(""+msg);	
 //		if( wallDetected ) sendMsgToMyself( ApplData.wallDetected(getName(),wallName ));
@@ -63,8 +66,10 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	}
  	
  	@State( name = "wallDetected" )
-	@Transition( state = {"robotMoving",       "endWork" }, 
-	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
+//	@Transition( state = {"robotMoving",       "endWork" }, 
+//	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
+	@Transition( state = "robotMoving" , msgId = ApplData.robotCmdId )
+ 	@Transition( state = "endWork" ,     msgId = SysData.haltSysCmdId )
 	protected void wallDetected( IApplMessage msg ) {
 		outInfo(""+msg);	
 //		wallDetected = false;
@@ -78,7 +83,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  	
  	@State( name = "endWork" )
  	protected void endWork( IApplMessage msg ) {
-		outInfo(""+msg);	
+		outInfo("BYE" );	
  		
  	}
  	
@@ -95,18 +100,20 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 
 	@Override
 	public void handleAsObserver(String data) {
-		ColorsOut.out(getName() + " |  asObserver receives:" + data);
+		ColorsOut.outappl(getName() + " |  asObserver receives:" + data, ColorsOut.MAGENTA);
  		JSONObject d = new JSONObject(""+data);
  		if( d.has("collision") ) {
-// 			wallDetected = true;
  			wallName     = d.getString("target");
  			sendMsgToMyself( ApplData.wallDetected(getName(),wallName ));
  		}else if( d.has("endmove") ) {
- 			if( d.getBoolean("endmove")) {
+ 			if( d.getBoolean("endmove")  ) {
  				CommUtils.delay(300);  //to reduce speed
  				sendMsgToMyself( ApplData.w( getName() , ApplData.robotName ) );
- 			}else ColorsOut.outerr(getName() + " |  inconsistent "  );
- 		}
+ 			}else {
+ 				ColorsOut.outerr(getName() + " |  interrupted " +  d.getString("move"));
+ 				sendMsgToMyself( SysData.haltSysCmd(ApplData.robotName, ApplData.robotName));
+ 			}
+ 		}//else sendMsgToMyself( SysData.haltSysCmd(ApplData.robotName, ApplData.robotName));
 	}
 
 }

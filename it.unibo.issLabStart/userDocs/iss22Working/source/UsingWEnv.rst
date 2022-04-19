@@ -49,6 +49,14 @@ AttoriFSM annotated
 --------------------------------------
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+package unibo.wenvUsage22.annot
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+- FirstAnnotated: primo esempio di QakActor22FsmAnnot
+- MainFirstAnnotated : usa nuove annotazioni e FirstAnnotated
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package unibo.wenvUsage22.actors.robot.annotated
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

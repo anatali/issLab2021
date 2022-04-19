@@ -15,16 +15,18 @@ public class FirstAnnotated extends QakActor22FsmAnnot{
  	}
 	
 	@State( name = "s0", initial=true)
-	@Transition( state = {"s0", "s1"}, 
-	                      msgId = {ApplData.moveCmdId, "halt"})
+//	@Transition( state = {"s0", "s1"}, 
+//	                      msgId = {ApplData.moveCmdId, "halt"})
+	@Transition( state = "s0", msgId=ApplData.moveCmdId )
+	@Transition( state = "s1", msgId = "halt" )
 	protected void s0( IApplMessage msg ) {
-		ColorsOut.outappl( getName()  + " | s0 " + msg, ColorsOut.MAGENTA);	
+		//ColorsOut.outappl( getName()  + " | s0 " + msg, ColorsOut.BLUE);	
 		outInfo(""+msg);
 	}
 	
 	@State( name = "s1")
 	protected void s1( IApplMessage msg ) {
-		ColorsOut.outappl( getName()  + " | s1 " + msg, ColorsOut.MAGENTA);	
+		//ColorsOut.outappl( getName()  + " | s1 " + msg, ColorsOut.BLUE);	
 		outInfo(""+msg);
 	}
 

@@ -24,6 +24,7 @@ public class RobotController extends QakActor22FsmAnnot{
 		outInfo(""+msg);
 		Qak22Context.showActorNames();
  		Qak22Util.sendAMsg( ApplData.w(getName() , ApplData.robotName ) );
+ 		Qak22Util.sendAMsg( SysData.haltSysCmd(getName(), ApplData.robotName) );
  	}
 	
 	

@@ -19,8 +19,9 @@ public  class RobotMoverFsmAnnotated extends QakActor22FsmAnnot  {
  	}
 	
 	@State( name = "robotStart", initial=true)
-	@Transition( state = {"robotMoving" }, 
-	             msgId = { ApplData.robotCmdId })
+//	@Transition( state = {"robotMoving" }, 
+//	             msgId = { ApplData.robotCmdId })
+	@Transition( state = "robotMoving", msgId=ApplData.robotCmdId )
 	protected void robotStart( IApplMessage msg ) {
 		outInfo(""+msg + " connecting (blocking all the actors ) ... ");	
 		//Inizializzo la connessione con WEnv
@@ -32,11 +33,18 @@ public  class RobotMoverFsmAnnotated extends QakActor22FsmAnnot  {
 	
 	//Muovo il robot in funzione del comando che mi arriva
 	@State( name = "robotMoving" )
-	@Transition( state = {"robotMoving", "s3" }, 
-	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
+//	@Transition( state = {"robotMoving", "s3" }, 
+//	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
+	@Transition( state = "robotMoving", msgId=ApplData.robotCmdId )
+	@Transition( state = "endWork",     msgId=SysData.haltSysCmdId )
 	protected void robotMoving( IApplMessage msg ) {
 		outInfo(""+msg);	
 		doMove( msg.msgContent().replaceAll("'","") ); //remove ' ' 		
+	}
+	
+	@State( name = "endWork" )
+	protected void endWork( IApplMessage msg ) {
+		outInfo("BYE" );
 	}
 	
 	protected void doMove(String move) {

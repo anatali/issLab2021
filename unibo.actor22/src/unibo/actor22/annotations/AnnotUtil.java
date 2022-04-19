@@ -149,51 +149,51 @@ RELATED TO PROTOCOLS
     }
 
 
-    /*
--------------------------------------------------------------------------------
-RELATED TO ROBOT MOVES
--------------------------------------------------------------------------------
- */
- 
- 
-    //Used also by IssArilRobotSupport
-    public static boolean checkRobotConfigFile(
-        String configFileName, HashMap<String, Integer> mvtimeMap){
-        try{
-            //spec( htime( 100 ),  ltime( 300 ), rtime( 300 ),  wtime( 600 ), wstime( 600 ) ).
-            //System.out.println("IssAnnotationUtil | checkRobotConfigFile configFileName=" + configFileName);
-            FileInputStream fis = new FileInputStream(configFileName);
-            Scanner sc = new Scanner(fis);
-            String line = sc.nextLine();
-            //System.out.println("IssAnnotationUtil | checkRobotConfigFile line=" + line);
-            String[] items = line.split(",");
-            mvtimeMap.put("h", getRobotConfigInfo("htime", items[0] ));
-            mvtimeMap.put("l", getRobotConfigInfo("ltime", items[1] ));
-            mvtimeMap.put("r", getRobotConfigInfo("rtime", items[2] ));
-            mvtimeMap.put("w", getRobotConfigInfo("wtime", items[3] ));
-            mvtimeMap.put("s", getRobotConfigInfo("stime", items[4] ));
-            //System.out.println("IssAnnotationUtil | checkRobotConfigFile ltime=:" + mvtimeMap.get("l"));
-            return true;
-        } catch (Exception e) {
-            System.out.println("IssAnnotationUtil | checkRobotConfigFile WARNING:" + e.getMessage());
-            return false;
-        }
-
-    }
-
-    protected static Integer getRobotConfigInfo(String functor, String line){
-        Pattern pattern = Pattern.compile(functor);
-        Matcher matcher = pattern.matcher(line);
-        String content = "0";
-        if(matcher.find()) {
-            int end = matcher.end() ;
-            content = line.substring( end, line.indexOf(")") )
-                    .replace("\"","")
-                    .replace("(","").trim();
-            //System.out.println("IssAnnotationUtil | getRobotConfigInfo functor=" + functor + " v=" + Integer.parseInt(content));
-        }
-        return Integer.parseInt( content );
-    }
-
+//    /*
+//-------------------------------------------------------------------------------
+//RELATED TO ROBOT MOVES
+//-------------------------------------------------------------------------------
+// */
+// 
+// 
+//    //Used also by IssArilRobotSupport
+//    public static boolean checkRobotConfigFile(
+//        String configFileName, HashMap<String, Integer> mvtimeMap){
+//        try{
+//            //spec( htime( 100 ),  ltime( 300 ), rtime( 300 ),  wtime( 600 ), wstime( 600 ) ).
+//            //System.out.println("IssAnnotationUtil | checkRobotConfigFile configFileName=" + configFileName);
+//            FileInputStream fis = new FileInputStream(configFileName);
+//            Scanner sc = new Scanner(fis);
+//            String line = sc.nextLine();
+//            //System.out.println("IssAnnotationUtil | checkRobotConfigFile line=" + line);
+//            String[] items = line.split(",");
+//            mvtimeMap.put("h", getRobotConfigInfo("htime", items[0] ));
+//            mvtimeMap.put("l", getRobotConfigInfo("ltime", items[1] ));
+//            mvtimeMap.put("r", getRobotConfigInfo("rtime", items[2] ));
+//            mvtimeMap.put("w", getRobotConfigInfo("wtime", items[3] ));
+//            mvtimeMap.put("s", getRobotConfigInfo("stime", items[4] ));
+//            //System.out.println("IssAnnotationUtil | checkRobotConfigFile ltime=:" + mvtimeMap.get("l"));
+//            return true;
+//        } catch (Exception e) {
+//            System.out.println("IssAnnotationUtil | checkRobotConfigFile WARNING:" + e.getMessage());
+//            return false;
+//        }
+//
+//    }
+//
+//    protected static Integer getRobotConfigInfo(String functor, String line){
+//        Pattern pattern = Pattern.compile(functor);
+//        Matcher matcher = pattern.matcher(line);
+//        String content = "0";
+//        if(matcher.find()) {
+//            int end = matcher.end() ;
+//            content = line.substring( end, line.indexOf(")") )
+//                    .replace("\"","")
+//                    .replace("(","").trim();
+//            //System.out.println("IssAnnotationUtil | getRobotConfigInfo functor=" + functor + " v=" + Integer.parseInt(content));
+//        }
+//        return Integer.parseInt( content );
+//    }
+//
  
 }

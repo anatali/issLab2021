@@ -9,7 +9,6 @@ import unibo.wenvUsage22.common.ApplData;
 
 @Actor(name = ApplData.robotName,      implement = RobotMoverFsmAnnotated.class)
 @Actor(name = ApplData.controllerName, implement = RobotController.class)
-
 public  class MainRobotMoverFsmAnnotated  {
 	
 	public void configure() {
