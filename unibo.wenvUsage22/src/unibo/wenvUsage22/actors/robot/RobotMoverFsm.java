@@ -2,7 +2,6 @@ package unibo.wenvUsage22.actors.robot;
 import java.util.Observable;
 import org.json.JSONObject;
 import it.unibo.kactor.IApplMessage;
-import unibo.actor22.Qak22Util;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.interfaces.StateActionFun;
@@ -22,18 +21,25 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 		myself = this;
  	}
 	
-	
+	protected void s0(IApplMessage msg) {
+		outInfo(""+msg);	
+		//Inizializzo la connessione con WEnv
+		conn = WsConnection.create("localhost:8091" );				 
+		//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
+		((WsConnection)conn).addObserver(myself);
+	}	
   	 
 	@Override
 	protected void declareTheStates( ) {
 		declareState("s0", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
-				outInfo(""+msg);	
-				//Inizializzo la connessione con WEnv
-				conn = WsConnection.create("localhost:8091" );				 
-				//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
-				((WsConnection)conn).addObserver(myself);
+//				outInfo(""+msg);	
+//				//Inizializzo la connessione con WEnv
+//				conn = WsConnection.create("localhost:8091" );				 
+//				//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
+//				((WsConnection)conn).addObserver(myself);
+				s0( msg );
 				//Muovo il robot in funzione del comando che mi arriva
 				addTransition( "moveTheRobot", ApplData.robotCmdId );
 				nextState();
@@ -66,16 +72,18 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 	
 	protected void doMove(String move) {
 		try {
-			outInfo("doMove:"+move);	
-			conn.forward( move );
+ 			conn.forward( move );
 		}catch( Exception e) {
 			ColorsOut.outerr("robotMOve ERROR:" + e.getMessage() );
 		}
 	}
 
+ 
+	
 	@Override
-	public void update(Observable source, Object data) {
-		ColorsOut.out( getName() + " | update/2 receives:" + data);
+	public void handleAsObserver(String data) {
+//		ColorsOut.out(getName() + " |  update receives:" + data);
+		ColorsOut.outappl( getName() + " | asobserver receives:" + data, ColorsOut.MAGENTA);
  		JSONObject d = new JSONObject(""+data);
  		if( d.has("endmove") ) {
  			boolean result = d.getBoolean("endmove");
@@ -89,11 +97,6 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
  		}
         //Otherwise ...
  			autoMsg( SysData.haltSysCmd("main",getName()) );	
-	}
-	
-	@Override
-	public void update(String data) {
-		ColorsOut.out(getName() + " |  update receives:" + data);
 	}	
 
 

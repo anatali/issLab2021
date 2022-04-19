@@ -24,6 +24,7 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	
  
 	public static Interaction2021 create(String addr ){
+        ColorsOut.outappl("WsConnection | wsconnect addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
 		if( ! connMap.containsKey(addr)){
 			connMap.put(addr, new WsConnection( addr ) );
 		}
@@ -32,6 +33,7 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	
 	
 	public WsConnection(String addr  ) {
+        //ColorsOut.outappl("WsConnection | constructor addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
 		wsconnect(addr);
  	}
 	
@@ -110,23 +112,19 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
     @Override
     public void onMessage(WebSocket webSocket, String msg  ) {
         ColorsOut.out("WsConnection | onMessage " + msg, ColorsOut.GREEN );
-//        IApplMessage m = new ApplMessage(msg);
-//        if( m.isReply() ) {
-//        	//resume waiting for reply
-//        }
         updateObservers( msg );
     }
 
 
 	
 //----------------------------------------------------------------------
-    public void wsconnect(String wsAddr){    // localhost:8091
-        //this.wsAddr = wsAddr;
+    protected void wsconnect(String wsAddr){    // localhost:8091
+         //ColorsOut.outappl("WsConnection | wsconnect wsAddr=" + wsAddr, ColorsOut.GREEN );
         Request request = new Request.Builder()
                 .url( "ws://"+wsAddr )
                 .build() ;
         myWs = okHttpClient.newWebSocket(request, this);
-        ColorsOut.out("WsConnection | wsconnect myWs=" + myWs, ColorsOut.GREEN );
+        //ColorsOut.out("WsConnection | wsconnect myWs=" + myWs, ColorsOut.GREEN );
     }
 
      

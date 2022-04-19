@@ -21,7 +21,7 @@ public  class MainRobotMoverFsm  {
 	protected void doJob(String name)  {
 		CommSystemConfig.tracing = false;
 		Qak22Context.showActorNames();
- 		Qak22Util.sendAMsg( startCmd );
+ 		//Qak22Util.sendAMsg( startCmd ); 
 		Qak22Util.sendAMsg( ApplData.w("main",name) );
 		CommUtils.delay(2000);		
 	}

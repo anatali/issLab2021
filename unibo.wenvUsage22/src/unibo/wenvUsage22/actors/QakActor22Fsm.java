@@ -1,18 +1,18 @@
 package unibo.wenvUsage22.actors;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Observable;
 import java.util.Vector;
 import it.unibo.kactor.IApplMessage;
 import kotlin.Pair;
-import unibo.actor22.Qak22Context;
-import unibo.actor22.Qak22Util;
 import unibo.actor22.QakActor22;
+import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.StateActionFun;
 import unibo.actor22comm.utils.ColorsOut;
  
 
 
-public abstract class QakActor22Fsm extends QakActor22{
+public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	private HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
 	protected HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
 	protected Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
@@ -33,16 +33,17 @@ public abstract class QakActor22Fsm extends QakActor22{
 	protected abstract void setTheInitialState( );
 	
 	protected void declareAsInitialState( String stateName ) {
+		ColorsOut.outappl( getName() + " QakActor22Fsm | declareAsInitialState " + stateName, ColorsOut.BLUE);		
 		curState = stateName;
 	};
 	
 	protected void declareState(String stateName, StateActionFun action) {
-		ColorsOut.outappl( getName() + " declareState " + stateName, ColorsOut.BLUE);		
+		ColorsOut.outappl( getName() + " QakActor22Fsm | declareState " + stateName, ColorsOut.BLUE);		
 		stateMap.put( stateName, action );
 	}
 	
 	protected void addTransition(String state, String msgId) {
-		ColorsOut.outappl( getName() + " in " + curState + " | transition to " + state + " for " +  msgId, ColorsOut.BLUE);		
+		//ColorsOut.outappl( getName() + " QakActor22Fsm | in " + curState + " | transition to " + state + " for " +  msgId, ColorsOut.BLUE);		
 		transTab.add( new Pair<>(state, msgId) );
 	}
 	
@@ -66,7 +67,8 @@ public abstract class QakActor22Fsm extends QakActor22{
 		curState = stateName;
 		transTab.removeAllElements();
 		StateActionFun a = stateMap.get(stateName);
-		a.run( msg );			
+		if( a != null ) a.run( msg );
+		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED");
 	}	
 	protected void addExpecetdMsg(String state, String msgId) {
 		nextMsgMap.put(msgId, state);		
@@ -81,14 +83,14 @@ public abstract class QakActor22Fsm extends QakActor22{
  	
 	@Override
 	protected void handleMsg(IApplMessage msg) {
-		ColorsOut.outappl(getName() + " | handleMsg " +  msg, ColorsOut.GREEN);
+		//ColorsOut.out(getName() + " | QakActor22Fsm handleMsg " +  msg, ColorsOut.GREEN);
 		String state = checkIfExpected(msg);
 		if ( state != null ) stateTransition(state,msg);
 		else memoTheMessage(msg);
 	}
 	
 	protected void memoTheMessage(IApplMessage msg) {
-		ColorsOut.outappl(getName() + " | handleMsg not yet:" +  msg, ColorsOut.YELLOW);
+		ColorsOut.outappl(getName() + " | QakActor22Fsm handleMsg not yet:" +  msg, ColorsOut.YELLOW);
 		OldMsgQueue.add(msg);		
 	}
 
@@ -105,11 +107,22 @@ public abstract class QakActor22Fsm extends QakActor22{
  	}
 
 	protected void outInfo(String info) {
-		ColorsOut.outappl(curState + " | " + info, ColorsOut.BLACK);
+		ColorsOut.outappl(getName() + "/" + curState + " | " + info, ColorsOut.BLACK);
 	}
 	
+//Useful for IObserver	
 	
-	
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		handleAsObserver(arg1.toString());
+	}
+
+//Convert ino an event ???? Or abstract ???	
+	@Override
+	public void update(String data) {
+		ColorsOut.outerr(curState + " | update NEVER HERE " );
+	} 
  	
+	public abstract void handleAsObserver(String data) ;
  	
 }

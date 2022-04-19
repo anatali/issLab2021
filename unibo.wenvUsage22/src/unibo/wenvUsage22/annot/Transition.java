@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 @Target (ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface StateSpec {
-	String name() default "s0";
+public @interface Transition {
+	String[] state()  ;
+	String[] msgId()  ;
 }

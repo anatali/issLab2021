@@ -8,11 +8,7 @@ import unibo.wenvUsage22.common.ApplData;
 
 
 public  class MainFirstAnnotated  {
-  	
-	public MainFirstAnnotated( ) {
-  	}
-  	 
- 	
+  	 	
 	public void doJob( String name ) {
 		new FirstAnnotated(name);
 	}
@@ -22,7 +18,7 @@ public  class MainFirstAnnotated  {
 		CommUtils.aboutThreads("Before start - ");
 		new MainFirstAnnotated(  ).doJob( "a1" );
 		Qak22Context.showActorNames();
-// 		Qak22Util.sendAMsg( startCmd );
+// 		Qak22Util.sendAMsg( startCmd );  //Done at the creation of the actor 
 		Qak22Util.sendAMsg( ApplData.moveCmd("main", "a1", "w" ) );
 		CommUtils.delay(1000);		
 		CommUtils.aboutThreads("Before end - ");

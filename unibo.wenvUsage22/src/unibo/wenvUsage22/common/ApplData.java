@@ -5,6 +5,9 @@ import unibo.actor22comm.utils.CommUtils;
 
 public class ApplData {
 	
+	public static String robotName      = "robot";
+	public static String controllerName = "robotCtrl";
+	
 	public static IApplMessage startEv  = CommUtils.buildEvent("main", "maincmd", "activate" );
 
 	/*
@@ -30,12 +33,19 @@ public class ApplData {
 		return CommUtils.buildDispatch(sender, moveCmdId, payload, receiver );
 	}
  
-	//Per WEnv
+	//Per WEnv VirtualRobot
 	public final static String robotCmdId = "move";
 	
 	public static final IApplMessage w(String sender, String receiver)   {
 		return CommUtils.buildDispatch(sender,robotCmdId,moveForward(300),receiver);
 	}
+	public static final IApplMessage a(String sender, String receiver)   {
+		return CommUtils.buildDispatch(sender,robotCmdId,turnLeft(300),receiver);
+	}
 	
-
+	//Per Robot 
+	public final static String wallDetectedId = "wallDetected";
+	public static final IApplMessage wallDetected ( String sender, String wallName )   { 
+		return CommUtils.buildDispatch(sender,wallDetectedId,wallName,robotName);
+	}
 }

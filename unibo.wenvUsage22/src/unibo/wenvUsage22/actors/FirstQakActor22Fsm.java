@@ -5,7 +5,7 @@ import unibo.actor22comm.utils.ColorsOut;
 import unibo.wenvUsage22.common.ApplData;
 
 
-public  class FirstQakActor22Fsm extends QakActor22Fsm{
+public  class FirstQakActor22Fsm extends QakActor22Fsm {
  	
 	public FirstQakActor22Fsm(String name) {
 		super(name);
@@ -52,9 +52,18 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm{
   			}			
 		});
 	}
+
+ 
 	
 	@Override
 	protected void setTheInitialState( ) {
 		declareAsInitialState( "s0" );
+	}
+
+
+	@Override
+	public void handleAsObserver(String data) {
+		// TODO Auto-generated method stub
+		
 	}
 }
