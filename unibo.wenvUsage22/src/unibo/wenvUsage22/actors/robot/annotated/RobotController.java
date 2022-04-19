@@ -32,16 +32,7 @@ public class RobotController extends QakActor22FsmAnnot{
 	public void handleAsObserver(String data) {
 		outInfo( "handleAsObserver: "  + data);
 	}
-	
-	
-
-
+ 
 }
 
-/*
- * 		CommSystemConfig.tracing = false;
-		Qak22Context.showActorNames();
- 		//Qak22Util.sendAMsg( startCmd );
-		Qak22Util.sendAMsg( ApplData.w("main",name) );
-		CommUtils.delay(4000);		
-*/
+ 

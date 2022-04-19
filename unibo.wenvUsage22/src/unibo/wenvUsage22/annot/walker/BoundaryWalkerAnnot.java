@@ -17,7 +17,7 @@ import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
 import unibo.wenvUsage22.common.ApplData;
 
-public class BoundaryWalkerAnnot extends QakActor22FsmAnnot implements IObserver{
+public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	private Interaction2021 conn;
 	
 //	private boolean wallDetected = false;
