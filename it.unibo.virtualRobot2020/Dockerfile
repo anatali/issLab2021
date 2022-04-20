@@ -1,6 +1,5 @@
 ## ELIMINARE node-modules dalle dir 
 FROM node:17-alpine
-##FROM node:12
 RUN mkdir -p /home/node
 	
 ### FROM openjdk:12.0.2		

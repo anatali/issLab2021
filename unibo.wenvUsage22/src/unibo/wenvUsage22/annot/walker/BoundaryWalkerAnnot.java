@@ -110,7 +110,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  				CommUtils.delay(300);  //to reduce speed
  				sendMsgToMyself( ApplData.w( getName() , ApplData.robotName ) );
  			}else {
- 				ColorsOut.outerr(getName() + " |  interrupted " +  d.getString("move"));
+ 				ColorsOut.outerr(getName() + " |  interrupted: " +  d.getString("move"));
  				sendMsgToMyself( SysData.haltSysCmd(ApplData.robotName, ApplData.robotName));
  			}
  		}//else sendMsgToMyself( SysData.haltSysCmd(ApplData.robotName, ApplData.robotName));

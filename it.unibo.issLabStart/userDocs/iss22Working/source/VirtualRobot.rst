@@ -149,7 +149,7 @@ Un esempio (relativo alla scena della figura precedente) può essere trovato in 
             },
             {
                 name: "wallRight",
-                centerPosition: { x: 1.0, y: 0.5},
+                centerPosition: { x: 0.98, y: 0.5},
                 size: { x: 0.01, y: 0.99}
             }
         ]
@@ -166,7 +166,48 @@ Sensori virtuali
 
 Il robot virtuale è dotato di due sensori di impatto, uno posto davanti e uno posto nella parte posteriore del robot.
 
-E' inoltre possibile introdurre sonar virtuali che rilevano la posizione corrente del robot (o di altri ostacoli) nella scena.
+E' inoltre possibile introdurre ostacoli mobili e sonar virtuali che rilevano la posizione corrente del robot 
+(o di ostacoli mobili) nella scena.
+Ad esempio:  
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+  
+  * - .. image::  ./_static/img/VirtualRobot/wenvscenewithsonars.PNG
+         :align: center 
+         :width: 100%
+
+      Si noti anche un esempio (commentato) di ostacolo mobile.
+
+    -  La scena alla sinistra si ottiene includendo in :ref:`sceneConfig.js` la seguente specifica:
+       
+       .. code::
+
+        sonars: [
+        {
+            name: "sonar1",
+            position: { x: 0.40, y: 0.04 },
+            senseAxis: { x: false, y: true }
+        },
+        {
+            name: "sonar2",
+            position: { x: 1.00, y: 0.95},
+            senseAxis: { x: true, y: false }
+        }
+        ],
+        movingObstacles: [
+        /*
+        {
+             name: "movingobstacle",
+             position: { x: .64, y: .42 },
+             directionAxis: { x: true, y: true },
+             speed: 0.4,
+             range: 8
+         }*/
+        ],
+     
+        
 
 --------------------------------------------
 Comandi-base per il robot in cril 
@@ -239,12 +280,30 @@ L'invio di un comando di movimento al robot (mossa) mediante WebSocket `ws`_  su
 implica una forma di comunicazione :blue:`asincrona` (*fire-and-forget*).
 
 Poichè l'invio asincrono di un comando non blocca il chiamante, un client può inviare un nuovo 
-comando prima che il precedente sia terminato. Per gestire situazioni di questo tipo, WEnv segue la
+comando prima che il precedente sia terminato. Per gestire situazioni di questo tipo, WEnv adotta la
 regola che segue:
 
 :remark:`è possibile interrompere l'esecuzione di una mossa solo con il comando alarm.`
 
-I *messaggi di stato* dopo l'esecuzione asincrona di un comando possono essere:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Messaggi di stato
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Un cliente connesso a WEnv mediante una connessione WS può ricevere  informazioni 
+su variazioni dello stato del 'mondo' (che qui denominiamo **messaggi di stato**), quali:
+
+- dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
+- dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
+
+Si noti che dati relativi a sonar presenti nella scena possono essere emessi indipendentemente dalla esecuzione
+di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. 
+Ad esempio:
+
+  .. code::
+
+    {"sonarName": "sonarName", "distanza": 1, "asse": "x" }
+
+
+I *messaggi di stato* connessi alla esecuzione asincrona di un comando possono essere:
 
 .. code::
 
@@ -258,27 +317,12 @@ Il significato dei valori di ``MINFO`` è il seguente:
 
 - **MOVEID_halted**: mossa ``MOVEID`` interrotta perchè il robot ha ricevuto un comando  ``alarm``
 - **MOVEID_notallowed**: mossa ``MOVEID`` rifiutata (non eseguita) in quanto la mossa relativa al comando precedente 
-  non è ancora terminata
-
-Un cliente connesso a WEnv mediante una connessione WS può ricevere  informazioni 
-su variazioni dello stato del 'mondo' (che qui denominiamo **messaggi di stato**), quali:
-
-- dati emessi dai sonar presenti nella scena, se rilevano il robot in movimento
-- dati emessi dai sensori di impatto posti davanti e dietro al robot, quando rilevano un ostacolo. 
-
-Si noti che dati relativi a sonar presenti nella scena possono essere emessi indipendentemente dalla esecuzione
-di mosse del robot, ad esempio in relazione alla rilevazione di ostacoli mobili. 
-
-Esempi di messaggi di stato sono:
-
-  .. code::
-
-    {"sonarName": "sonarName", "distanza": 1, "asse": "x" }
-    {"collision":"moveForward","target":"wallDown"}
-
-Ad esempio, se l'invio di un comando ``moveForward`` provoca il contatto con la parete 'sud' delòa stanza, il cliente riceve
+  non è ancora terminata.
+ 
+Se l'invio di un comando ``moveForward`` provoca il contatto con la parete 'sud' della stanza, il cliente riceve
 l'inforazione *collision* invece di *endmove*.
 
+  ``{"collision":"moveForward","target":"wallDown"}`` 
 
 ++++++++++++++++++++++++++++++++++++
 Esempi di uso 'naive' di WEnv 
@@ -293,18 +337,21 @@ ClientNaiveUsingHttp
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. list-table:: 
-  :widths: 35,75
+  :widths: 50,50
   :width: 100%
 
-  * - ClientNaiveUsingHttp.java
-    - :blue:`Key point`: Request-response :blue:`sincrona`. 
+  * - **ClientNaiveUsingHttp**.java
+
+      Esegue  mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot in cril>`
+
+    - :blue:`Key point`: Richiesta :blue:`sincrona`. 
 
       Richiede 1 thread.
 
 Osserviamo che:
 
 - Il codice di comunicazione è scritto completamente dal progettista dell'applicazione.
-- Una mossa può terminare prima del tempo indicato nel comando, restituendo la risposta **false**.  
+- Una mossa può terminare prima del tempo indicato nel comando, restituendo la risposta ``{"endmove":`` **false** ``, "move":MINFO }``.  
 - La gestione delle risposte JSON viene eseguita utilizzando la libreria  `org.json`_ 
   (vedi anche `Introduzione a JSON-Java`_ ).
 
@@ -315,13 +362,14 @@ ClientNaiveUsingWs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. list-table:: 
-  :widths: 25,75
+  :widths: 50,50
   :width: 100%
 
-  * - ClientNaiveUsingWs.java
-    - Esegue le mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot in cril>`.
+  * - **ClientNaiveUsingWs**.java
 
-      :blue:`Key point`: Richiesta :blue:`asincrona`
+      Esegue  mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot in cril>`
+
+    - :blue:`Key point`: Richiesta :blue:`asincrona`
 
       Richiede 4 thread, a causa della libreria ``javax.websocket``.
 
@@ -362,7 +410,7 @@ Dal punto di vista 'applicativo', osserviamo che:
 
 
 -------------------------------------------------
-Una WebGui per interagire con WEnv
+NaiveGui 
 -------------------------------------------------
 
 Il progetto ``unibo.wenvUsage22`` include un file ``resources/NaiveGui.html`` che permette di interagire con WEnv 
@@ -422,13 +470,13 @@ Casi di interazione
 
 Il `videoWEnv`_ mostra un insieme di possibili interazioni:
 
-#. Invio di comandi asincroni su WS mediante programma Java o mediante la pagina ``NaiveGui.html``
-#. Invio di comandi sincroni su HTTP mediante programma Java o mediante la pagina ``NaiveGui.html``
+#. Invio di comandi asincroni su WS mediante programma Java o mediante :ref:`NaiveGui<NaiveGui>`.
+#. Invio di comandi sincroni su HTTP mediante programma Java o mediante  :ref:`NaiveGui<NaiveGui>`.
 #. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
 
 
 Se invio un comando ``moveForward`` mediante HTTP-POST 
-e poi ``halt``  mediante la pagina ``NaiveGui.html``: ricevo come risposta 
+e poi ``halt``  mediante :ref:`NaiveGui<NaiveGui>`: ricevo come risposta 
 
   ``{"endmove":false,"move":"interrupted"}``
 
@@ -451,7 +499,7 @@ Architettura di WEnv
 
 .. image::  ./_static/img/VirtualRobot/WenvArch.PNG
     :align: center 
-    :width: 80%
+    :width: 100%
 
 
 ``WebpageServer.js`` utilizza due diversi tipi  di WebSocket:
@@ -470,7 +518,7 @@ Architettura di WEnv
 
 - il websocker **8091** basato sulla libreria `ws`_ : questo socket viene utilizzato per gestire comandi 
   applicativi asincroni per muovere il robot inviati da client remoti e per inviare a client remoti 
-  i *messaggi di stato*.
+  :ref:`Messaggi di stato`.
 
   WEnv utilizza la libreria Node `einaros`_ per accettare questi comendi.
 
@@ -483,33 +531,6 @@ oltre lo **sceneSocket**.
 
 Questo evento è gestito da un apposito handler (vedi ``init``sceneSocket``WebGLScene`` in ``WebpageServer.js``), 
 che reindirizza le informazioni a tutti i client connessi sulla  ``8091``.
-
-++++++++++++++++++++++++++++++++
-Workflow
-++++++++++++++++++++++++++++++++
-
-Il ``WebPageServer`` quando parte invoca ``init``sceneSocket``WebGLScene`` che usa ``sceneSocket`` (**sceneSocket**) 
-per interagire con le scene collegate su 8090 da parte di diversi browser.
-La **sceneSocket** riceverà i messaggi di stato sul cambiamento di WEnv e invierà le info a tutti i callers.
-
-Un client usa ws per inviare un comando su 8091. Risponde ``WebPageServer`` per la parte WS:
-
-  ``WebPageServer -> ws.on('message' -> doMoveAsynch -> execMoveOnAllConnectedScenes -> sceneSocket.emit``
-
-va alle scene del MASTER e dei MIRROR . In ``(``sceneSocket`` subscribed to EventBus)`` si esegue:
-
-  ``socket.on( MOVE ) ->  setTimeout( () => {MOVE,eventBus.post(eventBusEvents.endmove, MOVE)}, duration )``
-
-alla terminazione della *duration* della mossa, viene inviata una notifica endmove. 
-Prima però ci potrebbe essere un obstacle.
-In ``(``sceneSocket`` subscribed to EventBus)`` si esegue la callback (di *collision / endmove* ) che fa:
-
-  ``socket.emit``
-
-che viene gestita dalle callback di ``init``sceneSocket``WebGLScene`` che fa ``updateCallers`` per inviare le info a client
-
-
-
 
 ++++++++++++++++++++++++++++++++++++
 WEnv come immagine docker
@@ -526,11 +547,11 @@ immagine Docker (per una introduizione a Docker si veda `Introduction to Docker 
 
 .. code::
 
-    FROM node:13-alpine
+    node:17-alpine
     RUN mkdir -p /home/node      
     EXPOSE 8090
     EXPOSE 8091
-    COPY ./node/WEnv /home/node/WEnv 
+    COPY ./node/WEnv/server /home/node/WEnv/server 
     COPY ./node/WEnv/WebGLScene /home/node/WEnv/WebGLScene
     #set default dir so that next commands executes in it
     WORKDIR /home/node/WEnv/WebGLScene
@@ -542,7 +563,7 @@ immagine Docker (per una introduizione a Docker si veda `Introduction to Docker 
 
 L'immagine Docker può essere creata sul proprio PC eseguendo il comando (nella directory che contiene il *Dockerfile*):
 
-    ``docker build -t virtualrobotdisi:3.0 .``    //Notare il .
+    ``docker build -t virtualrobotdisi:4.0 .``    //Notare il .
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Esecuzione della immagine
@@ -552,15 +573,15 @@ L'immagine Docker di WEnv può essere attivata sul PC con il comando:
 
 .. code::
 
-    docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:3.0
+    docker run -ti -p 8090:8090 -p 8091:8091 --rm  virtualrobotdisi:4.0
     
 
 Il comando:
 
 .. code::
 
-    docker run -ti -p 8090:8090 
-                  -p 8091:8091 --rm  virtualrobotdisi:3.0 /bin/sh
+   docker run -ti -p 8090:8090 -p 8091:8091 
+                 --rm  virtualrobotdisi:4.0 /bin/sh
 
 permette di ispezionare il contenuto della macchina virtuale e di attivare manualmente il sistema
 (eseguendo  ``node WebpageServer.js``).
@@ -582,19 +603,15 @@ restituisce una tabella con 7 campi:
 Per modificare il file che definisce la scena, si può copiare una nuova versione attraverso il comando ``docker cp`` 
 e rendere permanente la modifica salvando il container.
 
- 
 .. code::
 
-     //change the scene
-    docker cp sceneConfig.js  CONTAINERID:/home/node/WEnv/WebGLScene/sceneConfig.js
+    //change the scene
+    docker cp sceneConfig.js  
+           CONTAINERID:/home/node/WEnv/WebGLScene/sceneConfig.js
     //Save the cotainer
     docker commit  CONTAINERID
-    TAG the new image IMAGEID
-    docker tag  IMAGEID IMGNAME:X.Y
 
-    //Tag and register the image
-    docker tag virtualrobotdisi:3.0 natbodocker/virtualrobotdisi:3.0
-    docker push natbodocker/virtualrobotdisi:3.0
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -602,8 +619,8 @@ Esecuzione con docker-compose
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-L'immagine viene distribuita anche su `Docker Hub`_ in ``docker.io/natbodocker/virtualrobotdisi:3.0``
-come risulta nella spefifica del file ``virtualRobotOnly3.0.yaml``:
+L'immagine viene distribuita anche su `Docker Hub`_ in ``docker.io/natbodocker/virtualrobotdisi:4.0``
+come risulta nella spefifica del file ``virtualRobotOnly4.0.yaml``:
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 virtualRobotOnly3.0.yaml
@@ -614,7 +631,7 @@ virtualRobotOnly3.0.yaml
     version: '3'
     services:
     wenv:
-        image: docker.io/natbodocker/virtualrobotdisi:3.0
+        image: docker.io/natbodocker/virtualrobotdisi:4.0
         ports:
         - 8090:8090
         - 8091:8091
@@ -623,8 +640,8 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
 
 .. code::
 
-    docker-compose -f virtualRobotOnly3.0.yaml  up   //per attivare
-    docker-compose -f virtualRobotOnly3.0.yaml  down //per terminare
+    docker-compose -f virtualRobotOnly4.0.yaml  up   //per attivare
+    docker-compose -f virtualRobotOnly4.0.yaml  down //per terminare
 
 
 
