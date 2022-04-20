@@ -1,5 +1,4 @@
 package unibo.wenvUsage22.actors.robot;
-import java.util.Observable;
 import org.json.JSONObject;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.interfaces.IObserver;

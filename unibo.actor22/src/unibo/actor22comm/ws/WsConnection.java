@@ -24,9 +24,11 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	
  
 	public static Interaction2021 create(String addr ){
-        ColorsOut.outappl("WsConnection | wsconnect addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
+        //ColorsOut.outappl("WsConnection | wsconnect addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
 		if( ! connMap.containsKey(addr)){
 			connMap.put(addr, new WsConnection( addr ) );
+		}else {
+		    ColorsOut.outappl("WsConnection | ALREADY connected to addr=" + addr, ColorsOut.YELLOW );			
 		}
 		return connMap.get(addr);
 	}	
