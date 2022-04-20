@@ -16,6 +16,7 @@ import unibo.wenvUsage22.common.ApplData;
 
 public class ActorUsingWEnv extends QakActor22 implements IObserver{
 	private Interaction2021 conn;
+	private int n = 0;
 	
 	public ActorUsingWEnv(String name) {
 		super(name);
@@ -67,8 +68,7 @@ public class ActorUsingWEnv extends QakActor22 implements IObserver{
 	protected void handleMsg(IApplMessage msg) {
 		ColorsOut.outappl(getName() + " | handleMsg:" + msg,  ColorsOut.BLUE);
 		//doBasicMovesHttp();
-		//moveForward();
-		interpret(msg);
+ 		interpret(msg);
 	}
 	
 	protected void interpret( IApplMessage m ) {
@@ -80,10 +80,10 @@ public class ActorUsingWEnv extends QakActor22 implements IObserver{
 			ColorsOut.outappl(getName() + " | sorry, I don't handle :" + m,  ColorsOut.BLUE);
 			return;
 		}
-		ColorsOut.outappl(getName() + " | handling:" + m.msgContent() + " " + ApplData.w,  ColorsOut.BLUE);
+		//ColorsOut.outappl(getName() + " | interpret:" + m.msgContent(),  ColorsOut.BLUE);
 		switch( m.msgContent() ) {
-			case ApplData.w : moveForward();break;
-			case ApplData.a : turnLeft();break;
+			case "w" : moveForward();break;
+			case "a" : turnLeft();break;
 			default: break;
 		}
 	}
@@ -93,7 +93,14 @@ public class ActorUsingWEnv extends QakActor22 implements IObserver{
 	public void update(String msg) {
 		ColorsOut.outappl(getName() + " | update:" + msg,  ColorsOut.BLUE);		
 		JSONObject d = new JSONObject(""+msg);
-		if( d.has("collision")) autoMsg(ApplData.moveCmd(getName(),getName(),"a"));
+		if( d.has("collision")) {
+			n++;
+			//autoMsg(ApplData.moveCmd(getName(),getName(),"a"));
+			sendMsg(ApplData.moveCmd(getName(),getName(),"a"));
+		}
+		if( d.has("endmove") && d.getBoolean("endmove") && n < 4) 
+			//autoMsg(ApplData.moveCmd(getName(),getName(),"w"));
+			sendMsg(ApplData.moveCmd(getName(),getName(),"w"));
  	}
 
 	@Override

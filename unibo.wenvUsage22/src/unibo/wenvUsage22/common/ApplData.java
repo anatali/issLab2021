@@ -36,14 +36,14 @@ public class ApplData {
  
 	//Per WEnv VirtualRobot
 	public final static String robotCmdId = "move";
-	public final static String w = "moveForward(300)";
-	public final static String a = "turnLeft(300)";
+	public final static String aril_w = "moveForward(300)";
+	public final static String aril_a = "turnLeft(300)";
 	
 	public static final IApplMessage w(String sender, String receiver)   {
-		return CommUtils.buildDispatch(sender,robotCmdId,w,receiver);
+		return CommUtils.buildDispatch(sender,robotCmdId,aril_w,receiver);
 	}
 	public static final IApplMessage a(String sender, String receiver)   {
-		return CommUtils.buildDispatch(sender,robotCmdId,a,receiver);
+		return CommUtils.buildDispatch(sender,robotCmdId,aril_a,receiver);
 	}
 	
 	//Per Robot 
