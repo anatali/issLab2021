@@ -18,9 +18,7 @@ import java.util.Observable;
 public class ClientUsingWs implements IObserver{
  
 	private Interaction2021 conn;
-	
-
- 
+  
 	protected void doBasicMoves() throws Exception {
 		conn = WsConnection.create("localhost:8091" );
 		((WsConnection)conn).addObserver(this);

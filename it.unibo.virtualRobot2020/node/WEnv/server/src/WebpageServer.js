@@ -4,6 +4,8 @@ WebpageServer.js
 sockets       = {}     //interaction with WebGLScene
 wssockets     = {}     //interaction with clients
 postResult    != null  //a POST-request pending
+
+docker build -t virtualrobotdisi:4.0 .
 ==========================================================================
 */
 
@@ -41,8 +43,15 @@ Defines how to handle GET from browser and from external controls
         if( ! alreadyConnected ){
             alreadyConnected = true;
             res.sendFile('indexOk.html', { root: './../../WebGLScene' })
-	     }else{
-		    res.sendFile('indexNoControl.html', { root: './../../WebGLScene' })
+	     }else{ /*
+                if( res != null ){
+                    res.writeHead(401, { 'Content-Type': 'text/json' });
+                    res.statusCode=401
+                    const answerJson = JSON.stringify(answer)
+                    res.write( answerJson  );
+                    res.end();
+                }*/
+		    res.sendFile('indexOccupied.html', { root: './../../WebGLScene' })
 	     }
     }); //app.get
 
@@ -220,7 +229,8 @@ function sceneSocketInfoHandler() {
       		var answer   = ""
   		    console.log( "WebpageServer sceneSocketInfoHandler  | endmove  curMove=" + curMove);
   		    if( curMove == "interrupted" || curMove == undefined) { //undefined viene da SocketIO.stopMoving per alarm
-  		        //answer = { 'endmove' : false , 'move' : curMove }
+  		        answer = { 'endmove' : false , 'move' : "interrupted" }
+  		        answerToPost( JSON.stringify(answer) );
                 moveMap.delete(moveIndex)
    		    }else{
               answer      = { 'endmove' : true , 'move' : curMove }
@@ -275,6 +285,36 @@ actorObserverClient.on('end', function() {
 
 }//setUpActorLocalConnection
 
+
+function answerToPost(  answerJson ){
+   if( postResult != null ){
+        console.log('WebpageServer | answerToPost  answer= ' + answerJson  );
+        postResult.writeHead(200, { 'Content-Type': 'text/json' });
+        postResult.statusCode=200
+        postResult.write( answerJson  );
+        postResult.end();
+        postResult = null;
+   }
+}
+
+
+function showMoveMap(){
+    moveMap.forEach( (key,v) => console.log("WARNING: movemap key=" + key + " v="+v) )
+}
+
+function startServer() {
+    console.log("WebpageServer  | startServer" )
+        //Connect with an observer actor
+        //setUpActorLocalConnection(8030)
+    sceneSocketInfoHandler()
+    initWs()
+    hhtpSrv.listen(serverPort)
+}
+//MAIN
+startServer()
+
+
+
 /*
 function sceneSocketInfoHandler() {
 	console.log("WebpageServer sceneSocketInfoHandler |  socketIndex="+socketIndex)
@@ -286,7 +326,7 @@ function sceneSocketInfoHandler() {
         if( socketIndex == 0) console.log("WebpageServer sceneSocketInfoHandler | MASTER-webpage ready")
 		socket.on( 'sonarActivated', (obj) => {  //Obj is a JSON object
 			console.log( "&&& WebpageServer sceneSocketInfoHandler | sonarActivated " );
-			console.log(obj) 
+			console.log(obj)
 			updateCallers( JSON.stringify(obj) )
 		})
 
@@ -366,32 +406,3 @@ function sceneSocketInfoHandler() {
     })
 }//sceneSocketInfoHandler
 */
-
-function answerToPost(  answerJson ){
-   if( postResult != null ){
-        console.log('WebpageServer | answerToPost  answer= ' + answerJson  );
-        postResult.writeHead(200, { 'Content-Type': 'text/json' });
-        postResult.statusCode=200
-        postResult.write( answerJson  );
-        postResult.end();
-        postResult = null;
-   }
-}
-
-
-function showMoveMap(){
-    moveMap.forEach( (key,v) => console.log("WARNING: movemap key=" + key + " v="+v) )
-}
-
-function startServer() {
-    console.log("WebpageServer  | startServer" )
-        //Connect with an observer actor
-        //setUpActorLocalConnection(8030)
-
-    sceneSocketInfoHandler()
-    initWs()
-    hhtpSrv.listen(serverPort)
-}
-//MAIN
-startServer()
-

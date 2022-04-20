@@ -10,6 +10,7 @@
 .. _DDR Robot: https://www.youtube.com/watch?v=aE7RQNhwnPQ
 
 .. _devsDdr: ./_static/devsDdr.html
+.. _videoWEnv: https://unibo.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%227673bfec-c7b6-4a96-8ff8-aca7011ae972%22
 
 .. http://faculty.salina.k-state.edu/tim/robotics_sg/Control/kinematics/unicycle.html
 .. https://www.epfl.ch/labs/la/wp-content/uploads/2018/08/Kappeler.Rapport.pdf.pdf
@@ -419,14 +420,15 @@ interazioni con WEnv:
 Casi di interazione
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Il video xxx mostra un insieme di possibili interazioni:
+Il `videoWEnv`_ mostra un insieme di possibili interazioni:
 
-#. Invio di comandi asincroni su WS mediante programma Java o mediante WebPage
-#. Invio di comandi sincroni su HTTP mediante programma Java o mediante WebPage
+#. Invio di comandi asincroni su WS mediante programma Java o mediante la pagina ``NaiveGui.html``
+#. Invio di comandi sincroni su HTTP mediante programma Java o mediante la pagina ``NaiveGui.html``
 #. Come nei due punti precedenti attivando uno o più osservatori su WS come programmi Java o come pagine Web
 
 
-Invio mediante POST prima moveForward e poi alarm DA ALTRA fonte: rcevo come risposta 
+Se invio un comando ``moveForward`` mediante HTTP-POST 
+e poi ``halt``  mediante la pagina ``NaiveGui.html``: ricevo come risposta 
 
   ``{"endmove":false,"move":"interrupted"}``
 
