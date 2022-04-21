@@ -32,7 +32,7 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm {
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);	
 				addTransition( "s1", ApplData.moveCmdId );
-				addTransition( "s3", SysData.haltSysCmdId );
+				addTransition( "s3", ApplData.haltSysCmdId );
 				nextState();
 			}			
 		});
@@ -41,7 +41,7 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm {
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);
 				outInfo("BYE" );
-				addTransition( "s3", SysData.haltSysCmdId );
+				addTransition( "s3", ApplData.haltSysCmdId );
   			}			
 		});
 	}

@@ -35,6 +35,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy
 	implementation group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
 
+//LOGGING
+	//implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+	implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+
 
 //JSON
     // https://mvnrepository.com/artifact/org.json/json

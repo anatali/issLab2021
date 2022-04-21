@@ -73,11 +73,6 @@ public class ClientNaiveUsingWs {
             }
         } catch (Exception e) {
         	ColorsOut.outerr("onMessage " + message + " " +e.getMessage());
-//        	try {
-//				request( stop(100) );
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}
         }
 
     }
@@ -121,21 +116,7 @@ BUSINESS LOGIC
     	
     }
 
-    protected void doBasicMovesOld() throws Exception{
-//    	  request( stop(10) );
-    	  requestSynch( ApplData.moveForward(  1400) );
-//        requestDelayed( turnLeft(2800) );
-//          request( moveForward(  1800) );
-//          Thread.sleep( 500 );
-//          request( stop(10) );
-//          request( moveBackward(  1000) );
-//          Thread.sleep( 500 );
-//          request( stop(10) );
-//         requestDelayed( turnRight(300) );
-//         requestDelayed( moveForward(  1800) );
-//         requestDelayed( moveBackward( 800) );
-//        this.userSession = null;
-    }
+ 
 
 /*
 MAIN

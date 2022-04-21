@@ -647,3 +647,6 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
 
 
 
+
+
+.. See https://www.slf4j.org/codes.html#StaticLoggerBinder

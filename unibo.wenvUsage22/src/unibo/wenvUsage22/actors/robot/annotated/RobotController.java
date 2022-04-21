@@ -6,7 +6,6 @@ import unibo.actor22.Qak22Util;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
-import unibo.wenvUsage22.actors.SysData;
 import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
 import unibo.wenvUsage22.common.ApplData;
@@ -19,12 +18,12 @@ public class RobotController extends QakActor22FsmAnnot{
 
 	@State( name = "s0", initial=true )
 //	@Transition( state = { "s0" }, 
-//	             msgId = {  SysData.haltSysCmdId })
+//	             msgId = {  ApplData.haltSysCmdId })
 	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg);
 		Qak22Context.showActorNames();
  		Qak22Util.sendAMsg( ApplData.w(getName() , ApplData.robotName ) );
- 		Qak22Util.sendAMsg( SysData.haltSysCmd(getName(), ApplData.robotName) );
+ 		Qak22Util.sendAMsg( ApplData.haltSysCmd(getName(), ApplData.robotName) );
  	}
 	
 	

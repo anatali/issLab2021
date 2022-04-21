@@ -4,6 +4,18 @@ import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.utils.CommUtils;
 
 public class ApplData {
+
+	public static final String startSysCmdId = "activate";
+	public static final String haltSysCmdId  = "halt";
+	
+	//Generali, usati dalla classe-base QakActor22Fsm
+	public static final IApplMessage startSysCmd(String sender, String receiver)   {
+		return CommUtils.buildDispatch(sender, startSysCmdId, "do", receiver );
+	}
+	public static final IApplMessage haltSysCmd(String sender, String receiver)   {
+		return CommUtils.buildDispatch(sender, haltSysCmdId, "do", receiver );
+	}
+
 	
 	public static final String activateId     = "activate";
 	public static final String robotName      = "robot";

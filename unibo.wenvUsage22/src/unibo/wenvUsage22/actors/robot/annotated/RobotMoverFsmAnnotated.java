@@ -6,7 +6,6 @@ import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
-import unibo.wenvUsage22.actors.SysData;
 import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
 import unibo.wenvUsage22.common.ApplData;
@@ -34,9 +33,9 @@ public  class RobotMoverFsmAnnotated extends QakActor22FsmAnnot  {
 	//Muovo il robot in funzione del comando che mi arriva
 	@State( name = "robotMoving" )
 //	@Transition( state = {"robotMoving", "s3" }, 
-//	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
+//	             msgId = { ApplData.robotCmdId, ApplData.haltSysCmdId })
 	@Transition( state = "robotMoving", msgId=ApplData.robotCmdId )
-	@Transition( state = "endWork",     msgId=SysData.haltSysCmdId )
+	@Transition( state = "endWork",     msgId=ApplData.haltSysCmdId )
 	protected void robotMoving( IApplMessage msg ) {
 		outInfo(""+msg);	
 		doMove( msg.msgContent().replaceAll("'","") ); //remove ' ' 		

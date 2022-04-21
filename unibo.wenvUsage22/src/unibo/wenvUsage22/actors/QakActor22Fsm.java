@@ -9,6 +9,7 @@ import unibo.actor22.QakActor22;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.StateActionFun;
 import unibo.actor22comm.utils.ColorsOut;
+import unibo.wenvUsage22.common.ApplData;
  
 
 
@@ -23,9 +24,9 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 		super(name);
 		declareTheStates( );
 		setTheInitialState( );
-		addExpecetdMsg(curState, SysData.startSysCmdId );
-		ColorsOut.outappl(getName() + " | autoMsg SysData.startSysCmd", ColorsOut.GREEN);
-		autoMsg(SysData.startSysCmd("system",name));
+		addExpecetdMsg(curState, ApplData.startSysCmdId );
+		ColorsOut.outappl(getName() + " | autoMsg ApplData.startSysCmd", ColorsOut.GREEN);
+		autoMsg(ApplData.startSysCmd("system",name));
 	}
  	
  	

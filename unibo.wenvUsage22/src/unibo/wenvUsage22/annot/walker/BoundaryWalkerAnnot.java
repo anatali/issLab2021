@@ -1,18 +1,13 @@
 package unibo.wenvUsage22.annot.walker;
 
-import java.util.Observable;
-
 import org.json.JSONObject;
-
 import it.unibo.kactor.IApplMessage;
-import unibo.actor22comm.http.HttpConnection;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
-import unibo.wenvUsage22.actors.SysData;
 import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
 import unibo.wenvUsage22.common.ApplData;
@@ -34,7 +29,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 		sendMsgToMyself( ApplData.a( getName() , ApplData.robotName ) );
 	}
 	protected void halt() {
-		sendMsgToMyself( SysData.haltSysCmd(getName(),getName()) );
+		sendMsgToMyself( ApplData.haltSysCmd(getName(),getName()) );
 	}
 	
 	@State( name = "robotStart", initial=true)
@@ -57,7 +52,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 //	             msgId = { ApplData.robotCmdId, ApplData.wallDetectedId })
 	@Transition( state = "robotMoving" ,  msgId = ApplData.robotCmdId )
  	@Transition( state = "wallDetected" , msgId = ApplData.wallDetectedId )
- 	@Transition( state = "endWork" ,      msgId = SysData.haltSysCmdId )
+ 	@Transition( state = "endWork" ,      msgId = ApplData.haltSysCmdId )
 	protected void robotMoving( IApplMessage msg ) {
 		outInfo(""+msg);	
 //		if( wallDetected ) sendMsgToMyself( ApplData.wallDetected(getName(),wallName ));
@@ -67,15 +62,15 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  	
  	@State( name = "wallDetected" )
 //	@Transition( state = {"robotMoving",       "endWork" }, 
-//	             msgId = { ApplData.robotCmdId, SysData.haltSysCmdId })
+//	             msgId = { ApplData.robotCmdId, ApplData.haltSysCmdId })
 	@Transition( state = "robotMoving" , msgId = ApplData.robotCmdId )
- 	@Transition( state = "endWork" ,     msgId = SysData.haltSysCmdId )
+ 	@Transition( state = "endWork" ,     msgId = ApplData.haltSysCmdId )
 	protected void wallDetected( IApplMessage msg ) {
 		outInfo(""+msg);	
 //		wallDetected = false;
 		wallName     = "unknown";
 		ncorner++;
-		if( ncorner == 4 ) //sendMsgToMyself( SysData.haltSysCmd(getName(),getName()) );
+		if( ncorner == 4 ) //sendMsgToMyself( ApplData.haltSysCmd(getName(),getName()) );
 			halt();
 		else //sendMsgToMyself( ApplData.a( getName() , ApplData.robotName ) );
 			turnLeft();
@@ -111,9 +106,9 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  				sendMsgToMyself( ApplData.w( getName() , ApplData.robotName ) );
  			}else {
  				ColorsOut.outerr(getName() + " |  interrupted: " +  d.getString("move"));
- 				sendMsgToMyself( SysData.haltSysCmd(ApplData.robotName, ApplData.robotName));
+ 				sendMsgToMyself( ApplData.haltSysCmd(ApplData.robotName, ApplData.robotName));
  			}
- 		}//else sendMsgToMyself( SysData.haltSysCmd(ApplData.robotName, ApplData.robotName));
+ 		}//else sendMsgToMyself( ApplData.haltSysCmd(ApplData.robotName, ApplData.robotName));
 	}
 
 }

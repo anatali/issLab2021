@@ -24,7 +24,7 @@ public  class MainFirstQakActor22Fsm  {
 		Qak22Util.sendAMsg( ApplData.moveCmd("main", name, "w" ) );
 		//Qak22Util.sendAMsg( haltCmd );
 		Qak22Util.sendAMsg( ApplData.moveCmd("main", name, "w" ) );
-		Qak22Util.sendAMsg( SysData.haltSysCmd("main", name) );
+		Qak22Util.sendAMsg( ApplData.haltSysCmd("main", name) );
 		//Qak22Util.sendAMsg( startCmd );
 		CommUtils.delay(2000);
 	}

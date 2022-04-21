@@ -8,7 +8,6 @@ import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.actors.QakActor22Fsm;
-import unibo.wenvUsage22.actors.SysData;
 import unibo.wenvUsage22.common.ApplData;
 
 
@@ -50,7 +49,7 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 				outInfo(""+msg);	
 				doMove( msg.msgContent().replaceAll("'","") ); //remove ' ' 
 				addTransition( "moveTheRobot",  ApplData.robotCmdId );
-				addTransition( "s3", SysData.haltSysCmdId );
+				addTransition( "s3", ApplData.haltSysCmdId );
 				nextState();
 			}			
 		});
@@ -59,7 +58,7 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);
 				outInfo("BYE" );
-				addTransition( "s3", SysData.haltSysCmdId );
+				addTransition( "s3", ApplData.haltSysCmdId );
   			}			
 		});
 	}
@@ -95,7 +94,7 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
  			return;
  		}
         //Otherwise ...
- 			autoMsg( SysData.haltSysCmd("main",getName()) );	
+ 			autoMsg( ApplData.haltSysCmd("main",getName()) );	
 	}	
 
 

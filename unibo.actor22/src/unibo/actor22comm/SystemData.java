@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.actors;
+package unibo.actor22comm;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.utils.CommUtils;
@@ -6,8 +6,10 @@ import unibo.actor22comm.utils.CommUtils;
 /*
  * MESSAGGI per attori come FSM
 */	
-public class SysData {
- 	
+public class SystemData {
+
+	public static final String wsEventId     = "wsEvent";
+
 	public static final String startSysCmdId = "activate";
 	public static final String haltSysCmdId  = "halt";
 	
