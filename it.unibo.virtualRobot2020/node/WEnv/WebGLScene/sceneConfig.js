@@ -20,7 +20,8 @@ const config = {
             name: "sonar2",
             position: { x: 1.00, y: 0.95},
             senseAxis: { x: true, y: false }
-        }*/
+        }
+ */
      ],
     movingObstacles: [
     /*

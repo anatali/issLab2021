@@ -248,7 +248,7 @@ Stringhe-comando di questa forma possono essere  inviate a WEnv in due modi dive
 
 
 ++++++++++++++++++++++++++++++++
-Interazioni con HTTP
+Interazioni mediante HTTP
 ++++++++++++++++++++++++++++++++
 
 L'invio di messaggi con HTTP implica una interazione logica di tipo request-response che blocca il 
@@ -300,7 +300,7 @@ Ad esempio:
 
   .. code::
 
-    {"sonarName": "sonarName", "distanza": 1, "asse": "x" }
+    {"sonarName": "sonarName", "distance": 1, "axis": "x" }
 
 
 I *messaggi di stato* connessi alla esecuzione asincrona di un comando possono essere:
@@ -482,6 +482,36 @@ e poi ``halt``  mediante :ref:`NaiveGui<NaiveGui>`: ricevo come risposta
 
 .. nextstep: attore che riceve messaggi strutturati e permette di usare VirtualRobot o RealRObot
 
+---------------------------------------------
+WsConnectionForActors
+---------------------------------------------
+
+La classe ``WsConnectionForActors`` realizza una versione di :ref:`Interaction2021<Interaction2021>` per WS specializzata 
+per operare in un abiente ad :ref:`Attori`.
+
+Questa versione riceve in ingresso al suo costruttore una String che può essere **null** 
+o il nome di un attore (detto **owner**).
+
+++++++++++++++++++++++++++++++
+WsConnSysObserver
+++++++++++++++++++++++++++++++
+
+Al momento della creazione, la classe ``WsConnectionForActors`` associa all'istanza 
+un osservatore definito dalla classe ``WsConnSysObserver``, il quale:
+ 
+- ``implements IObserver``, funzionando come osservatore dei messaggi (di stato) ricevuti sulla WS  
+- per ogni messaggio ricevuto (osservato) sulla WS, crea un messaggio :ref:`IApplMessage` che ha come 
+  msgId il valore ``"wsEvent"`` e come payload il messaggio osservato. Questo messaggio è un :blue:`evento` 
+  (si veda :ref:`Eventi`)
+  se  ``owner== null`` o  un :blue:`dispatch` (si veda :ref:`Struttura dei messaggi applicativi`) 
+  con **owner** come destinatario, se  ``owner!= null``.
+ 
+
+
+In altre parole:
+
+:remark:`WsConnectionForActors trasforma informazioni in eventi o dispatch`
+
 
 --------------------------------------
 Note di implementazione
@@ -529,7 +559,7 @@ Quando ``WebvGLScene`` rileva una collisione tra il robot virtuale e un ostacolo
 invoca l'utilità ``eventBus.js`` per 'emettere un evento collisione' 
 oltre lo **sceneSocket**. 
 
-Questo evento è gestito da un apposito handler (vedi ``init``sceneSocket``WebGLScene`` in ``WebpageServer.js``), 
+Questo evento è gestito da un apposito handler (vedi ``sceneSocketInfoHandler`` in ``WebpageServer.js``), 
 che reindirizza le informazioni a tutti i client connessi sulla  ``8091``.
 
 ++++++++++++++++++++++++++++++++++++
@@ -645,7 +675,9 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
 
 
 
+:worktodo:`WORKTODO: vacuumCleaner`
 
+- Muovere il VirtualRobot in modo da coprire tutta la superficie di una stanza vuota.
 
 
 
