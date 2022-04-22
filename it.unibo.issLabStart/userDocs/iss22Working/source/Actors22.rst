@@ -132,10 +132,10 @@ Parte del sistema su PC
 
 Questo programma dichiara il sistema composto da due attori: 
 
-- l'attore  ``a1``, che opera nel contesto di nome ``pcCtx`` locale al PC in quanto specifica che il suo host è  
+- l'attore  ``a1``, che opera nel contesto di nome ``pcCtx`` **locale** al PC in quanto specifica che il suo host è  
   :blue:`localhost`.  Ne viene quindi fornita anche la classe che lo implementa
 - l'attore  ``a2``, che opera nel contesto di nome ``raspCtx`` con **host diverso da  localhost**.
-  L'attore viene dunque visto (in questa prospettiva del sistema) come  **remoto**  e se ne specifica dunque la classe 
+  L'attore viene dunque visto (in questa prospettiva del sistema) come  **remoto**  e NON se ne specifica la classe 
   di implementazione.
 
 
@@ -157,7 +157,7 @@ Parte del sistema su RaspberryPi
 Questo programma dichiara il sistema nello stesso modo, ma con una **prospettiva diversa**: 
 
 - l'attore di nome ``a1`` su ``pcCtx`` viene visto come **remoto**
-- l'attore di nome  ``a2`` su ``raspCtx`` viene visto come locale al RaspberryPi e se ne fornisce dunque 
+- l'attore di nome  ``a2`` su ``raspCtx`` viene visto come **locale** al RaspberryPi e se ne fornisce dunque 
   la classe di implementazione.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
