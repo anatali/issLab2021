@@ -125,8 +125,9 @@ public class Qak22Context {
             ProtocolType protocol = rc.protocol();
             out.put(name, rc);
             if( host.equals("localhost")) {
-            	EnablerContextForActors ctx = new EnablerContextForActors( "ctx", port, protocol);
-            	ctx.activate();
+            	//EnablerContextForActors ctx = 
+            	EnablerContextForActors.create( "ctx", port, protocol);
+            	//ctx.activate();
             }
             ColorsOut.outappl("Registered context: " + name+ " at "
                             + String.format("%s//%s:%s", protocol, host, port), ColorsOut.YELLOW);

@@ -34,14 +34,15 @@ private EnablerContextForActors ctx;
 		
 		Qak22Context.handleLocalActorDecl(this);
   
-		ctx = new EnablerContextForActors( "ctx",ApplData.ctxPort,ApplData.protocol);
+		//ctx = new 
+				EnablerContextForActors.create( "ctx",ApplData.ctxPort,ApplData.protocol);
 		//new LedActor( ApplData.ledName );
  		//Registrazione dei componenti presso il contesto: NO MORE ... 
   	}
 	
 	protected void execute() {
 		ColorsOut.outappl("DevicesActorsOnRasp | execute", ColorsOut.MAGENTA);
-		ctx.activate();
+		//ctx.activate();
 	} 
 
 	public void terminate() {

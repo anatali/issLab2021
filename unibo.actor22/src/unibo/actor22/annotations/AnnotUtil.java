@@ -75,25 +75,25 @@ RELATED TO Actor22
         return out;
     }
     
-    public static Map<String, Context22> setRemoteContexts22(Object element) {
-        Map<String, Context22> out  = new HashMap<>();
-        Class<?> clazz              = element.getClass();
-        Annotation[] annotations    = clazz.getAnnotations();
-        Context22[] contexts        = element.getClass().getAnnotationsByType(Context22.class);
-        for (Context22 rc : contexts) {
-            String name     = rc.name();
-            String host     = rc.host();
-            int port        = Integer.parseInt(rc.port());
-            ProtocolType protocol = rc.protocol();
-            out.put(name, rc);
-            if( host.equals("localhost")) {
-                new EnablerContextForActors( "ctx", port, protocol);
-            }
-            ColorsOut.outappl("Registered context: " + name+ " at "
-                            + String.format("%s//%s:%s", protocol, host, port), ColorsOut.YELLOW);
-        }
-        return out;
-    }
+//    public static Map<String, Context22> setRemoteContexts22(Object element) {
+//        Map<String, Context22> out  = new HashMap<>();
+//        Class<?> clazz              = element.getClass();
+//        Annotation[] annotations    = clazz.getAnnotations();
+//        Context22[] contexts        = element.getClass().getAnnotationsByType(Context22.class);
+//        for (Context22 rc : contexts) {
+//            String name     = rc.name();
+//            String host     = rc.host();
+//            int port        = Integer.parseInt(rc.port());
+//            ProtocolType protocol = rc.protocol();
+//            out.put(name, rc);
+//            if( host.equals("localhost")) {
+//                new EnablerContextForActors( "ctx", port, protocol);
+//            }
+//            ColorsOut.outappl("Registered context: " + name+ " at "
+//                            + String.format("%s//%s:%s", protocol, host, port), ColorsOut.YELLOW);
+//        }
+//        return out;
+//    }
     
     public static void setActorAsRemote(Map<String, Context22> contexts, String actorCtxName, String actorName) {
     	contexts.forEach( ( ctxName,  ctx) -> {
@@ -110,34 +110,34 @@ RELATED TO Actor22
     }
     
 
-    public static void handleContextDeclaration(Object element) {
-        Class<?> clazz             = element.getClass();
-        Map<String, Context22> contextsMap = setRemoteContexts22(element);
-        Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
-        for (Actor22 actor : actorAnnotations) {
-                String actorName = actor.name();
-                String actorCtx  = actor.contextName();
-                ColorsOut.outappl( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx , ColorsOut.BLUE );
-                Context22 refCtx = contextsMap.get(actorCtx);
-                if( refCtx == null ) {
-                	ColorsOut.outerr("No context found for: " + actorName  ); 
-                	return;
-                }
-                if( refCtx.host().equals("localhost")) {
-                    Class implement = actor.implement();
-                    if (implement.equals(void.class))
-                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
-                    try {
-                        implement.getConstructor(String.class).newInstance(actorName);
-                         ColorsOut.outappl( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
-                    } catch ( Exception e ) {
-                        e.printStackTrace();
-                    }              	
-                }else { //Actor remote
-                	setActorAsRemote( contextsMap, refCtx.name(), actorName );
-                }
-        }//for         
-     }
+//    public static void handleContextDeclaration(Object element) {
+//        Class<?> clazz             = element.getClass();
+//        Map<String, Context22> contextsMap = setRemoteContexts22(element);
+//        Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
+//        for (Actor22 actor : actorAnnotations) {
+//                String actorName = actor.name();
+//                String actorCtx  = actor.contextName();
+//                ColorsOut.outappl( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx , ColorsOut.BLUE );
+//                Context22 refCtx = contextsMap.get(actorCtx);
+//                if( refCtx == null ) {
+//                	ColorsOut.outerr("No context found for: " + actorName  ); 
+//                	return;
+//                }
+//                if( refCtx.host().equals("localhost")) {
+//                    Class implement = actor.implement();
+//                    if (implement.equals(void.class))
+//                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
+//                    try {
+//                        implement.getConstructor(String.class).newInstance(actorName);
+//                         ColorsOut.outappl( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
+//                    } catch ( Exception e ) {
+//                        e.printStackTrace();
+//                    }              	
+//                }else { //Actor remote
+//                	setActorAsRemote( contextsMap, refCtx.name(), actorName );
+//                }
+//        }//for         
+//     }
     	
  
     
