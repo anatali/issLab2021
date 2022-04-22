@@ -12,6 +12,7 @@ public class SystemData {
 	public static final String wsEventId     = "wsEvent";
 
 	public static final String startSysCmdId = "activate";
+	public static final String demoSysId     = "demo";
 	public static final String haltSysCmdId  = "halt";
 	
 	//Generali, usati dalla classe-base QakActor22Fsm
@@ -34,5 +35,12 @@ public class SystemData {
 		return Qak22Util.buildDispatch(sender, activateActorCmd, "do", receiver);
 	}
  	
+//Utility for demo
+	public static final IApplMessage demoSysCmd(String sender, String receiver)   {
+		return CommUtils.buildDispatch(sender, demoSysId, "do", receiver );
+	}
+	public static final IApplMessage demoSysRequest(String sender, String receiver)   {
+		return CommUtils.buildRequest(sender, demoSysId+"1", "do", receiver );
+	}
 
 }

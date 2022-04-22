@@ -135,9 +135,7 @@ public class Qak22Context {
         return out;
     }
     
-    public static void configureTheSystem(Object element) {
-        Class<?> clazz             = element.getClass();
-        Map<String, Context22> contextsMap = setContexts22(element);
+    protected static void setActors( Map<String, Context22> contextsMap, Class<?> clazz ) {
         Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
         for (Actor22 actor : actorAnnotations) {
                 String actorName = actor.name();
@@ -149,22 +147,71 @@ public class Qak22Context {
                 	return;
                 }
                 if( refCtx.host().equals("localhost")) {
-                    Class implement = actor.implement();
-                    if (implement.equals(void.class))
-                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
-                    try {
-                         implement.getConstructor(String.class).newInstance(actorName);
-                         ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
-                         //attivo l'attore
-                         Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
-                    } catch ( Exception e ) {
-                        e.printStackTrace();
-                    }              	
+                	setActorAsLocal(actor,   actorName,   refCtx);
+//                    Class implement = actor.implement();
+//                    if (implement.equals(void.class))
+//                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
+//                    try {
+//                         implement.getConstructor(String.class).newInstance(actorName);
+//                         ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
+//                         //attivo l'attore
+//                         Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
+//                    } catch ( Exception e ) {
+//                        e.printStackTrace();
+//                    }              	
                 }else { //Actor remote
                 	setActorAsRemote( actorName, refCtx.port(), refCtx.host(), refCtx.protocol() );
                 	//String actorName, String entry, String host, ProtocolType protocol
                 }
         }//for         
+   	
+    }
+    
+    protected static void setActorAsLocal( Actor22 actor, String actorName, Context22 refCtx ) {
+        Class implement = actor.implement();
+        if (implement.equals(void.class))
+            throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
+        try {
+             implement.getConstructor(String.class).newInstance(actorName);
+             ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
+             //attivo l'attore
+             Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }              	    	
+    }
+    
+    public static void configureTheSystem(Object element) {
+        Class<?> clazz             = element.getClass();
+        Map<String, Context22> contextsMap = setContexts22(element);
+        setActors(contextsMap, clazz);
+//        Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
+//        for (Actor22 actor : actorAnnotations) {
+//                String actorName = actor.name();
+//                String actorCtx  = actor.contextName();
+//                //ColorsOut.out( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx , ColorsOut.BLUE );
+//                Context22 refCtx = contextsMap.get(actorCtx);
+//                if( refCtx == null ) {
+//                	ColorsOut.outerr("No context found for: " + actorName  ); 
+//                	return;
+//                }
+//                if( refCtx.host().equals("localhost")) {
+//                    Class implement = actor.implement();
+//                    if (implement.equals(void.class))
+//                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
+//                    try {
+//                         implement.getConstructor(String.class).newInstance(actorName);
+//                         ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
+//                         //attivo l'attore
+//                         Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
+//                    } catch ( Exception e ) {
+//                        e.printStackTrace();
+//                    }              	
+//                }else { //Actor remote
+//                	setActorAsRemote( actorName, refCtx.port(), refCtx.host(), refCtx.protocol() );
+//                	//String actorName, String entry, String host, ProtocolType protocol
+//                }
+//        }//for         
      }
 
     

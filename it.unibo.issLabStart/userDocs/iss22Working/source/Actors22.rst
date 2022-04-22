@@ -211,50 +211,24 @@ come istanza della classe ``EnablerContextForActors`` definita nel
 Annotazioni per dichiarare Attori
 ++++++++++++++++++++++++++++++++++++++++
 
+:remark:`Un attore nasce, vive e muore in un contesto`
 
+- Nel caso di attore **locale**, ne consegue una annotazione dichiarativa della forma:
 
-
-
-Poichè un contesto:
-
-    - conosce tutti gli altri contesti del sistema e la dislocazione di ogni attore nei diversi contesti
-    - conosce la dislocazione di ogni attore nei diversi contesti
-
-La annotazione precedente viene elaborata (da :ref:`Qak22Context` col metodo ``setContexts22``) tenendo traccia
-di tutti i contesti dichiarati
-
-.. list-table:: 
-  :widths: 100
-  :width: 100%
-
-
-  * - :remark:`un attore nasce, vive e muore in un contesto`
-  * - 
-     ``@Context22(name=<STRING>, host=<STRING>, port=<STRING>)``
-
-     Esempio:
-
-      ``@Context22(name = "demoCtx", host = "localhost", port = "8080")``
+    ``@Actor22(name=<STRING>,  contextName=<STRING>, implement=<CLASS>)``
   
-  * - :remark:`un attore è un ente attivo, dotato di un nome (univoco)`
-  * - 
-     ``@Actor22(name=<STRING>,  contextName=<STRING>, implement=<CLASS>)``
+  La annotazione precedente viene elaborata (da :ref:`Qak22Context` col metodo ``setActorAsLocal``) che:
 
-     ``@Actor22(name = "a1",  contextName = "demoCtx")``
+  - crea una istanza dell'attore come implementazione della classe specificata
+  - invia all'attore un messaggio di attivazione
 
-     Esempio:
 
-      ``@Context22(name = "demoCtx", host = "localhost",    port = "8080")``
-  
-  
-  * - :remark:`un attore è un ente attivo, dotato di un nome (univoco)`
-  * - 
-     ``@Actor22(name=<STRING>,  contextName=<STRING>, implement=<CLASS>)``
+- Nel caso di attore **remoto**, ne consegue una annotazione dichiarativa della forma:
 
-     ``@Actor22(name = "a1",  contextName = "demoCtx")``
+    ``@Actor22(name=<STRING>,  contextName=<STRING> )``
 
-     Esempio:
+  La annotazione precedente viene elaborata (da :ref:`Qak22Context` col metodo ``setActorAsRemote``) che: 
 
-      ``@Context22(name = "demoCtx", host = "localhost",    port = "8080")``
-
- 
+  - crea un proxy (singleton) per il contesto in cui risiede l'attore
+  - memorizza il proxy in una mappa utilizzata dalla operazione :ref:`sendMsgToRemoteActor` invocata da 
+    :ref:`sendMsg<Invio di messaggi da attore>`)
