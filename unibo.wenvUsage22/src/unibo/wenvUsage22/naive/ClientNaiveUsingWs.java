@@ -99,15 +99,15 @@ BUSINESS LOGIC
 
     protected void doBasicMoves() throws Exception{
      	request( ApplData.turnLeft( 800  ) );
-     	Thread.sleep( 800 );
-    	request( ApplData.stop( ) );
-//    	Thread.sleep( 500 );
-     	request( ApplData.turnRight( 300 ) );
-    	//request( ApplData.stop( ) );
-     	Thread.sleep( 800 );   	
-    	requestSynch(  ApplData.moveForward( 800  ) );
-    	Thread.sleep( 500 ); 
-      	requestSynch(  ApplData.moveBackward( 400  ) );
+    	Thread.sleep( 400 );
+     	request( ApplData.stop( ) );
+////    	Thread.sleep( 500 );
+    	request( ApplData.turnRight( 300 ) );
+//    	//request( ApplData.stop( ) );
+//     	Thread.sleep( 800 );   	
+//    	requestSynch(  ApplData.moveForward( 800  ) );
+//    	Thread.sleep( 500 ); 
+//      	requestSynch(  ApplData.moveBackward( 400  ) );
      	
      	Thread.sleep( 2500 );  //Give time to receive msgs from WEnv
     	

@@ -21,24 +21,26 @@ const config = {
             position: { x: 1.00, y: 0.95},
             senseAxis: { x: true, y: false }
         }
- */
+*/
      ],
     movingObstacles: [
-    /*
+/*
         {
              name: "movingobstacle",
              position: { x: .64, y: .42 },
              directionAxis: { x: true, y: true },
              speed: 0.4,
              range: 8
-         }*/
+         }
+ */
     ],
    staticObstacles: [
-        {
+  /*      {
+
             name: "plasticBox",
             centerPosition: { x: 0.34, y: 0.4},
             size: { x: 0.03, y: 0.07}
-        },
+        },*/
    /*
 
         {

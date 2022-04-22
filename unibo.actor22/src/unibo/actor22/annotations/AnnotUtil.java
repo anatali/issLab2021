@@ -10,8 +10,10 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import unibo.actor22.Qak22Context;
+import unibo.actor22.common.ApplData;
 import unibo.actor22comm.ProtocolInfo;
 import unibo.actor22comm.ProtocolType;
+import unibo.actor22comm.context.EnablerContextForActors;
 import unibo.actor22comm.utils.ColorsOut;
  
 
@@ -81,11 +83,14 @@ RELATED TO Actor22
         for (Context22 rc : contexts) {
             String name     = rc.name();
             String host     = rc.host();
-            String port     = rc.port();
+            int port        = Integer.parseInt(rc.port());
             ProtocolType protocol = rc.protocol();
             out.put(name, rc);
+            if( host.equals("localhost")) {
+                new EnablerContextForActors( "ctx", port, protocol);
+            }
             ColorsOut.outappl("Registered context: " + name+ " at "
-                            + String.format("%s//%s:%s", protocol, host, port), ColorsOut.GREEN);
+                            + String.format("%s//%s:%s", protocol, host, port), ColorsOut.YELLOW);
         }
         return out;
     }
@@ -124,44 +129,16 @@ RELATED TO Actor22
                         throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
                     try {
                         implement.getConstructor(String.class).newInstance(actorName);
-                        ColorsOut.outappl( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
+                         ColorsOut.outappl( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
                     } catch ( Exception e ) {
                         e.printStackTrace();
-                    }
-               	
+                    }              	
                 }else { //Actor remote
                 	setActorAsRemote( contextsMap, refCtx.name(), actorName );
                 }
         }//for         
      }
-            /*
-            if (isLocal) {
-                Class implement = actor.implement();
-                if (implement.equals(void.class))
-                    throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
-                try {
-                    implement.getConstructor(String.class).newInstance(name);
-                    ColorsOut.outappl( "Qak22Context | CREATED LOCAL ACTOR: "+ name, ColorsOut.MAGENTA );
-                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                        | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                String remoteContextName = actor.contextName();
-                if (remoteContextName.equals(""))
-                    throw new IllegalArgumentException("@Actor: Remote actor needs a remoteContextName");
-                if (contexts == null)
-                    contexts = AnnotUtil.getRemoteContexts(element);
-                if (!contexts.containsKey(remoteContextName)) {
-                    throw new IllegalArgumentException("@Actor: remoteContextName invalid, Available:" + contexts.keySet());
-                }
-
-                Context rc = contexts.get(remoteContextName);
-                Qak22Context.setActorAsRemote(name, rc.port(), rc.host(), rc.protocol());
-                ColorsOut.outappl( "Qak22Context | SET REMOTE ACTOR: "+ name, ColorsOut.MAGENTA );
-            }*/
-       
-   	
+    	
  
     
     public static void handleRepeatableActorDeclaration(Object element) {
