@@ -6,9 +6,9 @@ import unibo.actor22comm.SystemData;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 
-public class DemoActor22OnPc extends QakActor22{
+public class A1Actor22OnPc extends QakActor22{
 
-	public DemoActor22OnPc(String name) {
+	public A1Actor22OnPc(String name) {
 		super(name);
  	}
  
@@ -16,7 +16,7 @@ public class DemoActor22OnPc extends QakActor22{
 	protected void handleMsg(IApplMessage msg) {
 		if( msg.isDispatch() && msg.msgId().equals(SystemData.activateActorCmd) ) {
 			CommUtils.delay(1000);
-			ColorsOut.out( getName()  + " | ACTIVATED " , ColorsOut.CYAN);
+			ColorsOut.outappl( getName()  + " | ACTIVATED " , ColorsOut.YELLOW);
 			forward( SystemData.startSysCmd(getName(),"a2") );
 		}else {
  			elabMsg(msg);

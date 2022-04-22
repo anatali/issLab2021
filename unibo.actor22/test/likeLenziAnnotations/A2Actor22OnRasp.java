@@ -5,16 +5,16 @@ import unibo.actor22.QakActor22;
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.utils.ColorsOut;
 
-public class DemoActor22OnRaspi extends QakActor22{
+public class A2Actor22OnRasp extends QakActor22{
 
-	public DemoActor22OnRaspi(String name) {
+	public A2Actor22OnRasp(String name) {
 		super(name);
  	}
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {
 		if( msg.isDispatch() && msg.msgId().equals(SystemData.activateActorCmd) ) {
-	 		ColorsOut.out( getName()  + " | ACTIVATED " , ColorsOut.YELLOW);
+	 		ColorsOut.outappl( getName()  + " | ACTIVATED " , ColorsOut.YELLOW);
 		}else {
 	 		elabMsg(msg);
 		}	

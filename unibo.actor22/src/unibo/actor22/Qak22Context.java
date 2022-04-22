@@ -113,7 +113,7 @@ public class Qak22Context {
    }  
     
 //Final Annotations 
-    public static Map<String, Context22> setRemoteContexts22(Object element) {
+    public static Map<String, Context22> setContexts22(Object element) {
         Map<String, Context22> out  = new HashMap<>();
         Class<?> clazz              = element.getClass();
         Annotation[] annotations    = clazz.getAnnotations();
@@ -136,7 +136,7 @@ public class Qak22Context {
     
     public static void configureTheSystem(Object element) {
         Class<?> clazz             = element.getClass();
-        Map<String, Context22> contextsMap = setRemoteContexts22(element);
+        Map<String, Context22> contextsMap = setContexts22(element);
         Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
         for (Actor22 actor : actorAnnotations) {
                 String actorName = actor.name();
