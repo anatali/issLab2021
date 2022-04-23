@@ -220,7 +220,8 @@ Annotazioni per dichiarare Attori
   La annotazione precedente viene elaborata (da :ref:`Qak22Context` col metodo ``setActorAsLocal``) che:
 
   - crea una istanza dell'attore come implementazione della classe specificata
-  - invia all'attore un messaggio di attivazione
+
+.. - invia all'attore un messaggio di attivazione
 
 
 - Nel caso di attore **remoto**, ne consegue una annotazione dichiarativa della forma:
@@ -232,3 +233,24 @@ Annotazioni per dichiarare Attori
   - crea un proxy (singleton) per il contesto in cui risiede l'attore
   - memorizza il proxy in una mappa utilizzata dalla operazione :ref:`sendMsgToRemoteActor` invocata da 
     :ref:`sendMsg<Invio di messaggi da attore>`)
+
+
+----------------------------------------
+Actor22 esempi con WEnv
+----------------------------------------
+
+- TODO ActorUsingWEnvBetter 
+- BoundaryWalkerActor  come FSM 'a mano' : 
+  it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/BoundaryWalkerActor.java
+- ActorRobotCleaner usa fsm fatto a mano
+
+Problematiche:
+
+- defnire una strategia di copertura: goingDown e goingUp 
+- definizione di uno robot move-step 'sincrono' che può avere successo o fallire. Problema del recupero
+  dell'esito della operazione dalla gestione di SystemData.wsEventId emmessa da WsConnection
+- fsm come soluzione e come segnale per pasare da message-driven a Actor22Fsm
+- ridefinizione dell'attore con Actor22Fsm
+- il problema di capire quando il lavoro è terminato
+- il problema della verifica della copertura 
+- la memorizzazione del lavoro svolto (del percorso effettuato)

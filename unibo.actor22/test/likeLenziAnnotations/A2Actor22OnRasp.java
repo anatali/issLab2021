@@ -23,12 +23,11 @@ public class A2Actor22OnRasp extends QakActor22{
 		}	
 	}
 	protected void elabMsg(IApplMessage msg) {
-		ColorsOut.outappl( getName()  + " | elabMsgggggggggggggg " + msg, ColorsOut.CYAN);	
-		CommUtils.delay(1000);
- 		request( SystemData.demoSysRequest(getName(),"a3Pc") );
-		if( msg.isRequest() ) {
-			
+		ColorsOut.outappl( getName()  + " | elabMsggg " + msg, ColorsOut.CYAN);	
+		if( msg.isReply() ) {
+			ColorsOut.outappl( getName()  + " | reply= " + msg.msgContent() + " from " + msg.msgSender(), ColorsOut.GREEN);	
 		}
+		else request( SystemData.demoSysRequest(getName(),"a3Pc") );
 	}
 
 }

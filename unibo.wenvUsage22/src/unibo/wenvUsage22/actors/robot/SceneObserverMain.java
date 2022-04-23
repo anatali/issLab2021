@@ -15,13 +15,13 @@ import unibo.actor22comm.utils.CommUtils;
 		name =      { "sceneObserver" }, 
 		implement = { SceneObserver.class })
 public class SceneObserverMain {
-	private EnablerContextForActors ctx;
+	//private EnablerContextForActors ctx;
 	
 	public void doJob() {
 		CommSystemConfig.tracing = false;
-		ctx = new EnablerContextForActors( "ctx",8030,ProtocolType.tcp);
+		EnablerContextForActors.create( "ctx",8030,ProtocolType.tcp);
 		Qak22Context.handleLocalActorDecl(this);
-		ctx.activate();
+		//ctx.activate();
  		CommUtils.delay(6000000);
 		/*
 		IApplMessage req = CommUtils.buildRequest("main", "cmd", "start", "sceneObserver");

@@ -11,6 +11,9 @@ public class A1Actor22OnPc extends QakActor22{
 
 	public A1Actor22OnPc(String name) {
 		super(name);
+		//Inviare un msg in fase di creazione NON E' BUONA PRATICA in quanto
+		//il sistema potrebbe non essere ancora completamente costruito
+		//forward( SystemData.demoSysCmd(getName(),"a2") );
  	}
  
 	@Override

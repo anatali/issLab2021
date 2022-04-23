@@ -10,9 +10,10 @@ import unibo.actor22comm.utils.CommUtils;
  */
 
 @Context22(name = "pcCtx", host = "127.0.0.1", port = "8080")
+@Context22(name = "pcCtx1", host = "127.0.0.1", port = "8081")
 @Context22(name = "raspCtx",   host = "localhost",    port = "8082")
 @Actor22(name = "a1",      contextName = "pcCtx" )
-@Actor22(name = "a3Pc",    contextName = "pcCtx"  )
+@Actor22(name = "a3Pc",    contextName = "pcCtx1"  )
 @Actor22(name = "a2",      contextName = "raspCtx", implement=A2Actor22OnRasp.class )
 @Actor22(name = "a3Rasp",  contextName = "raspCtx", implement=A3Actor22.class )
 

@@ -1,5 +1,8 @@
 package unibo.wenvUsage22.actors.basic;
 
+/*
+ * WsConnection è associata a un observer che emette SystemData.wsEventId
+ */
 import org.json.JSONObject;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22;
@@ -51,12 +54,12 @@ public class ActorUsingWEnvBetter extends QakActor22  {
 	}
 	
 	protected void interpret( IApplMessage m ) {
-		if( m.isEvent() || m.msgId().equals( SystemData.wsEventId ) ) {
-			handleWsInfo(m);
-			return;
-		}
  		if( m.msgId().equals( ApplData.activateId )) {
 			autoMsg(ApplData.moveCmd(getName(),getName(),"w"));
+			return;
+		}
+		if( m.isEvent() || m.msgId().equals( SystemData.wsEventId ) ) {
+			handleWsInfo(m);
 			return;
 		}
 		if( ! m.msgId().equals( ApplData.moveCmdId )) {

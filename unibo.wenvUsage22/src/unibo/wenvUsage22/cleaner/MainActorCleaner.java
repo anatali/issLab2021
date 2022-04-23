@@ -1,10 +1,8 @@
-package unibo.wenvUsage22.actors.basic;
+package unibo.wenvUsage22.cleaner;
 
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
-import unibo.actor22.annotations.Actor;
 import unibo.actor22.annotations.Actor22;
-import unibo.actor22.annotations.AnnotUtil;
 import unibo.actor22.annotations.Context22;
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.utils.CommSystemConfig;
@@ -13,11 +11,10 @@ import unibo.wenvUsage22.common.ApplData;
 
 
 @Context22(name = "pcCtx", host = "localhost", port = "8083")
-//@Actor22(name = MainActorUsingWEnv.myName, contextName = "pcCtx", implement = ActorUsingWEnvBetter.class)
-@Actor22(name = MainActorUsingWEnv.myName, contextName = "pcCtx", implement = ActorUsingWEnv.class)
-public class MainActorUsingWEnv {
+@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
+public class MainActorCleaner {
 	
-	public static final String myName = "wenvUse";
+	public static final String myName = "cleaner";
 	
 	public void doJob() {
 		CommSystemConfig.tracing = false;
@@ -30,14 +27,14 @@ public class MainActorUsingWEnv {
 
 	public void terminate() {
 		CommUtils.aboutThreads("Before end - ");		
-		CommUtils.delay(12000); //Give time to work ...
+		CommUtils.delay(60000); //Give time to work ...
 		CommUtils.aboutThreads("At exit - ");		
 		System.exit(0);
 	}
 	
 	public static void main( String[] args) throws Exception {
 		CommUtils.aboutThreads("Before start - ");
-		MainActorUsingWEnv appl = new MainActorUsingWEnv( );
+		MainActorCleaner appl = new MainActorCleaner( );
 		appl.doJob();
 		appl.terminate();
 	}

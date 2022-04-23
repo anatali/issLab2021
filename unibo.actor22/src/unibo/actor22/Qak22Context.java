@@ -42,16 +42,16 @@ public class Qak22Context {
     }
     
 
-	public static void addActor(QakActor22 a) {	
-        ctxMap.put(a.getName(), a);
+	public static void addActor( QakActor22 a ) {	
+        ctxMap.put(a.getName(), a );
     }
 	public static void removeActor(QakActor22 a) {	
         ctxMap.remove( a.getName() );
     }	
 	public static void showActorNames( ) {
-		ColorsOut.outappl("CURRENT ACTORS in Context:", ColorsOut.MAGENTA);
-		ctxMap.forEach( (  v,x) ->  
-    		ColorsOut.outappl("" + v , ColorsOut.MAGENTA)
+		ColorsOut.outappl("CURRENT ACTORS in Context22:", ColorsOut.MAGENTA);
+		ctxMap.forEach( (  v,x ) ->  
+    		ColorsOut.outappl("" + v + " in " + x.getContext22Name(), ColorsOut.MAGENTA)
 		 );
 	}
     public static QakActor22 getActor(String actorName) {
@@ -66,7 +66,7 @@ public class Qak22Context {
 
 	
 	
-//Annotations
+//Annotations FIRST RELEASE
 	
     public static void handleLocalActorDecl(Object element) {   	
         Class<?> clazz            = element.getClass();
@@ -111,6 +111,8 @@ public class Qak22Context {
     	handleLocalActorDecl(element);
     	handleRemoteActorDecl(element);
    }  
+//END Annotations FIRST RELEASE   
+    
     
 //Final Annotations 
     public static Map<String, Context22> setContexts22(Object element) {
@@ -123,23 +125,25 @@ public class Qak22Context {
             String host     = rc.host();
             int port        = Integer.parseInt(rc.port());
             ProtocolType protocol = rc.protocol();
-            out.put(name, rc);
+            out.put(name, rc);   //STORE IN Context22 MAP
             if( host.equals("localhost")) {
+            	ColorsOut.outappl("CREATE EnablerContextForActors " + name, ColorsOut.MAGENTA);
             	//EnablerContextForActors ctx = 
-            	EnablerContextForActors.create( "ctx", port, protocol);
+            	EnablerContextForActors.create( name, port, protocol); //SINGLETON
             	//ctx.activate();
-            }
+            } 
             ColorsOut.outappl("Registered context: " + name+ " at "
                             + String.format("%s//%s:%s", protocol, host, port), ColorsOut.YELLOW);
+             
         }
         return out;
     }
     
     protected static void setActors( Map<String, Context22> contextsMap, Class<?> clazz ) {
         Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
-        for (Actor22 actor : actorAnnotations) {
-                String actorName = actor.name();
-                String actorCtx  = actor.contextName();
+        for (Actor22 actorAnnot : actorAnnotations) {
+                String actorName = actorAnnot.name();
+                String actorCtx  = actorAnnot.contextName();
                 //ColorsOut.out( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx , ColorsOut.BLUE );
                 Context22 refCtx = contextsMap.get(actorCtx);
                 if( refCtx == null ) {
@@ -147,18 +151,7 @@ public class Qak22Context {
                 	return;
                 }
                 if( refCtx.host().equals("localhost")) {
-                	setActorAsLocal(actor,   actorName,   refCtx);
-//                    Class implement = actor.implement();
-//                    if (implement.equals(void.class))
-//                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
-//                    try {
-//                         implement.getConstructor(String.class).newInstance(actorName);
-//                         ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
-//                         //attivo l'attore
-//                         Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
-//                    } catch ( Exception e ) {
-//                        e.printStackTrace();
-//                    }              	
+                	setActorAsLocal(actorAnnot,   actorName,   refCtx);
                 }else { //Actor remote
                 	setActorAsRemote( actorName, refCtx.port(), refCtx.host(), refCtx.protocol() );
                 	//String actorName, String entry, String host, ProtocolType protocol
@@ -167,15 +160,16 @@ public class Qak22Context {
    	
     }
     
-    protected static void setActorAsLocal( Actor22 actor, String actorName, Context22 refCtx ) {
-        Class implement = actor.implement();
+    protected static void setActorAsLocal( Actor22 actorAnnot, String actorName, Context22 refCtx ) {
+        Class implement = actorAnnot.implement();
         if (implement.equals(void.class))
             throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
         try {
-             implement.getConstructor(String.class).newInstance(actorName);
+        	 QakActor22 a = (QakActor22) implement.getConstructor(String.class).newInstance(actorName);
              ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
-             //attivo l'attore
-             Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
+             a.setContext22Name( refCtx.name() );
+             //attivo l'attore ???
+             //Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
         } catch ( Exception e ) {
             e.printStackTrace();
         }              	    	
@@ -185,33 +179,6 @@ public class Qak22Context {
         Class<?> clazz             = element.getClass();
         Map<String, Context22> contextsMap = setContexts22(element);
         setActors(contextsMap, clazz);
-//        Actor22[] actorAnnotations = clazz.getAnnotationsByType(Actor22.class);
-//        for (Actor22 actor : actorAnnotations) {
-//                String actorName = actor.name();
-//                String actorCtx  = actor.contextName();
-//                //ColorsOut.out( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx , ColorsOut.BLUE );
-//                Context22 refCtx = contextsMap.get(actorCtx);
-//                if( refCtx == null ) {
-//                	ColorsOut.outerr("No context found for: " + actorName  ); 
-//                	return;
-//                }
-//                if( refCtx.host().equals("localhost")) {
-//                    Class implement = actor.implement();
-//                    if (implement.equals(void.class))
-//                        throw new IllegalArgumentException("@Actor: Local actor needs a class specification");
-//                    try {
-//                         implement.getConstructor(String.class).newInstance(actorName);
-//                         ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
-//                         //attivo l'attore
-//                         Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
-//                    } catch ( Exception e ) {
-//                        e.printStackTrace();
-//                    }              	
-//                }else { //Actor remote
-//                	setActorAsRemote( actorName, refCtx.port(), refCtx.host(), refCtx.protocol() );
-//                	//String actorName, String entry, String host, ProtocolType protocol
-//                }
-//        }//for         
      }
 
     

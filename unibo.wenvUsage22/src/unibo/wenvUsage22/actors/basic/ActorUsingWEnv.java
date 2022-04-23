@@ -4,13 +4,17 @@ import java.util.Observable;
 import org.json.JSONObject;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22;
+import unibo.actor22.annotations.Actor22;
+import unibo.actor22.annotations.Context22;
 import unibo.actor22comm.http.HttpConnection;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.common.ApplData;
-
+/*
+ * ActorUsingWEnv è un Observer di WsConnection  
+ */
 public class ActorUsingWEnv extends QakActor22 implements IObserver{
 	private Interaction2021 conn;
 	private int n = 0;
@@ -88,7 +92,7 @@ public class ActorUsingWEnv extends QakActor22 implements IObserver{
  
 	@Override
 	public void update(String msg) {
-		ColorsOut.outappl(getName() + " | update:" + msg,  ColorsOut.BLUE);		
+		ColorsOut.outappl(getName() + " | update:" + msg,  ColorsOut.GREEN);		
 		JSONObject d = new JSONObject(""+msg);
 		if( d.has("collision")) {
 			n++;
