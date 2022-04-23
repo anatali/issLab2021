@@ -17,6 +17,11 @@ public class VRobotMoves {
 		return CommUtils.buildDispatch(sender,ApplData.robotCmdId,aril_a,receiver);
 	}
 
+	
+	
+	
+	public static final String w = "moveForward";
+	
 	public static void moveForward(String name, Interaction2021 conn, int duration)  {
 		try {
 			//ColorsOut.outappl(name + " | moveForward conn:" + conn,  ColorsOut.BLUE);

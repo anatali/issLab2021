@@ -6,10 +6,10 @@ import java.lang.annotation.*;
  
 @Target (ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(Transitions.class)
-public @interface Transition {
+@Repeatable(TransitionsGuarded.class)
+public @interface TransitionGuarded {
 	String name() default "t0";
-	String state()  ;
+	String stateOk()  ;
+	String stateKo()  ;
 	String msgId()  ;
-	//String guard() default "";  //nome di una funzione che restituisce boolean
 }

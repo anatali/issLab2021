@@ -121,10 +121,10 @@ Parte del sistema su PC
 
 .. code::
 
-    @Context22(name = "pcCtx",   host = "localhost",    port = "8080")
-    @Context22(name = "raspCtx", host = "192.168.1.12", port = "8082")
-    @Actor22(name = "a1",  contextName = "pcCtx", implement=A1Actor22OnPc.class)
-    @Actor22(name = "a2",  contextName = "raspCtx" )
+    @Context22(name="pcCtx",host="localhost",port="8080")
+    @Context22(name="raspCtx",host ="192.168.1.12",port="8082")
+    @Actor22(name="a1",contextName="pcCtx",implement=A1Actor22OnPc.class)
+    @Actor22(name="a2",contextName="raspCtx" )
 
     public class MainAnnotationDemo22Pc {
     ...

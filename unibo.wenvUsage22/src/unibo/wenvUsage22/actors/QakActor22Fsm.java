@@ -19,12 +19,13 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	protected Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
 	protected Vector< Pair<String, String> > transTab = new Vector< Pair<String, String> >();
 	private String curState = "";
+	protected IApplMessage currentMsg = null;
   	
 	public QakActor22Fsm(String name) {
 		super(name);
 		declareTheStates( );
 		setTheInitialState( );
-		addExpecetdMsg(curState, ApplData.startSysCmdId );
+		addExpectedMsg(curState, ApplData.startSysCmdId );
 		ColorsOut.outappl(getName() + " | autoMsg ApplData.startSysCmd", ColorsOut.GREEN);
 		autoMsg(ApplData.startSysCmd("system",name));
 	}
@@ -61,17 +62,18 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 				stateTransition(state,oldMsg);
 				break;
 			}
-			else  addExpecetdMsg(state, msgId);
+			else  addExpectedMsg(state, msgId);
 		}
 	}
 	protected void stateTransition(String stateName, IApplMessage msg ) {
-		curState = stateName;
+		curState   = stateName;
+		currentMsg = msg;
 		transTab.removeAllElements();
 		StateActionFun a = stateMap.get(stateName);
 		if( a != null ) a.run( msg );
 		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED");
 	}	
-	protected void addExpecetdMsg(String state, String msgId) {
+	protected void addExpectedMsg(String state, String msgId) {
 		nextMsgMap.put(msgId, state);		
 	}
 	protected void clearExpectedMsgs( ) {
@@ -85,6 +87,7 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	@Override
 	protected void handleMsg(IApplMessage msg) {
 		//ColorsOut.out(getName() + " | QakActor22Fsm handleMsg " +  msg, ColorsOut.GREEN);
+		//currentMsg = msg;
 		String state = checkIfExpected(msg);
 		if ( state != null ) stateTransition(state,msg);
 		else memoTheMessage(msg);
@@ -92,7 +95,8 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	
 	protected void memoTheMessage(IApplMessage msg) {
 		ColorsOut.outappl(getName() + " | QakActor22Fsm handleMsg not yet:" +  msg, ColorsOut.YELLOW);
-		OldMsgQueue.add(msg);		
+		OldMsgQueue.add(msg);	
+		currentMsg=null;
 	}
 
 	protected IApplMessage searchInOldMsgQueue(String msgId) {

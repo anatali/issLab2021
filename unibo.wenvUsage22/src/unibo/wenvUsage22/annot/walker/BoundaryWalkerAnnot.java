@@ -86,7 +86,8 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	protected void doMove(String move) {
 		try {
 			outInfo("doMove:"+move);	
-			conn.forward( move );
+			if( move.equals(ApplData.aril_w)) conn.forward( ApplData.moveForward(300) );
+			else if( move.equals(ApplData.aril_a)) conn.forward( ApplData.turnLeft(300) );
 		}catch( Exception e) {
 			ColorsOut.outerr("robotMOve ERROR:" + e.getMessage() );
 		}

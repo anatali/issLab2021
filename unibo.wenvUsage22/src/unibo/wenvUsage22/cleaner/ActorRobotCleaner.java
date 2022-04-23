@@ -41,7 +41,7 @@ public class ActorRobotCleaner extends QakActor22  {
  			fsm("",true);
 			return;
 		}
-		if( m.isEvent() || m.msgId().equals( SystemData.wsEventId ) ) {
+		if( m.isEvent() || m.msgId().equals( SystemData.wsEventId ) ) {  //Rimando a uno stato??
 			handleWsInfo(m);
 			return;
 		}

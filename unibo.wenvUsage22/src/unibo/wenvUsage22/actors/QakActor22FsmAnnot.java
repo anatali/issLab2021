@@ -7,6 +7,7 @@ import unibo.actor22comm.interfaces.StateActionFun;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
+import unibo.wenvUsage22.annot.TransitionGuarded;
  
 
 public abstract class QakActor22FsmAnnot  extends QakActor22Fsm{
@@ -48,27 +49,33 @@ protected String initialState = null;
 		  Vector<String> nextStates = new Vector<String>();
 		  Vector<String> msgIds     = new Vector<String>();
 		  
-		  Transition[] ta = m.getAnnotationsByType(Transition.class);
+		  Transition[] ta        = m.getAnnotationsByType(Transition.class);
+		  TransitionGuarded[] tg = m.getAnnotationsByType(TransitionGuarded.class);
 		  
 		  for ( Transition t : ta ) {
-			  ColorsOut.outappl("elabStateMethod  "+ t.msgId() + " -> " + t.state(), ColorsOut.CYAN);
+			  ColorsOut.outappl("Transition simple: "+ t.msgId() + " -> " + t.state(), ColorsOut.CYAN);
 			  nextStates.add(t.state());
 			  msgIds.add(t.msgId());
 		  }
-//		  if( m.isAnnotationPresent(Transition.class)) {
-//			  Transition t = m.getAnnotation(Transition.class);
-//			  ColorsOut.outappl("elabStateMethod t= "+ t, ColorsOut.CYAN);
-//			  for( int k=0; k<t.state().length; k++) {
-//				  String nextState = t.state()[k];
-//				  nextStates.add(nextState);
-//				  String msgId     = t.msgId()[k];
-//				  msgIds.add(msgId);
+		  //Farlo staticamente NO
+		  //Nextstate = controllo della guardia
+//		  for ( TransitionGuarded t : tg ) {
+//			  ColorsOut.outappl("TransitionGuarded "+ t.name() + " for " + t.msgId()  , ColorsOut.CYAN);
+//			  if( guardForTransition(stateName, t.name() ) ) {
+//				  nextStates.add(t.stateOk());
+//				  msgIds.add(t.msgId());				  
+//			  }else {
+//				  nextStates.add(t.stateKo());
+//				  msgIds.add(t.msgId());				  				  
 //			  }
 //		  }
 // 		  ColorsOut.outappl("nextStates "+ nextStates.size() , ColorsOut.CYAN);
 //		  ColorsOut.outappl("msgIds "+ msgIds.size() , ColorsOut.CYAN);
-		  doDeclareState(m,stateName,nextStates,msgIds );
-		
+		  doDeclareState(m,stateName,nextStates,msgIds );		
+	}
+	
+	protected boolean guardForTransition(String stateName, String transName ) {
+		return false;
 	}
 	
 	protected void doDeclareState(Method curMethod, String stateName, Vector<String> nextStates, Vector<String> msgIds) {
