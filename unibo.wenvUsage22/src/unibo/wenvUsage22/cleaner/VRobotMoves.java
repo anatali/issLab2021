@@ -47,24 +47,24 @@ public class VRobotMoves {
 		}	
 	}
 
-	public static void turnLeftAndStep(String name, Interaction2021 conn) {
+	public static void turnLeftAndStep(String name, int duration, Interaction2021 conn) {
 		try {
 			turnLeft(name,conn);
 			CommUtils.delay(300);  
 			//step( name,conn  );	  		
-			stepAfterTurn(name,conn,600);     //con dt>300 sta barando ...
+			stepAfterTurn(name,conn,duration);     //con dt>300 sta barando ...
  			turnLeft(name,conn);
 			CommUtils.delay(300);  
  		}catch( Exception e) {
 			ColorsOut.outerr( name +  " | turnLeft ERROR:" +  e.getMessage() );
 		}	
 	}
-	public static void turnRightAndStep(String name, Interaction2021 conn) {
+	public static void turnRightAndStep(String name, int duration, Interaction2021 conn) {
 		try {
 			turnRight(name,conn);
 			CommUtils.delay(300);  
 			//step( name,conn  );	 //collision?		
-			stepAfterTurn(name,conn,600);     //con dt>300 sta barando ...
+			stepAfterTurn(name,conn,duration);     //con dt>300 sta barando ...
 			turnRight(name,conn);
 			CommUtils.delay(300);  
  		}catch( Exception e) {

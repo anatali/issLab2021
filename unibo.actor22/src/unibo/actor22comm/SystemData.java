@@ -9,7 +9,24 @@ import unibo.actor22comm.utils.CommUtils;
 */	
 public class SystemData {
 
+	//Usati da WsConnSysObserver
 	public static final String wsEventId     = "wsEvent";
+	public static final String endMoveOkId   = "endMoveOk";
+	public static final String endMoveKoId   = "endMoveKo";
+	
+	public static final IApplMessage endMoveOkEvent(  String move )   {
+		return CommUtils.buildEvent("system", endMoveOkId, move  );
+	}
+	public static final IApplMessage endMoveKoEvent(  String move )   {
+		return CommUtils.buildEvent("system", endMoveKoId, move  );
+	}
+	public static final IApplMessage endMoveOk( String receiver, String move )   {
+		return CommUtils.buildDispatch("system", endMoveOkId, move, receiver );
+	}
+	public static final IApplMessage endMoveKo( String receiver, String move, String dt )   {
+		String result = "{ \"move\":" + move + ", duration:" + dt + "}";
+		return CommUtils.buildDispatch("system", endMoveKoId, result, receiver );
+	}
 
 	public static final String startSysCmdId = "activate";
 	public static final String demoSysId     = "demo";

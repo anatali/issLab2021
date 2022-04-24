@@ -17,7 +17,7 @@ public class MainActorCleanerFsm {
 	public static final String myName = "cleanerFsm";
 	
 	public void doJob() {
-		CommSystemConfig.tracing = false;
+		CommSystemConfig.tracing = true;
 		Qak22Context.configureTheSystem(this);
 		//CommUtils.delay(2000); //Give time ...
 		Qak22Context.showActorNames();
@@ -26,7 +26,7 @@ public class MainActorCleanerFsm {
 
 	public void terminate() {
 		CommUtils.aboutThreads("Before end - ");		
-		CommUtils.delay(30000); //Give time to work ...
+		CommUtils.delay(60000); //Give time to work ...
 		CommUtils.aboutThreads("At exit - ");		
 		System.exit(0);
 	}

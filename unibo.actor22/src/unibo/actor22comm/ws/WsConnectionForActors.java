@@ -21,7 +21,7 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
     final MediaType JSON_MediaType     = MediaType.get("application/json; charset=utf-8");
     private WebSocket myWs;
     private boolean opened = false;
-	
+	private WsConnSysObserver wsObserver;
  
 	public static Interaction2021 create(String addr, String ownerActor  ){
         //ColorsOut.outappl("WsConnectionForActors | wsconnect addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
@@ -39,7 +39,8 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
 	public WsConnectionForActors(String addr, String ownerActor  ) {
         //ColorsOut.outappl("WsConnectionForActors | constructor addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
 		wsconnect(addr);
-		addObserver( new WsConnSysObserver(ownerActor) );
+		wsObserver = new WsConnSysObserver(ownerActor);
+		addObserver( wsObserver );
  	}
 	
 //Since IObservable	 	
@@ -51,6 +52,7 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
 //Since inherits from IConnInteraction
 	@Override
 	public void sendALine(String msg) throws Exception {
+		((WsConnSysObserver)wsObserver).startMoveTime();
          myWs.send(msg);
 	}
 	@Override
@@ -70,7 +72,8 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
 //Since inherits from Interaction2021 firstpart
 	@Override
 	public void forward( String msg) throws Exception {
-        myWs.send(msg);
+	   ((WsConnSysObserver)wsObserver).startMoveTime();
+       myWs.send(msg);
  	}
 
 	@Override
