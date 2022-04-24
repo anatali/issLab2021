@@ -28,10 +28,10 @@ public class RobotController extends QakActor22FsmAnnot{
 	
 	
 	
-	@Override
-	public void handleAsObserver(String data) {
-		outInfo( "handleAsObserver: "  + data);
-	}
+//	@Override
+//	public void handleAsObserver(String data) {
+//		outInfo( "handleAsObserver: "  + data);
+//	}
  
 }
 

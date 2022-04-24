@@ -30,9 +30,9 @@ public class FirstAnnotated extends QakActor22FsmAnnot{
 		outInfo(""+msg);
 	}
 
-	@Override
-	public void handleAsObserver(String data) {
-		outInfo(""+data);		
-	}
+//	@Override
+//	public void handleAsObserver(String data) {
+//		outInfo(""+data);		
+//	}
 
 }

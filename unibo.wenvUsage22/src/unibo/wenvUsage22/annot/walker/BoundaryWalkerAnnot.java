@@ -42,7 +42,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  		conn = new WsConnection("localhost:8091");//WsConnection.create("localhost:8091" );				 
  		outInfo("connected "+conn);	
 		//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
-		((WsConnection)conn).addObserver((IObserver) myself);
+//		((WsConnection)conn).addObserver((IObserver) myself);
 		//sendMsgToMyself( ApplData.w( getName() , ApplData.robotName ) );
 		doStep();
 	}
@@ -93,7 +93,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 		}
 	}
 
-
+/*
 	@Override
 	public void handleAsObserver(String data) {
 		ColorsOut.outappl(getName() + " |  asObserver receives:" + data, ColorsOut.MAGENTA);
@@ -111,5 +111,5 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  			}
  		}//else sendMsgToMyself( ApplData.haltSysCmd(ApplData.robotName, ApplData.robotName));
 	}
-
+*/
 }

@@ -1,21 +1,17 @@
 package unibo.wenvUsage22.cleaner.fsm;
 
 /*
- * WsConnection è associata a un observer che emette SystemData.wsEventId
+ * 
  */
-import org.json.JSONObject;
+
 import it.unibo.kactor.IApplMessage;
-import unibo.actor22.QakActor22;
-import unibo.actor22comm.SystemData;
+import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnectionForActors;
-import unibo.wenvUsage22.actors.QakActor22Fsm;
 import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
 import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
-import unibo.wenvUsage22.annot.TransitionGuarded;
-import unibo.wenvUsage22.common.ApplData;
 import unibo.wenvUsage22.cleaner.VRobotMoves;
 
 
@@ -24,7 +20,7 @@ public class ActorRobotCleanerFsm extends QakActor22FsmAnnot{
  
 	private int numIter     = 0;
 	private int numIterOk   = 5;
-	private int turnStep    = 300;   //600 => too fast
+	private int turnStep    = 800;   //600 => too fast
  	
 	public ActorRobotCleanerFsm(String name) {
 		super(name);
@@ -33,6 +29,8 @@ public class ActorRobotCleanerFsm extends QakActor22FsmAnnot{
 	protected void init() {
  		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.BLUE);
 		conn = WsConnectionForActors.create("localhost:8091", getName() ); //con owner
+		IObserver robotMoveObserver = new WsConnApplObserver(this.getName());
+		((WsConnectionForActors)conn).addObserver(robotMoveObserver);
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
 	
@@ -109,13 +107,7 @@ public class ActorRobotCleanerFsm extends QakActor22FsmAnnot{
 		else ColorsOut.outerr(getName() + " | TOO FAST "  );  
   	}
 	
-
-
-
-	@Override
-	public void handleAsObserver(String data) {
-		outInfo(""+data);		
-	}
+ 
 	
 }
 

@@ -54,9 +54,9 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm {
 	}
 
 
-	@Override
-	public void handleAsObserver(String data) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void handleAsObserver(String data) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

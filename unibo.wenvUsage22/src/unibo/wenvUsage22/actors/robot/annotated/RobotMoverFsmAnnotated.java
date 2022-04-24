@@ -56,10 +56,10 @@ public  class RobotMoverFsmAnnotated extends QakActor22FsmAnnot  {
 	}
 
  	
-	@Override
-	public void handleAsObserver(String data) {
-		ColorsOut.outappl(getName() + " |  asobserver receives:" + data, ColorsOut.MAGENTA);
-	}	
+//	@Override
+//	public void handleAsObserver(String data) {
+//		ColorsOut.outappl(getName() + " |  asobserver receives:" + data, ColorsOut.MAGENTA);
+//	}	
 
 
 }

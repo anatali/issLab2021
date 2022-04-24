@@ -39,8 +39,9 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
 	public WsConnectionForActors(String addr, String ownerActor  ) {
         //ColorsOut.outappl("WsConnectionForActors | constructor addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
 		wsconnect(addr);
-		wsObserver = new WsConnSysObserver(ownerActor);
-		addObserver( wsObserver );
+		//NON AGGIUNGO Observer di default
+//		wsObserver = new WsConnSysObserver(null);
+//		addObserver( wsObserver );
  	}
 	
 //Since IObservable	 	
@@ -52,7 +53,8 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
 //Since inherits from IConnInteraction
 	@Override
 	public void sendALine(String msg) throws Exception {
-		((WsConnSysObserver)wsObserver).startMoveTime();
+		 observers.forEach( v -> ((WsConnSysObserver)v).startMoveTime() );
+		//((WsConnSysObserver)wsObserver).startMoveTime();
          myWs.send(msg);
 	}
 	@Override
@@ -72,8 +74,9 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
 //Since inherits from Interaction2021 firstpart
 	@Override
 	public void forward( String msg) throws Exception {
-	   ((WsConnSysObserver)wsObserver).startMoveTime();
-       myWs.send(msg);
+//		observers.forEach( v -> ((WsConnSysObserver)v).startMoveTime() );
+//       myWs.send(msg);
+		sendALine(msg);
  	}
 
 	@Override
@@ -114,7 +117,7 @@ public class WsConnectionForActors extends WebSocketListener implements Interact
     }
     @Override
     public void onMessage(WebSocket webSocket, String msg  ) {
-        ColorsOut.out("WsConnectionForActors | onMessage " + msg, ColorsOut.GREEN );
+        //ColorsOut.out("WsConnectionForActors | onMessage " + msg, ColorsOut.GREEN );
         updateObservers( msg );
     }
 

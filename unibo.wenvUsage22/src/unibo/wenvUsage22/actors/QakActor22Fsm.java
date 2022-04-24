@@ -13,7 +13,7 @@ import unibo.wenvUsage22.common.ApplData;
  
 
 
-public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
+public abstract class QakActor22Fsm extends QakActor22 { //implements IObserver
 	private HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
 	protected HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
 	protected Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
@@ -45,7 +45,7 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	}
 	
 	protected void addTransition(String state, String msgId) {
-		//ColorsOut.outappl( getName() + " QakActor22Fsm | in " + curState + " | transition to " + state + " for " +  msgId, ColorsOut.BLUE);		
+		ColorsOut.out( getName() + " QakActor22Fsm | in " + curState + " | transition to " + state + " for " +  msgId, ColorsOut.BLUE);		
 		transTab.add( new Pair<>(state, msgId) );
 	}
 	
@@ -114,7 +114,8 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	protected void outInfo(String info) {
 		ColorsOut.outappl(getName() + "/" + curState + " | " + info, ColorsOut.BLACK);
 	}
-	
+
+	/*
 //Useful for IObserver	
 	
 	@Override
@@ -129,5 +130,5 @@ public abstract class QakActor22Fsm extends QakActor22 implements IObserver{
 	} 
  	
 	public abstract void handleAsObserver(String data) ;
- 	
+ 	*/
 }

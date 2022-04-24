@@ -11,12 +11,12 @@ import unibo.wenvUsage22.actors.QakActor22Fsm;
 import unibo.wenvUsage22.common.ApplData;
 
 
-public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
+public  class RobotMoverFsm extends QakActor22Fsm { //implements IObserver
 	private Interaction2021 conn;
-	private static IObserver myself;
+//	private static IObserver myself;
 	public RobotMoverFsm(String name) {
 		super(name);
-		myself = this;
+//		myself = this;
  	}
 	
 	protected void s0(IApplMessage msg) {
@@ -24,7 +24,7 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 		//Inizializzo la connessione con WEnv
 		conn = WsConnection.create("localhost:8091" );				 
 		//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
-		((WsConnection)conn).addObserver(myself);
+//		((WsConnection)conn).addObserver(myself);
 	}	
   	 
 	@Override
@@ -77,7 +77,7 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
 	}
 
  
-	
+/*	
 	@Override
 	public void handleAsObserver(String data) {
 //		ColorsOut.out(getName() + " |  update receives:" + data);
@@ -96,6 +96,6 @@ public  class RobotMoverFsm extends QakActor22Fsm implements IObserver{
         //Otherwise ...
  			autoMsg( ApplData.haltSysCmd("main",getName()) );	
 	}	
-
+*/
 
 }

@@ -1,6 +1,6 @@
 package unibo.actor22comm;
 
-public class MoveTimer { //extends Thread
+public class SystemTimer { //extends Thread
 	
 	private long startTime;
 	private long endTime;

@@ -14,7 +14,8 @@ import unibo.wenvUsage22.common.ApplData;
 
 public class ActorRobotCleaner extends QakActor22  {
 	private Interaction2021 conn;
- 
+	private int turnStep    = 600;   //600 => too fast  300 => ok
+
 	private enum State {start, goingDown, goingUp, end };
 	private State curState  =  State.start ;
 	private int numIter     = 0;
@@ -66,7 +67,7 @@ public class ActorRobotCleaner extends QakActor22  {
             if (endmove ) { //move.equals("moveForward") && 
              	VRobotMoves.step(getName(), conn );
              } else {
-                VRobotMoves.turnLeftAndStep(getName(), conn);
+                VRobotMoves.turnLeftAndStep(getName(), turnStep, conn);
                 curState = State.goingUp;
             }
             break;
@@ -82,7 +83,7 @@ public class ActorRobotCleaner extends QakActor22  {
             		 curState = State.end; 
             		 VRobotMoves.turnLeftAndHome(getName(), conn);  
             	 }else {
-	                 VRobotMoves.turnRightAndStep(getName(), conn);
+	                 VRobotMoves.turnRightAndStep(getName(),turnStep, conn);
 	                 curState = State.goingDown;     
             	 }
             } break;
