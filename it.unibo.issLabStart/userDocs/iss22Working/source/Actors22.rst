@@ -257,3 +257,68 @@ Problematiche:
 - il problema di capire quando il lavoro è terminato
 - il problema della verifica della copertura 
 - la memorizzazione del lavoro svolto (del percorso effettuato)
+
+
+----------------------------------------
+RobotCleaner
+----------------------------------------
+
+++++++++++++++++++++++++++++
+RobotCleaner: requisiti
+++++++++++++++++++++++++++++
+Muovere il VirtualRobot in modo da coprire tutta la superficie di una stanza vuota.
+
+
++++++++++++++++++++++++++++++++++++++++++++
+RobotCleaner: analisi dei requisiti
++++++++++++++++++++++++++++++++++++++++++++ 
+
+- Il VirtualRobot (detto brevemente robot) è quello introdotto in :ref:`VirtualRobot`.
+- La stanza ha pavimento piano, forma rettangolare ed è delimitata da muri.
+- Il robot parte dalla zona detta HOME 
+
++++++++++++++++++++++++++++++++++++++++++++
+RobotCleaner: analisi del problema
++++++++++++++++++++++++++++++++++++++++++++
+
+Come analisti, poniamo in evidenza le seguenti problematiche:
+
+#. *Proattività*: il robot deve muoversi in modo autonomo fino a compimento del lavoro.
+#. *Copertura*: il robot deve seguire una strategia di movimento che garantisca di 
+   esplorare la superficie in modo completo.
+#. *Verifica*: occorre un criterio per stabilire che la copertura sia stata realizzata.
+
+Si possono pensare diverse possibili strategie di movimento sistematico che permettono la verifica.
+Ad esempio:
+
+
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - .. image::  ./_static/img/VirtualRobot/columnMove.PNG
+         :align: center 
+         :width: 80%
+
+    - .. image::  ./_static/img/VirtualRobot/spiralmove0.PNG
+         :align: center 
+         :width: 80%
+     
+
+Per semplificare suppoaniamo che il robot possa essere inscritto in un cerchio minimo di diamtero R.
+
+La lunghezza dei lati della stanza può quindi essere misurata in multipli di R.
+
+La stanza stessa può essere pensata come suddivisa in celle quadrate di lato R.
+
+  
+
+.. image::  ./_static/img/VirtualRobot/plant0.PNG
+    :align: center 
+    :width: 30% 
+
+
+Una possibile strategia di movimento semplice che permette la verifica è la seguente:
+
+- con
