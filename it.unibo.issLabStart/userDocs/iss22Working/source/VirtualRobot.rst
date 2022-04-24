@@ -23,6 +23,10 @@
 .. _ws: https://www.npmjs.com/package/ws
 .. _socket.io: https://socket.io/docs/v4/
 .. _einaros: https://github.com/einaros/ws
+.. _okhttp3: https://square.github.io/okhttp/
+.. _okhttp3WS: https://square.github.io/okhttp/4.x/okhttp/okhttp3/-web-socket/
+
+
 
 ==========================================
 VirtualRobot
@@ -435,10 +439,52 @@ Interaction2021 per HTTP e WS
 ---------------------------------------------
 
 Il progetto ``unibo.actor22`` introduce le implementazioni di :ref:`Interaction2021` per HTTP  (``HttpConnection``) e 
-per WebSocket (``WsConnection``) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
+per WebSocket (:ref:`WsConnection`) estendendo l'insieme dei :ref:`Tipi di protocollo` che possiamo usare per 
 realizzare la nostra :blue:`astrazione  connessione`.
 
 Ciò consente di riscrivere le applicazioni di esempio precedenti in modo più semplice e compatto.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+HttpConnection
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+La implementazione di :ref:`Interaction2021` per HTTP non pone particolari problemi: si tratta di utilizzare una libreria
+che fornisce un HTTP-client. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto
+che si tratta di realizzare schemi request-responde sincroni.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+WsConnection  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+La implementazione di :ref:`Interaction2021` per WS (WebSocket) è ancora basata su ``okhttp3`` (si veda `okhttp3Ws`_)
+ma modifica la struttura del codice (ne abbiamo parlato in :ref:`ClientNaiveUsingWs`) 
+in quanto le interazioni sono asincrone.
+
+Su una WS-connection possono cioè giungere informazioni 
+che sono risposte a messaggi inviati in precedenza o anche di altro tipo (ad esempio dati di un sensore, allarmi, etc.).
+
+Per meglio gestire queste informazioni in ingresso,
+questo tipo di connessione è stato realizzato come un POJO **osservabile** (che implementa :ref:`IObservable`), 
+in modo da permettere al livello
+applicativo di gestire i messaggi in arrivo da parte di ossservatori che implementano :ref:`IObserver`.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+WsConnSysObserver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Viene fornito un  osservatore 'di sistema' definito dalla classe ``WsConnSysObserver``, il quale:
+ 
+
+- riceve al momento della costruzione il nome di un attore (detto **owner**) che può assumere il valore ``null`` 
+- implementa :ref:`IObserver` e funziona  come osservatore dei :ref:`messaggi di stato` ricevuti sulla WS  
+- per ogni messaggio ricevuto (osservato) sulla WS, crea un messaggio :ref:`IApplMessage` che ha come 
+  msgId il valore ``"wsEvent"`` e come payload il messaggio osservato. Questo messaggio è un :blue:`evento` 
+  (si veda :ref:`Eventi`) se  ``owner== null`` oppure  un :blue:`dispatch` (si veda :ref:`Struttura dei messaggi applicativi`) 
+  con **owner** come destinatario, se  ``owner!= null``.
+ 
+In altre parole:
+
+:remark:`WsConnSysObserver trasforma informazioni in eventi o dispatch`
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Esempi di uso di HttpConnection e WsConnection
@@ -457,7 +503,7 @@ interazioni con WEnv:
  
   * - ClientUsingWs
     - Esegue mosse di base del robot inviando comandi scritti in :ref:`cril<Comandi-base per il robot in cril>`
-      su una connessione ``WsConnection``.
+      su una connessione ``WsConnection``. Funge anche da observer dei :ref:`messaggi di stato`.
 
   * - ClientUsingWsHttp
     - Interagisce con WEnv utilizzando sia una connessione ``HttpConnection`` sia una connessione ``WsConnection``,
@@ -482,35 +528,7 @@ e poi ``halt``  mediante :ref:`NaiveGui<NaiveGui>`: ricevo come risposta
 
 .. nextstep: attore che riceve messaggi strutturati e permette di usare VirtualRobot o RealRObot
 
----------------------------------------------
-WsConnectionForActors
----------------------------------------------
-
-La classe ``WsConnectionForActors`` realizza una versione di :ref:`Interaction2021<Interaction2021>` per WS specializzata 
-per operare in un abiente ad :ref:`Attori`.
-
-Questa versione riceve in ingresso al suo costruttore una String che può essere **null** 
-o il nome di un attore (detto **owner**).
-
-++++++++++++++++++++++++++++++
-WsConnSysObserver
-++++++++++++++++++++++++++++++
-
-Al momento della creazione, la classe ``WsConnectionForActors`` associa all'istanza 
-un osservatore definito dalla classe ``WsConnSysObserver``, il quale:
  
-- ``implements IObserver``, funzionando come osservatore dei messaggi (di stato) ricevuti sulla WS  
-- per ogni messaggio ricevuto (osservato) sulla WS, crea un messaggio :ref:`IApplMessage` che ha come 
-  msgId il valore ``"wsEvent"`` e come payload il messaggio osservato. Questo messaggio è un :blue:`evento` 
-  (si veda :ref:`Eventi`)
-  se  ``owner== null`` o  un :blue:`dispatch` (si veda :ref:`Struttura dei messaggi applicativi`) 
-  con **owner** come destinatario, se  ``owner!= null``.
- 
-
-
-In altre parole:
-
-:remark:`WsConnectionForActors trasforma informazioni in eventi o dispatch`
 
 
 --------------------------------------

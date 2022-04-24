@@ -49,7 +49,10 @@ public class ApplData {
 	public static final IApplMessage moveCmd(String sender, String receiver, String payload)   {
 		return CommUtils.buildDispatch(sender, moveCmdId, payload, receiver );
 	}
- 
+	public static final IApplMessage infoRequest(String sender, String receiver, String payload)   {
+		return CommUtils.buildDispatch(sender, moveCmdId, payload, receiver );
+	}
+
 	//Per WEnv VirtualRobot
 	public final static String robotCmdId = "move";
 	public final static String aril_w = "moveForward(300)";

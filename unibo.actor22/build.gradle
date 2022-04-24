@@ -36,7 +36,8 @@ dependencies {
 	implementation group: 'org.eclipse.californium', name: 'californium-proxy', version: '2.0.0-M12'
 
 //OkHttp library for websockets with Kotlin
-	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'    
+	//implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'    
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3' 
 	// https://mvnrepository.com/artifact/com.squareup.okhttp3/mockwebserver
 	testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.9.3'
 

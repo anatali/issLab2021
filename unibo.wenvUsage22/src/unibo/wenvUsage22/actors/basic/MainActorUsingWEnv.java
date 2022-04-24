@@ -30,7 +30,7 @@ public class MainActorUsingWEnv {
 
 	public void terminate() {
 		CommUtils.aboutThreads("Before end - ");		
-		CommUtils.delay(12000); //Give time to work ...
+		CommUtils.delay(20000); //Give time to work ...
 		CommUtils.aboutThreads("At exit - ");		
 		System.exit(0);
 	}

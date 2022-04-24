@@ -1,5 +1,6 @@
 package unibo.wenvUsage22.cleaner;
 
+import org.eclipse.californium.core.CoapResource;
 /*
  * WsConnection è associata a un observer che emette SystemData.wsEventId
  */
@@ -9,8 +10,10 @@ import unibo.actor22.QakActor22;
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.ws.WsConnectionForActors;
+import unibo.actor22comm.ws.WsConnSysObserver;
+import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.common.ApplData;
+import unibo.wenvUsage22.common.VRobotMoves;
 
 public class ActorRobotCleaner extends QakActor22  {
 	private Interaction2021 conn;
@@ -26,7 +29,9 @@ public class ActorRobotCleaner extends QakActor22  {
 	}
 
 	protected void init() {
-		conn = WsConnectionForActors.create("localhost:8091", getName() ); //con owner
+//		conn = WsConnectionForActors.create("localhost:8091", getName() ); //con owner
+		conn = WsConnection.create("localhost:8091"  ); 
+		((WsConnection) conn).addObserver( new WsConnSysObserver(getName()) );
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
 	

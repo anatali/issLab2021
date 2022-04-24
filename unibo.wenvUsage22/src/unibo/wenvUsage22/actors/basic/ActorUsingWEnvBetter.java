@@ -10,8 +10,10 @@ import unibo.actor22comm.SystemData;
 import unibo.actor22comm.http.HttpConnection;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.ws.WsConnectionForActors;
+import unibo.actor22comm.ws.WsConnSysObserver;
+import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.common.ApplData;
+import unibo.wenvUsage22.common.VRobotMoves;
 
 public class ActorUsingWEnvBetter extends QakActor22  {
 	private Interaction2021 conn;
@@ -23,29 +25,30 @@ public class ActorUsingWEnvBetter extends QakActor22  {
 	}
 
 	protected void init() {
-		conn = WsConnectionForActors.create("localhost:8091", getName() );
+		conn = WsConnection.create("localhost:8091" );
+		((WsConnection) conn).addObserver( new WsConnSysObserver(getName()) );
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
  
 
-	protected void moveForward()  {
-		try {
-			ColorsOut.outappl(getName() + " | moveForward conn:" + conn,  ColorsOut.BLUE);
-			conn.forward( ApplData.moveForward(2300) );
-		}catch( Exception e) {
-			ColorsOut.outerr( getName() +  " | doBasicMoves ERROR:" +  e.getMessage() );
-		}
-		
-	}
-	
-	protected void turnLeft() {
-		try {
-			conn.forward( ApplData.turnLeft( 300  ) );
-		}catch( Exception e) {
-			ColorsOut.outerr( getName() +  " | turnLeft ERROR:" +  e.getMessage() );
-		}
-	
-	}
+//	protected void moveForward()  {
+//		try {
+//			ColorsOut.outappl(getName() + " | moveForward conn:" + conn,  ColorsOut.BLUE);
+//			conn.forward( ApplData.moveForward(2300) );
+//		}catch( Exception e) {
+//			ColorsOut.outerr( getName() +  " | doBasicMoves ERROR:" +  e.getMessage() );
+//		}
+//		
+//	}
+//	
+//	protected void turnLeft() {
+//		try {
+//			conn.forward( ApplData.turnLeft( 300  ) );
+//		}catch( Exception e) {
+//			ColorsOut.outerr( getName() +  " | turnLeft ERROR:" +  e.getMessage() );
+//		}
+//	
+//	}
 	
 	@Override
 	protected void handleMsg(IApplMessage msg) {
@@ -68,8 +71,8 @@ public class ActorUsingWEnvBetter extends QakActor22  {
 		}
 		//ColorsOut.outappl(getName() + " | interpret:" + m.msgContent(),  ColorsOut.BLUE);
 		switch( m.msgContent() ) {
-			case "w" : moveForward();break;
-			case "a" : turnLeft();break;
+			case "w" : VRobotMoves.moveForward(getName(),conn,2300);break;
+			case "a" : VRobotMoves.turnLeft(getName(),conn);break;
 			default: break;
 		}
 	}

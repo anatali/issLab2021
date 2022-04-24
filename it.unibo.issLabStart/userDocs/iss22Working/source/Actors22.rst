@@ -24,6 +24,9 @@ Per agevolare lo sviluppo di applicazioni abbiamo 'nascosto' i dettagli tecnolog
 introducendo classi che implementano l'astrazione :blue:`connessione`, 
 espressa dall'interfaccia :ref:`Interaction2021<Interaction2021>`.
 
+La implementazione del concetto di connessione per le WebSocket (:ref:`WsConnection`) ha introdotto l'idea 
+di **connessione osservabile**, per la gestione dei :ref:`messaggi di stato`.
+
 Abbiamo rimandato alcune voci:
 
 - Refactoring del sistema a fronte dell’uso di altri protocolli: MQTT e CoAP.
@@ -85,8 +88,8 @@ aiutano a meglio comprenderne il codice e a colmare in modo automatico
 l':ref:`abstraction gap<Abstraction GAP e topDown>` tra la nuova semantica e il livello tecnologico
 sottostante.
 
-La conseguenza più importante  sarà la possibilità di impostare il processo 
-di produzione del software in modo :ref:`topDown<Abstraction GAP e topDown>`, ponendo in primo 
+La conseguenza più importante  sarà la possibilità di agevolare processi 
+di produzione  :ref:`topDown<Abstraction GAP e topDown>` del software, ponendo in primo 
 piano i requisiti e il problema, in modo da introdurre le tecnologie come risposta ad esigenze
 esplicitamente espresse e motivate.
 
@@ -165,7 +168,7 @@ Configurazione del sistema
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Le annotazioni  sono gestite da :ref:`Qak22Context`. Il programma di ciascun nodo avrà unaa stessa, semplice
-fase di configurazione; ad esemppio:
+fase di configurazione; ad esempio:
 
 .. code::
 

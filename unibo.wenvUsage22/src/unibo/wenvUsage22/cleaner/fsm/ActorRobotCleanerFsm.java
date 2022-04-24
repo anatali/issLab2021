@@ -8,11 +8,11 @@ import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.ws.WsConnectionForActors;
+import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
 import unibo.wenvUsage22.annot.State;
 import unibo.wenvUsage22.annot.Transition;
-import unibo.wenvUsage22.cleaner.VRobotMoves;
+import unibo.wenvUsage22.common.VRobotMoves;
 
 
 public class ActorRobotCleanerFsm extends QakActor22FsmAnnot{
@@ -28,9 +28,9 @@ public class ActorRobotCleanerFsm extends QakActor22FsmAnnot{
 
 	protected void init() {
  		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.BLUE);
-		conn = WsConnectionForActors.create("localhost:8091", getName() ); //con owner
-		IObserver robotMoveObserver = new WsConnApplObserver(this.getName());
-		((WsConnectionForActors)conn).addObserver(robotMoveObserver);
+		conn = WsConnection.create("localhost:8091" ); 
+		IObserver robotMoveObserver = new WsConnApplObserver(getName());
+		((WsConnection)conn).addObserver(robotMoveObserver);
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
 	

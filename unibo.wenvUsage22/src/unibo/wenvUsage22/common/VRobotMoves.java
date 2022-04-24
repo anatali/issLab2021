@@ -1,10 +1,9 @@
-package unibo.wenvUsage22.cleaner;
+package unibo.wenvUsage22.common;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
-import unibo.wenvUsage22.common.ApplData;
 
 public class VRobotMoves {
 
