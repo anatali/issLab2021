@@ -130,6 +130,7 @@ DR, lavrando in una 'stanza virtuale' di lati ``DWallDown - N*DR`` e ``DWallLeft
 
 :remark:`come analisti, riteniamo adeguata la strategia di lavoro per colonne`
 
+.. memorizzazione del lavoro svolto (del percorso effettuato)
 
 +++++++++++++++++++++++++++++++
 Il passo del robot
@@ -183,4 +184,5 @@ denominiamo :blue:`aril` (**Abstract Robot Interaction Lanaguage**).
 RobotCleaner: prototipo dopo l'analisi 
 ------------------------------------------- 
 
-Per
+
+- aril con  mossa  step (p) che può avere successo o fallire inviando due messggi diversi.

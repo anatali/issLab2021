@@ -302,7 +302,7 @@ associata a un osservatore di tipo :ref:`WsConnSysObserver`.
        interpret(msg);
     }
 
-La gestione dei messaggi è delegata al metodo di ``interpret``, che gestisce:
+La gestione dei messaggi è delegata al metodo  ``interpret``, che gestisce:
 
 - il mesaggio di attivazione dell'attore (con ``id=ApplData.activateId``), inviando un comando di movimento 
   in avanti di durata tale da provocare la collisione del robot con ``wallDown``
@@ -430,20 +430,11 @@ Le ricezione di un messaggio di stato induce un nuovo passo computazionale (una 
   }
 
 
-- TODO ActorUsingWEnvBetter 
-- BoundaryWalkerActor  come FSM 'a mano' : 
-  it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/BoundaryWalkerActor.java
-- ActorRobotCleaner usa fsm fatto a mano
+--------------------------------------------------
+Actor22Fsm
+--------------------------------------------------
 
-Problematiche:
 
-- defnire una strategia di copertura: goingDown e goingUp 
-- definizione di uno robot move-step 'sincrono' che può avere successo o fallire. Problema del recupero
-  dell'esito della operazione dalla gestione di SystemData.wsEventId emmessa da WsConnection
-- fsm come soluzione e come segnale per pasare da message-driven a Actor22Fsm
-- ridefinizione dell'attore con Actor22Fsm
-- il problema di capire quando il lavoro è terminato
-- il problema della verifica della copertura 
-- la memorizzazione del lavoro svolto (del percorso effettuato)
+
 
 
