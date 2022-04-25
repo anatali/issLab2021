@@ -3,8 +3,9 @@
 .. role:: remark
 .. role:: worktodo
 
-
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
+.. _state diagram: https://en.wikipedia.org/wiki/State_diagram#:~:text=A%20state%20diagram%20is%20a,this%20is%20a%20reasonable%20abstraction.
+.. _Automa a stati finiti: https://it.wikipedia.org/wiki/Automa_a_stati_finiti
 
 ======================================
 Actors22
@@ -25,7 +26,7 @@ introducendo classi che implementano l'astrazione :blue:`connessione`,
 espressa dall'interfaccia :ref:`Interaction2021<Interaction2021>`.
 
 La implementazione del concetto di connessione per le WebSocket (:ref:`WsConnection`) ha introdotto l'idea 
-di **connessione osservabile**, per la gestione dei :ref:`messaggi di stato`.
+di **connessione osservabile**, per la gestione dei :ref:`messaggi di stato`. 
 
 Abbiamo rimandato alcune voci:
 
@@ -55,7 +56,7 @@ sfruttando una implementazione in Kotlin (libreria ``it.unibo.qakactor-2.7.jar``
 realizzata in anni passati.
 Abbiamo cioè costruito ed iniziato ad usare:
 
-- una infrastruttura per attori message-driven come supporto alla costruzione di software distribuiti ed eterogeni
+- una infrastruttura per attori **message-driven** come supporto alla costruzione di software distribuiti ed eterogeni
 
 Al momento abbiamo lassciato in sospeso due temi: 
 
@@ -72,7 +73,7 @@ più importanti che avevamo riportato come :ref:`FASE3`:
 
 Il lavoro che ci accingiamo a svolgere comprende anche un altro punto menzionato nella :ref:`FASE2`
 
-- da attori message-driven ad :blue:`attori message-based` che operano come **automi a stati finiti**.
+- da attori message-driven ad :blue:`attori message-based` che operano come un `Automa a stati finiti`_.
 
 -----------------------------------------
 Preludio alla Fase3
@@ -124,8 +125,9 @@ Parte del sistema su PC
 
 .. code::
 
-    @Context22(name="pcCtx",host="localhost",port="8080")
-    @Context22(name="raspCtx",host ="192.168.1.12",port="8082")
+    @Context22(name="pcCtx",host="localhost",
+      port="8080", protocol=ProtocolType.tcp,)
+    @Context22(name="raspCtx",host ="192.168.1.12",port="8082") //TCP default
     @Actor22(name="a1",contextName="pcCtx",implement=A1Actor22OnPc.class)
     @Actor22(name="a2",contextName="raspCtx" )
 
@@ -148,8 +150,8 @@ Parte del sistema su RaspberryPi
 
 .. code::
 
-    @Context22(name = "pcCtx",  host = "192.168.1.12", port = "8080")
-    @Context22(name = "raspCtx",host = "localhost",    port = "8082")
+    @Context22(name = "pcCtx",  host = "192.168.1.12", port = "8080") 
+    @Context22(name = "raspCtx",host = "localhost",    port = "8082") //defalt TCP
     @Actor22(name = "a1",  contextName = "pcCtx" )
     @Actor22(name = "a2",  contextName = "raspCtx", implement=A2Actor22OnRasp.class )
 
@@ -242,6 +244,192 @@ Annotazioni per dichiarare Attori
 Actor22 esempi con WEnv
 ----------------------------------------
 
+Costruiamo un sistema formato da un attore di classe ``ActorWithObserverUsingWEnv`` che fa percorrere al 
+:ref:`VirtualRobot` il boundary della stanza, utilizzando :ref:`WsConnection` e l'osservatore della 
+connessione di classe :ref:`WsConnSysObserver`.
+
+
+.. code::
+
+    @Context22(name = "pcCtx", host = "localhost", 
+            protocol=ProtocolType.tcp, port = "8083")
+    @Actor22(name = MainActorUsingWEnv.myName, contextName = "pcCtx", 
+            implement = ActorWithObserverUsingWEnv.class)
+    public class MainActorUsingWEnv {
+	  public static final String myName = "wenvUse";
+	
+    public void doJob() {
+      Qak22Context.configureTheSystem(this);
+      Qak22Context.showActorNames();
+      Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
+    };
+    public void terminate() { ... }
+    public static void main( String[] args) throws Exception {
+      CommUtils.aboutThreads("Before start - ");
+      MainActorUsingWEnv appl = new MainActorUsingWEnv( );
+      appl.doJob();
+      appl.terminate();
+    }
+    }
+
+++++++++++++++++++++++++++++++++++++++++++++
+ActorWithObserverUsingWEnv
+++++++++++++++++++++++++++++++++++++++++++++
+
+Al momento della creazione, l'attore si connette al :ref:`VirtualRobot` creando una :ref:`WsConnection` 
+associata a un osservatore di tipo :ref:`WsConnSysObserver`.
+
+.. code:: 
+  
+  public class ActorWithObserverUsingWEnv extends QakActor22  {
+    private Interaction2021 conn;
+    private int n = 0;
+    
+    public ActorWithObserverUsingWEnv(String name) {
+      super(name);
+      init();
+    }
+
+    protected void init() {
+      conn = WsConnection.create("localhost:8091" );
+      ((WsConnection) conn).addObserver( new WsConnSysObserver(getName()) );
+      ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
+    }
+  
+    
+    @Override
+    protected void handleMsg(IApplMessage msg) {
+       interpret(msg);
+    }
+
+La gestione dei messaggi è delegata al metodo di ``interpret``, che gestisce:
+
+- il mesaggio di attivazione dell'attore (con ``id=ApplData.activateId``), inviando un comando di movimento 
+  in avanti di durata tale da provocare la collisione del robot con ``wallDown``
+- il messaggio ``SystemData.wsEventId`` generato da  :ref:`WsConnSysObserver` al momento della collisione
+  del robot con ``wallDown``
+- messaggi di movimento (con ``id= ApplData.moveCmdId``)
+
+.. code:: 
+
+    protected void interpret( IApplMessage m ) {
+      if( m.msgId().equals( ApplData.activateId )) {
+        autoMsg(ApplData.moveCmd(getName(),getName(),"w"));
+        return;
+      }
+      if( m.isEvent() || m.msgId().equals( SystemData.wsEventId ) ) {
+        handleWsInfo(m);
+        return;
+      }
+      if( ! m.msgId().equals( ApplData.moveCmdId )) {
+        ColorsOut.outappl(getName() + " | sorry, I don't handle :" + m,  ColorsOut.YELLOW);
+        return;
+      }
+      switch( m.msgContent() ) {
+        case "w" : VRobotMoves.moveForward(getName(),conn,2300);break;
+        case "a" : VRobotMoves.turnLeft(getName(),conn);break;
+        default: break;
+      }
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Gestione dei messaggi di stato
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La gestione dei :ref:`messaggi di stato` distingue tra completamenti di mosse e collsioni,
+realizzando parte della 'business logic'.
+
+.. code:: 
+
+      protected void handleWsInfo(IApplMessage m) {
+      String msg = m.msgContent().replace("'", "");
+      JSONObject d = new JSONObject(""+msg);
+      if( d.has("collision")) {
+        n++;
+        sendMsg(ApplData.moveCmd(getName(),getName(),"a"));
+      }
+      if( d.has("endmove") && d.getBoolean("endmove") && n < 4) 
+         sendMsg(ApplData.moveCmd(getName(),getName(),"w"));
+      
+      }
+  }
+
+:remark:`la realizzazione 'spezzata' della business logic va rivista`
+
+++++++++++++++++++++++++++++++++++++++++++++
+Un primo automa a stati finiti
+++++++++++++++++++++++++++++++++++++++++++++
+
+Il comportamento logico del BoundaryWalker può essere descritto da un semplice `Automa a stati finiti`_:
+
+.. code:: 
+
+  private enum State {start, goingAhead, turnedLeft, end };
+
+
+.. image::  ./_static/img/VirtualRobot/FsmBoundary.PNG
+    :align: center 
+    :width: 60% 
+
+Lo `state diagram`_ di figura può essere realizzato da una funzione come quella che segue:
+
+.. code:: 
+ 
+  protected void fsm(String move, boolean endmove){
+    switch( curState ) {
+    case start: {
+      VRobotMoves.step(getName(), conn );
+      curState = State.goingAhead;
+      numIter++;
+      break;
+    }
+    case goingAhead: {
+      if (endmove ) {  //lo stato non cambia	            	
+        VRobotMoves.step(getName(), conn );
+      } else {
+        VRobotMoves.turnLeft(getName(), conn);
+        curState = State.turnedLeft;	            }	        	
+      }
+      break;
+	  }
+    case turnedLeft:{
+      numIter++;
+      if( numIter < 5 ) {
+        VRobotMoves.step(getName(), conn );
+        curState = State.goingAhead;
+      }
+      else curState = State.end;
+      break;
+    }
+    case end: {
+      ColorsOut.outappl("fsm DONE "  , ColorsOut.MAGENTA);
+      break;
+    }       
+    }
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Nuova gestione dei messaggi di stato
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Le ricezione di un messaggio di stato induce un nuovo passo computazionale (una transizione) nell'automa.
+
+.. code:: 
+
+      protected void handleWsInfo(IApplMessage m) {
+      String msg = m.msgContent().replace("'", "");
+      JSONObject d = new JSONObject(""+msg);
+      if( d.has("collision")) {
+        fsm( d.getString("collision"), false);
+        return;
+      }
+      if( d.has("endmove") && d.getBoolean("endmove") && n < 4) 
+        fsm( d.getString("move"), true);
+        return;
+      }
+  }
+
+
 - TODO ActorUsingWEnvBetter 
 - BoundaryWalkerActor  come FSM 'a mano' : 
   it.unibo.virtualrobotclient/app/src/main/java/it/unibo/robotWithActorJava/BoundaryWalkerActor.java
@@ -259,66 +447,3 @@ Problematiche:
 - la memorizzazione del lavoro svolto (del percorso effettuato)
 
 
-----------------------------------------
-RobotCleaner
-----------------------------------------
-
-++++++++++++++++++++++++++++
-RobotCleaner: requisiti
-++++++++++++++++++++++++++++
-Muovere il VirtualRobot in modo da coprire tutta la superficie di una stanza vuota.
-
-
-+++++++++++++++++++++++++++++++++++++++++++
-RobotCleaner: analisi dei requisiti
-+++++++++++++++++++++++++++++++++++++++++++ 
-
-- Il VirtualRobot (detto brevemente robot) è quello introdotto in :ref:`VirtualRobot`.
-- La stanza ha pavimento piano, forma rettangolare ed è delimitata da muri.
-- Il robot parte dalla zona detta HOME 
-
-+++++++++++++++++++++++++++++++++++++++++++
-RobotCleaner: analisi del problema
-+++++++++++++++++++++++++++++++++++++++++++
-
-Come analisti, poniamo in evidenza le seguenti problematiche:
-
-#. *Proattività*: il robot deve muoversi in modo autonomo fino a compimento del lavoro.
-#. *Copertura*: il robot deve seguire una strategia di movimento che garantisca di 
-   esplorare la superficie in modo completo.
-#. *Verifica*: occorre un criterio per stabilire che la copertura sia stata realizzata.
-
-Si possono pensare diverse possibili strategie di movimento sistematico che permettono la verifica.
-Ad esempio:
-
-
-
-.. list-table:: 
-  :widths: 50,50
-  :width: 100%
-
-  * - .. image::  ./_static/img/VirtualRobot/columnMove.PNG
-         :align: center 
-         :width: 80%
-
-    - .. image::  ./_static/img/VirtualRobot/spiralmove0.PNG
-         :align: center 
-         :width: 80%
-     
-
-Per semplificare suppoaniamo che il robot possa essere inscritto in un cerchio minimo di diamtero R.
-
-La lunghezza dei lati della stanza può quindi essere misurata in multipli di R.
-
-La stanza stessa può essere pensata come suddivisa in celle quadrate di lato R.
-
-  
-
-.. image::  ./_static/img/VirtualRobot/plant0.PNG
-    :align: center 
-    :width: 30% 
-
-
-Una possibile strategia di movimento semplice che permette la verifica è la seguente:
-
-- con

@@ -450,7 +450,7 @@ HttpConnection
 
 La implementazione di :ref:`Interaction2021` per HTTP non pone particolari problemi: si tratta di utilizzare una libreria
 che fornisce un HTTP-client. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto
-che si tratta di realizzare schemi request-responde sincroni.
+che si tratta di realizzare schemi request-response sincroni.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 WsConnection  

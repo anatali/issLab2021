@@ -28,6 +28,7 @@ iss22
    VirtualRobot
    UsingWEnv
    Actors22
+   RobotCleaner
 
 
 Indices and tables

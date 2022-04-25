@@ -15,11 +15,11 @@ import unibo.wenvUsage22.common.ApplData;
 /*
  * ActorUsingWEnv è un Observer di WsConnection  
  */
-public class ActorUsingWEnv extends QakActor22 implements IObserver{
+public class ActorAsObserverUsingWEnv extends QakActor22 implements IObserver{
 	private Interaction2021 conn;
 	private int n = 0;
 	
-	public ActorUsingWEnv(String name) {
+	public ActorAsObserverUsingWEnv(String name) {
 		super(name);
 		init();
 	}

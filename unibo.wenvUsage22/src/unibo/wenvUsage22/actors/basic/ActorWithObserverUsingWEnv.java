@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22;
 import unibo.actor22comm.SystemData;
-import unibo.actor22comm.http.HttpConnection;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnSysObserver;
@@ -15,11 +14,11 @@ import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.common.ApplData;
 import unibo.wenvUsage22.common.VRobotMoves;
 
-public class ActorUsingWEnvBetter extends QakActor22  {
+public class ActorWithObserverUsingWEnv extends QakActor22  {
 	private Interaction2021 conn;
 	private int n = 0;
 	
-	public ActorUsingWEnvBetter(String name) {
+	public ActorWithObserverUsingWEnv(String name) {
 		super(name);
 		init();
 	}
@@ -30,25 +29,6 @@ public class ActorUsingWEnvBetter extends QakActor22  {
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
  
-
-//	protected void moveForward()  {
-//		try {
-//			ColorsOut.outappl(getName() + " | moveForward conn:" + conn,  ColorsOut.BLUE);
-//			conn.forward( ApplData.moveForward(2300) );
-//		}catch( Exception e) {
-//			ColorsOut.outerr( getName() +  " | doBasicMoves ERROR:" +  e.getMessage() );
-//		}
-//		
-//	}
-//	
-//	protected void turnLeft() {
-//		try {
-//			conn.forward( ApplData.turnLeft( 300  ) );
-//		}catch( Exception e) {
-//			ColorsOut.outerr( getName() +  " | turnLeft ERROR:" +  e.getMessage() );
-//		}
-//	
-//	}
 	
 	@Override
 	protected void handleMsg(IApplMessage msg) {
@@ -67,14 +47,14 @@ public class ActorUsingWEnvBetter extends QakActor22  {
 		}
 		if( ! m.msgId().equals( ApplData.moveCmdId )) {
 			ColorsOut.outappl(getName() + " | sorry, I don't handle :" + m,  ColorsOut.YELLOW);
-			return;
-		}
-		//ColorsOut.outappl(getName() + " | interpret:" + m.msgContent(),  ColorsOut.BLUE);
-		switch( m.msgContent() ) {
-			case "w" : VRobotMoves.moveForward(getName(),conn,2300);break;
-			case "a" : VRobotMoves.turnLeft(getName(),conn);break;
-			default: break;
-		}
+ 		}else {
+			//ColorsOut.outappl(getName() + " | interpret:" + m.msgContent(),  ColorsOut.BLUE);
+			switch( m.msgContent() ) {
+				case "w" : VRobotMoves.moveForward(getName(),conn,2300);break;
+				case "a" : VRobotMoves.turnLeft(getName(),conn);break;
+				default: break;
+			}
+ 		}
 	}
 
     protected void handleWsInfo(IApplMessage m) {
@@ -83,8 +63,8 @@ public class ActorUsingWEnvBetter extends QakActor22  {
 		JSONObject d = new JSONObject(""+msg);
 		if( d.has("collision")) {
 			n++;
-			//autoMsg(ApplData.moveCmd(getName(),getName(),"a"));
-			sendMsg(ApplData.moveCmd(getName(),getName(),"a"));
+			autoMsg(ApplData.moveCmd(getName(),getName(),"a"));
+			//sendMsg(ApplData.moveCmd(getName(),getName(),"a"));
 		}
 		if( d.has("endmove") && d.getBoolean("endmove") && n < 4) 
 			//autoMsg(ApplData.moveCmd(getName(),getName(),"w"));
