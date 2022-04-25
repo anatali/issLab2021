@@ -4,7 +4,7 @@ import unibo.actor22.annotations.Actor;
 import unibo.actor22.annotations.ActorLocal;
 import unibo.actor22.annotations.AnnotUtil;
 import unibo.actor22comm.utils.CommUtils;
-import unibo.wenvUsage22.actors.robot.RobotMoverFsm;
+import unibo.wenvUsage22.actors.robot.RobotBoundaryWalkerFsm;
 import unibo.wenvUsage22.common.ApplData;
 
 @Actor(name = ApplData.robotName,      implement = RobotMoverFsmAnnotated.class)

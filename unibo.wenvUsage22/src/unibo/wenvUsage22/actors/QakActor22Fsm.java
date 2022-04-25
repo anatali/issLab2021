@@ -71,7 +71,7 @@ public abstract class QakActor22Fsm extends QakActor22 { //implements IObserver
 		curState   = stateName;
 		currentMsg = msg;
 		transTab.removeAllElements();
-		StateActionFun a = stateMap.get(stateName);
+		StateActionFun a = stateMap.get(curState);
 		if( a != null ) a.run( msg );
 		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED");
 	}	

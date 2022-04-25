@@ -129,7 +129,7 @@ Parte del sistema su PC
 .. code::
 
     @Context22(name="pcCtx",host="localhost",
-      port="8080", protocol=ProtocolType.tcp,)
+      port="8080", protocol=ProtocolType.tcp)
     @Context22(name="raspCtx",host ="192.168.1.12",port="8082") //TCP default
     @Actor22(name="a1",contextName="pcCtx",implement=A1Actor22OnPc.class)
     @Actor22(name="a2",contextName="raspCtx" )
@@ -246,6 +246,8 @@ Annotazioni per dichiarare Attori
 ----------------------------------------
 Actor22: esempi con WEnv
 ----------------------------------------
+Progetto: **unibo.wenvUsage22** package: *unibo.wenvUsage22.actors.basic*.
+
 
 Costruiamo un sistema formato da un attore di classe ``ActorWithObserverUsingWEnv`` che fa percorrere al 
 :ref:`VirtualRobot` il boundary della stanza, utilizzando :ref:`WsConnection` e l'osservatore della 
@@ -362,6 +364,7 @@ realizzando parte della 'business logic'.
 ++++++++++++++++++++++++++++++++++++++++++++
 Un primo automa a stati finiti
 ++++++++++++++++++++++++++++++++++++++++++++
+Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.actors.fsm.basic.ActorWithFsmBasic*.
 
 Il comportamento logico del BoundaryWalker può essere descritto da un semplice FSM (`Automa a stati finiti`_):
 
@@ -417,6 +420,8 @@ Nuova gestione dei messaggi di stato
 
 La ricezione di un messaggio di stato induce un nuovo passo computazionale (una transizione) nell'automa.
 
+:remark:`tutta la business logic è ora definita dalla funzione fsm`
+
 .. code:: 
 
       protected void handleWsInfo(IApplMessage m) {
@@ -460,13 +465,26 @@ Il costruttore dell'automa opera come segue:
 .. code:: 
 
 	public QakActor22Fsm(String name) {
-		super(name);
-		declareTheStates( );
-		setTheInitialState( );
-		//Auto invia il messaggio di inizio che porta nello stato iniziale
-		addExpectedMsg(curState, ApplData.startSysCmdId );
-		autoMsg(ApplData.startSysCmd("system",name));
+        super(name);
+        declareTheStates( );
+        setTheInitialState( );
+        addExpectedMsg(curState, ApplData.startSysCmdId );
+        //Si auto-invia il messaggio di inizio che porta nello stato iniziale
+        autoMsg(ApplData.startSysCmd("system",name));
     }
+
++++++++++++++++++++++++++++++++++++++
+addExpectedMsg
++++++++++++++++++++++++++++++++++++++
+
+In un `Automa a stati finiti`_, ogni stato risulta 'essere interessato' a ricevere un preciso insieme di messaggi,
+effettuando una transizione di stato quando uno di questi si manifesta. 
+
+Il metodo ``addExpectedMsg`` inserisce l'identificatore di un messaggio tra quelli attesi, usando una 
+tabella  ``nextMsgMap`` che ha come chiave il nome dello stato.
+Questa tabella viene consultata dal metodo ``checkIfExpected`` e aggiornata dal metodo :ref:`nextState`, 
+che effettua le transizioni di stato.
+
 
 +++++++++++++++++++++++++++++++++++++
 QakActor22Fsm: handleMsg
@@ -481,7 +499,7 @@ In particolare, il metodo ``handleMsg``:
 
 #. controlla che il messaggio sia atteso nello stato corrente
 #. se il messaggio è atteso, esegue :ref:`stateTransition`, che effettua una transizione dallo stato corrente 
-   allo stato indicato nella *tabella delle transizioni correnti* (:ref:`transTab<addTransition: la transTab>`)
+   allo stato indicato nella *tabella delle transizioni correnti* (:ref:`transTab<addTransition>`)
 #. se il messaggio non è atteso, lo inserisce in una coda locale interna (``OldMsgQueue``), che verrà consultata al termine 
    della esecuzione del nuovo stato (si veda )
 
@@ -489,10 +507,10 @@ In particolare, il metodo ``handleMsg``:
 
     @Override
     protected void handleMsg(IApplMessage msg) {
-		String state = checkIfExpected(msg);
-		if ( state != null ) stateTransition(state,msg);
-		else memoTheMessage(msg);
-	}
+        String state = checkIfExpected(msg);
+        if ( state != null ) stateTransition(state,msg);
+        else memoTheMessage(msg);
+    }
 
  
 
@@ -571,7 +589,7 @@ Il metodo declareState inserisce lo stato nella *tabella degli stati*  ``stateMa
 
 
 +++++++++++++++++++++++++++++++++++++
-addTransition: la transTab
+addTransition
 +++++++++++++++++++++++++++++++++++++
 
 Il metodo ``addTransition`` aggiunge una transizione alla *tabella delle transizioni correnti* (``transTab``)
@@ -611,28 +629,42 @@ La transizione di stato opera come segue:
 
 
 +++++++++++++++++++++++++++++++++++++
-nextState: transizioni di stato
+nextState
 +++++++++++++++++++++++++++++++++++++
 
 La operazione ``nextState`` definita in ``QakActor22Fsm`` effettua una transione di stato sulla base del prossimo messaggio
-ricevuto dall'automa. Il suo funzionamento logico è il seguente:
+ricevuto dall'automa. Per ogni elemento della tabella ``transTab``:
 
-#. per ogni elemento della tabella ``transTab``  
+#.  cerca se il msgId si trova nella oldMsgQueue. In caso positivo, invoca :ref:`stateTransition` per effettuare la
+    transizione di stato relativa a questo vecchio messaggio
+#. in caso negativo, invoca `addExpectedMsg`, per inserire l'id del messaggio tra quelli attesi.
+   Ricordando il funzionamento di :ref:`QakActor22Fsm: handleMsg`, l'automa al momento di ferma.
+
+.. code:: 
+
+	protected void nextState() {
+		clearExpectedMsgs();
+		Iterator< Pair<String, String> > iter = transTab.iterator();
+		while( iter.hasNext() ) {
+			Pair<String, String> v = iter.next();
+			String state = v.getFirst();
+			String msgId = v.getSecond();
+			IApplMessage oldMsg = searchInOldMsgQueue( msgId );
+			if( oldMsg != null ) {
+				stateTransition(state,oldMsg);
+				break;
+			}
+			else  addExpectedMsg(state, msgId);
+		}
+	}
 
 
+--------------------------------------------
+Automa refactored
+--------------------------------------------
 
+Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.actors.robot.RobotBoundaryWalkerFsm*.
 
- 
-
-
-La macchina a stati viene definita a livello applicativo mediante il metodo ``declareTheStates`` 
-(dichiarato asbstract in ``QakActor22Fsm``). 
-
- 
-
-
-
-
-FirstQakActor22Fsm
+Facciamo un refactoring di :ref:`ActorWithFsmBasic<Un primo automa a stati finiti>`.
 
 
