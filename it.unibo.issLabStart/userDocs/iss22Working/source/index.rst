@@ -26,7 +26,6 @@ iss22
    RaspberrySoftware
    RaspBasicCode
    VirtualRobot
-   UsingWEnv
    Actors22
    RobotCleaner
 

@@ -76,7 +76,6 @@ public class ActorWithFsmBasic extends QakActor22  {
 	        	break;
 	        }
 	        case turnedLeft:{
-	        	//VRobotMoves.turnLeft(getName(), conn);
 	        	numIter++;
                 if( numIter < 5 ) {
                 	VRobotMoves.step(getName(), conn );
