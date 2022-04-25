@@ -12,36 +12,37 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm {
  	}
 	
    	
-	protected void s0(IApplMessage msg) {
-		//ColorsOut.outappl( getName()  + " | handleMsg " + msg, ColorsOut.CYAN);	
-		outInfo("uuuuuuuuuuuuuuuuuuuuuuu "+msg);
-	}
-
+ 	  
+	//invocata nel costruttore, prima del setting dei metodi locali della sottoclasse
 	@Override
-	protected void declareTheStates( ) {
-		declareState( "s0", new StateActionFun() {
+	protected void declareTheStates( ) {  
+		
+		StateActionFun s0State = new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
-				s0(msg);
+				outInfo( ""+msg );
 				addTransition( "s1", ApplData.moveCmdId );
 				nextState();
 			}			
-		});
+		};	
+		
+		
+		declareState( "s0", s0State);
 		declareState("s1", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);	
 				addTransition( "s1", ApplData.moveCmdId );
-				addTransition( "s3", ApplData.haltSysCmdId );
+				addTransition( "s2", ApplData.haltSysCmdId );
 				nextState();
 			}			
 		});
-		declareState("s3", new StateActionFun() {
+		declareState("s2", new StateActionFun() {
 			@Override
 			public void run(IApplMessage msg) {
 				outInfo(""+msg);
 				outInfo("BYE" );
-				addTransition( "s3", ApplData.haltSysCmdId );
+				System.exit(0);
   			}			
 		});
 	}
@@ -53,10 +54,5 @@ public  class FirstQakActor22Fsm extends QakActor22Fsm {
 		declareAsInitialState( "s0" );
 	}
 
-
-//	@Override
-//	public void handleAsObserver(String data) {
-//		// TODO Auto-generated method stub
-//		
-//	}
+ 
 }

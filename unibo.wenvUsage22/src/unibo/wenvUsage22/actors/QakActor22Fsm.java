@@ -25,6 +25,7 @@ public abstract class QakActor22Fsm extends QakActor22 { //implements IObserver
 		super(name);
 		declareTheStates( );
 		setTheInitialState( );
+		//Auto invia il messaggio di  inizio che porta nello stato iniziale
 		addExpectedMsg(curState, ApplData.startSysCmdId );
 		ColorsOut.outappl(getName() + " | autoMsg ApplData.startSysCmd", ColorsOut.GREEN);
 		autoMsg(ApplData.startSysCmd("system",name));
@@ -40,8 +41,9 @@ public abstract class QakActor22Fsm extends QakActor22 { //implements IObserver
 	};
 	
 	protected void declareState(String stateName, StateActionFun action) {
-		ColorsOut.outappl( getName() + " QakActor22Fsm | declareState " + stateName, ColorsOut.BLUE);		
-		stateMap.put( stateName, action );
+		ColorsOut.outappl( getName() + " QakActor22Fsm | declareState " + stateName + " action=" + action, ColorsOut.BLUE);		
+		if( action == null ) ColorsOut.outerr(getName() + " QakActor22Fsm | action null");
+		else stateMap.put( stateName, action );
 	}
 	
 	protected void addTransition(String state, String msgId) {
@@ -114,21 +116,4 @@ public abstract class QakActor22Fsm extends QakActor22 { //implements IObserver
 	protected void outInfo(String info) {
 		ColorsOut.outappl(getName() + "/" + curState + " | " + info, ColorsOut.BLACK);
 	}
-
-	/*
-//Useful for IObserver	
-	
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		handleAsObserver(arg1.toString());
-	}
-
-//Convert ino an event ???? Or abstract ???	
-	@Override
-	public void update(String data) {
-		ColorsOut.outerr(curState + " | update NEVER HERE " );
-	} 
- 	
-	public abstract void handleAsObserver(String data) ;
- 	*/
 }

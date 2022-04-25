@@ -6,6 +6,9 @@
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
 .. _state diagram: https://en.wikipedia.org/wiki/State_diagram#:~:text=A%20state%20diagram%20is%20a,this%20is%20a%20reasonable%20abstraction.
 .. _Automa a stati finiti: https://it.wikipedia.org/wiki/Automa_a_stati_finiti
+.. _Macchina d Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
+.. _opinionated: https://govdevsecopshub.com/2021/02/26/opinionated-software-what-it-is-and-how-it-enables-devops/
+
 
 ======================================
 Actors22
@@ -241,7 +244,7 @@ Annotazioni per dichiarare Attori
 
 
 ----------------------------------------
-Actor22 esempi con WEnv
+Actor22: esempi con WEnv
 ----------------------------------------
 
 Costruiamo un sistema formato da un attore di classe ``ActorWithObserverUsingWEnv`` che fa percorrere al 
@@ -360,7 +363,7 @@ realizzando parte della 'business logic'.
 Un primo automa a stati finiti
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Il comportamento logico del BoundaryWalker può essere descritto da un semplice `Automa a stati finiti`_:
+Il comportamento logico del BoundaryWalker può essere descritto da un semplice FSM (`Automa a stati finiti`_):
 
 .. code:: 
 
@@ -412,7 +415,7 @@ Lo `state diagram`_ di figura può essere realizzato da una funzione come quella
 Nuova gestione dei messaggi di stato
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Le ricezione di un messaggio di stato induce un nuovo passo computazionale (una transizione) nell'automa.
+La ricezione di un messaggio di stato induce un nuovo passo computazionale (una transizione) nell'automa.
 
 .. code:: 
 
@@ -431,10 +434,205 @@ Le ricezione di un messaggio di stato induce un nuovo passo computazionale (una 
 
 
 --------------------------------------------------
-Actor22Fsm
+QakActor22Fsm
 --------------------------------------------------
 
+La classe astratta ``QakActor22Fsm`` estende :ref:`QakActor22<ActorQak e QakActor22>` impostando il funzionamento di un attore
+come un FSM concepito come una `Macchina d Moore`_ i cui stati sono definiti da azioni, implementazioni della interfaccia 
+:ref:`StateActionFun`.
+
+Ogni stato è uan coppia ``<StateName, StateActionFun>`` che viene inserita durante la fase di costruzione 
+nella  *tabella degli stati* (``stateMap``).
+
++++++++++++++++++++++++++++++++++++++
+QakActor22Fsm: costruttore
++++++++++++++++++++++++++++++++++++++
+
+Il costruttore dell'automa opera come segue:
+
+#. invoca un metodo (dichiarato abstract) :ref:`declareTheStates` in cui l'Application designer definisce
+   gli stati dell'automa. Questi stati sono inseriti nella *tabella degli stati*  ``stateMap``,  usando come 
+   chiave il nome dello stato
+#. fissa il valore della variabile ``curState`` che denota il nome dello stato corrente al valore restituito dal metodo 
+   ``setTheInitialState`` (dichiarato abstract) 
+#. attiva l'automa, che si posiziona sullo stato iniziale (unico)
+
+.. code:: 
+
+	public QakActor22Fsm(String name) {
+		super(name);
+		declareTheStates( );
+		setTheInitialState( );
+		//Auto invia il messaggio di inizio che porta nello stato iniziale
+		addExpectedMsg(curState, ApplData.startSysCmdId );
+		autoMsg(ApplData.startSysCmd("system",name));
+    }
+
++++++++++++++++++++++++++++++++++++++
+QakActor22Fsm: handleMsg
++++++++++++++++++++++++++++++++++++++
+
+La classe ``QakActor22Fsm`` funziona secondo il solito meccanismo message-driven, ma realizza una gestione dei messaggi 
+volta a tenere conto delle specifiche dell'automa. 
+
+:remark:`un messaggio è gestito solo se atteso nello stato corrente, se no è memorizzato`
+
+In particolare, il metodo ``handleMsg``:
+
+#. controlla che il messaggio sia atteso nello stato corrente
+#. se il messaggio è atteso, esegue :ref:`stateTransition`, che effettua una transizione dallo stato corrente 
+   allo stato indicato nella *tabella delle transizioni correnti* (:ref:`transTab<addTransition: la transTab>`)
+#. se il messaggio non è atteso, lo inserisce in una coda locale interna (``OldMsgQueue``), che verrà consultata al termine 
+   della esecuzione del nuovo stato (si veda )
+
+.. code:: 
+
+    @Override
+    protected void handleMsg(IApplMessage msg) {
+		String state = checkIfExpected(msg);
+		if ( state != null ) stateTransition(state,msg);
+		else memoTheMessage(msg);
+	}
+
+ 
+
++++++++++++++++++++++++++++++++++++++
+StateActionFun
++++++++++++++++++++++++++++++++++++++
+
+Un oggetto di tipo ``StateActionFun`` definisce il comportamento dell'automa in relazione alla ricezione di un messaggio
+di tipo :ref:`IApplMessage`.
+
+.. code:: 
+
+    public interface StateActionFun {
+        void run(IApplMessage msg);
+    }
+
+La classe ``QakActor22Fsm`` (alquanto  `opinionated`_ ...) impone un precisa struttura logica al comportamnto di uno stato:
+
+.. code:: 
+
+    StateActionFun ... = new StateActionFun() {
+        @Override
+        public void run(IApplMessage msg) {
+            //Body dello stato (Behavior)
+            addTransition( <nextState>, <msgId> ); 
+            addTransition ...
+            nextState();
+        }			
+    };
+
+Ad esempio:
+
+.. code:: 
+
+    StateActionFun s0State = new StateActionFun() {
+        @Override
+        public void run(IApplMessage msg) {
+            outInfo( ""+msg ); //outInfo Inherited
+            addTransition( "s1", ApplData.moveCmdId );
+            nextState();
+        }		
+    };
 
 
++++++++++++++++++++++++++++++++++++++
+declareTheStates
++++++++++++++++++++++++++++++++++++++
+
+Un esempio del metodo declareTheStates:
+
+.. code:: 
+
+    @Override
+    protected void declareTheStates( ) {  
+		
+        StateActionFun s0State = ...
+
+        declareState( "s0", s0State);
+
+		declareState("s1", new StateActionFun() {
+			@Override
+			public void run(IApplMessage msg) {
+                outInfo(""+msg); 	//outInfo Inherited
+                addTransition( "s1", ApplData.moveCmdId );
+                addTransition( "s2", ApplData.haltSysCmdId );
+                nextState();
+			}	
+            ...		
+		});
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+declareState
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo declareState inserisce lo stato nella *tabella degli stati*  ``stateMap``.
+
+
++++++++++++++++++++++++++++++++++++++
+addTransition: la transTab
++++++++++++++++++++++++++++++++++++++
+
+Il metodo ``addTransition`` aggiunge una transizione alla *tabella delle transizioni correnti* (``transTab``)
+aggiungendo una coppia :blue:`(nextstate, msgId)` col seguente significato:
+
+- se il prossimo messaggio ha identificatore :blue:`msgId`, transita allo stato :blue:`nextstate`
+
+
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++
+stateTransition
++++++++++++++++++++++++++++++++++++++
+
+La transizione di stato opera come segue:
+
+#. aggiorna il valore dello stato corrente (variabile ``curState``)
+#. pulisce la  *tabella delle transizioni correnti* ``transTab``
+#. recupera dalla *tabella degli stati* ``stateMap`` il riferimento al codice dello stato
+#. esegue il codice dello stato
+
+.. code:: 
+
+	protected void stateTransition(String stateName, IApplMessage msg ) {
+		curState   = stateName;
+		currentMsg = msg;
+		transTab.removeAllElements();
+		StateActionFun a = stateMap.get(stateName);
+		if( a != null ) a.run( msg );
+		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED");
+	}	
+
+
+
++++++++++++++++++++++++++++++++++++++
+nextState: transizioni di stato
++++++++++++++++++++++++++++++++++++++
+
+La operazione ``nextState`` definita in ``QakActor22Fsm`` effettua una transione di stato sulla base del prossimo messaggio
+ricevuto dall'automa. Il suo funzionamento logico è il seguente:
+
+#. per ogni elemento della tabella ``transTab``  
+
+
+
+
+ 
+
+
+La macchina a stati viene definita a livello applicativo mediante il metodo ``declareTheStates`` 
+(dichiarato asbstract in ``QakActor22Fsm``). 
+
+ 
+
+
+
+
+FirstQakActor22Fsm
 
 

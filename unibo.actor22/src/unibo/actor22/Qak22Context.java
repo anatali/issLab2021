@@ -144,8 +144,8 @@ public class Qak22Context {
         for (Actor22 actorAnnot : actorAnnotations) {
                 String actorName = actorAnnot.name();
                 String actorCtx  = actorAnnot.contextName();
-                //ColorsOut.out( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx , ColorsOut.BLUE );
                 Context22 refCtx = contextsMap.get(actorCtx);
+                ColorsOut.outappl( "Qak22Context | handling actor: "+ actorName + " in " + actorCtx + " refCtx=" + refCtx.host(), ColorsOut.BLUE );
                 if( refCtx == null ) {
                 	ColorsOut.outerr("No context found for: " + actorName  ); 
                 	return;
