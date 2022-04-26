@@ -585,8 +585,13 @@ Un esempio del metodo declareTheStates:
 declareState
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il metodo declareState inserisce lo stato nella *tabella degli stati*  ``stateMap``.
+Il metodo : 
 
+.. code:: java 
+
+    declareState(String stateName, StateActionFun state)
+
+inserisce lo stato ``state`` nella *tabella degli stati*  ``stateMap`` dando ``stateName`` come chiave di accesso .
 
 +++++++++++++++++++++++++++++++++++++
 addTransition

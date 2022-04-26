@@ -125,6 +125,7 @@ Nel caso della figura di destra, il robot segue i bordi della stanza, riducendo 
 DR, lavrando in una 'stanza virtuale' di lati ``DWallDown - N*DR`` e ``DWallLeft - N*DR``, con ``N=1,2,..,M``.
 
 *CompletamentoLavoro*:   quando la stanza virtuale perde una dimensione, il robot deve coprire quallo che rimane.
+
 *VerificaLavoro*: se la parte che rimane ha lato ``L > DR``, può risultare complicato 
 
 
@@ -176,13 +177,11 @@ Può essere opportuno introdurre un linguaggio di comando 'technology-independen
 denominiamo :blue:`aril` (**Abstract Robot Interaction Lanaguage**).
 
 
-
-
-
-
 -------------------------------------------
 RobotCleaner: prototipo dopo l'analisi 
 ------------------------------------------- 
 
+:worktodo:`WORKTODO: formalizzare l'analisi`
 
-- aril con  mossa  step (p) che può avere successo o fallire inviando due messggi diversi.
+- Occorre definire un modello del sistema che descrive in modo 'formale' (comprensibile/eseguibile da una macchina)  
+  il risultato che l'analista intende esporre e fornire al progettista come punto di partenza per lo sviluppo.
