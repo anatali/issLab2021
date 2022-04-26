@@ -597,13 +597,7 @@ aggiungendo una coppia :blue:`(nextstate, msgId)` col seguente significato:
 
 - se il prossimo messaggio ha identificatore :blue:`msgId`, transita allo stato :blue:`nextstate`
 
-
-
-
-
-
-
-
+ 
 +++++++++++++++++++++++++++++++++++++
 stateTransition
 +++++++++++++++++++++++++++++++++++++

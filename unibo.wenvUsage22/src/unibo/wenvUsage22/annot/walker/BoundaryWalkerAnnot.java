@@ -6,6 +6,7 @@ import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
+import unibo.actor22comm.ws.WsConnSysObserver;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
 import unibo.wenvUsage22.annot.State;
@@ -33,8 +34,6 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	}
 	
 	@State( name = "robotStart", initial=true)
-//	@Transition( state = {"robotMoving" }, 
-//	             msgId = { ApplData.robotCmdId })
 	@Transition( state = "robotMoving" , msgId = ApplData.robotCmdId )
 	protected void robotStart( IApplMessage msg ) {
 		outInfo(""+msg + " connecting (blocking all the actors ) ... ");	
@@ -42,14 +41,13 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
  		conn = new WsConnection("localhost:8091");//WsConnection.create("localhost:8091" );				 
  		outInfo("connected "+conn);	
 		//Aggiungo l'attore come observer dei messaggi inviati da WEnv (vedi update)
-//		((WsConnection)conn).addObserver((IObserver) myself);
+ 		//((WsConnection)conn).addObserver((IObserver) myself);
+ 		((WsConnection)conn).addObserver( new WsConnSysObserver(getName()) );
 		//sendMsgToMyself( ApplData.w( getName() , ApplData.robotName ) );
 		doStep();
 	}
 	
  	@State( name = "robotMoving" )
-//	@Transition( state = {"robotMoving",        "wallDetected" }, 
-//	             msgId = { ApplData.robotCmdId, ApplData.wallDetectedId })
 	@Transition( state = "robotMoving" ,  msgId = ApplData.robotCmdId )
  	@Transition( state = "wallDetected" , msgId = ApplData.wallDetectedId )
  	@Transition( state = "endWork" ,      msgId = ApplData.haltSysCmdId )
@@ -61,8 +59,6 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	}
  	
  	@State( name = "wallDetected" )
-//	@Transition( state = {"robotMoving",       "endWork" }, 
-//	             msgId = { ApplData.robotCmdId, ApplData.haltSysCmdId })
 	@Transition( state = "robotMoving" , msgId = ApplData.robotCmdId )
  	@Transition( state = "endWork" ,     msgId = ApplData.haltSysCmdId )
 	protected void wallDetected( IApplMessage msg ) {
