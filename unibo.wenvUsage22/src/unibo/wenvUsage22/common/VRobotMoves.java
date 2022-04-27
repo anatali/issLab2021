@@ -83,7 +83,7 @@ public class VRobotMoves {
 	
 	public static void step(String name, Interaction2021 conn) {
 		moveForward( name,conn,300 );	 //se collision non completa		
-		CommUtils.delay(400); 		
+		//CommUtils.delay(400); 		
 	}
 	public static void stepAfterTurn(String name, Interaction2021 conn, int dt) {
 		moveForward( name,conn,dt );	 //se collision non completa		

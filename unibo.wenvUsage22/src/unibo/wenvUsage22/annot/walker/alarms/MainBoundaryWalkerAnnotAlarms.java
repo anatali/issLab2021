@@ -12,19 +12,17 @@ import unibo.wenvUsage22.common.ApplData;
 
 @Context22(name = "pcCtx", host = "localhost", port = "8083")
 @Actor22(name = ApplData.robotName,contextName="pcCtx",implement = BoundaryWalkerAnnotAlarms.class)
-@Actor22(name = "sentinel",contextName="pcCtx",implement = Sentinel.class)
+//@Actor22(name = "sentinel",contextName="pcCtx",implement = Sentinel.class)
 public class MainBoundaryWalkerAnnotAlarms { 
  	
 
 	protected void configure() throws Exception {
  		Qak22Context.configureTheSystem(this);
-		CommUtils.delay(1000);  //Give time to start ...
-		//EventHandler è un attore: protrebbe avere riterdi nella registrazione
 		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.fireEventId);
 		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.endAlarmId);
-
+		//EventHandler è un attore: protrebbe avere riterdi nella registrazione
 		Qak22Context.showActorNames();
-		CommSystemConfig.tracing = true;
+		CommSystemConfig.tracing = false;
  	}
  
  /*

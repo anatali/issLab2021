@@ -15,8 +15,22 @@ import unibo.actor22comm.utils.ColorsOut;
  */
 public class EventMsgHandler extends QakActor22{
 public static final String myName = "eventhandler";
+protected static EventMsgHandler evmsgHandler = null;
 
-//protected HashMap<String,String> eventObserverMap = new HashMap<String,String>();  
+//public static void  register(String actorName, String eventId ) {
+//	getEvMsgHandler().register(actorName,eventId);
+//}
+//public static void  unregister(String actorName, String eventId ) {
+//	getEvMsgHandler().unregister(actorName,eventId);
+//}
+
+public static EventMsgHandler getEvMsgHandler() {
+	if( Qak22Context.getActor(myName) == null ) {
+		new EventMsgHandler();
+	}
+	return  (EventMsgHandler) Qak22Context.getActor(myName);
+}
+
 protected Vector<Pair<String,String>> eventObservers = new Vector<Pair<String,String>>();
  	
 	public EventMsgHandler( ) {
@@ -27,13 +41,12 @@ protected Vector<Pair<String,String>> eventObservers = new Vector<Pair<String,St
 	protected void handleMsg(IApplMessage msg) {
 		ColorsOut.outappl(myName + " handles:" + msg + " ", ColorsOut.YELLOW_BACKGROUND);
 		if( msg.isDispatch() && msg.msgId().equals(Qak22Context.registerForEvent)) {
-			ColorsOut.outappl(myName + " register:" + msg.msgSender() + " for "+ msg.msgContent(), ColorsOut.MAGENTA);
-			eventObservers.add(new Pair( msg.msgSender(),msg.msgContent() ) );			
-			//eventObserverMap.put(msg.msgSender(), msg.msgContent()); //REPLACED!
+//			ColorsOut.outappl(myName + " register:" + msg.msgSender() + " for "+ msg.msgContent(), ColorsOut.MAGENTA);
+//			eventObservers.add(new Pair( msg.msgSender(),msg.msgContent() ) );			
+//			//eventObserverMap.put(msg.msgSender(), msg.msgContent()); //REPLACED!
+			register(msg.msgSender(), msg.msgContent());
 		}else if( msg.isDispatch() && msg.msgId().equals(Qak22Context.unregisterForEvent)) {
-			ColorsOut.outappl(myName + " unregister:" + msg.msgSender() + " for "+ msg.msgContent(), ColorsOut.MAGENTA);
-			//eventObserverMap.remove(msg.msgSender(), msg.msgContent());
-			//TODO
+			unregister(msg.msgSender(), msg.msgContent());
 		}else if( msg.isEvent() ) {
  			updateTheObservers( msg );
 		}else {
@@ -41,6 +54,15 @@ protected Vector<Pair<String,String>> eventObservers = new Vector<Pair<String,St
 		}
 	}  
 
+	public synchronized void  register(String actorName, String eventId ) {
+		ColorsOut.outappl(myName + " register:" + actorName + " for "+ eventId, ColorsOut.MAGENTA);
+		eventObservers.add(new Pair( actorName , eventId ) );			
+	}
+	
+	public synchronized void unregister(String actorName, String eventId ) {
+		ColorsOut.outappl(myName + " unregister (TODO):" + actorName + " for "+ eventId, ColorsOut.MAGENTA);
+		//TODO	
+	}
 	protected void updateTheObservers(IApplMessage msg) {
 		ColorsOut.out("updateTheObservers:" + msg + " eventObservers:" + eventObservers.size(), ColorsOut.MAGENTA); 
 		
