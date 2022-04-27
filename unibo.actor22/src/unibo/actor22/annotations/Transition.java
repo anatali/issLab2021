@@ -2,7 +2,9 @@ package unibo.actor22.annotations;
 
 import java.lang.annotation.*;
 
-
+/*
+ * Le annotazioni Java accettano solo attributi di tipo primitivo o Class
+ */
  
 @Target (ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -11,5 +13,5 @@ public @interface Transition {
 	String name() default "t0";
 	String state()  ;
 	String msgId()  ;
-	//String guard() default "";  //nome di una funzione che restituisce boolean
+	Class guard() default GuardAlwaysTrue.class; //???
 }

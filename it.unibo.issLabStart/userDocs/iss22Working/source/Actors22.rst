@@ -70,13 +70,13 @@ Al momento abbiamo lassciato in sospeso due temi:
 Li riprederemo dopo avere migliorato la nostra attuale infrastruttura, al fine di anticipare gli aspetti
 più importanti che avevamo riportato come :ref:`FASE3`:
 
-- da bottom-up a top-down: il ruolo dei modelli
-- uso di modelli eseguibili nelle fasi di analisi dei requisiti e del problema,
+- da bottom-up a **top-down**: il ruolo dei modelli
+- uso di **modelli eseguibili** nelle fasi di analisi dei requisiti e del problema,
   come premessa per l’abbattimento dei costi (e degli imprevisti) di produzione
 
 Il lavoro che ci accingiamo a svolgere comprende anche un altro punto menzionato nella :ref:`FASE2`
 
-- da attori message-driven ad :blue:`attori message-based` che operano come un `Automa a stati finiti`_.
+- da attori *message-driven* ad attori che operano come un `Automa a stati finiti`_.
 
 -----------------------------------------
 Preludio alla Fase3
@@ -84,22 +84,22 @@ Preludio alla Fase3
 
 In questa parte che precede la :ref:`FASE3` del nostro piano di lavoro,
 introdurremo alcuni miglioramenti alla implementazione degli attori con lo 
-scopo di agevolare quanto più possibile il lavoro dell'Application designer.
+scopo di agevolare quanto più possibile il lavoro dell'Application Designer.
 
 A questo fine, faremo ampio ricorso allo strumento delle :ref:`Annotazioni` che 
-permettono  di dare semantica aggiuntiva a classi e metodi Java attraverso frasi 'dichiarative' che 
+permettono  di dare semantica aggiuntiva a classi e metodi Java attraverso **frasi dichiarative** che 
 aiutano a meglio comprenderne il codice e a colmare in modo automatico 
 l':ref:`abstraction gap<Abstraction GAP e topDown>` tra la nuova semantica e il livello tecnologico
 sottostante.
 
 La conseguenza più importante  sarà la possibilità di agevolare processi 
-di produzione  :ref:`topDown<Abstraction GAP e topDown>` del software, ponendo in primo 
-piano i requisiti e il problema, in modo da introdurre le tecnologie come risposta ad esigenze
+di produzione  :ref:`topDown<Abstraction GAP e topDown>` del software, ponendo **in primo 
+piano i requisiti e il problema**, in modo da introdurre le tecnologie come risposta ad esigenze
 esplicitamente espresse e motivate.
 
 Faremmo anche passi sostanziali nel concretizzare il lavoro delle fasi di analisi (dei requisiti e del problema)
 introducendo :ref:`Modelli` **eseguibili** del sistema da sviluppare, coorredati da opportuni
-:ref:`piani di testing<Passi operativi 'a regime'>`, da cui i porgettisti potranno
+:ref:`piani di testing<Passi operativi 'a regime'>`, da cui i progettisti potranno
 partire per le evoluzioni incrementali che, con diversi :ref:`SPRINT<SCRUM>`, 
 porteranno alla versione finale del sistema. 
 
@@ -116,6 +116,7 @@ in forma di :ref:`Annotazioni` Java.
 ++++++++++++++++++++++++++++++++++++++++
 Un esempio di sistema a due nodi
 ++++++++++++++++++++++++++++++++++++++++
+Progetto: **unibo.wenvUsage22** package: *unibo.wenvUsage22.actors.demofirst*.
 
 Riportiamo subito un esempio di come si presentereranno le dichiarazioni per un sistema distribuito formato da due nodi:
 
@@ -129,7 +130,7 @@ Parte del sistema su PC
 .. code::
 
     @Context22(name="pcCtx",host="localhost",
-      port="8080", protocol=ProtocolType.tcp)
+               port="8080", protocol=ProtocolType.tcp)
     @Context22(name="raspCtx",host ="192.168.1.12",port="8082") //TCP default
     @Actor22(name="a1",contextName="pcCtx",implement=A1Actor22OnPc.class)
     @Actor22(name="a2",contextName="raspCtx" )
@@ -154,7 +155,7 @@ Parte del sistema su RaspberryPi
 .. code::
 
     @Context22(name = "pcCtx",  host = "192.168.1.12", port = "8080") 
-    @Context22(name = "raspCtx",host = "localhost",    port = "8082") //defalt TCP
+    @Context22(name = "raspCtx",host = "localhost",    port = "8082") //TCP default
     @Actor22(name = "a1",  contextName = "pcCtx" )
     @Actor22(name = "a2",  contextName = "raspCtx", implement=A2Actor22OnRasp.class )
 
@@ -200,7 +201,7 @@ Inoltre, un contesto:
 
 Ne consegue una annotazione dichiarativa della forma:
 
-    ``@Context22(name=<STRING>, host=<STRING>, port=<STRING>)``
+  ``@Context22(name=<STRING>,host=<STRING>,port=<STRING>,protocol=ProtocolType.<xxx>)``
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -354,8 +355,7 @@ realizzando parte della 'business logic'.
         sendMsg(ApplData.moveCmd(getName(),getName(),"a"));
       }
       if( d.has("endmove") && d.getBoolean("endmove") && n < 4) 
-         sendMsg(ApplData.moveCmd(getName(),getName(),"w"));
-      
+         sendMsg(ApplData.moveCmd(getName(),getName(),"w"));      
       }
   }
 
@@ -384,7 +384,7 @@ Lo `state diagram`_ di figura può essere realizzato da una funzione come quella
   protected void fsm(String move, boolean endmove){
     switch( curState ) {
     case start: {
-      VRobotMoves.step(getName(), conn );
+      VRobotMoves.step(getName(), conn ); //forward per 300
       curState = State.goingAhead;
       numIter++;
       break;
@@ -394,10 +394,11 @@ Lo `state diagram`_ di figura può essere realizzato da una funzione come quella
         VRobotMoves.step(getName(), conn );
       } else {
         VRobotMoves.turnLeft(getName(), conn);
-        curState = State.turnedLeft;	            }	        	
+        curState = State.turnedLeft;	           
+      }	        	
       }
       break;
-	  }
+    }
     case turnedLeft:{
       numIter++;
       if( numIter < 5 ) {
@@ -464,14 +465,14 @@ Il costruttore dell'automa opera come segue:
 
 .. code:: 
 
-	public QakActor22Fsm(String name) {
-        super(name);
-        declareTheStates( );
-        setTheInitialState( );
-        addExpectedMsg(curState, ApplData.startSysCmdId );
-        //Si auto-invia il messaggio di inizio che porta nello stato iniziale
-        autoMsg(ApplData.startSysCmd("system",name));
-    }
+  public QakActor22Fsm(String name) {
+    super(name);
+    declareTheStates( );
+    setTheInitialState( );
+    addExpectedMsg(curState, ApplData.startSysCmdId );
+    //Si auto-invia il messaggio di inizio che porta nello stato iniziale
+    autoMsg(ApplData.startSysCmd("system",name));
+  }
 
 +++++++++++++++++++++++++++++++++++++
 addExpectedMsg
@@ -501,7 +502,7 @@ In particolare, il metodo ``handleMsg``:
 #. se il messaggio è atteso, esegue :ref:`stateTransition`, che effettua una transizione dallo stato corrente 
    allo stato indicato nella *tabella delle transizioni correnti* (:ref:`transTab<addTransition>`)
 #. se il messaggio non è atteso, lo inserisce in una coda locale interna (``OldMsgQueue``), che verrà consultata al termine 
-   della esecuzione del nuovo stato (si veda )
+   della esecuzione del nuovo stato (si veda :ref:`nextState`)
 
 .. code:: 
 
@@ -527,7 +528,8 @@ di tipo :ref:`IApplMessage`.
         void run(IApplMessage msg);
     }
 
-La classe ``QakActor22Fsm`` (alquanto  `opinionated`_ ...) impone un precisa struttura logica al comportamnto di uno stato:
+La classe ``QakActor22Fsm`` (alquanto  `opinionated`_ ...) impone un precisa struttura logica al 
+comportamento di uno stato:
 
 .. code:: 
 
@@ -566,32 +568,26 @@ Un esempio del metodo declareTheStates:
     @Override
     protected void declareTheStates( ) {  
 		
-        StateActionFun s0State = ...
+      StateActionFun s0State = ...
+      declareState( "s0", s0State);
 
-        declareState( "s0", s0State);
-
-		declareState("s1", new StateActionFun() {
-			@Override
-			public void run(IApplMessage msg) {
-                outInfo(""+msg); 	//outInfo Inherited
-                addTransition( "s1", ApplData.moveCmdId );
-                addTransition( "s2", ApplData.haltSysCmdId );
-                nextState();
-			}	
-            ...		
-		});
+      declareState("s1", new StateActionFun() {
+      @Override
+      public void run(IApplMessage msg) {
+        outInfo(""+msg); 	//outInfo Inherited
+        addTransition( "s1", ApplData.moveCmdId );
+        addTransition( "s2", ApplData.haltSysCmdId );
+        nextState();
+      }	
+       ...		
+    });
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 declareState
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il metodo : 
+Il metodo declareState inserisce lo stato nella *tabella degli stati*  ``stateMap``.
 
-.. code:: java 
-
-    declareState(String stateName, StateActionFun state)
-
-inserisce lo stato ``state`` nella *tabella degli stati*  ``stateMap`` dando ``stateName`` come chiave di accesso .
 
 +++++++++++++++++++++++++++++++++++++
 addTransition
@@ -631,10 +627,11 @@ La transizione di stato opera come segue:
 nextState
 +++++++++++++++++++++++++++++++++++++
 
-La operazione ``nextState`` definita in ``QakActor22Fsm`` effettua una transione di stato sulla base del prossimo messaggio
+La operazione ``nextState`` definita in ``QakActor22Fsm`` effettua una transione di stato sulla base del 
+prossimo messaggio (o meglio del prossimo ``msgId``)
 ricevuto dall'automa. Per ogni elemento della tabella ``transTab``:
 
-#.  cerca se il msgId si trova nella oldMsgQueue. In caso positivo, invoca :ref:`stateTransition` per effettuare la
+#.  cerca se il ``msgId`` si trova nella ``oldMsgQueue``. In caso positivo, invoca :ref:`stateTransition` per effettuare la
     transizione di stato relativa a questo vecchio messaggio
 #. in caso negativo, invoca `addExpectedMsg`, per inserire l'id del messaggio tra quelli attesi.
    Ricordando il funzionamento di :ref:`QakActor22Fsm: handleMsg`, l'automa al momento di ferma.
@@ -664,6 +661,9 @@ Automa refactored
 
 Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.actors.robot.RobotBoundaryWalkerFsm*.
 
-Facciamo un refactoring di :ref:`ActorWithFsmBasic<Un primo automa a stati finiti>`.
+:worktodo:`WORKTODO: Refactoring usando QakActor22Fsm`
+
+- Fare un refactoring di :ref:`ActorWithFsmBasic<Un primo automa a stati finiti>` impostando l'attore come
+  un istanza di :ref:`QakActor22Fsm`.
 
 
