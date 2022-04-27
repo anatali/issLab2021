@@ -35,7 +35,8 @@ protected String initialState = null;
    		} catch (Exception e) {
   			ColorsOut.outerr("readAnnots ERROR:" + e.getMessage() )   ;	
   		}		
-	}	
+	}
+	
 	protected void setTheInitialState( String stateName ) {
      if( initialState == null  ) {
 		initialState= stateName;

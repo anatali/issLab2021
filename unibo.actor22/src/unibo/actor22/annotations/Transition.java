@@ -13,5 +13,5 @@ public @interface Transition {
 	String name() default "t0";
 	String state()  ;
 	String msgId()  ;
-	Class guard() default GuardAlwaysTrue.class; //???
+	Class guard() default GuardAlwaysTrue.class; 
 }

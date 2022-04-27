@@ -27,7 +27,6 @@ iss22
    RaspBasicCode
    VirtualRobot
    Actors22
-   Actor22Plus
    RobotCleaner
 
 

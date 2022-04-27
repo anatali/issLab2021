@@ -14,8 +14,6 @@ private int n = 0;
  	
 	@State( name = "s0", initial=true)
 	@Transition( state = "s1" ,  msgId = SystemData.demoSysId, guard = Guard0.class )
-	//@Transition( state = "alarm" ,        msgId = SystemData.fireEventId )
-	//@Transition( state = "wallDetected" , msgId = SystemData.endMoveKoId )
 	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg );
 		Guard0.setValue(n);
@@ -26,6 +24,5 @@ private int n = 0;
 	protected void s1( IApplMessage msg ) {
 		outInfo(""+msg );
 	}
-
 
 }

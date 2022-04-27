@@ -6,7 +6,7 @@
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
 .. _state diagram: https://en.wikipedia.org/wiki/State_diagram#:~:text=A%20state%20diagram%20is%20a,this%20is%20a%20reasonable%20abstraction.
 .. _Automa a stati finiti: https://it.wikipedia.org/wiki/Automa_a_stati_finiti
-.. _Macchina d Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
+.. _Macchina di Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
 .. _opinionated: https://govdevsecopshub.com/2021/02/26/opinionated-software-what-it-is-and-how-it-enables-devops/
 
 
@@ -444,7 +444,7 @@ QakActor22Fsm
 --------------------------------------------------
 
 La classe astratta ``QakActor22Fsm`` estende :ref:`QakActor22<ActorQak e QakActor22>` impostando il funzionamento di un attore
-come un FSM concepito come una `Macchina d Moore`_ i cui stati sono definiti da azioni, implementazioni della interfaccia 
+come un FSM concepito come una `Macchina di Moore`_ i cui stati sono definiti da azioni, implementazioni della interfaccia 
 :ref:`StateActionFun`.
 
 Ogni stato è uan coppia ``<StateName, StateActionFun>`` che viene inserita durante la fase di costruzione 
@@ -655,9 +655,9 @@ ricevuto dall'automa. Per ogni elemento della tabella ``transTab``:
 	}
 
 
---------------------------------------------
+++++++++++++++++++++++++++++++++++++++
 Automa refactored
---------------------------------------------
+++++++++++++++++++++++++++++++++++++++
 
 Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.actors.robot.RobotBoundaryWalkerFsm*.
 
@@ -666,4 +666,400 @@ Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.actors.robot.RobotBound
 - Fare un refactoring di :ref:`ActorWithFsmBasic<Un primo automa a stati finiti>` impostando l'attore come
   un istanza di :ref:`QakActor22Fsm`.
 
+
+------------------------------------------------------
+Annotazioni State e Transition
+------------------------------------------------------
+ 
+Abbiamo visto come la classe :ref:`QakActor22Fsm` forzi un ApplicationDesigner a concepire un attore come una 
+`Macchina di Moore`_ i cui stati sono definiti da azioni, implementazioni della interfaccia 
+:ref:`StateActionFun`.
+
+L'ApplicationDesigner viene indotto a definire due metodi che :ref:`QakActor22Fsm` dichiara come **abstract**:
+
+- il metodo :ref:`declareTheStates` che si avvale del metodo :ref:`declareState`
+- il metodo :ref:`setTheInitialState<QakActor22Fsm: costruttore>`
+
+Ora ci poniamo come obiettivo quello di 'nascondere' (ancora una volta!) questi dettagli, introducendo :ref:`Annotazioni` ai metodi
+che realizzano gli stati dell'automa. 
+
+A questo fine introduciamo:
+
+
+- l'annotazione ``State`` che denota un metodo come stato. 
+    
+  .. code:: 
+
+    @java (ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Inherited
+    public @interface State {
+	    String name() default "s0";
+	    boolean initial() default  false;   
+    }  
+
+- l'annotazione ``Transition`` che denota una transizione. 
+    
+  .. code:: 
+
+    @Target (ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Repeatable(Transitions.class)
+    public @interface Transition {
+	    String name() default "t0";
+	    String state()  ;
+	    String msgId()  ;
+      Class guard() default GuardAlwaysTrue.class;      
+    }
+
+- una classe ``QakActor22FsmAnnot`` che estende :ref:`QakActor22Fsm` con operazioni capaci di elaborare le annotazioni sui metodi
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+Transizioni senza messaggi
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Un automa può transitare da uno stato all'altro in modo 'spontaneo' (cioè non legato alla ricezione di un messaggio)
+se **msgId==null**.
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+Transizioni condizionate da guardie
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Ogni transizione può essere associata a una guardia, che ne condiziona l'attivazione.
+
+Le annotazioni Java consentono di specificare atturbuti di valori primitivi o Class. Vediamo una possibile uso di Claas per 
+esprimere e realizzare. guardie. 
+
+
+Il valore di default per una guardia è la classe ``GuardAlwaysTrue`` che, una volta valutata, fornisce sempre il valore boolean ``true``.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+GuardAlwaysTrue
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  .. code:: Java
+
+    public class GuardAlwaysTrue  {
+        public boolean eval( ) {
+          return true;
+      }
+    }
+
+L'ApplicationDesigner può introdurre classi specializzate in funzione delle esigenze applicative. Ad esempio:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+UNa guardia applicativa
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  .. code:: Java
+
+      public class Guard0 {
+        protected static int vn ;
+        //Usato da  
+        public static void setValue( int n ) {
+          vn = n;
+        }
+        public static boolean checkValue(   ) {
+          return vn > 0 ;
+        }
+        public boolean eval( ) {
+          return checkValue();
+        }
+      }
+
+Nell'esempio che segue, alla ricezione del messaggio con id=SystemData.demoSysId, lo stato s0 passa nello stato s1 
+solo se n>0.
+
+  .. code:: Java
+
+      public class TestGuards extends QakActor22FsmAnnot{
+      private int n = 0;
+        public TestGuards(String name) {
+          super(name);
+        }
+        
+        @State( name = "s0", initial=true)
+        @Transition( state = "s1" ,  msgId = SystemData.demoSysId, guard = Guard0.class )
+        protected void s0( IApplMessage msg ) {
+          Guard0.setValue(n);
+          autoMsg( SystemData.demoSysCmd( getName(),getName() ) );
+        }     
+        @State( name = "s1" )
+        protected void s1( IApplMessage msg ) {
+          outInfo(""+msg );
+        }
+      }
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+QakActor22FsmAnnot
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+La classe  ``QakActor22FsmAnnot`` definisce il metodo :ref:`declareTheStates` come analizzatore di tutte le annotazioni ``State`` e ``Transition``
+presenti nella classe specilizzata dall'ApplicationDesigner. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+QakActor22FsmAnnot.declareTheStates
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  .. code:: Java
+
+    @Override
+    protected void declareTheStates( ) {
+        try {
+        Method[] m = this.getClass().getDeclaredMethods( );
+           for( int i=0; i<m.length; i++ ) {
+            m[i].setAccessible(true);
+            if( m[i].isAnnotationPresent(State.class)) elabAnnotatedMethod(m[i]);	  
+          }
+        } catch (Exception e) {
+          ColorsOut.outerr("readAnnots ERROR:" + e.getMessage() )   ;	
+        }		
+    }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+QakActor22FsmAnnot.elabStateMethod  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per ciascun metodo annotato, :ref:`QakActor22FsmAnnot.declareTheStates` invoca il metodo
+
+    ``elabStateMethod(Method m, String stateName)``
+
+che:
+
+- tiene traccia delle informazioni dichiarate nelle annotazioni ``Transition`` in tre liste (``nextStates`, ``msgIds`` e ``guards``)
+- invoca il metodo :ref:`declareState<declareState in QakActor22FsmAnnot>` creando una istanza di :ref:`StateActionFun`:
+
+
+  .. code:: Java
+
+	  protected void elabStateMethod(Method m, String stateName) {
+		if( ! m.getName().equals(stateName)) {
+			ColorsOut.outerr(getName() + 
+         " | QakActor22FsmAnnot  Method name must be the same as state name" );
+		}
+		  Vector<String> nextStates = new Vector<String>();
+		  Vector<String> msgIds     = new Vector<String>();
+		  Vector<Class> guards      = new Vector<Class>();
+		  
+		  Transition[] ta        = m.getAnnotationsByType(Transition.class);
+ 		  
+		  for ( Transition t : ta ) {
+			  ColorsOut.outappl("Transition simple: "+ t.msgId() + " -> " + t.state() + " guard=" + t.guard(), ColorsOut.CYAN);
+			  nextStates.add(t.state());
+			  msgIds.add(t.msgId());
+			  guards.add(t.guard());
+ 		  }
+		  doDeclareState(m,stateName,nextStates,msgIds,guards );		   
+	}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+QakActor22FsmAnnot.doDeclareState  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Un volta raccolte le informazioni sulle transizioni, si possono costruire gli stati.
+
+  .. code:: Java
+
+    protected void doDeclareState(
+        Method curMethod, String stateName, 
+        Vector<String> nextStates, Vector<String> msgIds, Vector<Class> guards) {
+        declareState( stateName, new StateActionFun() {
+          ...
+        }			        			  
+        });//declareState		
+    }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+declareState in QakActor22FsmAnnot
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Questo metodo realizza :ref:`declareState<declareState>` al prosto dell'ApplicationDesigner.
+
+  .. code:: Java
+
+        declareState( stateName, new StateActionFun() {
+        @Override
+            public void run( IApplMessage msg ) {
+            try {
+                curMethod.invoke(  myself, msg   );  //I metodi hanno this come arg implicito
+                for( int j=0; j<nextStates.size();j++ ) {
+                    addTransition( nextStates.elementAt(j), msgIds.elementAt(j) );
+                }					
+                nextState();
+            } catch ( Exception e) {
+						ColorsOut.outerr("wrong execution for:"+ stateName + " - " + e.getMessage());
+            }
+            }			        			  
+        });//declareState		
+
+
+La classe ``QakActor22FsmAnnot`` costruisce in modo automatico quelle parti di codice richieste da 
+:ref:`QakActor22Fsm` e che nella versione non annotata dovevano essere scritte dall'ApplicationDesigner.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addTransition in QakActor22FsmAnnot
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  .. code:: Java
+
+    protected void addTransition(String state, String msgId) {
+      transTab.add( new Pair<>(state, msgId) );
+      if( msgId == null) { //A scopo di 'demo'
+        ColorsOut.out( getName() + " QakActor22Fsm | in " + curState +	" adding an empty move" , ColorsOut.BLUE );		
+      }
+    }
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+Refactoring del BoundaryWalker 
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.actors.annot.walker.BoundaryWalkerAnnot*.
+
+
+Prima di procedere alla definizione dell'attore, introduciamo  due nuove 'features'
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+VRobotMoves.step
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La classe di utilità ``VRobotMoves`` definisce un metodo :blue:`step` che muove in avanti il robot per ``300msec``. 
+
+    .. e attende il tempo necessario al completaento della mossa.
+
+
+  .. code:: Java
+
+	public static void step(String name, Interaction2021 conn) {
+		moveForward( name,conn,300 );	 	
+	}
+
+Sappiamo che dopo questo comando possiamo avere due esiti:
+
+- mossa completata con sucesso: WEnv invia sulla WSConnection un ``endmove``
+- collisione: WEnv invia sulla WS un ``collision``
+
+
+Impostatiamo il funzionamento dell'automa in modo che esso attenda sempre l'esito di una mossa prima di 
+effettuare la successiva. In questo modo:
+
+:remark:`evitiamo di inviare nuovi comandi prima del completamento di una mossa`
+ 
+Questo scopo viene raggiunto con l'aiuto di un osservatore sulla WSConnection.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+WsConnWEnvObserver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il compito che diamo all'osservatore ``WsConnWEnvObserver`` (che specializza :ref:`WsConnSysObserver`) è di gestire le 
+informazioni inviate da WEnv sulla WSConnection dopo l'esecuzione di uno :blue:`step` o di una rotazione,  in modo da emettere
+due possibili eventi/emssaggi:
+
+- **SystemData.endMoveOkEvent** se la mossa è stata completata con successo
+- **SystemData.endMoveKoEvent** se la mossa non è stata completata (per via di una collisione)
+
+Il sistema viene anche organanizzato in
+modo da ricevere, in caso di fallimento (di uno :blue:`step`), il tempo trascorso dall'inizio del movimento al momento del fallimento.
+Conoscere il tempo effettivo di esecuzione di uno step
+
+:remark:`permette gestire la localizzazione del robot`
+
+
+A questo fine, si è introdotto in :ref:`WsConnSysObserver` un *Timer*, che viene attivato per ogni osservatore registrato  
+nel metodo **sendLine** di :ref:`WsConnection` e fermato al termine di ogni mossa (dal metodo **update** di ``WsConnWEnvObserver``.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BoundaryWalkerAnnot
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Con le premesse precedenti, la nuova versione del BoundaryWalker può essere definita come segue:
+
+
+
+  .. code:: Java
+
+    public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
+	private Interaction2021 conn;	
+ 	private int ncorner  = 0;
+	
+	public BoundaryWalkerAnnot(String name) {
+		super(name);
+ 	}
+		
+        @State( name = "robotStart", initial=true)
+        @Transition( state = "robotMoving" ,  msgId = SystemData.endMoveOkId )
+        @Transition( state = "wallDetected" , msgId = SystemData.endMoveKoId )
+        protected void robotStart( IApplMessage msg ) {
+            conn = WsConnection.create("localhost:8091" ); 	 
+            ((WsConnection)conn).addObserver( new WsConnWEnvObserver(getName()) );
+            VRobotMoves.step(getName(),conn);
+        }
+
+        @State( name = "robotMoving" )
+        @Transition( state = "robotMoving" ,  msgId = SystemData.endMoveOkId)
+        @Transition( state = "wallDetected" , msgId = SystemData.endMoveKoId )
+        protected void robotMoving( IApplMessage msg ) {
+            outInfo(""+msg);	
+            VRobotMoves.step(getName(),conn);
+        }
+        
+        @State( name = "wallDetected" )
+        @Transition( state = "robotMoving" , msgId = SystemData.endMoveOkId )
+        @Transition( state = "endWork" ,     msgId = SystemData.haltSysCmdId)
+        protected void wallDetected( IApplMessage msg ) {
+            ncorner++;
+            if( ncorner == 4 ) {
+                autoMsg(SystemData.haltSysCmd(getName(),getName() ));
+            }else VRobotMoves.turnLeft(getName(), conn);
+        }
+        
+        @State( name = "endWork" )
+        protected void endWork( IApplMessage msg ) {
+            outInfo("BYE" );	
+            System.exit(0);
+        }
+    }
+
+
+Vediamo che:
+
+-  :blue:`robotStart`: è  lo stato iniziale, in cui 'attore si connette al robot usando la WSConnection.
+    In questo stato, l'attore invia un comando :blue:`step`, pianificando le transizioni come segue:
+        
+        - in caso di soccesso,  passerà nello stato :blue:`robotMoving`
+        - in caso di fallimento, ipotizza una collisione (non allarmi o altro) e passerà nello stato :blue:`wallDetected`
+
+-  :blue:`wallDetected`: è  lo stato in cui l'attora sa che il robot ha incontrato un muro.
+    In questo stato, l'attore invia un comando di rotazione a sinistra, se capisce di non avere terminato il percorso.
+    Se no, si auto-invia un messaggio di terminazione **SystemData.haltSysCmdId**.
+    Le transizioni sono pianificate in modo che l'attore:
+
+        - passerà nello stato :blue:`robotMoving` nel caso riceva un nessggio di mossa (rotazione) terminata con sueccsso
+        - passerà nello stato :blue:`endWork` nel caso riceva il messio di terminazione *SystemData.haltSysCmdId*
+        - il caso di fallimento della mossa di rotazione viene escluso
+ 
+-  :blue:`endWork`: è  lo stato finale in cui l'attore termina il sistema.
+
+Alternativa, usando le guardie:
+
+  .. code:: Java
+
+      @State( name = "wallDetected" )
+      @Transition( state = "robotMoving" , msgId = SystemData.endMoveOkId,  guard=GuardContinueWork.class   )
+      @Transition( state = "endWork" ,     msgId = SystemData.endMoveOkId,  guard=GuardEndOfWork.class )
+      protected void wallDetected( IApplMessage msg ) {
+        outInfo("ncorner="+ ncorner + " " + msg);	
+        ncorner++;
+        GuardContinueWork.setValue(ncorner);
+        GuardEndOfWork.setValue(ncorner);
+        VRobotMoves.turnLeft(getName(), conn);
+      }
 
