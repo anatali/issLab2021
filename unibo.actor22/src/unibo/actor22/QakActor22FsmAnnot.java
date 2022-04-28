@@ -3,7 +3,6 @@ package unibo.actor22;
 import java.lang.reflect.Method;
 import java.util.Vector;
 import it.unibo.kactor.IApplMessage;
-import unibo.actor22.annotations.GuardAlwaysTrue;
 import unibo.actor22.annotations.State;
 import unibo.actor22.annotations.Transition;
 import unibo.actor22comm.interfaces.StateActionFun;

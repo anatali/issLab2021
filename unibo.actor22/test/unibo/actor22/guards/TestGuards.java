@@ -16,6 +16,7 @@ private int n = 0;
 	@Transition( state = "s1" ,  msgId = SystemData.demoSysId, guard = Guard0.class )
 	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg );
+		//n++;
 		Guard0.setValue(n);
 		this.autoMsg( SystemData.demoSysCmd( getName(),getName() ) );
 	}
@@ -23,6 +24,7 @@ private int n = 0;
 	@State( name = "s1" )
 	protected void s1( IApplMessage msg ) {
 		outInfo(""+msg );
+		System.exit(0);
 	}
 
 }

@@ -18,8 +18,8 @@ public class MainBoundaryWalkerAnnotAlarms {
 
 	protected void configure() throws Exception {
  		Qak22Context.configureTheSystem(this);
-		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.fireEventId);
-		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.endAlarmId);
+//		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.fireEventId);
+//		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.endAlarmId);
 		//EventHandler è un attore: protrebbe avere riterdi nella registrazione
 		Qak22Context.showActorNames();
 		CommSystemConfig.tracing = false;

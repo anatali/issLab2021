@@ -39,7 +39,7 @@ protected Vector<Pair<String,String>> eventObservers = new Vector<Pair<String,St
 
 	@Override
 	protected void handleMsg(IApplMessage msg) {
-		ColorsOut.outappl(myName + " handles:" + msg + " ", ColorsOut.YELLOW_BACKGROUND);
+		//ColorsOut.outappl(myName + " handles:" + msg + " ", ColorsOut.YELLOW_BACKGROUND);
 		if( msg.isDispatch() && msg.msgId().equals(Qak22Context.registerForEvent)) {
 //			ColorsOut.outappl(myName + " register:" + msg.msgSender() + " for "+ msg.msgContent(), ColorsOut.MAGENTA);
 //			eventObservers.add(new Pair( msg.msgSender(),msg.msgContent() ) );			

@@ -27,8 +27,7 @@ public class VRobotMoves {
 			conn.forward( ApplData.moveForward(duration) );
 		}catch( Exception e) {
 			ColorsOut.outerr( name +  " | doBasicMoves ERROR:" +  e.getMessage() );
-		}
-		
+		}	
 	}
 	
 	public static void turnLeft(String name, Interaction2021 conn) {

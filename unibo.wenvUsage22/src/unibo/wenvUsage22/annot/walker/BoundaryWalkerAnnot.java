@@ -36,32 +36,34 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 		VRobotMoves.step(getName(),conn);
  	}
  	
-// 	@State( name = "wallDetected" )
-//	@Transition( state = "robotMoving" , msgId = SystemData.endMoveOkId,  guard=GuardContinueWork.class   )
-// 	@Transition( state = "endWork" ,     msgId = SystemData.endMoveOkId,  guard=GuardEndOfWork.class )
-//	protected void wallDetected( IApplMessage msg ) {
-//		outInfo("ncorner="+ ncorner + " " + msg);	
-//		ncorner++;
-//		GuardContinueWork.setValue(ncorner);
-//		GuardEndOfWork.setValue(ncorner);
-//		VRobotMoves.turnLeft(getName(), conn);
-// 	}
+ 	@State( name = "wallDetected" )
+	@Transition( state = "robotMoving" , 
+		msgId = SystemData.endMoveOkId,guard=GuardContinueWork.class   )
+ 	@Transition( state = "endWork" ,     
+ 		msgId = SystemData.endMoveOkId,guard=GuardEndOfWork.class )
+	protected void wallDetected( IApplMessage msg ) {
+		outInfo("ncorner="+ ncorner + " " + msg);	
+		ncorner++;
+		GuardContinueWork.setValue(ncorner);
+		GuardEndOfWork.setValue(ncorner);
+		VRobotMoves.turnLeft(getName(), conn);
+ 	}
 
  	/*
  	 * Transizioni condizionate (con guardie)
  	 */
- 	@State( name = "wallDetected" )
- 	protected void wallDetected( IApplMessage msg ) {
-		outInfo("ncorner="+ ncorner + " " + msg);	
-		ncorner++;
-		//Parte aggiunta al termine, per definire le transizioni
- 		if( ncorner == 4 ) {
- 			addTransition("endWork", null); //empty move
-  		}else {
-  			VRobotMoves.turnLeft(getName(), conn);
-  			addTransition("robotMoving",  SystemData.endMoveOkId);
-  		}
- 	}
+// 	@State( name = "wallDetected" )
+// 	protected void wallDetected( IApplMessage msg ) {
+//		outInfo("ncorner="+ ncorner + " " + msg);	
+//		ncorner++;
+//		//Parte aggiunta al termine, per definire le transizioni
+// 		if( ncorner == 4 ) {
+// 			addTransition("endWork", null); //empty move
+//  		}else {
+//  			VRobotMoves.turnLeft(getName(), conn);
+//  			addTransition("robotMoving",  SystemData.endMoveOkId);
+//  		}
+// 	}
  	
  	@State( name = "endWork" )
  	protected void endWork( IApplMessage msg ) {

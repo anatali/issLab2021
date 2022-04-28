@@ -9,10 +9,11 @@ import unibo.actor22comm.utils.CommUtils;
 import unibo.wenvUsage22.common.ApplData;
 
 @Context22(name="ctx",host="localhost", port="8024" )
-@Actor22(name = ApplData.robotName, contextName = "ctx", implement = RobotBoundaryWalkerFsm.class)
-public  class MainRobotMoverFsm  {
+//@Actor22(name = ApplData.robotName, contextName = "ctx", implement = RobotBoundaryWalkerFsm.class)
+@Actor22(name = ApplData.robotName, contextName = "ctx", implement = RobotBoundaryWalkerFsmBerardi.class)
+public  class MainRobotBoundaryWalkerFsm  {
    	
-	public MainRobotMoverFsm(   ) {	
+	public MainRobotBoundaryWalkerFsm(   ) {	
  		Qak22Context.configureTheSystem(this);
 		doJob( );
 		
@@ -28,7 +29,7 @@ public  class MainRobotMoverFsm  {
 //---------------------------------------------------------
 	public static void main( String[] args) throws Exception {
 		CommUtils.aboutThreads("Before start - ");
-		new MainRobotMoverFsm( ).doJob();
+		new MainRobotBoundaryWalkerFsm( ).doJob();
 		CommUtils.aboutThreads("Before end - ");		
 	}
 }

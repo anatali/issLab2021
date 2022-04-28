@@ -12,6 +12,7 @@ import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.annot.walker.WsConnWEnvObserver;
+import unibo.wenvUsage22.common.ApplData;
 import unibo.wenvUsage22.common.VRobotMoves;
 
 public class BoundaryWalkerAnnotAlarms extends QakActor22FsmAnnot  {
@@ -22,9 +23,9 @@ public class BoundaryWalkerAnnotAlarms extends QakActor22FsmAnnot  {
  	
 	public BoundaryWalkerAnnotAlarms(String name) {
 		super(name);
-		//EventHandler è un attore: protrebbe avere riterdi nella registrazione
-		//Qak22Context.registerAsEventObserver(name,SystemData.fireEventId);
-		//Qak22Context.registerAsEventObserver(name,SystemData.endAlarmId);
+		//EventHandler come attore  protrebbe avere riterdi nella registrazione
+		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.fireEventId);
+		Qak22Context.registerAsEventObserver(ApplData.robotName,SystemData.endAlarmId);
  	}
 	
 	@State( name = "robotStart", initial=true)
@@ -55,7 +56,7 @@ public class BoundaryWalkerAnnotAlarms extends QakActor22FsmAnnot  {
  	@Transition( state = "endalarm" , msgId = SystemData.endAlarmId )
 	protected void alarm( IApplMessage msg ) { 
  		wotkInterrupted = true;
- 		ColorsOut.outappl( "alarm while doing:"+ currentMove + " " + msg , ColorsOut.RED);
+ 		//ColorsOut.outappl( "alarm while doing:"+ currentMove + " " + msg , ColorsOut.RED);
  	}
  	
  	@State( name = "endalarm" )
