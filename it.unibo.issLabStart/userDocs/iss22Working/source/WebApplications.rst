@@ -1,0 +1,243 @@
+.. role:: red 
+.. role:: blue 
+.. role:: remark
+
+.. _Applicazione web: https://it.wikipedia.org/wiki/Applicazione_web    
+
+.. _WebappFrameworks: https://www.geeksforgeeks.org/top-10-frameworks-for-web-applications/
+
+.. _Springio: https://spring.io/
+
+.. _WebSocket: https://it.wikipedia.org/wiki/WebSocket
+
+.. _Node.js: https://nodejs.org/it/
+
+.. _Express: https://expressjs.com/it/
+
+.. _CleanArchitecture: https://clevercoder.net/2018/09/08/clean-architecture-summary-review
+
+.. _Buster: https://www.raspberrypi.com/news/buster-the-new-version-of-raspbian/
+
+.. _Bullseye: https://www.raspberrypi.com/news/raspberry-pi-os-debian-bullseye/
+
+
+==================================
+WebApplications
+==================================  
+ 
+
+Lo sviluppo di applicazioni Web non può presceindere dall'uso di uno dei numerosi framework disponibili (si veda ad
+esempio `WebappFrameworks`_). 
+
+Per il nostro legame con Java, può essere opportuno, per ora, fare 
+riferimento a `Springio`_. Tuttavia, una adeguata alternativa potrebbe essere l'uso di framework basati su 
+`Node.js`_ ed `Express`_.
+
+Sappiamo che l'uso di un framework aiuta a risolvere problemi ricorrenti in un dominio e 
+impone precise regole per l'introduzione di componenti applicativi 
+nel contesto dello schema architetturale che il framework utilizza per supportare le sue funzionalità.
+
+Nel caso dei framework nel dominio delle applicazioni Web, troviamo un insieme di concetti e modi di operare comuni:
+
+- l'uso di un WebServer (spesso Apache Tomcat) che rimane nascosto al livello applicativo;
+- l'uso di una infrastruttura che abilita le comunicazioni Client-Server mediante il protocollo HTTP 
+  e gli schemi REST di interazione;
+- la possibilità di definire componenti applicativi 'innestabili' nel framework secondo precisi meccanismi. 
+  SpringBoot si basa principalmente sul meccanismo delle annotazioni Java;
+- il concetto di :blue:`Controller` come elemento-base per la gestione dei messaggi;
+- l'uso di tools che agevolano la creazione dinamica di pagine HTML a partire da template con 'parametri'
+  che possono essere fissati dal :blue:`Controller`;
+- l'abilitazione all'uso delle WebSocket per interazioni asincrone con i Client  
+
+Lo schema di funzionamento può essere riassunto come segue:
+
+#. un operatire umano usa un Browser per collegarsi via HTTP a una certa porta di un nodo remoto, usata come porta
+   di ingresso dal WebServer
+#. l'infrastruttura del framework effettua una prima gestione del messaggio in arrivo in modo da confezionare
+   oggetti computazionali (richieste e/o risposte) da trasferire ad opportuni metodi del :blue:`Controller` 
+   per agevolare la stesura del codice di gestione da parte dell'Application Designer. Spesso la perte infrastrutturale
+   è organizzata secondo una **pipeline** che permette all'Application Designer di introdurre parti di elaborazione
+   a questo livello
+#. i metodi del :blue:`Controller` realizzano la gestione dei messaggi in funzione dei i 'verbi' HTTP (GET,PUT,POST,DELETE) 
+   con cui sono stati inviati e prepara una pagina HTML di risposta, sfruttando opportuni template predefiniti di pagine.
+   I parametri dei template vengono fissati utilizzando un **Modello della pagina** secondo un classico schema MVC.
+#. il :blue:`Controller` restituisce la pagina alla parte infrastruttrale che l'aveva chiamato, la quale provvede a inviare
+   la pagina al Client che aveva effettuato la richiesta HTTP;
+#. se l'operatore umano è sostituito da una macchina  si parla di Machine-To-Machine (M2M) interaction.
+   I messaggi vengono girati a un :blue:`Controller` specializato per inviare ripsoste in forma di dati, molto spesso 
+   in formato XML o JSon.
+
+
+
+
+++++++++++++++++++++++++++++++++++++
+Architettura del WebServer
+++++++++++++++++++++++++++++++++++++
+
+Dal punto di vista architetturale, l'organizzazione interna del codice del WebServer dovrà essere ispirata ai principi della
+`CleanArchitecture`_.
+
+.. csv-table::  
+    :align: center
+    :widths: 50,50
+    :width: 100% 
+    
+    .. image:: ./_static/img/Architectures/cleanArchCone.jpg,.. image:: ./_static/img/Architectures/cleanArch.jpg
+
+In accordo al principio della `inversione delle dipendenze <https://en.wikipedia.org/wiki/Dependency_inversion_principle>`_:
+
+- :remark:`I componenti di alto livello non devono dipendere da componenti di livello più basso.`
+
+Con queste premesse, il compito che ci attende è, in generale, quello di realizzare la parte 
+**Presenter**,  in modo da continuare a tenere separati i casi d'uso dall'interfaccia utente.
+
+++++++++++++++++++++++++++++++++++++
+IApplicationFacade
+++++++++++++++++++++++++++++++++++++
+
+In quanto componente applicativo primario, 
+il Controller-Spring relativo alla Human-interaction (``HIController``) e anche quello
+relativo a una Machine-interaction (``MIController``) impone 
+che il componente di cui farà uso per realizzare i suoi use-cases obbedisca ad una
+precisa interfaccia, che viene impostata come segue:
+
+.. code:: java 
+
+   public interface IApplicationFacade {  
+     //Metodi della business logic
+        ...
+        void activateObserver(IObserver h);  
+    }
+
+Come ogni applicazione SpringBoot, gli elementi salienti sono:
+
+- Un WebServer Controller che si occupa della Human-Interaction  (che di norma denomineremo **HIController**) 
+  che presenta all'end user una pagina HTML.
+- Una pagina HTML  che include campi il cui valore può essere definito attraverso
+  un oggetto ``org.springframework.ui.Model`` che viene trasferito a  ``HIController`` dalla infrastruttura
+  Spring e gestito mediante la Java template engine ``Theamleaf``.
+- Un file JavaScript  che include funzioni utili per la gestione della pagina lato client.
+- Un file per l'uso delle `WebSocket`_  che implementa l'interfaccia ``WebSocketConfigurer`` 
+  di  *org.springframework.web.socket.config.annotation*.
+- l'suo  delle `WebSocket`_, per l'aggiornamento automatico della pagina attraverso
+    la introduzione di un observer. In questo caso, l'uso di CoAP o MQTT può rendere il compito più agevole rispetto
+    a TCP, in quanto nella versione TCP abiamo introdotto solo observer locali. Con CoAP o MQTT invece non è complicato
+    introdurre presso il WebServer Spring un observer che riceve dati emessi dal Raspberry.
+
+-------------------------------------------------
+Introduzione all'uso di Spring Boot
+-------------------------------------------------
+
++++++++++++++++++++++++
+Start-up
++++++++++++++++++++++++
+
+#. Conntersi a https://start.spring.io/
+#. Selezionare Gradle Project, Kotlin, Group=it.unibo, Artifact=webspring.demo (Options:Packaging=Jar, Java=11) 
+   e le seguenti Dipendenze:
+
+   - Spring Web: crea applicazioni Web, inclusi RESTful, utilizzando Spring MVC. Utilizza Apache Tomcat come contenitore incorporato predefinito.
+   - Thymeleaf: un moderno motore di template Java lato server per ambienti web e standalone. 
+     Consente di visualizzare correttamente l'HTML nei browser e come prototipi statici.
+   - Spring Boot DevTools: Fornisce riavvii rapidi delle applicazioni, LiveReload e configurazioni per un'esperienza di sviluppo avanzata. 
+     Accelera questo ciclo di aggiornamento (codifica di una modifica, riavvio dell'applicazione e aggiornamento del browser 
+     per visualizzare la modifica).
+
+#. Attivare **Generate**
+#. Decomprimiere il file generato webspring.demo.zip in una directory vuota (es . C:/xxx ) ed esegure
+ 
+   ``gradlew build``
+
+#. Aprire un IDE e aprire o importare il progetto webspring.demo . Guardare la classe generata
+
+    ``it.unibo.webspring.demo.Application.kt``
+
+    .. code:: Java
+
+        package it.unibo.webspring.demo
+
+        import org.springframework.boot.autoconfigure.SpringBootApplication
+        import org.springframework.boot.runApplication
+
+        @SpringBootApplication
+        class Application
+
+        fun main(args: Array) {
+        runApplication(*args)
+        }
+
+#. Attivare 
+
+    ``Application.kt``
+
+#. Aprire un browser su  ``localhost:8080``: compare l apagina che segue:
+
+.. image::  ./_static/img/Spring/springboot1.PNG
+  :align: center 
+  :width: 70%
+
+#. Crea il file ``webspring.demo\src\principale\risorse\modelli\benvenuto.htm`` con il seguente contenuto:
+
+   .. code:: Html
+
+    <html xmlns:th="http://www.thymeleaf.org"> 
+    <head><title>Welcome</title></head>
+    <body>
+    <h1>Welcome (in templates)</h1>
+    <p>Welcome to <b><span th:text="${arg}">Our Arg</span></b>.</p>
+    </body>
+    </html>
+    </pre>
+
+#. Inserire nel file webspring.demo\src\main\resources\application.properties quanto segue:
+
+    .. code:: 
+
+        spring.application.name=First Spring Application iss2020
+
+        spring.banner.location=classpath:banner.txt
+        server.port   = 8081
+        human.logo    = Gui for human-machine interaction
+        machine.logo  = Gui for machine-to-machine interaction
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Un primo HIController in Java
++++++++++++++++++++++++++++++++++++++++++++++
+
+Creiamo un file it.unibo.webspring.demo.BaseController con il seguente contenuto:
+
+  .. code:: Java
+
+    package it.unibo.webspring.demo;
+    import ...
+    
+    @Controller 
+    public class BaseController { 
+    @Value("${spring.application.name}")
+    String appName;
+
+    @GetMapping("/") 		 
+    public String homePage(Model model) {
+        model.addAttribute("arg", appName);
+        return "welcome";
+    } 
+        
+    @ExceptionHandler 
+    public ResponseEntity handle(Exception ex) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+        return new ResponseEntity(
+                    "BaseController ERROR " + ex.getMessage(), 
+                    responseHeaders, HttpStatus.CREATED);
+        }
+    }
+
+ Attiviamo di nuovo
+
+    ``Application.kt``    
+
+e un browser su localhost:8080. Vedremo comparire:
+
+.. image::  ./_static/img/Spring/springboot2.PNG
+  :align: center 
+  :width: 70%
