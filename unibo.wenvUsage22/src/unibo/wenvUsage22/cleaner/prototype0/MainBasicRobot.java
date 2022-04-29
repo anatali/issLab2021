@@ -8,21 +8,17 @@ import unibo.actor22comm.SystemData;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
  
-
-
 @Context22(name = "ctx", host = "localhost", port = "8020")
-@Actor22(name = MainBasicRobot.myName, contextName = "ctx", implement = BasicRobot.class)
+@Actor22(name = "basicrobot", contextName = "ctx", implement = BasicRobot.class)
 public class MainBasicRobot {
 	
 	public static final String myName = "basicRobot";
 	
 	public void doJob() {
-		CommSystemConfig.tracing = false;
-		//AnnotUtil.handleRepeatableActorDeclaration(this);
+		CommSystemConfig.tracing = true;
 		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
-  		//Qak22Util.sendAMsg( ApplData.startSysCmd("main",myName) );
-  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
+  		//Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
 	};
 
 	public void terminate() {

@@ -7,13 +7,28 @@ import unibo.actor22comm.utils.CommUtils;
 
 public class VRobotMoves {
 
-	public final static String aril_w = "moveForward(300)";
-	public final static String aril_a = "turnLeft(300)";
+	public final static String robotCmdId = "move";
+	public final static String cril_w = "moveForward(300)";
+	public final static String cril_a = "turnLeft(300)";
+	public final static String cril_d = "turnRight(300)";
+	public final static String cril_s = "moveBAckward(300)";
+	public final static String cril_h = "alarm(300)";
+	
+	public static final IApplMessage move( String cmd,String sender, String receiver ) {
+		switch( cmd ) {
+		case "w" : return CommUtils.buildDispatch(sender,robotCmdId, cril_w,receiver);
+		case "a" : return CommUtils.buildDispatch(sender,robotCmdId, cril_a,receiver);
+		case "d" : return CommUtils.buildDispatch(sender,robotCmdId, cril_d,receiver);
+		case "h" : return CommUtils.buildDispatch(sender,robotCmdId, cril_h,receiver);
+		}
+		return  CommUtils.buildDispatch(sender,robotCmdId, cmd,receiver);
+	}
+	
 	public static final IApplMessage w(String sender, String receiver)   {
-		return CommUtils.buildDispatch(sender,ApplData.robotCmdId,aril_w,receiver);
+		return CommUtils.buildDispatch(sender, robotCmdId, cril_w,receiver);
 	}
 	public static final IApplMessage a(String sender, String receiver)   {
-		return CommUtils.buildDispatch(sender,ApplData.robotCmdId,aril_a,receiver);
+		return CommUtils.buildDispatch(sender, robotCmdId,cril_a,receiver);
 	}
 
 	

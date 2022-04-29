@@ -185,7 +185,7 @@ Introduzione all'uso di Spring Boot
 Start-up
 +++++++++++++++++++++++
 
-#. Conntersi a https://start.spring.io/
+#. Connettersi a https://start.spring.io/ 
 #. Selezionare Gradle Project, Kotlin, Group=it.unibo, Artifact=webspring.demo (Options:Packaging=Jar, Java=11) 
    e le seguenti Dipendenze:
 
@@ -254,46 +254,6 @@ Start-up
         machine.logo  = Gui for machine-to-machine interaction
 
 
-+++++++++++++++++++++++++++++++++++++++++++++
-Un primo HIController in Java
-+++++++++++++++++++++++++++++++++++++++++++++
-
-Creiamo un file it.unibo.webspring.demo.HIController con il seguente contenuto:
-
-.. code:: 
-
-    package it.unibo.webspring.demo;
-    import ...
-    
-    @Controller 
-    public class HIController { 
-    @Value("${spring.application.name}")
-    String appName;
-
-    @GetMapping("/") 		 
-    public String homePage(Model model) {
-        model.addAttribute("arg", appName);
-        return "welcome";
-    } 
-            
-    @ExceptionHandler 
-    public ResponseEntity handle(Exception ex) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-        return new ResponseEntity(
-                    "BaseController ERROR " + ex.getMessage(), 
-                    responseHeaders, HttpStatus.CREATED);
-        }
-    }
-
- Attiviamo di nuovo
-
-    ``Application.kt``    
-
-e un browser su localhost:8080. Vedremo comparire:
-
-.. image::  ./_static/img/Spring/springboot2.PNG
-  :align: center 
-  :width: 70%
 
 
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -361,3 +321,158 @@ Demo
 - usare TCP in browser per operare su BasicRobot
 - fare server per WsInteraction2021 per gli attori (un WebServer?)
 - fare wenvUsage22\cleaner\prototype0 con BasicCmdGui che attiva ....
+- vedere it.unibo.cautiousExplorer/userDocs/BasicStepRobotActorUsage.html
+  
+
+#. Faccio spring.io creando in Java una webapp per inviare msg a BasicRobot via TCP o via CoAP
+#. Attivo BasicRobot, che attende comandi aril 
+#. Attivo browser su 8085 che fornisce console e display area 
+
+- Ho già una console e display area in NaiveGui che manda comandi su ws
+- La  webapp  è un modo per dotare il BasicRobot di un server HTTP/WS
+
+
+-----------------------------------------------
+BasicRobot server extension
+-----------------------------------------------
+
+#. Connettersi a https://start.spring.io/ 
+#. Selezionare Gradle Project, Java, Group=unibo, Artifact=webForActors (Options:Packaging=Jar, Java=8) 
+   e le seguenti Dipendenze:
+
+   - Spring Web: crea applicazioni Web, inclusi RESTful, utilizzando Spring MVC. Utilizza Apache Tomcat come contenitore incorporato predefinito.
+   - Thymeleaf: un moderno motore di template Java lato server per ambienti web e standalone. 
+     Consente di visualizzare correttamente l'HTML nei browser e come prototipi statici.
+   - Spring Boot DevTools: Fornisce riavvii rapidi delle applicazioni, LiveReload e configurazioni per un'esperienza di sviluppo avanzata. 
+     Accelera questo ciclo di aggiornamento (codifica di una modifica, riavvio dell'applicazione e aggiornamento del browser 
+     per visualizzare la modifica).
+
+#. Attivare **Generate**
+#. Decomprimiere il file generato webForActors.zip in una directory vuota (es . C:/xxx ) ed esegure
+ 
+   ``gradlew build``
+
+#. Aprire un IDE e aprire o importare il progetto webForActors. Guardare la classe generata
+
+    ``unibo.webForActorsApplication.java``
+
+    .. code:: Java
+
+        package it.unibo.webspring.demo
+        import org.springframework.boot.autoconfigure.SpringBootApplication
+        import org.springframework.boot.runApplication
+
+        @SpringBootApplication
+        public class WebForActorsApplication {
+
+        public static void main(String[] args) {
+		    SpringApplication.run(WebForActorsApplication.class, args);
+	    }
+
+#. Eseguire l'applicazione
+
+#. Aprire un browser su  ``localhost:8085``: compare la pagina che segue:
+
+.. image::  ./_static/img/Spring/springboot1.PNG
+  :align: center 
+  :width: 60%
+
+#. Crea il file ``webForActors\src\main\resources\templates\welcome.html`` con il seguente contenuto:
+
+   .. code:: Html
+
+    <html xmlns:th="http://www.thymeleaf.org"> 
+    <head><title>Welcome</title></head>
+    <body>
+    <h1>Welcome (in templates)</h1>
+    <p>Welcome to <b><span th:text="${arg}">Our Arg</span></b>.</p>
+    </body>
+    </html>
+    </pre>
+
+#. Inserire nel file ``webForActors\src\main\resources\application.properties`` quanto segue:
+
+    .. code:: 
+
+        spring.application.name=WebForActors
+
+        spring.banner.location=classpath:banner.txt
+        server.port   = 8085
+        human.logo    = Gui for human-machine interaction
+        machine.logo  = Gui for machine-to-machine interaction
+
+#. Inserire un file ``banner.txt``  ( si veda ) personalizzato nella ``directory resources``
+
++++++++++++++++++++++++++++++++++++++++++++++
+Un primo controller  
++++++++++++++++++++++++++++++++++++++++++++++
+
+Creiamo un file ``it.unibo.webspring.demo.HIControllerDemo`` con il seguente contenuto:
+
+.. code:: 
+
+    package it.unibo.webspring.demo;
+    import ...
+    
+    @Controller 
+    public class HIControllerDemo { 
+    @Value("${spring.application.name}")
+    String appName;
+
+    @GetMapping("/") 		 
+    public String homePage(Model model) {
+        model.addAttribute("arg", appName);
+        return "welcome";
+    } 
+            
+    @ExceptionHandler 
+    public ResponseEntity handle(Exception ex) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+        return new ResponseEntity(
+                    "BaseController ERROR " + ex.getMessage(), 
+                    responseHeaders, HttpStatus.CREATED);
+        }
+    }
+
+Attiviamo di nuovo l'applicazione e un browser su ``localhost:8085``. Vedremo comparire:
+
+.. image::  ./_static/img/Spring/springboot2.PNG
+  :align: center 
+  :width: 60%
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Un controller per RobotNaiveGui.html
++++++++++++++++++++++++++++++++++++++++++++++
+
+#. Inseriamo il file ``RobotNaiveGui.html`` nella directory templates
+#. Commentiamo l'annotazione ``@Controller`` in ``HIControllerDemo`` e inseriamo questo nuovo controller:
+
+.. code:: 
+
+    package it.unibo.webspring.demo;
+    import ...
+    
+    @Controller 
+    public class HIController { 
+    @Value("${spring.application.name}")
+    String appName;
+
+    @GetMapping("/") 		 
+    public String homePage(Model model) {
+        model.addAttribute("arg", appName);
+        return "welcome";
+    } 
+            
+    @ExceptionHandler 
+    public ResponseEntity handle(Exception ex) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+        return new ResponseEntity(
+                    "BaseController ERROR " + ex.getMessage(), 
+                    responseHeaders, HttpStatus.CREATED);
+        }
+    }
+
+.. image::  ./_static/img/Spring/RobotNaiveGui.PNG
+  :align: center 
+  :width: 60%
