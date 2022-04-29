@@ -38,14 +38,21 @@ public class HumanInterfaceController {
 	  System.out.println("------------------- HumanInterfaceController homePage " + model  );
       model.addAttribute("arg", appName);
       return "gui";
-  } 
-   
+  }
+    @RequestMapping(value = "/w",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public @ResponseBody String doMove( String move ) {
+        applicationModelRep = "w";
+        return  "doMove APPLICATION_FORM_URLENCODED_VALUE move="+move+ " Current Robot State:"+applicationModelRep;
+    }
+
 /*   
   @PostMapping( path = "/home") 		 
   public String homePage(Model model) {
        return entry(model);
    } 
-  
+
   @GetMapping("/model")
   @ResponseBody
   public String halt(Model model) {
@@ -54,13 +61,7 @@ public class HumanInterfaceController {
   }     
 	
 	
-    @RequestMapping(value = "/w", 
-    		method = RequestMethod.POST,
-    		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public @ResponseBody String doMove( String move ) {
-		applicationModelRep = "w";
-        return  "doMove APPLICATION_FORM_URLENCODED_VALUE move="+move+ " Current Robot State:"+applicationModelRep; 
-    }    
+
 
 	@PostMapping( path = "/move" ) 
 	public String doMove( 

@@ -1,13 +1,12 @@
 package unibo.wenvUsage22.actors.robot.annotated;
  
 import it.unibo.kactor.IApplMessage;
+import unibo.actor22.QakActor22FsmAnnot;
+import unibo.actor22.annotations.*;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
-import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
-import unibo.wenvUsage22.annot.State;
-import unibo.wenvUsage22.annot.Transition;
 import unibo.wenvUsage22.common.ApplData;
 
 

@@ -912,8 +912,8 @@ Aggiorna la :ref:`transTab<addTransition>`:
 
     protected void addTransition(String state,String msgId) {
       transTab.add(new Pair<>(state,msgId));
-      if(msgId == null) { //A scopo di 'demo'
-    ColorsOut.out(getName() + " QakActor22Fsm | 
+      if(msgId.length() == 0) { //Per info
+        ColorsOut.out(getName() + " QakActor22Fsm | 
       in " + curState +	" adding an empty move",ColorsOut.BLUE);		
       }
     }

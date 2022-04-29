@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
  
-@RestController 	//annotates all the methods with @ResponseBody that embeds the return value in the body of HTTP answer
+//@RestController 	//annotates all the methods with @ResponseBody that embeds the return value in the body of HTTP answer
 public class MachineInterfaceController { 
     @Value("${machine.logo}")
     String appName;

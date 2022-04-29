@@ -1,27 +1,28 @@
-package unibo.wenvUsage22.cleaner.fsm;
+package unibo.wenvUsage22.cleaner.prototype0;
 
 /*
  * 
  */
 
 import it.unibo.kactor.IApplMessage;
-import unibo.actor22.QakActor22FsmAnnot;
-import unibo.actor22.annotations.*;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
+import unibo.actor22.QakActor22FsmAnnot;
+import unibo.actor22.annotations.*;
+import unibo.wenvUsage22.cleaner.fsm.WsConnApplObserver;
 import unibo.wenvUsage22.common.VRobotMoves;
 
 
-public class ActorRobotCleanerFsm extends QakActor22FsmAnnot{
+public class RobotCleaner extends QakActor22FsmAnnot{
 	private Interaction2021 conn;
  
 	private int numIter     = 0;
 	private int numIterOk   = 5;
 	private int turnStep    = 800;   //600 => too fast
  	
-	public ActorRobotCleanerFsm(String name) {
+	public RobotCleaner(String name) {
 		super(name);
 	}
 

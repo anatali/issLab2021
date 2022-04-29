@@ -1,8 +1,10 @@
 package unibo.wenvUsage22.actors.fsm;
 
 import it.unibo.kactor.IApplMessage;
-import unibo.wenvUsage22.actors.QakActor22FsmAnnot;
-import unibo.wenvUsage22.annot.State;
+import unibo.actor22.QakActor22FsmAnnot;
+import unibo.actor22.annotations.State;
+ 
+ 
 import unibo.wenvUsage22.common.ApplData;
 
 public class ActorFsm1 extends QakActor22FsmAnnot{
