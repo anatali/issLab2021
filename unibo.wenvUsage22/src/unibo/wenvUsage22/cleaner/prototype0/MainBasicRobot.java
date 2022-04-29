@@ -23,7 +23,7 @@ public class MainBasicRobot {
 
 	public void terminate() {
 		CommUtils.aboutThreads("Before end - ");		
-		CommUtils.delay(60000); //Give time to work ...
+		CommUtils.delay(600000); //Give time to work ...
 		CommUtils.aboutThreads("At exit - ");		
 		System.exit(0);
 	}
