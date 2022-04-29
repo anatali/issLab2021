@@ -336,13 +336,28 @@ Distribuzione
     docker build -t webspringrobot:1.0.1 .  //guarda Dockerfile
 
     docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  //controlla se l'immagine è in esecuzione
-    ---------------------------------------------------------------------------------------------------------
+     
     digita docker_password.txt | login docker --username natbodocker --password-stdin//Accedi a DockerHub
 
     tag docker webspringrobot:1.0.1 natbodocker/webspringrobot:1.0.1	//Tagga l'immagine
 
     docker push natbodocker/webspringrobot:1.0.1 	//Registra l'immagine
-    ---------------------------------------------------------------------------------------------------------
+     
 
     ATTENZIONE: verificare che nessun altro BasicStepRobot sia in esecuzione
-    docker-compose -f virtualrobotguistepper.yaml su
+    docker-compose -f virtualrobotguistepper.yaml up
+
+
+-----------------------------------------------
+Demo
+-----------------------------------------------
+
+ .. image::  ./_static/img/Spring/DemoRobot.PNG
+  :align: center 
+  :width: 70%
+
+
+- fare BasicRobot
+- usare TCP in browser per operare su BasicRobot
+- fare server per WsInteraction2021 per gli attori (un WebServer?)
+- fare wenvUsage22\cleaner\prototype0 con BasicCmdGui che attiva ....
