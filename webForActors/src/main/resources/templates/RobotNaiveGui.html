@@ -4,42 +4,13 @@
 <title>RobotNaiveGui</title>
 <body>
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
-<script language="javascript" type="text/javascript">
-const socket = new WebSocket('ws://localhost:8091/');
-  socket.onopen = function () { console.log("socket connected on 8091") };
 
-  	socket.onmessage = function(evt) { console.log(evt.data); };
+<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!--
+<script src="/webjars/jquery/jquery.min.js"></script>
 
-	socket.addEventListener('message', event => {
-	  document.getElementById("display").innerHTML += event.data +"<br/>"
-	});
-
-/*
-Invia comandi cril a VirtualRobot usando Ws-8091
-*/
-
-    function doMove(move, time) {
-        const moveJson = '{"robotmove":"'+ move + '", "time":'+time+'}'
-        console.log("doMove moveJson:" + moveJson);
-        if (socket && socket.bufferedAmount == 0) { socket.send(moveJson) }
-    }
-	
-$(document).ready(function(){ 
-	$( "#lsocket" ).click(function() {  
-		if (socket.bufferedAmount == 0) socket.send( "{\"robotmove\":\"turnLeft\", \"time\": 300}" );  });
-});
-
-$(function () {
-	$( "#rsocket" ).click(function() {  doMove("turnRight", 2000);    })  
- 
-	$( "#wsocket" ).click(function() {  doMove("moveForward", 1000);  })
- 
-	$( "#ssocket" ).click(function() { doMove("moveBackward", 1000);  })
-		
-	$( "#hsocket" ).click(function() { doMove("alarm", 100);         })
- 
-});
-</script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+-->
 
 <h3>CONFIGURATION</h3>
 <form action="configure" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
@@ -47,23 +18,28 @@ $(function () {
  <input type="text" id="configurespec" name="move" value="...">
  <input type="submit" value="set basicrobot address (the port is 8020)">
 </form>
-<p>PLEASE, activate a basicrobot</p>
+<p>Activate the basicrobot</p>
+
+  <form action="robotmove" method="post"><button name="move" value="t">START</button></form>
+
+
+<h4>Commands</h4>
 
 <center>
  <table>
   <tr><td style="width:50%">
    <center>
-    <h4>Commands</h4>
     <table style="width:50%">
      <tbody>
+
      <tr>
       <td > <form action="robotmove" method="post"><button name="move" value="w">w</button></form> </td>
       <td> <form action="robotmove" method="post"><button name="move" value="s">s</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="d">d</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="a">a</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="h">h</button></form> </td>
      </tr>
-     <tr>
-      <td> <form action="robotmove" method="post"><button name="move" value="r">r</button></form> </td>
-      <td> <form action="robotmove" method="post"><button name="move" value="l">l</button></form> </td>
-     </tr>
+     <!--
      <tr>
       <td> <form action="robotmove" method="post"><button name="move" value="x">x</button></form> </td>
       <td> <form action="robotmove" method="post"><button name="move" value="z">z</button></form> </td>
@@ -72,6 +48,7 @@ $(function () {
       <td> <form action="robotmove" method="post"><button name="move" value="p">p</button></form> </td>
       <td> <form action="robotmove" method="post"><button name="move" value="h">h</button></form> </td>
      </tr>
+     -->
     </table>
    </center>
   </td>
@@ -90,5 +67,9 @@ $(function () {
 <hr/>
 <h3>DISPLAY AREA</h3>
 <div id = "display"></div>
+
+
+
+ <script src="wsminimal.js"></script>
 </body>
 </html>

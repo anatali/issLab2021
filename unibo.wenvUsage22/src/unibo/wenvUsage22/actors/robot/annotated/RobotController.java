@@ -5,8 +5,6 @@ import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.State;
-import unibo.actor22comm.utils.CommSystemConfig;
-import unibo.actor22comm.utils.CommUtils;
 import unibo.wenvUsage22.common.ApplData;
 
 public class RobotController extends QakActor22FsmAnnot{

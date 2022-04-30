@@ -29,6 +29,7 @@ iss22
    Actors22
    RobotCleaner
    WebApplications
+   WebSockets
 
 
 Indices and tables
