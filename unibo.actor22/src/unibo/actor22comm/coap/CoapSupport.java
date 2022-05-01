@@ -8,6 +8,7 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.ApplMessageType;
+import unibo.actor22comm.utils.CommUtils;
 
 
 class MyHandler implements CoapHandler {
@@ -64,23 +65,25 @@ private CoapObserveRelation relation = null;
 	
 	
 	public boolean updateResourceWithValue( String data ) {
-     	ApplMessage m = new ApplMessage(
-    	        "sonar", ApplMessageType.event.toString(),
-            	"sonarRasp", "none", "sonar("+data+")", "1" , null);
-		return updateResource(m.toString());
+//     	ApplMessage m = new ApplMessage(
+//    	        "sonar", ApplMessageType.event.toString(),
+//            	"sonarRasp", "none", "sonar("+data+")", "1" , null);
+//		return updateResource(m.toString());
+		return true;
 	}
 	
 	public void test() {
 		String v = readResource();
 		System.out.println("CoapSupport | v=" + v);
-		updateResourceWithValue("55");
- 		v = readResource();
- 		System.out.println("CoapSupport | v=" + v);		
+//		updateResourceWithValue("55");
+// 		v = readResource();
+// 		System.out.println("CoapSupport | v=" + v);		
+		CommUtils.delay(300000);
 	}
 	
 	public static void main(String[] args) {
 		//CoapSupport cs = new CoapSupport("coap://localhost:5683","robot/sonar");
-		CoapSupport cs = new CoapSupport("coap://localhost:5683","ctx/basicrobot");
+		CoapSupport cs = new CoapSupport("coap://localhost:8083","actors/a1");
 		cs.test();		
 	}
 	

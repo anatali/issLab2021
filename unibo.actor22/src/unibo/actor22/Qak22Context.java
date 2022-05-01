@@ -32,7 +32,7 @@ public class Qak22Context {
     private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
 
     
-    public static  Resource  coapResourceRoot;
+//    public static  Resource  coapResourceRoot;
     			//new CoapResourceCtx("resourceCtx", null);	//from qak
 //    private static final CoapServer serverCoap = new CoapServer(8055);
     
@@ -43,9 +43,9 @@ public class Qak22Context {
 //    	serverCoap.add(  resourceCtx );
 //    	serverCoap.start();
     	
-    	CoapApplServer serverCoap = CoapApplServer.getTheServer(); //starts also ...
-    	coapResourceRoot          = serverCoap.getRoot();
-		ColorsOut.out("Qak22Context | initCoap coapResourceRoot=" + coapResourceRoot, ColorsOut.WHITE_BACKGROUND);
+    	CoapApplServer serverCoap = new CoapApplServer(port); //starts also ...
+//    	coapResourceRoot          = serverCoap.getRoot();
+//		ColorsOut.out("Qak22Context | initCoap coapResourceRoot=" + coapResourceRoot, ColorsOut.WHITE_BACKGROUND);
    	     
     }
     
@@ -194,9 +194,9 @@ public class Qak22Context {
              ColorsOut.out( "Qak22Context | CREATED LOCAL ACTOR: "+ actorName, ColorsOut.MAGENTA );
              a.setContext22Name( refCtx.name() );
 
-         	ColorsOut.outappl("Qak22Context | adding as coap resource " + a.getName(), ColorsOut.WHITE_BACKGROUND);        		
-         	coapResourceRoot.add( a ); 
-
+         	ColorsOut.outappl("Qak22Context | adding as coap resource " + a.getName(), ColorsOut.YELLOW_BACKGROUND);        		
+         	//coapResourceRoot.add( a ); 
+         	CoapApplServer.getTheServer().addCoapResource(a, "actors");
              //attivo l'attore ???
              //Qak22Util.sendAMsg( SystemData.activateActor(refCtx.name(),actorName) );
              

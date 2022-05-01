@@ -332,6 +332,18 @@ Demo
 - La  webapp  è un modo per dotare il BasicRobot di un server HTTP/WS
 
 
+``QakActor22`` diventa una risorsa CoAP perchè ``Qak22Context.InitCoap`` genera un ``CoapApplServer`` che
+ha come root una ``CoapResourse`` denominata **actors**.
+
+Per interagire via CoAP con un ``QakActor22`` occorre creare una ``CoapConnection``
+
+ ``Interaction2021 coapConn = new CoapConnection("localhost:8083", "actors/<ACTORNAME>");``
+
+Quindi si possono inviare messaggi:
+
+   ``coapConn.forward( "hello") ; ``
+
+
 -----------------------------------------------
 BasicRobot server extension
 -----------------------------------------------

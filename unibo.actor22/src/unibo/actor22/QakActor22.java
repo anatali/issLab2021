@@ -1,5 +1,8 @@
 package unibo.actor22;
 
+import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED;
+
+import java.net.InetAddress;
 import java.util.HashMap;
 
 import org.eclipse.californium.core.server.resources.CoapExchange;
@@ -160,7 +163,7 @@ String ctx22Name ;
 	public void updateResourceRep22( String v  ){
         setActorResourceRep(v);
         ColorsOut.out("&&&&&&&&&&& updateResourceRep22 " + v);
-        ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
+        //ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
         changed();             //DO NOT FORGET!!!
    }
 	
@@ -170,5 +173,21 @@ String ctx22Name ;
         ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
 		exchange.respond( getActorResourceRep() );
 	}
-	
+	@Override
+	public void handlePOST(CoapExchange exchange) {
+ 	}
+ 	@Override
+	public void handlePUT(CoapExchange exchange) {
+ 		ColorsOut.outappl(getName() + " | handlePUT addr=" + exchange.getSourceAddress(), ColorsOut.BgYellow );
+ 		String arg = exchange.getRequestText() ;
+		elaboratePut( arg, exchange.getSourceAddress() );
+		changed();
+		ColorsOut.out(getName() + " | after handlePUT arg=" + arg + " CHANGED="+ CHANGED );
+		exchange.respond(""+CHANGED);
+	}
+
+ 	protected  void elaboratePut(String req, InetAddress callerAddr) {
+		ColorsOut.out(getName() + " | elaboratePut TODO+" + req  );
+ 		
+ 	};
 }
