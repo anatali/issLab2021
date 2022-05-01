@@ -20,7 +20,9 @@ import unibo.actor22comm.utils.CommUtils;
 public abstract class QakActor22 extends ActorBasic{
 
 protected kotlin.coroutines.Continuation<? super Unit> mycompletion;
-String ctx22Name ;
+protected String ctx22Name ;
+protected String actorResourceRep = "unbound";
+
 	public QakActor22(@NotNull String name ) {      
 		super(name, QakContext.Companion.createScope(), false, true, false, 50);
         if( Qak22Context.getActor(name) == null ) {
@@ -161,8 +163,8 @@ String ctx22Name ;
     //-----------------------------------------
     //@Override
 	public void updateResourceRep22( String v  ){
-        setActorResourceRep(v);
-        ColorsOut.out("&&&&&&&&&&& updateResourceRep22 " + v);
+		actorResourceRep = v;
+        ColorsOut.out("&&&&&&&&&&& updateResourceRep22 CHANGE!!! " + actorResourceRep);
         //ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
         changed();             //DO NOT FORGET!!!
    }
@@ -170,8 +172,8 @@ String ctx22Name ;
 	@Override
 	public void handleGET( CoapExchange exchange) {
         ColorsOut.out("&&&&&&&&&&& handleGET " + exchange);
-        ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
-		exchange.respond( getActorResourceRep() );
+        //ColorsOut.out("&&&&&&&&&&& actorResourceRep=" + actorResourceRep );
+		exchange.respond( actorResourceRep );
 	}
 	@Override
 	public void handlePOST(CoapExchange exchange) {
@@ -181,6 +183,7 @@ String ctx22Name ;
  		ColorsOut.outappl(getName() + " | handlePUT addr=" + exchange.getSourceAddress(), ColorsOut.BgYellow );
  		String arg = exchange.getRequestText() ;
 		elaboratePut( arg, exchange.getSourceAddress() );
+		this.actorResourceRep = arg;
 		changed();
 		ColorsOut.out(getName() + " | after handlePUT arg=" + arg + " CHANGED="+ CHANGED );
 		exchange.respond(""+CHANGED);

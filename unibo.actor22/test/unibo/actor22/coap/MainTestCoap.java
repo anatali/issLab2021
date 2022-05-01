@@ -15,33 +15,40 @@ import unibo.actor22comm.utils.CommUtils;
 @Actor22(name = "a1",contextName="ctx",implement = TestCoap.class)
 public class MainTestCoap {
  
+	
 	protected void configure() throws Exception {
-		new Thread() {
-			public void run() {
-				CoapSupport cs       = new CoapSupport("coap://localhost:8083","actor/a1");
-				CoapApplObserver obs = new CoapApplObserver("localhost:8083", "actor/a1");
-				cs.observeResource( obs );
-				//CommUtils.delay(1000);
-//				ColorsOut.outappl( "main connect .... "  , ColorsOut.YELLOW_BACKGROUND );
-//				Interaction2021 coapConn = new CoapConnection("localhost:8083", "actors/a1");
-				//ColorsOut.outappl( "main coapConn=" + coapConn, ColorsOut.YELLOW_BACKGROUND );
-
-//				try {
-//					coapConn.forward( "hello") ;
-//				} catch (Exception e) {
-//					ColorsOut.outerr(""+e.getMessage() );
-//					//e.printStackTrace();
-//				} //
-			}
-		}.start();	
-		
 		CommSystemConfig.tracing = true;
 		sysUtil.INSTANCE.setTrace(true);
  		Qak22Context.configureTheSystem(this);
 		CommUtils.delay(1000);  //Give time to start ...
 		Qak22Context.showActorNames();
 		
-	
+		new ActorObserver().observe();
+ 
+/*		
+		
+		new Thread() {
+		public void run() {
+			CoapSupport cs       = new CoapSupport("coap://localhost:8083","actor/a1");
+			CoapApplObserver obs = new CoapApplObserver("localhost:8083", "actor/a1");
+			cs.observeResource( obs );
+			//CommUtils.delay(1000);
+			ColorsOut.outappl( "main connect .... "  , ColorsOut.YELLOW_BACKGROUND );
+			Interaction2021 coapConn = new CoapConnection("localhost:8083", "actors/a1");
+			ColorsOut.outappl( "main coapConn=" + coapConn, ColorsOut.YELLOW_BACKGROUND );
+			try {
+				coapConn.forward( "hello") ;
+				CommUtils.delay(1000);
+				String answer = coapConn.request( "");
+				ColorsOut.outappl( "main answer=" + answer, ColorsOut.YELLOW_BACKGROUND );
+				
+			} catch (Exception e) {
+				ColorsOut.outerr(""+e.getMessage() );
+				//e.printStackTrace();
+			} //
+	}
+}.start();	
+	*/
 		
  	}
 	

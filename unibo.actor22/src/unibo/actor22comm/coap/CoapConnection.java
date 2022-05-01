@@ -59,7 +59,7 @@ private String name = "CoapSprt";
 	
 	@Override
 	public String request(String query)   {
-  		ColorsOut.out(name + " | request query=" + query + " url="+url );
+  		ColorsOut.outappl(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
 		String param = query.isEmpty() ? "" :  "?q="+query;
   		ColorsOut.out(name + " | param=" + param );
 		client.setURI(url+param);
