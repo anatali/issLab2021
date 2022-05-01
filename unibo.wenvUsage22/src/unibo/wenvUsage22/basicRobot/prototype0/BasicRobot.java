@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.cleaner.prototype0;
+package unibo.wenvUsage22.basicRobot.prototype0;
 
 /*
  * BasicRobot riceve comandi aril da NaiveGui
@@ -6,17 +6,22 @@ package unibo.wenvUsage22.cleaner.prototype0;
  */
 
 import it.unibo.kactor.IApplMessage;
+ 
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.State;
 import unibo.actor22.annotations.Transition;
+import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.cleaner.fsm.WsConnApplObserver;
-import unibo.wenvUsage22.common.VRobotMoves;
 import unibo.wenvUsage22.common.ApplData;
+import unibo.wenvUsage22.common.VRobotMoves;
+
+ 
+
 
 public class BasicRobot extends QakActor22FsmAnnot{
 	
@@ -40,7 +45,7 @@ public class BasicRobot extends QakActor22FsmAnnot{
 			default: return CommUtils.buildDispatch(getName(),   robotCmdId, "alarm(300)",       robotName);
 		}		 
 	}
-	private  String move( String cmd  ) {
+	private  String arilToCril( String cmd  ) {
 		switch( cmd ) {
 			case "w" : return  ApplData.moveForward(300) ;
 			case "s" : return  ApplData.moveBackward(300);		
@@ -52,11 +57,8 @@ public class BasicRobot extends QakActor22FsmAnnot{
 	}
 
 	private void robotMove( String cmd ) {
-		//Dovrebbe un supporto che trasla il comando cmd in cril 
 		try {
-//			IApplMessage cmdMsg = move( cmd );
-//			ColorsOut.outappl(getName() + " | robotMove cmdMsg:" + cmdMsg,  ColorsOut.BLUE);
-			conn.forward( move(cmd) );
+			conn.forward( arilToCril(cmd) );
 		}catch( Exception e) {
 			ColorsOut.outerr( getName() +  " | robotMove ERROR:" +  e.getMessage() );
 		}			
@@ -64,33 +66,62 @@ public class BasicRobot extends QakActor22FsmAnnot{
 	
 	protected void init() {
 		//Dovrebbe distingure tra diversi tipi di robot e usare un supporto che realizza
- 		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.BLUE);
+ 		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.YELLOW);
 		conn = WsConnection.create("localhost:8091" ); 
-		IObserver robotMoveObserver = new WsConnApplObserver(getName());
+		IObserver robotMoveObserver = new WsConnApplObserver(getName()); //genera endMoveOk / endMoveKo
 		((WsConnection)conn).addObserver(robotMoveObserver);
- 		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
+ 		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.YELLOW);
 	}
-	
-	@State( name = "start", initial=true)
-	@Transition( state = "work"    )  //empty move
- 	protected void start( IApplMessage msg ) {
+
+	@State( name = "activate", initial=true)
+	@Transition( state = "start",   msgId= SystemData.startSysCmdId  )
+	protected void activate( IApplMessage msg ) {
 		outInfo(""+msg);
 		init();
-	}
-	
-	@State( name = "work" )
- 	@Transition( state = "work",     msgId="cmd"  ) 
-//	@Transition( state = "turnGoingDown", msgId="endMoveKo"  ) 
-	protected void work( IApplMessage msg ) {
-		outInfo(""+msg);
-		String cmd = msg.msgContent();
-		outInfo("cmd="+cmd);
-		//robotMove(  "a" ); 
-
-	//if( msg.msgId().equals("robotCmd") ) forward( VRobotMoves.move(msg.msgContent(), getName(), getName()));
  	}
-	
- 	
+
+	@State( name = "start" )
+	@Transition( state = "work", msgId="move"  )
+	protected void start( IApplMessage msg ) {
+		outInfo(""+msg); //activate ...
+	}
+
+
+	@State( name = "work" )
+ 	//@Transition( state = "work", msgId="move"  )
+	//@Transition( state = "waitMoveResult" )
+	@Transition( state = "handleOk", msgId="endMoveOk"  )
+	@Transition( state = "handleKo", msgId="endMoveKo"  )
+	protected void work( IApplMessage msg ) {
+		outInfo(""+msg);  //msg(move,dispatch,,basicrobot,w,3)
+		String cmd = msg.msgContent().replace("'","");
+		//VRobotMoves.step(getName(), conn );
+		//VRobotMoves.moveForward( getName(),conn,300 );
+		robotMove(cmd);
+ 	}
+
+	@State( name = "handleOk" )
+	@Transition( state = "work", msgId="move"  )
+ 	protected void handleOk( IApplMessage msg ) {
+		outInfo(""+msg);
+		this.updateResourceRep22("testttttttttttttttttttt");
+//		try {
+//			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( msg.toString() ) );
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+ 	}
+	@State( name = "handleKo" )
+	@Transition( state = "work", msgId="move"  )
+	protected void handleKo( IApplMessage msg ) {
+		outInfo(""+msg);
+//		try {
+//			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( msg.toString() ) );
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+	}
+
 	
 	@State( name = "endJob" )
 	protected void endJob( IApplMessage msg ) {

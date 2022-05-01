@@ -1,15 +1,16 @@
-package  unibo.Robots;
+package unibo.actor22comm.coap;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
+
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
-
-
-public class CoapConnection implements Interaction2021 {
+  
+ 
+public class CoapConnection implements Interaction2021  {
 private CoapClient client;
 private String url;
 private String name = "CoapSprt";
@@ -22,8 +23,9 @@ private String name = "CoapSprt";
  		setCoapClient(address,path);
 	}
 	
-	protected void setCoapClient(String address, String path) {
-		url            = "coap://"+address + ":5683/"+ path;
+	protected void setCoapClient(String addressWithPort, String path) {
+		//url            = "coap://"+address + ":5683/"+ path;
+		url            = "coap://"+addressWithPort + "/"+ path;
 		client          = new CoapClient( url );
  		client.useExecutor(); //To be shutdown
 		ColorsOut.out(name + " | STARTS client url=" +  url,ColorsOut.ANSI_YELLOW  ); //+ " client=" + client );
@@ -90,24 +92,29 @@ private String name = "CoapSprt";
 	}
 
 	@Override
-	public void sendALine(String s) throws Exception {
-
+	public void sendALine(String msg) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void sendALine(String s, boolean b) throws Exception {
-
+	public void sendALine(String msg, boolean isAnswer) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public String receiveALine() throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void closeConnection() throws Exception {
-
+		// TODO Auto-generated method stub
+		
 	}
+
 }
 /*
 Log4j by default looks for a file called log4j.properties or log4j.xml on the classpath

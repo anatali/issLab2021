@@ -1,6 +1,8 @@
 package unibo.actor22;
 
 import java.util.HashMap;
+
+import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.jetbrains.annotations.NotNull;
 import it.unibo.kactor.*;
 import kotlin.Unit;
@@ -20,6 +22,13 @@ String ctx22Name ;
 		super(name, QakContext.Companion.createScope(), false, true, false, 50);
         if( Qak22Context.getActor(name) == null ) {
         	Qak22Context.addActor( this );
+//        	QakContext qakCtx = this.getContext();
+//        	if( qakCtx != null ) qakCtx.addActor( this ); 
+//        	else {
+//        		ColorsOut.outerr("WARNING: no qakcontext");
+//        		Qak22Context.resourceCtx.addActorResource( this ); 
+//        		
+//        	}
         	ColorsOut.outappl( getName()  + " | CREATED " , ColorsOut.CYAN);
         }
         else ColorsOut.outerr("QakActor22 | WARNING: an actor with name " + name + " already exists");	
@@ -146,5 +155,20 @@ String ctx22Name ;
 //		}
 //	}    
 
+    //-----------------------------------------
+    //@Override
+	public void updateResourceRep22( String v  ){
+        setActorResourceRep(v);
+        ColorsOut.out("&&&&&&&&&&& updateResourceRep22 " + v);
+        ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
+        changed();             //DO NOT FORGET!!!
+   }
+	
+	@Override
+	public void handleGET( CoapExchange exchange) {
+        ColorsOut.out("&&&&&&&&&&& handleGET " + exchange);
+        ColorsOut.out("&&&&&&&&&&& getActorResourceRep " + getActorResourceRep() );
+		exchange.respond( getActorResourceRep() );
+	}
 	
 }

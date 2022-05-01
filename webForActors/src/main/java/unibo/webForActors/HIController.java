@@ -25,15 +25,16 @@ import unibo.actor22comm.utils.CommUtils;
 
 @Controller
 public class HIController {
-    private static final String robotCmdId = "move";
-    private static  String robotName  = "";
+    private static final String robotCmdId = "cmd";
+    private static  String robotName  = "basicrobot";
 
     private Interaction2021 conn;
 
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
         //createRobotCleaner();
-        createBasicRobot();
+        //createBasicRobot();
+        Qak22Context.setActorAsRemote(robotName, "8020", "localhost", ProtocolType.tcp);
     }
 
     protected void createRobotCleaner(){

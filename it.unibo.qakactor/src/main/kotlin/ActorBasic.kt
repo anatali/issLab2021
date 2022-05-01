@@ -529,7 +529,8 @@ KNOWLEDGE BASE
 
     fun updateResourceRep( v : String){
          ActorResourceRep = v
-        changed()             //DO NOT FORGET!!!
+         println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% updateResourceRep " + v)
+         changed()             //DO NOT FORGET!!!
     }
     fun geResourceRep() : String{
 		return ActorResourceRep
