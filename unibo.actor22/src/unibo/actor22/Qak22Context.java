@@ -43,9 +43,10 @@ public class Qak22Context {
 //    	serverCoap.add(  resourceCtx );
 //    	serverCoap.start();
     	
-    	CoapApplServer serverCoap = CoapApplServer.getTheServer();
-    	coapResourceRoot = serverCoap.getRoot();
-    	//serverCoap.start();
+    	CoapApplServer serverCoap = CoapApplServer.getTheServer(); //starts also ...
+    	coapResourceRoot          = serverCoap.getRoot();
+		ColorsOut.out("Qak22Context | initCoap coapResourceRoot=" + coapResourceRoot, ColorsOut.WHITE_BACKGROUND);
+   	     
     }
     
     public static final String actorReplyPrefix = "arply_";

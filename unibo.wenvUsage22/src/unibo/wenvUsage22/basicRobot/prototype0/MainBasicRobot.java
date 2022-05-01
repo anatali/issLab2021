@@ -6,6 +6,7 @@ import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.Actor22;
 import unibo.actor22.annotations.Context22;
 import unibo.actor22comm.SystemData;
+import unibo.actor22comm.coap.CoapSupport;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
@@ -39,9 +40,10 @@ public class MainBasicRobot {
 		
 		new Thread() {
 			public void run() {
-				CoapSupport cs = new CoapSupport("coap://localhost:8020","actor/basicrobot");
+				CoapSupport cs = new CoapSupport("coap://localhost:8020","ctx/basicrobot");
 				//CoapApplObserver obs = new CoapApplObserver("localhost:8020", "actor/basicrobot");
 				//cs.observeResource( obs );
+				CommUtils.delay(2000);
 				String result = cs.readResource();
 				ColorsOut.out( " result=" + result );
 			}

@@ -38,6 +38,7 @@ private CoapObserveRelation relation = null;
 	
 	public String readResource(   ) {
 		CoapResponse respGet = client.get( );
+		if( respGet == null ) return "CoapSupport : sorry no respGet";
 		System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
 		return respGet.getResponseText();
 	}
