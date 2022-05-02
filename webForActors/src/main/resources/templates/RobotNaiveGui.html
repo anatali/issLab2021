@@ -13,12 +13,12 @@
 -->
 
 <h3>CONFIGURATION</h3>
-<form action="configure" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
+<form action="configure" method="post">
  <label for="configurespec">address</label>
  <input type="text" id="configurespec" name="move" value="">
  <input type="submit" value="connect">
 </form>
-
+<!-- the form-data is sent to the page specified in the action attribute -->
   <form action="robotmove" method="post"><button name="move" value="t">START the robot</button></form>
 <br/><br/>
 <hr/>
@@ -31,7 +31,7 @@
    <center>
     <table style="width:50%">
      <tbody>
-
+     <!-- the form-data is sent to the page specified in the action attribute -->
      <tr>
       <td > <form action="robotmove" method="post"><button name="move" value="w">w</button></form> </td>
       <td> <form action="robotmove" method="post"><button name="move" value="s">s</button></form> </td>

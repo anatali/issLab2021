@@ -58,7 +58,14 @@ protected String robotName  = "vr";
 			ColorsOut.outerr( actorOwnerName +  " | robotMove ERROR:" +  e.getMessage() );
 		}			
 	}
-	
+
+	public void virtualRobotMove( String cmd ) {
+		try {
+			conn.forward( cmd );
+		}catch( Exception e) {
+			ColorsOut.outerr( actorOwnerName +  " | robotMove ERROR:" +  e.getMessage() );
+		}
+	}
 
 
 }

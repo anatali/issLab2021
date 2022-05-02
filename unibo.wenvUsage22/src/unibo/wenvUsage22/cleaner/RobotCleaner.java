@@ -1,4 +1,4 @@
-package unibo.Robots.cleaner;
+package unibo.wenvUsage22.cleaner;
 
 
 /*
@@ -6,14 +6,14 @@ package unibo.Robots.cleaner;
  */
 
 import it.unibo.kactor.IApplMessage;
-
-import unibo.Robots.common.VRobotMoves;
-import unibo.Robots.common.WsConnApplObserver;
+ 
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
+import unibo.wenvUsage22.basicRobot.prototype0.WsConnApplObserver;
+import unibo.wenvUsage22.common.VRobotMoves;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.*;
 

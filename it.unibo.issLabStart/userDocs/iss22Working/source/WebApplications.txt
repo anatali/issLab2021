@@ -14,6 +14,9 @@
 .. _REST : https://en.wikipedia.org/wiki/Representational_state_transfer
 .. _HATEOAS: https://en.wikipedia.org/wiki/HATEOAS
 
+.. _User Interface: https://en.wikipedia.org/wiki/User_interface
+.. _WebAppl: https://en.wikipedia.org/wiki/Web_application
+.. _DevsTools in IntelliJ: https://www.youtube.com/watch?v=BvIM9gNTDM4
 
 ==================================
 WebApplications
@@ -466,4 +469,25 @@ Distribuzione
     ATTENZIONE: verificare che nessun altro BasicStepRobot sia in esecuzione
     docker-compose -f virtualrobotguistepper.yaml up
 
-    
+
+
+------------------------------------
+BasicRobot appunti
+------------------------------------
+
+    #. Robot: il robot fisico o virtuale
+#. BasicRobotAdapter : un POJO
+ 
+   - si connette a WENV tramite WS usando il nome dell'ownerActor
+   - associa alla WsConnection un WsConnApplObserver che invia endMOveOk o endMoveKo al ownerActor
+
+#. BasicRobotActor : un attore CoAP observable che opera in TCP sulla porta 8083
+ 
+   - è l'owner di BasicRobotAdapter, che viene usato come POJO (metodo robotMove) per inviare comandi aril 
+     (conevertiti in cril) al Robot
+   - crea ActorObserver che usa un CoAP client per visualizzare i cambi di stato di BasicRobotActor
+
+#. webForActors: una applicazione SpringBoot
+
+   - WebSocketConfiguration associa WebSocketHandler che fornisce un metodo sendToAll invocato da BasicRobot
+     o meglio da un ActorObserver specializzato

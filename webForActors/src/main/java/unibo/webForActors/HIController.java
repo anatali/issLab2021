@@ -26,26 +26,31 @@ import unibo.actor22comm.utils.CommUtils;
 @Controller
 public class HIController {
     private static final String robotCmdId = "move";
-    private static  String robotName  = "basicrobot";
+    private static  String robotName       = "basicrobot";
+    private static boolean cleanerAppl     = true;
 
     private Interaction2021 conn;
+    private String mainPage = "";
 
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
-        //createRobotCleaner();
-        createBasicRobot();
+        if(cleanerAppl) createRobotCleaner();
+        else createBasicRobot();
     }
 
     protected void createRobotCleaner(){
+        CommSystemConfig.tracing = false;
         robotName  = MainRobotCleaner.myName;
+        mainPage   = "RobotCleanerGui";
         CommUtils.aboutThreads("Before start - ");
         MainRobotCleaner appl = new MainRobotCleaner( );
         appl.doJob();
         //appl.terminate();
     }
     protected void createBasicRobot(){
-        CommSystemConfig.tracing = true;
+        CommSystemConfig.tracing = false;
         robotName  = MainBasicRobot.myName;
+        mainPage   = "RobotNaiveGui";
         CommUtils.aboutThreads("Before start - ");
         MainBasicRobot appl = new MainBasicRobot( );
         appl.doJob();
@@ -55,11 +60,15 @@ public class HIController {
         //ColorsOut.outappl("HIController | moveAril cmd:" + cmd , ColorsOut.BLUE);
         switch( cmd ) {
             case "w" : return CommUtils.buildDispatch("webgui", robotCmdId, "w", robotName);
-            case "s" : return CommUtils.buildDispatch("webgui", robotCmdId, "s",robotName);
-            case "a" : return CommUtils.buildDispatch("webgui", robotCmdId, "a",    robotName);
-            case "d" : return CommUtils.buildDispatch("webgui", robotCmdId, "d",   robotName);
-            case "h" : return CommUtils.buildDispatch("webgui", robotCmdId, "h",       robotName);
-            default: return CommUtils.buildDispatch("webgui",   robotCmdId, "h",       robotName);
+            case "s" : return CommUtils.buildDispatch("webgui", robotCmdId, "s", robotName);
+            case "a" : return CommUtils.buildDispatch("webgui", robotCmdId, "a", robotName);
+            case "d" : return CommUtils.buildDispatch("webgui", robotCmdId, "d", robotName);
+            case "h" : return CommUtils.buildDispatch("webgui", robotCmdId, "h", robotName);
+            case "start"  : return CommUtils.buildDispatch("webgui", robotCmdId, "start",  robotName);
+
+            case "stop"   : return CommUtils.buildDispatch("webgui", "stop", "do",   robotName);
+            case "resume" : return CommUtils.buildDispatch("webgui", "resume", "do", robotName);
+            default:   return CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
         }
     }
     @Value("${spring.application.name}")
@@ -68,7 +77,7 @@ public class HIController {
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("arg", appName);
-        return "RobotNaiveGui";
+        return mainPage;
     }
 
     @PostMapping("/configure")
@@ -77,7 +86,7 @@ public class HIController {
         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         conn = connToRobot.createConnection(addr, 8083);
         Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
-        return "RobotNaiveGui";
+        return mainPage;
     }
 
     @PostMapping("/robotmove")
@@ -85,7 +94,7 @@ public class HIController {
                      //String @RequestParam(name="move", required=false, defaultValue="h")robotmove  )  {
         //sysUtil.colorPrint("HIController | param-move:$robotmove ", Color.RED)
         ColorsOut.outappl("HIController | doMove:" + move + " robotName=" + robotName, ColorsOut.BLUE);
-        if( move.equals("t")){
+        if( move.equals("t")){  //Start
             Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
         }else{
             try {
@@ -94,10 +103,9 @@ public class HIController {
                 conn.forward( msg );
             } catch (Exception e) {
                 ColorsOut.outerr("HIController | doMove ERROR:"+e.getMessage());
-                //e.printStackTrace();
             }
         }
-        return "RobotNaiveGui";
+        return mainPage;
     }
 
     @ExceptionHandler

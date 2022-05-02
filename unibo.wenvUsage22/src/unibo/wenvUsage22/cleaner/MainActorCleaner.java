@@ -11,7 +11,8 @@ import unibo.wenvUsage22.common.ApplData;
 
 
 @Context22(name = "pcCtx", host = "localhost", port = "8083")
-@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
+//@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
+@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
 public class MainActorCleaner {
 	
 	public static final String myName = "cleaner";

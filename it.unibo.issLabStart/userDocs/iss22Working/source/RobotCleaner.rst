@@ -5,13 +5,16 @@
 
 
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
+.. _Macchina di Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
 
 ==============================
 RobotCleaner
 ==============================
 
+
+
 -------------------------------------------
-RobotCleaner: requisiti
+Aprile 2002: requisiti
 -------------------------------------------
 Muovere il :ref:`VirtualRobot` in modo da coprire tutta la superficie di una stanza vuota.
 
@@ -177,29 +180,74 @@ Può essere opportuno introdurre un linguaggio di comando 'technology-independen
 denominiamo :blue:`aril` (**Abstract Robot Interaction Lanaguage**).
 
 
--------------------------------------------
-RobotCleaner: prototipo dopo l'analisi 
-------------------------------------------- 
+
 
 :worktodo:`WORKTODO: formalizzare l'analisi`
 
-- Occorre definire un modello del sistema che descrive in modo 'formale' (comprensibile/eseguibile da una macchina)  
+ 
+
+-------------------------------------------
+Maggio 20022: prototipo dopo l'analisi 
+------------------------------------------- 
+
+- Occorre definire un **modello** del sistema che descrive in modo 'formale' (comprensibile/eseguibile da una macchina)  
   il risultato che l'analista intende esporre e fornire al progettista come punto di partenza per lo sviluppo.
 
 
-#. Robot: il robot fisico o virtule
-#. BasicRobotAdapter : un POJO
- 
-   - si connette a WENV tramite WS usando il nome dell'ownerActor
-   - associa alla WsConnection un WsConnApplObserver che invia endMOveOk o endMoveKo al ownerActor
+++++++++++++++++++++++++++++++++++++
+RobotCleaner: Architettura
+++++++++++++++++++++++++++++++++++++
 
-#. BasicRobotActor : un attore CoAP observable che opera in TCP sulla porta 8083
- 
-   - è l'owner di BasicRobotAdapter, che viene usato come POJO (metodo robotMove) per inviare comandi aril 
-     (conevertiti in cril) al Robot
-   - crea ActorObserver che usa un CoAP client per visualizzare i cambi di stato di BasicRobotActor
+Il sistema è formato da un componente proattivo che può essere modellato come un attore che opera in un nodo computazionale.
 
-#. webForActors: una applicazione SpringBoot
+Utlizzando il (meta)modello :ref:`QakActor22<QakActor22>`, la specifica formale può essere:
 
-   - WebSocketConfiguration associa WebSocketHandler che fornisce un metodo sendToAll invocato da BasicRobot
-     o meglio da un ActorObserver specializzato
+.. code:: Java
+
+   @Context22(name = "pcCtx", host = "localhost", port = "8083")
+   @Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
+   public class MainActorCleaner {
+      ...
+   }
+
+Il componente proattivo che definisce la business logic può essere formalizzato come una attore che opera come una 
+`Macchina di Moore`_
+
+++++++++++++++++++++++++++++++++++++
+RobotCleaner: Behaviour
+++++++++++++++++++++++++++++++++++++
+
+- Gli stati dell'automa che opera secondo un :ref:`Movimento per colonne` sono
+
+   ``activate, start, goingDown, turnGoingDown, goingUp, turnGoingUp, lastColumn, completed, endJob``
+
+- L'automa invia al robot comandi di movimento in avanti a passi come indicato in :ref:`Il passo del robot` e di rotazione, 
+  definiti nella classe ``VRobotMoves``.
+
+- L'automa comunica con il robot (il VirtualRobot) in modo asincrono (attraverso una WsConnection) e riceve dal supporto il messaggio 
+  endMoveOk oppura endMoveKo al termina di ogni movimento e rotazione
+
+- Le transizioni di stato avvegono in conseguenza della ricezione di un messaggio endMoveOk oppura endMoveKo
+
+.. image::  ./_static/img/Spring/RobotCleanerFsm.PNG
+    :align: center 
+    :width: 80% 
+
+
+
+.. code:: Java
+
+   public class RobotCleaner extends QakActor22FsmAnnot{
+
+   	@State( name = "activate", initial=true)
+	   @Transition( state = "start",   msgId= SystemData.startSysCmdId  )
+      protected void activate( IApplMessage msg ) { ... }
+
+
+      @State( name = "start" )
+      @Transition( state = "goingDown",   msgId="endMoveOk"  )
+      @Transition( state = "endJob",      msgId="endMoveKo"  )
+      protected void start( IApplMessage msg ) { ... }
+
+
+   }

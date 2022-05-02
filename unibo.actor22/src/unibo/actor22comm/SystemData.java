@@ -33,6 +33,8 @@ public class SystemData {
 	}
 
 	public static final String startSysCmdId = "activate";
+	public static final String stopSysCmdId  = "stop";
+	public static final String resumeSysCmdId= "resume";
 	public static final String demoSysId     = "demo";
 	public static final String haltSysCmdId  = "halt";
 	public static final String fireEventId   = "alarmFire";
@@ -44,6 +46,12 @@ public class SystemData {
 	}
 	public static final IApplMessage haltSysCmd(String sender, String receiver)   {
 		return CommUtils.buildDispatch(sender, haltSysCmdId, "do", receiver );
+	}
+	public static final IApplMessage stopSysCmd(String sender, String receiver)   {
+		return CommUtils.buildDispatch(sender, stopSysCmdId, "do", receiver );
+	}
+	public static final IApplMessage resumeSysCmd(String sender, String receiver)   {
+		return CommUtils.buildDispatch(sender, resumeSysCmdId, "do", receiver );
 	}
 
 	public static final IApplMessage startSysRequest(String sender, String receiver)   {

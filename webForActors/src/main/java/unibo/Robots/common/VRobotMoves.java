@@ -89,7 +89,7 @@ public class VRobotMoves {
 			turnLeft(name,conn);
 			CommUtils.delay(310);
 			//step( name,conn  );	  		
-			stepAfterTurn(name,conn,2000);      
+			stepAfterTurn(name,conn,2500);
   		}catch( Exception e) {
 			ColorsOut.outerr( name +  " | turnLeft ERROR:" +  e.getMessage() );
 		}	

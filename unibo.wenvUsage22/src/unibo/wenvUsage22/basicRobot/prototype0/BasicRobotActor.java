@@ -59,7 +59,7 @@ protected 	BasicRobotAdapter robotAdapter;
 	@Transition( state = "work", msgId="move"  )
  	protected void handleOk( IApplMessage msg ) {
 		outInfo(""+msg);
-		this.updateResourceRep22("testttttttttttttttttttt");
+		this.updateResourceRep("testttttttttttttttttttt");
 //		try {
 //			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( msg.toString() ) );
 //		} catch (IOException e) {
