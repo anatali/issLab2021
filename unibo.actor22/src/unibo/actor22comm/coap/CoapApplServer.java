@@ -6,6 +6,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
 
+import it.unibo.kactor.CoapResourceCtx;
 import unibo.actor22comm.interfaces.IApplMsgHandler;
 import unibo.actor22comm.interfaces.IContext;
 import unibo.actor22comm.utils.ColorsOut;
@@ -13,16 +14,23 @@ import unibo.actor22comm.utils.ColorsOut;
 public class CoapApplServer extends CoapServer implements IContext{
 	
 	
-//	public final static String outputDeviceUri = "devices/output";
-//	public final static String lightsDeviceUri = outputDeviceUri+"/lights";
-//	public final static String inputDeviceUri  = "devices/input";
+/*
+ * Viene creato da Qak22Context.InitCoap
+ */
 
-	private static CoapResource root      = new CoapResource("actors");
+	private static CoapResource root      = new CoapResource("actors"); //new CoapResourceCtx("actors", null);  
 	private static CoapApplServer server  = null;
 
+	public CoapApplServer( int port ) {
+		super(port);
+		add( root );
+		ColorsOut.outappl("CoapApplServer STARTEDDDD root=" + root, ColorsOut.YELLOW_BACKGROUND );
+		server = this;
+		start();
+	}
 	
 	public static CoapApplServer getTheServer() {
-		if( server == null ) server = new CoapApplServer();
+		//if( server == null ) server = new CoapApplServer(8083);
 		return server;
 	}
 	public static void stopTheServer() {
@@ -33,15 +41,16 @@ public class CoapApplServer extends CoapServer implements IContext{
 		}
 	}
 	
-	private CoapApplServer(){
-//		CoapResource outputRes= new CoapResource("output");
-//		outputRes.add( new CoapResource("lights"));
-//		root.add(outputRes);
-//		root.add(new CoapResource("input"));
-		add( root );
-		ColorsOut.outappl("CoapApplServer STARTED", ColorsOut.WHITE_BACKGROUND );
-		start();
-	}
+//	private CoapApplServer(){
+////		CoapResource outputRes= new CoapResource("output");
+////		outputRes.add( new CoapResource("lights"));
+////		root.add(outputRes);
+////		root.add(new CoapResource("input"));
+//		add( root );
+//		ColorsOut.outappl("CoapApplServer STARTEDDDD root=" + root, ColorsOut.YELLOW_BACKGROUND );
+// 
+//		start();
+//	}
 	
 	public static Resource getResource( String uri ) {
 		return getResource( root, uri );		
@@ -50,16 +59,16 @@ public class CoapApplServer extends CoapServer implements IContext{
 	//Depth-first research
 	private static Resource getResource(Resource root, String uri) {
 		if( root != null ) {
-			//Colors.out("getResource checks in: "+root.getName() + " for uri=" + uri);
+			ColorsOut.out("getResource checks in: " + root.getName() + " for uri=" + uri);
 			Collection<Resource> rootChilds = root.getChildren();
 			Iterator<Resource> iter         = rootChilds.iterator();
-			//Colors.out("child size:"+rootChilds.size());
+			ColorsOut.out("child size:"+rootChilds.size());
 			while( iter.hasNext() ) {
 				Resource curRes = iter.next();
 				String curUri   = curRes.getURI();
-				//Colors.out("getResource curUri:"+curUri);
+				ColorsOut.out("getResource curUri:"+curUri);
 				if( curUri.equals(uri) ){
-					//Colors.out("getResource finds "+ curRes.getName() + " for " + curUri, Colors.ANSI_YELLOW);
+					ColorsOut.out("getResource finds "+ curRes.getName() + " for " + curUri, ColorsOut.ANSI_YELLOW);
 					return  curRes;
 				}else { 
 					//Colors.out("getResource restart from:"+curRes.getName());
@@ -72,13 +81,16 @@ public class CoapApplServer extends CoapServer implements IContext{
 	}
  
 	public  void addCoapResource( CoapResource resource, String fatherUri  )   {
-		Resource res = getResource("/"+fatherUri);
-		if( res != null ) {
-			res.add( resource );
-			ColorsOut.out("CoapApplServer | added " + resource.getName() + " father=" + fatherUri, ColorsOut.WHITE_BACKGROUND );
-		}else {
-			ColorsOut.outerr("addCoapResource FAILS for " + fatherUri);
-		}
+		ColorsOut.outappl("CoapApplServer | addCoapResource resource=" + resource.getName(), ColorsOut.YELLOW_BACKGROUND );
+		root.add(resource);
+//		Resource res = getResource("/"+fatherUri);
+//		ColorsOut.outappl("CoapApplServer | addCoapResource res=" + res, ColorsOut.YELLOW_BACKGROUND );
+//		if( res != null ) {
+//			res.add( resource );
+//			ColorsOut.outappl("CoapApplServer | added " + resource.getName() + " father=" + fatherUri, ColorsOut.YELLOW_BACKGROUND );
+//		}else {
+//			ColorsOut.outerr("addCoapResource FAILS for " + fatherUri);
+//		}
 	}
 	
 //	@Override

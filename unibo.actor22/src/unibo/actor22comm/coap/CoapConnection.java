@@ -24,11 +24,12 @@ private String name = "CoapSprt";
 	}
 	
 	protected void setCoapClient(String addressWithPort, String path) {
+		//ColorsOut.outappl(name + " | setCoapClient addressWithPort=" +  addressWithPort,ColorsOut.ANSI_YELLOW  ); //+ " client=" + client );
 		//url            = "coap://"+address + ":5683/"+ path;
 		url            = "coap://"+addressWithPort + "/"+ path;
 		client          = new CoapClient( url );
  		client.useExecutor(); //To be shutdown
-		ColorsOut.out(name + " | STARTS client url=" +  url,ColorsOut.ANSI_YELLOW  ); //+ " client=" + client );
+		ColorsOut.outappl(name + " | STARTS client url=" +  url,ColorsOut.YELLOW_BACKGROUND ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 		
 	}
  	
@@ -38,27 +39,27 @@ private String name = "CoapSprt";
 	}
 	public CoapObserveRelation observeResource( CoapHandler handler  ) {
 		CoapObserveRelation relation = client.observe( handler ); 
-		ColorsOut.out(name + " | added " + handler + " relation=" + relation + relation,ColorsOut.ANSI_YELLOW  );
+		ColorsOut.outappl(name + " | added " + handler + " relation=" + relation + relation,ColorsOut.ANSI_YELLOW  );
  		return relation;
 	}
 
 
 	
-//From Interaction2021
+//From Interaction2021 
 	@Override
 	public void forward(String msg)   {
-		//Colors.out(name + " | forward " + url + " msg=" + msg,Colors.ANSI_YELLOW);
+		ColorsOut.outappl(name + " | forward " + url + " msg=" + msg,ColorsOut.ANSI_YELLOW); 
 		if( client != null ) {
 			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
- 			if( resp != null ) ColorsOut.out(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
-		    //else { Colors.outerr(name + " | forward - resp null "   ); }  //?????
+ 			if( resp != null ) ColorsOut.outappl(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
+		    else { ColorsOut.outerr(name + " | forward - resp null "   ); }  //?????
 		} 
 	}
 
 	
 	@Override
 	public String request(String query)   {
-  		ColorsOut.out(name + " | request query=" + query + " url="+url );
+  		ColorsOut.outappl(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
 		String param = query.isEmpty() ? "" :  "?q="+query;
   		ColorsOut.out(name + " | param=" + param );
 		client.setURI(url+param);

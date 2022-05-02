@@ -16,7 +16,7 @@
 
 
 ==================================
-WebApplications
+WebApplications con SpringBoot
 ==================================  
  
 
@@ -60,8 +60,6 @@ Lo schema di funzionamento può essere riassunto come segue:
 #. se l'operatore umano è sostituito da una macchina  si parla di Machine-To-Machine (M2M) interaction.
    I messaggi vengono girati a un :blue:`Controller` specializato per inviare ripsoste in forma di dati, molto spesso 
    in formato XML o JSon.
-
-
 
 
 ---------------------------------------
@@ -158,158 +156,9 @@ Invece, lo stato dell'applicazione dovrebbe essere indirizzabile tramite il prop
 e ogni risorsa dovrebbe contenere collegamenti e informazioni su quali operazioni sono possibili 
 in ogni stato e su come navigare tra gli stati.
 
-++++++++++++++++++++++++++++++++++++
-IApplicationFacade
-++++++++++++++++++++++++++++++++++++
-
-In quanto componente applicativo primario, 
-il Controller-Spring relativo alla Human-interaction (``HIController``) e anche quello
-relativo a una Machine-interaction (``MIController``) impone 
-che il componente di cui farà uso per realizzare i suoi use-cases obbedisca ad una
-precisa interfaccia, che viene impostata come segue:
-
-.. code:: java 
-
-   public interface IApplicationFacade {  
-     //Metodi della business logic
-        ...
-        void activateObserver(IObserver h);  
-    }
-
-
--------------------------------------------------
-Introduzione all'uso di Spring Boot
--------------------------------------------------
-
-+++++++++++++++++++++++
-Start-up
-+++++++++++++++++++++++
-
-#. Connettersi a https://start.spring.io/ 
-#. Selezionare Gradle Project, Kotlin, Group=it.unibo, Artifact=webspring.demo (Options:Packaging=Jar, Java=11) 
-   e le seguenti Dipendenze:
-
-   - Spring Web: crea applicazioni Web, inclusi RESTful, utilizzando Spring MVC. Utilizza Apache Tomcat come contenitore incorporato predefinito.
-   - Thymeleaf: un moderno motore di template Java lato server per ambienti web e standalone. 
-     Consente di visualizzare correttamente l'HTML nei browser e come prototipi statici.
-   - Spring Boot DevTools: Fornisce riavvii rapidi delle applicazioni, LiveReload e configurazioni per un'esperienza di sviluppo avanzata. 
-     Accelera questo ciclo di aggiornamento (codifica di una modifica, riavvio dell'applicazione e aggiornamento del browser 
-     per visualizzare la modifica).
-
-#. Attivare **Generate**
-#. Decomprimiere il file generato webspring.demo.zip in una directory vuota (es . C:/xxx ) ed esegure
- 
-   ``gradlew build``
-
-#. Aprire un IDE e aprire o importare il progetto webspring.demo . Guardare la classe generata
-
-    ``it.unibo.webspring.demo.Application.kt``
-
-    .. code:: Java
-
-        package it.unibo.webspring.demo
-
-        import org.springframework.boot.autoconfigure.SpringBootApplication
-        import org.springframework.boot.runApplication
-
-        @SpringBootApplication
-        class Application
-
-        fun main(args: Array) {
-        runApplication(*args)
-        }
-
-#. Attivare 
-
-    ``Application.kt``
-
-#. Aprire un browser su  ``localhost:8080``: compare l apagina che segue:
-
-.. image::  ./_static/img/Spring/springboot1.PNG
-  :align: center 
-  :width: 70%
-
-#. Crea il file ``webspring.demo\src\principale\risorse\modelli\benvenuto.htm`` con il seguente contenuto:
-
-   .. code:: Html
-
-    <html xmlns:th="http://www.thymeleaf.org"> 
-    <head><title>Welcome</title></head>
-    <body>
-    <h1>Welcome (in templates)</h1>
-    <p>Welcome to <b><span th:text="${arg}">Our Arg</span></b>.</p>
-    </body>
-    </html>
-    </pre>
-
-#. Inserire nel file webspring.demo\src\main\resources\application.properties quanto segue:
-
-    .. code:: 
-
-        spring.application.name=First Spring Application iss2020
-
-        spring.banner.location=classpath:banner.txt
-        server.port   = 8081
-        human.logo    = Gui for human-machine interaction
-        machine.logo  = Gui for machine-to-machine interaction
-
-
-
-
-+++++++++++++++++++++++++++++++++++++++++++++
-Un primo HIController in Kotlin
-+++++++++++++++++++++++++++++++++++++++++++++
-
-.. code:: Java
-
-    package it.unibo.webspring.demo
-    import ...
-
-    @Controller
-    class HIController {
-        @Value("\${spring.application.name}")
-        var appName: String? = null
-        @GetMapping("/")
-        fun homePage(model: Model): String {
-            model.addAttribute("arg", appName)
-            return "welcome"
-        }
-
-        @ExceptionHandler
-        fun handle(ex: Exception): ResponseEntity<*> {
-            val responseHeaders = HttpHeaders()
-            return ResponseEntity(
-                "BaseController ERROR ${ex.message}", 
-                responseHeaders, HttpStatus.CREATED
-            )
-        }
-    } 
-
----------------------------------------------
-Distribuzione
----------------------------------------------
-
-.. code:: Java
-
-    build di gradlew	//guarda la distribuzione generata
-
-    docker build -t webspringrobot:1.0.1 .  //guarda Dockerfile
-
-    docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  //controlla se l'immagine è in esecuzione
-     
-    digita docker_password.txt | login docker --username natbodocker --password-stdin//Accedi a DockerHub
-
-    tag docker webspringrobot:1.0.1 natbodocker/webspringrobot:1.0.1	//Tagga l'immagine
-
-    docker push natbodocker/webspringrobot:1.0.1 	//Registra l'immagine
-     
-
-    ATTENZIONE: verificare che nessun altro BasicStepRobot sia in esecuzione
-    docker-compose -f virtualrobotguistepper.yaml up
-
 
 -----------------------------------------------
-Demo
+Spring Framework e gli attori
 -----------------------------------------------
 
  .. image::  ./_static/img/Spring/DemoRobot.PNG
@@ -333,8 +182,21 @@ Demo
 
 #. Faccio BasicRibotAdapter POJO che riceve il nome da un attore 'mente' BasicRobot
 
+``QakActor22`` diventa una risorsa CoAP perchè ``Qak22Context.InitCoap`` genera un ``CoapApplServer`` che
+ha come root una ``CoapResourse`` denominata **actors**.
+
+Per interagire via CoAP con un ``QakActor22`` occorre creare una ``CoapConnection``
+
+ ``Interaction2021 coapConn = new CoapConnection("localhost:8083", "actors/<ACTORNAME>");``
+
+Quindi si possono inviare messaggi:
+
+   ``coapConn.forward( "hello") ;``
+
+
+
 -----------------------------------------------
-BasicRobot server extension
+Primi passi con SpringBoot
 -----------------------------------------------
 
 #. Connettersi a https://start.spring.io/ 
@@ -370,9 +232,7 @@ BasicRobot server extension
 		    SpringApplication.run(WebForActorsApplication.class, args);
 	    }
 
-#. Eseguire l'applicazione
-
-#. Aprire un browser su  ``localhost:8085``: compare la pagina che segue:
+#. Eseguire l'applicazione e aprire un browser su  ``localhost:8080``: compare la pagina che segue:
 
 .. image::  ./_static/img/Spring/springboot1.PNG
   :align: center 
@@ -442,6 +302,12 @@ Attiviamo di nuovo l'applicazione e un browser su ``localhost:8085``. Vedremo co
   :width: 60%
 
 
+-----------------------------------------------
+Una WebConsole per il BasicRobot
+-----------------------------------------------
+
+o per gli attori in generale?
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Un controller per RobotNaiveGui.html
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -477,3 +343,29 @@ Un controller per RobotNaiveGui.html
 .. image::  ./_static/img/Spring/RobotNaiveGui.PNG
   :align: center 
   :width: 60%
+
+
+
+
+---------------------------------------------
+Distribuzione
+---------------------------------------------
+
+.. code:: Java
+
+    build di gradlew	//guarda la distribuzione generata
+
+    docker build -t webspringrobot:1.0.1 .  //guarda Dockerfile
+
+    docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  //controlla se l'immagine è in esecuzione
+     
+    digita docker_password.txt | login docker --username natbodocker --password-stdin//Accedi a DockerHub
+
+    tag docker webspringrobot:1.0.1 natbodocker/webspringrobot:1.0.1	//Tagga l'immagine
+
+    docker push natbodocker/webspringrobot:1.0.1 	//Registra l'immagine
+     
+
+    ATTENZIONE: verificare che nessun altro BasicStepRobot sia in esecuzione
+    docker-compose -f virtualrobotguistepper.yaml up
+
