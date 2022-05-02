@@ -26,16 +26,16 @@ import unibo.actor22comm.utils.CommUtils;
 @Controller
 public class HIController {
     private static final String robotCmdId = "move";
-    private static  String robotName       = "basicrobot";
+    private static  String robotName       = "cleaner";
     private static boolean cleanerAppl     = true;
 
     private Interaction2021 conn;
-    private String mainPage = "";
+    private String mainPage = "RobotCleanerGui";
 
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
-        if(cleanerAppl) createRobotCleaner();
-        else createBasicRobot();
+        //if(cleanerAppl) createRobotCleaner();
+        //else createBasicRobot();
     }
 
     protected void createRobotCleaner(){
@@ -80,6 +80,7 @@ public class HIController {
         return mainPage;
     }
 
+    //Dopo click sul pulsante connect
     @PostMapping("/configure")
     public String configure(Model viewmodel  , @RequestParam String move, String addr ){
         ColorsOut.outappl("HIController | configure:" + move, ColorsOut.BLUE);
@@ -89,6 +90,7 @@ public class HIController {
         return mainPage;
     }
 
+    //Dopo click sul pulsante start/stop/resume
     @PostMapping("/robotmove")
     public String doMove(Model viewmodel  , @RequestParam String move ){
                      //String @RequestParam(name="move", required=false, defaultValue="h")robotmove  )  {

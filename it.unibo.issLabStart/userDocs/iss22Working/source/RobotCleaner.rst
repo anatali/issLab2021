@@ -214,26 +214,50 @@ Il componente proattivo che definisce la business logic può essere formalizzato
 `Macchina di Moore`_
 
 ++++++++++++++++++++++++++++++++++++
-RobotCleaner: Behaviour
+RobotCleaner Behaviour
 ++++++++++++++++++++++++++++++++++++
+
+Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.cleaner.RobotCleaner*.
+
 
 - Gli stati dell'automa che opera secondo un :ref:`Movimento per colonne` sono
 
    ``activate, start, goingDown, turnGoingDown, goingUp, turnGoingUp, lastColumn, completed, endJob``
 
-- L'automa invia al robot comandi di movimento in avanti a passi come indicato in :ref:`Il passo del robot` e di rotazione, 
-  definiti nella classe ``VRobotMoves``.
+- L'automa invia (stati ``going..``) al robot comandi di movimento a passi in avanti  come indicato in :ref:`Il passo del robot` e di rotazione, 
+  (stati ``turn..``)  definiti nella classe ``VRobotMoves``.
 
-- L'automa comunica con il robot (il VirtualRobot) in modo asincrono (attraverso una WsConnection) e riceve dal supporto il messaggio 
-  endMoveOk oppura endMoveKo al termina di ogni movimento e rotazione
+- La *VerificaLavoro* prospettata in :ref:`Movimento per colonne` viene realizzata contando il numero di passi verso ``wallRight`` che deve 
+  risultare, nello stato  ``completed `` non inferiore `DWallDown/DR + 1``. La distanza `DWallDown`` può essere misurata facendo muovere l'automa
+  per passi lunghi DR da ``wallLeft`` a ``wallRight``. Questi compito può essere svolto da una applicazione ad hoc.
 
-- Le transizioni di stato avvegono in conseguenza della ricezione di un messaggio endMoveOk oppura endMoveKo
+   :worktodo:`WORKTODO: Realizzare una applicazione che calcola DWallDown`
+
+- L'automa comunica con il robot (al momento il :ref:`VirtualRobot`) in modo asincrono (attraverso una :ref:`WsConnection`) 
+  e riceve dal supporto il messaggio ``endMoveOk`` oppure ``endMoveKo`` al termina di ogni movimento e rotazione.
+
+- Il supporto che trasforma le informazioni di :ref:`WEnv` in messaggi ``endMoveOk`` o ``endMoveKo`` è realizzato a livello applicativo 
+  da un POJO, observer di :ref:`WsConnection`, definito dalla classe ``WsConnApplObserver`` che implementa :ref:IObserver`.
+
+   .. code:: Java
+
+      public class WsConnApplObserver extends WsConnSysObserver implements IObserver{
+        ...
+        @Override
+	      public void update(String data) {
+         //data : {"endmove":,,,,"move":"..."}
+         //data : {"collision":"...","target":"..."}
+         //Genera SystemData.endMoveOk o SystemData.endMoveKo
+         }
+      }
+ 
+- Le transizioni di stato avvegono in conseguenza della ricezione di un messaggio ``endMoveOk`` oppura ``endMoveKo``
 
 .. image::  ./_static/img/Spring/RobotCleanerFsm.PNG
     :align: center 
     :width: 80% 
 
-
+Il modello eseguibile è riportato in RobotCleaner.java
 
 .. code:: Java
 
@@ -248,6 +272,25 @@ RobotCleaner: Behaviour
       @Transition( state = "goingDown",   msgId="endMoveOk"  )
       @Transition( state = "endJob",      msgId="endMoveKo"  )
       protected void start( IApplMessage msg ) { ... }
-
-
    }
+
+
+------------------------------------------------------
+RobotCleaner reattivo a comandi
+------------------------------------------------------
+
+*RobotCleaner reattivo*: Estendere il funzionamento di il :ref:`RobotClenaer<RobotCleaner Behaviour>` in modo da eseguire i seguenti comandi inviati da un utente.
+(umano o macchina):
+
+- start (id = ``SystemData.startSysCmdId``) attiva il robot, che parte dalla posizione HOMe
+- stop (id = ``SystemData.stopSysCmdId``): ferma il robot nella posizione corrente
+- resume (id = ``SystemData.resumeSysCmdId``): riattiva il robot dalla posizione corrente
+
+
+Pianificazione del lavoro:
+
+#. Si estende il behavior introddto in :ref:`RobotCleaner Behaviour`, tenendo conto dei nuovi possibili messaggi
+#. Si realizza un attore che simula l'operatore umano che invia i comandi
+#. Si verifica il funzionamento del nuovo prototipo
+#. Si realizza una Web User Interface utlizzando SpringBoot. Per questa parte si veda :ref:`WebApplications con SpringBoot`
+   e :ref:`Una WebConsole per il RobotCleaner`

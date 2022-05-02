@@ -6,7 +6,6 @@ package unibo.wenvUsage22.cleaner;
  */
 
 import it.unibo.kactor.IApplMessage;
- 
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;

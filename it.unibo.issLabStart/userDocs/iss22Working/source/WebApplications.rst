@@ -1,6 +1,7 @@
 .. role:: red 
 .. role:: blue 
 .. role:: remark
+.. role:: worktodo  
 
 .. _Applicazione web: https://it.wikipedia.org/wiki/Applicazione_web    
 .. _WebappFrameworks: https://www.geeksforgeeks.org/top-10-frameworks-for-web-applications/
@@ -157,41 +158,7 @@ e ogni risorsa dovrebbe contenere collegamenti e informazioni su quali operazion
 in ogni stato e su come navigare tra gli stati.
 
 
------------------------------------------------
-Spring Framework e gli attori
------------------------------------------------
 
- .. image::  ./_static/img/Spring/DemoRobot.PNG
-  :align: center 
-  :width: 70%
-
-
-- fare BasicRobot
-- usare TCP in browser per operare su BasicRobot
-- fare server per WsInteraction2021 per gli attori (un WebServer?)
-- fare wenvUsage22\cleaner\prototype0 con BasicCmdGui che attiva ....
-- vedere it.unibo.cautiousExplorer/userDocs/BasicStepRobotActorUsage.html
-  
-
-#. Faccio spring.io creando in Java una webapp per inviare msg a BasicRobot via TCP o via CoAP
-#. Attivo BasicRobot, che attende comandi aril 
-#. Attivo browser su 8085 che fornisce console e display area 
-
-- Ho già una console e display area in NaiveGui che manda comandi su ws
-- La  webapp  è un modo per dotare il BasicRobot di un server HTTP/WS
-
-#. Faccio BasicRibotAdapter POJO che riceve il nome da un attore 'mente' BasicRobot
-
-``QakActor22`` diventa una risorsa CoAP perchè ``Qak22Context.InitCoap`` genera un ``CoapApplServer`` che
-ha come root una ``CoapResourse`` denominata **actors**.
-
-Per interagire via CoAP con un ``QakActor22`` occorre creare una ``CoapConnection``
-
- ``Interaction2021 coapConn = new CoapConnection("localhost:8083", "actors/<ACTORNAME>");``
-
-Quindi si possono inviare messaggi:
-
-   ``coapConn.forward( "hello") ;``
 
 
 
@@ -303,17 +270,50 @@ Attiviamo di nuovo l'applicazione e un browser su ``localhost:8085``. Vedremo co
 
 
 -----------------------------------------------
-Una WebConsole per il BasicRobot
+Una WebConsole per il RobotCleaner
 -----------------------------------------------
 
-o per gli attori in generale?
+Ci poniniamo l'obiettivo di creare con Spring una WebApplication che mostri agli utenti una pagina  HTML come quella di figura:
+
+.. image::  ./_static/img/Spring/RobotCleanerGui.PNG
+  :align: center 
+  :width: 60%
+
+
+
+:remark:`La business logic è nel prototipo RobotCleaner`
+
+- Obiettivo della applicazione Spring è solo quello di offrire una GUI. Tutta la logica applicativa è già stata realizzata 
+  (e testata) e può essere resa disponibile mediante un file ``jar``.
+
+
+:remark:`Chi crea il componente applicativo?`
+
+Vi sono due modi principali:
+
+#. *Modo remoto*: Il componente applicativo viene allocato su un nodo diverso da quello che ospita l'applicazione Spring
+#. *Modo locale*: Il componente applicativo viene creato dalla applicazione Spring stessa
+
+
+:worktodo:`WORKTODO: discutere i pro/contro dei due modi`
+
 
 +++++++++++++++++++++++++++++++++++++++++++++
-Un controller per RobotNaiveGui.html
+RobotCleanerGui.html
 +++++++++++++++++++++++++++++++++++++++++++++
 
-#. Inseriamo il file ``RobotNaiveGui.html`` nella directory templates
-#. Commentiamo l'annotazione ``@Controller`` in ``HIControllerDemo`` e inseriamo questo nuovo controller:
+
+- Inseriamo il file ``RobotCleanerGui.html`` nella directory templates
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Un controller per RobotCleaner Appl 
++++++++++++++++++++++++++++++++++++++++++++++
+
+- Commentiamo l'annotazione ``@Controller`` in ``HIControllerDemo`` e inseriamo un nuovo controller ``HIController``.
 
 .. code:: 
 
@@ -322,14 +322,42 @@ Un controller per RobotNaiveGui.html
     
     @Controller 
     public class HIController { 
-    @Value("${spring.application.name}")
-    String appName;
+    private static final String robotCmdId = "move";
+    private static  String robotName       = "cleaner";
+
+
+    public HIController(){
+      //createRobotCleaner();
+    }
 
     @GetMapping("/") 		 
     public String homePage(Model model) {
         model.addAttribute("arg", appName);
-        return "welcome";
+        return "RobotCleanerGui";
     } 
+
+    //Dopo click sul pulsante connect
+    @PostMapping("/configure")
+    public String configure(Model viewmodel  , @RequestParam String move, String addr ){
+        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
+        conn = connToRobot.createConnection(addr, 8083);
+        Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
+        return mainPage;
+    }
+
+   //Dopo click sul pulsante start/stop/resume
+    @PostMapping("/robotmove")
+    public String doMove(Model viewmodel  , @RequestParam String move ){
+        if( move.equals("t")){  //Start
+            Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
+        }else{
+            try {
+                String msg = moveAril(move).toString();
+                 conn.forward( msg );
+            } catch (Exception e) {... }
+        }
+        return mainPage;
+    }
             
     @ExceptionHandler 
     public ResponseEntity handle(Exception ex) {
@@ -340,32 +368,6 @@ Un controller per RobotNaiveGui.html
         }
     }
 
-.. image::  ./_static/img/Spring/RobotNaiveGui.PNG
-  :align: center 
-  :width: 60%
-
-
-
-
----------------------------------------------
-Distribuzione
----------------------------------------------
-
-.. code:: Java
-
-    build di gradlew	//guarda la distribuzione generata
-
-    docker build -t webspringrobot:1.0.1 .  //guarda Dockerfile
-
-    docker run -p 8081:8081 -ti --rm webspringrobot:1.0.1  //controlla se l'immagine è in esecuzione
-     
-    digita docker_password.txt | login docker --username natbodocker --password-stdin//Accedi a DockerHub
-
-    tag docker webspringrobot:1.0.1 natbodocker/webspringrobot:1.0.1	//Tagga l'immagine
-
-    docker push natbodocker/webspringrobot:1.0.1 	//Registra l'immagine
-     
-
-    ATTENZIONE: verificare che nessun altro BasicStepRobot sia in esecuzione
-    docker-compose -f virtualrobotguistepper.yaml up
+ 
+ 
 

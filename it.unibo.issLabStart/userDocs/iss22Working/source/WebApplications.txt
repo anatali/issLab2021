@@ -471,6 +471,94 @@ Distribuzione
 
 
 
+
+
+
+
+
+-----------------------------------------------
+Una WebConsole per il BasicRobot
+-----------------------------------------------
+
+o per gli attori in generale?
+
++++++++++++++++++++++++++++++++++++++++++++++
+Un controller per RobotNaiveGui.html
++++++++++++++++++++++++++++++++++++++++++++++
+
+#. Inseriamo il file ``RobotNaiveGui.html`` nella directory templates
+#. Commentiamo l'annotazione ``@Controller`` in ``HIControllerDemo`` e inseriamo questo nuovo controller:
+
+.. code:: 
+
+    package it.unibo.webspring.demo;
+    import ...
+    
+    @Controller 
+    public class HIController { 
+    @Value("${spring.application.name}")
+    String appName;
+
+    @GetMapping("/") 		 
+    public String homePage(Model model) {
+        model.addAttribute("arg", appName);
+        return "welcome";
+    } 
+            
+    @ExceptionHandler 
+    public ResponseEntity handle(Exception ex) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+        return new ResponseEntity(
+                    "BaseController ERROR " + ex.getMessage(), 
+                    responseHeaders, HttpStatus.CREATED);
+        }
+    }
+
+.. image::  ./_static/img/Spring/RobotNaiveGui.PNG
+  :align: center 
+  :width: 60%
+
+
+ 
+
+
+
+-----------------------------------------------
+Spring Framework e gli attori
+-----------------------------------------------
+
+ .. image::  ./_static/img/Spring/DemoRobot.PNG
+  :align: center 
+  :width: 70%
+
+
+- fare BasicRobot
+- usare TCP in browser per operare su BasicRobot
+- fare server per WsInteraction2021 per gli attori (un WebServer?)
+- fare wenvUsage22\cleaner\prototype0 con BasicCmdGui che attiva ....
+- vedere it.unibo.cautiousExplorer/userDocs/BasicStepRobotActorUsage.html
+  
+
+#. Faccio spring.io creando in Java una webapp per inviare msg a BasicRobot via TCP o via CoAP
+#. Attivo BasicRobot, che attende comandi aril 
+#. Attivo browser su 8085 che fornisce console e display area 
+
+- Ho già una console e display area in NaiveGui che manda comandi su ws
+- La  webapp  è un modo per dotare il BasicRobot di un server HTTP/WS
+
+#. Faccio BasicRibotAdapter POJO che riceve il nome da un attore 'mente' BasicRobot
+
+``QakActor22`` diventa una risorsa CoAP perchè ``Qak22Context.InitCoap`` genera un ``CoapApplServer`` che
+ha come root una ``CoapResourse`` denominata **actors**.
+
+Per interagire via CoAP con un ``QakActor22`` occorre creare una ``CoapConnection``
+
+ ``Interaction2021 coapConn = new CoapConnection("localhost:8083", "actors/<ACTORNAME>");``
+
+Quindi si possono inviare messaggi:
+
+   ``coapConn.forward( "hello") ;``
+
 ------------------------------------
 BasicRobot appunti
 ------------------------------------
