@@ -1,4 +1,4 @@
-package unibo.Robots;
+package unibo.Robots.common;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.utils.CommUtils;

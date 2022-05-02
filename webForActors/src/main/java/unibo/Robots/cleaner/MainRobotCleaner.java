@@ -1,4 +1,4 @@
-package unibo.Robots;
+package unibo.Robots.cleaner;
 
 import unibo.actor22.Qak22Context;
 import unibo.actor22.annotations.Actor22;
@@ -8,7 +8,7 @@ import unibo.actor22comm.utils.CommUtils;
 
 
 
-@Context22(name = "pcCtx", host = "localhost", port = "8020")
+@Context22(name = "pcCtx", host = "localhost", port = "8083")
 @Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
 public class MainRobotCleaner {
 	

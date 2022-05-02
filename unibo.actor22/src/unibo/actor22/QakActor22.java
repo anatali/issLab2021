@@ -159,7 +159,7 @@ protected String actorResourceRep = "unbound";
 //			ColorsOut.outerr( "QakActor22 handleEvent ERROR:" + e.getMessage());
 //		}
 //	}    
-
+/*
     //-----------------------------------------
     //@Override
 	public void updateResourceRep22( String v  ){
@@ -192,5 +192,5 @@ protected String actorResourceRep = "unbound";
  	protected  void elaboratePut(String req, InetAddress callerAddr) {
 		ColorsOut.out(getName() + " | elaboratePut TODO+" + req  );
  		
- 	};
+ 	};*/
 }

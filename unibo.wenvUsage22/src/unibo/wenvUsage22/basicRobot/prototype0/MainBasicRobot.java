@@ -12,8 +12,8 @@ import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.wenvUsage22.common.ApplData;
  
-@Context22(name = "ctx", host = "localhost", port = "8020")
-@Actor22(name = "basicrobot", contextName = "ctx", implement = BasicRobot.class)
+@Context22(name = "ctx", host = "localhost", port = "8083")
+@Actor22(name = MainBasicRobot.robotName, contextName = "ctx", implement = BasicRobotActor.class)
 public class MainBasicRobot {
 	
 	public static final String robotName = "basicrobot";
@@ -23,8 +23,9 @@ public class MainBasicRobot {
 		sysUtil.INSTANCE.setTrace(true);  //mondo qak
 		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
-  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
-  		Qak22Util.sendAMsg( ApplData.w("", robotName) );
+		//Activate viene dalla GUI
+//  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
+//  		Qak22Util.sendAMsg( ApplData.w("", robotName) );
 	};
 
 	public void terminate() {

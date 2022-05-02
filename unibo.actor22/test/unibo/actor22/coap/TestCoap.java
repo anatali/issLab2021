@@ -23,7 +23,7 @@ private int n = 0;
 	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg );
 		n++;   //Uncomment to go in s1
-		this.updateResourceRep22("n="+n);
+		this.updateResourceRep("n="+n);
  		this.autoMsg( SystemData.demoSysCmd( getName(),getName() ) );
 	}
 

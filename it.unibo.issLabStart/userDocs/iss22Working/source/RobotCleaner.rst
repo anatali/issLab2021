@@ -185,3 +185,21 @@ RobotCleaner: prototipo dopo l'analisi
 
 - Occorre definire un modello del sistema che descrive in modo 'formale' (comprensibile/eseguibile da una macchina)  
   il risultato che l'analista intende esporre e fornire al progettista come punto di partenza per lo sviluppo.
+
+
+#. Robot: il robot fisico o virtule
+#. BasicRobotAdapter : un POJO
+ 
+   - si connette a WENV tramite WS usando il nome dell'ownerActor
+   - associa alla WsConnection un WsConnApplObserver che invia endMOveOk o endMoveKo al ownerActor
+
+#. BasicRobotActor : un attore CoAP observable che opera in TCP sulla porta 8083
+ 
+   - è l'owner di BasicRobotAdapter, che viene usato come POJO (metodo robotMove) per inviare comandi aril 
+     (conevertiti in cril) al Robot
+   - crea ActorObserver che usa un CoAP client per visualizzare i cambi di stato di BasicRobotActor
+
+#. webForActors: una applicazione SpringBoot
+
+   - WebSocketConfiguration associa WebSocketHandler che fornisce un metodo sendToAll invocato da BasicRobot
+     o meglio da un ActorObserver specializzato

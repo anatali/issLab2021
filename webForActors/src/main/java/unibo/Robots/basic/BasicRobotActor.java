@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.basicRobot.prototype0;
+package unibo.Robots.basic;
 
 /*
  * BasicRobot riceve comandi aril da NaiveGui
@@ -6,32 +6,25 @@ package unibo.wenvUsage22.basicRobot.prototype0;
  */
 
 import it.unibo.kactor.IApplMessage;
- 
+import org.json.JSONObject;
+import org.springframework.web.socket.TextMessage;
+import unibo.Robots.common.ActorObserver;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.State;
 import unibo.actor22.annotations.Transition;
 import unibo.actor22comm.SystemData;
-import unibo.actor22comm.interfaces.IObserver;
-import unibo.actor22comm.interfaces.Interaction2021;
-import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommUtils;
-import unibo.actor22comm.ws.WsConnection;
-import unibo.wenvUsage22.cleaner.fsm.WsConnApplObserver;
-import unibo.wenvUsage22.common.ApplData;
-import unibo.wenvUsage22.common.VRobotMoves;
-
- 
+import unibo.webForActors.WebSocketConfiguration;
 
 
-public class BasicRobot extends QakActor22FsmAnnot{
+public class BasicRobotActor extends QakActor22FsmAnnot{
 	
 	
 protected 	BasicRobotAdapter robotAdapter;
 
  	
-	public BasicRobot(String name) {
+	public BasicRobotActor(String name) {
 		super(name);
-		//robotAdapter = new BasicRobotAdapter(name);
+ 		//ActorObserver obs = new ActorObserver("8083",getName());
 	}
 
 
@@ -67,22 +60,33 @@ protected 	BasicRobotAdapter robotAdapter;
 	@Transition( state = "work", msgId="move"  )
  	protected void handleOk( IApplMessage msg ) {
 		outInfo(""+msg);
-		this.updateResourceRep22("testttttttttttttttttttt");
-//		try {
-//			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( msg.toString() ) );
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		this.updateResourceRep( ""+msg );
+		//WARNING: non more a clean architecture
+		/*
+		try {
+			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( msg.toString() ) );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
  	}
 	@State( name = "handleKo" )
 	@Transition( state = "work", msgId="move"  )
 	protected void handleKo( IApplMessage msg ) {
 		outInfo(""+msg);
-//		try {
-//			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( msg.toString() ) );
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+
+		JSONObject json = new JSONObject( msg.msgContent().replace("'",""));
+		String move  = json.getString("move");
+		int duration = json.getInt("duration") ;
+		this.updateResourceRep(move + " failed after:"+duration);
+
+		//this.updateResourceRep( ""+msg );
+		/*
+		//WARNING: non more a clean architecture
+		try {
+			WebSocketConfiguration.wshandler.sendToAll( new TextMessage( move + " failed after:"+duration ) );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
 	}
 
 	

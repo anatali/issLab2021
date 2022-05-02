@@ -1,10 +1,12 @@
-package unibo.Robots;
+package unibo.Robots.cleaner;
 
 /*
  * 
  */
 
 import it.unibo.kactor.IApplMessage;
+import unibo.Robots.common.VRobotMoves;
+import unibo.Robots.common.WsConnApplObserver;
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
@@ -28,7 +30,8 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	protected void init() {
  		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.BLUE);
 		conn = WsConnection.create("localhost:8091" ); 
-		IObserver robotMoveObserver = new WsConnApplObserver(getName());
+		IObserver robotMoveObserver = new WsConnApplObserver(getName(), false);
+
 		((WsConnection)conn).addObserver(robotMoveObserver);
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
@@ -47,7 +50,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	@Transition( state = "endJob",      msgId="endMoveKo"  ) 
 	protected void start( IApplMessage msg ) {
 		outInfo(""+msg);
-     	//VRobotMoves.step(getName(), conn );
+     	VRobotMoves.step(getName(), conn );
 	}
 	
 	@State( name = "goingDown" )

@@ -28,7 +28,7 @@ public class SystemData {
 		return CommUtils.buildDispatch("system", endMoveOkId, move, receiver );
 	}
 	public static final IApplMessage endMoveKo( String receiver, String move, String dt )   {
-		String result = "{ \"move\":" + move + ", duration:" + dt + "}";
+		String result = "{ \"move\": \"" +  move + "\", \"duration\":" + dt + "}";
 		return CommUtils.buildDispatch("system", endMoveKoId, result, receiver );
 	}
 

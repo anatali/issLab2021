@@ -26,9 +26,10 @@ public class WsConnApplObserver extends WsConnSysObserver{
 	@Override
 	public void update(String data) {
 		 
-		ColorsOut.out("WsConnApplObserver update receives:" + data + " duration=" + actionDuration, ColorsOut.BLUE);
+//		ColorsOut.out("WsConnApplObserver update receives:" + data + " duration=" + actionDuration, ColorsOut.BLUE);
 		JSONObject dJson = new JSONObject(""+data);
 		boolean resultMoveOk =  dJson.has("endmove") && dJson.getBoolean("endmove");
+		ColorsOut.out("WsConnApplObserverrrrr update receives:" + data + " duration=" + actionDuration + " resultMoveOk=" + resultMoveOk, ColorsOut.BLUE);
 		 
 		if( resultMoveOk ) {
 			//if( dJson.getString("move").contains("turn")) return; //AVOID TO send info about turn
@@ -46,6 +47,7 @@ public class WsConnApplObserver extends WsConnSysObserver{
 		IApplMessage m;
 		if( ownerActor == null ) m = SystemData.endMoveOkEvent( data );
 		else m = SystemData.endMoveOk(ownerActor,data);		
+		ColorsOut.out("WsConnApplObserverpropagateEndMoveOk:" + m , ColorsOut.BLUE);
 		Qak22Util.sendAMsg(m);
 	}
 	protected void propagateEndMoveKo(String data,String duration) {

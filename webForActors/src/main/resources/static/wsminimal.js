@@ -48,6 +48,7 @@ wsminimal.js
         };
 
         socket.onmessage = function (event) {
+        console.log("ws-status:" + `${event.data}`);
             addMessageToWindow(""+`${event.data}`);
             //alert(`Got Message: ${event.data}`)
 

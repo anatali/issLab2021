@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import unibo.Robots.MainBasicRobot;
-import unibo.Robots.MainRobotCleaner;
+import unibo.Robots.basic.MainBasicRobot;
+import unibo.Robots.cleaner.MainRobotCleaner;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.ProtocolType;
@@ -25,7 +25,7 @@ import unibo.actor22comm.utils.CommUtils;
 
 @Controller
 public class HIController {
-    private static final String robotCmdId = "cmd";
+    private static final String robotCmdId = "move";
     private static  String robotName  = "basicrobot";
 
     private Interaction2021 conn;
@@ -33,8 +33,7 @@ public class HIController {
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
         //createRobotCleaner();
-        //createBasicRobot();
-        Qak22Context.setActorAsRemote(robotName, "8020", "localhost", ProtocolType.tcp);
+        createBasicRobot();
     }
 
     protected void createRobotCleaner(){
@@ -76,7 +75,8 @@ public class HIController {
     public String configure(Model viewmodel  , @RequestParam String move, String addr ){
         ColorsOut.outappl("HIController | configure:" + move, ColorsOut.BLUE);
         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
-        conn = connToRobot.createConnection(addr, 8020);
+        conn = connToRobot.createConnection(addr, 8083);
+        Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
         return "RobotNaiveGui";
     }
 

@@ -1,4 +1,4 @@
-package unibo.Robots;
+package unibo.Robots.common;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22comm.interfaces.Interaction2021;
@@ -63,11 +63,11 @@ public class VRobotMoves {
 	public static void turnLeftAndStep(String name, int duration, Interaction2021 conn) {
 		try {
 			turnLeft(name,conn);
-			CommUtils.delay(300);  
+			CommUtils.delay(310);
 			//step( name,conn  );	  		
 			stepAfterTurn(name,conn,duration);     //con dt>300 sta barando ...
  			turnLeft(name,conn);
-			CommUtils.delay(300);  
+			CommUtils.delay(310);
  		}catch( Exception e) {
 			ColorsOut.outerr( name +  " | turnLeft ERROR:" +  e.getMessage() );
 		}	
@@ -75,11 +75,11 @@ public class VRobotMoves {
 	public static void turnRightAndStep(String name, int duration, Interaction2021 conn) {
 		try {
 			turnRight(name,conn);
-			CommUtils.delay(300);  
+			CommUtils.delay(310);
 			//step( name,conn  );	 //collision?		
 			stepAfterTurn(name,conn,duration);     //con dt>300 sta barando ...
 			turnRight(name,conn);
-			CommUtils.delay(300);  
+			CommUtils.delay(310);
  		}catch( Exception e) {
 			ColorsOut.outerr( name +  " | turnLeft ERROR:" +  e.getMessage() );
 		}	
@@ -87,7 +87,7 @@ public class VRobotMoves {
 	public static void turnLeftAndHome(String name, Interaction2021 conn) {
 		try {
 			turnLeft(name,conn);
-			CommUtils.delay(300);  
+			CommUtils.delay(310);
 			//step( name,conn  );	  		
 			stepAfterTurn(name,conn,2000);      
   		}catch( Exception e) {

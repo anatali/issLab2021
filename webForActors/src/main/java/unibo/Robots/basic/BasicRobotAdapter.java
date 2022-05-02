@@ -1,12 +1,13 @@
-package unibo.wenvUsage22.basicRobot.prototype0;
+package unibo.Robots.basic;
 
- 
+import unibo.Robots.common.ApplData;
+import unibo.Robots.common.WsConnApplObserver;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommUtils;
+import unibo.actor22comm.ws.WsConnSysObserver;
 import unibo.actor22comm.ws.WsConnection;
- 
+
 
 public class BasicRobotAdapter {
 protected String actorOwnerName = "";
@@ -24,6 +25,7 @@ protected String robotName  = "vr";
 		ColorsOut.outappl(actorOwnerName + " | ws connecting ...." ,  ColorsOut.YELLOW);
 		conn = WsConnection.create("localhost:8091" ); 
 		IObserver robotMoveObserver = new WsConnApplObserver(actorOwnerName); //genera endMoveOk / endMoveKo
+		//IObserver robotMoveObserver = new WsConnSysObserver(actorOwnerName);
 		((WsConnection)conn).addObserver(robotMoveObserver);
 	    ColorsOut.outappl(actorOwnerName + " | conn:" + conn,  ColorsOut.YELLOW);
 	}

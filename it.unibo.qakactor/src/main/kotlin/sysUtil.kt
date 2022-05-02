@@ -44,7 +44,7 @@ object sysUtil{
 	var mqttBrokerIP : String? = ""
 	var mqttBrokerPort : String? = ""
 	var mqttBrokerEventTopic : String? = ""
-	var trace   : Boolean = true
+	var trace   : Boolean = false
 	var logMsgs : Boolean = false
 	val connActive : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()    //Oct2019
 
