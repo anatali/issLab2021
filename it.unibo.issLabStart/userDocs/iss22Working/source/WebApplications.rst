@@ -331,6 +331,7 @@ Demo
 - Ho già una console e display area in NaiveGui che manda comandi su ws
 - La  webapp  è un modo per dotare il BasicRobot di un server HTTP/WS
 
+#. Faccio BasicRibotAdapter POJO che riceve il nome da un attore 'mente' BasicRobot
 
 -----------------------------------------------
 BasicRobot server extension

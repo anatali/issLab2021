@@ -26,58 +26,21 @@ import unibo.wenvUsage22.common.VRobotMoves;
 public class BasicRobot extends QakActor22FsmAnnot{
 	
 	
-	private Interaction2021 conn;
-	private String robotCmdId = "move";
-	private String robotName  = "vr";
-	
+protected 	BasicRobotAdapter robotAdapter;
+
  	
 	public BasicRobot(String name) {
 		super(name);
+		//robotAdapter = new BasicRobotAdapter(name);
 	}
 
-	private  IApplMessage moveAril( String cmd  ) {
-		switch( cmd ) {
-			case "w" : return CommUtils.buildDispatch(getName(), robotCmdId, "moveForward(300)", robotName);
-			case "s" : return CommUtils.buildDispatch(getName(), robotCmdId, "moveBAckward(300)",robotName);		
-			case "a" : return CommUtils.buildDispatch(getName(), robotCmdId, "turnLeft(300)",    robotName);
-			case "d" : return CommUtils.buildDispatch(getName(), robotCmdId, "turnRight(300)",   robotName);
-			case "h" : return CommUtils.buildDispatch(getName(), robotCmdId, "alarm(300)",       robotName);
-			default: return CommUtils.buildDispatch(getName(),   robotCmdId, "alarm(300)",       robotName);
-		}		 
-	}
-	private  String arilToCril( String cmd  ) {
-		switch( cmd ) {
-			case "w" : return  ApplData.moveForward(300) ;
-			case "s" : return  ApplData.moveBackward(300);		
-			case "a" : return  ApplData.turnLeft(300);
-			case "d" : return  ApplData.turnRight(300);
-			case "h" : return  ApplData.stop(100);
-			default: return    ApplData.stop(100);
-		}		 
-	}
-
-	private void robotMove( String cmd ) {
-		try {
-			conn.forward( arilToCril(cmd) );
-		}catch( Exception e) {
-			ColorsOut.outerr( getName() +  " | robotMove ERROR:" +  e.getMessage() );
-		}			
-	}
-	
-	protected void init() {
-		//Dovrebbe distingure tra diversi tipi di robot e usare un supporto che realizza
- 		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.YELLOW);
-		conn = WsConnection.create("localhost:8091" ); 
-		IObserver robotMoveObserver = new WsConnApplObserver(getName()); //genera endMoveOk / endMoveKo
-		((WsConnection)conn).addObserver(robotMoveObserver);
- 		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.YELLOW);
-	}
 
 	@State( name = "activate", initial=true)
 	@Transition( state = "start",   msgId= SystemData.startSysCmdId  )
 	protected void activate( IApplMessage msg ) {
 		outInfo(""+msg);
-		init();
+		robotAdapter = new BasicRobotAdapter(getName());
+		//init();
  	}
 
 	@State( name = "start" )
@@ -97,7 +60,7 @@ public class BasicRobot extends QakActor22FsmAnnot{
 		String cmd = msg.msgContent().replace("'","");
 		//VRobotMoves.step(getName(), conn );
 		//VRobotMoves.moveForward( getName(),conn,300 );
-		robotMove(cmd);
+		robotAdapter.robotMove(cmd);
  	}
 
 	@State( name = "handleOk" )
