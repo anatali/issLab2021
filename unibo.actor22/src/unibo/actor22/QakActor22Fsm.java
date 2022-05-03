@@ -13,7 +13,8 @@ public abstract class QakActor22Fsm extends QakActor22 {
 	private HashMap<String,StateActionFun> stateMap = new HashMap<String,StateActionFun>();
 	protected HashMap<String,String> nextMsgMap       = new HashMap<String,String>();
 	protected Vector<IApplMessage>  OldMsgQueue       = new Vector< IApplMessage>();
-	protected Vector< Pair<String, String> > transTab = new Vector< Pair<String, String> >();
+	protected Vector< Pair<String, String> > transTab     = new Vector< Pair<String, String> >();
+	protected Vector< Pair<String, Boolean> >interruptTab = new Vector< Pair<String, Boolean> >();
 
 	
 	private String curState = "";
@@ -44,46 +45,85 @@ public abstract class QakActor22Fsm extends QakActor22 {
 		else stateMap.put( stateName, action );
 	}
 	
-	protected void addTransition(String state, String msgId) {
+	protected void addTransition(String state, String msgId, boolean withInterrupt) {
 		ColorsOut.out( getName() + " QakActor22Fsm | in " + curState + ": transition to " + state + " for " +  msgId, ColorsOut.BLUE);		
-		transTab.add( new Pair<>(state, msgId) );
+		transTab.add(     new Pair<>(state, msgId) );
+		interruptTab.add( new Pair<>(state, withInterrupt) );
 //		if( msgId.equals("emptyMove")) {//Per info
 //			ColorsOut.out( getName() + " QakActor22Fsm | in " + curState +	" adding an empty move" , ColorsOut.BLUE );		
 //		}
 	}
 	
 	protected String interruptedState = null;
+	protected Vector< Pair<String, String> > memoTransTab = null;
+	
 	protected void memoState(String currentState) {
+		ColorsOut.outappl(getName() + " | QakActor22Fsm memoState " +  currentState, ColorsOut.MAGENTA);
 		interruptedState = currentState;
+		memoTransTab=tabCopy(transTab);    //tabCopy(transTab);
 	}
-	protected void nextState(String currentState, boolean withInterrupt) {
- 		clearExpectedMsgs();
- 		if( withInterrupt ) memoState(currentState);
-		Iterator< Pair<String, String> > iter = transTab.iterator();
+	
+	protected Vector<Pair<String,String>> tabCopy( Vector<Pair<String,String>> tab){
+		Vector< Pair<String, String> > copied = new Vector<Pair<String,String>>();
+		Iterator< Pair<String, String> >  iter  = tab.iterator();
 		while( iter.hasNext() ) {
-			Pair<String, String> v = iter.next();			
-			String state = v.getFirst();
-			String msgId = v.getSecond();
+			copied.add( iter.next() );
+		}
+		return copied;
+	}
+	protected Vector<Pair<String,String>> tabRestore( Vector<Pair<String,String>> tab){
+		Vector< Pair<String, String> > copied = new Vector<Pair<String,String>>();
+		interruptTab = new Vector<Pair<String,Boolean>>();
+		Iterator< Pair<String, String> >  iter  = tab.iterator();
+		while( iter.hasNext() ) {
+			copied.add( iter.next() );
+			interruptTab.add( new Pair<>("", false) );  //
+		}
+		return copied;
+	}
+	
+	protected void resume() { //xxx
+		ColorsOut.outappl(getName() + " | QakActor22Fsm resume:" + memoTransTab.size(), ColorsOut.GREEN);
+		 
+		transTab = tabRestore(memoTransTab);
+		//interruptTab =  new Vector<Pair<String,Boolean>>();
+	}
+	protected void nextState(String currentState ) { //Called by  QakActor22FsmAnnot at 99
+ 		clearExpectedMsgs();
+ 		Iterator< Pair<String, String> >  iter  = transTab.iterator();
+		Iterator< Pair<String, Boolean> > iter1 = interruptTab.iterator();
+		while( iter.hasNext() ) {
+			Pair<String, String> v   = iter.next();	
+			Pair<String, Boolean> v1 = iter1.next();
+			String nextState         = v.getFirst();
+			String msgId             = v.getSecond();
+			boolean withInterrupt    = v1.getSecond();
 			if( msgId.equals(SystemData.emptyMoveId) ) {  
-				//autoMsg(SystemData.emptyMoveCmd(getName(),getName() ));
-				stateTransition(state, SystemData.emptyMoveCmd(getName(),getName() ));
+				stateTransition(nextState, SystemData.emptyMoveCmd(getName(),getName() ));
 				return;
 			}
+			if( withInterrupt ) memoState(currentState);
 			 
 			IApplMessage oldMsg = searchInOldMsgQueue( msgId );
 			if( oldMsg != null ) {
-				stateTransition(state,oldMsg);
+				stateTransition(nextState,oldMsg);
 				break;
 			}
-			else  addExpectedMsg(state, msgId);
+			else addExpectedMsg(nextState, msgId);
 		}
 	}
 	protected void stateTransition(String stateName, IApplMessage msg ) {
 		curState   = stateName;
 		currentMsg = msg;
 		transTab.removeAllElements();
+		interruptTab.removeAllElements();
 		StateActionFun a = stateMap.get(curState);
-		if( a != null ) a.run( msg );
+		if( a != null ) {
+//			if( interruptedState != null ) {
+//				ColorsOut.outerr(getName() + " | QakActor22Fsm interruptedState:" + interruptedState);
+//			}
+			a.run( msg );
+		}
 		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED");
 	}	
 	protected void addExpectedMsg(String state, String msgId) {
@@ -107,11 +147,15 @@ public abstract class QakActor22Fsm extends QakActor22 {
 	}
 	
 	protected void memoTheMessage(IApplMessage msg) {
-		ColorsOut.outappl(getName() + " | QakActor22Fsm handleMsg not yet:" +  msg, ColorsOut.YELLOW);
+		ColorsOut.outappl(getName() + " | QakActor22Fsm in " + this.curState + " handleMsg not yet:" +  msg, ColorsOut.YELLOW);
 		OldMsgQueue.add(msg);	
 		currentMsg=null;
 	}
 
+	//So interruptedState => ne considero le transizioni senza rifare il body
+	protected void resumeInterrupted() {
+		
+	}
 	protected IApplMessage searchInOldMsgQueue(String msgId) {
  		Iterator<IApplMessage> iter = OldMsgQueue.iterator();
 		while( iter.hasNext() ) {
