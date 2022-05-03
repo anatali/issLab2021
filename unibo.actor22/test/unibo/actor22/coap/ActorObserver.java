@@ -16,7 +16,7 @@ public class ActorObserver {
 	private CoapClient client = null;
 	
 	public ActorObserver(){
-		client = new CoapClient("coap://localhost:8083/actors/a1");
+		client = new CoapClient("coap://localhost:8073/actors/a1");
 	}
 	
 	public void  observe( ) {
@@ -24,7 +24,7 @@ public class ActorObserver {
 				new CoapHandler() {
 					@Override public void onLoad(CoapResponse response) {
 						String content = response.getResponseText();
-						ColorsOut.outappl("ResourceObserver | value=" + content, ColorsOut.GREEN);
+						ColorsOut.outappl("ActorObserver | value=" + content, ColorsOut.GREEN);
 					}					
 					@Override public void onError() {
 						ColorsOut.outerr("OBSERVING FAILED (press enter to exit)");
@@ -34,9 +34,9 @@ public class ActorObserver {
 	
 	public void waitUserEnd() {
  		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
- 		System.out.println("ResourceObserver | press enter to end ...");		
+ 		System.out.println("ActorObserver | press enter to end ...");		
 		try { br.readLine(); } catch (IOException e) { }		
-		System.out.println("ResourceObserver | CANCELLATION");		
+		System.out.println("ActorObserver | CANCELLATION");		
 		relation.proactiveCancel();		
 	}
 	

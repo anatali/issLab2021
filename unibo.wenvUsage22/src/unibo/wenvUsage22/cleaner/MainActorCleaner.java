@@ -10,7 +10,7 @@ import unibo.actor22comm.utils.CommUtils;
 import unibo.wenvUsage22.common.ApplData;
 
 
-@Context22(name = "pcCtx", host = "localhost", port = "8083")
+@Context22(name = "pcCtx", host = "localhost", port = "8075")
 //@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
 @Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
 public class MainActorCleaner {

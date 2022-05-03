@@ -30,18 +30,18 @@ public class HIController {
     private static boolean cleanerAppl     = true;
 
     private Interaction2021 conn;
-    private String mainPage = "RobotCleanerGui";
+    private String mainPage = "RobotNaiveGui";
 
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
-        //if(cleanerAppl) createRobotCleaner();
-        //else createBasicRobot();
+        if(cleanerAppl) createRobotCleaner();
+        else createBasicRobot();
     }
 
     protected void createRobotCleaner(){
         CommSystemConfig.tracing = false;
         robotName  = MainRobotCleaner.myName;
-        mainPage   = "RobotCleanerGui";
+        mainPage   = "RobotNaiveGui";
         CommUtils.aboutThreads("Before start - ");
         MainRobotCleaner appl = new MainRobotCleaner( );
         appl.doJob();

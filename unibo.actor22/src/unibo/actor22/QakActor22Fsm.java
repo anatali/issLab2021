@@ -52,15 +52,16 @@ public abstract class QakActor22Fsm extends QakActor22 {
 //		}
 	}
 	
-	
-	protected void nextState() {
-		
-		
-		clearExpectedMsgs();
+	protected String interruptedState = null;
+	protected void memoState(String currentState) {
+		interruptedState = currentState;
+	}
+	protected void nextState(String currentState, boolean withInterrupt) {
+ 		clearExpectedMsgs();
+ 		if( withInterrupt ) memoState(currentState);
 		Iterator< Pair<String, String> > iter = transTab.iterator();
 		while( iter.hasNext() ) {
-			Pair<String, String> v = iter.next();
-			
+			Pair<String, String> v = iter.next();			
 			String state = v.getFirst();
 			String msgId = v.getSecond();
 			if( msgId.equals(SystemData.emptyMoveId) ) {  

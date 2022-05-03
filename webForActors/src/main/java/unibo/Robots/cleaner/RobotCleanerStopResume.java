@@ -6,26 +6,26 @@ package unibo.Robots.cleaner;
  */
 
 import it.unibo.kactor.IApplMessage;
-
 import unibo.Robots.common.VRobotMoves;
 import unibo.Robots.common.WsConnApplObserver;
+import unibo.actor22.QakActor22FsmAnnot;
+import unibo.actor22.annotations.State;
+import unibo.actor22.annotations.Transition;
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
-import unibo.actor22.QakActor22FsmAnnot;
-import unibo.actor22.annotations.*;
 
 
-public class RobotCleaner extends QakActor22FsmAnnot{
+public class RobotCleanerStopResume extends QakActor22FsmAnnot{
 	private Interaction2021 conn;
 
 	private int numIter     = 0;
 	private int numIterOk   = 5;
 	private int turnStep    = 800;   //600 => too fast
- 	
-	public RobotCleaner(String name) {
+
+	public RobotCleanerStopResume(String name) {
 		super(name);
 	}
 
@@ -48,6 +48,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 
 	@State( name = "start" )
+	@Transition( state = "stoppedDown", msgId= SystemData.stopSysCmdId  )
 	@Transition( state = "goingDown",   msgId="endMoveOk"  )
 	@Transition( state = "endJob",      msgId="endMoveKo"  )
 	protected void start( IApplMessage msg ) {
@@ -56,6 +57,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 	
 	@State( name = "goingDown" )
+	@Transition( state = "stoppedDown",   msgId= SystemData.stopSysCmdId  )
 	@Transition( state = "goingDown",     msgId="endMoveOk"  )
 	@Transition( state = "turnGoingDown", msgId="endMoveKo"  )
 	protected void goingDown( IApplMessage msg ) {
@@ -72,6 +74,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 
 	@State( name = "goingUp" )
+	@Transition( state = "stoppedUp",   msgId= SystemData.stopSysCmdId  )
 	@Transition( state = "goingUp",     msgId="endMoveOk"  )
 	@Transition( state = "turnGoingUp", msgId="endMoveKo"  )  //if numIter
 	protected void goingUp( IApplMessage msg ) {
@@ -90,6 +93,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 
 	@State( name = "lastColumn" )
+	@Transition( state = "stoppedLast",  msgId= SystemData.stopSysCmdId  )
 	@Transition( state = "lastColumn",   msgId="endMoveOk"  )
 	@Transition( state = "completed",    msgId="endMoveKo"  )
 	//@Transition( state = "stopped",     msgId= SystemData.stopSysCmdId  )

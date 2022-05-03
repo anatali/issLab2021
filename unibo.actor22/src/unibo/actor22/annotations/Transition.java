@@ -14,4 +14,5 @@ public @interface Transition {
 	String state()  ;
 	String msgId() default "emptyMove" ;
 	Class guard() default GuardAlwaysTrue.class; 
+	boolean interrupt() default false;
 }

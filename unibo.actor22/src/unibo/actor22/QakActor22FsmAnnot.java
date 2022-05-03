@@ -50,6 +50,7 @@ protected String initialState = null;
 		  Vector<String> nextStates = new Vector<String>();
 		  Vector<String> msgIds     = new Vector<String>();
 		  Vector<Class> guards      = new Vector<Class>();
+		  Vector<Boolean> interrupts= new Vector<Boolean>();
 		  
 		  Transition[] ta        = m.getAnnotationsByType(Transition.class);
  		  
@@ -57,12 +58,13 @@ protected String initialState = null;
 			  ColorsOut.outappl("Transition simple: "+ t.msgId() + " -> " + t.state() + " guard=" + t.guard(), ColorsOut.CYAN);
 			  nextStates.add(t.state());
 			  msgIds.add(t.msgId());
+			  interrupts.add(t.interrupt());
 			  guards.add(t.guard());
  		  }
 		  //Farlo staticamente NO
 // 		  ColorsOut.outappl("nextStates "+ nextStates.size() , ColorsOut.CYAN);
 //		  ColorsOut.outappl("msgIds "+ msgIds.size() , ColorsOut.CYAN);
-		  doDeclareState(m,stateName,nextStates,msgIds,guards );	
+		  doDeclareState(m,stateName,nextStates,msgIds,guards,interrupts );	
 		   
 	}
 	
@@ -71,24 +73,34 @@ protected String initialState = null;
 	}
 	
 	protected void doDeclareState(
-			Method curMethod, String stateName, 
-			Vector<String> nextStates, Vector<String> msgIds, Vector<Class> guards) {
+			Method curMethod, String stateName, Vector<String> nextStates, 
+			Vector<String> msgIds, Vector<Class> guards,Vector<Boolean> interrupts) {
 		  declareState( stateName, new StateActionFun() {
 				@Override
 				public void run( IApplMessage msg ) {
 				try {
-  					//outInfo("uuuu "+ msg  + " " + this );	
-  					curMethod.invoke(  myself, msg   );  //I metodi hanno this come arg implicito
+  					//Esegue il body  					
+					curMethod.invoke(  myself, msg   );  //I metodi hanno this come arg implicito
+  					
+  					boolean withInterrupt=false;
   					for( int j=0; j<nextStates.size();j++ ) {
-  						Class g   =  guards.elementAt(j);
+   						Class g   =  guards.elementAt(j);
+  						if( ! withInterrupt ) { 
+  							withInterrupt = interrupts.elementAt(j);  
+  						}
+  						else {ColorsOut.outerr("multiple interrupt not allowed");}
   						Object og = g.newInstance();
-  						Boolean result = (Boolean) g.getMethod("eval").invoke( og );
-						if( result ) {
+   						Boolean result = (Boolean) g.getMethod("eval").invoke( og );
+ 						if( result ) {
 							//ColorsOut.outappl("g:"+ g + " result=" + result.getClass().getName(), ColorsOut.GREEN);
-							addTransition( nextStates.elementAt(j), msgIds.elementAt(j) );
+							if( ! withInterrupt )
+								addTransition( nextStates.elementAt(j), msgIds.elementAt(j) );
+							else {//Transition with interrupt
+								
+							}
   						}
   					}					
-  					nextState();
+  					nextState(stateName, withInterrupt);
 				} catch ( Exception e) {
 						ColorsOut.outerr("wrong execution for:"+ stateName + " - " + e.getMessage());
 				}

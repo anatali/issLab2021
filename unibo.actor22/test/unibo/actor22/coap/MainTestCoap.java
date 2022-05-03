@@ -11,7 +11,7 @@ import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 
-@Context22(name = "ctx", host = "localhost", port = "8083")
+@Context22(name = "ctx", host = "localhost", port = "8073")
 @Actor22(name = "a1",contextName="ctx",implement = TestCoap.class)
 public class MainTestCoap {
  

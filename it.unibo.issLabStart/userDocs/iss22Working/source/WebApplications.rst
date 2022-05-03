@@ -257,7 +257,7 @@ Creiamo un file ``it.unibo.webspring.demo.HIControllerDemo`` con il seguente con
     public ResponseEntity handle(Exception ex) {
             HttpHeaders responseHeaders = new HttpHeaders();
         return new ResponseEntity(
-                    "BaseController ERROR " + ex.getMessage(), 
+                    "HIControllerDemo ERROR " + ex.getMessage(), 
                     responseHeaders, HttpStatus.CREATED);
         }
     }

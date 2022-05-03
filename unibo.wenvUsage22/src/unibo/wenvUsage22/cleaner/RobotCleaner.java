@@ -32,7 +32,6 @@ public class RobotCleaner extends QakActor22FsmAnnot{
  		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.BLUE);
 		conn = WsConnection.create("localhost:8091" ); 
 		IObserver robotMoveObserver = new WsConnApplObserver(getName(), false);
-
 		((WsConnection)conn).addObserver(robotMoveObserver);
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
@@ -47,8 +46,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 
 	@State( name = "start" )
-	@Transition( state = "stoppedDown", msgId= SystemData.stopSysCmdId  )
-	@Transition( state = "goingDown",   msgId="endMoveOk"  )
+ 	@Transition( state = "goingDown",   msgId="endMoveOk"  )
 	@Transition( state = "endJob",      msgId="endMoveKo"  )
 	protected void start( IApplMessage msg ) {
 		outInfo(""+msg);
@@ -56,8 +54,7 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 	
 	@State( name = "goingDown" )
-	@Transition( state = "stoppedDown",   msgId= SystemData.stopSysCmdId  )
-	@Transition( state = "goingDown",     msgId="endMoveOk"  )
+ 	@Transition( state = "goingDown",     msgId="endMoveOk"  )
 	@Transition( state = "turnGoingDown", msgId="endMoveKo"  )
 	protected void goingDown( IApplMessage msg ) {
 		outInfo(""+msg);
@@ -92,7 +89,6 @@ public class RobotCleaner extends QakActor22FsmAnnot{
 	}
 
 	@State( name = "lastColumn" )
-	@Transition( state = "stoppedLast",  msgId= SystemData.stopSysCmdId  )
 	@Transition( state = "lastColumn",   msgId="endMoveOk"  )
 	@Transition( state = "completed",    msgId="endMoveKo"  )
 	//@Transition( state = "stopped",     msgId= SystemData.stopSysCmdId  )
