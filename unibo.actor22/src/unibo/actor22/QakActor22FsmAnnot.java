@@ -74,7 +74,7 @@ protected String initialState = null;
 	
 	protected void doDeclareState(
 			Method curMethod, String stateName, Vector<String> nextStates, 
-			Vector<String> msgIds, Vector<Class> guards,Vector<Boolean> interrupts) {
+			Vector<String> msgIds, Vector<Class> guards, Vector<Boolean> interrupts) {
 		  declareState( stateName, new StateActionFun() {
 				@Override
 				public void run( IApplMessage msg ) {
@@ -89,18 +89,14 @@ protected String initialState = null;
   							withInterrupt = interrupts.elementAt(j);  
   						}
   						else {ColorsOut.outerr("multiple interrupt not allowed");}
-  						Object og = g.newInstance();
+  						Object og = g.newInstance();  //Guard
    						Boolean result = (Boolean) g.getMethod("eval").invoke( og );
  						if( result ) {
 							//ColorsOut.outappl("g:"+ g + " result=" + result.getClass().getName(), ColorsOut.GREEN);
-							if( ! withInterrupt )
-								addTransition( nextStates.elementAt(j), msgIds.elementAt(j) );
-							else {//Transition with interrupt
-								
-							}
+ 							addTransition( nextStates.elementAt(j), msgIds.elementAt(j), withInterrupt );
   						}
   					}					
-  					nextState(stateName, withInterrupt);
+  					nextState(stateName );
 				} catch ( Exception e) {
 						ColorsOut.outerr("wrong execution for:"+ stateName + " - " + e.getMessage());
 				}

@@ -18,7 +18,7 @@ private int n = 0;
  	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg);
 		n++;
-		addTransition( "s1", ApplData.resumeCmd );
+		addTransition( "s1", ApplData.resumeCmd , false);
 		this.autoMsg( ApplData.resumeCmd("a1", "a1"));
   	}
  
@@ -26,9 +26,9 @@ private int n = 0;
  	protected void s1( IApplMessage msg ) {
 		outInfo("n="+n + " " + msg);
 		if( n < 2 ) {
-			addTransition( "s0", ApplData.resumeCmd );
+			addTransition( "s0", ApplData.resumeCmd, false );
 		}else {
-			addTransition( "s2", ApplData.resumeCmd );
+			addTransition( "s2", ApplData.resumeCmd, false );
 		}
 		this.autoMsg( ApplData.resumeCmd("a1", "a1"));
   	}

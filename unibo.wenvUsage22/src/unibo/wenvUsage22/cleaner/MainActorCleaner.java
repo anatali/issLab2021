@@ -12,7 +12,8 @@ import unibo.wenvUsage22.common.ApplData;
 
 @Context22(name = "pcCtx", host = "localhost", port = "8075")
 //@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
-@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
+//@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleanerStartStop.class)
+@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
 public class MainActorCleaner {
 	
 	public static final String myName = "cleaner";
@@ -22,8 +23,12 @@ public class MainActorCleaner {
 		//AnnotUtil.handleRepeatableActorDeclaration(this);
 		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
-  		//Qak22Util.sendAMsg( ApplData.startSysCmd("main",myName) );
   		Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
+
+		CommUtils.delay(1500);  
+		Qak22Util.sendAMsg( SystemData.stopSysCmd("main",myName) );
+	
+	
 	};
 
 	public void terminate() {

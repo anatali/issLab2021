@@ -9,7 +9,8 @@ import unibo.actor22comm.utils.CommUtils;
 
 
 @Context22(name = "pcCtx", host = "localhost", port = "8083")
-@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
+//@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
+@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
 public class MainRobotCleaner {
 	
 	public static final String myName = "cleaner";

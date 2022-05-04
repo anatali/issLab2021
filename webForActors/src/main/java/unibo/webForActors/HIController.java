@@ -41,7 +41,7 @@ public class HIController {
     protected void createRobotCleaner(){
         CommSystemConfig.tracing = false;
         robotName  = MainRobotCleaner.myName;
-        mainPage   = "RobotNaiveGui";
+        mainPage   = "RobotCleanerGui";
         CommUtils.aboutThreads("Before start - ");
         MainRobotCleaner appl = new MainRobotCleaner( );
         appl.doJob();
