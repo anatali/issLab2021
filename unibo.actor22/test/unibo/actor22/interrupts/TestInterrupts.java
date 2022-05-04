@@ -21,6 +21,7 @@ private int n = 0;
  	}
 
 	@State( name = "s0" )
+	@Transition( state = "s1_interrupted",   msgId= SystemData.stopSysCmdId, interrupt = true  )
 	@Transition( state = "s1" ,  msgId = SystemData.demoSysId )
 	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg );
@@ -29,7 +30,8 @@ private int n = 0;
 
 	
 	@State( name = "s1" )
-	@Transition( state = "s0" ,   msgId = SystemData.demoSysId, guard = Guard1.class)
+	@Transition( state = "s0" ,  msgId = SystemData.demoSysId, guard = Guard1.class)
+	@Transition( state = "s1" ,  msgId = SystemData.haltSysCmdId )
 	@Transition( state = "s1_interrupted" ,  msgId = SystemData.stopSysCmdId, interrupt = true )
  	protected void s1( IApplMessage msg ) {
 		outInfo(""+msg );
@@ -43,7 +45,7 @@ private int n = 0;
 	//transizioni di s1, così gestisco demoSysId dopo avere fatto s1_interrupted
 	@State( name = "s1_interrupted" )
 	protected void end( IApplMessage msg ) {
-		outInfo(""+msg + " interruptedState=" + interruptedState);
+		outInfo(""+msg + " stateWithInterrupt=" +  stateWithInterrupt  );
 		//RESUME: faccio le addTransition che avrebbe fatto s1 senza la parte di interrupt
 		resume();
 	}

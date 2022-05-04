@@ -24,7 +24,8 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	private int numIter     = 0;
 	private int numIterOk   = 5;
 	private int turnStep    = 800;   //600 => too fast
- 	
+ 	private boolean goingDown = true;
+ 
 	public RobotCleanerInterrupt(String name) {
 		super(name);
 	}
@@ -44,7 +45,6 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 		outInfo(""+msg);
 		init();
 		numIter++;
-		//VRobotMoves.step(getName(), conn );
 	}
 
 	@State( name = "start" )
@@ -53,7 +53,7 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	@Transition( state = "endJob",      msgId="endMoveKo"  )
 	protected void start( IApplMessage msg ) {
 		outInfo(""+msg);
-     	VRobotMoves.step(getName(), conn );
+     	//VRobotMoves.step(getName(), conn );
 	}
 	
 	@State( name = "goingDown" )

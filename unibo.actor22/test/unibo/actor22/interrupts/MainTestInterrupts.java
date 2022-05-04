@@ -19,6 +19,8 @@ public class MainTestInterrupts {
 		Qak22Util.sendAMsg( SystemData.startSysCmd("main","a1") );
 		CommUtils.delay(500);  
 		Qak22Util.sendAMsg( SystemData.stopSysCmd("main","a1") );
+		CommUtils.delay(500);  
+		Qak22Util.sendAMsg( SystemData.stopSysCmd("main","a1") );
  	}
 	
 	public static void main(String[] args) throws Exception   {

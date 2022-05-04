@@ -5,6 +5,7 @@ import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.Actor22;
 import unibo.actor22.annotations.Context22;
 import unibo.actor22comm.SystemData;
+import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.wenvUsage22.common.ApplData;
@@ -25,8 +26,15 @@ public class MainActorCleaner {
 		Qak22Context.showActorNames();
   		Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
 
-		CommUtils.delay(1500);  
-		Qak22Util.sendAMsg( SystemData.stopSysCmd("main",myName) );
+//		CommUtils.delay(5000);  
+//		ColorsOut.outerr("STOPPING");
+//		Qak22Util.sendAMsg( SystemData.stopSysCmd("main",myName) );
+//		CommUtils.delay(2000);  
+//		ColorsOut.outerr("STOPPING");
+//		Qak22Util.sendAMsg( SystemData.resumeSysCmd("main",myName) );
+//		CommUtils.delay(2000);  
+//		ColorsOut.outerr("STOPPING");
+//		Qak22Util.sendAMsg( SystemData.resumeSysCmd("main",myName) );
 	
 	
 	};

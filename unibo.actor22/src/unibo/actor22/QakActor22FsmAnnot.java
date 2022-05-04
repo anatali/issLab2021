@@ -82,18 +82,20 @@ protected String initialState = null;
   					//Esegue il body  					
 					curMethod.invoke(  myself, msg   );  //I metodi hanno this come arg implicito
   					
-  					boolean withInterrupt=false;
+  					boolean stateWithInterrupt=false;
+
   					for( int j=0; j<nextStates.size();j++ ) {
    						Class g   =  guards.elementAt(j);
-  						if( ! withInterrupt ) { 
-  							withInterrupt = interrupts.elementAt(j);  
-  						}
-  						else {ColorsOut.outerr("multiple interrupt not allowed");}
+   						boolean hasInterrupt = interrupts.elementAt(j);
+  						if( hasInterrupt  ) {  							
+  							if( ! stateWithInterrupt  ) stateWithInterrupt = true;  
+  	  						else {ColorsOut.outerr(stateName + ": multiple interrupt not allowed");}
+ 						}
   						Object og = g.newInstance();  //Guard
    						Boolean result = (Boolean) g.getMethod("eval").invoke( og );
  						if( result ) {
 							//ColorsOut.outappl("g:"+ g + " result=" + result.getClass().getName(), ColorsOut.GREEN);
- 							addTransition( nextStates.elementAt(j), msgIds.elementAt(j), withInterrupt );
+ 							addTransition( nextStates.elementAt(j), msgIds.elementAt(j), stateWithInterrupt );
   						}
   					}					
   					nextState(stateName );
