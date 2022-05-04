@@ -147,7 +147,7 @@ public abstract class QakActor22Fsm extends QakActor22 {
 		if( a != null ) {
 			a.run( msg );
 		}
-		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED");
+		else ColorsOut.outerr(getName() + " | QakActor22Fsm TERMINATED since no body");
 	}	
 	protected void addExpectedMsg(String state, String msgId) {
 		nextMsgMap.put(msgId, state);		

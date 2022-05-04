@@ -24,7 +24,6 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	private int numIter     = 0;
 	private int numIterOk   = 5;
 	private int turnStep    = 800;   //600 => too fast
- 	private boolean goingDown = true;
  
 	public RobotCleanerInterrupt(String name) {
 		super(name);
@@ -53,7 +52,7 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	@Transition( state = "endJob",      msgId="endMoveKo"  )
 	protected void start( IApplMessage msg ) {
 		outInfo(""+msg);
-     	//VRobotMoves.step(getName(), conn );
+     	VRobotMoves.step(getName(), conn );
 	}
 	
 	@State( name = "goingDown" )
@@ -96,7 +95,6 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	@Transition( state = "stopped",  msgId= SystemData.stopSysCmdId, interrupt = true  )
 	@Transition( state = "lastColumn",   msgId="endMoveOk"  )
 	@Transition( state = "completed",    msgId="endMoveKo"  )
-	//@Transition( state = "stopped",     msgId= SystemData.stopSysCmdId  )
 	protected void lastColumn( IApplMessage msg ) {
 		outInfo(""+msg);
 		//outInfo("numIter="+numIter);
@@ -133,7 +131,6 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	@State( name = "resume" )
  	protected void resume( IApplMessage msg ) {
 		outInfo("" + msg);
-		//RESUME: faccio le addTransition che avrebbe fatto lo stato interrupted senza la parte di interrupt
 		resume();
 	}
 

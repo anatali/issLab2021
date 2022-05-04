@@ -14,28 +14,27 @@ import unibo.wenvUsage22.common.ApplData;
 @Context22(name = "pcCtx", host = "localhost", port = "8075")
 //@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
 //@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleanerStartStop.class)
-@Actor22(name = MainActorCleaner.myName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
+//@Actor22(name = MainActorCleaner.robotName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
+@Actor22(name = MainActorCleaner.robotName, contextName = "pcCtx", implement = RobotCleanerProject.class)
 public class MainActorCleaner {
 	
-	public static final String myName = "cleaner";
+	public static final String robotName = "cleaner";
 	
 	public void doJob() {
 		CommSystemConfig.tracing = false;
 		//AnnotUtil.handleRepeatableActorDeclaration(this);
 		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
-  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
+  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
 
-//		CommUtils.delay(5000);  
-//		ColorsOut.outerr("STOPPING");
-//		Qak22Util.sendAMsg( SystemData.stopSysCmd("main",myName) );
-//		CommUtils.delay(2000);  
-//		ColorsOut.outerr("STOPPING");
-//		Qak22Util.sendAMsg( SystemData.resumeSysCmd("main",myName) );
-//		CommUtils.delay(2000);  
-//		ColorsOut.outerr("STOPPING");
-//		Qak22Util.sendAMsg( SystemData.resumeSysCmd("main",myName) );
-	
+  		for( int i = 1; i<=4; i++) {
+			CommUtils.delay(2000);  
+			ColorsOut.outerr("STOPPING_"+i);
+			Qak22Util.sendAMsg( SystemData.stopSysCmd("main",robotName) );
+			CommUtils.delay(2000);  
+			Qak22Util.sendAMsg( SystemData.resumeSysCmd("main",robotName) );
+			ColorsOut.outerr("RESUMING_"+i);
+  		}
 	
 	};
 

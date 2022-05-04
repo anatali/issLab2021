@@ -1,4 +1,4 @@
-package unibo.Robots.cleaner;
+package unibo.wenvUsage22.cleaner;
 
 
 /*
@@ -6,26 +6,27 @@ package unibo.Robots.cleaner;
  */
 
 import it.unibo.kactor.IApplMessage;
-
-import unibo.Robots.common.VRobotMoves;
-import unibo.Robots.common.WsConnApplObserver;
+ 
 import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
+import unibo.wenvUsage22.basicRobot.prototype0.WsConnApplObserver;
+import unibo.wenvUsage22.common.VRobotMoves;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.*;
 
 
-public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
+public class RobotCleanerProject extends QakActor22FsmAnnot{
 	private Interaction2021 conn;
 
 	private int numIter     = 0;
 	private int numIterOk   = 5;
 	private int turnStep    = 800;   //600 => too fast
+ 	private boolean goingDown = true;
  
-	public RobotCleanerInterrupt(String name) {
+	public RobotCleanerProject(String name) {
 		super(name);
 	}
 
@@ -47,49 +48,35 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	}
 
 	@State( name = "start" )
-	@Transition( state = "stopped", msgId= SystemData.stopSysCmdId, interrupt = true   )
-	@Transition( state = "goingDown",   msgId="endMoveOk"  )
+	@Transition( state = "stopped",     msgId= SystemData.stopSysCmdId, interrupt = true   )
+	@Transition( state = "coverColumn", msgId="endMoveOk"  )
 	@Transition( state = "endJob",      msgId="endMoveKo"  )
 	protected void start( IApplMessage msg ) {
 		outInfo(""+msg);
+		goingDown=true;
      	VRobotMoves.step(getName(), conn );
 	}
 	
-	@State( name = "goingDown" )
-	@Transition( state = "stopped",   msgId= SystemData.stopSysCmdId, interrupt = true  )
-	@Transition( state = "goingDown",     msgId="endMoveOk"  )
-	@Transition( state = "turnGoingDown", msgId="endMoveKo"  )
-	protected void goingDown( IApplMessage msg ) {
+	@State( name = "coverColumn" )
+	@Transition( state = "stopped",     msgId= SystemData.stopSysCmdId, interrupt = true  )
+	@Transition( state = "coverColumn", msgId="endMoveOk"  )
+	@Transition( state = "turn",        msgId="endMoveKo"  )
+	protected void coverColumn( IApplMessage msg ) {
 		outInfo(""+msg);
 		VRobotMoves.step(getName(), conn );
 	}
 	
-	@State( name = "turnGoingDown" ) //potrebbe collidere col wallRight
-	@Transition( state = "goingUp",     msgId="endMoveOk"  )
+	@State( name = "turn" ) //potrebbe collidere col wallRight
+	@Transition( state = "coverColumn", msgId="endMoveOk"  )
 	@Transition( state = "lastColumn",  msgId="endMoveKo"  )
- 	protected void turnGoingDown( IApplMessage msg ) {
-		outInfo(""+msg);
-		VRobotMoves.turnLeftAndStep(getName(), turnStep, conn);
-	}
-
-	@State( name = "goingUp" )
-	@Transition( state = "stopped",   msgId= SystemData.stopSysCmdId, interrupt = true  )
-	@Transition( state = "goingUp",     msgId="endMoveOk"  )
-	@Transition( state = "turnGoingUp", msgId="endMoveKo"  )  //if numIter
-	protected void goingUp( IApplMessage msg ) {
-		outInfo(""+msg);		
-		VRobotMoves.step(getName(), conn );
-	}
-
-	@State( name = "turnGoingUp" )   //potrebbe collidere col wallRight
-	@Transition( state = "goingDown",   msgId="endMoveOk"  )
-	@Transition( state = "lastColumn",  msgId="endMoveKo"  )  //if numIter
- 	protected void turnGoingUp( IApplMessage msg ) {
-		outInfo(""+msg);
-		numIter++;
-		if( numIter == numIterOk ) ColorsOut.outappl(getName() + " | DONE " ,  ColorsOut.BLUE);
+ 	protected void turn( IApplMessage msg ) {
+		outInfo(""+msg + " goingDown=" + goingDown);
+		if( goingDown ) VRobotMoves.turnLeftAndStep(getName(), turnStep, conn);
 		else VRobotMoves.turnRightAndStep(getName(), turnStep, conn);
+		goingDown = !goingDown;
+		//VRobotMoves.step(getName(), conn );
 	}
+
 
 	@State( name = "lastColumn" )
 	@Transition( state = "stopped",  msgId= SystemData.stopSysCmdId, interrupt = true  )
@@ -110,7 +97,8 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 		outInfo("numIter="+numIter);
 		if( numIter == numIterOk ) ColorsOut.outappl(getName() + " | DONE " ,  ColorsOut.MAGENTA);  
 		else ColorsOut.outerr(getName() + " | COMPLETED TOO FAST "  );  
-		VRobotMoves.turnLeftAndHome(getName(), conn ); 
+		if(goingDown) ColorsOut.outerr(getName() + " | todo gotHome from opposite corner"  );  
+		else VRobotMoves.turnLeftAndHome(getName(), conn ); 
 	}
 	
 	
@@ -131,7 +119,6 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
 	@State( name = "resume" )
  	protected void resume( IApplMessage msg ) {
 		outInfo("" + msg);
-		//RESUME: faccio le addTransition che avrebbe fatto lo stato interrupted senza la parte di interrupt
 		resume();
 	}
 

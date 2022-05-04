@@ -34,13 +34,11 @@ public class HIController {
 
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
-        if(cleanerAppl) createRobotCleaner();
-        else createBasicRobot();
     }
 
     protected void createRobotCleaner(){
         CommSystemConfig.tracing = false;
-        robotName  = MainRobotCleaner.myName;
+        robotName  = MainRobotCleaner.robotName;
         mainPage   = "RobotCleanerGui";
         CommUtils.aboutThreads("Before start - ");
         MainRobotCleaner appl = new MainRobotCleaner( );
@@ -64,8 +62,8 @@ public class HIController {
             case "a" : return CommUtils.buildDispatch("webgui", robotCmdId, "a", robotName);
             case "d" : return CommUtils.buildDispatch("webgui", robotCmdId, "d", robotName);
             case "h" : return CommUtils.buildDispatch("webgui", robotCmdId, "h", robotName);
-            case "start"  : return CommUtils.buildDispatch("webgui", robotCmdId, "start",  robotName);
 
+            case "start"  : return CommUtils.buildDispatch("webgui", robotCmdId, "start",  robotName);
             case "stop"   : return CommUtils.buildDispatch("webgui", "stop", "do",   robotName);
             case "resume" : return CommUtils.buildDispatch("webgui", "resume", "do", robotName);
             default:   return CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
@@ -77,6 +75,8 @@ public class HIController {
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("arg", appName);
+        if(cleanerAppl)  mainPage = "RobotCleanerGui";
+        else mainPage = "RobotNaiveGui";
         return mainPage;
     }
 
@@ -84,9 +84,11 @@ public class HIController {
     @PostMapping("/configure")
     public String configure(Model viewmodel  , @RequestParam String move, String addr ){
         ColorsOut.outappl("HIController | configure:" + move, ColorsOut.BLUE);
+        if(cleanerAppl) createRobotCleaner(); else createBasicRobot();
         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
-        conn = connToRobot.createConnection(addr, 8083);
-        Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
+        conn = connToRobot.createConnection(addr, 8083);  //8083 is the cleaner robot
+        //To allow ...
+        //Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
         return mainPage;
     }
 

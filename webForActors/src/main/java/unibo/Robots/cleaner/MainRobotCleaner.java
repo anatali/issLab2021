@@ -9,11 +9,13 @@ import unibo.actor22comm.utils.CommUtils;
 
 
 @Context22(name = "pcCtx", host = "localhost", port = "8083")
-//@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleaner.class)
-@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
+//@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
+//@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleanerStartStop.class)
+//@Actor22(name = MainRobotCleaner.robotName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
+@Actor22(name = MainRobotCleaner.robotName, contextName = "pcCtx", implement = RobotCleanerProject.class)
 public class MainRobotCleaner {
 	
-	public static final String myName = "cleaner";
+	public static final String robotName = "cleaner";
 	
 	public void doJob() {
 		CommSystemConfig.tracing = false;

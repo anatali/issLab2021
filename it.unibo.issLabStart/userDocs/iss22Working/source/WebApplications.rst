@@ -370,4 +370,13 @@ Un controller per RobotCleaner Appl
 
  
  
+.. image::  ./_static/img/Spring/RobotCleanerFsmProject.PNG
+  :align: center 
+  :width: 60%
+
+
+.. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
+  :align: center 
+  :width: 60%
+
 

@@ -275,6 +275,23 @@ Il modello eseguibile è riportato in RobotCleaner.java
    }
 
 
+
+------------------------------------------------------
+RobotCleaner: progetto
+------------------------------------------------------
+
+Il progetto semplifica l'automa e permette la riattivazione del robot dopo che ha completato il lavoro:
+ 
+ 
+.. image::  ./_static/img/Spring/RobotCleanerFsmProject.PNG
+  :align: center 
+  :width: 80%
+
+
+
+
+
+
 ------------------------------------------------------
 RobotCleaner reattivo a comandi
 ------------------------------------------------------
@@ -294,3 +311,48 @@ Pianificazione del lavoro:
 #. Si verifica il funzionamento del nuovo prototipo
 #. Si realizza una Web User Interface utlizzando SpringBoot. Per questa parte si veda :ref:`WebApplications con SpringBoot`
    e :ref:`Una WebConsole per il RobotCleaner`
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+RobotCleaner con start/stop
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Partendo dal modello della analisi, la versione ``RobotCleanerStartStop`` nel package ``unibo.wenvUsage22.cleaner``  considera 
+la possibilità di gestire un messaggio di stop negli stati marcati nella figura che segue.
+
+.. image::  ./_static/img/Spring/RobotCleanerFsmStartStopAnalisi.PNG
+  :align: center 
+  :width: 80%
+
+
+Per ogni stato marcato nasce uno stato stopped in cui 
+
+
+Ad esempio:
+
+.. image::  ./_static/img/Spring/RobotCleanerFsmStartStopAnalisiNoInterrupt.PNG
+  :align: center 
+  :width: 80%
+
+
+
+.. code:: Java
+
+   @State( name = "stoppedDown" )
+	@Transition( state = "resumedDown",  msgId= SystemData.resumeSysCmdId  )
+ 	protected void stoppedDown( IApplMessage msg ) {
+		outInfo("" + msg);
+	}
+
+	@State( name = "resumedDown" )
+	@Transition( state = "goingDown",     msgId="endMoveOk"  )
+	@Transition( state = "turnGoingDown", msgId="endMoveKo"  )
+	protected void resumedDown( IApplMessage msg ) {
+		outInfo("" + msg);
+	}
+
+
+
+
+.. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
+  :align: center 
+  :width: 80%
