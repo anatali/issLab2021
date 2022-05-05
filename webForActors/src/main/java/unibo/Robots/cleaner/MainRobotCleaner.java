@@ -22,8 +22,8 @@ public class MainRobotCleaner {
 		CommSystemConfig.tracing = false;
  		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
-		//ActorObserver obs = new ActorObserver("8083",robotName);
-		//obs.setWebSocketHandler(WebSocketConfiguration.wshandler);
+		ActorObserver obs = new ActorObserver("8083",robotName);
+		obs.setWebSocketHandler(WebSocketConfiguration.wshandler);
 
    		//Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
 	};

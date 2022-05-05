@@ -495,3 +495,140 @@ RobotCleaner:  display area
 - Il ``RobotCleaner`` deve emettere informazioni di stato che vengono inviate alla pagina Web mediante 
   una webSocket su 8085. La pagina deve visualizzare queste informazioni di stato nella DisplayArea.
 
+
+L'attore che realizza il ``RobotCleaner`` costituisce una risorsa CoAP osservabile, che viene 
+aggiornata usando il metodo  ``updateResourceRep``
+
+
+In MainRobotCleaner:
+
+.. code:: Java
+
+	public void doJob() {
+  		Qak22Context.configureTheSystem(this);
+ 
+		ActorObserver obs = new ActorObserver("8083",robotName);
+		obs.setWebSocketHandler(WebSocketConfiguration.wshandler);  //WebSocketHandler
+ 	};
+
++++++++++++++++++++++++++++++++++++++++
+WebSocketConfiguration
++++++++++++++++++++++++++++++++++++++++
+
+.. code:: Java
+
+   @Configuration
+   @EnableWebSocket
+   public class WebSocketConfiguration implements WebSocketConfigurer {
+
+   public static final WebSocketHandler wshandler = new WebSocketHandler();
+   public static final String wspath              = "socket";
+   @Override
+   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+      registry.addHandler(wshandler, wspath).setAllowedOrigins("*");
+   }
+
+
++++++++++++++++++++++++++++++++++++++++
+WebSocketHandler
++++++++++++++++++++++++++++++++++++++++
+
+.. code:: Java
+
+   public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHandler {
+   private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+
+      public void sendToAll(String message)  {
+         ...
+      }
+   }
+
+   public void sendToAll(TextMessage message) throws IOException{
+      while( sessions.size() == 0 ) {
+             CommUtils.delay(100);
+      }
+      Iterator<WebSocketSession> iter = sessions.iterator();
+      while( iter.hasNext() ){
+         iter.next().sendMessage(message);
+      }
+   }
+
+
++++++++++++++++++++++++++++++++++++++++
+ActorObserver
++++++++++++++++++++++++++++++++++++++++
+
+.. code:: Java
+
+   public class ActorObserver {
+   private CoapObserveRelation relation = null;
+   private CoapClient client = null;
+   private IWsHandler wsh ;
+
+   public ActorObserver(String port, String actorName){
+      client = new CoapClient("coap://localhost:"+port+"/actors/"+actorName);
+      observe();
+   }
+
+   public void setWebSocketHandler(IWsHandler h){
+      wsh = h;
+   }
+   public void  observe( ) {
+      relation = client.observe(
+         new CoapHandler() {
+            @Override public void onLoad(CoapResponse response) {
+            String content = response.getResponseText();
+            if( wsh != null ) wsh.sendToAll(content);
+         }					
+         @Override public void onError() {
+            ColorsOut.outerr("OBSERVING FAILED (press enter to exit)");
+         }
+      });		
+   }
+
+
+- ActorObserver: opera come CoAP client e offre un setWebSocketHandler (wsh)
+- Attiva un client.observe con argomento un CoapHandler che invoca wsh.sendToAll
+
++++++++++++++++++++++++++++++++++++++++
+wsminimal.js
++++++++++++++++++++++++++++++++++++++++
+
+.. code::   
+
+   const messageWindow   = document.getElementById("display");
+
+   function sendMessage(message) {
+      var jsonMsg = JSON.stringify( {'name': message});
+      socket.send(jsonMsg);
+      addMessageToWindow("Sent Message: " + jsonMsg);
+    }
+
+   function addMessageToWindow(message) {
+      //messageWindow.innerHTML += `<div>${message}</div>`
+      messageWindow.innerHTML = `<div>${message}</div>`
+   }
+
+   function connect(){
+      var host       =  "localhost:8085"; //document.location.host;
+      var pathname =  "/"//document.location.pathname;
+      var addr     = "ws://" +host  + pathname + "socket"  ;
+      // Assicura che sia aperta un unica connessione
+      if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+         alert("WARNING: Connessione WebSocket già stabilita");
+      }
+      var socket = new WebSocket(addr);
+      socket.onopen = function (event) {
+         addMessageToWindow("Connected to " + addr);
+      };
+
+      socket.onmessage = function (event) {
+         addMessageToWindow(""+`${event.data}`);
+      };
+      return socket;
+   }//connect
+
+   connect()
+
+- wsminimal.js in RobotCleanerGui.html si connette a una ws su localhost:8085 e riceve (onmessage) dati 
+  che visualizza in messageWindow.innerHTML  
