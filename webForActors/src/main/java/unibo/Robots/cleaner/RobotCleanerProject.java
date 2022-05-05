@@ -67,6 +67,7 @@ public class RobotCleanerProject extends QakActor22FsmAnnot{
 	@Transition( state = "turn",        msgId="endMoveKo"  )
 	protected void coverColumn( IApplMessage msg ) {
 		outInfo(""+msg);
+		//this.updateResourceRep( ""+msg );  //TODO
 		VRobotMoves.step(getName(), conn );
 	}
 	

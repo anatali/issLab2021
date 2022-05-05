@@ -144,4 +144,32 @@ e rimarrà inizializzata.
 
 
 
+-------------------------------------------
+RobotCleaner:  display area
+-------------------------------------------    
+
+:worktodo:`WORKTODO: aggiornare la DisplayArea con informazioni di stato`
+
+Il ``RobotCleaner`` deve emettere informazioni di stato che vengono inviate alla pagina Web mediante 
+una webSocket su 8085.
+
+L'attore che realizza il ``RobotCleaner`` costituisce una risorsa CoAP osservabile, che viene 
+aggiornata usando il metodo  ``updateResourceRep``
+
+
+In MainRobotCleaner:
+
+.. code:: Java
+
+	public void doJob() {
+  		Qak22Context.configureTheSystem(this);
  
+		ActorObserver obs = new ActorObserver("8083",robotName);
+		obs.setWebSocketHandler(WebSocketConfiguration.wshandler);
+ 	};
+
+
+- ActorObserver: opera come CoAP client e offre un setWebSocketHandler (wsh)
+- Attiva un client.observe con argomento un CoapHandler che invoca wsh.sendToAll
+- wsminimal.js in RobotCleanerGui.html si connette a una ws su localhost:8085 e riceve (onmessage) dati 
+  che visualizza in messageWindow.innerHTML  

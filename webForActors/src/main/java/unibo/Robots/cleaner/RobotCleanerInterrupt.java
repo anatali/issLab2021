@@ -123,13 +123,13 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
   	//--------------------------------------------------
 
 	@State( name = "stopped" )
-	@Transition( state = "resume",  msgId= SystemData.resumeSysCmdId  )
+	@Transition( state = "doresume",  msgId= SystemData.resumeSysCmdId  )
  	protected void stopped( IApplMessage msg ) {
 		outInfo("" + msg);
 	}
 
-	@State( name = "resume" )
- 	protected void resume( IApplMessage msg ) {
+	@State( name = "doresume" )
+ 	protected void doresume( IApplMessage msg ) {
 		outInfo("" + msg);
 		//RESUME: faccio le addTransition che avrebbe fatto lo stato interrupted senza la parte di interrupt
 		resume();

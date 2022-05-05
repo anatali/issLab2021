@@ -18,14 +18,14 @@ import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.*;
 
 
-public class RobotCleaner extends QakActor22FsmAnnot{
+public class RobotCleanerAnalisi extends QakActor22FsmAnnot{
 	private Interaction2021 conn;
 
 	private int numIter     = 0;
 	private int numIterOk   = 5;
 	private int turnStep    = 800;   //600 => too fast
  	
-	public RobotCleaner(String name) {
+	public RobotCleanerAnalisi(String name) {
 		super(name);
 	}
 

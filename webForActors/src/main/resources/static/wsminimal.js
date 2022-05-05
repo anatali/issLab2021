@@ -23,14 +23,14 @@ wsminimal.js
 
     function addMessageToWindow(message) {
         //messageWindow.innerHTML += `<div>${message}</div>`
-        messageWindow.innerHTML += `<div>${message}</div>`
+        messageWindow.innerHTML = `<div>${message}</div>`
     }
 
     //var socket = connect();
 
 
     function connect(){
-      var host       =  "localhost:8088"; //document.location.host;
+      var host       =  "localhost:8085"; //document.location.host;
         var pathname =  "/"//document.location.pathname;
         var addr     = "ws://" +host  + pathname + "socket"  ;
         //alert("connect addr=" + addr   );

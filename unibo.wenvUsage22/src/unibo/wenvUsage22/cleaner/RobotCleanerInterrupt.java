@@ -33,7 +33,6 @@ public class RobotCleanerInterrupt extends QakActor22FsmAnnot{
  		ColorsOut.outappl(getName() + " | ws connecting ...." ,  ColorsOut.BLUE);
 		conn = WsConnection.create("localhost:8091" ); 
 		IObserver robotMoveObserver = new WsConnApplObserver(getName(), false);
-
 		((WsConnection)conn).addObserver(robotMoveObserver);
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}

@@ -87,7 +87,7 @@ public class HIController {
         if(cleanerAppl) createRobotCleaner(); else createBasicRobot();
         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         conn = connToRobot.createConnection(addr, 8083);  //8083 is the cleaner robot
-        //To allow ...
+        //To allow ... todo
         //Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
         return mainPage;
     }

@@ -1,15 +1,16 @@
 package unibo.Robots.cleaner;
 
+import unibo.Robots.common.ActorObserver;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.annotations.Actor22;
 import unibo.actor22.annotations.Context22;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
-
+import unibo.webForActors.WebSocketConfiguration;
 
 
 @Context22(name = "pcCtx", host = "localhost", port = "8083")
-//@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = ActorRobotCleaner.class)
+//@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleanerAnalisi.class)
 //@Actor22(name = MainRobotCleaner.myName, contextName = "pcCtx", implement = RobotCleanerStartStop.class)
 //@Actor22(name = MainRobotCleaner.robotName, contextName = "pcCtx", implement = RobotCleanerInterrupt.class)
 @Actor22(name = MainRobotCleaner.robotName, contextName = "pcCtx", implement = RobotCleanerProject.class)
@@ -21,6 +22,9 @@ public class MainRobotCleaner {
 		CommSystemConfig.tracing = false;
  		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
+		//ActorObserver obs = new ActorObserver("8083",robotName);
+		//obs.setWebSocketHandler(WebSocketConfiguration.wshandler);
+
    		//Qak22Util.sendAMsg( SystemData.startSysCmd("main",myName) );
 	};
 
