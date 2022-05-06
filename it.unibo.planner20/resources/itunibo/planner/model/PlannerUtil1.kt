@@ -22,7 +22,7 @@ import itunibo.planner.model.RoomMap
 import itunibo.planner.model.Box
 import kotlinx.coroutines.delay
 
-public object plannerUtil { 
+object PlannerUtil1 { 
     private var robotState: RobotState? = null
 	private var actions: List<Action>?    = null
  	

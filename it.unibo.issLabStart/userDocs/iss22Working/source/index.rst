@@ -28,6 +28,7 @@ iss22
    VirtualRobot
    Actors22
    RobotCleaner
+   RobotExplorer
    WebApplications
    WebSockets
 

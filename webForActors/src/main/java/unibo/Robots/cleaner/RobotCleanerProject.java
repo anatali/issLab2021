@@ -128,7 +128,7 @@ public class RobotCleanerProject extends QakActor22FsmAnnot{
 	@State( name = "backToInterrupted" )
  	protected void backToInterrupted( IApplMessage msg ) {
 		outInfo("" + msg);
-		resume();
+		//resume();
 	}
 
  
