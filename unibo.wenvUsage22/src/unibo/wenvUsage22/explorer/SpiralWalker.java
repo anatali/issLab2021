@@ -17,7 +17,7 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	private Interaction2021 conn;
 	private int stepCounter;
 	private String CurrentPlannedMove = "";
-	private int  maxNumSteps          = 4;
+	private int  maxNumSteps          = 6;
 	
 	public SpiralWalker(String name) {
 		super(name);
@@ -70,6 +70,7 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	
 	@State( name = "doMove" )
 	@Transition( state = "doMove",        msgId="endMoveOk", guard="otherMoves"    )
+	@Transition( state = "hitWall",       msgId="endMoveKo"     )
 	@Transition( state = "testIfAtHome",  msgId="endMoveOk", guard="noOtherMoves"  )
 	protected void doMove( IApplMessage msg ) {
 		outInfo(""+msg);
@@ -84,13 +85,22 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 		}else if(  CurrentPlannedMove.equals( "r" )  ){
 			itunibo.planner.plannerUtil.updateMap( "r", "doing r" );
 			VRobotMoves.turnRight(getName(), conn );
-		}	
+		}else {
+			ColorsOut.outappl("doMove terminated", ColorsOut.MAGENTA);	
+			VRobotMoves.turnLeft(getName(), conn );
+			itunibo.planner.plannerUtil.updateMap( "l", "doing l" );
+		}
+	}
+	
+	@State( name = "hitWall" )
+	protected void hitWall( IApplMessage msg ) {
+		outInfo(""+msg);
 	}
 	
 	
 	@State( name = "testIfAtHome" )
 	@Transition( state = "backToHome",   guard="notAtHome"    )	
-	@Transition( state = "continueJob ", guard="atHome"    )	
+	@Transition( state = "continueJob", guard="atHome"    )	
 	protected void testIfAtHome( IApplMessage msg ) {
 		outInfo(""+msg);
 	}
@@ -103,15 +113,15 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	
 	@State( name = "continueJob" )
 	@Transition( state = "exploreStep", guard="otherSteps"  )	
-	@Transition( state = "endOfJob ",   guard="noOtherSteps"  )	
+	@Transition( state = "endOfJob",   guard="noOtherSteps"  )	
 	protected void continueJob( IApplMessage msg ) {
 		outInfo( "MAP AFTER BACK TO HOME " + stepCounter);
 		itunibo.planner.plannerUtil.showMap();		
 		//itunibo.planner.plannerUtil.saveRoomMap(mapname)		
 	}	
 
-	@State( name = "endJob" )
-	protected void endJob( IApplMessage msg ) {
+	@State( name = "endOfJob" ) 
+	protected void endOfJob( IApplMessage msg ) {
 		outInfo("BYE" );
 	}
 //-------------------------------------------
@@ -130,6 +140,7 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	
 	@TransitionGuard
 	protected boolean atHome() {
+		ColorsOut.outappl("atHome:"+itunibo.planner.plannerUtil.atHome(), ColorsOut.GREEN);	
 		return itunibo.planner.plannerUtil.atHome();
 	}	
 	

@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.annot.walker;
+package unibo.wenvUsage22.mapper;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22FsmAnnot;
@@ -9,12 +9,13 @@ import unibo.actor22comm.SystemData;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.wenvUsage22.common.VRobotMoves;
+import unibo.wenvUsage22.basicRobot.prototype0.WsConnApplObserver;
 
-public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
+public class BoundaryWalkerMapper extends QakActor22FsmAnnot  {
 	private Interaction2021 conn;	
  	private int ncorner  = 0;
 
- 	public BoundaryWalkerAnnot(String name) {
+ 	public BoundaryWalkerMapper(String name) {
 		super(name);
  	}
 	
@@ -25,7 +26,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 		outInfo(""+msg + " connecting (blocking all the actors ) ... ");	
  		conn = WsConnection.create("localhost:8091" ); 	 
  		outInfo("connected "+conn);	
-   		((WsConnection)conn).addObserver( new WsConnWEnvObserver(getName()) );
+   		((WsConnection)conn).addObserver( new WsConnApplObserver(getName(), true) );
   		VRobotMoves.step(getName(),conn);
 	}
 	
@@ -45,9 +46,7 @@ public class BoundaryWalkerAnnot extends QakActor22FsmAnnot  {
 	protected void wallDetected( IApplMessage msg ) {
 		outInfo("ncorner="+ ncorner + " " + msg);	
 		ncorner++;
-		GuardContinueWork.setValue(ncorner);
-		GuardEndOfWork.setValue(ncorner);
-		VRobotMoves.turnLeft(getName(), conn);
+ 		VRobotMoves.turnLeft(getName(), conn);
  	}
 
 
