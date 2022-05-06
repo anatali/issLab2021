@@ -19,7 +19,7 @@ private int n = 0;
  	}
 
 	@State( name = "s0" )
-	@Transition( state = "s1" ,  msgId = SystemData.demoSysId, guard = Guard0.class )
+	@Transition( state = "s1" ,  msgId = SystemData.demoSysId, guard = "guard0" )
 	protected void s0( IApplMessage msg ) {
 		outInfo(""+msg );
 		n++;   //Uncomment to go in s1
@@ -34,4 +34,9 @@ private int n = 0;
 		System.exit(0);
 	}
 
+//-------------------------------------------------------	
+	@TransitionGuard
+	protected boolean guard0() {
+		return n > 0;
+	}
 }

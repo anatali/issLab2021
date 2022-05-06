@@ -7,7 +7,8 @@ import unibo.actor22comm.SystemData;
 import unibo.actor22comm.utils.CommUtils;
 
 public class TestInterrupts extends QakActor22FsmAnnot{
-private int n = 0;
+private  int n = 0;
+private  int limit = 3 ;
 
 	public TestInterrupts(String name) {
 		super(name);
@@ -30,7 +31,7 @@ private int n = 0;
 
 	
 	@State( name = "s1" )
-	@Transition( state = "s0" ,  msgId = SystemData.demoSysId, guard = Guard1.class)
+	@Transition( state = "s0" ,  msgId = SystemData.demoSysId, guard = "guardLimit")
 	@Transition( state = "s1" ,  msgId = SystemData.haltSysCmdId )
 	@Transition( state = "s1_interrupted" ,  msgId = SystemData.stopSysCmdId, interrupt = true )
  	protected void s1( IApplMessage msg ) {
@@ -50,4 +51,9 @@ private int n = 0;
 		resume();
 	}
 
+	//-------------------------------------------------------	
+		@TransitionGuard
+		protected boolean guardLimit() {
+			return n < limit;
+		}	
 }
