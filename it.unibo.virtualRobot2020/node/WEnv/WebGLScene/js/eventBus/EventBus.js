@@ -4,7 +4,7 @@ function EventBus() {
     const eventCallbacksPairs = [] 
     
     function subscribe( eventType, callback ) {
-    	console.log("EventBus | subscribe eventType=" + eventType )
+    	//console.log("EventBus | subscribe eventType=" + eventType )
         const eventCallbacksPair = findEventCallbacksPair(eventType)
 
         if(eventCallbacksPair)

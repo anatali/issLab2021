@@ -19,7 +19,7 @@ public class WsConnSysObserver implements IObserver{
 		timer = new SystemTimer();
 	}
 	
-	public void startMoveTime() {
+	public void startMoveTime() { //see sendALine di WsConnection
 		timer.startTime();
 	}
 
@@ -27,9 +27,8 @@ public class WsConnSysObserver implements IObserver{
 	public void update(Observable source, Object data) {
 		timer.stopTime();	
 		actionDuration = ""+timer.getDuration();
- 		//ColorsOut.outappl("WsConnSysObserver update/2 receives:" + data + " duration=" + actionDuration, ColorsOut.WHITE_BACKGROUND);
+ 		ColorsOut.outappl("WsConnSysObserver update/2 receives:" + data + " duration=" + actionDuration, ColorsOut.WHITE_BACKGROUND);
 		update( data.toString() );
-		
 	}
 	@Override
 	public void update(String data) {

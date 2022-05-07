@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.explorer;
+package unibo.wenvUsage22.spiral;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22FsmAnnot;
@@ -30,6 +30,18 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 		((WsConnection)conn).addObserver(robotMoveObserver);
  		ColorsOut.outappl(getName() + " | conn:" + conn,  ColorsOut.BLUE);
 	}
+	
+	protected void initPlanner() {
+		try {
+			itunibo.planner.plannerUtil.initAI();
+	     	ColorsOut.outappl("INITIAL MAP", ColorsOut.CYAN);
+	 		itunibo.planner.plannerUtil.showMap();
+			itunibo.planner.plannerUtil.startTimer();  		
+	     	//VRobotMoves.step(getName(), conn );
+		} catch (Exception e) {
+			ColorsOut.outerr(getName() + " in start ERROR:"+e.getMessage());
+ 		}		
+	}
 
 	@State( name = "activate", initial=true)
 	@Transition( state = "start",   msgId= SystemData.startSysCmdId  )
@@ -42,15 +54,7 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	@Transition( state = "exploreStep")
 	protected void start( IApplMessage msg ) {
 		outInfo(""+msg);
-		try {
-			itunibo.planner.plannerUtil.initAI();
-	     	ColorsOut.outappl("INITIAL MAP", ColorsOut.CYAN);
-	 		itunibo.planner.plannerUtil.showMap();
-			itunibo.planner.plannerUtil.startTimer();  		
-	     	//VRobotMoves.step(getName(), conn );
-		} catch (Exception e) {
-			ColorsOut.outerr(getName() + " in start ERROR:"+e.getMessage());
- 		}
+ 		initPlanner();
 	}
 
 	@State( name = "exploreStep" )
@@ -75,7 +79,7 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	protected void doMove( IApplMessage msg ) {
 		outInfo(""+msg);
 		CurrentPlannedMove = itunibo.planner.plannerUtil.getNextPlannedMove();
-		outInfo("CurrentPlannedMove========================"+CurrentPlannedMove);
+		outInfo("CurrentPlannedMove ==== "+CurrentPlannedMove);
 		if( CurrentPlannedMove.equals( "w" ) ){
 			itunibo.planner.plannerUtil.updateMap( "w", "doing w" );
 			VRobotMoves.step(getName(), conn );
@@ -93,6 +97,7 @@ public class SpiralWalker extends QakActor22FsmAnnot{
 	}
 	
 	@State( name = "hitWall" )
+	@Transition( state = "doMove"  )
 	protected void hitWall( IApplMessage msg ) {
 		outInfo(""+msg);
 	}

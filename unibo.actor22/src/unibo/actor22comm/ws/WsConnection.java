@@ -49,12 +49,11 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 //Since inherits from IConnInteraction
 	@Override
 	public void sendALine(String msg) throws Exception {
-		observers.forEach( v -> ((WsConnSysObserver)v).startMoveTime() );
         myWs.send(msg);
+		observers.forEach( v -> ((WsConnSysObserver)v).startMoveTime() );
 	}
 	@Override
 	public void sendALine(String msg, boolean isAnswer) throws Exception {
-		// TODO Auto-generated method stub		
 	}
 	@Override
 	public String receiveALine() throws Exception {

@@ -1,4 +1,4 @@
-package unibo.wenvUsage22.mapper;
+package unibo.wenvUsage22.spiral;
 
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
@@ -8,21 +8,23 @@ import unibo.actor22comm.SystemData;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
- 
+import unibo.wenvUsage22.common.ApplData;
 
 
 @Context22(name = "pcCtx", host = "localhost", port = "8075")
-//@Actor22(name = MainRobotMapper.robotName, contextName = "pcCtx", implement = RobotMapperBoundary.class)
-@Actor22(name = MainRobotMapper.robotName, contextName = "pcCtx", implement = RobotMapperPlans.class)
-public class MainRobotMapper {
+@Actor22(name = MainRobotExplorer.robotName, contextName = "pcCtx", implement = SpiralWalker.class)
+public class MainRobotExplorer {
 	
-	public static final String robotName = "mapper";
+	public static final String robotName = "explorer";
 	
 	public void doJob() {
 		CommSystemConfig.tracing = false;
+		//AnnotUtil.handleRepeatableActorDeclaration(this);
 		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
   		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
+
+	
 	};
 
 	public void terminate() {
@@ -34,7 +36,7 @@ public class MainRobotMapper {
 	
 	public static void main( String[] args) throws Exception {
 		CommUtils.aboutThreads("Before start - ");
-		MainRobotMapper appl = new MainRobotMapper( );
+		MainRobotExplorer appl = new MainRobotExplorer( );
 		appl.doJob();
 		appl.terminate();
 	}

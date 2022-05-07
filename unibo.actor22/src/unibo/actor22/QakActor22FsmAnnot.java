@@ -92,12 +92,11 @@ protected String initialState = null;
 			  else {
 				  Method guard = getGuard(allguards, guardName);
 	                if (guard == null) {
-	                    throw new IllegalArgumentException("Non existent guard name!");
+	                    throw new IllegalArgumentException("Non existent guard:" + guardName);
 	                }	
 	                guards.add( guard );
 	          }
  		  }
-		  //Farlo staticamente NO
 // 		  ColorsOut.outappl("nextStates "+ nextStates.size() , ColorsOut.CYAN);
 //		  ColorsOut.outappl("msgIds "+ msgIds.size() , ColorsOut.CYAN);
 		  doDeclareState(this, m,stateName,nextStates,msgIds,guards,interrupts );	

@@ -24,5 +24,6 @@ it.unibo.cautiousExplorer
 #. Moves (step) with result
 #. Kotlin
 #. (robot service)
+#. ExplorerWithPlannerM2m 
 #. it.unibo.kotlinIntro/userDocs/FirstActorRobot2021.html
 
