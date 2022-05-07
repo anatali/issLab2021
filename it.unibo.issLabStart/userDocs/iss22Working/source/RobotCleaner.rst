@@ -9,7 +9,11 @@
 .. _CleanArchitecture: https://clevercoder.net/2018/09/08/clean-architecture-summary-review
 
 .. _jquery: https://www.w3schools.com/jquery/default.asp
-
+.. _coap:  https://en.wikipedia.org/wiki/Constrained_Application_Protocol
+.. _mqtt: https://mqtt.org/
+.. _californium: https://www.eclipse.org/californium/
+.. _paho: https://www.eclipse.org/paho/
+.. _Mosquitto: https://mosquitto.org/download/
 
 ==============================
 RobotCleaner
@@ -693,7 +697,25 @@ Questi due vincoli, presi insieme, implicano che:
   sullo stesso noodo di elaborazione  del ``RobotCleaner``.
 
 
-Dal punto di vista logico potremmo modellare il   ``RobotCleaner`` come un emettitore di :blue:`eventi`
+Dal punto di vista logico, potremmo modellare il ``RobotCleaner`` come un emettitore di :ref:`Eventi`, ma il sistema si presenta come 
+**eterogeneo**: non tutti i componenti del sistema seguono il modello ad :ref:`Attori`. In particolare:
+
+:remark:`il WebServer è progettato e costruito 'al di fuori' del modello ad  Attori`
+
+Potremmo superare questo ostacolo in due modi:
+
+#. Realizzare l'emissione di un evento da parte dell'attore ``RobotCleaner`` Utilizzando un :blue:`protocollo  publish-subscribe`  come MQTT. 
+   Il WebServer potrebbe iscriversi (**subscribe**) alla topic su cui l'attiore pubblica le informazioni. 
+#. Rendere l'attore ``RobotCleaner`` una :blue:`risorsa CoAP osservabile`. Il WebServer potrebbe utlizzare un :blue::`CoAP client` per ricevere 
+   le informazioni di stato quando sono emeesse.
+
+La infrastruttura degli attori è definita in modo da rendere possibili enatrambe le strade.
+
+In questa fase ci concentriamo sul fatto che ogni attore è anche una :blue:`risorsa CoAP osservabile`.
+
++++++++++++++++++++++++++++++++++++++++++
+RobotCleaner come risorsa CoAP
++++++++++++++++++++++++++++++++++++++++++
 
 
 L'attore che realizza il ``RobotCleaner`` costituisce una risorsa CoAP osservabile, che viene 
