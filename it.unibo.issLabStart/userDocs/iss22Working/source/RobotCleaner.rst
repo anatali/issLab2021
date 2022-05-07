@@ -7,6 +7,10 @@
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
 .. _Macchina di Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
 
+
+.. _jquery: https://www.w3schools.com/jquery/default.asp
+
+
 ==============================
 RobotCleaner
 ==============================
@@ -316,8 +320,8 @@ in modo da eseguire i seguenti comandi inviati da un controllore (umano o macchi
 A questo punto si potrebbe pensare alla seguente pianificazione del lavoro:
 
 #. Si estende il behavior introdotto in :ref:`RobotCleaner Behaviour`, tenendo conto dei nuovi possibili messaggi.
-#. Si realizza una Web User Interface utlizzando SpringBoot. Per questa parte si veda :ref:`WebApplications con SpringBoot`
-   e :ref:`Una WebConsole per il RobotCleaner`
+#. Si realizza una Web User Interface utlizzando SpringBoot. Per questa parte si veda 
+   :ref:`Una WebConsole per il RobotCleaner`
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Troppo precipitosi?
@@ -375,7 +379,7 @@ Ad esempio:
   :align: center 
   :width: 80%
 
-Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.cleaner.RobotCleanerStartStop*.
+.. Progetto: **unibo.wenvUsage22** code: *unibo.wenvUsage22.cleaner.RobotCleanerStartStop*.
 
 .. code:: Java
 
@@ -407,7 +411,7 @@ La semantica stop/resume delineata in precedenza ricorda il meccanismo delle int
 che implica:
 
 #. una memorizzazione (nello stack) del stato della CPU
-#. il trasferimento del controllo alla intruupt-routine e 
+#. il trasferimento del controllo alla interrupt-routine e 
 #. il ripristino dello stato salvato al termine di questa, con il ritorno al processo computazionale interrotto.
 
  
@@ -420,8 +424,8 @@ di rendere disponibile un meccanismo analogo da parte della infrastruttura di su
 così modificata:
 
 - viene  introdotto un attributo **interrupt** alle transizioni (una sola per stato)
-- quando uno stato S ha una transizione con ``interrupt=true``, lo si  memorizza prima di passare al prossimo stato 
-  Si memorizza anche a una copia della tabella delle transizioni che l'automa avrebbe poututo
+- quando uno stato S ha una transizione con ``interrupt=true``, lo si  memorizza prima di passare al prossimo stato. 
+  Si memorizza anche a una copia della tabella delle transizioni che l'automa avrebbe potuto
   effettuare in assenza dell'interrupt
 - se il prossimo stato (``S_I``) è quello relativo alla transizione qualificata come interrupt, 
   lo si esegue normalmente, ma alla fine della esecuzione di ``S_I``, come ultima operazione si deve eseguire 
@@ -432,7 +436,7 @@ così modificata:
 
 
 Osserviamo che dallo stato ``S_I`` si potrebbero avere anche transizioni normali verso altri stati. 
-Basta che ci la nuova catena computazionale termini con una :blue:`resume`.
+Basta che la nuova catena computazionale termini con una :blue:`resume`.
 
 Con questo meccansimo, il nuovo diagramma di progetto si presenta come segue:
 
@@ -472,6 +476,192 @@ La sua formalizzazione in codice si presenta in qyesto modo:
    }
 
 
+
+-----------------------------------------------
+Una WebConsole per il RobotCleaner
+-----------------------------------------------
+
+Ci poniniamo l'obiettivo di creare una :ref:`WebApplication con SpringBoot` che mostri agli utenti una pagina  HTML come quella di figura:
+
+.. image::  ./_static/img/Spring/RobotCleanerGui.PNG
+  :align: center 
+  :width: 80%
+
+
+:remark:`La business logic è nel prototipo RobotCleaner`
+
+- Obiettivo della applicazione Spring è solo quello di offrire una GUI. Tutta la logica applicativa è già stata realizzata 
+  (e testata) e può essere resa disponibile mediante un file ``jar``.
+
+
+:remark:`Chi crea il componente applicativo?`
+
+Vi sono due modi principali:
+
+#. *Modo remoto*: Il componente applicativo viene allocato su un nodo diverso da quello che ospita l'applicazione Spring
+#. *Modo locale*: Il componente applicativo viene creato dalla applicazione Spring stessa
+
+
+:worktodo:`WORKTODO: discutere i pro/contro dei due modi`
+
+In questa sezione continueremo ad usare il progetto denoinato webForActors introdotto in :ref:`Primi passi con SpringBoot`.
+
++++++++++++++++++++++++++++++++++++++++++++++
+RobotCleanerGui.html
++++++++++++++++++++++++++++++++++++++++++++++
+
+
+- Inseriamo il file ``RobotCleanerGui.html`` nella directory **templates**.
+
+
+Qyesto file definisce la struttura della pagina HTML, suddivisa in due zone:
+
+- area **Condigurazione e comandi**: questa zona realizza un dispositivo  di input, con cui l'utente può invioare comandi al server
+- **Display Area**: questa zona realizza un dispositivo di ouput, in cui il server può 'scrivere' informazioni di stato avvalendosi
+  di una :ref:`WebSocket<WebSocket in SpringBoot: versione base>`.
+
+Per gestire queste due aree, la pagina si avvale di `jquery`_ e del codice JavaScript defnito nel file **wsminimal.js** 
+con cui la pagina si connette a una WebSocket su localhost:8085 e riceve dati (metodo  ``onmessage``)  che visualizza nella *Display Area*. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+wsminimal.js
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::   
+
+   const messageWindow   = document.getElementById("display");
+
+   function sendMessage(message) {
+      var jsonMsg = JSON.stringify( {'name': message});
+      socket.send(jsonMsg);
+      addMessageToWindow("Sent Message: " + jsonMsg);
+    }
+
+   function addMessageToWindow(message) {
+      //messageWindow.innerHTML += `<div>${message}</div>` //add
+      messageWindow.innerHTML = `<div>${message}</div>`  //set
+   }
+
+   function connect(){
+      var host       =  "localhost:8085"; //document.location.host;
+      var pathname =  "/"//document.location.pathname;
+      var addr     = "ws://" +host  + pathname + "socket"  ;
+      // Assicura che sia aperta un unica connessione
+      if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+         alert("WARNING: Connessione WebSocket già stabilita");
+      }
+      var socket = new WebSocket(addr);
+      socket.onopen = function (event) {
+         addMessageToWindow("Connected to " + addr);
+      };
+
+      socket.onmessage = function (event) {
+         addMessageToWindow(""+`${event.data}`);
+      };
+      return socket;
+   }//connect
+
+   connect()
+
+
+ 
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+Un controller per la RobotCleaner Appl 
++++++++++++++++++++++++++++++++++++++++++++++
+
+Commentiamo l'annotazione ``@Controller`` in ``HIControllerDemo`` e inseriamo un nuovo controller ``HIController`` 
+
+.. code:: Java
+
+    package it.unibo.webspring.demo;
+    import ...
+    
+    @Controller 
+    public class HIController { 
+    private static final String robotCmdId = "move";
+    private static  String robotName       = "cleaner";
+    
+    private String mainPage = "RobotCleanerGui";
+
+    public HIController(){   }
+
+
+Il  controller ``HIController``  gestisce:
+
+- le richieste (HTTP-GET) di apertura della pagina:
+  
+   .. code:: Java
+
+      @GetMapping("/") 		 
+      public String homePage(Model model) {
+         model.addAttribute("arg", appName);
+         return mainPage;
+      } 
+
+- le informazioni di configurazione inviate con metodi HTTP-POST, quando l'utente (umano) preme il pulsante **Configure**
+
+   .. code:: Java
+
+      //Dopo click sul pulsante Configure
+      @PostMapping("/configure")
+      public String configure(Model viewmodel, 
+               @RequestParam String move, String addr ){
+         createRobotCleaner();   //Modo locale per la Busness logic:
+         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
+         conn = connToRobot.createConnection(addr, 8083);
+         return mainPage;
+      }
+
+- i comandi inviati con metodi HTTP-POST, quando l'utente (umano) preme i pulsanti **start / stop / resume**
+
+   .. code:: Java
+ 
+      //Dopo click sul pulsante start/stop/resume
+      @PostMapping("/robotcmd")
+      public String doMove(Model viewmodel, @RequestParam String cmd){
+         if( cmd.equals("t")){  //Start
+               Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
+         }else{
+               try {
+                  String msg = moveAril(cmd).toString();
+                  conn.forward( msg );
+               } catch (Exception e) {... }
+         }
+         return mainPage;
+      }
+
+   Notiamo che:
+
+   - il pulsante  **start**   invia un comando (cmd)  con valore  **t**,  a fronte della form HTML
+
+     .. code::
+    
+        <form action="robotcmd" method="post">
+            <button name="cmd" value="t">start</button>
+        </form>
+
+   - il pulsante  **stop/resume**   inviano un comando (move)  con valore uguale al nome del pulsante:
+
+     .. code::
+      
+      <form action="robotcmd" method="post">
+            <button name="cmd" value="stop">stop</button>
+      </form>
+ 
+ 
+ 
+.. image::  ./_static/img/Spring/RobotCleanerFsmProject.PNG
+  :align: center 
+  :width: 60%
+
+
+.. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
+  :align: center 
+  :width: 60%
+
 +++++++++++++++++++++++++++++++++++++
 RobotCleaner: return to HOME
 +++++++++++++++++++++++++++++++++++++
@@ -493,7 +683,7 @@ RobotCleaner:  display area
 :worktodo:`WORKTODO: aggiornare la DisplayArea`
 
 - Il ``RobotCleaner`` deve emettere informazioni di stato che vengono inviate alla pagina Web mediante 
-  una webSocket su 8085. La pagina deve visualizzare queste informazioni di stato nella DisplayArea.
+  una webSocket. La pagina deve visualizzare queste informazioni di stato nella DisplayArea.
 
 
 L'attore che realizza il ``RobotCleaner`` costituisce una risorsa CoAP osservabile, che viene 
@@ -590,45 +780,3 @@ ActorObserver
 - ActorObserver: opera come CoAP client e offre un setWebSocketHandler (wsh)
 - Attiva un client.observe con argomento un CoapHandler che invoca wsh.sendToAll
 
-+++++++++++++++++++++++++++++++++++++++
-wsminimal.js
-+++++++++++++++++++++++++++++++++++++++
-
-.. code::   
-
-   const messageWindow   = document.getElementById("display");
-
-   function sendMessage(message) {
-      var jsonMsg = JSON.stringify( {'name': message});
-      socket.send(jsonMsg);
-      addMessageToWindow("Sent Message: " + jsonMsg);
-    }
-
-   function addMessageToWindow(message) {
-      //messageWindow.innerHTML += `<div>${message}</div>`
-      messageWindow.innerHTML = `<div>${message}</div>`
-   }
-
-   function connect(){
-      var host       =  "localhost:8085"; //document.location.host;
-      var pathname =  "/"//document.location.pathname;
-      var addr     = "ws://" +host  + pathname + "socket"  ;
-      // Assicura che sia aperta un unica connessione
-      if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
-         alert("WARNING: Connessione WebSocket già stabilita");
-      }
-      var socket = new WebSocket(addr);
-      socket.onopen = function (event) {
-         addMessageToWindow("Connected to " + addr);
-      };
-
-      socket.onmessage = function (event) {
-         addMessageToWindow(""+`${event.data}`);
-      };
-      return socket;
-   }//connect
-
-   connect()
-
-- wsminimal.js in RobotCleanerGui.html si connette a una ws su localhost:8085 e riceve (onmessage) dati 
-  che visualizza in messageWindow.innerHTML  

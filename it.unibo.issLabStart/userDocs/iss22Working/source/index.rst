@@ -30,7 +30,6 @@ iss22
    RobotCleaner
    RobotExplorer
    WebApplications
-   WebSockets
 
 
 Indices and tables

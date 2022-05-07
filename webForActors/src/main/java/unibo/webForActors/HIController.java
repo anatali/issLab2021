@@ -80,7 +80,7 @@ public class HIController {
         return mainPage;
     }
 
-    //Dopo click sul pulsante connect
+    //Dopo click sul pulsante Configure
     @PostMapping("/configure")
     public String configure(Model viewmodel  , @RequestParam String move, String addr ){
         ColorsOut.outappl("HIController | configure:" + move, ColorsOut.BLUE);
@@ -93,16 +93,16 @@ public class HIController {
     }
 
     //Dopo click sul pulsante start/stop/resume
-    @PostMapping("/robotmove")
-    public String doMove(Model viewmodel  , @RequestParam String move ){
+    @PostMapping("/robotcmd")
+    public String doMove(Model viewmodel  , @RequestParam String cmd ){
                      //String @RequestParam(name="move", required=false, defaultValue="h")robotmove  )  {
         //sysUtil.colorPrint("HIController | param-move:$robotmove ", Color.RED)
-        ColorsOut.outappl("HIController | doMove:" + move + " robotName=" + robotName, ColorsOut.BLUE);
-        if( move.equals("t")){  //Start
+        ColorsOut.outappl("HIController | doMove:" + cmd + " robotName=" + robotName, ColorsOut.BLUE);
+        if( cmd.equals("t")){  //Start
             Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
         }else{
             try {
-                String msg = moveAril(move).toString();
+                String msg = moveAril(cmd).toString();
                 ColorsOut.outappl("HIController | doMove msg:" + msg , ColorsOut.BLUE);
                 conn.forward( msg );
             } catch (Exception e) {
