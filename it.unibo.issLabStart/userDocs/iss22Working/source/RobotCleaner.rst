@@ -6,7 +6,7 @@
 
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
 .. _Macchina di Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
-
+.. _CleanArchitecture: https://clevercoder.net/2018/09/08/clean-architecture-summary-review
 
 .. _jquery: https://www.w3schools.com/jquery/default.asp
 
@@ -615,6 +615,11 @@ Il  controller ``HIController``  gestisce:
          return mainPage;
       }
 
+
+   .. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
+      :align: center 
+      :width: 60%   
+
 - i comandi inviati con metodi HTTP-POST, quando l'utente (umano) preme i pulsanti **start / stop / resume**
 
    .. code:: Java
@@ -653,37 +658,42 @@ Il  controller ``HIController``  gestisce:
  
  
  
-.. image::  ./_static/img/Spring/RobotCleanerFsmProject.PNG
-  :align: center 
-  :width: 60%
+ 
 
 
-.. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
-  :align: center 
-  :width: 60%
 
-+++++++++++++++++++++++++++++++++++++
-RobotCleaner: return to HOME
-+++++++++++++++++++++++++++++++++++++
 
-Un ``RobotCleaner`` potrebbe dover essere reattivo a comadi o situazioni che non richiedono solo una
-momentanea interruzione delle attivtà che sta eseguendo come sua parte proattiva, ma anche
-un radicale cambiamento di queste.
 
-Ad esempio, il robot potrebbere ricevere un comando di ``returnToHome``.
-
-:worktodo:`WORKTODO: comando returnToHome`
-
-- analizzare le problematiche connesse al comando returnToHome e proporre un modello di soluzione
 
 -------------------------------------------
 RobotCleaner:  display area
 -------------------------------------------    
 
-:worktodo:`WORKTODO: aggiornare la DisplayArea`
+Affrontiamo ora il nuovo requsito:
 
-- Il ``RobotCleaner`` deve emettere informazioni di stato che vengono inviate alla pagina Web mediante 
-  una webSocket. La pagina deve visualizzare queste informazioni di stato nella DisplayArea.
+- **DisplayaAreaUpdate**: Il ``RobotCleaner`` deve fornire informazioni di stato che la pagina Web deve visualizzare nella DisplayArea.
+
++++++++++++++++++++++++++++++++++++++++++
+DisplayArea: analisi del problema
++++++++++++++++++++++++++++++++++++++++++
+
+La nostra analsisi parte tenendo conto dei seguenti vincoli (**requisiti non funzionali**):
+
+#. Per i principi delle  `CleanArchitecture`_, il ``RobotCleaner`` non deve avere conoscenza di questo nuovo requisito e non deve avere alcuna 
+   dipendenza verso la parte Web.
+#. L'aggiornamernto della pagina dovrebbe avvenire in modo asincrono, senza ricorso al polling. 
+
+
+Questi due vincoli, presi insieme, implicano che:
+
+- il ``RobotCleaner`` non deve rispondere a richieste volte a conoscere  il proprio stato. Piuttosto deve essere un ente **osservabile**, cioè
+  capace di emettere informazioni utili per chi fosse interessato;
+- il WebServer, responsabile dell'aggiornamento della pagina Web, dovrebbe operare come osservatore del  ``RobotCleaner``;
+- in quanto osservatore interessato alle informazioni emesse dal ``RobotCleaner``, il WebServer non deve essere vincolato a risiedere 
+  sullo stesso noodo di elaborazione  del ``RobotCleaner``.
+
+
+Dal punto di vista logico potremmo modellare il   ``RobotCleaner`` come un emettitore di :blue:`eventi`
 
 
 L'attore che realizza il ``RobotCleaner`` costituisce una risorsa CoAP osservabile, che viene 
@@ -780,3 +790,18 @@ ActorObserver
 - ActorObserver: opera come CoAP client e offre un setWebSocketHandler (wsh)
 - Attiva un client.observe con argomento un CoapHandler che invoca wsh.sendToAll
 
+
+
+-------------------------------------
+RobotCleaner: return to HOME
+-------------------------------------
+
+Un ``RobotCleaner`` potrebbe dover essere reattivo a comadi o situazioni che non richiedono solo una
+momentanea interruzione delle attivtà che sta eseguendo come sua parte proattiva, ma anche
+un radicale cambiamento di queste.
+
+Ad esempio, il robot potrebbere ricevere un comando di ``returnToHome``.
+
+:worktodo:`WORKTODO: comando returnToHome`
+
+- analizzare le problematiche connesse al comando returnToHome e proporre un modello di soluzione
