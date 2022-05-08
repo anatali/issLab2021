@@ -14,9 +14,8 @@ import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 
 public class WsConnection extends WebSocketListener implements Interaction2021, IObservable{
-	private static HashMap<String,WsConnection> connMap=
-            				new HashMap<String,WsConnection>();
-	private Vector<IObserver> observers  = new Vector<IObserver>();
+	private static HashMap<String,WsConnection> connMap=new HashMap<String,WsConnection>();
+	private Vector<IObserver> observers= new Vector<IObserver>();
     private OkHttpClient okHttpClient  = new OkHttpClient();
     final MediaType JSON_MediaType     = MediaType.get("application/json; charset=utf-8");
     private WebSocket myWs;
@@ -50,7 +49,9 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	@Override
 	public void sendALine(String msg) throws Exception {
         myWs.send(msg);
-		observers.forEach( v -> ((WsConnSysObserver)v).startMoveTime() );
+		observers.forEach( v -> {
+			if( v instanceof WsConnSysObserver) ((WsConnSysObserver)v).startMoveTime() ;
+		});
 	}
 	@Override
 	public void sendALine(String msg, boolean isAnswer) throws Exception {

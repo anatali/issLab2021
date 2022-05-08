@@ -731,14 +731,94 @@ wsminimal.js
    connect()
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Configurazione lato Server
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sul lato del WebServer, SpringBoot impone una :ref:`Configurazione con WebSocketConfigurer` che richiede la implementazione
+dell'interfaccia ``WebSocketConfigurer`` e la registrazione di un gestore che estende la casse ``AbstractWebSocketHandler``.
+
+La nostra versione della classe ``WebSocketConfiguration`` che implementa ``WebSocketConfigurer``,
+offre un metodo static che restituisce il gestore registrato e il wspath:
+
+.. code:: java
+
+    public static final WebSocketHandler wshandler = new WebSocketHandler();
+    public static final String wspath              = "socket";
+
+In base a questa configurazione, il server risponderà a richieste inviate sulla WebSocket al seguente indirizzo:
+
+.. code:: java
+
+    ws://<serverIP>:8085/socket
+
++++++++++++++++++++++++++++++++++++++
+IWsHandler
++++++++++++++++++++++++++++++++++++++
+
+Il nostro gestore è simile  a quanto introdotto :ref:`Il gestore WebSocketHandler`; in più implementa la interfaccia:
+
+.. code:: java
+
+   public interface IWsHandler {
+      void sendToAll(String message);
+   }
+
+Il metodo ``sendToAll`` permette di inviare informazioni (alla pagina Weeb) di tutti i client collegati attraverso la WebSocket.
+
+.. code:: java
+
+    public void sendToAll(TextMessage message) throws IOException{
+        Iterator<WebSocketSession> iter = sessions.iterator();
+        while( iter.hasNext() ){
+            iter.next().sendMessage(message);
+        }
+    }
+
+Per propagare un messaggio a tutti i client connessi attraverso la WebSocket,  :ref:`Il gestore WebSocketHandler` tiene traccia
+delle sessioni in una struttura dati (*sessions*).
+
+ 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 DisplayArea testing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Una prima verifica della soluzione proposta consiste:
+Una prima verifica della soluzione proposta si articola su diverse situazioni:
 
-- in locale (entro la pagina): nel visualizzare un messaggio di avvenuta connessione con la WebSocket
-- in remoto (informazioni da WebServer): nell'inviare un messaggio di avvenuta configurazione da parte di 
+- in **locale** (entro la pagina): si visualizza un messaggio di avvenuta connessione col server tramite la WebSocket;
+- in **remoto** (informazioni da WebServer): si invia un messaggio di avvenuta configurazione 
+  da parte di :ref:`Configurazione con WebSocketConfigurer`;
+
+  .. code:: java
+
+     @Configuration
+     @EnableWebSocket
+     public class WebSocketConfiguration implements WebSocketConfigurer {
+
+     public static final WebSocketHandler wshandler=new WebSocketHandler();
+     public static final String wspath             = "socket";
+
+     public WebSocketConfiguration(){
+      new Thread(){ //To test ws-connection
+         public void run(){
+            wshandler.sendToAll("WebSocketConfiguration created" );
+         }
+      }.start();
+     }
+     ...
+     }
+
+- da **programma** (connessioni su Ws): si crea un programma Java che utilizza :ref:`WsConnection` (la implementazione osservabile di 
+  :ref:`Interaction2021` sulle ws) per inviare comandi al WebServer. 
   
+  In modo simile al ``ClientUsingWs`` introdotto in  :ref:`Esempi di uso di HttpConnection e WsConnection`  definiamo un client che 
+  invia al WebServer la stringa "Hello from remote client". Vedremo ricomparire la stringa come echo nella DisplayArea.
+
+  Progetto: **webForActors** code: *unibo.webForActors.ClientUsingWs*. 
+ 
 
 +++++++++++++++++++++++++++++++++++++++++
 SPRINT2(update)
@@ -760,7 +840,7 @@ Potremmo superare questo ostacolo in due modi:
 La infrastruttura degli attori è definita in modo da rendere possibili enatrambe le strade.
 
 In questa fase ci concentriamo sul fatto che ogni attore è stato definito in mod da essere 
-anche una :blue:`risorsa CoAP osservabile`.
+anche una :blue:`risorsa CoAP osservabile` come descritto in :ref:`Attori come risorse CoAP`.
 
 +++++++++++++++++++++++++++++++++++++++++
 RobotCleaner come risorsa CoAP

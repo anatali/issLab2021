@@ -41,5 +41,14 @@ public class ApplData {
 	public static final  IApplMessage endWorkEvent  = Qak22Util.buildEvent(controllerName, evEndWork, evEndWork );
 	
 	
+	/*
+	 * MESSAGGI in cril
+	*/	
+	protected static String crilCmd(String move, int time){
+		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
+		//ColorsOut.out( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd );
+		return crilCmd;
+	}
+	public static final String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }
 	
 }

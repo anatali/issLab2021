@@ -5,14 +5,13 @@ Technology-dependent application
 TODO. eliminate the communication details from this level
 ===============================================================
 */
-package unibo.wenvUsage22.wshttp;
+package unibo.actor22.ws;
+import unibo.actor22.common.ApplData;
 import unibo.actor22comm.interfaces.IObserver;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 import unibo.actor22comm.ws.*;
-import unibo.wenvUsage22.common.ApplData;
-
 import java.util.Observable;
 
 public class ClientUsingWs implements IObserver{
@@ -20,12 +19,11 @@ public class ClientUsingWs implements IObserver{
 	private Interaction2021 conn;
   
 	protected void doBasicMoves() throws Exception {
-		//conn = WsConnection.create("localhost:8091" );
 		conn = WsConnection.create("localhost:8085/socket" );
 		((WsConnection)conn).addObserver(this);
  
  		//conn.forward( turnLeft( 800  ) );
- 		conn.forward( ApplData.moveForward(1500) ); 
+ 		conn.forward( ApplData.moveForward(500) ); 
  			//La info di fine mossa viene gestita da update/2
  		
  		

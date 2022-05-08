@@ -41,14 +41,12 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
     }
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        System.out.println("WebSocketHandler | New Text Message Received: " + message);
-        //session.sendMessage(message);
-        //Send to all the connected clients
-        sendToAll(message);
+        System.out.println("WebSocketHandler | handleTextMessage Received: " + message);
+        sendToAll("echo:"+message.toString());
     }
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
-        System.out.println("WebSocketHandler | New Binary Message Received " );
+        System.out.println("WebSocketHandler | handleBinaryMessage Received " );
         //session.sendMessage(message);
         //Send to all the connected clients
         Iterator<WebSocketSession> iter = sessions.iterator();
