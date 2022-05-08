@@ -15,6 +15,7 @@ import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.ws.WsConnection;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.*;
+import unibo.webForActors.WebSocketConfiguration;
 
 
 public class RobotCleanerProject extends QakActor22FsmAnnot{
@@ -67,7 +68,10 @@ public class RobotCleanerProject extends QakActor22FsmAnnot{
 	@Transition( state = "turn",        msgId="endMoveKo"  )
 	protected void coverColumn( IApplMessage msg ) {
 		outInfo(""+msg);
-		//this.updateResourceRep( ""+msg );  //TODO
+//THE WRONG WAY OF UPDATING the DisplayArea
+		//WebSocketConfiguration.wshandler.sendToAll(""+msg);
+//UPDATING THE CoAP RESOURCE - See unibo.Robots.common.ActorObserver
+		updateResourceRep( ""+msg );
 		VRobotMoves.step(getName(), conn );
 	}
 	
@@ -79,7 +83,6 @@ public class RobotCleanerProject extends QakActor22FsmAnnot{
 		if( goingDown ) VRobotMoves.turnLeftAndStep(getName(), turnStep, conn);
 		else VRobotMoves.turnRightAndStep(getName(), turnStep, conn);
 		goingDown = !goingDown;
-		//VRobotMoves.step(getName(), conn );
 	}
 
 
@@ -89,8 +92,7 @@ public class RobotCleanerProject extends QakActor22FsmAnnot{
 	@Transition( state = "completed",    msgId="endMoveKo"  )
 	protected void lastColumn( IApplMessage msg ) {
 		outInfo(""+msg);
-		//outInfo("numIter="+numIter);
-		VRobotMoves.step(getName(), conn ); 
+		VRobotMoves.step(getName(), conn );
 	}
 	
 	@State( name = "completed" )

@@ -573,7 +573,7 @@ Il  controller ``HIController``  gestisce:
 
    .. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
       :align: center 
-      :width: 60%   
+      :width: 80%   
 
 - i comandi inviati con metodi HTTP-POST, quando l'utente (umano) preme i pulsanti **start / stop / resume**
 
@@ -752,7 +752,7 @@ In base a questa configurazione, il server risponderà a richieste inviate sulla
     ws://<serverIP>:8085/socket
 
 +++++++++++++++++++++++++++++++++++++
-IWsHandler
+IWsHandler e WebSocketHandler
 +++++++++++++++++++++++++++++++++++++
 
 Il nostro gestore è simile  a quanto introdotto :ref:`Il gestore WebSocketHandler`; in più implementa la interfaccia:
@@ -767,6 +767,14 @@ Il metodo ``sendToAll`` permette di inviare informazioni (alla pagina Weeb) di t
 
 .. code:: java
 
+   public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHandler {
+   private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+    ...
+      @Override
+      protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+         sendToAll("echo:"+message.toString());
+      }
+
     public void sendToAll(TextMessage message) throws IOException{
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
@@ -776,10 +784,6 @@ Il metodo ``sendToAll`` permette di inviare informazioni (alla pagina Weeb) di t
 
 Per propagare un messaggio a tutti i client connessi attraverso la WebSocket,  :ref:`Il gestore WebSocketHandler` tiene traccia
 delle sessioni in una struttura dati (*sessions*).
-
- 
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -846,79 +850,61 @@ anche una :blue:`risorsa CoAP osservabile` come descritto in :ref:`Attori come r
 RobotCleaner come risorsa CoAP
 +++++++++++++++++++++++++++++++++++++++++
 
+L'attore che realizza il ``RobotCleaner`` costituisce una :ref:`risorsa CoAP-osservabile<Attori come risorse CoAP>` , che viene 
+aggiornata usando il metodo  ``updateResourceRep``.
 
-L'attore che realizza il ``RobotCleaner`` costituisce una risorsa CoAP osservabile, che viene 
-aggiornata usando il metodo  ``updateResourceRep``
+La fase di configurazione del sistema che realizza la logica applicativa crea un :ref:`RobotCleanerObserver` che riceve un riferimento
+al :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>` memorizzato in ``WebSocketConfiguration.wshandler``.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il configuratore MainRobotCleaner
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In MainRobotCleaner:
 
 .. code:: Java
 
+   @Context22(name = "pcCtx", host = "localhost", port = "8083")
+   @Actor22(name = MainRobotCleaner.robotName, 
+      contextName = "pcCtx", implement = RobotCleanerProject.class)
+   public class MainRobotCleaner {
+
 	public void doJob() {
-  		Qak22Context.configureTheSystem(this);
+      Qak22Context.configureTheSystem(this);
  
-		ActorObserver obs = new ActorObserver("8083",robotName);
-		obs.setWebSocketHandler(WebSocketConfiguration.wshandler);  //WebSocketHandler
+      RobotCleanaerObserver obs = new RobotCleanaerObserver("8083",robotName);
+      obs.setWebSocketHandler(WebSocketConfiguration.wshandler);//WebSocketHandler
  	};
+	public static final String robotName = "cleaner";
+	
+	public static void main( String[] args) throws Exception {
+		...
+		MainRobotCleaner appl = new MainRobotCleaner( );
+		appl.doJob();
+      ...
+	}
 
 +++++++++++++++++++++++++++++++++++++++
-WebSocketConfiguration
+RobotCleanerObserver
 +++++++++++++++++++++++++++++++++++++++
+
+Il compito dell'osservatore del  ``RobotCleaner`` è di crreare un CoAP client capace di ricevere le informazioni sui cambiamenti di stato
+'emesse' dal ``RobotCleaner``
+(in quanto  CoAP-resource) e invocare il metodo ``sendToAll`` del :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>` che 
+aggiorna la DisplayArea di tutti i client collegati.
+
 
 .. code:: Java
 
-   @Configuration
-   @EnableWebSocket
-   public class WebSocketConfiguration implements WebSocketConfigurer {
-
-   public static final WebSocketHandler wshandler = new WebSocketHandler();
-   public static final String wspath              = "socket";
-   @Override
-   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-      registry.addHandler(wshandler, wspath).setAllowedOrigins("*");
-   }
-
-
-+++++++++++++++++++++++++++++++++++++++
-WebSocketHandler
-+++++++++++++++++++++++++++++++++++++++
-
-.. code:: Java
-
-   public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHandler {
-   private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-
-      public void sendToAll(String message)  {
-         ...
-      }
-   }
-
-   public void sendToAll(TextMessage message) throws IOException{
-      while( sessions.size() == 0 ) {
-             CommUtils.delay(100);
-      }
-      Iterator<WebSocketSession> iter = sessions.iterator();
-      while( iter.hasNext() ){
-         iter.next().sendMessage(message);
-      }
-   }
-
-
-+++++++++++++++++++++++++++++++++++++++
-ActorObserver
-+++++++++++++++++++++++++++++++++++++++
-
-.. code:: Java
-
-   public class ActorObserver {
+   public class RobotCleanaerObserver {
    private CoapObserveRelation relation = null;
    private CoapClient client = null;
    private IWsHandler wsh ;
 
-   public ActorObserver(String port, String actorName){
-      client = new CoapClient("coap://localhost:"+port+"/actors/"+actorName);
-      observe();
+   public RobotCleanaerObserver(String port, String actorName){
+    client=new CoapClient("coap://localhost:"+port+"/actors/"+actorName);
+    observe();
    }
 
    public void setWebSocketHandler(IWsHandler h){
@@ -937,9 +923,38 @@ ActorObserver
       });		
    }
 
+- :remark:`Il RobotCleaner non dipende in alcun modo dalla WebApplication`
+  
+++++++++++++++++++++++++++++++++++++++++++
+Permanenza delle info nella DisplayArea
+++++++++++++++++++++++++++++++++++++++++++
 
-- ActorObserver: opera come CoAP client e offre un setWebSocketHandler (wsh)
-- Attiva un client.observe con argomento un CoapHandler che invoca wsh.sendToAll
+
+Purtroppo le informazioni inviate sulla WS **non permangono visibili** in quanto la pagina viene aggiornata dopo ogni comando.
+Per superare questo problema, possiamo inviare i comandi sulla WS stessa, invece che con HTTP-POST, realizzando di fatto una 
+forma di Machine-to-machine (M2M) interaction.
+
+S provi ad esempio ad utlizzare come GUI la pagina descritta nel file ``templates/RobotCmdGuiWs.html``; si vedranno comparire i comandi
+inviati come echo, inviati dal metodo ``handleTextMessage`` di :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>`.
+
+
+
+Notiamo che, lanciando il programma ``unibo.webForActors.ClientUsingWs``, questo visualizzerà tutte le informazioni emesse da 
+``RobotCleaner``.
+
+- :remark:`E' il RobotCleaner che decide quali informazioni rendere visibili`
+
+Notiamo anche che:
+
+- :remark:`Abbiamo un meccanismo utile per il testing automatizzato` 
+
+:worktodo:`WORKTODO: aggiornare un log file delle variazioni di stato del RobotCleaner`
+
+- Scrivere un programma Java (etserno alla WebApplication) che crea un Observer della CoAP-resource ``RobotCleaner`` che aggiorna 
+  un file di log di tutte  le informazioni emesse dal robot.
+
+ 
+
 
 
 

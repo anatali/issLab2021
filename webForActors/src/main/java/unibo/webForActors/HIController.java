@@ -75,7 +75,7 @@ public class HIController {
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("arg", appName);
-        if(cleanerAppl)  mainPage = "RobotCleanerGui";
+        if(cleanerAppl)  mainPage = "RobotCmdGuiWs";//"RobotCleanerGui";
         else mainPage = "RobotNaiveGui";
         return mainPage;
     }
