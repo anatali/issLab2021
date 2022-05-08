@@ -5,9 +5,6 @@ import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
-
-import it.unibo.kactor.ApplMessage;
-import it.unibo.kactor.ApplMessageType;
 import unibo.actor22comm.utils.CommUtils;
 
 
@@ -33,9 +30,7 @@ private CoapObserveRelation relation = null;
 		System.out.println("CoapSupport | STARTS url=" +  url  ); //+ " client=" + client
 		client.setTimeout( 1000L );		 
 	}
-//	public CoapSupport( String address ) {  
-//		this(address, Resource.path);
-//	}
+ 
 	
 	public String readResource(   ) {
 		CoapResponse respGet = client.get( );

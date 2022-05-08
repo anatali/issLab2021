@@ -15,10 +15,7 @@ private CoapClient client;
 private String url;
 private String name = "CoapSprt";
 
-//	public CoapConnection( String name, String address, String path) {  
-// 		this.name = name;
-// 		setCoapClient(address,path);
-// 	}
+
 	public CoapConnection( String address, String path) { //"coap://localhost:5683/" + path
  		setCoapClient(address,path);
 	}
