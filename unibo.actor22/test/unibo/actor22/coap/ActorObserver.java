@@ -3,7 +3,6 @@ package unibo.actor22.coap;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -16,7 +15,7 @@ public class ActorObserver {
 	private CoapClient client = null;
 	
 	public ActorObserver(){
-		client = new CoapClient("coap://localhost:8073/actors/a1");
+		client = new CoapClient("coap://localhost:8022/actors/a1");
 	}
 	
 	public void  observe( ) {
@@ -40,10 +39,10 @@ public class ActorObserver {
 		relation.proactiveCancel();		
 	}
 	
-	public static void main(String[] args) {
-  		ActorObserver rco = new ActorObserver();
-		rco.observe( );
-		rco.waitUserEnd();
-	}
+//	public static void main(String[] args) {
+//  		ActorObserver rco = new ActorObserver();
+//		rco.observe( );
+//		rco.waitUserEnd();
+//	}
 
 }

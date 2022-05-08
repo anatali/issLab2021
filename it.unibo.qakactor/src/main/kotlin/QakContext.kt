@@ -1,7 +1,6 @@
 package it.unibo.kactor
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.newSingleThreadContext
 import org.eclipse.californium.core.CoapServer
 import java.net.InetAddress
@@ -114,7 +113,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         proxyMap.put(ctxName, proxy)
     }
 
-    fun addActor( actor: ActorBasic ) {
+    fun addActor( actor: ActorBasic) {
         println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% addActor in coapctx   "  )
         actor.context = this    //injects the context
  		actor.createMsglogFileInContext()
@@ -124,7 +123,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         if( this::resourceCtx.isInitialized  ) resourceCtx.addActorResource( actor )   //CoAP: Jan2020
     }
 
-    fun addInternalActor( actor: ActorBasic ) {
+    fun addInternalActor( actor: ActorBasic) {
         actor.context = this    //injects the context
 // 		actor.createMsglogFileInContext()	//internal actors have no context !
         actorMap.put( actor.name, actor )
@@ -132,7 +131,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    fun removeInternalActor( actor: ActorBasic ){
+    fun removeInternalActor( actor: ActorBasic){
         actorMap.remove( actor.name )
  		actor.terminate()
      }

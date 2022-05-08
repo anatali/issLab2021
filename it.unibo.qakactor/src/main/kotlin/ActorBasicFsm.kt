@@ -3,7 +3,6 @@ package it.unibo.kactor
 import alice.tuprolog.*
 import kotlinx.coroutines.*
 import java.util.NoSuchElementException
-import java.io.File
 
 /*
 ================================================================

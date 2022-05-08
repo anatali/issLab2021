@@ -35,12 +35,12 @@ public abstract class QakActor22Fsm extends QakActor22 {
 	protected abstract void setTheInitialState( );
 	
 	protected void declareAsInitialState( String stateName ) {
-		ColorsOut.outappl( getName() + " QakActor22Fsm | declareAsInitialState " + stateName, ColorsOut.BLUE);		
+		ColorsOut.out( getName() + " QakActor22Fsm | declareAsInitialState " + stateName, ColorsOut.BLUE);		
 		curState = stateName;
 	};
 	
 	protected void declareState(String stateName, StateActionFun action) {
-		ColorsOut.outappl( getName() + " QakActor22Fsm | declareState " + stateName + " action=" + action, ColorsOut.BLUE);		
+		ColorsOut.out( getName() + " QakActor22Fsm | declareState " + stateName + " action=" + action, ColorsOut.BLUE);		
 		if( action == null ) ColorsOut.outerr(getName() + " QakActor22Fsm | action null");
 		else stateMap.put( stateName, action );
 	}
@@ -59,7 +59,7 @@ public abstract class QakActor22Fsm extends QakActor22 {
 	protected Vector< Pair<String, Boolean> > memoInterruptTab = null;
 	
 	protected void memoTheState(String currentState) {
-		ColorsOut.outappl(getName() + " | QakActor22Fsm memoTheState " +  currentState, ColorsOut.GREEN);
+		ColorsOut.out(getName() + " | QakActor22Fsm memoTheState " +  currentState, ColorsOut.GREEN);
 		stateWithInterrupt = currentState;
 		memoTransTab     = transTabCopy(transTab);     
 		memoInterruptTab = interruptTabCopy(interruptTab);     
@@ -101,7 +101,7 @@ public abstract class QakActor22Fsm extends QakActor22 {
 		return copied;
 	}	
 	protected void resume() {  
-		ColorsOut.outappl(getName() + " | QakActor22Fsm in " + curState + " resume:" + memoTransTab.size(), ColorsOut.GREEN);		 
+		ColorsOut.out(getName() + " | QakActor22Fsm in " + curState + " resume:" + memoTransTab.size(), ColorsOut.GREEN);		 
 		transTab           = tabRestore(memoTransTab);
 		interruptTab       = interruptTabRestore(memoInterruptTab);  
 		curState           = "resuming";

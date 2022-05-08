@@ -2,7 +2,6 @@ package it.unibo.kactor
 
 import kotlinx.coroutines.launch
 import org.eclipse.californium.core.server.resources.CoapExchange
-import kotlinx.coroutines.delay
 
 /*
  * ----------------------------------------------------------------------------------------------
@@ -10,8 +9,8 @@ import kotlinx.coroutines.delay
  * ----------------------------------------------------------------------------------------------
  */
 
-class CoapToActor( name : String, val exchange: CoapExchange,
-                   val owner: ActorBasic, val extmsg : IApplMessage) : ActorBasic( name ){
+class CoapToActor(name : String, val exchange: CoapExchange,
+                  val owner: ActorBasic, val extmsg : IApplMessage) : ActorBasic( name ){
 var answer = "noanswer" 	
  	init{
         this.context = owner.context

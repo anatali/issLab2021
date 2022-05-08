@@ -514,62 +514,13 @@ In questa sezione continueremo ad usare il progetto denoinato webForActors intro
 RobotCleanerGui.html
 +++++++++++++++++++++++++++++++++++++++++++++
 
-
 - Inseriamo il file ``RobotCleanerGui.html`` nella directory **templates**.
-
 
 Qyesto file definisce la struttura della pagina HTML, suddivisa in due zone:
 
 - area **Condigurazione e comandi**: questa zona realizza un dispositivo  di input, con cui l'utente può invioare comandi al server
 - **Display Area**: questa zona realizza un dispositivo di ouput, in cui il server può 'scrivere' informazioni di stato avvalendosi
   di una :ref:`WebSocket<WebSocket in SpringBoot: versione base>`.
-
-Per gestire queste due aree, la pagina si avvale di `jquery`_ e del codice JavaScript defnito nel file **wsminimal.js** 
-con cui la pagina si connette a una WebSocket su localhost:8085 e riceve dati (metodo  ``onmessage``)  che visualizza nella *Display Area*. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-wsminimal.js
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-.. code::   
-
-   const messageWindow   = document.getElementById("display");
-
-   function sendMessage(message) {
-      var jsonMsg = JSON.stringify( {'name': message});
-      socket.send(jsonMsg);
-      addMessageToWindow("Sent Message: " + jsonMsg);
-    }
-
-   function addMessageToWindow(message) {
-      //messageWindow.innerHTML += `<div>${message}</div>` //add
-      messageWindow.innerHTML = `<div>${message}</div>`  //set
-   }
-
-   function connect(){
-      var host       =  "localhost:8085"; //document.location.host;
-      var pathname =  "/"//document.location.pathname;
-      var addr     = "ws://" +host  + pathname + "socket"  ;
-      // Assicura che sia aperta un unica connessione
-      if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
-         alert("WARNING: Connessione WebSocket già stabilita");
-      }
-      var socket = new WebSocket(addr);
-      socket.onopen = function (event) {
-         addMessageToWindow("Connected to " + addr);
-      };
-
-      socket.onmessage = function (event) {
-         addMessageToWindow(""+`${event.data}`);
-      };
-      return socket;
-   }//connect
-
-   connect()
-
-
- 
-
 
 
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -660,14 +611,6 @@ Il  controller ``HIController``  gestisce:
             <button name="cmd" value="stop">stop</button>
       </form>
  
- 
- 
- 
-
-
-
-
-
 
 -------------------------------------------
 RobotCleaner:  display area
@@ -697,8 +640,113 @@ Questi due vincoli, presi insieme, implicano che:
   sullo stesso noodo di elaborazione  del ``RobotCleaner``.
 
 
-Dal punto di vista logico, potremmo modellare il ``RobotCleaner`` come un emettitore di :ref:`Eventi`, ma il sistema si presenta come 
-**eterogeneo**: non tutti i componenti del sistema seguono il modello ad :ref:`Attori`. In particolare:
++++++++++++++++++++++++++++++++++++++++++
+DisplayArea: architettura
++++++++++++++++++++++++++++++++++++++++++
+
+L'architettura logica di riferimento può essere rappresentata come nella figura che segue:
+
+
+.. image::  ./_static/img/Spring/RobotCleanerGuiArch.PNG
+   :align: center 
+   :width: 60%   
+
+
+Il componente :ref:`WebSocketHandler<Il gestore WebSocketHandler>` nasce da quanto esposto in 
+:ref:`Configurazione con WebSocketConfigurer`.
+
+
++++++++++++++++++++++++++++++++++++++++++
+DisplayArea: piano di lavoro
++++++++++++++++++++++++++++++++++++++++++
+
+Al termine della analisi, riteniamo opportuno proporre il seguente piano di lavoro:
+
+#. ``SPRINT1(ws)``: impostare il WebServer in modo da utilizzare connessioni mediante WebSocket con i client collegati, mediante 
+   il framework SpringBoot (a tal fine si veda :ref:`WebSockets in SpringBoot<WebSocket in SpringBoot: versione base>`). 
+#. ``SPRINT2(udapte)``: realizzare il ``RobotCleaner`` come emettitore di eventi percebili dal WebServer.
+
+
+Gli obiettivi (*Goals*) di ciascun SPRINT, possono essere definiti come segue: 
+
+- nello ``SPRINT1(ws)``: realizzare il file ``wsminimal.js``, il componente ``WebSocketHandler`` e verificare che il
+  WebServer sia in grado di inviare informazioni sulla DisplayArea;
+- nello ``SPRINT2(update)``: realizzare un meccanismo/supporto che permetta all'attore ``RobotCleaner`` di emettere 
+  informazioni che possano essere ricevute dal WebServer (in particolare dal ``WebSocketHandler``) in modo 
+  che possano essere visualizzate nella DisplayArea. Nella figura della architettura, questo meccanismo è 
+  relativo alla freccia tratteggiata.
+
+La :blue:`valutazione di complessità` ci porta a indicare lo  ``SPRINT2(update)`` come più rischioso e difficile, in quanto
+richiede progettazione ad hoc, mentre lo ``SPRINT1(ws)`` richiede 'solo' lo studio delle 
+:ref:`WebSockets in SpringBoot<WebSocket in SpringBoot: versione base>`.
+
+
++++++++++++++++++++++++++++++++++++++++++
+SPRINT1(ws)
++++++++++++++++++++++++++++++++++++++++++
+
+Per gestire le due aree (di input/output) introdotte in :ref:`RobotCleanerGui.html`, la pagina si avvale di `jquery`_ 
+e del codice JavaScript defnito nel file *wsminimal.js* 
+con cui la pagina si connette a una WebSocket su ``localhost:8085`` e riceve dati (metodo  ``onmessage``)  
+che visualizza nella *Display Area*. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+wsminimal.js
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::   
+
+   const messageWindow   = document.getElementById("display");
+
+   function sendMessage(message) {
+      var jsonMsg = JSON.stringify( {'name': message});
+      socket.send(jsonMsg);
+      addMessageToWindow("Sent Message: " + jsonMsg);
+    }
+
+   function addMessageToWindow(message) {
+      //messageWindow.innerHTML += `<div>${message}</div>` //add
+      messageWindow.innerHTML = `<div>${message}</div>`  //set
+   }
+
+   function connect(){
+      var host       =  "localhost:8085"; //document.location.host;
+      var pathname =  "/"//document.location.pathname;
+      var addr     = "ws://" +host  + pathname + "socket"  ;
+      // Assicura che sia aperta un unica connessione
+      if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+         alert("WARNING: Connessione WebSocket già stabilita");
+      }
+      var socket = new WebSocket(addr);
+      socket.onopen = function (event) {
+         addMessageToWindow("Connected to " + addr);
+      };
+
+      socket.onmessage = function (event) {
+         addMessageToWindow(""+`${event.data}`);
+      };
+      return socket;
+   }//connect
+
+   connect()
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DisplayArea testing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Una prima verifica della soluzione proposta consiste:
+
+- in locale (entro la pagina): nel visualizzare un messaggio di avvenuta connessione con la WebSocket
+- in remoto (informazioni da WebServer): nell'inviare un messaggio di avvenuta configurazione da parte di 
+  
+
++++++++++++++++++++++++++++++++++++++++++
+SPRINT2(update)
++++++++++++++++++++++++++++++++++++++++++
+
+Dal punto di vista logico, il ``RobotCleaner`` è stato modellato come un emettitore di :ref:`Eventi`, 
+ma il sistema si presenta come 
+**eterogeneo**: infatti non tutti i componenti del sistema seguono il modello ad :ref:`Attori`. In particolare:
 
 :remark:`il WebServer è progettato e costruito 'al di fuori' del modello ad  Attori`
 
@@ -711,7 +759,8 @@ Potremmo superare questo ostacolo in due modi:
 
 La infrastruttura degli attori è definita in modo da rendere possibili enatrambe le strade.
 
-In questa fase ci concentriamo sul fatto che ogni attore è anche una :blue:`risorsa CoAP osservabile`.
+In questa fase ci concentriamo sul fatto che ogni attore è stato definito in mod da essere 
+anche una :blue:`risorsa CoAP osservabile`.
 
 +++++++++++++++++++++++++++++++++++++++++
 RobotCleaner come risorsa CoAP

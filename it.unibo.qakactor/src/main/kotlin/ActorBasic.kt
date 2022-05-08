@@ -6,16 +6,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
 import org.eclipse.californium.core.CoapClient
 import org.eclipse.californium.core.CoapResource
-import org.eclipse.californium.core.CoapResponse
 import org.eclipse.californium.core.server.resources.CoapExchange
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED
-import org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED
 import org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED
 import org.eclipse.californium.core.coap.MediaTypeRegistry
-import java.io.File
 
 
 /*
@@ -49,7 +46,7 @@ abstract class  ActorBasic(  name:         String,
  
 //    private var timeAtStart: Long = 0
 
-    internal val requestMap : MutableMap<String, IApplMessage > = mutableMapOf<String,IApplMessage>()  //Oct2019
+    internal val requestMap : MutableMap<String, IApplMessage> = mutableMapOf<String, IApplMessage>()  //Oct2019
 
     private   var logo             : String 	        //Coap Jan2020
     protected var ActorResourceRep : String 			//Coap Jan2020
@@ -62,7 +59,7 @@ abstract class  ActorBasic(  name:         String,
         isObservable     = true
         logo             = "       ActorBasic(Resource) $name "
         ActorResourceRep = "$logo | created  "
- 		sysUtil.aboutThreads("$name CREATED - ")
+        sysUtil.aboutThreads("$name CREATED - ")
 
     }
 	
@@ -81,23 +78,23 @@ Message-driven kactor
 	
 	open fun createMsglogFile(){
 		actorLogfileName  = "${name}_MsLog.txt"
-  		sysUtil.createFile( actorLogfileName, dir=msgLogNoCtxDir   )		
+        sysUtil.createFile(actorLogfileName, dir = msgLogNoCtxDir)
 	}
 	fun createMsglogFileInContext(){	//called by QAkContext.addInternalActor when a context is injected
 		if( context !== null ){
-			sysUtil.deleteFile( actorLogfileName, dir=msgLogNoCtxDir )
+            sysUtil.deleteFile(actorLogfileName, dir = msgLogNoCtxDir)
 			msgLogDir = "logs/${context!!.name}"
-			sysUtil.createFile( actorLogfileName, dir=msgLogDir )				
+            sysUtil.createFile(actorLogfileName, dir = msgLogDir)
 		}else println("ActorBasic $name | WARNING: createMsglogFileInContext you should never be here")	
 	}
 	
- 	open fun writeMsgLog( msg: IApplMessage ){ //APR2020
+ 	open fun writeMsgLog( msg: IApplMessage){ //APR2020
           if( context !== null ){ 
         	  //Update the log of the context
- 			   sysUtil.updateLogfile(context!!.ctxLogfileName, "item($name,nostate,$msg).", dir=msgLogNoCtxDir )
+              sysUtil.updateLogfile(context!!.ctxLogfileName, "item($name,nostate,$msg).", dir = msgLogNoCtxDir)
 		  }	
           //Update the log of the actor
-          sysUtil.updateLogfile(actorLogfileName,  "item($name,nostate,$msg).", dir=msgLogDir )  
+        sysUtil.updateLogfile(actorLogfileName, "item($name,nostate,$msg).", dir = msgLogDir)
 	}
 	
     @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -105,7 +102,7 @@ Message-driven kactor
     val actor = scope.actor<IApplMessage>( dispatcher, capacity=channelSize ) {
         //println("ActorBasic $name |  RUNNING IN $dispatcher"  )
         for( msg in channel ) {
-            sysUtil.traceprintln("$tt ActorBasic  $name |  msg= $msg "  )
+            sysUtil.traceprintln("$tt ActorBasic  $name |  msg= $msg ")
 			writeMsgLog( msg )
 			if( msg.msgContent() == "stopTheActor") {  channel.close() }
             else{
@@ -161,14 +158,14 @@ Messaging
     }
 
     //ADDED April 2022 to avoid loop
-    fun sendMsgToMyself( msg : IApplMessage ){
+    fun sendMsgToMyself( msg : IApplMessage){
         scope.launch { autoMsg(msg) }
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun autoMsg( msgId : String, msg : String) {
-        actor.send( MsgUtil.buildDispatch(name, msgId, msg, this.name) )
+        actor.send(MsgUtil.buildDispatch(name, msgId, msg, this.name))
     }
 
 
@@ -176,21 +173,21 @@ Messaging
     //Oct2019
 @kotlinx.coroutines.ObsoleteCoroutinesApi 
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun sendMessageToActor( msg : IApplMessage , destName: String, conn : IConnInteraction? = null ) {
+    suspend fun sendMessageToActor(msg : IApplMessage, destName: String, conn : IConnInteraction? = null ) {
         //println("$tt ActorBasic sendMessageToActor | destName=$destName  ")
         if( context == null ){  //Defensive programming
             sysUtil.traceprintln("$tt ActorBasic sendMessageToActor |  no QakContext for the current actor")
             return
         }
         val destactor = context!!.hasActor(destName)
-        if( destactor is ActorBasic ) { //DESTINATION LOCAL
+        if( destactor is ActorBasic) { //DESTINATION LOCAL
             //println("$tt ActorBasic sendMessageToActor | ${msg.msgId()}  dest=$destName LOCAL IN ${context!!.name}")
             destactor.actor.send( msg )
             return
         }
         val ctx = sysUtil.getActorContext(destName)
         if( ctx == null ) { //DESTINATION REMOTE but no context known
-            sysUtil.traceprintln("$tt ActorBasic sendMessageToActor | ${msg.msgId()} dest=$destName REMOTE no context known " )
+            sysUtil.traceprintln("$tt ActorBasic sendMessageToActor | ${msg.msgId()} dest=$destName REMOTE no context known ")
             if( conn != null ){ //we are sending an answer via TCP to an 'alien'
                 sysUtil.traceprintln("$tt ActorBasic sendMessageToActor | dest=$destName sending answer  ${msg.msgId()} using $conn ")
                 conn.sendALine( "$msg" )
@@ -217,15 +214,15 @@ Messaging
         // REMOVED: Coap 2020 but not for request
         else{	//request
 	        val proxy = context!!.proxyMap.get(ctx.name)
-	        sysUtil.traceprintln("$tt ActorBasic sendMessageToActor |  ${msg.msgId()} $destName REMOTE with PROXY  " )
+            sysUtil.traceprintln("$tt ActorBasic sendMessageToActor |  ${msg.msgId()} $destName REMOTE with PROXY  ")
 	        //WARNING: destName must be the original and not the proxy
-	        if( proxy is ActorBasic ) { proxy.actor.send( msg ) }
+	        if( proxy is ActorBasic) { proxy.actor.send( msg ) }
 	        else println("$tt WARNING. ActorBasic  sendMessageToActor |  ${msg.msgId()} proxy of $ctx is null ")
 		}
          
     }
 
-    fun attemptToSendViaMqtt( ctx : QakContext, msg : IApplMessage, destName : String) : Boolean{
+    fun attemptToSendViaMqtt(ctx : QakContext, msg : IApplMessage, destName : String) : Boolean{
         //sysUtil.traceprintln("$tt ActorBasic attemptToSendViaMqtt | $msg}" )
         if( ctx.mqttAddr.length > 0  ) {
             if( ! mqttConnected ){
@@ -249,19 +246,19 @@ Messaging
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun request( msgId : String, msg: String, destActor: ActorBasic) {
         //println("       ActorBasic $name | forward $msgId:$msg to ${destActor.name} in ${sysUtil.curThread() }")
-        destActor.actor.send( MsgUtil.buildRequest(name, msgId, msg, destActor.name ) )
+        destActor.actor.send(MsgUtil.buildRequest(name, msgId, msg, destActor.name))
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun request( msgId : String, msg: String, destName: String) {
-        val m = MsgUtil.buildRequest(name,msgId, msg, destName)
+        val m = MsgUtil.buildRequest(name, msgId, msg, destName)
         sendMessageToActor( m, destName)
      }//request
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun answer( reqId: String, msgId : String, msg: String) {
-        sysUtil.traceprintln("$tt ActorBasic $name | answer $msgId:$msg  }")
+    sysUtil.traceprintln("$tt ActorBasic $name | answer $msgId:$msg  }")
         val reqMsg = requestMap.remove(reqId) //one request, one reply
         if( reqMsg == null ){
             println("$tt ActorBasic $name | WARNING: answer $msgId INCONSISTENT: no request found ")
@@ -291,13 +288,13 @@ Messaging
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun emit( ctx: QakContext, event : IApplMessage ) {  //used by NodeProxy
-         sysUtil.traceprintln("$tt ActorBasic $name | emit from proxy ctx= ${ctx.name} ")
+    suspend fun emit(ctx: QakContext, event : IApplMessage) {  //used by NodeProxy
+    sysUtil.traceprintln("$tt ActorBasic $name | emit from proxy ctx= ${ctx.name} ")
          ctx.actorMap.forEach {
 			val ctxName  = it.key
 			if(  ctx.name != ctxName ){
 	            val destActor = it.value
-	            sysUtil.traceprintln("$tt ActorBasic $name | PROPAGATE ${event.msgId()} locally to ${destActor.name} " )
+                sysUtil.traceprintln("$tt ActorBasic $name | PROPAGATE ${event.msgId()} locally to ${destActor.name} ")
 	            destActor.actor.send(event)
 			}
         }
@@ -309,14 +306,14 @@ Messaging
     suspend fun emitWithDelay(  evId: String, evContent: String, dt : Long = 0L ) {
 		scope.launch{
 			delay( dt )
-			val event = MsgUtil.buildEvent(name, evId,evContent)
+			val event = MsgUtil.buildEvent(name, evId, evContent)
 			emit( event, avatar=true )			
 		}
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun emit( event : IApplMessage, avatar : Boolean = false ) {
+    suspend fun emit(event : IApplMessage, avatar : Boolean = false ) {
 	//avatar=true means that the emitter is able to sense the event that emits
         if( context == null ){
              println("$tt ActorBasic $name | WARNING emit: actor has no QakContext. ")
@@ -341,7 +338,7 @@ Messaging
         //EMIT VIA MQTT IF there is
         if( context!!.mqttAddr.length != 0 ) {
 //            sysUtil.trace
-			println("$tt ActorBasic $name | emit MQTT ${event.msgId()}  on ${ sysUtil.getMqttEventTopic() }")
+			println("$tt ActorBasic $name | emit MQTT ${event.msgId()}  on ${sysUtil.getMqttEventTopic()}")
             //mqtt.sendMsg(event, sysUtil.getMqttEventTopic())
 			mqtt.publish(sysUtil.getMqttEventTopic(), event.toString() )  //Are perceived also by the emitter
         }
@@ -352,10 +349,10 @@ Messaging
         sysUtil.ctxsMap.forEach{
             val ctxName  = it.key
             //val ctx      = it.value
-            sysUtil.traceprintln("$tt ActorBasic $name | ${context!!.name } try to propagate event ${event.msgId()} to ${ctxName}  ")
+            sysUtil.traceprintln("$tt ActorBasic $name | ${context!!.name} try to propagate event ${event.msgId()} to ${ctxName}  ")
             val proxy  = context!!.proxyMap.get(ctxName)
             if( proxy is ActorBasic && proxy.name != this.context!!.name ){
-                sysUtil.traceprintln("$tt ActorBasic $name | emit ${event}  towards $ctxName " )
+                sysUtil.traceprintln("$tt ActorBasic $name | emit ${event}  towards $ctxName ")
                 proxy.actor.send( event )    //Propagate via proxy THAT MUST exist if we know the context
             } 
 
@@ -373,7 +370,7 @@ Messaging
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun emit( msgId : String, msg : String) {
-        val event = MsgUtil.buildEvent(name,msgId, msg)
+        val event = MsgUtil.buildEvent(name, msgId, msg)
         emit( event )
     }
 
@@ -385,7 +382,7 @@ Messaging
 */
     fun subscribe( a : ActorBasic) : ActorBasic {
         subscribers.add(a)
-        sysUtil.traceprintln(" $tt ActorBasic $name | subscribe ${a.name} " )
+    sysUtil.traceprintln(" $tt ActorBasic $name | subscribe ${a.name} ")
         return a
     }
     fun subscribeLocalActor( actorName : String) : ActorBasic {
@@ -401,13 +398,13 @@ Messaging
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     suspend fun emitLocalStreamEvent(ev: String, evc: String ){
-        emitLocalStreamEvent( MsgUtil.buildEvent( name, ev, evc) )
+        emitLocalStreamEvent(MsgUtil.buildEvent(name, ev, evc))
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    suspend fun emitLocalStreamEvent(v: IApplMessage ){
+    suspend fun emitLocalStreamEvent(v: IApplMessage){
         subscribers.forEach {
-            sysUtil.traceprintln(" $tt ActorBasic $name | emitLocalStreamEvent $it $v " );
+            sysUtil.traceprintln(" $tt ActorBasic $name | emitLocalStreamEvent $it $v ");
             it.actor.send(v)
 		}
     }
@@ -423,7 +420,7 @@ MQTT
             mqtt.connect(name,context!!.mqttAddr)
             mqttConnected = true
             mqtt.subscribe(this, "unibo/qak/$name")
-            mqtt.subscribe( this, sysUtil.getMqttEventTopic() )
+            mqtt.subscribe( this, sysUtil.getMqttEventTopic())
         }
     }
     fun removeFromMqtt(){
@@ -438,7 +435,7 @@ MQTT
     override fun messageArrived(topic: String, msg: MqttMessage) {
         //sysUtil.traceprintln("$tt ActorBasic $name |  MQTT messageArrived on "+ topic + ": "+msg.toString());
         val m = ApplMessage( msg.toString() )
-        sysUtil.traceprintln("$tt ActorBasic $name |  MQTT ARRIVED on $topic  m=$m ${actor}" )
+    sysUtil.traceprintln("$tt ActorBasic $name |  MQTT ARRIVED on $topic  m=$m ${actor}")
         //this.scope.launch{ actor.send( m ) }
         GlobalScope.launch{ actor.send( m ) }
     }
@@ -553,8 +550,8 @@ KNOWLEDGE BASE
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     override fun handlePUT(exchange: CoapExchange) {
-        val arg = exchange.requestText   
-        sysUtil.traceprintln("$logo | handlePUT arg=$arg")
+        val arg = exchange.requestText
+    sysUtil.traceprintln("$logo | handlePUT arg=$arg")
         try{
             val msg    = ApplMessage( arg )
             fromPutToMsg( msg, exchange )   
@@ -571,8 +568,8 @@ KNOWLEDGE BASE
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    fun fromPutToMsg( msg : IApplMessage, exchange: CoapExchange ) {
-        sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
+    fun fromPutToMsg(msg : IApplMessage, exchange: CoapExchange ) {
+    sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
         if( msg.isDispatch() || msg.isEvent() ) {
             scope.launch { autoMsg(msg) }
             exchange.respond( CHANGED )

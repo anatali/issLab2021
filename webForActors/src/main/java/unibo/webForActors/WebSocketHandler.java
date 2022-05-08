@@ -71,7 +71,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
     }
     public void sendToAll(TextMessage message) throws IOException{
         while( sessions.size() == 0 ) {
-            ColorsOut.outappl("WebSocketHandler | sendToAll sessions:" + sessions.size(), ColorsOut.BLUE);
+            //ColorsOut.outappl("WebSocketHandler | sendToAll sessions:" + sessions.size(), ColorsOut.BLUE);
             CommUtils.delay(100);
         }
         Iterator<WebSocketSession> iter = sessions.iterator();

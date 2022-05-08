@@ -51,7 +51,7 @@ class MqttUtils(val owner: String )  {
 	}
 
 
-	fun subscribe(  actor: ActorBasic, topic: String ) {
+	fun subscribe(actor: ActorBasic, topic: String ) {
 		//println("	%%% MqttUtils ${actor.name} subscribe to topic=$topic client=$client "  )
 		try {
 			this.workActor = actor

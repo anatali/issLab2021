@@ -1,13 +1,9 @@
 package it.unibo.kactor
 
 import org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED
-import org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED
 import org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED
 import org.eclipse.californium.core.CoapResource
-import org.eclipse.californium.core.CoapServer
-import org.eclipse.californium.core.coap.MediaTypeRegistry
 import org.eclipse.californium.core.server.resources.CoapExchange
-import it.unibo.kactor.ActorBasic
 import kotlinx.coroutines.launch
 
 

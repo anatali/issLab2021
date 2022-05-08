@@ -349,13 +349,18 @@ ai partire dai dati contenuti nel messaggio di richiesta come specificato in :re
    :align: center  
    :width: 70%
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-``CoapConnection`` implementa :ref:`Interaction2021<Interaction2021>`
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++ 
+CoapConnection
++++++++++++++++++++++++ 
+
 
 CoAP considera le interazioni (client/server) tra componenti come uno scambio di rappresentazioni di risorse
 e si pone l'obiettivo di realizzare una infrastruttura di gestione di risorse remote tramite alcune semplici
 funzioni di accesso e interazione come quelle di ``HTTP``: ``PUT, POST, GET, DELETE``.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+``CoapConnection`` implementa :ref:`Interaction2021<Interaction2021>`
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 La classe ``CoapConnection``  implementa :ref:`Interaction2021<Interaction2021>` 
 e quindi realizza il 'nostro' concetto di connessione, tenendo conto delle seguenti caratteristiche del protocollo
@@ -371,7 +376,6 @@ CoAP e della libreria `californium`_:
 - le risorse allocate su un nodo sono istanze della classe ``org.eclipse.californium.core.CoapResource`` 
   e sono gestite da un server di classe ``org.eclipse.californium.core.CoapServer``. Questo server realizza già
   funzioni analoghe a quelle da :ref:`IContext`.
-
 
 .. code:: java 
 
@@ -744,10 +748,10 @@ CoapContextServer
 
 
 - CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
-   implica schemi architetturali e di progettazione molto simili a quelli di applicazioni Web basate su ``HTTP``;
+  implica schemi architetturali e di progettazione molto simili a quelli di applicazioni Web basate su ``HTTP``;
 - l'uso di CoAP modifica il modello concettuale di riferimento per le interazioni, in quanto propone
-   l'idea di accesso in lettura (GET) o modifica (PUT) a :blue:`risorse` identificate da ``URI`` attraverso un 
-   unico server (che `californium`_ offre nella classe :blue:`org.eclipse.californium.core.CoapServer`).
+  l'idea di accesso in lettura (GET) o modifica (PUT) a :blue:`risorse` identificate da ``URI`` attraverso un 
+  unico server (che `californium`_ offre nella classe :blue:`org.eclipse.californium.core.CoapServer`).
    
   .. image:: ./_static/img/Architectures/CoapResources.png 
       :align: center

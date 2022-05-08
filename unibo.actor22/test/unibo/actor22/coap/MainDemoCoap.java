@@ -3,27 +3,24 @@ package unibo.actor22.coap;
 import it.unibo.kactor.sysUtil;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.annotations.*;
-import unibo.actor22comm.coap.CoapApplObserver;
-import unibo.actor22comm.coap.CoapConnection;
-import unibo.actor22comm.coap.CoapSupport;
-import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 
-@Context22(name = "ctx", host = "localhost", port = "8073")
-@Actor22(name = "a1",contextName="ctx",implement = TestCoap.class)
-public class MainTestCoap {
+@Context22(name = "ctx", host = "localhost", port = "8022")
+@Actor22(name = "a1",contextName="ctx",implement = ActorCoapDemo.class)
+public class MainDemoCoap {
  
 	
 	protected void configure() throws Exception {
-		CommSystemConfig.tracing = true;
-		sysUtil.INSTANCE.setTrace(true);
+		CommSystemConfig.tracing = false;
+		//sysUtil.INSTANCE.setTrace(true);
  		Qak22Context.configureTheSystem(this);
 		CommUtils.delay(1000);  //Give time to start ...
 		Qak22Context.showActorNames();
 		
 		new ActorObserver().observe();
+		//CommUtils.delay(3000);  //Give time to observe ...
  
 /*		
 		
@@ -54,7 +51,7 @@ public class MainTestCoap {
 	
 	public static void main(String[] args) throws Exception   {
 		CommUtils.aboutThreads("Before start - ");
- 		new MainTestCoap().configure();
+ 		new MainDemoCoap().configure();
   		CommUtils.aboutThreads("At end - ");
 	}
 }

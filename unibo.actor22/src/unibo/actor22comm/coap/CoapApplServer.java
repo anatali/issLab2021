@@ -30,8 +30,7 @@ public class CoapApplServer extends CoapServer implements IContext{
 	}
 	
 	public static CoapApplServer getTheServer() {
-		//if( server == null ) server = new CoapApplServer(8083);
-		return server;
+ 		return server;
 	}
 	public static void stopTheServer() {
 		if( server != null ) {

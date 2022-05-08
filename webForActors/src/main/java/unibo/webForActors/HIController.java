@@ -98,6 +98,7 @@ public class HIController {
                      //String @RequestParam(name="move", required=false, defaultValue="h")robotmove  )  {
         //sysUtil.colorPrint("HIController | param-move:$robotmove ", Color.RED)
         ColorsOut.outappl("HIController | doMove:" + cmd + " robotName=" + robotName, ColorsOut.BLUE);
+        WebSocketConfiguration.wshandler.sendToAll("HIController | doMove:" + cmd); //disappears
         if( cmd.equals("t")){  //Start
             Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
         }else{

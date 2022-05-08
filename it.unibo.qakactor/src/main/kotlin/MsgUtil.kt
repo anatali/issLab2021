@@ -1,12 +1,8 @@
 package it.unibo.kactor
 //FILE MsgUtil.kt
 
-import alice.tuprolog.Struct
-import alice.tuprolog.Term
 import it.unibo.`is`.interfaces.protocols.IConnInteraction
 import it.unibo.supports.FactoryProtocol
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 enum class Protocol {
     SERIAL, TCP, UDP, BTH
