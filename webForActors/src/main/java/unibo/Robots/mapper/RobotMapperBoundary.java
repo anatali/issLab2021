@@ -57,12 +57,13 @@ public class RobotMapperBoundary extends QakActor22FsmAnnot  {
  	}
 	
 	@State( name = "robotStart" )
-	@Transition( state = "detectBoundary"  )
+	@Transition( state = "doAheadMove"  ) //detectBoundary
  	protected void robotStart( IApplMessage msg ) {
 		initPlanner();
+		NumStep++ ;
 		itunibo.planner.plannerUtil.showCurrentRobotState();
 	}
- 
+ /*
 	@State( name = "detectBoundary" )
 	@Transition( state = "doAheadMove", guard="roundNotCompleted"    )
 	@Transition( state = "endWork",     guard="roundCompleted"    )
@@ -70,7 +71,7 @@ public class RobotMapperBoundary extends QakActor22FsmAnnot  {
  		outInfo(""+  msg);
  		NumStep++ ;
  	}
-	
+*/
 	@State( name = "doAheadMove" )
 	@Transition( state = "stepDone",   msgId="endMoveOk"     )
 	@Transition( state = "stepFailed", msgId="endMoveKo"     )
@@ -86,25 +87,31 @@ public class RobotMapperBoundary extends QakActor22FsmAnnot  {
 		CommUtils.delay(500);
 	}
 	@State( name = "stepFailed" )
-	@Transition( state = "backPosDone", msgId="endMoveOk"   )
+	@Transition( state = "backPosDone", msgId="endMoveOk"  )
+	//@Transition( state = "endWork",     guard="roundCompleted"   )
   	protected void stepFailed( IApplMessage msg ) {
-		outInfo(""+msg);
-		ColorsOut.outappl("FOUND A WALL" , ColorsOut.MAGENTA);	
-		itunibo.planner.plannerUtil.showMap();
+		outInfo(""+msg  );
+		ColorsOut.outappl("FOUND A WALL - atHome="+itunibo.planner.plannerUtil.atHome(), ColorsOut.MAGENTA);
+		//itunibo.planner.plannerUtil.showMap();
 		String map = itunibo.planner.plannerUtil.getMap();
 		ColorsOut.outappl(map, ColorsOut.GREEN);
 		updateResourceRep( map  );
-		JSONObject json = new JSONObject(msg.msgContent().replace("'", ""));
-		int duration = json.getInt("duration") ;
-		ColorsOut.outappl("duration="+duration, ColorsOut.YELLOW);		
- 		VRobotMoves.moveBackward( getName(), conn, duration);
+		//if( ! itunibo.planner.plannerUtil.atHome() ) {
+			JSONObject json = new JSONObject(msg.msgContent().replace("'", ""));
+			int duration = json.getInt("duration") ;  //TODO
+			if( duration > 100 ) duration = duration -50;  //TUNING ....
+			ColorsOut.outappl("duration=" + duration, ColorsOut.YELLOW);
+			VRobotMoves.moveBackward(getName(), conn, duration);
+		//}
 	}
 	
 	@State( name = "backPosDone" )
-	@Transition( state = "detectBoundary",  msgId="endMoveOk"  )
+	@Transition( state = "doAheadMove",  msgId="endMoveOk", guard="roundNotCompleted"   ) //"detectBoundary"
+	@Transition( state = "endWork",     guard="roundCompleted"   )
 	protected void backPosDone( IApplMessage msg ) {
 		outInfo(""+msg);
-		itunibo.planner.plannerUtil.updateMap(  "l","???" );
+		NumStep++ ;
+		itunibo.planner.plannerUtil.updateMap(  "l","turn" );
 		VRobotMoves.turnLeft(getName(), conn);
 	}	
 	
@@ -120,12 +127,12 @@ public class RobotMapperBoundary extends QakActor22FsmAnnot  {
  
 		@TransitionGuard
 		protected boolean roundNotCompleted() {
-			outInfo( "roundNotCompleted  " + NumStep);
+			outInfo( "roundNotCompleted  " + (NumStep < 5) );
 			return NumStep < 5;
 		}	
 		@TransitionGuard
 		protected boolean roundCompleted() {
-			outInfo( "roundCompleted  " + NumStep);
+			outInfo( "roundCompleted  " + (NumStep == 5) );
 			return NumStep == 5;
 		}	
  	 

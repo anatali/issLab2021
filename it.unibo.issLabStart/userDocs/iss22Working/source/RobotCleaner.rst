@@ -1071,10 +1071,6 @@ Cio ci induce ad asserire che:
   un file di log di tutte  le informazioni emesse dal robot.
 
  
-
-
-
-
 -------------------------------------
 RobotCleaner: back to HOME
 -------------------------------------
@@ -1117,6 +1113,23 @@ In generale poi, le applicazioni che richiedono il controllo di un robot mobile 
 si svolgono in una stanza vuota; di solito sono presenti vari ostacoli fissi all'interno della stanza.
 In questo caso, ammesso che tali ostacoli siano stati opportunamente evitati durante la fase di pulizia, 
 la strategia di ritono potrebbe complicarsi.
+
+
+-------------------------------------
+RobotMapperBoundary
+-------------------------------------
+Progetto: **webForActors** code: unibo.Robots.mapper.RobotMapperBoundary*.  
+
+Un robot che percorre i bordi della stanza (come il :ref:`BoundaryWalker<BoundaryWalkerAnnot`) e che utilizza del features 
+del pianificatore `UniboPlanner`_ per creare una mappa della stanza come matrice di celle quadrate di lunghezza pari a una
+:ref:`unità robitica<Il robot come unità di misura>`.
+
+Il comportamento del robot è definito come un :ref:`FSM<Un primo automa a stati finiti>` che utilizza le guardie 'versione Lenzi'.
+
+
+
+
+
+
  
 
-`UniboPlanner`_
