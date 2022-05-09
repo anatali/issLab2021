@@ -1,7 +1,5 @@
 package unibo.actor22.common;
 
-import it.unibo.kactor.ApplMessage;
-import it.unibo.kactor.ApplMessageType;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.ProtocolType;
@@ -9,8 +7,7 @@ import unibo.actor22comm.utils.ColorsOut;
 
 public class ApplData {
 	public static final String raspAddr       = "localhost";
-
-	
+ 	
 	public static final String ledName        = "led";
 	public static final String sonarName      = "sonar";
 	public static final String controllerName = "controller";

@@ -13,12 +13,12 @@
 Attori come risorse CoAP
 ===============================================
 
-Ogni attore :ref:`ActorQak e QakActor22`  è stato definito in mod da essere anche una :blue:`risorsa CoAP osservabile`.
+Ogni attore :ref:`ActorQak e QakActor22`  è stato definito in modo da essere anche una :blue:`risorsa CoAP osservabile`.
 In particolare:
 
 - un QAkactor di nome ``qa`` che opera in un contesto  ``ctxqa`` è una risorsa `CoAP`_ osservabile cui è possibile accedere 
   con URI path= :blue:`ctxqa/qa` nella versione ``ActorQak`` e, nella 
-  :remark:`versione QakActor22: con URI path = actors/qa`
+  :remark:`con URI path = actors/qa, nella versione QakActor22`
 - lo stato corrente della risorsa può essere memorizzato come una stringa nella variabile :blue:`actorResourceRep`, 
   utilizzando l'operazione ``updateResource``.
 
@@ -41,23 +41,16 @@ funzioni di accesso e interazione come quelle di ``HTTP``: ``PUT, POST, GET, DEL
 
 - le risorse allocate su un nodo sono istanze della classe ``org.eclipse.californium.core.CoapResource`` 
   e sono gestite da un server di classe ``org.eclipse.californium.core.CoapServer``. Questo server realizza già
-  funzioni analoghe a quelle da :ref:`IContext`.
+  funzioni analoghe a quelle da :ref:`IContext<Analisi del concetto di Contesto>`.
 
+- La classe :ref:`CoapConnection`   implementa :ref:`Interaction2021<Interaction2021>` 
+  e quindi realizza il nostro concetto genrale di connessione, tenendo conto delle caratteristiche del protocollo
+  CoAP e della libreria `californium`_.
 
-- CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo ``REST``, il suo utilizzo
-  implica schemi architetturali e di progettazione molto simili a quelli di applicazioni Web basate su ``HTTP``;
-- l'uso di CoAP modifica il modello concettuale di riferimento per le interazioni, in quanto propone
-  l'idea di accesso in lettura (GET) o modifica (PUT) a :blue:`risorse` identificate da ``URI`` attraverso un 
-  unico server (che `californium`_ offre nella classe :blue:`org.eclipse.californium.core.CoapServer`).
-
-
-La classe :ref:`CoapConnection`   implementa :ref:`Interaction2021<Interaction2021>` 
-e quindi realizza il nostro concetto genrale di connessione, tenendo conto delle caratteristiche del protocollo
-CoAP e della libreria `californium`_.
-
-
+ 
 - CoAP fornisce un modello di interazione ancora punto-a-punto ma, essendo di tipo `REST`_, il suo utilizzo
-  implica schemi architetturali e di progettazione molto simili a quelli di applicazioni Web basate su ``HTTP``;
+  implica schemi di comunicazione simili a quelli di applicazioni Web basate su ``HTTP``, ma schemi organizzativi
+  basati su **gerarchie di risorse**;
 - l'uso di CoAP **modifica il modello concettuale** di riferimento per le interazioni, in quanto propone
   l'idea di accesso in lettura (``GET``) o modifica (``PUT``) a :blue:`risorse` identificate da ``URI`` attraverso un 
   unico server (che `californium`_ offre nella classe :blue:`org.eclipse.californium.core.CoapServer`).
@@ -76,8 +69,8 @@ CoAP e della libreria `californium`_.
   :blue:`org.eclipse.californium.core.CoapResource` di `californium`_.
  
 
-Siamo dunque di fronte a un  modello simile allo  :ref:`schemaFramework`, ma con
-una forte forma di :blue:`standardizzazione` sia a livello di 'verbi' di interazione (GET/PUT/...) sia a livello di 
+Siamo dunque di fronte a un  modello simile a quanto introdotto in  :ref:`schemaFramework`, ma con
+una forte forma di :blue:`standardizzazione` sia a livello di 'verbi' di interazione (``GET/PUT/...``) sia a livello di 
 organizzazione del codice applicativo (come gerarchia di risorse).
 
 Per utilizzare il :ref:`framework iniziale<schemaFramework>` con protocollo CoAP non dovremo quindi scrivere molto 
@@ -88,9 +81,11 @@ Actor22-CoAP
 ---------------------------------------
 
 - Un attore ``QakActor22 extends it.unibo.kactor.ActorBasic`` ma non vive in ``it.unibo.kactor.QakContext``; vive in
-  ``Qak22Context``
-- CoapApplServer: Viene creato da Qak22Context.InitCoap`
-- setActorAsLocal: CoapApplServer.getTheServer().addCoapResource(a, "actors");
+  ``Qak22Context``.
+- CoapApplServer: Viene creato da ``Qak22Context.InitCoap``
+- Il metodo ``setActorAsLocal`` introduce un attore di nome **a** nella gerarchia delle risorse, invocando:
+   
+     ``CoapApplServer.getTheServer().addCoapResource(a, "actors");``
 
 ---------------------------------------
 Esempio di Attore-CoAP

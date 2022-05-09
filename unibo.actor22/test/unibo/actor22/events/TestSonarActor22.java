@@ -29,7 +29,7 @@ public class TestSonarActor22 {
 		
 		//con false, il ControllerForSonarActor chiede la distanza, 
 		//con true,  il ControllerForSonarActor agisce come observer
-		RadarSystemConfig.sonarObservable 	= false; 
+		RadarSystemConfig.sonarObservable 	= true; 
 		
 		//ALTRO Observer oltr il Controller
 // 		new EventObserver(ApplData.observerName);

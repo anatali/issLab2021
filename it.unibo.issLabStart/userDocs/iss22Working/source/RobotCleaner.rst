@@ -7,13 +7,14 @@
 .. _visione olistica: https://it.wikipedia.org/wiki/Olismo
 .. _Macchina di Moore: https://it.wikipedia.org/wiki/Macchina_di_Moore
 .. _CleanArchitecture: https://clevercoder.net/2018/09/08/clean-architecture-summary-review
-
+.. _WebSocket: https://it.wikipedia.org/wiki/WebSocket
 .. _jquery: https://www.w3schools.com/jquery/default.asp
 .. _coap:  https://en.wikipedia.org/wiki/Constrained_Application_Protocol
 .. _mqtt: https://mqtt.org/
 .. _californium: https://www.eclipse.org/californium/
 .. _paho: https://www.eclipse.org/paho/
 .. _Mosquitto: https://mosquitto.org/download/
+.. _REST : https://en.wikipedia.org/wiki/Representational_state_transfer
 
 ==============================
 RobotCleaner
@@ -498,6 +499,8 @@ Ci poniniamo l'obiettivo di creare una :ref:`WebApplication con SpringBoot` che 
   (e testata) e può essere resa disponibile mediante un file ``jar``.
 
 
+.. _modiCreazione:
+
 :remark:`Chi crea il componente applicativo?`
 
 Vi sono due modi principali:
@@ -508,7 +511,7 @@ Vi sono due modi principali:
 
 :worktodo:`WORKTODO: discutere i pro/contro dei due modi`
 
-In questa sezione continueremo ad usare il progetto denoinato webForActors introdotto in :ref:`Primi passi con SpringBoot`.
+In questa sezione continueremo ad usare il progetto denominato **webForActors** introdotto in :ref:`Primi passi con SpringBoot`.
 
 +++++++++++++++++++++++++++++++++++++++++++++
 RobotCleanerGui.html
@@ -518,8 +521,8 @@ RobotCleanerGui.html
 
 Qyesto file definisce la struttura della pagina HTML, suddivisa in due zone:
 
-- area **Condigurazione e comandi**: questa zona realizza un dispositivo  di input, con cui l'utente può invioare comandi al server
-- **Display Area**: questa zona realizza un dispositivo di ouput, in cui il server può 'scrivere' informazioni di stato avvalendosi
+- area **Condigurazione e comandi**: questa zona realizza un dispositivo  di input, con cui l'utente può inviare comandi al server
+- **Display Area**: questa zona realizza un dispositivo di output, in cui il server può 'scrivere' informazioni di stato avvalendosi
   di una :ref:`WebSocket<WebSocket in SpringBoot: versione base>`.
 
 
@@ -528,6 +531,8 @@ Un controller per la RobotCleaner Appl
 +++++++++++++++++++++++++++++++++++++++++++++
 
 Commentiamo l'annotazione ``@Controller`` in ``HIControllerDemo`` e inseriamo un nuovo controller ``HIController`` 
+
+.. _HIController:
 
 .. code:: Java
 
@@ -564,12 +569,14 @@ Il  controller ``HIController``  gestisce:
       @PostMapping("/configure")
       public String configure(Model viewmodel, 
                @RequestParam String move, String addr ){
-         createRobotCleaner();   //Modo locale per la Busness logic:
-         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
+         createRobotCleaner();  //Modo locale per la Business logic:
+         ConnQakBase connToRobot = 
+               ConnQakBase.create( ProtocolType.tcp );
          conn = connToRobot.createConnection(addr, 8083);
          return mainPage;
       }
 
+   La classe ``ConnQakBase`` è una utility per creare connessioni al Robot con un dato protocollo.
 
    .. image::  ./_static/img/Spring/RobotCleanerFsmStartStopProject.PNG
       :align: center 
@@ -595,7 +602,7 @@ Il  controller ``HIController``  gestisce:
 
    Notiamo che:
 
-   - il pulsante  **start**   invia un comando (cmd)  con valore  **t**,  a fronte della form HTML
+   - il pulsante  **start**   invia un comando (``cmd``)  con valore  **t**,  a fronte della form HTML
 
      .. code::
     
@@ -603,7 +610,7 @@ Il  controller ``HIController``  gestisce:
             <button name="cmd" value="t">start</button>
         </form>
 
-   - il pulsante  **stop/resume**   inviano un comando (move)  con valore uguale al nome del pulsante:
+   - i pulsanti  **stop/resume**   inviano un comando (``move``)  con valore uguale al nome del pulsante:
 
      .. code::
       
@@ -616,7 +623,7 @@ Il  controller ``HIController``  gestisce:
 RobotCleaner:  display area
 -------------------------------------------    
 
-Affrontiamo ora il nuovo requsito:
+Affrontiamo ora un nuovo requisito:
 
 - **DisplayaAreaUpdate**: Il ``RobotCleaner`` deve fornire informazioni di stato che la pagina Web deve visualizzare nella DisplayArea.
 
@@ -628,17 +635,17 @@ La nostra analsisi parte tenendo conto dei seguenti vincoli (**requisiti non fun
 
 #. Per i principi delle  `CleanArchitecture`_, il ``RobotCleaner`` non deve avere conoscenza di questo nuovo requisito e non deve avere alcuna 
    dipendenza verso la parte Web.
-#. L'aggiornamernto della pagina dovrebbe avvenire in modo asincrono, senza ricorso al polling. 
+#. L'aggiornamernto della pagina Web dovrebbe avvenire in modo asincrono, senza ricorso al polling. 
 
 
 Questi due vincoli, presi insieme, implicano che:
 
 - il ``RobotCleaner`` non deve rispondere a richieste volte a conoscere  il proprio stato. Piuttosto deve essere un ente **osservabile**, cioè
-  capace di emettere informazioni utili per chi fosse interessato;
-- il WebServer, responsabile dell'aggiornamento della pagina Web, dovrebbe operare come osservatore del  ``RobotCleaner``;
+  capace di emettere informazioni utili per componenti software interessati, anche **'alieni'**, cioè non-attori;
+- il WebServer, responsabile dell'aggiornamento della pagina Web, dovrebbe operare come un 'alieno', osservatore del  ``RobotCleaner``;
 - in quanto osservatore interessato alle informazioni emesse dal ``RobotCleaner``, il WebServer non deve essere vincolato a risiedere 
-  sullo stesso noodo di elaborazione  del ``RobotCleaner``.
-
+  sullo stesso nodo di elaborazione  del ``RobotCleaner``
+- la pagina Web deve essere aggiornata usando le `WebSocket`_
 
 +++++++++++++++++++++++++++++++++++++++++
 DisplayArea: architettura
@@ -653,7 +660,7 @@ L'architettura logica di riferimento può essere rappresentata come nella figura
 
 
 Il componente :ref:`WebSocketHandler<Il gestore WebSocketHandler>` nasce da quanto esposto in 
-:ref:`Configurazione con WebSocketConfigurer`.
+:ref:`Configurazione con WebSocketConfigurer` (si veda :ref:`Configurazione lato Server` ).
 
 
 +++++++++++++++++++++++++++++++++++++++++
@@ -664,7 +671,7 @@ Al termine della analisi, riteniamo opportuno proporre il seguente piano di lavo
 
 #. ``SPRINT1(ws)``: impostare il WebServer in modo da utilizzare connessioni mediante WebSocket con i client collegati, mediante 
    il framework SpringBoot (a tal fine si veda :ref:`WebSockets in SpringBoot<WebSocket in SpringBoot: versione base>`). 
-#. ``SPRINT2(udapte)``: realizzare il ``RobotCleaner`` come emettitore di eventi percebili dal WebServer.
+#. ``SPRINT2(udapte)``: realizzare il ``RobotCleaner`` come emettitore di eventi percepibli dal WebServer.
 
 
 Gli obiettivi (*Goals*) di ciascun SPRINT, possono essere definiti come segue: 
@@ -763,7 +770,7 @@ Il nostro gestore è simile  a quanto introdotto :ref:`Il gestore WebSocketHandl
       void sendToAll(String message);
    }
 
-Il metodo ``sendToAll`` permette di inviare informazioni (alla pagina Weeb) di tutti i client collegati attraverso la WebSocket.
+Il metodo ``sendToAll`` permette di inviare informazioni a tutti i client collegati attraverso la WebSocket.
 
 .. code:: java
 
@@ -815,11 +822,12 @@ Una prima verifica della soluzione proposta si articola su diverse situazioni:
      ...
      }
 
-- da **programma** (connessioni su Ws): si crea un programma Java che utilizza :ref:`WsConnection` (la implementazione osservabile di 
-  :ref:`Interaction2021` sulle ws) per inviare comandi al WebServer. 
+- da **programma** (connessioni su Ws): si crea un programma Java che utilizza :ref:`WsConnection` 
+  (la implementazione osservabile di  :ref:`Interaction2021` sulle ws) per inviare comandi al WebServer. 
   
-  In modo simile al ``ClientUsingWs`` introdotto in  :ref:`Esempi di uso di HttpConnection e WsConnection`  definiamo un client che 
-  invia al WebServer la stringa "Hello from remote client". Vedremo ricomparire la stringa come echo nella DisplayArea.
+  In modo simile al ``ClientUsingWs`` introdotto in  :ref:`Esempi di uso di HttpConnection e WsConnection`,  
+  definiamo un client che invia al WebServer la stringa "Hello from remote client". 
+  Vedremo ricomparire la stringa come echo nella DisplayArea.
 
   Progetto: **webForActors** code: *unibo.webForActors.ClientUsingWs*. 
  
@@ -834,16 +842,50 @@ ma il sistema si presenta come
 
 :remark:`il WebServer è progettato e costruito 'al di fuori' del modello ad  Attori`
 
-Potremmo superare questo ostacolo in due modi:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Una soluzione sbagliata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#. Realizzare l'emissione di un evento da parte dell'attore ``RobotCleaner`` Utilizzando un :blue:`protocollo  publish-subscribe`  come MQTT. 
+Nel caso in cui il ``RobotCleaner`` sia attivato in *Modo locale* (si veda `modiCreazione`_), una soluzione 
+possibile sarebbe introdurre codice supplementare nell'attore. Ad esempio:
+
+
+.. code:: Java
+
+  public class RobotCleanerProject extends QakActor22FsmAnnot{
+   ...
+   @State( name = "coverColumn" )
+   protected void coverColumn( IApplMessage msg ) {
+      ...
+      WebSocketConfiguration.wshandler.sendToAll(""+msg);
+   }
+  }
+
+:remark:`Questa soluzione funziona ma è errata`
+
+Infatti crea una dipendenza dell'attore dalla tecnolgia usata per l'aggiornamento delle pagine Web.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Emettere e percepire informazione (eventi)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Per evitare che ``RobotCleaner`` subisca modifiche indebite, potremmo affrontare il problema
+dell'osservabilità in tre modi:
+
+#. Rendere *'componenti alieni'* capaci di percepire eventi emessi da attori :ref:`ActorQak e QakActor22`.
+#. Realizzare l'emissione di un evento da parte dell'attore ``RobotCleaner`` utilizzando un :blue:`protocollo  publish-subscribe`  come MQTT. 
    Il WebServer potrebbe iscriversi (**subscribe**) alla topic su cui l'attiore pubblica le informazioni. 
-#. Rendere l'attore ``RobotCleaner`` una :blue:`risorsa CoAP osservabile`. Il WebServer potrebbe utlizzare un :blue::`CoAP client` per ricevere 
-   le informazioni di stato quando sono emeesse.
+#. Rendere l'attore ``RobotCleaner`` una :blue:`risorsa CoAP osservabile`. Il WebServer potrebbe utlizzare 
+   un :blue:`CoAP client` per ricevere le informazioni di stato quando sono emeesse.
 
-La infrastruttura degli attori è definita in modo da rendere possibili enatrambe le strade.
+La infrastruttura degli attori ``QakActor22`` è definita in modo da rendere possibili enatrambe le ultime due strade.
+La infrastruttura degli attori ``ActorQak`` rende possibile anche la prima.
 
-In questa fase ci concentriamo sul fatto che ogni attore è stato definito in mod da essere 
+In questa sede, ci concentriamo sulla strada meno convenzionale, che 
+considera le interazioni  tra componenti distribuiti come uno scambio di **rappresentazioni di risorse** 
+accessibili in stile `REST`_. 
+
+Il compito è agevolato dal fatto che ogni attore :ref:`ActorQak e QakActor22` è stato definito in modo da essere 
 anche una :blue:`risorsa CoAP osservabile` come descritto in :ref:`Attori come risorse CoAP`.
 
 +++++++++++++++++++++++++++++++++++++++++
@@ -851,45 +893,63 @@ RobotCleaner come risorsa CoAP
 +++++++++++++++++++++++++++++++++++++++++
 
 L'attore che realizza il ``RobotCleaner`` costituisce una :ref:`risorsa CoAP-osservabile<Attori come risorse CoAP>` , che viene 
-aggiornata usando il metodo  ``updateResourceRep``.
+aggiornata usando il metodo  ``updateResourceRep``. La dipendenza indebita si prima viene così superata come segue:
 
-La fase di configurazione del sistema che realizza la logica applicativa crea un :ref:`RobotCleanerObserver` che riceve un riferimento
-al :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>` memorizzato in ``WebSocketConfiguration.wshandler``.
+.. code:: Java
 
+  public class RobotCleanerProject extends QakActor22FsmAnnot{
+   ...
+   @State( name = "coverColumn" )
+   protected void coverColumn( IApplMessage msg ) {
+      ...
+      //WebSocketConfiguration.wshandler.sendToAll(""+msg);
+      updateResourceRep(""+msg);
+   }
+  }
+
+L'invocazione di ``updateResourceRep(M)`` provoca l'invio della stringa M a tutti i CoAP client connessi 
+alla risorsa.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Il configuratore MainRobotCleaner
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In MainRobotCleaner:
+La fase di configurazione sul WebServer che permette l'uso (in *modo locale* o in *modo remoto*) 
+del ``RobotCleaner`` deve ora  creare un :ref:`RobotCleanerObserver` 
+che riceve un riferimento
+al :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>` memorizzato in ``WebSocketConfiguration.wshandler``.
+
+Introdurremo la  creazione del :ref:`RobotCleanerObserver` nel metodo di configurazione di `HIController`_:
 
 .. code:: Java
+      
+   //Dopo click sul pulsante Configure
+   @PostMapping("/configure")
+      public String configure(Model viewmodel, 
+               @RequestParam String move, String addr ){
+         createRobotCleaner();  //Modo locale per la Business logic:
+         ConnQakBase connToRobot = 
+               ConnQakBase.create( ProtocolType.tcp );
+         conn = connToRobot.createConnection(addr, 8083);
 
-   @Context22(name = "pcCtx", host = "localhost", port = "8083")
-   @Actor22(name = MainRobotCleaner.robotName, 
-      contextName = "pcCtx", implement = RobotCleanerProject.class)
-   public class MainRobotCleaner {
-
-	public void doJob() {
-      Qak22Context.configureTheSystem(this);
+         RobotCleanaerObserver obs = new RobotCleanaerObserver("8083",robotName);
+         obs.setWebSocketHandler(WebSocketConfiguration.wshandler);         
+         
+         return mainPage;
+      }
  
-      RobotCleanaerObserver obs = new RobotCleanaerObserver("8083",robotName);
-      obs.setWebSocketHandler(WebSocketConfiguration.wshandler);//WebSocketHandler
- 	};
-	public static final String robotName = "cleaner";
-	
-	public static void main( String[] args) throws Exception {
-		...
-		MainRobotCleaner appl = new MainRobotCleaner( );
-		appl.doJob();
-      ...
-	}
+
+- :remark:`Il RobotCleaner non dipende in alcun modo dalla WebApplication`
+
+Inoltre:
+
+- :remark:`E' il RobotCleaner che decide quali informazioni rendere visibili`
 
 +++++++++++++++++++++++++++++++++++++++
 RobotCleanerObserver
 +++++++++++++++++++++++++++++++++++++++
 
-Il compito dell'osservatore del  ``RobotCleaner`` è di crreare un CoAP client capace di ricevere le informazioni sui cambiamenti di stato
+Il compito dell'osservatore del  ``RobotCleaner`` è di creare un CoAP-client capace di ricevere le informazioni sui cambiamenti di stato
 'emesse' dal ``RobotCleaner``
 (in quanto  CoAP-resource) e invocare il metodo ``sendToAll`` del :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>` che 
 aggiorna la DisplayArea di tutti i client collegati.
@@ -923,7 +983,7 @@ aggiorna la DisplayArea di tutti i client collegati.
       });		
    }
 
-- :remark:`Il RobotCleaner non dipende in alcun modo dalla WebApplication`
+
   
 ++++++++++++++++++++++++++++++++++++++++++
 Permanenza delle info nella DisplayArea
@@ -934,17 +994,13 @@ Purtroppo le informazioni inviate sulla WS **non permangono visibili** in quanto
 Per superare questo problema, possiamo inviare i comandi sulla WS stessa, invece che con HTTP-POST, realizzando di fatto una 
 forma di Machine-to-machine (M2M) interaction.
 
-S provi ad esempio ad utlizzare come GUI la pagina descritta nel file ``templates/RobotCmdGuiWs.html``; si vedranno comparire i comandi
-inviati come echo, inviati dal metodo ``handleTextMessage`` di :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>`.
-
-
+S provi ad esempio ad utlizzare come GUI la pagina descritta nel file ``templates/RobotCmdGuiWs.html``; 
+si vedranno comparire (come echo) i comandi,
+ritrasmessi ai client dal metodo ``handleTextMessage`` di :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>`.
 
 Notiamo che, lanciando il programma ``unibo.webForActors.ClientUsingWs``, questo visualizzerà tutte le informazioni emesse da 
 ``RobotCleaner``.
-
-- :remark:`E' il RobotCleaner che decide quali informazioni rendere visibili`
-
-Notiamo anche che:
+Cio ci induce ad asserire che:
 
 - :remark:`Abbiamo un meccanismo utile per il testing automatizzato` 
 

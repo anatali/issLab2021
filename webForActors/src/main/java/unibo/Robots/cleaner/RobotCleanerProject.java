@@ -67,11 +67,13 @@ public class RobotCleanerProject extends QakActor22FsmAnnot{
 	@Transition( state = "coverColumn", msgId="endMoveOk"  )
 	@Transition( state = "turn",        msgId="endMoveKo"  )
 	protected void coverColumn( IApplMessage msg ) {
-		outInfo(""+msg);
+		outInfo("--- "+msg);
 //THE WRONG WAY OF UPDATING the DisplayArea
 		//WebSocketConfiguration.wshandler.sendToAll(""+msg);
-//UPDATING THE CoAP RESOURCE - See unibo.Robots.common.ActorObserver
-		updateResourceRep( ""+msg );
+//THE QakActor WAY to emit information
+		this.emit(msg);
+//THE CoAP WAY: udpate a RESOURCE - See unibo.Robots.common.ActorObserver
+		//updateResourceRep( ""+msg );
 		VRobotMoves.step(getName(), conn );
 	}
 	

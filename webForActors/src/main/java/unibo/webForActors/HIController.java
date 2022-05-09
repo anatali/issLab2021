@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import unibo.Robots.basic.MainBasicRobot;
 import unibo.Robots.cleaner.MainRobotCleaner;
+import unibo.Robots.common.RobotCleanaerObserver;
+import unibo.Robots.common.RobotUtils;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.ProtocolType;
@@ -25,8 +27,8 @@ import unibo.actor22comm.utils.CommUtils;
 
 @Controller
 public class HIController {
-    private static final String robotCmdId = "move";
-    private static  String robotName       = "cleaner";
+    //private static final String robotCmdId = "move";
+    private static  String robotName       = "";
     private static boolean cleanerAppl     = true;
 
     private Interaction2021 conn;
@@ -35,7 +37,7 @@ public class HIController {
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
     }
-
+/*
     protected void createRobotCleaner(){
         CommSystemConfig.tracing = false;
         robotName  = MainRobotCleaner.robotName;
@@ -69,13 +71,14 @@ public class HIController {
             default:   return CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
         }
     }
+    */
     @Value("${spring.application.name}")
     String appName;
 
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("arg", appName);
-        if(cleanerAppl)  mainPage = "RobotCmdGuiWs";//"RobotCleanerGui";
+        if(cleanerAppl)  mainPage = "RobotCleanerGui"; //"RobotCmdGuiWs";//
         else mainPage = "RobotNaiveGui";
         return mainPage;
     }
@@ -84,9 +87,26 @@ public class HIController {
     @PostMapping("/configure")
     public String configure(Model viewmodel  , @RequestParam String move, String addr ){
         ColorsOut.outappl("HIController | configure:" + move, ColorsOut.BLUE);
-        if(cleanerAppl) createRobotCleaner(); else createBasicRobot();
-        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
-        conn = connToRobot.createConnection(addr, 8083);  //8083 is the cleaner robot
+
+        //modo locale di creazione del componente applicativo
+        if(cleanerAppl){
+            RobotUtils.createRobotCleaner();
+            robotName  = MainRobotCleaner.robotName;
+            mainPage   = "RobotCleanerGui";
+        } else {
+            RobotUtils.createBasicRobot();
+            robotName  = MainBasicRobot.myName;
+            mainPage   = "RobotNaiveGui";
+        }
+
+        RobotUtils.connectWithRobot(addr);
+
+        //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
+        //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);  //8083 is the cleaner robot
+
+        RobotCleanaerObserver obs = new RobotCleanaerObserver(""+RobotUtils.robotPort,robotName);
+        obs.setWebSocketHandler(WebSocketConfiguration.wshandler);
+
         //To allow ... todo
         //Qak22Context.setActorAsRemote(robotName, "8083", "localhost", ProtocolType.tcp);
         return mainPage;
@@ -100,15 +120,17 @@ public class HIController {
         ColorsOut.outappl("HIController | doMove:" + cmd + " robotName=" + robotName, ColorsOut.BLUE);
         WebSocketConfiguration.wshandler.sendToAll("HIController | doMove:" + cmd); //disappears
         if( cmd.equals("t")){  //Start
-            Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
-        }else{
+            RobotUtils.startRobot("hicontroller",robotName);
+            //Qak22Util.sendAMsg( SystemData.startSysCmd("hicontroller",robotName) );
+        }else{ RobotUtils.sendMsg(robotName,cmd);
+        /*
             try {
-                String msg = moveAril(cmd).toString();
+                String msg = RobotUtils.moveAril(robotName,cmd).toString();
                 ColorsOut.outappl("HIController | doMove msg:" + msg , ColorsOut.BLUE);
                 conn.forward( msg );
             } catch (Exception e) {
                 ColorsOut.outerr("HIController | doMove ERROR:"+e.getMessage());
-            }
+            }*/
         }
         return mainPage;
     }

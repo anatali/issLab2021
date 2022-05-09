@@ -7,12 +7,8 @@ wsminimal.js
     //const sendButton      = document.getElementById("send");
     //const messageInput    = document.getElementById("inputmessage");
 
-/*
-     sendButton.onclick = function (event) {
-        sendMessage(messageInput.value);
-        messageInput.value = "";
-    };
-*/
+    var socket;
+
     function sendMessage(message) {
         //socket.send(message);
         //addMessageToWindow("Sent Message: " + message);
@@ -39,7 +35,7 @@ wsminimal.js
         if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
              alert("WARNING: Connessione WebSocket già stabilita");
         }
-        var socket = new WebSocket(addr);
+        socket = new WebSocket(addr);
 
         //socket.binaryType = "arraybuffer";
 
@@ -53,8 +49,13 @@ wsminimal.js
             //alert(`Got Message: ${event.data}`)
 
         };
-        return socket;
+        //return socket;
     }//connect
 
+$(function () {
+	$( "#startws" ).click(function() { socket.send("start");    })
+	$( "#stopws" ).click(function() { socket.send("stop");  })
+	$( "#resumews" ).click(function() { socket.send("resume");  })
+});
 
 connect()
