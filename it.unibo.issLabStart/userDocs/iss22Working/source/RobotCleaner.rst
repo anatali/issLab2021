@@ -1118,15 +1118,19 @@ la strategia di ritono potrebbe complicarsi.
 -------------------------------------
 RobotMapperBoundary
 -------------------------------------
-Progetto: **webForActors** code: unibo.Robots.mapper.RobotMapperBoundary*.  
+Progetto: **webForActors** code:*unibo.Robots.mapper.RobotMapperBoundary*.  
 
-Un robot che percorre i bordi della stanza (come il :ref:`BoundaryWalker<BoundaryWalkerAnnot`) e che utilizza del features 
-del pianificatore `UniboPlanner`_ per creare una mappa della stanza come matrice di celle quadrate di lunghezza pari a una
-:ref:`unità robitica<Il robot come unità di misura>`.
+Un robot che percorre i bordi della stanza (come il :ref:`BoundaryWalker<BoundaryWalkerAnnot`) e che 
 
-Il comportamento del robot è definito come un :ref:`FSM<Un primo automa a stati finiti>` che utilizza le guardie 'versione Lenzi'.
+- utilizza le features  del pianificatore `UniboPlanner`_ per creare una mappa della stanza come matrice di celle quadrate di lunghezza 
+  pari a una :ref:`unità robotica<Il robot come unità di misura>`.
+- ha un  comportamento definito come un :ref:`FSM<Un primo automa a stati finiti>` che utilizza le guardie 'versione Lenzi'
+- rende visibile una rappresentazione corrente della mappa  ad ogni cambio di direzione 
+
+Per questa applicazione, il WebServer offre la pagina definita in ``RobotNaiveGui.html``.
 
 
+ 
 
 
 
