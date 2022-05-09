@@ -18,8 +18,9 @@ wsminimal.js
     }
 
     function addMessageToWindow(message) {
-        messageWindow.innerHTML += `<div>${message}</div>`
-        //messageWindow.innerHTML = `<div>${message}</div>`
+        //messageWindow.innerHTML += `<div>${message}</div>`
+        var output = message.replaceAll("\n","<br/>")
+        messageWindow.innerHTML = `<tt>${output}</tt>`
     }
 
     //var socket = connect();
@@ -52,6 +53,8 @@ wsminimal.js
         //return socket;
     }//connect
 
+
+//short-hand for $(document).ready(function() { ... });
 $(function () {
 	$( "#startws" ).click(function() { socket.send("start");    })
 	$( "#stopws" ).click(function() { socket.send("stop");  })

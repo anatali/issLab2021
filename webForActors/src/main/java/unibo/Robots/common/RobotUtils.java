@@ -4,6 +4,7 @@ import connQak.ConnQakBase;
 import it.unibo.kactor.IApplMessage;
 import unibo.Robots.basic.MainBasicRobot;
 import unibo.Robots.cleaner.MainRobotCleaner;
+import unibo.Robots.mapper.MainRobotMapper;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.ProtocolType;
 import unibo.actor22comm.SystemData;
@@ -13,8 +14,9 @@ import unibo.actor22comm.utils.CommSystemConfig;
 import unibo.actor22comm.utils.CommUtils;
 
 public class RobotUtils {
-    public static final String robotCmdId = "move";
-    public static final int robotPort    = 8083;
+    public static final String robotCmdId   = "move";
+    public static final int robotPort       = 8083;
+    public static final String robotPortStr = "8083";
     private static Interaction2021 conn;
 
     public static void createRobotCleaner(){
@@ -31,7 +33,13 @@ public class RobotUtils {
         appl.doJob();
         //appl.terminate();
     }
-
+    public static  void createRobotMapper(){
+        CommSystemConfig.tracing = false;
+        CommUtils.aboutThreads("Before start - ");
+        MainRobotMapper appl = new MainRobotMapper( );
+        appl.doJob();
+        //appl.terminate();
+    }
     public static void connectWithRobot(String addr){
         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         conn = connToRobot.createConnection(addr, RobotUtils.robotPort);  //8083 is the cleaner robot

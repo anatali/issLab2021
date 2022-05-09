@@ -14,7 +14,10 @@
 .. _californium: https://www.eclipse.org/californium/
 .. _paho: https://www.eclipse.org/paho/
 .. _Mosquitto: https://mosquitto.org/download/
-.. _REST : https://en.wikipedia.org/wiki/Representational_state_transfer
+.. _REST: https://en.wikipedia.org/wiki/Representational_state_transfer
+
+
+.. _UniboPlanner: ../../../../../it.unibo.planner20/userDocs/LabPlanner.html
 
 ==============================
 RobotCleaner
@@ -522,9 +525,33 @@ RobotCleanerGui.html
 Qyesto file definisce la struttura della pagina HTML, suddivisa in due zone:
 
 - area **Condigurazione e comandi**: questa zona realizza un dispositivo  di input, con cui l'utente può inviare comandi al server
-- **Display Area**: questa zona realizza un dispositivo di output, in cui il server può 'scrivere' informazioni di stato avvalendosi
-  di una :ref:`WebSocket<WebSocket in SpringBoot: versione base>`.
 
+  .. code::
+
+   <h4>Commands to the RobotCleaner</h4>
+    ...
+     <table>
+      <table style="width:50%">
+      <tbody>
+      <!-- the form-data is sent to the page specified in the action attribute -->
+      <tr>
+      <td > <form action="robotcmd" method="post"><button name="cmd" value="t">start</button></form></td>
+      <td> <form action="robotcmd" method="post"><button name="cmd" value="stop">stop</button></form></td>
+      <td> <form action="robotcmd" method="post"><button name="cmd" value="resume">resume</button></form></td>
+      </tr>
+      </table>
+      </center>
+   </td>
+
+ - **Display Area**: questa zona realizza un dispositivo di output, in cui visualizzare informazioni di stato (mediante
+   una :ref:`WebSocket<WebSocket in SpringBoot: versione base>`).
+
+   .. code::
+
+     <h3>DISPLAY AREA</h3>
+     <div id = "display"></div>
+
+   L'aggiornamento della DisplayArea verrà realizzato da codice JavScript (si veda più avanti: :ref:`wsminimal.js`).
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Un controller per la RobotCleaner Appl 
@@ -989,14 +1016,48 @@ aggiorna la DisplayArea di tutti i client collegati.
 Permanenza delle info nella DisplayArea
 ++++++++++++++++++++++++++++++++++++++++++
 
-
 Purtroppo le informazioni inviate sulla WS **non permangono visibili** in quanto la pagina viene aggiornata dopo ogni comando.
 Per superare questo problema, possiamo inviare i comandi sulla WS stessa, invece che con HTTP-POST, realizzando di fatto una 
 forma di Machine-to-machine (M2M) interaction.
 
-S provi ad esempio ad utlizzare come GUI la pagina descritta nel file ``templates/RobotCmdGuiWs.html``; 
-si vedranno comparire (come echo) i comandi,
+Si provi ad esempio ad inserire nella pagina `RobotCleanerGui.html`_ una nuova area-comandi:
+
+.. code::
+
+   <h4>COMMAND-WS AREA</h4>
+
+   <button id="startws" >startWs</button>  
+   <button id="stopws" >stopWs</button>
+   <button id="resumews" >resumeWs</button>
+
+ 
+.. image::  ./_static/img/Spring/RobotCleanerGuiPlus.PNG
+   :align: center 
+   :width: 40%   
+
+
+Il file `wsminimal.js`_  vine arricchito con codice `jQuery`_ che invia comandi sulla WebSocket:
+
+
+.. code::
+
+   $(function () { //short-hand for $(document).ready(function() {...});
+      $( "#startws" ).click(function() { socket.send("start");    })
+      $( "#stopws" ).click(function() { socket.send("stop");  })
+      $( "#resumews" ).click(function() { socket.send("resume");  })
+   });
+
+Premendo sui nuovi pulsanti, si vedranno comparire (come echo) i comandi,
 ritrasmessi ai client dal metodo ``handleTextMessage`` di :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>`.
+
+:worktodo:`WORKTODO: realizzare i comandiWs`
+
+- estendere il codice di ``handleTextMessage`` di :ref:`WebSocketHandler<IWsHandler e WebSocketHandler>` in modo da inviare 
+  gli opportuni messaggi  al ``RobotCleaner``.
+
+++++++++++++++++++++++++++++++++++++++++++
+Nuove opportunità
+++++++++++++++++++++++++++++++++++++++++++
 
 Notiamo che, lanciando il programma ``unibo.webForActors.ClientUsingWs``, questo visualizzerà tutte le informazioni emesse da 
 ``RobotCleaner``.
@@ -1015,15 +1076,47 @@ Cio ci induce ad asserire che:
 
 
 -------------------------------------
-RobotCleaner: return to HOME
+RobotCleaner: back to HOME
 -------------------------------------
 
 Un ``RobotCleaner`` potrebbe dover essere reattivo a comadi o situazioni che non richiedono solo una
 momentanea interruzione delle attivtà che sta eseguendo come sua parte proattiva, ma anche
 un radicale cambiamento di queste.
 
-Ad esempio, il robot potrebbere ricevere un comando di ``returnToHome``.
+Ad esempio, il robot potrebbere ricevere un comando di ``BacktoToHome``.
 
-:worktodo:`WORKTODO: comando returnToHome`
+.. :worktodo:`WORKTODO: comando returnToHome`
 
-- analizzare le problematiche connesse al comando returnToHome e proporre un modello di soluzione
+.. analizzare le problematiche connesse al comando ``returnToHome`` e proporre un modello di soluzione
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+BackToHome: analisi del requisito e del problema
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Un comando di ritorno in HOME senza ulteriori indicazioni, potrebbe essere eseguito in modo semplice,
+avvaledosi del fatto che il robot potrebbe proseguire lungo la direzione corrente fino a incontrare:
+
+- *wallUp* : in questo caso il robot si gira sinistra e percorre il borso superiore
+- *wallDown* :  in questo caso il robot si gira a destra e percorre prima il borso inferiore e poi il bordo sinistro.
+
+In altre parole esiste una strategia di soluzione che **non richiede conoscenza** della
+posizione corrente del robot e/o il percorso svolto fino a quel punto.
+
+In geenerale però, la :blue:`conoscenza del persorso e della posizione` potrebbe essere importante e necessaria.
+Si pensi ad esempio al caso in cui il committente precisi il requisito nel modo che segue:
+
+- **BackToHomeFast**: al comando ``returnToHome``, il robot deve tornare in HOME seguendo il percorso più breve (o, in alternativa,
+  con il numero minimo di spostamenti)
+
+Oppure
+ 
+- **BackToHomeClean**: al comando ``returnToHome``, il robot deve tornare in HOME limitando al minimo di ripercorrere il percorso già fatto
+  (il pavimento pulito) o limtando.
+
+In generale poi, le applicazioni che richiedono il controllo di un robot mobile (tra cui il ``RobotCleaner``) raramente 
+si svolgono in una stanza vuota; di solito sono presenti vari ostacoli fissi all'interno della stanza.
+In questo caso, ammesso che tali ostacoli siano stati opportunamente evitati durante la fase di pulizia, 
+la strategia di ritono potrebbe complicarsi.
+ 
+
+`UniboPlanner`_

@@ -9,6 +9,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import unibo.Robots.common.IWsHandler;
+import unibo.Robots.common.RobotUtils;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 
@@ -42,7 +43,8 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         System.out.println("WebSocketHandler | handleTextMessage Received: " + message);
-        sendToAll("echo:"+message.toString());
+        String cmd = message.getPayload();
+        sendToAll("echo: "+cmd);
     }
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {

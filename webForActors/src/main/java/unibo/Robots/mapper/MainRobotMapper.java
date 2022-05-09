@@ -1,5 +1,6 @@
-package unibo.wenvUsage22.mapper;
+package unibo.Robots.mapper;
 
+import unibo.Robots.common.RobotUtils;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.Actor22;
@@ -11,7 +12,7 @@ import unibo.actor22comm.utils.CommUtils;
  
 
 
-@Context22(name = "pcCtx", host = "localhost", port = "8075")
+@Context22(name = "pcCtx", host = "localhost", port = RobotUtils.robotPortStr)
 @Actor22(name = MainRobotMapper.robotName, contextName = "pcCtx", implement = RobotMapperBoundary.class)
 //@Actor22(name = MainRobotMapper.robotName, contextName = "pcCtx", implement = RobotMapperPlans.class)
 public class MainRobotMapper {
@@ -22,7 +23,7 @@ public class MainRobotMapper {
 		CommSystemConfig.tracing = false;
 		Qak22Context.configureTheSystem(this);
 		Qak22Context.showActorNames();
-  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
+  		//Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
 	};
 
 	public void terminate() {
@@ -36,7 +37,8 @@ public class MainRobotMapper {
 		CommUtils.aboutThreads("Before start - ");
 		MainRobotMapper appl = new MainRobotMapper( );
 		appl.doJob();
-		appl.terminate();
+		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
+		//appl.terminate();
 	}
 
 }

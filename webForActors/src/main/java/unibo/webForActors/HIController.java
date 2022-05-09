@@ -16,6 +16,7 @@ import unibo.Robots.basic.MainBasicRobot;
 import unibo.Robots.cleaner.MainRobotCleaner;
 import unibo.Robots.common.RobotCleanaerObserver;
 import unibo.Robots.common.RobotUtils;
+import unibo.Robots.mapper.MainRobotMapper;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.ProtocolType;
@@ -28,8 +29,8 @@ import unibo.actor22comm.utils.CommUtils;
 @Controller
 public class HIController {
     //private static final String robotCmdId = "move";
-    private static  String robotName       = "";
-    private static boolean cleanerAppl     = true;
+    protected static  String robotName     = ""; //visibility in package
+    private static boolean cleanerAppl     = false;
 
     private Interaction2021 conn;
     private String mainPage = "RobotNaiveGui";
@@ -37,41 +38,6 @@ public class HIController {
     public HIController(){
         ColorsOut.outappl("HIController: CREATE"   , ColorsOut.WHITE_BACKGROUND);
     }
-/*
-    protected void createRobotCleaner(){
-        CommSystemConfig.tracing = false;
-        robotName  = MainRobotCleaner.robotName;
-        mainPage   = "RobotCleanerGui";
-        CommUtils.aboutThreads("Before start - ");
-        MainRobotCleaner appl = new MainRobotCleaner( );
-        appl.doJob();
-        //appl.terminate();
-    }
-    protected void createBasicRobot(){
-        CommSystemConfig.tracing = false;
-        robotName  = MainBasicRobot.myName;
-        mainPage   = "RobotNaiveGui";
-        CommUtils.aboutThreads("Before start - ");
-        MainBasicRobot appl = new MainBasicRobot( );
-        appl.doJob();
-        //appl.terminate();
-    }
-    private IApplMessage moveAril( String cmd  ) {
-        //ColorsOut.outappl("HIController | moveAril cmd:" + cmd , ColorsOut.BLUE);
-        switch( cmd ) {
-            case "w" : return CommUtils.buildDispatch("webgui", robotCmdId, "w", robotName);
-            case "s" : return CommUtils.buildDispatch("webgui", robotCmdId, "s", robotName);
-            case "a" : return CommUtils.buildDispatch("webgui", robotCmdId, "a", robotName);
-            case "d" : return CommUtils.buildDispatch("webgui", robotCmdId, "d", robotName);
-            case "h" : return CommUtils.buildDispatch("webgui", robotCmdId, "h", robotName);
-
-            case "start"  : return CommUtils.buildDispatch("webgui", robotCmdId, "start",  robotName);
-            case "stop"   : return CommUtils.buildDispatch("webgui", "stop", "do",   robotName);
-            case "resume" : return CommUtils.buildDispatch("webgui", "resume", "do", robotName);
-            default:   return CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
-        }
-    }
-    */
     @Value("${spring.application.name}")
     String appName;
 
@@ -94,15 +60,12 @@ public class HIController {
             robotName  = MainRobotCleaner.robotName;
             mainPage   = "RobotCleanerGui";
         } else {
-            RobotUtils.createBasicRobot();
-            robotName  = MainBasicRobot.myName;
+            RobotUtils.createRobotMapper();
+            robotName  = MainRobotMapper.robotName;
             mainPage   = "RobotNaiveGui";
         }
 
         RobotUtils.connectWithRobot(addr);
-
-        //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
-        //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);  //8083 is the cleaner robot
 
         RobotCleanaerObserver obs = new RobotCleanaerObserver(""+RobotUtils.robotPort,robotName);
         obs.setWebSocketHandler(WebSocketConfiguration.wshandler);

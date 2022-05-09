@@ -59,13 +59,7 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
 		itunibo.planner.plannerUtil.planForGoal(""+lastX,""+lastY);		
 	}
  
-	
-//	@State( name = "execPlannedMoves" )
-//	@Transition( state = "doMove")
-//	protected void execPlannedMoves( IApplMessage msg ) {
-//		CurrentPlannedMove = itunibo.planner.plannerUtil.getNextPlannedMove();
-//		outInfo("CurrentPlannedMove="+ CurrentPlannedMove + " " + msg);
-// 	}
+
 	
 	//TODO: introduce an executor
 	@State( name = "doMove" )
@@ -90,8 +84,6 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
 			ColorsOut.outappl("doMove terminated", ColorsOut.MAGENTA);	
 			//itunibo.planner.plannerUtil.showMap();
 			itunibo.planner.plannerUtil.showCurrentRobotState();
-			//VRobotMoves.turnLeft(getName(), conn );  //per completare
-			//itunibo.planner.plannerUtil.updateMap( "l", "doing l" );
 		}
 		CommUtils.delay(500);
 	}
@@ -102,25 +94,9 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
 	protected void hitWall( IApplMessage msg ) {
 		outInfo(""+msg);
 		ColorsOut.outerr("hitWall not expected"  );		
-
-//		JSONObject json = new JSONObject(msg.msgContent().replace("'", ""));
-//		int duration = json.getInt("duration");
-//		ColorsOut.outappl("duration="+duration, ColorsOut.MAGENTA);		
-//		itunibo.planner.plannerUtil.showMap();
-//		VRobotMoves.moveBackward( getName(), conn, duration);
 	} 
 	
-//	@State( name = "backDone" )
-//	//@Transition( state = "doMove", msgId="endMoveOk"  )
-//	@Transition( state = "doMove",  guard="otherMoves"    )
-// 	@Transition( state = "endWork", guard="noOtherMoves"  )
-//	protected void backDone( IApplMessage msg ) {
-//		outInfo(""+msg);
-//		itunibo.planner.plannerUtil.updateMap(  "s","???" );
-//		//itunibo.planner.plannerUtil.showMap();
-//		itunibo.planner.plannerUtil.showCurrentRobotState();
-//		//VRobotMoves.turnLeft(getName(), conn);
-//	}
+
  	
 	
 	@State( name = "backToHome" )
@@ -130,7 +106,7 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
 		boolean alreadyAtHome = itunibo.planner.plannerUtil.atHome();
 		outInfo("alreadyAtHome="+alreadyAtHome);
 		if( ! alreadyAtHome ) itunibo.planner.plannerUtil.planForGoal("0" ,"0" );	
-		CommUtils.waitTheUser("going to home");
+		//CommUtils.waitTheUser("going to home");
 	}	
 	
  	@State( name = "endWork" )
