@@ -30,7 +30,7 @@ import unibo.actor22comm.utils.CommUtils;
 public class HIController {
     //private static final String robotCmdId = "move";
     protected static  String robotName     = ""; //visibility in package
-    private static boolean cleanerAppl     = false;
+    private static boolean cleanerAppl     = true;
 
     private Interaction2021 conn;
     private String mainPage = "RobotNaiveGui";
