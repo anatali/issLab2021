@@ -20,7 +20,7 @@ import itunibo.planner.model.RobotState.Direction
 import itunibo.planner.model.RobotAction
 import itunibo.planner.model.RoomMap
 import itunibo.planner.model.Box
-import kotlinx.coroutines.delay
+ 
 
 public object plannerUtil { 
     private var robotState: RobotState? = null

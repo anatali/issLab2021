@@ -7,7 +7,7 @@ QActor spiralwalker context ctxspiralwalker{
 	var CurrentPlannedMove = ""
 	val mapname            = "roomMap"
 	val maxNumSteps        = 4	 
-#]	  
+#]	   
 	State s0 initial {	     
 		println("&&&  plantester STARTED")
 		run itunibo.planner.plannerUtil.initAI()
@@ -44,7 +44,7 @@ QActor spiralwalker context ctxspiralwalker{
 		run itunibo.planner.plannerUtil.planForGoal("0","0")
 	} 
 	Goto  execPlannedMoves
-	
+	 
 	State testIfAtHome{}
  	Goto backToHome if[# ! itunibo.planner.plannerUtil.atHome()  #] else continueJob 
  	
