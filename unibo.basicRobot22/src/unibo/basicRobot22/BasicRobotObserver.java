@@ -8,13 +8,13 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import unibo.actor22comm.utils.ColorsOut;
 
-public class ActorObserver {
+public class BasicRobotObserver {
 	private CoapObserveRelation relation = null;
 	private CoapClient client = null;
 	
-	public ActorObserver(String port, String actorName){
+	public BasicRobotObserver(String port, String actorName){
 		client = new CoapClient("coap://localhost:"+port+"/actors/"+actorName);
-		ColorsOut.outappl("ActorObserver | CREATED client=" + client, ColorsOut.GREEN);
+		ColorsOut.outappl("BasicRobotObserver | CREATED client=" + client, ColorsOut.GREEN);
 		observe();
 	}
 	
@@ -23,10 +23,10 @@ public class ActorObserver {
 				new CoapHandler() {
 					@Override public void onLoad(CoapResponse response) {
 						String content = response.getResponseText();
-						ColorsOut.outappl("ActorObserver | value=" + content, ColorsOut.GREEN);
+						ColorsOut.outappl("BasicRobotObserver | value=" + content, ColorsOut.GREEN);
 					}					
 					@Override public void onError() {
-						ColorsOut.outerr("OBSERVING FAILED (press enter to exit)");
+						ColorsOut.outerr("BasicRobotObserver FAILED (press enter to exit)");
 					}
 				});		
 	}

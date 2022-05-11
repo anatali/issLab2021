@@ -8,13 +8,13 @@ import unibo.actor22comm.ws.WsConnSysObserver;
 import unibo.actor22comm.ws.WsConnection;
 
 
-public class BasicRobotAdapter {
+public class RobotAdapter22 {
 protected String actorOwnerName = "";
 protected Interaction2021 conn;
 protected String robotCmdId = "move";
 protected String robotName  = "vr";
 
-	public BasicRobotAdapter( String actorOwnerName) {
+	public RobotAdapter22( String actorOwnerName) {
 		configure(actorOwnerName);
 	}
 	

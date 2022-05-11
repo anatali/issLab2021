@@ -16,13 +16,13 @@ import unibo.actor22comm.utils.ColorsOut;
  
 
 
-public class BasicRobotActor extends QakActor22FsmAnnot{
-protected  BasicRobotAdapter robotAdapter;
+public class BasicRobot22 extends QakActor22FsmAnnot{
+protected  RobotAdapter22 robotAdapter;
 protected  IApplMessage curRequest;
  	
-	public BasicRobotActor(String name) {
+	public BasicRobot22(String name) {
 		super(name);
-		robotAdapter = new BasicRobotAdapter(getName());
+		robotAdapter = new RobotAdapter22(getName());
 	}
 
 	@State( name = "activate", initial=true)

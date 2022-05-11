@@ -11,7 +11,7 @@ import unibo.actor22comm.utils.CommUtils;
  
 
 @Context22(name = "ctx", host = "localhost", port = MainBasicRobot.port)
-@Actor22(name = MainBasicRobot.robotName, contextName = "ctx", implement = BasicRobotActor.class)
+@Actor22(name = MainBasicRobot.robotName, contextName = "ctx", implement = BasicRobot22.class)
 @Actor22(name = MainBasicRobot.callerName, contextName = "ctx", implement = RobotCmdSender.class)
 public class MainBasicRobot {
 	
@@ -25,7 +25,7 @@ public class MainBasicRobot {
 		Qak22Context.showActorNames();
 
  		//ActorObserver obs = 
- 				new ActorObserver(MainBasicRobot.port,robotName);
+ 				new BasicRobotObserver(MainBasicRobot.port,robotName);
 
 
 //  		Qak22Util.sendAMsg( SystemData.startSysCmd("main",robotName) );
