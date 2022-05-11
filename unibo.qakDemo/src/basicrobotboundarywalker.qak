@@ -1,0 +1,143 @@
+/*
+ */  
+System /* -trace */ basicrobotboundarywalker
+
+Dispatch start    : start( ARG ) 
+Dispatch mapDone  : mapDone( FNAME ) 
+Event sonar       : sonar(X)
+
+Dispatch cmd       : cmd(MOVE)     
+Request step       : step( TIME )	
+Reply   stepdone   : stepdone(V)  
+Reply   stepfail   : stepfail(DURATION, CAUSE)
+  
+Context ctxbundarywalker  ip [host="localhost" port=8022]
+Context ctxbasicrobot     ip [host="127.0.0.1" port=8020]    
+
+ExternalQActor basicrobot context ctxbasicrobot   
+/* 
+ * ------------------------------------------------------------------
+ *  basicboundarywalker 
+ * ------------------------------------------------------------------
+*/     
+QActor basicboundarywalker context ctxbundarywalker{         
+[#
+val mapname     = "roomBoundary"  		 
+var NumStep     = 0
+var Myself      = myself    
+#] 
+	State s0 initial {	 
+		println("&&&  basicboundarywalker ACTIVE ...") 
+		//[# kotlinCode.pathexecutil.register(myself) #]
+		//[# kotlinCode.pathexecutil.createSonarObserver(scope) #] 		
+		//run unibo.kotlin.planner22Util.loadRoomMap("parkingMap") 
+   	} 
+   	Transition t0 whenMsg start -> work
+
+  	State work{  		  
+   		[# NumStep = 0   #] 
+    	run unibo.kotlin.planner22Util.initAI()
+		run unibo.kotlin.planner22Util.showCurrentRobotState()  
+		  
+		println("basicboundarywalker w  ")
+		forward basicrobot -m cmd : cmd(w)  //executed in asynch way ...
+		delay 500
+		forward basicrobot -m cmd : cmd(h)
+		println("basicboundarywalker s  ")
+		forward basicrobot -m cmd : cmd(s)  //executed in asynch way ...
+		/* delay 500
+		println("basicboundarywalker l  ")
+		forward basicrobot -m cmd : cmd(l)
+		delay 500
+		println("basicboundarywalker r  ")
+		forward basicrobot -m cmd : cmd(r)*/
+		delay 500 
+		forward basicrobot -m cmd : cmd(h)
+		//[# pathexecutil.waitUser("starting") #]
+		[# sysUtil.waitUser("starting ", 100000) #]
+  	}
+    Goto detectBoundary   
+     
+    State detectBoundary{     
+    	[# NumStep++ #]
+    	println("basicboundarywalker detectBoundary $NumStep")
+    	//run unibo.kotlin.planner22Util.showCurrentRobotState()
+    	//updateResource [# "detectBoundary step=$NumStep" #]
+     }  
+    Goto doAheadMove if [# (NumStep<5) #] else boundaryFound
+   
+ 	State doAheadMove{ 
+ 		delay 300 //to avoid too rapid changes
+  		request basicrobot -m step : step(330)	//stepTime
+ 	}   
+	Transition t0   whenReply stepdone   -> stepDone   
+					whenReply stepfail   -> stepFailed  
+	  
+ 	State stepDone{  
+ 		//updateResource [# unibo.kotlin.planner22Util.getMap() #]
+ 		run unibo.kotlin.planner22Util.updateMap(  "w" )
+ 		//updateResource [# "stepDone" # ]
+  	} 
+	Goto doAheadMove		//alarm perceived ?? ...
+ 	                    
+	State stepFailed{  //has found an obstacle (a wall)
+ 		println("basicboundarywalker | FOUND A WALL at home=${unibo.kotlin.planner22Util.atHome()}")
+ 			//updateResource [# "stepFailed" # ]  
+ 	 		if [# ! unibo.kotlin.planner22Util.atHome() #]{
+	 			run unibo.kotlin.planner22Util.wallFound() 
+		 		updateResource [# "found a wall" #]
+ 		 		forward basicrobot -m cmd : cmd(l)
+				run unibo.kotlin.planner22Util.updateMap(  "l" )
+				//run unibo.kotlin.planner22Util.showCurrentRobotState()
+  	 		}else{
+   	 			forward basicrobot -m cmd : cmd(l)
+  	 			run unibo.kotlin.planner22Util.updateMap(  "l" )
+  	 		}
+  	 		delay 350			 	      
+ 	}    
+    Goto detectBoundary    
+ 
+ 	State boundaryFound{
+		run unibo.kotlin.planner22Util.saveRoomMap(mapname)
+		println("robotmapper | FINAL MAP")   
+ 		run unibo.kotlin.planner22Util.showCurrentRobotState()	 
+   		[# println(unibo.kotlin.planner22Util.showMap()) #]   	
+   		updateResource [#  "mapdone-${unibo.kotlin.planner22Util.getMap()}" #]	
+   		//updateResource [#  "${unibo.kotlin.planner22Util.getMap()}" #]	 
+   		forward testboundary -m mapDone : mapDone(mapname)
+  	}
+	 
+}//basicboundarywalker	
+
+
+QActor envsonarhandler context ctxbundarywalker{
+ 	State s0 initial { 	 
+ 		println("envsonarhandler | START")	 		
+	}	
+	Transition t1   whenEvent sonar -> handleEnvSonar
+	
+	State handleEnvSonar{
+		printCurrentMessage
+ 	}
+	Goto s0  
+}
+
+/*
+ *  main 
+*/   
+QActor testboundary context ctxbundarywalker{
+	[# val doboundary = true #]
+	State s0 initial{  
+	}
+	Goto boundarywalk if [# doboundary #] else endTest
+	 
+	State boundarywalk{
+		forward basicboundarywalker -m start : start(  any   )		  
+	}
+	Transition t0 whenMsg mapDone -> endTest  
+	
+	State endTest{
+ 		println("testboundary | END OF JOB")
+	}
+				   
+ } 

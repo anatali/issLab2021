@@ -137,3 +137,11 @@ Si veda:
 it.unibo.qak21.basicrobot/userDocs/basicrobot2021.html
 
  
+--------------------------------------
+qakdemo22
+--------------------------------------
+
+In eclipse
+
+.. code::
+new kotlin projct 

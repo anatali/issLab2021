@@ -1,0 +1,9 @@
+System -msglog demo0qak
+
+Context ctxDemo0  ip [host="localhost" port=8032]
+
+QActor demo0 context ctxDemo0 {
+	State s0 initial {
+		println("Hello world")
+	}
+}
