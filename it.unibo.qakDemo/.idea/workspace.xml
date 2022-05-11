@@ -5,7 +5,101 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4df62d5-64d3-4d04-a578-f21a2db8843e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/it.unibo.sysexample.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build_ctxDemo0.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo0qak.pl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/demo0.qak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/it/unibo/ctxDemo0/MainCtxDemo0.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/it/unibo/demo0/Demo0.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/.settings/org.jetbrains.kotlin.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/boundarywalkerqak.pl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/build_ctxBoundaryWalker.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/src/boundarywalker.qak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/src/it/unibo/boundarywalker/Boundarywalker.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/src/it/unibo/ctxBoundaryWalker/MainCtxBoundaryWalker.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/src/it/unibo/testboundary/Testboundary.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/src/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/support/CoapObserver.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/support/ObserverForAnswer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/support/pathexecutil.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibo.boundaryQak22/sysRules.pl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/.settings/org.jetbrains.kotlin.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/Californium.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/build_ctxDemo0.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/demo0qak.pl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/src/demo0.qak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/src/it/unibo/ctxDemo0/MainCtxDemo0.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/src/it/unibo/demo0/Demo0.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/src/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../uniboQakIntro22/sysRules.pl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/iss22Working/source/BasicRobot22.rst" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/iss22Working/source/BasicRobot22.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build2021.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build2021.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/basicrobotboundarywalker.qak" beforeDir="false" afterPath="$PROJECT_DIR$/src/basicrobotboundarywalker.qakt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.qakactor/src/main/kotlin/QakContext.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.qakactor/src/main/kotlin/QakContext.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.basicRobot22/bin/default/unibo/basicRobot22/BasicRobot22.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.basicRobot22/bin/default/unibo/basicRobot22/BasicRobotObserver$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.basicRobot22/bin/default/unibo/basicRobot22/BasicRobotObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.basicRobot22/bin/default/unibo/basicRobot22/MainBasicRobot.class" beforeDir="false" afterPath="$PROJECT_DIR$/../unibo.basicRobot22/bin/default/unibo/basicRobot22/MainBasicRobot.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.basicRobot22/bin/default/unibo/basicRobot22/RobotAdapter22.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/.settings/org.jetbrains.kotlin.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/build_ctxDemo0.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/demo0qak.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/src/demo0.qak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/src/it/unibo/ctxDemo0/MainCtxDemo0.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/src/it/unibo/demo0/Demo0.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/src/log4j.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.introQak22/sysRules.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/.settings/org.jetbrains.kotlin.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/build_ctxDemo0.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/demo0qak.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/src/demo0.qak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/src/it/unibo/ctxDemo0/MainCtxDemo0.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/src/it/unibo/demo0/Demo0.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/src/log4j.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.qakIntro22/sysRules.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/mapper/RobotMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/mapper/RobotMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/mapper/RobotMapperBoundary.class" beforeDir="false" afterPath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/mapper/RobotMapperBoundary.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/mapper/RobotMapperPlans.class" beforeDir="false" afterPath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/mapper/RobotMapperPlans.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/planner/MainPlannerdemo.class" beforeDir="false" afterPath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/planner/MainPlannerdemo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/spiral/SpiralWalker.class" beforeDir="false" afterPath="$PROJECT_DIR$/../unibo.wenvUsage22/bin/default/unibo/wenvUsage22/spiral/SpiralWalker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unibolibs/it.unibo.qakactor-2.7.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../unibolibs/it.unibo.qakactor-2.7.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,21 +158,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../it.unibo.demoqak21" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../unibo.boundaryQak22" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RunManager">
     <configuration name="MainCtxSysExampleKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="&quot;it.unibo.ctxSysExample.MainCtxSysExampleKt&quot;" />
-      <option name="WORKING_DIRECTORY" />
-      <module name="" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>

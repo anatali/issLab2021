@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.system.module.type="sourceSet" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output-test url="file://$MODULE_DIR$/../../build/classes/java/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../src/test" />
+    <content url="file://$MODULE_DIR$/../../test">
+      <sourceFolder url="file://$MODULE_DIR$/../../test" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="it.unibo.basicrobotboundarywalker.main" />
+    <orderEntry type="library" name="Gradle: :unibo.planner22-1.0:" level="project" />
+    <orderEntry type="library" name="Gradle: com.googlecode.aima-java:aima-core:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:mockwebserver:4.9.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:4.9.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.californium:californium-proxy:2.0.0-M12" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.californium:californium-core:2.0.0-M12" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20160810" level="project" />
+    <orderEntry type="library" name="Gradle: :2p301:" level="project" />
+    <orderEntry type="library" name="Gradle: :uniboInterfaces:" level="project" />
+    <orderEntry type="library" name="Gradle: :unibonoawtsupports:" level="project" />
+    <orderEntry type="library" name="Gradle: :it.unibo.qakactor-2.7:" level="project" />
+    <orderEntry type="library" name="Gradle: :unibo.actor22-1.1:" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.13" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okio:okio:2.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:15.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpasyncclient:4.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore-nio:4.4.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.5.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.4.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.californium:element-connector:2.0.0-M12" level="project" />
+    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="it.unibo.basicrobotboundarywalker.main" />
+</module>

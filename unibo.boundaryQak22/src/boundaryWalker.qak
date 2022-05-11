@@ -1,0 +1,68 @@
+/*
+ * 
+ */
+System -msglog boundarywalkerqak
+
+Dispatch start    : start( ARG ) 
+Dispatch moveok   : move( MOVESHORT )
+Dispatch pathfail : pathdone( P )
+//Dispatch movefail : move( MOVESHORT )
+Dispatch mapDone  : mapDone( FNAME ) 
+Event alarm     : alarm(X)
+
+
+Context ctxBoundaryWalker  ip [host="localhost" port=8032]
+
+/* 
+ * ------------------------------------------------------------------
+ *  boundarywalker 
+ * ------------------------------------------------------------------
+*/     
+QActor boundarywalker context ctxBoundaryWalker{    
+[#
+val mapname     = "roomBoundary"  		 
+var NumStep     = 0
+var Myself      = myself    
+#] 
+
+	State s0 initial {
+		printCurrentMessage
+	
+	}
+	Transition t0 whenMsg start -> work
+	
+	
+	State work{  		  
+   		[# NumStep = 0   #] 
+   		printCurrentMessage
+	}
+	
+}
+
+
+/*
+ *  main 
+*/   
+QActor mainwalk context ctxBoundaryWalker{
+	[# val doboundary = true #]
+	State s0 initial{  
+	}
+	Goto boundarywalk if [# doboundary #] else endTest
+	 
+	State boundarywalk{
+		forward boundarywalker -m start : start(  any   )		  
+		delay 1000
+		//emit alarm : alarm(fire)		 
+		/* 
+		delay 2000
+		emit alarm : alarm(tsunami)		
+		delay 1000
+		emit alarm : alarm(covid)	 */	
+	}
+	Transition t0 whenMsg mapDone -> endTest  
+	
+	State endTest{
+		println("END OF JOB")
+	}
+				   
+ } 

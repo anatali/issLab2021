@@ -144,4 +144,15 @@ qakdemo22
 In eclipse
 
 .. code::
-new kotlin projct 
+
+
+    uniboQakInro22
+    gradle init (1,1)
+    copy build.gradle
+    gradlew eclipse
+    create sourcefolder src
+    add demo0.qak
+    open --> Xtext
+    add Kotlin nature
+    run MainCtxDemo0
+     

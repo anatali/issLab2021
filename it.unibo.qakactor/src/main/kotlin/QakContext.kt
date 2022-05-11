@@ -82,7 +82,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
                   serverCoap.add(  resourceCtx )
                   serverCoap.start()
 
-                  println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% serverCoap started "  )
+                  //println("%%% serverCoap started "  )
 
                   sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapServer on port: $coapPort " );
                                     //println( "               %%% QakContext $name |  serverCoap started on port: $coapPort" )
@@ -114,7 +114,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
     }
 
     fun addActor( actor: ActorBasic) {
-        println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% addActor in coapctx   "  )
+        //println("%%%  addActor in coapctx   "  )
         actor.context = this    //injects the context
  		actor.createMsglogFileInContext()
         actorMap.put( actor.name, actor )
