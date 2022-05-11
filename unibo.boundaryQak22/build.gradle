@@ -74,7 +74,7 @@ dependencies {
 	implementation name: 'it.unibo.qakactor-2.7'
 	//implementation name: 'it.unibo.qakactor-2.4'
 	implementation name: 'unibo.actor22-1.1'
-	implementation name: 'IssActorKotlinRobotSupport-2.0NoPlanner'
+	//implementation name: 'IssActorKotlinRobotSupport-2.0NoPlanner'
 
  	//PLANNER
     compile name: 'unibo.planner22-1.0'

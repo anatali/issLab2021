@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scope ){
 
 	override fun getInitialState() : String{
-		return "s0"
+		return "activate"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
@@ -20,16 +20,60 @@ class Boundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( n
 		val mapname     = "roomBoundary"  		 
 		var NumStep     = 0
 		var Myself      = myself    
+		
+		var robotMoveObserver : unibo.actor22comm.interfaces.IObserver
+		lateinit  var conn    : unibo.actor22comm.interfaces.Interaction2021  
+		
+		var goingDown = true
+		var numIter   = 0
+		var turnStep  = 800;   //350 => ok
+		
+		/* 
+		fun init(){
+			conn = unibo.actor22comm.ws.WsConnection.create("localhost:8091" )  
+			robotMoveObserver = unibo.Robots.common.WsConnApplObserver(getName(), true)
+			unibo.actor22comm.utils.ColorsOut.outappl(  "${getName()} | ws connected $conn" ,  unibo.actor22comm.utils.ColorsOut.BLUE)
+			((unibo.actor22comm.ws.WsConnection) conn).addObserver(robotMoveObserver)
+		}
+		*/
 		return { //this:ActionBasciFsm
-				state("s0") { //this:State
+				state("activate") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						  conn=unibo.Robots.common.RobotUtils.connectWithVirtualRobot(getName())
+									numIter++  
 					}
-					 transition(edgeName="t00",targetState="work",cond=whenDispatch("start"))
+					 transition( edgeName="goto",targetState="start", cond=doswitch() )
 				}	 
-				state("work") { //this:State
+				state("start") { //this:State
 					action { //it:State
-						 NumStep = 0    
+						println("$name in ${currentState.stateName} | $currentMsg")
+						 unibo.Robots.common.VRobotMoves.step(getName(), conn )  
+					}
+					 transition(edgeName="t00",targetState="coverColumn",cond=whenDispatch("endMoveOk"))
+					transition(edgeName="t01",targetState="turn",cond=whenDispatch("endMoveKo"))
+				}	 
+				state("coverColumn") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						 unibo.Robots.common.VRobotMoves.step(getName(), conn )  
+					}
+					 transition(edgeName="t02",targetState="coverColumn",cond=whenDispatch("endMoveOk"))
+					transition(edgeName="t03",targetState="turn",cond=whenDispatch("endMoveKo"))
+				}	 
+				state("turn") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						
+						   			if( goingDown ) unibo.Robots.common.VRobotMoves.turnLeftAndStep(getName(), turnStep, conn);
+						   			else unibo.Robots.common.VRobotMoves.turnRightAndStep(getName(), turnStep, conn);
+						   			goingDown = ! goingDown;
+					}
+					 transition(edgeName="t04",targetState="coverColumn",cond=whenDispatch("endMoveOk"))
+					transition(edgeName="t05",targetState="lastColumn",cond=whenDispatch("endMoveKo"))
+				}	 
+				state("lastColumn") { //this:State
+					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
 				}	 
