@@ -55,11 +55,11 @@ dependencies {
 	testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.9.3'
 
 //LOG4j
-	implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+	//implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
-//LOGGING
-	//implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-	//implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
+//LOGGING (for Spring)
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+	implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
 
 //JSON
 	// https://mvnrepository.com/artifact/org.json/json
@@ -84,4 +84,9 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+configurations {
+	all*.exclude module : 'spring-boot-starter-logging'
+	all*.exclude module : 'logback-classic'
 }

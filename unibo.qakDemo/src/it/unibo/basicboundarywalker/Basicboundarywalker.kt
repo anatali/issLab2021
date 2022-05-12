@@ -30,8 +30,8 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 				state("work") { //this:State
 					action { //it:State
 						 NumStep = 0    
-						itunibo.planner.plannerUtil.initAI(  )
-						itunibo.planner.plannerUtil.showCurrentRobotState(  )
+						unibo.kotlin.planner22Util.initAI(  )
+						unibo.kotlin.planner22Util.showCurrentRobotState(  )
 						println("basicboundarywalker w  ")
 						forward("cmd", "cmd(w)" ,"basicrobot" ) 
 						delay(500) 
@@ -64,23 +64,23 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
-						itunibo.planner.plannerUtil.updateMap( "w"  )
+						unibo.kotlin.planner22Util.updateMap( "w"  )
 					}
 					 transition( edgeName="goto",targetState="doAheadMove", cond=doswitch() )
 				}	 
 				state("stepFailed") { //this:State
 					action { //it:State
-						println("basicboundarywalker | FOUND A WALL at home=${itunibo.planner.plannerUtil.atHome()}")
-						if(  ! itunibo.planner.plannerUtil.atHome()  
-						 ){itunibo.planner.plannerUtil.wallFound(  )
+						println("basicboundarywalker | FOUND A WALL at home=${unibo.kotlin.planner22Util.atHome()}")
+						if(  ! unibo.kotlin.planner22Util.atHome()  
+						 ){unibo.kotlin.planner22Util.wallFound(  )
 						updateResourceRep( "found a wall"  
 						)
 						forward("cmd", "cmd(l)" ,"basicrobot" ) 
-						itunibo.planner.plannerUtil.updateMap( "l"  )
+						unibo.kotlin.planner22Util.updateMap( "l"  )
 						}
 						else
 						 {forward("cmd", "cmd(l)" ,"basicrobot" ) 
-						 itunibo.planner.plannerUtil.updateMap( "l"  )
+						 unibo.kotlin.planner22Util.updateMap( "l"  )
 						 }
 						delay(350) 
 					}
@@ -88,11 +88,11 @@ class Basicboundarywalker ( name: String, scope: CoroutineScope  ) : ActorBasicF
 				}	 
 				state("boundaryFound") { //this:State
 					action { //it:State
-						itunibo.planner.plannerUtil.saveRoomMap( mapname  )
+						unibo.kotlin.planner22Util.saveRoomMap( mapname  )
 						println("robotmapper | FINAL MAP")
-						itunibo.planner.plannerUtil.showCurrentRobotState(  )
-						 println(itunibo.planner.plannerUtil.showMap())  
-						updateResourceRep(  "mapdone-${itunibo.planner.plannerUtil.getMap()}"  
+						unibo.kotlin.planner22Util.showCurrentRobotState(  )
+						 println(unibo.kotlin.planner22Util.showMap())  
+						updateResourceRep(  "mapdone-${unibo.kotlin.planner22Util.getMap()}"  
 						)
 						forward("mapDone", "mapDone(mapname)" ,"testboundary" ) 
 					}

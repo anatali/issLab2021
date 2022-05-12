@@ -1,7 +1,6 @@
 package unibo.wenvUsage22.mapper;
 
- 
-
+import org.json.JSONObject;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.State;
@@ -17,13 +16,17 @@ import unibo.wenvUsage22.common.VRobotMoves;
 import unibo.wenvUsage22.basicRobot.prototype0.WsConnApplObserver;
 import unibo.kotlin.planner22Util;
 
-public class RobotMapperPlans extends QakActor22FsmAnnot  {
+/*
+ * Il robot si muove lungo il boundary facendo step pari alla sua lunghezza.
+ * Ad ogni step fatto con successo, aggiorna la mappa con "w"
+ * Ad una collisione ...
+ */
+public class RobotUsingMap extends QakActor22FsmAnnot  {
 	private Interaction2021 conn;	
-  	private int lastX    = 6;
- 	private int lastY    = 5; 
-	private String CurrentPlannedMove = "";
- 	
- 	public RobotMapperPlans(String name) {
+ 	private String CurrentPlannedMove = "";
+	private int NumStep   = 0;
+	
+ 	public RobotUsingMap(String name) {
 		super(name);
  	}
  	
@@ -39,6 +42,7 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
 		try {
 			planner22Util.initAI();
 	     	ColorsOut.outappl("INITIAL MAP", ColorsOut.CYAN);
+	     	planner22Util.loadRoomMap("mapRoomEmpty");
 	 		planner22Util.showMap();
 			planner22Util.startTimer();  		
  		} catch (Exception e) {
@@ -54,21 +58,20 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
  	}
 	
 	@State( name = "robotStart" )
-	@Transition( state = "doMove"  )
+	@Transition( state = "execPlannedMoves"  )
  	protected void robotStart( IApplMessage msg ) {
 		initPlanner();
-		planner22Util.planForGoal(""+lastX,""+lastY);		
+ 		planner22Util.showCurrentRobotState();
+ 		planner22Util.planForGoal("4", "2");
 	}
  
-
+ 
 	
-	//TODO: introduce an executor
-	@State( name = "doMove" )
-	@Transition( state = "doMove",      msgId="endMoveOk", guard="otherMoves"    )
- 	@Transition( state = "hitWall",     msgId="endMoveKo"     )
- 	//@Transition( state = "backToHome",  msgId="endMoveOk", guard="noOtherMoves"  )
- 	@Transition( state = "backToHome",  guard="noOtherMoves"  )
-	protected void doMove( IApplMessage msg ) {
+	@State( name = "execPlannedMoves" )
+	@Transition( state = "execPlannedMoves",  msgId="endMoveOk", guard="otherMoves"    )
+	@Transition( state = "backToHome",        msgId="endMoveOk", guard="noOtherMoves"  )
+ 	@Transition( state = "endWork",           msgId="endMoveOk", guard="atHome"  )
+	protected void execPlannedMoves( IApplMessage msg ) {
 		outInfo(""+msg);
 		CurrentPlannedMove = planner22Util.getNextPlannedMove();
 		outInfo("CurrentPlannedMove ==== "+CurrentPlannedMove);
@@ -83,42 +86,38 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
 			VRobotMoves.turnRight(getName(), conn );
 		}else {
 			ColorsOut.outappl("doMove terminated", ColorsOut.MAGENTA);	
-			//planner22Util.showMap();
-			planner22Util.showCurrentRobotState();
+			VRobotMoves.turnLeft(getName(), conn );
+			planner22Util.updateMap( "l", "doing l" );
 		}
-		CommUtils.delay(500);
 	}
-	
-	@State( name = "hitWall" )
-	//@Transition( state = "backDone", msgId="endMoveOk")
-	@Transition( state = "doMove")
-	protected void hitWall( IApplMessage msg ) {
-		outInfo(""+msg);
-		ColorsOut.outerr("hitWall not expected"  );		
-	} 
-	
 
- 	
-	
 	@State( name = "backToHome" )
-	@Transition( state = "doMove",  guard="notAtHome"  )
-	@Transition( state = "endWork", guard="atHome"  )
+	@Transition( state = "execPlannedMoves"  )
 	protected void backToHome( IApplMessage msg ) {
-		boolean alreadyAtHome = planner22Util.atHome();
-		outInfo("alreadyAtHome="+alreadyAtHome);
-		if( ! alreadyAtHome ) planner22Util.planForGoal("0" ,"0" );	
-		//CommUtils.waitTheUser("going to home");
-	}	
+		outInfo(""+msg);
+		CommUtils.waitTheUser("click to return at HOME");
+		planner22Util.planForGoal("0", "0");
+	} 	
 	
  	@State( name = "endWork" )
  	protected void endWork( IApplMessage msg ) {
- 		//VRobotMoves.turnLeft(getName(), conn);
+ 		planner22Util.showMap();
 		outInfo("BYE" );	
  		System.exit(0);
  	}
 
 //----------------------------------------------
  
+		@TransitionGuard
+		protected boolean roundNotCompleted() {
+			outInfo( "roundNotCompleted  " + NumStep);
+			return NumStep < 5;
+		}	
+		@TransitionGuard
+		protected boolean roundCompleted() {
+			outInfo( "roundCompleted  " + NumStep);
+			return NumStep == 5;
+		}	
  	 
  		@TransitionGuard
  		protected boolean otherMoves() {
@@ -129,7 +128,7 @@ public class RobotMapperPlans extends QakActor22FsmAnnot  {
  		@TransitionGuard
  		protected boolean noOtherMoves() {
  			outInfo( "noOtherMoves  " + CurrentPlannedMove.length());
- 			return CurrentPlannedMove.length() == 0;
+ 			return CurrentPlannedMove.length() == 0 ;
  		}	
  		
  		@TransitionGuard
