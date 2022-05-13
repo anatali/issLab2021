@@ -5,12 +5,256 @@
 
 .. _Eclipse Xtext: https://www.eclipse.org/Xtext/download.html
 .. _Qak syntax: ./_static/Qactork.xtext
+.. _Uso di Prolog: ./_static/LabQakPrologUsage2021.html
+.. _shortcut: ./_static/LabQakPrologUsage2021.html#shortcut
+.. _Xtext: https://www.eclipse.org/Xtext/: https://www.eclipse.org/Xtext/
+.. _Moore machine: https://it.wikipedia.org/wiki/Macchina_di_Moore
+.. _Coroutine context and dispatchers: https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html
+.. _FSMKotlin: ./_static/FSMKotlin.html
+.. _tuProlog: http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf
 
 =============================================
 QActor (meta)model
 =============================================
 
-`Qak syntax`_
+- `Qak syntax`_
+- `Uso di Prolog`_
+
+Il linguaggio è definito utilizzando il framework Xtext e si basa su un nucleo di concetti 
+che compongono il :blue:`metamodello QActor` . Questi concetti possono essere così riassunti:
+
+- A :blue:`QA-System` is a collection of active entities (*QActors*) each working in a 
+  computational node (:blue:`Context`).
+
+   .. image::  ./_static/img/Qak/qacontexts.png
+      :align: center 
+      :width: 40% 
+
+- :blue:`QActors interact` by using :blue:`Messages` of different types (*Dispatch, Request,...*) and *Events*.
+
+- A QActor can deliver information to another QActor (both local or remote) by using a 
+  proper operations or by emitting events.
+
+- High-level send-operations do not use low-level references, but only **actor-names**.
+   
+- Each context owns a set QActors that can interact with components (actors or 'aliens') working on 
+  a different node, by means of the following protcols:
+
+  - :blue:`TCP` : on the port specified by the Context
+  - :blue:`CoAP` : on the port specified by the Context
+  - :blue:`MQTT` : using the broker specified in the mqttBroker declaration
+
+- The mapping between the high-level communication actions and a specific protocol technology 
+  is done by the QActor-infrastructure with the help of the Eclipse QActor software factory 
+  deployed by the it.unibo.issLabStart/resources/plugins
+
+--------------------------------------
+The QActor software factory
+--------------------------------------
+
+   .. image::  ./_static/img/Qak/qakSoftwareFactory.png
+      :align: center 
+      :width: 50% 
+
+
+The metamodel is supported by the :blue:`qak-infrastructure` defined in the :blue:`project 
+it.unibo.qakactor` and deployed in **it.unibo.qakactor-2.7.jar**.
+
+
+++++++++++++++++++++++++++++++++++++++
+ActorBasic.kt
+++++++++++++++++++++++++++++++++++++++
+
+
+:blue:`ActorBasic.kt` is an abstract class that implements the concept of qakactor as 
+a **message-driven** entity that handles messages by delegating the work to the abstract 
+the method *actorBody*.
+
+     .. image::  ./_static/img/Qak/ActorBasic.png
+      :align: center 
+      :width: 50% 
+
+*ActorBasic.kt* includes a Kotlin actor (let us name it as **kactor**) associated to a :blue:`dispatcher` 
+defined (si veda Coroutine context and dispatchers)
+according two arguments (**confined** and **iobound**) given in the constructor:
+
+- If *confined=true*, the actor is activated with a *kotlinx.coroutines.newSingleThreadContext*   
+  that makes use of just 1 Thread.
+- If *confined=false and iobound=true*, the actor is activated with a 
+  *kotlinx.coroutines.newFixedThreadPoolContext* with 64 Threads.
+- If *confined=false and iobound=false*, the **default** of type 
+  *kotlinx.coroutines.newFixedThreadPoolContext* is selected, that handles as many Threads 
+  as the number of CPUs available.
+
+The class ActorBasic.kt can be used to define applicative actors working in **message-driven** way:
+
+     .. image::  ./_static/img/Qak/ApplActorBasic.png
+      :align: center 
+      :width: 50% 
+
+
+
+++++++++++++++++++++++++++++++++++++++
+ActorBasicFsm.kt
+++++++++++++++++++++++++++++++++++++++
+
+
+- :blue:`ActorBasicFsm.kt` is an abstract class that **extends ActorBasic.kt** by defining 
+  the method *actorBody*, so to implement the behavior of a FSM.
+
+     .. image::  ./_static/img/Qak/ApplActorBasicFsm.png
+      :align: center 
+      :width: 65% 
+
+
+This class *ActorBasicFsm.kt* is designed according the same principles exposed in 
+`FSMKotlin`_. It can be used to define applicative actors working as a Finite State Machines.
+
+--------------------------------------
+Qak specification template
+--------------------------------------
+Un modello Qak viene definito organizzando la sua descrizione in base al segeunte template:
+
+.. code:: 
+
+  System < NAME OF THE SYSTEM >
+  mqttBroker "broker.hivemq.com" : 1883 //OPTIONAL 
+
+  //DECLARATION OF MESSAGES AND EVENTS
+
+  //DECLARATION OF CONTEXTS
+  Context CTXNAME ip [host="HOSTIP" port=PORTNUM]
+
+  //DECLARATION OF ACTORS
+
+--------------------------------------
+The Qak syntax
+--------------------------------------
+
+The syntax of the language is defined in `Qak syntax`_) using the `Xtext`_ framework as follows:
+
+--------------------------------------
+Messages and Events
+--------------------------------------
+
+
+In the QActor metamodel:
+
+- a :blue:`message` is intended as information sent in **asynchronous way** 
+  by some source to some specific destination.
+
+  For asynchronous transmission we intend that the messages can be 'buffered' by the infrastructure, 
+  while the 'unbuffered' transmission is said to be **synchronous**.
+  
+- an :blue:`event` is intended as information emitted by some source without any explicit destination.
+
+  Events whose identifier start with the prefix :blue:`local_` are not propagated outside the context in 
+  which they are generated.
+
+
+
+A  message has type: **ApplMessage.kt**, that requires the `tuProlog`_ library. 
+Some help in building and sending messages is given by the class: **MsgUtil.kt**.
+
+
+
+++++++++++++++++++++++++++++++++
+Message delivery rules
+++++++++++++++++++++++++++++++++
+
+- A message sent from a to a local actor b, is inserted in the kaq of the kactor of b.
+
+- An event raised in some Context, is delivered to all the other known Contexts of the system and to all the 'alien' connected via TCP or via MQTT.
+
+
+When a message sent from a to actor b working in a different context (on a different node), the Qak-Infrastructure attempts to find the ipaddress-port of the receiver context:
+
+- If information about the context of b is found and a MQTT broker is specified in the model, the message is sent via MQTT; otherwise it is sent via CoAP.
+
+- If no information about the context of b is found, the message to deliver should be a reply to a request made by some 'alien'.
+  The system first checks for the existence of an active TCP connection with the receiver (the 'alien' made a request via TCP).
+  In such a connection is found, the message is sent over it.
+  Otherwise, an attempt is made to send the reply via MQTT, hoping that the 'alien' was MQTT-connected.
+
+
+
+++++++++++++++++++++++++++++++++
+Message handling  rules
+++++++++++++++++++++++++++++++++
+
+
+With reference to a user-defined QAkactor qa of type ActorBasicFsm, let us call:
+
+- currentState: the name the current state of qa;
+- currentMsg: the msgId of the message that qa is processing;
+- kaq the message-queue of the Kotlin kactor;
+- mstore the message-queue local ActorBasicFsm ;
+- tset: the set of messages mentioned in the transition related to the currentState.
+
+
+Messages sent to qa and events are inserted in the kaq.
+
+fsmwork is called in a message-driven way with a new applMsg by the kactor loop , 
+while qa is in currentState. Its behavior is:
+
+#. qa checks for transition for applMsg:
+
+   - if it is possible to fire a transition, set currentMsg=applMsg, change currentState and goto 2)
+   - if no transition can be fired and discardMessages=false, store the message in the mstore;
+
+#. qa executes the actions of a state:
+   when the state actions terminate, if there is an empty-move goto 3) else goto 4);
+#. qa executes a empty-move:
+   set currentMsg=NoMsg , change currentState, and goto 2)
+#. qa looks at the mstore and
+
+  - if a message ms is found in tset : call fsmwork(ms);
+  - if no message is found terminate fsmwork (the next call will be perfomed by the kactor loop );
+
+
+++++++++++++++++++++++++++++++++
+Event propagation rules
+++++++++++++++++++++++++++++++++
+
+#. The event emitted by a QActor that belongs to a qak-system (qasys) is propagated via Context to all the other QActor of qasys.
+#. A standalone QActor (e.g. resource.qak) that does not use MQTT does not propagate events to QActors that use it, neither can perceive events emitted by them.
+#. An event emiited by an 'alien' component connected to a QActor via TCP will be perceived by the connected QActor only (i.e. it is not propagated to the other Contexts of the system).
+#. The event that reaches a Context (since propagated from another Contexts or emitted by an 'alien') is propagated only to the actors internal to that Context.
+#. The event emitted by a QActor of a qasys that uses MQTT are propagated on the specified topic.
+
+--------------------------------------
+High-level message-operations
+--------------------------------------
+
+The methods that an application designer can use to deliver messages are:
+
+- :blue:`forward` for a Dispatch
+- :blue:`request`, :blue:`replyTo`, :blue:`askFor` for a Request
+- :blue:`emit` for an Event
+
+:remark:`The QActor metamodel does not define any explicit receive operation.`
+
+In fact, the behavior of a QActor is modeled as a `Moore machine`_ in which state-transitions 
+are triggered by messaged and events.
+
+
+
+
+
+++++++++++++++++++++++++++++++++
+Transitions and guards in Qak
+++++++++++++++++++++++++++++++++
+
+- A :blue:`Transition` is 'fired' if the related condition (whenTime, whenEvent, whenMsg, ...) 
+  together with the related guard (if any) is true.
+
+- A :blue:`guard` is expressed as a condition written in user-defined Kotlin code.
+
+
+
+
+
+
 
 --------------------------------------
 StartUp
@@ -24,6 +268,9 @@ StartUp
 
 #. Copia nella directory **dropins** di Eclipse i file che costituiscono il supporto al metamodello-qak: 
     ``it.unibo.Qactork_1.2.4.jar``, ``it.unibo.Qactork.ui_1.2.4.jar``, ``it.unibo.Qactork.ide_1.2.4.jar``.
+
+
+
 
 
 
@@ -126,26 +373,47 @@ in una directory :blue:`resource`) è bene sia scritta in Kotlin.
 demo0.qak
 --------------------------------------
 
+
+
+Questo esempio mostra l'uso di: 
+
+- ``Dispatch msg : msg(ARG1, ARG2, ...)``: **dichiarazione** del dispatch di identificatore msg e 
+  con un template di payload ``msg(ARG1, ARG2, ...)`` in *sintassi Prolog*. Altre dichiarazioni:
+  - ``Event msg : msg(ARG1, ARG2, ...)``
+  - ``Request msg : msg(ARG1, ARG2, ...)``
+  - ``Reply msg : msg(ARG1, ARG2, ...)``
+- ``onMsg( msg:msg(ARG1, ARG2, ...) ){ ... }`` : esegue il body solo se il *messaggio corrente*  
+  ha identificatore ``msg`` e se il suo payload 
+  può essere **unificato in Prolog** con il template di messaggio definito nella dichiarazione **e**
+  con il template specificato in *onMsg*.
+- ``payloadArg(N)``: si veda `shortcut`_  (in `Uso di Prolog`_)
+- ``sysUtil.logMsgs``: crea dei file di log dei messaggi ricevuti
+- ``discardMsg On/Off``: seleziondando ``discardMsg Off`` i messaggi che non sono di interesse 
+  in un certo stato vengono conservati, mentre con ``discardMsg On``, essi vengono eliminati.
+
+ 
+  
+
 .. list-table:: 
-  :widths: 40,60
+  :widths: 45,55
   :width: 100%
 
   * -  
       .. image::  ./_static/img/Qak/demoDSL.png
          :align: center 
-         :width: 120% 
+         :width: 100% 
     -  
       .. code::
 
-        System demo0    
-        Dispatch msg1 : msg1(ARG)
-        Dispatch msg2 : msg2(ARG)  
-        Event alarm   : alarm( KIND )    
+       System demo0    
+       Dispatch msg1 : msg1(ARG)
+       Dispatch msg2 : msg2(ARG)  
+       Event alarm   : alarm( KIND )    
         
-        Context ctxdemo0 ip [host="localhost" port=8095]
-
+       Context ctxdemo0 
+                ip[host="localhost" port=8095]
           
-        QActor demo context ctxdemo0{
+       QActor demo context ctxdemo0{
           State s0 initial { 	    
             discardMsg Off
             //[# sysUtil.logMsgs=true #]
@@ -153,30 +421,42 @@ demo0.qak
           Goto s1  	
           State s1{
               println("demo in s1") 
-            //printCurrentMessage 
           }
           Transition t0 whenMsg msg1 -> s2
                         whenMsg msg2 -> s3 
-
           State s2{ 
             printCurrentMessage
             onMsg( msg1:msg1(ARG) ){
-              println("s2:since msg1:msg1(${payloadArg(0)})")
-              delay 1000  
+             println("s2: msg1(${payloadArg(0)})")
+             delay 1000  
             }
-            } 
+            }
           Transition t0 whenMsg msg2 -> s3
-
           State s3{ 
             printCurrentMessage 
-            //msg is received but not elaborated
             onMsg( msg2:msg2(1) ){ 
-              println("s3: since msg2:msg2(${payloadArg(0)})")
+             println("s3: msg2(${payloadArg(0)})")
             } 
             }
             Goto s1      
-        }    
+       }    
           
+
+
+
+
+
+:blue:`Output con discardMsg On` 
+
+.. code::
+
+  demo in s1
+  demo in s2 since msg1:msg1(1)
+  demo in s3 since msg2:msg2(1)
+  demo in s1
+
+
+
         QActor perceiver context ctxdemo0{
           State s0 initial { 	
             println("perceiver waits ..")
@@ -189,19 +469,6 @@ demo0.qak
           Goto s0
         } 
 
-
-Questo esempio evidenzia che, seleziondando ``discardMsg Off`` i messaggi che non sono di interesse 
-in un certo stato vengono conservati, mentre con ``discardMsg On``, essi vengono eliminati
-
-:blue:`Output con discardMsg On` 
-
-.. code::
-
-  demo in s1
-  demo in s2 since msg1:msg1(1)
-  demo in s3 since msg2:msg2(1)
-  demo in s1
- 
 :blue:`Output con discardMsg Off` 
 
 .. code::
