@@ -1,9 +1,0 @@
-System test0 
-
-Context ctx0  ip [ host="localhost" port=8022]
-
-QActor qa0 context ctx0 {
-	 State s0 initial {
-	 	printCurrentMessage
-	 }
-}

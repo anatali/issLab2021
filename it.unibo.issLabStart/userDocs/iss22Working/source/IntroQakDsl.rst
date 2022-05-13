@@ -61,7 +61,6 @@ dover essere espresso direttamente in Kotlin. Ma occorre non  esagerare l'uso di
 .. code::  
 
   System demonottodo
-
   Context ctxdemonottodo ip [host="localhost" port=8055]
 
   QActor demonottodo context ctxdemonottodo{
@@ -108,15 +107,13 @@ in una directory :blue:`resource`) è bene sia scritta in Kotlin.
 
   import unibo.actor22comm.utils.ColorsOut
 
-  object ut {
-    
+  object ut {    
     fun fibo(n: Int) : Int {
       if( n < 0 ) throw Exception("fibo argument must be >0")
       if( n == 0 || n==1 ) return n
       var v = fibo(n-1)+fibo(n-2)
       return v
-    }
-    
+    }   
     fun outMsg( m: String ){
       ColorsOut.outappl(m, ColorsOut.GREEN);
     }
@@ -125,18 +122,170 @@ in una directory :blue:`resource`) è bene sia scritta in Kotlin.
 
 :remark:`Per usare codice Java, fare ricorso a file jar`
 
+--------------------------------------
+demo0.qak
+--------------------------------------
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+
+  * -  
+      .. image::  ./_static/img/Qak/demoDSL.png
+         :align: center 
+         :width: 120% 
+    -  
+      .. code::
+
+        System demo0    
+        Dispatch msg1 : msg1(ARG)
+        Dispatch msg2 : msg2(ARG)  
+        Event alarm   : alarm( KIND )    
+        
+        Context ctxdemo0 ip [host="localhost" port=8095]
+
+          
+        QActor demo context ctxdemo0{
+          State s0 initial { 	    
+            discardMsg Off
+            //[# sysUtil.logMsgs=true #]
+          }     
+          Goto s1  	
+          State s1{
+              println("demo in s1") 
+            //printCurrentMessage 
+          }
+          Transition t0 whenMsg msg1 -> s2
+                        whenMsg msg2 -> s3 
+
+          State s2{ 
+            printCurrentMessage
+            onMsg( msg1:msg1(ARG) ){
+              println("s2:since msg1:msg1(${payloadArg(0)})")
+              delay 1000  
+            }
+            } 
+          Transition t0 whenMsg msg2 -> s3
+
+          State s3{ 
+            printCurrentMessage 
+            //msg is received but not elaborated
+            onMsg( msg2:msg2(1) ){ 
+              println("s3: since msg2:msg2(${payloadArg(0)})")
+            } 
+            }
+            Goto s1      
+        }    
+          
+        QActor perceiver context ctxdemo0{
+          State s0 initial { 	
+            println("perceiver waits ..")
+          }
+          Transition t0 whenEvent alarm -> handleAlarm
+          
+          State  handleAlarm{
+            printCurrentMessage
+          }
+          Goto s0
+        } 
+
+
+Questo esempio evidenzia che, seleziondando ``discardMsg Off`` i messaggi che non sono di interesse 
+in un certo stato vengono conservati, mentre con ``discardMsg On``, essi vengono eliminati
+
+:blue:`Output con discardMsg On` 
+
+.. code::
+
+  demo in s1
+  demo in s2 since msg1:msg1(1)
+  demo in s3 since msg2:msg2(1)
+  demo in s1
  
+:blue:`Output con discardMsg Off` 
+
+.. code::
+
+  demo in s1
+  demo in s2 since msg1:msg1(1)
+  demo in s3 since msg2:msg2(1)
+  demo in s1
+  demo in s2 since msg1:msg1(2)
 
 --------------------------------------
 demoStrange.qak
 --------------------------------------
 
+  
+  
+.. list-table:: 
+  :widths: 30,70
+  :width: 100%
+
+  * -  
+      .. image::  ./_static/img/Qak/demostrange.png
+         :align: center 
+         :width: 100% 
+    -  
+      .. code::
+          
+        System  demostrange
+        Dispatch cmd : cmd(X) 
+
+        Context ctxdemostrange ip [host="localhost" port=8055]
+
+        QActor demostrange context ctxdemostrange{
+          State s0 initial { 	 
+            printCurrentMessage
+            forward demostrange -m cmd : cmd(a)
+          }   
+          Goto s1             
+          State s1{
+            printCurrentMessage  
+            forward demostrange -m cmd : cmd(b) 
+          }
+          Goto s2            
+          State s2{
+            printCurrentMessage
+          }
+          Transition t0 whenTime 10 -> s3
+                        whenMsg cmd -> s2  
+          State s3{
+            printCurrentMessage
+            println("demostrange | s3, BYE")            
+          }
+        }
+
+Questo esempio evidenzia che:
+
+ - una empty-move è realizzata con emissione di un evento ``local_noMsg`` 
+ - una empty-move non crea indicazioni sui messaggi da elaborare: i messaggi in arrivo 
+   (inviati dall'attore stesso come auto-messaggi) sono memorizzati
+   nella coda interna locale e vengono gestiti nello stato ``s2``
+ - un attore non deve rimanare in attesa perenne di messaggi, in quanto può fare una empty-move 
+   dopo un certo tempo (**timeOut**) 
+ - lo scadere del *timeOut* provoca l'emissione di un evento di indentificatore univoco 
+   ``local_tout_aaa_sss`` ove ``aaa`` è il nome dell'attore e ``sss`` è  il nome dello stato corrente
+
+ 
+:blue:`Output`
+ 
+
+.. code::
+
+  demostrange in s0 | msg(autoStartSysMsg,dispatch,demostrange,demostrange,start,5)
+  demostrange in s1 | msg(local_noMsg,event,demostrange,none,noMsg,4)
+  demostrange in s2 | msg(local_noMsg,event,demostrange,none,noMsg,4)
+  demostrange in s2 | msg(cmd,dispatch,demostrange,demostrange,cmd(a),6)
+  demostrange in s2 | msg(cmd,dispatch,demostrange,demostrange,cmd(b),7)
+  demostrange in s3 | msg(local_tout_demostrange_s2,event,timer,none,local_tout_demostrange_s2,8)
+  demostrange | s3, BYE
+
+
+ 
 
 
 
---------------------------------------
-demo0.qak
---------------------------------------
 
 
 --------------------------------------

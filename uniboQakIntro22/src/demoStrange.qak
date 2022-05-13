@@ -1,0 +1,30 @@
+System  demostrange
+
+Dispatch cmd : cmd(X) 
+
+Context ctxdemostrange ip [host="localhost" port=8055]
+
+QActor demostrange context ctxdemostrange{
+	State s0 initial { 	 
+ 		printCurrentMessage
+ 		forward demostrange -m cmd : cmd(a)
+ 	}   
+	Goto s1 
+  	
+ 	State s1{
+ 		printCurrentMessage
+ 		forward demostrange -m cmd : cmd(b) 
+ 	}
+ 	Goto s2
+  	 
+ 	State s2{
+ 		printCurrentMessage
+ 	}
+ 	Transition t0 whenTime 10 -> s3
+ 				  whenMsg cmd -> s2  
+
+ 	State s3{
+ 		printCurrentMessage
+  		println("demostrange | s3, BYE")		
+ 	}
+ }

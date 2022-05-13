@@ -1,0 +1,103 @@
+/*
+ * 
+ */
+System -msglog cleanerwalkerqak
+
+Dispatch start       : start( ARG ) 
+Dispatch endMoveOk   : endMoveOk( V )
+Dispatch endMoveKo   : endMoveKo( V )
+ 
+Dispatch mapDone  : mapDone( FNAME ) 
+Event alarm     : alarm(X)
+
+
+Context ctxcleanerwalker  ip [host="localhost" port=8032]
+  
+/*  
+ * ------------------------------------------------------------------
+ *  cleanerwalker 
+ * ------------------------------------------------------------------
+*/     
+QActor cleanerwalker context ctxcleanerwalker{    
+[#
+val mapname     = "roomBoundary"  		 
+var NumStep     = 0
+var Myself      = myself    
+
+var robotMoveObserver : unibo.actor22comm.interfaces.IObserver
+lateinit  var conn    : unibo.actor22comm.interfaces.Interaction2021  
+
+var goingDown = true
+var numIter   = 0
+var turnStep  = 800;   //350 => ok
+ 
+#]  
+
+	State activate initial {
+		printCurrentMessage
+		[#  conn=unibo.Robots.common.RobotUtils.connectWithVirtualRobot(getName())
+			numIter++ #
+		]
+	}
+	Goto start
+	
+	
+	State start{  		  
+   		printCurrentMessage
+   		[# unibo.Robots.common.VRobotMoves.step(getName(), conn ) #] 
+	}
+	Transition t0 whenMsg endMoveOk -> coverColumn
+	              whenMsg endMoveKo -> turn
+
+
+	State coverColumn{  		  
+   		printCurrentMessage
+   		[# unibo.Robots.common.VRobotMoves.step(getName(), conn ) #] 
+	}
+	Transition t0 whenMsg endMoveOk -> coverColumn
+	              whenMsg endMoveKo -> turn
+
+	State turn{  		  
+   		printCurrentMessage
+   		[#
+   			if( goingDown ) unibo.Robots.common.VRobotMoves.turnLeftAndStep(getName(), turnStep, conn);
+   			else unibo.Robots.common.VRobotMoves.turnRightAndStep(getName(), turnStep, conn);
+   			goingDown = ! goingDown;
+   		#]
+	}	
+	Transition t0 whenMsg endMoveOk -> coverColumn
+	              whenMsg endMoveKo -> lastColumn
+
+
+	State lastColumn{  		  
+   		printCurrentMessage
+	}
+}
+
+
+/*
+ *  main 
+   
+QActor mainwalk context ctxcleanerwalker{
+	[# val doboundary = true #]
+	State s0 initial{  
+	}
+	Goto boundarywalk if [# doboundary #] else endTest
+	 
+	State boundarywalk{
+		forward cleanerwalker -m start : start(  any   )		  
+		delay 1000
+		//emit alarm : alarm(fire)		 
+		  
+		delay 2000
+		emit alarm : alarm(tsunami)		
+		delay 1000
+		emit alarm : alarm(covid)	  	
+	}
+	Transition t0 whenMsg mapDone -> endTest  
+	
+	State endTest{
+		println("END OF JOB")
+	}
+				   
+ } */
