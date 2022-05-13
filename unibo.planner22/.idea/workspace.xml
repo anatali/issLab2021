@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="aa3a1539-b788-4c5b-af47-acd9f6586800" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.settings/org.eclipse.buildship.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.settings/org.jetbrains.kotlin.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/MainPlannerdemo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/model/Box.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/model/Functions.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/model/RobotAction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/model/RobotState$Direction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/model/RobotState.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/default/unibo/planner22/model/RoomMap.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/unibo/kotlin/planner22Util.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unibolibs/unibo.planner22-1.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2022.html" beforeDir="false" afterPath="$PROJECT_DIR$/../it.unibo.issLabStart/userDocs/LectureBologna2022.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="290ZnPcNmwTZC8EZyjPWGuQnweG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Didattica2021/issLab2021/unibo.boundaryQak22" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Didattica2022\issLab2022\unibo.planner22\src\unibo" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MainPlannerdemo (1)">
+    <configuration name="MainPlannerdemo (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="unibo.planner22.MainPlannerdemo" />
+      <module name="unibo.planner22.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="unibo.planner22.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainPlannerdemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="unibo.planner22.MainPlannerdemo" />
+      <module name="unibo.planner22" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="unibo.planner22.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MainPlannerdemo (1)" />
+        <item itemvalue="Application.MainPlannerdemo" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aa3a1539-b788-4c5b-af47-acd9f6586800" name="Default Changelist" comment="" />
+      <created>1652252131203</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1652252131203</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
