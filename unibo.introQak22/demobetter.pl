@@ -1,6 +1,5 @@
 %====================================================================================
-% demo0qak description   
+% demobetter description   
 %====================================================================================
-context(ctxdemo0, "localhost",  "TCP", "8032").
- qactor( demo0, ctxdemo0, "it.unibo.demo0.Demo0").
-msglogging.
+context(ctxdemobetter, "localhost",  "TCP", "8045").
+ qactor( demobetter, ctxdemobetter, "it.unibo.demobetter.Demobetter").
