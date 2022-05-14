@@ -1,8 +1,6 @@
 /*
  * This is the Gradle build for QakActor application under Eclipse
  * By AN,  May 2022
- *
- * Usage: gradle  -b build2022.gradle eclipse
  */
 plugins {
     id 'java'
@@ -58,19 +56,10 @@ dependencies {
     implementation name: '2p301'
     implementation name: 'it.unibo.qakactor-2.7'
     implementation name: 'unibonoawtsupports'
-    	implementation name: 'unibo.actor22-1.1'
-	//implementation name: 'IssActorKotlinRobotSupport-2.0'
-	//BLS
-	//implementation name: 'it.unibo.bls19Local-1.0'
-	//RADAR
-	//implementation name: 'radarPojo'
-	//RADAR GUI
-	// https://mvnrepository.com/artifact/org.pushingpixels/trident
-	//implementation group: 'org.pushingpixels', name: 'trident', version: '1.3'
-	//ROBOT nano (SAM)
-    //implementation name: 'labbaseRobotSam'
-	//implementation mame: 'pi4j-core' //2-12 SNAPSHOT non in gradle
- 	//PLANNER
+    implementation name: 'unibo.actor22-1.1'
+    
+    
+  	//PLANNER
     implementation name: 'unibo.planner22-1.0'
  	// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
 	implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'

@@ -17,7 +17,7 @@
 .. _tuProlog: http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf
 .. _PrologUsage: ./_static/LabQakPrologUsage2020.html
 
-.. _build2022.gradle: ./_static/build2021.gradle
+.. _build2022.gradle: ./_static/build2022.gradle
 
 =============================================
 QActor (meta)model
