@@ -16,15 +16,16 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		 var CurMoveTodo = ""  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						println("pathexec starts")
 					}
-					 transition(edgeName="t00",targetState="dojob",cond=whenRequest("dopath"))
+					 transition(edgeName="t00",targetState="doThePath",cond=whenRequest("dopath"))
 				}	 
-				state("dojob") { //this:State
+				state("doThePath") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						 pathut.setPathFromRequest(currentMsg)  
@@ -34,32 +35,57 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("nextMove") { //this:State
 					action { //it:State
+						 CurMoveTodo = pathut.nextMove()  
+						println("curMoveTodooooooooooooooooo $CurMoveTodo")
 					}
-					 transition(edgeName="t01",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t02",targetState="pathcompleted",cond=whenDispatch("pathdone"))
-					transition(edgeName="t03",targetState="pathfailure",cond=whenDispatch("pathfail"))
-					transition(edgeName="t04",targetState="nextMove",cond=whenDispatch("moveok"))
+					 transition( edgeName="goto",targetState="endWorkOk", cond=doswitchGuarded({ CurMoveTodo.length == 0  
+					}) )
+					transition( edgeName="goto",targetState="doMove", cond=doswitchGuarded({! ( CurMoveTodo.length == 0  
+					) }) )
 				}	 
-				state("handleAlarm") { //this:State
+				state("doMove") { //this:State
+					action { //it:State
+						if(  CurMoveTodo == "w"  
+						 ){request("step", "step(350)" ,"basicrobot" )  
+						}
+						else
+						 {forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot" ) 
+						 }
+						stateTimer = TimerActor("timer_doMove", 
+							scope, context!!, "local_tout_pathexec_doMove", 1000.toLong() )
+					}
+					 transition(edgeName="t01",targetState="nextMove",cond=whenTimeout("local_tout_pathexec_doMove"))   
+					transition(edgeName="t02",targetState="nextMove",cond=whenReply("stepdone"))
+					transition(edgeName="t03",targetState="endWorkKo",cond=whenReply("stepfail"))
+				}	 
+				state("endWorkOk") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						println("PATH DONE - BYE")
+					}
+				}	 
+				state("endWorkKo") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						 var pathTodo = pathut.getPathTodo()  
+						println("PATH FAILURE - SORRY. pathTodo=$pathTodo")
+					}
+				}	 
+				state("testRobotCommands") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						request("step", "step(350)" ,"basicrobot" )  
+						stateTimer = TimerActor("timer_testRobotCommands", 
+							scope, context!!, "local_tout_pathexec_testRobotCommands", 500.toLong() )
+					}
+					 transition(edgeName="t04",targetState="again",cond=whenTimeout("local_tout_pathexec_testRobotCommands"))   
+				}	 
+				state("again") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
-					 transition(edgeName="t05",targetState="handleAlarm",cond=whenEvent("alarm"))
-					transition(edgeName="t06",targetState="pathcompleted",cond=whenDispatch("pathdone"))
-					transition(edgeName="t07",targetState="nextMove",cond=whenDispatch("moveok"))
-					transition(edgeName="t08",targetState="pathfailure",cond=whenDispatch("movefail"))
-				}	 
-				state("pathfailure") { //this:State
-					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
-						println("pathexec | END FAIL ")
-					}
-					 transition(edgeName="t09",targetState="dojob",cond=whenRequest("dopath"))
-				}	 
-				state("pathcompleted") { //this:State
-					action { //it:State
-					}
-					 transition(edgeName="t010",targetState="dojob",cond=whenRequest("dopath"))
+					 transition(edgeName="t05",targetState="testRobotCommands",cond=whenReply("stepdone"))
+					transition(edgeName="t06",targetState="endWorkKo",cond=whenReply("stepfail"))
 				}	 
 			}
 		}

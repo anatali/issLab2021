@@ -10,7 +10,7 @@
  *              and send to the caller a dispatch (moveok|movefail) related to the answer
  *  -
  */
-System -msglog pathexecutor   
+System   pathexecutor   //-trace -msglog
 
 Dispatch start    : start( ARG )
 Request  dopath   : dopath( PATH, OWNER )
@@ -21,35 +21,76 @@ Dispatch pathfail : pathdone( P )
 Dispatch moveok   : move( MOVESHORT )
 Dispatch movefail : move( MOVESHORT )
 Dispatch mapDone  : mapDone( FNAME )
+
+
+Dispatch cmd       	: cmd(MOVE)     
+Dispatch end       	: end(ARG)  
  
-Event alarm     : alarm(X)
+Request step       : step( TIME )	
+Reply   stepdone   : stepdone(V)  
+Reply   stepfail   : stepfail(DURATION, CAUSE)
+
+ 
+Event alarm     : alarm(X) 
 Event sonar     : distance(X)
 
 Context ctxPathexecutor  ip [host="localhost" port=8032]
+Context ctxbasicrobot    ip [host="127.0.0.1" port=8020]  
+
+ExternalQActor basicrobot context ctxbasicrobot
 
 QActor pathexec context ctxPathexecutor{
+[# var CurMoveTodo = "" #]   //Upcase, since var to be used in guards
 	State s0 initial{  	
 		printCurrentMessage
 		println("pathexec starts") 
 	}	
-	Transition t0 whenRequest dopath -> dojob
+	Transition t0 whenRequest dopath -> doThePath
+	//Goto testRobotCommands
 	
-	State dojob{
+	State doThePath{
 		printCurrentMessage
 		[# pathut.setPathFromRequest(currentMsg) #]
 		println("pathTodo = ${pathut.getPathTodo()}") 
-	}
+ 	}
 	Goto nextMove    
 	
+	
 	State nextMove{ 
-		//[# kotlinCode.pathexecutil.doNextMove(myself) #]		
+		[# CurMoveTodo = pathut.nextMove() #]	
+		println("curMoveTodooooooooooooooooo $CurMoveTodo" )
 	} 
+	Goto endWorkOk if [# CurMoveTodo.length == 0 #] else doMove
+	
+	State doMove{
+		if [# CurMoveTodo == "w" #] {
+			request basicrobot -m step : step( 350 )
+		}else{
+			forward basicrobot -m cmd : cmd($CurMoveTodo) 
+		}
+	}
+	Transition t0 whenTime 1000 -> nextMove  //no answer expected TODO
+	              whenReply stepdone -> nextMove
+	              whenReply stepfail -> endWorkKo
+	  
+	State endWorkOk{
+		printCurrentMessage
+		println("PATH DONE - BYE")
+	}
+
+	State endWorkKo{
+		printCurrentMessage
+		[# var pathTodo = pathut.getPathTodo() #]
+		println("PATH FAILURE - SORRY. pathTodo=$pathTodo")
+	}	
+	
+/* 	
 	Transition t0 whenEvent alarm  ->  handleAlarm  //first
 				  whenMsg pathdone ->  pathcompleted 
 				  whenMsg pathfail ->  pathfailure		  
 				  whenMsg moveok   ->  nextMove  
-				   
-	  
+*/				   
+/* 	  
 	State handleAlarm{ 
 		printCurrentMessage
 		//[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath() #]
@@ -67,16 +108,40 @@ QActor pathexec context ctxPathexecutor{
 		//forward spiralwalker -m  pathfail : pathfail( $Pathtodo ) //better to use request-response
 		//replyTo dopath with dopathfail : dopathfail( $Pathtodo )
 	}	  
-	Transition t0 whenRequest dopath -> dojob //DO ANOTHER PATH
+	Transition t0 whenRequest dopath -> doThePath //DO ANOTHER PATH
 	 
 	State pathcompleted{ 
+		printCurrentMessage
 		//[# val Pathtodo = kotlinCode.pathexecutil.getCurrentPath().replace("p","w") #]
 //		println("pathexec | END  Pathtodo= $Pathtodo ") 
 		//forward spiralwalker -m pathdone : pathdone(ok)  //better to use request-response
 //		replyTo dopath with dopathdone : dopathdone( ok )  //$Pathtodo
 	} 
-	Transition t0 whenRequest dopath -> dojob //DO ANOTHER PATH
-}   
+	Transition t0 whenRequest dopath -> doThePath //DO ANOTHER PATH
+  
+ */ 
+  
+//====================================================================================
+
+//Check the interaction with the basic robot
+	State testRobotCommands{
+		printCurrentMessage
+		//forward basicrobot -m cmd : cmd(a) 
+		//forward basicrobot -m cmd : cmd(d) 
+		request basicrobot -m step : step( 350 )
+	}
+	Transition t0 whenTime 500 -> again
+	
+	
+	State again{
+		printCurrentMessage
+	}
+	Transition t0 whenReply stepdone -> testRobotCommands
+	              whenReply stepfail -> endWorkKo
+	
+	
+
+} 
 
 /*
  * spiralwalker

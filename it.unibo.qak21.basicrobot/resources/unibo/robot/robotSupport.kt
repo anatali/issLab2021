@@ -100,8 +100,8 @@ object robotSupport{
 	 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-	fun move( cmd : String ){ //cmd = w | a | s | d | h
- 		//println("robotSupport move cmd=$cmd robotKind=$robotKind" ) 
+	fun move( cmd : String ){ //cmd = w | a | s | d | h 
+ 		println("robotSupport move cmd=$cmd robotKind=$robotKind" ) 
 		when( robotKind ){
 			//"mockrobot"  -> { robotMock.mockrobotSupport.move( cmd ) 					  }
 			"virtual"    -> { robotVirtual.virtualrobotSupport2021.move(  cmd ) 	  }
