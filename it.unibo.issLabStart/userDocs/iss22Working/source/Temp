@@ -145,3 +145,76 @@ e rimarrà inizializzata.
 
 
  
+
+ --------------------------------------
+demoStrange.qak
+--------------------------------------
+
+  
+  
+.. list-table:: 
+  :widths: 30,70
+  :width: 100%
+
+  * -  
+      .. image::  ./_static/img/Qak/demostrange.png
+         :align: center 
+         :width: 100% 
+    -  
+      .. code::
+          
+        System  demostrange
+        Dispatch cmd : cmd(X) 
+
+        Context ctxdemostrange ip [host="localhost" port=8055]
+
+        QActor demostrange context ctxdemostrange{
+          State s0 initial { 	 
+            printCurrentMessage
+            forward demostrange -m cmd : cmd(a)
+          }   
+          Goto s1             
+          State s1{
+            printCurrentMessage  
+            forward demostrange -m cmd : cmd(b) 
+          }
+          Goto s2            
+          State s2{
+            printCurrentMessage
+          }
+          Transition t0 whenTime 10 -> s3
+                        whenMsg cmd -> s2  
+          State s3{
+            printCurrentMessage
+            println("demostrange | s3, BYE")            
+          }
+        }
+
+Questo esempio evidenzia che:
+
+ - una empty-move è realizzata con emissione di un evento ``local_noMsg`` 
+ - una empty-move non crea indicazioni sui messaggi da elaborare: i messaggi in arrivo 
+   (inviati dall'attore stesso come auto-messaggi) sono memorizzati
+   nella coda interna locale e vengono gestiti nello stato ``s2``
+ - un attore non deve rimanare in attesa perenne di messaggi, in quanto può fare una empty-move 
+   dopo un certo tempo (**timeOut**) 
+ - lo scadere del *timeOut* provoca l'emissione di un evento di indentificatore univoco 
+   ``local_tout_aaa_sss`` ove ``aaa`` è il nome dell'attore e ``sss`` è  il nome dello stato corrente
+
+ 
+:blue:`Output`
+ 
+
+.. code::
+
+  demostrange in s0 | msg(autoStartSysMsg,dispatch,demostrange,demostrange,start,5)
+  demostrange in s1 | msg(local_noMsg,event,demostrange,none,noMsg,4)
+  demostrange in s2 | msg(local_noMsg,event,demostrange,none,noMsg,4)
+  demostrange in s2 | msg(cmd,dispatch,demostrange,demostrange,cmd(a),6)
+  demostrange in s2 | msg(cmd,dispatch,demostrange,demostrange,cmd(b),7)
+  demostrange in s3 | msg(local_tout_demostrange_s2,event,timer,none,local_tout_demostrange_s2,8)
+  demostrange | s3, BYE
+
+
+ 
+
