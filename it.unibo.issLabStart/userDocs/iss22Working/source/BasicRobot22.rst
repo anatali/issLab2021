@@ -3,7 +3,17 @@
 .. role:: remark
 .. role:: worktodo
 
-    
+.. _BasicRobot2021: ../../../../../it.unibo.qak21.basicrobot/userDocs/basicrobot2021.html
+.. _LabNanoRobot2021: ../../../../../it.unibo.qak21.basicrobot/userDocs/LabNanoRobot.html
+.. _Mbot2020: ../../../../../it.unibo.qak21.basicrobot/userDocs/Mbot2020.html
+
+
+.. _wssupportAsActorKotlin: ../../../../../it.unibo.kotlinSupports/userDocs/wssupportAsActorKotlin.html
+.. _RobotService: ../../../../../it.unibo.kotlinSupports/userDocs/RobotService.html
+.. _BasicStepRobotService: ../../../../../it.unibo.kotlinSupports/userDocs/BasicStepRobotService.html
+.. _ActorWithKotlinSupport: ../../../../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html
+
+
 ==================================================
 BasicRobot22
 ==================================================
@@ -20,6 +30,19 @@ che seleziona il supporto appropriato per il tipo di robot specificato in un fil
   :width: 95%
 
 
+- `BasicRobot2021`_
+- `LabNanoRobot2021`_
+- `Mbot2020`_
+
+- console
+- /it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb
+- /it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerMQTT.ipynb
+  
+.. 2022: il progetto it.unibo.qak21.robots è stato incluso in it.unibo.qak21.basicrobot
+
+
+
+   
 --------------------------------------------------
 basicrobotConfig.json
 --------------------------------------------------
@@ -145,20 +168,26 @@ BasicRobot22: Eventi
             BasicRobot22 (usa)  RobotAdapter22
                                 (usa) RobotReal oppure VirtualRoot
                                                             
-Si veda: 
-it.unibo.qak21.basicrobot/userDocs/basicrobot2021.html
+Si veda:  `BasicRobot2021`_
+ 
 
 ------------------------------------------------ 
 IssWsHttpKotlinSupport
 ------------------------------------------------      
 
+library: **IssActorKotlinRobotSupport-2.0.jar**
 
+- `wssupportAsActorKotlin`_
+- `RobotService`_
+- `BasicStepRobotService`_
+- `ActorWithKotlinSupport`_
 
-The class IssWsHttpKotlinSupport.kt provides a singleton (for each ip address) 
+The class ``IssWsHttpKotlinSupport.kt`` provides a singleton (for each ip address) 
 that defines utility operations to connect/disconnect (to the given ip address) 
 via HTTP or a websocket, using the library okhttp3.
 
 This utility:
+
 - implements the interface IssCommSupport.kt
 - implements the operations defined in the interface IssOperations.kt
 - works as an observer of the ws-socket

@@ -69,8 +69,9 @@ dependencies {
     compile name: '2p301'
     compile name: 'it.unibo.qakactor-2.4'
     compile name: 'unibonoawtsupports'
-	compile name: 'IssActorKotlinRobotSupport-2.0'
-	//implementation name: 'unibo.actor22-1.1'
+	//compile name: 'IssActorKotlinRobotSupport-2.0'
+	implementation name: 'unibo.actor22-1.1'
+	
 	//compile name: 'app-2.0'
 	//BLS
 	//compile name: 'it.unibo.bls19Local-1.0'

@@ -4,22 +4,21 @@ import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 import it.unibo.supports.*
 import it.unibo.kactor.*
-import it.unibo.actor0.*
-import it.unibo.actor0.ApplMessage
-import it.unibo.kactor.MsgUtil 
+import it.unibo.kactor.MsgUtil
+import unibo.actor22comm.ws.WsConnSysObserver
+ 
  
 /*
  Il robot che fa w prosegue fino a che non riceve h
 */ 
-class WsSupportObserver(name: String, scope:CoroutineScope, val owner:ActorBasic)
-    : ActorBasicKotlin(name, scope) {
- var stepok = MsgUtil.buildDispatch("wsobs","stepok","stepok(done)",owner.getName())
- var stepko = MsgUtil.buildDispatch("wsobs","stepko","stepko(todo)",owner.getName())
+class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
+ var stepok = MsgUtil.buildDispatch("wsobs","stepok","stepok(done)",owner )
+ var stepko = MsgUtil.buildDispatch("wsobs","stepko","stepko(todo)",owner )
 	
-    override protected suspend fun handleInput(msg : ApplMessage){
-        var msgJsonStr = msg.msgContent
+     protected suspend fun handleInput(msg : ApplMessage){
+        var msgJsonStr = msg.msgContent()
         val msgJson = JSONObject(msgJsonStr)
-        println("       &&& $name  | handleInput msgJson=$msgJson" ) //${ aboutThreads()}
+        println("       &&& WsSupportObserver  | handleInput msgJson=$msgJson" ) //${ aboutThreads()}
 		/*
 		if( msgJson.has("endmove") && msgJson.getBoolean("endmove") ) {
 			if( msgJson.getString("move").equals("moveForward") ){
@@ -31,6 +30,6 @@ class WsSupportObserver(name: String, scope:CoroutineScope, val owner:ActorBasic
 				
 			}
 		} */
-		if( msgJson.has("collision")) owner.emit("obstacle","obstacle(virtual)")
+		//if( msgJson.has("collision")) owner.emit("obstacle","obstacle(virtual)")
     }
 }

@@ -10,7 +10,7 @@ import org.eclipse.californium.core.CoapHandler
 import it.unibo.kactor.ActorBasic
 import kotlinx.coroutines.launch 
  
-object  CoapObserver {
+object  basicrobotCoapObserver {
 
     private val client = CoapClient()
 	
@@ -41,6 +41,6 @@ object  CoapObserver {
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 fun main( ) {
-		CoapObserver.activate()
+		basicrobotCoapObserver.activate()
 		System.`in`.read()   //to avoid exit
  }

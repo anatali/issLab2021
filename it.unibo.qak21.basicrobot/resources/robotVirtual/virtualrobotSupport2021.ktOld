@@ -14,9 +14,8 @@ import kotlinx.coroutines.Job
 import it.unibo.kactor.ActorBasic
 import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
-import unibo.actor22comm.wshttp.WsHttpConnection
-import unibo.actor22comm.interfaces.Interaction2021
-//import it.unibo.interaction.MsgRobotUtil
+import it.unibo.supports.IssWsHttpKotlinSupport
+import it.unibo.interaction.MsgRobotUtil
 
  //A support for using the virtual robot
  
@@ -27,8 +26,8 @@ object virtualrobotSupport2021 {
 	lateinit var owner      : ActorBasic
 	lateinit var robotsonar	: ActorBasic
 	private lateinit var hostName : String 	
-	private lateinit var support21   : Interaction2021 	 
-	private lateinit var support21ws : Interaction2021 	 
+	private lateinit var support21 : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
+	private lateinit var support21ws : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
     private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
     private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 1000}"
 
@@ -36,14 +35,14 @@ object virtualrobotSupport2021 {
 	
 	init{
 		println("virtualrobotSupport2021 | init ... ")
-		//WsHttpConnection.trace = false
+		IssWsHttpKotlinSupport.trace = false
 	}
 	
-val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
+val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
      fun(scope, support ) {
-		val obs  = WsSupportObserver( owner.getName() )
-        println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the WsHttpConnection")
-		support.addObserver( obs )
+		val obs  = WsSupportObserver("wsSupportObs", scope, owner)
+        println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the IssWsHttpKotlinSupport")
+		support.registerActor( obs )
 }
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -55,9 +54,9 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
             hostName         = hostNameStr
             port             = Integer.parseInt(portStr)
              try {
-				//WsHttpConnection.trace = true
-            	support21    = WsHttpConnection.createForHttp( "$hostNameStr:$portStr" )
-				support21ws  = WsHttpConnection.createForWs( "$hostNameStr:8091" )
+				IssWsHttpKotlinSupport.trace = true
+            	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
+				support21ws  = IssWsHttpKotlinSupport.createForWs(owner.scope, "$hostNameStr:8091" )
             	println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
 				support21ws.wsconnect( doafterConn )  //
 				 
