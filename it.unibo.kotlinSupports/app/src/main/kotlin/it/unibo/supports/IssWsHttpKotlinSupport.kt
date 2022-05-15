@@ -44,9 +44,12 @@ class IssWsHttpKotlinSupport
     //private var connectForWs   = false
 
     init{
-        if( wsconn ) myWs = wsconnect(  fun(scope, support ) {
-            colorPrint("IssWsHttpKotlinSupport | wsconnect ... ${sysUtil.aboutThreads("isssupport")}")
-        } )
+        colorPrint("IssWsHttpKotlinSupport | init - doing nothing")
+        /*
+         if( wsconn ) myWs = wsconnect(  fun(scope, support ) {
+             colorPrint("IssWsHttpKotlinSupport | wsconnect ... ${sysUtil.aboutThreads("isssupport")}")
+         } )
+          */
     }
     companion object { //singleton
         //val WEnvAddr = "localhost:8091"
@@ -142,7 +145,7 @@ class IssWsHttpKotlinSupport
         val request0 = Request.Builder()
             .url("ws://$ipaddr")
             .build()
-        val myWs = okHttpClient.newWebSocket(request0, this)
+        myWs = okHttpClient.newWebSocket(request0, this)
         colorPrint("IssWsHttpKotlinSupport | wsconnect myWs: $myWs", Color.BLUE)
         return myWs
     }
@@ -184,7 +187,7 @@ class IssWsHttpKotlinSupport
     }
 
       fun sendWs( msgJson : String   ){
-          colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
+          //colorPrint("IssWsHttpKotlinSupport | sendWs $msgJson", Color.RED)
         myWs.send(msgJson);
     }
 //========================================================================

@@ -21,6 +21,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("s0") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						  CurMoveTodo = ""  
 						println("pathexec starts")
 					}
 					 transition(edgeName="t00",targetState="doThePath",cond=whenRequest("dopath"))
@@ -36,7 +37,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("nextMove") { //this:State
 					action { //it:State
 						 CurMoveTodo = pathut.nextMove()  
-						println("curMoveTodooooooooooooooooo $CurMoveTodo")
+						println("curMoveTodo= $CurMoveTodo")
 					}
 					 transition( edgeName="goto",targetState="endWorkOk", cond=doswitchGuarded({ CurMoveTodo.length == 0  
 					}) )
@@ -45,24 +46,45 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMove") { //this:State
 					action { //it:State
-						if(  CurMoveTodo == "w"  
-						 ){request("step", "step(350)" ,"basicrobot" )  
-						}
-						else
-						 {forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot" ) 
-						 }
-						stateTimer = TimerActor("timer_doMove", 
-							scope, context!!, "local_tout_pathexec_doMove", 1000.toLong() )
+						println("$name in ${currentState.stateName} | $currentMsg")
+						println("avoid too fast ...")
+						delay(500) 
 					}
-					 transition(edgeName="t01",targetState="nextMove",cond=whenTimeout("local_tout_pathexec_doMove"))   
-					transition(edgeName="t02",targetState="nextMove",cond=whenReply("stepdone"))
-					transition(edgeName="t03",targetState="endWorkKo",cond=whenReply("stepfail"))
+					 transition( edgeName="goto",targetState="doMoveW", cond=doswitchGuarded({ CurMoveTodo == "w"  
+					}) )
+					transition( edgeName="goto",targetState="doMoveTurn", cond=doswitchGuarded({! ( CurMoveTodo == "w"  
+					) }) )
+				}	 
+				state("doMoveTurn") { //this:State
+					action { //it:State
+						forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot" ) 
+						stateTimer = TimerActor("timer_doMoveTurn", 
+							scope, context!!, "local_tout_pathexec_doMoveTurn", 300.toLong() )
+					}
+					 transition(edgeName="t01",targetState="nextMove",cond=whenTimeout("local_tout_pathexec_doMoveTurn"))   
+				}	 
+				state("doMoveW") { //this:State
+					action { //it:State
+						request("step", "step(350)" ,"basicrobot" )  
+					}
+					 transition(edgeName="t02",targetState="handleAlarm",cond=whenEvent("alarm"))
+					transition(edgeName="t03",targetState="nextMove",cond=whenReply("stepdone"))
+					transition(edgeName="t04",targetState="endWorkKo",cond=whenReply("stepfail"))
+				}	 
+				state("handleAlarm") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						 var pathTodo = pathut.getPathTodo()  
+						println("handleAlarm ... pathTodo=$pathTodo")
+					}
+					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 
 				state("endWorkOk") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						println("PATH DONE - BYE")
 					}
+					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 
 				state("endWorkKo") { //this:State
 					action { //it:State
@@ -70,6 +92,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						 var pathTodo = pathut.getPathTodo()  
 						println("PATH FAILURE - SORRY. pathTodo=$pathTodo")
 					}
+					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 
 				state("testRobotCommands") { //this:State
 					action { //it:State
@@ -78,14 +101,14 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						stateTimer = TimerActor("timer_testRobotCommands", 
 							scope, context!!, "local_tout_pathexec_testRobotCommands", 500.toLong() )
 					}
-					 transition(edgeName="t04",targetState="again",cond=whenTimeout("local_tout_pathexec_testRobotCommands"))   
+					 transition(edgeName="t05",targetState="again",cond=whenTimeout("local_tout_pathexec_testRobotCommands"))   
 				}	 
 				state("again") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
-					 transition(edgeName="t05",targetState="testRobotCommands",cond=whenReply("stepdone"))
-					transition(edgeName="t06",targetState="endWorkKo",cond=whenReply("stepfail"))
+					 transition(edgeName="t06",targetState="testRobotCommands",cond=whenReply("stepdone"))
+					transition(edgeName="t07",targetState="endWorkKo",cond=whenReply("stepfail"))
 				}	 
 			}
 		}

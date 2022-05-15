@@ -43,6 +43,7 @@ QActor pathexec context ctxPathexecutor{
 [# var CurMoveTodo = "" #]   //Upcase, since var to be used in guards
 	State s0 initial{  	
 		printCurrentMessage
+		[#  CurMoveTodo = "" #] 
 		println("pathexec starts") 
 	}	
 	Transition t0 whenRequest dopath -> doThePath
@@ -58,31 +59,51 @@ QActor pathexec context ctxPathexecutor{
 	
 	State nextMove{ 
 		[# CurMoveTodo = pathut.nextMove() #]	
-		println("curMoveTodooooooooooooooooo $CurMoveTodo" )
+		println("curMoveTodo= $CurMoveTodo" )
 	} 
 	Goto endWorkOk if [# CurMoveTodo.length == 0 #] else doMove
 	
 	State doMove{
-		if [# CurMoveTodo == "w" #] {
-			request basicrobot -m step : step( 350 )
-		}else{
-			forward basicrobot -m cmd : cmd($CurMoveTodo) 
-		}
+		printCurrentMessage
+		println("avoid too fast ..." )
+ 		delay 500  //avoid too fast ...
+ 	}
+	Goto doMoveW if [# CurMoveTodo == "w" #] else doMoveTurn
+	
+	State doMoveTurn{
+		forward basicrobot -m cmd : cmd($CurMoveTodo) //asynch !!!		
 	}
-	Transition t0 whenTime 1000 -> nextMove  //no answer expected TODO
-	              whenReply stepdone -> nextMove
-	              whenReply stepfail -> endWorkKo
-	  
+	Transition t0 whenTime 300 ->  nextMove  //wait for move execution ...
+	
+	State doMoveW{
+		request basicrobot -m step : step( 350 )
+	}	
+	Transition t0 whenEvent alarm  ->  handleAlarm
+				  whenReply stepdone  -> nextMove  
+	              whenReply stepfail  -> endWorkKo
+	              
+	State handleAlarm{ 
+		printCurrentMessage
+		[# var pathTodo = pathut.getPathTodo() #]
+		println("handleAlarm ... pathTodo=$pathTodo")
+		//[# var CurMoveTodo = "" #] 
+	}	
+	Goto s0              
+	              
 	State endWorkOk{
 		printCurrentMessage
 		println("PATH DONE - BYE")
+		//[# var CurMoveTodo = "" #] 
 	}
+	Goto s0
 
 	State endWorkKo{
 		printCurrentMessage
 		[# var pathTodo = pathut.getPathTodo() #]
 		println("PATH FAILURE - SORRY. pathTodo=$pathTodo")
+		//[# var CurMoveTodo = "" #] 
 	}	
+	Goto s0
 	
 /* 	
 	Transition t0 whenEvent alarm  ->  handleAlarm  //first

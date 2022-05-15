@@ -16,10 +16,10 @@ package-lock.json
 # MQTT generated
 *-tcp*
 
-# Ignore Gradle project-specific cache directory
-#.gradle
-#gradlew
-#gradlew.bat
+ # Ignore Gradle project-specific cache directory
+.gradle
+gradlew
+gradlew.bat
 
 
 /ReadMe.html
