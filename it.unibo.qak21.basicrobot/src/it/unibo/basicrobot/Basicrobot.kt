@@ -17,22 +17,21 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		
-		  var StepTime      = 0L 
+		  var StepTime      = 0L
 		  var StartTime     = 0L     
 		  var Duration      = 0L  
 		  var RobotType     = "" 
-		  var CurrentMove   = "moveUnknown"
+		  var CurrentMove   = "unkknown"
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						discardMessages = false
 						println("basicrobot | START")
-						 sysUtil.waitUser("hello", 3000)  
 						unibo.robot.robotSupport.create(myself ,"basicrobotConfig.json" )
 						 RobotType = unibo.robot.robotSupport.robotKind  
 						if(  RobotType != "virtual"  
 						 ){println("basicrobot | type=$RobotType attempts to activate the sonar pipe")
 						  //For real robots
-									    //delay( 1500 ) //give to the realsonar the time to start
 							 			var robotsonar = context!!.hasActor("realsonar")  
 							 			if( robotsonar != null ){ 
 							 				println("basicrobot | WORKING WITH SONARS") 
@@ -53,26 +52,20 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 	 				println("basicrobot | WORKING WITH VIRTUAL SONAR") 
 						 	 				//ACTIVATE THE DATA SOURCE realsonar
 						 	 				forward("sonarstart", "sonarstart(1)" ,"robotsonar" ) 				
-						 	 				//WE DO NOT SET THE PIPE, since we don't have sonar data  to clean
-						 	 				/* 
+						 	 				//SET THE PIPE  
 						 	 				robotsonar.
 						 	 				subscribeLocalActor("datacleaner").
 						 	 				subscribeLocalActor("distancefilter").
-						 	 				subscribeLocalActor("basicrobot")		*/
+						 	 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
 						 	 			}else{
-						 	 				println("basicrobot | WARNING: robotsonar NOT FOUND")
+						 	 				println("basicrobot | WARNING: realsonar NOT FOUND")
 						 	 			}
 						 
 						 }
-						unibo.robot.robotSupport.move( "h"  )
-						delay(1000) 
-						unibo.robot.robotSupport.move( "w"  )
-						delay(400) 
-						unibo.robot.robotSupport.move( "h"  )
-						unibo.robot.robotSupport.move( "s"  )
-						delay(400) 
-						unibo.robot.robotSupport.move( "h"  )
-						discardMessages = false
+						unibo.robot.robotSupport.move( "l"  )
+						unibo.robot.robotSupport.move( "r"  )
+						updateResourceRep( "basicrobot(start)"  
+						)
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -82,20 +75,16 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					}
 					 transition(edgeName="t10",targetState="execcmd",cond=whenDispatch("cmd"))
 					transition(edgeName="t11",targetState="doStep",cond=whenRequest("step"))
-					transition(edgeName="t12",targetState="handleObstacle",cond=whenDispatch("obstacle"))
-					transition(edgeName="t13",targetState="endwork",cond=whenDispatch("end"))
+					transition(edgeName="t12",targetState="endwork",cond=whenDispatch("end"))
 				}	 
 				state("execcmd") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("cmd(MOVE)"), Term.createTerm("cmd(MOVE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								unibo.robot.robotSupport.move( "${payloadArg(0)}"  )
-								 CurrentMove =  "${payloadArg(0)}"  
-								if(  CurrentMove != "h"  
-								 ){updateResourceRep( "moveactivated($CurrentMove)"  
+								unibo.robot.robotSupport.move( payloadArg(0)  )
+								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)
-								}
 						}
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
@@ -103,16 +92,14 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("handleObstacle") { //this:State
 					action { //it:State
 						unibo.robot.robotSupport.move( "h"  )
-						println("basicrobot | handleObstacleeeeeeeeeeeeeeeeeeee CurrentMove=$CurrentMove")
-						println("$name in ${currentState.stateName} | $currentMsg")
-						if(  CurrentMove == "w"  
-						 ){updateResourceRep( "obstacle(w)"  
+						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
-						println("COMPENSATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-						unibo.robot.robotSupport.move( "s"  )
+						if(  CurrentMove == "w" 
+						 ){unibo.robot.robotSupport.move( "s"  )
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
 						}
+						emit("info", "info(obstacledoing(w))" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -124,7 +111,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("doStep") { //this:State
 					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("step(TIME)"), Term.createTerm("step(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 									StepTime = payloadArg(0).toLong() 	 
@@ -132,21 +118,21 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 								)
 						}
 						StartTime = getCurrentTime()
-						println("basicrobot | doStep StepTime =$StepTime ")
+						println("basicrobot | doStep StepTime =$StepTime  ")
 						unibo.robot.robotSupport.move( "w"  )
 						stateTimer = TimerActor("timer_doStep", 
 							scope, context!!, "local_tout_basicrobot_doStep", StepTime )
 					}
-					 transition(edgeName="t04",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_doStep"))   
-					transition(edgeName="t05",targetState="stepFail",cond=whenDispatch("obstacle"))
+					 transition(edgeName="t03",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_doStep"))   
+					transition(edgeName="t04",targetState="stepFail",cond=whenDispatch("obstacle"))
 				}	 
 				state("stepDone") { //this:State
 					action { //it:State
 						unibo.robot.robotSupport.move( "h"  )
-						println("basicrobot | stepDone")
 						updateResourceRep( "stepDone($StepTime)"  
 						)
 						answer("step", "stepdone", "stepdone(ok)"   )  
+						println("basicrobot | stepDone reply done")
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -162,6 +148,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "stepFail($Duration)"  
 						)
+						emit("info", "info(stepFail($Duration))" ) 
 						answer("step", "stepfail", "stepfail($Duration,obst)"   )  
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
@@ -177,6 +164,16 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						emit("endall", "endall(normal)" ) 
 						terminate(1)
 					}
+				}	 
+				state("stepPerhapsDone") { //this:State
+					action { //it:State
+						unibo.robot.robotSupport.move( "h"  )
+						println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")
+						stateTimer = TimerActor("timer_stepPerhapsDone", 
+							scope, context!!, "local_tout_basicrobot_stepPerhapsDone", StepTime )
+					}
+					 transition(edgeName="t05",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_stepPerhapsDone"))   
+					transition(edgeName="t06",targetState="stepFail",cond=whenDispatch("obstacle"))
 				}	 
 			}
 		}

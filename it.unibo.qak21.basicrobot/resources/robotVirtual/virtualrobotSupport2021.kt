@@ -28,11 +28,7 @@ object virtualrobotSupport2021 {
 	private lateinit var hostName : String 	
 	private lateinit var support21 : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
 	private lateinit var support21ws : IssWsHttpKotlinSupport 	//see project it.unibo.kotlinSupports
-	
-	//WARNING: the virtualrobot REQUIRES that a move has a limited duration
-	//We set here a duration long enough to assure the raising of a 'collision' in the working room
-	//Moreover, we assume that the robot backwards for a shorter time
-    private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\",  \"time\": 2500}"
+    private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
     private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 1000}"
 
 	var traceOn = false
@@ -41,13 +37,13 @@ object virtualrobotSupport2021 {
 		println("virtualrobotSupport2021 | init ... ")
 		IssWsHttpKotlinSupport.trace = false
 	}
-/*	
+	
 val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
      fun(scope, support ) {
 		val obs  = WsSupportObserver("wsSupportObs", scope, owner)
         println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the IssWsHttpKotlinSupport")
 		support.registerActor( obs )
-}*/
+}
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,10 +58,10 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
             	support21    = IssWsHttpKotlinSupport.createForHttp(owner.scope, "$hostNameStr:$portStr" )
 				support21ws  = IssWsHttpKotlinSupport.createForWs(owner.scope, "$hostNameStr:8091" )
             	println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
-				//support21ws.wsconnect( doafterConn )  //ALREADY DONE BY createForWs
-            	val obs  = WsSupportObserver("wsSupportObs", owner.scope, owner)
-              	support21ws.registerActor( obs )				 
-				//support21ws.sendWs(MsgRobotUtil.turnLeftMsg)				  
+				support21ws.wsconnect( doafterConn )  //
+				 
+				//support21ws.sendWs(MsgRobotUtil.turnLeftMsg)
+				  
 				//support21ws.forward(MsgRobotUtil.turnRightMsg)
 				//ACTIVATE the robotsonar as the beginning of a pipe
 				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)
@@ -82,23 +78,20 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 
     fun move(cmd: String) {	//cmd is written in application-language
 		//println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
-		val msg = translate( cmd ) 
+		val msg = translate( cmd )
 		trace("move  $msg")
 		if( cmd == "w" || cmd == "s"){  //doing aysnch
 			//println("		--- virtualrobotSupport2021 |  wwwwwwwwwwwwwwwwwwwwwwwwww $support21ws")
 			support21ws.sendWs(msg)	//aysnch => no immediate answer 
 			return
 		}
+		//Comunicazione sincrona con il VirtualRobot via HTTP
 		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
 		trace("		--- virtualrobotSupport2021 | answer=$answer")
 		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt
-		try{
-			val ajson = JSONObject(answer)
-			if( ajson.has("endmove") && ajson.get("endmove")=="false" && cmd != "l" && cmd != "r" ){
-				owner.scope.launch{  owner.emit("obstacle","obstacle($cmd)") }
-			} 
-		}catch(e: Exception){
-			println("		--- virtualrobotSupport2021 |  move answer JSON ERROR $answer")
+		val ajson = JSONObject(answer)
+		if( ajson.has("endmove") && ajson.get("endmove")=="false"){
+			owner.scope.launch{  owner.emit("obstacle","obstacle(virtual)") }
 		}
     } 
     //translates application-language in cril

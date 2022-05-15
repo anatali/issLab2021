@@ -2,7 +2,6 @@
 #include <wiringPi.h>
 #include <fstream>
 #include <cmath>
-#include <unistd.h>
 
 //#define TRUE 1
 //Wiring Pi numbers for radar with stepper
@@ -14,16 +13,10 @@ using namespace std;
  * in the directory: of SonarAlone.c:
 1)  [ sudo ../../pi-blaster/pi-blaster ] if servo
 2)  g++  SonarAlone.c -l wiringPi -o  SonarAlone
-    gcc SonarAlone.c -std=gnu11 -l wiringPi -o  SonarAlone
-    
 sudo ./SonarAlone
 In nat/servosonar:
 sudo java -jar   SonarAloneP2PMain.jar
 sudo python radar.py
- */
- 
- /*
- Simply remove #include <iostream> and using namespace std;, and replace cout << endl; with putchar('\n');..
  */
 void setup() {
 	wiringPiSetup();

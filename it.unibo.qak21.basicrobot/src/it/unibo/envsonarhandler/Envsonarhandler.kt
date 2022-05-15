@@ -21,13 +21,13 @@ class Envsonarhandler ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( 
 					action { //it:State
 						println("envsonarhandler | START")
 					}
-					 transition(edgeName="t16",targetState="handleEnvSonar",cond=whenEvent("sonar"))
+					 transition(edgeName="t17",targetState="handleEnvSonar",cond=whenEvent("sonar"))
 				}	 
 				state("handleEnvSonar") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
-					 transition(edgeName="t17",targetState="handleEnvSonar",cond=whenEvent("sonar"))
+					 transition(edgeName="t18",targetState="handleEnvSonar",cond=whenEvent("sonar"))
 				}	 
 			}
 		}

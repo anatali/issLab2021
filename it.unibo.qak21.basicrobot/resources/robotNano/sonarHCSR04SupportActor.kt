@@ -12,19 +12,16 @@ import it.unibo.kactor.ApplMessage
 /* 
  Emits the event sonarRobot : sonar( V )
  */
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
 class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	lateinit var reader : BufferedReader
 	 
 	init{
-		println("$tt $name | CREATING without starting")
-		//forward("sonarstart", "sonarstart(1)" ,"realsonar" ) -- sent by basicrobot		 
+		println("$tt $name | CREATING")		
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
     override suspend fun actorBody(msg : ApplMessage){
- 		//println("$tt $name | received  $msg "  )
+ 		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "sonarstart"){
 			println("$tt $name | STARTING")
 			try{
@@ -44,7 +41,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 		GlobalScope.launch{	//to allow message handling
 		while( true ){
 				var data = reader.readLine()
-				//println("sonarHCSR04SupportActor data = $data"   )
+				//println("sonarHCSR04Support data = $data"   )
 				if( data != null ){
 					try{
 						val v = data.toInt()
@@ -53,7 +50,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 							val event = MsgUtil.buildEvent( name,"sonarRobot",m1)
 							//emit( event )
 							emitLocalStreamEvent( event )		//not propagated to remote actors
-							//println("$tt $name |  ${counter++}: $event "   )
+							println("$tt $name |  ${counter++}: $event "   )
 						}
 					}catch(e: Exception){}
 				}
