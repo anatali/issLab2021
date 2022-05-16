@@ -15,8 +15,8 @@
  * ================================================================================
  */ 
   
-System /* -trace */   basicrobot                
-//mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"   		//broker.hivemq.com
+System  -trace     basicrobot                
+mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"   		//broker.hivemq.com
 
 Dispatch cmd       	: cmd(MOVE)     
 Dispatch end       	: end(ARG)  
@@ -99,7 +99,7 @@ QActor basicrobot context ctxbasicrobot{
 	} 
 	Transition t1   whenMsg     cmd       -> execcmd
 					whenRequest step      -> doStep			
-					//whenMsg    obstacle   -> handleObstacle  //in virtualrobot caused by the move w/s
+					whenMsg    obstacle   -> handleObstacle  //in virtualrobot caused by the move w/s
 					//whenEvent sonar       -> handleSonar
 				  	whenMsg     end       -> endwork			  
 	
@@ -140,18 +140,17 @@ QActor basicrobot context ctxbasicrobot{
 			[#	StepTime = payloadArg(0).toLong() 	#]  
 			updateResource [# "step(${StepTime})" #]
   		}  
-        memoCurrentTime StartTime  	//(1)
+        memoCurrentTime StartTime  
         println("basicrobot | doStep StepTime =$StepTime  ")        
         run unibo.robot.robotSupport.move( "w" )  //moves a real robot forever !!!
 	}  
 	Transition t0 
-		whenTimeVar StepTime  -> stepDone //stepPerhapsDone	 
+		whenTimeVar StepTime  -> stepDone  	 
  		whenMsg  obstacle     -> stepFail		
     	 
 	
 	State stepDone{   
  		run unibo.robot.robotSupport.move( "h" )  //stop the real robot already done ???
-		//println("basicrobot | stepDone")
 		updateResource [# "stepDone($StepTime)" #]
    		//emit info : info( stepdone($StepTime) )
    		replyTo step with stepdone : stepdone(ok)
@@ -160,7 +159,7 @@ QActor basicrobot context ctxbasicrobot{
 	Goto work  
  
 	State stepFail{  		
-		setDuration Duration from StartTime	//(2)
+		setDuration Duration from StartTime
 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
 		[# var TunedDuration = Duration;  
 			TunedDuration = Duration * 5 / 6
@@ -179,35 +178,42 @@ QActor basicrobot context ctxbasicrobot{
 		onMsg( end : end( V ) ){ 
 			println("basicrobot | endwork")
 			updateResource [# "basicrobot(end)" #]	 		
-			//run utils.virtualRobotSupportQak.terminatevr( )
-		}
+ 		}
  		emit endall : endall(normal) 
  		terminate 1
 	}   
 	
 	
   	/* StepTime expires but also an obstacle is found */
+  	/* 
  	State stepPerhapsDone{ 
  		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
 		println("basicrobottttttttttttttttttttttttttttttt | $StepTime  ")  
 		//printCurrentMessage
- 		/* 
+ 		/ 
 		onMsg( local_sonar : sonar(D,T)){ //for the real robot
 			println("basicrobottxxxxxxxxxxxxxxxx | after a step emit polar(${payloadArg(0)}, 180) ")
 			emit polar : polar( $payloadArg(0), 90 )		//perceived via mqtt			
- 		}*/
+ 		}/
   	}
  	Transition t0 whenTimeVar StepTime  -> stepDone  //StepTime is the first checked
  				  whenMsg obstacle      -> stepFail   //Detected near end of step
-	 
+	*/ 
 }
 
 QActor envsonarhandler context ctxbasicrobot{
  	State s0 initial { 	 
- 		println("envsonarhandler | START")	 		
+ 		println("envsonarhandler | (RE)START")	 		
 	}	
-	Transition t1   whenEvent sonar -> handleEnvSonar
-	
+	Transition t1 
+	  whenMsg cmd -> dontcare
+	  whenEvent sonar -> handleEnvSonar
+
+	State dontcare{
+		printCurrentMessage
+	}
+	Goto s0
+		
 	State handleEnvSonar{
 		printCurrentMessage
 		/* 

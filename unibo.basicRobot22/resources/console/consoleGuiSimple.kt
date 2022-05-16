@@ -11,6 +11,7 @@ import consolegui.Utils
  
  
 class consoleGuiSimple( ) : IObserver {
+val stepTime = 350
 lateinit var connQakSupport : connQakBase
 //val buttonLabels = arrayOf("e","w", "s", "l", "r", "z", "x", "b", "p", "h")
 val buttonLabels = arrayOf( "w", "s", "l", "r",  "p", "h")
@@ -38,7 +39,7 @@ val buttonLabels = arrayOf( "w", "s", "l", "r",  "p", "h")
 	override fun update(o: Observable, arg: Any) {
     	  var move = arg as String
 		  if( move == "p" ){
-			  val msg = MsgUtil.buildRequest("console", "step", "step(800)", connQak.qakdestination )
+			  val msg = MsgUtil.buildRequest("console", "step", "step($stepTime)", connQak.qakdestination )
 			  connQakSupport.request( msg )
 		  } 
 		  else if( move == "e" ){
