@@ -2,34 +2,54 @@ package robotVirtual
  
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
-import it.unibo.supports.*
+//import it.unibo.supports.*
 import it.unibo.kactor.*
 import it.unibo.kactor.MsgUtil
 import unibo.actor22comm.ws.WsConnSysObserver
+import unibo.actor22comm.utils.ColorsOut
+import unibo.actor22comm.SystemData
+import unibo.actor22.Qak22Util
+import kotlinx.coroutines.runBlocking
  
  
 /*
- Il robot che fa w prosegue fino a che non riceve h
+  Oggetto che informa l'owner in caso di collisione
 */ 
 class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
  var stepok = MsgUtil.buildDispatch("wsobs","stepok","stepok(done)",owner )
  var stepko = MsgUtil.buildDispatch("wsobs","stepko","stepko(todo)",owner )
+
 	
-     protected suspend fun handleInput(msg : ApplMessage){
-        var msgJsonStr = msg.msgContent()
-        val msgJson = JSONObject(msgJsonStr)
-        println("       &&& WsSupportObserver  | handleInput msgJson=$msgJson" ) //${ aboutThreads()}
-		/*
-		if( msgJson.has("endmove") && msgJson.getBoolean("endmove") ) {
+	override fun update( data : String ) {
+ 		ColorsOut.out("WsConnSysObserver update receives:$data $actionDuration", ColorsOut.BLUE);
+        val msgJson = JSONObject(data)
+        //println("       &&& WsSupportObserver  | update msgJson=$msgJson" ) //${ aboutThreads()}
+		val ownerActor = sysUtil.getActor(owner)
+		if( ownerActor == null ) {
+			val ev = Qak22Util.buildEvent( "wsconn", SystemData.wsEventId, data  );
+            println("       &&& WsSupportObserver  | ownerActor null ev=$ev" ) 
+		}
+		if( msgJson.has("collision")){
+				runBlocking {
+					ownerActor!!.emit("obstacle","obstacle(virtual)")
+				}
+		}
+		/*		
+ 		if( msgJson.has("endmove") && msgJson.getBoolean("endmove") ) {
 			if( msgJson.getString("move").equals("moveForward") ){
-				//owner.autoMsg()
-				println("WsSupportObserver send $stepok")
-				owner.autoMsg(stepok)
+				println("WsSupportObserver update send $stepok")
+				runBlocking {
+					ownerActor.autoMsg(stepok)
+				}
+				//ownerActor.autoMsg(stepok)
 			}else{
 				//println("WsSupportObserver TODO ${msgJson.getBoolean("endmove") }" )
 				
 			}
-		} */
-		//if( msgJson.has("collision")) owner.emit("obstacle","obstacle(virtual)")
-    }
+		}
+		*/
+
+	}
+	
+
 }

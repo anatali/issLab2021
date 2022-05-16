@@ -64,11 +64,11 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation ("commons-io:commons-io:2.6")
 
-//CUSTOM
+//CUSTOM 
     compile name: 'uniboInterfaces'
     compile name: '2p301'
-    compile name: 'it.unibo.qakactor-2.4'
-    compile name: 'unibonoawtsupports'
+    compile name: 'it.unibo.qakactor-2.7'
+    compile name: 'unibonoawtsupports'  //required by the old infrastructure
 	//compile name: 'IssActorKotlinRobotSupport-2.0'
 	implementation name: 'unibo.actor22-1.1'
 	

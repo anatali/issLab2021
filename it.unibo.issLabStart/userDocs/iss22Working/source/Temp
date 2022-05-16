@@ -218,3 +218,44 @@ Questo esempio evidenzia che:
 
  
 
+------------------------------------------------ 
+IssWsHttpKotlinSupport
+------------------------------------------------      
+
+library: **IssActorKotlinRobotSupport-2.0.jar**
+
+- `wssupportAsActorKotlin`_
+- `RobotService`_
+- `BasicStepRobotService`_
+- `ActorWithKotlinSupport`_
+
+The class ``IssWsHttpKotlinSupport.kt`` provides a singleton (for each ip address) 
+that defines utility operations to connect/disconnect (to the given ip address) 
+via HTTP or a websocket, using the library okhttp3.
+
+This utility:
+
+- implements the interface IssCommSupport.kt
+- implements the operations defined in the interface IssOperations.kt
+- works as an observer of the ws-socket
+- is, in its turn, observable by components that implement the interface ``IUniboActor.kt``
+  
+  Progetto: **it.unibo.kotlinSupports** dir: *app\src\main\kotlin\* package: *it.unibo.interaction*
+
+  .. code:: Java
+        
+    interface IUniboActor : IssActorObservable  {
+        fun myname() : String
+        fun send(msg: String )
+    }
+
+      
+    interface IssActorObservable {
+        fun registerActor(obs: IUniboActor)
+        fun removeActor(obs: IUniboActor)
+    }
+
+    interface IUniboActor : IssActorObservable  {
+        fun myname() : String
+        fun send(msg: String )
+    }

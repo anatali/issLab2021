@@ -63,17 +63,6 @@ Il file di configurazione basicrobotConfig.json è scritto dal progettista dell'
     //Arduino connesso al Raspberry:
     {"type":"realmbot", "port":"/dev/ttyUSB0", "ipvirtualrobot":"-"}
 
---------------------------------------------------
-Avvertenze
---------------------------------------------------
-
-- Per muovere un robot reale occorre inviare comendi ai motori. La esecuzione di uno step di durata DT 
-  implica l'invio di due comandi ("w" e "h"), intervallati da DT.
-
-- Per muovere un VirtualRobot occorre inviare comandi che specificano già la durata del movimento.
-  Al fine di usare il VirtualRobot in modo del tutto analogo al robot reale, si definisce una durata 
-  adeguatamente 'lunga' del comando "w" (ad esempio 1000 msec)
- 
 
 
 --------------------------------------------------
@@ -90,6 +79,23 @@ Il **basicrobot.qak** (nel progetto *it.unibo.qak21.basicrobot* ):
 
 - interagisce con un robot concreto per mezzo di un POJO  ( resources/unibo/robot/robotSupport.kt ) 
   che funge da adattatore per i dispositivi descritti nel file di configurazione :blue:`basicrobotConfig.json` 
+
+++++++++++++++++++++++++++++
+Avvertenze
+++++++++++++++++++++++++++++
+
+- Per muovere un robot reale occorre inviare comendi ai motori. La esecuzione di uno step di durata DT 
+  implica l'invio di due comandi ("w" e "h"), intervallati da DT.
+
+- Per muovere un VirtualRobot occorre inviare comandi che specificano già la durata del movimento.
+  Al fine di usare il VirtualRobot in modo del tutto analogo al robot reale, si definisce una durata 
+  adeguatamente 'lunga' del comando "w" (ad esempio 1000 msec)
+
+- Le informazioni proveniente dall'ambiente sono percepibili come eventi, grazie alla feature :ref:`Actors as streams`.
+  
+   .. image::  ./_static/img/Robot22/sonarpipenano.png 
+     :align: center 
+     :width: 75%
 
 
 Il codice è definito come un modello qak che costruisce i propri supporti di basso livello leggendo il file 
@@ -171,44 +177,3 @@ BasicRobot22: Eventi
 Si veda:  `BasicRobot2021`_
  
 
------------------------------------------------- 
-IssWsHttpKotlinSupport
-------------------------------------------------      
-
-library: **IssActorKotlinRobotSupport-2.0.jar**
-
-- `wssupportAsActorKotlin`_
-- `RobotService`_
-- `BasicStepRobotService`_
-- `ActorWithKotlinSupport`_
-
-The class ``IssWsHttpKotlinSupport.kt`` provides a singleton (for each ip address) 
-that defines utility operations to connect/disconnect (to the given ip address) 
-via HTTP or a websocket, using the library okhttp3.
-
-This utility:
-
-- implements the interface IssCommSupport.kt
-- implements the operations defined in the interface IssOperations.kt
-- works as an observer of the ws-socket
-- is, in its turn, observable by components that implement the interface ``IUniboActor.kt``
-  
-  Progetto: **it.unibo.kotlinSupports** dir: *app\src\main\kotlin\* package: *it.unibo.interaction*
-
-  .. code:: Java
-        
-    interface IUniboActor : IssActorObservable  {
-        fun myname() : String
-        fun send(msg: String )
-    }
-
-      
-    interface IssActorObservable {
-        fun registerActor(obs: IUniboActor)
-        fun removeActor(obs: IUniboActor)
-    }
-
-    interface IUniboActor : IssActorObservable  {
-        fun myname() : String
-        fun send(msg: String )
-    }

@@ -1,6 +1,5 @@
 package unibo.actor22comm.tcp;
 import java.net.Socket;
-
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 

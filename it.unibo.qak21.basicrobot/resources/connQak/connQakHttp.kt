@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpPost
 import java.io.InputStream
 import org.apache.http.impl.client.CloseableHttpClient
 import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.IApplMessage
 
 //See https://www.codejava.net/java-se/networking/how-to-use-java-urlconnection-and-httpurlconnection
 
@@ -25,14 +26,14 @@ lateinit var hostAddr : String
 		println("connQakHttp | createConnection hostAddr=$")
 		client   =  HttpClientBuilder.create().build()
  	}
-	override fun forward(  msg: ApplMessage){
+	override fun forward(  msg: IApplMessage){
  		 	
 	}
 	
-	override fun request(  msg: ApplMessage){
+	override fun request(  msg: IApplMessage){
  	}
 	
-	override fun emit( msg: ApplMessage ){
+	override fun emit( msg: IApplMessage ){
   	}	
 	
 //	override fun forward( move : String ){

@@ -8,6 +8,7 @@ import it.unibo.kactor.ActorBasic
 import kotlinx.coroutines.delay
 import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.IApplMessage
 
 /* 
  Emits the event sonarRobot : sonar( V )
@@ -20,7 +21,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    override suspend fun actorBody(msg : ApplMessage){
+    override suspend fun actorBody(msg : IApplMessage){
  		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "sonarstart"){
 			println("$tt $name | STARTING")

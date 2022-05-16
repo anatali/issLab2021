@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import it.unibo.kactor.MsgUtil
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.IApplMessage
 
 class connQakMqtt( ) : connQakBase( ), MqttCallback{
  	lateinit var client  : MqttClient
@@ -60,16 +61,16 @@ class connQakMqtt( ) : connQakBase( ), MqttCallback{
  		}
 	}
 	
-	override fun forward(  msg: ApplMessage){
+	override fun forward(  msg: IApplMessage){
  		publish(msg.toString(), mqtttopic)		
 	}
 	
-	override fun request(  msg: ApplMessage){
+	override fun request(  msg: IApplMessage){
  		publish(msg.toString(), mqtttopic)
 		//The answer should be in ??? unibo/qak/clientmqtt		
 	}
 	
-	override fun emit( msg: ApplMessage ){
+	override fun emit( msg: IApplMessage ){
  		publish(msg.toString(), mqtttopic )		
 	}	
 }

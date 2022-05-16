@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import it.unibo.kactor.ActorBasic
 import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.IApplMessage
  
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -29,7 +30,7 @@ companion object {
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    override suspend fun actorBody(msg : ApplMessage){
+    override suspend fun actorBody(msg : IApplMessage){
 // 		println("$tt $name | received  $msg "  )  //perceives all the application events
 		if( msg.msgId() == "sonarstart"){
 			println("$tt $name | STARTING")

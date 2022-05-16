@@ -86,7 +86,7 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
         if( connectForWs)  myWs.send(msg);
         else {
         	String answer = sendHttp( msg );
-        	ColorsOut.out("WsHttpConnection | forward answer:" + answer + " DISCARDED");
+        	ColorsOut.out("WsHttpConnection | forward answer:" + answer + " DISCARDED since HTTP");
         }
 	}
 
@@ -171,7 +171,7 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
 
     public String sendHttp( String msgJson){
         try {
-            ColorsOut.out("WsHttpConnection | sendHttp httpAddr=" + httpAddr);
+            //ColorsOut.out("WsHttpConnection | sendHttp httpAddr=" + httpAddr);
             RequestBody body = RequestBody.create(JSON_MediaType, msgJson);
             Request request = new Request.Builder()
                     .url( "http://"+httpAddr+"/api/move" )   //TODO
@@ -179,7 +179,7 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
                     .build();
             Response response = okHttpClient.newCall(request).execute(); //a stream
             String answer     = ((RealResponseBody) response.body()).string();
-            ColorsOut.out("WsHttpConnection | response body=" + answer);
+            //ColorsOut.out("WsHttpConnection | sendHttp response body=" + answer);
             return answer;
         }catch(Exception e){
             return "";

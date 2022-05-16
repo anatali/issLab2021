@@ -16,6 +16,9 @@ import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
 import unibo.actor22comm.wshttp.WsHttpConnection
 import unibo.actor22comm.interfaces.Interaction2021
+import unibo.robot.MsgRobotUtil
+import unibo.actor22comm.ws.WsConnection
+ 
 //import it.unibo.interaction.MsgRobotUtil
 
  //A support for using the virtual robot
@@ -56,15 +59,16 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
             port             = Integer.parseInt(portStr)
              try {
 				//WsHttpConnection.trace = true
-            	support21    = WsHttpConnection.createForHttp( "$hostNameStr:$portStr" )
-				support21ws  = WsHttpConnection.createForWs( "$hostNameStr:8091" )
+            	support21    = WsHttpConnection.createForHttp( "$hostNameStr:$portStr" ) ///api/move built-in
+				support21ws  = WsConnection.create( "$hostNameStr:8091" )    
             	println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
-				support21ws.wsconnect( doafterConn )  //
-				 
-				//support21ws.sendWs(MsgRobotUtil.turnLeftMsg)
-				  
-				//support21ws.forward(MsgRobotUtil.turnRightMsg)
-				//ACTIVATE the robotsonar as the beginning of a pipe
+				//support21ws.wsconnect( doafterConn )  //2021
+//2022 Il POJO it.unibo.qak21.basicrobot informa basicrobot di una collisione				 
+				val obs  = WsSupportObserver( owner.getName() )
+				(support21ws as WsConnection).addObserver(obs) 
+ 
+			  
+//				//ACTIVATE the robotsonar as the beginning of a pipe
 				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)
 				owner.context!!.addInternalActor(robotsonar)  
 			  	println("		--- virtualrobotSupport | has created the robotsonar")	
@@ -83,11 +87,11 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
 		trace("move  $msg")
 		if( cmd == "w" || cmd == "s"){  //doing aysnch
 			//println("		--- virtualrobotSupport2021 |  wwwwwwwwwwwwwwwwwwwwwwwwww $support21ws")
-			support21ws.sendWs(msg)	//aysnch => no immediate answer 
+			support21ws.forward(msg)	//aysnch => no immediate answer 
 			return
 		}
 		//Comunicazione sincrona con il VirtualRobot via HTTP
-		val answer = support21.sendHttp(msg,"$hostName:$port/api/move")
+		val answer = support21.forward(msg) //,"$hostName:$port/api/move"
 		trace("		--- virtualrobotSupport2021 | answer=$answer")
 		//REMEMBER: answer={"endmove":"true","move":"alarm"} alarm means halt
 		val ajson = JSONObject(answer)

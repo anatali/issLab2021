@@ -2,6 +2,7 @@ package connQak
 import it.unibo.`is`.interfaces.IObserver
 import java.util.Observable
 import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.IApplMessage
  
 enum class ConnectionType {
     TCP, MQTT, COAP, HTTP
@@ -33,9 +34,9 @@ lateinit var currQakConn  : connQakBase
 
 	
 	  abstract fun createConnection( )     
-      abstract fun forward( msg : ApplMessage )
-      abstract fun request( msg : ApplMessage )
-      abstract fun emit( msg : ApplMessage )
+      abstract fun forward( msg : IApplMessage )
+      abstract fun request( msg : IApplMessage )
+      abstract fun emit( msg : IApplMessage )
 	
 }
 

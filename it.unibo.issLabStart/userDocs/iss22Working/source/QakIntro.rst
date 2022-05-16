@@ -17,6 +17,11 @@
 .. _tuProlog: http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf
 .. _PrologUsage: ./_static/LabQakPrologUsage2020.html
 
+.. _Reactive programming: https://en.wikipedia.org/wiki/Reactive_programming
+.. _Observer: https://en.wikipedia.org/wiki/Observer_pattern
+.. _Iterator: https://en.wikipedia.org/wiki/Iterator_pattern
+.. _Functional programming: https://en.wikipedia.org/wiki/Functional_programming
+
 .. _build2022.gradle: ./_static/build2022.gradle
 
 =============================================
@@ -681,3 +686,45 @@ demoStreams.qak
 Coded Qak
 --------------------------------------
 
+--------------------------------------
+Actors as streams
+--------------------------------------
+
+`Reactive programming`_ is a combination of the best ideas from the `Observer`_ pattern, the `Iterator`_ pattern, 
+and `Functional programming`_.
+
+In `Reactive programming`_, un consumatore reagisce ai dati non appena arrivano, con la capacità
+anche di *propagare le modifiche come eventi* agli osservatori registrati.
+
+Un QAkActor può lavorare come un produttore osservabile di dati; può essere *osservato da altri attori* che si
+'iscrivono' presso di lui.
+Ciascun sottoscrittore elaborerà i dati 'in parallelo' con gli altri e potrà a sua volta funzionare come osservabile.
+
+.. image::  ./_static/img/Robot22/sonarpipenano.png 
+  :align: center 
+  :width: 75%
+
+.. code:: Java
+
+    abstract class  ActorBasic( ... ) {
+    protected val subscribers = mutableListOf()
+
+        fun subscribe( a : ActorBasic) : ActorBasic {
+            subscribers.add(a)
+            return a
+        }
+        fun subscribeLocalActor( actorName : String) : ActorBasic {
+            val a = sysUtil.getActor(actorName)
+            if( a != null  ){ subscribers.add(a); return a}
+        }
+        fun unsubscribe( a : ActorBasic) {
+            subscribers.remove(a)
+        }
+
+        suspend fun emitLocalStreamEvent(v: ApplMessage ){
+            subscribers.forEach { it.actor.send(v) }
+        }
+
+
+
+Per un esempio si veda :ref:`basicrobot.qak`
