@@ -8,6 +8,7 @@
 .. _Mbot: ../../../../../it.unibo.qak21.basicrobot/userDocs/Mbot2020.html
 
 .. basicrobot.qak: ../../../../../unibo.basicrobot22/src/basicrobot.qak 
+.. _kotlinUnibo: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html
 
 .. _basicrobotqak: ../../../../../it.unibo.qak21.basicrobot/src/basicrobot.qak 
 .. _connQak.sysConnKb.kt: ../../../../../it.unibo.qak21.basicrobot/resources/connQak/connQak.sysConnKb.kt
@@ -32,12 +33,16 @@ BasicRobot22
 
 Progetto: **unibo.basicrobot22** code: *...*.
 
+:remark:`Introduzione all'uso di Kotlin`
 
+- si veda anche `kotlinUnibo`_
+  
 Introduciamo un componente che esegue comandi di spostamento di un DDR-robot in 'modo indipendente dalla tecnologia', 
 rispetto alla natura del robot (virtuale o reale).
 
 Questo obiettivo viene raggiunto introducendo un insieme di diversi supporti di basso livello e una fase di configurazione 
 che seleziona il supporto appropriato per il tipo di robot specificato in un file di configurazione del robot.
+
 
 --------------------------------------------------
 basicrobotConfig.json

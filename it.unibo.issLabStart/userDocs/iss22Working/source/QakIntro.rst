@@ -6,6 +6,8 @@
 .. _Akka actor model: https://doc.akka.io//docs/akka/current/typed/guide/actors-motivation.html
 .. _Hewitt: https://en.wikipedia.org/wiki/Carl_Hewitt#Actor_model
 .. _Kotlin: https://kotlinlang.org/
+.. _kotlinUnibo: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html
+
 .. _Eclipse Xtext: https://www.eclipse.org/Xtext/download.html
 .. _Qak syntax: ./_static/Qactork.xtext
 .. _Uso di Prolog: ./_static/LabQakPrologUsage2021.html
@@ -37,9 +39,13 @@ distribuiti e per la definizione di modelli di comportamento di attori
 che si comportano come Finite State Machines.
 
 L'aggiunta di **k** al prefisso (es ``qak``, ``Qak``) significa che stiamo facendo riferimento alla versione 
-implementata in `Kotlin`_, senza utilizzare alcun supporto Akka (come fatto nella prima versione del linguaggio).
+implementata in `Kotlin`_ (), senza utilizzare alcun supporto Akka (come fatto nella prima versione del linguaggio).
 
-Il linguaggio è definito utilizzando il framework `Xtext`_  e si basa su un nucleo di concetti 
+:remark:`Introduzione all'uso di Kotlin`
+
+- si veda anche `kotlinUnibo`_
+ 
+Il linguaggio ``Qak`` è definito utilizzando il framework `Xtext`_  e si basa su un nucleo di concetti 
 che compongono il :blue:`metamodello QActor` . Questi concetti possono essere così riassunti:
 
 - A :blue:`QA-System` is a collection of active entities (*QActors*) each working in a 
@@ -662,29 +668,16 @@ Questo esempio evidenzia che:
 
 
 
+.. sentinel.qak
 
+.. demoReq.qak
 
---------------------------------------
-sentinel.qak
---------------------------------------
+.. demoAskfor.qak
 
+.. demoStreams.qak
 
---------------------------------------
-demoReq.qak
---------------------------------------
+.. Coded Qak
 
-
---------------------------------------
-demoAskfor.qak
---------------------------------------
-
---------------------------------------
-demoStreams.qak
---------------------------------------
-
---------------------------------------
-Coded Qak
---------------------------------------
 
 --------------------------------------
 Actors as streams
@@ -727,4 +720,4 @@ Ciascun sottoscrittore elaborerà i dati 'in parallelo' con gli altri e potrà a
 
 
 
-Per un esempio si veda :ref:`basicrobot.qak`
+Per un esempio si veda :ref:`basicrobot22<BasicRobot22: comandi>`
