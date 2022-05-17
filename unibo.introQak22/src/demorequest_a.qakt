@@ -7,20 +7,20 @@ System  /* -trace */ -msglog demorequest_a
  
 //mqttBroker "broker.hivemq.com" : 1883
 
-Request r1 : r1(X) 
+Request r1 : r1(X)  
 Reply   a1 : a1(X)    //answer 
 
-Context ctxddemorequest_a ip [host="localhost" port=8010]   //for first run (debug)
-//Context ctxcallera ip [host="localhost" port=8072]  
-//Context ctxqacalled ip [host="127.0.0.1" port=8074]  
+//Context ctxddemorequest_a ip [host="localhost" port=8010]   //for first run (debug)
+Context ctxcallers ip [host="localhost" port=8072]  
+Context ctxcalled  ip [host="127.0.0.1" port=8074]  
 
-QActor callerqa1 context ctxddemorequest_a {
+QActor callerqa1 context ctxcallers { //ctxddemorequest_a
 	State init initial {
 		println("	callera1 starts")
 		request qacalled -m r1 : r1(data(10))
  		delay 500 
 		request qacalled -m r1 : r1(data(20))
-	}
+	} 
 	Goto work 
 	
 	State work{
@@ -35,7 +35,7 @@ QActor callerqa1 context ctxddemorequest_a {
 } 
 
 
-QActor callerqa2 context ctxddemorequest_a {
+QActor callerqa2 context ctxcallers { //ctxddemorequest_a
 	State init initial {
 		println("	callera2 starts")
 		request qacalled -m r1 : r1(val(100))
@@ -54,9 +54,9 @@ QActor callerqa2 context ctxddemorequest_a {
 		printCurrentMessage
  	}
 	Goto work	
-} 
+}  
 
-QActor qacalled context ctxddemorequest_a {
+QActor qacalled context ctxcalled {
  
 	State init initial {
  		//println("qacalled waits ...") 

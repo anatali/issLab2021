@@ -1,5 +1,5 @@
 %====================================================================================
-% demonottodo description   
+% resourcecore description   
 %====================================================================================
-context(ctxdemonottodo, "localhost",  "TCP", "8055").
- qactor( demonottodo, ctxdemonottodo, "it.unibo.demonottodo.Demonottodo").
+context(ctxresourcecore, "localhost",  "TCP", "8045").
+ qactor( resourcecore, ctxresourcecore, "it.unibo.resourcecore.Resourcecore").

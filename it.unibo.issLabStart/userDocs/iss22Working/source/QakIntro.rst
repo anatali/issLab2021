@@ -749,13 +749,12 @@ demorequest_a.qak
 Un esempio di due attori che inviano richieste dello stesso tipo, ma con payload diverso ad un terzo attore,
 il quale invia la risposta all'attore chiamante.
 
-
-
 .. image::  ./_static/img/Qak/demorequest_a.png
     :align: center 
     :width: 60% 
 
-Il sistema viene inizialmente eseguito in un unico contesto, in modo da eseguire un test sulla business logic.
+Il sistema viene inizialmente eseguito in un unico contesto, in modo da verificare la corretteza delle business logic in una 
+configurazione 'di testing confortevole'.
 
 .. code::
 
@@ -767,8 +766,15 @@ Il sistema viene inizialmente eseguito in un unico contesto, in modo da eseguire
 
     //for first run (debug)
     Context ctxddemorequest_a ip [host="localhost" port=8010]   
-    //Context ctxcallera ip [host="localhost" port=8072]     (1)
-    //Context ctxqacalled ip [host="127.0.0.1" port=8074]    (2)
+    //Context ctxcallers ip [host="localhost" port=8072]     (1)
+    //Context ctxcalled  ip [host="127.0.0.1" port=8074]    (2)
+
+Il sistema viene inizialmente configurato con tutti i componenti in un unico contesto, in modo da verificare la corretteza delle business logic in una 
+configurazione 'di testing confortevole'.
+
+I componenti (attori) che inviano richieste sono strutturati nel medesimo modo:
+
+.. code::
 
     QActor callerqa1 context ctxddemorequest_a {
       State init initial {
@@ -809,6 +815,10 @@ Il sistema viene inizialmente eseguito in un unico contesto, in modo da eseguire
       Goto work	
     } 
 
+Il componente (attore) che riceve le richieste, invia una risposta 'eco' preceduta dal nome del mittente:
+
+.. code::
+
     QActor qacalled context ctxddemorequest_a {
     
       State init initial {
@@ -832,11 +842,227 @@ Il sistema viene inizialmente eseguito in un unico contesto, in modo da eseguire
 demorequest_a distribuito
 ++++++++++++++++++++++++++++++++++
 
-Una volta verificato che il sistema *funziona in locale* come ci si aspetta, si pssono 
-tolgiere i commenti alle linee (1) e (2), per realizzare una versione distribuita: le risposte del sistema
-**non devono cambiare dal punto di vista logico**.
+Una volta verificato che il sistema *funziona in locale* come ci si aspetta, si possono allocare i tre componenti su  nodi
+computazionali diversi. Ad esempio, per la configurazione di figura:
 
- 
+.. image::  ./_static/img/Qak/demorequest_aDistr1.png
+    :align: center 
+    :width: 40% 
+
+la nuova specifica (del modello) del sistema diventa:
+
+.. code::
+
+    System  /* -trace */ -msglog demorequest_a
+    Request r1 : r1(X) 
+    Reply   a1 : a1(X)    //answer 
+
+    Context ctxcallers ip [host="localhost" port=8072]     (1)
+    Context ctxcalled ip [host="127.0.0.1" port=8074]    (2)
+
+    QActor callerqa1 context ctxcallers { ... }
+    QActor callerqa2 context ctxcallers { ... }
+    QActor qacalled context ctxcalled { ... }
+
+Una volta salavto il modello, viene generata la seguente descrizione del sistema:
+
+.. code::
+
+  context(ctxcallers, "localhost",  "TCP", "8072").
+  context(ctxcalled, "127.0.0.1",  "TCP", "8074").
+  qactor( callerqa1, ctxcallers, "it.unibo.callerqa1.Callerqa1").
+    qactor( callerqa2, ctxcallers, "it.unibo.callerqa2.Callerqa2").
+    qactor( qacalled, ctxcalled, "it.unibo.qacalled.Qacalled").
+  msglogging.
+
+
+
+Per eseguire il sistema è ora necessario invocare due diversi Main:
+
+- MainCtxcalled.kt che attiva gli attori allocati sul contesto ctxcalled di host=127.0.0.1 (l'attore qacalled)
+- MainCtxcallers.kt che attiva gli attori allocati sul contesto ctxcalled di host=localhost (callerqa1 e callerqa2)
+
+Si deve ovviamente verificare che le risposte del sistema **non devono cambiare dal punto di vista logico**.
+
+:remark:`Start-up di un sistema distribuito` 
+
+- Si noti che nessun attore viene attivato prima che siano stati eseguiti **tutti i Main**. Ciò in quanto un sistema 
+  vine concepito come è un 'organismo' che funziona solo quando tutte le sue parti sono state create, anche se si trovano su nodi 
+  computazionali diversi
+
+:worktodo:`WORKTODO: Altre configurazioni`
+
+- Si provi ad attivare il sistema in altre configurazioni distribuite, come ad esempio:
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+  
+  * - 
+       .. image::  ./_static/img/Qak/demorequest_aDistr2.png
+           :align: center 
+           :width: 80% 
+    -        
+         .. image::  ./_static/img/Qak/demorequest_aDistr3.png
+           :align: center 
+           :width: 80% 
+
+------------------------------------
+ExternalQActor 
+------------------------------------
+
+Nell'esempio :ref:`demorequest_a distribuito` abbiamo concepito un sistema software come un organismo che comincia ad
+operare solo quando tutte le sue parti sono state costruite ed attivate.
+
+Vi sono però situazioni in cui un sistema si configura e si costruisce 'icrementalmente', partendo da un nucleo iniziale 
+e poi aggiungendo parti (che interagiscono con il nucleo e tra loro sempre mediante scambio di messaggi).
+
+
++++++++++++++++++++++++++++++
+resourcecore
++++++++++++++++++++++++++++++
+
+Supponiamo ad esempio di introdurre come 'nucleo di base' una risorsa modellata come segue.
+
+.. code::
+
+    System ctxresourcecore
+    Request cmd 		: cmd(X) // X =  w | s | a | d | h
+    Reply   replytocmd  : replytocmd(X)
+    Event    alarm      : alarm(V)
+
+    Context ctxresourcecore ip [host="localhost" port=8045]
+    
+    QActor resourcecore context ctxresourcecore{
+      State s0 initial { 	  
+          println("resourcecore READY")     
+        }   
+      Transition t0  
+        whenRequest cmd   -> handleRequestCmd
+        whenEvent   alarm -> handleAlarm
+
+      State handleAlarm{
+          printCurrentMessage
+      }
+      Transition t0  
+          whenRequest cmd -> handleRequestCmd
+          whenEvent   alarm -> handleAlarm
+        
+        
+      State handleRequestCmd{
+        printCurrentMessage
+        onMsg( cmd : cmd(X) ){
+          [# val ANSW = "answerFor_${payloadArg(0)}" #]
+          replyTo cmd with replytocmd : replytocmd( $ANSW ) 
+        }		 		
+      }
+      Goto s0	
+    }   
+
+
+.. image::  ./_static/img/Qak/resourcecore.png
+    :align: center 
+    :width: 30% 
+
+Il sistema formato dalla sola :ref:`resourcecore` è descritto come segue:
+
+.. code::
+
+  //file resourcecore.pl
+  context(ctxresourcecore, "localhost",  "TCP", "8045").
+  qactor( resourcecore, ctxresourcecore, "it.unibo.resourcecore.Resourcecore").
+
++++++++++++++++++++++++++++++
+External caller1
++++++++++++++++++++++++++++++
+
+Supponiamo ora che un ulteriore componente QakActor software voglia 'fare sistema' con :ref:`resourcecore`, inviando una richiesta
+alla risorsa.
+
+
+.. image::  ./_static/img/Qak/corecaller.png
+    :align: center 
+    :width: 60% 
+
+
+
+:remark:`I messaggi sono il 'collante' del sistema`
+
+- Il componente che vuole interagire con  :ref:`resourcecore` deve conoscerne il linguaggio di interazione. Dunque, oltre 
+  al protocollo usato dalla risorsa per ricevere i messaggi, occorre anche fare riferimento agli stessi tipi di messaaggio
+  dichiarati in  :ref:`resourcecore`
+
+
+.. code::
+
+  System corecaller1
+
+  Request cmd 		: cmd(X) // X =  w | s | a | d | h
+  Reply   replytocmd  : replytocmd(X)
+  Event    alarm      : alarm(V)
+
+Agli occhi del nuovoco attore, la  :ref:`resourcecore` è un componente 'esterno' che deve essere solo 
+dichiarato come tale, dando informazioni sul suo contesto.
+
+.. code::
+
+  Context ctxcorecaller1   ip [host= "127.0.0.1"   port= 8038 ]
+  Context ctxresourcecore  ip [host= "localhost"   port= 8045 ]  
+  
+  ExternalQActor resourcecore context ctxresourcecore  
+
+  QActor corecaller1 context ctxcorecaller1{ ... }
+
+La descrizione del sistema 'visto' da ``corecaller1`` diventa:
+
+.. code::
+  
+  //file corecaller1.pl
+  context(ctxresourcecore, "localhost",  "TCP", "8045").
+  qactor( resourcecore, ctxresourcecore, "it.unibo.resourcecore.Resourcecore").
+
+A questo punto possiamo definire un comportamento che prevede lo scambio di messaggi.
+
+.. code::
+
+  QActor corecaller1 context ctxcorecaller1{
+     State s0 initial { 	  
+    	printCurrentMessage       
+    	request resourcecore -m cmd : cmd(caller1) 
+    }   
+	Transition t0 
+		whenReply replytocmd -> handleReply 
+		whenEvent alarm      -> handleAlarm
+  	
+	State handleReply{
+		printCurrentMessage
+		delay 5000
+		println("       --- caller1 handleReply: emit fire") 
+ 		emit alarm : alarm(fire)	 
+ 	}
+	Transition t0  
+ 		whenEvent   alarm -> handleAlarm
+
+	State handleAlarm{
+		println("       --- caller1 handleAlarm   ") 
+		printCurrentMessage
+    //emit alarm : alarm(fire)	//possible LOOP!!
+ 	}
+ 	Transition t0 
+		whenReply replytocmd -> handleReply 
+ 		whenEvent   alarm -> handleAlarm
+  }  
+
+
+
+
+
+
+
+
+
+
+
 .. sentinel.qak
 
  

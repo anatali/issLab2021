@@ -1,12 +1,12 @@
 /*
 ================================================================================
-build_ctxdemonottodo.gradle
+build_ctxresourcecore.gradle
 GENERATED ONLY ONCE
 USAGE:	 
-  	gradle  -b build_ctxdemonottodo.gradle eclipse		//to set the dependency on the library
-	gradle  -b build_ctxdemonottodo.gradle distZip
-	gradle  -b build_ctxdemonottodo.gradle -q tasks --all
-	gradle  -b build_ctxdemonottodo.gradle cleanDistDir	//to clean the src directory
+  	gradle  -b build_ctxresourcecore.gradle eclipse		//to set the dependency on the library
+	gradle  -b build_ctxresourcecore.gradle distZip
+	gradle  -b build_ctxresourcecore.gradle -q tasks --all
+	gradle  -b build_ctxresourcecore.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {
