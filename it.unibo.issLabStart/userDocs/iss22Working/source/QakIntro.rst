@@ -71,7 +71,7 @@ che compongono il :blue:`metamodello QActor` . Questi concetti possono essere co
 
 
   
-  ..deployed by the it.unibo.issLabStart/resources/plugins
+  .. deployed by the it.unibo.issLabStart/resources/plugins
 
 --------------------------------------
 The QActor software factory
@@ -87,6 +87,15 @@ is done by the QActor-infrastructure with the help of the *Eclipse QActor softwa
 
 The metamodel is supported by the :blue:`qak-infrastructure` defined in the :blue:`project 
 it.unibo.qakactor` and deployed in **it.unibo.qakactor-2.7.jar**.
+
++++++++++++++++++++++++++++++++++++
+System description
++++++++++++++++++++++++++++++++++++
+
+Given a system named ``xxx``, the Qak Software Factory generates a file ``xxx.pl`` that includes a description (written in Prolog) of 
+the system. 
+Moreover, it generates a utility file ``sysRules.pl`` (see `Uso di Prolog`_) that is used by the QActor-infrastructure
+when it needs knowledge about the system.
 
 
 ++++++++++++++++++++++++++++++++++++++
@@ -398,6 +407,8 @@ dover essere espresso direttamente in Kotlin. Ma occorre non  esagerare l'uso di
 demonottodo.qak
 +++++++++++++++++++++++++++
 
+Progetto: **unibo.introQak22** code: *src/….*
+
 Questo esempio definisce un attore che, una volta attivato, calcola il numero di Fibonacci di posizione ``7``
 usando codice Kotlin.
 
@@ -424,6 +435,12 @@ usando codice Kotlin.
     }   
   }
 
+Quando questo file viene salvato, la Qak Software Factory genera il file ``demonottodo.pl``:
+
+.. code::  
+
+  context(ctxdemonottodo, "localhost",  "TCP", "8055").
+  qactor( demonottodo, ctxdemonottodo, "it.unibo.demonottodo.Demonottodo").
 
 ++++++++++++++++++++++++++++++++++++++++
 demobetter.qak
@@ -666,11 +683,163 @@ Questo esempio evidenzia che:
   demo0 in s2 | msg(msg1,dispatch,sender,demo0,msg1(2),11)
   s2:msg1:msg1(2)
 
+-------------------------
+demorequest.qak
+-------------------------
+
+Un esempio di attere (``caller``) che invia una request (``r1`` con payload ``hello(world)`` ) 
+a un altro attore (``called``, locale) 
+e poi attende il messaggio di reply  (``a1``) che avrà payload ``called_caller_hello(world)``.
+
+.. image::  ./_static/img/Qak/demorequest.png
+    :align: center 
+    :width: 60% 
+
+.. code::
+
+    System  /* -trace */ -msglog demorequest 
+    //mqttBroker "broker.hivemq.com" : 1883
+
+    Request r1 : r1(X)     
+    Reply   a1 : a1(X)    //answer
+
+    Context ctxdemoreq ip [host="localhost" port=8010]    
+    
+    QActor caller context ctxdemoreq {
+      State init initial {
+        //[# sysUtil.logMsgs = true #]
+        println("	callera1 starts")
+        request called -m r1 : r1(10)
+      }
+      Goto work 
+      
+      State work{
+          //printCurrentMessage
+      }
+      Transition t0 whenReply a1 -> handleReply
+      
+      State handleReply{
+        printCurrentMessage
+      }
+      Goto work	
+    }
+    
+    QActor called context ctxdemoreq {    
+      State init initial {
+        println("called waits ...") 
+      }
+      Transition t0  
+        whenRequest r1 -> handleRequest
+    
+      State handleRequest{  
+        printCurrentMessage		 
+        onMsg( r1 : r1(X) ){  
+          [# val Answer = "${currentMsg.msgSender()}_${payloadArg(0)}" #]
+          replyTo r1 with a1 : a1( $Answer )  
+        } 
+      } 
+      Goto init   
+    }   
 
 
+-------------------------
+demorequest_a.qak
+-------------------------
+
+Un esempio di due attori che inviano richieste dello stesso tipo, ma con payload diverso ad un terzo attore,
+il quale invia la risposta all'attore chiamante.
+
+
+
+.. image::  ./_static/img/Qak/demorequest_a.png
+    :align: center 
+    :width: 60% 
+
+Il sistema viene inizialmente eseguito in un unico contesto, in modo da eseguire un test sulla business logic.
+
+.. code::
+
+    System  /* -trace */ -msglog demorequest_a
+    //mqttBroker "broker.hivemq.com" : 1883
+
+    Request r1 : r1(X) 
+    Reply   a1 : a1(X)    //answer 
+
+    //for first run (debug)
+    Context ctxddemorequest_a ip [host="localhost" port=8010]   
+    //Context ctxcallera ip [host="localhost" port=8072]     (1)
+    //Context ctxqacalled ip [host="127.0.0.1" port=8074]    (2)
+
+    QActor callerqa1 context ctxddemorequest_a {
+      State init initial {
+        println("	callera1 starts")
+        request qacalled -m r1 : r1(data(10))
+        delay 500 
+        request qacalled -m r1 : r1(data(20))
+      }
+      Goto work 
+      
+      State work{
+      }
+      Transition t0 whenReply   a1 -> handleReply
+      
+      State handleReply{
+        printCurrentMessage
+      }
+      Goto work	
+    } 
+
+
+    QActor callerqa2 context ctxddemorequest_a {
+      State init initial {
+        println("	callera2 starts")
+        request qacalled -m r1 : r1(val(100))
+        delay 500
+        request qacalled -m r1 : r1(val(200))
+      }
+      Goto work 
+      
+      State work{
+      }
+      Transition t0 whenReply   a1 -> handleReply
+      
+      State handleReply{
+        printCurrentMessage
+      }
+      Goto work	
+    } 
+
+    QActor qacalled context ctxddemorequest_a {
+    
+      State init initial {
+      }
+      Transition t0  whenRequest r1 -> handleRequest
+    
+      State handleRequest{  
+        printCurrentMessage		 
+        onMsg( r1 : r1(X) ){  
+          [# val Answer = "${currentMsg.msgSender()}_${payloadArg(0)}" 
+            ut.outMsg( "${getName()} | answer=$Answer" )
+          #]
+          replyTo r1 with a1 : a1( $Answer )  
+        } 
+      } 
+      Goto init   
+    }    
+
+
+++++++++++++++++++++++++++++++++++
+demorequest_a distribuito
+++++++++++++++++++++++++++++++++++
+
+Una volta verificato che il sistema *funziona in locale* come ci si aspetta, si pssono 
+tolgiere i commenti alle linee (1) e (2), per realizzare una versione distribuita: le risposte del sistema
+**non devono cambiare dal punto di vista logico**.
+
+ 
 .. sentinel.qak
 
-.. demoReq.qak
+ 
 
 .. demoAskfor.qak
 
