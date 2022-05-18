@@ -42,14 +42,14 @@ impostiamo un processo di produzione del software partendo da un insieme di requ
 .. _requirements:
 
 --------------------------------------
-Requisiti
+RadarSystem: Requisiti
 --------------------------------------
 
 Si desidera costruire un'applicazione software capace di: 
 
 .. _radarGui:
 
-- (requisito :blue:`radarGui`) mostrare le distanze rilevate da un sensore Sonar``HC-SR04`` connesso a un RaspberryPi 
+- (requisito :blue:`radarGui`) mostrare le distanze rilevate da un sensore Sonar ``HC-SR04`` connesso a un RaspberryPi 
   su un display (``RadarDisplay``) a forma di radar connesso a un PC.
   
 .. image:: ./_static/img/Radar/radarDisplay.png 

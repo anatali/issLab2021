@@ -289,7 +289,7 @@ are triggered by messaged and events.
 Transitions and guards in Qak
 ++++++++++++++++++++++++++++++++
 
-- A :blue:`Transition` is 'fired' if the related condition (whenTime, whenEvent, whenMsg, ...) 
+- A :blue:`Transition` is 'fired' if the related condition (``whenTime, whenEvent, whenMsg, ...``) 
   together with the related guard (if any) is true.
 
 - A :blue:`guard` is expressed as a condition written in user-defined Kotlin code.
@@ -394,20 +394,24 @@ Le operazioni di invio messaggio sono le seguenti:
                         "request" msgref=[Request] ":" val = PHead ;
 
 
---------------------------------------
-Primi esempi applicativi
---------------------------------------
+Vediamo ora alcuni esempi di uso del linguaggio.
+
+Progetto: **unibo.introQak22** code: *src/….*
+
+++++++++++++++++++++++++++++++++
+QAk: primi esempi 
+++++++++++++++++++++++++++++++++
 
 Il linguaggio Qak mira a esprimere modelli eseguibili, ma   
 **non è completo dal punto di vista computazionale**.  Dunque, parte del comportamento potrebbe talvolta 
 dover essere espresso direttamente in Kotlin. Ma occorre non  esagerare l'uso di una tale possibilità.
 
 
-+++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%
 demonottodo.qak
-+++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%
 
-Progetto: **unibo.introQak22** code: *src/….*
+
 
 Questo esempio definisce un attore che, una volta attivato, calcola il numero di Fibonacci di posizione ``7``
 usando codice Kotlin.
@@ -442,9 +446,9 @@ Quando questo file viene salvato, la Qak Software Factory genera il file ``demon
   context(ctxdemonottodo, "localhost",  "TCP", "8055").
   qactor( demonottodo, ctxdemonottodo, "it.unibo.demonottodo.Demonottodo").
 
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%
 demobetter.qak
-++++++++++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 Per limitare l'uso diretto di codice Kotlin, è opportuno introdurre classi di utilità e invocarne i metodi.
 
@@ -480,15 +484,179 @@ in una directory :blue:`resource`) è bene sia scritta in Kotlin. Ad esempio:
 
 :remark:`Per usare codice Java, fare ricorso a file jar`
 
-++++++++++++++++++++++++++++++++
-demo0.qak
-++++++++++++++++++++++++++++++++
+
+--------------------------------------
+CodedQActors
+--------------------------------------
+
+La :ref:`Qak factory<The QActor software factory>` introduce un editor guidato dalla sintassi che facilita la scrittura di modelli
+in linguaggio QAk. 
+Questa facilitazione è utile soprattutto quando i modelli sono un *risultato della analisi del problema* 
+(o anche, in qualche caso, dei requisiti).
+
+In altre situazioni però, non è escluso che sia preferibile introdurre attori scritti direttamente in Kotlin (o in Java)
+ed utlizzarli come una sorta di componenti predefiniti in modelli descritti in linguaggio QAk.
+
++++++++++++++++++++++++++++++
+Sonar come CodedQActor
++++++++++++++++++++++++++++++
+
+Si consideri ad esempio un sistema che deve utilizzare dati prodotti da un sonar ed è quindi logicamente composto
+da due componenti:
+
+- un componente (``sonarDataGen``) che gestisce il Sonar, rendendo disponibili i dati che questo genera 
+- un componente (``datahandler``) interessato ai dati prodotti dal sonar
+
+Entrambi questi componenti possono essere modellati come attori che interagiscono tramite **eventi**.
+
+.. image::  ./_static/img/Qak/sonarDataGen.png
+      :align: center 
+      :width: 50% 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Modello logico
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Un modello QAk del sistema può essere espresso come segue:
+
+.. code::
+
+  System /*-trace*/ democodedqactor 
+  Dispatch start   : start( ARG )
+  Event sonarrobot : sonar( DATA ) 
+  
+  Context ctxdemocodedqactor ip [host="localhost" port=8065]
+
+    CodedQActor sonargen  context ctxdemocodedqactor 
+                          className "codedActor.sonarDataGen"    
+    QActor datahandler context ctxdemocodedqactor{ ...   }  
+  }
+
+In questo modello, il sonar è introdotto come un :ref:`CodedQActor` di cui si specifica la classe che lo realizza.
+
++++++++++++++++++++++++++++++
+CodedQActor
++++++++++++++++++++++++++++++
+
+- A CodedQActor is an actor completely written in Kotlin that can be included in a QAk-model by specifying its class name. 
+
+- A CodedQActor is usually defined as a specilization of ActorBasic:
+
+  .. code::
+
+    class qacoded (name : String ) : ActorBasic( name ) {
+      override suspend fun actorBody(msg: ApplMessage) {
+        //...
+      }
+    }
+
+- The QA-infrastructure handles a CodedQActor as a usual; in particular,  
+  it 'injects' into the CodedQActor the context specified by the model.
+
+
++++++++++++++++++++++++++++++
+sonarDataGen.kt
++++++++++++++++++++++++++++++
+
+Come sempre, nelle fasi preliminari della costruzione di un sistema può essere opportuno introdurre un 
+:ref:`CodedQActor` che realizza la simulazione di un Sonar, focalizzando l'attenzione sulla informazione 
+emessa come evento.
+
+.. code::
+
+    class sonarDataGen ( name : String ) : ActorBasic( name ) {
+      
+      val data = sequence<Int>{
+        var v0 = 20
+        yield(v0)
+        while(true){
+          v0 = v0 - 1
+          yield( v0 )
+        }
+      }
+        
+      @kotlinx.coroutines.ObsoleteCoroutinesApi
+      @kotlinx.coroutines.ExperimentalCoroutinesApi
+        override suspend fun actorBody(msg : IApplMessage){
+        println("$tt $name | received  $msg "  )
+        if( msg.msgId() == "start") startDataReadSimulation(   )
+        }
+        
+    @kotlinx.coroutines.ObsoleteCoroutinesApi
+    @kotlinx.coroutines.ExperimentalCoroutinesApi
+      suspend fun startDataReadSimulation(    ){
+            var i = 0
+          while( i < 10 ){
+            val m1 = "sonar( ${data.elementAt(i*2)} )"
+            i++
+            val event = MsgUtil.buildEvent( name,"sonarrobot",m1)								
+            //println("$tt $name | emits $event")
+            this.emit( event )
+            delay( 300 )
+            }			
+          terminate()
+      }
+    } 
+
+:worktodo:`WORKTODO: realizzare sonarDataGen per un sonar reale HC-SR04`
+
+
+:remark:`Codice vs. modelli`
+
+- notiamo che il ``sonarDataGen`` non esprime in modo evidente il tipo di informazione che emette come evento.
+  Si tratta infatti di codice vero e proprio e *non di un modello* che intende catturare aspetti essenziali.
+- leggendo il codice capiamo che l'evento emesso ha la forma ``sonarrobot:sonar(DATA)`` e che corrisponde quindi 
+  a una dichiarazione QAk quale quella introdotta in :ref:`Modello logico`:
+
+  .. code:: 
+
+    Event sonarrobot : sonar( DATA )
+
++++++++++++++++++++++++++++++
+datahandler 
++++++++++++++++++++++++++++++
+
+Il modello che esprime la logica di funzionamento del gestore dei dati emessi dal sonar è un attore che 
+attiva il sonar inviando il dispatch start e poi attende gli eventi, terminando se non giunge nulla entro 
+1 sec (si veda :ref:`whenTime`).
+
+.. code::
+
+     QActor datahandler context ctxdemocodedqactor{
+      State s0 initial { 	  
+        printCurrentMessage
+        forward sonargen -m start : start(do)
+      }   
+      Transition t0 whenEvent sonarrobot -> handleSonarevent
+      State handleSonarevent { 
+        printCurrentMessage
+      }
+      Transition t0 whenTime 1000 -> end 
+                     whenEvent sonarrobot -> handleSonarevent
+      State end{
+        println("BYE")
+      }
+    }  
+
+
+
+ 
+
+--------------------------------------
+QAk: un esempio più articolato
+--------------------------------------
 
 Questo esempio descrive un attore che realizza l'automa rappresentato nella figura che segue:
 
 .. image::  ./_static/img/Qak/demoDSL.png
     :align: center 
     :width: 50% 
+
+
+++++++++++++++++++++++++++++++++
+demo0.qak
+++++++++++++++++++++++++++++++++
 
 In accordo alla  `Qak syntax`_, la descrizione del modello inizia con la :ref:`Dichiarazione dei messaggi`
 e del Contesto:
@@ -613,6 +781,11 @@ Se il ``timeout`` scade, l'attore transita nello stato finale.
       }
     } 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+whenTime
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Questo esempio evidenzia che:
 
  - un attore non deve rimanare in attesa perenne di messaggi, in quanto può fare una empty-move 
@@ -687,9 +860,9 @@ Questo esempio evidenzia che:
 demorequest.qak
 -------------------------
 
-Un esempio di attere (``caller``) che invia una request (``r1`` con payload ``hello(world)`` ) 
-a un altro attore (``called``, locale) 
-e poi attende il messaggio di reply  (``a1``) che avrà payload ``called_caller_hello(world)``.
+Un esempio di attere (``caller``) che invia una request (``r1`` con payload *hello(world)*) 
+a un altro attore locale (``called``) 
+e poi attende il messaggio di reply  (``a1``) che avrà payload *called_caller_hello(world)*.
 
 .. image::  ./_static/img/Qak/demorequest.png
     :align: center 
@@ -1059,13 +1232,9 @@ A questo punto possiamo definire un comportamento che prevede lo scambio di mess
 
 
 
-
-
-
+.. sonarSimulator emette eventi usando emitLocalStreamEvent 
 
 .. sentinel.qak
-
- 
 
 .. demoAskfor.qak
 
@@ -1115,4 +1284,4 @@ Ciascun sottoscrittore elaborerà i dati 'in parallelo' con gli altri e potrà a
 
 
 
-Per un esempio si veda :ref:`basicrobot22<BasicRobot22: comandi>`
+Per un esempio si veda :ref:`basicrobot22<BasicRobot22: requisiti>`

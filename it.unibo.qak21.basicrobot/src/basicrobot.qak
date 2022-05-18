@@ -52,8 +52,7 @@ QActor basicrobot context ctxbasicrobot{
  		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
         if[# RobotType != "virtual" #]{
-		// 	delay 1000  //give to the realsonar the time to start
-	 		println("basicrobot | type=$RobotType attempts to activate the sonar pipe")	
+ 	 		println("basicrobot | type=$RobotType attempts to activate the sonar pipe")	
 	 		[#  //For real robots
 	 			var robotsonar = context!!.hasActor("realsonar")  
 	 			if( robotsonar != null ){ 

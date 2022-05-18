@@ -1,7 +1,6 @@
 package rx
 
-import it.unibo.kactor.ActorBasic
-import it.unibo.kactor.ApplMessage
+import it.unibo.kactor.*
 import kotlinx.coroutines.delay
 import it.unibo.kactor.MsgUtil
 import kotlinx.coroutines.runBlocking
@@ -16,7 +15,7 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
   
 	val data = sequence<Int>{
 		var v0 = 15
-		yield(v0)
+		yield(v0) 
 		while(true){
 			v0 = v0 - 1
 			yield( v0 )
@@ -25,7 +24,7 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 @kotlinx.coroutines.ExperimentalCoroutinesApi
-    override suspend fun actorBody(msg : ApplMessage){
+    override suspend fun actorBody(msg : IApplMessage){
         //println("	--- sonarSimulator | received  msg= $msg "  ) 
 		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "start") startDataReadSimulation(   )
