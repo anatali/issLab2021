@@ -29,39 +29,11 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						println("basicrobot | START")
 						unibo.robot.robotSupport.create(myself ,"basicrobotConfig.json" )
 						 RobotType = unibo.robot.robotSupport.robotKind  
+						delay(1000) 
 						if(  RobotType != "virtual"  
-						 ){println("basicrobot | type=$RobotType attempts to activate the sonar pipe")
-						  //For real robots
-							 			var robotsonar = context!!.hasActor("realsonar")  
-							 			if( robotsonar != null ){ 
-							 				println("basicrobot | WORKING WITH SONARS") 
-							 				//ACTIVATE THE DATA SOURCE realsonar
-							 				forward("sonarstart", "sonarstart(1)" ,"realsonar" ) 				
-							 				//SET THE PIPE  
-							 				robotsonar.
-							 				subscribeLocalActor("datacleaner").
-							 				subscribeLocalActor("distancefilter").
-							 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
-							 			}else{
-							 				println("basicrobot | WARNING: realsonar NOT FOUND")
-							 			}
+						 ){ var robotsonar = context!!.hasActor("realsonar")  
+						        	   unibo.robot.robotSupport.createSonarPipe(myself) 
 						}
-						else
-						 {  var robotsonar = context!!.hasActor("robotsonar") 
-						 	 			if( robotsonar != null ){ 
-						 	 				println("basicrobot | WORKING WITH VIRTUAL SONAR") 
-						 	 				//ACTIVATE THE DATA SOURCE realsonar
-						 	 				forward("sonarstart", "sonarstart(1)" ,"robotsonar" ) 				
-						 	 				//SET THE PIPE  
-						 	 				robotsonar.
-						 	 				subscribeLocalActor("datacleaner").
-						 	 				subscribeLocalActor("distancefilter").
-						 	 				subscribeLocalActor("basicrobot")		//in order to perceive obstacle
-						 	 			}else{
-						 	 				println("basicrobot | WARNING: realsonar NOT FOUND")
-						 	 			}
-						 
-						 }
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )
 						updateResourceRep( "basicrobot(start)"  

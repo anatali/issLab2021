@@ -3,20 +3,20 @@
 .. role:: remark
 .. role:: worktodo
 
-.. _BasicRobot2021: ../../../../../it.unibo.qak21.basicrobot/userDocs/basicrobot2021.html
-.. _NanoRobot: ../../../../../it.unibo.qak21.basicrobot/userDocs/LabNanoRobot.html
-.. _Mbot: ../../../../../it.unibo.qak21.basicrobot/userDocs/Mbot2020.html
+.. _BasicRobot2021: ../../../../../unibo.basicrobot22/userDocs/basicrobot2021.html
+.. _NanoRobot: ../../../../../unibo.basicrobot22/userDocs/LabNanoRobot.html
+.. _Mbot: ../../../../../unibo.basicrobot22/userDocs/Mbot2020.html
 
 .. basicrobot.qak: ../../../../../unibo.basicrobot22/src/basicrobot.qak 
 .. _kotlinUnibo: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html
 
-.. _basicrobotqak: ../../../../../it.unibo.qak21.basicrobot/src/basicrobot.qak 
-.. _connQak.sysConnKb.kt: ../../../../../it.unibo.qak21.basicrobot/resources/connQak/connQak.sysConnKb.kt
+.. _basicrobotqak: ../../../../../unibo.basicrobot22/src/basicrobot.qak 
+.. _connQak.sysConnKb.kt: ../../../../../unibo.basicrobot22/resources/connQak/connQak.sysConnKb.kt
 
-.. _virtualrobotSupport: ../../../../../it.unibo.qak21.basicrobot/resources/robotVirtual/virtualrobotSupport2021.kt
-.. _nanoSupport: ../../../../../it.unibo.qak21.basicrobot/resources/robotNano/nanoSupport.kt
-.. _motors: ../../../../../it.unibo.qak21.basicrobot/resources/robotNano/Motors.c
-.. _mbotSupport: ../../../../../it.unibo.qak21.basicrobot/resources/robotNano/nanoSupport.kt
+.. _virtualrobotSupport: ../../../../../unibo.basicrobot22/resources/robotVirtual/virtualrobotSupport2021.kt
+.. _nanoSupport: ../../../../../unibo.basicrobot22/resources/robotNano/nanoSupport.kt
+.. _motors: ../../../../../unibo.basicrobot22/resources/robotNano/Motors.c
+.. _mbotSupport: ../../../../../unibo.basicrobot22/resources/robotNano/nanoSupport.kt
 
 
 
@@ -31,12 +31,6 @@
 BasicRobot22
 ==================================================
 
-Progetto: **unibo.basicrobot22** code: *...*.
-
-:remark:`Introduzione all'uso di Kotlin`
-
-- si veda anche `kotlinUnibo`_
-  
 Introduciamo un componente che esegue comandi di spostamento di un DDR-robot in 'modo indipendente dalla tecnologia', 
 rispetto alla natura del robot (virtuale o reale).
 
@@ -133,9 +127,18 @@ Avvertenze
   Al fine di usare il VirtualRobot in modo del tutto analogo al robot reale, si definisce una durata 
   adeguatamente 'lunga' del comando :blue:`w` (ad esempio 1000 msec)
 
+
 -------------------------------------
+Progetto unibo.basicrobot22
+-------------------------------------  
+
+- La realizzazione del ``BasicRobot22`` viene affidata al progetto **unibo.basicrobot22**. 
+- Il modello viene definito nel file :ref:`basicrobot.qak<BasicRobot22: il modello basicrobot.qak>`.
+- Per parti di basso livello definite in Kotlin, può essere utile consultare `kotlinUnibo`_.
+  
+++++++++++++++++++++++++++++++
 Console di comando
-------------------------------------- 
+++++++++++++++++++++++++++++++
 
 Per inviare comandi al ``BasicRobot22`` si può usare una console GUI come quella di figura
 
@@ -181,18 +184,18 @@ Per provocare interazioni usando MQTT, occorre
 .. 2022: il progetto it.unibo.qak21.robots è stato incluso in it.unibo.qak21.basicrobot
 
 
--------------------------------------------
++++++++++++++++++++++++++++++++++
 BasicRobot22: architettura
--------------------------------------------   
++++++++++++++++++++++++++++++++++
 
 .. image::  ./_static/img/Robot22/basicrobotproject.PNG 
   :align: center 
   :width: 50%
 
 
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 BasicRobot22: supporti
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. list-table:: 
   :widths: 30,70
@@ -261,7 +264,7 @@ basicrobot.qak: dichiarazioni
     QActor envsonarhandler context ctxbasicrobot{ ... }
  
 
-
+:ref:`Creazione di una pipe`
 
 
 

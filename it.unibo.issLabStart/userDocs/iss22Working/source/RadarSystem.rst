@@ -64,6 +64,7 @@ Si desidera costruire un'applicazione software capace di:
 --------------------------------------
 Analisi dei Requisiti
 --------------------------------------
+
 Iniziamo anallizzando il testo, cercando di chiarire con il committente il signifcato dei termini in esso presenti.
 Questa comunicazione a livello umano è fondamentale per formulare requisiti che siano:
 
