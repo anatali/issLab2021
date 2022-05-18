@@ -1257,9 +1257,6 @@ Un QAkActor può lavorare come un produttore osservabile di dati; può essere *o
 'iscrivono' presso di lui.
 Ciascun sottoscrittore elaborerà i dati 'in parallelo' con gli altri e potrà a sua volta funzionare come osservabile.
 
-.. image::  ./_static/img/Robot22/sonarpipenano.png 
-  :align: center 
-  :width: 75%
 
 .. code:: Java
 
@@ -1282,6 +1279,42 @@ Ciascun sottoscrittore elaborerà i dati 'in parallelo' con gli altri e potrà a
             subscribers.forEach { it.actor.send(v) }
         }
 
+++++++++++++++++++++++++++++++++
+emitLocalStreamEvent
+++++++++++++++++++++++++++++++++
+
+L'operazione ``emitLocalStreamEvent`` è una versione specializzata/ottimizzata del meccanismo di emissione di 
+un evento che opera inserendo l'informazione direttamente nella coda associata agli attori sottoscrittori.
 
 
-Per un esempio si veda :ref:`basicrobot22<BasicRobot22: requisiti>`
+++++++++++++++++++++++++++++++++
+Creazione di una pipe
+++++++++++++++++++++++++++++++++
+
+Nel progetto :ref:`basicrobot22<BasicRobot22: requisiti>` si introduce un sistema che configura
+la pipe di figura
+
+
+.. image::  ./_static/img/Robot22/sonarpipenano.png 
+  :align: center 
+  :width: 75%
+
+.. code::
+
+  firstActorInPipe = sysUtil.getActor("sonarsimulator")!!
+  firstActorInPipe.
+    subscribeLocalActor("datalogger").
+    subscribeLocalActor("datacleaner").
+    subscribeLocalActor("distancefilter").
+    subscribeLocalActor("qasink") 
+		  
+I dati generati da *firstActorInPipe* (un ``sonarsimulator`` come  :ref:`sonarDataGen.kt`) sono 
+memorizzati dal  ``datalogger``, filtrati dal ``datacleaner`` e gestiti dal ``distancefilter``, che
+emette l'evento 
+
+  ``obstacle:obstacle(V)`` 
+
+nel caso che il valore corrente della distanza 'pulita' misurata risulti inferiore a un limite prefissato.
+
+
+ 
