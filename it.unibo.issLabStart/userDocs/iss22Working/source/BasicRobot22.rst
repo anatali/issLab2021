@@ -234,6 +234,9 @@ Per il modello completo si veda  `basicrobotqak`_. In questa sede cercheremo di 
 basicrobot.qak: dichiarazioni
 ++++++++++++++++++++++++++++++++++++++++
 
+I messaggi 
+
+
 .. code::
 
     System /* -trace */   basicrobot                
@@ -272,5 +275,6 @@ basicrobot.qak: dichiarazioni
  
 
  
- 
+ :worktodo:`WORKTODO: creazione della mappa di una stanza vuota`
 
+- impostare il modello QAk di un sistema che opera come il :ref:`RobotMapperBoundary`

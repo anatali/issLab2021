@@ -34,8 +34,8 @@ Reply   stepfail   : stepfail(DURATION, CAUSE)
 Event alarm     : alarm(X) 
 Event sonar     : distance(X)
 
-Context ctxPathexecutor  ip [host="localhost" port=8032]
-Context ctxbasicrobot    ip [host="127.0.0.1" port=8020]  
+Context ctxPathexecutor  ip [host="localhost" port=8062]                        
+Context ctxbasicrobot    ip [host="127.0.0.1" port=8020]   
 
 ExternalQActor basicrobot context ctxbasicrobot
 

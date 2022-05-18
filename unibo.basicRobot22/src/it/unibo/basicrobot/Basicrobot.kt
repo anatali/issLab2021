@@ -122,20 +122,14 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "stepFail($Duration)"  
 						)
-						emit("info", "info(stepFail($Duration))" ) 
 						answer("step", "stepfail", "stepfail($Duration,obst)"   )  
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 				state("endwork") { //this:State
 					action { //it:State
-						if( checkMsgContent( Term.createTerm("end(ARG)"), Term.createTerm("end(V)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								println("basicrobot | endwork")
-								updateResourceRep( "basicrobot(end)"  
-								)
-						}
-						emit("endall", "endall(normal)" ) 
+						updateResourceRep( "basicrobot(end)"  
+						)
 						terminate(1)
 					}
 				}	 
