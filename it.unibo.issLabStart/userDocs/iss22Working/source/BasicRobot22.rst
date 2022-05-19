@@ -248,7 +248,16 @@ potrebbe interagire con il robot con uno dei seguenti protocolli:
 Osserviamo che la :ref:`Qak infrastructure<The QActor software factory>` supporta già interazioni 
 via TCP, CoAP, MQTT. 
 
-  
+++++++++++++++++++++++++++++++++++++++++
+Modello dell'analisi
+++++++++++++++++++++++++++++++++++++++++
+
+:worktodo:`WORKTODO: costruire un modello eseguibile del sistema`
+
+- Per meglio interagire con il committente è opportuno definire un modello eseguibile del sistema
+  che imposti le interazioni-base tra console e ``BasicRobot22`` senza introdurre alcun robot virtuale o reale.
+
+
 -------------------------------------
 BasicRobot22: Progetto  
 -------------------------------------  
