@@ -484,6 +484,12 @@ in una directory :blue:`resource`) è bene sia scritta in Kotlin. Ad esempio:
 
 :remark:`Per usare codice Java, fare ricorso a file jar`
 
++++++++++++++++++++++++++
+qrun
++++++++++++++++++++++++++
+
+L'operazione built-in ``qrun ccc.xxx()``  invoca  il metodo static ``xxx`` della classe ``ccc``.
+
 
 --------------------------------------
 CodedQActors

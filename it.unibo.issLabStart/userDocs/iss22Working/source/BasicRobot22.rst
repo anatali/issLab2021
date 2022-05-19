@@ -31,18 +31,278 @@
 BasicRobot22
 ==================================================
 
-Introduciamo un componente che esegue comandi di spostamento di un DDR-robot in 'modo indipendente dalla tecnologia', 
-rispetto alla natura del robot (virtuale o reale).
+Obiettivo: introdurre un componente software che esegue comandi di spostamento di un DDR-robot 
+in 'modo indipendente dalla tecnologia' con cui è realizzato del robot (virtuale o reale).
 
-Questo obiettivo viene raggiunto introducendo un insieme di diversi supporti di basso livello e una fase di configurazione 
+---------------------------------
+BasicRobot22: requisiti
+---------------------------------
+
+
+Più specificatamente, ``BasicRobot22``: 
+ 
+- (requisito :blue:`cmdbase`) è in grado di eseguire comandi-base  **cmd** di spostamento, 
+  con argomento :blue:`MOVE = w | s | l | r | h`
+- (requisito :blue:`cmdstep`) è in grado di rispondere alla richiesta di effettuare uno **step** in avanti per il tempo :blue:`TIME` specificato 
+  nell'argomento, fornendo una risposta che può essere:
+
+   - **stepdone** se lo *step* è stato eseguito con successo
+   - **stepfail** se lo *step* è fallito dopo il tempo :blue:`DT` (``DT<TIME``) per una qualche ragione :blue:`REASON`.
+     
+     (requisito :blue:`backstep`)  In questo caso, ``BasicRobot22`` effettua uno spostamento all'indietro 
+     **'di riposizionamenmto'** con durate (approssimativa)  :blue:`DT`.
+- (requisito :blue:`situated`) è in grado di percepire e gestire informazioni provenienti dall'ambiente 
+- (requisito :blue:`observable`) è in grado di rendere ossevabili informazioni 
+  sul suo stato funzionale corrente
+- (requisito :blue:`tipidirobot`) è in grado di utilizzare diversi tipi di robot (virtuali e reali) costruiti 
+  ciascuno con una propria  tecnologia
+- (requisito :blue:`cmdconsole`) deve poter essere comandato da un utente umano attraverso una console di comando
+
+.. `BasicRobot2021`_ 
+
+
++++++++++++++++++++++++++++++++++++++++
+BasicRobot22: analisi dei requisiti
++++++++++++++++++++++++++++++++++++++++
+
+Dopo il colloquio con il committente, si può precisare che:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requisito *cmdconsole*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il committente si aspetta una console   come quella di figura
+
+.. image::  ./_static/img/Robot22/consoleTcpSmall.PNG 
+  :align: center 
+  :width: 20%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requisito  *cmdstep*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+il simbolo **p** sulla console corrisponde al comando ``step`` 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requisito  *backstep*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+il *riposizionamenmto*  del robot dopo uno *stepfail* ha come obiettivo la possibilità che il robot possa
+costruire una mappa congruente dell'ambiente in cui si muove, come quella introdotta in 
+:ref:`Il robot come unità di misura`
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requisito  *tipidirobot*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il committente fa riferimento ad almeno tre diversi tipi di robot: 
+
+- :ref:`VirtualRobot`
+- `Mbot`_ (realmbot)
+- `NanoRobot`_ (realnano)
+
+.. image::  ./_static/img/Robot22/basicrobotComponent.PNG 
+  :align: center 
+  :width: 60%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requisito  *situated*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Le informazioni provenienti dall'ambiente in cui il ``BasicRobot22`` è situato possono essere di varia natura,
+**al momento non del tutto precisata**. Il caso ritenuto più probabile è che il robot debba poter reagire 
+ad :blue:`allarmi` generati da *sensori on board* (ad esempio sensori impatto, sonar, etc) 
+o *sensori ambientali* quali termometri, barometri, etc.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requisito  *observable*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Le informazioni osservabili **non sono al momento del tutto precisate**.  Tra le più probabili vi sono:
+
+- lo stato di esecuzione del robot, cioè l'azione che sta compiendo
+- il fatto che il robot, nel muoversi, ha incontrato un ostacolo
+
+
+------------------------------------------
+BasicRobot22: analisi del problema
+------------------------------------------
+
+:remark:`core problem`
+
+- Il cuore del problema consiste nel fare in modo che ``BasicRobot22`` agisca come un *esecutore osservabile*
+  di comandi, essendo al contempo capace di reagire ad  *allarmi*.
+
+``BasicRobot22`` si comporta essenzialmente in modo reattivo, in quanto opera sotto il controllo dell'utente,
+ma mostra proattività nella esecuzione dei comandi, tra cui in particolare ``step``.
+
+Nel seguito si farà uso del :ref:`linguaggio  QAk<QActor (meta)model>` per esprimere in modo formale 
+l'architettura logica del sistema e per costruire un modello eseguibile (prototipo)
+con cui interagire con il committente, al fine di definire al meglio i requisiti. 
+
+
+:remark:`progetto di lavoro: unibo.basicrobot22`
+
+Il modello viene costruito nel file `basicrobotqak`_, nel   orogetto  *unibo.basicrobot22*.
+
+
+++++++++++++++++++++++++++++++++
+BasicRobot22: interazione
+++++++++++++++++++++++++++++++++
+
+L'interazione con il robot è definita, in termini di operazioni di message-passing, come segue 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il requisito *cmdbase*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+      
+    Dispatch  cmd : cmd(MOVE)      
+
+:remark:`Sulla durata dei comandi-base`
+
+- Per muovere un robot reale occorre inviare comendi ai motori. La esecuzione di uno step di durata ``DT`` 
+  implica l'invio di due comandi (:blue:`w` e :blue:`h`), intervallati da ``DT``.
+
+- Per muovere un :ref:`VirtualRobot` si inviano comandi che specificano già la durata del movimento.
+  Al fine di usare il :ref:`VirtualRobot` in modo del tutto analogo a un robot reale, si definisce una durata 
+  adeguatamente 'lunga' del comando :blue:`w` (ad esempio ``1000`` msec)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il  requisito *cmdstep*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+    Request   step ( TIME )	
+    Reply     stepdone : stepdone(V)  
+    Reply     stepfail : stepfail(DT, REASON)
+
+++++++++++++++++++++++++++++++++
+Il requisito *situated*
+++++++++++++++++++++++++++++++++
+
+Al momento supponiamo che ``BasicRobot22`` debba poter percepire e gestire informazioni provenienti da un sonar
+installato a bordo:
+
+.. code::
+
+    Event  sonar  : sonar(DISTANCE,NAME)	
+
+++++++++++++++++++++++++++++++++
+Impostazione del modello
+++++++++++++++++++++++++++++++++
+
+Si delinea una prima definizione formale del sistema nel file `basicrobotqak`_:
+
+.. code::
+
+    System basicrobot                
+ 
+    Dispatch cmd       : cmd(MOVE)         
+    Request step       : step( TIME )	
+    Reply   stepdone   : stepdone(V)  
+    Reply   stepfail   : stepfail(DURATION, CAUSE)
+      
+    Event  sonar     	 : sonar(DISTANCE,NAME)			 
+    
+    Context ctxbasicrobot ip [host="localhost" port=8020]  
+     
+    QActor basicrobot context ctxbasicrobot{ ... }
+
+++++++++++++++++++++++++++++++++
+Il requisito  *tipidirobot*
+++++++++++++++++++++++++++++++++
+
+L'uso di robot di tipo diverso  può essere raggiunto introducendo un insieme di diversi supporti di basso livello 
+e una fase di configurazione 
 che seleziona il supporto appropriato per il tipo di robot specificato in un file di configurazione del robot.
 
+++++++++++++++++++++++++++++++++
+Una prima architettura
+++++++++++++++++++++++++++++++++
 
---------------------------------------------------
-BasicRobot22: tipi di robot
---------------------------------------------------
-Il file di configurazione ``basicrobotConfig.json`` attualmente distingue tre diversi tipi di robot: 
-due reali e uno virtuale.
+Si delinea una architettura come quella raffiguata:
+
+.. image::  ./_static/img/Robot22/basicrobotproject.PNG 
+  :align: center 
+  :width: 50%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il requisito *cmdconsole*
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La console che permette la interazione tra un operatore umano e il ``BasicRobot22`` è un sistema a sè stante che 
+potrebbe interagire con il robot con uno dei seguenti protocolli:
+
+- TCP
+- HTTP
+- CoAP
+- MQTT
+
+Osserviamo che la :ref:`Qak infrastructure<The QActor software factory>` supporta già interazioni 
+via TCP, CoAP, MQTT. 
+
+  
+-------------------------------------
+BasicRobot22: Progetto  
+-------------------------------------  
+
+**Progetto** unibo.basicrobot22
+
+La fase di progettazione parte dal :ref:`modello dell'analisi<Impostazione del modello>` e lo raffina introducendo 
+il codice necessario al soddisfacimento dei requisiti che l'analisi ha omesso.
+Per parti di basso livello definite in Kotlin, può essere utile consultare `kotlinUnibo`_.
+
+Anche in questa fase però miriamo  a definire nel modello gli **aspetti essenziali della 'business logic'** del robot, 
+lasciando ai :ref:`supporti<BasicRobot22: supporti>` 
+il compito di occuparsi dei dettagli tecnologici relativi ai diversi :ref:`tipi di robot<requisito  *tipidirobot*>`.
+ 
+.. Per il modello completo si veda  `basicrobotqak`_. In questa sede cercheremo di introdurlo in modo incrementale. 
+
+
++++++++++++++++++++++++++++++++++
+BasicRobot22: configurazione
++++++++++++++++++++++++++++++++++
+
+La utility class ``unibo.robot.robotSupport.kt`` si occupa dei dettagli tecnologici specifici di ogni 
+:ref:`tipo di robot<requisito  *tipidirobot*>` utilizzando un supporto diverso per ciascun tipo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BasicRobot22: supporti
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 30,70
+  :width: 100%
+  
+  * - 
+      .. image::  ./_static/img/Robot22/wenvscene1.PNG 
+           :align: center 
+           :width: 90%
+    - per il VirtualRobot: `virtualrobotSupport`_ 
+  * -
+      .. image::  ./_static/img/Robot22/robotsUnibo.jpg 
+           :align: center 
+           :width: 90%
+    - per il  NanoRObot. `nanoSupport`_, `motors`_
+  * -
+      .. image::  ./_static/img/Robot22/mbot.PNG 
+           :align: center 
+           :width: 90%
+    - per il  NanoRObot. `mbotSupport`_
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+File di configurazione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il file di configurazione  è impostato su frasi JSon, come ad esempio il seguente
+``basicrobotConfig.json``:
 
 .. code::
      
@@ -53,56 +313,65 @@ due reali e uno virtuale.
     //Arduino connesso al PC:
     {"type":"realmbot","port":"COM6","ipvirtualrobot":"dontcare"}	
 
-- :ref:`VirtualRobot`
-- `Mbot`_ (realmbot)
-- `NanoRobot`_ (realnano)
-
-
-
-
-.. image::  ./_static/img/Robot22/basicrobotComponent.PNG 
-  :align: center 
-  :width: 60%
- 
-
-
-+++++++++++++++++++++++++++++++++
-BasicRobot22: requisiti
-+++++++++++++++++++++++++++++++++
-
-L'interazione con il robot è definita, in termini di operazioni di message-passing, come segue 
-(si veda :ref:`BasicRobot22: il modello basicrobot.qak`):
-
-
-.. (si veda :ref:`basicrobotqak`):
+Con riferimento a :ref:`Una prima architettura` possiamo estendere il modello come segue:
 
 .. code::
-    
-     
-    Dispatch  cmd : cmd(MOVE)      
-         
-    Request   step ( TIME )	
-    Reply     stepdone : stepdone(V)  
-    Reply     stepfail : stepfail(DT, REASON)
 
-    Event  sonar     	: sonar(DISTANCE,NAME)		
+    System basicrobot                
+      ....     
+    Context ctxbasicrobot ip [host="localhost" port=8020]  
 
-Più specificatamente, ``BasicRobot22``:
- 
-- è in grado di eseguire comandi-base  **cmd** di spostamento, con argomento :blue:`MOVE = w | s | l | r | h`
-- è in grado di rispondere alla richiesta di effettuare uno **step** in avanti per il tempo :blue:`TIME` specificato 
-  nell'argomento, fornendo una risposta che può essere:
+    QActor basicrobot context ctxbasicrobot{
+      State s0 initial { 	      
+      discardMsg Off  //WE want receive any msg
+      qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
+      [# RobotType = unibo.robot.robotSupport.robotKind #]
+          if[# RobotType != "virtual" #]{
+            [# var robotsonar = context!!.hasActor("realsonar")  
+              unibo.robot.robotSupport.createSonarPipe(myself) 
+            #]
+        }//The Virtual robot sonar is created in virtualrobotSupport2021
+      } 
+    }
 
-   - **stepdone** se lo *step* è stato eseguito con successo
-   - **stepfail** se lo *step* è fallito dopo il tempo :blue:`DT` (``DT<TIME``) per una qualche ragione :blue:`REASON`.
-     In questo caso, ``BasicRobot22`` effettua uno spostamento all'indietro **'di riposizionamenmto'** con durate (approssimativa)
-     :blue:`DT`.
-- è in grado di percepire come eventi le informazioni proveniente dall'ambiente, grazie alla feature :ref:`Actors as streams`.
+L'operazione :ref:`qrun` invoca il metodo static ``create`` della utility class ``unibo.robot.robotSupport.kt`` 
+che consulta il :ref:`File di configurazione` creando il supporto per il tipo di robot specificato.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pipe per un Sonar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sfruttiamo la feature :ref:`Actors as streams` per generare eventi 'di ambiente' (come i dati di Sonar) 
+che possono essere percepiti e gestiti dal ``BasicRobot22``.
   
    .. image::  ./_static/img/Robot22/sonarpipenano.png 
      :align: center 
      :width: 75%
-- è una risorsa CoAP-osservabile che mantiene le informazioni sul suo stato funzionale corrente (``RObState``):
+
+:ref:`Creazione di una pipe`
+
+Il modello si raffina ultriormente:
+
+.. code::
+
+    System basicrobot                
+      ....     
+    Context ctxbasicrobot ip [host="localhost" port=8020]  
+
+    QActor basicrobot context ctxbasicrobot{ ... }
+
+    CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"
+    CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter"
+    
+    QActor envsonarhandler context ctxbasicrobot{ ... }
+
+++++++++++++++++++++++++++++++
+il requisito  *observable*
+++++++++++++++++++++++++++++++
+
+Il modello QAk costituisce una risorsa CoAP-osservabile.
+Le  informazioni sullo stato funzionale corrente sono definite in una variabile ``RObState`` che può assumere
+valori quali:
  
   - *basicrobot(start)*, when the basicrobot is activated.
   - *moveactivated(M)*, when the basicrobot has activated a non-step move M.
@@ -111,40 +380,10 @@ Più specificatamente, ``BasicRobot22``:
   - *stepFail(D)*, when the basicrobot has failed a step after time D<ST.
   - *obstacle(M)*, when the basicrobot hits an obstacle while executing the move M.
   - *basicrobot(end)*, when the basicrobot terminates.
-
-- `BasicRobot2021`_ 
-
-++++++++++++++++++++++++++++
-Avvertenze
-++++++++++++++++++++++++++++
-
-:remark:`Sulla durata dei comandi-base`
-
-- Per muovere un robot reale occorre inviare comendi ai motori. La esecuzione di uno step di durata ``DT`` 
-  implica l'invio di due comandi (:blue:`w` e :blue:`h`), intervallati da ``DT``.
-
-- Per muovere un VirtualRobot si inviano comandi che specificano già la durata del movimento.
-  Al fine di usare il VirtualRobot in modo del tutto analogo al robot reale, si definisce una durata 
-  adeguatamente 'lunga' del comando :blue:`w` (ad esempio 1000 msec)
-
-
--------------------------------------
-Progetto unibo.basicrobot22
--------------------------------------  
-
-- La realizzazione del ``BasicRobot22`` viene affidata al progetto **unibo.basicrobot22**. 
-- Il modello viene definito nel file :ref:`basicrobot.qak<BasicRobot22: il modello basicrobot.qak>`.
-- Per parti di basso livello definite in Kotlin, può essere utile consultare `kotlinUnibo`_.
   
 ++++++++++++++++++++++++++++++
-Console di comando
+La console di comando
 ++++++++++++++++++++++++++++++
-
-Per inviare comandi al ``BasicRobot22`` si può usare una console GUI come quella di figura
-
-.. image::  ./_static/img/Robot22/consoleTcpSmall.PNG 
-  :align: center 
-  :width: 20%
 
 La console  ``consoleGuiSimple`` può connettersi al ``BasicRobot22`` usando uno dei seguenti protocolli, 
 secondo quanto definito nel file `connQak.sysConnKb.kt`_
@@ -175,7 +414,8 @@ Per provocare interazioni usando MQTT, occorre
 
   ``mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"``
 
-- Attivare una console con protocollo MQTT oppure ``qakbasicrobotcallerMQTT.ipynb`` in ``it.unibo.issLabStart/resources/jupyter/``
+- Attivare una console con protocollo MQTT oppure ``qakbasicrobotcallerMQTT.ipynb`` 
+  in ``it.unibo.issLabStart/resources/jupyter/``
 
 
 ..  /it.unibo.issLabStart/resources/jupyter/qakbasicrobotcallerTCP.ipynb
@@ -183,98 +423,12 @@ Per provocare interazioni usando MQTT, occorre
   
 .. 2022: il progetto it.unibo.qak21.robots è stato incluso in it.unibo.qak21.basicrobot
 
+----------------------------
+Sviluppi futuri
+----------------------------
 
-+++++++++++++++++++++++++++++++++
-BasicRobot22: architettura
-+++++++++++++++++++++++++++++++++
-
-.. image::  ./_static/img/Robot22/basicrobotproject.PNG 
-  :align: center 
-  :width: 50%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-BasicRobot22: supporti
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-.. list-table:: 
-  :widths: 30,70
-  :width: 100%
-  
-  * - 
-      .. image::  ./_static/img/Robot22/wenvscene1.PNG 
-           :align: center 
-           :width: 90%
-    - per il VirtualRobot: `virtualrobotSupport`_ 
-  * -
-      .. image::  ./_static/img/Robot22/robotsUnibo.jpg 
-           :align: center 
-           :width: 90%
-    - per il  NanoRObot. `nanoSupport`_, `motors`_
-  * -
-      .. image::  ./_static/img/Robot22/mbot.PNG 
-           :align: center 
-           :width: 90%
-    - per il  NanoRObot. `mbotSupport`_
- 
-
------------------------------------------------
-BasicRobot22: il modello basicrobot.qak
------------------------------------------------
- 
-Per realizzare i :ref:`requisiti<BasicRobot22: requisiti>` impostiamo un :ref:`modello QAk<QActor (meta)model>` 
-con l'obiettivo di 
-definire gli aspetti essenziali della 'business logic' del robot, lasciando ai :ref:`supporti<BasicRobot22: supporti>` 
-il compito di occuparsi dei dettagli tecnologici relativi ai diversi :ref:`tipi di robot<BasicRobot22: tipi di robot>`.
-
-Per il modello completo si veda  `basicrobotqak`_. In questa sede cercheremo di introdurlo in modo incrementale. 
-
-
-++++++++++++++++++++++++++++++++++++++++
-basicrobot.qak: dichiarazioni
-++++++++++++++++++++++++++++++++++++++++
-
-I messaggi 
-
-
-.. code::
-
-    System /* -trace */   basicrobot                
-    //mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"   		//broker.hivemq.com
-
-    Dispatch cmd       	: cmd(MOVE)     
-    Dispatch end       	: end(ARG)  
-    Dispatch stepok   	: stepok(ARG)  
-    Dispatch stepko   	: stepko(ARG)  
-    
-    Request step       : step( TIME )	
-    Reply   stepdone   : stepdone(V)  
-    Reply   stepfail   : stepfail(DURATION, CAUSE)
-      
-    Dispatch obstacle  : obstacle( ARG ) 	//generated by distancefilter
-    Event  endall	     : endall( ARG )   
-    Event   info       : info( ARG ) 	    //for external components, not coap-observed
-
-    Event  sonar     	: sonar(DISTANCE,NAME)			//emitted by distancefilter
-    
-    Context ctxbasicrobot ip [host="localhost" port=8020]  
-
-    CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"
-    CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter"
-    
-    QActor basicrobot context ctxbasicrobot{ ... }
-
-    QActor envsonarhandler context ctxbasicrobot{ ... }
- 
-
-:ref:`Creazione di una pipe`
-
-
-
-
- 
-
- 
- :worktodo:`WORKTODO: creazione della mappa di una stanza vuota`
+ :worktodo:`WORKTODO: usiamo Qak`
 
 - impostare il modello QAk di un sistema che opera come il :ref:`RobotMapperBoundary`
+- impostare il modello QAk di un sistema che comanda ``BasicRobot22`` realizzando la sequenza di mosse 
+  proposta da un :ref:`pianificatore<Uso di un pianificatore>`
