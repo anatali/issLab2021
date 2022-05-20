@@ -3,7 +3,7 @@ System -msglog streamsdemo
 Dispatch start       : start(V)
 Event    sonarRobot  : sonar(V)
 Event    obstacle    : obstacle(V)
-
+  
 Context ctxstreamsdemo ip [host="localhost" port=8045]
 
 CodedQActor sonarsimulator context ctxstreamsdemo className "rx.sonarSimulator"

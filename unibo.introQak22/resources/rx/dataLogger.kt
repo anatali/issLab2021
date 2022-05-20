@@ -18,8 +18,7 @@ class dataLogger(name : String) : ActorBasic(name){
 		pw = PrintWriter( FileWriter(name+".txt") )
  	}
     
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+ 
 	override suspend fun actorBody(msg: IApplMessage) {
   		elabData( msg )
 		emitLocalStreamEvent(msg)	//propagate ... 

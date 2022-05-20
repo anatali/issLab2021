@@ -259,3 +259,28 @@ This utility:
         fun myname() : String
         fun send(msg: String )
     }
+
+
+
+    StartUp
+Scarica Eclipse Xtext e installa il plug-in Eclipse per Kotlin.
+
+Imposta (tramite Windows->Preferences )
+il compilatore Java alla versione 1.8 e il jre a jre1.8.0_ ...
+
+Copia nella directory dropins di Eclipse i file che costituiscono il supporto al metamodello-qak:
+it.unibo.Qactork_1.2.5.jar, it.unibo.Qactork.ui_1.2.5.jar, it.unibo.Qactork.ide_1.2.5.jar.
+
+Creazione di un nuovo progetto
+In un’area di lavoro vuota, crea un nuovo progetto Java
+
+Copiare il gradle build file build2022.gradle
+
+Eseguire
+
+gradle  -b build2022.gradle eclipse
+In src , crea un file con estensione qak A questo punto Eclipse dovrebbe presentare una finestra come la seguente:
+
+_images/qakStarting.png
+Aggiungere la natura Kotlin al progetto
+

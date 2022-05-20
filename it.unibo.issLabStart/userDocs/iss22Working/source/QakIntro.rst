@@ -295,41 +295,62 @@ Transitions and guards in Qak
 - A :blue:`guard` is expressed as a condition written in user-defined Kotlin code.
 
  
---------------------------------------
-StartUp
---------------------------------------
+-------------------------------------------
+StartUp (versione Valastro-Marchegiani)
+-------------------------------------------
 
-#. Scarica `Eclipse Xtext`_   e installa il **plug-in Eclipse per Kotlin**.
-#. Imposta (tramite **Windows->Preferences** ) 
-      il *compilatore Java* alla ``versione 1.8`` e il jre a ``jre1.8.0_ ...`` 
+#. Scarica gradle (versione usata qui: :blue:`Gradle 7.4.2`)
+#. Scarica `Eclipse Xtext`_   (versione usata qui: :blue:`Eclipse  2022-03 (4.23.0)`)
 
-      .. (``C:\Program Files\Java\jre1.8.0_301``)
+   - Java compiler compliance level:  :blue:`11`
+   - Installed JRE: :blue:`jdk 11.08 (default)`
 
 #. Copia nella directory **dropins** di Eclipse i file che costituiscono il supporto al metamodello-qak: 
-    ``it.unibo.Qactork_1.2.4.jar``, ``it.unibo.Qactork.ui_1.2.4.jar``, ``it.unibo.Qactork.ide_1.2.4.jar``.
+
+    - :blue:`it.unibo.Qactork_1.2.5.jar`
+    - :blue:`it.unibo.Qactork.ui_1.2.5.jar`
+    - :blue:`it.unibo.Qactork.ide_1.2.5.jar`
 
 +++++++++++++++++++++++++++++++++++++++
 Creazione di un nuovo progetto
 +++++++++++++++++++++++++++++++++++++++
 
-#. In **un'area di lavoro vuota**, crea un nuovo progetto Java
-#. Copiare il gradle build file `build2022.gradle`_ 
-#. Eseguire
-
+#. In **un'area di lavoro vuota**, crea un nuovo progetto Java  utilizzando 
+  
    .. code::
-    
-      gradle  -b build2022.gradle eclipse
 
-#. In ``src`` , crea un file con estensione ``qak``
+     gradle init
+        selezionare 1, 1, default, default
+#. Copiare nell'area di lavoro la directory :blue:`unibolibs` con le librerie 
+#. Importare il progetto in Eclipse come **Existing Gradle project**
+#. Aggiungere la **natura Java** al progetto
+#. Aggiungere due **source folder**: di nome :blue:`src` e di nome  :blue:`resources`
+#. Creare in **src** un file :blue:`qak` e aggiungere la **natura Xtext**  
+  
    A questo punto Eclipse dovrebbe presentare una finestra come la seguente:
    
    .. image::  ./_static/img/Qak/qakStarting.png
       :align: center 
       :width: 50% 
-#. Aggiungere la **natura Kotlin** al progetto
+#. Scrivere il contenuto del file **qak** e salvare. I plugin *Qactork*: 
+
+   - creano il file  `build2022.gradle`_
+   - creano i files ``sysRules.pl`` e ``sysXXX.pl`` essendo ``sysXXX`` il nome del **System** nel modello
 
 
-  Ricordamo che:
+#. Copiare il contenuto del  file `build2022.gradle`_ nel file :blue:`build.gradle`
+   ( o eliminare questo e ridenomicare il precedente. Il file `build2022.gradle`_ verrà rigenerato al prossimo
+   salvataggio del modello)
+#. Inserire codice Kotlin di utilità usato nel modello entro la directory :blue:`resources`
+#. Eseguire:
+
+   .. code::
+    
+      gradlew run
+  
+
+
+Ricordamo che:
 
   :remark:`Un file qak include la definizione (testuale) di un modello`
 
@@ -1058,8 +1079,10 @@ Una volta salavto il modello, viene generata la seguente descrizione del sistema
 
 Per eseguire il sistema è ora necessario invocare due diversi Main:
 
-- MainCtxcalled.kt che attiva gli attori allocati sul contesto ctxcalled di host=127.0.0.1 (l'attore qacalled)
-- MainCtxcallers.kt che attiva gli attori allocati sul contesto ctxcalled di host=localhost (callerqa1 e callerqa2)
+- **it.unibo.ctxcalled.MainCtxcalledKt** che attiva gli attori allocati sul contesto ctxcalled di ``host=127.0.0.1`` 
+  (l'attore *qacalled*)
+- **it.unibo.ctxcallers.MainCtxcallersKt** che attiva gli attori allocati sul contesto ctxcalled di 
+  ``host=localhost`` (*callerqa1* e *callerqa2*)
 
 Si deve ovviamente verificare che le risposte del sistema **non devono cambiare dal punto di vista logico**.
 

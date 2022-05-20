@@ -1,12 +1,12 @@
 /*
 ================================================================================
-build_ctxcorecaller1.gradle
+build_ctxmockconsole.gradle
 GENERATED ONLY ONCE
 USAGE:	 
-  	gradle  -b build_ctxcorecaller1.gradle eclipse		//to set the dependency on the library
-	gradle  -b build_ctxcorecaller1.gradle distZip
-	gradle  -b build_ctxcorecaller1.gradle -q tasks --all
-	gradle  -b build_ctxcorecaller1.gradle cleanDistDir	//to clean the src directory
+  	gradle  -b build_ctxmockconsole.gradle eclipse		//to set the dependency on the library
+	gradle  -b build_ctxmockconsole.gradle distZip
+	gradle  -b build_ctxmockconsole.gradle -q tasks --all
+	gradle  -b build_ctxmockconsole.gradle cleanDistDir	//to clean the src directory
 ================================================================================
 */
 plugins {

@@ -22,15 +22,13 @@ class sonarDataGen ( name : String ) : ActorBasic( name ) {
 		}
 	}
 		
-	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+ 
     override suspend fun actorBody(msg : IApplMessage){
 		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "start") startDataReadSimulation(   )
      }
   	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+ 
 	suspend fun startDataReadSimulation(    ){
   			var i = 0
 			while( i < 10 ){

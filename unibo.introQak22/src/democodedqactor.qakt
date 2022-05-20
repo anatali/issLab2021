@@ -1,6 +1,6 @@
 System /*-trace*/ democodedqactor 
 Dispatch start   : start( ARG )
-Event sonarrobot : sonar( DATA ) 
+Event sonarrobot : sonar( DATA )   
  
 Context ctxdemocodedqactor ip [host="localhost" port=8065]
 
