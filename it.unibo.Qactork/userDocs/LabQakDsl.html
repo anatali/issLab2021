@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+<!--
+
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin: 10;
+    margin-right: 15px;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom: 1px solid #242424;
+}
+
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+}
+
+h2 {
+    background-color: #d9fbff;
+    font-size: 110%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 80%;
+}
+h4 {
+    background-color: #99ffcc;
+    font-size: 100%;
+	width: 750px;
+}
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 80%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #ccffff;
+    color: #0033cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 80%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+pre{
+	font-family: "Helvetica";
+	font-size: 70%;
+	background-color: #fcf8c7; 
+}
+div.body{
+	width: 800px;
+    font-size: 18px;
+}    
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}    
+div.remark{
+	background-color: #FFFC33;     
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+  -->
+</style>
+    
+<head>
+   
+<title>LABDslISS</title></head>
+    
+<body>
+
+<div class="body"> 
+
+<h1>72939 - LABQakDsl | Qakactor DSL</h1> 
+<a href="http://htmlpreview.github.com/?https://github.com/anatali/iss2019Lab/blob/master/LectureBologna1819.html" target="isslm">LabISS-lectures site</a></font> 
+
+  
+
+
+<h2 id="">History</h2>
+<ol>
+<li>Object-based systems  (Lab3) Framework </li>
+<li>Actor-based systems   (Lab5, Lab6) </li>
+<li>Infrastructure        (Lab6)</li>
+<li>Metamodel 			  (Lab7, LABQak) </li>
+<li>State as DSL     	  (LabDsl, LABQak-QActor as Finite State Machine)</li>
+<li>Language (			  (LABQakDsl)</li>
+<li></li>
+</ol>
+
+<pre>
+QactorkGenerator
+    |
+GenQActorSystem
+    |
+GenQActorCtxSystem 
+    |                       |                 |
+GenQActorCtxSystem		GenSystemContexts  GenQActor
+</pre>
+<center><table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:40%">
+In package <tt>it.unibo.generator</tt>:
+<pre>
+<bc><font size=2>QactorkGenerator extends AbstractGenerator </font></bc>
+</pre>
+calls
+<pre>
+<bc><font size=2>GenQActorSystem</font></bc>
+</pre>
+</td>
+<td><m>
+<bc>GenQActorSystem</bc>:
+<ul>
+<li>for <i>each context</i>, it calls <bc>GenQActorCtxSystem</bc> that generates
+	<ul>
+	<li> the main class</li>
+	<li> the gradle build file</li>
+	</ul>
+</li>
+<li>for <i>each qactor</i>, it calls <bc>GenQActor</bc> that generates
+	<ul>
+	<li>the actor code</li>
+	</ul>
+</li>
+
+<li></li>
+<li></li>
+<li></li>
+</ul>
+</m>
+ 
+</td>
+</tr>
+
+<tr>
+<td>
+<pre><pre>
+
+</pre>
+</td>
+<td><m>
+</m>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre>
+</pre>
+</td>
+<td><h2>...</h2>
+</td>
+</tr>
+
+ 
+
+
+<tr>
+<td>
+<pre>
+</pre>
+</td>
+<td><h2>With and Apply</h2>
+</td>
+</tr>
+
+ 
+
+</tbody>	
+</table></center>
+
+<!-- C:\Didattica2018Work\iss2019Lab\it.unibo.eclipse.qak.test -->
+
+ 
+</div> 
+ 
+
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI    
+</div> 
+</body>
+</html>

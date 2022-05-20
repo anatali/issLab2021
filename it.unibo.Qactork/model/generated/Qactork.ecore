@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="qactork" nsURI="http://www.unibo.it/Qactork" nsPrefix="qactork">
+  <eClassifiers xsi:type="ecore:EClass" name="QActorSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="logmsg" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" eType="#//QActorSystemSpec"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QActorSystemSpec">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mqttBroker" eType="#//BrokerSpec"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" upperBound="-1"
+        eType="#//Message" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context" upperBound="-1"
+        eType="#//Context" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actor" upperBound="-1"
+        eType="#//QActorDeclaration" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BrokerSpec">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="brokerHost" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="brokerPort" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eventtopic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Message">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msg" eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OutOnlyMessage" eSuperTypes="#//Message"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OutInMessage" eSuperTypes="#//Message"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Event" eSuperTypes="#//OutOnlyMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Signal" eSuperTypes="#//OutOnlyMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Token" eSuperTypes="#//OutOnlyMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Dispatch" eSuperTypes="#//OutOnlyMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Request" eSuperTypes="#//OutInMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Reply" eSuperTypes="#//OutInMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Invitation" eSuperTypes="#//OutInMessage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Context">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ip" eType="#//ComponentIP"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mqtt" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComponentIP">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QActorDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context" eType="#//Context"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QActorExternal" eSuperTypes="#//QActorDeclaration"/>
+  <eClassifiers xsi:type="ecore:EClass" name="QActorCoded" eSuperTypes="#//QActorDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QActor" eSuperTypes="#//QActorDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="#//AnyAction"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
+        eType="#//State" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="State">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="normal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transition" eType="#//Transition"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IfSolvedAction" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="solvedactions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="notsolvedactions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GuardedStateAction" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" eType="#//AnyAction"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="okactions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="koactions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PrintCurMsg" eSuperTypes="#//StateAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Print" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" eType="#//PHead"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SolveGoal" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="goal" eType="#//PHead"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resVar" eType="#//Variable"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiscardMsg" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="discard" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MemoTime" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="store" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Duration" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="store" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="start" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Forward" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dest" eType="#//QActorDeclaration"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgref" eType="#//Dispatch"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Emit" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgref" eType="#//Event"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Demand" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dest" eType="#//QActorDeclaration"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgref" eType="#//Request"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Answer" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reqref" eType="#//Request"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgref" eType="#//Reply"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReplyReq" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reqref" eType="#//Request"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgref" eType="#//Request"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Delay" eSuperTypes="#//StateAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DelayInt" eSuperTypes="#//Delay">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="time" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DelayVar" eSuperTypes="#//Delay">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refvar" eType="#//Variable"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DelayVref" eSuperTypes="#//Delay">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reftime" eType="#//VarRef"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DelaySol" eSuperTypes="#//Delay">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refsoltime" eType="#//VarSolRef"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MsgCond" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Message"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msg" eType="#//PHead" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condactions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ifnot" eType="#//NoMsgCond"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EndActor" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arg" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateResource" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="#//AnyAction"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NoMsgCond">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="notcondactions" upperBound="-1"
+        eType="#//StateAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnyAction" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeRun" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//PHead"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeRunActor" eSuperTypes="#//CodeRun">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="aitem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeRunSimple" eSuperTypes="#//CodeRun">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bitem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Exec" eSuperTypes="#//StateAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="action" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EmptyTransition" eSuperTypes="#//Transition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetState" eType="#//State"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eguard" eType="#//AnyAction"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="othertargetState" eType="#//State"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NonEmptyTransition" eSuperTypes="#//Transition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="duration" eType="#//Timeout"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trans" upperBound="-1"
+        eType="#//InputTransition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elseempty" eType="#//EmptyTransition"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Timeout">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetState" eType="#//State"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeoutInt" eSuperTypes="#//Timeout">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="msec" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeoutVar" eSuperTypes="#//Timeout">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="#//Variable"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeoutVarRef" eSuperTypes="#//Timeout">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refvar" eType="#//VarRef"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeoutSol" eSuperTypes="#//Timeout">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refsoltime" eType="#//VarSolRef"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputTransition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" eType="#//AnyAction"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetState" eType="#//State"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventTransSwitch" eSuperTypes="#//InputTransition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Event"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MsgTransSwitch" eSuperTypes="#//InputTransition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Dispatch"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequestTransSwitch" eSuperTypes="#//InputTransition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Request"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReplyTransSwitch" eSuperTypes="#//InputTransition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Reply"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PHead"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PAtom" eSuperTypes="#//PHead"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PAtomString" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PAtomic" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PAtomNum" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PStructRef" eSuperTypes="#//PHead">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="struct" eType="#//PStruct"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PStruct" eSuperTypes="#//PHead">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="functor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgArg" upperBound="-1"
+        eType="#//PHead" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Variable" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="varName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VarRef" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="varName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VarRefInStr" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="varName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VarSolRef" eSuperTypes="#//PAtom">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="varName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: it.unibo.Qactork.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: it.unibo.Qactork.ide
+Bundle-Vendor: it.unibo.disi
+Bundle-Version: 1.2.5
+Bundle-SymbolicName: it.unibo.Qactork.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: it.unibo.Qactork,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: it.unibo.ide.contentassist.antlr.internal,
+ it.unibo.ide.contentassist.antlr
