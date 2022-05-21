@@ -14,7 +14,7 @@ class Cleanerwalker ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( na
 		return "activate"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		
 		val mapname     = "roomBoundary"  		 

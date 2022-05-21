@@ -14,7 +14,7 @@ class Ledmock ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, sc
 		return "s0"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 var Ledvalue = "off"  
 		return { //this:ActionBasciFsm

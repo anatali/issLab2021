@@ -25,7 +25,7 @@ val useMqttInTest 	  = false
  
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	@Before
 	fun systemSetUp() {
 		 //fsm.traceOn = true
@@ -42,14 +42,14 @@ val useMqttInTest 	  = false
 	} 
 }	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	@After
 	fun terminate() {
 		println("testBasicrobot terminated ")
 	}
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun testObstacleLocal(){
 		println(" --- testObstacleLocal ---")
  		runBlocking{
@@ -65,7 +65,7 @@ val useMqttInTest 	  = false
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun testObstacleRemote(){
 		println(" --- testObstacleRemote ---")
  		runBlocking{
@@ -81,7 +81,7 @@ val useMqttInTest 	  = false
 }
 				
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun testMovesLocal(){
 		println(" --- testMovesLocal ---")
  		runBlocking{
@@ -112,7 +112,7 @@ val useMqttInTest 	  = false
 	}
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun testMovesRemote(){
 		println(" --- testMovesRemote ---")
  		runBlocking{
@@ -141,7 +141,7 @@ val useMqttInTest 	  = false
 		}
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	@Test
 	fun testBasicRobot(){
  			if( useMqttInTest ){

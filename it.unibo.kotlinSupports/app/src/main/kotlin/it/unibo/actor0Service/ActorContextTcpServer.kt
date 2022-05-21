@@ -60,7 +60,7 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend protected fun waitForConnection() {
         //We could handle several connections
         //GlobalScope.launch(Dispatchers.IO) {
@@ -83,7 +83,7 @@ class ActorContextTcpServer(name:String, val protocol: Protocol, scope:Coroutine
 EACH CONNECTION WORKS IN ITS OWN COROUTINE
  */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend protected fun handleConnection(conn: IConnInteraction) {
         //GlobalScope.launch(Dispatchers.IO) {
             scope.launch(sysUtil.cpusThreadContext) { //userThreadContext

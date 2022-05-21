@@ -26,7 +26,7 @@ object actorQakCoapObserver {
     private val client = CoapClient()
     
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	 fun activate( context: String, destactor: String, ipaddr : String , owner: ActorBasic? = null){ 
        val uriStr = "$ipaddr/$context/$destactor"
  	   println("actortQakCoapObserver | START uriStr: $uriStr")
@@ -40,7 +40,7 @@ object actorQakCoapObserver {
 
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main( ) { //82.56.16.191
 		actorQakCoapObserver.activate("ctxledalone", "led", "192.168.1.22:8080" )
 		System.`in`.read()   //to avoid exit 

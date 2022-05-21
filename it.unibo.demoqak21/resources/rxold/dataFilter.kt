@@ -15,7 +15,7 @@ import alice.tuprolog.Struct
 class dataFilter (name : String, val owner : ActorBasic? = null) : ActorBasic( name ) {
 val LimitDistance = 8
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: ApplMessage) {
  		val vStr  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
  		elabData( vStr )
@@ -23,7 +23,7 @@ val LimitDistance = 8
 
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	  suspend fun elabData( data : String ){ //		 
 		println("   $name |  data = $data ")		
 		val Distance = Integer.parseInt( data ) 

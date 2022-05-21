@@ -14,7 +14,7 @@ class Testboundary ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 		return "s0"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 val doboundary = true  
 		return { //this:ActionBasciFsm

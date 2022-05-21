@@ -18,7 +18,7 @@ import it.unibo.kactor.ApplMessage
  //A support for using the virtual robot
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 object virtualrobotSupport {
 	lateinit var owner      : ActorBasic
 	lateinit var robotsonar	: ActorBasic
@@ -34,7 +34,7 @@ object virtualrobotSupport {
 		println(" CREATING")		
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){
  		this.owner   = owner	 
  		this.traceOn = trace

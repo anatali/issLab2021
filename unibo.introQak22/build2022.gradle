@@ -1,6 +1,6 @@
 /*
 ================================================================================
-build_ctxcalled.gradle
+build_ctxstreamsdemo.gradle
 GENERATED ONLY ONCE
 ================================================================================
 */
@@ -98,7 +98,7 @@ eclipse {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.unibo.ctxcalled.MainCtxcalledKt'
+    mainClass = 'it.unibo.ctxstreamsdemo.MainCtxstreamsdemoKt'
 }
 
  jar {

@@ -14,7 +14,7 @@ class Sonarmock ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, 
 		return "s0"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 val input   = java.util.Scanner(System.`in`)  
 		return { //this:ActionBasciFsm

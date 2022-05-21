@@ -16,7 +16,7 @@ var stepCounter = 0 //here for testing
 val ndnt ="   "			
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class Stepper (name: String, scope: CoroutineScope, val hh : WEnvConnSupport,
 			   usemqtt:Boolean=false, val owner: Fsm?=null,
 			   discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages, usemqtt){
@@ -133,7 +133,7 @@ suspend fun handleWEnvEvents( jsonMsg : String ) { //called by startReceiver in 
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 	val hh      = WEnvConnSupport( this, "localhost:8091", "400" ) //blocking
 	val stepper = Stepper("stepper", this, hh )

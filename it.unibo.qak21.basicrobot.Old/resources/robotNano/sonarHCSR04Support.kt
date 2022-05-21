@@ -26,7 +26,7 @@ object sonarHCSR04Support {
 	}
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun startRead( actor: ActorBasic  ){
 		GlobalScope.launch{
 			while( true ){

@@ -42,7 +42,7 @@ override fun getBody() : (Fsm.() -> Unit){
 }//getBody 
 }
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 suspend fun demoDiscardMsgs( scope: CoroutineScope){
 	println("---- DEMO with discardMessages=true")
@@ -54,7 +54,7 @@ suspend fun demoDiscardMsgs( scope: CoroutineScope){
 	delay( 100 )
 	Messages.forward("main","msg2","msg2_hello", demo)	
 }
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 suspend fun demoStoreMsgs( scope: CoroutineScope){
 	println("---- DEMO with discardMessages=false")
@@ -67,7 +67,7 @@ suspend fun demoStoreMsgs( scope: CoroutineScope){
 	Messages.forward("main","msg2","msg2_hello", demo)	
 }
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun main() = runBlocking(){
 	demoStoreMsgs( this ) 

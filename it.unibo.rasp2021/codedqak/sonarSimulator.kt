@@ -23,14 +23,14 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
 	}
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg : ApplMessage){
   		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "simulatorstart") startDataReadSimulation(   )
      }
   	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	suspend fun startDataReadSimulation(    ){
   			var i = 0
 			while( i < 10 ){
@@ -48,7 +48,7 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
 } 
 
 //@kotlinx.coroutines.ObsoleteCoroutinesApi
-//@kotlinx.coroutines.ExperimentalCoroutinesApi
+//
 //fun main() = runBlocking{
 // //	val startMsg = MsgUtil.buildDispatch("main","start","start","datasimulator")
 //	val consumer  = dataConsumer("dataconsumer")

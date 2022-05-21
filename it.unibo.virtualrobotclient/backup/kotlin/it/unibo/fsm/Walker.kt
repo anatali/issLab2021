@@ -35,7 +35,7 @@ class Walker (name: String, scope: CoroutineScope, val hh : WEnvConnSupport,
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override fun getBody() : (Fsm.() -> Unit){
 		//val steprobot = stepper("stepper", scope, usemqtt=false, owner=myself )
 		var nstep = 0
@@ -122,7 +122,7 @@ suspend fun mapWEnvEventToDispatch( jsonMsg : String ) { //called by startReceiv
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 	val hh = WEnvConnSupport( this, "localhost:8091", "400" ) //blocking
 	walker = Walker("walker", this, hh )

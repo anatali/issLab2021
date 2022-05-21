@@ -22,7 +22,7 @@ object sentinelCoapObserver {
  
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	 fun activate( owner: ActorBasic? = null){ 
        val uriStr = "coap://$ipaddr/$context/$destactor"
 	   println("sentinelCoapObserver | START uriStr: $uriStr")
@@ -42,7 +42,7 @@ object sentinelCoapObserver {
 
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main( ) {
 		sentinelCoapObserver.activate()
 		System.`in`.read()   //to avoid exit

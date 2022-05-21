@@ -11,14 +11,14 @@ class dataCleaner (name : String ) : ActorBasic( name ) {
 val LimitLow  = 2	
 val LimitHigh = 100
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: ApplMessage) {
   		elabData( msg )
  	}
 
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	  suspend fun elabData( msg: ApplMessage ){ //OPTIMISTIC		 
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
   		//println("$tt $name |  data = $data ")		

@@ -94,7 +94,7 @@ class MqttUtils(val owner: String )  {
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun sendMsgToWorkActor( msg: String ){
 		workActor.scope.launch{
 			val m = AppMsg.create( msg )

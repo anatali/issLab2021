@@ -115,7 +115,7 @@ gradle
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun sendMsgToWorkActor( msg: String ){
 		workActor.scope.launch{
 			val m = ApplMessage( msg )

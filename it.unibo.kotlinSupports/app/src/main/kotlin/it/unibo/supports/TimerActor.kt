@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
                           : ActorBasicKotlin(name, scope, DispatchType.single) {
     private var owner: ActorBasicKotlin
@@ -40,7 +40,7 @@ class TimerActor(name: String, owner: ActorBasicKotlin, scope: CoroutineScope)
     }
 
 }
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun main() {
     println("==============================================")

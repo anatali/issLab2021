@@ -33,7 +33,7 @@ val pauseStepTime  = 700L	//delay between steps
 */ 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class boundaryrobot ( name: String, scope: CoroutineScope,
 				   usemqtt:Boolean=false,
 				   val owner: Fsm?=null,
@@ -117,7 +117,7 @@ var nstep = 0
  
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main(  ) = runBlocking{
     println("==============================================")
     println("boundary | PLEASE, ACTIVATE WENV ")

@@ -31,7 +31,7 @@ fun forward( msgid: String, msgContent: String, dest: robotActorAppMsg){
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 suspend fun sendMsgAppCommands( dest: robotActorAppMsg  ) {
 
     forward( "init" , "", dest  )
@@ -51,7 +51,7 @@ suspend fun sendMsgAppCommands( dest: robotActorAppMsg  ) {
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main( ) = runBlocking {
     println("==============================================")
     println("PLEASE, ACTIVATE WENV ")

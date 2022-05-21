@@ -22,7 +22,7 @@ class WalkerHttpCaller (name: String, scope: CoroutineScope, val hh : WEnvHTTPSu
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override fun getBody() : (Fsm.() -> Unit){
 		//val steprobot = stepper("stepper", scope, usemqtt=false, owner=myself )
 		var nstep   = 0
@@ -59,7 +59,7 @@ class WalkerHttpCaller (name: String, scope: CoroutineScope, val hh : WEnvHTTPSu
 }//WalkerHttpCaller 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 	val hh     = WEnvHTTPSupport( "localhost:8090"  ) //blocking
 	walkerhttp = WalkerHttpCaller("walker", this, hh )

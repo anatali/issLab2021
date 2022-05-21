@@ -14,7 +14,7 @@ class Sonar ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 		return "s0"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 val simulate = false
 		   lateinit var firstActorInPipe : ActorBasic 

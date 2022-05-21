@@ -24,7 +24,7 @@ val showEvents  = { v : String ->  println("showWEnvEvents: $v ")  }//showWEnvEv
 
 //Actor that includes the business logic; the behavior is message-driven
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 val robotActorTry  : SendChannel<String>	= CoroutineScope( Dispatchers.Default ).actor {
     var state    = "working"
     val hh       = WEnvConnSupportNoChannel( "localhost:8091", "300" )

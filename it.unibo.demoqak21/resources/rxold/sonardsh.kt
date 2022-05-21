@@ -19,7 +19,7 @@ class sonardsh (name : String,   val owner : ActorBasic,
  	}
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override suspend fun elabData( data : String ){
 		println("   $name |  data = $data ")
 		val Distance = Integer.parseInt( data ) 

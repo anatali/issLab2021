@@ -5,7 +5,7 @@ import kotlinx.coroutines.delay
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class timer ( name: String, scope: CoroutineScope, usemqtt:Boolean=false, val owner: Fsm ) : Fsm( name, scope, true, usemqtt){
 val ndnt ="   "	
 	override fun getInitialState() : String{

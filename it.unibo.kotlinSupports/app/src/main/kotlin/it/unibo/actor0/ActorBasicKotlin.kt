@@ -9,7 +9,7 @@ import java.util.*
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 
 enum class DispatchType {single, iobound, cpubound }
 /*
@@ -42,7 +42,7 @@ abstract class ActorBasicKotlin(val name: String,
     }
 
 
-    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     val kactor = scope.actor<ApplMessage>(dispatcher, capacity = channelSize) {
         //println("%%% $name |  ${infoThreads()} ACTIVATED  scope=$scope dispatcher=$dispatcher" )
@@ -155,7 +155,7 @@ abstract class ActorBasicKotlin(val name: String,
 
 
     @kotlinx.coroutines.ObsoleteCoroutinesApi
-    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    
     suspend open fun autoMsg(  msg : ApplMessage) {
         //println("ActorBasic $name | autoMsg $msg actor=${actor}")
         kactor.send( msg )

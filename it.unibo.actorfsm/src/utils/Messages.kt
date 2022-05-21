@@ -18,7 +18,7 @@ object Messages{
  Forward a dispatch to a destination actor given by reference
 */	
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun forward(  sender: String, msgId : String, payload: String, dest : Fsm ){
 	 	//println("forward  msgId: ${msgId} payload=$payload")
 		val msg = AppMsg.buildDispatch(actor=sender, msgId=msgId , content=payload, dest=dest.name)
@@ -30,7 +30,7 @@ object Messages{
  Forward a dispatch to a destination actor by using a given MQTT support
 */		
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun forward(  sender: String, msgId : String, payload: String, destName : String, mqtt: MqttUtils ){		
 		val msg = AppMsg.buildDispatch(actor=sender, msgId=msgId , content=payload, dest=destName )
 		if( mqtt.connectDone() ){
@@ -42,7 +42,7 @@ object Messages{
  Emit an event by using a given MQTT support
 */	
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun emit(  sender: String, msgId : String, payload: String, mqtt: MqttUtils ){		
 		val event = AppMsg.buildEvent(actor=sender, msgId=msgId , content=payload )
 		if( mqtt.connectDone() ){

@@ -33,7 +33,7 @@ class ActorContextWsServer(name:String, scope: CoroutineScope )
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend protected fun waitForConnection() {
         //We could handle several connections
         //GlobalScope.launch(Dispatchers.IO) {
@@ -55,7 +55,7 @@ class ActorContextWsServer(name:String, scope: CoroutineScope )
 EACH CONNECTION WORKS IN ITS OWN COROUTINE
  */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend protected fun handleConnection(conn: IConnInteraction) {
         //GlobalScope.launch(Dispatchers.IO) {
             //scope.launch(sysUtil.userThreadContext) {
@@ -104,7 +104,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
 
 /*
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun propagateEvent(event : ApplMessage){
          ctx.actorMap.forEach{
              //sysUtil.traceprintln("       ActorContextServer $name | in ${ctx.name} propag $event to ${it.key} in ${it.value.context.name}")

@@ -13,7 +13,7 @@ import it.unibo.kactor.ApplMessage
  Emits the event sonarRobot : sonar( V )
  */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	lateinit var reader : BufferedReader
 	 
@@ -22,7 +22,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 		//forward("sonarstart", "sonarstart(1)" ,"realsonar" ) -- sent by basicrobot		 
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg : ApplMessage){
  		//println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "sonarstart"){
@@ -38,7 +38,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
      }
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	suspend fun startRead(   ){
  		var counter = 0
 		GlobalScope.launch{	//to allow message handling

@@ -28,7 +28,7 @@ val MoveJsonCmd : HashMap<String, String> = hashMapOf(
 lateinit var robotActorTry: SendChannel<String>
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun createActor(scope:CoroutineScope) : SendChannel<String> {
 	 println("createActor ${kotlindemo.curThread()}")
 	 robotActorTry = scope.actor( capacity = 3 ) {

@@ -13,7 +13,7 @@ val LimitHigh = 150
 		println("dataCleaner STARTS | LimitLow=$LimitLow LimitHigh=$LimitHigh")
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: ApplMessage) {
 	    if( msg.msgId() == "local_obstacleVirtual" ){
 			//Already perceived by the distance_filter too
@@ -26,7 +26,7 @@ val LimitHigh = 150
 
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	  suspend fun elabSonarData( msg: ApplMessage ){ //OPTIMISTIC		 
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
   		//println("$tt $name |  elabData data = $data ")		

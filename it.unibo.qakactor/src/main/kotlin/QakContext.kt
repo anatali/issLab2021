@@ -95,7 +95,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
      }
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun terminateTheContext(){
 		serverCoap.stop()
 		ctxserver.actor.close()
@@ -130,7 +130,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     fun removeInternalActor( actor: ActorBasic){
         actorMap.remove( actor.name )
  		actor.terminate()

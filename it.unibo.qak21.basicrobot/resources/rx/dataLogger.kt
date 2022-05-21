@@ -21,7 +21,7 @@ class dataLogger(name : String) : ActorBasic(name){
  	}
     
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override suspend fun actorBody(msg: IApplMessage) {
  		if( msg.msgId() != "sonarRobot" ) return //AVOID to handle other events
  		elabData( msg )

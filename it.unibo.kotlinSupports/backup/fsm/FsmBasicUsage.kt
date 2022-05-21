@@ -10,7 +10,7 @@ val terminate = MsgUtil.buildDispatch("main","any","stopTheActor","br")
 val msg       = MsgUtil.buildDispatch("main","cmd","cmd(w)","br")
 
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 suspend fun runAnActor( scope: CoroutineScope ){
 
@@ -24,7 +24,7 @@ suspend fun runAnActor( scope: CoroutineScope ){
 	(actor.fsmactor as Job).join()	//waits for termination  	
 }
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun main()=runBlocking{
 	println("main STARTS")

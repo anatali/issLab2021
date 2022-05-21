@@ -78,7 +78,7 @@ def  genCtxQActor( String sysName, String packageName, String className, Context
 def genBuildGradle(String className, Context ctx, boolean ddr)''' 
 /*
 ================================================================================
-build_«ctx.name».gradle
+build.gradle
 GENERATED ONLY ONCE
 ================================================================================
 */
@@ -136,6 +136,12 @@ dependencies {
     implementation group: 'org.eclipse.californium', name: 'californium-core', version: '3.5.0'
     // https://mvnrepository.com/artifact/org.eclipse.californium/californium-proxy2
     implementation group: 'org.eclipse.californium', name: 'californium-proxy2', version: '3.5.0'
+
+//OkHttp library for websockets with Kotlin
+	//implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'    
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3' 
+	// https://mvnrepository.com/artifact/com.squareup.okhttp3/mockwebserver
+	testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.9.3'
 
     /* LOG4J *************************************************************************************************************** */
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j

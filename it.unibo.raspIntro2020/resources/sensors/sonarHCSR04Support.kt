@@ -14,7 +14,7 @@ object sonarHCSR04Support {
 	lateinit var reader : BufferedReader
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun create( owner : ActorBasic? = null  ){
 		println("sonarHCSR04Support CREATING")
 		try{
@@ -27,7 +27,7 @@ object sonarHCSR04Support {
 	}
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun startRead( owner: ActorBasic?  ){
 		GlobalScope.launch{
 			var counter = 0

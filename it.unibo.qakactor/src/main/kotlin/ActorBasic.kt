@@ -64,7 +64,7 @@ abstract class  ActorBasic(  name:         String,
     }
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     protected val dispatcher =
         if( confined ) sysUtil.singleThreadContext
         else  if( ioBound ) sysUtil.ioBoundThreadContext
@@ -97,7 +97,7 @@ Message-driven kactor
         sysUtil.updateLogfile(actorLogfileName, "item($name,nostate,$msg).", dir = msgLogDir)
 	}
 	
-    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     val actor = scope.actor<IApplMessage>( dispatcher, capacity=channelSize ) {
         //println("ActorBasic $name |  RUNNING IN $dispatcher"  )
@@ -130,7 +130,7 @@ Message-driven kactor
 TERMINATION 
 */		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     fun terminate(arg: Int=0){
 		println("$tt ActorBasic $name | terminates $arg ")
         if( context !== null ) context!!.actorMap.remove(  name )
@@ -140,7 +140,7 @@ TERMINATION
 		println("$tt ActorBasic $name | terminateCtx $arg TODO ")
         //context!!.terminateTheContext()         
     }
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 	suspend fun waitTermination(){
 		(actor as Job).join()
@@ -151,7 +151,7 @@ Messaging
 --------------------------------------------
  */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend open fun autoMsg(  msg : IApplMessage) {
      //println("ActorBasic $name | autoMsg $msg actor=${actor}")
         actor.send( msg )
@@ -163,7 +163,7 @@ Messaging
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun autoMsg( msgId : String, msg : String) {
         actor.send(MsgUtil.buildDispatch(name, msgId, msg, this.name))
     }
@@ -172,7 +172,7 @@ Messaging
 
     //Oct2019
 @kotlinx.coroutines.ObsoleteCoroutinesApi 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun sendMessageToActor(msg : IApplMessage, destName: String, conn : IConnInteraction? = null ) {
         //println("$tt ActorBasic sendMessageToActor | destName=$destName  ")
         if( context == null ){  //Defensive programming
@@ -237,26 +237,26 @@ Messaging
         return false
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun forward( msgId : String, msg: String, destName: String) {
         val m = MsgUtil.buildDispatch(name, msgId, msg, destName)
         sendMessageToActor( m, destName)
      }//forward
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun request( msgId : String, msg: String, destActor: ActorBasic) {
         //println("       ActorBasic $name | forward $msgId:$msg to ${destActor.name} in ${sysUtil.curThread() }")
         destActor.actor.send(MsgUtil.buildRequest(name, msgId, msg, destActor.name))
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun request( msgId : String, msg: String, destName: String) {
         val m = MsgUtil.buildRequest(name, msgId, msg, destName)
         sendMessageToActor( m, destName)
      }//request
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun answer( reqId: String, msgId : String, msg: String) {
     sysUtil.traceprintln("$tt ActorBasic $name | answer $msgId:$msg  }")
         val reqMsg = requestMap.remove(reqId) //one request, one reply
@@ -272,7 +272,7 @@ Messaging
 
 /*
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun replyreq( reqId: String, reqestmsgId : String, msg: String) {
         //println(" $tt ActorBasic $name | replyreq $reqId related to request:$reqestmsgId content=$msg  ")
         val reqMsg = requestMap.get(reqestmsgId)		//WHY NOT remove?
@@ -287,7 +287,7 @@ Messaging
 */
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun emit(ctx: QakContext, event : IApplMessage) {  //used by NodeProxy
     sysUtil.traceprintln("$tt ActorBasic $name | emit from proxy ctx= ${ctx.name} ")
          ctx.actorMap.forEach {
@@ -302,7 +302,7 @@ Messaging
 
 //ADDED MAY2020	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun emitWithDelay(  evId: String, evContent: String, dt : Long = 0L ) {
 		scope.launch{
 			delay( dt )
@@ -312,7 +312,7 @@ Messaging
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun emit(event : IApplMessage, avatar : Boolean = false ) {
 	//avatar=true means that the emitter is able to sense the event that emits
         if( context == null ){
@@ -368,7 +368,7 @@ Messaging
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun emit( msgId : String, msg : String) {
         val event = MsgUtil.buildEvent(name, msgId, msg)
         emit( event )
@@ -396,12 +396,12 @@ Messaging
         subscribers.remove(a)
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun emitLocalStreamEvent(ev: String, evc: String ){
         emitLocalStreamEvent(MsgUtil.buildEvent(name, ev, evc))
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun emitLocalStreamEvent(v: IApplMessage){
         subscribers.forEach {
             sysUtil.traceprintln(" $tt ActorBasic $name | emitLocalStreamEvent $it $v ");
@@ -431,7 +431,7 @@ MQTT
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override fun messageArrived(topic: String, msg: MqttMessage) {
         //sysUtil.traceprintln("$tt ActorBasic $name |  MQTT messageArrived on "+ topic + ": "+msg.toString());
         val m = ApplMessage( msg.toString() )
@@ -548,7 +548,7 @@ KNOWLEDGE BASE
  * PUT method is idempotent. Use PUT when you want to modify
  */
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override fun handlePUT(exchange: CoapExchange) {
         val arg = exchange.requestText
     sysUtil.traceprintln("$logo | handlePUT arg=$arg")
@@ -567,7 +567,7 @@ KNOWLEDGE BASE
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     fun fromPutToMsg(msg : IApplMessage, exchange: CoapExchange ) {
     sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
         if( msg.isDispatch() || msg.isEvent() ) {

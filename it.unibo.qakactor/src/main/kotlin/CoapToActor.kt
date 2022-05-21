@@ -21,7 +21,7 @@ var answer = "noanswer"
      }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
      override suspend fun actorBody(msg : IApplMessage){
 //		if( msg.msgId() == "start") {
 //	        sysUtil.traceprintln("$tt $name | map PUT in request to ${owner.name}:  $extmsg "  )

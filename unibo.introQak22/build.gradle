@@ -107,7 +107,8 @@ eclipse {
 application {
     // Define the main class for the application.
     //mainClass = 'it.unibo.ctxcallers.MainCtxcallersKt'
-    mainClass = 'it.unibo.ctxcalled.MainCtxcalledKt'
+    //mainClass = 'it.unibo.ctxcalled.MainCtxcalledKt'
+    mainClass = 'it.unibo.ctxstreamsdemo.MainCtxstreamsdemoKt'
 }
 
  jar {

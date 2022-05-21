@@ -14,7 +14,7 @@ class Demonottodo ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name
 		return "s0"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State

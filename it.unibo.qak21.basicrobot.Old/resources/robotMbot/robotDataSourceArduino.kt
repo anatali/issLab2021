@@ -18,7 +18,7 @@ import kotlinx.coroutines.GlobalScope
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 					val conn : SerialPortConnSupport) : ActorBasic(name, owner.scope){		
 	init{
@@ -27,7 +27,7 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override suspend fun actorBody(msg: ApplMessage) {
 	//perceives also the event sonar emitted by distancefilter
         //println("   	%%% $name |  handles msg= $msg conn=$conn owner=$owner")
@@ -38,7 +38,7 @@ class  robotDataSourceArduino( name : String, val owner : ActorBasic ,
 	}
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	suspend fun readData(  ){
 	owner.scope.launch{
          println("   	%%% $name |  readData ...")

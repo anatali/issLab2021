@@ -34,7 +34,7 @@ var count = 1;
     }
 	
 //@kotlinx.coroutines.ObsoleteCoroutinesApi
-//@kotlinx.coroutines.ExperimentalCoroutinesApi
+//
 //@JvmStatic suspend fun sendAMsg( sender : String, msgId: String, msg: String, destActorName: String) {
 //		val a = sysUtil.getActor(destActorName)
 //        val dispatchMsg = buildDispatch(sender, msgId, msg, destActorName)
@@ -42,7 +42,7 @@ var count = 1;
 //        if( a != null ) a.actor.send( dispatchMsg )
 //    }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic    suspend fun sendMsg( 
             sender : String, msgId: String, msg: String, destActor: ActorBasicKotlin) {
         val dispatchMsg = buildDispatch(sender, msgId, msg, destActor.name)
@@ -50,12 +50,12 @@ var count = 1;
         destActor.actor.send( dispatchMsg )
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic    suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasicKotlin) {
         destActor.actor.send(msg)
     }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic    suspend fun sendMsg(
             msgId: String, msg: String, destActor: ActorBasicKotlin, source:String="unknown") {
         val dispatchMsg = buildDispatch(source, msgId, msg, destActor.name)

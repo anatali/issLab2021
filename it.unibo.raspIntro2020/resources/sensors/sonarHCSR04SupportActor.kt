@@ -17,7 +17,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg : ApplMessage){
  		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "simulatorstart"){
@@ -33,7 +33,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
      }
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	suspend fun startRead(   ){
  		var counter = 0
 		GlobalScope.launch{	//to allow message handling

@@ -14,7 +14,7 @@ var stepCounter = 0 //here for testing
 val ndnt ="   "			
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class stepper ( name: String, scope: CoroutineScope,
 				usemqtt:Boolean=false, val owner: Fsm?=null,
 				discardMessages:Boolean=true ) : Fsm( name, scope, discardMessages, usemqtt){
@@ -128,7 +128,7 @@ lateinit var robot : Fsm
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 //	utils.mqtttraceOn = true
 //	val worker = worker( "worker", this )

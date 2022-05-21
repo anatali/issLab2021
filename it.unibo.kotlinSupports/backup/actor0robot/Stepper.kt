@@ -9,7 +9,7 @@ import it.unibo.robotService.StepRobotActor
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class Stepper(name:String, scope: CoroutineScope) : ActorBasicKotlin(name, scope) {
     val stepMsg = ApplMsgs.stepMsg.replace("TIME", "350")
 

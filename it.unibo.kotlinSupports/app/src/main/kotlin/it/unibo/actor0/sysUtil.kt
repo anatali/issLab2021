@@ -16,7 +16,7 @@ object sysUtil{
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val singleThreadContext    = newSingleThreadContext("singleThread")
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "pool64")
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "cpuspool")

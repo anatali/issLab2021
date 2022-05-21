@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class demoactor ( scope: CoroutineScope ) : Fsm( "demoactor", scope ){
  	
 	override fun getInitialState() : String{

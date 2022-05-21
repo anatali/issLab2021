@@ -26,14 +26,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 object robotSupport{
 	lateinit var robotKind  :  String
 	var endPipehandler      :  ActorBasic? = null 
 	
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun testCrono(owner: ActorBasic){
 		println( "		--- robotSupport | testcronooooooooooooooooooooooooooooooooooooooooo" )
 		//Runtime.getRuntime().exec("sudo ./linuxCrono") //ADDED June 21 to check the time measurement
@@ -99,7 +99,7 @@ object robotSupport{
 	}
 	 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun move( cmd : String ){ //cmd = w | a | s | d | h 
  		println("robotSupport move cmd=$cmd robotKind=$robotKind" ) 
 		when( robotKind ){

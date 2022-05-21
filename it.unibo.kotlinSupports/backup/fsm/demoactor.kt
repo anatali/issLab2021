@@ -3,7 +3,7 @@ package fsm
 import kotlinx.coroutines.CoroutineScope
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class demoactor ( scope: CoroutineScope ) : FsmBasic( "demoactor", scope ){
  	
 	override fun getInitialState() : String{

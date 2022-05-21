@@ -54,7 +54,7 @@ fun buildEvent( actor: String, msgId : String , content : String  ) : ApplMessag
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic
 suspend fun sendMsg(sender : String, msgId: String, msg: String, destActor: ActorBasicKotlin) {
         val dispatchMsg = buildDispatch(sender, msgId, msg, destActor.name)
@@ -68,7 +68,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IUn
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic
     suspend fun sendMsg(msg: ApplMessage, destActor: ActorBasicKotlin) {
         destActor.kactor.send(msg)
@@ -79,7 +79,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IUn
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic
     suspend fun sendMsg(
             msgId: String, msg: String, destActor: ActorBasicKotlin, source:String="unknown") {
@@ -122,7 +122,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IUn
 
     /* //TODO
     @kotlinx.coroutines.ObsoleteCoroutinesApi
-    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    
     @JvmStatic    fun getConnectionSerial( portName: String, rate: Int) : IConnInteraction {
         val  factoryProtocol =  FactoryProtocol(null,"${Protocol.SERIAL}",portName)
         val conn = factoryProtocol.createSerialProtocolSupport(portName)
@@ -145,7 +145,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: IUn
  Forward a dispatch to a destination actor given by reference
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @JvmStatic     suspend fun forward(  sender: String, msgId : String, payload: String, dest : ActorBasicKotlin){
     //println("forward  msgId: ${msgId} payload=$payload")
     val msg = buildDispatch(actor=sender, msgId=msgId , content=payload, dest=dest.name)

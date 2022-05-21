@@ -17,7 +17,7 @@ class dataLogger(name : String) : ActorBasic(name){
  	}
     
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override suspend fun actorBody(msg: ApplMessage) {
   		elabData( msg )
 		emitLocalStreamEvent(msg)	//propagate ... 

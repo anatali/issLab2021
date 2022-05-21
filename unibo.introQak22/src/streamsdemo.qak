@@ -2,7 +2,7 @@ System -msglog streamsdemo
 
 Dispatch start       : start(V)
 Event    sonarRobot  : sonar(V)
-Event    obstacle    : obstacle(V)
+Event    obstacle    : obstacle(V) 
   
 Context ctxstreamsdemo ip [host="localhost" port=8045]
 

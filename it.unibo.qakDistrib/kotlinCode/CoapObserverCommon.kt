@@ -20,7 +20,7 @@ object  CoapObserverCommon {
  
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	 fun activate(  ){ 
        val uriStr = "coap://$ipaddr/$context/$destactor"
 	   println("CoapObserver | START uriStr: $uriStr")
@@ -39,7 +39,7 @@ object  CoapObserverCommon {
 
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main( ) {
 		CoapObserverCommon.activate()
 		System.`in`.read()   //to avoid exit

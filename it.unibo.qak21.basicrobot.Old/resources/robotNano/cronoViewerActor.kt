@@ -20,7 +20,7 @@ class cronoViewerActor ( name : String ) : ActorBasic( name ) {
 		 
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg : ApplMessage){
  		println("$tt $name | received  $msg "  )
 		if( msg.msgId() == "cronoViewerstart"){
@@ -36,7 +36,7 @@ class cronoViewerActor ( name : String ) : ActorBasic( name ) {
      }
 		
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	suspend fun startRead(   ){
  		GlobalScope.launch{	//to allow message handling
 		while( true ){

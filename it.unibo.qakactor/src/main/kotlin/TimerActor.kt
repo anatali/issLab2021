@@ -46,7 +46,7 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
 
     /*
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
    override suspend fun actorBody(msg : ApplMessage){
         //sysUtil.trace
     println("TimerActor using delay RECEIVES  ${msg} tout=$tout")

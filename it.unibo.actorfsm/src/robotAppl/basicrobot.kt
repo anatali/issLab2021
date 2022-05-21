@@ -16,7 +16,7 @@ enum class basicrobotstate {
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class basicrobot ( name: String, scope: CoroutineScope,
 				   usemqtt:Boolean=false,
 				   val owner: Fsm?=null,
@@ -101,7 +101,7 @@ class basicrobot ( name: String, scope: CoroutineScope,
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 suspend fun demoUsingMqtt( scope: CoroutineScope){
 	val mqttMain = MqttUtils("main")
 	while( ! mqttMain.connectDone() ){
@@ -124,7 +124,7 @@ suspend fun demoUsingMqtt( scope: CoroutineScope){
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 suspend fun demoLocal( scope: CoroutineScope){
 	val robot = basicrobot("basicrobot", scope, usemqtt=false, owner=null, discardMessages=true)
 	println(" --- demoLocal ---")
@@ -140,7 +140,7 @@ suspend fun demoLocal( scope: CoroutineScope){
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 	utils.mqtttraceOn = true
   

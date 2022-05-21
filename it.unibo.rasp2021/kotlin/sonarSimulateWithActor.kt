@@ -9,7 +9,7 @@ import it.unibo.kactor.ApplMessage
 import it.unibo.kactor.MsgUtil
  
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 class sonarSimulateWithActor( val name : String, scope: CoroutineScope = GlobalScope )    {
 	var coapSupport : CoapSupport	 

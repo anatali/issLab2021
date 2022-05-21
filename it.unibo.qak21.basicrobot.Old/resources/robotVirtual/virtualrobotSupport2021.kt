@@ -20,7 +20,7 @@ import it.unibo.interaction.MsgRobotUtil
  //A support for using the virtual robot
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 object virtualrobotSupport2021 {
 	private var port     = 0
 	lateinit var owner      : ActorBasic
@@ -50,7 +50,7 @@ val doafterConn : (CoroutineScope, IssWsHttpKotlinSupport) -> Unit =
 }*/
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){
  		this.owner   = owner	 
  		this.traceOn = trace

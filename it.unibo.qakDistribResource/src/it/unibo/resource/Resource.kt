@@ -14,7 +14,7 @@ class Resource ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 		return "s0"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
+				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		   
 			fun resourceInfo() : String {

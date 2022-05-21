@@ -18,13 +18,13 @@ object sysUtil{
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val singleThreadContext    = newSingleThreadContext("singleThread")
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "pool64")
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "cpuspool")
 
  	fun traceprintln( msg : String ){

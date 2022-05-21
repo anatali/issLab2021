@@ -11,7 +11,7 @@ import it.unibo.kactor.MsgUtil
 import kotlinx.coroutines.delay
 import javacode.CoapSupport
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 class simuldata( val name : String, val scope: CoroutineScope  )    {
 lateinit var coapSupport : CoapSupport	
@@ -47,7 +47,7 @@ lateinit var coapSupport : CoapSupport
 
 
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 fun main() {
 	 

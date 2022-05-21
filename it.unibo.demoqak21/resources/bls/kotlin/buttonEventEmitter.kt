@@ -23,7 +23,7 @@ class buttonEventEmitter( val a : ActorBasic, val name : String ) : IObserver {
 		}
 	}
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
      override fun update(o: Observable?, arg: Any?) {
  	        GlobalScope.launch{
 	            //MsgUtil.sendMsg("click", "clicked", a)

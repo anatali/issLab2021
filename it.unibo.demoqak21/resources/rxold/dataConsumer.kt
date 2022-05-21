@@ -14,7 +14,7 @@ class dataConsumer( name : String ) : ActorBasic( name ){
 	}		  		      
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg : ApplMessage){
  		println("$tt $name | received  $msg "  )
 // 		emit( msg, avatar=true ) 				 

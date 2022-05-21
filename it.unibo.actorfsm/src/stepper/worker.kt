@@ -15,7 +15,7 @@ class worker ( name: String, scope: CoroutineScope,
 	}
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override fun getBody() : (Fsm.() -> Unit){
 		val steprobot = stepper("stepper", scope, usemqtt=false, owner=myself )
 		return{

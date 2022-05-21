@@ -21,14 +21,14 @@ init{
 	//HIController.setAnswerChannel(answerMoveChannel)
 }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: ApplMessage) {
   		elabData( msg )
  	}
 
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	  suspend fun elabData( msg: ApplMessage ){
 	      sysUtil.colorPrint("basicrobotProxy | elabData:${msg} ", Color.BLUE)
 	/*

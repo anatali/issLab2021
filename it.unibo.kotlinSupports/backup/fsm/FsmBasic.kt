@@ -128,7 +128,7 @@ abstract class  FsmBasic(val name:  String,
         //println("Fsm $name | INIT setBody in state=${initialState}")
     }
 	
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
     @kotlinx.coroutines.ObsoleteCoroutinesApi
 	protected val dispatcher =
         if( confined ) newSingleThreadContext("fsmsingle")
@@ -138,7 +138,7 @@ abstract class  FsmBasic(val name:  String,
  
 	
 	
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
     @kotlinx.coroutines.ObsoleteCoroutinesApi
 	suspend fun waitTermination(){
 		(fsmactor as Job).join()
@@ -213,7 +213,7 @@ abstract class  FsmBasic(val name:  String,
     }
 	
 
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
     @kotlinx.coroutines.ObsoleteCoroutinesApi
 	fun terminate(){
 		println("		*** Fsm $name | terminates")
@@ -221,7 +221,7 @@ abstract class  FsmBasic(val name:  String,
 		fsmactor.close()
 	}
 	
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
     @kotlinx.coroutines.ObsoleteCoroutinesApi
 	suspend fun autoMsg(  msg : ApplMessage ) {
      	//println("		*** Fsm $name | autoMsg $msg actor=${actor}")
@@ -239,7 +239,7 @@ abstract class  FsmBasic(val name:  String,
     abstract fun getBody(): (FsmBasic.() -> Unit)
     abstract fun getInitialState(): String
 
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     fun setBody(buildbody: FsmBasic.() -> Unit, initialStateName: String ) {
         buildbody()            //Build the structural part
@@ -283,7 +283,7 @@ abstract class  FsmBasic(val name:  String,
 /*
  				
 */				
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     val fsmactor = scope.actor<ApplMessage>( dispatcher, capacity=channelSize ) {
         trace("Fsm $name | fsmactor RUNNING IN $dispatcher"  )
@@ -325,13 +325,13 @@ abstract class  FsmBasic(val name:  String,
 INTERACTION	
  */	
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun forward(  msgId : String, payload: String, dest : FsmBasic ){
 		val msg = MsgUtil.buildDispatch(actor=name, msgId=msgId , content=payload, dest=dest.name)
 		forward( msg, dest )
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun forward(  msg : ApplMessage, dest : FsmBasic ){
 	 	//println("		*** Fsm $name | forward  msg: ${msg} ")
 		 if( ! dest.fsmactor.isClosedForSend) dest.fsmactor.send( msg  )
@@ -339,13 +339,13 @@ INTERACTION
 	}
 	
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun emit(  msgId : String, payload: String ){
 		val msg = MsgUtil.buildEvent(actor=name, msgId=msgId , content=payload )
 		emit( msg )
 	}	
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi
+	
 	suspend fun emit(  msg : ApplMessage ){
 	 	//trace("		*** Fsm $name | emit  msg: ${msg} usemqtt=$usemqtt")
         trace("		*** Fsm $name | WARNING: Messages.emit NOT SUPPORTED without MQTT")

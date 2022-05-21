@@ -125,7 +125,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     abstract fun getInitialState(): String
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     fun setBody( buildbody: ActorBasicFsm.() -> Unit, initialStateName: String ) {
         buildbody()            //Build the structural part
         currentState = getStateByName(initialStateName)
@@ -143,14 +143,14 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 	}
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: IApplMessage) {
          if ( !isStarted && msg.msgId() == autoStartMsg.msgId() ) fsmStartWork( msg )
          else  fsmwork(msg)
     }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun fsmStartWork( msg: IApplMessage ) {
         isStarted = true
         //println("ActorBasicFsm $name | fsmStartWork in STATE ${currentState.stateName}")
@@ -167,7 +167,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
      }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
      suspend fun fsmwork(msg: IApplMessage) {
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
         var nextState = checkTransition(msg)
@@ -177,7 +177,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
    }
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun elabMsgInState( ) {
         sysUtil.traceprintln("$tt ActorBasicFsm $name | elabMsgInState in ${currentState.stateName} $currentMsg")
     	currentState.enterState() //execute local actions (Moore automaton)
@@ -186,7 +186,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     }
 	 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun checkEmptyMove() {
 		//sysUtil.traceprintln("$tt ActorBasicFsm $name | checkDoEmptyMoveInState msgQueueStoreSize=:${msgQueueStore.size}")
         var nextState = checkTransition(NoMsg) //EMPTY MOVE
@@ -235,7 +235,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	suspend private fun elabMsgQueueStore(  ) : Boolean {
         msgQueueStore.forEach {
            val state = checkTransition(it)
@@ -359,7 +359,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     suspend fun replyToCaller(msgId: String, msg: String) {
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | replyToCaller msgToReply=" + msgToReply);
         val caller = msgToReply.msgSender()

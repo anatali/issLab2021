@@ -20,7 +20,7 @@ import it.unibo.kactor.MsgUtil
 //import robotMbot.robotDataSourceArduino
  
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 object robotSupport{
 	lateinit var robotKind  :  String
 	var endPipehandler      :  ActorBasic? = null 
@@ -56,7 +56,7 @@ object robotSupport{
 	}
 	 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun move( cmd : String ){ //cmd = w | a | s | d | h
  		//println("robotSupport move cmd=$cmd robotKind=$robotKind" ) 
 		when( robotKind ){

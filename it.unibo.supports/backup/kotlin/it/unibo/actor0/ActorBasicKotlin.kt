@@ -7,7 +7,7 @@ import kotlinx.coroutines.channels.actor
 import org.json.JSONObject
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 
 enum class DispatchType {single, iobound, cpubound }
 
@@ -42,7 +42,7 @@ abstract class ActorBasicKotlin(val name: String,
     }
 
 
-    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    
     @kotlinx.coroutines.ObsoleteCoroutinesApi
     val actor = scope.actor<ApplMessage>(dispatcher, capacity = channelSize) {
          for (msg in channel) {
@@ -130,7 +130,7 @@ abstract class ActorBasicKotlin(val name: String,
         scope.launch {   actor.send(msg)  }
     }
     @kotlinx.coroutines.ObsoleteCoroutinesApi
-    @kotlinx.coroutines.ExperimentalCoroutinesApi
+    
     suspend open fun autoMsg(  msg : ApplMessage) {
         //println("ActorBasic $name | autoMsg $msg actor=${actor}")
         actor.send( msg )

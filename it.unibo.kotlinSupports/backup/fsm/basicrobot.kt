@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class basicrobot (name: String, scope: CoroutineScope,
 				  usemqtt:Boolean=false,
 				  val owner: FsmBasic?=null,
@@ -102,7 +102,7 @@ class basicrobot (name: String, scope: CoroutineScope,
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 suspend fun demoLocal( scope: CoroutineScope){
 	val robot = basicrobot("basicrobot", scope, usemqtt=false, owner=null, discardMessages=true)
 	println(" --- demoLocal ---")
@@ -118,7 +118,7 @@ suspend fun demoLocal( scope: CoroutineScope){
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 
 	demoLocal( this )

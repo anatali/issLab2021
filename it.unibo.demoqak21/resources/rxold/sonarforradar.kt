@@ -13,7 +13,7 @@ class sonarforradar (name : String,  val owner : ActorBasic ) : ApplActorDataStr
  	}
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	override suspend fun elabData( data : String ){ //
 		//println("   $name |  propagates $data ")		
   		val m1 = MsgUtil.buildEvent(name, "polar", "polar($data, 0)")

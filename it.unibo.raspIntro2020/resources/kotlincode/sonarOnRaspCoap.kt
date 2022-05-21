@@ -53,7 +53,7 @@ class sonarOnRaspCoap( val name : String, val scope: CoroutineScope = GlobalScop
 }
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi	
+	
 fun main() = runBlocking {
 	val maxtime = 600000L
 	val appl = sonarOnRaspCoap("sonarOnRaspCoap")

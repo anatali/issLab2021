@@ -5,7 +5,7 @@ import it.unibo.robotService.ApplMsgs
 import it.unibo.robotService.BasicRobotActor
 import kotlinx.coroutines.*
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class BasicRobotCaller(name: String, scope: CoroutineScope) : ActorBasicKotlin( name, scope ) {
 
     private val basicRobot = BasicRobotActor("basicRobot"  )
@@ -33,7 +33,7 @@ class BasicRobotCaller(name: String, scope: CoroutineScope) : ActorBasicKotlin( 
 
 }
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun mainbasicrobotcaller() {
     //sysUtil.trace = true
     val startTime = sysUtil.aboutSystem("BasicRobotCaller")

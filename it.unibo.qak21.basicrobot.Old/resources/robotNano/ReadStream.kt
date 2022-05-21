@@ -29,7 +29,7 @@ You can create a separate class to handle both the Input and Error Stream as fol
 
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class ReadStream ( val name : String, val  inps : InputStream, val a : ActorBasic ) : Runnable{ //ActorBasic( name ) {
 	//lateinit var reader : BufferedReader
 	//lateinit var thread : Thread
@@ -77,7 +77,7 @@ class ReadStream ( val name : String, val  inps : InputStream, val a : ActorBasi
 }
 /*
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main( ) {
 	var p : Process? = null
 	try{

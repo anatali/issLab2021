@@ -32,13 +32,13 @@ object sysUtil{
 	val cpus                   = Runtime.getRuntime().availableProcessors()
 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val singleThreadContext    = newSingleThreadContext("qaksingle")
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "qakiopool")
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "qakcpuspool")
 
 	var mqttBrokerIP : String? = ""
@@ -113,7 +113,7 @@ object sysUtil{
          dispatchMap.put( d, dt as Struct )
      }
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		//println("               %%% sysUtil | createTheContext $ctx ctxHost=$ctxHost  ")

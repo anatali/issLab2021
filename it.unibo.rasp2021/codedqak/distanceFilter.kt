@@ -11,7 +11,7 @@ import alice.tuprolog.Struct
 class distanceFilter (name : String ) : ActorBasic( name ) {
 val LimitDistance = 10
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: ApplMessage) {
 		if( msg.msgSender() == name) return //AVOID to handle the event emitted by itself
   		elabData( msg )
@@ -19,7 +19,7 @@ val LimitDistance = 10
 
  	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 	  suspend fun elabData( msg: ApplMessage ){ //OPTIMISTIC		 
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
 //  		println("$tt $name |  data = $data ")

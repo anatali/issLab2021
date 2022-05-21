@@ -15,7 +15,7 @@ class sonarDatastreamHandle (name : String ,
 							 scope : CoroutineScope = GlobalScope ) : ActorBasic(name, scope){
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
     override suspend fun actorBody(msg: ApplMessage) {
  		val vStr  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
  			//println("   $name |  handles msg= $msg  vStr=$vStr")

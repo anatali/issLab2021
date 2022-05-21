@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 
 val prfx   		= "&&& "
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 class sensorObserver ( name: String, scope: CoroutineScope,
 				   usemqtt:Boolean=true,  discardMessages:Boolean=true
 				 ) : Fsm( name, scope, discardMessages,usemqtt){
@@ -44,7 +44,7 @@ class sensorObserver ( name: String, scope: CoroutineScope,
 }//sensorObserver
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+
 fun main() = runBlocking{
 	val sobs = sensorObserver("sensorobserver", this, usemqtt=true ) 	
  	sobs.waitTermination()
