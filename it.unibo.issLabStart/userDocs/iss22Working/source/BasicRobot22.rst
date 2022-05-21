@@ -432,6 +432,59 @@ Per provocare interazioni usando MQTT, occorre
   
 .. 2022: il progetto it.unibo.qak21.robots è stato incluso in it.unibo.qak21.basicrobot
 
+
+----------------------------
+Distribuzione
+----------------------------
+
++++++++++++++++++++++++++++++++++
+Dockerfile
++++++++++++++++++++++++++++++++++
+
+.. code::
+
+  FROM openjdk:12.0.2
+  EXPOSE 8020
+  ## ADD extracts the tar
+  ADD ./build/distributions/it.unibo.basicrobot-1.0.tar /
+  WORKDIR /it.unibo.basicrobot-1.0/bin
+  COPY ./*.pl ./
+  COPY ./*.json ./
+
+  ##  docker build -t basicrobot22 . 
+  ##  docker run -it --rm --name basicrobot22 -p8020:8020/tcp --privileged basicrobot22  /bin/bash
+
+
++++++++++++++++++++++++++++++++++
+basicrobot22.yaml
++++++++++++++++++++++++++++++++++
+
+.. code::
+
+  version: '3'
+  services:
+    wenv:
+      #image: docker.io/natbodocker/virtualrobotdisi:4.0
+      image: virtualrobotdisi:4.0
+      ports:
+        - 8090:8090
+        - 8091:8091
+    robot:
+      ##image: docker.io/natbodocker/basicrobot21:1.0
+      image: basicrobot22
+      ports:
+        - 8020:8020/tcp
+        - 8020:8020/udp
+      depends_on:
+        - wenv
+
+  ## -------------------------------------------------------------
+  ## TODO See https://docs.docker.com/compose/startup-order/
+  ## -------------------------------------------------------------
+  ## docker-compose -f basicrobot22.yaml  up
+  ## docker-compose -f basicrobot22.yaml run --service-ports wenv
+
+
 ----------------------------
 Sviluppi futuri
 ----------------------------
