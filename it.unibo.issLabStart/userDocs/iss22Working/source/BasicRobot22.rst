@@ -438,7 +438,7 @@ Distribuzione
 ----------------------------
 
 +++++++++++++++++++++++++++++++++
-Dockerfile
+BasicRobot22: Dockerfile
 +++++++++++++++++++++++++++++++++
 
 .. code::
@@ -451,10 +451,21 @@ Dockerfile
   COPY ./*.pl ./
   COPY ./*.json ./
 
-  ##  docker build -t basicrobot22 . 
+  ##  docker build -t basicrobot22:1.0 . 
   ##  docker run -it --rm --name basicrobot22 -p8020:8020/tcp --privileged basicrobot22  /bin/bash
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Tagging and register on Dockerhub
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+.. code::
+
+  docker tag basicrobot22:1.0 natbodocker/basicrobot22:1.0
+  //Logging on Dockerhub
+  type docker_password.txt | docker login --username natbodocker --password-stdin
+  //Register
+  docker push natbodocker/basicrobot22:1.0
+   
 +++++++++++++++++++++++++++++++++
 basicrobot22.yaml
 +++++++++++++++++++++++++++++++++
@@ -484,6 +495,21 @@ basicrobot22.yaml
   ## docker-compose -f basicrobot22.yaml  up
   ## docker-compose -f basicrobot22.yaml run --service-ports wenv
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Revisione del file di configurazione
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La costruzione all'interno della macchina virtuale di un :ref:`VirtualRobot` come servizio 
+da cui dipende ``BasicRobot22`` richiede una 
+
+:remark:`Modifica alla specifiche di configurazione`
+
+- L'indirizzo ip deve assumere ora il nome del servizio (**wenv**):
+
+.. code::
+
+  {"type":"virtual", "port":"8090", "ipvirtualrobot":"wenv"}
 
 ----------------------------
 Sviluppi futuri

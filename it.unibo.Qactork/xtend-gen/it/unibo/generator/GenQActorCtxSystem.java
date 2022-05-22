@@ -322,6 +322,12 @@ public class GenQActorCtxSystem {
     _builder.append("    ");
     _builder.append("/* AIMA **************************************************************************************************************** */");
     _builder.newLine();
+    _builder.append(" \t");
+    _builder.append("//PLANNER  ");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("implementation name: \'unibo.planner22-1.0\'");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core");
     _builder.newLine();
