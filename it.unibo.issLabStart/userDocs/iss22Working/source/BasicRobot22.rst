@@ -511,12 +511,5 @@ da cui dipende ``BasicRobot22`` richiede una
 
   {"type":"virtual", "port":"8090", "ipvirtualrobot":"wenv"}
 
-----------------------------
-Sviluppi futuri
-----------------------------
 
- :worktodo:`WORKTODO: usiamo Qak`
-
-- impostare il modello QAk di un sistema che opera come il :ref:`RobotMapperBoundary`
-- impostare il modello QAk di un sistema che comanda ``BasicRobot22`` realizzando la sequenza di mosse 
-  proposta da un :ref:`pianificatore<Uso di un pianificatore>`
+.. docker inspect -f \'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' \
