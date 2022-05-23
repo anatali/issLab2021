@@ -1116,9 +1116,10 @@ ExternalQActor
 Nell'esempio :ref:`demorequest_a distribuito` abbiamo concepito un sistema software come un organismo che comincia ad
 operare solo quando tutte le sue parti sono state costruite ed attivate.
 
-Vi sono però situazioni in cui un sistema si configura e si costruisce 'icrementalmente', partendo da un nucleo iniziale 
+Vi sono però situazioni in cui un sistema si configura e si costruisce 'incrementalmente', partendo da un nucleo iniziale 
 e poi aggiungendo parti (che interagiscono con il nucleo e tra loro sempre mediante scambio di messaggi).
 
+**Progetto**: *it.unibo.resourcecore* 
 
 +++++++++++++++++++++++++++++
 resourcecore
@@ -1177,6 +1178,8 @@ Il sistema formato dalla sola :ref:`resourcecore` è descritto come segue:
 +++++++++++++++++++++++++++++
 External caller1
 +++++++++++++++++++++++++++++
+
+**Progetto**: *it.unibo.corecallers* 
 
 Supponiamo ora che un ulteriore componente QakActor software voglia 'fare sistema' con :ref:`resourcecore`, inviando una richiesta
 alla risorsa.

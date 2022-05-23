@@ -55,7 +55,10 @@ già al terminae della fase di analisi del problema può essere molto utile per:
 
 Per dare esempi di questo modo di procedere,  svilupperemo i segeunti progetti applicativi di 'ispirazione `IOT`_'  :
 
-- Premessa operativa: si veda :ref:`StartUp (versione Valastro-Marchegiani)`
+- Premessa operativa: 
+    - si veda :ref:`StartUp (versione Valastro-Marchegiani)`
+    - si esperimenti il sistema distribuito :ref:`resourcecore` e :ref:`External caller1`
+ 
 - `unibo.basicRobot22`_: il progetto è descritto in :ref:`BasicRobot22` e realizza la risorsa di base per le 
   applicazioni che seguono. Il sistema deployed su DockerHub comprende anche un DDR robot virtuale e mostra anche
   l'uso di
