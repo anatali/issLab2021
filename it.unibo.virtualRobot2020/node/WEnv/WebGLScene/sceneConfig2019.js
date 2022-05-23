@@ -4,7 +4,7 @@ const config = {
     },
     player: {
         //position: { x: 0.5, y: 0.5 },		//CENTER
-        position: { x: 0.12, y: 0.16 },		//INIT
+        position: { x: 0.10, y: 0.16 },		//INIT
         //position: { x: 0.8, y: 0.85 },		//END
         speed: 0.2
     },
@@ -26,16 +26,16 @@ const config = {
             centerPosition: { x: 0.60, y: 0.40},
             size: { x: 0.16, y: 0.14      }
 		},
-
+/*
         {
             name: "bottle1",
             centerPosition: { x: 0.55, y: 0.8 },
             size: { x: 0.05, y: 0.05      }
 		},
-		
+*/
         {
             name: "bottle2",
-            centerPosition: { x: 0.18, y: 0.20},
+            centerPosition: { x: 0.20, y: 0.20},
             size: { x: 0.05, y: 0.05      }
 		},
 

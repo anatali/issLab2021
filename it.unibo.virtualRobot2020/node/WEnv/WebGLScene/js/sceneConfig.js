@@ -29,14 +29,14 @@ const config = {
             range: 28
         },
 
-*/
+
         {
             name: "movingobstacle",
             position: { x: 0.0, y: 0.6 },
             directionAxis: { x: true, y: false },
             speed: 0.0078,
             range: 120
-        }
+        }*/
     ],
     staticObstacles: [
         {
@@ -50,12 +50,6 @@ const config = {
             centerPosition: { x: 0.6, y: 0.7},
             size: { x: 0.1, y: 0.1}
         },
-		//{
-        //    name: "wall",
-        //    centerPosition: { x: 0.32, y: 0.4},
-        //    size: { x: 0.1, y: 0.1}
-        //},
-
         {
         name: "wallUp",
         centerPosition: { x: 0.58, y: 0.98},

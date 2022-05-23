@@ -61,7 +61,7 @@ const config = {
             size: { x: 0.05, y: 0.05      }
 		},
 
-
+*/
  
         {
             name: "obs1",
@@ -74,7 +74,7 @@ const config = {
             centerPosition: { x: 0.94, y: 0.42 }, 
             size: { x: 0.053, y: 0.041}
         },
-*/		 		 
+
         {
             name: "wallUp",
             centerPosition: { x: 0.44, y: 0.97},
