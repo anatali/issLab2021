@@ -45,15 +45,4 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
 
 } 
 
-//@kotlinx.coroutines.ObsoleteCoroutinesApi
-//
-//fun main() = runBlocking{
-// //	val startMsg = MsgUtil.buildDispatch("main","start","start","datasimulator")
-//	val consumer  = dataConsumer("dataconsumer")
-//	val simulator = sonarSimulator( "datasimulator" )
-//	val filter    = dataFilter("datafilter", consumer)
-//	val logger    = dataLogger("logger")
-//	simulator.subscribe( logger ).subscribe( filter ).subscribe( consumer ) 
-//	MsgUtil.sendMsg("start","start",simulator)
-//	simulator.waitTermination()
-// } 
+ 

@@ -5,7 +5,7 @@ Event    sonarRobot  : sonar(V)
 Event    obstacle    : obstacle(V) 
   
 Context ctxstreamsdemo ip [host="localhost" port=8045]
-
+ 
 CodedQActor sonarsimulator context ctxstreamsdemo className "rx.sonarSimulator"
 CodedQActor datalogger     context ctxstreamsdemo className "rx.dataLogger"
 CodedQActor datacleaner    context ctxstreamsdemo className "rx.dataCleaner"

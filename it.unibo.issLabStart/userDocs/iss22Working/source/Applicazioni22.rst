@@ -57,7 +57,8 @@ Per dare esempi di questo modo di procedere,  svilupperemo i segeunti progetti a
 
 - Premessa operativa: 
     - si veda :ref:`StartUp (versione Valastro-Marchegiani)`
-    - si esperimenti il sistema distribuito :ref:`resourcecore` e :ref:`External caller1`
+    - si esperimenti il sistema distribuito :ref:`resourcecore` e :ref:`External caller1` 
+      (tratto da :ref:`demorequest.qak`)
  
 - `unibo.basicRobot22`_: il progetto è descritto in :ref:`BasicRobot22` e realizza la risorsa di base per le 
   applicazioni che seguono. Il sistema deployed su DockerHub comprende anche un DDR robot virtuale e mostra anche
