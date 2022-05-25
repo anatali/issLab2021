@@ -42,6 +42,7 @@
 .. _Asynchronous I/O: https://en.wikipedia.org/wiki/Asynchronous_I/O
 .. _Coroutine video: https://www.youtube.com/watch?v=lmRzRKIsn1g  
 .. _Coroutines basics: https://kotlinlang.org/docs/coroutines-basics.html#extract-function-refactoring
+.. _Deferred values: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/
 
 .. _I/O bound: https://it.wikipedia.org/wiki/I/O_bound
 .. _Scala: https://en.wikipedia.org/wiki/Scala_(programming_language)
@@ -74,7 +75,7 @@ pur mantenendo la flessibilità ei vantaggi della programmazione nativa.
 
 .. image:: ./_static/img/programming/kotlin-multiplatform.png
    :align: center
-   :width: 70%
+   :width: 40%
 
 
 In rete si trova molto materiale relativo a questo linguaggio, che ne permette uno studio efficace. 
@@ -96,7 +97,7 @@ Koltin per ISS-72939
 E' ovvio che la presentazione e lo studio di Kotlin avrebbe bisogno di un congruo numero di ore.
 In relazione al corso di *Ingegneria dei Sitemi software*, ci poniamo due obiettivi principali:
 
-#. comprendere il ruolo dei Kotlin Actors all'interno della classe :ref:`ActorBasic.kt`   
+#. comprendere il ruolo degli `Attori Kotlin`_ all'interno della classe :ref:`ActorBasic.kt`   
 #. fornire informazioni-base utili per scrivere :ref:`CodedQActors` in Kotlin e frasi Kotlin 
    all'interno dei :ref:`modelli eseguibili QAk<Qak specification template>`.
 
@@ -112,10 +113,12 @@ Riportiamo qui i punti salienti per ottenere questi obiettivi:
 
 
 Il file `kotlinUnibo`_ contiene una introduzione con esempi su questi aspetti, 
-tenendo conto del seguente percorso logico:
+tenendo conto di un percorso logico che distingue (al solito) una parte 
+relativa alla *organizzazione strutturale* dei programmi, una parte relativa alla 
+*esecuzione* (concorrente) di attività e una parte relativa alla *interazione* tra attività.
 
 +++++++++++++++++++++++++++++++++++
-La parte sequenziale
+La parte strutturale
 +++++++++++++++++++++++++++++++++++
 
 
@@ -170,7 +173,12 @@ La parte concorrente
    (si veda :blue:`suspend function` in `Coroutines basics`_) 
    implementato utilizzando (dietro le quinte) una macchina a stati e ``CPS`` .
    Le coroutines non sono parte del linguaggio e nemmeno della libreria standard; fanno parte di una libreria separata 
-#. I valori differiti forniscono un modo conveniente per trasferire un singolo valore tra coroutine. 
+
++++++++++++++++++++++++++++++++++++
+La parte interazione
++++++++++++++++++++++++++++++++++++
+
+#. I `Deferred values`_ forniscono un modo conveniente per trasferire un singolo valore tra coroutine. 
    I `Canali Kotlin`_ forniscono un modo per trasferire un flusso di valori (uno :blue:`stream`).
 #. Un *attore Kotlin* è una combinazione di una coroutine, lo stato in essa incapsulato e confinato e un canale 
    per comunicare con altre coroutine.
