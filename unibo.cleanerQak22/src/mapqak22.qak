@@ -12,7 +12,7 @@ Reply   stepfail   : stepfail(DURATION, CAUSE)
 Event alarm        : alarm(X)
 
 Request  dopath   : dopath( PATH, OWNER )
-Reply dopathdone  : dopathdone( ARG )
+Reply dopathdone  : dopathdone( ARG ) 
 Reply dopathfail  : dopathfail( ARG )
 
 
