@@ -22,6 +22,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						println("pathexec ready ...")
 					}
 					 transition(edgeName="t09",targetState="doThePath",cond=whenRequest("dopath"))
+					transition(edgeName="t010",targetState="s0",cond=whenDispatch("pathreset"))
 				}	 
 				state("doThePath") { //this:State
 					action { //it:State
@@ -61,15 +62,17 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						stateTimer = TimerActor("timer_doMoveTurn", 
 							scope, context!!, "local_tout_pathexec_doMoveTurn", 300.toLong() )
 					}
-					 transition(edgeName="t010",targetState="nextMove",cond=whenTimeout("local_tout_pathexec_doMoveTurn"))   
+					 transition(edgeName="t011",targetState="nextMove",cond=whenTimeout("local_tout_pathexec_doMoveTurn"))   
+					transition(edgeName="t012",targetState="s0",cond=whenDispatch("pathreset"))
 				}	 
 				state("doMoveW") { //this:State
 					action { //it:State
 						request("step", "step(350)" ,"basicrobot" )  
 					}
-					 transition(edgeName="t011",targetState="endWorkKo",cond=whenEvent("alarm"))
-					transition(edgeName="t012",targetState="nextMove",cond=whenReply("stepdone"))
-					transition(edgeName="t013",targetState="endWorkKo",cond=whenReply("stepfail"))
+					 transition(edgeName="t013",targetState="endWorkKo",cond=whenEvent("alarm"))
+					transition(edgeName="t014",targetState="s0",cond=whenDispatch("pathreset"))
+					transition(edgeName="t015",targetState="nextMove",cond=whenReply("stepdone"))
+					transition(edgeName="t016",targetState="endWorkKo",cond=whenReply("stepfail"))
 				}	 
 				state("handleAlarm") { //this:State
 					action { //it:State
@@ -93,6 +96,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						println("PATH FAILURE - SORRY. PathStillTodo=$PathStillTodo")
 						answer("dopath", "dopathfail", "dopathfail($PathStillTodo)"   )  
 					}
+					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 
 			}
 		}

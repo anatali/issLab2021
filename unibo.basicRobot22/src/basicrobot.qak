@@ -10,7 +10,7 @@
  * 		resources\consolepython\basicrobotconsole.py
  * or 	resources\consolegui\consoleGuiCoap.kt (look at sysConnKb.kt)
  * 
- * External MQTT sites:
+ * External MQTT sites: 
  * 	"mqtt.eclipse.org:  mosquitto.org mqtt.fluux.io  broker.hivemq.com
  * ================================================================================
  */ 
@@ -31,9 +31,10 @@ Event   info       : info( ARG ) 	    //for external components, not coap-observ
 Event  sonar       : sonar( DISTANCE )			//emitted by distancefilter
 Event alarm        : alarm(X) 
 
-Request  dopath   : dopath( PATH, OWNER )
-Reply dopathdone  : dopathdone( ARG )
-Reply dopathfail  : dopathfail( ARG )
+Request  dopath    : dopath( PATH, OWNER )
+Reply dopathdone   : dopathdone( ARG )
+Reply dopathfail   : dopathfail( ARG )
+Dispatch pathreset : pathreset( ARG )
 
 Context ctxbasicrobot ip [host="localhost" port=8020]  
 
@@ -206,6 +207,7 @@ QActor pathexec context ctxbasicrobot{
 		println("pathexec ready ...") 
 	}	
 	Transition t0 whenRequest dopath -> doThePath
+	              whenMsg pathreset -> s0
 	
 	State doThePath{
 		printCurrentMessage
@@ -235,11 +237,12 @@ QActor pathexec context ctxbasicrobot{
 		forward basicrobot -m cmd : cmd($CurMoveTodo) //asynch !!!		
 	}
 	Transition t0 whenTime 300 ->  nextMove  //wait for move done ...
-	
+				  whenMsg pathreset -> s0
 	State doMoveW{
 		request basicrobot -m step : step( 350 )
 	}	
 	Transition t0 whenEvent alarm     -> endWorkKo
+	              whenMsg pathreset   -> s0
 				  whenReply stepdone  -> nextMove  
 	              whenReply stepfail  -> endWorkKo
 	              
@@ -263,7 +266,7 @@ QActor pathexec context ctxbasicrobot{
 		println("PATH FAILURE - SORRY. PathStillTodo=$PathStillTodo")
 		replyTo dopath with dopathfail : dopathfail( $PathStillTodo )
 	}	
-	//Goto s0
+	Goto s0
 
 
 } 

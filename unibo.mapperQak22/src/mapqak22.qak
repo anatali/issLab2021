@@ -54,7 +54,7 @@ var stepok      = 0
    		   unibo.kotlin.planner22Util.updateMap(  "w", "" ) 		
    		#]
    		println("coverColumn stepok=$stepok NumStep=$NumStep")
-     	delay 700 
+     	delay 300 
    		request basicrobot -m step : step(340)
  	}
 	Transition t0  whenReply stepdone -> coverColumn
@@ -67,10 +67,10 @@ var stepok      = 0
 		println("backHome")
    			forward basicrobot -m cmd : cmd(l)
 			[#  unibo.kotlin.planner22Util.updateMap(  "l", "" )  #]   			
-   			delay 700 
+   			delay 300 
    			forward basicrobot -m cmd : cmd(l)
 			[#  unibo.kotlin.planner22Util.updateMap(  "l", "" )  #]   			
-   			delay 700  
+   			delay 300  
     			
     		[# unibo.kotlin.planner22Util.showCurrentRobotState() #]
     		request basicrobot -m step : step(340)   
@@ -86,7 +86,7 @@ var stepok      = 0
  		   stepok = stepok - 1 
  		#]
  		println("gotoHome stepok=$stepok")	
- 		delay 700 
+ 		delay 300 
  		request basicrobot -m step : step(340)  
  	}
 // 	Goto gotoHome if [# stepok > 0 #] else turnAndStep  //WRONG
@@ -98,7 +98,7 @@ var stepok      = 0
  	State turnAndStep{
    		forward basicrobot -m cmd : cmd(r)
 		[#  unibo.kotlin.planner22Util.updateMap(  "r", "" )  #]   			
-   		delay 700 			
+   		delay 300 			
    		request basicrobot -m step : step(340)  //step laterale
  	}
   	Transition t0  whenReply stepdone -> posForNextColumn
@@ -111,7 +111,7 @@ var stepok      = 0
 		println("posForNextColumn stepok=$stepok")		
    		[# unibo.kotlin.planner22Util.showCurrentRobotState() #]		
  		//[# unibo.actor22comm.utils.CommUtils.waitTheUser("posForNextColumn")	 #]
-   		delay 1700 		 
+   		delay 1300 		 
 	}
  	Goto coverNextColumn
  	

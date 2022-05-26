@@ -15,27 +15,24 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 val inmapname   = "map2019"  
+			   var PathTodo    =  ""  
 		return { //this:ActionBasciFsm
 				state("activate") { //this:State
 					action { //it:State
-						unibo.kotlin.planner22Util.initAI(  )
 						unibo.kotlin.planner22Util.loadRoomMap( inmapname  )
-						unibo.kotlin.planner22Util.showCurrentRobotState(  )
+						unibo.kotlin.planner22Util.initAI(  )
+						unibo.kotlin.planner22Util.updateMap( "l", ""  )
+						println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+						unibo.kotlin.planner22Util.showMap(  )
 					}
-					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						unibo.kotlin.planner22Util.setGoal( 3, 3  )
-						 var Pactions = unibo.kotlin.planner22Util.doPlan()  //java.util.List<aima.core.agent.Action> 
-									
-						println("$Pactions")
-					}
-				}	 
-				state("doPath") { //this:State
-					action { //it:State
-						 val PathTodo =  "wwlwlwwlwl"   
-						println("doexplore starts $PathTodo")
+						unibo.kotlin.planner22Util.setGoal( 5, 3  )
+						 PathTodo = unibo.kotlin.planner22Util.doPlan().toString() 
+								   //PathTodo = PathTodo.replace("[","").replace("]","").replace(", ",",")	
+								   //PathTodo = PathTodo.replace(", ",",")
+						println("Azioni pianificate: $PathTodo")
 						request("dopath", "dopath($PathTodo,pathcaller)" ,"pathexec" )  
 					}
 					 transition(edgeName="t00",targetState="pathok",cond=whenReply("dopathdone"))
@@ -49,6 +46,8 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("pathko") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						unibo.kotlin.planner22Util.showMap(  )
+						unibo.kotlin.planner22Util.showCurrentRobotState(  )
 					}
 				}	 
 				state("end") { //this:State

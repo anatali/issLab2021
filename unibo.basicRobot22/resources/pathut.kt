@@ -23,7 +23,8 @@ object pathut{
 	
 	fun setPath(path: String)  {
  		//path : "wwlw"  
-		curPath = path
+ 		//Potrei ricevere dal pianificatore la stringa: "[w, w, l, w]"
+		curPath = path.replace(" ","").replace(",","").replace("[","").replace("]","")
 	}
 		
 	fun setPathFromRequest(msg: IApplMessage)  {
@@ -33,7 +34,7 @@ object pathut{
 	}
 	
 	fun getPathTodo() : String{
-		return curPath
+		return curPath.replace(",","").replace("[","")
 	}
 
 	suspend fun doNextMove( master: ActorBasicFsm) {
@@ -49,10 +50,15 @@ object pathut{
 	}
 		
 	fun nextMove() : String{
-		//println("pathexecutil | nextMove curPath=$curPath")
+		println("pathexecutil | nextMove curPath=$curPath")
 		if( curPath.length == 0 ) return ""
 		//curPath still has moves
-		val move = ""+curPath[0]
+		var move = ""+curPath[0]
+		if( move == "," ){
+		 curPath  = curPath.substring(1)
+		}
+		move     = ""+curPath[0]
+		//println("pathexecutil  | move=$move")
 		curPath  = curPath.substring(1)
 		return move
 	}
