@@ -4,21 +4,19 @@ Request  dopath   : dopath( PATH, OWNER )
 Reply dopathdone  : dopathdone( ARG ) 
 Reply dopathfail  : dopathfail( ARG )
 
-Context ctxbasicrobot  ip [host="127.0.0.1" port=8020]  
+Dispatch setMap   : setMap (MapStr )
+
+//Context ctxbasicrobot  ip [host="127.0.0.1" port=8020]  
+Context ctxPathexecutor  ip [host="127.0.0.1" port=8062]
 Context ctxrobotappl   ip [host="localhost" port=8078]
 
-ExternalQActor pathexec context ctxbasicrobot  
+ExternalQActor pathexec context ctxPathexecutor  
 
 QActor robotappl1 context ctxrobotappl{
 	[# val Inmapname   = "map2019.txt"  
 	   var PathTodo    =  ""  
-	   var Mapp        = "|r, 1, 1, 1, 1, 1, 1,"
-/* |r, 1, 1, 1, 1, 1, 1, 
-|1, 1, 1, 1, 1, 1, 1, 
-|1, 1, X, 1, 1, 1, 1,  
-|1, 1, 0, 1, 1, 1, 1, 
-|1, 1, 0, 1, 1, 1, 1, 
-|X, X, 0, X, X, X, X,*/
+	   var MapStr      =  
+"1, 1, 1, 1, 1, 1, 1, @ 1, 1, 1, 1, 1, 1, 1, @ 1, 1, X, 1, 1, 1, 1,  @ 1, 1, 0, 1, 1, 1, 1, @ 1, 1, 0, 1, 1, 1, 1, @ X, X, 0, X, X, X, X, "
 	#]
 	State activate initial {
  		//run unibo.kotlin.planner22Util.loadRoomMap( inmapname )	  
@@ -29,6 +27,7 @@ QActor robotappl1 context ctxrobotappl{
  		println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
  		//run unibo.kotlin.planner22Util.showMap()
  		run unibo.kotlin.planner22Util.showCurrentRobotState()
+ 		forward pathexec -m setMap :  map( $MapStr )
 	}
 	Goto work
 	
@@ -38,10 +37,10 @@ QActor robotappl1 context ctxrobotappl{
 		#] //List<aima.core.agent.Action> 
 		println("Azioni pianificate: $PathTodo")
 		//[# val MapStr = java.util.Base64.getEncoder().encodeToString("1, 1, 1") #]
- 		request pathexec -m dopath : dopath( $PathTodo, map($Mapp) )  
+ 		request pathexec -m dopath : dopath( $PathTodo, somecaller)  
 	}
-	Transition t0 whenReply dopathdone -> pathok 
-				  whenReply dopathfail -> pathko
+//	Transition t0 whenReply dopathdone -> pathok 
+//				  whenReply dopathfail -> pathko
   	
 	State pathok{ 
 		printCurrentMessage

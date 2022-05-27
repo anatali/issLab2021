@@ -16,13 +16,8 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 val Inmapname   = "map2019.txt"  
 			   var PathTodo    =  ""  
-			   var Mapp        = "|r, 1, 1, 1, 1, 1, 1,"
-		/* |r, 1, 1, 1, 1, 1, 1, 
-		|1, 1, 1, 1, 1, 1, 1, 
-		|1, 1, X, 1, 1, 1, 1,  
-		|1, 1, 0, 1, 1, 1, 1, 
-		|1, 1, 0, 1, 1, 1, 1, 
-		|X, X, 0, X, X, X, X,*/
+			   var MapStr      =  
+		"1, 1, 1, 1, 1, 1, 1, @ 1, 1, 1, 1, 1, 1, 1, @ 1, 1, X, 1, 1, 1, 1,  @ 1, 1, 0, 1, 1, 1, 1, @ 1, 1, 0, 1, 1, 1, 1, @ X, X, 0, X, X, X, X, "
 		return { //this:ActionBasciFsm
 				state("activate") { //this:State
 					action { //it:State
@@ -30,6 +25,7 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						unibo.kotlin.planner22Util.initAI(  )
 						println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
 						unibo.kotlin.planner22Util.showCurrentRobotState(  )
+						forward("setMap", "map($MapStr)" ,"pathexec" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
@@ -38,10 +34,8 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						unibo.kotlin.planner22Util.setGoal( 1, 1  )
 						 PathTodo = unibo.kotlin.planner22Util.doPlan().toString() 
 						println("Azioni pianificate: $PathTodo")
-						request("dopath", "dopath($PathTodo,map($Mapp))" ,"pathexec" )  
+						request("dopath", "dopath($PathTodo,somecaller)" ,"pathexec" )  
 					}
-					 transition(edgeName="t00",targetState="pathok",cond=whenReply("dopathdone"))
-					transition(edgeName="t01",targetState="pathko",cond=whenReply("dopathfail"))
 				}	 
 				state("pathok") { //this:State
 					action { //it:State

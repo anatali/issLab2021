@@ -515,8 +515,8 @@ L'operazione built-in ``run ccc.xxx()``  invoca  il metodo *static* ``xxx`` dell
 qrun
 +++++++++++++++++++++++++
 
-L'operazione built-in ``qrun ccc.xxx()``  invoca  il metodo *static* ``xxx`` della classe ``ccc`. Il 
-metodo deve avere come primo argomento un riferimento all'attore corrente (dato da **myself**) `.
+L'operazione built-in ``qrun ccc.xxx()``  invoca  il metodo *static*  ``xxx`` della classe ``ccc``. Il 
+metodo deve avere come primo argomento un riferimento all'attore corrente (ad esempio **myself**).
 
 
 

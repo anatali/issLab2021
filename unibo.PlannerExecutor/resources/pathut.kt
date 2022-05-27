@@ -24,12 +24,23 @@ object pathut{
 	var wenvAddr = "localhost"
 	lateinit var  master: ActorBasicFsm
 	lateinit var  owner:  String
-	
-	
-	
+
+
+	fun setPath(path: String)  {
+		//path : "wwlw"
+		//Potrei ricevere dal pianificatore la stringa: "[w, w, l, w]"
+		curPath = path
+			.replace(" ","")
+			.replace(",","")
+			.replace("[","")
+			.replace("]","")
+	}
+
 	fun setPathFromRequest(msg: IApplMessage)  {
+		println("setPathFromRequest $msg")
 		var payload     = msg.msgContent().replace("'","")
 		//payload : {"path":"wwlw" , "owner":"pathexecCaller"}
+		println("setPathFromRequest $payload")
 		curPath = JSONObject(payload).getString("path")
 	}
 	
