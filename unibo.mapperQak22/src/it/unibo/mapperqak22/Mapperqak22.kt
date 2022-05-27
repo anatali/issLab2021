@@ -20,8 +20,8 @@ class Mapperqak22 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name
 					action { //it:State
 						println("mapperbuilder starts")
 						 unibo.kotlin.planner22Util.initAI()  
+						unibo.kotlin.planner22Util.showMap(  )
 					}
-					 transition( edgeName="goto",targetState="doAheadMove", cond=doswitch() )
 				}	 
 				state("doAheadMove") { //this:State
 					action { //it:State

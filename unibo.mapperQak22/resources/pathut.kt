@@ -10,7 +10,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
- 
+
+import java.io.PrintWriter
+import java.io.FileWriter
+import java.io.ObjectOutputStream
+import java.io.FileOutputStream
+import java.io.ObjectInputStream
+import java.io.FileInputStream
+import unibo.planner22.model.*
 
 object pathut{
 	var pathDone = ""
@@ -97,5 +104,21 @@ object pathut{
 		} catch (e: java.lang.Exception) {
 			e.printStackTrace()
 		}
+	}
+	
+	fun saveAdjustedMap( fname : String ){
+		val adjustedMap = RoomMap.getRoomMap().toString().replace("r,","1,")
+		val pw = PrintWriter( FileWriter(fname+".txt") )
+		pw.print( adjustedMap )
+		pw.close()
+		
+		val os = ObjectOutputStream( FileOutputStream(fname+".bin") )
+		os.writeObject( RoomMap.getRoomMap() )
+		os.flush()
+		os.close()		
+	}
+	
+	fun test(){
+		//val map = RoomMap("map2019.txt")
 	}
 }

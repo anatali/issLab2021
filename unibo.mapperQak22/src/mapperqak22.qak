@@ -25,8 +25,9 @@ QActor mapperqak22 context ctxmapperqak22{
 	State s0 initial{  	
 		println("mapperbuilder starts") 
 		[# unibo.kotlin.planner22Util.initAI() #]
+		run  unibo.kotlin.planner22Util.showMap()
 	}		
-	Goto doAheadMove
+	//Goto doAheadMove
 	
 	State doAheadMove {
 		delay 300

@@ -14,26 +14,31 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		return "activate"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		 val inmapname   = "map2019"  
+		 val Inmapname   = "map2019.txt"  
 			   var PathTodo    =  ""  
+			   var Mapp        = "|r, 1, 1, 1, 1, 1, 1,"
+		/* |r, 1, 1, 1, 1, 1, 1, 
+		|1, 1, 1, 1, 1, 1, 1, 
+		|1, 1, X, 1, 1, 1, 1,  
+		|1, 1, 0, 1, 1, 1, 1, 
+		|1, 1, 0, 1, 1, 1, 1, 
+		|X, X, 0, X, X, X, X,*/
 		return { //this:ActionBasciFsm
 				state("activate") { //this:State
 					action { //it:State
-						unibo.kotlin.planner22Util.loadRoomMap( inmapname  )
+						unibo.kotlin.planner22Util.createRoomMapFromTextfile( "$Inmapname"  )
 						unibo.kotlin.planner22Util.initAI(  )
-						unibo.kotlin.planner22Util.updateMap( "l", ""  )
 						println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
-						unibo.kotlin.planner22Util.showMap(  )
+						unibo.kotlin.planner22Util.showCurrentRobotState(  )
 					}
+					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						unibo.kotlin.planner22Util.setGoal( 5, 3  )
+						unibo.kotlin.planner22Util.setGoal( 1, 1  )
 						 PathTodo = unibo.kotlin.planner22Util.doPlan().toString() 
-								   //PathTodo = PathTodo.replace("[","").replace("]","").replace(", ",",")	
-								   //PathTodo = PathTodo.replace(", ",",")
 						println("Azioni pianificate: $PathTodo")
-						request("dopath", "dopath($PathTodo,pathcaller)" ,"pathexec" )  
+						request("dopath", "dopath($PathTodo,map($Mapp))" ,"pathexec" )  
 					}
 					 transition(edgeName="t00",targetState="pathok",cond=whenReply("dopathdone"))
 					transition(edgeName="t01",targetState="pathko",cond=whenReply("dopathfail"))
