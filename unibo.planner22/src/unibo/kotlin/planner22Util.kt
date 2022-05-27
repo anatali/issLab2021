@@ -1,19 +1,14 @@
 package  unibo.kotlin
 
-import java.util.ArrayList
 import aima.core.agent.Action
 import aima.core.search.framework.SearchAgent
 import aima.core.search.framework.problem.GoalTest
 import aima.core.search.framework.problem.Problem
 import aima.core.search.framework.qsearch.GraphSearch
 import aima.core.search.uninformed.BreadthFirstSearch
-import java.io.PrintWriter
-import java.io.FileWriter
-import java.io.ObjectOutputStream
-import java.io.FileOutputStream
-import java.io.ObjectInputStream
-import java.io.FileInputStream
 import unibo.planner22.model.*
+import java.io.*
+import java.util.*
 
 object planner22Util {
     private var robotState: RobotState? = null
@@ -255,7 +250,59 @@ object planner22Util {
 		}
 		mapDims = getMapDims()//Pair(dimMapx,dimMapy)
 	}
-	
+	@JvmStatic fun createRoomMapFromTextfile( fname: String  )   {
+		try {
+			val map      = RoomMap.getRoomMap()
+			var y        = 0
+			val myObj    = File(fname)
+			val myReader = Scanner(myObj)
+			while (myReader.hasNextLine()) {
+				val data: String = myReader.nextLine()
+					.replace("|","")
+					.replace("r","1")
+					.replace(", ","")
+				handleMapLine(y, data, map)
+				y = y + 1
+			}
+			myReader.close()
+		} catch (e: FileNotFoundException) {
+			println("testRoomMap Error: ${e.message}" )
+ 		}
+	}
+	@JvmStatic fun createRoomMapFromString( mapStr: String  )   {
+		try {
+			val map      = RoomMap.getRoomMap()
+			var y        = 0
+ 			val myReader = Scanner(mapStr)
+			while (myReader.hasNextLine()) {
+				val data: String = myReader.nextLine()
+					.replace("|","")
+					.replace("r","1")
+					.replace(" ","")
+					.replace(",","")
+				handleMapLine(y, data, map)
+				y = y + 1
+			}
+			myReader.close()
+		} catch (e: FileNotFoundException) {
+			println("testRoomMap Error: ${e.message}" )
+		}
+	}
+
+	fun handleMapLine( y: Int, line : String, map : RoomMap ){
+		//println(line)
+		var x = 0
+		line.forEach {
+			if(it=='1')
+				map.put(x,y, Box(false, false, false))
+			else if(it=='0')
+				map.put(x,y, Box(false, true, false))
+			else if(it=='X')
+				map.put(x,y, Box(true, false, false))
+			x = x + 1
+		}
+		//showMap()
+	}
  
 	@JvmStatic fun saveRoomMap(  fname : String)   {		
         println("saveMap in $fname")

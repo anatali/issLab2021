@@ -28,12 +28,17 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("doThePath") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
-						if( checkMsgContent( Term.createTerm("dopath(PATH,OWNER)"), Term.createTerm("dopath(P,C)"), 
+						if( checkMsgContent( Term.createTerm("dopath(PATH,OWNER)"), Term.createTerm("dopath(P,MAP)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val path = payloadArg(0); println(path)  
-								 pathut.setPath(path)  
+								 val path = payloadArg(0)
+												println(path) 
+												val map = payloadArg(1)
+												println(map)
+												unibo.kotlin.planner22Util.createRoomMapFromString( map )
+												unibo.kotlin.planner22Util.showMap()
+											    pathut.setPath(path)  
+								println("pathexec pathTodo = ${pathut.getPathTodo()}")
 						}
-						println("pathexec pathTodo = ${pathut.getPathTodo()}")
 					}
 					 transition( edgeName="goto",targetState="nextMove", cond=doswitch() )
 				}	 

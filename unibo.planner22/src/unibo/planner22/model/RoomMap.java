@@ -25,7 +25,13 @@ public class RoomMap implements Serializable{
 	
 	
 	private List<ArrayList<Box>> roomMap = new ArrayList<ArrayList<Box>>();
-	
+/*
+	public RoomMap( String map ){
+		System.out.println("RoomMap CREATING:\n " + map );
+		String[] mapY = map.split("\n");
+		System.out.println("RoomMap mapY:\n " + mapY + " " + mapY.length  );
+	}
+*/
 	private RoomMap() {
 		super();
 		for (int i=0; i<1; i++) {
@@ -40,7 +46,9 @@ public class RoomMap implements Serializable{
 	public void cleanCell(int x, int y) {
 		put(x, y, new Box(false, false, false));
 	}
-	
+
+
+
 	public void put(int x, int y, Box box) {
 		try {
 			roomMap.get(y);

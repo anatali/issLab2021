@@ -48,13 +48,18 @@ QActor pathexec context ctxPathexecutor{
 	
 	State doThePath{
 		printCurrentMessage
-		onMsg ( dopath : dopath(P,C)){
-			[# val path = payloadArg(0); println(path) #]
-			[# pathut.setPath(path) #]
-		}
-		 
-		println("pathexec pathTodo = ${pathut.getPathTodo()}") 
- 	}
+		onMsg ( dopath : dopath(P,MAP)){
+			[# val path = payloadArg(0)
+				println(path) 
+				val map = payloadArg(1)
+				println(map)
+				unibo.kotlin.planner22Util.createRoomMapFromString( map )
+				unibo.kotlin.planner22Util.showMap()
+			    pathut.setPath(path)  
+			#]			 
+			println("pathexec pathTodo = ${pathut.getPathTodo()}") 
+ 		}
+	}
 	Goto nextMove    
 	
 	
