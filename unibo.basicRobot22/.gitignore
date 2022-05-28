@@ -8,6 +8,8 @@ logs
 
 log4jInfo.log
 
+docker_password.txt
+
 #node
 nodeCode/*/node_modules/
 *.lck
