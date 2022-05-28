@@ -27,8 +27,10 @@ object pathut{
 
 
 	fun setPath(path: String)  {
+		println("setPath:$path")
 		//path : "wwlw"
 		//Potrei ricevere dal pianificatore la stringa: "[w, w, l, w]"
+		//Meglio ricevere wwlw
 		curPath = path
 			.replace(" ","")
 			.replace(",","")
@@ -45,7 +47,8 @@ object pathut{
 	}
 	
 	fun getPathTodo() : String{
-		return curPath
+		if( curPath.length == 0 ) return "none"
+		else return curPath
 	}
 
 	suspend fun doNextMove( master: ActorBasicFsm) {

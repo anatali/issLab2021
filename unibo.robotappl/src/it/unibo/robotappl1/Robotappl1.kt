@@ -14,39 +14,62 @@ class Robotappl1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		return "activate"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		 val Inmapname   = "map2019.txt"  
+		 val Inmapname   = "xxx" //"map2019"  
 			   var PathTodo    =  ""  
-			   var MapStr      =  
-		"1, 1, 1, 1, 1, 1, 1, @ 1, 1, 1, 1, 1, 1, 1, @ 1, 1, X, 1, 1, 1, 1,  @ 1, 1, 0, 1, 1, 1, 1, @ 1, 1, 0, 1, 1, 1, 1, @ X, X, 0, X, X, X, X, "
+			   var CurGoalX    = 3
+			   var CurGoalY    = 3 
 		return { //this:ActionBasciFsm
 				state("activate") { //this:State
 					action { //it:State
-						unibo.kotlin.planner22Util.createRoomMapFromTextfile( "$Inmapname"  )
+						unibo.kotlin.planner22Util.createRoomMapFromTextfile( "$Inmapname.txt"  )
 						unibo.kotlin.planner22Util.initAI(  )
-						println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
 						unibo.kotlin.planner22Util.showCurrentRobotState(  )
-						forward("setMap", "map($MapStr)" ,"pathexec" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						unibo.kotlin.planner22Util.setGoal( 1, 1  )
-						 PathTodo = unibo.kotlin.planner22Util.doPlan().toString() 
+						unibo.kotlin.planner22Util.setGoal( CurGoalX, CurGoalY  )
+						 PathTodo = unibo.kotlin.planner22Util.doPlan().toString()  //List<aima.core.agent.Action>  [w, w, l, w] 
+									.replace(" ","")
+									.replace(",","")
+									.replace("[","")
+									.replace("]","")
 						println("Azioni pianificate: $PathTodo")
-						request("dopath", "dopath($PathTodo,somecaller)" ,"pathexec" )  
+						if(  PathTodo.length == 0  
+						 ){println("WARNING: nessuna azione pianificata. Il piano vuoto viene comunque eseguito")
+						}
+						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
+					 transition(edgeName="t00",targetState="pathok",cond=whenReply("dopathdone"))
+					transition(edgeName="t01",targetState="pathko",cond=whenReply("dopathfail"))
 				}	 
 				state("pathok") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
+						unibo.kotlin.planner22Util.updateMapWithPath( PathTodo  )
+						unibo.kotlin.planner22Util.showCurrentRobotState(  )
+						unibo.kotlin.planner22Util.saveRoomMap( "xxx"  )
 					}
 				}	 
 				state("pathko") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
-						unibo.kotlin.planner22Util.showMap(  )
+						if( checkMsgContent( Term.createTerm("dopathfail(ARG)"), Term.createTerm("dopathfail(P)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								  val planStillTodo = payloadArg(0) 
+												var p =""
+												if( planStillTodo=="none"){ //l'ultimo w ha provocato il fail
+													p = PathTodo.dropLast(1)
+												}else{
+													p = PathTodo.dropLast( planStillTodo.length+1 ) //un w ha provocato il fail
+												}
+												println("planStillTodo:$planStillTodo over $PathTodo done: $p")
+								unibo.kotlin.planner22Util.updateMapWithPath( p  )
+								unibo.kotlin.planner22Util.updateMapObstacleOnCurrentDirection(  )
+						}
 						unibo.kotlin.planner22Util.showCurrentRobotState(  )
+						unibo.kotlin.planner22Util.saveRoomMap( "xxx"  )
 					}
 				}	 
 				state("end") { //this:State
