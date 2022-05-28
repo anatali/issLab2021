@@ -10,8 +10,9 @@
 
 .. _unibo.basicrobot22: ../../../../../unibo.basicrobot22
 .. _unibo.mapperQak22: ../../../../../unibo.mapperQak22
-.. _unibo.cleanerQak22: ../../../../../unibo.cleanerQak22
-.. _unibo.pathexecutor: ../../../../../unibo.pathexecutor
+.. _mapemptyroom22.qak: ../../../../../unibo.mapperQak22/userDocs/mapemptyroom22.qakt
+.. _mapwithobstqak22.qak: ../../../../../unibo.mapperQak22/userDocs/mapwithobstqak22.qakt
+.. _unibo.robotappl: ../../../../../unibo.robotappl
 
 
 .. _NanoRobot: ../../../../../unibo.basicrobot22/userDocs/LabNanoRobot.html
@@ -55,28 +56,35 @@ già al terminae della fase di analisi del problema può essere molto utile per:
 
 Per dare esempi di questo modo di procedere,  svilupperemo i segeunti progetti applicativi di 'ispirazione `IOT`_'  :
 
-- Premessa operativa: 
+#. Premessa operativa: 
     - si veda :ref:`StartUp (versione Valastro-Marchegiani)`
     - si esperimenti il sistema distribuito :ref:`resourcecore` e :ref:`External caller1` 
       (tratto da :ref:`demorequest.qak`)
  
-- `unibo.basicRobot22`_: il progetto è descritto in :ref:`BasicRobot22` e realizza la risorsa di base per le 
-  applicazioni che seguono. Il sistema deployed su DockerHub comprende anche un DDR robot virtuale e mostra anche
-  l'uso di
+#. `unibo.basicRobot22`_: il progetto **unibo.basicrobot22** è descritto in :ref:`BasicRobot22` e realizza la risorsa di base per le 
+   applicazioni che seguono. Il sistema deployed su DockerHub comprende anche un DDR robot virtuale e mostra anche
+   l'uso di
 
     - :ref:`CodedQActors`
     - :ref:`ExternalQActor` 
     - :ref:`Actors as streams`
-   
-- `unibo.mapperQak22`_: utilizza :ref:`BasicRobot22` e :ref:`UniboPlanner<Uso di un planner>` per creare 
-  (e salvare) la mappa di una stanza rettangolare secondo la politica *BoundaryWalker*.
-  E' utile confrontare il modello con:
 
-    - :ref:`ActorWithObserverUsingWEnv`
-    - :ref:`Un primo automa a stati finiti`
-    - :ref:`BoundaryWalkerAnnot`
+#. unibo.pathexecutor
   
-- `unibo.cleanerQak22`_: utilizza :ref:`BasicRobot22` e :ref:`UniboPlanner<Uso di un planner>` per creare 
-  (e salvare) la mappa di una stanza rettangolare che contiene **ostacoli fissi**
-- `unibo.pathexecutor`_: utilizza :ref:`BasicRobot22` per eseguire la richiesta di esecuzione di un path dato 
-  con possibile successo o fallimento. Nel caso di fallimento fornisce il path ancora da compiere
+   Il sistema include un attore (:blue:`pathexec`) che utilizza :ref:`BasicRobot22` per eseguire la richiesta di esecuzione 
+   di un path dato,  con possibile successo o fallimento; nel caso di fallimento, fornisce il path ancora da compiere.
+   
+#. `unibo.mapperQak22`_: il progetto **unibo.mapperQak22** contiene due modelli:
+
+    #. `mapemptyroom22.qak`_ : utilizza :ref:`BasicRobot22` e :ref:`UniboPlanner<Uso di un planner>` per creare 
+       (e salvare) la mappa di una stanza rettangolare vuota (almeno sui bordi) secondo la politica *BoundaryWalker*.
+       E' utile confrontare questo modello con:
+
+        - :ref:`ActorWithObserverUsingWEnv`
+        - :ref:`Un primo automa a stati finiti`
+        - :ref:`BoundaryWalkerAnnot`
+    
+    #. `mapwithobstqak22.qak`_ :  utilizza :ref:`BasicRobot22` e :ref:`UniboPlanner<Uso di un planner>` per creare 
+       (e salvare) la mappa di una stanza rettangolare che contiene **ostacoli fissi**
+
+#. `unibo.robotappl`_:  utilizza :blue:`pathexec` per spostare il robot in un dato punto della stanza, nota la mappa.

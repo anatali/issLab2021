@@ -43,18 +43,6 @@ object pathut{
 		return curPath
 	}
 
-	suspend fun doNextMove( master: ActorBasicFsm) {
-		val move = nextMove()
-		//println("pathexecutil | doNextMove=$move")
-		delay(150)  	//to reduce path speed
-		if( move.length == 0 ) {
-			//master.autoMsg("pathdone","pathtodo($curPath)")
-			//println("!!!!!!!!!!! SEND pathdone to OWNER=$owner" )
-		}else{
-			doMove(master, move)
-		}
-	}
-		
 	fun nextMove() : String{
 		//println("pathexecutil | nextMove curPath=$curPath")
 		if( curPath.length == 0 ) return ""
@@ -62,38 +50,6 @@ object pathut{
 		val move = ""+curPath[0]
 		curPath  = curPath.substring(1)
 		return move
-	}
-
-
-
-	suspend fun doMove(master: ActorBasicFsm, moveTodo: String ){
-		println("pathexecutil | doMove moveTodo=$moveTodo")
-/*		
- //robot.send(ApplMsgs.stepRobot_step("appl", "350"))
- //support.//
-		//val MoveAnsw = CallRestWithApacheHTTP.doMove(moveTodo)
-		curMove = moveTodo
-		when( curMove ){
-			"p" -> robot.send(ApplMsgs.stepRobot_step("appl", "350"))
-			"l" -> robot.send(ApplMsgs.stepRobot_l("appl"))
-			"r" -> robot.send(ApplMsgs.stepRobot_r("appl"))
-			else -> println("$curMove uknown")
-		}
- */
-		
-		/*
-		println("pathexecutil | doMove $moveTodo MoveAnsw=$MoveAnsw")
- 
-		val answJson = JSONObject( MoveAnsw ) 
-		//println("pathexecutil | doMove $moveTodo answJson=$answJson")
-		if( ( answJson.has("endmove") && answJson.getString("endmove") == "true")
-			|| answJson.has("stepDone") ){
-			pathDone = pathDone+moveTodo
-			master.autoMsg("moveok","move($moveTodo)")
-		}else{
-			master.autoMsg("pathfail","pathdone($pathDone)")
-			//println("!!!!!!!!!!!  SEND pathfail to OWNER=$owner")
-		}*/
 	}
 	
  	fun waitUser(prompt: String) {

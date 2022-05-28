@@ -168,11 +168,12 @@ QActor envsonarhandler context ctxbasicrobot{
 
 /* 
  * 
-
+ 
  */
  
 QActor pathexec context ctxbasicrobot{ 
 [# var CurMoveTodo = ""    //Upcase, since var to be used in guards
+   var StepTime = 345
 #]
 	State s0 initial{  	
 		//printCurrentMessage
@@ -212,7 +213,7 @@ QActor pathexec context ctxbasicrobot{
   
  	State doMoveW{
 		//printCurrentMessage
-		request basicrobot -m step : step( 350 )
+		request basicrobot -m step : step( $StepTime )
 	}	
 	Transition t0 whenEvent alarm     -> endWorkKo
  				  whenReply stepdone  -> nextMove  

@@ -15,6 +15,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 var CurMoveTodo = ""    //Upcase, since var to be used in guards
+		   var StepTime = 345
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -61,7 +62,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveW") { //this:State
 					action { //it:State
-						request("step", "step(350)" ,"basicrobot" )  
+						request("step", "step($StepTime)" ,"basicrobot" )  
 					}
 					 transition(edgeName="t011",targetState="endWorkKo",cond=whenEvent("alarm"))
 					transition(edgeName="t012",targetState="nextMove",cond=whenReply("stepdone"))

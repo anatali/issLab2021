@@ -4,7 +4,7 @@
  * 
  * docker cp sceneConfig.js 87c9eb2e0989:/home/node/WEnv/WebGLScene/sceneConfig.js
  */
-System mapqak22 //-msglog    
+System mapwithobstqak22 //-msglog    
 Dispatch cmd       : cmd(MOVE)     
 Request step       : step( TIME )	
 Reply   stepdone   : stepdone(V)  
@@ -16,34 +16,35 @@ Reply dopathdone  : dopathdone( ARG )
 Reply dopathfail  : dopathfail( ARG )
 
 
-Context ctxbasicrobot  ip [host="127.0.0.1" port=8020]   
-Context ctxmapqak22    ip [host="localhost" port=8032]
+Context ctxbasicrobot         ip [host="127.0.0.1" port=8020]   
+Context ctxmapwithobstqak22   ip [host="localhost" port=8032]
 
 ExternalQActor basicrobot context ctxbasicrobot  
 ExternalQActor pathexec   context ctxbasicrobot  
 
-/*  
+/*   
  * ------------------------------------------------------------------
  * mapqak22
  * ASSUNZIONE: bordo superiore libero
  * ------------------------------------------------------------------
 */     
-QActor mapqak22 context ctxmapqak22{    
+QActor mapwithobstqak22 context ctxmapwithobstqak22{    
 [#
 val MaxNumStep  = 6
 var NumStep     = 0
 var stepok      = 0
 val StepTime    = 345
 var CurMoveTodo = "h"
+val MapName     = "mapWithObst2019"
 #]  
 
 	State activate initial {
-		printCurrentMessage
+		//printCurrentMessage
 		[# NumStep     = 0;     
            unibo.kotlin.planner22Util.initAI()
         #] 
  	} 
-	//Goto coverNextColumn 
+	Goto coverNextColumn 
 
 	State coverNextColumn{  		  
 		printCurrentMessage
@@ -57,15 +58,15 @@ var CurMoveTodo = "h"
    		[# stepok = stepok + 1
    		   unibo.kotlin.planner22Util.updateMap(  "w", "" ) 		
    		#]
-   		println("coverColumn stepok=$stepok NumStep=$NumStep")
-     	delay 300 
+   		//println("coverColumn stepok=$stepok NumStep=$NumStep")
+     	delay 100 
    		request basicrobot -m step : step($StepTime)
  	}
 	Transition t0  whenReply stepdone -> coverColumn
  	               whenReply stepfail and [# NumStep <  MaxNumStep #] -> backHome
  
 	State backHome{  	
-		printCurrentMessage	   
+		//printCurrentMessage	   
 		run  unibo.kotlin.planner22Util.updateMapObstacleOnCurrentDirection()    		
 		println("backHome")
    			forward basicrobot -m cmd : cmd(l)
@@ -87,8 +88,8 @@ var CurMoveTodo = "h"
  		[# unibo.kotlin.planner22Util.updateMap(  "w", "" ) 
  		   stepok = stepok - 1 
  		#]
- 		println("gotoHome stepok=$stepok")	
- 		delay 300 
+ 		//println("gotoHome stepok=$stepok")	
+ 		//delay 300 
  		request basicrobot -m step : step($StepTime)  
  	}
 // 	Goto gotoHome if [# stepok > 0 #] else turnAndStep  //WRONG
@@ -113,20 +114,20 @@ var CurMoveTodo = "h"
 		println("posForNextColumn stepok=$stepok")		
    		run unibo.kotlin.planner22Util.showCurrentRobotState()  		
  		//[# unibo.actor22comm.utils.CommUtils.waitTheUser("posForNextColumn")	 #]
-   		delay 500 		 
+   		delay 300 		 
 	}
  	Goto coverNextColumn
- 	
+ 	 
  	
 	State endOfWork{  		  
    		printCurrentMessage
    		[#  unibo.kotlin.planner22Util.showMap()
-   			var Athome = unibo.kotlin.planner22Util.atHome(); println("athome=$Athome") 
-   			//pathut.saveAdjustedMap("map2019temp")
-   			
+   			var Athome = unibo.kotlin.planner22Util.atHome(); 
+   			println("athome=$Athome")    			
    		#]
+   		run unibo.kotlin.planner22Util.saveRoomMap("$MapName")
 	}	
-	Goto backToHome if [# ! unibo.kotlin.planner22Util.atHome() #] else atHomeAgain
+	//Goto backToHome if [# ! unibo.kotlin.planner22Util.atHome() #] else atHomeAgain
 	
 	State backToHome{
 		run unibo.kotlin.planner22Util.setGoal(0,0)
@@ -166,23 +167,17 @@ var CurMoveTodo = "h"
 	Transition t0 whenReply stepdone  -> nextMove  
 	              whenReply stepfail  -> fatal
 	
-	
-	
-	
-	
-	
-	
-	
+ 	
 	State atHomeAgain{
    		[#  unibo.kotlin.planner22Util.showMap()
-    		unibo.kotlin.planner22Util.saveRoomMap("map2019")
+    		unibo.kotlin.planner22Util.saveRoomMap("$MapName")
    		#]		
 	}
 	
 	State fatal{
 		printCurrentMessage
    		[#  unibo.kotlin.planner22Util.showMap()
-    		unibo.kotlin.planner22Util.saveRoomMap("map2019Failed")
+    		unibo.kotlin.planner22Util.saveRoomMap("${MapName}ko")
    		#]		
 		println("SORRY: fatal error")
 	}

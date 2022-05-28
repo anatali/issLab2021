@@ -24,10 +24,10 @@ class Pathcaller ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						 val PathTodo =  "wwlwlwwlwl"   
 						println("doexplore starts $PathTodo")
-						request("dopath", "dopath($PathTodo,pathcaller)" ,"pathexec" )  
+						request("dopath", "dopath($PathTodo)" ,"pathexec" )  
 					}
-					 transition(edgeName="t06",targetState="end",cond=whenReply("dopathdone"))
-					transition(edgeName="t07",targetState="handelPathFailure",cond=whenReply("dopathfail"))
+					 transition(edgeName="t05",targetState="end",cond=whenReply("dopathdone"))
+					transition(edgeName="t06",targetState="handelPathFailure",cond=whenReply("dopathfail"))
 				}	 
 				state("handelPathFailure") { //this:State
 					action { //it:State
