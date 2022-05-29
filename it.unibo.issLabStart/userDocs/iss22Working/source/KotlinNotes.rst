@@ -7,7 +7,7 @@
 .. _kotlinUnibo: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html
 
 .. _Data, Types and Variables: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#data
-.. _Functions: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#fun
+.. _Functions: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#funs
 .. _Using lambda: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#lambda
 .. _Closures, Callbacks and CPS: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#clos
 .. _Towards Asynchronous Programming: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#async
@@ -57,6 +57,12 @@
 .. _Kotlin Basic syntax: https://kotlinlang.org/docs/basic-syntax.html#for-loop
 
 .. _Programmazione funzionale: https://it.wikipedia.org/wiki/Programmazione_funzionale
+
+
+.. _demoBasic.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoBasic.kt
+.. _demoFun.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoFun.kt
+.. _demoClasses.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoClasses.kt
+
 
 
 .. video 5.44
@@ -126,21 +132,69 @@ La parte strutturale
    qualsiasi computazione. 
 
    - Un :blue:`dato` è concettualmente un valore prodotto da una funzione, il cui tipo viene **inferito**
-     (si veda `Data, Types and Variables`_)  
+     (si veda `Data, Types and Variables`_ )  
+
+      .. list-table::
+         :widths: 25,75
+         :width: 100%
+
+         * - `demoBasic.kt`_
+           - `var, val, Type, Any, Smart/Explicit cast, ==, ===, Range, Array`
+  
    - Le funzioni sono *oggetti di prima classe* che hanno un tipo, possono essere assegnati a variabili e 
      usati come argomenti di funzioni o come valori di ritorno. (si veda `Functions`_) 
+
+      .. list-table::
+         :widths: 25,75
+         :width: 100%
+
+         * - `demoFun.kt`_
+           - `Top-level fun, One-line fun, FunctionType, Lambda Exp Literal, Anonymous fun`
 
 #. Kotlin supporta Object Oriented Programming (OOP)  e fornisce funzionalità come astrazione, incapsulamento, ereditarietà
    ma in modo diverso da Java  (si veda `Classes and Objects in Kotlin`_). di particolare rilevanza:
 
-   - `Kotlin Object`_
-   - `Kotlin Class`_
-   - `About initializazion`_
-   - `Sealed clsss`_
-   - `Companion object`_
-   - `Inheritance`_
-   - `Property delegation`_ ( `Delegated properties`_ )
-   - `Enum classes`_  ( `Enum class`_ )
+      .. list-table::
+         :widths: 35,65
+         :width: 100%
+
+         * - `demoClasses.kt`_
+           - ``SingleCounter`` 
+             ``Person``  
+             ``PersonILL``   
+             ``Expr``  
+             ``PersonCo``  
+             ``Student``  
+             ``Delegate`` 
+             ``Color`` 
+         
+         * - `Kotlin Object`_
+           - ``SingleCounter`` 
+         
+         * - `Kotlin Class`_
+           - ``Person`` 
+
+         * - `About initializazion`_
+           - ``PersonILL, lateinit, lazy`` 
+
+         * - `Sealed clsss`_
+           - ``Expr`` 
+
+         * - `Companion object`_
+           - ``PersonCo`` 
+
+         * - `Inheritance`_
+           - ``Student`` 
+
+         * - `Property delegation`_
+           - ``Delegate``,  see `Delegated properties`_
+
+         * - `Enum classes`_
+           - ``Color``,  see `Enum class`_ 
+
+
+
+
 
 +++++++++++++++++++++++++++++++++++
 La parte concorrente
