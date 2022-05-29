@@ -168,17 +168,19 @@ QActor envsonarhandler context ctxbasicrobot{
 
 /* 
  * 
- 
+
  */
  
 QActor pathexec context ctxbasicrobot{ 
 [# var CurMoveTodo = ""    //Upcase, since var to be used in guards
-   var StepTime = 345
+   var StepTime    = "300"
 #]
 	State s0 initial{  	
 		//printCurrentMessage
-		[#  CurMoveTodo = "" #] 
-		println("pathexec ready ...") 
+		[#  CurMoveTodo = "" 
+			StepTime = unibo.robot.robotSupport.readStepTime()
+		#]
+		println("pathexec ready. StepTime=$StepTime") 
 	}	
 	Transition t0 whenRequest dopath -> doThePath
   	

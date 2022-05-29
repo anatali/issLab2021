@@ -9,6 +9,16 @@
 .. _IOT: https://en.wikipedia.org/wiki/Internet_of_things
 
 .. _unibo.basicrobot22: ../../../../../unibo.basicrobot22
+.. _basicrobot.qak: ../../../../../unibo.basicrobot22/src/basicrobot.qak
+.. _basicRobot22.yaml: ../../../../../unibo.basicrobot22/basicRobot22.yaml
+.. _basicrobotConfig.json: ../../../../../unibo.basicrobot22/basicrobotConfig.json
+.. _stepTimeConfig.json: ../../../../../unibo.basicrobot22/stepTimeConfig.json
+
+.. _unibo.pathexecutor: ../../../../../unibo.pathexecutor
+.. _pathexecutor.qak: ../../../../../unibo.pathexecutor/src/pathexecutor.qak
+
+.. _webForActors: ../../../../../webForActors
+
 .. _unibo.mapperQak22: ../../../../../unibo.mapperQak22
 .. _mapemptyroom22.qak: ../../../../../unibo.mapperQak22/userDocs/mapemptyroom22.qakt
 .. _mapwithobstqak22.qak: ../../../../../unibo.mapperQak22/userDocs/mapwithobstqak22.qakt
@@ -54,27 +64,97 @@ già al terminae della fase di analisi del problema può essere molto utile per:
 
 .. ``
 
-Per dare esempi di questo modo di procedere,  svilupperemo i segeunti progetti applicativi di 'ispirazione `IOT`_'  :
+Per dare esempi di questo modo di procedere,  svilupperemo un insieme di progetti applicativi di 'ispirazione `IOT`_' 
+a complessità crescente.
 
-#. Premessa operativa: 
-    - si veda :ref:`StartUp (versione Valastro-Marchegiani)`
-    - si esperimenti il sistema distribuito :ref:`resourcecore` e :ref:`External caller1` 
-      (tratto da :ref:`demorequest.qak`)
- 
-#. `unibo.basicRobot22`_: il progetto **unibo.basicrobot22** è descritto in :ref:`BasicRobot22` e realizza la risorsa di base per le 
-   applicazioni che seguono. Il sistema deployed su DockerHub comprende anche un DDR robot virtuale e mostra anche
-   l'uso di
+---------------------------------
+Premessa operativa
+---------------------------------
+
+- si veda :ref:`StartUp (versione Valastro-Marchegiani)`
+- si esperimenti il sistema distribuito :ref:`resourcecore` e :ref:`External caller1` 
+  (tratto da :ref:`demorequest.qak`)
+
+
+---------------------------------
+unibo.basicRobot22
+---------------------------------
+
+:remark:`Goal di basicRobot22`
+
+- Costruire un robot 'astratto' capace di gestire diversi tipi di robot concreti e capace di eseguire 
+  :ref:`comandi aril<Linguaggio di Comando: da cril a aril>`
+
+Il progetto `unibo.basicRobot22`_ , descritto in :ref:`BasicRobot22`, propone il modello `basicRobot.qak`_
+che definisce l'attore :blue:`basicrobot`, il quale
+realizza la **risorsa di base** per tutte le applicazioni che seguono. Questa risorsa utilizza:
 
     - :ref:`CodedQActors`
     - :ref:`ExternalQActor` 
     - :ref:`Actors as streams`
 
-#. unibo.pathexecutor
-  
-   Il sistema include un attore (:blue:`pathexec`) che utilizza :ref:`BasicRobot22` per eseguire la richiesta di esecuzione 
-   di un path dato,  con possibile successo o fallimento; nel caso di fallimento, fornisce il path ancora da compiere.
-   
-#. `unibo.mapperQak22`_: il progetto **unibo.mapperQak22** contiene due modelli:
++++++++++++++++++++++++++++++
+pathexec
++++++++++++++++++++++++++++++
+
+Il modello `basicRobot.qak`_ include anche la definizione dell'attore :blue:`pathexec` dapprima definito nel progetto
+:ref:`unibo.pathexecutor`.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+unibo.pathexecutor
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il progetto `unibo.pathexecutor`_ propone il modello `pathexecutor.qak`_ che definisve
+l'attore :blue:`pathexec`, il quale utilizza :ref:`BasicRobot22` 
+per eseguire la richiesta di esecuzione 
+di un path dato,  con possibile successo o fallimento. Nel caso di fallimento, la risposta
+fornisce il path ancora da compiere.
+
++++++++++++++++++++++++++++++
+Attivazione di basicRobot22
++++++++++++++++++++++++++++++
+
+Il *sistema basicrobot* può essere attivato usando `basicRobot22.yaml`_ col comando:
+
+.. code::
+
+  docker-compose -f basicrobot22.yaml  up 
+  //per attivare solo wenv:
+  docker-compose -f basicrobot22.yaml run --service-ports wenv 
+
+I files di configurazione sono:
+
+  - `basicrobotConfig.json`_
+  - `stepTimeConfig.json`_
+
+
+---------------------------------
+webForActors
+--------------------------------- 
+:remark:`Goal di webForActors`
+
+- Costruire una WebGUI per il robot :ref:`unibo.basicRobot22` capace di visualizzare l'esito dei comandi
+
+
+Il progetto `webForActors`_, introdotto in :ref:`Primi passi con SpringBoot`,
+è stato modificato in modo da definire una GUI per il sistema
+:ref:`unibo.basicRobot22`
+
+.. image:: ./_static/img/Robot22/basicRobotCmdGui.png 
+   :align: center
+   :width: 70%
+
+ 
+---------------------------------
+unibo.mapperQak22
+--------------------------------- 
+
+:remark:`Goal di mapperQak22`
+
+- Utilizzare :ref:`unibo.basicRobot22` per creare la mappa della stanza
+
+
+Il progetto `unibo.mapperQak22`_ contiene due modelli:
 
     #. `mapemptyroom22.qak`_ : utilizza :ref:`BasicRobot22` e :ref:`UniboPlanner<Uso di un planner>` per creare 
        (e salvare) la mappa di una stanza rettangolare vuota (almeno sui bordi) secondo la politica *BoundaryWalker*.
@@ -87,4 +167,13 @@ Per dare esempi di questo modo di procedere,  svilupperemo i segeunti progetti a
     #. `mapwithobstqak22.qak`_ :  utilizza :ref:`BasicRobot22` e :ref:`UniboPlanner<Uso di un planner>` per creare 
        (e salvare) la mappa di una stanza rettangolare che contiene **ostacoli fissi**
 
-#. `unibo.robotappl`_:  utilizza :blue:`pathexec` per spostare il robot in un dato punto della stanza, nota la mappa.
+---------------------------------
+unibo.robotappl
+--------------------------------- 
+
+:remark:`Goal di mapperQak22`
+
+- Utilizzare :ref:`unibo.basicRobot22` e :ref:`pathexec` per creare una applicazione. 
+
+Il progetto  `unibo.robotappl`_:  utilizza :ref:`pathexec` per spostare il robot in un dato punto della stanza, 
+nota la mappa.

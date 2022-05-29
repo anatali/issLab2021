@@ -284,3 +284,12 @@ In src , crea un file con estensione qak A questo punto Eclipse dovrebbe present
 _images/qakStarting.png
 Aggiungere la natura Kotlin al progetto
 
+Per modificarli, usare comandi simili a :ref:`Modificare la scena nella immagine`. Ad esempio:
+
+.. code::
+
+  docker-compose -f basicrobot22.yaml run --service-ports robot /bin/sh
+  docker ps -a 
+  docker commit  CONTAINERID
+
+  docker cp mystepTimeConfig.json faf69252ca5b:/unibobasicrobot22_robot_1/stepTimeConfig.json  ///it.unibo.basicrobot-1.0/bin

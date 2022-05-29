@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <meta charset = "utf-8" />
-<title>RobotNaiveGui</title>
+<title>BasicRobotCmdGui</title>
 <body>
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
-
 <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <!--
 <script src="/webjars/jquery/jquery.min.js"></script>
@@ -12,7 +11,7 @@
 <script src="/webjars/sockjs-client/sockjs.min.js"></script>
 -->
 
-<h3>CONFIGURATION</h3>
+<h3>BasicRobotCmdGui  CONFIGURATION</h3>
 <form action="configure" method="post">
  <label for="configurespec">address</label>
  <input type="text" id="configurespec" name="move" value="">
@@ -20,13 +19,26 @@
  <!-- the form-data is sent to the page specified in the action attribute -->
 </form>
 
-<center>
-<form action="robotcmd" method="post">
- <button name="cmd" value="t">START the robot</button>
-</form>
- </center>
+
 <hr/>
 
+<h4>Commands</h4>
+
+<center>
+ <table>
+  <tr><td style="width:50%">
+   <center>
+    <table style="width:50%">
+     <tbody>
+     <!-- the form-data is sent to the page specified in the action attribute -->
+     <tr>
+      <td > <form action="robotmove" method="post"><button name="move" value="w">w</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="s">s</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="r">r</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="l">l</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="p">p</button></form> </td>
+      <td> <form action="robotmove" method="post"><button name="move" value="h">h</button></form> </td>
+     </tr>
 
     </table>
    </center>
