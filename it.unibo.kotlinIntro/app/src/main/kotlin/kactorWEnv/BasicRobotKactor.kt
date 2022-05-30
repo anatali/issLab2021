@@ -17,7 +17,7 @@ lateinit var basicRobotKactor: SendChannel<String>
 lateinit var support: IssWsHttpKotlinSupport
 
 @kotlinx.coroutines.ObsoleteCoroutinesApi
-
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 fun createBasicActor(scope:CoroutineScope) : SendChannel<String> {
 	 println("createBasicActor ${kotlindemo.curThread()}")
 	 support = IssWsHttpKotlinSupport.getConnectionWs(scope, "localhost:8091")

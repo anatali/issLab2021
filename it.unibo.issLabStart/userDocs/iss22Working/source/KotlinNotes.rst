@@ -79,6 +79,7 @@
 .. _simpleproducerkotlin.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/simpleproducerkotlin.kt
 .. _demoactors.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoactors.kt
 .. _demoactorcounter.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoactorcounter.kt
+.. _demo2022.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demo2022.kt
 
 .. video 5.44
 
@@ -138,6 +139,7 @@ tenendo conto di un percorso logico che distingue (al solito) una parte
 relativa alla *organizzazione strutturale* dei programmi, una parte relativa alla 
 *esecuzione* (concorrente) di attività e una parte relativa alla *interazione* tra attività.
 
+Il file `demo2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
 
 +++++++++++++++++++++++++++++++++
 Learning by examples
@@ -238,9 +240,6 @@ usati come argomenti di funzioni o come valori di ritorno.
    * - `demoCps.kt`_
      - ``Lexical Closures``, ``Callbacks``, ``Continuation Passing Style`` (**CPS**)  (si veda `Closures, Callbacks and CPS`_)
 
-   * - `demoCpsAsynch.kt`_
-     - ``CPS in Asynchronous programming``, ``Single Abstract Method converstoion`` (**SAM**) 
-         (si veda `Towards Asynchronous Programming`_)
 
 Una lettura interessante: `Inline Functions`_:
 
@@ -256,14 +255,30 @@ La parte concorrente
    è noto per essere soggetto a errori e inaffidabile. 
 #. Le `Chiusure lessicali`_ sono spesso usati come :blue:`callbacks` in programmi con asincronismo `I/O bound`_,
    in accordo allo stile di programmazione **CPS** (`Continuation-passing style`_) .
-#. Per dare supporto alla *programmazione asincrona* (o *non bloccante*), evitando il noto callback hell
-   (si veda `Asynchronous I/O`_), Kotlin introduce il meccanismo delle *coroutines*.
+
+
++++++++++++++++++++++++++++++++++
+Asynch
++++++++++++++++++++++++++++++++++
+
+.. list-table::
+   :widths: 25,75
+   :width: 100%
+
+
+   * - `demoCpsAsynch.kt`_
+     - ``CPS in Asynchronous programming``: `kotlin.concurrent.thread, Single Abstract Method converstoion` (**SAM**) 
+         (si veda `Towards Asynchronous Programming`_)
+
+
+kotlin.concurrent.thread
+
 
 +++++++++++++++++++++++++++++++++
 Kotlin concurrent overview
 +++++++++++++++++++++++++++++++++
-
-#. A function can be activated as a coroutine, i.e. as a a sort of 'light-weight thread'.
+#. Per dare supporto alla *programmazione asincrona* (o *non bloccante*), evitando il noto callback hell
+   (si veda `Asynchronous I/O`_), Kotlin introduce il meccanismo delle *coroutines*.
 #. A coroutine can invoke other functions; it can also :ref:`suspend<Suspending functions>` its behavior (without 
    blocking its running thread).
    
@@ -281,6 +296,10 @@ Kotlin concurrent overview
 
 #. Combining a coroutine with a channel to communicate with other coroutines makes the idea 
    of Kotlin :ref:`actor<Gli attori>`.
+
+
+
+
 
 +++++++++++++++++++++++++++++++++++
 Le coroutines

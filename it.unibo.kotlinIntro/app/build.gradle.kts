@@ -20,7 +20,7 @@ plugins {
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
-    flatDir{ dirs("../unibolibs")   }   //Our libraries
+    flatDir{ dirs("../../unibolibs")   }   //Our libraries (we are in app ...)
 }
 
 version = "1.0"
@@ -61,7 +61,7 @@ dependencies {
 //UNIBO
     implementation( "uniboInterfaces:uniboInterfaces"  )
     implementation( "uniboProtocolSupport:unibonoawtsupports"  )
-    implementation( "uniboIssSupport:IssActorKotlinRobotSupport-2.0")
+    //implementation( "uniboIssSupport:IssActorKotlinRobotSupportJ11-2.0")
 }
 
 application {
