@@ -132,6 +132,7 @@ relativa alla *organizzazione strutturale* dei programmi, una parte relativa all
 *esecuzione* (concorrente) di attività e una parte relativa alla *interazione* tra attività.
 
 Il file `demo2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
+
 Il file `demoOOP2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
 
 Riportiamo qui i punti salienti per ottenere i nostri obiettivi, indicando gli indice degli esempi di `demo2022.kt`_:
