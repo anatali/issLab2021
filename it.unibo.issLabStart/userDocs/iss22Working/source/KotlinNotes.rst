@@ -79,6 +79,10 @@
 .. _simpleproducerkotlin.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/simpleproducerkotlin.kt
 .. _demoactors.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoactors.kt
 .. _demoactorcounter.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoactorcounter.kt
+.. _demo2022.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demo2022.kt
+.. _demoOOP2022.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoOOP2022.kt
+
+
 
 .. video 5.44
 
@@ -122,39 +126,34 @@ In relazione al corso di *Ingegneria dei Sitemi software*, ci poniamo due obiett
 #. fornire informazioni-base utili per scrivere :ref:`CodedQActors` in Kotlin e frasi Kotlin 
    all'interno dei :ref:`modelli eseguibili QAk<Qak specification template>`.
 
-Riportiamo qui i punti salienti per ottenere questi obiettivi:
-
-- elementi essenziali della  sintassi Kotlin
-- *classi ed oggetti* in Kotlin
-- il supporto Kotlin allo *stile funzionale* (:blue:`chiusure, callbacks e CPS`)
-- il supporto Kotlin alla *programmazione asincrona in stile CPS*
-- le :blue:`coroutines` Kotlin come 'thread leggeri' che possono essere sospesi senza bloccare il thread che le esegue
-- i Kotlin :blue:`channels` come 'code' che consentono *suspending send* e *suspending receive*
-- i Kotlin :blue:`Actors` come supporto al modello degli Attori
-
-
-Il file `kotlinUnibo`_ contiene una introduzione con esempi su questi aspetti, 
+Il file `kotlinUnibo`_ contiene una introduzione a Kotlin condotta attraverso esempi, 
 tenendo conto di un percorso logico che distingue (al solito) una parte 
 relativa alla *organizzazione strutturale* dei programmi, una parte relativa alla 
 *esecuzione* (concorrente) di attività e una parte relativa alla *interazione* tra attività.
 
+Il file `demo2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
 
-+++++++++++++++++++++++++++++++++
-Learning by examples
-+++++++++++++++++++++++++++++++++
+Il file `demoOOP2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
 
-Funzioni, coroutines attori
+Riportiamo qui i punti salienti per ottenere i nostri obiettivi, indicando gli indice degli esempi di `demo2022.kt`_:
 
-#. `demoBasic.kt`_: introduzione alle nuove notazioni e alla nuova possibile impostazione dei programmi
+- elementi essenziali della  sintassi Kotlin : **1**
+- *classi ed oggetti* in Kotlin : si veda `demoOOP2022.kt`_
+- il supporto Kotlin allo *stile funzionale* (:blue:`chiusure, callbacks e CPS`): **2, 3**
+- il supporto Kotlin alla *programmazione asincrona in stile CPS*  **4**
+- le :blue:`coroutines` Kotlin come 'thread leggeri' che possono essere sospesi 
+  senza bloccare il thread che le esegue: : **5, 6, 7, 8, 9, 10, 11, 12**
+- i Kotlin :blue:`channels` come 'code' che consentono *suspending send* e *suspending receive*: **17, 18, 19, 20**
+- i Kotlin :blue:`Actors` come supporto al modello degli Attori **21, 22, 23**
 
-#. `demoLambda.kt`_: shortcut per le lambda
+
 
 ---------------------------------------
 La parte strutturale
 ---------------------------------------
 
 +++++++++++++++++++++++
-Dati e tipi
+Dati e tipi di dato
 +++++++++++++++++++++++
 
 Kotlin intende promuovere l'idea della `Programmazione funzionale`_, per cui :ref:`Le funzioni` sono 
@@ -238,9 +237,6 @@ usati come argomenti di funzioni o come valori di ritorno.
    * - `demoCps.kt`_
      - ``Lexical Closures``, ``Callbacks``, ``Continuation Passing Style`` (**CPS**)  (si veda `Closures, Callbacks and CPS`_)
 
-   * - `demoCpsAsynch.kt`_
-     - ``CPS in Asynchronous programming``, ``Single Abstract Method converstoion`` (**SAM**) 
-         (si veda `Towards Asynchronous Programming`_)
 
 Una lettura interessante: `Inline Functions`_:
 
@@ -256,14 +252,30 @@ La parte concorrente
    è noto per essere soggetto a errori e inaffidabile. 
 #. Le `Chiusure lessicali`_ sono spesso usati come :blue:`callbacks` in programmi con asincronismo `I/O bound`_,
    in accordo allo stile di programmazione **CPS** (`Continuation-passing style`_) .
-#. Per dare supporto alla *programmazione asincrona* (o *non bloccante*), evitando il noto callback hell
-   (si veda `Asynchronous I/O`_), Kotlin introduce il meccanismo delle *coroutines*.
+
+
++++++++++++++++++++++++++++++++++
+Asynch
++++++++++++++++++++++++++++++++++
+
+.. list-table::
+   :widths: 25,75
+   :width: 100%
+
+
+   * - `demoCpsAsynch.kt`_
+     - ``CPS in Asynchronous programming``: `kotlin.concurrent.thread, Single Abstract Method converstoion` (**SAM**) 
+         (si veda `Towards Asynchronous Programming`_)
+
+
+ 
+
 
 +++++++++++++++++++++++++++++++++
 Kotlin concurrent overview
 +++++++++++++++++++++++++++++++++
-
-#. A function can be activated as a coroutine, i.e. as a a sort of 'light-weight thread'.
+#. Per dare supporto alla *programmazione asincrona* (o *non bloccante*), evitando il noto callback hell
+   (si veda `Asynchronous I/O`_), Kotlin introduce il meccanismo delle *coroutines*.
 #. A coroutine can invoke other functions; it can also :ref:`suspend<Suspending functions>` its behavior (without 
    blocking its running thread).
    
@@ -281,6 +293,10 @@ Kotlin concurrent overview
 
 #. Combining a coroutine with a channel to communicate with other coroutines makes the idea 
    of Kotlin :ref:`actor<Gli attori>`.
+
+
+
+
 
 +++++++++++++++++++++++++++++++++++
 Le coroutines
@@ -308,7 +324,7 @@ Le coroutines non sono parte del linguaggio e nemmeno della libreria standard; f
          :width: 100%
 
          * - `demoCoroutinesIntro.kt`_
-           - `GlocalScope, CoroutineScope, Launch, Join, runBlocking, Dispatchers`
+           - `GlocalScope, CoroutineScope, Launch, Join, runBlocking, Dispatchers, manyThreads, manyCoroutines, await`
  
          * - `demoDispatchers.kt`_
            - `Dispatchers.Default, Dispatchers.IO, newSingleThreadContext, Dispatchers.Unconfined` (si veda `Dispatchers`_)
@@ -402,5 +418,8 @@ la tradizionale interazione di chiamata di procedura senza perdere in prestazion
                .. image:: ./_static/img/Kotlin/demoActorCounter.png
                  :align: center
                  :width: 30% 
+
+
+
 
 
