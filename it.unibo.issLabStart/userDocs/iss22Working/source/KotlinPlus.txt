@@ -1,0 +1,15 @@
+
+
+#. Invece dei thread, il runtime Kotlin/Native offre il concetto di :blue:`Worker`: 
+   flussi di flusso di controllo eseguiti contemporaneamente con una coda di richiesta associata. 
+   I Worker sono molto simili agli attori nell'`Actor Model`_. 
+
+   - un `Kotlin Worker`_ può scambiare oggetti Kotlin con un altro Worker. L'oggetto o è immutabile
+     o, se modificabile, è proprietà di un singolo Worker, in modo da garantire un singolo mutator
+     ed evitare locking. La proprietà può essere trasferita. Si veda anche `Kotlin Concurrency overview`_.
+
+gif not permitted ???
+
+.. image:: ./_static/img/Kotlin/liveCoroutine.gif
+   :align: center
+   :width: 40%
