@@ -80,6 +80,9 @@
 .. _demoactors.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoactors.kt
 .. _demoactorcounter.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoactorcounter.kt
 .. _demo2022.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demo2022.kt
+.. _demoOOP2022.kt: ../../../../../it.unibo.kotlinIntro/app/src/main/kotlin/kotlindemo/demoOOP2022.kt
+
+
 
 .. video 5.44
 
@@ -123,40 +126,33 @@ In relazione al corso di *Ingegneria dei Sitemi software*, ci poniamo due obiett
 #. fornire informazioni-base utili per scrivere :ref:`CodedQActors` in Kotlin e frasi Kotlin 
    all'interno dei :ref:`modelli eseguibili QAk<Qak specification template>`.
 
-Riportiamo qui i punti salienti per ottenere questi obiettivi:
-
-- elementi essenziali della  sintassi Kotlin
-- *classi ed oggetti* in Kotlin
-- il supporto Kotlin allo *stile funzionale* (:blue:`chiusure, callbacks e CPS`)
-- il supporto Kotlin alla *programmazione asincrona in stile CPS*
-- le :blue:`coroutines` Kotlin come 'thread leggeri' che possono essere sospesi senza bloccare il thread che le esegue
-- i Kotlin :blue:`channels` come 'code' che consentono *suspending send* e *suspending receive*
-- i Kotlin :blue:`Actors` come supporto al modello degli Attori
-
-
-Il file `kotlinUnibo`_ contiene una introduzione con esempi su questi aspetti, 
+Il file `kotlinUnibo`_ contiene una introduzione a Kotlin condotta attraverso esempi, 
 tenendo conto di un percorso logico che distingue (al solito) una parte 
 relativa alla *organizzazione strutturale* dei programmi, una parte relativa alla 
 *esecuzione* (concorrente) di attività e una parte relativa alla *interazione* tra attività.
 
 Il file `demo2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
+Il file `demoOOP2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
 
-+++++++++++++++++++++++++++++++++
-Learning by examples
-+++++++++++++++++++++++++++++++++
+Riportiamo qui i punti salienti per ottenere i nostri obiettivi, indicando gli indice degli esempi di `demo2022.kt`_:
 
-Funzioni, coroutines attori
+- elementi essenziali della  sintassi Kotlin : **1**
+- *classi ed oggetti* in Kotlin : si veda `demoOOP2022.kt`_
+- il supporto Kotlin allo *stile funzionale* (:blue:`chiusure, callbacks e CPS`): **2, 3**
+- il supporto Kotlin alla *programmazione asincrona in stile CPS*  **4**
+- le :blue:`coroutines` Kotlin come 'thread leggeri' che possono essere sospesi 
+  senza bloccare il thread che le esegue: : **5, 6, 7, 8, 9, 10, 11, 12**
+- i Kotlin :blue:`channels` come 'code' che consentono *suspending send* e *suspending receive*: **17, 18, 19, 20**
+- i Kotlin :blue:`Actors` come supporto al modello degli Attori **21, 22, 23**
 
-#. `demoBasic.kt`_: introduzione alle nuove notazioni e alla nuova possibile impostazione dei programmi
 
-#. `demoLambda.kt`_: shortcut per le lambda
 
 ---------------------------------------
 La parte strutturale
 ---------------------------------------
 
 +++++++++++++++++++++++
-Dati e tipi
+Dati e tipi di dato
 +++++++++++++++++++++++
 
 Kotlin intende promuovere l'idea della `Programmazione funzionale`_, per cui :ref:`Le funzioni` sono 
@@ -271,7 +267,7 @@ Asynch
          (si veda `Towards Asynchronous Programming`_)
 
 
-kotlin.concurrent.thread
+ 
 
 
 +++++++++++++++++++++++++++++++++
@@ -327,7 +323,7 @@ Le coroutines non sono parte del linguaggio e nemmeno della libreria standard; f
          :width: 100%
 
          * - `demoCoroutinesIntro.kt`_
-           - `GlocalScope, CoroutineScope, Launch, Join, runBlocking, Dispatchers`
+           - `GlocalScope, CoroutineScope, Launch, Join, runBlocking, Dispatchers, manyThreads, manyCoroutines, await`
  
          * - `demoDispatchers.kt`_
            - `Dispatchers.Default, Dispatchers.IO, newSingleThreadContext, Dispatchers.Unconfined` (si veda `Dispatchers`_)
@@ -421,5 +417,8 @@ la tradizionale interazione di chiamata di procedura senza perdere in prestazion
                .. image:: ./_static/img/Kotlin/demoActorCounter.png
                  :align: center
                  :width: 30% 
+
+
+
 
 
