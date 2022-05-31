@@ -1,0 +1,49 @@
+System sonarqak22
+Dispatch sonaractivate   : info(ARG)
+Dispatch sonardeactivate : info(ARG)
+
+Context ctxsonarqak22 ip [host="localhost" port=8080] 
+
+QActor sonarqak22 context ctxsonarqak22{
+	[# lateinit var Sonar : `it.unibo`.radarSystem22.domain.interfaces.ISonar #]
+	State s0 initial {
+		printCurrentMessage
+		[#
+			`it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.simulation   	= true;			
+			`it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.tracing      	= true;		
+			`it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.sonarDelay   	= 200;
+//			`it.unibo`.radarSystem22.domain.utils.CommSystemConfig.tracing        	= false;	
+             Sonar = `it.unibo`.radarSystem22.domain.DeviceFactory.createSonar()	
+             println(Sonar)	
+		#]
+	}
+	Transition t0 whenMsg sonaractivate -> activateTheSonar
+			      whenMsg sonardeactivate -> deactivateTheSonar
+	
+	State activateTheSonar{
+		printCurrentMessage
+		if[#  `it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.simulation #]{
+			[# Sonar.activate() 
+			#]
+			println( " SonarMock| sonarSetUp done ")
+		}
+	}
+	Goto end
+	
+	State deactivateTheSonar{
+		printCurrentMessage
+	}
+	
+	State end{ 
+		delay 3000 
+		println("sonarqak22 BYE")
+		[# System.exit(0) #]
+	}
+}
+
+QActor sonarmastermock context ctxsonarqak22{
+	State s0 initial {
+		forward sonarqak22 -m sonaractivate : info(ok)
+	}
+	
+} 

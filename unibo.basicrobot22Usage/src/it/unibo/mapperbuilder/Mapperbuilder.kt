@@ -13,8 +13,6 @@ class Mapperbuilder ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( na
 	override fun getInitialState() : String{
 		return "s0"
 	}
-	@kotlinx.coroutines.ObsoleteCoroutinesApi
-	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 var NumStep   = 0  
 		return { //this:ActionBasciFsm
