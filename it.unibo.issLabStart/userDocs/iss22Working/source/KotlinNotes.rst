@@ -133,7 +133,7 @@ relativa alla *organizzazione strutturale* dei programmi, una parte relativa all
 
 Il file `demo2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
 
-Il file `demoOOP2022.kt`_ contiene una sintesi di esempi che coprono il percorso *funzioni-cps-corouitnes-canali-attori*.
+Il file `demoOOP2022.kt`_ contiene una sintesi di esempi inerenti il tema *OOP in Kotlin*.
 
 Riportiamo qui i punti salienti per ottenere i nostri obiettivi, indicando gli indice degli esempi di `demo2022.kt`_:
 
@@ -165,7 +165,7 @@ Un :blue:`dato` è concettualmente un valore prodotto da una funzione, il cui ti
          :widths: 25,75
          :width: 100%
 
-         * - `demoBasic.kt`_
+         * - `demoBasic.kt`_ 
            - `var, val, Type, Any, Unit, NullaleType, Smart/Explicit cast (as operator), ==, ===, Range, ArrayOf, Property`
 
 +++++++++++++++++++++++
@@ -228,13 +228,13 @@ usati come argomenti di funzioni o come valori di ritorno.
    :widths: 25,75
    :width: 100%
 
-   * - `demoFun.kt`_
+   * - `demoFun.kt`_ (**1**)
      - `Top-level fun, One-line fun, FunctionType, Lambda Exp Literal, Anonymous fun` (si veda `Functions`_)
          
-   * - `demoLambda.kt`_
+   * - `demoLambda.kt`_ (**2**)
      - ``Lambda syntax shortcut``, ``Function reference``, ``let, run, it`` (si veda `Using Lambda`_)
 
-   * - `demoCps.kt`_
+   * - `demoCps.kt`_ (**3**)
      - ``Lexical Closures``, ``Callbacks``, ``Continuation Passing Style`` (**CPS**)  (si veda `Closures, Callbacks and CPS`_)
 
 
@@ -250,6 +250,13 @@ La parte concorrente
 #. Il runtime Kotlin/Native **non incoraggia** un classico modello di concorrenza orientato ai thread 
    con blocchi di codice che si escludono a vicenda e variabili condizionali, poiché questo modello 
    è noto per essere soggetto a errori e inaffidabile. 
+#. Il runtime Kotlin/Native offre il concetto di :blue:`Worker`: 
+   flussi di flusso di controllo eseguiti contemporaneamente con una coda di richiesta associata. 
+   I Worker sono molto simili agli attori nell'`Actor Model`_. 
+
+   - un `Kotlin Worker`_ può scambiare oggetti Kotlin con un altro Worker. L'oggetto o è immutabile
+     o, se modificabile, è proprietà di un singolo Worker, in modo da garantire un singolo mutator
+     ed evitare locking. La proprietà può essere trasferita. Si veda anche `Kotlin Concurrency overview`_.   
 #. Le `Chiusure lessicali`_ sono spesso usati come :blue:`callbacks` in programmi con asincronismo `I/O bound`_,
    in accordo allo stile di programmazione **CPS** (`Continuation-passing style`_) .
 
@@ -263,7 +270,7 @@ Asynch
    :width: 100%
 
 
-   * - `demoCpsAsynch.kt`_
+   * - `demoCpsAsynch.kt`_ (**4**)
      - ``CPS in Asynchronous programming``: `kotlin.concurrent.thread, Single Abstract Method converstoion` (**SAM**) 
          (si veda `Towards Asynchronous Programming`_)
 
@@ -323,13 +330,13 @@ Le coroutines non sono parte del linguaggio e nemmeno della libreria standard; f
          :widths: 25,75
          :width: 100%
 
-         * - `demoCoroutinesIntro.kt`_
+         * - `demoCoroutinesIntro.kt`_ (**5-16**)
            - `GlocalScope, CoroutineScope, Launch, Join, runBlocking, Dispatchers, manyThreads, manyCoroutines, await`
  
-         * - `demoDispatchers.kt`_
+         * - `demoDispatchers.kt`_  
            - `Dispatchers.Default, Dispatchers.IO, newSingleThreadContext, Dispatchers.Unconfined` (si veda `Dispatchers`_)
 
-         * - `demoSequences.kt`_
+         * - `demoSequences.kt`_  
            - `Sequences, Suspendable sequences (yield) ``
 
 
@@ -380,13 +387,13 @@ They are used for providing and consuming objects from the channel, implemented 
       :widths: 25,75
       :width: 100%
 
-      * - `demoChannels.kt`_
+      * - `demoChannels.kt`_ (**17,18**)
         - `Channel<Int>`  (si veda `Kotlin channels`_)
-      *  - `simpleProducerKotlin.kt`_
+      *  - `simpleProducerKotlin.kt`_ 
          - `ReceiveChannel<Int>`  (si veda `Producers-consumers in Kotlin`_)
-      *  - `prodConsKotlin.kt`_
+      *  - `prodConsKotlin.kt`_ (**19**)
          - `ManyType producer` (si veda `Producers-consumers in Kotlin`_)
-      *  - `prodManyConsKotlin.kt`_
+      *  - `prodManyConsKotlin.kt`_  (**20**)
          - `Many consumers` (si veda `Producers-consumers in Kotlin`_)
 
 +++++++++++++++++++++++++++++++++++
@@ -403,7 +410,7 @@ la tradizionale interazione di chiamata di procedura senza perdere in prestazion
          :widths: 25,75
          :width: 100%
 
-         * - `demoActors.kt`_
+         * - `demoActors.kt`_ (**21,22**)
            -  (si veda `Kotlin Actors`_)
               
                .. image:: ./_static/img/Kotlin/demoActor0.png
@@ -412,7 +419,7 @@ la tradizionale interazione di chiamata di procedura senza perdere in prestazion
                
               
  
-         * - `demoActorCounter.kt`_
+         * - `demoActorCounter.kt`_ (**23**)
            - (si veda `actorcounter`_)
              
                .. image:: ./_static/img/Kotlin/demoActorCounter.png
