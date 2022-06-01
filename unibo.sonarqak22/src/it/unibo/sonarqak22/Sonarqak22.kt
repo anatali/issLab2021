@@ -14,18 +14,14 @@ class Sonarqak22 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		return "s0"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		 lateinit var Sonar : `it.unibo`.radarSystem22.domain.interfaces.ISonar  
+		 val simulate       = true
+			   val sonarActorName = "sonarqak22"
+			   val usingDomain    = true
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
-						
-									`it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.simulation   	= true;			
-									`it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.tracing      	= true;		
-									`it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.sonarDelay   	= 200;
-						//			`it.unibo`.radarSystem22.domain.utils.CommSystemConfig.tracing        	= false;	
-						             Sonar = `it.unibo`.radarSystem22.domain.DeviceFactory.createSonar()	
-						             println(Sonar)	
+						sonarConfig.configureTheSonar( simulate, sonarActorName, usingDomain  )
 					}
 					 transition(edgeName="t00",targetState="activateTheSonar",cond=whenDispatch("sonaractivate"))
 					transition(edgeName="t01",targetState="deactivateTheSonar",cond=whenDispatch("sonardeactivate"))
@@ -34,20 +30,34 @@ class Sonarqak22 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if(   `it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.simulation  
-						 ){ Sonar.activate() 
-						println(" SonarMock| sonarSetUp done ")
+						 ){sonarConfig.activateSonarSimulated(  )
 						}
+						else
+						 {forward("sonaractivate", "info(ok)" ,"sonardatasource" ) 
+						 }
 					}
-					 transition( edgeName="goto",targetState="end", cond=doswitch() )
+					 transition(edgeName="t02",targetState="handleSonarData",cond=whenEvent("sonar"))
+					transition(edgeName="t03",targetState="deactivateTheSonar",cond=whenDispatch("sonardeactivate"))
 				}	 
 				state("deactivateTheSonar") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
+					 transition( edgeName="goto",targetState="end", cond=doswitch() )
+				}	 
+				state("handleSonarData") { //this:State
+					action { //it:State
+						if( checkMsgContent( Term.createTerm("distance(V)"), Term.createTerm("distance(D)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val D = payloadArg(0)  
+								emit("sonardata", "distance($D)" ) 
+						}
+					}
+					 transition(edgeName="t04",targetState="handleSonarData",cond=whenEvent("sonar"))
+					transition(edgeName="t05",targetState="deactivateTheSonar",cond=whenDispatch("sonardeactivate"))
 				}	 
 				state("end") { //this:State
 					action { //it:State
-						delay(3000) 
 						println("sonarqak22 BYE")
 						 System.exit(0)  
 					}

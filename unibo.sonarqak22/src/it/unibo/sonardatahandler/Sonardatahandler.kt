@@ -19,14 +19,14 @@ class Sonardatahandler ( name: String, scope: CoroutineScope  ) : ActorBasicFsm(
 					action { //it:State
 					}
 					 transition(edgeName="t06",targetState="handleSonarData",cond=whenEvent("sonar"))
-					transition(edgeName="t07",targetState="handleSonarData",cond=whenEvent("sonarrobot"))
+					transition(edgeName="t07",targetState="handleSonarData",cond=whenEvent("sonardata"))
 				}	 
 				state("handleSonarData") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 					}
 					 transition(edgeName="t08",targetState="handleSonarData",cond=whenEvent("sonar"))
-					transition(edgeName="t09",targetState="handleSonarData",cond=whenEvent("sonarrobot"))
+					transition(edgeName="t09",targetState="handleSonarData",cond=whenEvent("sonardata"))
 				}	 
 			}
 		}

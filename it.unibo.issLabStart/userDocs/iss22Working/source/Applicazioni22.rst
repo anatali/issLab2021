@@ -177,3 +177,136 @@ unibo.robotappl
 
 Il progetto  `unibo.robotappl`_:  utilizza :ref:`pathexec` per spostare il robot in un dato punto della stanza, 
 nota la mappa.
+
+--------------------------------------------------
+Riprendiamo il RadarSystem
+--------------------------------------------------
+
+Affrontare la costrzuione di un sistema software partendo dalla costruzione di
+uno o più modelli 
+significa promuovere una :blue:`metodologia di sviluppo top-down` che, partendo dai requisiti, 
+giunge al livello delle tecnologie di implementazione solo dopo avere ben compreso 
+le problematiche indotte dai requisiti stessi e dopo avere definito l'architettura del sistema.
+
+Le tecnologie adottate per la implementazione non sono quindi più una scelta 'a-priori', me costitusicono la 
+risposta ritenuta più adeguata dagli analisti e dai progettisti per la costruzione concreta del sistema.
+
+Al termine del nsotro percorso, è quindi opportuno riprendere il sistema :ref:`RadarSystem` dal quale siamo partiti
+cercando di impostare la fase di analisi dei requisiti e la fase di analisi del problema con l'obiettivo di
+definre, al temine di ciscuna di queste, un modello (eseguibile) del sistema, avvalendoci
+del :ref:`QActor (meta)model`.
+
+Cerchermo di procedere in modo sintetico, evidenziando, per ogni fase, i punti salienti, con richiami a quanto
+fatto in precedenza.
+
++++++++++++++++++++++++++++++++++++
+RadarSystem: analisi dei requisiti
++++++++++++++++++++++++++++++++++++
+
+Abbiamo già introdotto una :ref:`User-story <User stories>` e, dopo le :ref:`Domande al committente` Abbiamo
+asserito (in linguaggio naturale) che:
+
+- Si tratta di realizzare un sistema software distribuito ed eterogeneo
+
+I termini di modello possiamo 'formalizzare' questo asserto nel modo che segue:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RadarSystem: modello dei requisiti
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+  System radarsystem22
+
+  Context ctxrasp ip [host="192.168.1.xxx" port=8086]  //Raspberry
+  Context ctxpc   ip [host="192.168.1.yyy" port=8088]  //PC
+
+  QActor sonar22 context ctxrasp{ ... }
+  QActor led22 context ctxrasp{ ... }
+  QActor radar22 context ctxpc{ ... }
+  QActor controller22 context ctxpc{ ... }
+
+Questo modello, a livello-requisiti,  dice che il sistema **deve essere** distributo su due nodi (contesti):
+il sotto-sistema sul Raspberry deve includere i dispositivi, mentre il sotto-sistema sul PC deve includere 
+il RadarDisplay e il Controller.
+
+L'esistenza del Controller non si evince dal testo dei requisiti, ma è stata motivata nella nostra 
+prima :ref:`Analisi del problema`, che si era conclusa con la evidenziazione di :ref:`Un primo abstraction gap`
+che ci ha indotto a iniziare un percorso per definire e costruire
+*componenti riusabili che possano ‘sopravvivere’ all’applicazione che stiamo costruendo per poter essere 
+impiegati in futuro in altre applicazioni distribuite*.
+
+Di fatto, questo percorso è culminato con la definizione del :ref:`QActor (meta)model` che ora ci permette di:
+
+- ignorare i dettagli tecnologici relativi alle interazioni
+- focalizzare l'attenzione sulla logica della interazione e sulle informazioni che i componenti si devono scambiare
+- impostare in tempi brevi un prototipo eseguibile con cui interagire con il committente
+
+La costruzione di un :blue:`prototipo eseguibile` diventa ora un obiettivo della fase di analisi del problema. 
+
+
+
++++++++++++++++++++++++++++++++++++
+RadarSystem: analisi del problema
++++++++++++++++++++++++++++++++++++
+
+:remark:`Domanda-chiave: come interagiscono i componenti?`
+
+La risposta 'formale' a questa domanda induce a definire un insieme di (tipi di) messaggi, prima ancora di addentrarci
+sui dettagli interni dei componenti.
+
+Ricordiamo il nostro precedente :ref:`SPRINT2: RadarSystem distribuito` e il lavoro connesso alla fase 
+di :ref:`Deployment<SPRINT2: Deployment>`, che ora sappiamo poter variare agevolmente,  agendo su una 
+dichiarazione. Se ad esempio si ritiene opportuno che anche il *Controller* operi sul RaspberryPi, basterà dire:
+
+.. code::
+
+   QActor controller22 context ctxrasp{ ... }
+
+La nostra attenzione è invece ora rivolta a un aspetto che rimaneva sommerso nella fase in cui volevamo 
+definire i :ref:`Supporti per comunicazioni` e che si è  evidenziato   
+dapprima nella fase di :ref:`Approfondimento della analisi del problema` e poi, passando attraverso ol concetto di
+:ref:`Contesti-contenitori`, nella introduziuone di una :ref:`Struttura dei messaggi applicativi` 
+basata su una precisa  :ref:`Terminologia di riferimento` (tipologia) per i messaggi.
+
+Ora, come analisti del problema, **asseriamo** che: 
+
+- il *Sonar* è un dispositivo che, una volta attivato, emette informazioni senza sapere a chi interessino
+- il *RadarDisplay* è un componente interessato alle informazioni emesse dal Sonar
+- il *Led* è un dispositivo che esegue comandi di on/off 
+- il *Controller* è il componente che include la businness logic. Esso è interessato alle informazioni emesse dal Sonar.
+  in quanto deve inviare comandi al Led a secondo dalla distanza rilevata. Il *Controller* è anche ritenuto 
+  responsabile dalla attivazione/disattivazione del *Sonar*.
+
+In questa analisi, abbiamo ritenuto un valore aggiunto quello di ridurre quanto più possibile le conoscenze 
+reciproche (e quindi le interdipensenze esplicite) tra i componenti.
+
+Come analisti, indichiamo quindi che componenti del sistema **devono**  interagire 
+utilizzando i seguenti tipi di messaggio:
+
+.. code::
+
+  Dispatch sonaractivate   : info(ARG)  //
+  Dispatch sonardeactivate : info(ARG)
+  Dispatch ledCmd          : ledCmd(ONOFF)
+  Event    sonardata       : distance( V )       
+    
+:remark:`Punto-chiave: se qualche analista dissente non possiamo passare al progetto`
+
+Infatti possiamo pensare ai risulati dell'analisi come la specifica di COSA (**WHAT**) occoore fare.
+Compito del progetto è di passare da WHAT a **HOW**.
+
+Tuttavia, come analisti del problema, possiamo anche definire una versione eseguibile del modello, in modo da
+coinvolgere subito anche il committente *'al suo livello di competenza e di interesse'*.
+
+:remark:`Punto-chiave: sapere cosa ne pensa il committente, attivando un prototipo`
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Modello della analisi come primo prototipo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
++++++++++++++++++++++++++++++++++++
+RadarSystem: architettura logica
++++++++++++++++++++++++++++++++++++
