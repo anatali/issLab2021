@@ -4,7 +4,7 @@
 .. role:: worktodo
 
 .. _Actor model: https://en.wikipedia.org/wiki/Actor_model
-.. _kotlinUnibo: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html
+.. _kotlinUnibo: ../../../../../issLab2022/it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html
 
 .. _Data, Types and Variables: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#data
 .. _Functions: ../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#funs
@@ -281,6 +281,7 @@ Asynch
 +++++++++++++++++++++++++++++++++
 Kotlin concurrent overview
 +++++++++++++++++++++++++++++++++
+
 #. Per dare supporto alla *programmazione asincrona* (o *non bloccante*), evitando il noto callback hell
    (si veda `Asynchronous I/O`_), Kotlin introduce il meccanismo delle *coroutines*.
 #. A coroutine can invoke other functions; it can also :ref:`suspend<Suspending functions>` its behavior (without 
