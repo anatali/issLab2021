@@ -221,10 +221,10 @@ RadarSystem: modello dei requisiti
   Context ctxrasp ip [host="192.168.1.xxx" port=8086]  //Raspberry
   Context ctxpc   ip [host="192.168.1.yyy" port=8088]  //PC
 
-  QActor sonar22 context ctxrasp{ ... }
-  QActor led22 context ctxrasp{ ... }
-  QActor radar22 context ctxpc{ ... }
-  QActor controller22 context ctxpc{ ... }
+  QActor sonar22 context ctxrasp{ State s0 initial{} }
+  QActor led22 context ctxrasp{ State s0 initial{}. }
+  QActor radar22 context ctxpc{ State s0 initial{} }
+  QActor controller22 context ctxpc{ State s0 initial{} }
 
 Questo modello, a livello-requisiti,  dice che il sistema **deve essere** distributo su due nodi (contesti):
 il sotto-sistema sul Raspberry deve includere i dispositivi, mentre il sotto-sistema sul PC deve includere 
@@ -299,7 +299,7 @@ Compito del progetto è di passare da WHAT a **HOW**.
 Tuttavia, come analisti del problema, possiamo anche definire una versione eseguibile del modello, in modo da
 coinvolgere subito anche il committente *'al suo livello di competenza e di interesse'*.
 
-:remark:`Punto-chiave: sapere cosa ne pensa il committente, attivando un prototipo`
+:remark:`Punto-chiave: sapere cosa pensa il committente, discutendo su un prototipo`
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
