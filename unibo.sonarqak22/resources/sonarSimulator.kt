@@ -24,7 +24,7 @@ class sonarSimulator ( name : String ) : ActorBasic( name ) {
 	}
 
     override suspend fun actorBody(msg : IApplMessage){
-  		println("$tt $name | received  $msg "  )
+  		//println("$tt $name | received  $msg "  )  //RICEVE GLI EVENTI!!!
 		if( msg.msgId() == "sonaractivate") startDataReadSimulation(   )
 		if( msg.msgId() == "sonardeactivate") goon=false
 	}

@@ -16,11 +16,10 @@ class Sonarqak22 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 val simulate       = true
 			   val sonarActorName = "sonarqak22"
-			   val usingDomain    = true
+			   val usingDomain    = false
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						println("$name in ${currentState.stateName} | $currentMsg")
 						sonarConfig.configureTheSonar( simulate, sonarActorName, usingDomain  )
 					}
 					 transition(edgeName="t00",targetState="activateTheSonar",cond=whenDispatch("sonaractivate"))
@@ -30,7 +29,7 @@ class Sonarqak22 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if(   `it.unibo`.radarSystem22.domain.utils.DomainSystemConfig.simulation  
-						 ){sonarConfig.activateSonarSimulated(  )
+						 ){forward("sonaractivate", "info(ok)" ,"sonarsimulator" ) 
 						}
 						else
 						 {forward("sonaractivate", "info(ok)" ,"sonardatasource" ) 

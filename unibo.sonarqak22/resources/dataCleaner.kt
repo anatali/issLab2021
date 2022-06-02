@@ -13,10 +13,12 @@ val LimitHigh = 100
   		elabData( msg )
  	}
 
- 	
+//WARNING: datacleaner perecpisce TUTTI gli event 	
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 
-	  suspend fun elabData( msg: IApplMessage ){ //OPTIMISTIC
+	  suspend fun elabData( msg: IApplMessage ){ 
+        println("$tt $name | received  $msg "  )  //RICEVE TUTTI GLI EVENTI!!!
+	    if( msg.msgId() != "sonar" ) return
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()
   		//println("$tt $name |  data = $data ")		
 		val Distance = Integer.parseInt( data ) 

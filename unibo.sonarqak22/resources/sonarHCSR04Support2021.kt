@@ -21,7 +21,7 @@ class sonarHCSR04Support2021 ( name : String ) : ActorBasic( name ) {
 	//var coapSupport = javacode.CoapSupport("coap://localhost:8028","ctxsonarresource/sonarresource")
 
     override suspend fun actorBody(msg : IApplMessage){
- 		println("$tt $name | received  $msg "  )
+ 		//println("$tt $name | received  $msg "  )  //RICEVE GLI EVENTI!!!
 		if( msg.msgId() == "sonaractivate"){
 			println("sonarHCSR04Support2021 STARTING")
 			try{

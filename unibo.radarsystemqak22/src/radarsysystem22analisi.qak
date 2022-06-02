@@ -115,7 +115,8 @@ QActor controller22 context ctxprototipo0{ //ctxpc{
 }
 
 /*
- * MODIFCARE LA CONFIGURAZIONE 
- * DEFINIRE I DISPOSITIVI (come attori External ? ...)
- * DEFINIRE IL RADARGUI
+ * WORKPLAN:
+ * 1) MODIFCARE LA CONFIGURAZIONE 
+ * 2) DEFINIRE I DISPOSITIVI (come attori External ? ...)
+ * 3) ...
  */

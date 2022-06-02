@@ -44,6 +44,10 @@
 .. _ActorWithKotlinSupport: ../../../../../it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html
 
 
+.. _radarsysystem22analisi.qak: ../../../../../unibo.radarsystemqak22/src/radarsysystem22analisi.qak
+.. _Sprint Review: :https://www.agileway.it/sprint-review-meeting/
+.. _Opinionated Software: https://www.baeldung.com/cs/opinionated-software-design
+
 
 =========================================
 Applicazioni 2022
@@ -291,22 +295,163 @@ utilizzando i seguenti tipi di messaggio:
   Dispatch ledCmd          : ledCmd(ONOFF)
   Event    sonardata       : distance( V )       
     
-:remark:`Punto-chiave: se qualche analista dissente non possiamo passare al progetto`
+:remark:`Punto-chiave: se qualche analista dissente, non possiamo passare al progetto`
 
 Infatti possiamo pensare ai risulati dell'analisi come la specifica di COSA (**WHAT**) occoore fare.
 Compito del progetto è di passare da WHAT a **HOW**.
+
+
 
 Tuttavia, come analisti del problema, possiamo anche definire una versione eseguibile del modello, in modo da
 coinvolgere subito anche il committente *'al suo livello di competenza e di interesse'*.
 
 :remark:`Punto-chiave: sapere cosa pensa il committente, discutendo su un prototipo`
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RadarSystem: architettura_logica_1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. image:: ./_static/img/Radar/analisiQak22.png 
+   :align: center
+   :width: 80%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Modello della analisi come primo prototipo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+La figura precedente è una prima rappreentazione (:blue:`grafica e semi-formale`) della architettura del sistema,
+che può essere rappresentato, :blue:`in modo formale ed eseguibile`, dal modello `radarsysystem22analisi.qak`_.
+ 
 
 +++++++++++++++++++++++++++++++++++
-RadarSystem: architettura logica
+RadarSystem: una diversa analisi
 +++++++++++++++++++++++++++++++++++
+
+Durante la `Sprint Review`_ (si vedano le note su :ref:`SCRUM`) qualcuno osserva che si potrebbe concepire il sistema
+in modo diverso, evitando la introduzione di un *Controller* che conosce i (nomi dei) componenti *Led* e *Radar*.
+
+In particolare viene asserito che:
+
+#. un **sistema** nasce perchè un insieme di enti (che verranno poi visti come 'componenti') elaborano 
+   informazione in un modo che può risultare coordinato e 'goal oriented' a un osservatore esterno,
+   ma che non è forzato/imposto/realizzato da nessun componente in particolare
+#. ciascun ente opera in modo totalmente autonomo, senza essere consapevole della esistenza degli altri
+#. l'informazione scambiata assume la forma di *eventi* che possono indurre ciascun ente ad effettuare azioni 
+   locali che, con gli occhi di un ossservatore 'globale' producono il soddisfacimento dei requisiti.
+
+Alla domanda:
+
+- ma come fa il Led ad accendersi se nessuno gli invia un comando
+
+viene data la seguente risposta:
+
+- si assume di operare cone un (nuovo) 'metamodello' in cui ogni componente viene ritenuto indotto as operare
+  in termini di 'reazione a stimoli' 
+  rappresentati da eventi. Il Led quindi potrebbe essere definito come un componente capace di percepire un evento del tipo:
+
+  .. code::
+
+    Event thrill : info(CMD)
+
+    Il Led potrebbe accendersi se l'evento  ``thrill`` ha contenuto ``info(on)`` e spegnersi se ha ``info(off)``.
+
+
+E' ovvio che si potrebbe introdurre un *Controller* che ha come 'obiettivo dichiarato' la trasformazione di 
+eventi ``sonardata:distance(D)`` in eventi ``thrill`` a seconda del valore ``D``.
+
+Ma si potrebbe anche preseguire l'idea che i sistemi possono 'evolvore in modo spontaneo' quando, nell'ambito di
+un insieme già attivo, si introduce un nuovo elemento.
+
+Si supponga ad esempio di attivare (su tra nodi di elaborazione diversi) i componenti Sonar,Radar e Led
+
+.. image:: ./_static/img/Radar/analisiQak22NoControllerNoWatcher.png 
+   :align: center
+   :width: 80%
+
+In questa configurazione, il Radar mostra i dati emessi da Sonar, ma il Led non si accende in quanto manca
+un componente capace di trasformare  eventi ``sonardata:distance(D)`` in eventi ``thrill``.
+
+Se però attiviamo un nuovo componente (diciamo un ``watcher``) dotato di un valore di soglia interno (diciamo ``DLIMIT``),
+capace di perecipere gli eventi ``sonardata:distance(D)`` e di emettere ``thrill:info(on)`` se ``D<=DLIMI`` 
+o altrimenti ``thrill:info(off)``, allora vederemo che il Led si comporterà in accordo a un nostro piano di testing.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+watcher.qak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Questo componente può essere subito modellato come segue:
+
+  .. code::
+
+    Event  sonardata   : distance( V )    
+    Event  thrill      : info(CMD)
+
+
+    QActor watcherqak22 context ctxwatcherqak22{
+      [# val DLIMIT = 30 #]
+      State s0 initial {
+        println("$name STARTS")
+      }
+      Transition t0  whenEvent sonardata -> handleSonarData
+      
+      State handleSonarData{
+        onMsg( sonardata : distance(D) ) {
+          [# var DistanceStr = payloadArg(0); 
+            var Distance    = DistanceStr.toInt() 
+          #]
+            if [# Distance <= DLIMIT #]  {   emit thrill : info( on ) } 
+          else { emit thrill : info( off ) }  
+        }
+      }
+      Transition t0 whenEvent sonardata -> handleSonarData
+    }
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RadarSystem: architettura_logica_2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La nuova analisi fornisce sia l'esempio di un possibile dibattto/contezioso tra analisti, sia un esempio 
+di `Opinionated Software`_ fondato sull'idea (opinion) che i sistemi si possano sviluppare anche partendo da componenti
+che non sanno nulla l'uno dell'altro.
+
+In concreto quello cha abbiamo è la proposta di una diversa architattura logica:
+
+ 
+.. image:: ./_static/img/Radar/radarSystemqakAllEvents.png 
+   :align: center
+   :width: 80%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Interazioni mediante MQTT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Questa architettura può essere realizzata e sperimentata avvalendosi del :ref:`QActor (meta)model` sfruttando 
+la possibilità dei QActor di interagire usando come supporto un *broker MQTT* 
+(si veda :ref:`Nuovi supporti Interaction2021`).
+
+Ogni componente saraà ora introdotto da un modello che spefica l'uso di un broker MQTT e di una **topic** di riferimento.
+Ad esempio:
+
+.. code::
+
+  System <name>
+  mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/nat/radar"
+
+  Context <ctxname> ip [host="..." port=...] 
+
+  QActor <qanam>> context <ctxname>{ ... }
+
+
+Di fatto quindi la topic qualificata come ``unibo/nat/radar`` sarà l'elemento che permette ai diversi 
+componenti (Sonar,Radar,Led e Watcher) di lavorare come un tutto organico, cioè come un sistema.
+
+:remark:`Il punto è: analizzare, sperimentare e decidere prima di codificare.`
+
+Ricordiamo il motto:
+
+:remark:`Non c'è codice senza progetto, progetto senza analisi del problema, problema senza requisiti.`
