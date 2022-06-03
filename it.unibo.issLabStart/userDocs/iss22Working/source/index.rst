@@ -40,6 +40,7 @@ iss22
    KotlinNotes
    demo2022
    TemaFinale22
+   TemaFinaleNote
 
 Indices and tables
 -------------------
