@@ -207,7 +207,7 @@ fatto in precedenza.
 RadarSystem: analisi dei requisiti
 +++++++++++++++++++++++++++++++++++
 
-Abbiamo già introdotto una :ref:`User-story<User stories>` e, dopo le :ref:`Domande al committente`, abbiamo
+Abbiamo già introdotto una :ref:`User story` e, dopo le :ref:`Domande al committente`, abbiamo
 asserito (in linguaggio naturale) che:
 
 - Si tratta di realizzare un sistema software distribuito ed eterogeneo

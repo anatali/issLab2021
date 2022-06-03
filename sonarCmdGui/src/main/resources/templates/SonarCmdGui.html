@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<meta charset = "utf-8" />
+<title>SonarCmdGui</title>
+<body>
+<script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+
+<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+<h3>SonarCmdGui</h3>
+<hr/>
+<form action="configure" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
+ <label for="configurespec">Address</label>
+ <input type="text" id="configurespec" name="addr" value="">
+ <input type="submit" value="Configure">
+</form>
+
+<hr/>
+<h4>Commands to the Sonar</h4>
+
+<center>
+ <table>
+  <tr><td style="width:50%">
+   <center>
+    <table style="width:50%">
+     <tbody>
+     <!-- the form-data is sent to the page specified in the action attribute -->
+     <tr>
+      <td> <form action="sonarcmd" method="post"><button name="cmd" value="start">start</button></form> </td>
+      <td> <form action="sonarcmd" method="post"><button name="cmd" value="stop">stop</button></form> </td>
+     </tr>
+
+    </table>
+   </center>
+  </td>
+   <td>
+    <!-- <h4>Web cam on Rasp</h4>
+    <div id="content" align="left" color="yellow">
+     <img src="" id="img_src" alt=""  width="320" height="240"><br/>
+    </div>
+    <script type="text/javascript">
+    if( robotip.length>0) document.getElementById("img_src").src = robotip;
+</script> -->
+   </td>
+  </tr>
+ </table>
+</center>
+
+
+
+<hr/>
+<h3>DISPLAY AREA</h3>
+<div id = "display"></div>
+
+
+
+<!-- <script src="wsminimal.js"></script> -->
+</body>
+</html>
