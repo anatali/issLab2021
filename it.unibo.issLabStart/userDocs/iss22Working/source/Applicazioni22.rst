@@ -192,7 +192,7 @@ significa promuovere una :blue:`metodologia di sviluppo top-down` che, partendo 
 giunge al livello delle tecnologie di implementazione solo dopo avere ben compreso 
 le problematiche indotte dai requisiti stessi e dopo avere definito l'architettura del sistema.
 
-Le tecnologie adottate per la implementazione non sono quindi più una scelta 'a-priori', me costitusicono la 
+Le tecnologie adottate per la implementazione non sono quindi più una scelta 'a-priori', ma costitusicono la 
 risposta ritenuta più adeguata dagli analisti e dai progettisti per la costruzione concreta del sistema.
 
 Al termine del nsotro percorso, è quindi opportuno riprendere il sistema :ref:`RadarSystem` dal quale siamo partiti
@@ -207,7 +207,7 @@ fatto in precedenza.
 RadarSystem: analisi dei requisiti
 +++++++++++++++++++++++++++++++++++
 
-Abbiamo già introdotto una :ref:`User-story <User stories>` e, dopo le :ref:`Domande al committente` Abbiamo
+Abbiamo già introdotto una :ref:`User-story<User stories>` e, dopo le :ref:`Domande al committente`, abbiamo
 asserito (in linguaggio naturale) che:
 
 - Si tratta di realizzare un sistema software distribuito ed eterogeneo
@@ -240,13 +240,16 @@ che ci ha indotto a iniziare un percorso per definire e costruire
 *componenti riusabili che possano ‘sopravvivere’ all’applicazione che stiamo costruendo per poter essere 
 impiegati in futuro in altre applicazioni distribuite*.
 
-Di fatto, questo percorso è culminato con la definizione del :ref:`QActor (meta)model` che ora ci permette di:
+Questo percorso è stato svolto in modo :ref:`bottom-up<Sviluppo bottomUp>`, partendo dai protocolli per le comunicazioni 
+in rete, ed è culminato, dopo vari passi, nella definizione del :ref:`QActor (meta)model`.
+Questo linguaggio si basa su un insieme di concetti (metamodello) che ora ci permette di:
 
 - ignorare i dettagli tecnologici relativi alle interazioni
 - focalizzare l'attenzione sulla logica della interazione e sulle informazioni che i componenti si devono scambiare
 - impostare in tempi brevi un prototipo eseguibile con cui interagire con il committente
 
-La costruzione di un :blue:`prototipo eseguibile` diventa ora un obiettivo della fase di analisi del problema. 
+La costruzione di un :blue:`prototipo eseguibile` diventa ora un obiettivo importante, fin 
+dalla fase di analisi del problema o, quantomento, fin dal primo SPRINT di progettazione/sviluppo. 
 
 
 
@@ -283,7 +286,7 @@ Ora, come analisti del problema, **asseriamo** che:
   responsabile dalla attivazione/disattivazione del *Sonar*.
 
 In questa analisi, abbiamo ritenuto un valore aggiunto quello di ridurre quanto più possibile le conoscenze 
-reciproche (e quindi le interdipensenze esplicite) tra i componenti.
+reciproche (e quindi *ridurre le interdipendenze esplicite*) tra i componenti.
 
 Come analisti, indichiamo quindi che componenti del sistema **devono**  interagire 
 utilizzando i seguenti tipi di messaggio:
@@ -320,7 +323,7 @@ RadarSystem: architettura_logica_1
 Modello della analisi come primo prototipo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La figura precedente è una prima rappreentazione (:blue:`grafica e semi-formale`) della architettura del sistema,
+La figura precedente è una prima **rappreentazione** (:blue:`grafica e semi-formale`, della architettura) del sistema,
 che può essere rappresentato, :blue:`in modo formale ed eseguibile`, dal modello `radarsysystem22analisi.qak`_.
  
 
@@ -342,28 +345,28 @@ In particolare viene asserito che:
 
 Alla domanda:
 
-- ma come fa il Led ad accendersi se nessuno gli invia un comando
+- ma come fa il Led ad accendersi se nessuno gli invia un comando?
 
 viene data la seguente risposta:
 
-- si assume di operare cone un (nuovo) 'metamodello' in cui ogni componente viene ritenuto indotto as operare
-  in termini di 'reazione a stimoli' 
-  rappresentati da eventi. Il Led quindi potrebbe essere definito come un componente capace di percepire un evento del tipo:
+- si assume che ogni componente sia indotto as operare in termini di 'reazione a stimoli' 
+  rappresentati da eventi. Il Led quindi potrebbe essere definito come un componente capace di 
+  percepire un evento/stimolo del tipo:
 
   .. code::
 
     Event thrill : info(CMD)
 
-    Il Led potrebbe accendersi se l'evento  ``thrill`` ha contenuto ``info(on)`` e spegnersi se ha ``info(off)``.
-
+Il Led potrebbe accendersi se l'evento  ``thrill`` ha contenuto ``info(on)`` e spegnersi se ha ``info(off)``.
 
 E' ovvio che si potrebbe introdurre un *Controller* che ha come 'obiettivo dichiarato' la trasformazione di 
 eventi ``sonardata:distance(D)`` in eventi ``thrill`` a seconda del valore ``D``.
 
-Ma si potrebbe anche preseguire l'idea che i sistemi possono 'evolvore in modo spontaneo' quando, nell'ambito di
-un insieme già attivo, si introduce un nuovo elemento.
+Ma si potrebbe anche perseguire l'idea (o proporre un nuovo  'metamodello' organizzativo) 
+in cui i sistemi possono 'evolvore in modo spontaneo' quando, nell'ambito di
+un insieme già attivo, si introduce un nuovo elemento. 
 
-Si supponga ad esempio di attivare (su tra nodi di elaborazione diversi) i componenti Sonar,Radar e Led
+Si supponga ad esempio di attivare (su nodi di elaborazione diversi) i componenti Sonar, Radar e Led
 
 .. image:: ./_static/img/Radar/analisiQak22NoControllerNoWatcher.png 
    :align: center
@@ -380,7 +383,7 @@ o altrimenti ``thrill:info(off)``, allora vederemo che il Led si comporterà in 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 watcher.qak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Questo componente può essere subito modellato come segue:
+Il 'componente aggiuntivo' che permette di raggiungere l'effetto voluto, può essere subito modellato come segue:
 
   .. code::
 
@@ -450,8 +453,5 @@ Ad esempio:
 Di fatto quindi la topic qualificata come ``unibo/nat/radar`` sarà l'elemento che permette ai diversi 
 componenti (Sonar,Radar,Led e Watcher) di lavorare come un tutto organico, cioè come un sistema.
 
-:remark:`Il punto è: analizzare, sperimentare e decidere prima di codificare.`
 
-Ricordiamo il motto:
 
-:remark:`Non c'è codice senza progetto, progetto senza analisi del problema, problema senza requisiti.`

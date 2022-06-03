@@ -39,6 +39,8 @@ iss22
    Applicazioni22
    KotlinNotes
    demo2022
+   Architetture
+   ConclusioniISS22
    TemaFinale22
    TemaFinaleNote
 
