@@ -17,18 +17,14 @@ A company intends to build a :blue:`WasteService` for the *separate collection o
    - a :blue:`PlasticBox` container, devoted to store objects made of plastic, upto **MAXPB** kg of material.
    - a :blue:`GlassBox` container, devoted to store objects made of glass, upto **MAXGB** kg of material.
 
-   The service area is free form internal obstacles, as shown in the following picture:
+   The service area is free from internal obstacles, as shown in the following picture:
 
-    .. image:: ./_static/img/Intro/ScienzaEIng.PNG
+    .. image:: ./_static/img/TF22/WasteServiceRoom.PNG
       :align: center
-      :width: 10%
+      :width: 60%
 
 #. a DDR robot working as a :blue:`transport trolley`, that is intially situated in its :blue:`HOME` location. 
    The transport trolley has  the form of a square of side length **RD**.
-
-      .. image:: ./_static/img/Intro/ScienzaEIng.PNG
-        :align: center
-        :width: 10%
 
    The `transport trolley` is used to performa a :blue:`deposit action` that consists in the following phases:
    
