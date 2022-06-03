@@ -61,7 +61,7 @@ Requirements
 The main goal of the :blue:`WasteService` software is to allow a :blue:`Waste truck` to deposit its load of 
 **TruckLoad** kg plastic or glass in the proper container.
 
-The global user-story can be described as follows:
+The global story can be described as follows:
 
 #. The `Waste truck` driver approaches the `INDOOR` and sends (using a smart device) a request to store the load, 
    by specifyng the `type of  the material` (plastic or glass) and its `TruckLoad`.
