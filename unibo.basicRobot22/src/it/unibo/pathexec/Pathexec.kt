@@ -55,7 +55,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveTurn") { //this:State
 					action { //it:State
-						forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot" ) 
+						forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot22" ) 
 						stateTimer = TimerActor("timer_doMoveTurn", 
 							scope, context!!, "local_tout_pathexec_doMoveTurn", 300.toLong() )
 					}
@@ -63,7 +63,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveW") { //this:State
 					action { //it:State
-						request("step", "step($StepTime)" ,"basicrobot" )  
+						request("step", "step($StepTime)" ,"basicrobot22" )  
 					}
 					 transition(edgeName="t011",targetState="endWorkKo",cond=whenEvent("alarm"))
 					transition(edgeName="t012",targetState="nextMove",cond=whenReply("stepdone"))

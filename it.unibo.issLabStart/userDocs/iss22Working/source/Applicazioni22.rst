@@ -461,3 +461,5 @@ Robot2022
 
 - Mbot non ha bisogno di supporti ???
 - Il progetto *it.unibo.qak21.basicrobot* funziona su Mbot
+- Il progetto *it.unibo.qak21.basicrobot*  è stato portato in *unibo.basicrobot22* che ha anche pathexec
+- *unibo.basicrobot22* è stato deployed su DockerHub in una configurazione che comprende il VirtualRobot

@@ -6,7 +6,7 @@ import time
 
 port       = 8020
 sock       = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-calledName = "basicrobot"
+calledName = "basicrobot22"
 
 cmd         = "step(350)"
 requestMsg  = "msg(step,request,python,RECEIVER,PAYLOAD,1)".replace("RECEIVER",calledName).replace("PAYLOAD",cmd)

@@ -13,9 +13,18 @@ I punti salienti del nostro lavoro si possono riassumere dicendo che, in :ref:`I
 #. :remark:`Non c'è progetto senza analisi del problema ...`
 #. :remark:`Non c'è problema senza requisiti.`
 
-e che, nella :ref:`Ingegneria del software<Programmatori = (non) ingegneri?>`:
+Il problema è che quasi sempre le analisi e i progetti non sono esplicitamente definiti e/o espressi in modo coerente,
+consistente e non amabiguo.
 
-- :remark:`I modelli permettono di analizzare, sperimentare e decidere, prima di codificare`
+Nella  :ref:`Ingegneria del software<Programmatori = (non) ingegneri?>`:
+
+- :remark:`I modelli permettono di esprimere elementi essenziali di una analisi o di un progetto `
+
+Inoltre: 
+
+- :remark:`I modelli eseguibili sono comprensibili ad una machina e quindi formalmente definiti`
+
+- :remark:`I modelli eseguibilipermettono di analizzare, sperimentare e decidere, prima di codificare`
 
 - Nell'ambito di un processo di sviluppo :ref:`agile-iterativo<Indicazioni sul processo di produzione>`:
 

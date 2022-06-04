@@ -47,7 +47,7 @@ object robotSupport{
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
   			"realnano"   ->  {
 				robotNano.nanoSupport.create( owner )
- 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")
+ 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar")
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  
   				println("		--- robotSupport | has created the realsonar")
@@ -93,7 +93,7 @@ object robotSupport{
 		 		robotsonar.
 		 			subscribeLocalActor("datacleaner").
 		 			subscribeLocalActor("distancefilter").
-		 			subscribeLocalActor("basicrobot")		//in order to perceive obstacle
+		 			subscribeLocalActor("basicrobot22")		//in order to perceive obstacle
 				println("robotSupport | SONAR PIPE DONE") 
 			}
 	 	}else{

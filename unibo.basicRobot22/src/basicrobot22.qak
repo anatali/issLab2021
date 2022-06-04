@@ -1,12 +1,12 @@
 /* 
  * ================================================================================
- * basicrobot.qak
+ * basicrobot22.qak
  * ================================================================================
  */ 
   
-System  /* -trace  */   basicrobot                
+System  /* -trace  */   basicrobot22                
 //mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"   //broker.hivemq.com
-
+ 
 Dispatch cmd       	: cmd(MOVE)     
 Dispatch end       	: end(ARG)  
  
@@ -22,14 +22,14 @@ Event alarm        : alarm(X)
 
 Request  dopath    : dopath( PATH  )
 Reply dopathdone   : dopathdone( ARG )
-Reply dopathfail   : dopathfail( ARG )
- 
-Context ctxbasicrobot ip [host="localhost" port=8020]  
+Reply dopathfail   : dopathfail( ARG ) 
+  
+Context ctxbasicrobot22 ip [host="localhost" port=8020]  
 
-CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"
-CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter"
+CodedQActor datacleaner    context ctxbasicrobot22 className "rx.dataCleaner"
+CodedQActor distancefilter context ctxbasicrobot22 className "rx.distanceFilter"
  
-QActor basicrobot context ctxbasicrobot{
+QActor basicrobot22 context ctxbasicrobot22{
 [#
   var StepTime      = 0L
   var StartTime     = 0L     
@@ -39,25 +39,25 @@ QActor basicrobot context ctxbasicrobot{
 #]  
  	State s0 initial { 	      
  		discardMsg Off  //WE want receive any msg
-		println("basicrobot | START")	
- 		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
+		println("basicrobot22 | START")	
+ 		qrun unibo.robot.robotSupport.create(myself,"basicrobot22Config.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
  		delay 1000  //give to the realsonar the time to start
         if[# RobotType != "virtual" #]{
         	[# var robotsonar = context!!.hasActor("realsonar")  
-        	   unibo.robot.robotSupport.createSonarPipe(myself) 
+        	   unibo.robot.robotSupport.createSonarPipe(robotsonar)
         	#]
   		}//The Virtual robot sonar is created in virtualrobotSupport2021
  
   		run unibo.robot.robotSupport.move( "l" )    //synch
  		run unibo.robot.robotSupport.move( "r" )	//synch
     		//run unibo.robot.robotSupport.move( "w" )    //asynch
- 		updateResource [# "basicrobot(start)" #]
+ 		updateResource [# "basicrobot22(start)" #]
  	} 
 	Goto work
 	
 	State work{ 
-		println("basicrobot  | waiting .................. ")  
+		println("basicrobot22  | waiting .................. ")  
 	} 
 	Transition t1   whenMsg     cmd       -> execcmd
 					whenRequest step      -> doStep			
@@ -76,7 +76,7 @@ QActor basicrobot context ctxbasicrobot{
 	 Goto work  
 	 
 	State handleObstacle{
-		//println("basicrobot | handleObstacle")	
+		//println("basicrobot22 | handleObstacle")	
 		run unibo.robot.robotSupport.move( "h" )
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
@@ -88,7 +88,7 @@ QActor basicrobot context ctxbasicrobot{
 			run unibo.robot.robotSupport.move( "h" ) 
  		}
  		emit info : info( obstacledoing(w) )
-	}
+	} 
 	Goto work 
  
 	State handleSonar{
@@ -103,7 +103,7 @@ QActor basicrobot context ctxbasicrobot{
 			updateResource [# "step(${StepTime})" #]
   		}  
         memoCurrentTime StartTime  
-        println("basicrobot | doStep StepTime =$StepTime  ")        
+        println("basicrobot22 | doStep StepTime =$StepTime  ")        
         run unibo.robot.robotSupport.move( "w" )  //moves a real robot forever !!!
 	}  
 	Transition t0 
@@ -116,7 +116,7 @@ QActor basicrobot context ctxbasicrobot{
 		updateResource [# "stepDone($StepTime)" #]
    		//emit info : info( stepdone($StepTime) )
    		replyTo step with stepdone : stepdone(ok)
-		println("basicrobot | stepDone reply done")
+		println("basicrobot22 | stepDone reply done")
   	}
 	Goto work  
  
@@ -126,7 +126,7 @@ QActor basicrobot context ctxbasicrobot{
 		[# var TunedDuration = Duration;  
 			TunedDuration = Duration * 5 / 6
 		#]
-		println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
+		println("basicrobot22 | stepFail duration=$Duration TunedDuration=$TunedDuration")
 			run unibo.robot.robotSupport.move( "s" )
 			delayVar TunedDuration 
 			run unibo.robot.robotSupport.move( "h" ) 
@@ -137,13 +137,13 @@ QActor basicrobot context ctxbasicrobot{
 	Goto work
 	
 	State endwork{ 
-		updateResource [# "basicrobot(end)" #]	 		
+		updateResource [# "basicrobot22(end)" #]	 		
  		terminate 1
 	}   
  
 }
 
-QActor envsonarhandler context ctxbasicrobot{
+QActor envsonarhandler context ctxbasicrobot22{
  	State s0 initial { 	 
  		println("envsonarhandler | (RE)START")	 		
 	}	
@@ -171,7 +171,7 @@ QActor envsonarhandler context ctxbasicrobot{
 
  */
  
-QActor pathexec context ctxbasicrobot{ 
+QActor pathexec context ctxbasicrobot22{ 
 [# var CurMoveTodo = ""    //Upcase, since var to be used in guards
    var StepTime    = "300"
 #]
@@ -209,13 +209,13 @@ QActor pathexec context ctxbasicrobot{
 	
 	State doMoveTurn{
 		//printCurrentMessage
-		forward basicrobot -m cmd : cmd($CurMoveTodo) //asynch !!!		
+		forward basicrobot22 -m cmd : cmd($CurMoveTodo) //asynch !!!		
 	}
 	Transition t0 whenTime 300 ->  nextMove  //wait for move done ...
   
  	State doMoveW{
 		//printCurrentMessage
-		request basicrobot -m step : step( $StepTime )
+		request basicrobot22 -m step : step( $StepTime )
 	}	
 	Transition t0 whenEvent alarm     -> endWorkKo
  				  whenReply stepdone  -> nextMove  

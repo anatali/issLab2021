@@ -18,7 +18,7 @@ object  basicrobotCoapObserver {
 	
 	private val ipaddr      = "localhost:8020"		//5683 default
 	private val context     = "ctxbasicrobot"
- 	private val destactor   = "basicrobot"
+ 	private val destactor   = "basicrobot22"
  
 
 

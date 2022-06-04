@@ -3,3 +3,4 @@
 {"_comment": "", "type":"realmbot", "port":"COM6", "ipvirtualrobot":"localhost"}
 {"_comment": "", "type":"realmbot", "port":"/dev/ttyUSB0", "ipvirtualrobot":"localhost"}
 {"_comment": "", "type":"realnano", "port":"8020", "ipvirtualrobot":"localhost"}
+
