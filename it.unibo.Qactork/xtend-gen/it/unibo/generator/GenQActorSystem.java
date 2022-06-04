@@ -1,12 +1,8 @@
 package it.unibo.generator;
 
-import it.unibo.qactork.Context;
-import it.unibo.qactork.QActorDeclaration;
 import it.unibo.qactork.QActorSystem;
 import it.unibo.qactork.QActorSystemSpec;
-import it.unibo.qactork.generator.common.GenUtils;
 import it.unibo.qactork.generator.common.SysKb;
-import org.eclipse.emf.common.util.EList;
 
 @SuppressWarnings("all")
 public class GenQActorSystem {
@@ -27,20 +23,10 @@ public class GenQActorSystem {
   }
   
   public void doGenerate(final QActorSystemSpec system, final SysKb kb) {
-    this.genSystemInfo.doGenerate(system, this.tracing, this.msglogging, kb);
-    EList<Context> _context = system.getContext();
-    for (final Context context : _context) {
-      {
-        GenUtils.setPackageName(context.getName());
-        this.genQActorCtxSystem.doGenerate(system, context, kb);
-      }
-    }
-    EList<QActorDeclaration> _actor = system.getActor();
-    for (final QActorDeclaration actor : _actor) {
-      {
-        GenUtils.setPackageName(actor.getName());
-        this.genQActor.doGenerate(actor, kb);
-      }
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field context is undefined for the type QActorSystemSpec"
+      + "\nThe method or field actor is undefined for the type QActorSystemSpec"
+      + "\nname cannot be resolved"
+      + "\nname cannot be resolved");
   }
 }

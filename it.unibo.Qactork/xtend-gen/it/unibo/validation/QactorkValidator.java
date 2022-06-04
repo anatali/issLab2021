@@ -4,17 +4,11 @@
 package it.unibo.validation;
 
 import it.unibo.qactork.Context;
-import it.unibo.qactork.EmptyTransition;
 import it.unibo.qactork.Message;
 import it.unibo.qactork.NonEmptyTransition;
-import it.unibo.qactork.PHead;
-import it.unibo.qactork.PStruct;
 import it.unibo.qactork.QActor;
 import it.unibo.qactork.QActorExternal;
 import it.unibo.qactork.QActorSystemSpec;
-import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 /**
  * This class contains custom validation rules.
@@ -26,95 +20,78 @@ public class QactorkValidator extends AbstractQactorkValidator {
   /**
    * Only one initial plan is allowed
    */
-  @Check
-  public void checkSingleNormalPlan(final QActor qactor) {
-    final Function1<it.unibo.qactork.State, Boolean> _function = (it.unibo.qactork.State it) -> {
-      return Boolean.valueOf(it.isNormal());
-    };
-    int _size = IteratorExtensions.size(IteratorExtensions.<it.unibo.qactork.State>filter(qactor.getStates().iterator(), _function));
-    boolean _equals = (_size == 0);
-    if (_equals) {
-      this.error("A initial state is required", null);
-    }
-    final Function1<it.unibo.qactork.State, Boolean> _function_1 = (it.unibo.qactork.State it) -> {
-      return Boolean.valueOf(it.isNormal());
-    };
-    int _size_1 = IteratorExtensions.size(IteratorExtensions.<it.unibo.qactork.State>filter(qactor.getStates().iterator(), _function_1));
-    boolean _greaterThan = (_size_1 > 1);
-    if (_greaterThan) {
-      this.error("Only one initial state is allowed", null);
-    }
+  /* @Check
+   */public Object checkSingleNormalPlan(final QActor qactor) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field states is undefined for the type QActor"
+      + "\nThe method or field normal is undefined"
+      + "\nThe method error(String, Object) is undefined"
+      + "\nThe method or field states is undefined for the type QActor"
+      + "\nThe method or field normal is undefined"
+      + "\nThe method error(String, Object) is undefined"
+      + "\niterator cannot be resolved"
+      + "\nfilter cannot be resolved"
+      + "\nsize cannot be resolved"
+      + "\n== cannot be resolved"
+      + "\niterator cannot be resolved"
+      + "\nfilter cannot be resolved"
+      + "\nsize cannot be resolved"
+      + "\n> cannot be resolved");
   }
   
   /**
    * System name must be lowercase
    */
-  @Check
-  public void systemName(final QActorSystemSpec sys) {
-    boolean _equals = sys.getName().toLowerCase().equals(sys.getName());
-    boolean _not = (!_equals);
-    if (_not) {
-      this.error("Uppercase letters not allowed for system name", null);
-    }
+  /* @Check
+   */public Object systemName(final QActorSystemSpec sys) {
+    throw new Error("Unresolved compilation problems:"
+      + "\n! cannot be resolved."
+      + "\nThe method error(String, Object) is undefined");
   }
   
   /**
    * Actor names must be lowercase
    */
-  @Check
-  public void actorName(final QActor qa) {
-    boolean _equals = qa.getName().toLowerCase().equals(qa.getName());
-    boolean _not = (!_equals);
-    if (_not) {
-      this.error("Uppercase letters not allowed in actor\'s names", null);
-    }
+  /* @Check
+   */public Object actorName(final QActor qa) {
+    throw new Error("Unresolved compilation problems:"
+      + "\n! cannot be resolved."
+      + "\nThe method error(String, Object) is undefined");
   }
   
-  public void actorName(final QActorExternal qa) {
-    boolean _equals = qa.getName().toLowerCase().equals(qa.getName());
-    boolean _not = (!_equals);
-    if (_not) {
-      this.error("Uppercase letters not allowed in actor\'s names", null);
-    }
+  public Object actorName(final QActorExternal qa) {
+    throw new Error("Unresolved compilation problems:"
+      + "\n! cannot be resolved."
+      + "\nThe method error(String, Object) is undefined");
   }
   
   /**
    * Context names must start with a lowercase
    */
-  @Check
-  public void ctxName(final Context ctx) {
-    char _charAt = ctx.getName().toLowerCase().charAt(0);
-    char _charAt_1 = ctx.getName().charAt(0);
-    boolean _equals = (_charAt == _charAt_1);
-    boolean _not = (!_equals);
-    if (_not) {
-      this.error("Context name must start with a lowercase ", null);
-    }
-    boolean _startsWith = ctx.getName().startsWith("ctx");
-    boolean _not_1 = (!_startsWith);
-    if (_not_1) {
-      this.warning("Context name should start with ctx", null);
-    }
+  /* @Check
+   */public Object ctxName(final Context ctx) {
+    throw new Error("Unresolved compilation problems:"
+      + "\n== cannot be resolved."
+      + "\nThe method error(String, Object) is undefined"
+      + "\n! cannot be resolved."
+      + "\nThe method warning(String, Object) is undefined"
+      + "\n! cannot be resolved");
   }
   
   /**
    * Event payload must be  a Struct
    */
-  @Check
-  public void eventPayload(final Message ev) {
-    PHead _msg = ev.getMsg();
-    boolean _not = (!(_msg instanceof PStruct));
-    if (_not) {
-      this.error("msg payload must be a Struct", null);
-    }
+  /* @Check
+   */public Object eventPayload(final Message ev) {
+    throw new Error("Unresolved compilation problems:"
+      + "\n! cannot be resolved."
+      + "\nThe method error(String, Object) is undefined");
   }
   
-  @Check
-  public void emptyAfterTransition(final NonEmptyTransition t) {
-    EmptyTransition _elseempty = t.getElseempty();
-    boolean _tripleNotEquals = (_elseempty != null);
-    if (_tripleNotEquals) {
-      this.error("AVOID else clause: not yet implemented", null);
-    }
+  /* @Check
+   */public Object emptyAfterTransition(final NonEmptyTransition t) {
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved."
+      + "\nThe method error(String, Object) is undefined");
   }
 }

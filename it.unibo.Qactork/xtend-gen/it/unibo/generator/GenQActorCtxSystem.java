@@ -5,33 +5,24 @@ import it.unibo.qactork.QActorSystemSpec;
 import it.unibo.qactork.generator.common.GenUtils;
 import it.unibo.qactork.generator.common.SysKb;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class GenQActorCtxSystem {
   public void doGenerate(final QActorSystemSpec system, final Context ctx, final SysKb kb) {
-    String _name = system.getName();
-    String _plus = (" *** GenQActorCtxSystem starts for " + _name);
-    String _plus_1 = (_plus + " ctx=");
-    String _name_1 = ctx.getName();
-    String _plus_2 = (_plus_1 + _name_1);
-    InputOutput.<String>println(_plus_2);
-    final String sysName = kb.getActorSystemName().toLowerCase();
-    final String ctxClassName = StringExtensions.toFirstUpper(ctx.getName());
-    final String mainClassName = ("Main" + ctxClassName);
-    final String packageName = GenUtils.packageName;
-    GenUtils.genFileDir("../src/", GenUtils.packageName, mainClassName, "kt", 
-      this.genCtxQActor(sysName, packageName, mainClassName, ctx));
-    GenUtils.genFileDir("../src/", "", "log4j", "properties", this.genLogProperties());
-    GenUtils.genFileDir("..", "", "build2022", "gradle", this.genBuildGradle(mainClassName, ctx, false));
-    GenUtils.genFileDir("..", "", ".gitignore", "", this.genBuildGitIgnore());
-    GenUtils.genFileDir("..", "", "settings", "gradle", this.genSettingsGradle(system.getName()));
-    boolean _existFile = SysKb.existFile("../gradle.properties");
-    boolean _not = (!_existFile);
-    if (_not) {
-      GenUtils.genFileDir("..", "", "gradle", "properties", this.genGradleProperties());
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method println(Object) is undefined"
+      + "\n+ cannot be resolved."
+      + "\nThe method or field toFirstUpper is undefined for the type String"
+      + "\n+ cannot be resolved."
+      + "\n! cannot be resolved."
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\n+ cannot be resolved"
+      + "\n+ cannot be resolved");
   }
   
   /**
