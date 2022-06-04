@@ -13,7 +13,7 @@ import it.unibo.kactor.IApplMessage
 class dataCleaner (name : String ) : ActorBasic( name ) {
 val LimitLow  = 2	
 val LimitHigh = 150
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     override suspend fun actorBody(msg: IApplMessage) {
   		//println("$tt $name |  msg = $msg ")		
@@ -22,7 +22,7 @@ val LimitHigh = 150
  	}
 
  	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	  suspend fun elabData( msg: IApplMessage ){ //OPTIMISTIC		 
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()

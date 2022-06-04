@@ -3,7 +3,7 @@
  * RUNS ON Raspberry
  *
  * - loads the kb about the system (sonar2021Kb.pl) and showSystemConfiguration
- * - loads the sonar2021ConfigKb.pl and reads the sonar-data source (real or simulated).
+ * - loads the sonarnaive.pl and reads the sonar-data source (real or simulated).
  *   	If real, activates the CodedQActor sonardatasource of class sonarHCSR04Support2021
  *   	If simulated, activates the CodedQActor sonarsimulator of class sonarsimulator
  * - setup the sonar-data pipe that emits-on-stream the event sonar:distance( V )

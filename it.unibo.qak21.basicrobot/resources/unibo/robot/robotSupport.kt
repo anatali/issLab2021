@@ -19,7 +19,7 @@ import java.io.File
 import it.unibo.kactor.MsgUtil
 //import robotMbot.robotDataSourceArduino
  
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 object robotSupport{
 	lateinit var robotKind  :  String
@@ -55,7 +55,7 @@ object robotSupport{
 		return obj
 	}
 	 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	fun move( cmd : String ){ //cmd = w | a | s | d | h
  		//println("robotSupport move cmd=$cmd robotKind=$robotKind" ) 

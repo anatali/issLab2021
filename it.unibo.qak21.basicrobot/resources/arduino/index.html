@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>WebIOPi | Arduino UI</title>
+        <script type="text/javascript" src="/webiopi.js"></script>
+<script type="text/javascript">
+        // Javascript code will go here
+        // declare variable for Serial object
+        var serial;
+
+        webiopi().ready(init);
+       
+        // defines function passed to webiopi().ready()
+        function init() {
+                // define Serial object, must be configured in /etc/webiopi/config
+                serial = new Serial("uno");
+        		//alert("init ..." + serial)
+         }
+                
+</script>
+        
+<style>
+		table, th, td {
+		  border: 1px solid black;
+		  border-collapse: collapse;
+		}    
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 5px px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>      
+
+ </head>
+<body>
+
+	<table style="width:50%">
+	<tbody>
+	<tr>
+	<td><button type="button" class="button" onclick="serial.write('w') ") >w</button></td>
+	<td><button type="button" class="button" onclick="serial.write('s') ") >s</button></td>
+	</tbody>
+	</tr>
+
+	<tr>
+	<td><button type="button" class="button" onclick="serial.write('r') ") >r</button></td>
+	<td><button type="button" class="button" onclick="serial.write('l') ") >l</button></td>
+	</tbody>
+	</tr>
+
+	<tr>
+	<td><button type="button" class="button" onclick="serial.write('x') ") >x</button></td>
+	<td><button type="button" class="button" onclick="serial.write('z') ") >z</button></td>
+	</tbody>
+	</tr>
+
+
+	<tr>
+	<td><button type="button" class="button" onclick="serial.write('h') ") >h</button></td>
+	<td><button type="button" class="button" onclick="serial.write('h') ") >h</button></td>
+	</tbody>
+	</tr>
+	
+	</table>
+
+
+<h3>Display</h3>
+
+	<div id="content" align="left">
+		<img src=""  id="img_src" alt=""  width="320" height="240"><br/> 
+	</div>
+
+	<script type="text/javascript">
+		 var url = window.location.host;
+	     var len = url.length;
+	     var n= url.indexOf(":");
+	     var j = url.substring(n+1,len);
+	     var ip = url.replace(j,'8899');
+		 ip = "http://" + ip + "/?action=stream";
+		 //alert("ip="+ip);	 
+	     document.getElementById("img_src").src = ip;	
+	</script>
+
+	
+
+ 	
+</body>
+</html>

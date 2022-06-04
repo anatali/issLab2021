@@ -22,8 +22,10 @@ e che, nella :ref:`Ingegneria del software<Programmatori = (non) ingegneri?>`:
   :remark:`Il software deve essere facilmente configurabile/modificabile`
   
   in quanto  i requisiti possono essere precisati (o anche cambiare) in corso d'opera e perchè 
-  alcune problematche potrebbero sfuggire durante la prima anailsi del problema
+  alcune problematche potrebbero sfuggire durante la prima anailsi del problema.
 
-- L' :ref:`architettura<Architetture>` :blue:`(logica) di un sistema software` è 
+- Questo obiettivo va raggiunto tenendo conto dei principi SOLID e del fatto che
+  l' :ref:`architettura<Architetture>` :blue:`(logica) di un sistema software` è 
 
   :remark:`un invariante con cui pianificare il lavoro e disciplinare la variabilità`
+

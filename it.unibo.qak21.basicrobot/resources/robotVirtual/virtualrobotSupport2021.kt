@@ -23,7 +23,7 @@ import unibo.actor22comm.ws.WsConnection
 
  //A support for using the virtual robot
  
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 object virtualrobotSupport2021 {
 	private var port     = 0
@@ -49,7 +49,7 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
 		support.addObserver( obs )
 }
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){
  		this.owner   = owner	 

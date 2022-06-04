@@ -455,3 +455,9 @@ componenti (Sonar,Radar,Led e Watcher) di lavorare come un tutto organico, cioè
 
 
 
+-------------------------------------
+Robot2022
+-------------------------------------
+
+- Mbot non ha bisogno di supporti ???
+- Il progetto *it.unibo.qak21.basicrobot* funziona su Mbot

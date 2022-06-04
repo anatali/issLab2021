@@ -14,7 +14,7 @@ class distanceFilter (name : String ) : ActorBasic( name ) {
 val LimitDistance       = 10
 var obstacleFound       = false	
 var curSonarDistance	= 0
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     override suspend fun actorBody(msg: IApplMessage) {
 		//println("$tt $name |  $msg")
@@ -34,7 +34,7 @@ var curSonarDistance	= 0
 		forward("obstacle","obstacle($Distance)","basicrobot")	//send a msg to basicrobot			 
 	}
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	  suspend fun elabData( msg: IApplMessage ){ //msg( "sonarRobor, event, EMITTER, none, sonar(D), N")	  	    
  		val data  = (Term.createTerm( msg.msgContent() ) as Struct).getArg(0).toString()

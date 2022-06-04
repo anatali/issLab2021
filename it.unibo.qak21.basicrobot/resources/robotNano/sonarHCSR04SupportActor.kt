@@ -19,7 +19,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 	init{
 		println("$tt $name | CREATING")		
 	}
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     override suspend fun actorBody(msg : IApplMessage){
  		println("$tt $name | received  $msg "  )
@@ -35,7 +35,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
  		}
      }
 		
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	suspend fun startRead(   ){
  		var counter = 0

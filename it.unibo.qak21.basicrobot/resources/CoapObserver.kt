@@ -19,7 +19,7 @@ object  CoapObserver {
  	private val destactor   = "basicrobot"
  
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	 fun activate(  ){ 
        val uriStr = "coap://$ipaddr/$context/$destactor"
@@ -38,7 +38,7 @@ object  CoapObserver {
  }
 
  
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 fun main( ) {
 		CoapObserver.activate()

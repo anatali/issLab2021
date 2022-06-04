@@ -17,7 +17,7 @@ import it.unibo.kactor.ApplMessage
 import it.unibo.kactor.IApplMessage
  
  
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 class virtualrobotSonarSupportActor( name : String, val clientSocket : Socket? ) : ActorBasic( name ) {
 private var sensorObserver : Job? = null
@@ -28,7 +28,7 @@ companion object {
 		println("$tt $name | CREATING")		
 	}
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     override suspend fun actorBody(msg : IApplMessage){
 // 		println("$tt $name | received  $msg "  )  //perceives all the application events
@@ -38,7 +38,7 @@ companion object {
 		}
 	}
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
    fun startSensorObserver(  ) {
 	if( clientSocket != null ){

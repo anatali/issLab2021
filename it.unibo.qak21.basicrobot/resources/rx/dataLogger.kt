@@ -20,7 +20,7 @@ class dataLogger(name : String) : ActorBasic(name){
 		pw = PrintWriter( FileWriter(name+".txt") )
  	}
     
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	override suspend fun actorBody(msg: IApplMessage) {
  		if( msg.msgId() != "sonarRobot" ) return //AVOID to handle other events
