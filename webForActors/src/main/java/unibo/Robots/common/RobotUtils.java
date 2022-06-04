@@ -16,8 +16,8 @@ import unibo.actor22comm.utils.CommUtils;
 public class RobotUtils {
     public static final String robotCmdId       = "move";
     public static final String basicrobotCmdId  = "cmd";
-    public static final int robotPort       = 8020; //8083 is the cleaner robot
-    public static final String robotPortStr = ""+robotPort;
+    public static final int robotPort           = 8020; //8083 is the cleaner robot
+    public static final String robotPortStr     = ""+robotPort;
     private static Interaction2021 conn;
 
     public static void createRobotCleaner(){

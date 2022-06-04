@@ -43,7 +43,7 @@ object mbotSupport{
  	  by the Python application robotCmdExec that exploits GY521
     */
 	fun  move( cmd : String ){
-		//println("  	%%% mbotSupport | move cmd=$cmd ")
+		println("  	%%% mbotSupport | move cmd=$cmd on conn=$conn")
 		when( cmd ){
 			"msg(w)", "w" -> conn.sendALine("w")
 			"msg(s)", "s" -> conn.sendALine("s")

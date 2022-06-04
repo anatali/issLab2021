@@ -45,7 +45,7 @@ QActor basicrobot22 context ctxbasicrobot22{
  		delay 1000  //give to the realsonar the time to start
         if[# RobotType != "virtual" #]{
         	[# var robotsonar = context!!.hasActor("realsonar")  
-        	   unibo.robot.robotSupport.createSonarPipe(robotsonar)
+        	   if( robotsonar != null ){  unibo.robot.robotSupport.createSonarPipe(robotsonar) }
         	#]
   		}//The Virtual robot sonar is created in virtualrobotSupport2021
  

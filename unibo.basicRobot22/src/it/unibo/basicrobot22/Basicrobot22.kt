@@ -30,7 +30,7 @@ class Basicrobot22 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						delay(1000) 
 						if(  RobotType != "virtual"  
 						 ){ var robotsonar = context!!.hasActor("realsonar")  
-						        	   unibo.robot.robotSupport.createSonarPipe(robotsonar)
+						        	   if( robotsonar != null ){  unibo.robot.robotSupport.createSonarPipe(robotsonar) }
 						}
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )

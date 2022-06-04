@@ -54,9 +54,10 @@ public class HIController {
     @PostMapping("/configure")
     public String configure(Model viewmodel, @RequestParam String move, String addr ){
         ColorsOut.outappl("HIController | configure:" + move, ColorsOut.BLUE);
+        mainPage   = "BasicRobotCmdGui";
         //Uso basicrobto22 sulla porta 8020
         robotName  = "basicrobot";
-        RobotUtils.connectWithRobot(addr);
+        RobotUtils.connectWithRobot(move);
  /*
         //modo locale di creazione del componente applicativo
         if(cleanerAppl){

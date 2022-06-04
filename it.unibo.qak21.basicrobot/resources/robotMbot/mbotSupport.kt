@@ -13,6 +13,11 @@ import kotlinx.coroutines.launch
 
 
 object mbotSupport{
+
+val rotLeftTime : Long   = 610;
+val rotRightTime : Long  = 610;
+val rotZStepTime  = 58;
+
 	lateinit var owner   : ActorBasic
  	lateinit var conn    : SerialPortConnSupport
 	var dataSonar        : Int = 0 ; //Double = 0.0
@@ -47,10 +52,10 @@ object mbotSupport{
 		when( cmd ){
 			"msg(w)", "w" -> conn.sendALine("w")
 			"msg(s)", "s" -> conn.sendALine("s")
-			"msg(a)", "a" -> conn.sendALine("a")
-			"msg(d)", "d" -> conn.sendALine("d")
-			"msg(l)", "l" -> conn.sendALine("l")  
-			"msg(r)", "r" -> conn.sendALine("r")  
+			"msg(a)", "a" -> { kotlinx.coroutines.runBlocking{ conn.sendALine("a") ;  kotlinx.coroutines.delay(rotLeftTime);   conn.sendALine("h") } }
+			"msg(d)", "d" -> { kotlinx.coroutines.runBlocking{ conn.sendALine("r") ;  kotlinx.coroutines.delay(rotLeftTime);   conn.sendALine("h") } }
+			"msg(l)", "l" -> { kotlinx.coroutines.runBlocking{ conn.sendALine("l") ;  kotlinx.coroutines.delay(rotLeftTime);   conn.sendALine("h") } }
+			"msg(r)", "r" -> { kotlinx.coroutines.runBlocking{ conn.sendALine("r") ;  kotlinx.coroutines.delay(rotRightTime);  conn.sendALine("h") } } 
 			"msg(z)", "z" -> conn.sendALine("z")  
 			"msg(x)", "x" -> conn.sendALine("x")  
 			"msg(h)", "h" -> conn.sendALine("h")
