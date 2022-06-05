@@ -7,6 +7,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import it.unibo.QactorkRuntimeModule;
 import it.unibo.QactorkStandaloneSetup;
+import it.unibo.ide.QactorkIdeModule;
 import org.eclipse.xtext.util.Modules2;
 
 /**

@@ -21,6 +21,8 @@ class GenQActorSystem {
 		
 		//Generate the system info
 		genSystemInfo.doGenerate(system,tracing, msglogging, kb)
+ 
+		GenUtils.genFileDir(  "..", "", "settings", "gradle",  genSettingsGradle(system.name)	)	
 		
 		for( context : system.context ){
 			GenUtils.setPackageName( context.name )
@@ -33,4 +35,8 @@ class GenQActorSystem {
  			genQActor.doGenerate(actor, kb)	
 		}
 	}
+	
+	def genSettingsGradle(String name)'''
+	rootProject.name = "unibo.«name»"
+	'''
 }

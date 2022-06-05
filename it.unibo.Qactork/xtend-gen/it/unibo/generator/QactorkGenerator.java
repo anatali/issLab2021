@@ -4,6 +4,7 @@
 package it.unibo.generator;
 
 import com.google.common.collect.Iterables;
+import it.unibo.generator.GenQActorSystem;
 import it.unibo.qactork.QActorSystem;
 import it.unibo.qactork.generator.common.GenUtils;
 import it.unibo.qactork.generator.common.SysKb;

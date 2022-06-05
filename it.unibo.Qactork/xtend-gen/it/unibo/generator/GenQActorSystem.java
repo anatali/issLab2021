@@ -1,5 +1,8 @@
 package it.unibo.generator;
 
+import it.unibo.generator.GenQActor;
+import it.unibo.generator.GenQActorCtxSystem;
+import it.unibo.generator.GenSystemInfo;
 import it.unibo.qactork.Context;
 import it.unibo.qactork.QActorDeclaration;
 import it.unibo.qactork.QActorSystem;
@@ -7,6 +10,7 @@ import it.unibo.qactork.QActorSystemSpec;
 import it.unibo.qactork.generator.common.GenUtils;
 import it.unibo.qactork.generator.common.SysKb;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtend2.lib.StringConcatenation;
 
 @SuppressWarnings("all")
 public class GenQActorSystem {
@@ -28,6 +32,7 @@ public class GenQActorSystem {
   
   public void doGenerate(final QActorSystemSpec system, final SysKb kb) {
     this.genSystemInfo.doGenerate(system, this.tracing, this.msglogging, kb);
+    GenUtils.genFileDir("..", "", "settings", "gradle", this.genSettingsGradle(system.getName()));
     EList<Context> _context = system.getContext();
     for (final Context context : _context) {
       {
@@ -42,5 +47,14 @@ public class GenQActorSystem {
         this.genQActor.doGenerate(actor, kb);
       }
     }
+  }
+  
+  public CharSequence genSettingsGradle(final String name) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("rootProject.name = \"unibo.");
+    _builder.append(name);
+    _builder.append("\"");
+    _builder.newLineIfNotEmpty();
+    return _builder;
   }
 }

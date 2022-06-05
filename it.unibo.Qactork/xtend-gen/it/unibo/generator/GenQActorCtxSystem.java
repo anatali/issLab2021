@@ -26,7 +26,6 @@ public class GenQActorCtxSystem {
     GenUtils.genFileDir("../src/", "", "log4j", "properties", this.genLogProperties());
     GenUtils.genFileDir("..", "", "build2022", "gradle", this.genBuildGradle(mainClassName, ctx, false));
     GenUtils.genFileDir("..", "", ".gitignore", "", this.genBuildGitIgnore());
-    GenUtils.genFileDir("..", "", "settings", "gradle", this.genSettingsGradle(system.getName()));
     boolean _existFile = SysKb.existFile("../gradle.properties");
     boolean _not = (!_existFile);
     if (_not) {

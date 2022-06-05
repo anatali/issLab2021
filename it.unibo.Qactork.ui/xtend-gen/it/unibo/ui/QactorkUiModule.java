@@ -3,6 +3,7 @@
  */
 package it.unibo.ui;
 
+import it.unibo.ui.AbstractQactorkUiModule;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor;
 

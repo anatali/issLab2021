@@ -5,14 +5,11 @@ package robotMbot
  For each data value V, it emitLocalStreamEvent sonarRobot:sonar(V)
  -------------------------------------------------------------------------------------------------
  */
-import it.unibo.kactor.ActorBasicFsm
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
-import it.unibo.kactor.ActorBasic
-import it.unibo.kactor.MsgUtil
-import it.unibo.kactor.ApplMessage
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
+import it.unibo.kactor.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.GlobalScope
 
@@ -27,7 +24,7 @@ companion object {
  		println("   	%%% $name |  starts conn=$conn")	 
 	}
 
-	override suspend fun actorBody(msg: ApplMessage) {
+	override suspend fun actorBody(msg: IApplMessage) {
         //println("   	%%% $name |  handles msg= $msg  ")
 		//val vStr  = (Term.createTerm( msg.msgContent()) as Struct).getArg(0).toString()
 		//println("   	%%% $name |  handles msg= $msg  vStr=$vStr")

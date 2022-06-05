@@ -3,7 +3,7 @@ Automatic-Module-Name: it.unibo.Qactork
 Bundle-ManifestVersion: 2
 Bundle-Name: it.unibo.Qactork
 Bundle-Vendor: it.unibo.disi
-Bundle-Version: 1.2.5
+Bundle-Version: 1.2.6
 Bundle-SymbolicName: it.unibo.Qactork; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,

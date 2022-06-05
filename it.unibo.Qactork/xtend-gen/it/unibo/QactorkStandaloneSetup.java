@@ -3,6 +3,8 @@
  */
 package it.unibo;
 
+import it.unibo.QactorkStandaloneSetupGenerated;
+
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */

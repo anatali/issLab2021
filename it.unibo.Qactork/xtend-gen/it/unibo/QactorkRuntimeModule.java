@@ -3,6 +3,8 @@
  */
 package it.unibo;
 
+import it.unibo.AbstractQactorkRuntimeModule;
+
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */

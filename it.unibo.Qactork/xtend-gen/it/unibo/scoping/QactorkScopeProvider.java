@@ -3,6 +3,8 @@
  */
 package it.unibo.scoping;
 
+import it.unibo.scoping.AbstractQactorkScopeProvider;
+
 /**
  * This class contains custom scoping description.
  * 

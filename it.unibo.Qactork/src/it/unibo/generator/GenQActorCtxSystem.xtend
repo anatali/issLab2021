@@ -20,14 +20,16 @@ class GenQActorCtxSystem {
 		GenUtils.genFileDir( "../src/", "",  "log4j",  "properties", genLogProperties( ) )	
 		//if( ! SysKb.existFile( "../build2022.gradle" ) ){
 			GenUtils.genFileDir(  "..", "", "build2022", "gradle", genBuildGradle(mainClassName,ctx,false ) )
-			GenUtils.genFileDir(  "..", "", ".gitignore", "",      genBuildGitIgnore() ) 			
-			GenUtils.genFileDir(  "..", "", "settings", "gradle",  genSettingsGradle(system.name) ) 			
+			GenUtils.genFileDir(  "..", "", ".gitignore", "",      genBuildGitIgnore() ) 
+//genSettingsGradle spostato in GenQActorSystem			
+			//GenUtils.genFileDir(  "..", "", "settings", "gradle",  genSettingsGradle(system.name) ) 	
+			//GenUtils.genFileDir(  "..", "", "settings", "gradle",  genSettingsGradle(GenUtils.packageName)	)	
 		//}
 		if( ! SysKb.existFile( "../gradle.properties" ) ){
 			GenUtils.genFileDir(  "..", "", "gradle", "properties",genGradleProperties() )
 		}
 //		if( ! SysKb.existFile( "../build_"+ctx.name+".gradle" ) ){
-//			GenUtils.genFileDir(  "..", "", ".gitignore", "",      genBuildGitIgnore() ) 			
+//genSettingsGradle spostato in GenQActorSystem		
 //			GenUtils.genFileDir(  "..", "", "settings", "gradle",  genSettingsGradle(system.name) ) 			
 //			GenUtils.genFileDir(  "..", "", "build_"+ctx.name, "gradle",  genBuildGradle(mainClassName,ctx,false ) )
 //			GenUtils.genFileDir(  "..", "", "build_"+ctx.name, "gradle.kts",  genBuildGradleKts(mainClassName,ctx,false ) ) //2021

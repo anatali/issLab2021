@@ -3,6 +3,8 @@
  */
 package it.unibo.ide;
 
+import it.unibo.ide.AbstractQactorkIdeModule;
+
 /**
  * Use this class to register ide components.
  */

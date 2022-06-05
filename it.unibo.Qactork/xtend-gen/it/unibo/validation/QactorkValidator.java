@@ -12,6 +12,7 @@ import it.unibo.qactork.PStruct;
 import it.unibo.qactork.QActor;
 import it.unibo.qactork.QActorExternal;
 import it.unibo.qactork.QActorSystemSpec;
+import it.unibo.validation.AbstractQactorkValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;

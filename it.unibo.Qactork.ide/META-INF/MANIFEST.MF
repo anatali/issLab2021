@@ -3,7 +3,7 @@ Automatic-Module-Name: it.unibo.Qactork.ide
 Bundle-ManifestVersion: 2
 Bundle-Name: it.unibo.Qactork.ide
 Bundle-Vendor: it.unibo.disi
-Bundle-Version: 1.2.5
+Bundle-Version: 1.2.6
 Bundle-SymbolicName: it.unibo.Qactork.ide; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: it.unibo.Qactork,
