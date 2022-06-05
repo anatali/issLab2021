@@ -402,7 +402,8 @@ Messaging
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 
     suspend fun emitLocalStreamEvent(v: IApplMessage){
-        subscribers.forEach {
+    println("emitLocalStreamEvent ........................................ ${name}")
+    subscribers.forEach {
             sysUtil.traceprintln(" $tt ActorBasic $name | emitLocalStreamEvent $it $v ");
             it.actor.send(v)
 		}
