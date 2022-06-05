@@ -57,7 +57,8 @@ var curSonarDistance	= 0
 	 		if( curSonarDistance != Distance){
 				//println("$tt $name |  $Distance")
 				curSonarDistance = Distance
-		 	 	val m0 = MsgUtil.buildEvent(name, "sonar", "sonar($Distance)")
+		 	 	val m0 = MsgUtil.buildEvent(name, "sonardata", "distance($Distance)")
+				//L'evento può essere percepito via MQTT da radarqak22
 		 	 	emit( m0 )			
 			}
   		}

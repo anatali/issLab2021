@@ -12,14 +12,10 @@ package unibo.robot
  -------------------------------------------------------------------------------------------------
  */
 
-import it.unibo.kactor.ActorBasic
-import it.unibo.kactor.ActorBasicFsm
+import it.unibo.kactor.*
 import org.json.JSONObject
 import java.io.File
-import it.unibo.kactor.MsgUtil
-import it.unibo.kactor.QakContext
 import kotlinx.coroutines.runBlocking
-//import robotMbot.robotDataSourceArduino
  
 
 
@@ -90,12 +86,12 @@ object robotSupport{
  		if( robotsonar != null ){ 
 			runBlocking{
 				//ACTIVATE THE DATA SOURCE  
-				//MsgUtil.sendMsg("robotSupport", "sonarstart", "sonarstart(do)", robotsonar)
+				MsgUtil.sendMsg("robotSupport", "sonarstart", "sonarstart(do)", robotsonar)
 		 		//SET THE PIPE  
 		 		robotsonar.
 		 			subscribeLocalActor("datacleaner").
 		 			subscribeLocalActor("distancefilter").
-		 			subscribeLocalActor("basicrobot22")		//in order to perceive obstacle
+		 			subscribeLocalActor("basicrobot")		//in order to perceive obstacle
 				println("robotSupport | SONAR PIPE DONE") 
 			}
 	 	}else{

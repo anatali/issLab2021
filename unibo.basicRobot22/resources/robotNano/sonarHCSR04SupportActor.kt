@@ -51,7 +51,7 @@ class sonarHCSR04SupportActor ( name : String ) : ActorBasic( name ) {
 							val event = MsgUtil.buildEvent( name,"sonarRobot",m1)
 							//emit( event )
 							emitLocalStreamEvent( event )		//not propagated to remote actors
-							println("$tt $name |  ${counter++}: $event "   )
+							//println("$tt $name |  ${counter++}: $event "   )
 						}
 					}catch(e: Exception){}
 				}

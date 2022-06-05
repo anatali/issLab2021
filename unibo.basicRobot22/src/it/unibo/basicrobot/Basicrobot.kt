@@ -30,7 +30,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						delay(1000) 
 						if(  RobotType != "virtual"  
 						 ){ var robotsonar = context!!.hasActor("realsonar")  
-						        	   if(robotsonar != null) unibo.robot.robotSupport.createSonarPipe(myself) 
+						        	   if(robotsonar != null) unibo.robot.robotSupport.createSonarPipe(robotsonar) 
 						}
 						unibo.robot.robotSupport.move( "l"  )
 						unibo.robot.robotSupport.move( "r"  )
@@ -62,6 +62,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
+						println("basicrobot | handleObstacle")
 						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
