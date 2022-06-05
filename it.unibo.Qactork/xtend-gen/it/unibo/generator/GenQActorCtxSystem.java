@@ -5,12 +5,11 @@ import it.unibo.qactork.QActorSystemSpec;
 import it.unibo.qactork.generator.common.GenUtils;
 import it.unibo.qactork.generator.common.SysKb;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class GenQActorCtxSystem {
   public void doGenerate(final QActorSystemSpec system, final Context ctx, final SysKb kb) {
+<<<<<<< HEAD
     String _name = system.getName();
     String _plus = (" *** GenQActorCtxSystem starts for " + _name);
     String _plus_1 = (_plus + " ctx=");
@@ -31,6 +30,22 @@ public class GenQActorCtxSystem {
     if (_not) {
       GenUtils.genFileDir("..", "", "gradle", "properties", this.genGradleProperties());
     }
+=======
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method println(Object) is undefined"
+      + "\n+ cannot be resolved."
+      + "\nThe method or field toFirstUpper is undefined for the type String"
+      + "\n+ cannot be resolved."
+      + "\n! cannot be resolved."
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object"
+      + "\n+ cannot be resolved"
+      + "\n+ cannot be resolved");
+>>>>>>> 7efacd5a8281a8c84ee98242a79e04636849baaf
   }
   
   /**

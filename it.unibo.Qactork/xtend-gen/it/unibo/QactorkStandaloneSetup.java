@@ -11,6 +11,7 @@ import it.unibo.QactorkStandaloneSetupGenerated;
 @SuppressWarnings("all")
 public class QactorkStandaloneSetup extends QactorkStandaloneSetupGenerated {
   public static void doSetup() {
-    new QactorkStandaloneSetup().createInjectorAndDoEMFRegistration();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method createInjectorAndDoEMFRegistration() is undefined for the type QactorkStandaloneSetup");
   }
 }

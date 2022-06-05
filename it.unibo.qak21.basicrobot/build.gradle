@@ -15,7 +15,7 @@ plugins {
 }
 
 version '1.0'
-sourceCompatibility = 11
+sourceCompatibility = 1.8
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -45,10 +45,17 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion"
 
+<<<<<<< HEAD
     //ARDUINO
     // https://mvnrepository.com/artifact/org.scream3r/jssc
     implementation group: 'org.scream3r', name: 'jssc', version: '2.8.0'
 
+=======
+//ARDUINO
+    // https://mvnrepository.com/artifact/org.scream3r/jssc
+    compile group: 'org.scream3r', name: 'jssc', version: '2.8.0'
+    
+>>>>>>> 7efacd5a8281a8c84ee98242a79e04636849baaf
     /*  MQTT *************************************************************************************************************** */
     // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
     implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'

@@ -25,7 +25,6 @@ import it.unibo.qactork.InputTransition;
 import it.unibo.qactork.MemoTime;
 import it.unibo.qactork.MsgCond;
 import it.unibo.qactork.MsgTransSwitch;
-import it.unibo.qactork.NoMsgCond;
 import it.unibo.qactork.NonEmptyTransition;
 import it.unibo.qactork.PAtomNum;
 import it.unibo.qactork.PAtomString;
@@ -55,16 +54,9 @@ import it.unibo.qactork.VarRef;
 import it.unibo.qactork.VarRefInStr;
 import it.unibo.qactork.VarSolRef;
 import it.unibo.qactork.Variable;
-import it.unibo.qactork.generator.common.GenUtils;
 import it.unibo.qactork.generator.common.SysKb;
 import java.util.Arrays;
-import java.util.function.Consumer;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class GenQActor {
@@ -74,171 +66,57 @@ public class GenQActor {
   }
   
   protected void _doGenerate(final QActorExternal actor, final SysKb kb) {
-    String _name = actor.getName();
-    String _plus = (" *** GenQActor external: " + _name);
-    InputOutput.<String>println(_plus);
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method println(Object) is undefined"
+      + "\n+ cannot be resolved.");
   }
   
   protected void _doGenerate(final QActorCoded actor, final SysKb kb) {
-    String _name = actor.getName();
-    String _plus = (" *** GenQActor already coded: " + _name);
-    InputOutput.<String>println(_plus);
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method println(Object) is undefined"
+      + "\n+ cannot be resolved.");
   }
   
   protected void _doGenerate(final QActor actor, final SysKb kb) {
-    String _name = actor.getName();
-    String _plus = (" *** GenQActor starts for regular actor " + _name);
-    InputOutput.<String>println(_plus);
-    final String actorClassName = StringExtensions.toFirstUpper(actor.getName());
-    GenUtils.genFileDir("../src/", GenUtils.packageName, actorClassName, "kt", this.genQActor(actor, actorClassName, ""));
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method println(Object) is undefined"
+      + "\n+ cannot be resolved."
+      + "\nThe method or field toFirstUpper is undefined for the type String"
+      + "\nThe method genFileDir(String, String, String, String, CharSequence) from the type GenUtils refers to the missing type Object");
   }
   
   public CharSequence genQActor(final QActor actor, final String actorClassName, final String extensions) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append(GenUtils.logo);
-    _builder.newLineIfNotEmpty();
-    _builder.append("package ");
-    _builder.append(GenUtils.packageName);
-    _builder.newLineIfNotEmpty();
-    _builder.newLine();
-    _builder.append("import it.unibo.kactor.*");
-    _builder.newLine();
-    _builder.append("import alice.tuprolog.*");
-    _builder.newLine();
-    _builder.append("import kotlinx.coroutines.CoroutineScope");
-    _builder.newLine();
-    _builder.append("import kotlinx.coroutines.delay");
-    _builder.newLine();
-    _builder.append("import kotlinx.coroutines.launch");
-    _builder.newLine();
-    _builder.append("import kotlinx.coroutines.runBlocking");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.newLine();
-    _builder.append("class ");
-    _builder.append(actorClassName);
-    _builder.append(" ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scope ){");
-    _builder.newLineIfNotEmpty();
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("override fun getInitialState() : String{");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("return \"");
-    String _genInitialStateName = this.genInitialStateName(actor);
-    _builder.append(_genInitialStateName, "\t\t");
-    _builder.append("\"");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t");
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("override fun getBody() : (ActorBasicFsm.() -> Unit){");
-    _builder.newLine();
-    _builder.append("\t\t");
-    {
-      AnyAction _start = actor.getStart();
-      boolean _tripleNotEquals = (_start != null);
-      if (_tripleNotEquals) {
-        CharSequence _genAction = this.genAction(actor.getStart());
-        _builder.append(_genAction, "\t\t");
-      }
-    }
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t\t");
-    _builder.append("return { //this:ActionBasciFsm");
-    _builder.newLine();
-    _builder.append("\t\t\t\t");
-    String _genStates = this.genStates(actor);
-    _builder.append(_genStates, "\t\t\t\t");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t\t\t");
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("}");
-    _builder.newLine();
-    return _builder;
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved.");
   }
   
   public String genInitialStateName(final QActor actor) {
-    final StringBuilder sb = new StringBuilder();
-    final Consumer<State> _function = (State state) -> {
-      boolean _isNormal = state.isNormal();
-      if (_isNormal) {
-        sb.append(state.getName());
-      }
-    };
-    actor.getStates().forEach(_function);
-    return sb.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field states is undefined for the type QActor"
+      + "\nforEach cannot be resolved"
+      + "\nnormal cannot be resolved"
+      + "\nname cannot be resolved");
   }
   
   public String genStates(final QActor actor) {
-    final StringBuilder sb = new StringBuilder();
-    final Consumer<State> _function = (State state) -> {
-      sb.append(this.genState(actor, state));
-    };
-    actor.getStates().forEach(_function);
-    return sb.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field states is undefined for the type QActor"
+      + "\nforEach cannot be resolved");
   }
   
   public CharSequence genState(final QActor actor, final State state) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("state(\"");
-    String _name = state.getName();
-    _builder.append(_name);
-    _builder.append("\") { //this:State");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t");
-    _builder.append("action { //it:State");
-    _builder.newLine();
-    _builder.append("\t\t");
-    String _genActions = this.genActions(state);
-    _builder.append(_genActions, "\t\t");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t\t");
-    CharSequence _genTimer = this.genTimer(actor, state);
-    _builder.append(_genTimer, "\t\t");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t");
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("\t");
-    {
-      Transition _transition = state.getTransition();
-      boolean _tripleNotEquals = (_transition != null);
-      if (_tripleNotEquals) {
-        _builder.append(" ");
-        CharSequence _genTransition = this.genTransition(actor, state, state.getTransition());
-        _builder.append(_genTransition, "\t");
-      }
-    }
-    _builder.append("\t \t ");
-    _builder.newLineIfNotEmpty();
-    _builder.append("}\t ");
-    _builder.newLine();
-    return _builder;
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved.");
   }
   
   public String genActions(final State state) {
-    final StringBuilder sb = new StringBuilder();
-    EList<StateAction> _actions = state.getActions();
-    for (final StateAction action : _actions) {
-      sb.append(this.genAction(action));
-    }
-    return sb.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field actions is undefined for the type State");
   }
   
   public CharSequence genTimer(final QActor actor, final State state) {
-    CharSequence _xifexpression = null;
-    Transition _transition = state.getTransition();
-    boolean _tripleNotEquals = (_transition != null);
-    if (_tripleNotEquals) {
-      _xifexpression = this.genTheTimer(actor, state.getName(), state.getTransition());
-    }
-    return _xifexpression;
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved.");
   }
   
   protected CharSequence _genTheTimer(final QActor actor, final String stateName, final Transition tr) {
@@ -247,28 +125,8 @@ public class GenQActor {
   }
   
   protected CharSequence _genTheTimer(final QActor actor, final String stateName, final NonEmptyTransition tr) {
-    Timeout _duration = tr.getDuration();
-    boolean _tripleNotEquals = (_duration != null);
-    if (_tripleNotEquals) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("stateTimer = TimerActor(\"timer_");
-      _builder.append(stateName);
-      _builder.append("\", ");
-      _builder.newLineIfNotEmpty();
-      _builder.append("\t");
-      _builder.append("scope, context!!, \"local_tout_");
-      String _name = actor.getName();
-      _builder.append(_name, "\t");
-      _builder.append("_");
-      _builder.append(stateName, "\t");
-      _builder.append("\", ");
-      CharSequence _genTimeToWait = this.genTimeToWait(tr.getDuration());
-      _builder.append(_genTimeToWait, "\t");
-      _builder.append(" )");
-      _builder.newLineIfNotEmpty();
-      return _builder.toString();
-    }
-    return null;
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved.");
   }
   
   protected CharSequence _genTimeToWait(final Timeout tout) {
@@ -300,61 +158,30 @@ public class GenQActor {
    * ACTIONS
    */
   protected CharSequence _genAction(final IfSolvedAction a) {
-    String actionStr = this.genActionSequence(a.getSolvedactions());
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("if( currentSolution.isSuccess() ) ");
-    String guardStr = _builder.toString();
-    String elseStr = "";
-    EList<StateAction> _notsolvedactions = a.getNotsolvedactions();
-    boolean _tripleNotEquals = (_notsolvedactions != null);
-    if (_tripleNotEquals) {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("else");
-      _builder_1.newLine();
-      String _genActionSequence = this.genActionSequence(a.getNotsolvedactions());
-      _builder_1.append(_genActionSequence);
-      _builder_1.newLineIfNotEmpty();
-      elseStr = _builder_1.toString();
-    }
-    StringConcatenation _builder_2 = new StringConcatenation();
-    _builder_2.append(guardStr);
-    _builder_2.append(actionStr);
-    _builder_2.append(elseStr);
-    return _builder_2.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field solvedactions is undefined for the type IfSolvedAction"
+      + "\nThe method or field notsolvedactions is undefined for the type IfSolvedAction"
+      + "\nThe method or field notsolvedactions is undefined for the type IfSolvedAction"
+      + "\nThe method genActionSequence(EList) from the type GenQActor refers to the missing type EList"
+      + "\nThe method genActionSequence(EList) from the type GenQActor refers to the missing type EList"
+      + "\n!== cannot be resolved");
   }
   
   protected CharSequence _genAction(final GuardedStateAction a) {
-    String actionStr = this.genActionSequence(a.getOkactions());
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("if( ");
-    Object _genAction = this.genAction(a.getGuard());
-    _builder.append(_genAction);
-    _builder.append(" )");
-    String guardStr = _builder.toString();
-    String elseStr = "";
-    int _length = ((Object[])Conversions.unwrapArray(a.getKoactions(), Object.class)).length;
-    boolean _greaterThan = (_length > 0);
-    if (_greaterThan) {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("else");
-      _builder_1.newLine();
-      _builder_1.append(" ");
-      String _genActionSequence = this.genActionSequence(a.getKoactions());
-      _builder_1.append(_genActionSequence, " ");
-      _builder_1.newLineIfNotEmpty();
-      elseStr = _builder_1.toString();
-    }
-    StringConcatenation _builder_2 = new StringConcatenation();
-    _builder_2.append(guardStr);
-    _builder_2.append(actionStr);
-    _builder_2.append(elseStr);
-    return _builder_2.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field okactions is undefined for the type GuardedStateAction"
+      + "\nThe method or field koactions is undefined for the type GuardedStateAction"
+      + "\nThe method or field koactions is undefined for the type GuardedStateAction"
+      + "\nThe method genActionSequence(EList) from the type GenQActor refers to the missing type EList"
+      + "\nThe method genActionSequence(EList) from the type GenQActor refers to the missing type EList"
+      + "\nlength cannot be resolved"
+      + "\n> cannot be resolved");
   }
   
-  public String genActionSequence(final EList<StateAction> a) {
+  public String genActionSequence(final /* EList<StateAction> */Object a) {
     final StringBuilder sb = new StringBuilder();
     sb.append("{");
-    for (final StateAction action : a) {
+    for (final EList action : a) {
       sb.append(this.genAction(action));
     }
     sb.append("}\n");
@@ -512,58 +339,19 @@ public class GenQActor {
   }
   
   protected CharSequence _genAction(final SolveGoal m) {
-    final String g = this.genPHead(m.getGoal()).toString().replace("\"", "\'");
-    String r = "";
-    Variable _resVar = m.getResVar();
-    boolean _tripleNotEquals = (_resVar != null);
-    if (_tripleNotEquals) {
-      r = this.genPHead(m.getResVar()).toString();
-    }
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("solve(\"");
-    _builder.append(g);
-    _builder.append("\",\"");
-    _builder.append(r);
-    _builder.append("\") //set resVar\t");
-    _builder.newLineIfNotEmpty();
-    return _builder.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved.");
   }
   
   protected CharSequence _genAction(final MsgCond m) {
-    CharSequence _genPHead = this.genPHead(m.getMsg());
-    final String msgUserTemplate = ("" + _genPHead);
-    CharSequence _genPHead_1 = this.genPHead(m.getMessage().getMsg());
-    final String msgTemplate = ("" + _genPHead_1);
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("if( checkMsgContent( Term.createTerm(\"");
-    _builder.append(msgTemplate);
-    _builder.append("\"), Term.createTerm(\"");
-    _builder.append(msgUserTemplate);
-    _builder.append("\"), ");
-    _builder.newLineIfNotEmpty();
-    _builder.append("                        ");
-    _builder.append("currentMsg.msgContent()) ) { //set msgArgList");
-    _builder.newLine();
-    _builder.append("\t\t");
-    String _genTestMsgActions = this.genTestMsgActions(m.getCondactions());
-    _builder.append(_genTestMsgActions, "\t\t");
-    _builder.newLineIfNotEmpty();
-    _builder.append("}");
-    {
-      NoMsgCond _ifnot = m.getIfnot();
-      boolean _tripleNotEquals = (_ifnot != null);
-      if (_tripleNotEquals) {
-        _builder.append("else{");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        String _genTestMsgActions_1 = this.genTestMsgActions(m.getIfnot().getNotcondactions());
-        _builder.append(_genTestMsgActions_1, "\t");
-        _builder.newLineIfNotEmpty();
-        _builder.append("}");
-      }
-    }
-    _builder.newLineIfNotEmpty();
-    return _builder.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\n+ cannot be resolved."
+      + "\n+ cannot be resolved."
+      + "\nThe method or field condactions is undefined for the type MsgCond"
+      + "\n!== cannot be resolved."
+      + "\nThe method or field notcondactions is undefined for the type NoMsgCond"
+      + "\nThe method genTestMsgActions(EList) from the type GenQActor refers to the missing type EList"
+      + "\nThe method genTestMsgActions(EList) from the type GenQActor refers to the missing type EList");
   }
   
   protected CharSequence _genAction(final EndActor m) {
@@ -576,9 +364,9 @@ public class GenQActor {
     return _builder;
   }
   
-  public String genTestMsgActions(final EList<StateAction> a) {
+  public String genTestMsgActions(final /* EList<StateAction> */Object a) {
     final StringBuilder sb = new StringBuilder();
-    for (final StateAction action : a) {
+    for (final EList action : a) {
       sb.append(this.genAction(action));
     }
     return sb.toString();
@@ -646,58 +434,16 @@ public class GenQActor {
   }
   
   protected CharSequence _genAction(final CodeRunSimple move) {
-    StringConcatenation _builder = new StringConcatenation();
-    String _bitem = move.getBitem();
-    _builder.append(_bitem);
-    _builder.append("( ");
-    {
-      EList<PHead> _args = move.getArgs();
-      boolean _hasElements = false;
-      for(final PHead ms : _args) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate(",", "");
-        }
-        CharSequence _genPHead = this.genPHead(ms);
-        _builder.append(_genPHead);
-        _builder.append(" ");
-      }
-    }
-    _builder.append(" )");
-    _builder.newLineIfNotEmpty();
-    return _builder.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field args is undefined for the type CodeRunSimple");
   }
   
   protected CharSequence _genAction(final CodeRunActor move) {
-    String actorRef = "myself";
-    int _length = ((Object[])Conversions.unwrapArray(move.getArgs(), Object.class)).length;
-    boolean _greaterThan = (_length > 0);
-    if (_greaterThan) {
-      actorRef = "myself ,";
-    }
-    StringConcatenation _builder = new StringConcatenation();
-    String _aitem = move.getAitem();
-    _builder.append(_aitem);
-    _builder.append("(");
-    _builder.append(actorRef);
-    {
-      EList<PHead> _args = move.getArgs();
-      boolean _hasElements = false;
-      for(final PHead ms : _args) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate(",", "");
-        }
-        CharSequence _genPHead = this.genPHead(ms);
-        _builder.append(_genPHead);
-        _builder.append(" ");
-      }
-    }
-    _builder.append(")");
-    _builder.newLineIfNotEmpty();
-    return _builder.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field args is undefined for the type CodeRunActor"
+      + "\nThe method or field args is undefined for the type CodeRunActor"
+      + "\nlength cannot be resolved"
+      + "\n> cannot be resolved");
   }
   
   protected CharSequence _genAction(final Exec move) {
@@ -720,58 +466,18 @@ public class GenQActor {
   }
   
   protected CharSequence _genTransition(final QActor actor, final State curstate, final EmptyTransition tr) {
-    AnyAction _eguard = tr.getEguard();
-    boolean _tripleEquals = (_eguard == null);
-    if (_tripleEquals) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("transition( edgeName=\"goto\",targetState=\"");
-      String _name = tr.getTargetState().getName();
-      _builder.append(_name);
-      _builder.append("\", cond=doswitch() )");
-      _builder.newLineIfNotEmpty();
-      return _builder.toString();
-    } else {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("transition( edgeName=\"goto\",targetState=\"");
-      String _name_1 = tr.getTargetState().getName();
-      _builder_1.append(_name_1);
-      _builder_1.append("\", cond=doswitchGuarded({");
-      CharSequence _genAction = this.genAction(tr.getEguard());
-      _builder_1.append(_genAction);
-      _builder_1.append("}) )");
-      _builder_1.newLineIfNotEmpty();
-      _builder_1.append("transition( edgeName=\"goto\",targetState=\"");
-      String _name_2 = tr.getOthertargetState().getName();
-      _builder_1.append(_name_2);
-      _builder_1.append("\", cond=doswitchGuarded({! (");
-      CharSequence _genAction_1 = this.genAction(tr.getEguard());
-      _builder_1.append(_genAction_1);
-      _builder_1.append(") }) )");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\n=== cannot be resolved.");
   }
   
   private String curActorNameForTransition = "";
   
   protected CharSequence _genTransition(final QActor actor, final State curstate, final NonEmptyTransition tr) {
-    this.curActorNameForTransition = actor.getName();
-    final StringBuilder sb = new StringBuilder();
-    Timeout _duration = tr.getDuration();
-    boolean _tripleNotEquals = (_duration != null);
-    if (_tripleNotEquals) {
-      sb.append(this.genTransition(tr.getName(), curstate, tr.getDuration(), tr.getDuration().getTargetState()));
-    }
-    EList<InputTransition> _trans = tr.getTrans();
-    for (final InputTransition t : _trans) {
-      sb.append(this.genTransition(tr.getName(), curstate, t, t.getTargetState()));
-    }
-    EmptyTransition _elseempty = tr.getElseempty();
-    boolean _tripleNotEquals_1 = (_elseempty != null);
-    if (_tripleNotEquals_1) {
-      sb.append(this.genTransition(actor, curstate, tr.getElseempty()));
-    }
-    return sb.toString();
+    throw new Error("Unresolved compilation problems:"
+      + "\n!== cannot be resolved."
+      + "\nThe method or field trans is undefined for the type NonEmptyTransition"
+      + "\n!== cannot be resolved."
+      + "\ntargetState cannot be resolved");
   }
   
   protected CharSequence _genTransition(final String tname, final State curstate, final InputTransition tr, final State state) {
@@ -781,178 +487,36 @@ public class GenQActor {
   }
   
   protected CharSequence _genTransition(final String tname, final State curstate, final EventTransSwitch tr, final State state) {
-    AnyAction _guard = tr.getGuard();
-    boolean _tripleEquals = (_guard == null);
-    if (_tripleEquals) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("transition(edgeName=\"");
-      _builder.append(tname);
-      int _plusPlus = this.count++;
-      _builder.append(_plusPlus);
-      _builder.append("\",targetState=\"");
-      String _name = state.getName();
-      _builder.append(_name);
-      _builder.append("\",cond=whenEvent(\"");
-      String _name_1 = tr.getMessage().getName();
-      _builder.append(_name_1);
-      _builder.append("\"))");
-      _builder.newLineIfNotEmpty();
-      return _builder.toString();
-    } else {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("transition(edgeName=\"");
-      _builder_1.append(tname);
-      int _plusPlus_1 = this.count++;
-      _builder_1.append(_plusPlus_1);
-      _builder_1.append("\",targetState=\"");
-      String _name_2 = state.getName();
-      _builder_1.append(_name_2);
-      _builder_1.append("\",cond=whenEventGuarded(\"");
-      String _name_3 = tr.getMessage().getName();
-      _builder_1.append(_name_3);
-      _builder_1.append("\",{");
-      CharSequence _genAction = this.genAction(tr.getGuard());
-      _builder_1.append(_genAction);
-      _builder_1.append("}))");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\n=== cannot be resolved."
+      + "\n++ cannot be resolved."
+      + "\n++ cannot be resolved.");
   }
   
   protected CharSequence _genTransition(final String tname, final State curstate, final MsgTransSwitch tr, final State state) {
-    AnyAction _guard = tr.getGuard();
-    boolean _tripleEquals = (_guard == null);
-    if (_tripleEquals) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("transition(edgeName=\"");
-      _builder.append(tname);
-      int _plusPlus = this.count++;
-      _builder.append(_plusPlus);
-      _builder.append("\",targetState=\"");
-      String _name = state.getName();
-      _builder.append(_name);
-      _builder.append("\",cond=whenDispatch(\"");
-      String _name_1 = tr.getMessage().getName();
-      _builder.append(_name_1);
-      _builder.append("\"))");
-      _builder.newLineIfNotEmpty();
-      return _builder.toString();
-    } else {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("transition(edgeName=\"");
-      _builder_1.append(tname);
-      int _plusPlus_1 = this.count++;
-      _builder_1.append(_plusPlus_1);
-      _builder_1.append("\",targetState=\"");
-      String _name_2 = state.getName();
-      _builder_1.append(_name_2);
-      _builder_1.append("\",cond=whenDispatchGuarded(\"");
-      String _name_3 = tr.getMessage().getName();
-      _builder_1.append(_name_3);
-      _builder_1.append("\",{");
-      CharSequence _genAction = this.genAction(tr.getGuard());
-      _builder_1.append(_genAction);
-      _builder_1.append("}))");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\n=== cannot be resolved."
+      + "\n++ cannot be resolved."
+      + "\n++ cannot be resolved.");
   }
   
   protected CharSequence _genTransition(final String tname, final State curstate, final RequestTransSwitch tr, final State state) {
-    AnyAction _guard = tr.getGuard();
-    boolean _tripleEquals = (_guard == null);
-    if (_tripleEquals) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("transition(edgeName=\"");
-      _builder.append(tname);
-      int _plusPlus = this.count++;
-      _builder.append(_plusPlus);
-      _builder.append("\",targetState=\"");
-      String _name = state.getName();
-      _builder.append(_name);
-      _builder.append("\",cond=whenRequest(\"");
-      String _name_1 = tr.getMessage().getName();
-      _builder.append(_name_1);
-      _builder.append("\"))");
-      _builder.newLineIfNotEmpty();
-      return _builder.toString();
-    } else {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("transition(edgeName=\"");
-      _builder_1.append(tname);
-      int _plusPlus_1 = this.count++;
-      _builder_1.append(_plusPlus_1);
-      _builder_1.append("\",targetState=\"");
-      String _name_2 = state.getName();
-      _builder_1.append(_name_2);
-      _builder_1.append("\",cond=whenRequestGuarded(\"");
-      String _name_3 = tr.getMessage().getName();
-      _builder_1.append(_name_3);
-      _builder_1.append("\",{");
-      CharSequence _genAction = this.genAction(tr.getGuard());
-      _builder_1.append(_genAction);
-      _builder_1.append("}))");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\n=== cannot be resolved."
+      + "\n++ cannot be resolved."
+      + "\n++ cannot be resolved.");
   }
   
   protected CharSequence _genTransition(final String tname, final State curstate, final ReplyTransSwitch tr, final State state) {
-    AnyAction _guard = tr.getGuard();
-    boolean _tripleEquals = (_guard == null);
-    if (_tripleEquals) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("transition(edgeName=\"");
-      _builder.append(tname);
-      int _plusPlus = this.count++;
-      _builder.append(_plusPlus);
-      _builder.append("\",targetState=\"");
-      String _name = state.getName();
-      _builder.append(_name);
-      _builder.append("\",cond=whenReply(\"");
-      String _name_1 = tr.getMessage().getName();
-      _builder.append(_name_1);
-      _builder.append("\"))");
-      _builder.newLineIfNotEmpty();
-      return _builder.toString();
-    } else {
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("transition(edgeName=\"");
-      _builder_1.append(tname);
-      int _plusPlus_1 = this.count++;
-      _builder_1.append(_plusPlus_1);
-      _builder_1.append("\",targetState=\"");
-      String _name_2 = state.getName();
-      _builder_1.append(_name_2);
-      _builder_1.append("\",cond=whenReplyGuarded(\"");
-      String _name_3 = tr.getMessage().getName();
-      _builder_1.append(_name_3);
-      _builder_1.append("\",{");
-      CharSequence _genAction = this.genAction(tr.getGuard());
-      _builder_1.append(_genAction);
-      _builder_1.append("}))");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\n=== cannot be resolved."
+      + "\n++ cannot be resolved."
+      + "\n++ cannot be resolved.");
   }
   
   protected CharSequence _genTransition(final String tname, final State curstate, final Timeout tr, final State state) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("transition(edgeName=\"");
-    _builder.append(tname);
-    int _plusPlus = this.count++;
-    _builder.append(_plusPlus);
-    _builder.append("\",targetState=\"");
-    String _name = state.getName();
-    _builder.append(_name);
-    _builder.append("\",cond=whenTimeout(\"local_tout_");
-    _builder.append(this.curActorNameForTransition);
-    _builder.append("_");
-    String _name_1 = curstate.getName();
-    _builder.append(_name_1);
-    _builder.append("\"))   ");
-    _builder.newLineIfNotEmpty();
-    return _builder;
+    throw new Error("Unresolved compilation problems:"
+      + "\n++ cannot be resolved.");
   }
   
   /**
@@ -1014,48 +578,13 @@ public class GenQActor {
   }
   
   protected CharSequence _genPHead(final PStructRef ps) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("${");
-    String _functor = ps.getStruct().getFunctor();
-    _builder.append(_functor);
-    _builder.append("(");
-    {
-      EList<PHead> _msgArg = ps.getStruct().getMsgArg();
-      boolean _hasElements = false;
-      for(final PHead term : _msgArg) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate(",", "");
-        }
-        Object _genPHead = this.genPHead(term);
-        _builder.append(_genPHead);
-      }
-    }
-    _builder.append(")}");
-    return _builder;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field msgArg is undefined for the type PStruct");
   }
   
   protected CharSequence _genPHead(final PStruct ps) {
-    StringConcatenation _builder = new StringConcatenation();
-    String _functor = ps.getFunctor();
-    _builder.append(_functor);
-    _builder.append("(");
-    {
-      EList<PHead> _msgArg = ps.getMsgArg();
-      boolean _hasElements = false;
-      for(final PHead term : _msgArg) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate(",", "");
-        }
-        Object _genPHead = this.genPHead(term);
-        _builder.append(_genPHead);
-      }
-    }
-    _builder.append(")");
-    return _builder;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field msgArg is undefined for the type PStruct");
   }
   
   protected CharSequence _genPHead(final PAtomNum ph) {
@@ -1184,7 +713,7 @@ public class GenQActor {
     }
   }
   
-  public CharSequence genTransition(final String tname, final State curstate, final EObject tr, final State state) {
+  public CharSequence genTransition(final String tname, final State curstate, final Object tr, final State state) {
     if (tr instanceof EventTransSwitch) {
       return _genTransition(tname, curstate, (EventTransSwitch)tr, state);
     } else if (tr instanceof MsgTransSwitch) {

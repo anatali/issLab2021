@@ -5,6 +5,10 @@ package robotMbot
  For each data value V, it emitLocalStreamEvent sonarRobot:sonar(V)
  -------------------------------------------------------------------------------------------------
  */
+<<<<<<< HEAD
+=======
+import it.unibo.kactor.*
+>>>>>>> 7efacd5a8281a8c84ee98242a79e04636849baaf
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import alice.tuprolog.Term
@@ -30,9 +34,7 @@ companion object {
 		//println("   	%%% $name |  handles msg= $msg  vStr=$vStr")
 		elabData(   )
 	}
-
-@kotlinx.coroutines.ObsoleteCoroutinesApi
-@kotlinx.coroutines.ExperimentalCoroutinesApi
+ 
 	suspend fun elabData(  ){
  	GlobalScope.launch{	//to allow message handling
 		var counter   = 0

@@ -461,3 +461,15 @@ Robot2022
 
 - Mbot non ha bisogno di supporti ???
 - Il progetto *it.unibo.qak21.basicrobot* funziona su Mbot
+- Il progetto *it.unibo.qak21.basicrobot*  è stato portato in *unibo.basicrobot22* che ha anche pathexec
+- *unibo.basicrobot22* è stato deployed su DockerHub in una configurazione che comprende il VirtualRobot
+- *unibo.basicrobot22*  può essere comandato da ``basicRobotCmdGui`` in *webForActors*
+
+Description	Resource	Path	Location	Type
+Project at 'C:\Didattica2022\issLab2022\unibo.basicrobot22' can't be named 'it.unibo.basicrobot' because 
+it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. 
+To resolve this problem, move the project out of the workspace root or configure it to have the name 'unibo.basicrobot22'.	
+unibo.basicrobot22		line 0	Gradle Error Marker
+
+
+Tento di rifare la generazione di settings.gradle ma ... 

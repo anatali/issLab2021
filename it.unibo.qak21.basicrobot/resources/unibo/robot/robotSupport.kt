@@ -34,18 +34,19 @@ object robotSupport{
 		val hostAddr     = jsonObject.getString("ipvirtualrobot") 
 		robotKind        = jsonObject.getString("type") 
 		val robotPort    = jsonObject.getString("port") 
-		println( "		--- robotSupport | CREATED for $robotKind host=$hostAddr port=$robotPort owner=$owner" )
+		println( "		--- robotSupport | CREATING for $robotKind host=$hostAddr port=$robotPort owner=$owner" )
 
 		when( robotKind ){		
 			//"mockrobot"  ->  { robotMock.mockrobotSupport.create(  ) }
 			"virtual"    ->  { robotVirtual.virtualrobotSupport2021.create( owner, hostAddr, robotPort) }
   			"realnano"   ->  {
 				robotNano.nanoSupport.create( owner )
- 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar for nano")
+ 				val realsonar = robotNano.sonarHCSR04SupportActor("realsonar")
 				//Context injection  
 				owner.context!!.addInternalActor(realsonar)  
   				println("		--- robotSupport | has created the realsonar")
 			}
+ 			"realmbot" -> { robotMbot.mbotSupport.create(owner, robotPort) }
  			else -> println( "		--- robotSupport | robot $robotKind unknown" )
  		}
 	}
@@ -62,7 +63,8 @@ object robotSupport{
 		when( robotKind ){
 			//"mockrobot"  -> { robotMock.mockrobotSupport.move( cmd ) 					  }
 			"virtual"    -> { robotVirtual.virtualrobotSupport2021.move(  cmd ) 	  }
-  			"realnano"   -> { robotNano.nanoSupport.move( cmd)	}
+            "realmbot"   -> { robotMbot.mbotSupport.move( cmd )	}
+ 			"realnano"   -> { robotNano.nanoSupport.move( cmd)	}
 			else         -> println( "		--- robotSupport | robot unknown")
 		}		
 	}
