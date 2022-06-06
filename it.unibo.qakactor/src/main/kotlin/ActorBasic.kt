@@ -386,7 +386,10 @@ Messaging
     }
     fun subscribeLocalActor( actorName : String) : ActorBasic {
         val a = sysUtil.getActor(actorName)
-        if( a != null  ){ subscribers.add(a); return a}
+        if( a != null  ){
+            subscribers.add(a);
+            println("...... subscribed: $actorName to $name ${subscribers.size}" );
+            return a}
         else{ println("WARNING: actor $actorName not found" );
             throw Exception("actor $actorName not found in the current context")
         }
@@ -402,7 +405,7 @@ Messaging
 @kotlinx.coroutines.ObsoleteCoroutinesApi
 
     suspend fun emitLocalStreamEvent(v: IApplMessage){
-    println("emitLocalStreamEvent ........................................ ${name}")
+    //println("emitLocalStreamEvent .... ${name} subs=${subscribers.size}")
     subscribers.forEach {
             sysUtil.traceprintln(" $tt ActorBasic $name | emitLocalStreamEvent $it $v ");
             it.actor.send(v)

@@ -465,6 +465,7 @@ Robot2022
 - *unibo.basicrobot22* è stato deployed su DockerHub in una configurazione che comprende il VirtualRobot
 - *unibo.basicrobot22*  può essere comandato da ``basicRobotCmdGui`` in *webForActors*
   e riceve i dati del sonar ...
+- il radar
 
 Description	Resource	Path	Location	Type
 Project at 'C:\Didattica2022\issLab2022\unibo.basicrobot22' can't be named 'it.unibo.basicrobot' because 
