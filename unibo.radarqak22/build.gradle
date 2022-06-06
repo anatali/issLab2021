@@ -119,7 +119,9 @@ application {
  jar {
     println("building jar")
     from sourceSets.main.allSource
-    manifest {
+    from sourceSets.main.resources 
+    //from sourceSets.main.runtimeClasspath
+   manifest {
         attributes 'Main-Class': "$mainClassName"
     }
 }
