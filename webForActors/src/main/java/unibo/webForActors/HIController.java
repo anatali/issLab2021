@@ -46,7 +46,7 @@ public class HIController {
         model.addAttribute("arg", appName);
         if(cleanerAppl)  mainPage = "RobotCleanerGui"; //"RobotCmdGuiWs";//
         else //mainPage = "RobotNaiveGui";
-        mainPage   = "index"; //"BasicRobotCmdGui";
+        mainPage   = "BasicRobotCmdGui"; //"index"; //
         return mainPage;
     }
 
