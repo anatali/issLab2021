@@ -54,6 +54,9 @@ webrobot22: startup
     }
     dependencies {
         ...
+        //Libreria Kotlin-runtime
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
         //Per comunicazioni WebSocket NOSTOMP della pagina HTML
         implementation("org.springframework:spring-websocket:5.3.14")
 
@@ -67,7 +70,7 @@ webrobot22: startup
         implementation name: '2p301'
         implementation name: 'it.unibo.qakactor-2.7'
         implementation name: 'unibonoawtsupports'  //required by the old infrastructure
-        implementation name: 'unibo.actor22-1.1'
+        implementation name: 'unibo.actor22-1.1'   //using actor22comm in ConnQakBase
     }
     mainClassName = 'unibo.webRobot22.WebRobot22Application'
     jar {
@@ -115,10 +118,39 @@ Comandare il robot
 
 
 
+Handler dispatch failed; nested exception is java.lang.NoClassDefFoundError: kotlin/jvm/internal/Intrinsics
+
+
+++++++++++++++++++++++++++++++++++++
+Bootstrap
+++++++++++++++++++++++++++++++++++++
+The Bootstrap grid system has four classes: xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+
+
+++++++++++++++++++++++++++++++++++++
+Card with webcam
+++++++++++++++++++++++++++++++++++++
+
+- Open Windows Settings and choose Devices
+- Click the Windows Start Menu Button.
+- Click Camera
+- ipwecab e SimpleMjpegView
+
+ .. code::
+     
+    <script>
+    function myFunction() {
+    window.open("https://www.w3schools.com");
+    }
+    </script>
 
 
 -----------------------------------------------------------
 Enable SpringBoot live DevTools
 -----------------------------------------------------------
 settings(ctrl +alt+s) -> Build,Execution,Deployment -> compiler, check "Build project automatically"
-Enable option 'allow auto-make to start even if developed application is currently running' in Settings -> Advanced Settings under compiler
+Enable option 'allow auto-make to start even if developed application is currently running' in 
+Settings -> Advanced Settings under compiler
+
+
+
