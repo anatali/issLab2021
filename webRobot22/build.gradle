@@ -19,6 +19,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//FOR WebSocket NOSTOMP
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// https://mvnrepository.com/artifact/org.springframework/spring-websocket
+	implementation("org.springframework:spring-websocket:5.3.14")
+//added
+	implementation 'org.webjars:webjars-locator-core'
+	implementation 'org.webjars:bootstrap:5.1.3'
+	implementation 'org.webjars:jquery:3.6.0'
+
 //-------------------------------------------------------------------------------
 
 	// Align versions of all Kotlin components

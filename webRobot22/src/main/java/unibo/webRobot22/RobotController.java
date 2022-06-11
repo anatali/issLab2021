@@ -19,12 +19,7 @@ import unibo.actor22comm.utils.ColorsOut;
 @Controller 
 public class RobotController {
     protected static  String robotName     = ""; //visibility in package
-
-	//String htmlPage  = "index";
-    //String htmlPage  = "robotGuiPost";
-    //String htmlPage  = "robotGuiSocket";
-    //String htmlPage  = "robotGuiPostBoundary";
-    String mainPage  = "BasicRobotCmdGui";
+    protected String mainPage  = "basicrobot22Gui";
 
     public RobotController() {
 
@@ -41,8 +36,7 @@ public class RobotController {
     @PostMapping("/configure")
     public String configure(Model viewmodel, @RequestParam String move, String addr ){
         System.out.println("RobotHIController | configure:" + move );
-        mainPage   = "BasicRobotCmdGui";
-        //Uso basicrobto22 sulla porta 8020
+         //Uso basicrobto22 sulla porta 8020
         robotName  = "basicrobot";
         RobotUtils.connectWithRobot(move);
         return mainPage;
