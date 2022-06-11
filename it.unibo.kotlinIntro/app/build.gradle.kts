@@ -28,7 +28,7 @@ version = "1.0"
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "15"
+        jvmTarget = "1.8"
     }
 }
 dependencies {
