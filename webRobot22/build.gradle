@@ -1,0 +1,65 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'application'
+}
+
+group = 'unibo'
+version = '1.0'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+	flatDir {   dirs '../unibolibs'	 }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//-------------------------------------------------------------------------------
+
+	// Align versions of all Kotlin components
+	//implementation platform('org.jetbrains.kotlin:kotlin-bom')
+	// Use the Kotlin JDK 8 standard library.
+	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+	// This dependency is used by the application.
+	implementation 'com.google.guava:guava:30.1.1-jre'
+	// Use the Kotlin test library.
+	testImplementation 'org.jetbrains.kotlin:kotlin-test'
+	// Use the Kotlin JUnit integration.
+	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+	/* COROUTINES ********************************************************************************************************** */
+	// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
+	implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlinVersion", ext: 'pom'
+	// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
+	implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion"
+
+
+
+
+	/* UNIBO ********************************** */
+	implementation name: 'uniboInterfaces'
+	implementation name: '2p301'
+	implementation name: 'it.unibo.qakactor-2.7'
+	implementation name: 'unibonoawtsupports'  //required by the old infrastructure
+	implementation name: 'unibo.actor22-1.1'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// -----------------------------------------------------------
+mainClassName = 'unibo.webRobot22.WebRobot22Application'
+
+jar {
+	println("executing jar")
+	from sourceSets.main.allSource
+	manifest {
+		attributes 'Main-Class': "$mainClassName"
+	}
+}
