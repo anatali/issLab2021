@@ -5,10 +5,36 @@
 
 
 .. _bannerOnline: https://manytools.org/hacker-tools/ascii-banner/
+.. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
+.. _Bootstrap5: https://www.w3schools.com/bootstrap5/
+.. _Grids: https://www.w3schools.com/bootstrap5/bootstrap_grid_basic.php
+.. _Cards: https://www.w3schools.com/bootstrap5/bootstrap_cards.php
+.. _Toasts: https://www.w3schools.com/bootstrap5/bootstrap_toast.php
+
+.. _jsdelivr: https://www.jsdelivr.com/
+.. _WebJars: https://mvnrepository.com/artifact/org.webjars
+.. _WebJarsExplained: https://www.baeldung.com/maven-webjars 
+.. _WebJarsDocs: https://getbootstrap.com/docs/5.1/getting-started/introduction/
+.. _WebJarsExamples: https://getbootstrap.com/docs/5.1/examples/
+.. _WebJarsContainer: https://getbootstrap.com/docs/5.1/layout/containers/
+.. _Heart-beating: https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
+
 
 ========================================
 webrobot22
 ========================================
+
+#. :ref:`webrobot22: startup`
+#. Preparazione della pagina con `Bootstrap5`_
+#. Sezione area comandi
+#. Sezione cam
+#. Connessione Ws con il server
+#. Connessione TCP/CoAP con il robot (o applicazione)
+#. Risposta js ai comandi
+#. Azioni del controller in seguito a un comando
+
+
+
 
 -----------------------------------------------------------
 webrobot22: startup
@@ -124,9 +150,43 @@ Handler dispatch failed; nested exception is java.lang.NoClassDefFoundError: kot
 ++++++++++++++++++++++++++++++++++++
 Bootstrap
 ++++++++++++++++++++++++++++++++++++
-The Bootstrap grid system has four classes: xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+
+- Bootstrap 4 was released in 2018
+- Bootstrap 5 has switched to JavaScript instead of jQuery.
+- W3.CSS is an excellent alternative to Bootstrap 5.
+- ``jsDelivr`` provides CDN support for Bootstrap's CSS and JavaScript:
+
+ .. code::
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+- There are two container classes to choose from: ``.container`` (fixed width)  ``.container-fluid``
+- ``.container-sm|md|lg|xl`` classes to determine when the container should be responsive
+- By default, containers have left and right padding, with no top or bottom padding.
 
 
+- The Bootstrap `Grids`_ system has four classes: xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+- Bootstrap's `Grids`_ system is built with flexbox and allows up to 12 columns across the page.
+- The Bootstrap 5 `Grids`_ system has six classes:
+
+    - ``.col-`` (extra small devices - screen width less than 576px)
+    - ``.col-sm-`` (small devices - screen width equal to or greater than 576px)
+    - ``.col-md-`` (medium devices - screen width equal to or greater than 768px)
+    - ``.col-lg-`` (large devices - screen width equal to or greater than 992px)
+    - ``.col-xl-`` (xlarge devices - screen width equal to or greater than 1200px)
+    - ``.col-xxl-`` (xxlarge devices - screen width equal to or greater than 1400px)
+
+- `Cards`_: bordered box with some padding around its content. 
+  It includes options for headers, footers, content, colors, etc.
+
+- Responsive images automatically adjust to fit the size of the screen.
+  ``img-fluid`` class applies max-width: 100%; and height: auto; to the image.  
+  The image will then scale nicely to the parent element.
+  
 ++++++++++++++++++++++++++++++++++++
 Card with webcam
 ++++++++++++++++++++++++++++++++++++
