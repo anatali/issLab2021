@@ -21,7 +21,7 @@ public class RobotUtils {
         conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
     }
     public static void connectWithRobotUsingCoap(String addr){
-        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.coap );
+        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
     }
     public static  IApplMessage moveAril(String robotName, String cmd  ) {

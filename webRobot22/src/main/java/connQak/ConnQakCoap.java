@@ -30,7 +30,7 @@ public class ConnQakCoap extends ConnQakBase { //implements Interaction2021
             else
                 ColorsOut.outappl("connQakCoap | url=  " + url
                         + " FAILURE", ColorsOut.YELLOW);
-            conn = new CoapConnection(hostAddr,port);
+            //conn = new CoapConnection(hostAddr,port);
             return conn;
         } catch (Exception e) {
             ColorsOut.outerr("connQakCoap | createConnection ERROR:" + e.getMessage() );
