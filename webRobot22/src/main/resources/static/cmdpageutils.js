@@ -19,7 +19,7 @@ $(function () {
     $( "#s" ).click(function() { callServerUsingAjax("s") });
     $( "#r" ).click(function() { callServerUsingAjax("r") });
     $( "#l" ).click(function() { callServerUsingAjax("l") });
-    $( "#x" ).click(function() { callServerUsingAjax("x") });
+    $( "#p" ).click(function() { callServerUsingAjax("p") });
     $( "#z" ).click(function() { callServerUsingAjax("z") });
  });
 

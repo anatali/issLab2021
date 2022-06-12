@@ -20,7 +20,10 @@ public class RobotUtils {
         ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
     }
-
+    public static void connectWithRobotUsingCoap(String addr){
+        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.coap );
+        conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
+    }
     public static  IApplMessage moveAril(String robotName, String cmd  ) {
         //ColorsOut.outappl("HIController | moveAril cmd:" + cmd , ColorsOut.BLUE);
         switch( cmd ) {

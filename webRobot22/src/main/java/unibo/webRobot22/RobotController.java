@@ -38,7 +38,8 @@ public class RobotController {
         System.out.println("RobotHIController | configure:" + move );
          //Uso basicrobto22 sulla porta 8020
         robotName  = "basicrobot";
-        RobotUtils.connectWithRobot(move);
+        //RobotUtils.connectWithRobot(move);
+        RobotUtils.connectWithRobotUsingCoap(move);
         return mainPage;
     }
 
