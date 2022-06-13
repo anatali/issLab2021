@@ -26,20 +26,21 @@
     <div class="card-body">
      <div class="row">
       <div class="col-8">
-       <form action="protocol" method="post">
+       <form action="setprotocol" method="post">
         <!-- the form-data is sent to the path specified in the action attribute -->
         <!-- <label for="webcamspec">wcam ip</label> -->
-        <input type="text" id="protocolspec" name="ipaddr" value="tcp">
+        <input type="text" id="protocolspec" name="protocol" value="tcp">
         <input type="submit" value="setprotocol">
        </form>
       </div>
       <div class="col-4">
-       <h6 id="protocol">tcp</h6>
+       <!-- <h6 id="protocol">tcp</h6> -->
+       <b><span th:text="${protocol}">tcp</span></b>
       </div>
      </div> <!-- row0 in card -->
      <div class="row">
       <div class="col-8">
-        <form action="webcam" method="post">
+        <form action="setwebcamip" method="post">
          <!-- the form-data is sent to the path specified in the action attribute -->
          <!-- <label for="webcamspec">wcam ip</label> -->
          <input type="text" id="webcamspec" name="ipaddr" value="">
@@ -47,13 +48,14 @@
         </form>
       </div>
       <div class="col-4">
-        <h6 id="webcamip">unknown</h6>
+        <!-- <h6 id="webcamip">unknown</h6> -->
+       <b><span th:text="${webcamip}" id="webcamipaddr">unknown</span></b>
       </div>
      </div> <!-- row1 in card -->
 
      <div class="row">
       <div class="col-8">
-          <form action="configure" method="post">
+          <form action="setrobotip" method="post">
          <!-- the form-data is sent to the path specified in the action attribute -->
          <!-- <label for="configurespec">robot  ip</label> -->
          <input type="text" id="configurespec" name="ipaddr" value="localhost">
@@ -61,7 +63,8 @@
          </form>
        </div>
       <div class="col-4">
-       <h6 id="robotip">localhost</h6>
+       <!-- <h6 id="robotip">localhost</h6> -->
+       <b><span th:text="${robotip}">not connected</span></b>
       </div>
      </div> <!--  row2 in card -->
 
@@ -120,6 +123,7 @@
 
   </div> <!-- col -->
 
+  <script>const webcamip = document.getElementById("webcamipaddr").textContent;alert(webcamip); </script>
   <!-- SECONDA COLONNA (webcam e robot messages) -->
   <!-- Responsive images automatically adjust to fit the size of the screen. -->
   <div class="col">
@@ -129,7 +133,7 @@
        <!--
        <img th:src="@{/images/mbotIot.png}"/>
        <a th:href="@{https://www.thymeleaf.org/documentation.html}">aaa</a> -->
-       <img class="img-fluid" th:src="@{http://192.168.1.149:8080/video}"
+       <img class="img-fluid" th:src="@{http://${webcamip}:8080/video}"
             alt="androidcam" style="border-spacing: 0; border: 1px solid black;">
        <img class="img-fluid" th:src="@{http://192.168.1.15:8080/?action=stream}"
             alt="raspicam" style="border-spacing: 0; border: 1px solid black;">

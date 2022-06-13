@@ -3,6 +3,7 @@ cmdpageutils.js
 */
 
     const messageWindow   = document.getElementById("display");
+    const webcamip        = document.getElementById("webcamip");
 
     function addMessageToWindow(message) {
          var output = message.replaceAll("\n","<br/>")
@@ -44,3 +45,4 @@ function callServerUsingAjax(message) {
       }
      });
 }
+

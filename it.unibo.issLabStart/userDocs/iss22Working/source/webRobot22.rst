@@ -3,6 +3,7 @@
 .. role:: remark
 .. role:: worktodo
 
+.. _Thymeleaf: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
 
 .. _bannerOnline: https://manytools.org/hacker-tools/ascii-banner/
 .. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
@@ -120,6 +121,15 @@ webrobot22: pagina
 - :ref:`Bootstrap e webJars`
 - :ref:`WebSocket in SpringBoot: versione STOMP`
 - :ref:`Client (in Java per programmi)`
+
++++++++++++++++++++++++++++++++
+Template della pagina
++++++++++++++++++++++++++++++++
+
+ .. code::
+
+
+
 
 +++++++++++++++++++++++++++++++
 Costruzione della pagina

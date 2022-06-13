@@ -19,18 +19,18 @@ public class RobotUtils {
 
 
     public static void connectWithRobotUsingTcp(String addr){
-        ColorsOut.outappl("HIController | connectWithRobotUsingTcp addr:" + addr , ColorsOut.BLUE);
+        //ColorsOut.outappl("HIController | connectWithRobotUsingTcp addr:" + addr , ColorsOut.CYAN);
         //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
         try {
             conn = TcpClientSupport.connect(addr, robotPort, 10);
-            ColorsOut.outappl("HIController | connectWithRobotUsingTcp conn:" + conn , ColorsOut.BLUE);
+            ColorsOut.outappl("HIController | connect Tcp conn:" + conn , ColorsOut.CYAN);
         }catch(Exception e){
             ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());
         }
     }
     public static void connectWithRobotUsingCoap(String addr){
-        ColorsOut.outappl("HIController | connectWithRobotUsingCoap addr:" + addr , ColorsOut.BLUE);
+        //ColorsOut.outappl("HIController | connec Coap addr:" + addr , ColorsOut.BLUE);
         //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
         try {
@@ -38,6 +38,7 @@ public class RobotUtils {
             String qakdestination 	= "basicrobot";
             String path   = ctxqakdest+"/"+qakdestination;
             conn = new CoapConnection(addr, path);
+            ColorsOut.outappl("HIController | connect Coap conn:" + conn , ColorsOut.CYAN);
         }catch(Exception e){
             ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());
         }
