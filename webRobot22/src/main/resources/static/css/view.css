@@ -1,0 +1,11 @@
+.btn-block {
+	width: 100%
+}
+.btn.btn-light-primary {
+	background-color: #ebf3ff;
+	color: #002152
+}
+
+.font-bold {
+	font-weight: 700
+}

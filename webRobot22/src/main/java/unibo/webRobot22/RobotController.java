@@ -38,16 +38,20 @@ public class RobotController {
   	 return mainPage;
   }
 
+    @PostMapping("/webcam")
+    public String webcam(Model viewmodel, @RequestParam String ipaddr, String addr ){
+        System.out.println("RobotHIController | webcam:" + ipaddr );
+        return mainPage;
+    }
     @PostMapping("/configure")
     public String configure(Model viewmodel, @RequestParam String ipaddr, String addr ){
         System.out.println("RobotHIController | configure:" + ipaddr );
-         //Uso basicrobto22 sulla porta 8020
+        //Uso basicrobto22 sulla porta 8020
         robotName  = "basicrobot";
         if( usingCoap ) RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
         else RobotUtils.connectWithRobotUsingTcp(ipaddr);
         return mainPage;
     }
-
     @PostMapping("/robotmove")
     public String doMove(Model viewmodel  , @RequestParam String move ){
         ColorsOut.outappl("RobotController | doMove:" + move + " robotName=" + robotName, ColorsOut.BLUE);
