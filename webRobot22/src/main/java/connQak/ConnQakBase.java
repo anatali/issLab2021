@@ -7,8 +7,6 @@ import unibo.actor22comm.utils.ColorsOut;
 public abstract class ConnQakBase  {
 
     private static ConnQakBase currQakConn;
-    public static final String ctxqakdest      = "ctxbasicrobot";
-    public static final String qakdestination 	= "basicrobot";
 
     public static ConnQakBase create(ProtocolType protocol) {
         ColorsOut.outappl("ConnQakBase | create protocol="+protocol, ColorsOut.MAGENTA);
@@ -16,10 +14,11 @@ public abstract class ConnQakBase  {
         if( protocol == ProtocolType.tcp ){
             currQakConn = new ConnQakTcp( );
             return currQakConn;
-        } else if( protocol == ProtocolType.coap ){
+        }
+        /* else if( protocol == ProtocolType.coap ){
             currQakConn = new ConnQakCoap( );
             return currQakConn;
-        }
+        }*/
         else return null;
     }
 

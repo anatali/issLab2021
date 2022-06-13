@@ -24,7 +24,7 @@
 <div class="container-fluid mt-3">
  <div class="row">
   <div class="col">  <!-- col-sm-6 col equal-width columns on all devices and screen widths -->
-
+    protocol=<b><span th:text="${protocol}">???</span></b>
 
    <div class="card">
     <div class="card-body">
@@ -32,11 +32,11 @@
       <div class="col">
        <div>
         <form action="configure" method="post">
+         <!-- the form-data is sent to the path specified in the action attribute -->
          <label for="configurespec">address</label>
-         <input type="text" id="configurespec" name="move" value="">
+         <input type="text" id="configurespec" name="ipaddr" value="localhost">
          <input type="submit" value="connect">
-         <!-- the form-data is sent to the page specified in the action attribute -->
-        </form>
+         </form>
        </div>
       </div>
      </div> <!-- first row in card -->
@@ -104,7 +104,7 @@
        <!--
        <img th:src="@{/images/mbotIot.png}"/>
        <a th:href="@{https://www.thymeleaf.org/documentation.html}">aaa</a> -->
-       <img class="img-fluid" th:src="@{http://192.168.1.23:8080/video}"
+       <img class="img-fluid" th:src="@{http://192.168.1.6:8080/video}"
             alt="androidcam" style="border-spacing: 0; border: 1px solid black;">
        <img class="img-fluid" th:src="@{http://192.168.1.15:8080/?action=stream}"
             alt="raspicam" style="border-spacing: 0; border: 1px solid black;">

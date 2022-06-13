@@ -7,19 +7,24 @@ import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 import org.eclipse.californium.core.CoapClient;
 
-public class ConnQakCoap extends ConnQakBase { //implements Interaction2021
+public class ConnQakCoap   { //implements Interaction2021
+    public static final String ctxqakdest      = "ctxbasicrobot";
+    public static final String qakdestination 	= "basicrobot";
+
     private Interaction2021 conn;
     private CoapClient client;
     private String hostAddr;
     private int port;
 
-    @Override
+
     public Interaction2021 createConnection(String hostAddr, int port){
         try {
             this.hostAddr = hostAddr;
             this.port     = port;
-            String url = "coap://"+hostAddr+":"+port+"/"+ ctxqakdest+"/"+qakdestination;
-            ColorsOut.outappl("connQakCoap | createConnection url="+url, ColorsOut.YELLOW);
+            String path   = ctxqakdest+"/"+qakdestination;
+            //String url = "coap://"+hostAddr+":"+port+"/"+ path;
+            ColorsOut.outappl("connQakCoap | createConnection path="+path, ColorsOut.YELLOW);
+/*
             client = new CoapClient( url );
             client.setTimeout( 1000L );
             //initialCmd: to make console more reactive at the first user cmd
@@ -30,14 +35,15 @@ public class ConnQakCoap extends ConnQakBase { //implements Interaction2021
             else
                 ColorsOut.outappl("connQakCoap | url=  " + url
                         + " FAILURE", ColorsOut.YELLOW);
-            //conn = new CoapConnection(hostAddr,port);
+*/
+            conn = new CoapConnection(hostAddr,path);
             return conn;
         } catch (Exception e) {
             ColorsOut.outerr("connQakCoap | createConnection ERROR:" + e.getMessage() );
             return null;
         }
     }
-
+/*
     @Override
     public void forward(String msg) {
         try {
@@ -72,5 +78,5 @@ public class ConnQakCoap extends ConnQakBase { //implements Interaction2021
             ColorsOut.outerr("connQakCoap | request ERROR:" + e.getMessage() );
         }
     }
-
+*/
  }

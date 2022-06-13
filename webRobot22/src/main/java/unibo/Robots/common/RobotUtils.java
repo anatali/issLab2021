@@ -4,7 +4,9 @@ import it.unibo.kactor.IApplMessage;
 import unibo.actor22.Qak22Util;
 import unibo.actor22comm.ProtocolType;
 import unibo.actor22comm.SystemData;
+import unibo.actor22comm.coap.CoapConnection;
 import unibo.actor22comm.interfaces.Interaction2021;
+import unibo.actor22comm.tcp.TcpClientSupport;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 
@@ -12,17 +14,33 @@ public class RobotUtils {
     public static final String robotCmdId       = "move";
     public static final String basicrobotCmdId  = "cmd";
     public static final int robotPort           = 8020; //8083 is the cleaner robot
-    public static final String robotPortStr     = ""+robotPort;
+    //public static final String robotPortStr     = ""+robotPort;
     private static Interaction2021 conn;
 
 
-    public static void connectWithRobot(String addr){
-        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
-        conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
+    public static void connectWithRobotUsingTcp(String addr){
+        ColorsOut.outappl("HIController | connectWithRobotUsingTcp addr:" + addr , ColorsOut.BLUE);
+        //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
+        //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
+        try {
+            conn = TcpClientSupport.connect(addr, robotPort, 10);
+            ColorsOut.outappl("HIController | connectWithRobotUsingTcp conn:" + conn , ColorsOut.BLUE);
+        }catch(Exception e){
+            ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());
+        }
     }
     public static void connectWithRobotUsingCoap(String addr){
-        ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
-        conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
+        ColorsOut.outappl("HIController | connectWithRobotUsingCoap addr:" + addr , ColorsOut.BLUE);
+        //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
+        //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
+        try {
+            String ctxqakdest       = "ctxbasicrobot";
+            String qakdestination 	= "basicrobot";
+            String path   = ctxqakdest+"/"+qakdestination;
+            conn = new CoapConnection(addr, path);
+        }catch(Exception e){
+            ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());
+        }
     }
     public static  IApplMessage moveAril(String robotName, String cmd  ) {
         //ColorsOut.outappl("HIController | moveAril cmd:" + cmd , ColorsOut.BLUE);

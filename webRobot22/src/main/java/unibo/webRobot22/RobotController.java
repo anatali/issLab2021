@@ -3,6 +3,7 @@ package unibo.webRobot22;
 //https://www.toptal.com/java/stomp-spring-boot-websocket
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,12 @@ import unibo.actor22comm.utils.ColorsOut;
 
 @Controller 
 public class RobotController {
-    protected static  String robotName     = ""; //visibility in package
-    protected String mainPage  = "basicrobot22Gui";
+    @Value("${spring.server.protocol}")
+    String protocol;
 
+    protected static  String robotName     = ""; //visibility in package
+    protected String mainPage   = "basicrobot22Gui";
+    protected boolean usingCoap = false;
     public RobotController() {
 
     }
@@ -29,17 +33,18 @@ public class RobotController {
 
   @GetMapping("/") 		 
   public String entry(Model viewmodel) {
- 	 viewmodel.addAttribute("arg", "Entry page loaded. Please use the buttons ");
+     if( usingCoap ) viewmodel.addAttribute("protocol", "coap");
+     else viewmodel.addAttribute("protocol", protocol);
   	 return mainPage;
   }
 
     @PostMapping("/configure")
-    public String configure(Model viewmodel, @RequestParam String move, String addr ){
-        System.out.println("RobotHIController | configure:" + move );
+    public String configure(Model viewmodel, @RequestParam String ipaddr, String addr ){
+        System.out.println("RobotHIController | configure:" + ipaddr );
          //Uso basicrobto22 sulla porta 8020
         robotName  = "basicrobot";
-        //RobotUtils.connectWithRobot(move);
-        RobotUtils.connectWithRobotUsingCoap(move);
+        if( usingCoap ) RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
+        else RobotUtils.connectWithRobotUsingTcp(ipaddr);
         return mainPage;
     }
 
