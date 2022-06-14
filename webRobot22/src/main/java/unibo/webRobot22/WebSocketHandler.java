@@ -54,7 +54,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
 
     public void sendToAll(String message)  {
         try{
-            ColorsOut.outappl("WebSocketHandler | sendToAll:" + message, ColorsOut.BLUE);
+            ColorsOut.outappl("WebSocketHandler | sendToAll:" + message, ColorsOut.CYAN);
             //JSONObject jsm = new JSONObject(message);
             //IApplMessage mm = new ApplMessage(message);
             //String mstr    = mm.msgContent();//.replace("'","");
@@ -62,7 +62,6 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
         }catch( Exception e ){
             ColorsOut.outerr("WebSocketHandler | sendToAll ERROR:"+e.getMessage());
         }
-
     }
     public void sendToAll(TextMessage message) throws IOException{
        /*

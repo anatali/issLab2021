@@ -20,7 +20,7 @@ via @EnableWebSocket annotation.
 @Configuration
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
-
+public static final WebSocketHandler wshandler = new WebSocketHandler();
     /*
     Necessario per l'invio di immagini
      */
@@ -33,7 +33,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler(), "/socket").setAllowedOrigins("*");
+        registry.addHandler(wshandler, "/socket").setAllowedOrigins("*");
     }
 }
 

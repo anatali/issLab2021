@@ -29,7 +29,7 @@ public class RobotUtils {
             ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());
         }
     }
-    public static void connectWithRobotUsingCoap(String addr){
+    public static CoapConnection connectWithRobotUsingCoap(String addr){
         //ColorsOut.outappl("HIController | connec Coap addr:" + addr , ColorsOut.BLUE);
         //ConnQakBase connToRobot = ConnQakBase.create( ProtocolType.tcp );
         //conn = connToRobot.createConnection(addr, RobotUtils.robotPort);
@@ -42,6 +42,7 @@ public class RobotUtils {
         }catch(Exception e){
             ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());
         }
+        return (CoapConnection) conn;
     }
     public static  IApplMessage moveAril(String robotName, String cmd  ) {
         //ColorsOut.outappl("HIController | moveAril cmd:" + cmd , ColorsOut.BLUE);

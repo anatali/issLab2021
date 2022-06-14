@@ -3,6 +3,9 @@ package unibo.webRobot22;
 //https://www.toptal.com/java/stomp-spring-boot-websocket
 
 
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapHandler;
+import org.eclipse.californium.core.CoapResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,7 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 import unibo.Robots.common.RobotUtils;
+import unibo.actor22comm.coap.CoapConnection;
+import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 
 //---------------------------------------------------
@@ -28,7 +34,7 @@ public class RobotController {
 
     protected static  String robotName     = ""; //visibility in package
     protected String mainPage   = "basicrobot22Gui";
-    protected boolean usingCoap = false;
+    protected boolean usingTcp  = false;
 
     public RobotController() {
 
@@ -43,7 +49,7 @@ public class RobotController {
   @GetMapping("/") 		 
   public String entry(Model viewmodel) {
      //viewmodel.addAttribute("protocol", protocol);
-     //if( usingCoap ) viewmodel.addAttribute("protocol", "coap");
+     //if( usingTcp ) viewmodel.addAttribute("protocol", "coap");
      //else viewmodel.addAttribute("protocol", protocol);
       setConfigParams(viewmodel);
       return mainPage;
@@ -52,8 +58,8 @@ public class RobotController {
     @PostMapping("/setprotocol")
     public String setprotocol(Model viewmodel, @RequestParam String protocol  ){
         this.protocol = protocol;
-        usingCoap     = protocol.equals("coap");
-        System.out.println("RobotHIController | setprotocol:" + protocol );
+        usingTcp      = protocol.equals("tcp");
+        System.out.println("RobotController | setprotocol:" + protocol );
         viewmodel.addAttribute("protocol", protocol);
         setConfigParams(viewmodel);
         return mainPage;
@@ -72,19 +78,12 @@ public class RobotController {
         System.out.println("RobotHIController | setrobotip:" + ipaddr );
         viewmodel.addAttribute("robotip", robotip);
         setConfigParams(viewmodel);
-        /*
-        return mainPage;
-    }
-
-    @PostMapping("/configure")
-    public String configure(Model viewmodel, @RequestParam String ipaddr  ){
-        System.out.println("RobotHIController | configure:" + ipaddr );
-
-         */
         //Uso basicrobto22 sulla porta 8020
         robotName  = "basicrobot";
-        if( usingCoap ) RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
-        else RobotUtils.connectWithRobotUsingTcp(ipaddr);
+        if( usingTcp ) RobotUtils.connectWithRobotUsingTcp(ipaddr+":8020");
+        //Attivo comunque una connessione CoAP per osservare basicrobot
+        CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
+        conn.observeResource( new RobotCoapObserver() );
         return mainPage;
     }
 
@@ -102,6 +101,11 @@ public class RobotController {
         }
         return mainPage;
     }
+
+
+
+
+
 
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) {
