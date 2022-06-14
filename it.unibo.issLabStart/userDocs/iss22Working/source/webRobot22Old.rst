@@ -3,8 +3,6 @@
 .. role:: remark
 .. role:: worktodo
 
-.. _Thymeleaf: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
-.. _ThymeleafSyntax: https://www.thymeleaf.org/doc/articles/standardurlsyntax.html
 
 .. _bannerOnline: https://manytools.org/hacker-tools/ascii-banner/
 .. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
@@ -124,15 +122,6 @@ webrobot22: pagina
 - :ref:`Client (in Java per programmi)`
 
 +++++++++++++++++++++++++++++++
-Template della pagina
-+++++++++++++++++++++++++++++++
-
- .. code::
-
-
-
-
-+++++++++++++++++++++++++++++++
 Costruzione della pagina
 +++++++++++++++++++++++++++++++
 
@@ -215,6 +204,25 @@ Card with webcam
     }
     </script>
 
+++++++++++++++++++++++++++++++++++++
+Thymeleaf URL Syntax
+++++++++++++++++++++++++++++++++++++
+
+https://www.thymeleaf.org/doc/articles/standardurlsyntax.html
+
+- Absolute URLs
+  
+   .. code::
+
+    <a th:href="@{http://www.thymeleaf/documentation.html}">
+
+- Context-relative URLs
+  
+ - Server-relative URLs
+ 
+    .. code::
+
+    <a th:href="@{~/billing-app/showDetails.htm}">
 
 -----------------------------------------------------------
 Enable SpringBoot live DevTools
@@ -222,6 +230,4 @@ Enable SpringBoot live DevTools
 settings(ctrl +alt+s) -> Build,Execution,Deployment -> compiler, check "Build project automatically"
 Enable option 'allow auto-make to start even if developed application is currently running' in 
 Settings -> Advanced Settings under compiler
-
-
 
