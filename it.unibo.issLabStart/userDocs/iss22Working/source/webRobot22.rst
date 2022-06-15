@@ -26,10 +26,10 @@
 webrobot22
 ========================================
 
-#. :ref:`webrobot22: startup`
-#. Preparazione della pagina con `Bootstrap5`_
+#. Iniziamo il **progetto webrobot22** :ref:`webrobot22: startup`
+#. Prepariamo la pagina usando `Bootstrap5`_
 #. Sezione area comandi
-#. Sezione cam
+#. Sezione WebCam
 #. Connessione Ws con il server
 #. Connessione TCP/CoAP con il robot (o applicazione)
 #. Risposta js ai comandi
@@ -38,11 +38,20 @@ webrobot22
 
 
 
+
+
 -----------------------------------------------------------
 webrobot22: startup
 -----------------------------------------------------------
 
-- Estraggo ``webRobot22.zip`` in webRobot22
+- Costruiamo il file ``webRobot22.zip`` in accordo a :ref:`Primi passi con SpringBoot`
+  
+ 
+  .. image::  ./_static/img/Robot22/webRobot22Springio.PNG
+    :align: center 
+    :width: 50%
+
+- Scompattiamo il file ``webRobot22.zip``  nella nostra cartella di lavoro
 - Cambio da ``7.4.1`` a ``7.4.2`` in ``webRobot22\gradle\wrapper\gradle-wrapper.properties``
 - In ``build.gradle`` modifico:
   
@@ -122,6 +131,11 @@ webrobot22: pagina
 - :ref:`Bootstrap e webJars`
 - :ref:`WebSocket in SpringBoot: versione STOMP`
 - :ref:`Client (in Java per programmi)`
+
+
+.. image::  ./_static/img/Robot22/webRobot22GuiAnnot.PNG
+  :align: center 
+  :width: 100%
 
 +++++++++++++++++++++++++++++++
 Template della pagina
