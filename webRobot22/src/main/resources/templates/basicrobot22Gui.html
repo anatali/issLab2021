@@ -48,7 +48,6 @@
         </form>
       </div>
       <div class="col-5">
-        <!-- <h6 id="webcamip">unknown</h6> -->
        <b><span th:text="${webcamip}" id="webcamipaddr">unknown</span></b>
       </div>
      </div> <!-- row1 in card -->
@@ -73,52 +72,27 @@
       <div class="col">
        <!-- card dei comandi -->
        <div class="card">
-
-        <div class="card-header">
+       <!-- <div class="card-header px-1">
          <h4>Commands</h4>
-        </div>
+        </div> --><h5>Commands</h5>
         <div class="card-content"> <!--  pb-4 -->
 
          <div class="row"> <!--  See https://getbootstrap.com/docs/4.1/components/buttons/ -->
-           <div class="col"><button class="btn btn-info border" id='w'>w <i>(ahead)</i></button></div> <!--class='btn btn-block btn-light-primary font-bold border' -->
-          <div class="col">  <button class='btn btn-warning border' id='p'>p (step) </button></div>
-          <div class="col"><button class='btn btn-success border' id='l'>l (left)  </button></div>
-
-         </div> <!-- 1 row in card dei comandi -->
+           <div class="col"><button class="btn btn-info btn-block border" id='w'>w <i>(ahead)</i></button></div> <!--class='btn btn-block btn-light-primary font-bold border' -->
+           <div class="col"><button class='btn btn-info btn-block border' id='s'>s (back) </button></div>
+           <div class="col"><button class='btn btn-danger  btn-block border' id='h'>h (halt) </button></div>
+          </div> <!-- 1 row in card dei comandi -->
 
          <div class="row"> <!--  px-4 -->
-            <div class="col"><button class='btn btn-info border' id='s'>s (back) </button></div>
-          <div class="col"><button class='btn btn-danger  border' id='h'>h (halt) </button></div>
-          <div class="col"><button class='btn btn-success border' id='r'>r (rigth) </button></div>
-          </div> <!-- 2 row in card dei comandi -->
+             <div class="col"><button class='btn btn-warning btn-block border' id='p'>p (step) </button></div>
+             <div class="col"><button class='btn btn-success btn-block border' id='l'>l (left)  </button></div>
+            <div class="col"><button class='btn btn-success btn-block border' id='r'>r (rigth) </button></div>
+         </div> <!-- 2 row in card dei comandi -->
+<!-- AGGIORNAMENTO PAGINA -->
+         <div>Info: <br/><b><span id="display">...</span></b></div>
 
-         <div class="row">
-          <div class="card">
-           <div class="card-body">
+        <div>Robot state: <br/><b><span id="robotDisplay">...</span></b></div>
 
-            <div class="row">
-             <!--  <div class="col-md-2">
-               <div class="stats-icon green" id="iconTable1">
-                <i class="fa-regular fa-table-picnic"></i>
-               </div>
-              </div>-->
-             <div class="col">
-              <!-- <h6 class="text-muted">Command result</h6>   font-semibold -->
-                 Command: <b><span id="display">todo</span></b>
-             </div>
-            </div> <!-- row -->
-
-            <div class="row">
-             <!--
-                          <div class="col">
-
-                           Robot: <span id="robotDisplay">...</span>
-                          </div> -->
-            </div> <!-- row -->
-           </div> <!-- card-body -->
-          </div> <!-- card -->
-
-         </div> <!-- row3 in card comandi -->
        </div> <!-- card-content -->
        </div> <!-- fine card dei comandi -->
       </div>
@@ -153,7 +127,6 @@
 
 </div> <!-- first row in container -->
 
- Robot: <span id="robotDisplay">...</span>
 
  <footer>
   <hr/>
@@ -174,8 +147,8 @@
 <script src="vendors/jquery/jquery.min.js"></script>
 <script src="sockjs.min.js"></script>
 <!-- <script src="app.js"></script> -->
-<script src="wsminimal.js"></script>
 <script src="cmdpageutils.js"></script>
+<script src="wsminimal.js"></script>
 <script>connect()</script>
 </body>
 </html>

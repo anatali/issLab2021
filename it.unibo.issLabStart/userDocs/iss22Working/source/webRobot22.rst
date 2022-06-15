@@ -146,6 +146,7 @@ Template della pagina
         </div>
 
     </body>
+
 +++++++++++++++++++++++++++++++
 Costruzione della pagina
 +++++++++++++++++++++++++++++++
@@ -162,6 +163,11 @@ Costruzione della pagina
 - wsminimal.js
 
 
++++++++++++++++++++++++++++++++
+Interazione pagina-server
++++++++++++++++++++++++++++++++
+
+- cmdpageutils.js : callServerUsingAjax fa una POST con answer
 
 -----------------------------------------------------------
 Comandare il robot
@@ -176,8 +182,8 @@ Handler dispatch failed; nested exception is java.lang.NoClassDefFoundError: kot
 Bootstrap
 ++++++++++++++++++++++++++++++++++++
 
-- Bootstrap 4 was released in 2018
-- Bootstrap 5 has switched to JavaScript instead of jQuery.
+- `Bootstrap4`_ was released in 2018
+- `Bootstrap5`_ has switched to JavaScript instead of jQuery.
 - W3.CSS is an excellent alternative to Bootstrap 5.
 - ``jsDelivr`` provides CDN support for Bootstrap's CSS and JavaScript:
 

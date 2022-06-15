@@ -2,17 +2,20 @@
 cmdpageutils.js
 */
 
-    const messageWindow   = document.getElementById("display");
+    const infoDisplay     = document.getElementById("display");
     const webcamip        = document.getElementById("webcamip");
+    const robotDisplay    = document.getElementById("robotDisplay");
 
-    function addMessageToWindow(message) {
-         var output = message.replaceAll("\n","<br/>")
-          //messageWindow.innerHTML += `<div>${output}</div>`
-         messageWindow.innerHTML = `<tt>${output}</tt>`
+    function setMessageToWindow(outfield, message) {
+         var output = message.replace("\n","<br/>")
+         outfield.innerHTML = `<tt>${output}</tt>`
     }
 
-    //var socket = connect();
-
+    function addMessageToWindow(outfield, message) {
+         var output = message.replace("\n","<br/>")
+          outfield.innerHTML += `<div>${output}</div>`
+    }
+ 
 //short-hand for $(document).ready(function() { ... });
 $(function () {
     $( "#h" ).click(function() { callServerUsingAjax("h") });  //callServerUsingAjax is in wsminimal
@@ -37,7 +40,7 @@ function callServerUsingAjax(message) {
       //Visualizzazione risultato o errori
       success: function(msg){  //msg ha tutta la pagina ...
         //console.log("call msg="+msg);
-        addMessageToWindow(message+" done")
+        setMessageToWindow(infoDisplay,message+" done")
       },
       error: function(){
         alert("Chiamata fallita, si prega di riprovare..."); 

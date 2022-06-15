@@ -11,7 +11,7 @@ wsminimal.js
     }
 
     function connect(){
-      var host       =  "localhost:8085";     //document.location.host;
+      var host       =  document.location.host;
         var pathname =  "/"                   //document.location.pathname;
         var addr     = "ws://" +host  + pathname + "socket"  ;
         //alert("connect addr=" + addr   );
@@ -23,14 +23,15 @@ wsminimal.js
         socket = new WebSocket(addr);
 
         socket.onopen = function (event) {
-            console.log("Connected to " + addr);
+            //console.log("Connected to " + addr);
+            setMessageToWindow(infoDisplay,"Connected to " + addr);
         };
 
         socket.onmessage = function (event) {
             console.log("ws-status:" + `${event.data}`);
             console.log(""+`${event.data}`);
+            setMessageToWindow(robotDisplay,""+`${event.data}`);
             //alert(`Got Message: ${event.data}`)
-
         };
     }//connect
 

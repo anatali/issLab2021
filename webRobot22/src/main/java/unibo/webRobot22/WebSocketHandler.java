@@ -25,14 +25,14 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
-        ColorsOut.out("WebSocketHandler | Added the session:" + session, ColorsOut.BLUE);
+        ColorsOut.out("WebSocketHandler | Added the session:" + session, ColorsOut.MAGENTA);
         super.afterConnectionEstablished(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
-        ColorsOut.out("WebSocketHandler | Removed the session:" + session, ColorsOut.BLUE);
+        ColorsOut.out("WebSocketHandler | Removed the session:" + session, ColorsOut.MAGENTA);
         super.afterConnectionClosed(session, status);
     }
     @Override
@@ -64,11 +64,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
         }
     }
     public void sendToAll(TextMessage message) throws IOException{
-       /*
-        while( sessions.size() == 0 ) {
-            //ColorsOut.outappl("WebSocketHandler | sendToAll sessions:" + sessions.size(), ColorsOut.BLUE);
-            CommUtils.delay(100);
-        }*/
+        ColorsOut.outappl("WebSocketHandler | sendToAll sessions:" + sessions.size(), ColorsOut.MAGENTA);
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             iter.next().sendMessage(message);

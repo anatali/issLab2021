@@ -48,9 +48,6 @@ public class RobotController {
 
   @GetMapping("/") 		 
   public String entry(Model viewmodel) {
-     //viewmodel.addAttribute("protocol", protocol);
-     //if( usingTcp ) viewmodel.addAttribute("protocol", "coap");
-     //else viewmodel.addAttribute("protocol", protocol);
       setConfigParams(viewmodel);
       return mainPage;
   }
@@ -84,6 +81,7 @@ public class RobotController {
         //Attivo comunque una connessione CoAP per osservare basicrobot
         CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
         conn.observeResource( new RobotCoapObserver() );
+        //WebSocketConfiguration.wshandler.sendToAll("Connected to Robot" + ipaddr); //disappears
         return mainPage;
     }
 
@@ -92,10 +90,7 @@ public class RobotController {
         ColorsOut.outappl("RobotController | doMove:" + move + " robotName=" + robotName, ColorsOut.BLUE);
         //WebSocketConfiguration.wshandler.sendToAll("RobotController | doMove:" + move); //disappears
         try {
-            //String msg = RobotUtils.moveAril(robotName,move).toString();
-            //ColorsOut.outappl("RobotController | doMove msg:" + msg , ColorsOut.BLUE);
-            //conn.forward( msg );
-            RobotUtils.sendMsg(robotName,move);
+              RobotUtils.sendMsg(robotName,move);
         } catch (Exception e) {
             ColorsOut.outerr("RobotController | doMove ERROR:"+e.getMessage());
         }
