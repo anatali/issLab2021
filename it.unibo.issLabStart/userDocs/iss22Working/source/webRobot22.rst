@@ -3,6 +3,7 @@
 .. role:: remark
 .. role:: worktodo
 
+.. _IPWebcam:  https://play.google.com/store/apps/details?id=nfo.webcam&hl=it&gl=US
 .. _Thymeleaf: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
 .. _ThymeleafSyntax: https://www.thymeleaf.org/doc/articles/standardurlsyntax.html
 
@@ -22,6 +23,10 @@
 .. _Heart-beating: https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
 
 
+.. _basicrobot22Gui.html: ../../../../../unibo.webRobot22/src/main/resources/templates/basicrobot22Gui.html
+
+
+
 ========================================
 webrobot22
 ========================================
@@ -35,47 +40,41 @@ webrobot22
 #. Risposta js ai comandi
 #. Azioni del controller in seguito a un comando
 
-
-
-
-
-
+ 
 -----------------------------------------------------------
 webrobot22: startup
 -----------------------------------------------------------
 
-- Costruiamo il file ``webRobot22.zip`` in accordo a :ref:`Primi passi con SpringBoot`
+#. Costruiamo il file ``webRobot22.zip`` in accordo a :ref:`Primi passi con SpringBoot`.
   
  
   .. image::  ./_static/img/Robot22/webRobot22Springio.PNG
     :align: center 
     :width: 50%
 
-- Scompattiamo il file ``webRobot22.zip``  nella nostra cartella di lavoro
-- Cambio da ``7.4.1`` a ``7.4.2`` in ``webRobot22\gradle\wrapper\gradle-wrapper.properties``
-- In ``build.gradle`` modifico:
-  
-  .. code::
-
-      version = '1.0'
-      sourceCompatibility = '11'
-
--  Aggiungo il file ``gradle.properties`` con il contenuto:
+#. Scompattiamo il file ``webRobot22.zip``  nella nostra cartella di lavoro.
+#. Modifichiamo   ``7.4.1``in ``7.4.2`` in ``webRobot22\gradle\wrapper\gradle-wrapper.properties``
+#. Aggiungiamo il file ``gradle.properties`` con il contenuto:
 
    .. code::
 
        kotlinVersion = 1.6.0
 
--  Inserisco ``banner.txt`` in *src\main\resources\* usando `bannerOnline`_ (*small* font)
--  In ``application.properties`` in *src\main\resources\* inserisco*
+#. Aggiungiamo il file ``banner.txt`` in ``src\main\resources\`` usando `bannerOnline`_ (*small* font)
+#. Nel file  ``application.properties`` di ``src\main\resources\`` inseriamo:
 
    .. code::
 
        spring.application.name = webRobot22
        spring.banner.location  = classpath:banner.txt
-       server.port             = 8085      
+       server.port             = 8080      
 
-- In ``build.gradle`` inserisco:
+
+++++++++++++++++++++++++++++++++++++++
+build.gradle di webRobot22 
+++++++++++++++++++++++++++++++++++++++
+
+- Aggiorniamo ``build.gradle``:
  
   .. code::
 
@@ -83,8 +82,10 @@ webrobot22: startup
         ...
         id 'application'
     }     
+
     version = '1.0'
     sourceCompatibility = '11'
+
     repositories {
         mavenCentral()
         flatDir {   dirs '../unibolibs'	 }
@@ -118,48 +119,86 @@ webrobot22: startup
         }
     }
  
-- Eseguo ``gradlew run`` e apro un browser su ``localhost:8085``
+- Eseguo ``gradlew run`` e apro un browser su ``localhost:8080``
 
 
 -----------------------------------------------------------
-webrobot22: pagina
+basicrobot22Gui.html
 -----------------------------------------------------------
+ 
+Avvalendoci di `Bootstrap5`_, impostiamo una pagina HTML (nel file `basicrobot22Gui.html`_ in ``src/main/resources/templates``) 
+in modo che presenti le aree mostrate in figura:
 
-- :ref:`WebApplication con SpringBoot`
-- :ref:`Configurazione con WebSocketConfigurer`
-- :ref:`Trasferimento di immagini: indexAlsoImages.html`
-- :ref:`Bootstrap e webJars`
-- :ref:`WebSocket in SpringBoot: versione STOMP`
-- :ref:`Client (in Java per programmi)`
-
-
-.. image::  ./_static/img/Robot22/webRobot22GuiAnnot.PNG
+.. image::  ./_static/img/Robot22/webRobot22GuiStructure.PNG
   :align: center 
-  :width: 100%
+  :width: 70%
+
+
+- :ref:`ConfigurationArea`: area che include campi per la configurazione del sistema.
+- *ConfigurationData*: area che mostra i valori dei dati di configurazione selezionati dall'utente.
+- *inforDisplay*: area che visualizza informazioni di sistema.
+- *robotDisplay*: area che visualizza informazioni relative al robot o al suo ambiente.
+- *Ip Webcam Android*: area che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
+  Viene introdotta per chi non abbia un robot fisico dotato di telecamera.
+- *WebCam robot*: area che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
+
 
 +++++++++++++++++++++++++++++++
-Template della pagina
+Uso di Bootstrap5
 +++++++++++++++++++++++++++++++
+
+Per abilitare l'uso di `Bootstrap5`_, impostiamo il file `basicrobot22Gui.html`_:
 
  .. code::
 
     <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- bootstrap: ensure proper rendering -->
-    <title>basicrobot22Gui</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="css/view.css">
-    <link rel="shortcut icon" href="images/mbotIot.png" type="image/x-icon">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- bootstrap: ensure proper rendering -->
+        <title>basicrobot22Gui</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="css/view.css">
+        <link rel="shortcut icon" href="images/mbotIot.png" type="image/x-icon">
     </head>
 
     <body>
 
         <div class="container-fluid pt-1 bg-primary text-white text-center">  
-        <h1>basicrobot22 console</h1>
+            <h1>basicrobot22 console</h1>
         </div>
 
+        div class="container-fluid">
+
+            <div class="row"> <!-- Page row -->
+ 
+                 <div class="col-7">  <!-- left col  -->
+
+
+                 </div>
+
+                 <div class="col-5">  <!-- webcam col  -->
+
+                 </div>
+
+            </div> <!-- Page row -->
+
+            <footer>
+                ...
+            </footer>
+        </div>
+
+
     </body>
+
+
++++++++++++++++++++++++++++++++
+ConfigurationArea
++++++++++++++++++++++++++++++++
+
+
+ 
+
+
 
 +++++++++++++++++++++++++++++++
 Costruzione della pagina
@@ -175,6 +214,15 @@ Costruzione della pagina
 - preprazione della pagina
 - definizione delle azioni
 - wsminimal.js
+
+
+- :ref:`WebApplication con SpringBoot`
+- :ref:`Configurazione con WebSocketConfigurer`
+- :ref:`Trasferimento di immagini: indexAlsoImages.html`
+- :ref:`Bootstrap e webJars`
+- :ref:`WebSocket in SpringBoot: versione STOMP`
+- :ref:`Client (in Java per programmi)`
+
 
 
 +++++++++++++++++++++++++++++++
@@ -259,3 +307,6 @@ Settings -> Advanced Settings under compiler
 
 
 
+.. image::  ./_static/img/Robot22/webRobot22GuiAnnot.PNG
+  :align: center 
+  :width: 100%
