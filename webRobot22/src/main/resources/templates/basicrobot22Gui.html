@@ -24,11 +24,13 @@
   <!-- PRIMA COLONNA (Input/Output area) -->
   <div class="col-7 px-1">  <!-- I/O area col  -->
 
+   <!-- CONFIGURATION Area and Data -->
    <div class="card iss-bg-inputarea">  <!-- I/O area card -->
     <div class="card-body">
-
+     <!-- PROTOCOL -->
      <div class="row"> <!-- protocol row in I/O area card -->
       <div class="col-7">
+       <!--   PROTOCOL InputArea   -->
        <form action="setprotocol" method="post">
         <!-- the form-data is sent to the path specified in the action attribute -->
         <!-- <label for="webcamspec">wcam ip</label> -->
@@ -36,32 +38,40 @@
         <input type="submit" value="protocol">
        </form>
       </div>
+         <!--   PROTOCOL DataArea   -->
       <div class="col-5 text-primary">
        <b><span th:text="${protocol}">tcp</span></b>
       </div>
-     </div> <!-- protocol row in I/O area card -->
+     </div> <!--  row protocol in I/O area card -->
 
-     <div class="row" > <!-- camip row in I/O area card  -->
+     <!-- WEBCAM Android -->
+        <div class="row" > <!-- camip row in I/O area card  -->
       <div class="col-7">
+          <!--   WEBCAM Android InputArea   -->
         <form action="setwebcamip" method="post">
          <!-- the form-data is sent to the path specified in the action attribute -->
          <input type="text" size="10" id="webcamspec" name="ipaddr" value="">
          <input type="submit" value="camip">
         </form>
       </div>
+        <!--   WEBCAM Android DataArea   -->
       <div class="col-5 text-info">
        <b><span th:text="${webcamip}" id="webcamipaddr">unknown</span></b>
       </div>
      </div> <!-- row webcamip in card in I/O area card  -->
 
+     <!-- ROBOT ADDRESS -->
      <div class="row"> <!-- row robotip in card in I/O area card  -->
       <div class="col-7">
+          <!--   ROBOT ADDRESS InputArea   -->
           <form action="setrobotip" method="post">
          <!-- the form-data is sent to the path specified in the action attribute -->
          <input type="text" size="10" id="configurespec" name="ipaddr" value="localhost">
          <input type="submit" value="robotip">
          </form>
        </div>
+
+         <!--   ROBOT ADDRESS DataArea   -->
       <div class="col-5 text-danger">
          <b><span th:text="${robotip}">not connected</span></b>
       </div>
@@ -70,9 +80,8 @@
      </div> <!-- I/O area card body -->
     </div>  <!-- I/O area card -->
 
-
-     <!--<div class="row">   row commands in I/O area card  -->
-        <div class="card  iss-bg-cmdarea text-primary"> <!--  command card -->
+    <!--  RobotCmdArea -->
+      <div class="card  iss-bg-cmdarea text-primary"> <!--  command card -->
          <div class="card-header">
           <h6>Commands</h6>
          </div>
@@ -90,9 +99,9 @@
              <div class="col"><button class='btn btn-warning btn-block border' id='p'>p (step) </button></div>
          </div> <!-- p,l,r commands row -->
         </div> <!-- command card-content -->
-        </div> <!--  command card -->
+      </div> <!--  command card -->
 
-      <!-- AREA DATI dal server -->
+      <!-- Informazioni inviate dal server -->
          <div class="card iss-bg-infoarea text-primary">
              <div class="card-header px-1">Info:</div>
              <div class="card-content px-1">

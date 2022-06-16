@@ -137,8 +137,9 @@ in modo che presenti le aree mostrate in figura:
   :width: 70%
 
 
-- :ref:`ConfigurationArea`: area di input che include campi per la configurazione del sistema.
-- :ref:`ConfigurationData`: area di output  che mostra i valori dei dati di configurazione fissati dall'utente.
+- :ref:`ConfigurationArea and Data`: area che include campi di input per la configurazione del sistema 
+- e campi di output che mostrano i valori dei dati di configurazione fissati dall'utente.
+- :ref:`RobotCmdArea`: area di input con pulsanti per inviare comandi di movimento al robot.
 - *infoDisplay*: area di output  che visualizza informazioni di sistema.
 - *robotDisplay*: area di output  che visualizza informazioni relative al robot o al suo ambiente.
 - :ref:`Ip Webcam Android<WebcamArea>`: area di output  che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
@@ -221,8 +222,13 @@ Le aree entro le colonne sono organizzate usando le  `Cards`_ secondo lo schema:
       </div>
 
 Per i colori del testo (``TEXTCOLOR``) faremo riferimento agli standard `Colors`_, mentre 
-per lo stile di background (``BGSTYLE``) faremo riferimento a definizioni custom, definite nel file
-`issSpec.css`_.
+per lo stile di background (``BGSTYLE``) faremo riferimento a definizioni custom.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Stili custom: issSpec.css
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+LA specifica degli stili custom è definite nel file `issSpec.css`_.
 
 Per le specifiche del tipo ``px-N``, si veda `Spacing`_.
 
@@ -256,25 +262,106 @@ Per la visualizzazione, sfrutteremo la specifica di URL *Protocol-relative* (``t
 
 
 I valori delle variabili ``webcamip`` e ``robotip`` sono definiti dai valori immessi dall'utente nella 
-:ref:`ConfigurationArea` e visualizzati nella parte :ref:`ConfigurationData`.
+*InputArea* della sezione :ref:`ConfigurationArea and Data`.
 
-Per queste e per le altre aree, tutte con la struttura indicata in
-:ref:`Schema delle aree`, ci limiteremo ad indicare solo la parte ``CARDCONTENT``.
+Per queste e per le altre aree,ci limiteremo a riportare solo la parte ``CARDCONTENT``
+indicata in :ref:`Schema delle aree`
 
 
 
 
 
 +++++++++++++++++++++++++++++++
-ConfigurationArea
+ConfigurationArea and Data
 +++++++++++++++++++++++++++++++
+ 
+.. code::
 
+  <!-- CONFIGURATION Area and Data   -->
+   <div class="card iss-bg-inputarea">   
+     <div class="card-body">
+        <!-- AREA PROTOCOL       --> 
+        <!-- AREA WEBCAM Android -->
+        <!-- AREA ROBOT ADDRESS  -->
+    </div>
+   </div>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Struttura delle aree
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+     <!-- AREA ...         --> 
+     <div class="row"> 
+      <div class="col-7">
+        <!--   InputArea   -->
+         ...
+      </div>      
+      <div class="col-5 text-primary">
+        <!--   DataArea      -->
+        ...
+      </div>
+     </div> <!-- row -->
+
+- Le aree di input sono espresse medinate form HTML
+- I dati sono visualizzati in filed con identificatori referenziabili via model
+
+Vediamo nel dettaglio.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Specifica del protocollo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+ 
+      <!--   PROTOCOL InputArea   -->
+        <input type="text" size="10" id="protocolspec" name="protocol" value="coap">
+        <input type="submit" value="protocol">
+       </form>
+ 
+      <!--   PROTOCOL DataArea      -->
+        <b><span th:text="${protocol}">tcp</span></b>
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Specifica della WEBCAM Android
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+  
+    <!--WEBCAM Android InputArea  --> 
+        <form action="setwebcamip" method="post">
+         <input type="text" size="10" id="webcamspec" name="ipaddr" value="">
+         <input type="submit" value="camip">
+        </form>
+
+    <!--WEBCAM Android DataArea  --> 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Specifica del ROBOT ADDRESS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+  
+    <!-- ROBOT ADDRESS InputArea --> 
+      <form action="setrobotip" method="post">
+        <input type="text" size="10" id="configurespec" name="ipaddr" value="localhost">
+        <input type="submit" value="robotip">
+      </form>    
+
+    <!-- ROBOT ADDRESS DataArea  --> 
+       <b><span th:text="${robotip}">not connected</span></b>
 
 +++++++++++++++++++++++++++++++
 ConfigurationData
 +++++++++++++++++++++++++++++++
 
++++++++++++++++++++++++++++++++
+RobotCmdArea
++++++++++++++++++++++++++++++++
 
+RobotCmdArea
 
 +++++++++++++++++++++++++++++++
 Costruzione della pagina
