@@ -7,6 +7,8 @@
 .. _Thymeleaf: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
 .. _ThymeleafSyntax: https://www.thymeleaf.org/doc/articles/standardurlsyntax.html
 
+.. _FormHTML: https://www.w3schools.com/html/html_forms.asp
+
 .. _bannerOnline: https://manytools.org/hacker-tools/ascii-banner/
 .. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
 .. _Bootstrap5: https://www.w3schools.com/bootstrap5/
@@ -27,7 +29,7 @@
 
 .. _basicrobot22Gui.html: ../../../../../webRobot22/src/main/resources/templates/basicrobot22Gui.html
 .. _issSpec.css: ../../../../../webRobot22/src/main/resources/static/css/issSpec.css
-
+.. _application.properties: ../../../../../webRobot22/src/main/resources/application.properties
  
 
 ========================================
@@ -70,7 +72,7 @@ webrobot22: startup
 
        spring.application.name = webRobot22
        spring.banner.location  = classpath:banner.txt
-       server.port             = 8080      
+       server.port             = 8085      
 
 
 ++++++++++++++++++++++++++++++++++++++
@@ -122,7 +124,7 @@ build.gradle di webRobot22
         }
     }
  
-- Eseguo ``gradlew run`` e apro un browser su ``localhost:8080``
+- Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8080``
 
 
 -----------------------------------------------------------
@@ -228,7 +230,7 @@ per lo stile di background (``BGSTYLE``) faremo riferimento a definizioni custom
 Stili custom: issSpec.css
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-LA specifica degli stili custom è definite nel file `issSpec.css`_.
+La specifica degli stili custom è definite nel file `issSpec.css`_.
 
 Per le specifiche del tipo ``px-N``, si veda `Spacing`_.
 
@@ -268,9 +270,6 @@ Per queste e per le altre aree,ci limiteremo a riportare solo la parte ``CARDCON
 indicata in :ref:`Schema delle aree`
 
 
-
-
-
 +++++++++++++++++++++++++++++++
 ConfigurationArea and Data
 +++++++++++++++++++++++++++++++
@@ -304,10 +303,43 @@ Struttura delle aree
       </div>
      </div> <!-- row -->
 
-- Le aree di input sono espresse medinate form HTML
-- I dati sono visualizzati in filed con identificatori referenziabili via model
+- Le aree di input sono espresse mediante `FormHTML`_
+- I dati sono visualizzati in campi con identificatori referenziabili via model
 
-Vediamo nel dettaglio.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Specifica dei dati applicativi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il file `application.properties`_ definisce i valori iniziali dei campi di input:
+
+.. code::
+
+  robot22.protocol   = coap
+  robot22.robotip    = not connected
+  robot22.webcamip   = unknown
+
+Questi valori sono visualizzati sulla pagina dal Controller dell'applicazione SpringBooot
+(:ref:`RobotController`) mediante il **Model**, che opera come un contenitore per i dati applicativi.
+
+Il metodo ``setConfigParams`` del :ref:`RobotController` viene introdotto come una utility per aggiornare
+gli attributi del modello.
+
+.. code::
+
+    protected void setConfigParams(Model viewmodel){
+        viewmodel.addAttribute("protocol", protocol);
+        viewmodel.addAttribute("webcamip", webcamip);
+        viewmodel.addAttribute("robotip",  robotip);
+    }
+
+
+Quando l'utente immette un dato nella form di input e lo invia al server, il :ref:`RobotController`
+memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setConfigParams``.
+
+
+
+Vediamo nel dettaglio le parti di Input/Output per la configurazione del sistema.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Specifica del protocollo
@@ -354,14 +386,72 @@ Specifica del ROBOT ADDRESS
        <b><span th:text="${robotip}">not connected</span></b>
 
 +++++++++++++++++++++++++++++++
-ConfigurationData
-+++++++++++++++++++++++++++++++
-
-+++++++++++++++++++++++++++++++
 RobotCmdArea
 +++++++++++++++++++++++++++++++
 
-RobotCmdArea
+.. code::
+
+      <div class="card  iss-bg-cmdarea text-primary"> <!--  command card -->
+         <div class="card-header">
+          <h6>Commands</h6>
+         </div>
+        <div class="card-content"> <!--  pb-4 -->
+         <!--  See https://getbootstrap.com/docs/4.1/components/buttons/ -->
+         <div class="row">  <!-- w,s,h commands row -->
+           <div class="col"><button class="btn btn-block iss-btn-ligthblue border" id='w'>w <i>(ahead)</i></button></div> <!--class='btn btn-block btn-light-primary font-bold border' -->
+           <div class="col"><button class='btn btn-block iss-btn-ligthblue  border' id='s'>s (back) </button></div>
+           <div class="col"><button class='btn btn-danger  btn-block border' id='h'>h (halt) </button></div>
+          </div> <!-- w,s,h commands row -->
+
+         <div class="row"> <!-- p,l,r commands row -->
+             <div class="col"><button class='btn btn-block iss-btn-ligthgreen border' id='l'>l (left)  </button></div>
+             <div class="col"><button class='btn btn-block iss-btn-ligthgreen border' id='r'>r (rigth) </button></div>
+             <div class="col"><button class='btn btn-warning btn-block border' id='p'>p (step) </button></div>
+         </div> <!-- p,l,r commands row -->
+        </div> <!-- command card-content -->
+      </div> <!--  command card -->
+
+
++++++++++++++++++++++++++++++++
+infoDisplay
++++++++++++++++++++++++++++++++
+
+.. code::
+
+  <div class="card iss-bg-infoarea text-primary">
+    <div class="card-header px-1">Info:</div>
+    <div class="card-content px-1">
+        <span id="display">...</span>
+    </div>
+  </div>
+
++++++++++++++++++++++++++++++++
+robotDisplay
++++++++++++++++++++++++++++++++
+
+.. code::
+
+  <div class="card iss-bg-robotarea text-dark">
+    <div class="card-header px-1">Robot:</div>
+      <div class="card-content px-1">
+        <span id="robotDisplay" >...</span>
+    </div>
+  </div>
+
+
++++++++++++++++++++++++++++++++
+Pagina finale
++++++++++++++++++++++++++++++++
+
+.. image::  ./_static/img/Robot22/webRobot22GuiAnnot.PNG
+  :align: center 
+  :width: 100%
+
+
+ 
+
+
+ 
 
 +++++++++++++++++++++++++++++++
 Costruzione della pagina
@@ -402,6 +492,10 @@ Comandare il robot
 
 Handler dispatch failed; nested exception is java.lang.NoClassDefFoundError: kotlin/jvm/internal/Intrinsics
 
+
+-----------------------------------------------------------
+RobotController
+-----------------------------------------------------------
 
 ++++++++++++++++++++++++++++++++++++
 Bootstrap
@@ -470,6 +564,3 @@ Settings -> Advanced Settings under compiler
 
 
 
-.. image::  ./_static/img/Robot22/webRobot22GuiAnnot.PNG
-  :align: center 
-  :width: 100%

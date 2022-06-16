@@ -1,11 +1,6 @@
 package unibo.webRobot22;
 //https://www.baeldung.com/websockets-spring
 //https://www.toptal.com/java/stomp-spring-boot-websocket
-
-
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapHandler;
-import org.eclipse.californium.core.CoapResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 import unibo.Robots.common.RobotUtils;
 import unibo.actor22comm.coap.CoapConnection;
-import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
 
 //---------------------------------------------------
