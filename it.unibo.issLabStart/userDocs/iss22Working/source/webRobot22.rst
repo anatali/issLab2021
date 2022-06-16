@@ -1,7 +1,8 @@
 .. role:: red 
+.. role:: brown
 .. role:: blue 
 .. role:: remark
-.. role:: worktodo
+.. role:: worktodo  
 
 .. _IPWebcam:  https://play.google.com/store/apps/details?id=nfo.webcam&hl=it&gl=US
 .. _Thymeleaf: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
@@ -36,14 +37,39 @@
 webrobot22
 ========================================
 
+:brown:`Creazione del progetto`
+
 #. Iniziamo il **progetto webrobot22** :ref:`webrobot22: startup`
+
+:brown:`Parte statica`
+
 #. Prepariamo la pagina usando `Bootstrap5`_
-#. Sezione area comandi
-#. Sezione WebCam
-#. Connessione Ws con il server
-#. Connessione TCP/CoAP con il robot (o applicazione)
-#. Risposta js ai comandi
-#. Azioni del controller in seguito a un comando
+#. Visualizziamo staticamente, con IpWebcam su Android
+
+
+:brown:`Parte dinamica`
+
+#. Organizzazione del :ref:`RobotController`
+#. Interazione HTTP :blue:`Page-RobotController` 
+
+   - che esegue configurazine/comando e restituisce una pagina aggiornata con Model
+   - cmdpageutils.js
+#. Interazione :blue:`RobotController-basicrobot22`  
+
+   - avviene usando protocol
+   - request-response (step)
+   - dispatch (w,s,r,l,h)
+#. Interazione :blue:`basicrobot22-RobotController` 
+
+   - avviene usando CoAP
+   - ostacoli
+   - si veda  basicrobot22 updateResource
+#. Interazione asincrona :blue:`RobotController-Page` 
+ 
+   - wsminimal.js
+   - WebSocketHandler
+   - WebSocketConfiguration
+
 
  
 -----------------------------------------------------------
@@ -131,6 +157,9 @@ build.gradle di webRobot22
 basicrobot22Gui.html
 -----------------------------------------------------------
  
+
+
+
 Avvalendoci di `Bootstrap5`_, impostiamo una pagina HTML (nel file `basicrobot22Gui.html`_ in ``src/main/resources/templates``) 
 in modo che presenti le aree mostrate in figura:
 
@@ -140,17 +169,57 @@ in modo che presenti le aree mostrate in figura:
 
 
 - :ref:`ConfigurationArea and Data`: area che include campi di input per la configurazione del sistema 
-- e campi di output che mostrano i valori dei dati di configurazione fissati dall'utente.
+  e campi di output che mostrano i valori dei dati di configurazione fissati dall'utente.
 - :ref:`RobotCmdArea`: area di input con pulsanti per inviare comandi di movimento al robot.
-- *infoDisplay*: area di output  che visualizza informazioni di sistema.
-- *robotDisplay*: area di output  che visualizza informazioni relative al robot o al suo ambiente.
+- :ref:`infoDisplay`: area di output  che visualizza informazioni di sistema.
+- :ref:`robotDisplay`: area di output  che visualizza informazioni relative al robot o al suo ambiente.
 - :ref:`Ip Webcam Android<WebcamArea>`: area di output  che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
   Viene introdotta per chi non abbia un robot fisico dotato di telecamera.
 - :ref:`WebCam robot<WebcamArea>`: area di output che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
 
+++++++++++++++++++++++++++++++++++++
+Note su Bootstrap
+++++++++++++++++++++++++++++++++++++
+
+- `Bootstrap4`_ was released in 2018
+- `Bootstrap5`_ has switched to JavaScript instead of jQuery.
+- W3.CSS is an excellent alternative to Bootstrap 5.
+- ``jsDelivr`` provides CDN support for Bootstrap's CSS and JavaScript:
+
+ .. code::
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+- There are two container classes to choose from: ``.container`` (fixed width)  ``.container-fluid``
+- ``.container-sm|md|lg|xl`` classes to determine when the container should be responsive
+- By default, containers have left and right padding, with no top or bottom padding.
+
+
+- The Bootstrap `Grids`_ system has four classes: xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+- Bootstrap's `Grids`_ system is built with flexbox and allows up to 12 columns across the page.
+- The Bootstrap 5 `Grids`_ system has six classes:
+
+    - ``.col-`` (extra small devices - screen width less than 576px)
+    - ``.col-sm-`` (small devices - screen width equal to or greater than 576px)
+    - ``.col-md-`` (medium devices - screen width equal to or greater than 768px)
+    - ``.col-lg-`` (large devices - screen width equal to or greater than 992px)
+    - ``.col-xl-`` (xlarge devices - screen width equal to or greater than 1200px)
+    - ``.col-xxl-`` (xxlarge devices - screen width equal to or greater than 1400px)
+
+- `Cards`_: bordered box with some padding around its content. 
+  It includes options for headers, footers, content, colors, etc.
+
+- Responsive images automatically adjust to fit the size of the screen.
+  ``img-fluid`` class applies max-width: 100%; and height: auto; to the image.  
+  The image will then scale nicely to the parent element.
+
 
 +++++++++++++++++++++++++++++++
-Uso di Bootstrap5
+Usiamo Bootstrap5
 +++++++++++++++++++++++++++++++
 
 Abilitiamo l'uso di `Bootstrap5`_, nella sezione ``head`` del file `basicrobot22Gui.html`_ e impostiamo la struttura 
@@ -186,7 +255,7 @@ della pagina:
 Contenuto della pagina
 +++++++++++++++++++++++++++++++
 
-Il contenuto della pagina è strutturato in una riga (di ``12`` colonne, come indicato in `Grids`_ ) 
+Il contenuto della pagina viene organizzato entro una riga (di ``12`` colonne, come indicato in `Grids`_ ) 
 che contiene due colonne: la colonna di sinistra (di ampiezza ``7``) 
 è riservata alla area di Input/Output, mentre la  la colonna di destra (di ampiezza ``5``)  è dedicata
 alla visualizzazione degli stream di dati delle telecamere.
@@ -197,7 +266,7 @@ alla visualizzazione degli stream di dati delle telecamere.
     <div class="row"> <!-- Page main row -->
         <div class="col-7">  <!-- I/O area col  -->
              <!-- CONFIGURATION Area and Data   -->
-             <!-- ROBOT COMMANDS buttons        -->
+             <!-- ROBOTCmdArea                  -->
              <!-- INFO display                  -->
              <!-- ROBOT display                 -->
         </div>
@@ -217,11 +286,13 @@ Le aree entro le colonne sono organizzate usando le  `Cards`_ secondo lo schema:
 .. code::
 
       <div class="card BGSTYLE TEXTCOLOR">
-          <div class="card-header px-1"> ... </div> <!-- px-N -->
+          <div class="card-header px-1"> ... </div>  
           <div class="card-content px-1">
                <!-- CARDCONTENT -->
           </div>
       </div>
+
+Per le specifiche del tipo ``px-N``, si veda `Spacing`_.
 
 Per i colori del testo (``TEXTCOLOR``) faremo riferimento agli standard `Colors`_, mentre 
 per lo stile di background (``BGSTYLE``) faremo riferimento a definizioni custom.
@@ -230,9 +301,10 @@ per lo stile di background (``BGSTYLE``) faremo riferimento a definizioni custom
 Stili custom: issSpec.css
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La specifica degli stili custom è definite nel file `issSpec.css`_.
+La specifica degli stili custom si trova nel file `issSpec.css`_.
+Tutte le definizioni iniziano con il prefisso :brown:`iss-`.
 
-Per le specifiche del tipo ``px-N``, si veda `Spacing`_.
+
 
 
 +++++++++++++++++++++++++++++++
@@ -242,7 +314,7 @@ WebcamArea
 Riportiamo la specifica della colonna relativa all'area di output che visualizza 
 gli stream (``Ip Webcam Android`` e ``WebCam robot``) prodotti dalle telecamere.
 
-Per la visualizzazione, sfrutteremo la specifica di URL *Protocol-relative* (``th:src``) di `ThymeleafSyntax`_.
+Per la visualizzazione, sfrutteremo la specifica *Protocol-relative-URL* (``th:src``) di `ThymeleafSyntax`_.
 
 
 .. code::
@@ -263,17 +335,19 @@ Per la visualizzazione, sfrutteremo la specifica di URL *Protocol-relative* (``t
    </div><!-- webcam col -->
 
 
-I valori delle variabili ``webcamip`` e ``robotip`` sono definiti dai valori immessi dall'utente nella 
+I valori delle variabili ``webcamip`` e ``robotip`` sono quelli  immessi dall'utente nella 
 *InputArea* della sezione :ref:`ConfigurationArea and Data`.
 
-Per queste e per le altre aree,ci limiteremo a riportare solo la parte ``CARDCONTENT``
-indicata in :ref:`Schema delle aree`
+.. Per queste e per le altre aree,ci limiteremo a riportare solo la parte ``CARDCONTENT`` indicata in :ref:`Schema delle aree`
 
 
 +++++++++++++++++++++++++++++++
 ConfigurationArea and Data
 +++++++++++++++++++++++++++++++
- 
+
+La parte :blue:`CONFIGURATION Area and Data` del :ref:`Contenuto della pagina`  vien organizzata come una *card* suddivisa 
+in aree:
+
 .. code::
 
   <!-- CONFIGURATION Area and Data   -->
@@ -286,7 +360,7 @@ ConfigurationArea and Data
    </div>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Struttura delle aree
+Struttura generale delle aree
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code::
@@ -304,39 +378,8 @@ Struttura delle aree
      </div> <!-- row -->
 
 - Le aree di input sono espresse mediante `FormHTML`_
-- I dati sono visualizzati in campi con identificatori referenziabili via model
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Specifica dei dati applicativi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Il file `application.properties`_ definisce i valori iniziali dei campi di input:
-
-.. code::
-
-  robot22.protocol   = coap
-  robot22.robotip    = not connected
-  robot22.webcamip   = unknown
-
-Questi valori sono visualizzati sulla pagina dal Controller dell'applicazione SpringBooot
-(:ref:`RobotController`) mediante il **Model**, che opera come un contenitore per i dati applicativi.
-
-Il metodo ``setConfigParams`` del :ref:`RobotController` viene introdotto come una utility per aggiornare
-gli attributi del modello.
-
-.. code::
-
-    protected void setConfigParams(Model viewmodel){
-        viewmodel.addAttribute("protocol", protocol);
-        viewmodel.addAttribute("webcamip", webcamip);
-        viewmodel.addAttribute("robotip",  robotip);
-    }
-
-
-Quando l'utente immette un dato nella form di input e lo invia al server, il :ref:`RobotController`
-memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setConfigParams``.
-
+- I dati sono visualizzati in campi con identificatori referenziabili da 
+- **Model**, che opera come un contenitore per i dati applicativi.
 
 
 Vediamo nel dettaglio le parti di Input/Output per la configurazione del sistema.
@@ -448,10 +491,62 @@ Pagina finale
   :width: 100%
 
 
- 
+-------------------------------------------
+Parte dinamica
+-------------------------------------------
+
+++++++++++++++++++++++++++++++++++++++++
+Interazione Page-RobotController
+++++++++++++++++++++++++++++++++++++++++
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Specifica dei dati applicativi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il file `application.properties`_ definisce i valori iniziali dei campi di input:
+
+.. code::
+
+  robot22.protocol   = coap
+  robot22.robotip    = not connected
+  robot22.webcamip   = unknown
+
+Questi valori sono visualizzati sulla pagina dal Controller dell'applicazione SpringBooot
+(:ref:`RobotController`) mediante il **Model**, che opera come un contenitore per i dati applicativi.
+
+Il metodo ``setConfigParams`` del :ref:`RobotController` viene introdotto come una utility per aggiornare
+gli attributi del modello.
+
+.. code::
+
+    protected void setConfigParams(Model viewmodel){
+        viewmodel.addAttribute("protocol", protocol);
+        viewmodel.addAttribute("webcamip", webcamip);
+        viewmodel.addAttribute("robotip",  robotip);
+    }
+
+
+Quando l'utente immette un dato nella form di input e lo invia al server, il :ref:`RobotController`
+memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setConfigParams``. 
 
 
  
++++++++++++++++++++++++++++++++++++++++++++
+Interazione RobotController-basicrobot22
++++++++++++++++++++++++++++++++++++++++++++
+
+ 
+
+
++++++++++++++++++++++++++++++++++++++++++++
+Interazione basicrobot22-RobotController
++++++++++++++++++++++++++++++++++++++++++++
+
+
++++++++++++++++++++++++++++++++++++++++++++
+Interazione asincrona RobotController-Page
++++++++++++++++++++++++++++++++++++++++++++
+
 
 +++++++++++++++++++++++++++++++
 Costruzione della pagina
@@ -497,45 +592,6 @@ Handler dispatch failed; nested exception is java.lang.NoClassDefFoundError: kot
 RobotController
 -----------------------------------------------------------
 
-++++++++++++++++++++++++++++++++++++
-Bootstrap
-++++++++++++++++++++++++++++++++++++
-
-- `Bootstrap4`_ was released in 2018
-- `Bootstrap5`_ has switched to JavaScript instead of jQuery.
-- W3.CSS is an excellent alternative to Bootstrap 5.
-- ``jsDelivr`` provides CDN support for Bootstrap's CSS and JavaScript:
-
- .. code::
-
-    <!-- Latest compiled and minified CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-- There are two container classes to choose from: ``.container`` (fixed width)  ``.container-fluid``
-- ``.container-sm|md|lg|xl`` classes to determine when the container should be responsive
-- By default, containers have left and right padding, with no top or bottom padding.
-
-
-- The Bootstrap `Grids`_ system has four classes: xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
-- Bootstrap's `Grids`_ system is built with flexbox and allows up to 12 columns across the page.
-- The Bootstrap 5 `Grids`_ system has six classes:
-
-    - ``.col-`` (extra small devices - screen width less than 576px)
-    - ``.col-sm-`` (small devices - screen width equal to or greater than 576px)
-    - ``.col-md-`` (medium devices - screen width equal to or greater than 768px)
-    - ``.col-lg-`` (large devices - screen width equal to or greater than 992px)
-    - ``.col-xl-`` (xlarge devices - screen width equal to or greater than 1200px)
-    - ``.col-xxl-`` (xxlarge devices - screen width equal to or greater than 1400px)
-
-- `Cards`_: bordered box with some padding around its content. 
-  It includes options for headers, footers, content, colors, etc.
-
-- Responsive images automatically adjust to fit the size of the screen.
-  ``img-fluid`` class applies max-width: 100%; and height: auto; to the image.  
-  The image will then scale nicely to the parent element.
   
 ++++++++++++++++++++++++++++++++++++
 Card with webcam
