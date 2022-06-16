@@ -12,6 +12,8 @@
 .. _Bootstrap5: https://www.w3schools.com/bootstrap5/
 .. _Grids: https://www.w3schools.com/bootstrap5/bootstrap_grid_basic.php
 .. _Cards: https://www.w3schools.com/bootstrap5/bootstrap_cards.php
+.. _Colors: https://getbootstrap.com/docs/4.0/utilities/colors/
+.. _Spacing: https://getbootstrap.com/docs/5.0/utilities/spacing/
 .. _Toasts: https://www.w3schools.com/bootstrap5/bootstrap_toast.php
 
 .. _jsdelivr: https://www.jsdelivr.com/
@@ -23,9 +25,10 @@
 .. _Heart-beating: https://stomp.github.io/stomp-specification-1.2.html#Heart-beating
 
 
-.. _basicrobot22Gui.html: ../../../../../unibo.webRobot22/src/main/resources/templates/basicrobot22Gui.html
+.. _basicrobot22Gui.html: ../../../../../webRobot22/src/main/resources/templates/basicrobot22Gui.html
+.. _issSpec.css: ../../../../../webRobot22/src/main/resources/static/css/issSpec.css
 
-
+ 
 
 ========================================
 webrobot22
@@ -135,12 +138,12 @@ in modo che presenti le aree mostrate in figura:
 
 
 - :ref:`ConfigurationArea`: area di input che include campi per la configurazione del sistema.
-- *ConfigurationData*: area di output  che mostra i valori dei dati di configurazione selezionati dall'utente.
+- :ref:`ConfigurationData`: area di output  che mostra i valori dei dati di configurazione fissati dall'utente.
 - *infoDisplay*: area di output  che visualizza informazioni di sistema.
 - *robotDisplay*: area di output  che visualizza informazioni relative al robot o al suo ambiente.
-- *Ip Webcam Android*: area di output  che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
+- :ref:`Ip Webcam Android<WebcamArea>`: area di output  che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
   Viene introdotta per chi non abbia un robot fisico dotato di telecamera.
-- *WebCam robot*: area di output che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
+- :ref:`WebCam robot<WebcamArea>`: area di output che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
 
 
 +++++++++++++++++++++++++++++++
@@ -158,6 +161,7 @@ della pagina:
       <title>basicrobot22Gui</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      <link rel="stylesheet" href="css/issSpec.css">                           <!-- stili custom -->
       <link rel="shortcut icon" href="images/mbotIot.png" type="image/x-icon"> <!-- ICONA su browser -->
     </head>
 
@@ -199,8 +203,66 @@ alla visualizzazione degli stream di dati delle telecamere.
             <!-- Webcam robot      -->
         </div>
     </div> <!-- Page main row -->
-    
-Le arre entro le colonne sono organizzate usando le  `Cards`_.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Schema delle aree
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Le aree entro le colonne sono organizzate usando le  `Cards`_ secondo lo schema:
+
+.. code::
+
+      <div class="card BGSTYLE TEXTCOLOR">
+          <div class="card-header px-1"> ... </div> <!-- px-N -->
+          <div class="card-content px-1">
+               <!-- CARDCONTENT -->
+          </div>
+      </div>
+
+Per i colori del testo (``TEXTCOLOR``) faremo riferimento agli standard `Colors`_, mentre 
+per lo stile di background (``BGSTYLE``) faremo riferimento a definizioni custom, definite nel file
+`issSpec.css`_.
+
+Per le specifiche del tipo ``px-N``, si veda `Spacing`_.
+
+
++++++++++++++++++++++++++++++++
+WebcamArea
++++++++++++++++++++++++++++++++
+
+Riportiamo la specifica della colonna relativa all'area di output che visualizza 
+gli stream (``Ip Webcam Android`` e ``WebCam robot``) prodotti dalle telecamere.
+
+Per la visualizzazione, sfrutteremo la specifica di URL *Protocol-relative* (``th:src``) di `ThymeleafSyntax`_.
+
+
+.. code::
+
+  <div class="col-5">  <!-- webcam col -->
+    <div class="card iss-bg-webcamarea px-1 border">
+     <div class="card-body">
+      <div class="row">
+         <img class="img-fluid" th:src="@{${ 'http://'+webcamip+':8080/video'} }"
+            alt="androidcam" style="border-spacing: 0; border: 1px solid black;">
+      </div>
+       <div class="row">
+         <img class="img-fluid" th:src="@{${ 'http://'+robotip+':8080/?action=stream'}}"
+            alt="raspicam" style="border-spacing: 0; border: 1px solid black;">
+      </div>
+     </div> <!-- card body -->
+     </div> <!-- card -->
+   </div><!-- webcam col -->
+
+
+I valori delle variabili ``webcamip`` e ``robotip`` sono definiti dai valori immessi dall'utente nella 
+:ref:`ConfigurationArea` e visualizzati nella parte :ref:`ConfigurationData`.
+
+Per queste e per le altre aree, tutte con la struttura indicata in
+:ref:`Schema delle aree`, ci limiteremo ad indicare solo la parte ``CARDCONTENT``.
+
+
+
 
 
 +++++++++++++++++++++++++++++++
@@ -208,7 +270,9 @@ ConfigurationArea
 +++++++++++++++++++++++++++++++
 
 
- 
++++++++++++++++++++++++++++++++
+ConfigurationData
++++++++++++++++++++++++++++++++
 
 
 
