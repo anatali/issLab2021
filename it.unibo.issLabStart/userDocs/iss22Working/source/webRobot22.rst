@@ -134,61 +134,73 @@ in modo che presenti le aree mostrate in figura:
   :width: 70%
 
 
-- :ref:`ConfigurationArea`: area che include campi per la configurazione del sistema.
-- *ConfigurationData*: area che mostra i valori dei dati di configurazione selezionati dall'utente.
-- *inforDisplay*: area che visualizza informazioni di sistema.
-- *robotDisplay*: area che visualizza informazioni relative al robot o al suo ambiente.
-- *Ip Webcam Android*: area che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
+- :ref:`ConfigurationArea`: area di input che include campi per la configurazione del sistema.
+- *ConfigurationData*: area di output  che mostra i valori dei dati di configurazione selezionati dall'utente.
+- *infoDisplay*: area di output  che visualizza informazioni di sistema.
+- *robotDisplay*: area di output  che visualizza informazioni relative al robot o al suo ambiente.
+- *Ip Webcam Android*: area di output  che visualizza lo stream prodotto da un telecamera posta su Android (ad esempio `IpWebcam`_) o su PC.
   Viene introdotta per chi non abbia un robot fisico dotato di telecamera.
-- *WebCam robot*: area che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
+- *WebCam robot*: area di output che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
 
 
 +++++++++++++++++++++++++++++++
 Uso di Bootstrap5
 +++++++++++++++++++++++++++++++
 
-Per abilitare l'uso di `Bootstrap5`_, impostiamo il file `basicrobot22Gui.html`_:
+Abilitiamo l'uso di `Bootstrap5`_, nella sezione ``head`` del file `basicrobot22Gui.html`_ e impostiamo la struttura 
+della pagina:
 
- .. code::
+.. code::
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- bootstrap: ensure proper rendering -->
-        <title>basicrobot22Gui</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <link rel="stylesheet" href="css/view.css">
-        <link rel="shortcut icon" href="images/mbotIot.png" type="image/x-icon">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+      <title>basicrobot22Gui</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      <link rel="shortcut icon" href="images/mbotIot.png" type="image/x-icon"> <!-- ICONA su browser -->
     </head>
 
     <body>
-
         <div class="container-fluid pt-1 bg-primary text-white text-center">  
             <h1>basicrobot22 console</h1>
         </div>
+    
+        <div class="container-fluid">
+            <!-- Contenuto della pagina -->
+        </div>  
 
-        div class="container-fluid">
-
-            <div class="row"> <!-- Page row -->
- 
-                 <div class="col-7">  <!-- left col  -->
-
-
-                 </div>
-
-                 <div class="col-5">  <!-- webcam col  -->
-
-                 </div>
-
-            </div> <!-- Page row -->
-
-            <footer>
-                ...
-            </footer>
-        </div>
-
-
+        <footer>
+            <!-- FOOTER -->
+        </footer>
     </body>
+
++++++++++++++++++++++++++++++++
+Contenuto della pagina
++++++++++++++++++++++++++++++++
+
+Il contenuto della pagina è strutturato in una riga (di ``12`` colonne, come indicato in `Grids`_ ) 
+che contiene due colonne: la colonna di sinistra (di ampiezza ``7``) 
+è riservata alla area di Input/Output, mentre la  la colonna di destra (di ampiezza ``5``)  è dedicata
+alla visualizzazione degli stream di dati delle telecamere.
+
+.. code::
+
+    <!-- Contenuto della pagina -->
+    <div class="row"> <!-- Page main row -->
+        <div class="col-7">  <!-- I/O area col  -->
+             <!-- CONFIGURATION Area and Data   -->
+             <!-- ROBOT COMMANDS buttons        -->
+             <!-- INFO display                  -->
+             <!-- ROBOT display                 -->
+        </div>
+        <div class="col-5">  <!-- Webcam area col  -->
+            <!-- IPWebcam Android  -->
+            <!-- Webcam robot      -->
+        </div>
+    </div> <!-- Page main row -->
+    
+Le arre entro le colonne sono organizzate usando le  `Cards`_.
 
 
 +++++++++++++++++++++++++++++++
