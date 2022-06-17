@@ -13,10 +13,12 @@
 .. _ThymeleafSyntax: https://www.thymeleaf.org/doc/articles/standardurlsyntax.html
 
 .. _FormHTML: https://www.w3schools.com/html/html_forms.asp
+.. _InputHTML: https://www.w3schools.com/tags/tag_input.asp
 
 .. _bannerOnline: https://manytools.org/hacker-tools/ascii-banner/
 .. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
 .. _Bootstrap5: https://www.w3schools.com/bootstrap5/
+.. _Containers: https://getbootstrap.com/docs/5.0/layout/containers/
 .. _Grids: https://www.w3schools.com/bootstrap5/bootstrap_grid_basic.php
 .. _Cards: https://www.w3schools.com/bootstrap5/bootstrap_cards.php
 .. _Colors: https://getbootstrap.com/docs/4.0/utilities/colors/
@@ -170,7 +172,7 @@ build.gradle di webRobot22
     }
  
 
-I `WebJars`_ sono stati introdotti in :ref:`Bootstrap e webJarss`.
+I `WebJars`_ sono stati introdotti in :ref:`Bootstrap e webJars`.
 
 -----------------------------------------------------------
 basicrobot22Gui.html
@@ -193,45 +195,6 @@ in modo che presenti le aree mostrate in figura:
   Viene introdotta per chi non abbia un robot fisico dotato di telecamera.
 - :ref:`WebCam robot<WebcamArea>`: area di output che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
 
-++++++++++++++++++++++++++++++++++++
-Note su Bootstrap
-++++++++++++++++++++++++++++++++++++
-
-- `Bootstrap4`_ was released in 2018
-- `Bootstrap5`_ has switched to JavaScript instead of jQuery.
-- W3.CSS is an excellent alternative to Bootstrap 5.
-- ``jsDelivr`` provides CDN support for Bootstrap's CSS and JavaScript:
-
- .. code::
-
-    <!-- Latest compiled and minified CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-- There are two container classes to choose from: ``container`` (fixed width)  ``container-fluid``
-- ``container-sm|md|lg|xl`` classes to determine when the container should be responsive
-- By default, containers have left and right padding, with no top or bottom padding.
-
-
-- The Bootstrap `Grids`_ system has four classes: xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
-- Bootstrap's `Grids`_ system is built with flexbox and allows up to 12 columns across the page.
-- The Bootstrap 5 `Grids`_ system has six classes:
-
-    - ``.col-`` (extra small devices - screen width less than 576px)
-    - ``.col-sm-`` (small devices - screen width equal to or greater than 576px)
-    - ``.col-md-`` (medium devices - screen width equal to or greater than 768px)
-    - ``.col-lg-`` (large devices - screen width equal to or greater than 992px)
-    - ``.col-xl-`` (xlarge devices - screen width equal to or greater than 1200px)
-    - ``.col-xxl-`` (xxlarge devices - screen width equal to or greater than 1400px)
-
-- `Cards`_: bordered box with some padding around its content. 
-  It includes options for headers, footers, content, colors, etc.
-
-- Responsive images automatically adjust to fit the size of the screen.
-  ``img-fluid`` class applies max-width: 100%; and height: auto; to the image.  
-  The image will then scale nicely to the parent element.
 
 
 +++++++++++++++++++++++++++++++
@@ -244,13 +207,16 @@ della pagina:
 .. code::
 
    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-      <title>basicrobot22Gui</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-      <link rel="stylesheet" href="css/issSpec.css">                           <!-- stili custom -->
-      <link rel="shortcut icon" href="images/mbotIot.png" type="image/x-icon"> <!-- ICONA su browser -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>basicrobot22Gui</title>
+    <link href=
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src=
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/issSpec.css">     <!-- stili custom -->
+    <link rel=
+    "shortcut icon" href="images/mbotIot.png" type="image/x-icon"> <!-- ICONA su browser -->
     </head>
 
     <body>
@@ -339,11 +305,13 @@ Per la visualizzazione, sfrutteremo la specifica *Protocol-relative-URL* (``th:s
     <div class="card iss-bg-webcamarea px-1 border">
      <div class="card-body">
       <div class="row">
-         <img class="img-fluid" th:src="@{${ 'http://'+webcamip+':8080/video'} }"
+         <img class="img-fluid" 
+            th:src="@{${ 'http://'+webcamip+':8080/video'} }"
             alt="androidcam" style="border-spacing: 0; border: 1px solid black;">
       </div>
        <div class="row">
-         <img class="img-fluid" th:src="@{${ 'http://'+robotip+':8080/?action=stream'}}"
+         <img class="img-fluid" 
+            th:src="@{${ 'http://'+robotip+':8080/?action=stream'}}"
             alt="raspicam" style="border-spacing: 0; border: 1px solid black;">
       </div>
      </div> <!-- card body -->
@@ -361,7 +329,7 @@ I valori delle variabili ``webcamip`` e ``robotip`` sono quelli  immessi dall'ut
 ConfigurationArea and Data
 +++++++++++++++++++++++++++++++
 
-La parte :blue:`CONFIGURATION Area and Data` del :ref:`Contenuto della pagina`  vien organizzata come una *card* suddivisa 
+La parte :blue:`CONFIGURATION Area and Data` del :ref:`Contenuto della pagina`  viene organizzata come una *card* suddivisa 
 in aree:
 
 .. code::
@@ -393,20 +361,21 @@ Struttura generale delle aree
       </div>
      </div> <!-- row -->
 
-- Le aree di input sono espresse mediante `FormHTML`_
-- I dati sono visualizzati in campi con identificatori referenziabili da 
-- **Model**, che opera come un contenitore per i dati applicativi.
+- Le aree di input sono espresse mediante   `FormHTML`_ con campi `InputHTML`_
+- I dati sono visualizzati in campi con identificatori referenziabili nel :ref:`RobotController` mediante  
+  **Model**, che opera come un contenitore per i dati applicativi.
 
 
 Vediamo nel dettaglio le parti di Input/Output per la configurazione del sistema.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Specifica del protocollo
+AREA PROTOCOL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code::
  
       <!--   PROTOCOL InputArea   -->
+      <form action="setprotocol" method="post">
         <input type="text" size="10" id="protocolspec" name="protocol" value="coap">
         <input type="submit" value="protocol">
        </form>
@@ -416,21 +385,22 @@ Specifica del protocollo
  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Specifica della WEBCAM Android
+AREA WEBCAM Android
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code::
   
     <!--WEBCAM Android InputArea  --> 
-        <form action="setwebcamip" method="post">
+      <form action="setwebcamip" method="post">
          <input type="text" size="10" id="webcamspec" name="ipaddr" value="">
          <input type="submit" value="camip">
-        </form>
+      </form>
 
     <!--WEBCAM Android DataArea  --> 
+      <b><span th:text="${webcamip}" id="webcamipaddr">unknown</span></b>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Specifica del ROBOT ADDRESS
+AREA ROBOT ADDRESS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code::
@@ -447,6 +417,9 @@ Specifica del ROBOT ADDRESS
 +++++++++++++++++++++++++++++++
 RobotCmdArea
 +++++++++++++++++++++++++++++++
+
+Pulsanti per inviare a :ref:`RobotController` comandi per muovere il robot.
+
 
 .. code::
 
@@ -484,6 +457,8 @@ infoDisplay
     </div>
   </div>
 
+- Identificatore ``display`` usato in ... todo
+
 +++++++++++++++++++++++++++++++
 robotDisplay
 +++++++++++++++++++++++++++++++
@@ -497,6 +472,7 @@ robotDisplay
     </div>
   </div>
 
+- Identificatore ``robotDisplay`` usato in ... todo
 
 +++++++++++++++++++++++++++++++
 Pagina finale
@@ -507,9 +483,9 @@ Pagina finale
   :width: 100%
 
 
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Visualizziamo la pagina statica 
-+++++++++++++++++++++++++++++++++
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8080``
 
@@ -547,9 +523,9 @@ Overview
    - WebSocketHandler
    - WebSocketConfiguration
 
-++++++++++++++++++++++++++++++++++++++++
-Interazione Page-RobotController
-++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Interazione PgToRc (Pagina-RobotController)
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Specifica dei dati applicativi
@@ -583,21 +559,21 @@ memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setC
 
 
  
-+++++++++++++++++++++++++++++++++++++++++++
-Interazione RobotController-basicrobot22
-+++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Interazione RcToBr (RobotController-basicrobot22)
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
  
 
 
-+++++++++++++++++++++++++++++++++++++++++++
-Interazione basicrobot22-RobotController
-+++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Interazione BrToRc (basicrobot22-RobotController)
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-+++++++++++++++++++++++++++++++++++++++++++
-Interazione asincrona RobotController-Page
-+++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Interazione RcToPg (RobotController-Pagina)
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 +++++++++++++++++++++++++++++++
