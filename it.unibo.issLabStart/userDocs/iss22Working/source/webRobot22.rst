@@ -1,8 +1,12 @@
 .. role:: red 
 .. role:: brown
 .. role:: blue 
+.. role:: green
 .. role:: remark
 .. role:: worktodo  
+
+.. _SpringBoot: https://spring.io/projects/spring-boot
+.. _User experience design: https://it.wikipedia.org/wiki/User_experience_design
 
 .. _IPWebcam:  https://play.google.com/store/apps/details?id=nfo.webcam&hl=it&gl=US
 .. _Thymeleaf: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
@@ -37,41 +41,47 @@
 webrobot22
 ========================================
 
+Lo scopo di questo lavoro è usare `SpringBoot`_  per costruire una applicazione Web che fornisca una console di comando
+per  il  :ref:`BasicRobot22<Una prima architettura>`.
+
+Procederemo in due passi:
+
+#. Come primo passo, costruiremo la *'parte statica'* dell'applicazione che riguarda la impostazione della pagina HTML
+#. Come secondo passo, costruiremo la *'parte dinamica'* che permette all'applicazione Web di interagire da un lato 
+   con utente umano e da un altro lato con l':ref:`attore Qak<QActor (meta)model>` 
+   che realizza il  :ref:`bascirobot22<Impostazione del modello>`.
+
+  .. image::  ./_static/img/Robot22/webRobot22ComeSistDistr.PNG
+    :align: center 
+    :width: 40%
+
+ 
+
 :brown:`Creazione del progetto`
 
 #. Iniziamo il **progetto webrobot22** :ref:`webrobot22: startup`
 
 :brown:`Parte statica`
 
-#. Prepariamo la pagina usando `Bootstrap5`_
-#. Visualizziamo staticamente, con IpWebcam su Android
+#. :ref:`Usiamo Bootstrap5` per impostare la pagina usando `Bootstrap5`_
+#. :ref:`Visualizziamo la pagina statica`, come primo passo di un processo di `User experience design`_.
 
 
-:brown:`Parte dinamica`
+:brown:`Parte dinamica` 
 
-#. Organizzazione del :ref:`RobotController`
-#. Interazione HTTP :blue:`Page-RobotController` 
+#. Impostiamo l'organizzazione di un :ref:`RobotController` lato seerver.
+#. :green:`PgToRc`: Realizziamo l'interazione sincrona :blue:`Pagina-RobotController`  via HTTP
+#. :green:`RcToBr`: Realizziamo l'interazione :blue:`RobotController-basicrobot22` usando un protocollo specificato dall'utente.  
+#. :green:`BrToRc`: Realizziamo l'interazione :blue:`basicrobot22-RobotController` per far giungere alla applicazione Web informazioni 
+   sullo stato del sistema.
+#. :green:`RcToPg`: Realizziamo l'interazione asincrona :blue:`RobotController-Pagina` per visualizzare sulla pagina HTML 
+   le informazioni sullo stato del sistema. (Direttamente o con la mediazione del :ref:`RobotController`)
 
-   - che esegue configurazine/comando e restituisce una pagina aggiornata con Model
-   - cmdpageutils.js
-#. Interazione :blue:`RobotController-basicrobot22`  
-
-   - avviene usando protocol
-   - request-response (step)
-   - dispatch (w,s,r,l,h)
-#. Interazione :blue:`basicrobot22-RobotController` 
-
-   - avviene usando CoAP
-   - ostacoli
-   - si veda  basicrobot22 updateResource
-#. Interazione asincrona :blue:`RobotController-Page` 
- 
-   - wsminimal.js
-   - WebSocketHandler
-   - WebSocketConfiguration
+   .. image::  ./_static/img/Robot22/webRobot22Interactions.PNG
+     :align: center 
+     :width: 60%
 
 
- 
 -----------------------------------------------------------
 webrobot22: startup
 -----------------------------------------------------------
@@ -84,7 +94,7 @@ webrobot22: startup
     :width: 50%
 
 #. Scompattiamo il file ``webRobot22.zip``  nella nostra cartella di lavoro.
-#. Modifichiamo   ``7.4.1``in ``7.4.2`` in ``webRobot22\gradle\wrapper\gradle-wrapper.properties``
+#. Modifichiamo   ``7.4.1`` in ``7.4.2`` nel file ``webRobot22\gradle\wrapper\gradle-wrapper.properties``
 #. Aggiungiamo il file ``gradle.properties`` con il contenuto:
 
    .. code::
@@ -99,6 +109,15 @@ webrobot22: startup
        spring.application.name = webRobot22
        spring.banner.location  = classpath:banner.txt
        server.port             = 8085      
+
+
++++++++++++++++++++++++++++++++++++++++++
+Enable SpringBoot live DevTools
++++++++++++++++++++++++++++++++++++++++++
+
+settings(ctrl +alt+s) -> Build,Execution,Deployment -> compiler, check "Build project automatically"
+Enable option 'allow auto-make to start even if developed application is currently running' in 
+Settings -> Advanced Settings under compiler
 
 
 ++++++++++++++++++++++++++++++++++++++
@@ -150,15 +169,12 @@ build.gradle di webRobot22
         }
     }
  
-- Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8080``
 
+I `WebJars`_ sono stati introdotti in :ref:`Bootstrap e webJarss`.
 
 -----------------------------------------------------------
 basicrobot22Gui.html
 -----------------------------------------------------------
- 
-
-
 
 Avvalendoci di `Bootstrap5`_, impostiamo una pagina HTML (nel file `basicrobot22Gui.html`_ in ``src/main/resources/templates``) 
 in modo che presenti le aree mostrate in figura:
@@ -194,8 +210,8 @@ Note su Bootstrap
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-- There are two container classes to choose from: ``.container`` (fixed width)  ``.container-fluid``
-- ``.container-sm|md|lg|xl`` classes to determine when the container should be responsive
+- There are two container classes to choose from: ``container`` (fixed width)  ``container-fluid``
+- ``container-sm|md|lg|xl`` classes to determine when the container should be responsive
 - By default, containers have left and right padding, with no top or bottom padding.
 
 
@@ -491,9 +507,45 @@ Pagina finale
   :width: 100%
 
 
++++++++++++++++++++++++++++++++++
+Visualizziamo la pagina statica 
++++++++++++++++++++++++++++++++++
+
+Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8080``
+
+
 -------------------------------------------
 Parte dinamica
 -------------------------------------------
+
+
+Overview
+
+  .. image::  ./_static/img/Robot22/webRobot22Arch.PNG
+    :align: center 
+    :width: 80%
+
+
+#. Impostiamo l'organizzazione di un :ref:`RobotController` lato seerver.
+#. Interazione HTTP :blue:`Page-RobotController` 
+
+   - che esegue configurazine/comando e restituisce una pagina aggiornata con Model
+   - cmdpageutils.js
+#. Interazione :blue:`RobotController-basicrobot22`  
+
+   - avviene usando protocol
+   - request-response (step)
+   - dispatch (w,s,r,l,h)
+#. Interazione :blue:`basicrobot22-RobotController` 
+
+   - avviene usando CoAP
+   - ostacoli
+   - si veda  basicrobot22 updateResource
+#. Interazione asincrona :blue:`RobotController-Page` 
+ 
+   - wsminimal.js
+   - WebSocketHandler
+   - WebSocketConfiguration
 
 ++++++++++++++++++++++++++++++++++++++++
 Interazione Page-RobotController
@@ -611,12 +663,7 @@ Card with webcam
     </script>
 
 
------------------------------------------------------------
-Enable SpringBoot live DevTools
------------------------------------------------------------
-settings(ctrl +alt+s) -> Build,Execution,Deployment -> compiler, check "Build project automatically"
-Enable option 'allow auto-make to start even if developed application is currently running' in 
-Settings -> Advanced Settings under compiler
+
 
 
 
