@@ -69,9 +69,9 @@ Procederemo in due passi:
 #. :ref:`Usiamo Bootstrap5` per impostare la pagina usando `Bootstrap5`_
 #. :ref:`Visualizziamo la pagina statica`, come primo passo di un processo di `User experience design`_.
 
-+++++++++++++++++++++++++++++++++++++++
-Interazioni tra componenti
-+++++++++++++++++++++++++++++++++++++++
+--------------------------------------
+Interazioni tra i componenti
+--------------------------------------
 
 :brown:`Parte dinamica` 
 
@@ -97,7 +97,7 @@ webrobot22: startup
  
   .. image::  ./_static/img/Robot22/webRobot22Springio.PNG
     :align: center 
-    :width: 50%
+    :width: 70%
 
 #. Scompattiamo il file ``webRobot22.zip``  nella nostra cartella di lavoro.
 #. Modifichiamo   ``7.4.1`` in ``7.4.2`` nel file ``webRobot22\gradle\wrapper\gradle-wrapper.properties``
@@ -121,9 +121,12 @@ webrobot22: startup
 Enable SpringBoot live DevTools
 +++++++++++++++++++++++++++++++++++++++++
 
-settings(ctrl +alt+s) -> Build,Execution,Deployment -> compiler, check "Build project automatically"
-Enable option 'allow auto-make to start even if developed application is currently running' in 
-Settings -> Advanced Settings under compiler
+La featire di auto restart in Intellij  mediante *Spring Developer Tools* non sembra abilitata di default
+(come avviene invece in Eclipse).
+Per provare a farlo manualmente, si consulti la rete, ad esempio :
+https://medium.com/javarevisited/spring-boot-developer-tools-and-intellij-b16c7e5f39e4
+
+ 
 
 
 ++++++++++++++++++++++++++++++++++++++
@@ -548,7 +551,7 @@ Parte dinamica
 -------------------------------------------
 
 La pagina :ref:`basicrobot22Gui.html` viene dotata di supporti utili per la interazione con il server attraverso 
-codice JavaScript, contenuto nei files :ref:`ioutils.js` e :ref:`wsminimal.js`.
+codice JavaScript, contenuto nei files :ref:`ioutils.js` e :ref:`wsminimal.js<wsminimal.js in webrobo22>`.
 
 In linea di princpio, una pagina HTML potrebbe anche agire come osservatore diretto via CoAP del :ref:`basicrobot22`.
 Tuttavia, notiamo che: 
@@ -700,7 +703,7 @@ JavaScript di supporto nella pagina
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Come detto in precedenza, la pagina :ref:`basicrobot22Gui.html` viene dotata di supporti utili per la interazione 
-con il server attraverso codice JavaScript, contenuto nei files :ref:`ioutils.js` e :ref:`wsminimal.js`.
+con il server attraverso codice JavaScript, contenuto nei files :ref:`ioutils.js` e :ref:`wsminimal.js<wsminimal.js in webrobo22>`.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&
 ioutils.js
@@ -736,10 +739,11 @@ di successo o falimento sull'invio nell'area :ref:`infoDisplay`.
   }
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&
-wsminimal.js
+wsminimal.js in webrobo22
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-Il file :ref:`wsminimal.js`, è già stato introdotto in :ref:`WebSocket in SpringBoot: versione base<Lo script wsminimal.js>`.
+Il file `wsminimal.js`, è già stato introdotto in :ref:`RobotCleanerWeb<wsminimal.js>` e 
+in :ref:`WebApplication con SpringBoot<Lo script *wsminimal.js*>`.
 Esso definisce funzioni che realizzano la connessione via socket con il server e funzioni di I/O che permettono di inviare 
 un messaggio al server e di visualizzare la risposta.
 
@@ -787,28 +791,7 @@ In ogni caso, inizializza anche una connessione CoAP con il robot, associando ad
         return buildThePage(viewmodel);
     }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-RobotCoapObserver
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Il *RobotCoapObserver* è un POJO che usa :ref:`WebSocketConfiguration<Configurazione con WebSocketConfigurer>` 
-per inviare i messaggi di stato a tutti i client HTTP connessi al server.
-
-
-.. code::
-
-  public class RobotCoapObserver implements CoapHandler{
-
-      @Override
-      public void onLoad(CoapResponse response) {
-          //send info over the websocket
-          WebSocketConfiguration.wshandler.sendToAll(
-            "" + response.getResponseText());
-      }
-
-      @Override
-      public void onError() { ... }
-  }
 
 
 
@@ -840,17 +823,70 @@ ma realizza la :ref:`Interazione BrToRc (basicrobot22-RobotController)`.
 Interazione RcToBr (RobotController-basicrobot22)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
- 
+Avviene usando RobotUtils 
 
+
+.. code::
+
+  public class RobotUtils {
+   public static void connectWithRobotUsingTcp(String addr){ ... }
+   public static CoapConnection connectWithRobotUsingCoap(String addr){ ... }
+   public static  IApplMessage moveAril(String robotName, String cmd  ) {
+      //costruisce dispatch o request
+   }
+   public static void sendMsg(String robotName, String cmd){ 
+        try {
+            String msg =  moveAril(robotName,cmd).toString();
+            conn.forward( msg );
+        } catch (Exception e) {...}
+   }
+  }
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Interazione BrToRc (basicrobot22-RobotController)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+Avviene usando  WebSocketHandler gia introdotto in :ref`WebApplication con SpringBoot<Il gestore WebSocketHandler>`
+
+.. code::
+
+  public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHandler {
+    ...
+    public void sendToAll(TextMessage message) throws IOException{
+        Iterator<WebSocketSession> iter = sessions.iterator();
+        while( iter.hasNext() ){
+            iter.next().sendMessage(message);
+        }
+    }
+  }
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Interazione RcToPg (RobotController-Pagina)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RobotCoapObserver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il *RobotCoapObserver* è un POJO che usa :ref:`WebSocketConfiguration<Configurazione con WebSocketConfigurer>` 
+per inviare i messaggi di stato a tutti i client HTTP connessi al server.
+
+
+.. code::
+
+  public class RobotCoapObserver implements CoapHandler{
+
+      @Override
+      public void onLoad(CoapResponse response) {
+          //send info over the websocket
+          WebSocketConfiguration.wshandler.sendToAll(
+            "" + response.getResponseText());
+      }
+
+      @Override
+      public void onError() { ... }
+  }
+
 
 
 +++++++++++++++++++++++++++++++

@@ -60,11 +60,11 @@ public class RobotUtils {
             default:   return CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
         }
     }
-
+/*
     public static void startRobot( String sender, String robotName ){
         Qak22Util.sendAMsg( SystemData.startSysCmd(sender,robotName) );
     }
-
+*/
     public static void sendMsg(String robotName, String cmd){
         try {
             String msg =  moveAril(robotName,cmd).toString();
