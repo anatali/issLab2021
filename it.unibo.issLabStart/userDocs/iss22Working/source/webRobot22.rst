@@ -19,6 +19,7 @@
 .. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
 .. _Bootstrap5: https://www.w3schools.com/bootstrap5/
 .. _Containers: https://getbootstrap.com/docs/5.0/layout/containers/
+ 
 .. _Grids: https://www.w3schools.com/bootstrap5/bootstrap_grid_basic.php
 .. _Cards: https://www.w3schools.com/bootstrap5/bootstrap_cards.php
 .. _Colors: https://getbootstrap.com/docs/4.0/utilities/colors/
@@ -48,9 +49,9 @@ per  il  :ref:`BasicRobot22<Una prima architettura>`.
 
 Procederemo in due passi:
 
-#. Come primo passo, costruiremo la *'parte statica'* dell'applicazione che riguarda la impostazione della pagina HTML
+#. Come primo passo, costruiremo la *'parte statica'* dell'applicazione che riguarda la impostazione della pagina HTML.
 #. Come secondo passo, costruiremo la *'parte dinamica'* che permette all'applicazione Web di interagire da un lato 
-   con utente umano e da un altro lato con l':ref:`attore Qak<QActor (meta)model>` 
+   con utente umano (attraverso un Browser e da un altro lato con l':ref:`attore Qak<QActor (meta)model>` 
    che realizza il  :ref:`bascirobot22<Impostazione del modello>`.
 
   .. image::  ./_static/img/Robot22/webRobot22ComeSistDistr.PNG
@@ -195,14 +196,17 @@ in modo che presenti le aree mostrate in figura:
   Viene introdotta per chi non abbia un robot fisico dotato di telecamera.
 - :ref:`WebCam robot<WebcamArea>`: area di output che visualizza lo stream prodotto da un telecamera posta sul robot fisico.
 
-
+Avvalendo di `Thymeleaf`_,  impostiamo la pagina come un template che presenta alcuni campi 
+(*protocol, robotip, webcamip*) 
+che corrispondo a quanto definito nella :ref:`Specifica dei dati applicativi`, i cui valori verranno fissati 
+dal :ref:`RobotController` nella fase di costruzione della pagina (si veda :ref:`buildThePage`).
 
 +++++++++++++++++++++++++++++++
 Usiamo Bootstrap5
 +++++++++++++++++++++++++++++++
 
-Abilitiamo l'uso di `Bootstrap5`_, nella sezione ``head`` del file `basicrobot22Gui.html`_ e impostiamo la struttura 
-della pagina:
+Abilitiamo l'uso di `Bootstrap5`_, nella sezione ``head`` del file `basicrobot22Gui.html`_ e poi impostiamo la struttura 
+del contenuto della pagina:
 
 .. code::
 
@@ -219,6 +223,16 @@ della pagina:
     "shortcut icon" href="images/mbotIot.png" type="image/x-icon"> <!-- ICONA su browser -->
     </head>
 
+
+
++++++++++++++++++++++++++++++++
+Contenuto della pagina
++++++++++++++++++++++++++++++++
+
+La pagina viene suddivisa in due `Containers`_ di tipo *fluid*, uno per il titolo e uno per il contenuto vero e proprio.
+
+.. code::
+
     <body>
         <div class="container-fluid pt-1 bg-primary text-white text-center">  
             <h1>basicrobot22 console</h1>
@@ -232,10 +246,6 @@ della pagina:
             <!-- FOOTER -->
         </footer>
     </body>
-
-+++++++++++++++++++++++++++++++
-Contenuto della pagina
-+++++++++++++++++++++++++++++++
 
 Il contenuto della pagina viene organizzato entro una riga (di ``12`` colonne, come indicato in `Grids`_ ) 
 che contiene due colonne: la colonna di sinistra (di ampiezza ``7``) 
@@ -260,7 +270,7 @@ alla visualizzazione degli stream di dati delle telecamere.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Schema delle aree
+Schema delle aree di I/O
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Le aree entro le colonne sono organizzate usando le  `Cards`_ secondo lo schema:
@@ -318,11 +328,16 @@ Per la visualizzazione, sfrutteremo la specifica *Protocol-relative-URL* (``th:s
      </div> <!-- card -->
    </div><!-- webcam col -->
 
+-  Il simbolo :brown:`webcamip` denota un campo del Model che viene fissato dal :ref:`RobotController` al valore immesso 
+   dall'utente nella :ref:`AREA WEBCAM Android`   della sezione :ref:`ConfigurationArea and Data`.
+-  Il simbolo :brown:`robotip` denota un campo del Model che viene fissato dal :ref:`RobotController` al valore immesso 
+   dall'utente nella :ref:`AREA ROBOT ADDRESS`   della sezione :ref:`ConfigurationArea and Data`.
 
-I valori delle variabili ``webcamip`` e ``robotip`` sono quelli  immessi dall'utente nella 
-*InputArea* della sezione :ref:`ConfigurationArea and Data`.
+ 
 
-.. Per queste e per le altre aree,ci limiteremo a riportare solo la parte ``CARDCONTENT`` indicata in :ref:`Schema delle aree`
+Quando l'utente immette un dato nella form di input e lo invia al server, il :ref:`RobotController`
+memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setConfigParams``, come
+indicato in :ref:`Interazione PgToRc (Pagina-RobotController)`.
 
 
 +++++++++++++++++++++++++++++++
@@ -343,9 +358,9 @@ in aree:
     </div>
    </div>
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Struttura generale delle aree
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Struttura generale delle aree di I/O
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code::
 
@@ -361,9 +376,23 @@ Struttura generale delle aree
       </div>
      </div> <!-- row -->
 
-- Le aree di input sono espresse mediante   `FormHTML`_ con campi `InputHTML`_
+- Le aree di input sono espresse mediante   `FormHTML`_ con campi `InputHTML`_.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+Specifica dei dati applicativi
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+- Il file `application.properties`_ definisce i valori iniziali dei campi di input che vengono visualizzati nella
+  pagina.
+
+  .. code::
+
+    robot22.protocol   = coap
+    robot22.robotip    = not connected
+    robot22.webcamip   = unknown
+
 - I dati sono visualizzati in campi con identificatori referenziabili nel :ref:`RobotController` mediante  
-  **Model**, che opera come un contenitore per i dati applicativi.
+  **Model**, come indicato in   :ref:`Interazione PgToRc (Pagina-RobotController)`.
 
 
 Vediamo nel dettaglio le parti di Input/Output per la configurazione del sistema.
@@ -398,6 +427,12 @@ AREA WEBCAM Android
 
     <!--WEBCAM Android DataArea  --> 
       <b><span th:text="${webcamip}" id="webcamipaddr">unknown</span></b>
+
+Il valore immesso dall'utente viene inviato via HTTP-POST al :ref:`RobotController` che lo 
+gestisce col metodo :ref:`setwebcamip` memorizzando nel Model (si veda :ref:`setConfigParams`) e di qui, via `Thymeleaf`_,  
+nel parametro ``webcamip``  del template della pagina (si veda :ref:`buildThePage`).
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 AREA ROBOT ADDRESS
@@ -445,6 +480,14 @@ Pulsanti per inviare a :ref:`RobotController` comandi per muovere il robot.
 
 
 +++++++++++++++++++++++++++++++
+cmdpageutils.js
++++++++++++++++++++++++++++++++
+
+.. code::
+
+  const webcamip = document.getElementById("webcamip");
+
++++++++++++++++++++++++++++++++
 infoDisplay
 +++++++++++++++++++++++++++++++
 
@@ -487,7 +530,7 @@ Pagina finale
 Visualizziamo la pagina statica 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8080``
+Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8085``
 
 
 -------------------------------------------
@@ -523,40 +566,115 @@ Overview
    - WebSocketHandler
    - WebSocketConfiguration
 
+-----------------------------------------------------------
+RobotController
+-----------------------------------------------------------
+
+Il Controller definisce i valori di alcune variabili locali, che comprendono gli attributi usati nel *Model*. 
+
+Il **Model** utilizzato dal :ref:`RobotController` opera come un contenitore per dati applicativi, che vengono 
+aggiornati, prima dell'invio della pagina di risposta, utilizzando il metodo :ref:`setConfigParams`.
+
+
+.. code::
+
+  @Controller 
+  public class RobotController {
+    protected String robotName  = "basicrobot";  
+    protected String mainPage   = "basicrobot22Gui";
+
+    //Settaggio di variabili relative ad attributi del modello
+    @Value("${robot22.protocol}")
+    String protocol;
+    @Value("${robot22.webcamip}")
+    String webcamip;
+    @Value("${robot22.robotip}")
+    String robotip;
+
+    //Metodi di interazione ...
+ 
+    @ExceptionHandler
+    public ResponseEntity handle(Exception ex) { ... }
+  }
+
+- Il *Settaggio degli attributi del modello* avviene con riferimento alla :ref:`Specifica dei dati applicativi`.
+
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Interazione PgToRc (Pagina-RobotController)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Specifica dei dati applicativi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La interazione tra il Browser che contiene la pagina HTML e il Controller della Web application è relativa a richieste:
 
-Il file `application.properties`_ definisce i valori iniziali dei campi di input:
+- di tipo :blue:`GET`, iniviata dal Browser all'inizio della connessione;
+- di tipo :blue:`POST`, provenienti dalle parti di input della :ref:`ConfigurationArea and Data`.
 
-.. code::
-
-  robot22.protocol   = coap
-  robot22.robotip    = not connected
-  robot22.webcamip   = unknown
-
-Questi valori sono visualizzati sulla pagina dal Controller dell'applicazione SpringBooot
-(:ref:`RobotController`) mediante il **Model**, che opera come un contenitore per i dati applicativi.
-
-Il metodo ``setConfigParams`` del :ref:`RobotController` viene introdotto come una utility per aggiornare
-gli attributi del modello.
 
 .. code::
+  
+  //Metodi di interazione ...
 
-    protected void setConfigParams(Model viewmodel){
-        viewmodel.addAttribute("protocol", protocol);
-        viewmodel.addAttribute("webcamip", webcamip);
-        viewmodel.addAttribute("robotip",  robotip);
+    @GetMapping("/") 		 
+    public String entry(Model viewmodel) {
+      buildThePage(viewmodel);    
     }
 
+    //Richieste di configurazione
+    @PostMapping("/setprotocol")
+    public String setprotocol(Model m,@RequestParam String protocol){...}
+    
+    @PostMapping("/setwebcamip")
+    public String setwebcamip(Model m,@RequestParam String ipaddr){...}
+    
+    @PostMapping("/setrobotip")
+    public String setrobotip(Model m,@RequestParam String ipaddr){...}
 
-Quando l'utente immette un dato nella form di input e lo invia al server, il :ref:`RobotController`
-memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setConfigParams``. 
 
+    //Comandi al robot
+    @PostMapping("/robotmove"))
+    public String doMove(Model m,@RequestParam String move ){...}
+ 
+
+
+Al termine della elaborazione di ciascuna richiesta, il Controller risponde al Browser 
+fornendo (col metodo :ref:`buildThePage`) la pagina iniziale definita da :ref:`basicrobot22Gui.html` 
+ed aggiornata con i valori dei correnti degli attributi del *Model*.
+
++++++++++++++++++++++++++++++++++++
+buildThePage
++++++++++++++++++++++++++++++++++++  
+
+.. code::
+
+  protected String buildThePage(Model viewmodel) {
+      setConfigParams(viewmodel);
+      return mainPage;
+  }
+
+
++++++++++++++++++++++++++++++++++++
+setConfigParams
++++++++++++++++++++++++++++++++++++  
+ 
+.. code::
+
+  protected void setConfigParams(Model viewmodel){
+    viewmodel.addAttribute("protocol", protocol);
+    viewmodel.addAttribute("webcamip", webcamip);
+    viewmodel.addAttribute("robotip",  robotip);
+  }
+
++++++++++++++++++++++++++++++++++++
+setprotocol
++++++++++++++++++++++++++++++++++++
+
++++++++++++++++++++++++++++++++++++
+setwebcamip
++++++++++++++++++++++++++++++++++++
+
++++++++++++++++++++++++++++++++++++
+setrobotip
++++++++++++++++++++++++++++++++++++
 
  
 ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -616,9 +734,7 @@ Comandare il robot
 Handler dispatch failed; nested exception is java.lang.NoClassDefFoundError: kotlin/jvm/internal/Intrinsics
 
 
------------------------------------------------------------
-RobotController
------------------------------------------------------------
+
 
   
 ++++++++++++++++++++++++++++++++++++

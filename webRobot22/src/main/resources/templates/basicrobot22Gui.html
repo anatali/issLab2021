@@ -27,7 +27,7 @@
    <!-- CONFIGURATION Area and Data -->
    <div class="card iss-bg-inputarea">  <!-- I/O area card -->
     <div class="card-body">
-     <!-- PROTOCOL -->
+     <!-- AREA PROTOCOL -->
      <div class="row"> <!-- protocol row in I/O area card -->
       <div class="col-7">
        <!--   PROTOCOL InputArea   -->
@@ -44,7 +44,7 @@
       </div>
      </div> <!--  row protocol in I/O area card -->
 
-     <!-- WEBCAM Android -->
+     <!-- AREA WEBCAM Android -->
         <div class="row" > <!-- camip row in I/O area card  -->
       <div class="col-7">
           <!--   WEBCAM Android InputArea   -->
@@ -60,7 +60,7 @@
       </div>
      </div> <!-- row webcamip in card in I/O area card  -->
 
-     <!-- ROBOT ADDRESS -->
+     <!-- AREA ROBOT ADDRESS -->
      <div class="row"> <!-- row robotip in card in I/O area card  -->
       <div class="col-7">
           <!--   ROBOT ADDRESS InputArea   -->
@@ -69,12 +69,11 @@
          <input type="text" size="10" id="configurespec" name="ipaddr" value="localhost">
          <input type="submit" value="robotip">
          </form>
-       </div>
-
-         <!--   ROBOT ADDRESS DataArea   -->
-      <div class="col-5 text-danger">
-         <b><span th:text="${robotip}">not connected</span></b>
       </div>
+         <!--   ROBOT ADDRESS DataArea   -->
+         <div class="col-5 text-danger">
+            <b><span th:text="${robotip}">not connected</span></b>
+         </div>
      </div> <!-- row robotip in card in I/O area card  -->
 
      </div> <!-- I/O area card body -->

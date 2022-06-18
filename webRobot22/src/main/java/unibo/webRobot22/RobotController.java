@@ -18,6 +18,11 @@ import unibo.actor22comm.utils.ColorsOut;
 
 @Controller 
 public class RobotController {
+    protected String robotName  = "basicrobot";
+    protected String mainPage   = "basicrobot22Gui";
+    protected boolean usingTcp  = false;
+
+    //Settaggio degli attributi del modello
     @Value("${robot22.protocol}")
     String protocol;
     @Value("${robot22.webcamip}")
@@ -25,12 +30,10 @@ public class RobotController {
     @Value("${robot22.robotip}")
     String robotip;
 
-    protected static  String robotName     = ""; //visibility in package
-    protected String mainPage   = "basicrobot22Gui";
-    protected boolean usingTcp  = false;
 
-    public RobotController() {
-
+    protected String buildThePage(Model viewmodel) {
+        setConfigParams(viewmodel);
+        return mainPage;
     }
 
     protected void setConfigParams(Model viewmodel){
@@ -41,8 +44,7 @@ public class RobotController {
 
   @GetMapping("/") 		 
   public String entry(Model viewmodel) {
-      setConfigParams(viewmodel);
-      return mainPage;
+      return buildThePage(viewmodel);
   }
 
     @PostMapping("/setprotocol")
@@ -51,31 +53,30 @@ public class RobotController {
         usingTcp      = protocol.equals("tcp");
         System.out.println("RobotController | setprotocol:" + protocol );
         viewmodel.addAttribute("protocol", protocol);
-        setConfigParams(viewmodel);
-        return mainPage;
+        return buildThePage(viewmodel);
     }
     @PostMapping("/setwebcamip")
     public String setwebcamip(Model viewmodel, @RequestParam String ipaddr  ){
         webcamip = ipaddr;
         System.out.println("RobotHIController | setwebcamip:" + ipaddr );
         viewmodel.addAttribute("webcamip", webcamip);
-        setConfigParams(viewmodel);
-        return mainPage;
+        return buildThePage(viewmodel);
     }
     @PostMapping("/setrobotip")
     public String setrobotip(Model viewmodel, @RequestParam String ipaddr  ){
         robotip = ipaddr;
         System.out.println("RobotHIController | setrobotip:" + ipaddr );
         viewmodel.addAttribute("robotip", robotip);
-        setConfigParams(viewmodel);
+//        setConfigParams(viewmodel);
         //Uso basicrobto22 sulla porta 8020
-        robotName  = "basicrobot";
+        //robotName  = "basicrobot";
         if( usingTcp ) RobotUtils.connectWithRobotUsingTcp(ipaddr+":8020");
         //Attivo comunque una connessione CoAP per osservare basicrobot
         CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
         conn.observeResource( new RobotCoapObserver() );
         //WebSocketConfiguration.wshandler.sendToAll("Connected to Robot" + ipaddr); //disappears
-        return mainPage;
+ //       return mainPage;
+        return buildThePage(viewmodel);
     }
 
     @PostMapping("/robotmove")
