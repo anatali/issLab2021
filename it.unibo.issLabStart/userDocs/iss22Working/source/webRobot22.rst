@@ -428,7 +428,7 @@ AREA WEBCAM Android
     <!--WEBCAM Android DataArea  --> 
       <b><span th:text="${webcamip}" id="webcamipaddr">unknown</span></b>
 
-Il valore immesso dall'utente viene inviato via HTTP-POST al :ref:`RobotController` che lo 
+Il valore immesso dall'utente viene inviato via ``HTTP-POST`` al :ref:`RobotController` che lo 
 gestisce col metodo :ref:`setwebcamip` memorizzando nel Model (si veda :ref:`setConfigParams`) e di qui, via `Thymeleaf`_,  
 nel parametro ``webcamip``  del template della pagina (si veda :ref:`buildThePage`).
 
@@ -448,6 +448,10 @@ AREA ROBOT ADDRESS
 
     <!-- ROBOT ADDRESS DataArea  --> 
        <b><span th:text="${robotip}">not connected</span></b>
+
+Il valore immesso dall'utente viene inviato via ``HTTP-POST`` al :ref:`RobotController` che lo 
+gestisce col metodo :ref:`setrobotip` memorizzando nel Model (si veda :ref:`setConfigParams`) e di qui, via `Thymeleaf`_,  
+nel parametro ``robotip``  del template della pagina (si veda :ref:`buildThePage`).
 
 +++++++++++++++++++++++++++++++
 RobotCmdArea
@@ -477,6 +481,9 @@ Pulsanti per inviare a :ref:`RobotController` comandi per muovere il robot.
          </div> <!-- p,l,r commands row -->
         </div> <!-- command card-content -->
       </div> <!--  command card -->
+
+Il conando immesso dall'utente con uno *button* viene inviato via ``HTTP-POST`` al :ref:`RobotController` che lo 
+gestisce col metodo :ref:`doMove`.
 
 
 +++++++++++++++++++++++++++++++
@@ -676,6 +683,71 @@ setwebcamip
 setrobotip
 +++++++++++++++++++++++++++++++++++
 
+Il metodo ``setrobotip`` del Controller tiene traccia nel Model del ``ipaddr`` immesso dall'utente
+e inizializza una connessione con :ref:`basicrobot22` usando il protocollo selezionato dall'utente.
+
+In ogni caso, inizializza anche una connessione CoAP con il robot, associando ad essa un  
+:ref:`RobotCoapObserver` che ha lo scopo di realizzare la :ref:`Interazione RcToPg (RobotController-Pagina)`.
+
+ 
+.. code::
+
+    @PostMapping("/setrobotip")
+    public String setrobotip(Model viewmodel, @RequestParam String ipaddr  ){
+        robotip = ipaddr;
+         viewmodel.addAttribute("robotip", robotip);
+        if( usingTcp ) RobotUtils.connectWithRobotUsingTcp(ipaddr+":8020");
+        //Attivo comunque una connessione CoAP per osservare basicrobot22
+        CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
+        conn.observeResource( new RobotCoapObserver() );
+        return buildThePage(viewmodel);
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RobotCoapObserver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il *RobotCoapObserver* è un POJO che usa :ref:`WebSocketConfiguration<Configurazione con WebSocketConfigurer>` 
+per inviare i messaggi di stato a tutti i client HTTP connessi al server.
+
+
+.. code::
+
+  public class RobotCoapObserver implements CoapHandler{
+
+      @Override
+      public void onLoad(CoapResponse response) {
+          //send info over the websocket
+          WebSocketConfiguration.wshandler.sendToAll(
+            "" + response.getResponseText());
+      }
+
+      @Override
+      public void onError() { ... }
+  }
+
+:remark:`L'uso delle websocket può essere evitato`
+
+- inserendo un CoAP client entro la :ref:`basicrobot22Gui.html`.
+
++++++++++++++++++++++++++++++++++++
+doMove
++++++++++++++++++++++++++++++++++++
+
+Il metodo ``doMove`` del Controller non modifica il Model, 
+ma realizza la :ref:`Interazione BrToRc (basicrobot22-RobotController)`.
+
+.. code::
+
+    @PostMapping("/robotmove")
+    public String doMove(Model viewmodel , @RequestParam String move ){
+        try {
+              RobotUtils.sendMsg(robotName,move);
+        } catch (Exception e) {
+            ColorsOut.outerr("RobotController | doMove ERROR:"+e.getMessage());
+        }
+        return mainPage;
+    }
  
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Interazione RcToBr (RobotController-basicrobot22)
