@@ -1,5 +1,5 @@
 /*
-cmdpageutils.js
+ioutils.js
 */
 
     const infoDisplay     = document.getElementById("display");

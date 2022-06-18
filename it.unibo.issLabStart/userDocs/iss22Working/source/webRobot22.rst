@@ -69,16 +69,19 @@ Procederemo in due passi:
 #. :ref:`Usiamo Bootstrap5` per impostare la pagina usando `Bootstrap5`_
 #. :ref:`Visualizziamo la pagina statica`, come primo passo di un processo di `User experience design`_.
 
++++++++++++++++++++++++++++++++++++++++
+Interazioni tra componenti
++++++++++++++++++++++++++++++++++++++++
 
 :brown:`Parte dinamica` 
 
-#. Impostiamo l'organizzazione di un :ref:`RobotController` lato seerver.
+#. Impostiamo l'organizzazione di un :ref:`RobotController` lato server.
 #. :green:`PgToRc`: Realizziamo l'interazione sincrona :blue:`Pagina-RobotController`  via HTTP
 #. :green:`RcToBr`: Realizziamo l'interazione :blue:`RobotController-basicrobot22` usando un protocollo specificato dall'utente.  
-#. :green:`BrToRc`: Realizziamo l'interazione :blue:`basicrobot22-RobotController` per far giungere alla applicazione Web informazioni 
-   sullo stato del sistema.
+#. :green:`BrToRc`: Realizziamo l'interazione :blue:`basicrobot22-RobotController` per far giungere 
+   alla applicazione Web informazioni  sullo stato del sistema.
 #. :green:`RcToPg`: Realizziamo l'interazione asincrona :blue:`RobotController-Pagina` per visualizzare sulla pagina HTML 
-   le informazioni sullo stato del sistema. (Direttamente o con la mediazione del :ref:`RobotController`)
+   le informazioni sullo stato del sistema, con la mediazione del :ref:`RobotController` ()
 
    .. image::  ./_static/img/Robot22/webRobot22Interactions.PNG
      :align: center 
@@ -544,6 +547,20 @@ Eseguo ``gradlew bootRun`` e apro un browser su ``localhost:8085``
 Parte dinamica
 -------------------------------------------
 
+La pagina :ref:`basicrobot22Gui.html` viene dotata di supporti utili per la interazione con il server attraverso 
+codice JavaScript, contenuto nei files :ref:`ioutils.js` e :ref:`wsminimal.js`.
+
+In linea di princpio, una pagina HTML potrebbe anche agire come osservatore diretto via CoAP del :ref:`basicrobot22`.
+Tuttavia, notiamo che: 
+
+:remark:`I Browser non supportano API JavaScript per CoAP per motivi di sicurezza (legate a UDP)`
+
+Questo rende necessario che il :ref:`RobotController` funga da mediatore tra le informazioni emesse via CoAP da 
+:ref:`basicrobot22` e la pagina, attraverso le interazioni ``BrToRc`` e ``RcToPg`` introdotte in 
+:ref:`Interazioni tra i componenti`.
+ 
+
+
 
 Overview
 
@@ -598,7 +615,7 @@ aggiornati, prima dell'invio della pagina di risposta, utilizzando il metodo :re
     @Value("${robot22.robotip}")
     String robotip;
 
-    //Metodi di interazione ...
+    //Metodi di INTERAZIONE ...
  
     @ExceptionHandler
     public ResponseEntity handle(Exception ex) { ... }
@@ -616,10 +633,9 @@ La interazione tra il Browser che contiene la pagina HTML e il Controller della 
 - di tipo :blue:`GET`, iniviata dal Browser all'inizio della connessione;
 - di tipo :blue:`POST`, provenienti dalle parti di input della :ref:`ConfigurationArea and Data`.
 
-
 .. code::
   
-  //Metodi di interazione ...
+  //Metodi di INTERAZIONE ...
 
     @GetMapping("/") 		 
     public String entry(Model viewmodel) {
@@ -641,15 +657,22 @@ La interazione tra il Browser che contiene la pagina HTML e il Controller della 
     @PostMapping("/robotmove"))
     public String doMove(Model m,@RequestParam String move ){...}
  
-
-
 Al termine della elaborazione di ciascuna richiesta, il Controller risponde al Browser 
 fornendo (col metodo :ref:`buildThePage`) la pagina iniziale definita da :ref:`basicrobot22Gui.html` 
 ed aggiornata con i valori dei correnti degli attributi del *Model*.
 
-+++++++++++++++++++++++++++++++++++
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Creazione della pagina di risposta
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La pagina di risposta referenziata dalla variabile ``mainPage`` è un template che include campi che vengono 
+aggiornati (metodo :ref:`setConfigParams`) con i valori correnti degli attibuti del Model.  
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&
 buildThePage
-+++++++++++++++++++++++++++++++++++  
+&&&&&&&&&&&&&&&&&&&&&&&&&&& 
 
 .. code::
 
@@ -659,9 +682,9 @@ buildThePage
   }
 
 
-+++++++++++++++++++++++++++++++++++
+&&&&&&&&&&&&&&&&&&&&&&&&&&&
 setConfigParams
-+++++++++++++++++++++++++++++++++++  
+&&&&&&&&&&&&&&&&&&&&&&&&&&&
  
 .. code::
 
@@ -671,20 +694,81 @@ setConfigParams
     viewmodel.addAttribute("robotip",  robotip);
   }
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+JavaScript di supporto nella pagina
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Come detto in precedenza, la pagina :ref:`basicrobot22Gui.html` viene dotata di supporti utili per la interazione 
+con il server attraverso codice JavaScript, contenuto nei files :ref:`ioutils.js` e :ref:`wsminimal.js`.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+ioutils.js
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Il file  ``ioutils.js`` definisce operazioni utili a inserire messaggi nelle aree  :ref:`infoDisplay` e :ref:`robotDisplay`
+
+.. code::
+
+  function setMessageToWindow(outfield, message) {
+      var output = message.replace("\n","<br/>")
+      outfield.innerHTML = `<tt>${output}</tt>`
+  }
+
+Inoltre defnisce una funzione che usa Ajax per inviare via HTTP comandi POST al server e visualizzare un messaggio
+di successo o falimento sull'invio nell'area :ref:`infoDisplay`.
+
+.. code::
+
+  function callServerUsingAjax(message) {
+      $.ajax({
+        type: "POST",        
+        url: "robotmove",        //Dove  inviare i dati        
+        data: "move=" + message, //Dati da inviare
+        dataType: "html",         
+        success: function(msg){   
+          setMessageToWindow(infoDisplay,message+" done")
+        },
+        error: function(){
+          alert("Chiamata fallita, si prega di riprovare..."); 
+        }
+      });
+  }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+wsminimal.js
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Il file :ref:`wsminimal.js`, è già stato introdotto in :ref:`WebSocket in SpringBoot: versione base<Lo script wsminimal.js>`.
+Esso definisce funzioni che realizzano la connessione via socket con il server e funzioni di I/O che permettono di inviare 
+un messaggio al server e di visualizzare la risposta.
+
+
 +++++++++++++++++++++++++++++++++++
 setprotocol
 +++++++++++++++++++++++++++++++++++
+
+Il metodo ``setprotocol`` del Controller tiene traccia nel Model del protocollo che l'utente intende usare
+per le interazioni tra :ref:`RobotController`  e il :ref:`basicrobot22`.
+
+L'utente può scegliere tra ``TCP``, ``MQTT``e ``CoAP``. In ogni caso, il protocollo CoAP viene comunque usato 
+per realizzare la :ref:`Interazione BrToRc (basicrobot22-RobotController)`.
+
+
 
 +++++++++++++++++++++++++++++++++++
 setwebcamip
 +++++++++++++++++++++++++++++++++++
 
+Il metodo ``setwebcamip`` del Controller tiene traccia nel Model dell'indirzzo IP della WebCam su Android (o su PC).
+Lo stream prodotto da questa WebCam (una volta attivata) viene visualizzato nella card superiore della :ref:`WebcamArea`.
+
 +++++++++++++++++++++++++++++++++++
 setrobotip
 +++++++++++++++++++++++++++++++++++
 
-Il metodo ``setrobotip`` del Controller tiene traccia nel Model del ``ipaddr`` immesso dall'utente
-e inizializza una connessione con :ref:`basicrobot22` usando il protocollo selezionato dall'utente.
+Il metodo ``setrobotip`` del Controller tiene traccia nel Model dell'indirzzo IP del robot (``ipaddr``) immesso dall'utente
+e inizializza una connessione con :ref:`basicrobot22` usando il protocollo selezionato dall'utente con :ref:`setprotocol`.
 
 In ogni caso, inizializza anche una connessione CoAP con il robot, associando ad essa un  
 :ref:`RobotCoapObserver` che ha lo scopo di realizzare la :ref:`Interazione RcToPg (RobotController-Pagina)`.
@@ -726,9 +810,7 @@ per inviare i messaggi di stato a tutti i client HTTP connessi al server.
       public void onError() { ... }
   }
 
-:remark:`L'uso delle websocket può essere evitato`
 
-- inserendo un CoAP client entro la :ref:`basicrobot22Gui.html`.
 
 +++++++++++++++++++++++++++++++++++
 doMove
@@ -748,7 +830,12 @@ ma realizza la :ref:`Interazione BrToRc (basicrobot22-RobotController)`.
         }
         return mainPage;
     }
- 
+
+
+
+
+
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Interazione RcToBr (RobotController-basicrobot22)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
