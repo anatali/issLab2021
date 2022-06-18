@@ -14,6 +14,7 @@
 
 .. _FormHTML: https://www.w3schools.com/html/html_forms.asp
 .. _InputHTML: https://www.w3schools.com/tags/tag_input.asp
+.. _ButtonHTML: https://www.w3schools.com/tags/tag_button.asp
 
 .. _bannerOnline: https://manytools.org/hacker-tools/ascii-banner/
 .. _Bootstrap4: https://www.w3schools.com/bootstrap4/bootstrap_get_started.asp
@@ -121,9 +122,9 @@ webrobot22: startup
 Enable SpringBoot live DevTools
 +++++++++++++++++++++++++++++++++++++++++
 
-La featire di auto restart in Intellij  mediante *Spring Developer Tools* non sembra abilitata di default
-(come avviene invece in Eclipse).
-Per provare a farlo manualmente, si consulti la rete, ad esempio :
+La feature di auto-restart mediante *Spring Developer Tools* non sembra abilitata di default
+in Intellij   (come avviene invece in Eclipse).
+Per provare ad attivarla manualmente, si consulti la rete, ad esempio :
 https://medium.com/javarevisited/spring-boot-developer-tools-and-intellij-b16c7e5f39e4
 
  
@@ -255,7 +256,7 @@ La pagina viene suddivisa in due `Containers`_ di tipo *fluid*, uno per il titol
 
 Il contenuto della pagina viene organizzato entro una riga (di ``12`` colonne, come indicato in `Grids`_ ) 
 che contiene due colonne: la colonna di sinistra (di ampiezza ``7``) 
-è riservata alla area di Input/Output, mentre la  la colonna di destra (di ampiezza ``5``)  è dedicata
+è riservata alla area di I/O, mentre la  la colonna di destra (di ampiezza ``5``)  è dedicata
 alla visualizzazione degli stream di dati delle telecamere.
 
 .. code::
@@ -339,12 +340,6 @@ Per la visualizzazione, sfrutteremo la specifica *Protocol-relative-URL* (``th:s
 -  Il simbolo :brown:`robotip` denota un campo del Model che viene fissato dal :ref:`RobotController` al valore immesso 
    dall'utente nella :ref:`AREA ROBOT ADDRESS`   della sezione :ref:`ConfigurationArea and Data`.
 
- 
-
-Quando l'utente immette un dato nella form di input e lo invia al server, il :ref:`RobotController`
-memorizza il dato e lo ritrasmetta alla pagina aggtionando il modello con ``setConfigParams``, come
-indicato in :ref:`Interazione PgToRc (Pagina-RobotController)`.
-
 
 +++++++++++++++++++++++++++++++
 ConfigurationArea and Data
@@ -383,6 +378,9 @@ Struttura generale delle aree di I/O
      </div> <!-- row -->
 
 - Le aree di input sono espresse mediante   `FormHTML`_ con campi `InputHTML`_.
+- Quando l'utente immette un dato in una Form di input e lo invia al server, il :ref:`RobotController`
+  memorizza il dato e lo ritrasmetta alla pagina aggiornando il modello con ``setConfigParams``, come
+  indicato in :ref:`Interazione PgToRc (Pagina-RobotController)`.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 Specifica dei dati applicativi
@@ -401,7 +399,7 @@ Specifica dei dati applicativi
   **Model**, come indicato in   :ref:`Interazione PgToRc (Pagina-RobotController)`.
 
 
-Vediamo nel dettaglio le parti di Input/Output per la configurazione del sistema.
+Vediamo nel dettaglio le parti di I/O per la configurazione del sistema.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 AREA PROTOCOL
@@ -418,6 +416,10 @@ AREA PROTOCOL
       <!--   PROTOCOL DataArea      -->
         <b><span th:text="${protocol}">tcp</span></b>
  
+Il valore immesso dall'utente viene inviato via ``HTTP-POST`` al :ref:`RobotController` che lo 
+gestisce col metodo :ref:`setprotocol` memorizzando nel Model (si veda :ref:`setConfigParams`) e di qui, via `Thymeleaf`_,  
+nel parametro ``protocol``  del template della pagina (si veda :ref:`buildThePage`).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 AREA WEBCAM Android
@@ -463,7 +465,7 @@ nel parametro ``robotip``  del template della pagina (si veda :ref:`buildThePage
 RobotCmdArea
 +++++++++++++++++++++++++++++++
 
-Pulsanti per inviare a :ref:`RobotController` comandi per muovere il robot.
+Queta area presenta `ButtonHTML`_  per inviare a :ref:`RobotController` comandi per muovere il robot.
 
 
 .. code::
@@ -488,12 +490,12 @@ Pulsanti per inviare a :ref:`RobotController` comandi per muovere il robot.
         </div> <!-- command card-content -->
       </div> <!--  command card -->
 
-Il conando immesso dall'utente con uno *button* viene inviato via ``HTTP-POST`` al :ref:`RobotController` che lo 
+Il conando immesso dall'utente con un *button* viene inviato via ``HTTP-POST`` al :ref:`RobotController` che lo 
 gestisce col metodo :ref:`doMove`.
 
 
 +++++++++++++++++++++++++++++++
-cmdpageutils.js
+cmdpageutils.js  xxx
 +++++++++++++++++++++++++++++++
 
 .. code::
@@ -513,7 +515,8 @@ infoDisplay
     </div>
   </div>
 
-- Identificatore ``display`` usato in ... todo
+- Il contenuto del campo denotato dall'dentificatore :blue:`display` è dinamicamente modificato da :ref:`ioutils.js`
+  e da :ref:`wsminimal.js<wsminimal.js in webrobo22>`.
 
 +++++++++++++++++++++++++++++++
 robotDisplay
@@ -528,7 +531,7 @@ robotDisplay
     </div>
   </div>
 
-- Identificatore ``robotDisplay`` usato in ... todo
+- Il contenuto del campo denotato dall'dentificatore ``robotDisplay`` è dinamicamente definito da da :ref:`wsminimal.js<wsminimal.js in webrobo22>`.
 
 +++++++++++++++++++++++++++++++
 Pagina finale
@@ -662,7 +665,7 @@ La interazione tra il Browser che contiene la pagina HTML e il Controller della 
  
 Al termine della elaborazione di ciascuna richiesta, il Controller risponde al Browser 
 fornendo (col metodo :ref:`buildThePage`) la pagina iniziale definita da :ref:`basicrobot22Gui.html` 
-ed aggiornata con i valori dei correnti degli attributi del *Model*.
+ed aggiornata con i valori correnti degli attributi del *Model*.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -713,6 +716,10 @@ Il file  ``ioutils.js`` definisce operazioni utili a inserire messaggi nelle are
 
 .. code::
 
+    const infoDisplay     = document.getElementById("display");
+    const webcamip        = document.getElementById("webcamip");
+    const robotDisplay    = document.getElementById("robotDisplay");
+
   function setMessageToWindow(outfield, message) {
       var output = message.replace("\n","<br/>")
       outfield.innerHTML = `<tt>${output}</tt>`
@@ -748,6 +755,42 @@ Esso definisce funzioni che realizzano la connessione via socket con il server e
 un messaggio al server e di visualizzare la risposta.
 
 
+Si riporta qui il codice della funzione ``connect`` che crea una WebSocket usando l'URL 
+``ws://SERVERHOSTIP/socket``.
+
+
+
+.. code::
+
+    function connect(){
+      var host       =  document.location.host;
+        var pathname =  "/"                    
+        var addr     = "ws://" +host  + pathname + "socket"  ;
+        // Assicura che sia aperta un unica connessione
+        if(socket !== undefined && socket.readyState !== WebSocket.CLOSED){
+             alert("WARNING: Connessione WebSocket già stabilita");
+        }
+        socket = new WebSocket(addr);
+
+        socket.onopen = function (event) {
+            setMessageToWindow(infoDisplay,"Connected to " + addr);
+        };
+
+        socket.onmessage = function (event) {
+            console.log("ws-status:" + `${event.data}`);
+            console.log(""+`${event.data}`);
+            setMessageToWindow(robotDisplay,""+`${event.data}`);
+        };
+    }//connect
+
+- La proprietà ``socket.onopen`` definisce l'handler invocato alla apertura della socket. Questo handler
+  invoca la funzione ``setMessageToWindow`` definita in :ref:`ioutils.js` per visualizzare 
+  nel campo :blue:`display` dell'area :ref:`infoDisplay` della pagina l'avventuta apertura. 
+- La proprietà ``socket.onmessage`` definisce l'handler invocato alla ricezione di un messaggio. Questo handler
+  invoca la funzione ``setMessageToWindow`` definita in :ref:`ioutils.js` per visualizzare il messaggio
+  nel campo :blue:`robotDisplay` dell'area :ref:`robotDisplay`.
+
+
 +++++++++++++++++++++++++++++++++++
 setprotocol
 +++++++++++++++++++++++++++++++++++
@@ -755,7 +798,7 @@ setprotocol
 Il metodo ``setprotocol`` del Controller tiene traccia nel Model del protocollo che l'utente intende usare
 per le interazioni tra :ref:`RobotController`  e il :ref:`basicrobot22`.
 
-L'utente può scegliere tra ``TCP``, ``MQTT``e ``CoAP``. In ogni caso, il protocollo CoAP viene comunque usato 
+L'utente può scegliere tra ``TCP`` e ``CoAP``. In ogni caso, il protocollo CoAP viene comunque usato 
 per realizzare la :ref:`Interazione BrToRc (basicrobot22-RobotController)`.
 
 
@@ -846,7 +889,7 @@ Avviene usando RobotUtils
 Interazione BrToRc (basicrobot22-RobotController)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Avviene usando  WebSocketHandler gia introdotto in :ref`WebApplication con SpringBoot<Il gestore WebSocketHandler>`
+Avviene usando  ``WebSocketHandler`` gia introdotto in :ref:`WebApplication con SpringBoot<Il gestore WebSocketHandler>`
 
 .. code::
 
