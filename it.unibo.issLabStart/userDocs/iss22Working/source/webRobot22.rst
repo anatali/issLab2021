@@ -779,11 +779,6 @@ La interazione tra il Browser che contiene la pagina HTML e il Controller della 
 Al termine della elaborazione di ciascuna richiesta, il Controller risponde al Browser 
 come descritto in :ref:`Creazione della pagina di risposta`.
 
-
-fornendo (col metodo :ref:`buildThePage`) la pagina iniziale definita da :ref:`basicrobot22Gui.html` 
-ed aggiornata con i valori correnti degli attributi del *Model*.
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Creazione della pagina di risposta
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -826,9 +821,21 @@ setprotocol
 Il metodo ``setprotocol`` del Controller tiene traccia nel Model del protocollo che l'utente intende usare
 per le interazioni tra :ref:`RobotController`  e il :ref:`basicrobot22`.
 
+.. code::
+
+  protected boolean usingTcp  = false;
+
+    @PostMapping("/setprotocol")
+    public String setprotocol(Model viewmodel, @RequestParam String protocol  ){
+        this.protocol = protocol;
+        usingTcp      = protocol.equals("tcp");
+        viewmodel.addAttribute("protocol", protocol);
+        return buildThePage(viewmodel);
+    }
+
+
 L'utente può scegliere tra ``TCP`` e ``CoAP``. In ogni caso, il protocollo CoAP viene comunque usato 
 per realizzare la :ref:`Interazione BrToRc (basicrobot22-RobotController)`.
-
 
 
 +++++++++++++++++++++++++++++++++++
@@ -838,6 +845,15 @@ setwebcamip
 Il metodo ``setwebcamip`` del Controller tiene traccia nel Model dell'indirzzo IP della WebCam su Android (o su PC).
 Lo stream prodotto da questa WebCam (una volta attivata) viene visualizzato nella card superiore della :ref:`WebcamArea`.
 
+.. code::
+
+    @PostMapping("/setwebcamip")
+    public String setwebcamip(Model viewmodel, @RequestParam String ipaddr  ){
+        webcamip = ipaddr;
+        viewmodel.addAttribute("webcamip", webcamip);
+        return buildThePage(viewmodel);
+    }
+
 +++++++++++++++++++++++++++++++++++
 setrobotip
 +++++++++++++++++++++++++++++++++++
@@ -845,8 +861,8 @@ setrobotip
 Il metodo ``setrobotip`` del Controller tiene traccia nel Model dell'indirzzo IP del robot (``ipaddr``) immesso dall'utente
 e inizializza una connessione con :ref:`basicrobot22` usando il protocollo selezionato dall'utente con :ref:`setprotocol`.
 
-Per realizzare le connessioni usiamo la libreria ``it.unibo.comm2022-2.0.jar`` costruita dal progetto
-``it.unibo.comm2022`` descritto in :ref:`Supporti per comunicazioni`
+Per realizzare le connessioni, usiamo la libreria ``it.unibo.comm2022-2.0.jar`` costruita dal progetto
+``it.unibo.comm2022`` descritto in :ref:`Supporti per comunicazioni`.
 
 
 In ogni caso, inizializza anche una connessione CoAP con il robot, associando ad essa un  
