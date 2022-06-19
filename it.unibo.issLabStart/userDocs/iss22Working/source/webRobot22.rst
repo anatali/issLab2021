@@ -722,11 +722,35 @@ Si riporta qui il codice della funzione ``connect`` che crea una WebSocket usand
 Chiamate HTTP al Controller
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
+
+
 La interazione tra il Browser che contiene la pagina HTML e il Controller della Web application
 è relativa a richieste:
 
 - di tipo :blue:`GET`, iniviata dal Browser all'inizio della connessione;
 - di tipo :blue:`POST`, provenienti dalle parti di input della :ref:`ConfigurationArea and Data`.
+
+  .. list-table:: 
+    :widths: 50,50
+    :width: 80%
+
+    * -   
+        .. image::  ./_static/img/Robot22/webRobot22GuiConfigCmds.PNG
+           :align: center 
+           :width: 100%
+
+      -
+          .. image::  ./_static/img/Robot22/webRobot22GuiRobotCmds.PNG
+           :align: center 
+           :width: 100%
+
+ 
+
+
+
+ 
 
 .. code::
   
