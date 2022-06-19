@@ -346,3 +346,30 @@ Note su Bootstrap
 - Responsive images automatically adjust to fit the size of the screen.
   ``img-fluid`` class applies ``max-width: 100%;`` and ``height: auto;`` to the image.  
   The image will then scale nicely to the parent element.
+
+
+- :ref:`WebApplication con SpringBoot`
+- :ref:`Configurazione con WebSocketConfigurer`
+- :ref:`Trasferimento di immagini: indexAlsoImages.html`
+- :ref:`Bootstrap e webJars`
+- :ref:`WebSocket in SpringBoot: versione STOMP`
+- :ref:`Client (in Java per programmi)`
+
+
+  
+++++++++++++++++++++++++++++++++++++
+Card with webcam
+++++++++++++++++++++++++++++++++++++
+
+- Open Windows Settings and choose Devices
+- Click the Windows Start Menu Button.
+- Click Camera
+- ipwecab e SimpleMjpegView
+
+ .. code::
+     
+    <script>
+    function myFunction() {
+    window.open("https://www.w3schools.com");
+    }
+    </script>

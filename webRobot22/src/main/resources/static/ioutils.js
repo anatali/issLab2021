@@ -3,7 +3,7 @@ ioutils.js
 */
 
     const infoDisplay     = document.getElementById("display");
-    const webcamip        = document.getElementById("webcamip");
+    //const webcamip        = document.getElementById("webcamip");
     const robotDisplay    = document.getElementById("robotDisplay");
 
     function setMessageToWindow(outfield, message) {
