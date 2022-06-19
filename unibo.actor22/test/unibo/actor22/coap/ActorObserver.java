@@ -5,7 +5,7 @@ import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 
-import unibo.actor22comm.utils.ColorsOut;
+import unibo.comm22.utils.ColorsOut;
 
 public class ActorObserver {
 	private CoapObserveRelation relation = null;

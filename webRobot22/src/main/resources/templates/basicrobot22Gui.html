@@ -33,10 +33,15 @@
        <!--   PROTOCOL InputArea   -->
        <form action="setprotocol" method="post">
         <!-- the form-data is sent to the path specified in the action attribute -->
-        <!-- <label for="webcamspec">wcam ip</label> -->
-        <input type="text" size="10" id="protocolspec" name="protocol" value="coap">
+           <select name="protocol" id="protocols">
+               <option value="coap">coap</option>
+               <option value="tcp">tcp</option>
+           </select>
+        <!-- <input type="text" size="10" id="protocolspec" name="protocol" value="coap"> -->
         <input type="submit" value="protocol">
        </form>
+
+
       </div>
          <!--   PROTOCOL DataArea   -->
       <div class="col-5 text-primary">

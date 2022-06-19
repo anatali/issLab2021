@@ -1,23 +1,24 @@
 /*
-ClientUsingPost.java
+ClientUsingWs.java
 ===============================================================
 Technology-dependent application
 TODO. eliminate the communication details from this level
 ===============================================================
 */
 package unibo.actor22.ws;
+
 import unibo.actor22.common.ApplData;
-import unibo.actor22comm.interfaces.IObserver;
-import unibo.actor22comm.interfaces.Interaction2021;
-import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommUtils;
-import unibo.actor22comm.ws.*;
+import unibo.comm22.interfaces.IObserver;
+import unibo.comm22.interfaces.Interaction2021;
+import unibo.comm22.utils.ColorsOut;
+import unibo.comm22.utils.CommUtils;
+import unibo.comm22.ws.*;
 import java.util.Observable;
 
 public class ClientUsingWs implements IObserver{
  
 	private Interaction2021 conn;
-  
+ /* 
 	protected void doBasicMoves() throws Exception {
 		conn = WsConnection.create("localhost:8085/socket" );
 		((WsConnection)conn).addObserver(this);
@@ -56,15 +57,26 @@ public class ClientUsingWs implements IObserver{
 	public void update(String data) {
 		ColorsOut.out("ClientUsingWs update receives:" + data);
 	}	
-/*
-MAIN
- */
+ 
+
 	public static void main(String[] args) throws Exception   {
 		CommUtils.aboutThreads("Before start - ");
  		new ClientUsingWs().doBasicMoves();
 		CommUtils.aboutThreads("At end - ");
 	}
 	
+ */
 
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(String value) {
+		// TODO Auto-generated method stub
+		
+	}
 	
  }

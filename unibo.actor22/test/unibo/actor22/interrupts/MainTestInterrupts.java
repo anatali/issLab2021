@@ -4,8 +4,8 @@ import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.*;
 import unibo.actor22comm.SystemData;
-import unibo.actor22comm.utils.CommSystemConfig;
-import unibo.actor22comm.utils.CommUtils;
+import unibo.comm22.utils.CommSystemConfig;
+import unibo.comm22.utils.CommUtils;
 
 @Context22(name = "ctx", host = "localhost", port = "8078")
 @Actor22(name = "a1",contextName="ctx",implement = TestInterrupts.class)

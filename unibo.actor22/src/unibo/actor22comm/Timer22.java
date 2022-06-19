@@ -4,7 +4,7 @@ import it.unibo.kactor.IApplMessage;
 import it.unibo.radarSystem22.domain.utils.ColorsOut;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
-import unibo.actor22comm.utils.CommUtils;
+import unibo.comm22.utils.CommUtils;
 
 public class Timer22 extends Thread{
 	private int interval = 0;

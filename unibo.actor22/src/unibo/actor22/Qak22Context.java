@@ -8,15 +8,15 @@ import unibo.actor22.annotations.Actor22;
 import unibo.actor22.annotations.ActorLocal;
 import unibo.actor22.annotations.ActorRemote;
 import unibo.actor22.annotations.Context22;
-import unibo.actor22comm.ProtocolInfo;
-import unibo.actor22comm.ProtocolType;
+import unibo.comm22.ProtocolInfo;
+import unibo.comm22.ProtocolType;
 import unibo.actor22comm.SystemData;
-import unibo.actor22comm.coap.CoapApplServer;
+import unibo.comm22.coap.CoapApplServer;
 import unibo.actor22comm.context.EnablerContextForActors;
 import unibo.actor22comm.events.EventMsgHandler;
 import unibo.actor22comm.proxy.ProxyAsClient;
-import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommUtils;
+import unibo.comm22.utils.ColorsOut;
+import unibo.comm22.utils.CommUtils;
 
  
 

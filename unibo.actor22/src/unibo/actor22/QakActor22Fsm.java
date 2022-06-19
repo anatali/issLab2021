@@ -5,8 +5,8 @@ import java.util.Vector;
 import it.unibo.kactor.IApplMessage;
 import kotlin.Pair;
 import unibo.actor22comm.SystemData;
-import unibo.actor22comm.interfaces.StateActionFun;
-import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22.interfaces.StateActionFun;
+import unibo.comm22.utils.ColorsOut;
  
 
 public abstract class QakActor22Fsm extends QakActor22 {  

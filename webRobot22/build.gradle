@@ -69,7 +69,8 @@ dependencies {
 	implementation name: '2p301'
 	implementation name: 'it.unibo.qakactor-2.7'
 	implementation name: 'unibonoawtsupports'  //required by the old infrastructure
-	implementation name: 'unibo.actor22-1.1'   //using actor22comm in ConnQakBase
+
+	implementation name: 'unibo.actor22-1.1'   //using actor22comm  FLAT?
 
 }
 

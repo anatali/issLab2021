@@ -7,7 +7,7 @@ import it.unibo.kactor.ApplMessage;
 import it.unibo.kactor.IApplMessage;
 import kotlin.Pair;
 import unibo.actor22.*;
-import unibo.actor22comm.utils.ColorsOut;
+import unibo.comm22.utils.ColorsOut;
 
 /*
  * Gestisce gli eventi generati da emit locali o remote

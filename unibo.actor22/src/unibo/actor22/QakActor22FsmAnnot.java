@@ -9,8 +9,8 @@ import it.unibo.kactor.IApplMessage;
 import unibo.actor22.annotations.State;
 import unibo.actor22.annotations.Transition;
 import unibo.actor22.annotations.TransitionGuard;
-import unibo.actor22comm.interfaces.StateActionFun;
-import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22.interfaces.StateActionFun;
+import unibo.comm22.utils.ColorsOut;
  
  
 
