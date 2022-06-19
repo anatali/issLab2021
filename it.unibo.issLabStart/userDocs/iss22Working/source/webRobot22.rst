@@ -585,7 +585,8 @@ La realizzazione della parte dinamica si avvale di supporti sia nella pagina Web
     :width: 80%
 
 
-- Pagina HTML: :ref:`wsminimal.js<wsminimal.js in webrobo22>`, :ref:`ioutils.js`
+- Pagina HTML: :ref:`wsminimal.js<wsminimal.js in webrobo22>`, :ref:`ioutils.js` 
+  (e anche :ref:`Stili custom: issSpec.css`).
 - Server: :ref:`RobotUtils.java`  
 
 -----------------------------------------------------------
