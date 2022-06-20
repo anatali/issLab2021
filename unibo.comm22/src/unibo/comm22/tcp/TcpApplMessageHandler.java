@@ -35,7 +35,7 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    	break;
 			    } else{ 
 			    	IApplMessage m = new ApplMessage(msg);
-			    	handler.elaborate( m, conn ); //chiama  ctxH
+			    	handler.elaborate( m, conn );  
 			    }
 			}
 			ColorsOut.out("TcpApplMessageHandler  |  BYE", ColorsOut.BLUE   );

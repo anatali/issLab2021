@@ -4,8 +4,8 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import org.springframework.web.util.HtmlUtils;
-import unibo.actor22comm.interfaces.Interaction2021;
-import unibo.actor22comm.utils.ColorsOut;
+import unibo.comm22.interfaces.Interaction2021;
+import unibo.comm22.utils.ColorsOut;
 
 public class RobotCoapObserver implements CoapHandler{
 

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import unibo.Robots.common.RobotUtils;
-import unibo.actor22comm.coap.CoapConnection;
-import unibo.actor22comm.utils.ColorsOut;
+import unibo.comm22.coap.CoapConnection;
+import unibo.comm22.utils.ColorsOut;
 
 //---------------------------------------------------
 //import unibo.Robots.common.RobotUtils;

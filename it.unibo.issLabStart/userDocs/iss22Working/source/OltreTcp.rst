@@ -56,6 +56,9 @@ che cambiano l'impostazione logica della interazione.
 
 In ogni caso, dovremo costruire le nostre astrazioni utilizzando le librerie disponibili.
 
+
+Si veda il progetto: :blue:`it.unibo.enablerCleanArch` (e poi :blue:`it.unibo.comm22`).
+
 .. _librerieprotocolli:
 
 ------------------------------------

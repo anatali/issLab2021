@@ -1,14 +1,16 @@
 package unibo.Robots.common;
-//import connQak.ConnQakBase;
-//import it.unibo.kactor.IApplMessage;
-//import unibo.actor22.Qak22Util;
-//import unibo.actor22comm.ProtocolType;
-//import unibo.actor22comm.SystemData;
+/*
 import unibo.actor22comm.coap.CoapConnection;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.tcp.TcpClientSupport;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
+*/
+import unibo.comm22.coap.CoapConnection;
+import unibo.comm22.interfaces.Interaction2021;
+import unibo.comm22.tcp.TcpClientSupport;
+import unibo.comm22.utils.ColorsOut;
+import unibo.comm22.utils.CommUtils;
 
 public class RobotUtils {
     public static final String robotCmdId       = "move";
