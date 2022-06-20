@@ -45,6 +45,11 @@ protected String topicInput = "";
 		return mqttSup;
 	}
 
+	public static synchronized MqttConnection create(String clientName  ) {
+		if( mqttSup == null  ) mqttSup = new MqttConnection( clientName );
+		return mqttSup;
+	}
+
 	public static synchronized MqttConnection create(String clientName, String mqttBrokerAddr, String topic ) {
 		if( mqttSup == null  ) mqttSup = new MqttConnection(clientName, mqttBrokerAddr, topic);
 		return mqttSup;
@@ -58,7 +63,10 @@ protected String topicInput = "";
 //		if( mqttSup == null  ) mqttSup = new MqttConnection(clientName,topicToSubscribe);
 //		return mqttSup;
 //	}
-	
+
+    public MqttConnection( String clientName ) {  
+    }
+    
     protected MqttConnection(String clientName, String mqttBrokerAddr, String topic) { //, String topicToSubscribe
     	setTopic(topic);
     	connectToBroker(clientName, mqttBrokerAddr);	
@@ -75,7 +83,10 @@ protected String topicInput = "";
 //    }
     
     
-    
+    public boolean connect(String clientid,  String brokerAddr) {
+    	connectToBroker(clientid,brokerAddr);
+    	return isConnected;
+    }
     public void connectToBroker(String clientid,  String brokerAddr) {
     	if( isConnected ) return;
 		try {
@@ -116,34 +127,15 @@ protected String topicInput = "";
 		}    	
     }
  
+   //Introduced for unibo.qakactor22
+    public void setCallback( MqttCallback h ) {
+    	client.setCallback(h);
+    }
+    //Introduced for unibo.qakactor22
+    public void subscribe( String t ) throws MqttException {
+    	client.subscribe(t);
+    }
    
-//	protected void connect(String clientid, String topic, String brokerAddr) {
-//		if( isConnected ) return;
-//		try {
-//			this.clientid   = clientid;
-//			//this.topic      = topic;
-//			this.brokerAddr = brokerAddr;
-//			client          = new MqttClient(brokerAddr, clientid);
-//			MqttConnectOptions options = new MqttConnectOptions();
-//			options.setKeepAliveInterval(480);
-//			options.setWill("unibo/clienterrors", "crashed".getBytes(), 2, true);  
-//			client.connect(options);
-//			isConnected = true;
-//			ColorsOut.out("MqttConnection | connected " + clientid + " to " + topic, ColorsOut.CYAN);
-//		} catch (MqttException e) {
-//			isConnected = false;
-//			ColorsOut.outerr("MqttConnection  | connect Error:" + e.getMessage());
-//		}
-//	}
-	
-/*	
-	protected void connectMqtt(String clientid, String topic, IApplMsgHandlerMqtt handler) {
-		connect( clientid, topic, RadarSystemConfig.mqttBrokerAddr);
-		this.handler = handler;
-		subscribe(clientid, topic, handler);    
-		ColorsOut.out(clientid + " | CREATED MqttConnection handler="+handler + " subscribed to " + topic, ColorsOut.CYAN);
-	}
-*/	
 	public void disconnect() {
 		try {
 			client.disconnect();
@@ -190,6 +182,9 @@ protected String topicInput = "";
 		subscribe( clientid, answertopic, new MqttConnectionCallback(client.getClientId() , blockingQueue));
 	}
 
+	public void publish(String topic, String msg ) {
+		publish( topic, msg, 2, false );
+	}
 	
 	public void publish(String topic, String msg, int qos, boolean retain) {
 		//ColorsOut.outappl("publish " + msg + " on " + topic, ColorsOut.BLUE);
@@ -268,27 +263,6 @@ protected String topicInput = "";
 		publish(topicInput, requestMsg.toString(), 2, false);	
  		
  		//ATTESA RISPOSTA su answerTopic. See MqttConnectionCallback
-		/*
-		String answer = null;
-		while( answer== null ) {
-			answer=blockingQueue.poll() ;
-			ColorsOut.out("MqttConnection | blockingQueue-poll answer=" + answer, ColorsOut.CYAN  );
-			Utils.delay(200); //il client ApplMsgHandler dovrebbe andare ...
-		}	
-		ColorsOut.out("MqttConnection | request-answer=" + answer + " blockingQueue=" + blockingQueue, ColorsOut.CYAN);
- 		try {
- 			ApplMessage msgAnswer = new ApplMessage(answer); //answer is structured
- 			answer = msgAnswer.msgContent(); 		
- 			//Disconnect ancd close the answer client
- 			clientAnswer.disconnect();
- 			clientAnswer.close();
-   		}catch(Exception e) {
- 			ColorsOut.outerr("MqttConnection | request-answer ERROR: " + e.getMessage()   ); 			
- 		}
-		return answer;
-		*/
-//		return waitFroAnswerPolling(  clientAnswer );
-//		return waitFroAnswerBlocking(  clientAnswer );
 		String answer = receiveMsg();
 		clientAnswer.disconnect();
 		clientAnswer.close();
