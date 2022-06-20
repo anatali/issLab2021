@@ -3,7 +3,7 @@ import alice.tuprolog.Prolog
 import alice.tuprolog.Struct
 import alice.tuprolog.Term
 import alice.tuprolog.Theory
-import it.unibo.`is`.interfaces.protocols.IConnInteraction
+import  unibo.comm22.interfaces.Interaction2021
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.newFixedThreadPoolContext
@@ -31,13 +31,13 @@ object sysUtil{
 	val userDirectory          = System.getProperty("user.dir")
 	val cpus                   = Runtime.getRuntime().availableProcessors()
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	val singleThreadContext    = newSingleThreadContext("qaksingle")
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	val ioBoundThreadContext   = newFixedThreadPoolContext(64, "qakiopool")
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	val cpusThreadContext      = newFixedThreadPoolContext(cpus, "qakcpuspool")
 
@@ -46,7 +46,7 @@ object sysUtil{
 	var mqttBrokerEventTopic : String? = ""
 	var trace   : Boolean = false
 	var logMsgs : Boolean = false
-	val connActive : MutableSet<IConnInteraction> = mutableSetOf<IConnInteraction>()    //Oct2019
+	val connActive : MutableSet<Interaction2021> = mutableSetOf<Interaction2021>()    //Oct2019
 
 	
 @JvmStatic    	fun getMqttEventTopic() : String {
@@ -112,7 +112,7 @@ object sysUtil{
          //println("sysUtil | dispatch $dt  ")
          dispatchMap.put( d, dt as Struct )
      }
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")

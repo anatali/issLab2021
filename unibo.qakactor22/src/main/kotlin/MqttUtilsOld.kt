@@ -114,7 +114,7 @@ gradle
 	}
 
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	fun sendMsgToWorkActor( msg: String ){
 		workActor.scope.launch{

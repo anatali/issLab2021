@@ -76,7 +76,7 @@ class CoapResourceCtx(name: String, val ctx : QakContext) : CoapResource(name) {
         changed()             //DO NOT FORGET!!!
     }
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     fun propagateEvent(event : ApplMessage){
         if( ctx == null ) return;  //defensive May 2022

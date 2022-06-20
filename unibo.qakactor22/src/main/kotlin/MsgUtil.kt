@@ -1,11 +1,20 @@
 package it.unibo.kactor
 
 import unibo.comm22.interfaces.Interaction2021
+import unibo.comm22.tcp.TcpConnection
+import unibo.comm22.udp.UdpConnection
+import java.net.DatagramSocket
+import java.net.Socket
+import unibo.comm22.udp.UdpEndpoint
+
+import java.net.InetAddress
+import jssc.SerialPort
+import unibo.comm22.serial.SerialConnection
 
 
 //FILE MsgUtil.kt
 
-//import it.unibo.`is`.interfaces.protocols.IConnInteraction
+//import  unibo.comm22.interfaces.Interaction2021
 //import it.unibo.supports.FactoryProtocol
 
 enum class Protocol {
@@ -60,7 +69,7 @@ suspend fun sendMsg( sender : String, msgId: String, msg: String, destActor: Act
 suspend fun sendMsg(msg: IApplMessage, destActor: ActorBasic) {
         destActor.actor.send(msg)
     }
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 @JvmStatic
 suspend fun sendMsg(msgId: String, msg: String, destActor: ActorBasic) {
@@ -80,7 +89,7 @@ suspend fun sendMsg(  sender: String, msgId : String, payload: String, destName 
 		}
 	}
 	
-	
+/*
 @JvmStatic
 fun getFactoryProtocol(protocol: Protocol) : FactoryProtocol?{
         var factoryProtocol : FactoryProtocol? = null
@@ -93,7 +102,7 @@ fun getFactoryProtocol(protocol: Protocol) : FactoryProtocol?{
         return factoryProtocol
     }
 
-@JvmStatic    fun getConnection(protocol: Protocol, hostName: String, portNum: Int, clientName:String) : IConnInteraction? {
+@JvmStatic    fun getConnection(protocol: Protocol, hostName: String, portNum: Int, clientName:String) : Interaction2021? {
         when( protocol ){
             Protocol.TCP , Protocol.UDP -> {
                 val factoryProtocol = FactoryProtocol(null, "$protocol", clientName)
@@ -110,15 +119,47 @@ fun getFactoryProtocol(protocol: Protocol) : FactoryProtocol?{
             }
         }
     }
-	
+*/
+    @JvmStatic
+    fun getConnection(protocol: Protocol, hostName: String, portNum: Int, clientName:String) : Interaction2021? {
+        when( protocol ){
+            Protocol.TCP -> {
+                //val factoryProtocol = FactoryProtocol(null, "$protocol", clientName)
+                try {
+                    val socket = Socket(hostName, portNum)
+                    val conn   = TcpConnection(socket)
+                    return conn
+                }catch( e: Exception ){
+                    //println("MsgUtil: NO conn to $hostName ")
+                    return null
+                }
+            }
+            Protocol.UDP -> {
+                val socket = DatagramSocket()
+                val address  = InetAddress.getByName(hostName)
+                val endpoint = UdpEndpoint(address, portNum)
+                val conn: Interaction2021 = UdpConnection(socket, endpoint)
+                return conn
+            }
+            else -> {
+                return null
+            }
+        }
+    }
 
 
 @JvmStatic
 fun getConnectionSerial( portName: String, rate: Int) : Interaction2021 {
-        val  factoryProtocol =  FactoryProtocol(null,"${Protocol.SERIAL}",portName)
-        val conn = factoryProtocol.createSerialProtocolSupport(portName)
-        return conn
-    }
+    //val  factoryProtocol =  FactoryProtocol(null,"${Protocol.SERIAL}",portName)
+    val DATA_RATE   = 115200
+    val serialPort  =  SerialPort(portName);
+    serialPort.openPort();
+    serialPort.setParams(DATA_RATE, SerialPort.DATABITS_8,
+        SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+    val conn = SerialConnection(serialPort)
+    //val conn = factoryProtocol.createSerialProtocolSupport(portName)
+    return conn
+}
 
 @JvmStatic
 fun strToProtocol( ps: String):Protocol{

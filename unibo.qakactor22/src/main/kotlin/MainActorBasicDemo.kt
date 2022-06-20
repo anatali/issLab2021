@@ -14,7 +14,7 @@ override suspend fun actorBody(msg : IApplMessage){
  			File("${name}_MsgLog.txt").appendText("${msg}\n")
 	}	
 }
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 fun main() = runBlocking {
 	println("MainActorBasicDemo START")

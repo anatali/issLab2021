@@ -1,20 +1,21 @@
 package it.unibo.kactor
 
-import it.unibo.`is`.interfaces.protocols.IConnInteraction
+import unibo.comm22.interfaces.Interaction2021
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
 class NodeProxy( name: String, val ctx: QakContext, val protocol: Protocol,
                  val hostName: String,  val portNum: Int ) : ActorBasic( name ) {
 
-    protected var conn: IConnInteraction? = null
+    protected var conn: Interaction2021? = null
 
     init {
         configure()
     }
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     fun configure() {
         while (conn == null) {
@@ -38,7 +39,7 @@ class NodeProxy( name: String, val ctx: QakContext, val protocol: Protocol,
     override suspend fun actorBody(msg: IApplMessage) {
         //sysUtil.traceprintln("       NodeProxy $name receives $msg conn=$conn ") // conn=$conn"
         try {
-            conn?.sendALine("$msg")
+            conn?.forward("$msg")
         } catch (e: Exception) {
             println("               %%% NodeProxy $name  | sendALine error $e ")
         }
@@ -46,14 +47,14 @@ class NodeProxy( name: String, val ctx: QakContext, val protocol: Protocol,
 
 
     //Oct2019 : handle answers sent on this connections
-@kotlinx.coroutines.ObsoleteCoroutinesApi
 
-   protected fun handleConnection( conn: IConnInteraction ) {
+
+   protected fun handleConnection( conn: Interaction2021 ) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 //sysUtil.traceprintln("               %%% NodeProxy $name  | handling new input from :$conn")
                 while (true) {
-                    val msg = conn.receiveALine()       //BLOCKING ???
+                    val msg = conn.receiveMsg()       //BLOCKING ???
                     sysUtil.traceprintln("               %%% NodeProxy $name  | receives: $msg  ")
                     if( msg == null ){
                         break

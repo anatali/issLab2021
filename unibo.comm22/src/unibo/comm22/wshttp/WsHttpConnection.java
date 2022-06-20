@@ -58,29 +58,13 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
     }	
 
 	 
-//Since inherits from IConnInteraction
-	@Override
-	public void sendALine(String msg) throws Exception {
+ 
+	protected void sendALine(String msg) throws Exception {
         if(connectForWs) myWs.send(msg);
         else ColorsOut.out("SORRY: not connected for ws");
 	}
 	 
-	@Override
-	public void sendALine(String msg, boolean isAnswer) throws Exception {
-		// TODO Auto-generated method stub		
-	}
-
-	@Override
-	public String receiveALine() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void closeConnection() throws Exception {
-		// TODO Auto-generated method stub		
-	}
-	
-	 
+ 	 
 	
 	
 //Since inherits from Interaction2021 firstpart

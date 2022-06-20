@@ -3,7 +3,7 @@ package it.unibo.kactor
 import kotlinx.coroutines.*
  
  
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 abstract class ActorWrapper( name: String) :
 	ActorBasic(name, scope, false, true, false, 50) {
 

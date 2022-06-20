@@ -50,8 +50,8 @@ protected boolean closed;
 		closeConnection();
 	}
 
-	@Override
-	public void sendALine(String msg) throws Exception {
+	 
+	protected void sendALine(String msg) throws Exception {
 		ColorsOut.out( " | UdpConnection sendALine=" + msg, ColorsOut.GREEN);
 
 		//BasicUtils.aboutThreads( " | UdpConnection  sendALine - ");  
@@ -64,12 +64,10 @@ protected boolean closed;
 	    //ColorsOut.out( "UdpConnection | has sent   " + msg, ColorsOut.ANSI_YELLOW );	 
 	}
 
-	@Override
-	public void sendALine(String msg, boolean isAnswer) throws Exception {
-	}
+ 
 
-	@Override
-	public String receiveALine() throws Exception {
+	 
+	protected String receiveALine() throws Exception {
 		String line;
 			if(closed) {
 				line = null; //UdpApplMessageHandler will terminate
@@ -86,8 +84,8 @@ protected boolean closed;
  			return line;		
 	}
 
-	@Override
-	public void closeConnection() throws Exception {
+	 
+	protected void closeConnection() throws Exception {
 		forward(closeMsg);
 		closed = true;
 		ColorsOut.out( "UdpConnection | closing   ", ColorsOut.ANSI_YELLOW );

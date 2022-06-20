@@ -7,10 +7,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-
 import unibo.comm22.interfaces.Interaction2021;
 import unibo.comm22.utils.ColorsOut;
-import unibo.comm22.utils.CommUtils;
+ 
   
 
 public class TcpConnection implements Interaction2021{
@@ -53,9 +52,13 @@ private Socket socket;
 	public void close() throws Exception { 
 		closeConnection();
 	}
-
-	@Override
-	public void sendALine(String msg) throws Exception {
+	
+	protected String receiveALine() throws Exception {
+		String	line = inputChannel.readLine() ; //blocking =>
+ 		return line;		
+	}
+	
+	protected void sendALine(String msg) throws Exception {
 		//ColorsOut.outappl( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
@@ -66,6 +69,12 @@ private Socket socket;
 			throw e;
 	    }	
 	}
+	protected void closeConnection() throws Exception {
+		socket.close();
+		ColorsOut.out( "TcpConnection | CLOSED  ", ColorsOut.BLUE );
+	}
+/*
+	@Override
 
 	@Override
 	public void sendALine(String msg, boolean isAnswer) throws Exception {
@@ -79,11 +88,8 @@ private Socket socket;
 	}
 
 	@Override
-	public void closeConnection() throws Exception {
-		socket.close();
-		ColorsOut.out( "TcpConnection | CLOSED  ", ColorsOut.BLUE );
-	}
 
+*/
 
 
 }

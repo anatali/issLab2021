@@ -13,7 +13,7 @@ class Demo ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scope
 	override fun getInitialState() : String{
 		return "s0"
 	}
-	@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 				
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		return { //this:ActionBasciFsm

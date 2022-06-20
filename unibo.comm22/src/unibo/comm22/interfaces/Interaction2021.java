@@ -1,8 +1,8 @@
 package unibo.comm22.interfaces;
 
-import it.unibo.is.interfaces.protocols.IConnInteraction;
+ 
 
-public interface Interaction2021 extends IConnInteraction {	 
+public interface Interaction2021  {	 //extends IConnInteraction
 	public void forward(  String msg ) throws Exception;
 	public String request(  String msg ) throws Exception;
  	public void reply(  String reqid ) throws Exception;

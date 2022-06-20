@@ -20,7 +20,7 @@ var answer = "noanswer"
 		scope.launch{ request( extmsg.msgId(), extmsg.msgContent(), owner) }
      }
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
      override suspend fun actorBody(msg : IApplMessage){
 //		if( msg.msgId() == "start") {

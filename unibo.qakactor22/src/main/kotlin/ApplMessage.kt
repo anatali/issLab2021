@@ -2,7 +2,7 @@ package it.unibo.kactor
 
 import alice.tuprolog.Struct
 import alice.tuprolog.Term
-import it.unibo.`is`.interfaces.protocols.IConnInteraction
+import  unibo.comm22.interfaces.Interaction2021
 
 
 
@@ -15,7 +15,7 @@ open class ApplMessage:  IApplMessage{
     protected var msgContent: String = ""
     protected var msgNum: Int = 0
 
-    var conn : IConnInteraction? = null   //Oct2019
+    var conn : Interaction2021? = null   //Oct2019
 
     val term: Term
         get() = if (msgType == "")
@@ -34,7 +34,7 @@ open class ApplMessage:  IApplMessage{
      }
         //@Throws(Exception::class)
     constructor( MSGID: String, MSGTYPE: String, SENDER: String, RECEIVER: String,
-                 CONTENT: String, SEQNUM: String, connection : IConnInteraction )  {
+                 CONTENT: String, SEQNUM: String, connection : Interaction2021 )  {
         msgId = MSGID
         msgType = MSGTYPE
         msgSender = SENDER

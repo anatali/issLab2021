@@ -45,7 +45,7 @@ class TimerActor(name: String, scope: CoroutineScope, val ctx : QakContext,
     }
 
     /*
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
    override suspend fun actorBody(msg : ApplMessage){
         //sysUtil.trace

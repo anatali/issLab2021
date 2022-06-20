@@ -124,7 +124,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     abstract fun getBody(): (ActorBasicFsm.() -> Unit)
     abstract fun getInitialState(): String
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     fun setBody( buildbody: ActorBasicFsm.() -> Unit, initialStateName: String ) {
         buildbody()            //Build the structural part
@@ -142,14 +142,14 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 			 sysUtil.updateLogfile(context!!.ctxLogfileName, "item($name,${currentState.stateName},$msg).", dir=msgLogNoCtxDir )		
 	}
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     override suspend fun actorBody(msg: IApplMessage) {
          if ( !isStarted && msg.msgId() == autoStartMsg.msgId() ) fsmStartWork( msg )
          else  fsmwork(msg)
     }
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     suspend fun fsmStartWork( msg: IApplMessage ) {
         isStarted = true
@@ -166,7 +166,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
           sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmStartWork ENDS ")
      }
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
      suspend fun fsmwork(msg: IApplMessage) {
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
@@ -176,7 +176,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
         sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmwork ENDS for $msg")
    }
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     suspend fun elabMsgInState( ) {
         sysUtil.traceprintln("$tt ActorBasicFsm $name | elabMsgInState in ${currentState.stateName} $currentMsg")
@@ -185,7 +185,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     	if( elabMsgQueueStore() ) elabMsgInState()
     }
 	 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     suspend fun checkEmptyMove() {
 		//sysUtil.traceprintln("$tt ActorBasicFsm $name | checkDoEmptyMoveInState msgQueueStoreSize=:${msgQueueStore.size}")
@@ -234,7 +234,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     }
 
 	
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
 	suspend private fun elabMsgQueueStore(  ) : Boolean {
         msgQueueStore.forEach {
@@ -358,7 +358,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     }
 
 
-@kotlinx.coroutines.ObsoleteCoroutinesApi
+
 
     suspend fun replyToCaller(msgId: String, msg: String) {
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | replyToCaller msgToReply=" + msgToReply);
