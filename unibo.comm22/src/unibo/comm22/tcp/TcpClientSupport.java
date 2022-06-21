@@ -12,11 +12,12 @@ public class TcpClientSupport {
  		 
 		for( int i=1; i<=nattempts; i++ ) {
 			try {
+				ColorsOut.outappl("TcpClient | attempt " + i + " to connect with host:" + host + " port=" + port, ColorsOut.YELLOW);
 				Socket socket         =  new Socket( host, port );
- 				Interaction2021 conn  =  new TcpConnection( socket );
+				Interaction2021 conn  =  new TcpConnection( socket );
 				return conn;
 			}catch(Exception e) {
-				ColorsOut.out("TcpClient | Another attempt to connect with host:" + host + " port=" + port);
+				ColorsOut.outerr("TcpClient | Another attempt to connect with host:" + host + " port=" + port);
 				Thread.sleep(500);
 			}
 		}//for
