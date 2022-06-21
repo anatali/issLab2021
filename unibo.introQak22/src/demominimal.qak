@@ -18,8 +18,8 @@ QActor demominimal context ctxdemominimal{
 		discardMsg Off
 		//[# sysUtil.logMsgs=true #]
  	}     
- 	Goto waitMsg  
- 	
+ 	Goto waitMsg    
+ 	 
  	State waitMsg{
   		//printCurrentMessage 
   		println("demominimal waiting ...")

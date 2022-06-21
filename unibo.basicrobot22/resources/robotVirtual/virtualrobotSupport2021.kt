@@ -14,10 +14,10 @@ import kotlinx.coroutines.Job
 import it.unibo.kactor.ActorBasic
 import it.unibo.kactor.MsgUtil
 import it.unibo.kactor.ApplMessage
-import unibo.actor22comm.wshttp.WsHttpConnection
-import unibo.actor22comm.interfaces.Interaction2021
+import unibo.comm22.wshttp.WsHttpConnection
+import unibo.comm22.interfaces.Interaction2021
 import unibo.robot.MsgRobotUtil
-import unibo.actor22comm.ws.WsConnection
+import unibo.comm22.ws.WsConnection
  
 //import it.unibo.interaction.MsgRobotUtil
 

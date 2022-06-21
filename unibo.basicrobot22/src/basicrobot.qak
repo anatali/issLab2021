@@ -5,7 +5,7 @@
  https://peppe8o.com/fix-slow-ssh-remote-terminal-issue-in-raspberry-pi-os/
  */  
    
-System  /* -trace  */   basicrobot
+System  /* -trace  */   basicrobot 
 mqttBroker "broker.hivemq.com" : 1883 eventTopic "unibo/basicrobot"   //broker.hivemq.com
 
 Dispatch cmd       	: cmd(MOVE)     

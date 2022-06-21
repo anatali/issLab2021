@@ -1,7 +1,7 @@
 
 
 import it.unibo.kactor.IApplMessage;
-import unibo.actor22comm.utils.CommUtils;
+import unibo.comm22.utils.CommUtils;
 
 public class ApplData {
 

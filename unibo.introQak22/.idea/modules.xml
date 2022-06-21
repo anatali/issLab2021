@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/unibo.demominimal.iml" filepath="$PROJECT_DIR$/.idea/modules/unibo.demominimal.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/unibo.demominimal.main.iml" filepath="$PROJECT_DIR$/.idea/modules/unibo.demominimal.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/unibo.demominimal.test.iml" filepath="$PROJECT_DIR$/.idea/modules/unibo.demominimal.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/unibo.demobetter.iml" filepath="$PROJECT_DIR$/.idea/modules/unibo.demobetter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/unibo.demobetter.main.iml" filepath="$PROJECT_DIR$/.idea/modules/unibo.demobetter.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/unibo.demobetter.test.iml" filepath="$PROJECT_DIR$/.idea/modules/unibo.demobetter.test.iml" />
     </modules>
   </component>
 </project>
