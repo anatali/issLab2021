@@ -6,6 +6,7 @@ import unibo.comm22.NaiveApplHandler
 import unibo.comm22.interfaces.IApplMsgHandler
 import unibo.comm22.tcp.TcpServer
 import unibo.comm22.utils.ColorsOut
+import unibo.comm22.utils.CommSystemConfig
 import java.net.ServerSocket
 import java.net.Socket
 
@@ -43,29 +44,18 @@ class QakContextServer(val ctx: QakContext, scope: CoroutineScope,
         //We could handle several connections
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                ColorsOut.outappl(" %%% QakContextServer $name | waitForConnection protocol=${protocol.equals( "TCP" )}", ColorsOut.GREEN);
+                ColorsOut.outappl(" %%% QakContextServer $name | waitForConnection protocol=${protocol == Protocol.TCP}", ColorsOut.GREEN);
                 //while (true) {
                     //println("       QakContextServer $name | WAIT FOR CONNECTION")
                     //val conn = factoryProtocol!!.createServerProtocolSupport(ctx.portNum) //BLOCKS
                     //var conn : Interaction2021
                     if( protocol == Protocol.TCP ){
-                        /*
-                        val serverSocket = ServerSocket(ctx.portNum)
-
-                        var timeOut = 20000
-                        if (System.getProperty("inputTimeOut") != null) timeOut =
-                            System.getProperty("inputTimeOut").toInt()
-                        //System.out.println( " ***acceptAConnection timeOut = " + timeOut + " serverSocket=" + serverSocket.getInetAddress());
-                        //System.out.println( " ***acceptAConnection timeOut = " + timeOut + " serverSocket=" + serverSocket.getInetAddress());
-                        serverSocket.soTimeout = timeOut //wait for timeOut sec
-
-                        val socket = serverSocket.accept()
-                        //println( " *** has accepted a connection ... " + socket.getRemoteSocketAddress());
-                        */
-                        val userDefHandler = ContextMsgHandler("attemptCtxMsgH")
+                        val userDefHandler = ContextMsgHandler("${ctx.name}MsgH")
                         ColorsOut.outappl(name + " | waitForConnection $userDefHandler", ColorsOut.GREEN);
                         val server = TcpServer("tcpSrv",ctx.portNum,userDefHandler)
-                        ColorsOut.outappl(name + " | waitForConnection $server on ${ctx.portNum}", ColorsOut.GREEN);
+                        CommSystemConfig.tracing = true
+                        server.activate()
+                        //ColorsOut.outappl(name + " | waitForConnection $server on ${ctx.portNum}", ColorsOut.YELLOW);
                         //val serverSocket: ServerSocket = tcpSupport.connectAsReceiver(portNum)
                     //}
 

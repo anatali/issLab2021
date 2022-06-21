@@ -1,0 +1,54 @@
+//https://dl.bintray.com/jetbrains/kotlin/eclipse-plugin/0.8.19/
+
+System  demominimal    
+//mqttBroker "localhost" : 1883 eventTopic "demo0/events"
+//mqttBroker "broker.hivemq.com" : 1883 eventTopic "demo0/events"
+  
+Dispatch msg1 : msg1(ARG)
+Request  msg2 : msg2(ARG) 
+Reply    data : info(ARG)
+    
+Event alarm   : alarm( KIND )    
+ 
+Context ctxdemominimal ip [host="localhost" port=8005]
+
+   
+QActor demominimal context ctxdemominimal{
+	State s0 initial { 	    
+		//printCurrentMessage
+		discardMsg Off
+		//[# sysUtil.logMsgs=true #]
+ 	}     
+ 	Goto waitMsg  
+ 	
+ 	State waitMsg{
+  		//printCurrentMessage 
+  		println("demominimal waiting ...")
+ 	}
+ 	Transition t0 whenMsg    msg1  -> handleMsg
+ 				  whenRequest msg2 -> handleRequest
+ 
+ 
+ 	State handleMsg{ 
+ 		printCurrentMessage
+ 		onMsg( msg1:msg1(ARG) ){
+ 			println("handleMsg:msg1:msg1(${payloadArg(0)})")
+ 		}
+   	} 
+    Goto waitMsg      
+
+ 	State handleRequest{ 
+ 		printCurrentMessage
+ 		onMsg( msg2:msg2(ARG) ){
+ 			println("handleRequest:msg2:msg2(${payloadArg(0)})")
+ 		}
+ 		replyTo msg2 with data : info(ok)
+   	} 
+   	Goto waitMsg
+
+
+}    
+  
+ 	 
+ 
+   
