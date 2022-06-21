@@ -1,6 +1,5 @@
 package it.unibo.kactor
 
-import kotlinx.coroutines.CoroutineScope
 import unibo.comm22.interfaces.IApplMsgHandler
 import unibo.comm22.interfaces.Interaction2021
 import unibo.comm22.utils.ColorsOut

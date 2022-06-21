@@ -50,7 +50,7 @@ class QakContextServer(val ctx: QakContext, scope: CoroutineScope,
                     //val conn = factoryProtocol!!.createServerProtocolSupport(ctx.portNum) //BLOCKS
                     //var conn : Interaction2021
                     if( protocol == Protocol.TCP ){
-                        val userDefHandler = ContextMsgHandler("${ctx.name}MsgH")
+                        val userDefHandler = ContextMsgHandler("${ctx.name}MsgH", ctx)
                         ColorsOut.outappl(name + " | waitForConnection $userDefHandler", ColorsOut.GREEN);
                         val server = TcpServer("tcpSrv",ctx.portNum,userDefHandler)
                         CommSystemConfig.tracing = true
@@ -73,7 +73,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
  */
 
     //June2002: sarebbe un userDefHandler
-
+/*
     suspend protected fun handleConnection(conn: Interaction2021 ) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
@@ -128,5 +128,7 @@ EACH CONNECTION WORKS IN ITS OWN COROUTINE
              }
          }
     }
+
+ */
 }
 

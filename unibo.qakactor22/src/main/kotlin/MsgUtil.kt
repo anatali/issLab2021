@@ -6,7 +6,6 @@ import unibo.comm22.udp.UdpConnection
 import java.net.DatagramSocket
 import java.net.Socket
 import unibo.comm22.udp.UdpEndpoint
-
 import java.net.InetAddress
 import jssc.SerialPort
 import unibo.comm22.serial.SerialConnection

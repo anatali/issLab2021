@@ -7,7 +7,6 @@ System  demominimal
 Dispatch msg1 : msg1(ARG)
 Request  msg2 : msg2(ARG) 
 Reply    data : info(ARG)
-    
 Event alarm   : alarm( KIND )    
  
 Context ctxdemominimal ip [host="localhost" port=8005]
@@ -27,7 +26,7 @@ QActor demominimal context ctxdemominimal{
  	}
  	Transition t0 whenMsg    msg1  -> handleMsg
  				  whenRequest msg2 -> handleRequest
- 
+ 				  whenEvent  alarm -> handleEvent
  
  	State handleMsg{ 
  		printCurrentMessage
@@ -36,6 +35,17 @@ QActor demominimal context ctxdemominimal{
  		}
    	} 
     Goto waitMsg      
+
+ 	State handleEvent{ 
+ 		printCurrentMessage
+ 		onMsg( alarm:alarm(ARG) ){
+ 			[# unibo.comm22.utils.ColorsOut.out( "handleEvent:alarm:alarm(${payloadArg(0)})", 
+ 				unibo.comm22.utils.ColorsOut.BLUE
+ 			) #]
+ 		}
+   	} 
+    Goto waitMsg      
+
 
  	State handleRequest{ 
  		printCurrentMessage

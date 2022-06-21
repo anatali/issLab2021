@@ -27,6 +27,7 @@ class Demominimal ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name
 					}
 					 transition(edgeName="t00",targetState="handleMsg",cond=whenDispatch("msg1"))
 					transition(edgeName="t01",targetState="handleRequest",cond=whenRequest("msg2"))
+					transition(edgeName="t02",targetState="handleEvent",cond=whenEvent("alarm"))
 				}	 
 				state("handleMsg") { //this:State
 					action { //it:State
@@ -34,6 +35,18 @@ class Demominimal ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name
 						if( checkMsgContent( Term.createTerm("msg1(ARG)"), Term.createTerm("msg1(ARG)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								println("handleMsg:msg1:msg1(${payloadArg(0)})")
+						}
+					}
+					 transition( edgeName="goto",targetState="waitMsg", cond=doswitch() )
+				}	 
+				state("handleEvent") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						if( checkMsgContent( Term.createTerm("alarm(KIND)"), Term.createTerm("alarm(ARG)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 unibo.comm22.utils.ColorsOut.out( "handleEvent:alarm:alarm(${payloadArg(0)})", 
+								 				unibo.comm22.utils.ColorsOut.BLUE
+								 			)  
 						}
 					}
 					 transition( edgeName="goto",targetState="waitMsg", cond=doswitch() )
