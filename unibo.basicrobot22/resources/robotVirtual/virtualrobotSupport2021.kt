@@ -4,15 +4,8 @@ package robotVirtual
 import org.json.JSONObject
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import java.io.InputStreamReader
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.Job
 import it.unibo.kactor.ActorBasic
-import it.unibo.kactor.MsgUtil
-import it.unibo.kactor.ApplMessage
 import unibo.comm22.wshttp.WsHttpConnection
 import unibo.comm22.interfaces.Interaction2021
 import unibo.robot.MsgRobotUtil

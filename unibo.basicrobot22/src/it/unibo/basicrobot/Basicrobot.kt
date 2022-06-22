@@ -63,6 +63,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
+						println("basicrobot | handleObstacle ${CurrentMove}")
 						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
@@ -71,7 +72,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						delay(100) 
 						unibo.robot.robotSupport.move( "h"  )
 						}
-						emit("info", "info(obstacledoing(w))" ) 
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 

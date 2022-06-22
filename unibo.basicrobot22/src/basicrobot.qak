@@ -78,7 +78,7 @@ QActor basicrobot context ctxbasicrobot{
 	 Goto work  
 	 
 	State handleObstacle{
-		//println("basicrobot | handleObstacle")	
+		println("basicrobot | handleObstacle ${CurrentMove}")	
 		run unibo.robot.robotSupport.move( "h" )
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
@@ -89,7 +89,7 @@ QActor basicrobot context ctxbasicrobot{
 			delay 100 
 			run unibo.robot.robotSupport.move( "h" ) 
  		}
- 		emit info : info( obstacledoing(w) )
+ 		//emit info : info( obstacledoing(w) )
 	}
 	Goto work 
  

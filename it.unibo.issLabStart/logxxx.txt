@@ -1,0 +1,49 @@
+env_1   |        $$$ WebpageServer wssocket=0 receives: {"robotmove":"moveForward", "time": 1000} curMove=undefined
+wenv_1   | AAA $$$ WebpageServer | moveForward duration=1000
+wenv_1   | $$$ WebpageServer | execMoveOnAllConnectedScenes moveForward index=15
+wenv_1   | WebpageServer sceneSocketInfoHandler  | collision detected wallDown runningMovesIndex=15 move=moveForward target=wallDown numOfSockets=1
+wenv_1   | WARNING: movemap key=moveForward v=15
+wenv_1   | WARNING: movemap key=interrupted v=15
+wenv_1   | SceneOnlyServer | updateCallersssssssssssssssssss{"collision":"moveForward","target":"wallDown"} undefined
+wenv_1   | WebpageServer | updateCallers key=0 msgJson={"collision":"moveForward","target":"wallDown"}
+robot_1  | WsConnSysObserver update/2 receives:{"collision":"moveForward","target":"wallDown"} duration=362
+robot_1  |                %%%  distancefilter |  VIRTUAL OBSTACLE FOUND
+robot_1  |              WsHttpConnection | sendHttp httpAddr=wenv:8090
+wenv_1   | POSTTT /api/move data {"robotmove":"alarm", "time": 100} undefined
+robot_1  |              WsHttpConnection | response body={"endmove":"true","move":"halt"}
+robot_1  |              WsHttpConnection | forward answer:{"endmove":"true","move":"halt"} DISCARDED
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  PRE index=-1
+wenv_1   | WARNING: movemap key=interrupted v=15
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove after collision moveMap.size=1
+wenv_1   | WARNING: movemap key=interrupted v=15
+robot_1  | basicrobot  | waiting ..................
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  PRE index=15
+wenv_1   | WARNING: movemap key=interrupted v=15
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  curMove=interrupted
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove index=15 moveMap.size=0
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  PRE index=15
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  curMove=undefined
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove index=15 moveMap.size=0
+
+
+
+robot_1  | basicrobot  | waiting ..................
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  PRE index=15
+wenv_1   | WARNING: movemap key=interrupted v=15
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  curMove=interrupted
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove index=15 moveMap.size=0
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  PRE index=15
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  curMove=undefined
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove index=15 moveMap.size=0
+robot_1  | basicrobot in execcmd | msg(cmd,dispatch,webgui,basicrobot,cmd(s),33)
+wenv_1   |        $$$ WebpageServer wssocket=0 receives: {"robotmove":"moveBackward", "time": 1000} curMove=undefined
+wenv_1   | AAA $$$ WebpageServer | moveBackward duration=1000
+wenv_1   | $$$ WebpageServer | execMoveOnAllConnectedScenes moveBackward index=16
+robot_1  | basicrobot  | waiting ..................
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  PRE index=16
+wenv_1   | WARNING: movemap key=moveBackward v=16
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove  curMove=moveBackward
+wenv_1   | SceneOnlyServer | updateCallersssssssssssssssssss{"endmove":true,"move":"moveBackward"} undefined
+wenv_1   | WebpageServer | updateCallers key=0 msgJson={"endmove":true,"move":"moveBackward"}
+wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove index=16 moveMap.size=0
+robot_1  | WsConnSysObserver update/2 receives:{"endmove":true,"move":"moveBackward"} duration=1015
