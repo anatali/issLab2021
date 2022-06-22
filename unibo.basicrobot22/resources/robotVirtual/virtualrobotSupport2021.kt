@@ -79,7 +79,7 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
 	}
 
     fun move(cmd: String) {	//cmd is written in application-language
-		//println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
+		println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
 		val msg = translate( cmd )
 		trace("move  $msg")
 		if( cmd == "w" || cmd == "s"){  //doing aysnch

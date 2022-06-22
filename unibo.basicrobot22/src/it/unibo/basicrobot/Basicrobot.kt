@@ -53,6 +53,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("cmd(MOVE)"), Term.createTerm("cmd(MOVE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
+								 CurrentMove = payloadArg(0)  
 								unibo.robot.robotSupport.move( payloadArg(0)  )
 								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)

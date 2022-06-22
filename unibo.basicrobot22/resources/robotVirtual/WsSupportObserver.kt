@@ -24,18 +24,23 @@ class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
 		val ownerActor = sysUtil.getActor(owner)
 		if( ownerActor == null ) {
 			val ev = CommUtils.buildEvent( "wsconn", "wsEvent", data  );
-            println("       &&& WsSupportObserver  | ownerActor null ev=$ev" ) 
+            println("       &&& WsSupportObserver  | ownerActor null ev=$ev" )
+			return
 		}
 		var target : String = "nonso"
 		if( msgJson.has("target")   ){
 			target = msgJson.getString("target")
- 		}
+			runBlocking {
+				ownerActor!!.emit("obstacle","obstacle($target)")
+			}
+		}
 		if( msgJson.has("collision") ){
- 				target = msgJson.getString("move")
+			target = msgJson.getString("move")
+			runBlocking {
+				ownerActor!!.emit("obstacle","obstacle($target)")
+			}
 		}
-		runBlocking {
- 			ownerActor!!.emit("obstacle","obstacle($target)")
-		}
+
 
 	}
 	
