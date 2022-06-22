@@ -15,7 +15,7 @@ import unibo.comm22.utils.CommUtils;
 public class RobotUtils {
     public static final String robotCmdId       = "move";
     public static final String basicrobotCmdId  = "cmd";
-    public static final int robotPort           = 8020; //8083 is the cleaner robot
+    public static final int robotPort           = 8015; //8083 is the cleaner robot
     //public static final String robotPortStr     = ""+robotPort;
     private static Interaction2021 conn;
 
@@ -39,7 +39,7 @@ public class RobotUtils {
             String ctxqakdest       = "ctxbasicrobot";
             String qakdestination 	= "basicrobot";
             String path   = ctxqakdest+"/"+qakdestination;
-            conn = new CoapConnection(addr, path);
+            conn = new CoapConnection(addr+":"+robotPort, path);
             ColorsOut.outappl("HIController | connect Coap conn:" + conn , ColorsOut.CYAN);
         }catch(Exception e){
             ColorsOut.outerr("RobotUtils | connectWithRobotUsingTcp ERROR:"+e.getMessage());

@@ -3,6 +3,8 @@ package robotVirtual
 import org.json.JSONObject
 import it.unibo.kactor.*
 import it.unibo.kactor.MsgUtil
+import kotlinx.coroutines.runBlocking
+import unibo.comm22.utils.ColorsOut
 import unibo.comm22.ws.WsConnSysObserver
 import unibo.comm22.utils.CommUtils
 
@@ -16,22 +18,25 @@ class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
 
 	
 	override fun update( data : String ) {
- 		//ColorsOut.outappl("WsConnSysObserver update receives:$data $actionDuration", ColorsOut.GREEN);
+ 		ColorsOut.outappl("WsSupportObserver update $data owner=$owner   ", ColorsOut.MAGENTA);
         val msgJson = JSONObject(data)
         //println("       &&& WsSupportObserver  | update msgJson=$msgJson" ) //${ aboutThreads()}
 		val ownerActor = sysUtil.getActor(owner)
 		if( ownerActor == null ) {
-			val ev = CommUtils.buildEvent( "wsconn", "updateev", data  ); //TODO JUNE22
+			val ev = CommUtils.buildEvent( "wsconn", "wsEvent", data  );
             println("       &&& WsSupportObserver  | ownerActor null ev=$ev" ) 
 		}
-		if( msgJson.has("target")){
-			//TODO JUNE22
-				/*
-				runBlocking {
-					var target = msgJson.getString("target")
-					ownerActor!!.emit("obstacle","obstacle($target)")
-				}*/
+		var target : String = "nonso"
+		if( msgJson.has("target")   ){
+			target = msgJson.getString("target")
+ 		}
+		if( msgJson.has("collision") ){
+ 				target = msgJson.getString("move")
 		}
+		runBlocking {
+ 			ownerActor!!.emit("obstacle","obstacle($target)")
+		}
+
 	}
 	
 

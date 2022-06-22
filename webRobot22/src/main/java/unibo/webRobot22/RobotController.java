@@ -51,7 +51,7 @@ public class RobotController {
     public String setprotocol(Model viewmodel, @RequestParam String protocol  ){
         this.protocol = protocol;
         usingTcp      = protocol.equals("tcp");
-        System.out.println("RobotController | setprotocol:" + protocol );
+        System.out.println("RobotController | usingTcp:" + usingTcp );
         viewmodel.addAttribute("protocol", protocol);
         return buildThePage(viewmodel);
     }
@@ -70,9 +70,9 @@ public class RobotController {
 //        setConfigParams(viewmodel);
         //Uso basicrobto22 sulla porta 8020
         //robotName  = "basicrobot";
-        if( usingTcp ) RobotUtils.connectWithRobotUsingTcp(ipaddr+":8020");
+        if( usingTcp ) RobotUtils.connectWithRobotUsingTcp(ipaddr);
         //Attivo comunque una connessione CoAP per osservare basicrobot
-        CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr+":8020");
+        CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr);
         conn.observeResource( new RobotCoapObserver() );
         //WebSocketConfiguration.wshandler.sendToAll("Connected to Robot" + ipaddr); //disappears
  //       return mainPage;

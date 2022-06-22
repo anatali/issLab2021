@@ -1,9 +1,8 @@
 package robotVirtual
 
-import java.io.PrintWriter
-import java.net.Socket
+
 import org.json.JSONObject
-import java.io.BufferedReader
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.InputStreamReader
@@ -80,7 +79,7 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
 	}
 
     fun move(cmd: String) {	//cmd is written in application-language
-		//println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
+		println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
 		val msg = translate( cmd )
 		trace("move  $msg")
 		if( cmd == "w" || cmd == "s"){  //doing aysnch
