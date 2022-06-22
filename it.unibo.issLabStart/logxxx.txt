@@ -47,3 +47,36 @@ wenv_1   | SceneOnlyServer | updateCallersssssssssssssssssss{"endmove":true,"mov
 wenv_1   | WebpageServer | updateCallers key=0 msgJson={"endmove":true,"move":"moveBackward"}
 wenv_1   | WebpageServer sceneSocketInfoHandler  | endmove index=16 moveMap.size=0
 robot_1  | WsConnSysObserver update/2 receives:{"endmove":true,"move":"moveBackward"} duration=1015
+
+
+
+
+
+================================= NUOVO basicrobot22 Ccoap   using a SingleThreadExecutor for the CoapClient
+basicrobot  | waiting ..................
+basicrobot in execcmd | msg(cmd,dispatch,webgui,basicrobot,cmd(w),34)
+                --- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee w
+basicrobot  | waiting ..................
+                WsConnection | onMessage {"endmove":true,"move":"moveForward"}
+WsConnSysObserver update/2 receives:{"endmove":true,"move":"moveForward"} duration=1655917436753
+WsSupportObserver update {"endmove":true,"move":"moveForward"} owner=basicrobot   
+
+SI VEDE moveactivated(w)
+
+basicrobot  | waiting ..................
+                WsConnection | onMessage {"collision":"moveForward","target":"wallDown"}
+WsConnSysObserver update/2 receives:{"collision":"moveForward","target":"wallDown"} duration=1655917539082
+WsSupportObserver update {"collision":"moveForward","target":"wallDown"} owner=basicrobot   
+               %%%  distancefilter |  VIRTUAL OBSTACLE FOUND
+basicrobot | handleObstacle w
+                --- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee h
+                WsHttpConnection | forward answer:{"endmove":"true","move":"halt"} DISCARDED since HTTP
+                --- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee s
+                --- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee h
+                WsHttpConnection | forward answer:{"endmove":"true","move":"halt"} DISCARDED since HTTP
+basicrobot  | waiting ..................
+
+
+SI VEDE obstacle(w)
+
+w,s NON VANNO PIU: partono, ma non arrivano a virtualrobot
