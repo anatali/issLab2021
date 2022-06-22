@@ -15,7 +15,7 @@ Oltre TCP
 I primi SPRINT dello sviluppo hanno seguito un processo bottom-up, che ha fatto riferimento
 a TCP come protocollo per le comunicazioni di rete.
 
-Abbiamo anche costruito un  :ref:`prototipo<primoPrototipo>` di una versione distribuita del sistema, 
+Abbiamo anche costruito un  :ref:`prototipo<Architettura del primo prototipo>` di una versione distribuita del sistema, 
 la cui architettura è schematizzata nella figura che segue:
 
 .. image:: ./_static/img/Radar/sysDistr1.PNG

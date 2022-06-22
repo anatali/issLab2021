@@ -5,8 +5,8 @@
 FROM openjdk:12.0.2
 EXPOSE 8020
 ## ADD extracts the tar
-ADD ./build/distributions/it.unibo.basicrobot-1.0.tar /
-WORKDIR /it.unibo.basicrobot-1.0/bin
+ADD ./build/distributions/unibo.basicrobot-2.0.tar /
+WORKDIR /unibo.basicrobot-2.0/bin
 COPY ./*.pl ./
 COPY ./*.json ./
 ## COPY ./*.py ./
@@ -15,8 +15,8 @@ COPY ./*.json ./
 ## RUN apt-get install -y wiringpi
 ## RUN sudo apt-get install -y python
 
-CMD ["bash", "it.unibo.basicrobot"]
+CMD ["bash", "unibo.basicrobot"]
 
 
-##  docker build -t basicrobot22:1.0 .
-##  docker run -it --rm --name basicrobot22:1.0 -p8020:8020/tcp --privileged basicrobot22:1.0  /bin/bash
+##  docker build -t basicrobot22:2.0 .
+##  docker run -it --rm --name basicrobot22:2.0 -p8020:8020/tcp --privileged basicrobot22:2.0  /bin/bash
