@@ -1,11 +1,13 @@
 package unibo.webRobot22;
 
+import org.json.JSONObject;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import unibo.Robots.common.IWsHandler;
+import unibo.Robots.common.RobotUtils;
 import unibo.comm22.utils.ColorsOut;
 
 import java.io.IOException;
@@ -37,9 +39,19 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
     }
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        System.out.println("WebSocketHandler | handleTextMessage Received: " + message);
-        String cmd = message.getPayload();
-        sendToAll("echo: "+cmd);
+        String movecmd = message.getPayload();
+        ColorsOut.outappl("WebSocketHandler | handleTextMessage Received: " + movecmd, ColorsOut.GREEN);
+        //Gestione di comandi remoti via Ws come RobotController
+        //sendToAll("webRobot22 WebSocketHandler echo: "+cmd);
+        try {
+            JSONObject json = new JSONObject(movecmd);
+            String move = json.getString("robotmove");
+            ColorsOut.outappl("WebSocketHandler | handleTextMessage doing: " + move, ColorsOut.GREEN);
+            RobotUtils.sendMsg(RobotController.robotName,move);
+        } catch (Exception e) {
+            ColorsOut.outerr("WebSocketHandler | handleTextMessage ERROR:"+e.getMessage());
+        }
+
     }
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
@@ -54,7 +66,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
 
     public void sendToAll(String message)  {
         try{
-            ColorsOut.outappl("WebSocketHandler | sendToAll String:" + message, ColorsOut.CYAN);
+            ColorsOut.outappl("WebSocketHandler | sendToAll String: " + message, ColorsOut.CYAN);
             //JSONObject jsm = new JSONObject(message);
             //IApplMessage mm = new ApplMessage(message);
             //String mstr    = mm.msgContent();//.replace("'","");
@@ -64,14 +76,18 @@ public class WebSocketHandler extends AbstractWebSocketHandler implements IWsHan
         }
     }
     public void sendToAll(TextMessage message) {
-        ColorsOut.outappl("WebSocketHandler | sendToAll TextMessage sessions:" + sessions.size(), ColorsOut.MAGENTA);
+        //ColorsOut.outappl("WebSocketHandler | sendToAll " + message.getPayload() + " TextMessage sessions:" + sessions.size(), ColorsOut.CYAN);
         Iterator<WebSocketSession> iter = sessions.iterator();
         while( iter.hasNext() ){
             try{
-                iter.next().sendMessage(message);
+                WebSocketSession session = iter.next();
+                ColorsOut.outappl("WebSocketHandler | sendToAll " +
+                        message.getPayload() + " for session " + session.getRemoteAddress() , ColorsOut.MAGENTA);
+                //synchronized(session){
+                    session.sendMessage(message);
+                //}
             }catch(Exception e){
-                ColorsOut.outerr("WebSocketHandler | TextMessage String ERROR:"+e.getMessage());
-
+                ColorsOut.outerr("WebSocketHandler | TextMessage ERROR:"+e.getMessage());
             }
         }
     }

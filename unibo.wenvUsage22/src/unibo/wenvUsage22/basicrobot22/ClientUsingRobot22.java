@@ -5,7 +5,7 @@ Technology-dependent application
 TODO. eliminate the communication details from this level
 ===============================================================
 */
-package unibo.wenvUsage22.wshttp;
+package unibo.wenvUsage22.basicrobot22;
  
 import unibo.comm22.interfaces.IObserver;
 import unibo.comm22.interfaces.Interaction2021;
@@ -17,18 +17,18 @@ import unibo.wenvUsage22.common.ApplData;
 
 import java.util.Observable;
 
-public class ClientUsingWs implements IObserver{
+public class ClientUsingRobot22 implements IObserver{
  
 	private Interaction2021 conn;
   
 	protected void doBasicMoves() throws Exception {
-		conn = WsConnection.create("localhost:8091" );
-		//conn = WsConnection.create("localhost:8085/socket" ); //test for  webRobot22
+ 		conn = WsConnection.create("localhost:8085/socket" ); //test for  webRobot22
 		((WsConnection)conn).addObserver(this);
  
  		conn.forward( ApplData.turnLeft( 800  ) );
  		CommUtils.delay(1000);
-  		conn.forward( ApplData.moveForward(1500) ); 
+ /*
+ 		conn.forward( ApplData.moveForward(1500) ); 
  		//La info di fine mossa viene gestita da update/2
   		//CommUtils.delay(500);
   	    //conn.forward( ApplData.turnRight(300) );  //not allowed. Send stop before 
@@ -43,20 +43,8 @@ public class ClientUsingWs implements IObserver{
   		conn.forward( ApplData.moveBackward(1500) ); 
   		CommUtils.delay(300);
   		conn.forward( ApplData.stop( ) );
-  		
-//			conn.forward( turnRight(300) );
-// 			CommUtils.delay(500);
-//			conn.forward( stop() );
-//			conn.forward( turnLeft(300) );
-// 			CommUtils.delay(500);
-//			conn.forward( stop() );
-//			//CommUtils.delay(500);
-//			conn.forward( moveForward(1000) );
- 
-//			CommUtils.delay(1500);
-//			conn.close();
-// 
-	}
+*/
+ 	}
 	
 	@Override
 	public void update(Observable source, Object data) {
@@ -74,7 +62,7 @@ MAIN
  */
 	public static void main(String[] args) throws Exception   {
 		CommUtils.aboutThreads("Before start - ");
- 		new ClientUsingWs().doBasicMoves();
+ 		new ClientUsingRobot22().doBasicMoves();
 		CommUtils.aboutThreads("At end - ");
 	}
 	

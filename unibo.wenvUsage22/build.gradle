@@ -57,10 +57,11 @@ dependencies {
 //CUSTOM unibo
     implementation name: '2p301'
     implementation name: 'uniboInterfaces'
-    implementation name: 'unibonoawtsupports'
-	implementation name: 'it.unibo.qakactor-2.7'
-	implementation name: 'unibo.actor22-1.1'
-
+//    implementation name: 'unibonoawtsupports'
+//	implementation name: 'it.unibo.qakactor-2.7'
+//	implementation name: 'unibo.actor22-1.1'
+	implementation name: 'unibo.qakactor22-2.8'
+	implementation name: 'unibo.comm22-1.1'
  	//PLANNER
     compile name: 'unibo.planner22-1.0'
  	// https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core

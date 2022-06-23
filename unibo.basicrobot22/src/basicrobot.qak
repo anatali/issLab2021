@@ -61,7 +61,7 @@ QActor basicrobot context ctxbasicrobot{
 		println("basicrobot  | waiting .................. ")  
 	} 
 	Transition t1   whenMsg     cmd       -> execcmd
-					whenRequest step      -> doStep			
+					whenRequest step      -> doStep			 
 					whenMsg    obstacle   -> handleObstacle  //in virtualrobot caused by the move w/s
 					//whenEvent sonar       -> handleSonar
 				  	whenMsg     end       -> endwork			  
@@ -82,13 +82,14 @@ QActor basicrobot context ctxbasicrobot{
 		run unibo.robot.robotSupport.move( "h" )
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
-		if[# CurrentMove == "w"#]{
+		/* 
+		if[# CurrentMove == "w" #]{
 		//back to avoid emission of obstacle again if real robot moving forward !!!
 		//if[# RobotType != "virtual" #]{	//is it better to embed this behavior in the support?
 			run unibo.robot.robotSupport.move( "s" )
 			delay 100 
 			run unibo.robot.robotSupport.move( "h" ) 
- 		}
+ 		}*/
  		//emit info : info( obstacledoing(w) )
 	}
 	Goto work 

@@ -51,6 +51,7 @@ public class RobotUtils {
         switch( cmd ) {
             case "w" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(w)", robotName);
             case "s" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(s)", robotName);
+            case "turnLeft" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(a)", robotName);
             case "l" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(a)", robotName);
             case "r" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(d)", robotName);
             case "h" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(h)", robotName);
@@ -70,10 +71,10 @@ public class RobotUtils {
     public static void sendMsg(String robotName, String cmd){
         try {
             String msg =  moveAril(robotName,cmd);
-            ColorsOut.outappl("RobotUtils | doMove msg:" + msg + " conn=" + conn, ColorsOut.BLUE);
+            ColorsOut.outappl("RobotUtils | sendMsg msg:" + msg + " conn=" + conn, ColorsOut.BLUE);
             conn.forward( msg );
         } catch (Exception e) {
-            ColorsOut.outerr("RobotUtils | doMove ERROR:"+e.getMessage());
+            ColorsOut.outerr("RobotUtils | sendMsg ERROR:"+e.getMessage());
         }
     }
 

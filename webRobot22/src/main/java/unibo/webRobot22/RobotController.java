@@ -18,8 +18,8 @@ import unibo.comm22.utils.ColorsOut;
 
 @Controller 
 public class RobotController {
-    protected String robotName  = "basicrobot";
-    protected String mainPage   = "basicrobot22Gui";
+    public final static String robotName  = "basicrobot";
+    protected String mainPage      = "basicrobot22Gui";
     protected boolean usingTcp  = false;
 
     //Settaggio degli attributi del modello

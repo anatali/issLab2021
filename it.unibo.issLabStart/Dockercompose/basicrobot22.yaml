@@ -20,5 +20,5 @@ services:
 ## TODO See https://docs.docker.com/compose/startup-order/
 ## -------------------------------------------------------------
 ## docker-compose -f basicrobot22.yaml  up
-## docker-compose run --service-ports wenv
+## docker-compose -f basicrobot22.yaml run --service-ports wenv
 ## docker-compose run --service-ports vrobotclient  ATTIVA ANCHE wenv

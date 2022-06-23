@@ -13,7 +13,6 @@ import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
 import unibo.comm22.ws.WsConnection;
 import unibo.wenvUsage22.common.ApplData;
- 
 
 import java.util.Observable;
 
@@ -22,28 +21,19 @@ public class ClientUsingWs implements IObserver{
 	private Interaction2021 conn;
   
 	protected void doBasicMoves() throws Exception {
-		conn = WsConnection.create("localhost:8091" );
-		//conn = WsConnection.create("localhost:8085/socket" ); //test for  webRobot22
+		//conn = WsConnection.create("localhost:8091" );
+		conn = WsConnection.create("localhost:8085/socket" );
 		((WsConnection)conn).addObserver(this);
  
  		conn.forward( ApplData.turnLeft( 800  ) );
- 		CommUtils.delay(1000);
-  		conn.forward( ApplData.moveForward(1500) ); 
- 		//La info di fine mossa viene gestita da update/2
-  		//CommUtils.delay(500);
-  	    //conn.forward( ApplData.turnRight(300) );  //not allowed. Send stop before 
+ 		conn.forward( ApplData.moveForward(1500) ); 
+ 			//La info di fine mossa viene gestita da update/2
  		
-  		CommUtils.delay(500);
- 		conn.forward( ApplData.stop( ) );
- 
- 		conn.forward( ApplData.turnRight( 300 ) );
- 		CommUtils.delay(500);
- 		conn.forward( ApplData.turnLeft( 300 ) );  //not allowed before 300
- 		CommUtils.delay(500);
-  		conn.forward( ApplData.moveBackward(1500) ); 
-  		CommUtils.delay(300);
-  		conn.forward( ApplData.stop( ) );
-  		
+ 		
+//		conn.forward( stop( ) );
+////    	Thread.sleep( 500 );
+//		conn.forward( turnRight( 400 ) );
+
 //			conn.forward( turnRight(300) );
 // 			CommUtils.delay(500);
 //			conn.forward( stop() );

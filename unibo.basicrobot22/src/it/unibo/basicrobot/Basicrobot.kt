@@ -67,11 +67,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
-						if(  CurrentMove == "w" 
-						 ){unibo.robot.robotSupport.move( "s"  )
-						delay(100) 
-						unibo.robot.robotSupport.move( "h"  )
-						}
 					}
 					 transition( edgeName="goto",targetState="work", cond=doswitch() )
 				}	 

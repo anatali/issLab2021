@@ -47,11 +47,17 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 
 //Since inherits from IConnInteraction
 	 
-    protected void sendALine(String msg) throws Exception {
-        myWs.send(msg);
-//		observers.forEach( v -> {
-//			if( v instanceof WsConnSysObserver) ((WsConnSysObserver)v).startMoveTime() ;
-//		});
+    protected void sendALine(String msg)   {
+    	try {
+		    ColorsOut.outappl("WsConnection | sendALine "  + msg  , ColorsOut.CYAN);
+	        myWs.send(msg);
+			observers.forEach( v -> {
+				if( v instanceof WsConnSysObserver) ((WsConnSysObserver)v).startMoveTime() ;
+			});
+    	}catch( Exception e ) {
+    	    ColorsOut.outerr("WsConnection | ERROR "  + e.getMessage()  );
+    		
+    	}
 	}
  	
 //Since inherits from Interaction2021 firstpart
@@ -75,24 +81,25 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	@Override
 	public String receiveMsg() throws Exception {
 		// TODO Auto-generated method stub
+	     ColorsOut.outappl("WsConnection | receiveMsg, perhaps onMessage"  , ColorsOut.MAGENTA);
 		return null;
 	}
 
 	@Override
 	public void close() throws Exception {
 	     boolean gracefulShutdown = myWs.close(1000, "close");
-	     ColorsOut.out("WsConnection | close gracefulShutdown=" + gracefulShutdown);
+	     ColorsOut.outappl("WsConnection | close gracefulShutdown=" + gracefulShutdown, ColorsOut.YELLOW);
 	}
 	
 // Since extends WebSocketListener
     @Override
     public void onOpen(WebSocket webSocket, Response response  ) {
-        ColorsOut.out("WsConnection | onOpen ", ColorsOut.GREEN );
+        ColorsOut.outappl("WsConnection | onOpen ", ColorsOut.YELLOW );
         opened = true;
     }
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason  ) {
-        ColorsOut.out("WsConnection | onClosing ", ColorsOut.GREEN );
+        ColorsOut.outappl("WsConnection | onClosing ", ColorsOut.YELLOW );
         try {
 			close();
 		} catch (Exception e) {
@@ -101,7 +108,7 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
     }
     @Override
     public void onMessage(WebSocket webSocket, String msg  ) {
-        ColorsOut.out("WsConnection | onMessage " + msg, ColorsOut.GREEN );
+        ColorsOut.outappl("WsConnection | onMessage " + msg, ColorsOut.YELLOW );
         updateObservers( msg );
     }
 
@@ -109,19 +116,19 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	
 //----------------------------------------------------------------------
     protected void wsconnect(String wsAddr){    // localhost:8091
-         //ColorsOut.outappl("WsConnection | wsconnect wsAddr=" + wsAddr, ColorsOut.GREEN );
+         //ColorsOut.outappl("WsConnection | wsconnect wsAddr=" + wsAddr, ColorsOut.YELLOW );
         Request request = new Request.Builder()
                 .url( "ws://"+wsAddr )
                 .build() ;
         myWs = okHttpClient.newWebSocket(request, this);
-        //ColorsOut.out("WsConnection | wsconnect myWs=" + myWs, ColorsOut.GREEN );
+        //ColorsOut.out("WsConnection | wsconnect myWs=" + myWs, ColorsOut.YELLOW );
     }
 
      
 //Since IObservable    
 	@Override
 	public void addObserver(IObserver obs) {
-        ColorsOut.out("WsConnection | addObserver " + obs, ColorsOut.GREEN );
+        ColorsOut.outappl("WsConnection | addObserver " + obs, ColorsOut.YELLOW );
 		observers.add( obs);		
 	}
 	@Override
