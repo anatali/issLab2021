@@ -59,8 +59,8 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
 				val obs  = WsSupportObserver( owner.getName() )
 				(support21ws as WsConnection).addObserver(obs) 			  
 //				//ACTIVATE the robotsonar as the beginning of a pipe
-				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)
-				owner.context!!.addInternalActor(robotsonar)  
+//				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)  //JUne2022
+//				owner.context!!.addInternalActor(robotsonar)  					//JUne2022
 			  	println("		--- virtualrobotSupport2021 | has created the robotsonar")	
 			 }catch( e:Exception ){
                  println("		--- virtualrobotSupport2021 | ERROR $e")

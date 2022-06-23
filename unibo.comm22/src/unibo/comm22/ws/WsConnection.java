@@ -116,12 +116,12 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
 	
 //----------------------------------------------------------------------
     protected void wsconnect(String wsAddr){    // localhost:8091
-         //ColorsOut.outappl("WsConnection | wsconnect wsAddr=" + wsAddr, ColorsOut.YELLOW );
+         ColorsOut.outappl("WsConnection | wsconnect wsAddr=" + wsAddr, ColorsOut.YELLOW );
         Request request = new Request.Builder()
                 .url( "ws://"+wsAddr )
                 .build() ;
         myWs = okHttpClient.newWebSocket(request, this);
-        //ColorsOut.out("WsConnection | wsconnect myWs=" + myWs, ColorsOut.YELLOW );
+        ColorsOut.outappl("WsConnection | wsconnect myWs=" + myWs, ColorsOut.YELLOW );
     }
 
      

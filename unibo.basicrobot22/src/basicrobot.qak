@@ -75,10 +75,10 @@ QActor basicrobot context ctxbasicrobot{
 			updateResource [# "moveactivated(${payloadArg(0)})" #]
 		}
 	 }
-	 Goto work  
+	 Goto work   
 	 
 	State handleObstacle{
-		println("basicrobot | handleObstacle ${CurrentMove}")	
+		println("basicrobottttttttttttttttttttttttttttttttttt | handleObstacle ${CurrentMove}")	
 		run unibo.robot.robotSupport.move( "h" )
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
@@ -92,7 +92,7 @@ QActor basicrobot context ctxbasicrobot{
  		}*/
  		//emit info : info( obstacledoing(w) )
 	}
-	Goto work 
+	Goto work  
  
 	State handleSonar{
 		printCurrentMessage
