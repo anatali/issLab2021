@@ -23,7 +23,7 @@ class ContextMsgHandler(name: String, val ctx: QakContext) : ApplMsgHandler(name
     }
 
     protected fun elabRequest(msg: IApplMessage, conn: Interaction2021) {
-        ColorsOut.outappl(name + " | elabRequest $msg conn= $conn", ColorsOut.CYAN);
+        ColorsOut.out(name + " | elabRequest $msg conn= $conn", ColorsOut.CYAN);
         //Inserisco conn nel messaggio di richiesta
         val requestMsg = ApplMessage(msg.msgId(),msg.msgType(),
             msg.msgSender(), msg.msgReceiver(), msg.msgContent(), msg.msgNum(), conn);
@@ -38,7 +38,7 @@ class ContextMsgHandler(name: String, val ctx: QakContext) : ApplMsgHandler(name
     }
 
     protected fun elabNonRequest(msg: IApplMessage, conn: Interaction2021?) {
-        ColorsOut.outappl(name + " | elabNonRequest $msg conn= $conn", ColorsOut.CYAN);
+        ColorsOut.out(name + " | elabNonRequest $msg conn= $conn", ColorsOut.CYAN);
         val a = QakContext.getActor(msg.msgReceiver())
         runBlocking {
             if (a != null) MsgUtil.sendMsg(msg, a)

@@ -59,14 +59,14 @@ private Socket socket;
 	}
 	
 	protected void sendALine(String msg) throws Exception {
-		//ColorsOut.outappl( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
+		ColorsOut.outappl( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
 			//ColorsOut.outappl( "TcpConnection | has sent   " + msg, ColorsOut.CYAN );	 
-		} catch (IOException e) {
-			//ColorsOut.outerr( "TcpConnection | sendALine ERROR " + e.getMessage());	 
-			throw e;
+		} catch (Exception e) {
+			ColorsOut.outerr( "TcpConnection | sendALine " + msg + "  ERROR:" + e.getMessage());	 
+			//throw e;
 	    }	
 	}
 	protected void closeConnection() throws Exception {
