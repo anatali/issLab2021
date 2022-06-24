@@ -34,7 +34,7 @@ public class ApplData {
 	*/	
 	protected static String crilCmd(String move, int time){
 		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
-		ColorsOut.outappl( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd, ColorsOut.CYAN );
+		//ColorsOut.outappl( "ApplData |  buildCrilCmd:" + crilCmd, ColorsOut.CYAN );
 		return crilCmd;
 	}
 	public static final String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }

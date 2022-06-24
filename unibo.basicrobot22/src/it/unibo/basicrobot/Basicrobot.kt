@@ -64,7 +64,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				state("handleObstacle") { //this:State
 					action { //it:State
 						println("basicrobottttttttttttttttttttttttttttttttttt | handleObstacle ${CurrentMove}")
-						unibo.robot.robotSupport.move( "h"  )
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
 					}

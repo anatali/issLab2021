@@ -31,7 +31,7 @@ object virtualrobotSupport2021 {
 	lateinit var robotsonar	: ActorBasic
 	private lateinit var hostName : String 	
 	private lateinit var support21   : Interaction2021 	 
-	private lateinit var support21ws : Interaction2021 	 
+	private lateinit var support21ws : WsConnection //extends Interaction2021
     private val forwardlongtimeMsg  = "{\"robotmove\":\"moveForward\", \"time\": 1000}"
     private val backwardlongtimeMsg = "{\"robotmove\":\"moveBackward\", \"time\": 1000}"
 
@@ -41,14 +41,14 @@ object virtualrobotSupport2021 {
 		println("virtualrobotSupport2021 | init ... ")
 		//WsHttpConnection.trace = false
 	}
-	
+/*
 val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
      fun(scope, support ) {
 		val obs  = WsSupportObserver( owner.getName() )
         println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the WsHttpConnection")
 		support.addObserver( obs )
 }
-	
+*/
 
 
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){

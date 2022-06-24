@@ -16,19 +16,25 @@ class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
 
 	
 	override fun update( data : String ) {
- 		//ColorsOut.outappl("WsConnSysObserver update receives:$data $actionDuration", ColorsOut.GREEN);
-        val msgJson = JSONObject(data)
-        //println("       &&& WsSupportObserver  | update msgJson=$msgJson" ) //${ aboutThreads()}
-		val ownerActor = sysUtil.getActor(owner)
-		if( ownerActor == null ) {
-			val ev = CommUtils.buildEvent( "wsconn", SystemData.wsEventId, data  );
-            println("       &&& WsSupportObserver  | ownerActor null ev=$ev" ) 
-		}
-		if( msgJson.has("target")){
-				runBlocking {
-					var target = msgJson.getString("target")
-					ownerActor!!.emit("obstacle","obstacle($target)")
-				}
+ 		ColorsOut.outappl("WsSupportObserver update receives:$data $actionDuration", ColorsOut.GREEN);
+        try{
+        	val msgJson = JSONObject(data)
+			//println("       &&& WsSupportObserver  | update msgJson=$msgJson" ) //${ aboutThreads()}
+			val ownerActor = sysUtil.getActor(owner)
+			if( ownerActor == null ) {
+				val ev = CommUtils.buildEvent( "wsconn", SystemData.wsEventId, data  );
+				println("       &&& WsSupportObserver  | ownerActor null ev=$ev" )
+			}
+			if( msgJson.has("target")){  //emetto evento gestito dalla pipe del sonar
+					runBlocking {
+						var target = msgJson.getString("target")
+						ColorsOut.outappl("WsSupportObserver emits:${obstacle($target)}", ColorsOut.GREEN);
+						//ownerActor!!.emit("obstacle","obstacle($target)")
+					}
+			}
+		}catch( e: Exception ){
+			ColorsOut.outerr("WsSupportObserver ERROR ${e.message}" );
+
 		}
 	}
 	

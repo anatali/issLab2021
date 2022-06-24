@@ -79,7 +79,7 @@ QActor basicrobot context ctxbasicrobot{
 	 
 	State handleObstacle{
 		println("basicrobottttttttttttttttttttttttttttttttttt | handleObstacle ${CurrentMove}")	
-		run unibo.robot.robotSupport.move( "h" )
+		//run unibo.robot.robotSupport.move( "h" ) //non importa 
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
 		/* 

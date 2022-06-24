@@ -28,18 +28,22 @@ class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
 			return
 		}
 		var target : String = "nonso"
+
 		if( msgJson.has("target")   ){
 			target = msgJson.getString("target")
 			runBlocking {
+				ColorsOut.outappl("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
 				ownerActor!!.emit("obstacle","obstacle($target)")
 			}
 		}
+	/*
 		if( msgJson.has("collision") ){
-			target = msgJson.getString("move")
+ 			var target = msgJson.getString("target")
+			ColorsOut.outappl("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
 			runBlocking {
-				ownerActor!!.emit("obstacle","obstacle($target)")
+				//ownerActor!!.emit("obstacle","obstacle($target)")
 			}
-		}
+		}*/
 
 
 	}

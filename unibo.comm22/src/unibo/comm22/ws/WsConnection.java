@@ -22,7 +22,7 @@ public class WsConnection extends WebSocketListener implements Interaction2021, 
     private boolean opened = false;
 	
  
-	public static Interaction2021 create(String addr ){
+	public static WsConnection create(String addr ){
         //ColorsOut.outappl("WsConnection | wsconnect addr=" + addr + " " + connMap.containsKey(addr), ColorsOut.GREEN );
 		if( ! connMap.containsKey(addr)){
 			connMap.put(addr, new WsConnection( addr ) );
