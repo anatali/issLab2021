@@ -29,6 +29,8 @@ public class RobotController {
     String webcamip;
     @Value("${robot22.robotip}")
     String robotip;
+    @Value("${robot22.path}")
+    String pathtodo;
 
 
     protected String buildThePage(Model viewmodel) {
@@ -40,6 +42,7 @@ public class RobotController {
         viewmodel.addAttribute("protocol", protocol);
         viewmodel.addAttribute("webcamip", webcamip);
         viewmodel.addAttribute("robotip",  robotip);
+        viewmodel.addAttribute("path",     pathtodo);
     }
 
   @GetMapping("/") 		 
@@ -87,6 +90,20 @@ public class RobotController {
               RobotUtils.sendMsg(robotName,move);
         } catch (Exception e) {
             ColorsOut.outerr("RobotController | doMove ERROR:"+e.getMessage());
+        }
+        return mainPage;
+    }
+
+    @PostMapping("/dopath")
+    public String dopath(Model viewmodel  , @RequestParam String path ){
+        ColorsOut.outappl("RobotController | dopath:" + path + " robotName=" + robotName, ColorsOut.BLUE);
+        pathtodo =  path;
+        viewmodel.addAttribute("path", pathtodo);
+        //WebSocketConfiguration.wshandler.sendToAll("RobotController | doMove:" + move); //disappears
+        try {
+            //RobotUtils.sendMsg(robotName,move);
+        } catch (Exception e) {
+            ColorsOut.outerr("RobotController | dopath ERROR:"+e.getMessage());
         }
         return mainPage;
     }

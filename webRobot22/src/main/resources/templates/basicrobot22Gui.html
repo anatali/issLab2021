@@ -101,7 +101,14 @@
              <div class="col"><button class='btn btn-block iss-btn-ligthgreen border' id='l'>l (left)  </button></div>
              <div class="col"><button class='btn btn-block iss-btn-ligthgreen border' id='r'>r (rigth) </button></div>
              <div class="col"><button class='btn btn-warning btn-block border' id='p'>p (step) </button></div>
-         </div> <!-- p,l,r commands row -->
+         </div> <!-- path row -->
+            <div class="row"> <!-- path row -->
+                <form action="dopath" method="post">
+                    <!-- the form-data is sent to the path specified in the action attribute -->
+                    <input type="text" size="30" id="dopath" name="path" value="wlwlwl">
+                    <input type="submit" value="dopath">
+                </form>
+            </div> <!-- path row -->
         </div> <!-- command card-content -->
       </div> <!--  command card -->
 
