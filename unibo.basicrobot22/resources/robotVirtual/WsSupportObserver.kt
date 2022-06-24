@@ -18,21 +18,21 @@ class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
 
 	
 	override fun update( data : String ) {
- 		ColorsOut.outappl("WsSupportObserver update $data owner=$owner   ", ColorsOut.MAGENTA);
+ 		ColorsOut.out("WsSupportObserver update $data owner=$owner   ", ColorsOut.MAGENTA);
         val msgJson = JSONObject(data)
         //println("       &&& WsSupportObserver  | update msgJson=$msgJson" ) //${ aboutThreads()}
 		val ownerActor = sysUtil.getActor(owner)
 		if( ownerActor == null ) {
 			val ev = CommUtils.buildEvent( "wsconn", "wsEvent", data  );
-            println("       &&& WsSupportObserver  | ownerActor null ev=$ev" )
+			ColorsOut.out("       &&& WsSupportObserver  | ownerActor null ev=$ev", ColorsOut.MAGENTA )
 			return
 		}
-		var target : String = "nonso"
+		var target : String
 
 		if( msgJson.has("target")   ){
 			target = msgJson.getString("target")
 			runBlocking {
-				ColorsOut.outappl("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
+				ColorsOut.out("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
 				ownerActor!!.emit("obstacle","obstacle($target)")
 			}
 		}

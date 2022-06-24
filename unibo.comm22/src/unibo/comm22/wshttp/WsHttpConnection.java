@@ -20,75 +20,94 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
             				new HashMap<String,WsHttpConnection>();
 	private Vector<IObserver> observers  = new Vector<IObserver>();
 	
-	private boolean connectForWs       = true;
+	//private boolean connectForWs       = true;
     private OkHttpClient okHttpClient  = new OkHttpClient();
     final MediaType JSON_MediaType     = MediaType.get("application/json; charset=utf-8");
 
     private String httpAddr ; 
-    private WebSocket myWs;
-    private String wsAddr ;
+    //private WebSocket myWs;
+    //private String wsAddr ;
     private boolean opened = false;
 	
 	public static Interaction2021 createForHttp(String addr ){
 		if( ! connMap.containsKey(addr)){
-			connMap.put(addr, new WsHttpConnection(addr,false) );
+			connMap.put(addr, new WsHttpConnection( addr ) );
 		}
 		return connMap.get(addr);
 	}
-	public static Interaction2021 createForWs(String addr ){
-		if( ! connMap.containsKey(addr)){
-			connMap.put(addr, new WsHttpConnection(addr,true) );
-		}
-		return connMap.get(addr);
-	}	
+//	public static Interaction2021 createForWs(String addr ){
+//		if( ! connMap.containsKey(addr)){
+//			connMap.put(addr, new WsHttpConnection(addr,true) );
+//		}
+//		return connMap.get(addr);
+//	}	
 	
 	
-	public WsHttpConnection(String addr, boolean wsconn ) {
-		connectForWs = wsconn;
-        if( wsconn ) wsconnect(addr);
-        else httpconnect(addr);		
+	public WsHttpConnection(String addr ) {//, boolean wsconn
+//		connectForWs = wsconn;
+//        if( wsconn ) wsconnect(addr);
+//        else
+//        	httpconnect(addr);	
+		httpAddr = addr; 
 	}
+/*	
+    public void wsconnect(String wsAddr){    // localhost:8091
+        this.wsAddr = wsAddr;
+        Request request = new Request.Builder()
+                .url( "ws://"+wsAddr )
+                .build() ;
+        myWs = okHttpClient.newWebSocket(request, this);
+        ColorsOut.out("WsHttpConnection | wsconnect myWs=" + myWs);
+    }
 	
-//Since IObservable	 
-	
-    protected void updateObservers( String msg ){
-        ColorsOut.out("WsHttpConnection | updateObservers " + observers.size() );
-        //observers.forEach( v -> v.send( msg ) );
-        observers.forEach( v -> v.update(null, msg) );
+    public void httpconnect(String httpaddr){    //localhost:8090/api/move
+        this.httpAddr = httpaddr;  
+//        try {
+//        Request request = new Request.Builder()
+//                .url( "http://"+httpaddr )
+//                .build() ;
+//        Response response = okHttpClient.newCall(request).execute(); //a stream
+//        String answer     = ((RealResponseBody) response.body()).string();
+//        ColorsOut.out("WsHttpConnection | httpconnect answer=" + answer);
+//        }catch(Exception e){
+//             e.printStackTrace();
+//        } 
     }	
+    */
 
 	 
- 
+ /*
 	protected void sendALine(String msg) throws Exception {
         if(connectForWs) myWs.send(msg);
-        else ColorsOut.out("SORRY: not connected for ws");
+        else ColorsOut.outerr("WsHttpConnection sendALine | SORRY: not connected for ws");
 	}
-	 
+*/	 
  	 
 	
 	
-//Since inherits from Interaction2021 firstpart
+//Since  Interaction2021  
 	@Override
 	public void forward( String msg) throws Exception {
-        if( connectForWs)  myWs.send(msg);
-        else {
+//        if( connectForWs)  myWs.send(msg);
+//        else {
         	String answer = sendHttp( msg );
-        	ColorsOut.out("WsHttpConnection | forward answer:" + answer + " DISCARDED since HTTP");
-        }
+        	ColorsOut.out("WsHttpConnection | forward answer:" + answer + " DISCARDED since HTTP", ColorsOut.BLUE);
+//        }
 	}
 
 	@Override
 	public String request(String msg) throws Exception {
-        if( ! connectForWs)  return sendHttp( msg );
-        else { //invio su ws e apsetto reply da onMessage
-        	return "SORRY: not connected for HTTP";
-        }
+//        if( ! connectForWs)  return sendHttp( msg );
+//        else { //invio su ws e apsetto reply da onMessage
+        	return "WsHttpConnection request |  SORRY: not connected for HTTP";
+//        }
 	}
 
 	@Override
 	public void reply(String msgJson) throws Exception {
-        if(connectForWs) myWs.send(msgJson);
-        else ColorsOut.out("SORRY: not connected for ws");
+//        if(connectForWs) myWs.send(msgJson);
+//        else 
+        	ColorsOut.outerr("WsHttpConnection reply | SORRY: not connected for ws");
 	}
 
 	@Override
@@ -99,21 +118,21 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
 
 	@Override
 	public void close() throws Exception {
-		if( myWs != null ){
-	       boolean gracefulShutdown = myWs.close(1000, "close");
-	       ColorsOut.out("WsHttpConnection | close gracefulShutdown=" + gracefulShutdown);
-		}
+//		if( myWs != null ){
+//	       boolean gracefulShutdown = myWs.close(1000, "close");
+//	       ColorsOut.out("WsHttpConnection | close gracefulShutdown=" + gracefulShutdown, ColorsOut.BLUE);
+//		}
 	}
 	
 // Since extends WebSocketListener
     @Override
     public void onOpen(WebSocket webSocket, Response response  ) {
-        ColorsOut.out("WsHttpConnection | onOpen ");
+        ColorsOut.out("WsHttpConnection | onOpen ", ColorsOut.BLUE);
         opened = true;
     }
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason  ) {
-        ColorsOut.out("WsHttpConnection | onClosing ");
+        ColorsOut.out("WsHttpConnection | onClosing ", ColorsOut.BLUE);
         try {
 			close();
 		} catch (Exception e) {
@@ -122,7 +141,7 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
     }
     @Override
     public void onMessage(WebSocket webSocket, String msg  ) {
-        ColorsOut.out("WsHttpConnection | onMessage " + msg );
+        ColorsOut.outappl("WsHttpConnection | onMessage " + msg, ColorsOut.BLUE );
 //        IApplMessage m = new ApplMessage(msg);
 //        if( m.isReply() ) {
 //        	//resume waiting for reply
@@ -133,28 +152,8 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
 
 	
 //----------------------------------------------------------------------
-    public void wsconnect(String wsAddr){    // localhost:8091
-        this.wsAddr = wsAddr;
-        Request request = new Request.Builder()
-                .url( "ws://"+wsAddr )
-                .build() ;
-        myWs = okHttpClient.newWebSocket(request, this);
-        ColorsOut.out("WsHttpConnection | wsconnect myWs=" + myWs);
-    }
 
-    public void httpconnect(String httpaddr){    //localhost:8090/api/move
-        this.httpAddr = httpaddr; /*
-        try {
-        Request request = new Request.Builder()
-                .url( "http://"+httpaddr )
-                .build() ;
-        Response response = okHttpClient.newCall(request).execute(); //a stream
-        String answer     = ((RealResponseBody) response.body()).string();
-        ColorsOut.out("WsHttpConnection | httpconnect answer=" + answer);
-        }catch(Exception e){
-             e.printStackTrace();
-        }*/
-    }
+
 
     public String sendHttp( String msgJson){
         try {
@@ -183,4 +182,11 @@ public class WsHttpConnection extends WebSocketListener implements Interaction20
 	public void deleteObserver(IObserver obs) {
 		observers.remove( obs);
 	}
+	
+    protected void updateObservers( String msg ){
+        ColorsOut.out("WsHttpConnection | updateObservers " + observers.size(), ColorsOut.BLUE );
+        //observers.forEach( v -> v.send( msg ) );
+        observers.forEach( v -> v.update(null, msg) );
+    }	
+	
  }

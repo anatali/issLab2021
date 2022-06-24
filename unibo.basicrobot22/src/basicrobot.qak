@@ -40,6 +40,7 @@ QActor basicrobot context ctxbasicrobot{
 #]  
  	State s0 initial { 	      
  		discardMsg Off  //WE want receive any msg
+ 		//[# unibo.comm22.utils.CommSystemConfig.tracing = false #]  //tracing at unibo.comm22 level
 		println("basicrobot | START")	
  		qrun unibo.robot.robotSupport.create(myself,"basicrobotConfig.json")	
  		[# RobotType = unibo.robot.robotSupport.robotKind #]
@@ -78,7 +79,7 @@ QActor basicrobot context ctxbasicrobot{
 	 Goto work   
 	 
 	State handleObstacle{
-		println("basicrobottttttttttttttttttttttttttttttttttt | handleObstacle ${CurrentMove}")	
+		//println("basicrobotttttttttt | handleObstacle ${CurrentMove}")	
 		//run unibo.robot.robotSupport.move( "h" ) //non importa 
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
@@ -126,9 +127,7 @@ QActor basicrobot context ctxbasicrobot{
 	State stepFail{  		
 		setDuration Duration from StartTime
 		run unibo.robot.robotSupport.move( "h" )  //stop the (real) robot
-		[# var TunedDuration = Duration;  
-			TunedDuration = Duration * 5 / 6
-		#]
+		[# var TunedDuration =  Duration * 5 / 6 #]
 		println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
 			run unibo.robot.robotSupport.move( "s" )
 			delayVar TunedDuration 

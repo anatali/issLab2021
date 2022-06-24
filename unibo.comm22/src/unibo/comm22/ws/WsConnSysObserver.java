@@ -24,7 +24,7 @@ public abstract class WsConnSysObserver implements IObserver{
 	public void update(Observable source, Object data) {
 		timer.stopTime();	
 		actionDuration = ""+timer.getDuration();
- 		ColorsOut.outappl("WsConnSysObserver update/2 receives:" + data + " duration=" + actionDuration, ColorsOut.CYAN);
+ 		ColorsOut.out("WsConnSysObserver update/2 receives:" + data + " duration=" + actionDuration, ColorsOut.CYAN);
 		update( data.toString() );
 	}
 	@Override

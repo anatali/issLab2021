@@ -5,6 +5,7 @@ package unibo.robot
 
 import it.unibo.kactor.ActorBasic
 import org.json.JSONObject
+import unibo.comm22.utils.CommSystemConfig
 import java.io.File
 
  
@@ -26,7 +27,8 @@ object robotSupport{
 		val jsonObject   = JSONObject( config )
 		val hostAddr     = jsonObject.getString("ipvirtualrobot") 
 		robotKind        = jsonObject.getString("type") 
-		val robotPort    = jsonObject.getString("port") 
+		val robotPort    = jsonObject.getString("port")
+		CommSystemConfig.tracing = jsonObject.getBoolean("commtrace")
 		println( "		--- robotSupport | CREATING for $robotKind host=$hostAddr port=$robotPort owner=$owner" )
 
 		when( robotKind ){		

@@ -33,14 +33,14 @@ object virtualrobotSupport2021 {
 		println("virtualrobotSupport2021 | init ... ")
 		//WsHttpConnection.trace = false
 	}
-	
+/*
 val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
      fun(scope, support ) {
 		val obs  = WsSupportObserver( owner.getName() )
         println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the WsHttpConnection")
 		support.addObserver( obs )
 }
-	
+	*/
 
 
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){
@@ -50,7 +50,6 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
             hostName         = hostNameStr
             port             = Integer.parseInt(portStr)
              try {
-				//WsHttpConnection.trace = true
             	support21    = WsHttpConnection.createForHttp( "$hostNameStr:$portStr" ) ///api/move built-in
 				support21ws  = WsConnection.create( "$hostNameStr:8091" )    
             	//println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
@@ -72,7 +71,7 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
 	}
 
     fun move(cmd: String) {	//cmd is written in application-language
-		println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
+		//println("		--- virtualrobotSupport2021 |  moveeeeeeeeeeeeeeeeeeeeee $cmd ")
 		val msg = translate( cmd )
 		trace("move  $msg")
 		if( cmd == "w" || cmd == "s"){  //doing aysnch
