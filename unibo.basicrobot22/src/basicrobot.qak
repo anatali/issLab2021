@@ -82,10 +82,11 @@ QActor basicrobot context ctxbasicrobot{
 		//run unibo.robot.robotSupport.move( "h" ) //non importa 
 		//printCurrentMessage
 		updateResource [# "obstacle(${CurrentMove})" #]
+		//JUNE22: behavior embedded in VirtualrobotSupport2021
 		/* 
 		if[# CurrentMove == "w" #]{
 		//back to avoid emission of obstacle again if real robot moving forward !!!
-		//if[# RobotType != "virtual" #]{	//is it better to embed this behavior in the support?
+		//if[# RobotType != "virtual" #]{	
 			run unibo.robot.robotSupport.move( "s" )
 			delay 100 
 			run unibo.robot.robotSupport.move( "h" ) 

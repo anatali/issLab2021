@@ -12,11 +12,19 @@ import unibo.comm22.utils.CommUtils
 /*
   Oggetto che informa l'owner in caso di collisione
 */ 
-class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
+class WsSupportObserver( val owner:String, val vrsupport : virtualrobotSupport2021) : WsConnSysObserver( owner) {
  var stepok = MsgUtil.buildDispatch("wsobs","stepok","stepok(done)",owner )
  var stepko = MsgUtil.buildDispatch("wsobs","stepko","stepko(todo)",owner )
 
-	
+
+	fun backALittle(){
+		runBlocking {
+			ColorsOut.outappl("WsSupportObserver backALittleeeeeeeeeeeee", ColorsOut.BLUE);
+			vrsupport.move("s")
+			kotlinx.coroutines.delay(50L)
+			vrsupport.move("h")
+		}
+	}
 	override fun update( data : String ) {
  		ColorsOut.outappl("WsSupportObserver update $data owner=$owner   ", ColorsOut.MAGENTA);
         val msgJson = JSONObject(data)
@@ -29,21 +37,21 @@ class WsSupportObserver( val owner:String) : WsConnSysObserver( owner) {
 		}
 		var target : String = "nonso"
 
+		if( msgJson.has("collision") ){
+			var move = msgJson.getString("collision")
+			ColorsOut.outappl("WsSupportObserver move=$move}", ColorsOut.GREEN);
+			if( move == "moveForward") backALittle()
+ 		}
 		if( msgJson.has("target")   ){
 			target = msgJson.getString("target")
 			runBlocking {
+
 				ColorsOut.outappl("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
 				ownerActor!!.emit("obstacle","obstacle($target)")
 			}
 		}
-	/*
-		if( msgJson.has("collision") ){
- 			var target = msgJson.getString("target")
-			ColorsOut.outappl("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
-			runBlocking {
-				//ownerActor!!.emit("obstacle","obstacle($target)")
-			}
-		}*/
+
+
 
 
 	}

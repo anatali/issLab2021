@@ -1,17 +1,12 @@
 package robotVirtual
 
-
 import org.json.JSONObject
-
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import it.unibo.kactor.ActorBasic
 import unibo.comm22.wshttp.WsHttpConnection
 import unibo.comm22.interfaces.Interaction2021
 import unibo.robot.MsgRobotUtil
 import unibo.comm22.ws.WsConnection
- 
-//import it.unibo.interaction.MsgRobotUtil
 
  //A support for using the virtual robot
  
@@ -33,14 +28,14 @@ object virtualrobotSupport2021 {
 		println("virtualrobotSupport2021 | init ... ")
 		//WsHttpConnection.trace = false
 	}
-	
+/*
 val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
      fun(scope, support ) {
 		val obs  = WsSupportObserver( owner.getName() )
         println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the WsHttpConnection")
 		support.addObserver( obs )
 }
-	
+*/
 
 
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){
@@ -56,12 +51,12 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
             	//println("		--- virtualrobotSupport2021 |  created (ws) $hostNameStr:$portStr $support21 $support21ws")	
 				//support21ws.wsconnect( doafterConn )  //2021
 //2022 Il POJO it.unibo.qak21.basicrobot informa basicrobot di una collisione				 
-				val obs  = WsSupportObserver( owner.getName() )
+				val obs  = WsSupportObserver( owner.getName(), this )
 				(support21ws as WsConnection).addObserver(obs) 			  
 //				//ACTIVATE the robotsonar as the beginning of a pipe
 //				robotsonar = virtualrobotSonarSupportActor("robotsonar", null)  //JUne2022
 //				owner.context!!.addInternalActor(robotsonar)  					//JUne2022
-			  	println("		--- virtualrobotSupport2021 | has created the robotsonar")	
+//			  	println("		--- virtualrobotSupport2021 | has created the robotsonar")
 			 }catch( e:Exception ){
                  println("		--- virtualrobotSupport2021 | ERROR $e")
              }	

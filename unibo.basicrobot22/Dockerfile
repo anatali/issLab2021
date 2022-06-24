@@ -19,4 +19,4 @@ CMD ["bash", "unibo.basicrobot"]
 
 
 ##  docker build -t basicrobot22:2.0 .
-##  docker run -it --rm --name basicrobot22:2.0 -p8020:8020/tcp --privileged basicrobot22:2.0  /bin/bash
+##  docker run -it --rm --name basicrobot22:2.0 -p8020:8020/tcp --privileged basicrobot22:1.0  /bin/bash
