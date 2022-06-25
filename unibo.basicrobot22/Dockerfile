@@ -19,6 +19,10 @@ CMD ["bash", "unibo.basicrobot"]
 
 
 ##  docker build -t basicrobot22:2.0 .
+<<<<<<< HEAD
+##  docker run -it --rm --name basicrobot22:2.0 -p8020:8020/tcp --privileged basicrobot22:1.0  /bin/bash
+=======
 ##  docker run -it --rm --name basicrobot22:2.0 -p8020:8020/tcp --privileged basicrobot22:2.0  /bin/bash
 
 # docker cp basicrobotConfig.json a9c36dac5bdd:/unibo.basicrobot-2.0/bin/basicrobotConfig.json
+>>>>>>> 45c5085cfe69d122b43ddc226b3ac2a2b6f7f694
