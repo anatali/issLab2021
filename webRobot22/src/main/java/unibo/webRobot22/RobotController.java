@@ -19,8 +19,8 @@ import unibo.comm22.utils.ColorsOut;
 @Controller 
 public class RobotController {
     public final static String robotName  = "basicrobot";
-    protected String mainPage      = "basicrobot22Gui";
-    protected boolean usingTcp  = false;
+    protected String mainPage             = "basicrobot22Gui";
+    protected boolean usingTcp            = false;
 
     //Settaggio degli attributi del modello
     @Value("${robot22.protocol}")
@@ -42,7 +42,7 @@ public class RobotController {
         viewmodel.addAttribute("protocol", protocol);
         viewmodel.addAttribute("webcamip", webcamip);
         viewmodel.addAttribute("robotip",  robotip);
-        viewmodel.addAttribute("path",     pathtodo);
+        viewmodel.addAttribute("pathtodo", pathtodo);
     }
 
   @GetMapping("/") 		 
@@ -77,8 +77,6 @@ public class RobotController {
         //Attivo comunque una connessione CoAP per osservare basicrobot
         CoapConnection conn = RobotUtils.connectWithRobotUsingCoap(ipaddr);
         conn.observeResource( new RobotCoapObserver() );
-        //WebSocketConfiguration.wshandler.sendToAll("Connected to Robot" + ipaddr); //disappears
- //       return mainPage;
         return buildThePage(viewmodel);
     }
 
@@ -98,14 +96,13 @@ public class RobotController {
     public String dopath(Model viewmodel  , @RequestParam String path ){
         ColorsOut.outappl("RobotController | dopath:" + path + " robotName=" + robotName, ColorsOut.BLUE);
         pathtodo =  path;
-        viewmodel.addAttribute("path", pathtodo);
-        //WebSocketConfiguration.wshandler.sendToAll("RobotController | doMove:" + move); //disappears
-        try {
-            //RobotUtils.sendMsg(robotName,move);
+        viewmodel.addAttribute("pathtodo", pathtodo);
+          try {
+            RobotUtils.doThePath( path );
         } catch (Exception e) {
             ColorsOut.outerr("RobotController | dopath ERROR:"+e.getMessage());
         }
-        return mainPage;
+        return buildThePage(viewmodel);
     }
 
 

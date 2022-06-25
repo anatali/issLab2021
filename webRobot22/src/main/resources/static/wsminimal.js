@@ -11,7 +11,7 @@ wsminimal.js
     }
 
     function connect(){
-      var host       =  document.location.host;
+        var host     =  document.location.host;
         var pathname =  "/"                   //document.location.pathname;
         var addr     = "ws://" +host  + pathname + "socket"  ;
         //alert("connect addr=" + addr   );
@@ -28,10 +28,12 @@ wsminimal.js
         };
 
         socket.onmessage = function (event) {
-            console.log("ws-status:" + `${event.data}`);
-            console.log(""+`${event.data}`);
-            setMessageToWindow(robotDisplay,""+`${event.data}`);
-            //alert(`Got Message: ${event.data}`)
-        };
+            //alert(`Got Message: ${event.data}`);
+            msg = event.data;
+            //alert(`Got Message: ${msg}`);
+            console.log("ws-status:" + msg);
+            if( msg.includes("path") ) setMessageToWindow(pathexecDisplay,msg);
+            else setMessageToWindow(robotDisplay,msg); //""+`${event.data}`*/
+         };
     }//connect
 

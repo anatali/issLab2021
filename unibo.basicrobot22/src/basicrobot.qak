@@ -226,13 +226,15 @@ QActor pathexec context ctxbasicrobot{
 	State endWorkOk{
 		//printCurrentMessage
 		println("endWorkOk: PATH DONE - BYE")
+		updateResource [# "pathdone" #]	
 		replyTo dopath with dopathdone : dopathdone( ok )
 	}
 	Goto s0 
-
+ 
 	State endWorkKo{
 		printCurrentMessage
 		[# var PathStillTodo = pathut.getPathTodo() #]
+		updateResource [# "pathstilltodo($PathStillTodo)" #]	
 		println("PATH FAILURE - SORRY. PathStillTodo=$PathStillTodo")
 		replyTo dopath with dopathfail : dopathfail( $PathStillTodo )
 	}	

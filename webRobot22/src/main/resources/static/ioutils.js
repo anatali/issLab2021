@@ -5,6 +5,7 @@ ioutils.js
     const infoDisplay     = document.getElementById("display");
     //const webcamip        = document.getElementById("webcamip");
     const robotDisplay    = document.getElementById("robotDisplay");
+    const pathexecDisplay = document.getElementById("pathexecDisplay");
 
     function setMessageToWindow(outfield, message) {
          var output = message.replace("\n","<br/>")

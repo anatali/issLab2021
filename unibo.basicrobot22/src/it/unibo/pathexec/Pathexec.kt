@@ -72,6 +72,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("endWorkOk") { //this:State
 					action { //it:State
 						println("endWorkOk: PATH DONE - BYE")
+						updateResourceRep( "pathdone"  
+						)
 						answer("dopath", "dopathdone", "dopathdone(ok)"   )  
 					}
 					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
@@ -80,6 +82,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						 var PathStillTodo = pathut.getPathTodo()  
+						updateResourceRep( "pathstilltodo($PathStillTodo)"  
+						)
 						println("PATH FAILURE - SORRY. PathStillTodo=$PathStillTodo")
 						answer("dopath", "dopathfail", "dopathfail($PathStillTodo)"   )  
 					}
