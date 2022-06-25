@@ -102,7 +102,7 @@ public class RobotController {
         } catch (Exception e) {
             ColorsOut.outerr("RobotController | dopath ERROR:"+e.getMessage());
         }
-        return buildThePage(viewmodel);
+        return mainPage;
     }
 
 

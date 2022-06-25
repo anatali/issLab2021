@@ -45,12 +45,7 @@ class WsSupportObserver( val owner:String, val vrsupport : virtualrobotSupport20
 		if( msgJson.has("target")   ){
 			target = msgJson.getString("target")
 			runBlocking {
-<<<<<<< HEAD
-
-				ColorsOut.outappl("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
-=======
 				ColorsOut.out("WsSupportObserver emits:obstacle($target)}", ColorsOut.GREEN);
->>>>>>> 45c5085cfe69d122b43ddc226b3ac2a2b6f7f694
 				ownerActor!!.emit("obstacle","obstacle($target)")
 			}
 		}

@@ -24,7 +24,9 @@
 .iss-bg-robotarea{
     background-color: #ffffe6;
 }
-
+.iss-bg-pathexecarea{
+    background-color: #ffb3ff;
+}
 .iss-btn-ligthblue{
 	background-color: #b3ffff;
 	color: #002152

@@ -102,16 +102,6 @@
              <div class="col"><button class='btn btn-block iss-btn-ligthgreen border' id='r'>r (rigth) </button></div>
              <div class="col"><button class='btn btn-warning btn-block border' id='p'>p (step) </button></div>
          </div> <!--p,l,r commands row -->
-            <div class="row"> <!-- path row -->
-
-                <form action="dopath" method="post">
-                    <!-- the form-data is sent to the path specified in the action attribute -->
-
-                    <input type="text" size="20" name="path" >
-                    <input type="submit" value="dopath">
-                    lastpath=<span th:text="${pathtodo}" id="pathtoexec"></span>
-                </form>
-            </div> <!-- path row -->
         </div> <!-- command card-content -->
       </div> <!--  command card -->
 
@@ -131,9 +121,18 @@
       </div>
 
       <!-- pathexectDisplay -->
-      <div class="card iss-bg-robotarea text-dark">
+      <div class="card iss-bg-pathexecarea text-dark">
           <div class="card-header px-1">Path executor</div>
           <div class="card-content px-1">
+              <div class="row"> <!-- path row -->
+
+                  <form action="dopath" method="post">
+                      <!-- the form-data is sent to the path specified in the action attribute -->
+                      <input type="text" size="20" name="path" >
+                      <input type="submit" value="dopath">
+                      last=<span th:text="${pathtodo}" id="pathtoexec"></span>
+                  </form>
+              </div> <!-- path row -->
               <span id="pathexecDisplay" >...</span>
           </div>
       </div>

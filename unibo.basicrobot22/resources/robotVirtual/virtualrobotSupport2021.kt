@@ -35,11 +35,8 @@ val doafterConn : (CoroutineScope, WsHttpConnection) -> Unit =
         println("virtualrobotSupport2021 | doafterConn REGISTER an observer for the WsHttpConnection")
 		support.addObserver( obs )
 }
-<<<<<<< HEAD
+
 */
-=======
-	*/
->>>>>>> 45c5085cfe69d122b43ddc226b3ac2a2b6f7f694
 
 
 	fun create( owner: ActorBasic, hostNameStr: String, portStr: String, trace : Boolean = false  ){

@@ -16,11 +16,12 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		 var CurMoveTodo = ""    //Upcase, since var to be used in guards
 		   var StepTime    = "300"
+		   var PathTodo    = ""
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						  CurMoveTodo = "" 
-									StepTime = unibo.robot.robotSupport.readStepTime()
+									StepTime = unibo.robot.robotSupport.readStepTime() //stepTimeConfig.json
 						println("pathexec ready. StepTime=$StepTime")
 					}
 					 transition(edgeName="t09",targetState="doThePath",cond=whenRequest("dopath"))
@@ -30,7 +31,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						println("$name in ${currentState.stateName} | $currentMsg")
 						if( checkMsgContent( Term.createTerm("dopath(PATH)"), Term.createTerm("dopath(PATH)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								pathut.setPath( payloadArg(0)  )
+								 PathTodo = payloadArg(0)  
+								pathut.setPath( PathTodo  )
 						}
 						println("pathexec pathTodo = ${pathut.getPathTodo()}")
 					}
@@ -72,7 +74,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				state("endWorkOk") { //this:State
 					action { //it:State
 						println("endWorkOk: PATH DONE - BYE")
-						updateResourceRep( "pathdone"  
+						updateResourceRep( "path $PathTodo done"  
 						)
 						answer("dopath", "dopathdone", "dopathdone(ok)"   )  
 					}

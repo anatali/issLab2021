@@ -6,6 +6,7 @@ import unibo.actor22comm.tcp.TcpClientSupport;
 import unibo.actor22comm.utils.ColorsOut;
 import unibo.actor22comm.utils.CommUtils;
 */
+import it.unibo.kactor.IApplMessage;
 import unibo.comm22.coap.CoapConnection;
 import unibo.comm22.interfaces.Interaction2021;
 import unibo.comm22.tcp.TcpClientSupport;
@@ -44,21 +45,21 @@ public class RobotUtils {
         }
         return (CoapConnection) conn;
     }
-    public static  String moveAril(String robotName, String cmd  ) {
+    public static IApplMessage moveAril(String robotName, String cmd  ) {
         //ColorsOut.outappl("HIController | moveAril cmd:" + cmd , ColorsOut.BLUE);
         switch( cmd ) {
-            case "w" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(w)", robotName);
-            case "s" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(s)", robotName);
-            case "turnLeft" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(a)", robotName);
-            case "l" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(a)", robotName);
-            case "r" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(d)", robotName);
-            case "h" : return ""+CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(h)", robotName);
-            case "p" : return ""+CommUtils.buildRequest("webgui", "step", "step(345)", robotName);
+            case "w" : return CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(w)", robotName);
+            case "s" : return CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(s)", robotName);
+            case "turnLeft" : return CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(a)", robotName);
+            case "l" : return CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(a)", robotName);
+            case "r" : return CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(d)", robotName);
+            case "h" : return CommUtils.buildDispatch("webgui", basicrobotCmdId, "cmd(h)", robotName);
+            case "p" : return CommUtils.buildRequest("webgui", "step", "step(345)", robotName);
 
-            case "start"  : return ""+CommUtils.buildDispatch("webgui", robotCmdId, "start",  robotName);
-            case "stop"   : return ""+CommUtils.buildDispatch("webgui", "stop", "do",   robotName);
-            case "resume" : return ""+CommUtils.buildDispatch("webgui", "resume", "do", robotName);
-            default:   return ""+CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
+            case "start"  : return CommUtils.buildDispatch("webgui", robotCmdId, "start",  robotName);
+            case "stop"   : return CommUtils.buildDispatch("webgui", "stop", "do",   robotName);
+            case "resume" : return CommUtils.buildDispatch("webgui", "resume", "do", robotName);
+            default:   return CommUtils.buildDispatch("webgui",   robotCmdId, "h",robotName);
         }
     }
 /*
@@ -68,9 +69,15 @@ public class RobotUtils {
 */
     public static void sendMsg(String robotName, String cmd){
         try {
-            String msg =  moveAril(robotName,cmd);
+            IApplMessage msg =  moveAril(robotName,cmd);
             ColorsOut.outappl("RobotUtils | sendMsg msg:" + msg + " conn=" + conn, ColorsOut.BLUE);
-            conn.forward( msg );
+            /*
+            if( msg.isRequest() ){
+                String answer = conn.request( msg.toString() );
+                ColorsOut.outappl("RobotUtils | answer:" + answer  , ColorsOut.BLUE);
+            }
+            else */
+                conn.forward( msg.toString() );
         } catch (Exception e) {
             ColorsOut.outerr("RobotUtils | sendMsg ERROR:"+e.getMessage());
         }

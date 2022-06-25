@@ -211,7 +211,7 @@ protected String topicInput = "";
 			new ApplMessage(msg); //no exception => we can publish
 		}catch( Exception e ) { //The message is not structured
 			ColorsOut.outappl("forward ERROR:" + e.getMessage() , ColorsOut.BLUE);
-			ApplMessage msgAppl = CommUtils.buildDispatch("mqtt", "cmd", msg, "unknown");
+			IApplMessage msgAppl = CommUtils.buildDispatch("mqtt", "cmd", msg, "unknown");
 		}				
 		publish(topicInput, msg, 2, false);	
 	}

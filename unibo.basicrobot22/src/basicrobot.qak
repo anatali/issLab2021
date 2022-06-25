@@ -177,11 +177,12 @@ QActor envsonarhandler context ctxbasicrobot{
 QActor pathexec context ctxbasicrobot{ 
 [# var CurMoveTodo = ""    //Upcase, since var to be used in guards
    var StepTime    = "300"
+   var PathTodo    = ""
 #]
 	State s0 initial{  	
 		//printCurrentMessage
 		[#  CurMoveTodo = "" 
-			StepTime = unibo.robot.robotSupport.readStepTime()
+			StepTime = unibo.robot.robotSupport.readStepTime() //stepTimeConfig.json
 		#]
 		println("pathexec ready. StepTime=$StepTime") 
 	}	
@@ -191,7 +192,8 @@ QActor pathexec context ctxbasicrobot{
 		printCurrentMessage 
 		//[# prinln( currentMsg ) #]
 		onMsg ( dopath : dopath( PATH )){
-			run pathut.setPath( payloadArg(0) )  //se payloadArg fallisce non da eccezione! (ma non fa nulla)
+			[# PathTodo = payloadArg(0) #]
+			run pathut.setPath( PathTodo )  //se payloadArg fallisce non da eccezione! (ma non fa nulla)
 		}		 
 		println("pathexec pathTodo = ${pathut.getPathTodo()}") 
  	}
@@ -227,7 +229,7 @@ QActor pathexec context ctxbasicrobot{
 	State endWorkOk{
 		//printCurrentMessage
 		println("endWorkOk: PATH DONE - BYE")
-		updateResource [# "pathdone" #]	
+		updateResource [# "path $PathTodo done" #]	
 		replyTo dopath with dopathdone : dopathdone( ok )
 	}
 	Goto s0 
