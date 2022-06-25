@@ -63,7 +63,6 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 				}	 
 				state("handleObstacle") { //this:State
 					action { //it:State
-						println("basicrobottttttttttttttttttttttttttttttttttt | handleObstacle ${CurrentMove}")
 						updateResourceRep( "obstacle(${CurrentMove})"  
 						)
 					}
@@ -107,8 +106,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						Duration = getDuration(StartTime)
 						unibo.robot.robotSupport.move( "h"  )
-						 var TunedDuration = Duration;  
-									TunedDuration = Duration * 5 / 6
+						 var TunedDuration =  Duration * 5 / 6  
 						println("basicrobot | stepFail duration=$Duration TunedDuration=$TunedDuration")
 						unibo.robot.robotSupport.move( "s"  )
 						delay(TunedDuration)

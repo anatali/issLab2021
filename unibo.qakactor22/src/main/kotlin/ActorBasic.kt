@@ -122,11 +122,7 @@ Message-driven kactor
 	fun setDiscard( v: Boolean){
 		discardMessages = v
 	}
-    //fun setContext( ctx: QakContext ) //built-in
-//    fun terminate(){
-//        context!!.actorMap.remove(  name )
-//        actor.close()
-//    }
+
 	
 /*
 TERMINATION 
@@ -134,7 +130,7 @@ TERMINATION
 
 
     fun terminate(arg: Int=0){
-		println("$tt ActorBasic $name | terminates $arg ")
+		if( ! name.contains("route") ) println("$tt ActorBasic $name | terminates $arg ")
         if( context !== null ) context!!.actorMap.remove(  name )
         actor.close()
     }
@@ -152,7 +148,6 @@ TERMINATION
 Messaging
 --------------------------------------------
  */
-
 
     suspend open fun autoMsg(  msg : IApplMessage) {
      //println("ActorBasic $name | autoMsg $msg actor=${actor}")
@@ -581,7 +576,7 @@ KNOWLEDGE BASE
             return
         }
         if( msg.isRequest() ) {
-            //println("$logo | fromPutToMsg request=$msg")
+            sysUtil.traceprintln("$logo | REQUEST in CoAP| create a temporary actor to manage $msg ")
             CoapToActor("caoproute${count++}", exchange, this, msg)
          }
      }

@@ -23,10 +23,6 @@ var answer = "noanswer"
 
 
      override suspend fun actorBody(msg : IApplMessage){
-//		if( msg.msgId() == "start") {
-//	        sysUtil.traceprintln("$tt $name | map PUT in request to ${owner.name}:  $extmsg "  )
-// 			request( extmsg.msgId(), extmsg.msgContent(), owner)
-//		} 
         if( msg.isReply() ){
   	        //sysUtil.traceprintln("$tt $name | PUT response: $msg exchange=${exchange.getSourceAddress()}"  )
  			answer = msg.toString().replace(name,owner.name)
