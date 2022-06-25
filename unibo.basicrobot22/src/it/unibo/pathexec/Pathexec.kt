@@ -49,6 +49,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMove") { //this:State
 					action { //it:State
+						delay(300) 
 					}
 					 transition( edgeName="goto",targetState="doMoveW", cond=doswitchGuarded({ CurMoveTodo == "w"  
 					}) )
