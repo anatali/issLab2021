@@ -373,3 +373,70 @@ Card with webcam
     window.open("https://www.w3schools.com");
     }
     </script>
+
+
+
+#!/bin/bash
+
+#USAGE  bash samexample.sh cmd=f
+
+echo "param $1"
+		### wiring pi
+IN1=17		#0
+IN2=18		#1
+IN3=22		#3
+IN4=23		#4
+
+gpio mode 0 out 
+gpio mode 1 out 
+gpio mode 3 out 
+gpio mode 4 out 
+
+if [ -a /dev/pi-blaster ]; #True if FILE exists.
+then 
+	echo "pi-blaster found"; 
+else 
+	echo "init";
+	sudo ./pi-blaster
+fi
+
+if [[ $1 == *"cmd=f"* ]]
+then
+  echo "doing f";
+	echo "$IN1=0.5" > /dev/pi-blaster  
+	echo "$IN2=0" > /dev/pi-blaster
+	echo "$IN3=0.5" > /dev/pi-blaster  
+	echo "$IN4=0" > /dev/pi-blaster
+elif [[ $1 == *"cmd=b"* ]]
+then
+  echo "doing b";
+	echo "$IN1=0" > /dev/pi-blaster  
+	echo "$IN2=0.5" > /dev/pi-blaster
+	echo "$IN3=0" > /dev/pi-blaster  
+	echo "$IN4=0.5" > /dev/pi-blaster
+elif [[ $1 == *"cmd=l"* ]]
+then
+  echo "doing l";
+	echo "$IN1=0" > /dev/pi-blaster  
+	echo "$IN2=0.5" > /dev/pi-blaster
+	echo "$IN3=0.5" > /dev/pi-blaster  
+	echo "$IN4=0" > /dev/pi-blaster
+elif [[ $1 == *"cmd=r"* ]]
+then
+  echo "doing r";
+	echo "$IN1=0.5" > /dev/pi-blaster  
+	echo "$IN2=0" > /dev/pi-blaster
+	echo "$IN3=0" > /dev/pi-blaster  
+	echo "$IN4=0.5" > /dev/pi-blaster
+elif [[ $1 == *"cmd=s"* ]]
+then
+  echo "doing s";
+	echo "$IN1=0" > /dev/pi-blaster  
+	echo "$IN2=0" > /dev/pi-blaster
+	echo "$IN3=0" > /dev/pi-blaster  
+	echo "$IN4=0" > /dev/pi-blaster
+elif [[ $1 == *"init"* ]]
+then
+	echo "init"
+	sudo /home/pi/pi-blaster/pi-blaster
+fi

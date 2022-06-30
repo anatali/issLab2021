@@ -173,9 +173,8 @@ build.gradle di webRobot22
         /* UNIBO ********************************** */
         implementation name: 'uniboInterfaces'
         implementation name: '2p301'
-        implementation name: 'it.unibo.qakactor-2.7'
-        implementation name: 'unibonoawtsupports'  //required by the old infrastructure
-        implementation name: 'unibo.actor22-1.1'   //using actor22comm in ConnQakBase
+	      implementation name: 'unibo.comm22-1.1'
+	      implementation name: 'unibo.qakactor22-2.8'  //per ApplMessage
     }
     mainClassName = 'unibo.webRobot22.WebRobot22Application'
     jar {
@@ -187,7 +186,10 @@ build.gradle di webRobot22
     }
  
 
-I `WebJars`_ sono stati introdotti in :ref:`Bootstrap e webJars`.
+- I `WebJars`_ sono stati introdotti in :ref:`Bootstrap e webJars`.
+- La libreria ``unibo.comm22-1.1.jar`` è costruita nel progetto  :blue:`it.unibo.comm22`
+- La libreria ``unibo.qakactor22-2.8`` è costruita nel progetto :ref:`QActor (meta)model`  
+  e utilizza la libreria precedente per le comunicazioni.
 
 -----------------------------------------------------------
 basicrobot22Gui.html
