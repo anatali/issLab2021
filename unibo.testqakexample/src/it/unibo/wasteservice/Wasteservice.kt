@@ -24,6 +24,8 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 					action { //it:State
 						println("the wasteservice is waiting..")
 						 TrolleyPos = "Home"  
+						updateResourceRep( "TrolleyPos = Home"  
+						)
 					}
 					 transition(edgeName="t00",targetState="handlerequest",cond=whenRequest("depositrequest"))
 				}	 
