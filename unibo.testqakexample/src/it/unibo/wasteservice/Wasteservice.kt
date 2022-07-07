@@ -17,10 +17,13 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 		
 						lateinit var Material  : String
 						lateinit var TruckLoad : String ;
+						
+						lateinit var TrolleyPos : String ; //GBox,Pbox,Home,Indoor,Other
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("the wasteservice is waiting..")
+						 TrolleyPos = "Home"  
 					}
 					 transition(edgeName="t00",targetState="handlerequest",cond=whenRequest("depositrequest"))
 				}	 

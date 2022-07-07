@@ -24,6 +24,7 @@ class Transporttrolley ( name: String, scope: CoroutineScope  ) : ActorBasicFsm(
 				state("handlepickup") { //this:State
 					action { //it:State
 						answer("pickup", "pickupanswer", "pickupanswer(done)"   )  
+						 TrolleyPos = "Indoor"  
 					}
 					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 

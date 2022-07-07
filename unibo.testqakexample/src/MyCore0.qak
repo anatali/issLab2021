@@ -15,9 +15,12 @@ QActor wasteservice context ctxWasteService {
 			[#
 				lateinit var Material  : String
 				lateinit var TruckLoad : String ;
+				
+				lateinit var TrolleyPos : String ; //GBox,Pbox,Home,Indoor,Other
 			#]
 	State s0 initial {
 		println("the wasteservice is waiting..")
+		[# TrolleyPos = "Home" #]
 	}
 	Transition t0 whenRequest depositrequest -> handlerequest
 	
@@ -63,6 +66,8 @@ QActor transporttrolley context ctxWasteService {
 	
 	State handlepickup{
 		replyTo pickup with pickupanswer : pickupanswer( done )
+		//TODO
+		[# TrolleyPos = "Indoor" #]
 	}
 	Goto s0
  

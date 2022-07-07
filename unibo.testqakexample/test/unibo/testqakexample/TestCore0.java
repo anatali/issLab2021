@@ -43,7 +43,8 @@ public class TestCore0 {
 			String answer     = connTcp.request(truckRequestStr);
  			ColorsOut.outappl("testLoadok answer=" + answer , ColorsOut.GREEN);
 			connTcp.close();
-			assertTrue(answer.contains("loadaccept"));
+			assertTrue(answer.contains("loadaccept"));			
+			//TODO: controllare che TrolleyPos sia "Indoor"
 		}catch(Exception e){
 			ColorsOut.outerr("testLoadok ERROR:" + e.getMessage());
 
