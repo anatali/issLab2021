@@ -52,7 +52,10 @@ private CoapConnection conn;
  			ColorsOut.outappl("testLoadok answer=" + answer , ColorsOut.GREEN);
 			connTcp.close();
 			assertTrue(answer.contains("loadaccept"));
+			//TODO: problema dei tempi
 			assertTrue( coapCheck("indoor") );
+			CommUtils.delay(1000);
+			assertTrue( coapCheck("gbox") );
 			//TODO: controllare che TrolleyPos sia "Indoor"
 			CommUtils.delay(3000);
 		}catch(Exception e){

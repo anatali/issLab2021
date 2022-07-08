@@ -15,10 +15,10 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		
-						lateinit var Material  : String
-						lateinit var TruckLoad : String ;
+						lateinit var Material  : String //glass, plastic
+						lateinit var TruckLoad : String  
 						
-						lateinit var TrolleyPos : String ; //gbox,pbox,Home,indoor,other
+						lateinit var TrolleyPos : String   //gbox,pbox,Home,indoor,other
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -67,6 +67,20 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 								 answer("depositrequest", "loadrejected", "loadrejected($Material,$TruckLoad)"   )  
 								 }
 						}
+					}
+					 transition( edgeName="goto",targetState="dodeposit", cond=doswitch() )
+				}	 
+				state("dodeposit") { //this:State
+					action { //it:State
+						delay(1000) 
+						if(  Material == "glass"  
+						 ){updateResourceRep( "trolleyPos(gbox)"  
+						)
+						}
+						else
+						 {updateResourceRep( "trolleyPos(pbox)"  
+						 )
+						 }
 					}
 				}	 
 			}
