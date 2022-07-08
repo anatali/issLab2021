@@ -18,13 +18,13 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						lateinit var Material  : String
 						lateinit var TruckLoad : String ;
 						
-						lateinit var TrolleyPos : String ; //GBox,Pbox,Home,Indoor,Other
+						lateinit var TrolleyPos : String ; //gbox,pbox,Home,indoor,other
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						println("the wasteservice is waiting..")
 						 TrolleyPos = "Home"  
-						updateResourceRep( "TrolleyPos = Home"  
+						updateResourceRep( "trolleyPos(home0)"  
 						)
 					}
 					 transition(edgeName="t00",targetState="handlerequest",cond=whenRequest("depositrequest"))
@@ -33,6 +33,8 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 					action { //it:State
 						 fun checkdepositpossible(MATERIAL:String,LOAD:String) : Boolean { return true }  
 						println("$name in ${currentState.stateName} | $currentMsg")
+						updateResourceRep( "trolleyPos(home1)"  
+						)
 						if( checkMsgContent( Term.createTerm("depositrequest(MATERIAL,TRUCKLOAD)"), Term.createTerm("depositrequest(MATERIAL,TRUCKLOAD)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								
@@ -55,7 +57,10 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 var R = payloadArg(0);  
 								if(  R == "done"  
-								 ){answer("depositrequest", "loadaccept", "loadaccept($Material,$TruckLoad)"   )  
+								 ){ TrolleyPos = "Indoor"  
+								updateResourceRep( "trolleyPos(indoor)"  
+								)
+								answer("depositrequest", "loadaccept", "loadaccept($Material,$TruckLoad)"   )  
 								}
 								else
 								 {println("FATAL ERROR")

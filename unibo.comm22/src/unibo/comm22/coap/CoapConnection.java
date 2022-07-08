@@ -88,31 +88,7 @@ private String name = "CoapSprt";
 		ColorsOut.out(name + " | client shutdown=" + client);		
 		client.shutdown();	
 	}
-/*
-	@Override
-	public void sendALine(String msg) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void sendALine(String msg, boolean isAnswer) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String receiveALine() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void closeConnection() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-*/
 }
 /*
 Log4j by default looks for a file called log4j.properties or log4j.xml on the classpath

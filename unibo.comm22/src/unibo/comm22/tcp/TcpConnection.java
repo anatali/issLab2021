@@ -73,23 +73,7 @@ private Socket socket;
 		socket.close();
 		ColorsOut.out( "TcpConnection | CLOSED  ", ColorsOut.BLUE );
 	}
-/*
-	@Override
-
-	@Override
-	public void sendALine(String msg, boolean isAnswer) throws Exception {
-		// REQUIRED BY THE OLD LIBRARY	 (obsolete)
-	}
-
-	@Override
-	public String receiveALine() throws Exception {
-		String	line = inputChannel.readLine() ; //blocking =>
- 		return line;		
-	}
-
-	@Override
-
-*/
+ 
 
 
 }

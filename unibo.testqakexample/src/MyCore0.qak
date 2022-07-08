@@ -1,33 +1,34 @@
 System wasteservice
-
+ 
 Request depositrequest : depositrequest(MATERIAL, TRUCKLOAD)
 Reply loadaccept       : loadaccept(MATERIAL, TRUCKLOAD)
 Reply loadrejected     : loadrejected(MATERIAL, TRUCKLOAD)
-
+ 
 Request pickup         : pickup(MATERIAL, TRUCKLOAD)
 Reply   pickupanswer   : pickupanswer(RESULT)
-
+ 
 Dispatch execute : execute(MATERIAL,TRUCKLOAD)
+  
+Context ctxwasteservice ip [ host="localhost" port=8013 ]
 
-Context ctxWasteService ip [ host="localhost" port=8013 ]
-
-QActor wasteservice context ctxWasteService {
+QActor wasteservice context ctxwasteservice {
 			[#
 				lateinit var Material  : String
 				lateinit var TruckLoad : String ;
 				
-				lateinit var TrolleyPos : String ; //GBox,Pbox,Home,Indoor,Other
-			#]
+				lateinit var TrolleyPos : String ; //gbox,pbox,Home,indoor,other
+			#] 
 	State s0 initial {
 		println("the wasteservice is waiting..")
 		[# TrolleyPos = "Home" #]
-		updateResource [# "TrolleyPos = Home" #]
+		updateResource [# "trolleyPos(home0)" #] 
 	}
 	Transition t0 whenRequest depositrequest -> handlerequest
 	
 	State handlerequest{
 		[# fun checkdepositpossible(MATERIAL:String,LOAD:String) : Boolean { return true } #]
 		printCurrentMessage
+		updateResource [# "trolleyPos(home1)" #]
 		onMsg(depositrequest : depositrequest(MATERIAL, TRUCKLOAD)) {
 			[#
 				 Material 	= payloadArg(0) ;
@@ -43,11 +44,15 @@ QActor wasteservice context ctxWasteService {
 	Transition t0 whenReply pickupanswer -> handlepickupanswer
 	
 	
-	State handlepickupanswer{
+	State handlepickupanswer{ 
 		printCurrentMessage
 		onMsg( pickupanswer : pickupanswer(RESULT) ){
 			[# var R = payloadArg(0); #]
 			if [# R == "done" #] {
+				//TODO
+				[# TrolleyPos = "Indoor" #]
+				//emit 
+				updateResource [# "trolleyPos(indoor)" #]
 				replyTo depositrequest with 
 					loadaccept : loadaccept($Material,$TruckLoad)
 			}else{
@@ -59,7 +64,7 @@ QActor wasteservice context ctxWasteService {
 	}
 }
 
-QActor transporttrolley context ctxWasteService {
+QActor transporttrolley context ctxwasteservice {
 	State s0 initial {
 		println("the transporttrolley is waiting..")
 	}
@@ -67,9 +72,6 @@ QActor transporttrolley context ctxWasteService {
 	
 	State handlepickup{
 		replyTo pickup with pickupanswer : pickupanswer( done )
-		//TODO
-		[# TrolleyPos = "Indoor" #]
-		updateResource [# "TrolleyPos = Indoor" #]
 	}
 	Goto s0
  
