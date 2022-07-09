@@ -5,7 +5,6 @@ import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
-
 import unibo.comm22.interfaces.Interaction2021;
 import unibo.comm22.utils.ColorsOut;
   
@@ -13,7 +12,7 @@ import unibo.comm22.utils.ColorsOut;
 public class CoapConnection implements Interaction2021  {
 private CoapClient client;
 private String url;
-private String name = "CoapSprt";
+private String name = "CoapConn";
 
 
 	public CoapConnection( String address, String path) { //"coap://localhost:5683/" + path
@@ -36,7 +35,7 @@ private String name = "CoapSprt";
 	}
 	public CoapObserveRelation observeResource( CoapHandler handler  ) {
 		CoapObserveRelation relation = client.observe( handler ); 
-		ColorsOut.out(name + " | added " + handler + " relation=" + relation + relation,ColorsOut.ANSI_YELLOW  );
+		//ColorsOut.out(name + " | added " + handler + " relation=" + relation + relation, ColorsOut.ANSI_YELLOW  );
  		return relation;
 	}
 
@@ -45,10 +44,10 @@ private String name = "CoapSprt";
 //From Interaction2021 
 	@Override
 	public void forward(String msg)   {
-		ColorsOut.out(name + " | forward " + url + " msg=" + msg,ColorsOut.ANSI_YELLOW); 
+		ColorsOut.out(name + " | forward " + url + " msg=" + msg, ColorsOut.ANSI_YELLOW); 
 		if( client != null ) {
 			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
- 			if( resp != null ) ColorsOut.outappl(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
+ 			if( resp != null ) ColorsOut.out(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
 		    else { ColorsOut.outerr(name + " | forward - resp null "   ); }  //?????
 		} 
 	}
@@ -56,14 +55,14 @@ private String name = "CoapSprt";
 	
 	@Override
 	public String request(String query)   {
-  		ColorsOut.out(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
+  		//ColorsOut.out(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
 		String param = query.isEmpty() ? "" :  "?q="+query;
   		//ColorsOut.out(name + " | param=" + param, ColorsOut.ANSI_YELLOW );
 		client.setURI(url+param);
 		CoapResponse respGet = client.get(  );
 		if( respGet != null ) {
-	 		ColorsOut.out(name + " | request=" + query 
-	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),ColorsOut.ANSI_YELLOW);
+//	 		ColorsOut.out(name + " | request=" + query 
+//	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),ColorsOut.ANSI_YELLOW);
 			return respGet.getResponseText();
 		}else {
 	 		ColorsOut.out(name + " | request=" + query +" RESPONSE NULL ",ColorsOut.RED);
