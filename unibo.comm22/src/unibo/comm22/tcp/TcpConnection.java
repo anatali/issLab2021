@@ -2,7 +2,6 @@ package unibo.comm22.tcp;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -59,7 +58,7 @@ private Socket socket;
 	}
 	
 	protected void sendALine(String msg) throws Exception {
-		ColorsOut.outappl( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
+		ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();
@@ -74,6 +73,4 @@ private Socket socket;
 		ColorsOut.out( "TcpConnection | CLOSED  ", ColorsOut.BLUE );
 	}
  
-
-
 }

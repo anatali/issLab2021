@@ -12,7 +12,7 @@ public class TcpClientSupport {
  		 
 		for( int i=1; i<=nattempts; i++ ) {
 			try {
-				ColorsOut.outappl("TcpClient | attempt " + i + " to connect with host:" + host + " port=" + port, ColorsOut.YELLOW);
+				ColorsOut.out("TcpClient | attempt " + i + " to connect with host:" + host + " port=" + port, ColorsOut.YELLOW);
 				Socket socket         =  new Socket( host, port );
 				Interaction2021 conn  =  new TcpConnection( socket );
 				return conn;

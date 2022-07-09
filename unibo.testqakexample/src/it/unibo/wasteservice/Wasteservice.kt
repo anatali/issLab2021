@@ -79,8 +79,10 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						 {updateResourceRep( "trolleyPos(pbox)"  
 						 )
 						 }
+						stateTimer = TimerActor("timer_dodeposit", 
+							scope, context!!, "local_tout_wasteservice_dodeposit", 5000.toLong() )
 					}
-					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
+					 transition(edgeName="t02",targetState="s0",cond=whenTimeout("local_tout_wasteservice_dodeposit"))   
 				}	 
 			}
 		}

@@ -9,6 +9,7 @@ import org.eclipse.californium.core.CoapHandler;
 import org.junit.*;
 import unibo.comm22.coap.CoapConnection;
 import unibo.comm22.utils.ColorsOut;
+import unibo.comm22.utils.CommSystemConfig;
 import unibo.comm22.utils.CommUtils;
 
 
@@ -17,7 +18,9 @@ private CoapConnection conn;
 
 	@Before
 	public void up() {
-		connectUsingCoap("localhost", new TrolleyPosObserver());
+		CommSystemConfig.tracing=false;
+
+		startObserverCoap("localhost", new TrolleyPosObserver());
 
 		new Thread(){
 			public void run(){
@@ -56,8 +59,8 @@ private CoapConnection conn;
 			assertTrue( coapCheck("indoor") );
 			CommUtils.delay(1000);
 			assertTrue( coapCheck("gbox") );
-			//TODO: controllare che TrolleyPos sia "Indoor"
-			CommUtils.delay(3000);
+			//TODO: controllare la history
+			//CommUtils.delay(3000);
 		}catch(Exception e){
 			ColorsOut.outerr("testLoadok ERROR:" + e.getMessage());
 
@@ -71,17 +74,22 @@ protected boolean coapCheck(String check){
 	ColorsOut.outappl("coapCheck answer=" + answer, ColorsOut.CYAN);
 	return answer.contains(check);
 }
-protected void connectUsingCoap(String addr, CoapHandler handler){
-	try {
-		String ctxqakdest       = "ctxwasteservice";
-		String qakdestination 	= "wasteservice";
-		String applPort         = "8013";
-		String path             = ctxqakdest+"/"+qakdestination;
-		conn                    = new CoapConnection(addr+":"+applPort, path);
-		conn.observeResource( handler );
-		ColorsOut.outappl("connected via Coap conn:" + conn , ColorsOut.CYAN);
-	}catch(Exception e){
-		ColorsOut.outerr("connectUsingCoap ERROR:"+e.getMessage());
-	}
+protected void startObserverCoap(String addr, CoapHandler handler){
+		new Thread(){
+			public void run(){
+				try {
+					String ctxqakdest       = "ctxwasteservice";
+					String qakdestination 	= "wasteservice";
+					String applPort         = "8013";
+					String path             = ctxqakdest+"/"+qakdestination;
+					conn                    = new CoapConnection(addr+":"+applPort, path);
+					conn.observeResource( handler );
+					ColorsOut.outappl("connected via Coap conn:" + conn , ColorsOut.CYAN);
+				}catch(Exception e){
+					ColorsOut.outerr("connectUsingCoap ERROR:"+e.getMessage());
+				}
+			}
+		}.start();
+
 }
 }

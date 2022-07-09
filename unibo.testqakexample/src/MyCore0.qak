@@ -73,7 +73,7 @@ QActor wasteservice context ctxwasteservice {
 		if [# Material == "glass" #]{ updateResource [# "trolleyPos(gbox)" #]
 		}else{ updateResource [# "trolleyPos(pbox)" #] }
 	}
-	Goto s0
+	Transition t0 whenTime 5000  -> s0
 }
 
 QActor transporttrolley context ctxwasteservice {

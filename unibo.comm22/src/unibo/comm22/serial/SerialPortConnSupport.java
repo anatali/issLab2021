@@ -1,4 +1,4 @@
-package robotMbot;
+package unibo.comm22.serial;
 
 import java.util.ArrayList;
 import java.util.List;

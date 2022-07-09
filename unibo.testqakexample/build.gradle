@@ -68,16 +68,16 @@ dependencies {
     /* LOG4J *************************************************************************************************************** */
     //Simple Logging Facade for Java
     implementation group: 'org.slf4j', name: 'slf4j-api',    version: '1.7.36'
-    //implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.36'
+    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.36'
     //implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
-        //emette su System.err. Usa simplelogger.properties
+                            //emette su System.err. Usa simplelogger.properties
     //OPPURE:
-
+    /*
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36'
-        //si appoggia su log4j di apache, che usa log4j.properties
+                            //si appoggia su log4j di apache, che usa log4j.properties
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.16.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.16.0'
-     
+    */
 
 
     /* HTTP **************************************************************************************************************** */

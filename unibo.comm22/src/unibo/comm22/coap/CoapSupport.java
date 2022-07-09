@@ -6,6 +6,7 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
+import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
 
 
@@ -14,10 +15,10 @@ class MyHandler implements CoapHandler {
 	}
 	@Override public void onLoad(CoapResponse response) {
 		String content = response.getResponseText();
-		System.out.println("MyHandler | NOTIFICATION: " + content);
+		ColorsOut.out("MyHandler | NOTIFICATION: " + content, ColorsOut.CYAN);
  	}					
 	@Override public void onError() {
-		System.err.println("MyHandler  |  FAILED (press enter to exit)");
+		ColorsOut.outerr("MyHandler  |  FAILED (press enter to exit)");
 	}
 }
 
@@ -28,7 +29,7 @@ private CoapObserveRelation relation = null;
 	public CoapSupport( String addressWithPort, String path) { //"coap://localhost:5683/" + path
 		String url = addressWithPort + "/" + path;
 		client = new CoapClient( url );
-		System.out.println("CoapSupport | STARTS url=" +  url  ); //+ " client=" + client
+		ColorsOut.out("CoapSupport | STARTS url=" +  url, ColorsOut.CYAN ); //+ " client=" + client
 		client.setTimeout( 1000L );		 
 	}
  
@@ -36,7 +37,7 @@ private CoapObserveRelation relation = null;
 	public String readResource(   ) {
 		CoapResponse respGet = client.get( );
 		if( respGet == null ) return "CoapSupport : sorry no respGet";
-		System.out.println("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
+		ColorsOut.out("CoapSupport | readResource RESPONSE CODE: " + respGet.getCode());		
 		return respGet.getResponseText();
 	}
 
@@ -70,7 +71,7 @@ private CoapObserveRelation relation = null;
 	
 	public void test() {
 		String v = readResource();
-		System.out.println("CoapSupport | v=" + v);
+		ColorsOut.out("CoapSupport | v=" + v, ColorsOut.CYAN);
 //		updateResourceWithValue("55");
 // 		v = readResource();
 // 		System.out.println("CoapSupport | v=" + v);		

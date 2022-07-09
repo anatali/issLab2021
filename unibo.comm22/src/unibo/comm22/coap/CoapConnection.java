@@ -26,7 +26,7 @@ private String name = "CoapSprt";
 		url            = "coap://"+addressWithPort + "/"+ path;
 		client          = new CoapClient( url );
  		client.useExecutor(); //To be shutdown
-		ColorsOut.outappl(name + " | STARTS client url=" +  url,ColorsOut.YELLOW_BACKGROUND ); //+ " client=" + client );
+		ColorsOut.out(name + " | STARTS client url=" +  url,ColorsOut.YELLOW_BACKGROUND ); //+ " client=" + client );
 		client.setTimeout( 1000L );		 		
 	}
  	
@@ -36,7 +36,7 @@ private String name = "CoapSprt";
 	}
 	public CoapObserveRelation observeResource( CoapHandler handler  ) {
 		CoapObserveRelation relation = client.observe( handler ); 
-		ColorsOut.outappl(name + " | added " + handler + " relation=" + relation + relation,ColorsOut.ANSI_YELLOW  );
+		ColorsOut.out(name + " | added " + handler + " relation=" + relation + relation,ColorsOut.ANSI_YELLOW  );
  		return relation;
 	}
 
@@ -45,7 +45,7 @@ private String name = "CoapSprt";
 //From Interaction2021 
 	@Override
 	public void forward(String msg)   {
-		ColorsOut.outappl(name + " | forward " + url + " msg=" + msg,ColorsOut.ANSI_YELLOW); 
+		ColorsOut.out(name + " | forward " + url + " msg=" + msg,ColorsOut.ANSI_YELLOW); 
 		if( client != null ) {
 			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
  			if( resp != null ) ColorsOut.outappl(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
@@ -56,9 +56,9 @@ private String name = "CoapSprt";
 	
 	@Override
 	public String request(String query)   {
-  		ColorsOut.outappl(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
+  		ColorsOut.out(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
 		String param = query.isEmpty() ? "" :  "?q="+query;
-  		ColorsOut.out(name + " | param=" + param );
+  		//ColorsOut.out(name + " | param=" + param, ColorsOut.ANSI_YELLOW );
 		client.setURI(url+param);
 		CoapResponse respGet = client.get(  );
 		if( respGet != null ) {
