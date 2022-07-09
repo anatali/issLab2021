@@ -1,0 +1,13 @@
+2022-07-09 11:47:44 INFO  Configuration:591 - loading properties from file C:\Didattica2021\issLab2021\unibo.qakexampleobserver\Californium3.properties
+2022-07-09 11:47:44 INFO  Configuration:341 - defaults added UDP.
+2022-07-09 11:47:45 INFO  Configuration:341 - defaults added COAP.
+2022-07-09 11:47:45 INFO  RandomTokenGenerator:66 - using tokens of 8 bytes in length
+2022-07-09 11:47:45 INFO  ban:380 - Started.
+2022-07-09 11:47:45 INFO  CoapEndpoint:406 - coap CoapEndpoint uses udp context
+2022-07-09 11:47:45 INFO  Configuration:341 - defaults added SYS.
+2022-07-09 11:47:45 INFO  BlockwiseLayer:386 - coap BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000, MAX_RESOURCE_BODY_SIZE=8192, BLOCKWISE_STRICT_BLOCK2_OPTION=false
+2022-07-09 11:47:45 INFO  CoapEndpoint:456 - coap Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2022-07-09 11:47:45 INFO  UDPConnector:242 - UDPConnector starts up 1 sender threads and 1 receiver threads
+2022-07-09 11:47:45 INFO  UDPConnector:268 - UDPConnector listening on 0.0.0.0/0.0.0.0:51503, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2022-07-09 11:47:45 INFO  CoapEndpoint:493 - coap Started endpoint at coap://0.0.0.0:51503
+2022-07-09 11:47:45 INFO  EndpointManager:134 - created implicit endpoint coap://0.0.0.0:51503 for coap

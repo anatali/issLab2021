@@ -1,0 +1,39 @@
+2022-07-09 11:48:39 INFO  Configuration:591 - loading properties from file C:\Didattica2021\issLab2021\unibo.qakexampleobserver\Californium3.properties
+2022-07-09 11:48:39 INFO  Configuration:341 - defaults added UDP.
+2022-07-09 11:48:40 INFO  Configuration:341 - defaults added COAP.
+2022-07-09 11:48:40 INFO  RandomTokenGenerator:66 - using tokens of 8 bytes in length
+2022-07-09 11:48:40 INFO  ban:380 - Started.
+2022-07-09 11:48:40 INFO  CoapEndpoint:406 - coap CoapEndpoint uses udp context
+2022-07-09 11:48:40 INFO  Configuration:341 - defaults added SYS.
+2022-07-09 11:48:40 INFO  BlockwiseLayer:386 - coap BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000, MAX_RESOURCE_BODY_SIZE=8192, BLOCKWISE_STRICT_BLOCK2_OPTION=false
+2022-07-09 11:48:40 INFO  CoapEndpoint:456 - coap Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2022-07-09 11:48:40 INFO  UDPConnector:242 - UDPConnector starts up 1 sender threads and 1 receiver threads
+2022-07-09 11:48:40 INFO  UDPConnector:268 - UDPConnector listening on 0.0.0.0/0.0.0.0:53790, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2022-07-09 11:48:40 INFO  CoapEndpoint:493 - coap Started endpoint at coap://0.0.0.0:53790
+2022-07-09 11:48:40 INFO  EndpointManager:134 - created implicit endpoint coap://0.0.0.0:53790 for coap
+2022-07-09 11:48:51 INFO  Configuration:591 - loading properties from file C:\Didattica2021\issLab2021\unibo.qakexampleobserver\Californium3.properties
+2022-07-09 11:48:51 INFO  Configuration:341 - defaults added UDP.
+2022-07-09 11:48:51 INFO  Configuration:341 - defaults added COAP.
+2022-07-09 11:48:51 INFO  RandomTokenGenerator:66 - using tokens of 8 bytes in length
+2022-07-09 11:48:51 INFO  ban:380 - Started.
+2022-07-09 11:48:51 INFO  CoapEndpoint:406 - coap CoapEndpoint uses udp context
+2022-07-09 11:48:51 INFO  Configuration:341 - defaults added SYS.
+2022-07-09 11:48:51 INFO  BlockwiseLayer:386 - coap BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000, MAX_RESOURCE_BODY_SIZE=8192, BLOCKWISE_STRICT_BLOCK2_OPTION=false
+2022-07-09 11:48:51 INFO  CoapEndpoint:456 - coap Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2022-07-09 11:48:51 INFO  UDPConnector:242 - UDPConnector starts up 1 sender threads and 1 receiver threads
+2022-07-09 11:48:51 INFO  UDPConnector:268 - UDPConnector listening on 0.0.0.0/0.0.0.0:51598, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2022-07-09 11:48:51 INFO  CoapEndpoint:493 - coap Started endpoint at coap://0.0.0.0:51598
+2022-07-09 11:48:51 INFO  EndpointManager:134 - created implicit endpoint coap://0.0.0.0:51598 for coap
+2022-07-09 11:59:34 INFO  Configuration:591 - loading properties from file C:\Didattica2021\issLab2021\unibo.qakexampleobserver\Californium3.properties
+2022-07-09 11:59:34 INFO  Configuration:341 - defaults added UDP.
+2022-07-09 11:59:35 INFO  Configuration:341 - defaults added COAP.
+2022-07-09 11:59:35 INFO  RandomTokenGenerator:66 - using tokens of 8 bytes in length
+2022-07-09 11:59:35 INFO  ban:380 - Started.
+2022-07-09 11:59:35 INFO  CoapEndpoint:406 - coap CoapEndpoint uses udp context
+2022-07-09 11:59:35 INFO  Configuration:341 - defaults added SYS.
+2022-07-09 11:59:35 INFO  BlockwiseLayer:386 - coap BlockwiseLayer uses MAX_MESSAGE_SIZE=1024, PREFERRED_BLOCK_SIZE=512, BLOCKWISE_STATUS_LIFETIME=300000, MAX_RESOURCE_BODY_SIZE=8192, BLOCKWISE_STRICT_BLOCK2_OPTION=false
+2022-07-09 11:59:35 INFO  CoapEndpoint:456 - coap Endpoint [coap://0.0.0.0:0] requires an executor to start, using default single-threaded daemon executor
+2022-07-09 11:59:35 INFO  UDPConnector:242 - UDPConnector starts up 1 sender threads and 1 receiver threads
+2022-07-09 11:59:35 INFO  UDPConnector:268 - UDPConnector listening on 0.0.0.0/0.0.0.0:61496, recv buf = 65536, send buf = 65536, recv packet size = 2048
+2022-07-09 11:59:35 INFO  CoapEndpoint:493 - coap Started endpoint at coap://0.0.0.0:61496
+2022-07-09 11:59:35 INFO  EndpointManager:134 - created implicit endpoint coap://0.0.0.0:61496 for coap

@@ -22,10 +22,10 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						println("the wasteservice is waiting..")
-						 TrolleyPos = "Home"  
-						updateResourceRep( "trolleyPos(home0)"  
+						 TrolleyPos = "home"  
+						updateResourceRep( "trolleyPos(home)"  
 						)
+						println("the wasteservice is waiting ... ")
 					}
 					 transition(edgeName="t00",targetState="handlerequest",cond=whenRequest("depositrequest"))
 				}	 
@@ -33,8 +33,6 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 					action { //it:State
 						 fun checkdepositpossible(MATERIAL:String,LOAD:String) : Boolean { return true }  
 						println("$name in ${currentState.stateName} | $currentMsg")
-						updateResourceRep( "trolleyPos(home1)"  
-						)
 						if( checkMsgContent( Term.createTerm("depositrequest(MATERIAL,TRUCKLOAD)"), Term.createTerm("depositrequest(MATERIAL,TRUCKLOAD)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								
@@ -82,6 +80,7 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						 )
 						 }
 					}
+					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 
 			}
 		}

@@ -1,5 +1,4 @@
-package unibo.testqakexample;
-
+package unibo.qakexampleobserver;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -8,18 +7,12 @@ import org.eclipse.californium.core.CoapResponse;
 import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
 
-public class Observer {
+public class WasteServiceObserver {
     private CoapObserveRelation relation = null;
     private CoapClient client = null;
+    private String truckRequestStr = "msg(depositrequest, request,python,wasteservice,depositrequest(glass,200),1)";
 
-    public Observer(){
-        /*
-        new Thread(){
-            public void run(){
-                client = new CoapClient("coap://localhost:8013/ctxWasteService/wasteservice");
-            }
-        }.start();
-    */
+    public WasteServiceObserver(){
         client = new CoapClient("coap://localhost:8013/ctxwasteservice/wasteservice");
         observe( );
     }
@@ -39,9 +32,8 @@ public class Observer {
     }
 
     public static void main( String[] args ){
-        //BasicConfigurator.configure(); //For slf4j
-        new Observer();
-        CommUtils.delay(60*10*1000);
+         new WasteServiceObserver();
+        CommUtils.delay(60*1000*10);
         ColorsOut.outappl("Observer ENDS " , ColorsOut.CYAN);
     }
 }

@@ -11,7 +11,7 @@ plugins {
     id 'eclipse'
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
 }
 
 version '1.0'
@@ -24,27 +24,12 @@ repositories {
 }
 
 dependencies {
-    // Align versions of all Kotlin components
-    implementation platform('org.jetbrains.kotlin:kotlin-bom')
-
-    // Use the Kotlin JDK 8 standard library.
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-
+ 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:30.1.1-jre'
 
-    // Use the Kotlin test library.
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-
-    // Use the Kotlin JUnit integration.
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
-
-    /* COROUTINES ********************************************************************************************************** */
-    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlinVersion", ext: 'pom'
-    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion"
-
+ 
+  
     /*  MQTT *************************************************************************************************************** */
     // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
     implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
@@ -66,20 +51,14 @@ dependencies {
     testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.9.3'
 
     /* LOG4J *************************************************************************************************************** */
-    //Simple Logging Facade for Java
-    implementation group: 'org.slf4j', name: 'slf4j-api',    version: '1.7.36'
-    //implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.36'
-    //implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
-        //emette su System.err. Usa simplelogger.properties
-    //OPPURE:
-
-    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36'
-        //si appoggia su log4j di apache, che usa log4j.properties
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.16.0'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.16.0'
-     
-
-
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j
+    //Simple Logging Facade for Java https://www.slf4j.org/manual.html
+    implementation group: 'org.slf4j', name: 'slf4j-api',    version: '1.7.36' 
+     //implementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.36'
+    //implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36' //use standard.err
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36'  
+implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.16.0'
+implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.16.0'
     /* HTTP **************************************************************************************************************** */
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
@@ -91,14 +70,12 @@ dependencies {
     implementation name: '2p301'
     implementation name: 'unibo.comm22-1.1'
     implementation name: 'unibo.qakactor22-2.8'  //per ApplMessage
-    //implementation name: 'unibonoawtsupports'  //required by the old infrastructure
-    //implementation name: 'unibo.actor22-1.1'
-
+ 
     /* AIMA **************************************************************************************************************** */
     //PLANNER
-    implementation name: 'unibo.planner22-1.0'
+    //implementation name: 'unibo.planner22-1.0'
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
-    implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
+    //implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
 }
 

@@ -18,17 +18,19 @@ QActor wasteservice context ctxwasteservice {
 				
 				lateinit var TrolleyPos : String   //gbox,pbox,Home,indoor,other
 			#] 
-	State s0 initial {
-		println("the wasteservice is waiting..")
-		[# TrolleyPos = "Home" #]
-		updateResource [# "trolleyPos(home0)" #]  
+	State s0 initial { 
+		//[# org.apache.log4j.BasicConfigurator.configure() #]
+		//https://sematext.com/blog/slf4j-tutorial/
+		[# TrolleyPos = "home" #]
+		updateResource [# "trolleyPos(home)" #]  
+		println("the wasteservice is waiting ... ")
 	}
 	Transition t0 whenRequest depositrequest -> handlerequest
 	
 	State handlerequest{
 		[# fun checkdepositpossible(MATERIAL:String,LOAD:String) : Boolean { return true } #]
 		printCurrentMessage
-		updateResource [# "trolleyPos(home1)" #]
+		//updateResource [# "trolleyPos(home)" #]
 		onMsg(depositrequest : depositrequest(MATERIAL, TRUCKLOAD)) {
 			[#
 				 Material 	= payloadArg(0) ;
@@ -68,12 +70,10 @@ QActor wasteservice context ctxwasteservice {
 		//We suppose here that the service drives  the Trolley  to do the deposit
 		//At the end the Trolley must be in the box related to the Material
 		delay 1000
-		if [# Material == "glass" #]{
-			updateResource [# "trolleyPos(gbox)" #]
-		}else{
-			updateResource [# "trolleyPos(pbox)" #]
-		}
+		if [# Material == "glass" #]{ updateResource [# "trolleyPos(gbox)" #]
+		}else{ updateResource [# "trolleyPos(pbox)" #] }
 	}
+	Goto s0
 }
 
 QActor transporttrolley context ctxwasteservice {

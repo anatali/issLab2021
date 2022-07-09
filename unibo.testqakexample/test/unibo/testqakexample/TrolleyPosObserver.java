@@ -7,10 +7,11 @@ import unibo.comm22.utils.ColorsOut;
 
 
 public class TrolleyPosObserver implements CoapHandler{
-
+protected String history = "";
     @Override
     public void onLoad(CoapResponse response) {
-        ColorsOut.outappl("TrolleyPosObserver changed:" + response.getResponseText(), ColorsOut.MAGENTA);
+        history += response.getResponseText();
+        ColorsOut.outappl("TrolleyPosObserver history=" + history, ColorsOut.MAGENTA);
     }
 
     @Override
