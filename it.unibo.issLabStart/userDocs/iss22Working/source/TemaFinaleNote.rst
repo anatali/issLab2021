@@ -69,3 +69,80 @@ FASI del colloquio
     Al termine di questa fase una singola persona può raggiungere un punteggio massimo di ``29/30``.
 #.  :blue:`Altre domande` rivolte dal docente a singole persone.
     Al termine di questa fase, una singola persona può raggiungere un punteggio di ``30elode``.
+
+---------------------------------------------
+Aggiornamenti del software
+---------------------------------------------
+
+Ho pubblicato sul GIT del corso:
+
+- il progetto *unibo.comm22* con varie implementazioni di *Interaction2021* con diversi protocolli.
+- il progetto *webrobot22* (e il file *webRobot22.html* nelle dispense) che fornisce una webGUI per il basicrobot.
+- il progetto *unibo.testqakexample* come un esempio di JUnit per il testing della richiesta *pickup* del tema finale, 
+  basato su un modello qak e sul fatto che gli attori qak sono risorse CoAP.
+
+---------------------------------------------
+Precisazioni del commitente
+---------------------------------------------
+
+Riportiamo le risposte date dal committente ad alcune  domande:
+
+- Sarebbe bene mandare via il truck appena possibile.
+- Il *WasteSerice* potrebbe ricevere un nuova richiesta mentre sta ancora eseguendo la deposit action di quella precedente.
+- Una volta pieni, i contenitori non verranno svuotati, se non riavviando l'applicazione.
+- Come  *posizione del trolley*, sono valide anche  indicazioni solo qualitative, quali 'at indooor', 'at glassbox', etc. 
+- Non è richiesto che il robot si muova in modo ottimizzato, ma non dovrebbe nemmeno girovagare troppo nella stanza.
+- Il tempo di raccolta del materiale dal truck è sempre limitato e prevedibile, mentre il tempo necessario 
+  per il deposito potrebbe  essere anche alquanto lungo (anche in relazione al punto preceente).
+- Il sonar/led NON sono sul trolley, ma su un RaspberryPi a parte.
+- Il Sonar rileva oggetti che saremo noi a porgli davanti 
+- Il DDR fornito dal committente ha un sonar on-board che viene usato per rilevare ostacoli quando si muove.
+
+---------------------------------------------
+Note dopo le interazioni in rete
+---------------------------------------------
+
+#. Lo scopo del tema finale NON è (solo) risolvere il problema ma avere un caso di studio su cui ragionare sul 
+   processo di costruzione del software.
+
+#. Lo scopo della analisi dei requisiti è ridefinire il testo dato dal committente in modo 'preciso' (e formale, cioè
+   per noi, comprensibile alla macchina). Per le varie entità menzionate nel testo, occorre dare risposta ad alcune
+   precise domande, tra cui (altri tipi di domande sarebbe bene fossero individuate da voi):
+
+     - cosa intende il committente per xxx (ad esempio DDR robot)?
+     - il committenete fornisce indicazioni sul software da usare per xxx?
+     - se si, è possibile fornire un modello di tale software (per capire bene cosa bisogna sapere per usarlo)?
+
+   Occorre anche porre molta attenzione alle frasi scritte in linguaggio naturale e dare loro una interpretazione
+   non ambigua. Ad esempio: 
+
+       - per la frase *a DDR robot working as a transport trolley*, che relazione si pensa debba esistere tra 
+         l'entità *trolley* e l'entità *DDR robot*?
+
+#. Ogni fase (a partire dai requisiti) dovrebbe terminare con la specifica di un modello (anche non eseguibile) 
+   che costituisce l'inizio della fase successiva.  
+#. I file HTML  in *userdocs* non devono essere visti come  'documentazione', ma come una sorta di 'diario del capitano'
+   che appunta (in modo sintetico,  in linguaggio naturale) i punti essenziali che hanno portato a quei modelli.
+#. L'uso del linguaggio **qak** va motivato in relazione alle caratteristiche del (sotto)problema esaminato  e 
+   introdotto con un link a un documento che spiega cosa esso sia. 
+   Sarebbe bene che questo documento fosse scritto - una volta sola - 
+   da chi ne propone l'uso (con links ai documenti 'ufficiali'), in modo da porre in evidenza il perchè 
+   lo si propone, nel contesto del problema (è anche un modo per 'ripassare' quanto fatto nel corso).
+#. Ogni modello dovrebbe essere accompagnato da almeno un TestPlan funzionale significativo.
+#. Lo scopo della fase di analisi è definire una modello (eseguibile) della architettura logica e 
+   dare elementi utili per la costruzione di un *piano di lavoro*.
+#. Il primo SPRINT dovrebbe scaturire dal piano di lavoro e iniziare a partire dal modello dell'analisi 
+   
+#. Ogni SPRINT dovrebbe:
+
+   - essere associato a un preciso obiettivo (SCRUM goal) 
+   - approfondire l'analisi relativa al sottoproblema relativo al goal dello SPRINT 
+   - estendere/precisare l'architettura logica e i TestPlan
+   - definire una architettura di progetto e Test relativi 
+   - terminare con un prototipo eseguibile (da discutere con il committente)  e una proposta di nuovo SPRINT 
+     (che potrebbe anche consistere in una revisione dell'analisi, se si vede che è stata fatta male)
+#. Ogni SPRINT dovrebbe terminare con una pagina di sintesi che riporta l'architettura finale 
+   del sistema (con i link al modello e ai Test). 
+   Questa pagina sarà l'inizio del documento relativo allo SPRINT successivo.
+
+
