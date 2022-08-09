@@ -87,6 +87,10 @@ Precisazioni del commitente
 
 Riportiamo le risposte date dal committente ad alcune  domande:
 
+- Il *Waste truck driver* è un operatore umano che non fa parte del sistema. Fanno invece parte del sistema i messaggi che 
+  questo deve inviare usando uno smart device (telefonino). Può essere opportuno simulare il *Waste truck driver* e viene
+  consigliato di farlo introducendo una applicazione esterna, sviluppata ad esempio in Python. Nelle fasi preliminari 
+  è invece accettabile di simulare il *Waste truck driver* con un attore.
 - Sarebbe bene mandare via il truck appena possibile.
 - Il *WasteSerice* potrebbe ricevere un nuova richiesta mentre sta ancora eseguendo la deposit action di quella precedente.
 - Una volta pieni, i contenitori non verranno svuotati, se non riavviando l'applicazione.
@@ -95,17 +99,28 @@ Riportiamo le risposte date dal committente ad alcune  domande:
 - Il tempo di raccolta del materiale dal truck è sempre limitato e prevedibile, mentre il tempo necessario 
   per il deposito potrebbe  essere anche alquanto lungo (anche in relazione al punto preceente).
 - Il sonar/led NON sono sul trolley, ma su un RaspberryPi a parte.
-- Il Sonar rileva oggetti che saremo noi a porgli davanti 
-- Il DDR fornito dal committente ha un sonar on-board che viene usato per rilevare ostacoli quando si muove.
+- Il Sonar rileva oggetti che saremo noi a porgli davanti.
+- Il blocco del trolley in conseguenza di un 'allarme' individuato dal Sonar dovrebbe avvenire 'il prima possibile'.
+- Il DDR fornito dal committente ha un sonar on-board, ma questo viene usato per rilevare ostacoli quando il robot si muove.
 
 ---------------------------------------------
 Note dopo le interazioni in rete
 ---------------------------------------------
 
-#. Lo scopo del tema finale NON è (solo) risolvere il problema ma avere un caso di studio su cui ragionare sul 
-   processo di costruzione del software.
+#. Lo scopo del tema finale NON è (solo) risolvere il problema ma avere un :blue:`caso di studio su cui ragionare sul 
+   processo di costruzione del software`.
 
-#. Lo scopo della analisi dei requisiti è ridefinire il testo dato dal committente in modo 'preciso' (e formale, cioè
+#. L'uso del linguaggio **qak** non va preso come un vincolo a priori. 
+   Ne va invece motivato l'uso (come per ogni altra tecnologia) in relazione alle caratteristiche del (sotto)problema esaminato.
+   Poichè il lettore potrebbe non consoscere questo linguaggio, è opportuno scrivere - una volta sola - un 
+   (breve) documento che spiega per quali caratteristiche si ritiene opportuno usare i qak. 
+   Il documento dovrebbe porre in luce gli aspetti salienti, rinviando (con links) gli approfondimenti ai documenti 'ufficiali', 
+   in modo da porre in evidenza il perchè lo si propone, nel contesto del problema.  
+
+#. I link tra i vari documenti dovrebbero essere possibilmente locali, in modo da poter leggere i documenti stessi senza 
+   (ove possibile) connessione di rete.
+
+#. Lo :blue:`scopo della analisi dei requisiti` è ridefinire il testo dato dal committente in modo 'preciso' (e formale, cioè
    per noi, comprensibile alla macchina). Per le varie entità menzionate nel testo, occorre dare risposta ad alcune
    precise domande, tra cui (altri tipi di domande sarebbe bene fossero individuate da voi):
 
@@ -120,17 +135,17 @@ Note dopo le interazioni in rete
          l'entità *trolley* e l'entità *DDR robot*?
 
 #. Ogni fase (a partire dai requisiti) dovrebbe terminare con la specifica di un modello (anche non eseguibile) 
-   che costituisce l'inizio della fase successiva.  
-#. I file HTML  in *userdocs* non devono essere visti come  'documentazione', ma come una sorta di 'diario del capitano'
-   che appunta (in modo sintetico,  in linguaggio naturale) i punti essenziali che hanno portato a quei modelli.
-#. L'uso del linguaggio **qak** va motivato in relazione alle caratteristiche del (sotto)problema esaminato  e 
-   introdotto con un link a un documento che spiega cosa esso sia. 
-   Sarebbe bene che questo documento fosse scritto - una volta sola - 
-   da chi ne propone l'uso (con links ai documenti 'ufficiali'), in modo da porre in evidenza il perchè 
-   lo si propone, nel contesto del problema (è anche un modo per 'ripassare' quanto fatto nel corso).
+   che costituisce l'inizio della fase successiva.  Al modello dovrebbe essere associato un insieme di TestPlan 
+   (ne basta anche solo uno signficativo) di tipo funzionale per chiarire cosa ci si aspetta (come ouput) dal software 
+   che *dovrà essere sviluppato per quel requisito*, una volta date le opportune info di ingresso.
+#. I file HTML  in *userdocs* non devono essere visti come  'documentazione', ma come una sorta di :blue:`'diario di bordo'`
+   che appunta (in modo sintetico,  in linguaggio naturale e con link al codice) i punti essenziali 
+   che hanno portato a quei modelli.
+
 #. Ogni modello dovrebbe essere accompagnato da almeno un TestPlan funzionale significativo.
-#. Lo scopo della fase di analisi è definire una modello (eseguibile) della architettura logica e 
-   dare elementi utili per la costruzione di un *piano di lavoro*.
+#. Lo :blue:`scopo della fase di analisi del problema` è definire una modello (eseguibile) della architettura logica e 
+   dare elementi utili per la costruzione di un *piano di lavoro* e per la :blue:`suddivsione dei compiti` tra i componenti
+   del Team.
 #. Il primo SPRINT dovrebbe scaturire dal piano di lavoro e iniziare a partire dal modello dell'analisi 
    
 #. Ogni SPRINT dovrebbe:
@@ -141,7 +156,7 @@ Note dopo le interazioni in rete
    - definire una architettura di progetto e Test relativi 
    - terminare con un prototipo eseguibile (da discutere con il committente)  e una proposta di nuovo SPRINT 
      (che potrebbe anche consistere in una revisione dell'analisi, se si vede che è stata fatta male)
-#. Ogni SPRINT dovrebbe terminare con una pagina di sintesi che riporta l'architettura finale 
+#. Il 'documento Ogni SPRINT dovrebbe :blue:`terminare con una pagina di sintesi` che riporta l'architettura finale 
    del sistema (con i link al modello e ai Test). 
    Questa pagina sarà l'inizio del documento relativo allo SPRINT successivo.
 
