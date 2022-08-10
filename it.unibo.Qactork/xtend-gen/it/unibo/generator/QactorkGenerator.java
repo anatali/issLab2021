@@ -3,24 +3,6 @@
  */
 package it.unibo.generator;
 
-<<<<<<< HEAD
-import com.google.common.collect.Iterables;
-import it.unibo.generator.GenQActorSystem;
-import it.unibo.qactork.QActorSystem;
-import it.unibo.qactork.generator.common.GenUtils;
-import it.unibo.qactork.generator.common.SysKb;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.generator.AbstractGenerator;
-import org.eclipse.xtext.generator.IFileSystemAccess;
-import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGeneratorContext;
-import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.eclipse.xtext.xbase.lib.IteratorExtensions;
-
-=======
->>>>>>> 7efacd5a8281a8c84ee98242a79e04636849baaf
 /**
  * Generates code from your model files on save.
  * 

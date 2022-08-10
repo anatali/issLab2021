@@ -10,12 +10,19 @@ import java.util.NoSuchElementException
 ================================================================
  */
 class State(val stateName : String, val scope: CoroutineScope ) {
-    private val edgeList          = mutableListOf<Transition>()
+    private var edgeList          = mutableListOf<Transition>()
     private val stateEnterAction  = mutableListOf< suspend (State) -> Unit>()
     private val myself : State    = this
 
-    fun transition(edgeName: String, targetState: String, cond: Transition.() -> Unit) {
-        val trans = Transition(edgeName, targetState)
+    fun transition(edgeName: String, targetState: String, cond: Transition.() -> Unit ) {
+        val trans = Transition(edgeName, targetState, null)
+        //println("      trans $name $targetState")
+        trans.cond() //set eventHandler (given by user) See fireIf
+        edgeList.add(trans)
+    }
+    //Aug2022
+    fun interrupthandle(edgeName: String, targetState: String, cond: Transition.() -> Unit) {
+        val trans = Transition(edgeName, targetState, edgeList)
         //println("      trans $name $targetState")
         trans.cond() //set eventHandler (given by user) See fireIf
         edgeList.add(trans)
@@ -46,6 +53,17 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         val first = edgeList.firstOrNull { it.canHandleMessage(msg) }
         return first
     }
+    //AUG2022: ottengo la lista delle transizioni dello stato (meno interrupt?)
+    //L'operazione resume deve ripristinare questa lista nello stato che gestisce l'interrupt
+    //invocando setTransitions
+    fun getTransitions( ): MutableList<Transition> {
+          //println("State $name       | getTransitions  $msg  list=${edgeList.size} ")
+          return  edgeList
+    }
+    fun setTransitions( t: MutableList<Transition> ) {
+        //println("State $name       | setTransitions  $msg  list=${edgeList.size} ")
+         edgeList = t
+    }
 }
 
 /*
@@ -53,10 +71,12 @@ class State(val stateName : String, val scope: CoroutineScope ) {
  Transition
 ================================================================
  */
-class Transition(val edgeName: String, val targetState: String) {
+class Transition(val edgeName: String, val targetState: String,
+                 val globalEdges: MutableList<Transition>? ) {  //Aug2022
 
     lateinit var edgeEventHandler: ( IApplMessage ) -> Boolean  //MsgId previous: String
-    private val actionList = mutableListOf<(Transition) -> Unit>()
+    private val actionList       = mutableListOf<(Transition) -> Unit>()
+    //private val globalActionList = mutableListOf<Transition>()
 
     fun action(action: (Transition) -> Unit) { //MEALY?
         //println("Transition  | add ACTION:  $action")
@@ -110,7 +130,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     }
 
     private fun getStateByName(name: String): State {
-        return stateList.firstOrNull { it.stateName == name }
+         return stateList.firstOrNull { it.stateName == name }
             ?: throw NoSuchElementException(name)
     }
     //===========================================================================================
@@ -255,7 +275,9 @@ abstract class ActorBasicFsm(  qafsmname:  String,
         val trans = currentState.getTransitionForMessage(msg)
         //sysUtil.traceprintln("$tt ActorBasicFsm $name | checkTransition, $msg, curState=${currentState.stateName}, trans=$trans")
         return if (trans != null) {
-            trans.enterTransition { getStateByName(it) }
+             trans.enterTransition {
+                  getStateByName(it)
+             }
         } else {
             //sysUtil.traceprintln("$tt ActorBasicFsm $name | checkTransition in ${currentState.stateName} NO next State for $msg !!!")
             null

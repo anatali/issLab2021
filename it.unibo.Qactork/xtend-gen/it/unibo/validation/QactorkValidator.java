@@ -9,13 +9,6 @@ import it.unibo.qactork.NonEmptyTransition;
 import it.unibo.qactork.QActor;
 import it.unibo.qactork.QActorExternal;
 import it.unibo.qactork.QActorSystemSpec;
-<<<<<<< HEAD
-import it.unibo.validation.AbstractQactorkValidator;
-import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.IteratorExtensions;
-=======
->>>>>>> 7efacd5a8281a8c84ee98242a79e04636849baaf
 
 /**
  * This class contains custom validation rules.
