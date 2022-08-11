@@ -21,11 +21,17 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         edgeList.add(trans)
     }
     //Aug2022
-    fun interrupthandle(edgeName: String, targetState: String, cond: Transition.() -> Unit) {
+    fun interrupthandle(edgeName: String, targetState: String, cond: Transition.() -> Unit, storage: MutableList<Transition> ) {
         val trans = Transition(edgeName, targetState, edgeList)
         //println("      trans $name $targetState")
         trans.cond() //set eventHandler (given by user) See fireIf
         edgeList.add(trans)
+        //AUG2022: ottengo la lista delle transizioni dello stato (con interrupt)
+        //L'operazione resume deve ripristinare questa lista nello stato che gestisce l'interrupt
+        //invocando storeTransitionsOfStateInterrupted
+        storage.clear()                      //Reset the storage
+        edgeList.forEach{ storage.add(it) }  //Ricopio
+        //println("&&&& ${stateName} interrupthandle ${storage.size}")
     }
     //Add an action which will be called when the state is entered
     fun action(  a:  suspend (State) -> Unit) {
@@ -53,17 +59,12 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         val first = edgeList.firstOrNull { it.canHandleMessage(msg) }
         return first
     }
-    //AUG2022: ottengo la lista delle transizioni dello stato (meno interrupt?)
-    //L'operazione resume deve ripristinare questa lista nello stato che gestisce l'interrupt
-    //invocando setTransitions
-    fun getTransitions( ): MutableList<Transition> {
-          //println("State $name       | getTransitions  $msg  list=${edgeList.size} ")
-          return  edgeList
-    }
-    fun setTransitions( t: MutableList<Transition> ) {
-        //println("State $name       | setTransitions  $msg  list=${edgeList.size} ")
-         edgeList = t
-    }
+
+    fun storeTransitionsOfStateInterrupted( t: MutableList<Transition> ) {
+        //println("&&&&  $stateName storeTransitionsOfStateInterrupted ${t.size}")
+        edgeList  = mutableListOf<Transition>()
+        t.forEach { edgeList.add(it) }   //Ricopio
+     }
 }
 
 /*
@@ -170,7 +171,6 @@ abstract class ActorBasicFsm(  qafsmname:  String,
     }
 
 
-
     suspend fun fsmStartWork( msg: IApplMessage ) {
         isStarted = true
         //println("ActorBasicFsm $name | fsmStartWork in STATE ${currentState.stateName}")
@@ -195,7 +195,12 @@ abstract class ActorBasicFsm(  qafsmname:  String,
         if (b)  elabMsgInState( )
         sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmwork ENDS for $msg")
    }
-	
+
+    //Aug2022
+    fun returnFromInterrupt( t: MutableList<Transition> ) {
+        //println("&&&&  ${currentState.stateName} returnFromInterrupt ${t.size}")
+        currentState.storeTransitionsOfStateInterrupted( t )
+    }
 
 
     suspend fun elabMsgInState( ) {
