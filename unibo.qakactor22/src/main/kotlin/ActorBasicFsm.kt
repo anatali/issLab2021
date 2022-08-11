@@ -2,6 +2,7 @@ package it.unibo.kactor
 
 import alice.tuprolog.*
 import kotlinx.coroutines.*
+import unibo.comm22.utils.ColorsOut
 import java.util.NoSuchElementException
 
 /*
@@ -21,6 +22,7 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         edgeList.add(trans)
     }
     //Aug2022
+    //Called by a state as a transition
     fun interrupthandle(edgeName: String, targetState: String, cond: Transition.() -> Unit, storage: MutableList<Transition> ) {
         val trans = Transition(edgeName, targetState, edgeList)
         //println("      trans $name $targetState")
@@ -29,7 +31,11 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         //AUG2022: ottengo la lista delle transizioni dello stato (con interrupt)
         //L'operazione resume deve ripristinare questa lista nello stato che gestisce l'interrupt
         //invocando storeTransitionsOfStateInterrupted
-        storage.clear()                      //Reset the storage
+        /*
+        if( storage.size > 0 ) {                     //The storage must be empty
+            ColorsOut.outerr("Interrupt nesting not allowed. Size=${storage.size}")
+            System.exit(1)
+        }*/
         edgeList.forEach{ storage.add(it) }  //Ricopio
         //println("&&&& ${stateName} interrupthandle ${storage.size}")
     }
@@ -64,6 +70,7 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         //println("&&&&  $stateName storeTransitionsOfStateInterrupted ${t.size}")
         edgeList  = mutableListOf<Transition>()
         t.forEach { edgeList.add(it) }   //Ricopio
+        t.clear()                        //Reset the storage
      }
 }
 
