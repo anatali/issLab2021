@@ -58,7 +58,7 @@ private Socket socket;
 	}
 	
 	protected void sendALine(String msg) throws Exception {
-		ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );	 
+		//ColorsOut.out( "TcpConnection | sendALine  " + msg + " on " + outputChannel, ColorsOut.ANSI_YELLOW );
 		try {
 			outputChannel.writeBytes( msg+"\n" );
 			outputChannel.flush();

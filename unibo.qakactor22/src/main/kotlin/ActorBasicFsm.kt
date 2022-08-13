@@ -37,7 +37,7 @@ class State(val stateName : String, val scope: CoroutineScope ) {
             System.exit(1)
         }*/
         edgeList.forEach{ storage.add(it) }  //Ricopio
-        println("&&&& ${stateName} interrupthandle ${storage.size}")
+        //println("&&&& ${stateName} interrupthandle ${storage.size}")
     }
     //Add an action which will be called when the state is entered
     fun action(  a:  suspend (State) -> Unit) {
@@ -67,10 +67,10 @@ class State(val stateName : String, val scope: CoroutineScope ) {
     }
 
     fun storeTransitionsOfStateInterrupted( t: MutableList<Transition> ) {
-        println("&&&&  $stateName storeTransitionsOfStateInterrupted ${t}")
+        //println("&&&&  $stateName storeTransitionsOfStateInterrupted ${t}")
         edgeList  = mutableListOf<Transition>()   //clear
         t.forEach { edgeList.add(it) }   //Ricopio
-        //t.clear()                        //Reset the storage (sideeffect)
+        //t.clear()                      //NOOO: Reset the storage (sideeffect)
      }
 }
 
@@ -205,7 +205,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 
     //Aug2022
     fun returnFromInterrupt( t: MutableList<Transition> ) {
-        println("&&&&  ${currentState.stateName} returnFromInterrupt ${t.size}")
+        //println("&&&&  ${currentState.stateName} returnFromInterrupt ${t.size}")
         currentState.storeTransitionsOfStateInterrupted( t )
     }
 

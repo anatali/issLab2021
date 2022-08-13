@@ -25,11 +25,11 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 	public void run() {
 		String name = handler.getName();
 		try {
-			ColorsOut.out( "TcpApplMessageHandler | STARTS with handler=" + name + " conn=" + conn, ColorsOut.BLUE );
+			//ColorsOut.out( "TcpApplMessageHandler | STARTS with handler=" + name + " conn=" + conn, ColorsOut.BLUE );
 			while( true ) {
 				//ColorsOut.out(name + " | waits for message  ...");
 			    String msg = conn.receiveMsg();
-			    ColorsOut.out(name + "  | TcpApplMessageHandler received:" + msg, ColorsOut.YELLOW );
+			    //ColorsOut.out(name + "  | TcpApplMessageHandler received:" + msg, ColorsOut.YELLOW );
 			    if( msg == null ) {
 			    	conn.close();
 			    	break;
@@ -38,7 +38,7 @@ public TcpApplMessageHandler(  IApplMsgHandler handler, Interaction2021 conn ) {
 			    	handler.elaborate( m, conn );  
 			    }
 			}
-			ColorsOut.out("TcpApplMessageHandler  |  BYE", ColorsOut.BLUE   );
+			//ColorsOut.out("TcpApplMessageHandler  |  BYE", ColorsOut.BLUE   );
 		}catch( Exception e) {
 			ColorsOut.outerr( "TcpApplMessageHandler | ERROR:" + e.getMessage()  );
 		}	

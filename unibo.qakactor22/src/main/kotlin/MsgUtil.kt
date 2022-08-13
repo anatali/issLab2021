@@ -9,6 +9,7 @@ import unibo.comm22.udp.UdpEndpoint
 import java.net.InetAddress
 import jssc.SerialPort
 import unibo.comm22.serial.SerialConnection
+import unibo.comm22.utils.ColorsOut
 
 
 //FILE MsgUtil.kt
@@ -170,4 +171,13 @@ fun strToProtocol( ps: String):Protocol{
             else -> return Protocol.TCP
         }
      }
+    @JvmStatic
+    fun outgreen( msg: String) { ColorsOut.outappl(msg, ColorsOut.GREEN) }
+    @JvmStatic
+    fun outblue( msg: String) {  ColorsOut.outappl(msg, ColorsOut.BLUE)  }
+    @JvmStatic
+    fun outred( msg: String) { ColorsOut.outappl(msg, ColorsOut.RED)  }
+    @JvmStatic
+    fun outmagenta( msg: String) {  ColorsOut.outappl(msg, ColorsOut.MAGENTA) }
+
 }

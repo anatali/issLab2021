@@ -23,7 +23,7 @@ class CoapObserverSupport(
             object : CoapHandler {
                 override fun onLoad(response: CoapResponse) {
                     val content = response.responseText
-                    ColorsOut.out("CoapObs | content=$content", ColorsOut.BLUE)
+                    //ColorsOut.out("CoapObs | content=$content", ColorsOut.BLUE)
                     val actorDispatch = buildDispatch(
                         actorName, "coapUpdate",
                         "coapUpdate(RESOURCE, VALUE)".replace("RESOURCE", actorName).replace("VALUE", content),
@@ -40,7 +40,7 @@ class CoapObserverSupport(
 
     init {
         val addr = "coap://HOST:".replace("HOST", host!!) + port + "/CONTEXT/".replace("CONTEXT", ctx) + actorName
-        ColorsOut.out("CoapObs | addr=$addr", ColorsOut.BLUE)
+        //ColorsOut.out("CoapObs | addr=$addr", ColorsOut.BLUE)
         client = CoapClient(addr)
         observe()
     }
