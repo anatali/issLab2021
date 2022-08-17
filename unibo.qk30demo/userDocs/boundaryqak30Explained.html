@@ -229,31 +229,52 @@ dall'applicazione stessa) con i  seguenti comandi:
 <li><ks>exit</ks>: termina provocando l'uscita dal sistema</li>
 </ul>
 
-
-<h3>Generazione di diagrammi</h3>
-<p>
-<ul>
-<li>produce codice Python che usa i moduli diagrams e Graphiz.  
-tutto va come prima, ma in più
-dovrebbe comparire un file di nome Arch_xxx (con xxs= nome del vostro modello qak)
-che, una volta eseguito genea la figura</li>
-</ul>
-</p>
-<p> 
-Ad esempio :
-
-Per la esecuzione del codice Python, dovete installare i moduli necessari (in Python3, con Anaconda) ma non dovrebbe essere difficile. Il mio metodo di lavoro è incollare in jupyter 
-il codice generato in Arch_xxx e poi eseguire da lì.
-</p>
-<p>
-Le icone usate nel programma, le trovate in: it.unibo.issLabStart/userDocs/img/IconeQak/
-</p>
-
-
- 
- 
 <h3>Il modello di esempio</h3>
 <p>
+Grazie alla nuova versione dei plugin,
+il modello <tt><a href="../src/boundaryqak30.qak">boundaryqak30.qak</a></tt> viene dotato
+di una rappresentazione grafica che può essere generata esegundo codice Python generato 
+in modo automatico.
+</p>
+<h4>Generazione di diagrammi</h4>
+<p>
+Il codice Python che genera la rappresentazione grafica viene generato in un file 
+di nome <tt>Arch_xxx.py</tt>, con <tt>xxx</tt>= nome del modello qak. 
+</p>
+<p>
+Quindi, nel caso attuale, viene 
+generato il file <tt>Arch_boundaryqak30.py</tt>, la cui esecuzione produce il diagramma
+mostrato in figura:
+<center>
+<img src="./img/boundaryqak30Arch.PNG" alt="boundaryqak30Arch" width="400" height="400">
+</center>
+
+
+Poichè gli <ks>eventi</ks> non hanno un destinatario esplicito, il diagramma mostra che un evento
+è diretto al supporto run-time, che poi lo manifesta agli attori interessati.
+
+<div class="remark">Il diagramma illustra un modello che presenta i contesti 
+effettivi del sistema finale.</div>
+
+ Al solito, l'esecuzione del modello in fase prototipale può essere effettuata includendo 
+tutti gli attori in un solo contesto (o due).  
+
+</p>
+
+<h5>Note di installazione</h5>
+<p>
+Il codice Python necessita dei moduli <tt>diagrams</tt> e 
+<tt>Graphiz</tt>, che vanno opportunamente installati.
+</p>
+
+ 
+<p>
+Le icone usate dal programma, sono memorizzate in: 
+<tt>it.unibo.issLabStart/userDocs/img/IconeQak/</tt>
+</p>
+
+ 
+
 
 <h4>La console</h4>
 <p>
