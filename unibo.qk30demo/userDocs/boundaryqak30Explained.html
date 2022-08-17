@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0114)file:///C:/Users/Davide/Desktop/issLab2022/it.unibo.issLabStart/userDocs/Dispense/html/_static/templateToFill.html -->
+<html><!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+--><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+
+   
+<title>Waste Service SPRINT 2</title></head>
+    
+<body>
+<div id="top">
+<h1>Qak Versione 3.0 <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduzione</h2>
+Queste note descrivono l'applicazione  BoundaryWalker sviluppata avvalendosi di:
+
+<ol>
+
+<li>Nuova versione dei plugin qak:
+	<ul>
+	<li><tt>it.unibo.Qactork_1.3.0</tt></li>
+	<li><tt>it.unibo.Qactork.ide_1.3.0</tt></li>
+	<li><tt>it.unibo.Qactork.ui_1.3.0</tt></li>
+	</ul>
+</li>
+
+<li>Nuova versione del supporto run-time: <tt>unibo.qakactor22-3.0</tt>
+</li>
+
+</ol>
+
+<h3>L'applicazione</h3>
+
+L'applicazione di esempio mostrata nel modello 
+<tt><a href="../src/boundaryqak30.qak">boundaryqak30.qak</a></tt> 
+intende muovere il virualrobot lungo il perimetro (privo di ostacoli) di una stanza 
+sotto il controllo di utente umano che si avvale di una console (visualizzata
+dall'applicazione stessa) con i  seguenti comandi:
+</p>
+<ul>
+<li><ks>init</ks>: attiva l'attore <tt>boundaryqak30</tt> che include la business logic</li>
+<li><ks>stop</ks>: ferma l'attività del robot </li>
+<li><ks>resume</ks>: riprende l'attività del robot dal punto in cui si era fermato</li>
+<li><ks>exit</ks>: termina provocando l'uscita dal sistema</li>
+</ul>
+
+
+<h3>Generazione di diagrammi</h3>
+<p>
+<ul>
+<li>produce codice Python che usa i moduli diagrams e Graphiz.  
+tutto va come prima, ma in più
+dovrebbe comparire un file di nome Arch_xxx (con xxs= nome del vostro modello qak)
+che, una volta eseguito genea la figura</li>
+</ul>
+</p>
+<p> 
+Ad esempio :
+
+Per la esecuzione del codice Python, dovete installare i moduli necessari (in Python3, con Anaconda) ma non dovrebbe essere difficile. Il mio metodo di lavoro è incollare in jupyter 
+il codice generato in Arch_xxx e poi eseguire da lì.
+</p>
+<p>
+Le icone usate nel programma, le trovate in: it.unibo.issLabStart/userDocs/img/IconeQak/
+</p>
+
+
+ 
+ 
+<h3>Il modello di esempio</h3>
+<p>
+
+<h4>La console</h4>
+<p>
+La console è realizzata da codice Java esterno al sistema, che viene attivato dall'attore  
+<tt>cmdconsole</tt>.
+Questo codice Java mappa i click sui tasti in corrispondenti dispatch per <tt>boundaryqak30</tt>
+
+<pre>
+Dispatch init      : init(X)
+Dispatch resume    : resume(X)
+Dispatch stop      : stop(X)
+</pre>
+ 
+</p>
+
+<h4>La business logic</h4>
+<p>
+L'attore <tt>boundaryqak30</tt> risponde ai comandi <ks>init, stop, resume</ks> inviatigli
+dalla console.
+</p>
+<h5>Interruzioni</h5>
+<p>
+Il comando <tt>stop</tt> si traduce nell'omonimo dispatch che viene gestito da 
+<tt>boundaryqak30</tt> con una <k>whenInterrupt</k> invece che da una <ks>whenMsg</ks>.
+</p>
+<p>
+La transizione dallo stato <tt>coverNextEdge</tt> allo stato <tt>handleStop</tt> viene
+implementata in modo speciale, memorizzando le transizioni che si trovano prima di  
+<k>whenInterrupt</k>. 
+<p>
+</p>Lo stato <tt>handleStop</tt> si pone in attesa del comando (dispatch) resume che,
+quando raggiunge  <tt>boundaryqak30</tt>, provoca la transizione allo stato <tt>exitFromStop</tt>
+che esegue la nuova primitiva <k>returnFromInterrupt</k>, ripristiando l'insieme delle transizioni 
+dello stato 'interrotto' <tt>coverNextEdge</tt>.
+
+<div class="remark">Gli interrupt non possono essere innestati</div>
+</p>
+ <p>
+
+L'attore <tt>boundaryqak30</tt>
+utilizza la primitiva <k>updateResource</k> per 
+emettere (in quanto risorsa CoAP-observable) informazioni sull'andamento della propria
+attività.
+
+
+</p>
+
+<h4>Gli osservatori</h4>
+
+<p>
+L'attore <tt>anobserver</tt> funge da osservatore delle informazioni emesse da 
+<tt>boundaryqak30</tt>, utilizzando la nuova primitiva <k>observeResource</k>.
+</p>
+<p>
+Questa estensione è stata proposta da Lenzi e 'innestata' nel qak facendo in modo che
+un attore <tt>A</tt> che invoca <k>observeResource</k> su un altro attore <tt>B</tt>, attivi un 
+CoAP-client connesso a <tt>B</tt>.
+</p>
+<p>
+Il CoAP-client attivato per A provvede a trasformare ogni messaggio ricevuto via CoAP
+in un   il dispatch inviato ad A, definito come
+<pre>
+Dispatch coapUpdate: coapUpdate(RESOURCE, VALUE)
+</pre>
+</p>
+
+<p>
+L'attore <tt>applobserver</tt> è un altro da osservatore che gestisce anche l'evento <tt>alarm</tt>
+emesso (per scopi di demo) dall'attore  <tt>cmdconsole</tt> a intervalli regolari.
+</p>
+
+ 
+
+
+
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:95%;text-align:left;color:white">
+AN - DISI - Unibo <br>
+</div> 
+
+</body></html>
