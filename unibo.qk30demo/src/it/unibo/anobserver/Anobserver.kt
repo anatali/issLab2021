@@ -26,7 +26,7 @@ class Anobserver ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						if( checkMsgContent( Term.createTerm("coapUpdate(RESOURCE,VALUE)"), Term.createTerm("coapUpdate(RESOURCE,VALUE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 MsgUtil.outgreen("applobserver OBSERVES: ${payloadArg(1)} FROM ${payloadArg(0)} ")  
+								 MsgUtil.outgreen("anobserver OBSERVES: ${payloadArg(1)} FROM ${payloadArg(0)} ")  
 						}
 					}
 					 transition(edgeName="t06",targetState="handleUpdate",cond=whenDispatch("coapUpdate"))

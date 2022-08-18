@@ -197,33 +197,33 @@ div.imagedesc{
 
 <div class="body"> 
 <h2>Introduzione</h2>
-Queste note descrivono l'applicazione  BoundaryWalker sviluppata avvalendosi di:
+Queste note descrivono unaapplicazione sviluppata avvalendosi di:
 
 <ol>
 
 <li>Nuova versione dei plugin qak:
 	<ul>
-	<li><tt>it.unibo.Qactork_1.3.0</tt></li>
-	<li><tt>it.unibo.Qactork.ide_1.3.0</tt></li>
-	<li><tt>it.unibo.Qactork.ui_1.3.0</tt></li>
+	<li><ks>it.unibo.Qactork_1.3.0</ks></li>
+	<li><ks>it.unibo.Qactork.ide_1.3.0</ks></li>
+	<li><ks>it.unibo.Qactork.ui_1.3.0</ks></li>
 	</ul>
 </li>
 
-<li>Nuova versione del supporto run-time: <tt>unibo.qakactor22-3.0</tt>
+<li>Nuova versione del supporto run-time: <ks>unibo.qakactor22-3.0</ks>
 </li>
 
 </ol>
 
 <h3>L'applicazione</h3>
 
-L'applicazione di esempio mostrata nel modello 
+L'applicazione mostrata nel modello 
 <tt><a href="../src/boundaryqak30.qak">boundaryqak30.qak</a></tt> 
-intende muovere il virualrobot lungo il perimetro (privo di ostacoli) di una stanza 
+muove il virualrobot lungo il perimetro (privo di ostacoli) di una stanza, 
 sotto il controllo di utente umano che si avvale di una console (visualizzata
-dall'applicazione stessa) con i  seguenti comandi:
+dall'applicazione stessa) che offre i  seguenti comandi:
 </p>
 <ul>
-<li><ks>init</ks>: attiva l'attore <tt>boundaryqak30</tt> che include la business logic</li>
+<li><ks>init</ks>: attiva l'attore <bc>boundaryqak30</bc> che include la business logic</li>
 <li><ks>stop</ks>: ferma l'attività del robot </li>
 <li><ks>resume</ks>: riprende l'attività del robot dal punto in cui si era fermato</li>
 <li><ks>exit</ks>: termina provocando l'uscita dal sistema</li>
@@ -243,20 +243,21 @@ di nome <tt>Arch_xxx.py</tt>, con <tt>xxx</tt>= nome del modello qak.
 </p>
 <p>
 Quindi, nel caso attuale, viene 
-generato il file <tt>Arch_boundaryqak30.py</tt>, la cui esecuzione produce il diagramma
+generato il file <ks>Arch_boundaryqak30.py</ks>, la cui esecuzione produce il diagramma
 mostrato in figura:
 <center>
-<img src="./img/boundaryqak30Arch.PNG" alt="boundaryqak30Arch" width="400" height="400">
+<img src="./img/boundaryqak30Arch.PNG" alt="boundaryqak30Arch" width="430" height="350" />
 </center>
 
 
 Poichè gli <ks>eventi</ks> non hanno un destinatario esplicito, il diagramma mostra che un evento
-è diretto al supporto run-time, che poi lo manifesta agli attori interessati.
+è diretto al supporto run-time, che poi lo manifesta agli attori che si sono dichiarati interessati
+(eseguendo un <tt>whenEvent</tt>).
 
 <div class="remark">Il diagramma illustra un modello che presenta i contesti 
 effettivi del sistema finale.</div>
 
- Al solito, l'esecuzione del modello in fase prototipale può essere effettuata includendo 
+ Al solito, l'esecuzione del modello in <kc>fase prototipale</kc> conviene sia effettuata includendo 
 tutti gli attori in un solo contesto (o due).  
 
 </p>
@@ -270,80 +271,96 @@ Il codice Python necessita dei moduli <tt>diagrams</tt> e
  
 <p>
 Le icone usate dal programma, sono memorizzate in: 
-<tt>it.unibo.issLabStart/userDocs/img/IconeQak/</tt>
+<ks>it.unibo.issLabStart/userDocs/img/IconeQak/</ks>
 </p>
 
- 
+<p>
+Un modo rapido per visualizzare il diagramma può essere quallo di copiare il codice 
+python generato in un file <tt>.ipynb</tt> da eseguire con <ks>jupyter</ks>.
+</p> 
 
 
 <h4>La console</h4>
 <p>
 La console è realizzata da codice Java esterno al sistema, che viene attivato dall'attore  
-<tt>cmdconsole</tt>.
-Questo codice Java mappa i click sui tasti in corrispondenti dispatch per <tt>boundaryqak30</tt>
+<bc>cmdconsole</bc>.
+
+<center>
+<img src="./img/console.PNG" alt="console" width="200" height="150" />
+</center>
+
+
+Questo codice Java mappa i click sui tasti in corrispondenti <i>dispatch</i> per <bc>boundaryqak30</bc>
 
 <pre>
 Dispatch init      : init(X)
 Dispatch resume    : resume(X)
 Dispatch stop      : stop(X)
 </pre>
+
  
 </p>
 
 <h4>La business logic</h4>
 <p>
-L'attore <tt>boundaryqak30</tt> risponde ai comandi <ks>init, stop, resume</ks> inviatigli
-dalla console.
+L'attore <bc>boundaryqak30</bc> gestisce i comandi (disptach) <ks>init, stop, resume</ks> 
+emessi dalla console.
+<p>
+Il comando/dispatch <ks>stop</ks> viene gestito usando la nuova primitiva <k>whenInterrupt</k> 
+invece che la solita <ks>whenMsg</ks>.
+</p>
 </p>
 <h5>Interruzioni</h5>
-<p>
-Il comando <tt>stop</tt> si traduce nell'omonimo dispatch che viene gestito da 
-<tt>boundaryqak30</tt> con una <k>whenInterrupt</k> invece che da una <ks>whenMsg</ks>.
-</p>
-<p>
-La transizione dallo stato <tt>coverNextEdge</tt> allo stato <tt>handleStop</tt> viene
-implementata in modo speciale, memorizzando le transizioni che si trovano prima di  
-<k>whenInterrupt</k>. 
-<p>
-</p>Lo stato <tt>handleStop</tt> si pone in attesa del comando (dispatch) resume che,
-quando raggiunge  <tt>boundaryqak30</tt>, provoca la transizione allo stato <tt>exitFromStop</tt>
-che esegue la nuova primitiva <k>returnFromInterrupt</k>, ripristiando l'insieme delle transizioni 
-dello stato 'interrotto' <tt>coverNextEdge</tt>.
 
-<div class="remark">Gli interrupt non possono essere innestati</div>
+<p>
+La transizione dallo stato <kc>coverNextEdge</kc> allo stato <kc>handleStop</kc> viene
+implementata in modo speciale, memorizzando le transizioni che si trovano prima di  
+<k>whenInterrupt</k> (che quindi deve essere posta <b>al termine</b> della lista delle transizioni). 
+<p>
+</p>Lo stato <kc>handleStop</kc> si pone in attesa del comando (dispatch) <kc>resume</kc>, che
+provoca la transizione allo stato <kc>exitFromStop</kc>
+che esegue la nuova primitiva <k>returnFromInterrupt</k>, ripristiando l'insieme delle transizioni 
+dello stato 'interrotto' <kc>coverNextEdge</kc>.
+
+<div class="remark">Gli interrupt non possono essere innestati.</div>
+
+Quindi, la 'interrupt computation' che parte dallo stato <kc>handleStop</kc> e giunge allo stato
+<kc>exitFromStop</kc>, non può presentare una <k>whenInterrupt</k> nelle sue transizioni.
 </p>
  <p>
 
-L'attore <tt>boundaryqak30</tt>
-utilizza la primitiva <k>updateResource</k> per 
-emettere (in quanto risorsa CoAP-observable) informazioni sull'andamento della propria
-attività.
 
 
 </p>
 
 <h4>Gli osservatori</h4>
 
+L'attore <bc>boundaryqak30</bc>
+utilizza la primitiva <k>updateResource</k> per 
+emettere (in quanto risorsa CoAP-observable) informazioni sull'andamento della propria
+attività.
+
 <p>
-L'attore <tt>anobserver</tt> funge da osservatore delle informazioni emesse da 
-<tt>boundaryqak30</tt>, utilizzando la nuova primitiva <k>observeResource</k>.
+L'attore <bc>anobserver</bc> funge da osservatore delle informazioni emesse da 
+<bc>boundaryqak30</bc>, utilizzando la nuova primitiva <k>observeResource</k>.
 </p>
 <p>
 Questa estensione è stata proposta da Lenzi e 'innestata' nel qak facendo in modo che
-un attore <tt>A</tt> che invoca <k>observeResource</k> su un altro attore <tt>B</tt>, attivi un 
-CoAP-client connesso a <tt>B</tt>.
+un attore <tt>Obs</tt> che invoca <k>observeResource</k> su un altro attore <tt>A</tt>, attivi un 
+CoAP-client connesso a <tt>A</tt>.
 </p>
 <p>
-Il CoAP-client attivato per A provvede a trasformare ogni messaggio ricevuto via CoAP
-in un   il dispatch inviato ad A, definito come
+Il CoAP-client attivato in <tt>Obs/tt> provvede a trasformare ogni messaggio ricevuto via CoAP
+in un <i>dispatch</i> inviato all'attore <tt>Obs</tt>; tale <i>dispatch</i>  è definito come:
 <pre>
 Dispatch coapUpdate: coapUpdate(RESOURCE, VALUE)
 </pre>
 </p>
 
 <p>
-L'attore <tt>applobserver</tt> è un altro da osservatore che gestisce anche l'evento <tt>alarm</tt>
-emesso (per scopi di demo) dall'attore  <tt>cmdconsole</tt> a intervalli regolari.
+L'attore <bc>applobserver</bc> è un altro osservatore, che gestisce anche l'evento <ks>alarm</ks>
+emesso (per scopi di demo per quanto riguarda la parte grafica) dall'attore  
+<bc>cmdconsole</bc> a intervalli regolari.
 </p>
 
  
