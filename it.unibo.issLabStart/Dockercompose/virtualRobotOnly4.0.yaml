@@ -3,8 +3,9 @@ services:
   wenv:
     image: docker.io/natbodocker/virtualrobotdisi:4.0
     ports:
-      - 8090:8090
-      - 8091:8091
+      - 8090:8090 
+      - 8091:8091/tcp
+      - 8091:8091/udp
 
 ## -------------------------------------------------------------
 ## TODO See https://docs.docker.com/compose/startup-order/
@@ -12,6 +13,6 @@ services:
 ## - only until it’s running. There’s a good reason for this.
 ## The best solution is to perform this check in your application code,
 ## -------------------------------------------------------------
-## docker-compose up -d
+## docker compose -f virtualRobotOnly4.0.yaml up -d
 ## docker-compose down
 ## docker-compose run --service-ports wenv    starts wenv

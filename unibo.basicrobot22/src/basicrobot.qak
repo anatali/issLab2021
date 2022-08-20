@@ -24,7 +24,10 @@ Event alarm        : alarm(X)
 Request  dopath    : dopath( PATH  )
 Reply dopathdone   : dopathdone( ARG )
 Reply dopathfail   : dopathfail( ARG )
- 
+
+
+Dispatch coapUpdate: coapUpdate(RESOURCE, VALUE)
+
 Context ctxbasicrobot ip [host="localhost" port=8020]  
 
 CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"
@@ -51,8 +54,8 @@ QActor basicrobot context ctxbasicrobot{
         	#] 
   		}//The Virtual robot sonar is created in virtualrobotSupport2021
  
-  		run unibo.robot.robotSupport.move( "l" )    //synch
- 		run unibo.robot.robotSupport.move( "r" )	//synch
+  		run unibo.robot.robotSupport.move( "a" )    //synch
+ 		run unibo.robot.robotSupport.move( "d" )	//synch
     		//run unibo.robot.robotSupport.move( "w" )    //asynch
  		updateResource [# "basicrobot(start)" #]
  	} 
@@ -184,6 +187,7 @@ QActor pathexec context ctxbasicrobot{
 		[#  CurMoveTodo = "" 
 			StepTime = unibo.robot.robotSupport.readStepTime() //stepTimeConfig.json
 		#]
+		updateResource [# "pathexecsteptime($StepTime)" #]
 		println("pathexec ready. StepTime=$StepTime") 
 	}	
 	Transition t0 whenRequest dopath -> doThePath
@@ -193,6 +197,7 @@ QActor pathexec context ctxbasicrobot{
 		//[# prinln( currentMsg ) #]
 		onMsg ( dopath : dopath( PATH )){
 			[# PathTodo = payloadArg(0) #]
+		    updateResource [# "pathexecdopath($PathTodo)" #]
 			run pathut.setPath( PathTodo )  //se payloadArg fallisce non da eccezione! (ma non fa nulla)
 		}		 
 		println("pathexec pathTodo = ${pathut.getPathTodo()}") 
@@ -214,12 +219,14 @@ QActor pathexec context ctxbasicrobot{
 	
 	State doMoveTurn{
 		//printCurrentMessage
+		updateResource [# "pathexecdoturn($CurMoveTodo)" #]
 		forward basicrobot -m cmd : cmd($CurMoveTodo) //asynch !!!		
 	}
 	Transition t0 whenTime 300 ->  nextMove  //wait for move done ...
   
  	State doMoveW{
 		//printCurrentMessage
+		updateResource [# "pathexecdostep($CurMoveTodo)" #]
 		request basicrobot -m step : step( $StepTime )
 	}	
 	Transition t0 whenEvent alarm     -> endWorkKo
@@ -245,4 +252,17 @@ QActor pathexec context ctxbasicrobot{
 
 
 } 
- 
+
+QActor pathobs context ctxbasicrobot{
+	State s0 initial{  	
+		observeResource pathexec
+	}	
+	Transition t0 whenMsg coapUpdate -> handleUpdate
+ 	
+	State handleUpdate{
+		onMsg (coapUpdate : coapUpdate(RESOURCE, VALUE)) {
+  		    [# MsgUtil.outgreen("applobserver OBSERVES: ${payloadArg(1)} FROM ${payloadArg(0)} ") #]
+		}
+	}
+	Transition t0 whenMsg coapUpdate -> handleUpdate
+}

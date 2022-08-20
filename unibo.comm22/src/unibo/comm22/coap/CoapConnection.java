@@ -47,7 +47,8 @@ private String name = "CoapConn";
 		ColorsOut.out(name + " | forward " + url + " msg=" + msg, ColorsOut.ANSI_YELLOW); 
 		if( client != null ) {
 			CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
- 			if( resp != null ) ColorsOut.out(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
+ 			if( resp != null )
+ 				ColorsOut.out(name + " | forward " + msg + " resp=" + resp.getCode(),ColorsOut.ANSI_YELLOW  );
 		    else { ColorsOut.outerr(name + " | forward - resp null "   ); }  //?????
 		} 
 	}

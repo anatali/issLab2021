@@ -14,6 +14,7 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 		return "s0"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		val interruptedStateTransitions = mutableListOf<Transition>()
 		
 		  var StepTime      = 0L
 		  var StartTime     = 0L     
@@ -32,8 +33,8 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						 ){ var robotsonar = context!!.hasActor("realsonar")  
 						        	   if(robotsonar != null) unibo.robot.robotSupport.createSonarPipe(robotsonar) 
 						}
-						unibo.robot.robotSupport.move( "l"  )
-						unibo.robot.robotSupport.move( "r"  )
+						unibo.robot.robotSupport.move( "a"  )
+						unibo.robot.robotSupport.move( "d"  )
 						updateResourceRep( "basicrobot(start)"  
 						)
 					}

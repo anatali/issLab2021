@@ -14,6 +14,7 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 		return "s0"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		val interruptedStateTransitions = mutableListOf<Transition>()
 		 var CurMoveTodo = ""    //Upcase, since var to be used in guards
 		   var StepTime    = "300"
 		   var PathTodo    = ""
@@ -22,6 +23,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 					action { //it:State
 						  CurMoveTodo = "" 
 									StepTime = unibo.robot.robotSupport.readStepTime() //stepTimeConfig.json
+						updateResourceRep( "pathexecsteptime($StepTime)"  
+						)
 						println("pathexec ready. StepTime=$StepTime")
 					}
 					 transition(edgeName="t09",targetState="doThePath",cond=whenRequest("dopath"))
@@ -32,6 +35,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						if( checkMsgContent( Term.createTerm("dopath(PATH)"), Term.createTerm("dopath(PATH)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 PathTodo = payloadArg(0)  
+								updateResourceRep( "pathexecdopath($PathTodo)"  
+								)
 								pathut.setPath( PathTodo  )
 						}
 						println("pathexec pathTodo = ${pathut.getPathTodo()}")
@@ -58,6 +63,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveTurn") { //this:State
 					action { //it:State
+						updateResourceRep( "pathexecdoturn($CurMoveTodo)"  
+						)
 						forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot" ) 
 						stateTimer = TimerActor("timer_doMoveTurn", 
 							scope, context!!, "local_tout_pathexec_doMoveTurn", 300.toLong() )
@@ -66,6 +73,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveW") { //this:State
 					action { //it:State
+						updateResourceRep( "pathexecdostep($CurMoveTodo)"  
+						)
 						request("step", "step($StepTime)" ,"basicrobot" )  
 					}
 					 transition(edgeName="t011",targetState="endWorkKo",cond=whenEvent("alarm"))
