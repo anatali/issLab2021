@@ -33,8 +33,7 @@ class State(val stateName : String, val scope: CoroutineScope ) {
         //invocando storeTransitionsOfStateInterrupted
         /*
         if( storage.size > 0 ) {                     //The storage must be empty
-            ColorsOut.outerr("Interrupt nesting not allowed. Size=${storage.size}")
-            System.exit(1)
+             System.exit(1)
         }*/
         edgeList.forEach{ storage.add(it) }  //Ricopio
         //println("&&&& ${stateName} interrupthandle ${storage.size}")

@@ -1,6 +1,6 @@
 //https://dl.bintray.com/jetbrains/kotlin/eclipse-plugin/0.8.19/
 
-System -trace -msglog demo0g    
+System  demo0g     //-trace -msglog
 //mqttBroker "localhost" : 1883 eventTopic "demo0/events"
  
   
@@ -23,18 +23,20 @@ QActor componenta context ctxtesta{
 		updateResource [# "componenta(s0)" #]
 		discardMsg Off
  	}
- 	Transition t0 whenRequest start -> s1
- 	
+ 	//Transition t0 whenRequest start -> s1
+ 	Goto s1
+ 	 
  	State s1 {
  		printCurrentMessage
  		updateResource [# "componenta(s1)" #]
- 		request componentb -m atob : atob(_)
+ 		request componentb -m atob : atob(11)
  	}
  	Transition t0 whenReply btoa -> s2
  	
  	State s2 {
+ 		printCurrentMessage
  		updateResource [# "componenta(s2)" #]
- 		replyTo start with done : done(_)
+ 		//replyTo start with done : done(12)
  		println("Componenta | DONE")
  	}
 }
@@ -50,13 +52,14 @@ QActor componentb context ctxtestb{
  	State s1 {
  		printCurrentMessage
  		updateResource [# "componentb(s1)" #]
- 		request componentc -m btoc : btoc(_)
+ 		request componentc -m btoc : btoc(13)
  	}
  	Transition t0 whenReply ctob -> s2
  	
  	State s2 {
+ 		printCurrentMessage
  		updateResource [# "componentb(s2)" #]
- 		replyTo atob with btoa : btoa(_)
+ 		replyTo atob with btoa : btoa(14)
  		println("Componentb | DONE")
  	}
 }
@@ -68,10 +71,11 @@ QActor componentc context ctxtestc{
 		discardMsg Off
  	}
  	Transition t0 whenRequest btoc -> s2
- 	
+ 	 
  	State s2 {
+ 		printCurrentMessage
  		updateResource [# "componentc(s2)" #]
- 		replyTo btoc with ctob : ctob(_)
+ 		replyTo btoc with ctob : ctob(15)
  		println("Componentc | DONE")
  	}
 }

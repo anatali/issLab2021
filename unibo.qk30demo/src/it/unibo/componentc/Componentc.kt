@@ -23,13 +23,14 @@ class Componentc ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						)
 						discardMessages = false
 					}
-					 transition(edgeName="t04",targetState="s2",cond=whenRequest("btoc"))
+					 transition(edgeName="t03",targetState="s2",cond=whenRequest("btoc"))
 				}	 
 				state("s2") { //this:State
 					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
 						updateResourceRep( "componentc(s2)"  
 						)
-						answer("btoc", "ctob", "ctob(_)"   )  
+						answer("btoc", "ctob", "ctob(15)"   )  
 						println("Componentc | DONE")
 					}
 				}	 

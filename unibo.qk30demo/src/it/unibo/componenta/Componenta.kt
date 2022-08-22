@@ -23,22 +23,22 @@ class Componenta ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 						)
 						discardMessages = false
 					}
-					 transition(edgeName="t00",targetState="s1",cond=whenRequest("start"))
+					 transition( edgeName="goto",targetState="s1", cond=doswitch() )
 				}	 
 				state("s1") { //this:State
 					action { //it:State
 						println("$name in ${currentState.stateName} | $currentMsg")
 						updateResourceRep( "componenta(s1)"  
 						)
-						request("atob", "atob(_)" ,"componentb" )  
+						request("atob", "atob(11)" ,"componentb" )  
 					}
-					 transition(edgeName="t01",targetState="s2",cond=whenReply("btoa"))
+					 transition(edgeName="t00",targetState="s2",cond=whenReply("btoa"))
 				}	 
 				state("s2") { //this:State
 					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
 						updateResourceRep( "componenta(s2)"  
 						)
-						answer("start", "done", "done(_)"   )  
 						println("Componenta | DONE")
 					}
 				}	 

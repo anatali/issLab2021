@@ -1,5 +1,6 @@
 package it.unibo.kactor
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import unibo.comm22.ApplMsgHandler
 import unibo.comm22.interfaces.IApplMsgHandler
@@ -7,7 +8,8 @@ import unibo.comm22.interfaces.Interaction2021
 import unibo.comm22.utils.ColorsOut
 
 
-class ContextMsgHandler(name: String, val ctx: QakContext) : ApplMsgHandler(name), IApplMsgHandler {
+class ContextMsgHandler(name: String, val ctx: QakContext) :
+    ApplMsgHandler(name), IApplMsgHandler {
 
 
     override fun elaborate(msg: String?, conn: Interaction2021?) {
@@ -23,7 +25,7 @@ class ContextMsgHandler(name: String, val ctx: QakContext) : ApplMsgHandler(name
     }
 
     protected fun elabRequest(msg: IApplMessage, conn: Interaction2021) {
-        //ColorsOut.out(name + " | elabRequest $msg conn= $conn", ColorsOut.CYAN);
+        //MsgUtil.outblue(name + " | ${ctx.name} elabRequest  $msg conn= $conn" );
         //Inserisco conn nel messaggio di richiesta
         val requestMsg = ApplMessage(msg.msgId(),msg.msgType(),
             msg.msgSender(), msg.msgReceiver(), msg.msgContent(), msg.msgNum(), conn);
@@ -38,12 +40,19 @@ class ContextMsgHandler(name: String, val ctx: QakContext) : ApplMsgHandler(name
     }
 
     protected fun elabNonRequest(msg: IApplMessage, conn: Interaction2021?) {
-        //ColorsOut.out(name + " | elabNonRequest $msg conn= $conn", ColorsOut.CYAN);
-        val a = QakContext.getActor(msg.msgReceiver())
-        runBlocking {
-            if (a != null) MsgUtil.sendMsg(msg, a)
-            else ColorsOut.outerr(name + " | I should not be here .. " + msg.msgReceiver())
+        for( i in 1..4) {
+            val a = QakContext.getActor(msg.msgReceiver())
+            if (a == null){
+                MsgUtil.outblue(name + " | not found destination=${msg.msgReceiver()} RETRYING $i ..." )
+                runBlocking { delay( 250 ) }
+            }else{
+                runBlocking {
+                         MsgUtil.sendMsg(msg, a)
+                }
+                return
+            }
         }
+        ColorsOut.outerr(name + " | not found destination actor:" + msg.msgReceiver())
     }
 
     protected fun elabEvent(event: IApplMessage, conn: Interaction2021?) {
