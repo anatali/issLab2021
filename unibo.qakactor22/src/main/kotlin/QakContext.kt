@@ -40,7 +40,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
 
         //Called by generated code main of ctx
          fun createContexts(hostName: String, scope: CoroutineScope ,
-                           desrFilePath: String, rulesFilePath: String) {
+                           desrFilePath: String, rulesFilePath: String, localContextName: String? = null) {
             sysUtil.createContexts(hostName, desrFilePath, rulesFilePath)
              if( sysUtil.ctxOnHost.size == 0 ){
                 val ip = InetAddress.getLocalHost().getHostAddress()
