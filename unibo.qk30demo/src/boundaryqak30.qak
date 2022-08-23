@@ -24,10 +24,10 @@ Dispatch coapUpdate: coapUpdate(RESOURCE, VALUE)
 Event alarm        : alarm(X)
  
 Context ctxboundaryqak30   ip [host="localhost" port=8032]
-//Context ctxconsole         ip [host="localhost" port=8042]
-//Context ctxobserver        ip [host="localhost" port=8044]    
 Context ctxbasicrobot      ip [host="127.0.0.1" port=8020]   
- 
+//Context ctxconsole         ip [host="127.0.0.1" port=8042]
+//Context ctxobserver        ip [host="localhost" port=8044]    
+  
 ExternalQActor basicrobot context ctxbasicrobot  
  
 QActor boundaryqak30 context ctxboundaryqak30{    
@@ -42,8 +42,8 @@ QActor boundaryqak30 context ctxboundaryqak30{
 
 	State coverNextEdge{  		  
    		delay 500 
- 		updateResource [# "doingastep" #] 
-     	request basicrobot -m step : step(345)	  //come il pathexec
+ 		updateResource [# "doingastep $NumStep" #] 
+     	request basicrobot -m step : step(350)	
 	}
 	Transition t0  whenReply stepdone -> coverNextEdge   
 				   whenReply stepfail -> otherEdge
@@ -84,7 +84,7 @@ QActor cmdconsole context ctxboundaryqak30 { //ctxconsole ctxboundaryqak30{
 	State s0 initial{
 		[# consolegui.StartStopGui( "boundaryqak30", 8032 ) #]
 	}
-	//Goto alarmSimulation
+	Goto alarmSimulation
 	
 	State alarmSimulation{
 		delay 2000
@@ -96,8 +96,7 @@ QActor cmdconsole context ctxboundaryqak30 { //ctxconsole ctxboundaryqak30{
 
 /*
  * Observer
- */
- /* 
+
  QActor anobserver context ctxobserver { //ctxobserver ctxboundaryqak30{
  	State s0 initial{
 		observeResource boundaryqak30
@@ -111,8 +110,8 @@ QActor cmdconsole context ctxboundaryqak30 { //ctxconsole ctxboundaryqak30{
 	Transition t0 whenMsg coapUpdate -> handleUpdate
  
  } 
- 
-QActor applobserver context ctxobserver { //ctxobserver ctxboundaryqak30{
+ */ 
+QActor applobserver context ctxboundaryqak30 { //ctxobserver ctxboundaryqak30{
  	State s0 initial{
 		observeResource boundaryqak30
 	} 
@@ -131,9 +130,9 @@ QActor applobserver context ctxobserver { //ctxobserver ctxboundaryqak30{
 		onMsg (alarm : alarm(X)) {
   		    [# MsgUtil.outmagenta("applobserver handles ALARM: ${payloadArg(0)}") #]
 		}
-	} 
+	}
 	Transition t0 whenMsg coapUpdate -> handleUpdate
 	              whenEvent alarm -> handleAlarm
 	
- } 
- */ 
+ }
+

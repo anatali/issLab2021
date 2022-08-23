@@ -28,9 +28,9 @@ class Boundaryqak30 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( na
 				state("coverNextEdge") { //this:State
 					action { //it:State
 						delay(500) 
-						updateResourceRep( "doingastep"  
+						updateResourceRep( "doingastep $NumStep"  
 						)
-						request("step", "step(345)" ,"basicrobot" )  
+						request("step", "step(350)" ,"basicrobot" )  
 					}
 					 transition(edgeName="t01",targetState="coverNextEdge",cond=whenReply("stepdone"))
 					transition(edgeName="t02",targetState="otherEdge",cond=whenReply("stepfail"))

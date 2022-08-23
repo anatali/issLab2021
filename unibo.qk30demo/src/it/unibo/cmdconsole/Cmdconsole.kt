@@ -21,6 +21,7 @@ class Cmdconsole ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					action { //it:State
 						 consolegui.StartStopGui( "boundaryqak30", 8032 )  
 					}
+					 transition( edgeName="goto",targetState="alarmSimulation", cond=doswitch() )
 				}	 
 				state("alarmSimulation") { //this:State
 					action { //it:State
