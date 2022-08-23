@@ -39,6 +39,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         }
 
         //Called by generated code main of ctx
+        //ARGUMENT localContextName by Loris Giannatempo, August 2022
          fun createContexts(hostName: String, scope: CoroutineScope ,
                            desrFilePath: String, rulesFilePath: String, localContextName: String? = null) {
 
@@ -97,36 +98,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
 
 
 }
-/*    fun initAug2022(){
-        ctxLogfileName = "${name}_MsLog.txt"    //APR2020
-        //OCT2019 --> NOV2019 Create a QakContextServer also when we use MQTT
-        resourceCtx = CoapResourceCtx(name, this)   //must be ininitialized here  ENABLE
-        if (!external) {
-            sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapResourceCtx  ");
-            //println("               %%% QakContext |  $hostAddr:$portNum INIT ")
-            ctxserver = QakContextServer(this, createScope(), "server$name", Protocol.TCP) //
-            //CoAP: Jan2020
 
-            try {
-                //sysUtil.waitUser("Starting CoapServer", 20000);
-                //sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
-                val coapPort = portNum
-                serverCoap = CoapServer(coapPort)
-                serverCoap.add(resourceCtx)
-                serverCoap.start()
-
-                //println("%%% serverCoap started "  )
-
-                sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapServer on port: $coapPort ");
-                //println( "               %%% QakContext $name |  serverCoap started on port: $coapPort" )
-            } catch (e: Exception) {
-                println("               %%% QakContext $name |  serverCoap error: ${e.message}")
-            }
-
-
-        }
-    }
-*/
 	fun terminateTheContext(){
 		serverCoap.stop()
 		ctxserver.actor.close()
