@@ -44,22 +44,20 @@ class QakContextServer(val ctx: QakContext, scope: CoroutineScope,
         //We could handle several connections
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                ColorsOut.outappl(" %%% QakContextServer $name | waitForConnection protocol=${protocol == Protocol.TCP}", ColorsOut.GREEN);
+                MsgUtil.outblue("%%% QakContextServer $name | waitForConnection protocol=${protocol == Protocol.TCP}");
                 //while (true) {
                     //println("       QakContextServer $name | WAIT FOR CONNECTION")
                     //val conn = factoryProtocol!!.createServerProtocolSupport(ctx.portNum) //BLOCKS
                     //var conn : Interaction2021
                     if( protocol == Protocol.TCP ){
                         val userDefHandler = ContextMsgHandler("${ctx.name}MsgH", ctx)
-                        ColorsOut.outappl(name + " | waitForConnection $userDefHandler", ColorsOut.GREEN);
+                        //MsgUtil.outgreen(name + " | waitForConnection $userDefHandler" );
                         val server = TcpServer("tcpSrv",ctx.portNum,userDefHandler)
                         CommSystemConfig.tracing = true
                         server.activate()
                         //ColorsOut.outappl(name + " | waitForConnection $server on ${ctx.portNum}", ColorsOut.YELLOW);
                         //val serverSocket: ServerSocket = tcpSupport.connectAsReceiver(portNum)
                     //}
-
-
                     //sysUtil.connActive.add(conn)      //TODO
                     //handleConnection( conn )          //TODO: create userDefHandler
                 }

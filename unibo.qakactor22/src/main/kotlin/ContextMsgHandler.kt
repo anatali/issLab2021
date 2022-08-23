@@ -40,11 +40,11 @@ class ContextMsgHandler(name: String, val ctx: QakContext) :
     }
 
     protected fun elabNonRequest(msg: IApplMessage, conn: Interaction2021?) {
-        for( i in 1..4) {
+        for( i in 1..10) {
             val a = QakContext.getActor(msg.msgReceiver())
             if (a == null){
                 MsgUtil.outblue(name + " | not found destination=${msg.msgReceiver()} RETRYING $i ..." )
-                runBlocking { delay( 250 ) }
+                runBlocking { delay( 500 ) }
             }else{
                 runBlocking {
                          MsgUtil.sendMsg(msg, a)

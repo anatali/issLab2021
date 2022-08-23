@@ -29,7 +29,7 @@ class NodeProxy( name: String, val ctx: QakContext, val protocol: Protocol,
                 println("               %%% NodeProxy $name | WAIT/RETRY TO SET PROXY TO $hostName:$portNum ")
                 Thread.sleep(500)
             } else {
-                println("               %%% NodeProxy $name | in ${ctx.name} PROXY DONE TO $hostName:$portNum ")
+                sysUtil.traceprintln("               %%% NodeProxy $name | in ${ctx.name} PROXY ACTIVATED TO $hostName:$portNum ")
                 handleConnection(conn!!)
             }
         }

@@ -212,7 +212,6 @@ object sysUtil{
 	}//addProxyToOtherCtxs
 */
 	fun addProxyToOtherCtxs( ctxsList : List<String>, hostName : String, localContextName: String? = null){
-		MsgUtil.outmagenta("sysUtil addProxyToOtherCtxs $localContextName")
 		ctxsList.forEach { ctx ->
 			val curCtx = ctxsMap.get("$ctx")
 			//val a : Boolean
@@ -222,17 +221,17 @@ object sysUtil{
 				ctx == localContextName
 			}
 			if( curCtx is QakContext && !isLocalContext ) {
+				//MsgUtil.outgreen("sysUtil addProxyToOtherCtxs $localContextName $ctx")
 				val others = solve("getOtherContextNames(OTHERS,$ctx)","OTHERS")
 				val ctxs   = strRepToList(others!!)
-				//others!!.replace("[", "").replace("]", "").split(",")
 				ctxs.forEach {
 					if( it.length==0  ) return
 					val ctxOther = ctxsMap.get("$it")
-					if (ctxOther is QakContext) {
-						println("               %%% sysUtil | FOR ACTIVATED CONTEXT ${ctxOther.name}: ADDING A PROXY to ${curCtx.name} ")
-						MsgUtil.outmagenta("sysUtil addCtxProxy ${ctxOther.name} , ${curCtx.name}")
-						ctxOther.addCtxProxy(curCtx)
-					}else{  //NEVER??
+					if (ctxOther is QakContext ) { //&& ctxOther != curCtx Aug2022
+						//sysUtil.traceprintln("               %%% sysUtil | FOR ACTIVATED CONTEXT ${ctxOther.name}: ADDING A PROXY to ${curCtx.name} ")
+ 						//MsgUtil.outmagenta("sysUtil addCtxProxy ${ctxOther.name} , ${curCtx.name}")
+ 						ctxOther.addCtxProxy(curCtx)
+ 					}else{  //NEVER??
 						if( ctxOther!!.mqttAddr.length > 1 )  return //NO PROXY for MQTT ctx
 						println("               %%% sysUtil | WARNING: CONTEXT ${it} NOT ACTIVATED: " +
 								"WE SHOULD WAIT FOR IT, TO SET THE PROXY in ${curCtx.name}")

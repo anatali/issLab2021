@@ -31,12 +31,12 @@ protected boolean stopped = true;
 	@Override
 	public void run() {
 	      try {
-		  	ColorsOut.out(getName() + " | STARTING ... ", ColorsOut.BLUE  );
+		  	//ColorsOut.out(getName() + " | STARTING ... ", ColorsOut.BLUE  );
 			while( ! stopped ) {
 				//Accept a connection				 
 				//ColorsOut.out(getName() + " | waits on server port=" + port + " serversock=" + serversock );	 
 		 		Socket sock          = serversock.accept();	
-				ColorsOut.out(getName() + " | accepted connection  ", ColorsOut.BLUE   );  
+				//ColorsOut.out(getName() + " | accepted connection  ", ColorsOut.BLUE   );
 		 		Interaction2021 conn = new TcpConnection(sock);
 		 		//Create a message handler on the connection
  		 		new TcpApplMessageHandler( userDefHandler, conn );			 		
@@ -49,7 +49,7 @@ protected boolean stopped = true;
 	public void activate() {
 		if( stopped ) {
 			stopped = false;
-			ColorsOut.out(getName()+" |  ACTIVATE userDefHandler=" + userDefHandler + " PORT=" + serversock.getLocalPort(), ColorsOut.BLUE);
+			//ColorsOut.out(getName()+" |  ACTIVATE userDefHandler=" + userDefHandler + " PORT=" + serversock.getLocalPort(), ColorsOut.BLUE);
 			this.start();
 		}//else already activated
 	}
