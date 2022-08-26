@@ -7,7 +7,7 @@ import java.util.NoSuchElementException
 
 /*
 Versione con interrupt updated by Lenzi e gestion whenTime
-inserendo il ocneto di azione ripetibile di sistema (sysaction)
+inserendo il concetto di azione ripetibile di sistema (sysaction)
  */
 
 /*

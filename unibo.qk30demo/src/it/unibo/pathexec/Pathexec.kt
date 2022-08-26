@@ -31,11 +31,16 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 					 transition( edgeName="goto",targetState="nextMove", cond=doswitch() )
 				}	 
 				state("nextMove") { //this:State
+					sysaction { //it:State
+						MsgUtil.outgreen("pathexec | sysactionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
+						stateTimer = TimerActor("timer_nextMove",
+							scope, context!!, "local_tout_pathexec_nextMove", 250.toLong() )
+					}
 					action { //it:State
 						 MsgUtil.outgreen("pathexec | Move progress: ${5 - Counter}")  
 						 Counter--  
 						stateTimer = TimerActor("timer_nextMove", 
-							scope, context!!, "local_tout_pathexec_nextMove", 500.toLong() )
+							scope, context!!, "local_tout_pathexec_nextMove", 250.toLong() )
 					}
 					 transition(edgeName="t23",targetState="checkWorkEnded",cond=whenTimeout("local_tout_pathexec_nextMove"))   
 					interrupthandle(edgeName="t24",targetState="stopped",cond=whenDispatch("stopPath"),interruptedStateTransitions)

@@ -17,7 +17,7 @@ class Sonarshim ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, 
 		val interruptedStateTransitions = mutableListOf<Transition>()
 		
 				var Val = 200
-				var Wait = 500L
+				var Wait = 1500L
 				var N    = 0
 		return { //this:ActionBasciFsm
 				state("scanWait") { //this:State

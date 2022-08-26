@@ -78,7 +78,7 @@ QActor pathexec context ctx_wasteservice_proto_ctx {
 		printCurrentMessage
 		[# Counter = 4 #]
  	}
-	Goto nextMove
+	Goto nextMove 
 	
 	State nextMove {
 		//printCurrentMessage
@@ -116,7 +116,7 @@ QActor pathexec context ctx_wasteservice_proto_ctx {
 		[# MsgUtil.outblue("pathexec | pathexec resumed") #]
 		returnFromInterrupt
 	}
-}
+} 
 /* 
 QActor timer context ctx_wasteservice_proto_ctx{
 	[# var N = 1 #]
