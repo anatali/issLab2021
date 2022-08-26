@@ -31,7 +31,13 @@ class Timer ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scop
 				}	 
 				state("endJob") { //this:State
 					action { //it:State
+<<<<<<< HEAD:unibo.qk30demo/src/it/unibo/timer/Timer.kt
 						println("timer BYE")
+=======
+						delay(3000) 
+						emit("alarm", "alarm($N)" ) 
+						 N = N+1  
+>>>>>>> 1bbacb9c7c6be722adf4aa1ae59b727ade51d838:unibo.qk30demo/src/it/unibo/cmdconsole/Cmdconsole.kt
 					}
 				}	 
 			}

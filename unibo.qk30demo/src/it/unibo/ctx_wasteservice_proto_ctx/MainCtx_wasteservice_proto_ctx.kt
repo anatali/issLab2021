@@ -6,7 +6,11 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
 	QakContext.createContexts(
+<<<<<<< HEAD:unibo.qk30demo/src/it/unibo/ctx_wasteservice_proto_ctx/MainCtx_wasteservice_proto_ctx.kt
 	        "localhost", this, "testguerra.pl", "sysRules.pl","ctx_wasteservice_proto_ctx"
+=======
+	        "localhost", this, "boundaryqak30.pl", "sysRules.pl","ctxbasicrobot"
+>>>>>>> 1bbacb9c7c6be722adf4aa1ae59b727ade51d838:unibo.qk30demo/src/it/unibo/ctxbasicrobot/MainCtxbasicrobot.kt
 	)
 }
 
