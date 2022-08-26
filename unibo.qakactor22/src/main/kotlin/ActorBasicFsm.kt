@@ -67,6 +67,8 @@ class State(val stateName : String, val scope: CoroutineScope ) {
             //println(" --- | State $stateName    | enterState ${myself.stateName} ")
             if( stateEnterAction.size > 0 )
                 stateEnterAction.get(0)( myself )
+            if( sysstateEnterAction.size > 0 )
+                sysstateEnterAction.get(0)( myself )
         }.join()
         //println(" --- | State $stateName    | enterState DONE ")
         //stateEnterAction.forEach {  it(this) }

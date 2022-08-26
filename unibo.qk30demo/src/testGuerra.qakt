@@ -5,7 +5,7 @@ Reply dopathdone   : dopathdone( ARG )
 Reply dopathfail   : dopathfail( ARG )
 Dispatch stopPath : stopPath(X)
 Dispatch resumePath : resumePath(X)
-
+ 
 Dispatch tick : tick(X)
 
 Context ctx_wasteservice_proto_ctx ip [host="localhost" port=8050]
@@ -30,11 +30,14 @@ QActor wastetruck context ctx_wasteservice_proto_ctx {
 	}	
 }
 
+/*
+ * Lancia uno stop e una resume ogni Wait time
+ */
 QActor sonarshim context ctx_wasteservice_proto_ctx {
 	[#
 		var Val = 200
-		var Wait = 500L
-		var N    = 0
+		var Wait = 1500L
+		var N    = 3
 	#]
 
 	State scanWait initial {
@@ -49,7 +52,7 @@ QActor sonarshim context ctx_wasteservice_proto_ctx {
 		if [# PrevVal != Val #] {
 			//println("\tSonar: $N detected distance $Val ")
 			if [# PrevVal > 100 #]{
-			     [# N           = N+1 #]
+			     [# N           = N-1 #]
 			     [# MsgUtil.outred("sonarshim | stopPath($N)") #]
 				forward pathexec -m stopPath : stopPath($N)
 			}
@@ -59,7 +62,7 @@ QActor sonarshim context ctx_wasteservice_proto_ctx {
 			updateResource [# "$Val" #]			
 		}
 	}
-	Goto scanWait if [# N < 5 #] else endJob
+	Goto scanWait if [# N > 0 #] else endJob
 	
 	State endJob{
 		println("sonarshim BYE")
@@ -72,7 +75,7 @@ QActor pathexec context ctx_wasteservice_proto_ctx {
 		printCurrentMessage
 	}	
 	Transition t1 whenRequest dopath -> doThePath
-				  //whenInterrupt stopPath -> stopped
+				  whenInterrupt stopPath -> stopped
 	
 	State doThePath{
 		printCurrentMessage
