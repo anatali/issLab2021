@@ -29,6 +29,7 @@ with Diagram('basicrobot22Arch', show=False, outformat='png', graph_attr=graphat
      sys >> Edge(color='red', style='dashed', xlabel='sonar') >> envsonarhandler
      pathexec >> Edge(color='blue', style='solid', xlabel='cmd') >> basicrobot
      pathexec >> Edge(color='magenta', style='solid', xlabel='step') >> basicrobot
+     basicrobot >> Edge(color='green', style='dashed', xlabel='') >> pathexec
      sys >> Edge(color='red', style='dashed', xlabel='alarm') >> pathexec
      pathexec >> Edge(color='blue', style='solid', xlabel='coapUpdate') >> pathobs
 diag

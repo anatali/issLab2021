@@ -5,9 +5,10 @@ Reply dopathdone   : dopathdone( ARG )
 Reply dopathfail   : dopathfail( ARG )
 Dispatch stopPath : stopPath(X)
 Dispatch resumePath : resumePath(X)
- 
+   
 Dispatch tick : tick(X)
-
+Event    demo : demo(X)   
+    
 Context ctx_wasteservice_proto_ctx ip [host="localhost" port=8050]
 
 QActor wastetruck context ctx_wasteservice_proto_ctx {
@@ -29,7 +30,7 @@ QActor wastetruck context ctx_wasteservice_proto_ctx {
 		println("########### wastetruck BYE ########### ")
 	}	
 }
-
+ 
 /*
  * Lancia uno stop e una resume ogni Wait time
  */
@@ -92,7 +93,7 @@ QActor pathexec context ctx_wasteservice_proto_ctx {
 	Transition t2 whenTime      500      -> checkWorkEnded
 	              //whenMsg tick -> checkWorkEnded
 				  whenInterrupt stopPath -> stopped
-	 
+	  
 	State checkWorkEnded {	
 		//printCurrentMessage	
 		[# MsgUtil.outblue("pathexec | checkWorkEnded: ${Counter}") #]
@@ -102,10 +103,11 @@ QActor pathexec context ctx_wasteservice_proto_ctx {
 	State endWorkOk {
 		//printCurrentMessage
 		println("########### endWorkOk: PATH DONE ########### ")
+		emit demo : demo(1)
 		replyTo dopath with dopathdone : dopathdone( ok )
 	}
-	Goto s0 
-	
+	Goto s0  
+	 
 	State stopped {
 		printCurrentMessage
 		//println("pathexec stopped")

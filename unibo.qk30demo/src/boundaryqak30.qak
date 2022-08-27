@@ -37,9 +37,9 @@ QActor boundaryqak30 context ctxboundaryqak30{
 		[# NumStep     = 0; #] 
 		updateResource [# "waitingOn( edge_$NumStep )" #] 
  	}
-	Transition t0  whenTime 2000 -> coverNextEdge   //inizia da solo dopo 2 sec
-				   whenMsg init -> coverNextEdge
-	               whenInterrupt stop -> handleStop
+	Transition t0  whenTime 5000 -> coverNextEdge   //inizia da solo dopo 5 sec
+				   whenMsg init -> coverNextEdge    //attivato da console
+	               whenInterrupt stop -> handleStop //interrotto prima di init
 
 	State coverNextEdge{  		  
    		delay 500 

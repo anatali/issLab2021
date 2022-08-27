@@ -26,4 +26,6 @@ with Diagram('testguerraArch', show=False, outformat='png', graph_attr=graphattr
      wastetruck >> Edge(color='magenta', style='solid', xlabel='dopath') >> pathexec
      sonarshim >> Edge(color='blue', style='solid', xlabel='stopPath') >> pathexec
      sonarshim >> Edge(color='blue', style='solid', xlabel='resumePath') >> pathexec
+     pathexec >> Edge( xlabel='demo', **eventedgeattr) >> sys
+     pathexec >> Edge(color='green', style='dashed', xlabel='dopathdone') >> sys 
 diag
