@@ -242,11 +242,11 @@ Estensioni estate 2022
 
 Nuova versione dei plugin qak:
 
-- :blue:`it.unibo.Qactork_1.3.1`
-- :blue:`it.unibo.Qactork.ide_1.3.1`
-- :blue:`it.unibo.Qactork.ui_1.3.1`
+- :blue:`it.unibo.Qactork_1.3.2`
+- :blue:`it.unibo.Qactork.ide_1.3.2`
+- :blue:`it.unibo.Qactork.ui_1.3.2`
 
-Nuova versione del supporto run-time: :blue:`unibo.qakactor22-3.1`
+Nuova versione del supporto run-time: :blue:`unibo.qakactor22-3.2`
 
 
 ++++++++++++++++++++++++++++
@@ -285,5 +285,9 @@ Un esempio delle nuove features viene fornito nel modello *boundaryqak30.qak*  d
 L'oggetto Kotlin *externalCoapObserver.kt* realizza un observer eseterno dell'attore *boundaryqak30* che si affianca all'attore-observer
 interno al modello di nome *applobserver*.
 
-L'attore *cmdconsole.kt* emette un evento *alarm* ogni 3 secondi che viene gestito da *applobserver* come esempio di uso degli eventi
-(e di alternativa al meccanismo di CoAP-osservabilità)
+L'attore *cmdconsole* invia la richiesta *ready* a boundaryqak30 e quando riceve la risposta (*oktogo*)
+mostra all'utente una GUI (realizzata in Java).
+
+Successivamente, la console emette un evento *alarm* ogni 3 secondi; questo evento 
+viene gestito da *applobserver* come esempio di uso degli eventi
+(e di alternativa al meccanismo di CoAP-osservabilità).
