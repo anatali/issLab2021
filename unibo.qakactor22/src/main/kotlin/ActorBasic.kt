@@ -254,12 +254,19 @@ Messaging
 
 
 
-    suspend fun answer( reqId: String, msgId : String, msg: String) {
-    sysUtil.traceprintln("$tt ActorBasic $name | answer $msgId:$msg  }")
+    suspend fun answer( reqId: String, msgId : String, msg: String,  caller : String?=null ) {
+        sysUtil.traceprintln("$tt ActorBasic $name | answer $msgId:$msg  }")
         val reqMsg = requestMap.remove(reqId) //one request, one reply
         if( reqMsg == null ){
-            println("$tt ActorBasic $name | WARNING: answer $msgId INCONSISTENT: no request found ")
+            MsgUtil.outred("$tt ActorBasic $name | WARNING: answer $msgId no request found ")
             return
+        }
+        if( caller != null && ! caller.equals(reqMsg.msgSender())){
+            MsgUtil.outred("$tt ActorBasic $name | WARNING: answer $msgId WRONG caller ")
+            java.awt.Toolkit.getDefaultToolkit().beep();
+            //(Windows) The sound used is determined from the setting found in
+            //Control Panel/Sounds and Devices/Sounds/Sound Scheme/"Default Beep".
+             return
         }
         val destName = reqMsg.msgSender()
         //println("$tt ActorBasic $name | answer destName=$destName  }")
