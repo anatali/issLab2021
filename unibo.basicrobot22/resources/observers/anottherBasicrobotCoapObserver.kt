@@ -4,7 +4,7 @@ import org.eclipse.californium.core.CoapClient
 import org.eclipse.californium.core.CoapResponse
 import org.eclipse.californium.core.CoapHandler
 
-object  basicrobotCoapObserver {
+object  anotherBasicrobotCoapObserver {
 
     private val client = CoapClient()
 	
@@ -33,6 +33,6 @@ object  basicrobotCoapObserver {
 
 
 fun main( ) {
-		basicrobotCoapObserver.activate()
+        anotherBasicrobotCoapObserver.activate()
 		System.`in`.read()   //to avoid exit
  }
