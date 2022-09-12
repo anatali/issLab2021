@@ -1,0 +1,31 @@
+System /*-trace*/ resource1
+//mqttBroker "broker.hivemq.com" : 1883  eventTopic "unibo/nat/radar"
+
+Event  sonardata       : distance( V )   //for the application level
+Event  thrill          : info(CMD)
+
+Context ctxresource1 ip [host="localhost" port=8065] 
+
+
+QActor resource1 context ctxresource1{
+	[# var Count = 1 #]
+ 	State s0 initial {
+		println("$name STARTS")
+	}
+	Goto work
+	
+	State work{
+ 		updateResource [# "$name : $Count" #] 
+ 		[# Count = Count + 1
+ 		   MsgUtil.outmagenta( "${name} count= $Count" )
+ 		   
+				#]				
+ 		delay 2000
+	}
+	Goto work if [# Count < 50 #] else endJob
+	
+	State endJob{
+		println("$name ENDS")
+	}
+}
+

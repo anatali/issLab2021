@@ -34,7 +34,7 @@ ExternalQActor basicrobot context ctxbasicrobot
   
 QActor boundaryqak30 context ctxboundaryqak30{    
 [# var NumStep     = 0 #]  
-
+ 
 	State s0 initial {
 		[# NumStep     = 0; #]  
  	}

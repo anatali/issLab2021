@@ -23,6 +23,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 					action { //it:State
 						  CurMoveTodo = "" 
 									StepTime = unibo.robot.robotSupport.readStepTime() //stepTimeConfig.json
+						updateResourceRep( "pathexecsteptime($StepTime)"  
+						)
 						println("pathexec ready. StepTime=$StepTime")
 						//genTimer( actor, state )
 					}
@@ -37,6 +39,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 						if( checkMsgContent( Term.createTerm("dopath(PATH)"), Term.createTerm("dopath(PATH)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 PathTodo = payloadArg(0)  
+								updateResourceRep( "pathexecdopath($PathTodo)"  
+								)
 								pathut.setPath( PathTodo  )
 						}
 						println("pathexec pathTodo = ${pathut.getPathTodo()}")
@@ -75,6 +79,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveTurn") { //this:State
 					action { //it:State
+						updateResourceRep( "pathexecdoturn($CurMoveTodo)"  
+						)
 						forward("cmd", "cmd($CurMoveTodo)" ,"basicrobot" ) 
 						//genTimer( actor, state )
 					}
@@ -89,6 +95,8 @@ class Pathexec ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 				}	 
 				state("doMoveW") { //this:State
 					action { //it:State
+						updateResourceRep( "pathexecdostep($CurMoveTodo)"  
+						)
 						request("step", "step($StepTime)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
