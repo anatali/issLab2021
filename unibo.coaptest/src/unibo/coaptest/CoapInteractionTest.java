@@ -12,7 +12,7 @@ import org.eclipse.californium.elements.exception.ConnectorException;
 
 import it.unibo.kactor.MsgUtil;
 import unibo.comm22.utils.CommUtils;
-import it.unibo.ctxresource1.MainCtxresource1Kt;
+import it.unibo.ctxresource1.MainCtxresource1Kt; 
 
 class MyHandler implements CoapHandler {
 	public MyHandler ( ) {		 
@@ -26,17 +26,17 @@ class MyHandler implements CoapHandler {
 	}
 }
 
-public class CoapSupport {
+public class CoapInteractionTest {
 private CoapClient client;
 private CoapObserveRelation relation = null;
 
-	public CoapSupport(  ) { 
+	public CoapInteractionTest(  ) { 
 	}
  	
 	public void connectTo(String address, String path, boolean asObserver) {
 		String url = "coap://"+address + "/" + path; //"coap://localhost:5683/" + path
 		client = new CoapClient( url );
-		MsgUtil.outyellow("CoapSupport | STARTS url=" +  url ); //+ " client=" + client );
+		MsgUtil.outyellow("CoapInteractionTest | STARTS url=" +  url + " client=" + client);  
 		client.setTimeout( 1000L );		
 		if( asObserver ) observeTheResource( );		
 	}
@@ -44,7 +44,7 @@ private CoapObserveRelation relation = null;
 		CoapResponse respGet = client.get( );
 		if( respGet != null ) {
 			ResponseCode rc = respGet.getCode();
-			MsgUtil.outgreen("CoapSupport | readResource RESPONSE CODE: " + rc);
+			MsgUtil.outgreen("CoapInteractionTest | readResource RESPONSE CODE: " + rc);
 			//4.04 means: Not Found
 			//Se non trova la risorsa, l'handler ha ricevuto 4.04 e non va più
 			//Quindi lo rimuovo e lo rimetto
@@ -72,75 +72,100 @@ private CoapObserveRelation relation = null;
 		//msg must be a dispatch or a request or an event
 		CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN);
  		if( resp != null )
-			MsgUtil.outgreen("CoapSupport | updateResource RESPONSE CODE: " + resp.getCode());
- 		else MsgUtil.outred("CoapSupport | updateResource FAILS"  );
+			MsgUtil.outgreen("CoapInteractionTest | updateResource RESPONSE CODE: " + resp.getCode());
+ 		else MsgUtil.outred("CoapInteractionTest | updateResource FAILS"  );
 		return resp != null;
 	}
 
 	public void readTheResource() {
 		try {
  			String v = readResource();
-			MsgUtil.outgreen("CoapSupport | readTheResource reads v=" + v);
-			//updateResource("a(23)");
+			MsgUtil.outgreen("CoapInteractionTest | readTheResource reads v=" + v);
 		} catch ( Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void startBeforRemoteContextCreated() {
+	public static void startBeforRemoteContextCreated() { //TEST_A
 		MsgUtil.outblue("startBeforRemoteContextCreated");
-		CoapSupport cs = new CoapSupport();
+		CoapInteractionTest cs = new CoapInteractionTest();
 		cs.connectTo("localhost:8065","ctxresource1/resource1",true);
-		cs.readTheResource();
+		for( int i=1; i<=3; i++){
+			cs.readTheResource();
+			CommUtils.delay(1000);
+		}
 	}
-	public static void startBeforRemoteResourceCreated() {
-		MsgUtil.outblue("startBeforRemoteResourceCreated");
+	public static void startForResourceNotexisting() { //TEST_B
+		MsgUtil.outblue("startForResourceNotexisting");
 		new Thread(){
 			public void run(){
 				MainCtxresource1Kt.main();
 			}
 		}.start();
 		CommUtils.delay(1000);  //Give time the CoapServer of the Appl to start
-		CoapSupport cs = new CoapSupport();
+		CoapInteractionTest cs = new CoapInteractionTest();
 		cs.connectTo("localhost:8065","ctxresource1/resourceunknown",true);
 		cs.readTheResource();
 	}
-	public static void startAfterRemoteResourcePerhapsCreated() {
+	public static void startAfterRemoteResourcePerhapsCreated() { //TEST_C
 		MsgUtil.outblue("startAfterRemoteResourceCreated");
-		CoapSupport cs = new CoapSupport();
+		//TEST STARTS BEFORE APP
+
+		CoapInteractionTest cs = new CoapInteractionTest();
 		cs.connectTo("localhost:8065","ctxresource1/resource1",true);
-		cs.readTheResource();
-		//CoapSupport legge null (dopo un pò) come per startBeforRemoteContextCreated
-		//CommUtils.delay(3000);  //Se attendo si connette perdendo qualche update
+		cs.readTheResource(); 	//qui readTheResource reads v=null
+		//CoapInteractionTest legge null (dopo un po) come per startBeforRemoteContextCreated
+		//INSERENDO il delay riesce a connettersi,  perdendo qualche update
+		//CommUtils.delay(3000);
+
 		new Thread(){
 			public void run(){
 				MainCtxresource1Kt.main();
 			}
 		}.start();
-		//CommUtils.delay(2000);
-		/*
-		CoapSupport cs = new CoapSupport();
+
+
+		//TEST STARTS AFTER APP
+		//Se non faccio TEST STARTS BEFORE APP e decommento la parte che segue 
+		//sono sicuro che prima creo l'app, poi faccio il test
+/*
+        CommUtils.delay(2000); 		
+		CoapInteractionTest cs = new CoapInteractionTest();
 		cs.connectTo("localhost:8065","ctxresource1/resource1",true);
-		cs.readTheResource();*/
+		for( int i=1; i<=3; i++){
+			cs.readTheResource();
+			CommUtils.delay(1000);
+		}
+*/
 	}
+
+	
+	/*
+	 * TEST_A) Faccio partire questo main PRIMA di attivare ctxresource1.
+	 *         Output:
+	 * 			 CoapInteractionTest | readTheResource reads v=null
+	 * TEST_B) Faccio partire questo main DOPO attivato ctxresource1 ma per una risorsa che non c'�
+	 *         Output:
+	 * 	         CoapInteractionTest | readResource RESPONSE CODE: 4.04
+     *           CoapInteractionTest | readTheResource reads v=
+     *           MyHandler | content=  code=4.04
+	 * TEST_C) Faccio partire questo main DOPO attivato ctxresource1 ma
+	 *         PRIMA che l'attivazione di resource1 sia completata,
+	 *         in modo che CoapServer ( attivato  da QakContext alla sua istanziazione ) 
+	 *         POTREBBE ricevere una richiesta per una risorsa che ancora non esiste.
+	 *         
+	 *    sysUtil.createActor -> QakContext.addactor( actor ) -> resourceCtx.addActorResource( actor )
+	 */
 
 	public static void main(String[] args) {
 		CommUtils.showSystemInfo();
- 		//CoapSupport.startBeforRemoteContextCreated();
-		CoapSupport.startBeforRemoteResourceCreated();
-		//CoapSupport.startAfterRemoteResourcePerhapsCreated();
+		//CoapInteractionTest.startBeforRemoteContextCreated();  //TEST_A
+		//CoapInteractionTest.startForResourceNotexisting();   //TEST_B
+		CoapInteractionTest.startAfterRemoteResourcePerhapsCreated();  //TEST_C
 	}
 	
 }
 
-/*
- * TEST_A) Faccio partire questo main PRIMA di attivare ctxresource1.
- * TEST_B) Faccio partire questo main PRIMA che l'attivazione di resource1 sia completata,
- *         in modo che CoapServer ( attivato  da QakContext alla istanziazion ) 
- *         riceva una richiesta per una risorsa che non esiste.
- *         Di fatto 
- *    sysUtil.createActor -> QakContext.addactor( actor ) -> resourceCtx.addActorResource( actor )
- */
 
 
 /*
