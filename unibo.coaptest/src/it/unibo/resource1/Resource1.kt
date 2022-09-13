@@ -20,34 +20,47 @@ class Resource1 ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, 
 				state("s0") { //this:State
 					action { //it:State
 						println("$name STARTS")
+						CoapObserverSupport(myself, "localhost","8065","ctxresource1","resource1")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="work", cond=doswitch() )
+					 transition(edgeName="t00",targetState="handleUpdate",cond=whenDispatch("coapUpdate"))
+				}	 
+				state("handleUpdate") { //this:State
+					action { //it:State
+						println("$name in ${currentState.stateName} | $currentMsg")
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="work", cond=doswitchGuarded({ Count < 3  
+					}) )
+					transition( edgeName="goto",targetState="endJob", cond=doswitchGuarded({! ( Count < 3  
+					) }) )
 				}	 
 				state("work") { //this:State
 					action { //it:State
 						updateResourceRep( "$name : $Count"  
 						)
-						 Count = Count + 1
-						 		   MsgUtil.outmagenta( "${name} count= $Count" )
-						 		   
+						 
+						 		   MsgUtil.outmagenta( "${name} (qakmodel) count= $Count" )		
+						 		   Count = Count + 1   
 						delay(2000) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="work", cond=doswitchGuarded({ Count < 50  
-					}) )
-					transition( edgeName="goto",targetState="endJob", cond=doswitchGuarded({! ( Count < 50  
-					) }) )
+					 transition(edgeName="t01",targetState="handleUpdate",cond=whenDispatch("coapUpdate"))
 				}	 
 				state("endJob") { //this:State
 					action { //it:State
 						println("$name ENDS")
+						 unibo.comm22.utils.CommUtils.waitTheUser("Type a key to exit");
+								   System.exit(0)  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

@@ -132,7 +132,7 @@ QActor cmdconsole context ctxconsole { //ctxconsole ctxboundaryqak30{
  
 QActor applobserver context ctxobserver { //ctxobserver ctxboundaryqak30{
  	State s0 initial{
-		observeResource boundaryqak30
+		observeResource   boundaryqak30
 	} 
 	Transition t0 whenMsg coapUpdate -> handleUpdate
 	              whenEvent alarm -> handleAlarm

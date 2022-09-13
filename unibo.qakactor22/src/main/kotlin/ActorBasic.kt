@@ -558,7 +558,7 @@ KNOWLEDGE BASE
 
     override fun handlePUT(exchange: CoapExchange) {
         val arg = exchange.requestText
-    sysUtil.traceprintln("$logo | handlePUT arg=$arg")
+        sysUtil.traceprintln("$logo | handlePUT arg=$arg")
         try{
             val msg    = ApplMessage( arg )
             fromPutToMsg( msg, exchange )   
@@ -576,7 +576,7 @@ KNOWLEDGE BASE
 
 
     fun fromPutToMsg(msg : IApplMessage, exchange: CoapExchange ) {
-    sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
+        sysUtil.traceprintln("$logo | fromPutToMsggg msg=$msg")
         if( msg.isDispatch() || msg.isEvent() ) {
             scope.launch { autoMsg(msg) }
             exchange.respond( CHANGED )
@@ -585,7 +585,7 @@ KNOWLEDGE BASE
         if( msg.isRequest() ) {
             sysUtil.traceprintln("$logo | REQUEST in CoAP| create a temporary actor to manage $msg ")
             CoapToActor("caoproute${count++}", exchange, this, msg)
-         }
+        }
      }
 
 

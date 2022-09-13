@@ -21,4 +21,5 @@ with Diagram('resource1Arch', show=False, outformat='png', graph_attr=graphattr)
      sys = Custom('','./qakicons/system.png')
      with Cluster('ctxresource1', graph_attr=nodeattr):
           resource1=Custom('resource1','./qakicons/symActorSmall.png')
+     resource1 >> Edge(color='blue', style='solid', xlabel='coapUpdate', fontcolor='blue') >> resource1
 diag

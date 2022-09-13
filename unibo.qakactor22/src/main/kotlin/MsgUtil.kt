@@ -172,6 +172,8 @@ fun strToProtocol( ps: String):Protocol{
         }
      }
     @JvmStatic
+    fun outyellow( msg: String) { ColorsOut.outappl(msg, ColorsOut.YELLOW) }
+    @JvmStatic
     fun outgreen( msg: String) { ColorsOut.outappl(msg, ColorsOut.GREEN) }
     @JvmStatic
     fun outblue( msg: String) {  ColorsOut.outappl(msg, ColorsOut.BLUE)  }
