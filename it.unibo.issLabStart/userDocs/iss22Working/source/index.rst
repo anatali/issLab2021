@@ -44,6 +44,7 @@ iss22
    ConclusioniISS22
    TemaFinale22
    TemaFinaleNote
+   BookMspatterns
    webRobot22
 
 Indices and tables
