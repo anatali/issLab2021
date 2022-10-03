@@ -12,6 +12,7 @@ iss22
    Introduzione
    CostruireSoftware
    WorkspaceSetup
+   MicroServizi
    RadarSystem
    RadarSystemAnalisi
    RadarSystemProdottiAnalisi

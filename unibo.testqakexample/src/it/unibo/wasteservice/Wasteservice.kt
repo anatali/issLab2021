@@ -14,6 +14,7 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 		return "s0"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
+		val interruptedStateTransitions = mutableListOf<Transition>()
 		
 						lateinit var Material  : String //glass, plastic
 						lateinit var TruckLoad : String  
@@ -26,7 +27,11 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						updateResourceRep( "trolleyPos(home)"  
 						)
 						println("the wasteservice is waiting ... ")
+						//genTimer( actor, state )
 					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
 					 transition(edgeName="t00",targetState="handlerequest",cond=whenRequest("depositrequest"))
 				}	 
 				state("handlerequest") { //this:State
@@ -45,7 +50,11 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 								 {answer("depositrequest", "loadrejected", "loadrejected($Material,$TruckLoad)"   )  
 								 }
 						}
+						//genTimer( actor, state )
 					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
 					 transition(edgeName="t01",targetState="handlepickupanswer",cond=whenReply("pickupanswer"))
 				}	 
 				state("handlepickupanswer") { //this:State
@@ -65,7 +74,11 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 								 answer("depositrequest", "loadrejected", "loadrejected($Material,$TruckLoad)"   )  
 								 }
 						}
+						//genTimer( actor, state )
 					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
 					 transition( edgeName="goto",targetState="dodeposit", cond=doswitch() )
 				}	 
 				state("dodeposit") { //this:State
@@ -79,9 +92,15 @@ class Wasteservice ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						 {updateResourceRep( "trolleyPos(pbox)"  
 						 )
 						 }
-						stateTimer = TimerActor("timer_dodeposit", 
-							scope, context!!, "local_tout_wasteservice_dodeposit", 5000.toLong() )
+						//genTimer( actor, state )
 					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+				 	 		//sysaction { //it:State
+				 	 		  stateTimer = TimerActor("timer_dodeposit", 
+				 	 			scope, context!!, "local_tout_wasteservice_dodeposit", 5000.toLong() )
+				 	 		//}
+					}	 	 
 					 transition(edgeName="t02",targetState="s0",cond=whenTimeout("local_tout_wasteservice_dodeposit"))   
 				}	 
 			}
