@@ -1,4 +1,4 @@
-package io.eventuate.tram.examples.basic.messages;
+package io.eventuate.tram.examples.basic.inmemory.messages;
 
 import io.eventuate.tram.messaging.common.Message;
 import io.eventuate.tram.messaging.consumer.MessageConsumer;

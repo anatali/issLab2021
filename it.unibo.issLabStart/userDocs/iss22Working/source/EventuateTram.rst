@@ -7,7 +7,10 @@
 EventuateTram
 =====================================
 
-
+- https://github.com/eventuate-tram/eventuate-tram-core
+- https://eventuate.io/whyeventdriven.html
+- https://gehrcke.de/beautiful-readme/
+  
 -----------------------------------------
 Eventuate Tram Basic Examples
 -----------------------------------------
@@ -97,6 +100,7 @@ Inspect the database
 You can inspect the Eventuate Tram-related database tables:
 
 .. code::
+
     $ ./mysql-cli.sh -it
     Welcome to the MySQL monitor.  Commands end with ; or \g.
  
