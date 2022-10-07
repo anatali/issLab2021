@@ -5,16 +5,13 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    //Added
-    id 'org.springframework.boot' version '2.7.4'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-
 }
 
 repositories {
-    //mavenLocal()
-    //maven { url = uri('https://repo.maven.apache.org/maven2/') }
-    mavenCentral()
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
 }
 
 dependencies {
@@ -24,14 +21,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-devtools:2.7.0'
     runtimeOnly 'com.h2database:h2:2.1.212'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
-
-    //added
-    implementation 'org.springframework.data:spring-data-rest-hal-explorer'
-    //developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    // JAX-B dependencies for JDK 9+
-    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
-    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 }
 
 group = 'net.codejava'

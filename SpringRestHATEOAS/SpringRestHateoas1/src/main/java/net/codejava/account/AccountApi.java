@@ -85,7 +85,7 @@ public class AccountApi {
 		
 		return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
 	}
-	
+	//curl -X PATCH -H "Content-Type: application/json" -d "{\"amount\": 100}"} localhost:8080/api/accounts/3/deposits
 	@PatchMapping("/{id}/deposits")
 	public HttpEntity<Account> deposit(@PathVariable("id") Integer id, @RequestBody Amount amount) {
 		Account updatedAccount = service.deposit(amount.getAmount(), id);
