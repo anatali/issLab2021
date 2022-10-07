@@ -20,12 +20,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '1.5.2'
+	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	//implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	//implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '1.5.2'
 }
 
 dependencyManagement {

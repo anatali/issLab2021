@@ -7,26 +7,21 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 public class CustomerController {
-//private Order ord = new Order("glass",100,10);
-//private List<Order> orders = new Vector<Order>();
+private Order order = new Order("glass",100,10);
 
-/*
+
 public CustomerController(){
-    ord=new Order("food",100,10);
-    orders.add(ord);
+    order  = new Order("food",100,10);
 }
-*/
 
-    //@Autowired
+
+    @Autowired
     private OrderService orderService;
 /*
 	@RequestMapping("/")
@@ -44,6 +39,14 @@ public CustomerController(){
         return new ResponseEntity<Greet>(greet, HttpStatus.OK);
     }
 
+    //@RequestMapping("/order")
+    @GetMapping("/order")
+    public  HttpEntity<Order> getOrder( ) {
+        System.out.println("oooooooooooooooo " + order);
+        order.add(linkTo(methodOn(CustomerController.class).getOrder()).withSelfRel());
+        return new ResponseEntity<Order>(order, HttpStatus.OK);
+    }
+
 
     @GetMapping("/{customerId}/{orderId}/start")
     public Order getOrderById(@PathVariable final String customerId, @PathVariable final String orderId) {
@@ -55,34 +58,21 @@ public CustomerController(){
     //curl http://localhost:8080/spring-security-rest/api/customers
     @GetMapping(value = "/{customerId}/orders", produces = { "application/hal+json" })
     public CollectionModel<Order> getOrdersForCustomer(@PathVariable final String customerId) {
- 	    System.out.println("............" + customerId);
+
 
         final List<Order> orders = orderService.getAllOrdersForCustomer(customerId);
+        System.out.println("... getOrdersForCustomer " + customerId + " " + orders.size());
+        /*
         for (final Order order : orders) {
             final Link selfLink = linkTo(
                     methodOn(CustomerController.class).getOrderById(customerId, order.getOrderId())).withSelfRel();
             order.add(selfLink);
-        }
+        }*/
 
         Link link = linkTo(methodOn(CustomerController.class).getOrdersForCustomer(customerId)).withSelfRel();
         CollectionModel<Order> result = CollectionModel.of(orders, link);
         return result;
-	    /*
-        List<Order> orders = orderService.getAllOrdersForCustomer(customerId);
-        for (final Order order : orders) {
-            Link selfLink = linkTo(methodOn(GreetingController.class).getOrderById(customerId, order.getOrderId())).withSelfRel();
-            order.add(selfLink);
-        }
 
-
-
-        //Link selfLink = linkTo(methodOn(GreetingController.class).getOrdersForCustomer(customerId)).withSelfRel();
-        //ord.add(selfLink);
-
-        Link link = linkTo(methodOn(GreetingController.class).getOrdersForCustomer(customerId)).withSelfRel();
-        CollectionModel<Order> result = CollectionModel.of(orders, link);
-        return result;
- */
 	}
 }
 /*
@@ -100,4 +90,5 @@ the relationship between the current resource and the link.
 At a minimum the _links property should contain a self entry
 pointing to the current resource.
 
+https://toedter.github.io/hal-explorer/release/reference-doc/
  */

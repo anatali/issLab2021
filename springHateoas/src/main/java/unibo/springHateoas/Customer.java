@@ -18,6 +18,7 @@ public class Customer extends RepresentationModel<Customer> {
 
     public Customer(final String customerId, final String customerName, final String companyName) {
         super();
+        System.out.println("Customerrrrrrrrrrrrrrrr " + customerId  );
         this.customerId = customerId;
         this.customerName = customerName;
         this.companyName = companyName;
