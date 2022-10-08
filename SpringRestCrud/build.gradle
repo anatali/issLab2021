@@ -24,6 +24,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2:2.1.212'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
     //added
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+
     //
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
     //Human-machine interface

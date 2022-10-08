@@ -1,15 +1,13 @@
 package unibo;
 
 import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import unibo.account.Account;
 import unibo.account.AccountRepository;
 
-@Configuration
+//@Configuration
 public class LoadDatabase {
 	private AccountRepository accountRepo;
 	

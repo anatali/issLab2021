@@ -58,6 +58,7 @@ public class AccountApi {
 		return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
 	}
 
+	//curl -X PATCH -H "Content-Type: application/json" -d "{\"amount\": 100}"} localhost:8080/api/accounts/2/withdrawal
 	@PatchMapping("/{id}/withdrawal")
 	public HttpEntity<Account> withdraw(@PathVariable("id") Integer id, @RequestBody Amount amount) {
 		System.out.println("%%% withdraw id="+id + " amount="+amount);
