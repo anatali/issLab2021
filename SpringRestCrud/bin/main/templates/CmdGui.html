@@ -1,0 +1,71 @@
+<!--
+-->
+
+<!DOCTYPE html >
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>CrudCmdGui</title>
+        <!-- <script src="/app.js"></script> TEST -->
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 5px px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>      
+
+ </head>
+<body>
+<h1><span th:text="${arg}">Arg to be replaced</span></h1>
+
+
+<p>I am <i>webspring.demo - templates/naiveGui.html</i></p>
+
+
+<h2>Commands via HTML POST</h2>
+<hr/>
+<table style="width:50%">
+    <tbody>
+    <tr>
+<td>
+    <form action="/move" method="post">   <!-- the form-data is sent to the page specified in the action attribute -->
+        <label for="movespec">Move</label><br>
+        <input type="text" id="movespec" name="movetodo" value="w"><br>
+        <input type="submit" value="Submit">
+    </form>
+</td>
+     </tr>
+    </tbody>
+</table>
+
+<h2>Basic moves and step(p)</h2>
+<form action="/domove" method="post">
+<table style="width:50%">
+<tbody>
+<tr>
+    <td><center><button id="l" class="btn btn-default" type="submit" name="movetodo" value="l">l</button></center></td>
+    <td><center><button id="r" class="btn btn-default" type="submit" name="movetodo" value="r">r</button></center></td>
+    <td><center><button id="w" class="btn btn-default" type="submit" name="movetodo" value="w">w</button></center></td>
+    <td><center><button id="s" class="btn btn-default" type="submit" name="movetodo" value="s">s</button></center></td>
+    <td><center><button id="p" class="btn btn-default" type="submit" name="movetodo" value="p">p</button></center></td>
+    <td><center><button id="h" class="btn btn-default" type="submit" name="movetodo" value="h">h</button></center></td>
+</tr>
+</tbody>
+</table>
+</form>
+
+</body>
+</html>

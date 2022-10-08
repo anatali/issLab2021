@@ -227,7 +227,7 @@ Primi passi con SpringBoot
     <p>Welcome to <b><span th:text="${arg}">Our Arg</span></b>.</p>
     </body>
     </html>
-    </pre>
+
 
 #. Inserire nel file ``webForActors\src\main\resources\application.properties`` quanto segue:
 

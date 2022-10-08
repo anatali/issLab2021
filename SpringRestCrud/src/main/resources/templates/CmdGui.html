@@ -1,0 +1,62 @@
+<!--
+-->
+
+<!DOCTYPE html >
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>CrudCmdGui</title>
+        <!-- <script src="/app.js"></script> TEST -->
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 5px px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>      
+
+ </head>
+<body>
+<h1><span th:text="${arg}">Arg to be replaced</span></h1>
+
+
+<p>I am <i>webspring.demo - templates/naiveGui.html</i></p>
+
+<hr/>
+<h2>Command via HTML POST</h2>
+
+
+    <form action="/cmd" method="post">
+        <!-- the form-data is sent to the page specified in the action attribute -->
+        <label for="cmdspec">Command</label>
+        <input type="text" id="cmdspec" name="cmdtodo" value="/">
+        <input type="submit" value="Submit">
+    </form>
+
+<h2>Answer</h2>
+<span th:text="${answer}">...</span>
+
+<hr/>
+<h2>Command that returns Json</h2>
+
+    <form action="/cmdJson" method="post">
+        <!-- the form-data is sent to the page specified in the action attribute -->
+        <label for="cmdJsonspec">Command </label>
+        <input type="text" id="cmdJsonspec" name="cmdtodo" value="/">
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>

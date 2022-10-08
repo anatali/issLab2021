@@ -44,6 +44,7 @@ iss22
    ConclusioniISS22
    TemaFinale22
    TemaFinaleNote
+   SpringRestCrud
    BookMspatterns
    EventuateTram
    webRobot22
