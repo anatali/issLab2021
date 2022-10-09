@@ -101,9 +101,9 @@ H2 console
          :align: center
          :width: 100%
 
-+++++++++++++++++++++++++++++++++++
-Popoliamo il database
-+++++++++++++++++++++++++++++++++++        
+++++++++++++++++++++++++++++++++++++++++++++++++
+Popoliamo il database usando la H2 console
+++++++++++++++++++++++++++++++++++++++++++++++++      
 
 .. code::
 
@@ -121,16 +121,59 @@ Popoliamo il database
 .. code::
 
     curl localhost:8080/products 
+    curl localhost:8080/categories
 
 Stessa risposta  mostrata dalla H2 Console nel campo :blue:`Response Body`.
 
 
-.. image:: ./_static/img/Spring/SpringRestH2ProductPOST.png 
++++++++++++++++++++++++++++++++++++
+Popoliamo il database usando POST
++++++++++++++++++++++++++++++++++++
+ 
+ .. list-table:: 
+  :widths: 80,20
+  :width: 100%
+
+  * - H2 Console Login
+
+      .. image:: ./_static/img/Spring/SpringRestH2CategoryPOST.png 
+         :align: center
+         :width: 100%
+    - Incrementa in modo automatico l'id
+
+ 
+
+.. code::
+
+    {
+    "name": "hardware",
+    "description": "hardware",
+    "title": "hardware"
+    }
+
+
++++++++++++++++++++++++++++++++++++
+Modifichiamo usando PUT
++++++++++++++++++++++++++++++++++++
+
+.. image:: ./_static/img/Spring/SpringRestH2ProductPUT.png 
     :align: center
     :width: 100%
 
+.. code::
 
+  "name": "cup",
+  "code": "001",
+  "title": "cup",
+  "description": "cup",
+  "imgUrl": "",
+  "price": 63
 
++++++++++++++++++++++++++++++++++++
+Modifichiamo usando PATCH
++++++++++++++++++++++++++++++++++++
 
+.. code::
 
-curl -X PATCH -H "Content-Type: application/json" -d "{\"price\": 63}"} localhost:8080/products/0
+  curl -X PATCH -H "Content-Type: application/json" -d "{\"title\" : \"Glass\"}" localhost:8080/categories/1
+  curl -X PATCH -H "Content-Type: application/json" -d "{\"price\": 11}"} localhost:8080/products/1
