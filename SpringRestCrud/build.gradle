@@ -18,15 +18,18 @@ repositories {
 }
 
 dependencies {
-     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.0'
     implementation 'org.springframework.boot:spring-boot-devtools:2.7.0'
     runtimeOnly 'com.h2database:h2:2.1.212'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
     //added
     compileOnly 'org.projectlombok:lombok:1.18.24'
-
+    annotationProcessor 'org.projectlombok:lombok'
     //
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+ 
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
     //Human-machine interface
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
