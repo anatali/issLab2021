@@ -138,7 +138,7 @@ Popoliamo il database usando POST
 
       .. image:: ./_static/img/Spring/SpringRestH2CategoryPOST.png 
          :align: center
-         :width: 100%
+         :width: 60%
     - Incrementa in modo automatico l'id
 
  
@@ -158,7 +158,7 @@ Modifichiamo usando PUT
 
 .. image:: ./_static/img/Spring/SpringRestH2ProductPUT.png 
     :align: center
-    :width: 100%
+    :width: 50%
 
 .. code::
 
