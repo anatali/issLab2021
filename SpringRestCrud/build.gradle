@@ -29,7 +29,7 @@ dependencies {
     //
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
- 
+
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
     //Human-machine interface
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
