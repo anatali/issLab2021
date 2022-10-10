@@ -1,0 +1,10 @@
+2022-10-10 08:38:50 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO CATEGORY VALUES(1, 'glass', 'glass', 'glass')\000d\000a [*]INSERT INTO CATEGORY VALUES(2, 'plastic', 'plastic', 'plastic')"; SQL statement:
+INSERT INTO CATEGORY VALUES(1, 'glass', 'glass', 'glass')
+ INSERT INTO CATEGORY VALUES(2, 'plastic', 'plastic', 'plastic') [42000-214]
+2022-10-10 08:39:49 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRDDUCT" not found; SQL statement:
+SELECT * FROM PRDDUCT [42102-214]
+2022-10-10 08:39:57 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRDDUCT" not found; SQL statement:
+SELECT * FROM PRDDUCT [42102-214]

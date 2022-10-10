@@ -28,6 +28,15 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//Added for java db caller
+	implementation 'com.squareup.okhttp:okhttp:2.7.5'
+	//Added for kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	//Added for ZeroMQ
+	implementation 'org.springframework.integration:spring-integration-zeromq:5.5.15'
+	implementation 'org.zeromq:jeromq:0.5.2'
 }
 
 tasks.named('test') {
