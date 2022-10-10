@@ -4,7 +4,7 @@ import org.zeromq.ZContext;
 
 public class HelloWorldServer{
     public static void main(String[] args) throws Exception{
-    	System.out.println("HelloWorldServer STARTS" + Thread.activeCount());
+    	System.out.println("HelloWorldServer STARTS " + Thread.activeCount());
  
         try (ZContext context = new ZContext()) {
             // Socket to talk to clients
@@ -17,7 +17,7 @@ public class HelloWorldServer{
 
                 // Print the message
                 System.out.println(
-                    "Received: [" + new String(reply, ZMQ.CHARSET) + "]" + + Thread.activeCount()
+                    "Received: [" + new String(reply, ZMQ.CHARSET) + "] " + + Thread.activeCount()
                 );
 
                 // Send a response
