@@ -92,6 +92,9 @@ possiamo
 
 - effettuare richieste HTTP attraverso l' :ref:`Uso di curl`
 - effettuare richieste HTTP attraveso l' :ref:`Uso di Java`, Python, etc.
+- utilizzare :blue:`springdoc-openapi`, (https://springdoc.org/#Introduction e https://www.youtube.com/watch?v=utRxyPfFlDw) 
+  la libreria Java che aiuta ad automatizzare la generazione della documentazione 
+  API utilizzando progetti SpringBoot.
 
 ++++++++++++++++++++++++
 H2 console
@@ -295,6 +298,33 @@ Java PATCH
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+
+
+------------------------------------
+Swagger
+------------------------------------
+
+Spring Fox 3.0.0 not supporting new PathPattern Based Path Matching Strategy for Spring MVC which is now 
+the new default from spring-boot 2.6.0.
+
+- https://springdoc.org/#Introduction
+- https://www.youtube.com/watch?v=utRxyPfFlDw
+
+springdoc-openapi works by examining an application at runtime to infer API semantics based on spring configurations, 
+class structure and various annotations.
+
+
 .. code::
 
-    http://localhost:8080/swagger-ui.html
+    http://localhost:8080/swagger-ui/
+
+  spring:
+   mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  http://localhost:8080/swagger-ui/index.html
+  http://localhost:8080/v3/api-docs
+
+SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project 
+and replace it with maintained springdoc-openapi library.

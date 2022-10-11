@@ -1,4 +1,4 @@
-package unibo.SpringRestH2;
+package unibo.SpringRestH2.callers;
 
 import com.squareup.okhttp.*;
 

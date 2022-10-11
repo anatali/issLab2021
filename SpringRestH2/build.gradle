@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'unibo'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -32,12 +32,13 @@ dependencies {
 	//Added for java db caller
 	implementation 'com.squareup.okhttp:okhttp:2.7.5'
 	//Added for Swagger
-	//implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+	//implementation 'io.springfox:springfox-boot-starter'
 	//implementation 'io.springfox:springfox-swagger2:3.0.0'
 	//implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
-	compileOnly 'io.springfox:springfox-swagger2:3.0.0'
-	compileOnly 'io.springfox:springfox-swagger-ui:3.0.0'
+	//implementation 'io.springfox:springfox-swagger2:2.6.0'
+	//implementation 'io.springfox:springfox-swagger-ui:2.6.0'
 
 
 	//Added for kafka
