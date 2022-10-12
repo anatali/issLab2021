@@ -14,7 +14,7 @@ SpringRestCrud
 .. Bupne spiegazioni in https://spring.io/guides/gs/accessing-data-rest/ Accessing JPA Data with REST
 
 -------------------------------------
-Progetto SpringDataRest
+Progetto SpringDataRest - iniziale
 -------------------------------------
 
 Introduce un database H2 che memorizza dati relativi alla entià di Dominio Person definita da una classe
@@ -55,7 +55,7 @@ PersonRepository
     @RepositoryRestResource(collectionResourceRel = "people", path = "people")
     public interface PersonRepository extends PagingAndSortingRepository<Person, Long> {
 
-        //Nuova operazione che fornisce l'elenco di :ref:`ntity Person`  con un dato *lastName*
+        //Nuova operazione che fornisce l'elenco di Person  con un dato lastName
         List<Person> findByLastName(@Param("name") String name);
     }
 
@@ -71,9 +71,9 @@ convertitori JSON e altri bean per fornire un front-end RESTful.
 Questi componenti si collegano al backend Spring Data JPA. 
 
 
-+++++++++++++++++++++++++++
-SpringDataRest - iniziale
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++++
+SpringDataRest - dipendenze
++++++++++++++++++++++++++++++
 
 Il progetto inizia con le seguenti dipendenze:
 
@@ -114,27 +114,88 @@ Eseguiamo l'applicazione con il comando:
               }
             }
 
-       La risposta Utilizza il formato HAL per l'output JSON e 
+       La risposta utilizza il formato HAL per l'output JSON e 
        indica che il server offre un  collegamento situato a http://localhost:8080/people e 
        le opzioni *?page, ?size, e ?sort*.
   
-Per visualizzare e modificare il database, possiamo usare curl:
+Per visualizzare e modificare il database, possiamo usare il comando :blue:`curl`. 
+Ad esempio, per ottenere l'elenco delle persone ordinato per cognome, con due valori per pagina:
 
 .. code::
 
-   curl http://localhost:8080/people
-   curl -i -H "Content-Type:application/json" -d "{\"firstName\": \"Frodo\", \"lastName\": \"Baggins\"}" http://localhost:8080/people
-   curl -X PUT -H "Content-Type:application/json" -d "{\"firstName\": \"Bilbo\", \"lastName\": \"Baggins\"}" http://localhost:8080/people/1
-   curl -X PATCH -H "Content-Type:application/json" -d "{\"firstName\": \"Bilbo Jr.\"}" http://localhost:8080/people/1
-   curl -X DELETE http://localhost:8080/people/1
+    curl "http://localhost:8080/people?sort=lastName&page=0&size=2"   //double quotes necessarie in Windows
 
-   curl http://localhost:8080/people/search
-   curl http://localhost:8080/people/search/findByLastName?name=Baggins
+Altri comandi :
+
+.. list-table:: 
+  :width: 90%
+
+  * - Popolare il database 
+  * -   
+      .. code::
+
+        curl -i -H "Content-Type:application/json" 
+                 -d "{\"firstName\": \"Alessando\", \"lastName\": \"Manzoni\"}" 
+                http://localhost:8080/people
+        curl -i -H "Content-Type:application/json" 
+                -d "{\"firstName\": \"Ugo\", \"lastName\": \"Foscolo\"}" 
+                http://localhost:8080/people
+        curl -i -H "Content-Type:application/json" 
+                -d "{\"firstName\": \"Dante\", \"lastName\": \"Alighieri\"}" 
+                http://localhost:8080/people
+        curl -i -H "Content-Type:application/json" 
+                -d "{\"firstName\": \"Giacomo\", \"lastName\": \"Leopardi\"}" 
+                http://localhost:8080/people
+
+  * - Modificare un elemento (:blue:`PUT` sostituisce un intero record. I campi non forniti vengono sostituiti con null)
+  * -  
+      .. code::
+
+         curl -X PUT -H "Content-Type:application/json" 
+                     -d "{\"firstName\": \"Alessandro\", \"lastName\": \"MANZONI\"}" 
+                     http://localhost:8080/people/1
+
+  * - Modificare parte di un elemento (:blue:`PATCH`)
+  * -  
+      .. code::
+
+         curl -X PATCH -H "Content-Type:application/json" 
+                       -d "{\"firstName\": \"ALESSANDRO\"}" 
+                       http://localhost:8080/people/1
+
+  * - Cancellare un elemento  
+  * -  
+      .. code::
+
+         curl -X DELETE http://localhost:8080/people/1
+
+  * - Cercare un elemento (query personalizzata) 
+  * -  
+      .. code::
+
+         curl http://localhost:8080/people/search/findByLastName?name=Leopardi
+
+ 
 
 
 ++++++++++++++++++++++++
 H2 console
 ++++++++++++++++++++++++
+Spring Boot configura l'applicazione per la connessione a un **archivio in memoria**, con il nome utente *sa* 
+e una password vuota.
+Questi parametri possono essere modificati aggiungendo proprietà nel file :blue:`application.properties`:
+
+.. code::
+
+    spring.datasource.platform=h2
+    spring.datasource.url=jdbc:h2:mem:haldb   
+              oppure jdbc:h2:file:./data/sample
+    spring.jpa.hibernate.ddl-auto=update    
+    spring.h2.console.enabled=true
+
+Una volta riattivata l'applicazione, possiamo aprire un browser e inserire 
+il comando *http://localhost:8080/h2-console*; si apre una console che permette la gestione del database attraverso 
+statement SQL.
 
 .. list-table:: 
   :widths: 40,60
@@ -162,6 +223,21 @@ Popoliamo il database usando la H2 console
 
     INSERT INTO PRODUCT VALUES(1,'001', 'cup', '', 'cup',85.0,'cup',1)
     INSERT INTO PRODUCT VALUES(2,'002', 'box', '', 'box',21.0,'box',2)
+
+
+
+++++++++++++++++++++++++++++++
+SpringDataRest - Testing
+++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++
+SpringDataRest - Swagger
+++++++++++++++++++++++++++++++
+
+
+-------------------------------------
+Progetto SpringDataRest - servizi
+-------------------------------------
 
 ++++++++++++++++++++++++++++++
 SpringDataRest - HAL browser
@@ -231,13 +307,9 @@ SpringRestH2 Workspace
          :align: center
          :width: 70%
     - application.properties  (per usare la ui-console)
-       .. code::
+        
 
-        spring.h2.console.enabled=true
-        spring.datasource.platform=h2
-        spring.datasource.url=jdbc:h2:mem:haldb   
-              oppure jdbc:h2:file:./data/sample
-        spring.jpa.hibernate.ddl-auto=update    
+
 
 +++++++++++++++++++++++++++++++
 Eseguiamo l'applicazione
