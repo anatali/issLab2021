@@ -11,6 +11,7 @@ import unibo.SpringDataRest.model.Person;
 //It is used only to change the export details,
 //such as using /people instead of the default value of /persons.
 @RepositoryRestResource(collectionResourceRel = "people", path = "people")
+//public interface PersonRepository<P> extends CrudRepository<Person, Long> {
 public interface PersonRepository extends PagingAndSortingRepository<Person, Long> {
 
 	List<Person> findByLastName(@Param("name") String name);

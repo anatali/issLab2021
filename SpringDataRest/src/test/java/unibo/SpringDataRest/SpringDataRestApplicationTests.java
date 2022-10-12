@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import unibo.SpringDataRest.repo.PersonRepository;
 
 import static org.hamcrest.Matchers.*;
@@ -28,39 +29,47 @@ class SpringDataRestApplicationTests {
 
 	@BeforeEach
 	public void deleteAllBeforeTests() throws Exception {
-		personRepository.deleteAll();
+		//personRepository.deleteAll();
 	}
 
-	@Test
+	//@Test
 	public void shouldReturnRepositoryIndex() throws Exception {
 
-		mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk()).andExpect(
-				jsonPath("$._links.people").exists());
+		ResultActions res = mockMvc
+				.perform(get("/"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$._links.people").exists());
+		System.out.println("shouldReturnRepositoryIndex res="  + res.andReturn().getResponse().getHeader("location") );
 	}
 
 	@Test
 	public void shouldCreateEntity() throws Exception {
-
-		mockMvc.perform(post("/people").content(
-				"{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}")).andExpect(
-				status().isCreated()).andExpect(
-				header().string("Location", containsString("people/")));
+		ResultActions res = mockMvc
+				.perform(post("/people")
+				.content("{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}"))
+				.andDo(print())
+				.andExpect(status().isCreated())
+				.andExpect(header().string("Location", containsString("people/")));
+		System.out.println("shouldCreateEntity res="  + res.andReturn().getResponse().getHeader("location") );
 	}
 
 	@Test
 	public void shouldRetrieveEntity() throws Exception {
 
-		MvcResult mvcResult = mockMvc.perform(post("/people").content(
-				"{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}")).andExpect(
-				status().isCreated()).andReturn();
+		MvcResult mvcResult = mockMvc
+				.perform(post("/people").content("{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}"))
+				.andExpect(status().isCreated())
+				.andReturn();
 
 		String location = mvcResult.getResponse().getHeader("Location");
-		mockMvc.perform(get(location)).andExpect(status().isOk()).andExpect(
-				jsonPath("$.firstName").value("Frodo")).andExpect(
-				jsonPath("$.lastName").value("Baggins"));
+		mockMvc.perform(get(location))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.firstName").value("Frodo"))
+				.andExpect(jsonPath("$.lastName").value("Baggins"));
 	}
 
-	@Test
+	//@Test
 	public void shouldQueryEntity() throws Exception {
 
 		mockMvc.perform(post("/people").content(
@@ -74,7 +83,7 @@ class SpringDataRestApplicationTests {
 						"Frodo"));
 	}
 
-	@Test
+	//@Test
 	public void shouldUpdateEntity() throws Exception {
 
 		MvcResult mvcResult = mockMvc.perform(post("/people").content(
@@ -92,7 +101,7 @@ class SpringDataRestApplicationTests {
 				jsonPath("$.lastName").value("Baggins"));
 	}
 
-	@Test
+	//@Test
 	public void shouldPartiallyUpdateEntity() throws Exception {
 
 		MvcResult mvcResult = mockMvc.perform(post("/people").content(
@@ -110,7 +119,7 @@ class SpringDataRestApplicationTests {
 				jsonPath("$.lastName").value("Baggins"));
 	}
 
-	@Test
+	//@Test
 	public void shouldDeleteEntity() throws Exception {
 
 		MvcResult mvcResult = mockMvc.perform(post("/people").content(

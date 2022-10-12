@@ -230,6 +230,43 @@ Popoliamo il database usando la H2 console
 SpringDataRest - Testing
 ++++++++++++++++++++++++++++++
 
+WebClient è un'interfaccia che rappresenta il punto di ingresso principale per l'esecuzione di richieste web.
+
+È stato creato come parte del modulo *Spring Web Reactive* e sostituirà il classico RestTemplate 
+(https://www.baeldung.com/rest-template) . 
+Il nuovo client è una soluzione reattiva e non bloccante che funziona tramite il protocollo HTTP/1.1.
+Essa offre supporto sia per operazioni sincrone che asincrone.
+
+++++++++++++++++++++++++++++++
+MockMvc
+++++++++++++++++++++++++++++++
+
+- C:\Didattica\SpringExamples\spring-boot-hateoas
+- https://howtodoinjava.com/spring-boot2/rest/rest-with-spring-hateoas-example/
+- https://howtodoinjava.com/spring-boot2/testing/spring-boot-mockmvc-example/
+- https://howtodoinjava.com/series/spring-mvc-tutorials/
+
+Spring WebMVC (o Spring MVC ) contiene il model-view-controller (MVC) di Spring 
+e l'implementazione dei servizi Web REST per le applicazioni Web. 
+È progettato attorno a un  *DispatcherServlet* che trasferisce le richieste in arrivo 
+per richiedere i metodi del gestore.
+
+https://howtodoinjava.com/spring-mvc/contextloaderlistener-vs-dispatcherservlet/
+
+Spring MVC fornisce una netta separazione tra il modello di dominio e il livello web. 
+Si integra inoltre perfettamente con altri moduli Spring come Spring Security e Spring Data 
+per funzionalità aggiuntive.
+
+.. code::
+
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/eGUEAvNpz48" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html#spring-mvc-test-framework
+
+MockMvc è definito come un punto di ingresso principale per i test Spring MVC lato server. 
+I test MockMvc si trovano a metà strada tra i test di unità e di integrazione.
+
+
 ++++++++++++++++++++++++++++++
 SpringDataRest - Swagger
 ++++++++++++++++++++++++++++++
