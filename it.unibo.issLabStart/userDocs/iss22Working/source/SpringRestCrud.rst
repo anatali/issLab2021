@@ -7,8 +7,194 @@
 SpringRestCrud
 =======================================
 
-HATEOAS sta per Hypermedia as the Engine of Application State.
+- :blue:`HATEOAS` sta per *Hypermedia as the Engine of Application State*.
+- :blue:`HAL` (*Hypertext Application Language*)  fornisce un formato coerente  per il collegamento 
+  ipertestuale tra le risorse.
 
+.. Bupne spiegazioni in https://spring.io/guides/gs/accessing-data-rest/ Accessing JPA Data with REST
+
+-------------------------------------
+Progetto SpringDataRest
+-------------------------------------
+
+Introduce un database H2 che memorizza dati relativi alla entià di Dominio Person definita da una classe
+Java, che funge da modello.
+
++++++++++++++++++++++++++++
+Entity Person
++++++++++++++++++++++++++++
+
+.. code:: Java
+
+    @Entity  //Hybernate
+        public class Person {
+            @Id
+            @GeneratedValue(strategy = GenerationType.AUTO)
+            private long id;
+            private String firstName;
+            private String lastName;
+            public String getFirstName() { return firstName; }
+            public void setFirstName(String firstName) { this.firstName = firstName; }
+            public String getLastName() {return lastName; }
+            public void setLastName(String lastName) { this.lastName = lastName; }
+        }
+
+- La annotazione @Entity ...
+
+- I metodi getter e setter possono essere omessi utilizzando lombok
+
++++++++++++++++++++++++++++
+PersonRepository
++++++++++++++++++++++++++++
+
+.. code:: Java
+
+    /* @RepositoryRestResource is not required for a repository to be exported.
+       It is used only to change the export details,
+       such as using /people instead of the default value of /persons. */
+    @RepositoryRestResource(collectionResourceRel = "people", path = "people")
+    public interface PersonRepository extends PagingAndSortingRepository<Person, Long> {
+
+        //Nuova operazione che fornisce l'elenco di :ref:`ntity Person`  con un dato *lastName*
+        List<Person> findByLastName(@Param("name") String name);
+    }
+
+In fase di esecuzione, Spring Data REST crea automaticamente un'implementazione di questa interfaccia. 
+Quindi usa l'annotazione @RepositoryRestResource per dirigere Spring MVC per creare endpoint RESTful in /people.
+
+
+Spring Boot avvia automaticamente Spring Data JPA per creare un'implementazione concreta di *PersonRepository*
+e configurarlo per comunicare con un back end in-memory database utilizzando JPA.
+
+Spring Data REST si basa su Spring MVC. Crea una raccolta di controller Spring MVC, 
+convertitori JSON e altri bean per fornire un front-end RESTful. 
+Questi componenti si collegano al backend Spring Data JPA. 
+
+
++++++++++++++++++++++++++++
+SpringDataRest - iniziale
++++++++++++++++++++++++++++
+
+Il progetto inizia con le seguenti dipendenze:
+
+.. code:: 
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        runtimeOnly 'com.h2database:h2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+Eseguiamo l'applicazione con il comando:
+
+.. code::
+
+    gradlew bootrun
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+
+  * - *http://localhost:8080/* 
+    -  restituisce dati JSON relativi al top level service
+       
+       .. code::
+
+            {
+              "_links": {
+                "people": {
+                "href": "http://localhost:8080/people{?page,size,sort}",
+                "templated": true
+                },
+                "profile": {
+                "href": "http://localhost:8080/profile"
+                }
+              }
+            }
+
+       La risposta Utilizza il formato HAL per l'output JSON e 
+       indica che il server offre un  collegamento situato a http://localhost:8080/people e 
+       le opzioni *?page, ?size, e ?sort*.
+  
+Per visualizzare e modificare il database, possiamo usare curl:
+
+.. code::
+
+   curl http://localhost:8080/people
+   curl -i -H "Content-Type:application/json" -d "{\"firstName\": \"Frodo\", \"lastName\": \"Baggins\"}" http://localhost:8080/people
+   curl -X PUT -H "Content-Type:application/json" -d "{\"firstName\": \"Bilbo\", \"lastName\": \"Baggins\"}" http://localhost:8080/people/1
+   curl -X PATCH -H "Content-Type:application/json" -d "{\"firstName\": \"Bilbo Jr.\"}" http://localhost:8080/people/1
+   curl -X DELETE http://localhost:8080/people/1
+
+   curl http://localhost:8080/people/search
+   curl http://localhost:8080/people/search/findByLastName?name=Baggins
+
+
+++++++++++++++++++++++++
+H2 console
+++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+
+  * - H2 Console Login
+
+      .. image:: ./_static/img/Spring/SpringRestH2h2consoleInit.png 
+         :align: center
+         :width: 100%
+    - H2 Console
+      
+      .. image:: ./_static/img/Spring/SpringRestH2h2console.png 
+         :align: center
+         :width: 100%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Popoliamo il database usando la H2 console
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+.. code::
+
+    INSERT INTO CATEGORY VALUES(1, 'glass', 'glass', 'glass')
+    INSERT INTO CATEGORY VALUES(2, 'plastic', 'plastic', 'plastic')
+
+    INSERT INTO PRODUCT VALUES(1,'001', 'cup', '', 'cup',85.0,'cup',1)
+    INSERT INTO PRODUCT VALUES(2,'002', 'box', '', 'box',21.0,'box',2)
+
+++++++++++++++++++++++++++++++
+SpringDataRest - HAL browser
+++++++++++++++++++++++++++++++
+
+Aggiungianmo le dipendenze che permettono l'usop di HAL explorer:
+
+.. code::
+
+    dependencies {
+      ...
+      implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+    }
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+
+  
+  * - *http://localhost:8080/*
+      restituisce HAL page
+     
+       .. image:: ./_static/img/Spring/SpringRestH2HAlExplorer.png 
+         :align: center
+         :width: 100%
+    - click su :blue:`<` di **products**
+      
+      .. image:: ./_static/img/Spring/SpringRestH2Products.png 
+        :align: center
+        :width: 100%     
+ 
+
+ 
 --------------------------------
 HAL 
 --------------------------------
@@ -30,24 +216,7 @@ HAL
    :align: center
    :width: 90%
 
-+++++++++++++++++++++++++++++++++++
-build.gradle - dipendenze
-+++++++++++++++++++++++++++++++++++
-       
-.. code::
-
-    ...
-    dependencies {
-         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-         implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-         implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-         implementation 'org.springframework.boot:spring-boot-starter-web'
-         implementation 'org.springframework.data:spring-data-rest-hal-explorer'
-         compileOnly 'org.projectlombok:lombok'
-         runtimeOnly 'com.h2database:h2'
-         annotationProcessor 'org.projectlombok:lombok'
-         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    }
+ 
 
 +++++++++++++++++++++++++++++++++++
 SpringRestH2 Workspace
@@ -61,7 +230,7 @@ SpringRestH2 Workspace
      .. image:: ./_static/img/Spring/SpringRestH2Workspace.png 
          :align: center
          :width: 70%
-    - application.properties
+    - application.properties  (per usare la ui-console)
        .. code::
 
         spring.h2.console.enabled=true
@@ -96,36 +265,7 @@ possiamo
   la libreria Java che aiuta ad automatizzare la generazione della documentazione 
   API utilizzando progetti SpringBoot.
 
-++++++++++++++++++++++++
-H2 console
-++++++++++++++++++++++++
 
-.. list-table:: 
-  :widths: 40,60
-  :width: 100%
-
-  * - H2 Console Login
-
-      .. image:: ./_static/img/Spring/SpringRestH2h2consoleInit.png 
-         :align: center
-         :width: 100%
-    - H2 Console
-      
-      .. image:: ./_static/img/Spring/SpringRestH2h2console.png 
-         :align: center
-         :width: 100%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Popoliamo il database usando la H2 console
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-
-.. code::
-
-    INSERT INTO CATEGORY VALUES(1, 'glass', 'glass', 'glass')
-    INSERT INTO CATEGORY VALUES(2, 'plastic', 'plastic', 'plastic')
-
-    INSERT INTO PRODUCT VALUES(1,'001', 'cup', '', 'cup',85.0,'cup',1)
-    INSERT INTO PRODUCT VALUES(2,'002', 'box', '', 'box',21.0,'box',2)
 
 
 +++++++++++++++++++++++++
@@ -328,3 +468,58 @@ class structure and various annotations.
 
 SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project 
 and replace it with maintained springdoc-openapi library.
+
+
+-------------------------------------
+Servizi Web REST
+-------------------------------------
+
+I servizi Web REST sono diventati il ​​mezzo numero uno per l'integrazione delle applicazioni sul Web. 
+Al suo interno, REST definisce un sistema costituito da risorse con cui interagiscono i client. 
+Queste risorse sono implementate in modo ipermediale. 
+Spring MVC e Spring WebFlux offrono ciascuna una solida base per costruire questi tipi di servizi. 
+
+Tuttavia, l'implementazione anche del principio più semplice dei servizi Web REST per un sistema 
+di oggetti multidominio può essere piuttosto noioso e comportare molto codice standard.
+
+Spring Data REST si basa sui repository :ref:`Spring Data` e li esporta automaticamente come risorse REST. 
+Sfrutta l'ipermedia per consentire ai client di trovare automaticamente le funzionalità esposte dai 
+repository e di integrare queste risorse nelle relative funzionalità basate sull'ipermedia.
+
+.. code::
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+        runtimeOnly 'com.h2database:h2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+   curl http://localhost:8080/people
+   curl -i -H "Content-Type:application/json" -d "{\"firstName\": \"Frodo\", \"lastName\": \"Baggins\"}" http://localhost:8080/people
+   curl http://localhost:8080/people/search
+   curl http://localhost:8080/people/search/findByLastName?name=Baggins
+   curl -X PUT -H "Content-Type:application/json" -d "{\"firstName\": \"Bilbo\", \"lastName\": \"Baggins\"}" http://localhost:8080/people/1
+   curl -X PATCH -H "Content-Type:application/json" -d "{\"firstName\": \"Bilbo Jr.\"}" http://localhost:8080/people/1
+   curl -X DELETE http://localhost:8080/people/1
+
+PUT replaces an entire record. Fields not supplied are replaced with null. You can use PATCH to update a subset of items.
+
+
+-------------------------------------
+Spring data
+-------------------------------------
+
+La missione di Spring Data è fornire un modello di programmazione basato su Spring familiare e coerente 
+per l'accesso ai dati, pur mantenendo le caratteristiche speciali dell'archivio dati sottostante.
+
+Semplifica l'utilizzo di tecnologie di accesso ai dati, database relazionali e non relazionali, 
+framework di riduzione delle mappe e servizi dati basati su cloud. 
+Questo è un progetto ombrello che contiene molti sottoprogetti specifici di un determinato database. 
+
+
+-------------------------------------
+Spring Statemachine
+-------------------------------------
+Spring Statemachine è un framework per gli sviluppatori di applicazioni per utilizzare concetti di macchina 
+a stati con le applicazioni Spring. 

@@ -1,5 +1,6 @@
 package unibo.SpringRestH2.controller;
 
+import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.NoSuchElementException;
 If we define @RestController, the HAL controller does not work anymore
  */
 @RestController
+//@RepositoryRestController
 public class CategoryApi {
 
     private CategoryService categoryService ;
