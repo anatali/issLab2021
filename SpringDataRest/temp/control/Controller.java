@@ -6,7 +6,7 @@ import unibo.SpringDataRest.model.Person;
 
 import java.util.List;
 
-@RestController
+//@RestController
 public class Controller {
 /*
 Si veda
@@ -21,6 +21,7 @@ Si veda
     @RequestMapping(value = "/person/{name}", method = RequestMethod.GET)
     public @ResponseBody Person getAllUsers(@PathVariable String name) {
         List<Person> pl = personService.getByName(name);
+        System.out.println("Controller: list size= " + pl.size());
         return pl.get(0);
     }
 }

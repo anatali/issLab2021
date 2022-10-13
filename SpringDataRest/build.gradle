@@ -22,7 +22,7 @@ dependencies {
 	//implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 //HAL
-	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+	//implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 
 }
 

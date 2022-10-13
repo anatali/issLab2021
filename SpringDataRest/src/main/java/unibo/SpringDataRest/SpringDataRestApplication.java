@@ -2,6 +2,7 @@ package unibo.SpringDataRest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /*
 @Configuration:
@@ -20,8 +21,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringDataRestApplication {
 
+private static ConfigurableApplicationContext context = null;
+
 	public static void main(String[] args) {
-		SpringApplication.run(SpringDataRestApplication.class, args);
+		if( context == null) {
+			context = SpringApplication.run(SpringDataRestApplication.class, args);
+		}
+	}
+	public static void closeAppl( ) {
+		if( context != null){
+			System.out.println("&&& Application closed");
+			context.close();
+		}
 	}
 
 }

@@ -7,18 +7,43 @@
 SpringRestCrud
 =======================================
 
+#. Creazione di un database usando H2 : :ref:`Progetto SpringDataRest - iniziale`
+#. Testing con :ref:`MockMvc` e RestTemplate
+#. Progetto SpringDataRest - servizi (e controller)
+#. SpringDataRest - HAL browser
+#. Swagger
+
+
 - :blue:`HATEOAS` sta per *Hypermedia as the Engine of Application State*.
 - :blue:`HAL` (*Hypertext Application Language*)  fornisce un formato coerente  per il collegamento 
   ipertestuale tra le risorse.
 
-.. Bupne spiegazioni in https://spring.io/guides/gs/accessing-data-rest/ Accessing JPA Data with REST
+.. Buone spiegazioni in https://spring.io/guides/gs/accessing-data-rest/ Accessing JPA Data with REST
 
 -------------------------------------
 Progetto SpringDataRest - iniziale
 -------------------------------------
 
+Progetto: :remark:`issLab2021\SpringDataRest`
+
 Introduce un database H2 che memorizza dati relativi alla entià di Dominio Person definita da una classe
 Java, che funge da modello.
+
++++++++++++++++++++++++++++++
+SpringDataRest - dipendenze
++++++++++++++++++++++++++++++
+
+Il progetto inizia con le seguenti dipendenze:
+
+.. code:: 
+
+  dependencies {
+   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+   implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+   implementation 'org.springframework.boot:spring-boot-starter-web'
+   runtimeOnly 'com.h2database:h2'
+   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  }
 
 +++++++++++++++++++++++++++
 Entity Person
@@ -26,7 +51,8 @@ Entity Person
 
 .. code:: Java
 
-    @Entity  //Hybernate
+    @Entity  
+    //@Table(name="PERSONA")
         public class Person {
             @Id
             @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,29 +65,44 @@ Entity Person
             public void setLastName(String lastName) { this.lastName = lastName; }
         }
 
-- La annotazione @Entity ...
+- La annotazione @Entity denota una entità in JPA (*Java Persistence API*).
+- Le entità in JPA sono POJO che rappresentano dati che possono essere mantenuti nel database. 
+- Un'entità rappresenta una tabella nel database. Ogni istanza di un'entità rappresenta una riga nella tabella.
+- Se non utilizziamo l annotazione :blue:`@Table`, il nome della tabella sarà il nome dell'entità.
+- Una 'entità deve avere un costruttore no-arg e una chiave primaria. L'annotazione :blue:`@Id` definisce la chiave primaria.
+- Poiché varie implementazioni JPA proveranno a creare sottoclassi dellla nostra entità per fornire la loro funzionalità, 
+  le classi di entità **non** devono essere dichiarate **final**.
 
-- I metodi getter e setter possono essere omessi utilizzando lombok
+- I metodi getter e setter possono essere omessi utilizzando lombok.
+
+Per altre informazioni, si veda: https://www.baeldung.com/jpa-entities.
 
 +++++++++++++++++++++++++++
 PersonRepository
 +++++++++++++++++++++++++++
 
+Spring Data REST si basa sul progetto Spring Data e semplifica la creazione di servizi Web REST basati 
+su ipermedia che si connettono ai repository di Spring Data, 
+il tutto utilizzando :blue:`HAL` (*JSON Hypertext Application Language*) come tipo di ipermedia
+(si veda https://www.baeldung.com/spring-rest-hal).
+
+La interfaccia  *PagingAndSortingRepository* permette di  specificare che vogliamo ottenere i dati dalla nostra 
+:ref:`Entity Person`.
+
 .. code:: Java
 
-    /* @RepositoryRestResource is not required for a repository to be exported.
-       It is used only to change the export details,
-       such as using /people instead of the default value of /persons. */
     @RepositoryRestResource(collectionResourceRel = "people", path = "people")
     public interface PersonRepository extends PagingAndSortingRepository<Person, Long> {
 
-        //Nuova operazione che fornisce l'elenco di Person  con un dato lastName
+        //Nuova operazione che fornisce l'elenco di Person  che hanno il lastName specificato
         List<Person> findByLastName(@Param("name") String name);
     }
 
-In fase di esecuzione, Spring Data REST crea automaticamente un'implementazione di questa interfaccia. 
-Quindi usa l'annotazione @RepositoryRestResource per dirigere Spring MVC per creare endpoint RESTful in /people.
+L'annotazione *@RepositoryRestResource* è facoltativa e viene utilizzata per personalizzare l'endpoint REST.
+Nel caso specifico, si intende usare **/people** invece del valore di default */persons*.
 
+In fase di esecuzione, Spring Data REST crea automaticamente un'implementazione di questa interfaccia. 
+Quindi usa l'annotazione @RepositoryRestResource per dirigere Spring MVC per creare endpoint RESTful.
 
 Spring Boot avvia automaticamente Spring Data JPA per creare un'implementazione concreta di *PersonRepository*
 e configurarlo per comunicare con un back end in-memory database utilizzando JPA.
@@ -71,21 +112,10 @@ convertitori JSON e altri bean per fornire un front-end RESTful.
 Questi componenti si collegano al backend Spring Data JPA. 
 
 
+
 +++++++++++++++++++++++++++++
-SpringDataRest - dipendenze
+SpringDataRest - esecuzione
 +++++++++++++++++++++++++++++
-
-Il progetto inizia con le seguenti dipendenze:
-
-.. code:: 
-
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        runtimeOnly 'com.h2database:h2'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    }
 
 Eseguiamo l'applicazione con il comando:
 
@@ -94,38 +124,44 @@ Eseguiamo l'applicazione con il comando:
     gradlew bootrun
 
 .. list-table:: 
-  :widths: 40,60
   :width: 100%
 
-  * - *http://localhost:8080/* 
-    -  restituisce dati JSON relativi al top level service
-       
-       .. code::
-
-            {
-              "_links": {
-                "people": {
-                "href": "http://localhost:8080/people{?page,size,sort}",
-                "templated": true
-                },
-                "profile": {
-                "href": "http://localhost:8080/profile"
-                }
-              }
-            }
-
-       La risposta utilizza il formato HAL per l'output JSON e 
-       indica che il server offre un  collegamento situato a http://localhost:8080/people e 
-       le opzioni *?page, ?size, e ?sort*.
+  * - :blue:`http://localhost:8080/` 
+  * - Restituisce dati JSON relativi al top level service.
   
+      La risposta utilizza il formato HAL per l'output JSON e 
+      indica che il server offre un  collegamento situato a http://localhost:8080/people e 
+      le opzioni *?page, ?size, e ?sort*.
+
+      .. code::
+
+        {
+            "_links": {
+              "people": {
+              "href": "http://localhost:8080/people{?page,size,sort}",
+              "templated": true
+            },
+            "profile": {
+               "href": "http://localhost:8080/profile"
+               }
+            }
+        }
+
+
+.. list-table:: 
+  :width: 100%
+
+  * - :blue:`http://localhost:8080/people?page=0&size=2&sort=lastName` 
+  * - Restituisce l'elenco delle persone ordinato per cognome, con due valori per pagina
+
+++++++++++++++++++++++++
+Usiamo curl
+++++++++++++++++++++++++
+
 Per visualizzare e modificare il database, possiamo usare il comando :blue:`curl`. 
-Ad esempio, per ottenere l'elenco delle persone ordinato per cognome, con due valori per pagina:
 
-.. code::
-
-    curl "http://localhost:8080/people?sort=lastName&page=0&size=2"   //double quotes necessarie in Windows
-
-Altri comandi :
+Riportiamo alcuni esempi:
+ 
 
 .. list-table:: 
   :width: 90%
@@ -135,33 +171,33 @@ Altri comandi :
       .. code::
 
         curl -i -H "Content-Type:application/json" 
-                 -d "{\"firstName\": \"Alessando\", \"lastName\": \"Manzoni\"}" 
-                http://localhost:8080/people
+          -d "{\"firstName\":\"Alessando\", \"lastName\":\"Manzoni\"}"
+          http://localhost:8080/people
         curl -i -H "Content-Type:application/json" 
-                -d "{\"firstName\": \"Ugo\", \"lastName\": \"Foscolo\"}" 
-                http://localhost:8080/people
+          -d "{\"firstName\":\"Ugo\", \"lastName\":\"Foscolo\"}"
+          http://localhost:8080/people
         curl -i -H "Content-Type:application/json" 
-                -d "{\"firstName\": \"Dante\", \"lastName\": \"Alighieri\"}" 
-                http://localhost:8080/people
+          -d "{\"firstName\":\"Dante\", \"lastName\":\"Alighieri\"}"
+          http://localhost:8080/people
         curl -i -H "Content-Type:application/json" 
-                -d "{\"firstName\": \"Giacomo\", \"lastName\": \"Leopardi\"}" 
-                http://localhost:8080/people
+          -d "{\"firstName\":\"Giacomo\", \"lastName\":\"Leopardi\"}"
+          http://localhost:8080/people
 
-  * - Modificare un elemento (:blue:`PUT` sostituisce un intero record. I campi non forniti vengono sostituiti con null)
+  * - Modificare un elemento (:blue:`PUT` sostituisce un intero record. I campi non forniti vengono sostituiti con **null**)
   * -  
       .. code::
 
          curl -X PUT -H "Content-Type:application/json" 
-                     -d "{\"firstName\": \"Alessandro\", \"lastName\": \"MANZONI\"}" 
-                     http://localhost:8080/people/1
+           -d "{\"firstName\": \"Alessandro\",\"lastName\":\"MANZONI\"}"
+           http://localhost:8080/people/1
 
   * - Modificare parte di un elemento (:blue:`PATCH`)
   * -  
       .. code::
 
-         curl -X PATCH -H "Content-Type:application/json" 
-                       -d "{\"firstName\": \"ALESSANDRO\"}" 
-                       http://localhost:8080/people/1
+        curl -X PATCH -H "Content-Type:application/json"
+              -d "{\"firstName\": \"ALESSANDRO\"}"
+              http://localhost:8080/people/1
 
   * - Cancellare un elemento  
   * -  
@@ -173,32 +209,33 @@ Altri comandi :
   * -  
       .. code::
 
-         curl http://localhost:8080/people/search/findByLastName?name=Leopardi
+        curl http://localhost:8080/
+            people/search/findByLastName?name=Leopardi
+  * - Ottenere l'elenco delle persone ordinato per cognome, con due valori per pagina
+  * -  
+      .. code::
 
- 
-
+         curl "http://localhost:8080/people?sort=lastName&page=0&size=2"   
+         //double quotes necessarie in Windows
 
 ++++++++++++++++++++++++
 H2 console
 ++++++++++++++++++++++++
 Spring Boot configura l'applicazione per la connessione a un **archivio in memoria**, con il nome utente *sa* 
 e una password vuota.
-Questi parametri possono essere modificati aggiungendo proprietà nel file :blue:`application.properties`:
+
+Aggiungiamo una proprietà nel file :blue:`application.properties`:
 
 .. code::
-
-    spring.datasource.platform=h2
-    spring.datasource.url=jdbc:h2:mem:haldb   
-              oppure jdbc:h2:file:./data/sample
-    spring.jpa.hibernate.ddl-auto=update    
+  
     spring.h2.console.enabled=true
 
-Una volta riattivata l'applicazione, possiamo aprire un browser e inserire 
-il comando *http://localhost:8080/h2-console*; si apre una console che permette la gestione del database attraverso 
+Una volta riattivata l'applicazione, apriamo un browser e inseriamo
+il comando *http://localhost:8080/h2-console*: si apre una console che permette la gestione del database attraverso 
 statement SQL.
 
 .. list-table:: 
-  :widths: 40,60
+  :widths: 35,65
   :width: 100%
 
   * - H2 Console Login
@@ -218,11 +255,30 @@ Popoliamo il database usando la H2 console
 
 .. code::
 
-    INSERT INTO CATEGORY VALUES(1, 'glass', 'glass', 'glass')
-    INSERT INTO CATEGORY VALUES(2, 'plastic', 'plastic', 'plastic')
+    INSERT INTO PERSON VALUES(1, 'Ugo', 'Foscolo' )
+    INSERT INTO PERSON VALUES(2, 'Giacomo', 'Leopardi' )
+    INSERT INTO PERSON VALUES(3, 'Dante', 'Alighieri' )
+    INSERT INTO PERSON VALUES(4, 'Alessandro', 'Manzoni' )
 
-    INSERT INTO PRODUCT VALUES(1,'001', 'cup', '', 'cup',85.0,'cup',1)
-    INSERT INTO PRODUCT VALUES(2,'002', 'box', '', 'box',21.0,'box',2)
+++++++++++++++++++++++++
+Archivio su file
+++++++++++++++++++++++++
+
+Spring Boot configura l'applicazione per la connessione a un **archivio in memoria**, con il nome utente *sa* 
+e una password vuota.
+Questi parametri possono essere modificati aggiungendo proprietà nel file :blue:`application.properties`:
+
+Per modificare il database usato da Spring Boot è sufficiente modificare una proprietà in :blue:`application.properties`.
+Ad esempio, per memorizzare i dati in modo permanente su file, possinao specificare:
+
+.. code::
+
+    spring.datasource.url= jdbc:h2:file:./data/people
+ 
+
+ 
+
+
 
 
 

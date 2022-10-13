@@ -1,39 +1,50 @@
 package unibo.SpringDataRest;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpEntity;
+import org.junit.jupiter.api.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import unibo.SpringDataRest.model.Person;
 
-/*
-The @SpringBootTest annotation tells Spring Boot to look for a main configuration class
-(one with @SpringBootApplication, for instance) and use that to start a Spring application context.
- */
-@SpringBootTest
+
+//See https://www.baeldung.com/rest-template
 public class FirstTest {
 
-    /*
-    the application context is cached between tests
-     */
-    //@Test
-    public void contextLoads() throws Exception {
-        System.out.println("%%% contextLoads");
-        //assertThat(controller).isNotNull();
+
+    @BeforeEach
+    public void start() throws Exception {
+        SpringDataRestApplication.main( new String[]{});
+    }
+
+    @AfterAll
+    public static void end(){
+        SpringDataRestApplication.closeAppl();
+    }
+
+    @Test
+    public void shouldReturnRepositoryIndex() {
+        System.out.println(" ------ shouldReturnRepositoryIndex"  );
+        String url      =  "http://localhost:8080/";
+        RestTemplate rt = new RestTemplate( );
+        ResponseEntity<String> response = rt.getForEntity( url, String.class);
+        System.out.println("response:" + response );
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
     @Test
-    public void test0(){
-        //String getPeopleUrl = "http://localhost:8080/people"; //+ "/1"
-        String getPeopleUrl = "http://localhost:8080/person/Baggins";
-
-        //https://www.baeldung.com/rest-template
-        //HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        //RestTemplate rt = new RestTemplate(factory);
-
+    public void getPeople() {
+        System.out.println(" ------ getPeople"  );
+        String url = "http://localhost:8080/people";
         RestTemplate rt = new RestTemplate( );
-        System.out.println("%%% test0 rt="+rt + " getPeopleUrl=" + getPeopleUrl);
+        ResponseEntity<String> response = rt.getForEntity( url, String.class);
+        System.out.println("response:" + response );
+        System.out.println("response body:" + response.getBody() );
+
+    }
+    //@Test
+    public void getAPerson(){
+        System.out.println(" ------ getAPerson"  );
+        String url = "http://localhost:8080/person/Baggins";
+        RestTemplate rt = new RestTemplate( );
+        System.out.println("%%% test0 rt="+rt + " url=" + url);
         /*
         Person p0 = new Person();
         p0.setFirstName("Giacomo");
@@ -42,7 +53,7 @@ public class FirstTest {
         Person foo = rt.postForObject(getPeopleUrl, request, Person.class);
         System.out.println("foo=" + foo );
 */
-        ResponseEntity<String> response = rt.getForEntity( getPeopleUrl, String.class);
+        ResponseEntity<String> response = rt.getForEntity( url, String.class);
         //Person p = rt.getForObject("http://localhost:8080/people/search/findByLastName?name=Leopardi", Person.class);
         //System.out.println("" + response);
         //org.springframework.data.rest.webmvc.RepositoryController c;
@@ -50,6 +61,7 @@ public class FirstTest {
         System.out.println("response:" + response );
         //We can also map the response directly to a Resource DTO
     }
+
 /*
     @Test
     public void test1() {
