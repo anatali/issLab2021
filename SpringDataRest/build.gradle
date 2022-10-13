@@ -18,11 +18,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+//Human-machine interface
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+//HAL
+	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 //per l'uso di WebClient al posto di RestTemplate
 	//implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-//HAL
-	//implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 
 }
 

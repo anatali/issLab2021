@@ -310,16 +310,46 @@ Accesso mediante Python
 Usiamo Jupyter
 
 
-++++++++++++++++++++++++++++++
-SpringDataRest - Testing
-++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest - Testing con RestTemplate
+++++++++++++++++++++++++++++++++++++++++++++++
+Per interagire con REST, il client deve creare un'istanza client e richiedere un oggetto, eseguire la richiesta, 
+interpretare la risposta, mappare la risposta agli oggetti di dominio e anche gestire le eccezioni. 
 
-WebClient è un'interfaccia che rappresenta il punto di ingresso principale per l'esecuzione di richieste web.
+Le informazioni consegnate al cliente possono essere in diversi formati, 
+come ad esempio JSON, XML, HTML, PHP, text, etc.
 
-È stato creato come parte del modulo *Spring Web Reactive* e sostituirà il classico RestTemplate 
-(https://www.baeldung.com/rest-template) . 
-Il nuovo client è una soluzione reattiva e non bloccante che funziona tramite il protocollo HTTP/1.1.
-Essa offre supporto sia per operazioni sincrone che asincrone.
+Spring fornisce un modo conveniente per utilizzare le API REST, tramite la classe RestTemplate,
+che costituisce un client sincrono, progettata per chiamare i servizi REST. 
+I suoi metodi primari sono strettamente legati ai metodi del protocollo HTTP HEAD , GET , POST , PUT , DELETE e OPTIONS.
+
+Usando RestTemplate (https://www.baeldung.com/rest-template)
+
+RestTemplate sarà deprecato nelle versioni future di Spring a favore di 
+WebClient (https://www.baeldung.com/spring-5-webclient) che fornisce un'API sincrona tradizionale, 
+ma supporta anche un efficiente approccio reattivo, non bloccante e asincrono, 
+che funziona tramite il protocollo HTTP/1.1.
+
+
+- getForEntity(): executes a GET request and returns an object of ResponseEntity class that contains both the status code 
+                and the resource as an object.
+
+- getForObject() : similar to getForEntity(), but returns the resource directly.
+
+- exchange(): executes a specified HTTP method, such as GET, POST, PUT, etc, and returns a ResponseEntity containing both the HTTP status code and the resource as an object.
+
+- execute() : similar to the exchange() method, but takes additional parameters: RequestCallback and ResultSetExtractor.
+
+- headForHeaders(): executes a HEAD request and returns all HTTP headers for the specified URL.
+
+- optionsForAllow(): executes an OPTIONS request and uses the Allow header to return the HTTP methods that are allowed under the specified URL.
+
+- delete(): deletes the resources at the given URL using the HTTP DELETE method.
+
+- put(): updates a resource for a given URL using the HTTP PUT method.
+
+
+
 
 ++++++++++++++++++++++++++++++
 MockMvc
