@@ -123,6 +123,31 @@ Eseguiamo l'applicazione con il comando:
 
     gradlew bootrun
 
+Una volta attivata l'applicazione Spring che gestisce il database H2 in memoria o su file,
+possiamo attivare gli endpoint REST in molti modi diversi, avendo cura di 
+di utilizzando i verbi HTTP nel modo che segue:
+
+  - :blue:`GET` per richidere informazioni
+  - :blue:`POST`: per inserire nuovi elementi nel database
+  - :blue:`PUT`: per modificare in modo completo un elemento 
+  - :blue:`PATCH`: per modificare in modo parziale un elemento 
+  - :blue:`DELETE`: per eliminare un elemento 
+  
+Tra i diversi modi di accesso con richieste HTTP, ricordiamo:  
+
+- :ref:`Accesso mediante browser`
+- :ref:`Accesso mediante H2 console` per agire direttamente sul database attraverso comandi SQL.
+- :ref:`Accesso medinate HAL browser`  
+- :ref:`Accesso mediante curl`
+- :ref:`Accesso mediante Java`, Python, etc.
+- utilizzare :blue:`springdoc-openapi`, 
+  (https://springdoc.org/#Introduction e https://www.youtube.com/watch?v=utRxyPfFlDw) 
+  la libreria Java che aiuta ad automatizzare la generazione della documentazione 
+  API utilizzando progetti SpringBoot.
+
++++++++++++++++++++++++++++++
+Accesso mediante browser
++++++++++++++++++++++++++++++
 .. list-table:: 
   :width: 100%
 
@@ -155,7 +180,7 @@ Eseguiamo l'applicazione con il comando:
   * - Restituisce l'elenco delle persone ordinato per cognome, con due valori per pagina
 
 ++++++++++++++++++++++++
-Usiamo curl
+Accesso mediante curl
 ++++++++++++++++++++++++
 
 Per visualizzare e modificare il database, possiamo usare il comando :blue:`curl`. 
@@ -218,9 +243,9 @@ Riportiamo alcuni esempi:
          curl "http://localhost:8080/people?sort=lastName&page=0&size=2"   
          //double quotes necessarie in Windows
 
-++++++++++++++++++++++++
-H2 console
-++++++++++++++++++++++++
++++++++++++++++++++++++++++++++
+Accesso mediante H2 console
++++++++++++++++++++++++++++++++
 Spring Boot configura l'applicazione per la connessione a un **archivio in memoria**, con il nome utente *sa* 
 e una password vuota.
 
@@ -275,11 +300,14 @@ Ad esempio, per memorizzare i dati in modo permanente su file, possinao specific
 
     spring.datasource.url= jdbc:h2:file:./data/people
  
+++++++++++++++++++++++++++++++
+Accesso mediante Java
+++++++++++++++++++++++++++++++
 
- 
-
-
-
+++++++++++++++++++++++++++++++
+Accesso mediante Python
+++++++++++++++++++++++++++++++
+Usiamo Jupyter
 
 
 ++++++++++++++++++++++++++++++
@@ -333,7 +361,7 @@ Progetto SpringDataRest - servizi
 -------------------------------------
 
 ++++++++++++++++++++++++++++++
-SpringDataRest - HAL browser
+Accesso medinate HAL browser
 ++++++++++++++++++++++++++++++
 
 Aggiungianmo le dipendenze che permettono l'usop di HAL explorer:
@@ -404,31 +432,8 @@ SpringRestH2 Workspace
 
 
 
-+++++++++++++++++++++++++++++++
-Eseguiamo l'applicazione
-+++++++++++++++++++++++++++++++
+ 
 
-.. code::
-
-    gradlew bootrun
-
-Una volta attivata l'applicazione Spring che gestisce il database H2 in memoria o su file,
-possiamo 
-
-- utilizzare la :ref:`H2 console` per agire direttamente sul database attraverso comandi SQL.
-- utilizzare lo :ref:`HAL Browser` per attivare gli endpoint REST utilizzando i verbi HTTP nel modo che segue:
-
-  - :blue:`GET` per richidere informazioni
-  - :blue:`POST`: per inserire nuovi elementi nel database
-  - :blue:`PUT`: per modificare in modo completo un elemento 
-  - :blue:`PATCH`: per modificare in modo parziale un elemento 
-  - :blue:`DELETE`: per eliminare un elemento 
-
-- effettuare richieste HTTP attraverso l' :ref:`Uso di curl`
-- effettuare richieste HTTP attraveso l' :ref:`Uso di Java`, Python, etc.
-- utilizzare :blue:`springdoc-openapi`, (https://springdoc.org/#Introduction e https://www.youtube.com/watch?v=utRxyPfFlDw) 
-  la libreria Java che aiuta ad automatizzare la generazione della documentazione 
-  API utilizzando progetti SpringBoot.
 
 
 
