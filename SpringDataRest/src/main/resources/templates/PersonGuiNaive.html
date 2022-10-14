@@ -23,11 +23,13 @@ lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
 
 <h2>Person found</h2>
 
-<span th:text="${personfound}"> Replaceable text </span >
+<div id="BOX">
+<span  th:text="${personfound}"> Replaceable text </span>
+</div>
 
 
 <h2>Insert a new Person</h2>
-<form method="POST" th:object="${model}">
+<form method="POST" action="/Api/createPersonWithModel" th:object="${personmodel}">
 
     <label for="id">ID : </label>
     <input type="text" th:field="*{id}"><br/>
@@ -40,8 +42,7 @@ lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
     <input type="submit" value="submit">
 </form>
 
-<h2>Headers</h2>
-<p th:text="${headers}"></p>
+
 
 </body>
 </html>

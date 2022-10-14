@@ -39,11 +39,227 @@ Il progetto inizia con le seguenti dipendenze:
    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
    implementation 'org.springframework.boot:spring-boot-starter-web'
    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//For java HTTP caller
-	implementation 'com.squareup.okhttp:okhttp:2.7.5'
+  //Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+  //For java HTTP caller
+	  implementation 'com.squareup.okhttp:okhttp:2.7.5'
   //Human-machine interface
-	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
   }
+
+
++++++++++++++++++++++++++++
+Person
++++++++++++++++++++++++++++
+
+.. code:: Java
+
+    @Data  //Lombok
+    public class Person {
+      private long id;
+      private String firstName;
+      public String toString(){
+        return "person id="+id+" firstName="+firstName + " lastName="+lastName;
+    }        
+    }
+
++++++++++++++++++++++++++++
+DataHandler
++++++++++++++++++++++++++++
+
+.. code:: Java
+
+  public class DataHandler {
+      private static Vector<Person> userDataList = new Vector<Person>();
+      private static int id = 0;
+
+      private static void addNewPerson(){
+          Person userData = new Person();
+          userData.setId(id);
+          userData.setFirstName("dummy");
+          userData.setLastName("dummy");
+           userDataList.add(userData);
+          id++;
+      }
+      public static void addPerson(Person userData){
+          userDataList.add(userData);
+      }
+      public static Person getLast(){
+          if( userDataList.isEmpty()) addNewPerson();
+          return userDataList.lastElement();
+      }
+      public static Person getFirst(){
+          if( userDataList.isEmpty()) addNewPerson();
+          return userDataList.firstElement();
+      }
+      public static String getPersonWithLastName(String lastName){
+          String pFound = "person not found";
+          //Scandisce userDataList cercando la prima persona con userDataList
+          ...
+          return pFound;
+      }
+  }
+
++++++++++++++++++++++++++++
+PersonGuiNaive
++++++++++++++++++++++++++++
+
+.. code:: html
+
+  <!DOCTYPE html>
+  <html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+  <head>
+      <title>UserData Gui</title>
+      <style>
+  h1{
+    color:forestgreen;
+  }
+  p{
+    width:500px;
+  }
+  </style>
+  </head>
+  <body>
+  <h1>UserData Gui</h1>
+
+  <h2>Last Person inserted</h2>
+
+  id=<span th:text="${lastperson.id}"> Replaceable text </span >
+  firstName=<span th:text="${lastperson.firstName}"> Replaceable text </span >
+  lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
+
+  <h2>Person found</h2>
+
+  <span th:text="${personfound}"> Replaceable text </span >
+
+
+  <h2>Insert a new Person</h2>
+  <form method="POST" action="/Api/createPerson"  th:object="${personmodel}">
+
+      <label for="id">ID : </label>
+      <input type="text" th:field="*{id}"><br/>
+
+      <label for="firstName">FIRSTNAME : </label>
+      <input type="text" th:field="*{firstName}"><br/>
+
+      <label for="lastName">LASTNAME : </label>
+      <input type="text" th:field="*{lastName}">
+      <input type="submit" value="submit">
+  </form>
+
+  </body>
+  </html> 
+
+
++++++++++++++++++++++++++++
+Human-machine controller
++++++++++++++++++++++++++++
+.. code:: Java
+
+  @Controller
+  @RequestMapping("/Api")
+  public class HIController {
+
+      private void updateTheModel(Model model, Person lastPerson, String foundPerson){
+          model.addAttribute("personmodel", new Person());
+          model.addAttribute("lastperson",  lastPerson);
+          model.addAttribute("personfound", foundPerson );
+      }
+      
+      @GetMapping
+      public String get(Model model){
+          updateTheModel(model, DataHandler.getLast(), "todo");
+          return "PesronGuiNaive";
+      }
+      @GetMapping("/getAPerson") //getAPerson?lastName=Foscolo
+      public String getAPerson(Model model, @RequestParam( "lastName" ) String lastName){
+          String ps = DataHandler.getPersonWithLastName(lastName);
+          updateTheModel(model, DataHandler.getLast(), ps);
+          return "PesronGuiNaive";
+      }
+      @PostMapping("/createPerson")
+      public String post(@ModelAttribute("personmodel") Person userData, Model model) {
+          DataHandler.addPerson(userData);
+          updateTheModel(model, DataHandler.getLast(), "todo");
+          return "PesronGuiNaive";
+      }
+  } 
+
++++++++++++++++++++++++++++++
+SpringDataRest - esecuzione
++++++++++++++++++++++++++++++
+
+Eseguiamo l'applicazione con il comando:
+
+.. code::
+
+    gradlew bootrun
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+DataOnly: accesso con browser
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :width: 100%
+
+  * - :blue:`http://localhost:8080/` 
+  * - Restituisce dati JSON relativi al top level service.
+  
+      La risposta utilizza il formato HAL per l'output JSON e 
+      indica che il server offre un  collegamento situato a http://localhost:8080/
+
+      .. code::
+
+        {
+          "_links": {
+            "profile": {
+              "href": "http://localhost:8080/profile"
+            }
+          }
+        }
+
+
+.. list-table:: 
+  :width: 100%
+
+  * - :blue:`http://localhost:8080/Api` 
+  * - Restituisce la pagina generata da  :ref:`PersonGuiNaive` mediante Thymeleaf.
+  
+      .. image:: ./_static/img/SpringDataRest/SpringDataRestGuiInit.png 
+         :align: center
+         :width: 40%
+
++++++++++++++++++++++++++++++++++++++++++++++
+DataOnly: accesso con curl
++++++++++++++++++++++++++++++++++++++++++++++
+.. list-table:: 
+  :width: 90%
+
+  * - Creare dati (POST)
+  * -   
+      .. code::
+
+        curl -d "id=2&firstName=Alessando&lastName=Manzoni" -H 
+             "Content-Type: application/x-www-form-urlencoded" 
+             -X POST http://localhost:8080/Api/createPerson
+  * - Cercare dati (GET)
+  * -   
+      .. code::
+
+        curl http://localhost:8080/Api/getAPerson?lastName=Manzoni
+
++++++++++++++++++++++++++++++++++++++++++++++
+DataOnly: accesso con Java
++++++++++++++++++++++++++++++++++++++++++++++
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+DataOnly: accesso con RestTemplate
++++++++++++++++++++++++++++++++++++++++++++++
+
 
 -------------------------------------
 Progetto SpringDataRest - database
@@ -62,13 +278,13 @@ Il progetto inizia con le seguenti dipendenze:
 
 .. code:: 
 
-  dependencies {
-   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-   implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-   implementation 'org.springframework.boot:spring-boot-starter-web'
-   runtimeOnly 'com.h2database:h2'
-   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  }
+   dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+   }
 
 +++++++++++++++++++++++++++
 Entity Person
@@ -138,9 +354,9 @@ Questi componenti si collegano al backend Spring Data JPA.
 
 
 
-+++++++++++++++++++++++++++++
-SpringDataRest - esecuzione
-+++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++
+SpringDataRest wirh db- esecuzione
+++++++++++++++++++++++++++++++++++++++
 
 Eseguiamo l'applicazione con il comando:
 

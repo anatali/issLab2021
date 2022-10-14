@@ -19,7 +19,7 @@ dependencies {
 //Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-//Added for java db caller
+//For HTTP caller
 	implementation 'com.squareup.okhttp:okhttp:2.7.5'
 //Human-machine interface
 	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"

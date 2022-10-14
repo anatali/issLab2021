@@ -42,6 +42,7 @@ public class DataHandler {
             }
         }
         //userDataList.forEach( p -> { if(p.getLastName().equals(lastName)) p0=p;} );
+        System.out.println(" --- DataHandler pFound=" + pFound);
         return pFound;
     }
 }
