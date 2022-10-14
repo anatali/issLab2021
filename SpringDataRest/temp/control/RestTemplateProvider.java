@@ -2,24 +2,24 @@ package unibo.SpringDataRest.control;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import unibo.SpringDataRest.model.Person;
+import unibo.SpringDataRest.model.UserData;
 
 public class RestTemplateProvider {
     // Creating an instance of RestTemplate class
     RestTemplate rest = new RestTemplate();
 
     // Method
-    public Person getUserData() {
+    public UserData getUserData() {
         return rest.getForObject(
                 "http://localhost:8080/RestApi/getData",
-                Person.class);
+                UserData.class);
     }
 
     // Method
-    public ResponseEntity<Person> post(Person user) {
+    public ResponseEntity<UserData> post(UserData user) {
         return rest.postForEntity(
                 "http://localhost:8080/RestApi", user,
-                Person.class, "");
+                UserData.class, "");
     }
 
 }

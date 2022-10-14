@@ -6,12 +6,15 @@
 =======================================
 SpringRestCrud
 =======================================
-
-#. Creazione di un database usando H2 : :ref:`Progetto SpringDataRest - iniziale`
-#. Testing con :ref:`MockMvc` e RestTemplate
+#. Creazione di un progetto SpringBoot :ref:`Progetto SpringDataRest - iniziale` con 
+   interazioni *HumanMachine* (:blue:`hm`) e *MachineToMachine* (:blue:`m2m`)
+#. Testing con RestTemplate ()
+#. Swagger
+#. Creazione di un database usando H2 : :ref:`Progetto SpringDataRest - database`
+#. Testing con :ref:`MockMvc`  
 #. Progetto SpringDataRest - servizi (e controller)
 #. SpringDataRest - HAL browser
-#. Swagger
+ 
 
 
 - :blue:`HATEOAS` sta per *Hypermedia as the Engine of Application State*.
@@ -24,14 +27,36 @@ SpringRestCrud
 Progetto SpringDataRest - iniziale
 -------------------------------------
 
++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest - dipendenze iniziali
++++++++++++++++++++++++++++++++++++++++++++
+
+Il progetto inizia con le seguenti dipendenze:
+
+.. code:: 
+
+  dependencies {
+   implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+   implementation 'org.springframework.boot:spring-boot-starter-web'
+   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//For java HTTP caller
+	implementation 'com.squareup.okhttp:okhttp:2.7.5'
+  //Human-machine interface
+	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+  }
+
+-------------------------------------
+Progetto SpringDataRest - database
+-------------------------------------
+
 Progetto: :remark:`issLab2021\SpringDataRest`
 
 Introduce un database H2 che memorizza dati relativi alla entià di Dominio Person definita da una classe
 Java, che funge da modello.
 
-+++++++++++++++++++++++++++++
-SpringDataRest - dipendenze
-+++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest - dipendenze per il db
+++++++++++++++++++++++++++++++++++++++++++
 
 Il progetto inizia con le seguenti dipendenze:
 

@@ -1,7 +1,6 @@
 package unibo.SpringDataRest;
 
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import unibo.SpringDataRest.model.Person;

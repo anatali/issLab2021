@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import unibo.SpringDataRest.businessLogic.DataHandler;
-import unibo.SpringDataRest.model.Person;
+import unibo.SpringDataRest.model.UserData;
 
 
 // Annotation
@@ -19,19 +18,21 @@ import unibo.SpringDataRest.model.Person;
 
 public class RestApiController {
 
-
     @GetMapping("/getData")
-    public Person get() {
+    public UserData get() {
+        UserData userData = new UserData();
+        userData.setId("1");
+        userData.setUserName("an@unibo.it");
+        userData.setData("Data send by Rest-API");
         System.out.println(" --- RestApiController get");
-        return DataHandler.getLast();
+        return userData;
     }
 
 
     @PostMapping
-    public ResponseEntity<Person> post(@RequestBody Person userData) {
+    public ResponseEntity<UserData> post(@RequestBody UserData userData) {
         HttpHeaders headers = new HttpHeaders();
         System.out.println(" --- RestApiController post");
-        DataHandler.addPerson(userData);
         return new ResponseEntity<>(userData, headers, HttpStatus.CREATED);
     }
 }

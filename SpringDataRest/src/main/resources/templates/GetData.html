@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>GFG-REST-TEMPLATE</title>
+    <title>UserData Gui</title>
     <style>
 h1{
 	color:forestgreen;
@@ -13,24 +13,34 @@ p{
 </style>
 </head>
 <body>
-<h1>Hello Geek</h1>
-<h1 th:text="${user.id}"> Replaceable text </h1 >
-<h1 th:text="${user.userName}"> Replaceable text </h1 >
-<h1 th:text="${user.data}"> Replaceable text </h1 >
+<h1>UserData Gui</h1>
 
+<h2>Last Person inserted</h2>
+
+id=<span th:text="${lastperson.id}"> Replaceable text </span >
+firstName=<span th:text="${lastperson.firstName}"> Replaceable text </span >
+lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
+
+<h2>Person found</h2>
+
+<span th:text="${personfound}"> Replaceable text </span >
+
+
+<h2>Insert a new Person</h2>
 <form method="POST" th:object="${model}">
 
-    <label for="id">Type ID : </label><br/>
+    <label for="id">ID : </label>
     <input type="text" th:field="*{id}"><br/>
 
-    <label for="userName">Type USERNAME : </label><br/>
-    <input type="text" th:field="*{userName}"><br/>
+    <label for="firstName">FIRSTNAME : </label>
+    <input type="text" th:field="*{firstName}"><br/>
 
-    <label for="data">Type DATA : </label><br/>
-    <input type="text" th:field="*{data}">
+    <label for="lastName">LASTNAME : </label>
+    <input type="text" th:field="*{lastName}">
     <input type="submit" value="submit">
 </form>
 
+<h2>Headers</h2>
 <p th:text="${headers}"></p>
 
 </body>
