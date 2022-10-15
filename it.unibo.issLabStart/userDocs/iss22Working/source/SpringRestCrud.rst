@@ -111,13 +111,10 @@ PersonGuiNaive
   <html xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org">
   <head>
-      <title>UserData Gui</title>
+      <title>PersonGuiNaive</title>
       <style>
   h1{
     color:forestgreen;
-  }
-  p{
-    width:500px;
   }
   </style>
   </head>
@@ -129,15 +126,9 @@ PersonGuiNaive
   id=<span th:text="${lastperson.id}"> Replaceable text </span >
   firstName=<span th:text="${lastperson.firstName}"> Replaceable text </span >
   lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
-
-  <h2>Person found</h2>
-
-  <span th:text="${personfound}"> Replaceable text </span >
-
-
+ 
   <h2>Insert a new Person</h2>
   <form method="POST" action="/Api/createPerson"  th:object="${personmodel}">
-
       <label for="id">ID : </label>
       <input type="text" th:field="*{id}"><br/>
 
@@ -149,13 +140,24 @@ PersonGuiNaive
       <input type="submit" value="submit">
   </form>
 
+  <h3>Answer to Api/getAPerson?lastName=... </h3>
+  <div id="FOUND" th:text="${personfound}"> Replaceable text </div>
+
+  <h3>Answer to Api/getAllPersons</h3>
+  <table id="ALLPERSONS">
+      <tr th:each="person: ${persons}">
+          <td th:text="${person.id}" />
+          <td th:text="${person.firstName}" />
+          <td th:text="${person.lastName}" />
+      </tr>
+  </table>
   </body>
   </html> 
 
 
-+++++++++++++++++++++++++++
-Human-machine controller
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest - Human-machine controller
++++++++++++++++++++++++++++++++++++++++++++
 .. code:: Java
 
   @Controller
@@ -167,7 +169,7 @@ Human-machine controller
           model.addAttribute("lastperson",  lastPerson);
           model.addAttribute("personfound", foundPerson );
       }
-      
+
       @GetMapping
       public String get(Model model){
           updateTheModel(model, DataHandler.getLast(), "todo");
@@ -180,13 +182,30 @@ Human-machine controller
           return "PesronGuiNaive";
       }
       @PostMapping("/createPerson")
-      public String post(@ModelAttribute("personmodel") Person userData, Model model) {
+      public String post(
+        @ModelAttribute("personmodel") Person userData, Model model) {
           DataHandler.addPerson(userData);
           updateTheModel(model, DataHandler.getLast(), "todo");
           return "PesronGuiNaive";
       }
-  } 
+      public void runGet(String lastName){
+        String response =  doGet("http://localhost:8080/Api/getAPerson?lastName="+lastName);
+        readTheHtmlPage(response,"FOUND");
+      }
+      public void runGetAll( ){
+         String response =  doGet("http://localhost:8080/Api/getAllPersons");
+         readTheHtmlPage(response,"ALLPERSONS");
+      }
+      public void runPost() {
+        String json = "{\"id\": \"1\",\"firstName\": \"Ugo\",\"lastName\": \"Foscolo\"}";
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
+        String response = doPost(BASE_URL + "/createPerson", body);
+        System.out.println("runPost response="+response);
+     }
+  }
 
+
+  
 +++++++++++++++++++++++++++++
 SpringDataRest - esecuzione
 +++++++++++++++++++++++++++++
@@ -245,16 +264,110 @@ DataOnly: accesso con curl
         curl -d "id=2&firstName=Alessando&lastName=Manzoni" -H 
              "Content-Type: application/x-www-form-urlencoded" 
              -X POST http://localhost:8080/Api/createPerson
-  * - Cercare dati (GET)
+  * - Cercare un dato (GET)
   * -   
       .. code::
 
         curl http://localhost:8080/Api/getAPerson?lastName=Manzoni
+  * - Cercare tutti dati (GET)
+  * -   
+      .. code::
+
+        curl http://localhost:8080/Api/getAllPersons 
 
 +++++++++++++++++++++++++++++++++++++++++++++
 DataOnly: accesso con Java
 +++++++++++++++++++++++++++++++++++++++++++++
 
+.. code:: Java
+
+  public class DataHttpCaller {
+    final private OkHttpClient client = new OkHttpClient();
+    final private String BASE_URL     = "http://localhost:8080/Api";
+ 
+    public void runGet(String lastName){
+        String response =  doGet(BASE_URL +"/getAPerson?lastName="+lastName);
+        //System.out.println(response);   //Visualizza la pagina
+        readTheHtmlPage(response,"FOUND");
+    }
+    public void runGetAll( ){
+        String response =  doGet(BASE_URL +"/getAllPersons");
+        //System.out.println(response);   //Visualizza la pagina
+        readTheHtmlPage(response,"ALLPERSONS");
+    }
+    public void runPost() {
+      String personData  = "id=1&firstName=Ugo&lastName=Foscolo";
+      RequestBody body   = RequestBody.create(
+        MediaType.parse("application/x-www-form-urlencoded"), personData);
+      int respCode = doPost(BASE_URL + "/createPerson", body);
+      if( respCode == 200 ) System.out.println("runPost Foscolo ok" );
+      else System.out.println("WARNING: runPost problem:" + respCode);
+    }
+
+    //get, post in Java ...
+    //readTheHtmlPage   ... 
+
+      public static void main(String[] args)  {
+        //IPOTESI: applicazione attivata
+        DataHttpCaller appl = new DataHttpCaller();
+          appl.runGetAll();        
+          appl.runGet("Foscolo");  //person not found
+          appl.runPost();           
+          appl.runGet("Foscolo");
+      }
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+get, post in Java
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+     private String doGet(String url)  {
+      Request request = new Request.Builder()
+          .url(url)
+          .build();
+      try{
+        Response response = client.newCall(request).execute();
+          return response.body().string();
+      }catch(Exception e){...}
+    }
+    private int doPost(String urlStr, RequestBody body)  {
+        try{
+            Request request = new Request.Builder()
+                .url(urlStr)
+                .post(body)
+                .build();
+            Call call = client.newCall(request);
+            Response response = call.execute();
+            return( response.code()   )  ;
+        }catch(Exception e){ return 0; }
+    }    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+readTheHtmlPage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+     private void readTheHtmlPage(String htmlString, String elementID){
+        try {
+             HTMLEditorKit htmlEditKit = new HTMLEditorKit();
+             HTMLDocument htmlDocument = new HTMLDocument();
+             try {
+                htmlEditKit.read(new StringReader( htmlString ), htmlDocument, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Element foundField  = htmlDocument.getElement(elementID);
+            int start  = foundField.getStartOffset();
+            int length = foundField.getEndOffset() - start;
+            String s   = foundField.getDocument().getText(start,length);
+            System.out.println( s );
+        } catch( Exception e){
+             e.printStackTrace();
+        }
+    }
 
 +++++++++++++++++++++++++++++++++++++++++++++
 DataOnly: accesso con RestTemplate

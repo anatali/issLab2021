@@ -1,50 +1,113 @@
 package unibo.SpringDataRest.callers;
 import com.squareup.okhttp.*;
+import com.squareup.okhttp.MediaType;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+import unibo.SpringDataRest.model.Person;
+
+import javax.swing.text.Element;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import java.io.StringReader;
+
+/*
+RestTemplate should be used for Rest interactions
+ */
 
 
-public class DataRestTemplateCaller {
-    final OkHttpClient client = new OkHttpClient();
-    final String BASE_URL     = "http://localhost:8080/api";
+public class DataRestTemplateCaller  {
+    final protected String BASE_URL   = "http://localhost:8080/RestApi";
 
-    public void testGet(){
-        System.out.println("--------- MAIN PAGE");
-        String response =  doGet("http://localhost:8080/products");
-        System.out.println(response);
-        System.out.println("--------- ACCESSO AL DATO");
-        response =  doGet("http://localhost:8080/getData");
-        System.out.println(response);
+    private void readTheHtmlPage(String htmlString, String elementID){
+        try {
+            HTMLEditorKit htmlEditKit = new HTMLEditorKit();
+            HTMLDocument htmlDocument = new HTMLDocument();
+            try {
+                htmlEditKit.read(new StringReader( htmlString ), htmlDocument, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Element foundField  = htmlDocument.getElement(elementID);
+            int start  = foundField.getStartOffset();
+            int length = foundField.getEndOffset() - start;
+            System.out.println("foundField:"  + start + " " + length);
+            String s   = foundField.getDocument().getText(start,length);
+            System.out.println( s );
+            //System.out.println("title="+htmlDocument.getProperty("title")); //
+
+        } catch( Exception e){
+            System.out.println( "readTheHtmlPage ERROR:"+e.getMessage());
+            //e.printStackTrace();
+        }
+    }
+    public void runGet(String lastName){
+        System.out.println("--------- runGet");
+        String response =  doGet(BASE_URL +"/getAPerson?lastName="+lastName);
+        //System.out.println(response);   //Visualizza la pagina
+        readTheHtmlPage(response,"FOUND");
+    }
+    public void runGetAll( ){
+        System.out.println("--------- runGetAll");
+        String response =  doGet(BASE_URL +"/getAllPersons");
+        //System.out.println(response);   //Visualizza la pagina
+        readTheHtmlPage(response,"ALLPERSONS");
     }
 
-    public void testPost() {
-        String json =
-        "{\"category\": \"category/2\",\"name\": \"box\",\"code\": \"004\",\"title\": \"box\", \"description\": \"new box\", \"imgUrl\": \"\", \"price\": 35}";
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
-        String response = doPost(BASE_URL + "/products",body);
-        System.out.println("testPost response="+response);
+    //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    public void runPost() {
+        Person p0       = new Person();
+        p0.setId(1);
+        p0.setFirstName("Giovanni");
+        p0.setLastName("Verga");
+        HttpEntity<Person> request = new HttpEntity<Person>(p0);
+        int respCode = doPost( BASE_URL +"/createPersonWithModel", request);
+        //System.out.println("runPost response="+response);
+        if( respCode == 200 || respCode == 201) System.out.println("runPost Verga ok" );
+        else System.out.println("WARNING: runPost problem:" + respCode);
+
+
     }
-    String doPost(String urlStr, RequestBody body)  {
+
+
+    protected int doPost(String urlStr, HttpEntity<Person> request)  {
         try{
-            Request request = new Request.Builder()
-                .url(urlStr)
-                    //.addHeader("Authorization", Credentials.basic("username", "password"))
-                .post(body)
-                .build();
+            RestTemplate rt = new RestTemplate( );
 
-            Call call = client.newCall(request);
-            Response response = call.execute();
-            return response.body().string();
+            System.out.println("doPost urlStr=" + urlStr);
+
+            //HttpEntity<Person> request = new HttpEntity<Person>(p0);
+            //ResponseEntity<Person> foo = rt.postForEntity(urlStr,request,Person.class);         //OK
+            Person foo = rt.postForObject(urlStr, request, Person.class);                         //OK
+
+            //String foo = rt.postForObject(BASE_URL +"/createPerson", request, String.class);
+            System.out.println("foo:" + foo  ); //Tutta la pagina
+            if( foo != null && foo.getId()==1 ) return 201; else return 0;
+                //return foo.getStatusCode().value();
+/*
+            //ResponseEntity<Person> createResponse  = rt.postForEntity(BASE_URL +"/createPerson", p0, Person.class);
+            ResponseEntity<Person> createResponse  = rt.postForEntity(BASE_URL +"/createPersonWithModel", p0, Person.class);
+            HttpStatus code = createResponse.getStatusCode();
+
+            System.out.println("response.getStatusCode=" + code.value() );
+            //System.out.println("response.getBody      =" + createResponse.getBody() );
+            return code.value() ;
+
+ */
         }catch(Exception e){
-            return "error: " +e.getMessage();
+            System.out.println("response.ERROR =" + e.getMessage() );
+            return 0;
         }
     }
 
-    String doGet(String url)  {
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+
+
+    protected String doGet(String url)  {
         try{
-            Response response = client.newCall(request).execute();
-            return response.body().string();
+            RestTemplate rt = new RestTemplate( );
+            ResponseEntity<String> response = rt.getForEntity( url, String.class);
+            //System.out.println("response:" + response );
+            //System.out.println("response body:" + response.getBody() );
+            return response.getBody().toString();
         }catch(Exception e){
             return "error: " +e.getMessage();
         }
@@ -52,7 +115,7 @@ public class DataRestTemplateCaller {
 
     public static void main(String[] args)  {
         DataRestTemplateCaller appl = new DataRestTemplateCaller();
-        appl.testGet();
-        //appl.testPost();
+        //appl.runGetAll();
+        appl.runPost();
       }
 }

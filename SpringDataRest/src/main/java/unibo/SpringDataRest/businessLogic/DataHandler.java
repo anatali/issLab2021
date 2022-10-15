@@ -24,7 +24,7 @@ public class DataHandler {
         userDataList.add(p);
     }
     public static List<Person> getAllPersons(){
-        if( userDataList.isEmpty()) addNewPerson();
+        //if( userDataList.isEmpty()) addNewPerson();
         return userDataList;
     }
     public static Person getLast(){
