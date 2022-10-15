@@ -1,19 +1,17 @@
 package unibo.SpringDataRest.callers;
 import com.squareup.okhttp.*;
 
-import javax.swing.*;
 import javax.swing.text.Element;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.ImageView;
 import java.io.StringReader;
 
 
-public class DataJavaCaller {
+public class DataHttpCaller {
     final OkHttpClient client = new OkHttpClient();
     final String BASE_URL     = "http://localhost:8080/Api";
 
-     private void readTheHtmlPage(String htmlString){
+     private void readTheHtmlPage(String htmlString, String elementID){
         try {
              HTMLEditorKit htmlEditKit = new HTMLEditorKit();
              HTMLDocument htmlDocument = new HTMLDocument();
@@ -22,10 +20,12 @@ public class DataJavaCaller {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Element foundField  = htmlDocument.getElement("FOUND");
+            Element foundField  = htmlDocument.getElement(elementID);
             int start  = foundField.getStartOffset();
             int length = foundField.getEndOffset() - start;
-            System.out.println("fff  ="+ foundField.getDocument().getText(start,length));
+            String s   = foundField.getDocument().getText(start,length);
+            //System.out.println("foundField:"  + start + " " + length);
+            System.out.println( s );
             //System.out.println("title="+htmlDocument.getProperty("title")); //
 
         } catch( Exception e){
@@ -36,7 +36,13 @@ public class DataJavaCaller {
         System.out.println("--------- runGet");
         String response =  doGet("http://localhost:8080/Api/getAPerson?lastName="+lastName);
         //System.out.println(response);   //Visualizza la pagina
-        readTheHtmlPage(response);
+        readTheHtmlPage(response,"FOUND");
+    }
+    public void runGetAll( ){
+        System.out.println("--------- runGetAll");
+        String response =  doGet("http://localhost:8080/Api/getAllPersons");
+        //System.out.println(response);   //Visualizza la pagina
+        readTheHtmlPage(response,"ALLPERSONS");
     }
 
     public void runPost() {
@@ -74,8 +80,8 @@ public class DataJavaCaller {
     }
 
     public static void main(String[] args)  {
-        DataJavaCaller appl = new DataJavaCaller();
-        //String response = example.run("https://raw.github.com/square/okhttp/master/README.md");
+        DataHttpCaller appl = new DataHttpCaller();
+        appl.runGetAll();
         appl.runGet("Manzoni");
         //appl.runPost();
       }

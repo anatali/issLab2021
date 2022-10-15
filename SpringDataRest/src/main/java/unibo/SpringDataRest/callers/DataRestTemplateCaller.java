@@ -2,9 +2,9 @@ package unibo.SpringDataRest.callers;
 import com.squareup.okhttp.*;
 
 
-public class DataCaller {
+public class DataRestTemplateCaller {
     final OkHttpClient client = new OkHttpClient();
-    final String BASE_URL     = "http://localhost:8080";
+    final String BASE_URL     = "http://localhost:8080/api";
 
     public void testGet(){
         System.out.println("--------- MAIN PAGE");
@@ -51,7 +51,7 @@ public class DataCaller {
     }
 
     public static void main(String[] args)  {
-        DataCaller appl = new DataCaller();
+        DataRestTemplateCaller appl = new DataRestTemplateCaller();
         appl.testGet();
         //appl.testPost();
       }

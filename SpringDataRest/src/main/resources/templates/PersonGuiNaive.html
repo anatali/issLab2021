@@ -16,20 +16,15 @@ p{
 <h1>UserData Gui</h1>
 
 <h2>Last Person inserted</h2>
-
+<!-- https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html -->
 id=<span th:text="${lastperson.id}"> Replaceable text </span >
 firstName=<span th:text="${lastperson.firstName}"> Replaceable text </span >
-lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
-
-<h2>Person found</h2>
-
-<div id="BOX">
-<span  th:text="${personfound}"> Replaceable text </span>
-</div>
+lastName =<span th:text="${lastperson.lastName}"> Replaceable text </span >
 
 
 <h2>Insert a new Person</h2>
-<form method="POST" action="/Api/createPersonWithModel" th:object="${personmodel}">
+<!-- <form method="POST" action="/Api/createPersonWithModel" th:object="${personmodel}"> -->
+<form method="POST" action="/Api/createPerson" th:object="${personmodel}">
 
     <label for="id">ID : </label>
     <input type="text" th:field="*{id}"><br/>
@@ -42,7 +37,21 @@ lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
     <input type="submit" value="submit">
 </form>
 
+<h3>Answer to Api/getAPerson?lastName=... </h3>
 
+<div id="FOUND" th:text="${personfound}"> Replaceable text </div>
+<!-- <div id="ALLPERSONS" th:each="person:${persons}"> <p th:text>${person}> xxx </p></div> -->
+
+
+<h3>Answer to Api/getAllPersons</h3>
+
+<table id="ALLPERSONS">
+    <tr th:each="person: ${persons}">
+        <td th:text="${person.id}" />
+        <td th:text="${person.firstName}" />
+        <td th:text="${person.lastName}" />
+    </tr>
+</table>
 
 </body>
 </html>

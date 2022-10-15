@@ -3,6 +3,7 @@ package unibo.SpringDataRest.businessLogic;
 import unibo.SpringDataRest.model.Person;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 public class DataHandler {
@@ -14,13 +15,17 @@ public class DataHandler {
         userData.setId(id);
         userData.setFirstName("dummy");
         userData.setLastName("dummy");
-        System.out.println(" --- DataHandler createUserData id=" + id);
+        System.out.println(" --- DataHandler addNewPerson id=" + id);
         userDataList.add(userData);
         id++;
     }
-    public static void addPerson(Person userData){
-        System.out.println(" --- DataHandler addUserData id=" + id);
-        userDataList.add(userData);
+    public static void addPerson(Person p){
+        System.out.println(" --- DataHandler addPerson  " +p );
+        userDataList.add(p);
+    }
+    public static List<Person> getAllPersons(){
+        if( userDataList.isEmpty()) addNewPerson();
+        return userDataList;
     }
     public static Person getLast(){
         if( userDataList.isEmpty()) addNewPerson();

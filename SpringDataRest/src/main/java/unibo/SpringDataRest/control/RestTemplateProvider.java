@@ -1,5 +1,5 @@
 package unibo.SpringDataRest.control;
-
+//https://www.geeksforgeeks.org/spring-resttemplate/
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import unibo.SpringDataRest.model.Person;
@@ -11,8 +11,7 @@ public class RestTemplateProvider {
     // Method
     public Person getUserData() {
         return rest.getForObject(
-                "http://localhost:8080/RestApi/getData",
-                Person.class);
+                "http://localhost:8080/RestApi/getData", Person.class);
     }
 
     // Method
