@@ -32,10 +32,11 @@ Operazioni che usano BASE_URL
 
     protected String doGet(String url)  {
         try{
+            System.out.println("        doGet url="  + url);
             RestTemplate rt = new RestTemplate( );
             ResponseEntity<String> response = rt.getForEntity( url, String.class);
-            //System.out.println("response:" + response );
-            //System.out.println("response body:" + response.getBody() );
+            System.out.println("    response:" + response.getStatusCode() );
+            //System.out.println("    response body:" + response.getBody() );
             return response.getBody().toString();
         }catch(Exception e){
             return "error: " +e.getMessage();

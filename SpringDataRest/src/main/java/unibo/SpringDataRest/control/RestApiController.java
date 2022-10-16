@@ -39,7 +39,7 @@ public class RestApiController {
     }
 
     @PostMapping("/createPerson")
-    public String createPerson(@RequestParam( "id" ) String id,
+    public String createPersonWithParams(@RequestParam( "id" ) String id,
                                @RequestParam( "firstName" ) String firstName,
                                @RequestParam( "lastName" ) String lastName, Model model) {
         Person p = new Person();
