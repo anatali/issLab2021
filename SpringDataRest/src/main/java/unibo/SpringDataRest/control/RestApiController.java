@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import unibo.SpringDataRest.businessLogic.DataHandler;
 import unibo.SpringDataRest.model.Person;
 
+import java.util.List;
+
 
 // Annotation
 @RestController
@@ -15,13 +17,18 @@ import unibo.SpringDataRest.model.Person;
 
 public class RestApiController {
 
-
-    @GetMapping("/getData")
-    public Person get() {
-        System.out.println(" --- RestApiController get");
-        return DataHandler.getLast();
+    @GetMapping("/getLastPerson")
+    public Person getLastPerson() {
+        System.out.println(" --- RestApiController getLastPerson");
+        return DataHandler.getLast();  //Restituice un oggetto Java di class Person
+        //poichè produce "application/json" i dati sono convertiti in Json
+        //Ad esempio:{"id":2,"firstName":"Alessando","lastName":"Manzoni"}
     }
-
+    @GetMapping("/getAllPersons")
+    public List<Person> getAllPersons() {
+        System.out.println(" --- RestApiController getAllPersons");
+        return DataHandler.getAllPersons();
+    }
 
     @PostMapping("/createPersonWithModel")
     public ResponseEntity<Person> createPersonWithModel(@RequestBody Person userData) {

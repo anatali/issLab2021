@@ -1,49 +1,22 @@
 package unibo.SpringDataRest.callers;
 import com.squareup.okhttp.*;
 
-import javax.swing.text.Element;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import java.io.StringReader;
 
-
-public class DataHttpCaller {
+public class HttpCaller {
     final private OkHttpClient client = new OkHttpClient();
     final protected String BASE_URL   = "http://localhost:8080";
 
-     private void readTheHtmlPage(String htmlString, String elementID){
-        try {
-             HTMLEditorKit htmlEditKit = new HTMLEditorKit();
-             HTMLDocument htmlDocument = new HTMLDocument();
-             try {
-                htmlEditKit.read(new StringReader( htmlString ), htmlDocument, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Element foundField  = htmlDocument.getElement(elementID);
-            int start  = foundField.getStartOffset();
-            int length = foundField.getEndOffset() - start;
-            System.out.println("foundField:"  + start + " " + length);
-            String s   = foundField.getDocument().getText(start,length);
-            System.out.println( s );
-            //System.out.println("title="+htmlDocument.getProperty("title")); //
-
-        } catch( Exception e){
-            System.out.println( "readTheHtmlPage ERROR:"+e.getMessage());
-             //e.printStackTrace();
-        }
-    }
     public void runGet(String lastName){
         System.out.println("--------- runGet");
         String response =  doGet(BASE_URL +"/Api/getAPerson?lastName="+lastName);
         //System.out.println(response);   //Visualizza la pagina
-        readTheHtmlPage(response,"FOUND");
+        PageUtil.readTheHtmlPage(response,"FOUND");
     }
     public void runGetAll( ){
         System.out.println("--------- runGetAll");
         String response =  doGet(BASE_URL +"/Api/getAllPersons");
         //System.out.println(response);   //Visualizza la pagina
-        readTheHtmlPage(response,"ALLPERSONS");
+        PageUtil.readTheHtmlPage(response,"ALLPERSONS");
     }
 
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
@@ -90,11 +63,12 @@ public class DataHttpCaller {
     }
 
     public static void main(String[] args)  {
-        DataHttpCaller appl = new DataHttpCaller();
+        HttpCaller appl = new HttpCaller();
         appl.runGetAll();
-        appl.runGet("Foscolo");
-        appl.runPost();
-        appl.runGet("Foscolo");
+
+        //appl.runGet("Foscolo");
+        //appl.runPost();
+        //appl.runGet("Foscolo");
       }
 }
 /*

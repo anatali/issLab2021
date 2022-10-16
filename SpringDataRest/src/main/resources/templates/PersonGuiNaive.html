@@ -16,11 +16,12 @@ p{
 <h1>UserData Gui</h1>
 
 <h2>Last Person inserted</h2>
+<div  ID="LASTPERSON">
 <!-- https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html -->
 id=<span th:text="${lastperson.id}"> Replaceable text </span >
 firstName=<span th:text="${lastperson.firstName}"> Replaceable text </span >
 lastName =<span th:text="${lastperson.lastName}"> Replaceable text </span >
-
+</div>
 
 <h2>Insert a new Person</h2>
 <!-- <form method="POST" action="/Api/createPersonWithModel" th:object="${personmodel}"> -->
