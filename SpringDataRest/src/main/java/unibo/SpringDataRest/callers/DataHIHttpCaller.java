@@ -2,35 +2,38 @@ package unibo.SpringDataRest.callers;
 import com.squareup.okhttp.*;
 
 
-public class HttpCaller {
+public class DataHIHttpCaller {
     final private OkHttpClient client = new OkHttpClient();
     final protected String BASE_URL   = "http://localhost:8080";
 
     public void runGet(String lastName){
         System.out.println("--------- runGet");
         String response =  doGet(BASE_URL +"/Api/getAPerson?lastName="+lastName);
-        //System.out.println(response);   //Visualizza la pagina
+        //System.out.println(response);   //Visualizza la pagina: prolisso
+        //Visualizzimamo l'elemento della pagina che contiene la risposta
         PageUtil.readTheHtmlPage(response,"FOUND");
     }
     public void runGetAll( ){
         System.out.println("--------- runGetAll");
         String response =  doGet(BASE_URL +"/Api/getAllPersons");
-        //System.out.println(response);   //Visualizza la pagina
+        //System.out.println(response);   //Visualizza la pagina: prolisso
+        //Visualizzimamo l'elemento della pagina che contiene la risposta
         PageUtil.readTheHtmlPage(response,"ALLPERSONS");
     }
 
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-    public void runPost() {
-        //String json = "{\"id\": \"1\",\"firstName\": \"Ugo\",\"lastName\": \"Foscolo\"}";
+    public void runCreate(String id, String firstName, String lastName) {
+        //String json = "{\"id\": \"1\",\"firstName\": \"...\",\"lastName\": \"...\"}";
         //RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
-        String personData  = "id=1&firstName=Ugo&lastName=Foscolo";
+        String personData  = "id=ID&firstName=FN&lastName=LN".replace("ID",id)
+                  .replace("FN",firstName).replace("LN",lastName);
         RequestBody body = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), personData);
-        //System.out.println("runPost doPost="+BASE_URL + "/createPerson");
+        //System.out.println("runCreate doPost="+BASE_URL + "/createPerson");
         //String response = doPost( "http://localhost:8080/Api/createPersonWithModel", body);  //OK
         int respCode = doPost( BASE_URL +"/Api/createPerson", body);                      //OK
-        //System.out.println("runPost response="+response);
-        if( respCode == 200 || respCode == 201) System.out.println("runPost ok" );
-        else System.out.println("WARNING: runPost problem:" + respCode);
+        //System.out.println("runCreate response="+response);
+        if( respCode == 200 || respCode == 201) System.out.println("runCreate ok" );
+        else System.out.println("WARNING: runCreate problem:" + respCode);
 
 
     }
@@ -63,12 +66,11 @@ public class HttpCaller {
     }
 
     public static void main(String[] args)  {
-        HttpCaller appl = new HttpCaller();
+        DataHIHttpCaller appl = new DataHIHttpCaller();
         appl.runGetAll();
-
-        //appl.runGet("Foscolo");
-        //appl.runPost();
-        //appl.runGet("Foscolo");
+        appl.runGet("Foscolo");  //person not found
+        appl.runCreate("2","Ugo","Foscolo");
+        appl.runGet("Foscolo");
       }
 }
 /*

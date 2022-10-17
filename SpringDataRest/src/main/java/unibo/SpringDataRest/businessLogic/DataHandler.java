@@ -23,6 +23,10 @@ public class DataHandler {
         System.out.println(" --- DataHandler addPerson  " +p );
         userDataList.add(p);
     }
+    public static void removePerson(Person p){
+        System.out.println(" --- DataHandler removePerson  " +p );
+        userDataList.remove(p);
+    }
     public static List<Person> getAllPersons(){
         //if( userDataList.isEmpty()) addNewPerson();
         return userDataList;
@@ -36,7 +40,7 @@ public class DataHandler {
         return userDataList.firstElement();
     }
     public static String getPersonWithLastName(String lastName){
-        System.out.println(" --- DataHandler getPersonWithLastName lastName=" + lastName);
+        //System.out.println(" --- DataHandler getPersonWithLastName lastName=" + lastName);
         String pFound = "person not found";
         Iterator<Person> iter = userDataList.iterator();
         while( iter.hasNext() ){
@@ -46,8 +50,8 @@ public class DataHandler {
                 break;
             }
         }
-        //userDataList.forEach( p -> { if(p.getLastName().equals(lastName)) p0=p;} );
-        System.out.println(" --- DataHandler pFound=" + pFound);
+        System.out.println(" --- DataHandler getPersonWithLastName="
+                + lastName + " result: " + ! pFound.contains("not found"));
         return pFound;
     }
 }

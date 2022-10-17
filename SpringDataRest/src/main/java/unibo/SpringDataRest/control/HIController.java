@@ -25,12 +25,14 @@ public final String lineSep = "| ";
 
     @GetMapping
     public String get(Model model){
+        System.out.println("%%% HIController get  "   );
         updateTheModel(model, DataHandler.getLast(), "todo");
         return "PersonGuiNaive";
     }
     @GetMapping("/getAllPersons")
     public String getAllPersons( Model model ){
-        /*
+        System.out.println("%%% HIController getAllPersons  "   );
+       /*
             Iterator<Person> iter = DataHandler.getAllPersons( ).iterator();
             String pListOut = "";
             while( iter.hasNext() ){
@@ -39,12 +41,13 @@ public final String lineSep = "| ";
             System.out.println( pListOut );*/
         List<Person> lp = DataHandler.getAllPersons( );
         System.out.println( lp );
-            updateTheModel(model, DataHandler.getLast(), "todo");
-            model.addAttribute("persons", lp );
-            return "PersonGuiNaive";
+        updateTheModel(model, DataHandler.getLast(), "todo");
+        model.addAttribute("persons", lp );//Further info in page
+        return "PersonGuiNaive";
     }
     @GetMapping("/getAPerson") //getAPerson?lastName=Foscolo
     public String getAPerson(Model model, @RequestParam( "lastName" ) String lastName){
+        System.out.println("%%% HIController getAPerson lastName= " + lastName );
         String ps = DataHandler.getPersonWithLastName(lastName);
         //System.out.println("getAPerson p=" + p);
         updateTheModel(model, DataHandler.getLast(), ps);
@@ -54,7 +57,7 @@ public final String lineSep = "| ";
     @PostMapping("/createPersonWithModel")                                            //OK
     //@RequestMapping(value = "/createPerson", method = RequestMethod.POST)  //OK
     public String postWithModel(@ModelAttribute("personmodel") Person newPerson, BindingResult result, Model model) {
-        System.out.println("mmmmmmmmmmmmmmmmmmmmmmm "  + result.getTarget() );
+        System.out.println("%%% HIController createPersonWithModel "  + result.getTarget() );
         DataHandler.addPerson(newPerson);
         updateTheModel(model, DataHandler.getLast(), "todo");
         return "PersonGuiNaive";
@@ -64,15 +67,30 @@ public final String lineSep = "| ";
     public String createPerson(@RequestParam( "id" ) String id,
                        @RequestParam( "firstName" ) String firstName,
                        @RequestParam( "lastName" ) String lastName, Model model) {
-        System.out.println("............... createPerson"  + id + " " + firstName + " " + lastName );
+        System.out.println("%%% HIController createPerson: "  + id + " " + firstName + " " + lastName );
         Person p = new Person();
         p.setId(Long.valueOf(id));
         p.setFirstName(firstName);
         p.setLastName(lastName);
-        System.out.println("............... p="  + p );
+        //System.out.println("............... p="  + p );
         DataHandler.addPerson(p);
         updateTheModel(model, DataHandler.getLast(), "todo");
         return "PersonGuiNaive";
     }
 
+    @DeleteMapping("/deletePerson") //deletePerson?id=ID&firstName=FN&lastName=LN
+    public String deletePerson(@RequestParam( "id" ) String id,
+                             @RequestParam( "firstName" ) String firstName,
+                             @RequestParam( "lastName" ) String lastName,
+                             Model model){
+        System.out.println("%%% HIController deletePerson: "  + id + " " + firstName + " " + lastName );
+        Person p = new Person();
+        p.setId(Long.valueOf(id));
+        p.setFirstName(firstName);
+        p.setLastName(lastName);
+        DataHandler.removePerson(p);
+        //System.out.println("............... p="  + p );
+        updateTheModel(model, p, "REMOVED");
+        return "PersonGuiNaive";
+    }
 }

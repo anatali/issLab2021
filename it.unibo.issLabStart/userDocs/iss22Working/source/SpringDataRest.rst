@@ -4,7 +4,7 @@
 .. role:: worktodo
 
 =======================================
-SpringRestCrud
+SpringDataRest
 =======================================
 #. Creazione di un progetto SpringBoot :ref:`Progetto SpringDataRest - iniziale` con 
    interazioni *HumanMachine* (:blue:`hm`) e *MachineToMachine* (:blue:`m2m`)
@@ -86,6 +86,9 @@ DataHandler
       public static void addPerson(Person userData){
           userDataList.add(userData);
       }
+      public static List<Person> getAllPersons(){
+        return userDataList;
+      }
       public static Person getLast(){
           if( userDataList.isEmpty()) addNewPerson();
           return userDataList.lastElement();
@@ -113,21 +116,18 @@ PersonGuiNaive
         xmlns:th="http://www.thymeleaf.org">
   <head>
       <title>PersonGuiNaive</title>
-      <style>
-  h1{
-    color:forestgreen;
-  }
-  </style>
+      <style> ...  </style>
   </head>
   <body>
   <h1>UserData Gui</h1>
 
   <h2>Last Person inserted</h2>
+  <div  ID="LASTPERSON">
+    id=<span th:text="${lastperson.id}">Replaceable text</span >
+    firstName=<span th:text="${lastperson.firstName}">Replace text</span >
+    lastName=<span th:text="${lastperson.lastName}">Replace text</span >
+  </div>
 
-  id=<span th:text="${lastperson.id}"> Replaceable text </span >
-  firstName=<span th:text="${lastperson.firstName}"> Replaceable text </span >
-  lastName=<span th:text="${lastperson.lastName}"> Replaceable text </span >
- 
   <h2>Insert a new Person</h2>
   <form method="POST" action="/Api/createPerson"  th:object="${personmodel}">
       <label for="id">ID : </label>
@@ -174,35 +174,29 @@ SpringDataRest - Human-machine controller
       @GetMapping
       public String get(Model model){
           updateTheModel(model, DataHandler.getLast(), "todo");
-          return "PesronGuiNaive";
+          return "PersonGuiNaive"; //Rendered by TheamLeaf
       }
       @GetMapping("/getAPerson") //getAPerson?lastName=Foscolo
-      public String getAPerson(Model model, @RequestParam( "lastName" ) String lastName){
+      public String getAPerson(
+            Model model, @RequestParam( "lastName" ) String lastName){
           String ps = DataHandler.getPersonWithLastName(lastName);
           updateTheModel(model, DataHandler.getLast(), ps);
-          return "PesronGuiNaive";
+          return "PersonGuiNaive";
       }
+      @GetMapping("/getAllPersons")
+       public String getAllPersons( Model model ){
+       List<Person> lp = DataHandler.getAllPersons( );
+        updateTheModel(model, DataHandler.getLast(), "todo");
+        model.addAttribute("persons", lp ); //Further info in page
+        return "PersonGuiNaive";
+    }
       @PostMapping("/createPerson")
       public String post(
         @ModelAttribute("personmodel") Person userData, Model model) {
           DataHandler.addPerson(userData);
           updateTheModel(model, DataHandler.getLast(), "todo");
-          return "PesronGuiNaive";
+          return "PersonGuiNaive";
       }
-      public void runGet(String lastName){
-        String response =  doGet("http://localhost:8080/Api/getAPerson?lastName="+lastName);
-        readTheHtmlPage(response,"FOUND");
-      }
-      public void runGetAll( ){
-         String response =  doGet("http://localhost:8080/Api/getAllPersons");
-         readTheHtmlPage(response,"ALLPERSONS");
-      }
-      public void runPost() {
-        String json = "{\"id\": \"1\",\"firstName\": \"Ugo\",\"lastName\": \"Foscolo\"}";
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
-        String response = doPost(BASE_URL + "/createPerson", body);
-        System.out.println("runPost response="+response);
-     }
   }
 
 :remark:`La interazione con HIController riceve come risposta una String (la pagina HTML)` 
@@ -262,7 +256,7 @@ SpringDataRest: accesso a HI con curl
   * -   
       .. code::
 
-        curl -d "id=2&firstName=Alessando&lastName=Manzoni" -H 
+        curl -d "id=1&firstName=Alessando&lastName=Manzoni" -H 
              "Content-Type: application/x-www-form-urlencoded" 
              -X POST http://localhost:8080/Api/createPerson
   * - Cercare un dato (GET)
@@ -280,18 +274,19 @@ SpringDataRest: accesso a HI con curl
 SpringDataRest: accesso a HI con Java
 +++++++++++++++++++++++++++++++++++++++++++++
 
-Eseguiamo chiamate HTTP usando una qualche libreria.
-Nella classe unibo.SpringDataRest.callers.DataHttpCaller del progetto SpringDataRest utilizziamo
+Nella classe *unibo.SpringDataRest.callers.DataHttpCaller* del progetto *SpringDataRest* 
+eseguiamo chiamate HTTP usando
 la libreria *com.squareup.okhttp.OkHttpClient* (si veda https://www.baeldung.com/guide-to-okhttp).
 
 .. code:: Java
 
-  public class DataHttpCaller {
+  public class DataHIHttpCaller {
     final private OkHttpClient client = new OkHttpClient();
     final private String BASE_URL     = "http://localhost:8080/Api";
  
     public void runGet(String lastName){
-        String response =  doGet(BASE_URL +"/getAPerson?lastName="+lastName);
+        String response =  
+           doGet(BASE_URL +"/getAPerson?lastName="+lastName);
         //System.out.println(response);   //Visualizza la pagina: prolisso
         //Visualizzimamo l'elemento della pagina che contiene la risposta
         PageUtil.readTheHtmlPage(response,"FOUND");  
@@ -302,13 +297,14 @@ la libreria *com.squareup.okhttp.OkHttpClient* (si veda https://www.baeldung.com
         //Visualizzimamo l'elemento della pagina che contiene la risposta
         PageUtil.readTheHtmlPage(response,"ALLPERSONS"); 
     }
-    public void runPost() {
-      String personData  = "id=1&firstName=Ugo&lastName=Foscolo";
+    public void runCreate(String id,String firstName,String lastName){
+      String personData = "id=ID&firstName=FN&lastName=LN"
+          .replace("ID",id).replace("FN",firstName).replace("LN",lastName);
       RequestBody body   = RequestBody.create(
         MediaType.parse("application/x-www-form-urlencoded"), personData);
       int respCode = doPost(BASE_URL + "/createPerson", body);
-      if( respCode == 200 ) System.out.println("runPost Foscolo ok" );
-      else System.out.println("WARNING: runPost problem:" + respCode);
+      if( respCode == 200 ) System.out.println("runCreate ok" );
+      else System.out.println("WARNING: runCreate problem:" + respCode);
     }
 
     //get, post in Java ...
@@ -318,7 +314,7 @@ la libreria *com.squareup.okhttp.OkHttpClient* (si veda https://www.baeldung.com
         DataHttpCaller appl = new DataHttpCaller();
           appl.runGetAll();        
           appl.runGet("Foscolo");  //person not found
-          appl.runPost();           
+          appl.runCreate("2","Alessandro","Foscolo");           
           appl.runGet("Foscolo");
       }
   }
@@ -381,9 +377,8 @@ su *System.out*.
     }
 
 +++++++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest: accesso a HI con RestTemplate
+RestTemplate
 +++++++++++++++++++++++++++++++++++++++++++++++
-
 La classe RestTemplate (https://www.baeldung.com/rest-template) costituisce un client sincrono, 
 progettata per chiamare i servizi REST. 
 I suoi metodi primari, qui di seguito elencati, 
@@ -402,10 +397,29 @@ sono strettamente legati ai metodi del protocollo HTTP HEAD , GET , POST , PUT ,
 - :blue:`delete()`: deletes the resources at the given URL using the HTTP DELETE method.
 - :blue:`put()`: updates a resource for a given URL using the HTTP PUT method.
 
+Per interagire con il server, occorre creare un'istanza di RestTemplate, eseguire la richiesta, 
+interpretare la risposta, mappare la risposta agli oggetti di dominio e anche gestire le eccezioni. 
 
-Tuttavia  RestTemplate può essere usato anche al posto di OkHttpClient per interagire con  
+Le informazioni consegnate al cliente possono essere in diversi formati, 
+come ad esempio JSON, XML, HTML, PHP, text, etc.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RestTemplate vs. WebClient
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+RestTemplate sarà deprecato nelle versioni future di Spring a favore di 
+WebClient (https://www.baeldung.com/spring-5-webclient) che fornisce un'API sincrona tradizionale, 
+ma supporta anche un efficiente approccio reattivo, non bloccante e asincrono, 
+che funziona tramite il protocollo HTTP/1.1.
+
++++++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest: accesso a HI con RestTemplate
++++++++++++++++++++++++++++++++++++++++++++++++
+RestTemplate può essere usato anche al posto di OkHttpClient per interagire con  
 :ref:`SpringDataRest - Human-machine controller`. Ad esempio (il codice che segue si trova 
-in *unibo.SpringDataRest.callers.RestTemplateApiCaller* del **progetto  SpringDataRest**):
+in *unibo.SpringDataRest.callers.RestTemplateApiCaller* del *progetto  SpringDataRest*)
+utilizza le seguenti classi per:
 
 - *org.springframework.http.HttpEntity<String>*  (si veda: https://www.demo2s.com/java/spring-httpentity-httpentity-t-body.html)
 - *org.springframework.http.ResponseEntity<String>* (si veda: https://www.demo2s.com/java/java-org-springframework-http-responseentity.html)
@@ -417,10 +431,10 @@ in *unibo.SpringDataRest.callers.RestTemplateApiCaller* del **progetto  SpringDa
     //url=http://localhost:8080/Api/               per runGetLastPerson
     //url=http://localhost:8080/Api//getAllPersons per runGetLastPerson
         try{
-
             RestTemplate rt = new RestTemplate( );
-            ResponseEntity<String> response = rt.getForEntity( url, String.class);
-            //response: <200, HTMLPAGE, ,[Content-Type:"text/html;charset=UTF-8", Content-Language:"it-IT", ...]>
+            ResponseEntity<String> response = 
+                rt.getForEntity( url, String.class);
+            //response:<200, HTMLPAGE,[Content-Type:"text/html;charset=UTF-8", ...]>
             //response.getStatusCode: 200 OK
             return response.getBody().toString();  //HTMLPAGE
         }catch(Exception e){
@@ -434,17 +448,18 @@ in *unibo.SpringDataRest.callers.RestTemplateApiCaller* del **progetto  SpringDa
     }
 
 
+++++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest - Testing con RestTemplate
+++++++++++++++++++++++++++++++++++++++++++++++
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-RestTemplate vs. WebClient
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il codice precedente può essere riusato all'interno di un test JUnit:
 
-RestTemplate sarà deprecato nelle versioni future di Spring a favore di 
-WebClient (https://www.baeldung.com/spring-5-webclient) che fornisce un'API sincrona tradizionale, 
-ma supporta anche un efficiente approccio reattivo, non bloccante e asincrono, 
-che funziona tramite il protocollo HTTP/1.1.
+BasicTestWithRestTemplate
 
 
+++++++++++++++++++++++++++++++
+SpringDataRest - Swagger
+++++++++++++++++++++++++++++++
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -810,14 +825,6 @@ Accesso mediante Python
 Usiamo Jupyter
 
 
-++++++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest - Testing con RestTemplate
-++++++++++++++++++++++++++++++++++++++++++++++
-Per interagire con REST, il client deve creare un'istanza client e richiedere un oggetto, eseguire la richiesta, 
-interpretare la risposta, mappare la risposta agli oggetti di dominio e anche gestire le eccezioni. 
-
-Le informazioni consegnate al cliente possono essere in diversi formati, 
-come ad esempio JSON, XML, HTML, PHP, text, etc.
 
 
 
@@ -853,9 +860,7 @@ MockMvc è definito come un punto di ingresso principale per i test Spring MVC l
 I test MockMvc si trovano a metà strada tra i test di unità e di integrazione.
 
 
-++++++++++++++++++++++++++++++
-SpringDataRest - Swagger
-++++++++++++++++++++++++++++++
+
 
 
 -------------------------------------
