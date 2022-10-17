@@ -23,12 +23,13 @@ public final String lineSep = "| ";
         //model.addAttribute("persons", new Vector<Person>() );
     }
 
-    @GetMapping
+    @GetMapping()
     public String get(Model model){
         System.out.println("%%% HIController get  "   );
         updateTheModel(model, DataHandler.getLast(), "todo");
         return "PersonGuiNaive";
     }
+
     @GetMapping("/getAllPersons")
     public String getAllPersons( Model model ){
         System.out.println("%%% HIController getAllPersons  "   );

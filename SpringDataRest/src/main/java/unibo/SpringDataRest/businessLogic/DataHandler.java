@@ -54,4 +54,19 @@ public class DataHandler {
                 + lastName + " result: " + ! pFound.contains("not found"));
         return pFound;
     }
+    public static Person getThePersonWithLastName(String lastName){
+        //System.out.println(" --- DataHandler getPersonWithLastName lastName=" + lastName);
+        Person pFound = null;
+        Iterator<Person> iter = userDataList.iterator();
+        while( iter.hasNext() ){
+            Person p = iter.next();
+            if(p.getLastName().equals(lastName)) {
+                pFound = p;
+                break;
+            }
+        }
+        System.out.println(" --- DataHandler getPersonWithLastName="
+                + lastName + " result: " + pFound);
+        return pFound;
+    }
 }

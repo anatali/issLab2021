@@ -15,9 +15,11 @@ GET
     public ResponseEntity<String> getLastPerson( ){
          return  doGet(BASE_URL +"/");
     }
-     public ResponseEntity<String> getAPerson(String lastName){
+
+    public ResponseEntity<String> getAPerson(String lastName){
           return  doGet(BASE_URL +"/getAPerson?lastName="+lastName);
     }
+
     public ResponseEntity<String> getAllPersons( ){
          return  doGet(BASE_URL +"/getAllPersons");
     }
