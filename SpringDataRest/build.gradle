@@ -23,7 +23,8 @@ dependencies {
 	implementation 'com.squareup.okhttp:okhttp:2.7.5'
 //Human-machine interface
 	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-
+//Added for Swagger
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 }
 
 tasks.named('test') {

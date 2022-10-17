@@ -29,10 +29,10 @@ Progetto SpringDataRest - iniziale
 Il codice completo del progetto si trova in **progetto  SpringDataRest**.
 
 +++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest - dipendenze iniziali
+SpringDataRest - build.gradle iniziale
 +++++++++++++++++++++++++++++++++++++++++++
 
-Il progetto inizia con le seguenti dipendenze:
+Il progetto inizia con le seguenti dipendenze nel file *build.gradle*:
 
 .. code:: 
 
@@ -157,8 +157,13 @@ PersonGuiNaive
 
 
 +++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest - Human-machine controller
+SpringDataRest - HIController 
 +++++++++++++++++++++++++++++++++++++++++++
+
+Il Controller Spring *HIController* realizza il comportamento di un controllore Human-machine  
+che restituisce una pagina HTML elaborata da TheamLeaf.
+
+
 .. code:: Java
 
   @Controller
@@ -211,10 +216,10 @@ Eseguiamo l'applicazione con il comando:
 
     gradlew bootrun
 
++++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest: accesso a HI con browser
++++++++++++++++++++++++++++++++++++++++++++++
 
-+++++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest: accesso a HI  con browser
-+++++++++++++++++++++++++++++++++++++++++++++
 
 .. list-table:: 
   :width: 100%
@@ -417,49 +422,195 @@ che funziona tramite il protocollo HTTP/1.1.
 SpringDataRest: accesso a HI con RestTemplate
 +++++++++++++++++++++++++++++++++++++++++++++++
 RestTemplate può essere usato anche al posto di OkHttpClient per interagire con  
-:ref:`SpringDataRest - Human-machine controller`. Ad esempio (il codice che segue si trova 
+:ref:`SpringDataRest - HIcontroller`. Ad esempio (il codice che segue si trova 
 in *unibo.SpringDataRest.callers.RestTemplateApiCaller* del *progetto  SpringDataRest*)
 utilizza le seguenti classi per:
 
 - *org.springframework.http.HttpEntity<String>*  (si veda: https://www.demo2s.com/java/spring-httpentity-httpentity-t-body.html)
 - *org.springframework.http.ResponseEntity<String>* (si veda: https://www.demo2s.com/java/java-org-springframework-http-responseentity.html)
 
++++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest: testing con RestTemplate
++++++++++++++++++++++++++++++++++++++++++++++
 
-.. code::
+Il codice precedente può essere riusato all'interno di un 
+Impostiamo una test JUnit che 
 
-    protected String doGet(String url)  {
-    //url=http://localhost:8080/Api/               per runGetLastPerson
-    //url=http://localhost:8080/Api//getAllPersons per runGetLastPerson
-        try{
-            RestTemplate rt = new RestTemplate( );
-            ResponseEntity<String> response = 
-                rt.getForEntity( url, String.class);
-            //response:<200, HTMLPAGE,[Content-Type:"text/html;charset=UTF-8", ...]>
-            //response.getStatusCode: 200 OK
-            return response.getBody().toString();  //HTMLPAGE
-        }catch(Exception e){
-            return "error: " +e.getMessage();
-        }
-    }
-    public void runGetLastPerson( ){
-        String response =  doGet(BASE_URL +"/");
-        //Visualizziamo la parte di pagina che contiene l'informazione
-        PageUtil.readTheHtmlPage(response,"LASTPERSON");
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RestTemplateApiUtil before/after
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Prima dei test lanciamo l'applicazione, che viene chiusa al termine degli stessi.
+
+.. code:: Java
+
+    @BeforeAll
+    public static void start() throws Exception {
+        SpringDataRestApplication.main( new String[]{});
+        rtUtil = new RestTemplateApiUtil("http://localhost:8080/Api");
     }
 
+    @AfterAll
+    public static void end(){
+        SpringDataRestApplication.closeAppl();
+    }
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RestTemplateApiUtil basic ops
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-++++++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest - Testing con RestTemplate
-++++++++++++++++++++++++++++++++++++++++++++++
+.. code:: Java    
 
-Il codice precedente può essere riusato all'interno di un test JUnit:
+    protected ResponseEntity<String> doGet(String url)  {
+        RestTemplate rt = new RestTemplate( );
+        ResponseEntity<String> response = rt.getForEntity( url, String.class);
+        return response;
+    }
 
-BasicTestWithRestTemplate
+    protected ResponseEntity<String> doPost(String urlStr, HttpEntity<String> entity)  {
+        RestTemplate rt = new RestTemplate( );
+         ResponseEntity<String> response = rt
+                .exchange(urlStr, HttpMethod.POST, entity, String.class);
+        return response;
+    }
+    protected ResponseEntity<String> doDelete(String urlStr, HttpEntity<String> entity)  {
+        RestTemplate rt = new RestTemplate( );
+        ResponseEntity<String> response = rt
+                .exchange(urlStr, HttpMethod.DELETE, entity, String.class);
+        return response;
+    }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BasicTestWithRestTemplate: i test
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+    private static RestTemplateApiUtil rtUtil;
+    @Test
+    public void testGetFoscoloAfterCreate(){
+        System.out.println("=== testGetFoscoloAfterCreate"  );
+        ckeckPerson("Foscolo","person not found" );
+        //CREATE
+        ResponseEntity<String> response =
+                rtUtil.createPerson("1","Ugo","Foscolo");
+        assertTrue(response.getStatusCode()==HttpStatus.OK);
+        //CHECK
+        ckeckPerson("Foscolo","lastName=Foscolo" );
+        //DELETE
+        response = rtUtil.deletePerson("1","Ugo","Foscolo");
+        assertTrue(response.getStatusCode()==HttpStatus.OK);
+        //CHECK
+        ckeckPerson("Foscolo","person not found" );
+    }
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+ckeckPerson
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.. code:: Java
+
+    private void ckeckPerson( String lastName, String expected){
+        ResponseEntity<String> response =  rtUtil.getAPerson(lastName);
+        String answer = PageUtil.readTheHtmlPage(response.getBody(), "FOUND"); 
+        assertTrue(response.getStatusCode()==HttpStatus.OK);
+        assertTrue( answer.contains(expected));
+    }
+
+Per determinare i valori inclusi da :ref:`SpringDataRest - HIController`  nella pagina di risposta
+abbiamo riusato :ref:`PageUtil.readTheHtmlPage`.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RestTemplateApiUtil
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+  
+  public class RestTemplateApiUtil {
+
+     protected String BASE_URL ;
+     public RestTemplateApiUtil(String BASE_URL){
+         this.BASE_URL = BASE_URL;
+     }
+    public ResponseEntity<String> getLastPerson( ){
+         return  doGet(BASE_URL +"/");
+    }
+     public ResponseEntity<String> getAPerson(String lastName){
+          return  doGet(BASE_URL +"/getAPerson?lastName="+lastName);
+    }
+    public ResponseEntity<String> getAllPersons( ){
+         return  doGet(BASE_URL +"/getAllPersons");
+    }
+    public ResponseEntity<String> createPerson(String id, String firstName, String lastName) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String personData  = "id=ID&firstName=FN&lastName=LN".replace("ID",id)
+                .replace("FN",firstName).replace("LN",lastName);
+        HttpEntity<String> entity = new HttpEntity<String>(personData,headers);
+        return doPost(BASE_URL +"/createPerson",entity);
+     }
+    public ResponseEntity<String> deletePerson(String id, String firstName, String lastName) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String personData  = "id=ID&firstName=FN&lastName=LN".replace("ID",id)
+                .replace("FN",firstName).replace("LN",lastName);
+        HttpEntity<String> entity = new HttpEntity<String>(personData,headers);
+        return doDelete(BASE_URL +"/deletePerson",entity);
+    }
+  }
 
 ++++++++++++++++++++++++++++++
 SpringDataRest - Swagger
 ++++++++++++++++++++++++++++++
+
+
+Aggiungiamo in :ref:`SpringDataRest - build.gradle iniziale` la dipendenza alla libreria springdoc-openapi 
+che sostituisce la libreria SpringFox, non più mantenuta. Questa libreria
+esamina a runtime  l'applicazione, per inferirne la API semantics basata sulla configurazione Spring,
+sulla struttura delle classi e sulle annotwzioni.
+
+.. code:: 
+
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+
+.. code:: 
+
+	spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+swagger-ui/index.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+  http://localhost:8080/swagger-ui/index.html
+
+Fornisce la gui che segue:
+
+.. image:: ./_static/img/SpringDataRest/SpringDataRestSwaggerUi.png 
+    :align: center
+    :width: 80%
+
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+v3/api-docs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code::
+
+  http://localhost:8080/swagger-ui/index.html
+
+Fornisce  json
+
+ 
+.. Spring Fox 3.0.0 not supporting new PathPattern Based Path Matching Strategy for Spring MVC which is now the new default from spring-boot 2.6.0.
+
+.. https://springdoc.org/#Introduction
+.. https://www.youtube.com/watch?v=utRxyPfFlDw
+.. SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project  and replace it with maintained springdoc-openapi library.
+
+
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1086,7 +1237,7 @@ Uso di Java
 
 In Java ci possiamo avvalere della libreria OKHTTP (https://www.baeldung.com/guide-to-okhttp).
 
-Aggiungiamo la dipendenza in build.gradle:
+Aggiungiamo la dipendenza in :ref:`SpringDataRest - build.gradle iniziale`:
 
 .. code::
 
@@ -1117,34 +1268,9 @@ Java PATCH
 
 
 
-------------------------------------
-Swagger
-------------------------------------
-
-Spring Fox 3.0.0 not supporting new PathPattern Based Path Matching Strategy for Spring MVC which is now 
-the new default from spring-boot 2.6.0.
-
-- https://springdoc.org/#Introduction
-- https://www.youtube.com/watch?v=utRxyPfFlDw
-
-springdoc-openapi works by examining an application at runtime to infer API semantics based on spring configurations, 
-class structure and various annotations.
+ 
 
 
-.. code::
-
-    http://localhost:8080/swagger-ui/
-
-  spring:
-   mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
-  http://localhost:8080/swagger-ui/index.html
-  http://localhost:8080/v3/api-docs
-
-SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project 
-and replace it with maintained springdoc-openapi library.
 
 
 -------------------------------------

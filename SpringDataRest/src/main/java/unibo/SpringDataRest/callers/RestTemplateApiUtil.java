@@ -4,7 +4,6 @@ import org.springframework.web.client.RestTemplate;
 
 public class RestTemplateApiUtil {
      protected String BASE_URL ;
-
      public RestTemplateApiUtil(String BASE_URL){
          this.BASE_URL = BASE_URL;
      }

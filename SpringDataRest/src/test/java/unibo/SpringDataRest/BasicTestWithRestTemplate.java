@@ -1,6 +1,7 @@
 package unibo.SpringDataRest;
 
 import org.junit.jupiter.api.*;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 
 //See https://www.baeldung.com/rest-template
+//@SpringBootTest
 public class BasicTestWithRestTemplate {
     //private static RestTemplate rt ;
     private static RestTemplateApiUtil rtUtil;
@@ -20,17 +22,15 @@ public class BasicTestWithRestTemplate {
 
     private void ckeckPerson( String lastName, String expected){
         ResponseEntity<String> response =  rtUtil.getAPerson(lastName);
-        String answer = PageUtil.readTheHtmlPage(response.getBody(), "FOUND"); //lunga 17 (??)
+        String answer = PageUtil.readTheHtmlPage(response.getBody(), "FOUND");
         //System.out.println("ckeckPerson answer:" + answer );
         assertTrue(response.getStatusCode()==HttpStatus.OK);
         assertTrue( answer.contains(expected));
     }
 
     @BeforeAll
-    //@BeforeEach
     public static void start() throws Exception {
         SpringDataRestApplication.main( new String[]{});
-        //rt = new RestTemplate( );
         rtUtil = new RestTemplateApiUtil("http://localhost:8080/Api");
     }
 
