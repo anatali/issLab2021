@@ -1,24 +1,22 @@
 package unibo.SpringDataRest.communication;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
 import java.io.File;
 import java.net.URI;
 
-
+@Component
 public class EmailService {
     private Properties prop;
 
     public EmailService() {
-
     }
 
-    public void sendUsingMailTrap(){
+    public void sendMailUsingMailTrap(String msg, String destination){
         try {
             prop = new Properties();
             prop.put("mail.smtp.host", "smtp.mailtrap.io");
@@ -27,13 +25,17 @@ public class EmailService {
             //prop.put("mail.smtp.starttls.enable", "true");
             //prop.put("mail.smtp.ssl.trust", host);
             //prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-            sendMailUsingMailTrap("Mail to unibo usando smtp.mailtrap.io","antonio.natali@unibo.it");
-            sendMailUsingMailTrap("Mail to gmail usando smtp.mailtrap.io","agoognat@gmail.com");
-        } catch (Exception e) {
+            Session session = Session.getInstance(prop, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("9ed36bdf47bccb", "c84a76872c7592");
+                }
+            });
+            sendMail(session, msg, destination);        } catch (Exception e) {
             System.out.println("ERROR:"+e.getMessage());
         }
     }
-    public void sendUsingGoogle(){
+    public void sendMailUsingGoogle(String msg, String destination){
         try {
             prop = new Properties();
             prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -41,14 +43,20 @@ public class EmailService {
             prop.put("mail.smtp.auth", true);
             prop.put("mail.smtp.starttls.enable", "true");
             prop.setProperty("mail.debug", "true");
-            //sendMail("Mail to unibo usando smtp.gmail.com", "agoognat@gmail.com", "bhthxbuswevuxfba");
-            sendMailUsingGoogle("Mail to unibo usando smtp.gmail.com","antonio.natali@unibo.it");
-            sendMailUsingGoogle("Mail to gmail usando smtp.gmail.com","agoognat@gmail.com");
+            Session session = Session.getInstance(prop, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    //Password set Google Mail  Password per le app
+                    return new PasswordAuthentication("agoognat@gmail.com", "bhthxbuswevuxfba");
+                }
+            });
+            sendMail(session, msg, destination);
+
         } catch (Exception e) {
             System.out.println("ERROR:"+e.getMessage());
         }
     }
-
+/*
     public void sendMailUsingGoogle(String msg, String destination) throws Exception {
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
@@ -68,7 +76,7 @@ public class EmailService {
         });
         sendMail(session, msg, destination);
     }
-
+*/
 
     protected void sendMail(Session session, String msg, String destination ) throws Exception{
         Message message = new MimeMessage(session);
@@ -106,7 +114,11 @@ public class EmailService {
 
     public static void main(String... args) {
         EmailService appl = new EmailService();
-        //appl.sendUsingMailTrap();
-        appl.sendUsingGoogle();
+
+//        appl.sendMailUsingGoogle("Mail to unibo usando smtp.gmail.com","antonio.natali@unibo.it");
+//        appl.sendMailUsingGoogle("Mail to gmail usando smtp.gmail.com","agoognat@gmail.com");
+//        appl.sendMailUsingMailTrap("Mail to unibo usando smtp.mailtrap.io","antonio.natali@unibo.it");
+//        appl.sendMailUsingMailTrap("Mail to gmail usando smtp.mailtrap.io","agoognat@gmail.com");
+
     }
 }
