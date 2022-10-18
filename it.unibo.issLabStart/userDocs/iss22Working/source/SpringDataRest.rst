@@ -10,7 +10,7 @@ SpringDataRest
    interazioni *HumanMachine* (:blue:`hm`) e *MachineToMachine* (:blue:`m2m`)
 #. Testing con RestTemplate ()
 #. Swagger
-#. Creazione di un database usando H2 : :ref:`Progetto SpringDataRest - database`
+#. Creazione di un database usando H2 :  `Progetto SpringDataRest - database`
 #. Testing con :ref:`MockMvc`  
 #. Progetto SpringDataRest - servizi (e controller)
 #. SpringDataRest - HAL browser
@@ -673,8 +673,13 @@ dati della persona trovata; ad esempio:
    {"id":1,"firstName":"Ugo","lastName":"Foscolo"}
 
 ++++++++++++++++++++++++++++++
-SpringDataRest - Swagger
+SpringDataRest - descrizione
 ++++++++++++++++++++++++++++++
+
+OpenAPI è una specifica, cioè una descrizione astratta che non è legata a un’implementazione 
+particolare. Fino alla versione 2.0, questa specifica era chiamata Swagger ed è stata rinominata 
+in seguito specifica OpenAPI. Tuttavia, i tool forniti dalla società di sviluppo originale, 
+SmartBear, continuano a esistere con il nome di Swagger.
 
 
 Aggiungiamo in :ref:`SpringDataRest - build.gradle iniziale` la dipendenza alla libreria springdoc-openapi 
@@ -684,12 +689,15 @@ sulla struttura delle classi e sulle annotwzioni.
 
 .. code:: 
 
+  //Aggiungere in build.gradle
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 
-.. code:: 
-
+  //Aggiungere in application.properties
 	spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER  
 
+
+  https://editor.swagger.io/#
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 swagger-ui/index.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -750,7 +758,7 @@ SpringDataRest: invio mail
    java -jar fakeSMTP.jar  -m   //save in memory
    //-o output_directory_name   //port25
 
-   //Google Mail
+   //Google Mail  Password per le app  Genera bhthxbuswevuxfba
    https://myaccount.google.com/security
 
 Probabilmente stai tentando di utilizzare i server di Gmail sulla porta 25 per consegnare 
