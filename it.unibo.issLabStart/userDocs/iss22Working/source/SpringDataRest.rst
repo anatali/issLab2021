@@ -731,6 +731,19 @@ Fornisce le informazioni sulle operazioni in Json.
 .. https://www.youtube.com/watch?v=utRxyPfFlDw
 .. SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project  and replace it with maintained springdoc-openapi library.
 
+---------------------------------------
+SpringDataRest: mails
+---------------------------------------
 
+.. code::
 
- 
+  implementation 'org.springframework.boot:spring-boot-starter-mail'
+  implementation 'com.github.tntim96:fakesmtp:2.0'   
+
+  spring.mail.host=localhost
+  spring.mail.port=2525
+
+.. code::
+
+   java -jar fakeSMTP.jar  -m   //save in memory
+   //-o output_directory_name   //port25

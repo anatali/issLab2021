@@ -25,6 +25,12 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
 //Added for Swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+//Added for mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'javax.mail:mail:1.4.1'
+	implementation 'org.apache.commons:commons-email:1.5'
+//Added for FakeSMTP
+	implementation 'com.github.tntim96:fakesmtp:2.0'
 }
 
 tasks.named('test') {

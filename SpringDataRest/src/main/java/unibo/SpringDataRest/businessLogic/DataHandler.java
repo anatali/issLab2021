@@ -1,5 +1,7 @@
 package unibo.SpringDataRest.businessLogic;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import unibo.SpringDataRest.communication.Mailer;
 import unibo.SpringDataRest.model.Person;
 
 import java.util.Iterator;
@@ -9,6 +11,8 @@ import java.util.Vector;
 public class DataHandler {
     private static Vector<Person> userDataList = new Vector<Person>();
     private static int id = 0;
+
+
 
     private static void addNewPerson(){
         Person userData = new Person();
@@ -22,6 +26,8 @@ public class DataHandler {
     public static void addPerson(Person p){
         System.out.println(" --- DataHandler addPerson  " +p );
         userDataList.add(p);
+        //Added for mailing
+        Mailer.sendAMail("antonio.natali@unibo.it", p.toString());
     }
     public static void removePerson(Person p){
         System.out.println(" --- DataHandler removePerson  " +p );
