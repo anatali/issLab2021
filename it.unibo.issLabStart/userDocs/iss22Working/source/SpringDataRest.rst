@@ -732,7 +732,7 @@ Fornisce le informazioni sulle operazioni in Json.
 .. SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project  and replace it with maintained springdoc-openapi library.
 
 ---------------------------------------
-SpringDataRest: mails
+SpringDataRest: invio mail
 ---------------------------------------
 
 .. code::
@@ -743,7 +743,23 @@ SpringDataRest: mails
   spring.mail.host=localhost
   spring.mail.port=2525
 
+  https://mailtrap.io/register/signup
+
 .. code::
 
    java -jar fakeSMTP.jar  -m   //save in memory
    //-o output_directory_name   //port25
+
+   //Google Mail
+   https://myaccount.google.com/security
+
+Probabilmente stai tentando di utilizzare i server di Gmail sulla porta 25 per consegnare 
+la posta a terzi tramite una connessione non autenticata. 
+Gmail non ti consente di farlo, perché in tal caso chiunque potrebbe utilizzare i server 
+di Gmail per inviare posta a chiunque altro. 
+Questo è chiamato un inoltro aperto (opean relay) ed era un attivatore comune di spam 
+nei primi giorni. 
+Gli opean relays non sono più accettabili su Internet.
+
+Dovrai chiedere al tuo client SMTP di connettersi a Gmail utilizzando una 
+connessione autenticata, probabilmente sulla porta 587 .
