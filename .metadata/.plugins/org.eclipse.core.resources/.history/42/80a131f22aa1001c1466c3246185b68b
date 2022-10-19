@@ -1,0 +1,38 @@
+package it.unibo.radarSystem22.actors.domain;
+
+import it.unibo.actorComm.utils.ColorsOut;
+import it.unibo.kactor.Actor22;
+import it.unibo.kactor.ApplMessage;
+import it.unibo.kactor.IApplMessage;
+import it.unibo.kactor.MsgUtil;
+import it.unibo.radarSystem22.interfaces.IRadarDisplay;
+import it.unibo.radarSystem22.actors.domain.support.DeviceLang;
+import it.unibo.radarSystem22.actors.domain.support.DomainData;
+import it.unibo.radarSystem22.domain.RadarDisplay;
+import it.unibo.radarSystem22.domain.utils.BasicUtils;
+/*
+ * Funge da interprete di 
+ */
+public class RadarDisplayActor extends Actor22 implements IRadarDisplay{
+private IRadarDisplay radar ;
+
+	public RadarDisplayActor(String name) {
+		super(name);
+		radar = RadarDisplay.getRadarDisplay();
+	}
+
+	@Override
+	protected void doJob(IApplMessage msg) {
+		BasicUtils.aboutThreads(getName()  + " |  Before doJob - ");
+		ColorsOut.outappl( getName()  + " | doJob " + msg, ColorsOut.MAGENTA);
+		radar.update(msg.msgContent(),"90");		
+	}
+
+	@Override
+	public void update(String d, String angle) {
+		ColorsOut.outappl( getName()  + " | update distance " + d, ColorsOut.BLUE);
+		IApplMessage updateRadarGui = MsgUtil.buildDispatch(getName(), DeviceLang.cmd, ""+d, DomainData.radarName);		
+		Actor22.sendMsg(updateRadarGui, this );  
+	}
+
+}

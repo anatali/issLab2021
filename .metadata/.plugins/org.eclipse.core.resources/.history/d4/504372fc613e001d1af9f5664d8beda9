@@ -1,0 +1,63 @@
+from diagrams import Cluster, Diagram, Edge
+from diagrams.custom import Custom
+import os
+os.environ['PATH'] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
+
+graphattr = {     #https://www.graphviz.org/doc/info/attrs.html
+    'fontsize': '22',
+}
+
+nodeattr = {   
+    'fontsize': '22',
+    'bgcolor': 'lightyellow'
+}
+
+eventedgeattr = {
+    'color': 'red',
+    'style': 'dotted'
+}
+with Diagram('wastettArch', show=False, outformat='png', graph_attr=graphattr) as diag:
+  with Cluster('env'):
+     sys = Custom('','./qakicons/system.png')
+     with Cluster('ctxbasicrobot', graph_attr=nodeattr):
+          basicrobot=Custom('basicrobot(ext)','./qakicons/externalQActor.png')
+     with Cluster('ctxwastett', graph_attr=nodeattr):
+          waste_service=Custom('waste_service','./qakicons/symActorSmall.png')
+          transport_trolley=Custom('transport_trolley','./qakicons/symActorSmall.png')
+          truckapp_handler=Custom('truckapp_handler','./qakicons/symActorSmall.png')
+          sonar_handler=Custom('sonar_handler','./qakicons/symActorSmall.png')
+     with Cluster('ctxsonar_led', graph_attr=nodeattr):
+          ledqak=Custom('ledqak(ext)','./qakicons/externalQActor.png')
+          sonar_rasp=Custom('sonar_rasp(ext)','./qakicons/externalQActor.png')
+     waste_service >> Edge(color='blue', style='solid', xlabel='start_app') >> sonar_handler
+     waste_service >> Edge(color='green', style='dashed', xlabel='loadaccepted') >> sys 
+     waste_service >> Edge(color='green', style='dashed', xlabel='loadrejected') >> sys 
+     waste_service >> Edge(color='green', style='dashed', xlabel='loadaccepted') >> sys 
+     waste_service >> Edge(color='green', style='dashed', xlabel='loadrejected') >> sys 
+     waste_service >> Edge(color='magenta', style='solid', xlabel='goToIndoor') >> transport_trolley
+     waste_service >> Edge(color='magenta', style='solid', xlabel='goToHome') >> transport_trolley
+     waste_service >> Edge(color='blue', style='solid', xlabel='info') >> truckapp_handler
+     waste_service >> Edge(color='magenta', style='solid', xlabel='goToPos') >> transport_trolley
+     waste_service >> Edge(color='blue', style='solid', xlabel='end_app') >> sonar_handler
+     transport_trolley >> Edge( xlabel='led_message', **eventedgeattr) >> sys
+     transport_trolley >> Edge(color='blue', style='solid', xlabel='ready') >> waste_service
+     transport_trolley >> Edge(color='blue', style='solid', xlabel='cmd') >> basicrobot
+     transport_trolley >> Edge(color='magenta', style='solid', xlabel='step') >> basicrobot
+     transport_trolley >> Edge(color='green', style='dashed', xlabel='done') >> sys 
+     transport_trolley >> Edge(color='green', style='dashed', xlabel='done') >> sys 
+     transport_trolley >> Edge(color='green', style='dashed', xlabel='alldone') >> sys 
+     transport_trolley >> Edge(color='green', style='dashed', xlabel='alldone') >> sys 
+     transport_trolley >> Edge(color='green', style='dashed', xlabel='athome') >> sys 
+     transport_trolley >> Edge(color='green', style='dashed', xlabel='athome') >> sys 
+     transport_trolley >> Edge(color='blue', style='solid', xlabel='stop') >> transport_trolley
+     truckapp_handler >> Edge(color='magenta', style='solid', xlabel='req') >> waste_service
+     truckapp_handler >> Edge(color='green', style='dashed', xlabel='loadacceptedForApp') >> sys 
+     truckapp_handler >> Edge(color='green', style='dashed', xlabel='fineScarico') >> sys 
+     truckapp_handler >> Edge(color='green', style='dashed', xlabel='loadrejectedForApp') >> sys 
+     sonar_handler >> Edge( xlabel='activate', **eventedgeattr) >> sys
+     sys >> Edge(color='red', style='dashed', xlabel='alarm_active') >> sonar_handler
+     sys >> Edge(color='red', style='dashed', xlabel='alarm_deactive') >> sonar_handler
+     sonar_handler >> Edge(color='blue', style='solid', xlabel='alarm_on') >> transport_trolley
+     sonar_handler >> Edge(color='blue', style='solid', xlabel='alarm_off') >> transport_trolley
+     sonar_handler >> Edge( xlabel='deactivate', **eventedgeattr) >> sys
+diag

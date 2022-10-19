@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 2 elements from project &apos;it.unibo.ParkManagerService&apos;&#x0D;&#x0A;- Original project: &apos;it.unibo.ParkManagerService&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     ObserverForAnswer.kt&#x0D;&#x0A;     pathexecutil.kt" description="Delete elements" element1="src/ObserverForAnswer.kt" element2="src/pathexecutil.kt" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="2" stamp="1625641993190" subPackages="false" version="1.0"/>
+</session>

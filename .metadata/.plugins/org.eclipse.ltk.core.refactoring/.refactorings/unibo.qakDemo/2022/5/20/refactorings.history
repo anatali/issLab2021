@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete element from project &apos;unibo.qakDemo&apos;&#x0D;&#x0A;- Original project: &apos;unibo.qakDemo&apos;&#x0D;&#x0A;- Original element: &apos;unibo.qakDemo/src/it.unibo.basicboundarywalker&apos;" description="Delete element" element1="/src&lt;it.unibo.basicboundarywalker" elements="1" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1652264828178" subPackages="false" version="1.0"/>
+</session>

@@ -1,0 +1,231 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+  
+    <title>RadarSystemUserConsole</title>
+
+<style>
+#ledOn{
+      width: 50px;
+      height: 50px;
+      background: red;
+}
+
+#ledOff{
+      width: 10px;
+      height: 10px;
+      background: gray;
+}
+
+		table, th, td {
+		  border: 1px solid black;
+		  border-collapse: collapse;
+		}    
+ 
+    #button {
+    background-color: green;
+    border: 1px solid black;
+    color: white;
+    padding: 5px px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    }
+ 	
+</style>
+
+<script type="text/javascript">
+    function myIp() {
+      var ip = location.host;
+      alert(ip);
+      document.getElementById("appladdr").innerHTML   = ip;
+      //document.getElementById("raspIp").innerHTML = "192.168.1.5";
+    }
+	function getApplIp(){
+	         var applip =""
+	         var appladdr = document.getElementById("appladdr").innerHTML
+	         if(  appladdr.length == 0 ) appladdr="/192.168.1.9"; 
+	         console.log("appladdr ... "+appladdr )
+	         var url = appladdr+":8080"  // FOR WEB CAM
+	         var len = url.length;
+	         var n   = url.indexOf(":");
+	         var j   = url.substring(n+1,len);
+	         applip = "http://" + url + "/?action=stream";
+	         alert(applip); //applip=http://192.168.1.72:8080/?action=stream
+	}
+	
+	myIp();
+</script>
+
+ </head>
+<body>
+<div id="main-content" class="container-fluid pt-3">
+    <h1><span th:text="${arg}">Our Arg</span></h1>
+ 
+<p>basicrobotaddr:
+<span id="appladdr" th:text="${applicationlAddr}">applIP unknown</span>
+</p>
+
+ 
+
+<!--
+Pulsanti di invio comandi
+-->
+
+       <div class="row">
+        <div class="col-md-6">
+        <h3>Led commands</h3>
+        <table>
+        <tr>
+        <td>
+            <form class="form-inline" action="/on" method="post">
+            <div class="form-group">
+                    <button id="on" type="submit">Led TutnOn</button>                     
+             </div>
+            </form>
+        </td>
+       <td>
+            <form class="form-inline" action="/off" method="post">
+            <div class="form-group">
+                     <button id="off" type="submit">Led TutnOff</button>
+                      
+            </div>
+            </form>
+        </td>
+       <td>
+             <form class="form-inline" action="/doLedBlink" method="post">
+            <div class="form-group">
+                     <button id="doLedBlink" type="submit">Start led blinking</button>
+                      
+            </div>
+            </form>
+        </td>
+       <td>
+              <form class="form-inline" action="/stopLedBlink" method="post">
+            <div class="form-group">
+                     <button id="stopLedBlink" type="submit">Stop led blinking</button>
+                      
+            </div>
+            </form>     
+        </td>
+        </tr>
+        </table>
+        
+        <!--
+            <form class="form-inline" action="/on" method="post">
+            <div class="form-group">
+                    <button id="on" type="submit">Led TutnOn</button>                     
+             </div>
+            </form>
+            <form class="form-inline" action="/off" method="post">
+            <div class="form-group">
+                     <button id="off" type="submit">Led TutnOff</button>
+                      
+            </div>
+            </form>
+             <form class="form-inline" action="/doLedBlink" method="post">
+            <div class="form-group">
+                     <button id="doLedBlink" type="submit">Start led blinking</button>
+                      
+            </div>
+            </form>
+              <form class="form-inline" action="/stopLedBlink" method="post">
+            <div class="form-group">
+                     <button id="stopLedBlink" type="submit">Stop led blinking</button>
+                      
+            </div>
+            </form>    --> 
+ 
+ <br/> 
+<h4>Current Led State=<span th:text="${ledstate}">unknown</span></h4>
+<div th:id=${ledgui} align="left"></div>
+ 
+<hr/>           
+           <h3>Sonar commands</h3>     
+           
+           <table>
+           <tr>
+           <td>
+            <form class="form-inline" action="/distance" method="post">
+            <div class="form-group">
+                     <button id="distance" type="submit">Current Sonar distance</button>
+                      
+            </div>
+            </form>           
+           </td>
+            <td>
+             <form class="form-inline" action="/sonardataon" method="post">
+            <div class="form-group">
+                     <button id="sonardataon" type="submit">Start sonar data view</button>
+                      
+            </div>
+            </form>           
+           </td>
+            <td>
+             <form class="form-inline" action="/sonardataoff" method="post">
+            <div class="form-group">
+                     <button id="sonardataoff" type="submit">Stop sonar data view</button>
+                      
+          </div>
+            </form>           
+           </td>
+           </tr>
+           </table>
+           
+            
+         </div>
+      </div>
+      
+ <br/> 
+ <!--
+Area dati sonar
+-->
+
+<div class="row">
+    <div class="col-md-12">
+    	 <h2>Sonar data</h2>
+         <p id="sonarData">unknown</p>
+    </div>
+</div>
+
+<h4>Current Sonar distance=<span th:text="${sonardistance}">unknown</span></h4>
+
+<hr/> 
+
+<!--
+Area di output
+-->
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="conversation" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Info area</th>
+            </tr>
+            </thead>
+            <tbody id="output">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<hr/>
+<h3>WebCam</h3>
+             <div id="content" align="left">
+                <img src="" id="img_src" alt=""  width="640" height="480"><br/>
+            </div>
+<script type="text/javascript">
+    if( applip.length>0) document.getElementById("img_src").src = applip;
+</script>
+
+
+</body>
+<script src="wsNoStomp.js"></script>
+</html>

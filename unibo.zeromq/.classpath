@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin/default"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry sourcepath="C:/Users/anatali/.gradle/caches/modules-2/files-2.1/org.zeromq/jeromq/0.5.2/7f088101b211572d0aafcc7a2ee99cfcee42ea81/jeromq-0.5.2-sources.jar" kind="lib" path="C:/Users/anatali/.gradle/caches/modules-2/files-2.1/org.zeromq/jeromq/0.5.2/54cfd030abe0aa2eb26d307a27551b7279e7576f/jeromq-0.5.2.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/anatali/.gradle/caches/modules-2/files-2.1/eu.neilalexander/jnacl/1.0.0/79c84417c0c36273b5c6b30ab05a0494dc81c473/jnacl-1.0.0-sources.jar" kind="lib" path="C:/Users/anatali/.gradle/caches/modules-2/files-2.1/eu.neilalexander/jnacl/1.0.0/82e9034fb81a33cb9d7e0c4cd241a2ba84802ae2/jnacl-1.0.0.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+</classpath>

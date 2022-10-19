@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;basicrobotboundarywalker.qak&apos; to &apos;unibo.qakDemo/src&apos;&#x0D;&#x0A;- Original project: &apos;it.unibo.qakDemo&apos;&#x0D;&#x0A;- Destination element: &apos;unibo.qakDemo/src&apos;&#x0D;&#x0A;- Original element: &apos;basicrobotboundarywalker.qak&apos;" description="Copy file" destination="=unibo.qakDemo/src" element1="src/basicrobotboundarywalker.qak" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1652264427063" units="0" version="1.0"/>
+</session>

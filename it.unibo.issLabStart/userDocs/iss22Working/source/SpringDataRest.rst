@@ -49,6 +49,13 @@ Il progetto inizia con le seguenti dipendenze nel file *build.gradle*:
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
   }
 
+---------------------------------------------
+Progetto SpringDataRest - business logic
+---------------------------------------------
+Il codice che definisce la business logic della applicazione è organizzato su due classi:
+
+- La classe :ref:`Person` che rappresenta i dati
+- La classe :ref:`DataHandler` che rappresenta il gestore logico dei dati
 
 +++++++++++++++++++++++++++
 Person
@@ -68,6 +75,9 @@ Person
 +++++++++++++++++++++++++++
 DataHandler
 +++++++++++++++++++++++++++
+
+Il gestore logico dei dati è qui molto semplice: realizza un elenco di :ref:`Person` e 
+offre operazioni per aggiungere/eliminare elementi dall'elenco e cercare/ottenere elementi.
 
 .. code:: Java
 
@@ -743,31 +753,147 @@ Fornisce le informazioni sulle operazioni in Json.
 SpringDataRest: invio mail
 ---------------------------------------
 
-.. code::
++++++++++++++++++++++++++++++
+Mail: requisito
++++++++++++++++++++++++++++++
+Inviare una mail a un preciso destinatario quando un elemento viene aggiunto ai dati.
 
-  implementation 'org.springframework.boot:spring-boot-starter-mail'
-  implementation 'com.github.tntim96:fakesmtp:2.0'   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mail: user story
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  spring.mail.host=localhost
-  spring.mail.port=2525
+Come utente del servizio mi aspetto che, se invoco (con successo) l'operazione *createPerson* di 
+:ref:`SpringDataRest - M2MController`, una mail viene inviata a un destinatario specificato
+in un file di configurazione dell'applicazione.
 
-  https://mailtrap.io/register/signup
++++++++++++++++++++++++++++++
+Mail: analisi
++++++++++++++++++++++++++++++
+IL problema implica l'utilizzo di un mail server e di una libreria Java di supporto al mailing.
 
-.. code::
+- mail server: :blue:`gmail` (*smtp.gmail.com*) oppure il testing tool :blue:`mailtrap` (*smtp.mailtrap.io*)  
+- libreria Java: *javax.mail*
+  
+Aggiungiamo dunque in *build.gradle* la dipendenza a *javax.mail*:
 
-   java -jar fakeSMTP.jar  -m   //save in memory
-   //-o output_directory_name   //port25
+  .. code::
+  
+     implementation 'com.sun.mail:javax.mail:1.5.5'
 
-   //Google Mail  Password per le app  Genera bhthxbuswevuxfba
-   https://myaccount.google.com/security
 
-Probabilmente stai tentando di utilizzare i server di Gmail sulla porta 25 per consegnare 
-la posta a terzi tramite una connessione non autenticata. 
-Gmail non ti consente di farlo, perché in tal caso chiunque potrebbe utilizzare i server 
-di Gmail per inviare posta a chiunque altro. 
-Questo è chiamato un inoltro aperto (opean relay) ed era un attivatore comune di spam 
-nei primi giorni. 
-Gli opean relays non sono più accettabili su Internet.
+La logica per creare la sessione differisce in base al tipo di server SMTP; 
+ad esempio, se il server SMTP non richiede alcuna autenticazione, possiamo 
+creare l'oggetto Session con alcune semplici proprietà mentre se richiede 
+l'autenticazione TLS o SSL, la logica da creare sarà diversa . 
 
-Dovrai chiedere al tuo client SMTP di connettersi a Gmail utilizzando una 
-connessione autenticata, probabilmente sulla porta 587 .
+Il protocollo :blue:`SSL` ed il suo successore :blue:`TLS` permettono una comunicazione sicura dal sorgente 
+al destinatario (end-to-end) su reti TCP/IP offrendo autenticazione, integrità dei dati 
+e cifratura operando al di sopra del livello di trasporto.
+
+Introduciamo la classe *EmailService* come utility per l'invio dei messaggi di mail
+capace di usare due diversi mail servers:
+
+- :blue:`gmail` (*smtp.gmail.com*) per inviare messaggi in modo reale
+- :blue:`mailtrap` (*smtp.mailtrap.io*) per scopi di testing
+
+Il programma Java per inviare e-mail contiene i seguenti passaggi:
+
+- Creazione di un oggetto *javax.mail.Session*
+- Creando un oggetto *javax.mail.internet.MimeMessage*, dobbiamo impostare diverse proprietà in questo oggetto 
+  come l'indirizzo e-mail del destinatario, l'oggetto dell'e-mail, l'e-mail di risposta, 
+  il corpo dell'e-mail, gli allegati ecc.
+- Utilizzo di *javax.mail.Transport* per inviare il messaggio di posta elettronica.
+
+++++++++++++++++++++++++++++++++++++++
+Mail: approfondimento della analisi
+++++++++++++++++++++++++++++++++++++++
+
+L'invio di messaggi (di mail) da parte di :ref:`DataHandler` costituisce una estensione 
+delle funzionalità del gestore logico dei dati.
+
+Per ottenere queste estensioni, è possibile agire in diversi modi:
+
+- definire una classe specializzazione di :ref:`DataHandler`
+- introdurre in :ref:`DataHandler` una operazione locale (diciamo *sendMail*) che realizza l'invio di una mail 
+  e che viene invocata al termine della operazione addPerson o di ogni altra operazione 
+- impostare il :ref:`DataHandler` come un oggetto osservabile, lasciano ad eventuali observer il compito
+  di inviare la mail o di eseguire altre attività (ad esempio aggiornare un file di log)
+
+Il :blue:`principio di singola resposabilità`, induce a delegare l'invio della mail a un componente
+specializzato, come ad esempio:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+EmailService
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: Java
+
+  public interface Mailer{
+    public void sendMail( String msg, String destination ) throws Exception;
+  }
+
+  public class EmailService implements Mailer{
+  private String userName="";
+  private String userPswd="";
+  private boolean useTrueMail = false;
+
+    public EmailService() {
+        readUserData(  );
+    }
+
+    protected void readUserData(  )   {
+    //legge da file i valori userName e userPswd 
+    }
+
+    public void sendMail( String msg, String destination ) {
+      try {
+        sendMailUsingGoogle(msg,destination);
+        sendMailUsingMailTrap(msg,destination);
+      }catch(Exception e){... }
+    }
+
+Questo componente funge da adpater per una comunicazione della business logic verso il mondo
+esterno, in accordo con gli schemi della cleanArchitecture.
+
+.. image:: ./_static/img/Architectures/cleanArch.jpg 
+    :align: center
+    :width: 60%
+
+Le operazioni *sendMailUsingGoogle*
+
+.. code:: Java
+
+    private void sendMailUsingGoogle(String msg, String destination){
+      try {
+        prop = new Properties();
+       //prop.setProperty("mail.debug", "true");
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", 25);  //587 porta TLS
+        prop.put("mail.smtp.auth", true);
+        prop.put("mail.smtp.starttls.enable", "true"); //richiesto dal server gmail
+        prop.put("mail.smtp.ssl.trust", "*"); //evita 'Could not convert socket to TLS'
+        Session session = Session.getInstance(prop, new Authenticator() {
+           @Override
+          protected PasswordAuthentication getPasswordAuthentication() {
+            //Password set su Google Mail:  Password per le app
+              return new PasswordAuthentication("...", "...");
+          }
+        });
+        sendMail(session, msg, destination);
+      } catch (Exception e) {...}
+    }
+
+    private void sendMail(Session session, String msg, String destination ) throws Exception{
+        Message message = new MimeMessage(session);
+        //message.setFrom(new InternetAddress("fittizio@gmail.com"));
+        message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(destination)); //"agoognat@gmail.com"
+        message.setSubject("System informazioni");
+        message.setText(msg);
+        Transport.send(message);  //javax.mail.Service
+    }
+
+
+  
+.. implementation 'com.github.tntim96:fakesmtp:2.0'   
+.. https://mailtrap.io/register/signup
+.. java -jar fakeSMTP.jar  -m   //save in memory

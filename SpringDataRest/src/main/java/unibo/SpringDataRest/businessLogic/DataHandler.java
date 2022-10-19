@@ -27,7 +27,7 @@ public class DataHandler {
         userDataList.add(p);
         //Added for mailing
         //Mailer.sendAMail("antonio.natali@unibo.it", p.toString());
-        mailer.sendMailUsingMailTrap(p.toString(),"antonio.natali@unibo.it");
+        mailer.sendMail(p.toString(),"antonio.natali@unibo.it");
     }
     public static void removePerson(Person p){
         System.out.println(" --- DataHandler removePerson  " +p );

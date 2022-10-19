@@ -1,0 +1,159 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <title>RadarSystemUserConsole</title>
+
+<style>
+#ledOn{
+      width: 50px;
+      height: 50px;
+      background: red;
+}
+
+#ledOff{
+      width: 10px;
+      height: 10px;
+      background: gray;
+}
+
+		table, th, td {
+		  border: 1px solid black;
+		  border-collapse: collapse;
+		}    
+ 
+    #button {
+    background-color: gray;
+    border: 1px solid black;
+    color: white;
+    padding: 5px px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    }
+ 	
+</style>
+ </head>
+<body>
+<div id="main-content" class="container-fluid pt-3">
+    <h1><span th:text="${arg}">Our Arg</span></h1>
+<!--
+Connessione con websocket
+-->
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default"
+                            type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default"
+                            type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--
+Pulsanti di invio comandi
+-->
+
+ 
+
+      <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline" action="/on" method="post">
+            <div class="form-group">
+                    <label for="on">Led TurnOn</label>  
+                    <button id="on" type="submit">on</button>
+              </div>
+            </form>
+            <form class="form-inline" action="/off" method="post">
+            <div class="form-group">
+                     <label for="off">Led TurnOff</label>  
+                    <button id="off" type="submit">off</button>
+            </div>
+            </form>
+             <form class="form-inline" action="/doLedBlink" method="post">
+            <div class="form-group">
+                     <label for="doLedBlink">Led Blick</label>  
+                    <button id="doLedBlink" type="submit">doLedBlink</button>
+            </div>
+            </form>
+              <form class="form-inline" action="/stopLedBlink" method="post">
+            <div class="form-group">
+                     <label for="stopLedBlink">Led Blink Stop</label>  
+                    <button id="stopLedBlink" type="submit">stopLedBlink</button>
+            </div>
+            </form>           
+              <form class="form-inline" action="/distance" method="post">
+            <div class="form-group">
+                     <label for="distance">Sonar distance</label>  
+                    <button id="distance" type="submit">distance</button>
+            </div>
+            </form>           
+        </div>
+      </div>
+ 
+
+
+<!--
+Zona devices
+-->
+<h2>Current Led State=<span th:text="${ledstate}">unknown</span></h2>
+<div th:id=${ledgui} align="left"></div>
+
+<h2>Current distance=<span th:text="${sonardistance}">unknown</span></h2>
+
+
+
+<!--
+Area di output
+-->
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="conversation" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Output</th>
+            </tr>
+            </thead>
+            <tbody id="output">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!--
+Area dati sonar
+-->
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="sonar" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Sonar data</th>
+            </tr>
+            </thead>
+            <tbody id="sonarData">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+<script src="wsNoStomp.js"></script>
+</html>

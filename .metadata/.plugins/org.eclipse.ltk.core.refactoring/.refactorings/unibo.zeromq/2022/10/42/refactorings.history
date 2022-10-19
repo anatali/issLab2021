@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;HelloWorldServer.java&apos; to &apos;unibo.zeromq.HelloWorldServer.java&apos;&#x0D;&#x0A;- Original project: &apos;unibo.zeromq&apos;&#x0D;&#x0A;- Destination element: &apos;unibo.zeromq.HelloWorldServer.java&apos;&#x0D;&#x0A;- Original element: &apos;unibo.zeromq.HelloWorldServer.java&apos;" description="Copy compilation unit" destination="/src&lt;unibo.zeromq{HelloWorldServer.java" element1="/src&lt;unibo.zeromq{HelloWorldServer.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1665395889455" units="1" version="1.0"/>
+</session>

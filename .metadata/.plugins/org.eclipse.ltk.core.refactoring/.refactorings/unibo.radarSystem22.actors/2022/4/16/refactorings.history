@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;EventObserver.java&apos; to &apos;unibo.wenvUsage22/src/unibo.wenvUsage22.actors&apos;&#x0D;&#x0A;- Original project: &apos;unibo.radarSystem22.actors&apos;&#x0D;&#x0A;- Destination element: &apos;unibo.wenvUsage22/src/unibo.wenvUsage22.actors&apos;&#x0D;&#x0A;- Original element: &apos;unibo.radarSystem22.actors.EventObserver.java&apos;" description="Copy compilation unit" destination="=unibo.wenvUsage22/src&lt;unibo.wenvUsage22.actors" element1="/src&lt;unibo.radarSystem22.actors{EventObserver.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1650094443328" units="1" version="1.0"/>
+</session>

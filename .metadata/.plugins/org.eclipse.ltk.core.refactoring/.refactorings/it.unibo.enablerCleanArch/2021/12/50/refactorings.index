@@ -1,0 +1,55 @@
+1638697478336	Copy compilation unit
+1638697574530	Delete element
+1638697599648	Rename method 'setVal'
+1638704445866	Delete element
+1638704456086	Delete element
+1638704505598	Delete element
+1638781190799	Rename type 'ProtcolType'
+1638781885128	Copy compilation unit
+1638782596568	Move compilation unit
+1638782632083	Rename type 'IEnablerAsServer'
+1638783447452	Rename resource 'SonarEnablerAsServer.java'
+1638783456702	Move compilation unit
+1638783547511	Move compilation unit
+1638783584511	Copy compilation unit
+1638783820721	Copy compilation unit
+1638783892014	Delete element
+1638784025422	Move compilation unit
+1638784436329	Move compilation unit
+1638785038416	Move compilation unit
+1638862702419	Rename type 'SonarModelObservable'
+1638863359292	Move compilation unit
+1638863497457	Copy compilation unit
+1638863566008	Rename type 'SonarMockObservable'
+1638863773905	Rename type 'SonarModelObservable'
+1638954039473	Rename type 'EnablerCounterServer'
+1638954054517	Rename type 'EnablerCounterClient'
+1638958645026	Rename type 'TcpApplServer'
+1638960973147	Rename type 'TcpApplServerMain'
+1639038538239	Rename field 'server'
+1639045038184	Copy compilation unit
+1639045058401	Rename type 'SharedCounterExample'
+1639045882566	Rename type 'EnablerCounterAsServer'
+1639046391282	Rename type 'Counter'
+1639046564454	Rename type 'EnablerCounterAsClient'
+1639046664442	Rename type 'CounterLazy'
+1639046731432	Rename type 'EnablerCounter'
+1639134105547	Move compilation unit
+1639137224443	Copy compilation unit
+1639169861320	Copy compilation unit
+1639210031383	Copy compilation unit
+1639211218322	Rename type 'IApplMessageHandler'
+1639212578701	Delete element
+1639212878410	Copy compilation unit
+1639213083862	Move compilation unit
+1639213096550	Move compilation unit
+1639213350607	Delete element
+1639213861112	Delete element
+1639216782762	Copy compilation unit
+1639219104967	Rename local variable 'sonarAdapterAsclient'
+1639219199430	Move compilation units
+1639219231525	Move compilation units
+1639219418165	Rename field 'sonarAdapterServer'
+1639219907505	Move compilation unit
+1639220150339	Delete element
+1639221662721	Move compilation unit

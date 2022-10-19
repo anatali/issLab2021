@@ -1,0 +1,45 @@
+package it.unibo.msenabler;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+ 
+@Configuration
+@EnableWebSocket
+public class WebSocketConfiguration implements WebSocketConfigurer {
+
+    /*
+    Necessario per l'invio di immagini
+     */
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxBinaryMessageBufferSize(1024000);
+        return container;
+    }
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new WebSocketHandler(), "/radarsocket").setAllowedOrigins("*");
+    }
+}
+
+/*
+registry.addHandler(this.brokerStomp, "/sockjs")
+            .addInterceptors(handShakeWebSocketInterceptor)
+            .setAllowedOrigins("*")
+            .withSockJS()
+            .setHeartbeatTime(this.weEventConfig.getStompHeartbeats() * 1000);
+
+    registry.addHandler(this.brokerStomp, "/stomp")
+            .addInterceptors(handShakeWebSocketInterceptor)
+            .setAllowedOrigins("*");
+
+    registry.addHandler(this.webSocketMqtt, "/mqtt")
+            .addInterceptors(handShakeWebSocketInterceptor)
+            .setAllowedOrigins("*");
+
+registry.addHandler(serverHandler(), "/ws")
+      .setHandshakeHandler(this.handshakeHandler);
+registry.addHandler(serverHandler(), "/sockjs").withSockJS()
+      .setTransportHandlerOverrides(new WebSocketTransportHandler(this.handshakeHandler));
+ */

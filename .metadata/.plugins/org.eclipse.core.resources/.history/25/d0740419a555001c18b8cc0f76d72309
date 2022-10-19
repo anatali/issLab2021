@@ -1,0 +1,5 @@
+package it.unibo.enablerCleanArch.adapters;
+
+public class SonarProxy {
+
+}

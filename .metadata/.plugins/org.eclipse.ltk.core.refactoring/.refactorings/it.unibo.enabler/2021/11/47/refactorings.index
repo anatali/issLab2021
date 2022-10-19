@@ -1,0 +1,25 @@
+1636967649333	Rename type 'Enabler'
+1636967818148	Rename type 'TcpEnablerUsage'
+1636968021515	Copy compilation unit
+1636969414841	Copy compilation unit
+1636973037383	Copy compilation unit
+1636986994556	Rename resource 'build_ctxradargui.gradle'
+1636990164259	Copy compilation unit
+1636990695009	Rename package 'it.unibo.bls.devices.mock'
+1636992156210	Rename type 'DeviceEnabler'
+1636992336062	Copy compilation unit
+1637055001382	Delete elements
+1637312699024	Rename field 'connSupport'
+1637312915284	Rename type 'MessageHandler'
+1637315480140	Rename type 'NaiveClientHandler'
+1637317621046	Move compilation units
+1637317632237	Delete element
+1637318611272	Move compilation unit
+1637320667160	Rename type 'LedEnablerClientMsgHandler'
+1637320736982	Rename type 'SonarEnablerClientMsgHandler'
+1637320817662	Rename type 'ControllerEnablerClientMsgHandler'
+1637397817140	Copy compilation unit
+1637397839024	Copy compilation units
+1637403015601	Copy file
+1637403018879	Copy file
+1637403081428	Copy file

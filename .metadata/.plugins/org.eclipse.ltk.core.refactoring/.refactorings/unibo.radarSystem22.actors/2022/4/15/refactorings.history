@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;AllOnPc.java&apos; to &apos;unibo.radarSystem22.actors.main.AllOnPc.java&apos;&#x0D;&#x0A;- Original project: &apos;unibo.radarSystem22.actors&apos;&#x0D;&#x0A;- Destination element: &apos;unibo.radarSystem22.actors.main.AllOnPc.java&apos;&#x0D;&#x0A;- Original element: &apos;unibo.radarSystem22.actors.main.AllOnPc.java&apos;" description="Copy compilation unit" destination="/src&lt;unibo.radarSystem22.actors.main{AllOnPc.java" element1="/src&lt;unibo.radarSystem22.actors.main{AllOnPc.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1649315594074" units="1" version="1.0"/>
+</session>
