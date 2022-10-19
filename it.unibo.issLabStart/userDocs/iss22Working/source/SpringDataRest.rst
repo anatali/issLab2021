@@ -6,78 +6,64 @@
 =======================================
 SpringDataRest
 =======================================
-#. Creazione di un progetto SpringBoot :ref:`Progetto SpringDataRest - iniziale` con 
-   interazioni *HumanMachine* (:blue:`hm`) e *MachineToMachine* (:blue:`m2m`)
-#. Testing con RestTemplate ()
-#. Swagger
-#. Creazione di un database usando H2 :  `Progetto SpringDataRest - database`
-#. Testing con :ref:`MockMvc`  
-#. Progetto SpringDataRest - servizi (e controller)
-#. SpringDataRest - HAL browser
- 
-
-
-- :blue:`HATEOAS` sta per *Hypermedia as the Engine of Application State*.
-- :blue:`HAL` (*Hypertext Application Language*)  fornisce un formato coerente  per il collegamento 
-  ipertestuale tra le risorse.
-
-.. Buone spiegazioni in https://spring.io/guides/gs/accessing-data-rest/ Accessing JPA Data with REST
 
 -------------------------------------
-Progetto SpringDataRest - iniziale
+SpringDataRest - requisiti
 -------------------------------------
-Il codice completo del progetto si trova in **progetto  SpringDataRest**.
 
-+++++++++++++++++++++++++++++++++++++++++++
-SpringDataRest - build.gradle iniziale
-+++++++++++++++++++++++++++++++++++++++++++
+Costruire una applicazione (un sistema software) che permette la gestione CRUD di informazioni
+relative a persone.
+L'applicazione deve essere resa disponibile in rete attraverso una API Restful.
 
-Il progetto inizia con le seguenti dipendenze nel file *build.gradle*:
 
-.. code:: 
++++++++++++++++++++++++++++++++++++
+SpringDataRest: user story
++++++++++++++++++++++++++++++++++++
 
-  dependencies {
-   implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-   implementation 'org.springframework.boot:spring-boot-starter-web'
-   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  //Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-  //For java HTTP caller
-	  implementation 'com.squareup.okhttp:okhttp:2.7.5'
-  //Human-machine interface
-    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-  }
+Come utente del servizio mi aspetto che,  ...
 
----------------------------------------------
-Progetto SpringDataRest - business logic
----------------------------------------------
-Il codice che definisce la business logic della applicazione è organizzato su due classi:
+---------------------------------
+SpringDataRest: analisi
+---------------------------------
 
-- La classe :ref:`Person` che rappresenta i dati
-- La classe :ref:`DataHandler` che rappresenta il gestore logico dei dati
+Dopo interazione con il committente,  le informazioni relative a persone possono essere
+formalmente espresse dalla seguente classe Java:
 
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++++
 Person
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++++
 
 .. code:: Java
 
-    @Data  //Lombok
+ 
     public class Person {
       private long id;
       private String firstName;
       public String toString(){
         return "person id="+id+" firstName="+firstName + " lastName="+lastName;
-    }        
-    }
+    }  
 
-+++++++++++++++++++++++++++
-DataHandler
-+++++++++++++++++++++++++++
+I metodi get/set delle proprietà sono omessi perchè qui non essenziali.
 
-Il gestore logico dei dati è qui molto semplice: realizza un elenco di :ref:`Person` e 
+
+++++++++++++++++++++++++++++
+Gestore CRUD
+++++++++++++++++++++++++++++
+
+Il gestore logico dei dati richiesto dal committente è molto semplice: 
+realizza un elenco di :ref:`Person` e 
 offre operazioni per aggiungere/eliminare elementi dall'elenco e cercare/ottenere elementi.
+
+- parte CREATE: *addPerson*
+- parte READ: *getFirst, getLast, getAllPersons, getPersonWithLastName*
+- parte UPDATE: todo
+- parte DELETE: *removePerson*
+
+Il gestore implicato dai requisiti può essere formalizzato dalla seguente classe Java:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DataHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 .. code:: Java
 
@@ -113,7 +99,78 @@ offre operazioni per aggiungere/eliminare elementi dall'elenco e cercare/ottener
           ...
           return pFound;
       }
+      public static void removePerson(Person p){
+        userDataList.remove(p);
+      }
   }
+
++++++++++++++++++++++++++++++++
+SpringDataRest: API Restful
++++++++++++++++++++++++++++++++
+Al momento questo requisito suggerisce l'uso di un framework specializzato come SprinBoot.
+
+- :blue:`HATEOAS` sta per *Hypermedia as the Engine of Application State*.
+- :blue:`HAL` (*Hypertext Application Language*)  fornisce un formato coerente  per il collegamento 
+  ipertestuale tra le risorse.
+
+.. Buone spiegazioni in https://spring.io/guides/gs/accessing-data-rest/ Accessing JPA Data with REST
+
++++++++++++++++++++++++++++++++++
+SpringDataRest: piano di lavoro
++++++++++++++++++++++++++++++++++
+
+#. Creazione di un progetto SpringBoot  con 
+   interazioni *HumanMachine* (:blue:`hm`) e *MachineToMachine* (:blue:`m2m`)
+#. Testing con RestTemplate ()
+#. Swagger
+
+
+.. Creazione di un database usando H2 :  `Progetto SpringDataRest - database`
+.. Testing con :ref:`MockMvc`  
+.. Progetto SpringDataRest - servizi (e controller)
+.. SpringDataRest - HAL browser
+
+
+
+
+
+--------------------------------------------
+SpringDataRest: impostazione del workspace
+--------------------------------------------
+
+Il codice completo del progetto si trova in **progetto  SpringDataRest**.
+
++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest - build.gradle iniziale
++++++++++++++++++++++++++++++++++++++++++++
+
+Il progetto inizia con le seguenti dipendenze nel file *build.gradle*:
+
+.. code:: 
+
+  dependencies {
+   implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+   implementation 'org.springframework.boot:spring-boot-starter-web'
+   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  //Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+  //For java HTTP caller
+	  implementation 'com.squareup.okhttp:okhttp:2.7.5'
+  //Human-machine interface
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+  }
+
+++++++++++++++++++++++++++++++++++++++++++++++
+Progetto SpringDataRest - business logic
+++++++++++++++++++++++++++++++++++++++++++++++
+Il codice che definisce la business logic della applicazione è organizzato su due classi:
+
+- La classe :ref:`Person` che rappresenta i dati
+- La classe :ref:`DataHandler` che rappresenta il gestore logico dei dati
+ 
+ 
+
 
 +++++++++++++++++++++++++++
 PersonGuiNaive
@@ -754,32 +811,86 @@ SpringDataRest: invio mail
 ---------------------------------------
 
 +++++++++++++++++++++++++++++
-Mail: requisito
+Mail: requisito mail
 +++++++++++++++++++++++++++++
-Inviare una mail a un preciso destinatario quando un elemento viene aggiunto ai dati.
+Inviare una mail a un destinatario precisato dal committente, quando un elemento viene aggiunto ai dati.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Mail: user story
+SpringDataRest-Mail: user story
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Come utente del servizio mi aspetto che, se invoco (con successo) l'operazione *createPerson* di 
-:ref:`SpringDataRest - M2MController`, una mail viene inviata a un destinatario specificato
-in un file di configurazione dell'applicazione.
+Come utente del servizio, mi aspetto che una mail venga inviata al destinatario specificato
+in un file di configurazione dell'applicazione:
+
+- se effettuo un `SpringDataRest: accesso a HI con curl` - Creare dati (POST)
+- se eseguio un programma che invoca (con successo) l'operazione *createPerson* di 
+  :ref:`SpringDataRest - M2MController`
 
 +++++++++++++++++++++++++++++
-Mail: analisi
+SpringDataRest-Mail: analisi
 +++++++++++++++++++++++++++++
-IL problema implica l'utilizzo di un mail server e di una libreria Java di supporto al mailing.
+Dal punto di vista tecnologico, il problema implica l'utilizzo di un mail server e di una libreria Java 
+di supporto al mailing; ad esempio:
 
 - mail server: :blue:`gmail` (*smtp.gmail.com*) oppure il testing tool :blue:`mailtrap` (*smtp.mailtrap.io*)  
 - libreria Java: *javax.mail*
-  
+
+Dal punto di vista logico, si pone il seguente problema:
+
+:remark:`Quale compoenente del sistema ha la responsabilità di iniviare la mail?`
+
+#. I controller :ref:`SpringDataRest - M2MController` e :ref:`SpringDataRest - HIController`.
+#. Il :ref:`DataHandler`.
+#. Un nuovo componente che fa 'polling' su :ref:`DataHandler`, invocandone il metodo *getLast* 
+   e invia una mail quando trova questa info cmodificata.
+#. Un nuovo componente, che capisce quando il :ref:`DataHandler` ha terminato l'operazione *addPerson*.
+
+Notiamo subito che:
+
+- Affidare il compito ai controller significa non includere questa parte nel 'core' della business logic.
+- Introdurre un ente attivo che fa polling significa sprecare risorse e non avere sicurezza che 
+  venga inviata una mail ad ogni inserzione (si pensi al caso di una inserzione seguita da eliminazione
+  e una frequenza di polling cui sfugge il cambiamento).
+
+
+Il punto essenziale è che la business logic venga riorganizzata in modo che una mail vemga inviata
+ogni volta che il :ref:`DataHandler` ha terminato l'operazione *addPerson*.
+Questo comportamento  costituisce una estensione delle funzionalità del gestore logico dei dati,
+che può essere tecnicamente ottenuta in diversi modi:
+
+#. definire una classe specializzazione di :ref:`DataHandler`. Qui però va ricordato il principio di Occam.
+#. modificare il codice *addPerson* di :ref:`DataHandler` in modo che realizzi l'invio della mail,
+   avvaledosi di una utility di supporto
+#. impostare il :ref:`DataHandler` come un **oggetto osservabile**, che aggiorna gli observer al termine
+   dell'operazione  *addPerson*. Un observer che viene registrato presso il :ref:`DataHandler` 
+   rappresenta il nuovo componente, che 'capisce' quando è il momento di inviare la mail.
+
+Il terzo tipo di riorganizzazione architetturale sembra più complesso ma è sicuramente più flssibile che
+non cablare nuovi possibili comportamenti 'marginali' nel codice del gestore.
+Si pensi ad esempio all'aggiunta di nuovi requisiti come:
+
+- registare in un file di log il completamento con successo di ogni operazione;
+- emettere un suono di allarme quando un elemento viene eliminato;
+- accendere un led quando il :ref:`DataHandler` è in esecuzione;
+- utilizzare un protocollo *publish-subscribe* per inviare informazioni al mondo esterno  
+  o per aprire nuovi canali di richiesta;
+- ... 
+
+Inoltre, in accordo al :blue:`principio di singola resposabilità`,
+l'invio della  mail è incapsulato nel codice dell'observer, liberando il :ref:`DataHandler`
+da questo ulteriore compito.
+
+Per realizzare la nuova funzionalità conviene impostare un nuovo SPRINT.
+
+++++++++++++++++++++++++++++++++++
+SpringDataRest: sprint 1 (mail)
+++++++++++++++++++++++++++++++++++
+
 Aggiungiamo dunque in *build.gradle* la dipendenza a *javax.mail*:
 
   .. code::
   
      implementation 'com.sun.mail:javax.mail:1.5.5'
-
 
 La logica per creare la sessione differisce in base al tipo di server SMTP; 
 ad esempio, se il server SMTP non richiede alcuna autenticazione, possiamo 
@@ -789,6 +900,12 @@ l'autenticazione TLS o SSL, la logica da creare sarà diversa .
 Il protocollo :blue:`SSL` ed il suo successore :blue:`TLS` permettono una comunicazione sicura dal sorgente 
 al destinatario (end-to-end) su reti TCP/IP offrendo autenticazione, integrità dei dati 
 e cifratura operando al di sopra del livello di trasporto.
+
+
+++++++++++++++++++++++++++++++++++
+SpringDataRest-Mail: progetto
+++++++++++++++++++++++++++++++++++
+
 
 Introduciamo la classe *EmailService* come utility per l'invio dei messaggi di mail
 capace di usare due diversi mail servers:
@@ -804,20 +921,7 @@ Il programma Java per inviare e-mail contiene i seguenti passaggi:
   il corpo dell'e-mail, gli allegati ecc.
 - Utilizzo di *javax.mail.Transport* per inviare il messaggio di posta elettronica.
 
-++++++++++++++++++++++++++++++++++++++
-Mail: approfondimento della analisi
-++++++++++++++++++++++++++++++++++++++
 
-L'invio di messaggi (di mail) da parte di :ref:`DataHandler` costituisce una estensione 
-delle funzionalità del gestore logico dei dati.
-
-Per ottenere queste estensioni, è possibile agire in diversi modi:
-
-- definire una classe specializzazione di :ref:`DataHandler`
-- introdurre in :ref:`DataHandler` una operazione locale (diciamo *sendMail*) che realizza l'invio di una mail 
-  e che viene invocata al termine della operazione addPerson o di ogni altra operazione 
-- impostare il :ref:`DataHandler` come un oggetto osservabile, lasciano ad eventuali observer il compito
-  di inviare la mail o di eseguire altre attività (ad esempio aggiornare un file di log)
 
 Il :blue:`principio di singola resposabilità`, induce a delegare l'invio della mail a un componente
 specializzato, come ad esempio:
@@ -852,12 +956,7 @@ EmailService
       }catch(Exception e){... }
     }
 
-Questo componente funge da adpater per una comunicazione della business logic verso il mondo
-esterno, in accordo con gli schemi della cleanArchitecture.
 
-.. image:: ./_static/img/Architectures/cleanArch.jpg 
-    :align: center
-    :width: 60%
 
 Le operazioni *sendMailUsingGoogle*
 
@@ -892,8 +991,23 @@ Le operazioni *sendMailUsingGoogle*
         Transport.send(message);  //javax.mail.Service
     }
 
+Questo componente può essere invocato direttamente da :ref:`DataHandler`
+oppure essere incapsulato in un observer.
 
+Esso funge da *adapter* per la comunicazione dell'applicazione verso il mondo
+esterno, in accordo con gli schemi della cleanArchitecture.
+
+.. image:: ./_static/img/Architectures/cleanArch.jpg 
+    :align: center
+    :width: 60%
   
 .. implementation 'com.github.tntim96:fakesmtp:2.0'   
 .. https://mailtrap.io/register/signup
 .. java -jar fakeSMTP.jar  -m   //save in memory
+
+----------------------------------------------
+SpringDataRest: refactoring a messaggi
+----------------------------------------------
+
+- La business logic può essere scorporata e resa disponibile in rete senza l'uso di Spring
+- La business logic può essere vista come una risorsa, in ottica HATEOAS

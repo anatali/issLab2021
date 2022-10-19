@@ -30,7 +30,6 @@ public class DataHandler {
         mailer.sendMail(p.toString(),"antonio.natali@unibo.it");
     }
     public static void removePerson(Person p){
-        System.out.println(" --- DataHandler removePerson  " +p );
         userDataList.remove(p);
     }
     public static List<Person> getAllPersons(){

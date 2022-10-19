@@ -22,11 +22,8 @@ dependencies {
     implementation 'com.github.joschi.jackson:jackson-datatype-threetenbp:2.6.4'
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.1.16.RELEASE'
-
-    //Added
-    implementation 'javax.xml.bind:jaxb-api:2.1'
-
 }
 
 group = 'io.swagger'
