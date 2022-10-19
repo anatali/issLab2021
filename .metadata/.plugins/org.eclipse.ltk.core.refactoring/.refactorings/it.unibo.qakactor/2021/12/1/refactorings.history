@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy element &apos;MqttUtils.kt&apos; to &apos;it.unibo.enablerCleanArch/src/it.unibo.enablerCleanArch.supports.mqtt&apos;&#x0D;&#x0A;- Original project: &apos;it.unibo.qakactor&apos;&#x0D;&#x0A;- Destination element: &apos;it.unibo.enablerCleanArch/src/it.unibo.enablerCleanArch.supports.mqtt&apos;&#x0D;&#x0A;- Original element: &apos;MqttUtils.kt&apos;" description="Copy file" destination="=it.unibo.enablerCleanArch/src&lt;it.unibo.enablerCleanArch.supports.mqtt" element1="src/main/kotlin/MqttUtils.kt" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1640679411873" units="0" version="1.0"/>
-</session>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy element &apos;ActionFunction.java&apos; to &apos;unibo.actor22/src/unibo.actor22comm&apos;&#x0D;&#x0A;- Original project: &apos;it.unibo.radarSystem22&apos;&#x0D;&#x0A;- Destination element: &apos;unibo.actor22/src/unibo.actor22comm&apos;&#x0D;&#x0A;- Original element: &apos;it.unibo.radarSystem22.sprint1.ActionFunction.java&apos;" description="Copy compilation unit" destination="=unibo.actor22/src&lt;unibo.actor22comm" element1="/src&lt;it.unibo.radarSystem22.sprint1{ActionFunction.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1650102763713" units="1" version="1.0"/>
-</session>

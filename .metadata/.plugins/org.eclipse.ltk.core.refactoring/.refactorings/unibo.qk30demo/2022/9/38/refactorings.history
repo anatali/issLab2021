@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;unibo.qk30demo/src/boundaryqak30.qak&apos; to &apos;boundaryqak30.qakt&apos;" description="Rename resource &apos;boundaryqak30.qak&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/boundaryqak30.qak" name="boundaryqak30.qakt" stamp="1663676898657" updateReferences="true"/>
-</session>
