@@ -1018,6 +1018,24 @@ SpringBoot cli
 ----------------------------------
 
 .. https://www.digitalocean.com/community/tutorials/spring-boot-cli-setup-and-helloworld-example
+.. https://github.com/PacktPublishing/Hands-On-Microservices-with-Spring-Boot-and-Spring-Cloud
+.. code put in C:\Didattica\microservices
 
-/spring-boot-cli-2.7.4-bin.zip
-bin/spring.bat
+.. code::
+
+  set PATH=C:\DidatticaTools\Spring\spring-2.7.5\bin;%PATH%
+
+  /spring-boot-cli-2.7.5-bin.zip
+  bin/spring.bat
+
+  spring init --force ^
+  --boot-version=2.7.5 ^
+  --build=gradle ^
+  --java-version=1.8 ^
+  --packaging=jar ^
+  --name=product-service ^
+  --package-name=it.unibo.core.core.product ^
+  --groupId=it.unibo ^
+  --dependencies=actuator,webflux ^
+  --version=1.0.0 ^
+  product-service

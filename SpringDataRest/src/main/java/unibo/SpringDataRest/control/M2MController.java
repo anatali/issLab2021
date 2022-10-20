@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import unibo.SpringDataRest.api.PersonService;
 import unibo.SpringDataRest.businessLogic.DataHandler;
 import unibo.SpringDataRest.model.Person;
 
@@ -15,7 +16,13 @@ import java.util.List;
 @RequestMapping(path = "/RestApi", produces = "application/json")
 @CrossOrigin(origins = "*")
 
-public class M2MController {
+public class M2MController implements PersonService {
+
+    @Override
+    public Person getPerson(int personId) {
+        Person p = DataHandler.getPersonWithId( Long.valueOf(personId) );
+        return p;
+    }
 
     @GetMapping("/getLastPerson")
     public ResponseEntity<Person> getLastPerson() {
@@ -70,4 +77,6 @@ public class M2MController {
         DataHandler.removePerson(p);
         return "";
     }
+
+
 }

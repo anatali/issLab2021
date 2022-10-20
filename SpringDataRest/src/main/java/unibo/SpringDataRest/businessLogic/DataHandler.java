@@ -44,6 +44,19 @@ public class DataHandler {
         if( userDataList.isEmpty()) addNewPerson();
         return userDataList.firstElement();
     }
+    public static Person getPersonWithId(long id){
+        //System.out.println(" --- DataHandler getPersonWithLastName lastName=" + lastName);
+        Person  pfound = null;
+        Iterator<Person> iter = userDataList.iterator();
+        while( iter.hasNext() ){
+            Person p = iter.next();
+            if( p.getId() == id ) {
+                pfound=p;
+                break;
+            }
+        }
+        return pfound;
+    }
     public static String getPersonWithLastName(String lastName){
         //System.out.println(" --- DataHandler getPersonWithLastName lastName=" + lastName);
         String pFound = "person not found";
