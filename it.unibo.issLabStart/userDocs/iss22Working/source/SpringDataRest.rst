@@ -806,6 +806,56 @@ Fornisce le informazioni sulle operazioni in Json.
 .. https://www.youtube.com/watch?v=utRxyPfFlDw
 .. SpringFox hasn't been updated for a year or so, so I would prefer remove it completely from a project  and replace it with maintained springdoc-openapi library.
 
+
+---------------------------------------
+SpringDataRest:  interfaces
+---------------------------------------
+A partire da *Spring Framewrk 5.0* è possibile descrivere API RESTful mediante interfacce Java.
+
+Supponiamo ad esempio dei definire:
+
+.. code::
+
+  public interface PersonService {
+    @GetMapping(value="/person/{personId}", produces ="application/json")
+    Person getPerson(@PathVariable int personId);
+  }
+
+Questa specifica include le seguenti informazioni:
+
+ - :blue:`@GetMapping`: specifica che il metodo *getPerson* è mappato a una richiesta
+    HTTP GET con URL-path=:brown:`/person/{personId}` e che il formato della risposta è JSON.
+ - :blue:`@PathVariable`: specifica che il path variabile name :brown:`{personId}` della GET
+    è mappato all'argomento *personId* del metodo.
+    Ad esempio una HTTP *GET /person/3* si traduce in una chiamata a *getPerson(3)*.
+ - Il metodo *getPerson* restituisce un POJO di tipo Person, che costituisce il 
+   :blue:`DTO` (*Data Transfer Object*) usato per trasferire i dati di risposta al caller.
+
+
++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest: interface implementation
++++++++++++++++++++++++++++++++++++++++++++
+
+.. code::
+
+  @RestController
+  public class M2MController implements PersonService {
+
+    @Override
+    public Person getPerson(int personId) {
+        Person p = DataHandler.getPersonWithId( Long.valueOf(personId) );
+        return p;
+    }
+    ...
+
+Invicazione
+
+.. code::
+
+  curl http://localhost:8080/RestApi/person?personId=1
+  curl http://localhost:8080/RestApi/person/1
+  curl http://localhost:8080/RestApi/getLastPerson
+
 ---------------------------------------
 SpringDataRest: invio mail
 ---------------------------------------
@@ -1039,3 +1089,10 @@ SpringBoot cli
   --dependencies=actuator,webflux ^
   --version=1.0.0 ^
   product-service
+
+  //ESECUZIONE
+  gradlew build 
+  cd build/libs 
+  java -jar product-service-1.0.0.jar 
+  curl http://localhost:7001/product/3
+  {"productId":3,"name":"name-3","weight":123,"serviceAddress":"natDell/192.168.1.132:7001"}

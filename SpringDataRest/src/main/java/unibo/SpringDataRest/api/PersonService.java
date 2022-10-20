@@ -2,11 +2,12 @@ package unibo.SpringDataRest.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import unibo.SpringDataRest.model.Person;
 
 public interface PersonService {
-    @GetMapping(value="/person/{personId}", produces ="application/json")
-    Person getPerson(@PathVariable int personId);
+    @GetMapping(value="/RestApi/person/{personId}", produces ="application/json")
+    Person getPerson(@RequestParam int personId);
 }
 /*
  @GetMapping: specifica che il metodo getPerson è mappato a una richiesta
