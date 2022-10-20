@@ -1011,3 +1011,13 @@ SpringDataRest: refactoring a messaggi
 
 - La business logic può essere scorporata e resa disponibile in rete senza l'uso di Spring
 - La business logic può essere vista come una risorsa, in ottica HATEOAS
+
+
+----------------------------------
+SpringBoot cli 
+----------------------------------
+
+.. https://www.digitalocean.com/community/tutorials/spring-boot-cli-setup-and-helloworld-example
+
+/spring-boot-cli-2.7.4-bin.zip
+bin/spring.bat
