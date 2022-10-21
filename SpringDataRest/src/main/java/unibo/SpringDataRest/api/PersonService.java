@@ -17,6 +17,10 @@ public interface PersonService {
               è mappato all'argomento personId.
               Ad esempio una HTTP GET /person/3 si traduce in una chiamata
               a getPerson(3)
+ @RequestParam: specifica che i parametri di query (opzionali)  devono essere
+              mappati nell’argomento arg del metodo.
+              Ad esempio, una HTTP GET /person/3?arg=abc si traduce in una chiamata
+              a getPerson(3,”abc”).
  Il metodo getPerson restituisce un POJO di tipo Person,
               che costituisce il Data Transfer Object (DTO) usato per
               trasferire i dati di risposta al caller

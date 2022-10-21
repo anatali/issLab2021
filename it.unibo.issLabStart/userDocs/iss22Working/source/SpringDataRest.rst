@@ -324,6 +324,51 @@ SpringDataRest: accesso a HI con browser
          :align: center
          :width: 40%
 
+
++++++++++++++++++++++++++++++++++++++++++++++
+SpringDataRest: accesso con HAL browser
++++++++++++++++++++++++++++++++++++++++++++++
+Aggiungianmo la seguente dipendenza:
+
+.. code::
+
+    dependencies {
+      ...
+      implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+    }
+
+In tal modo l'accesso al server :blue:`http://localhost:8080/` induce l'esescusione 
+di un browser specializzato per HAL. :
+
+.. image:: ./_static/img/SpringDataRest/SpringDataRestHAL.png 
+    :align: center
+    :width: 60%
+
+Pemendo il pulsante GO! dopo avere inserito in *Edit Headers*:
+
+- :blue:`/Api`: otteniamo una stringa JSON di risposta (in seguito a una seganalzione di errore) della forma:
+
+  .. code::
+
+    {
+      "error": {},
+      "text": "<!DOCTYPE html> ... "
+    } 
+
+  Questo è il segno che il browser si aspetta di ricevere messaggi JSON.
+
+- :blue:`/RestApi/getLastPerson`: otteniamo  la stringa JSON di risposta del tipo:
+  
+  .. code::
+
+    {
+      "id": ...,
+      "firstName": "...",
+      "lastName": "..."
+    }  
+  
+  Questa è la risposta prodotta da :ref:`SpringDataRest - M2MController`  che introdurremo tra poco.
+
 +++++++++++++++++++++++++++++++++++++++++++++
 SpringDataRest: accesso a HI con curl
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -830,9 +875,9 @@ Questa specifica include le seguenti informazioni:
  - :blue:`@PathVariable`: specifica che il path variabile name :brown:`{personId}` della GET
    è mappato all'argomento *personId* del metodo.
 
-   Ad esempio, una HTTP *GET /person*:brown:`/3?arg` si traduce in una chiamata a *getPerson(3,"")*.
- - :blue:`@RequestParam`: specifica che i parametri di query devono essere mappati nell'argomento 
-   *arg* del metodo.
+   Ad esempio, una HTTP *GET /person*:brown:`/3` si traduce in una chiamata a *getPerson(3,"")*.
+ - :blue:`@RequestParam`: specifica che i parametri di query (opzionali) devono essere 
+   mappati nell'argomento *arg* del metodo.
 
    Ad esempio, una HTTP *GET /person/3*:brown:`?arg=abc` si traduce in una chiamata a *getPerson(3,"abc")*.
  - Il metodo *getPerson* restituisce un POJO di tipo Person, che costituisce il 

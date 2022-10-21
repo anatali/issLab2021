@@ -19,6 +19,8 @@ dependencies {
 //Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+//Added for HAL explorer
+	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 //For HTTP caller
 	implementation 'com.squareup.okhttp:okhttp:2.7.5'
 //Human-machine interface

@@ -128,7 +128,7 @@ Tra i diversi modi di accesso con richieste HTTP, ricordiamo:
 
 - :ref:`Accesso mediante browser`
 - :ref:`Accesso mediante H2 console` per agire direttamente sul database attraverso comandi SQL.
-- :ref:`Accesso medinate HAL browser`  
+- :ref:`Accesso mediante HAL browser`  
 - :ref:`Accesso mediante curl`
 - :ref:`Accesso mediante Java`, Python, etc.
 - utilizzare :blue:`springdoc-openapi`, 
@@ -344,7 +344,7 @@ Progetto SpringDataRest - servizi
 -------------------------------------
 
 ++++++++++++++++++++++++++++++
-Accesso medinate HAL browser
+Accesso mediante HAL browser
 ++++++++++++++++++++++++++++++
 
 Aggiungianmo le dipendenze che permettono l'usop di HAL explorer:
