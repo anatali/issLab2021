@@ -19,7 +19,8 @@ import java.util.List;
 public class M2MController implements PersonService {
 
     @Override
-    public Person getPerson(int personId) {
+    public Person getPerson(int personId, String arg) {
+        System.out.println(" --- M2MController getPerson Id="+personId + " arg.length="+arg.length());
         Person p = DataHandler.getPersonWithId( Long.valueOf(personId) );
         return p;
     }

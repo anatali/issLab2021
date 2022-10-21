@@ -46,6 +46,7 @@ iss22
    TemaFinaleNote
    SpringDataRest
    SpringDataRestDB
+   QakRest
    BookMspatterns
    EventuateTram
    webRobot22

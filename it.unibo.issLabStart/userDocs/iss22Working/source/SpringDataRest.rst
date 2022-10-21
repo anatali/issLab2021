@@ -1,5 +1,6 @@
 .. role:: red 
 .. role:: blue 
+.. role:: brown 
 .. role:: remark
 .. role:: worktodo
 
@@ -818,16 +819,22 @@ Supponiamo ad esempio dei definire:
 
   public interface PersonService {
     @GetMapping(value="/person/{personId}", produces ="application/json")
-    Person getPerson(@PathVariable int personId);
+    Person getPerson(@PathVariable int personId, 
+                     @RequestParam(required = false)String arg);
   }
 
 Questa specifica include le seguenti informazioni:
 
  - :blue:`@GetMapping`: specifica che il metodo *getPerson* è mappato a una richiesta
-    HTTP GET con URL-path=:brown:`/person/{personId}` e che il formato della risposta è JSON.
+   HTTP GET con URL-path= :brown:`/person/{personId}?arg=...` e che il formato della risposta è JSON.
  - :blue:`@PathVariable`: specifica che il path variabile name :brown:`{personId}` della GET
-    è mappato all'argomento *personId* del metodo.
-    Ad esempio una HTTP *GET /person/3* si traduce in una chiamata a *getPerson(3)*.
+   è mappato all'argomento *personId* del metodo.
+
+   Ad esempio, una HTTP *GET /person*:brown:`/3?arg` si traduce in una chiamata a *getPerson(3,"")*.
+ - :blue:`@RequestParam`: specifica che i parametri di query devono essere mappati nell'argomento 
+   *arg* del metodo.
+
+   Ad esempio, una HTTP *GET /person/3*:brown:`?arg=abc` si traduce in una chiamata a *getPerson(3,"abc")*.
  - Il metodo *getPerson* restituisce un POJO di tipo Person, che costituisce il 
    :blue:`DTO` (*Data Transfer Object*) usato per trasferire i dati di risposta al caller.
 
@@ -848,13 +855,66 @@ SpringDataRest: interface implementation
     }
     ...
 
-Invicazione
+Indicazione
 
 .. code::
 
   curl http://localhost:8080/RestApi/person?personId=1
   curl http://localhost:8080/RestApi/person/1
   curl http://localhost:8080/RestApi/getLastPerson
+
+
+
+
+
+---------------------------------------
+Actuator - JConsole
+---------------------------------------
+
+.. code::
+
+  implementation 'org.springframework.boot:spring-boot-starter-actuator:2.7.4'
+
+Actuator viene attualmente fornito con la maggior parte degli endpoint disabilitati.
+Per abilitarli:
+
+.. code::
+
+  management.endpoints.web.exposure.include=* 
+
+Actuator espone i suoi endpoints come :blue:`MBean` che possono essere visualizzati e gestiti con strumenti
+(tra cui la JConsole) conformi alla specifica JMX (Java Management Extensions).
+
+.. code::
+
+  localhost:8080/actuator
+  //open the Links sections
+
+
+.. image:: ./_static/img/SpringDataRest/SpringDataRestActuator.png 
+    :align: center
+    :width: 80%  
+ 
+See https://www.oracle.com/technical-resources/articles/java/jconsole.html
+
+L'interfaccia utente grafica di JConsole è uno strumento di monitoraggio 
+conforme alla specifica JMX (Java Management Extensions).
+
+JMX fornisce strumenti per la gestione e il monitoraggio di applicazioni, oggetti di sistema, 
+dispositivi (come le stampanti) e reti orientate ai servizi. 
+Tali risorse sono rappresentate da oggetti chiamati Managed Bean (o :blue:`MBean`).
+
+JConsole utilizza l'ampia strumentazione della Java Virtual Machine (JVM) per fornire informazioni sulle prestazioni 
+e sul consumo di risorse delle applicazioni in esecuzione sulla piattaforma Java.
+
+L' eseguibile JConsole si trova in *JDK_HOME /bin* , dove JDK_HOME è la directory in cui è installato Java Development Kit (JDK). 
+
+L'avvio di JConsole senza alcun argomento rileverà automaticamente tutte le applicazioni Java locali 
+e visualizzerà una finestra di dialogo che consente di selezionare l'applicazione che si desidera monitorare.
+
+L'utilizzo di JConsole per monitorare un'applicazione locale è utile per lo sviluppo e per la creazione di prototipi, 
+ma non è consigliato per gli ambienti di produzione, poiché JConsole stessa consuma notevoli risorse di sistema. 
+Si consiglia il monitoraggio remoto per isolare l'applicazione JConsole dalla piattaforma monitorata.
 
 ---------------------------------------
 SpringDataRest: invio mail
@@ -1071,11 +1131,14 @@ SpringBoot cli
 .. https://github.com/PacktPublishing/Hands-On-Microservices-with-Spring-Boot-and-Spring-Cloud
 .. code put in C:\Didattica\microservices
 
+
 .. code::
 
   set PATH=C:\DidatticaTools\Spring\spring-2.7.5\bin;%PATH%
 
   /spring-boot-cli-2.7.5-bin.zip
+  bin/spring --help
+  set JAVA_HOME=C:\Program Files\Java\jdk-11.0.8
   bin/spring.bat
 
   spring init --force ^
@@ -1096,3 +1159,8 @@ SpringBoot cli
   java -jar product-service-1.0.0.jar 
   curl http://localhost:7001/product/3
   {"productId":3,"name":"name-3","weight":123,"serviceAddress":"natDell/192.168.1.132:7001"}
+
+  curl http://localhost:8080/RestApi/person/1
+  curl http://localhost:8080/RestApi/person/1?arg=abc   OK
+
+  uuu

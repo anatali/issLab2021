@@ -25,6 +25,8 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
 //Added for Swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+//Added for actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 //Added for mail
 	//implementation 'org.springframework.boot:spring-boot-starter-mail'
