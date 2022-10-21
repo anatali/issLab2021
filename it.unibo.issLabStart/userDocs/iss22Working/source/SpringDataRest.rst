@@ -913,7 +913,7 @@ Indicazione
 
 
 ---------------------------------------
-Actuator - JConsole
+Actuator 
 ---------------------------------------
 
 .. code::
@@ -928,38 +928,60 @@ Per abilitarli:
   management.endpoints.web.exposure.include=* 
 
 Actuator espone i suoi endpoints come :blue:`MBean` che possono essere visualizzati e gestiti con strumenti
-(tra cui la JConsole) conformi alla specifica JMX (Java Management Extensions).
+(tra cui la :ref:`JConsole`) conformi alla specifica JMX (Java Management Extensions).
+
+Apriamo un browsser ed esguiamo:
 
 .. code::
 
-  localhost:8080/actuator
-  //open the Links sections
+   localhost:8080/explorer/index.html#uri=/actuator
 
+In questo modo attiviamo :ref:`SpringDataRest: accesso con HAL browser` con header=/actuator, il che
+produce la pagina delle Links section in una forma più user-friendly:
 
-.. image:: ./_static/img/SpringDataRest/SpringDataRestActuator.png 
+.. image:: ./_static/img/SpringDataRest/SpringDataRestActuatorHAL.png 
     :align: center
     :width: 80%  
- 
-See https://www.oracle.com/technical-resources/articles/java/jconsole.html
+
+
++++++++++++++++++++++++++++++++
+JConsole
++++++++++++++++++++++++++++++++
+
+In una finestra di comando del sistema operativo, inviamo il comando :blue:`JConsole`.  
 
 L'interfaccia utente grafica di JConsole è uno strumento di monitoraggio 
-conforme alla specifica JMX (Java Management Extensions).
+conforme alla specifica JMX (*Java Management Extensions*).
 
-JMX fornisce strumenti per la gestione e il monitoraggio di applicazioni, oggetti di sistema, 
-dispositivi (come le stampanti) e reti orientate ai servizi. 
-Tali risorse sono rappresentate da oggetti chiamati Managed Bean (o :blue:`MBean`).
+L'eseguibile JConsole si trova in *JDK_HOME/bin* , dove JDK_HOME è la directory in cui è installato 
+il Java Development Kit (JDK). Nel caso il comando non venga trovato, aggiornare il path; ad esempio:
 
-JConsole utilizza l'ampia strumentazione della Java Virtual Machine (JVM) per fornire informazioni sulle prestazioni 
-e sul consumo di risorse delle applicazioni in esecuzione sulla piattaforma Java.
+.. code::
 
-L' eseguibile JConsole si trova in *JDK_HOME /bin* , dove JDK_HOME è la directory in cui è installato Java Development Kit (JDK). 
+   set PATH=C:\Program Files\Java\jdk-11.0.9\bin;%PATH%
 
 L'avvio di JConsole senza alcun argomento rileverà automaticamente tutte le applicazioni Java locali 
 e visualizzerà una finestra di dialogo che consente di selezionare l'applicazione che si desidera monitorare.
 
+.. image:: ./_static/img/SpringDataRest/SpringDataRestJConsole.png 
+    :align: center
+    :width: 80%  
+
+ 
+JMX fornisce strumenti per la gestione e il monitoraggio di applicazioni, oggetti di sistema, 
+dispositivi (come le stampanti) e reti orientate ai servizi. 
+Tali risorse sono rappresentate da oggetti chiamati Managed Bean (o :blue:`MBean`).
+Si veda: https://www.oracle.com/technical-resources/articles/java/jconsole.html
+
+JConsole utilizza l'ampia strumentazione della Java Virtual Machine (JVM) per fornire informazioni sulle prestazioni 
+e sul consumo di risorse delle applicazioni in esecuzione sulla piattaforma Java.
+
 L'utilizzo di JConsole per monitorare un'applicazione locale è utile per lo sviluppo e per la creazione di prototipi, 
 ma non è consigliato per gli ambienti di produzione, poiché JConsole stessa consuma notevoli risorse di sistema. 
 Si consiglia il monitoraggio remoto per isolare l'applicazione JConsole dalla piattaforma monitorata.
+
+
+
 
 ---------------------------------------
 SpringDataRest: invio mail
