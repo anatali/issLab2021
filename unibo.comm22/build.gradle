@@ -15,7 +15,7 @@ repositories {
     flatDir { dirs '../unibolibs' }
 }
 
-version '1.1'
+version '1.2'
 sourceCompatibility = 1.8
 
 dependencies {
@@ -62,7 +62,8 @@ dependencies {
     implementation name: '2p301'
     implementation name: 'uniboInterfaces'
     implementation name: 'unibonoawtsupports'
-	implementation name: 'it.unibo.qakactor-2.7'  //for ApplMessage
+	//implementation name: 'it.unibo.qakactor-2.7'  //for ApplMessage
+    implementation name: 'unibo.qakactor22-3.2'
 }
 
 sourceSets {
