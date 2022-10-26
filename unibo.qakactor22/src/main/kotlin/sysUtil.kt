@@ -138,7 +138,7 @@ object sysUtil{
 		//CREATE AND MEMO THE CONTEXT
 		var newctx : QakContext?  
 		if( ! ctxHost.equals(hostName) ){
-              println("               %%% sysUtil | createTheContext $ctx for DIFFERENT host=$ctxHost} ")
+              println("               %%% sysUtil | createTheContext $ctx for DIFFERENT ctxHost=$ctxHost host=$hostName} ")
 			  newctx = QakContext( ctx, "$ctxHost", portNum, "", true) //isa ActorBasic
 		}else{
 			  println("               %%% sysUtil | createTheContext $ctx FOR host=$hostName  ")
@@ -168,7 +168,7 @@ object sysUtil{
 		//CREATE AND MEMO THE CONTEXT
 		var newctx : QakContext?
 		if( ctx!=localContextName ){
-			println("               %%% sysUtil | createTheContext $ctx for DIFFERENT node (host=$ctxHost) ")
+			println("               %%% sysUtil | createTheContext $ctx for DIFFERENT node (localContextName=$localContextName host=$ctxHost) ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "", true) //isa ActorBasic
 		}else{
 			println("               %%% sysUtil | createTheContext $ctx for LOCAL node (host=$hostName)  ")
@@ -245,12 +245,12 @@ object sysUtil{
 		}
 	}//addProxyToOtherCtxs
 
-	fun getAllActorNames(ctxName: String) : List<String>{
+	@JvmStatic fun getAllActorNames(ctxName: String) : List<String>{
 		val actorNames : String? = solve("getActorNames(A,$ctxName)","A" )
 		val actorList = strRepToList(actorNames!!)
 		return actorList
 	}
-	fun getAllActorNames( ) : List<String>{
+	@JvmStatic fun getAllActorNames( ) : List<String>{
 		val actorNames : String? = solve("getActorNames(A,ANY)","A" )
 		val actorList = strRepToList(actorNames!!)
 		return actorList
@@ -301,8 +301,9 @@ object sysUtil{
 	}
 
 	fun solve( goal: String, resVar: String  ) : String? {
-		//println("sysUtil  | solveGoal ${goal}" );
-		val sol = pengine.solve( "$goal.")
+		println("sysUtil  | solveGoal ${goal} resVar=$resVar" );
+		//val sol = pengine.solve( "context(CTX, HOST,  PROTOCOL, PORT)."); //, "CTX"
+		val sol = pengine.solve( goal+".");
 		if( sol.isSuccess ) {
 			if( resVar.length == 0 ) return "success"
 			val result = sol.getVarValue(resVar)  //Term
