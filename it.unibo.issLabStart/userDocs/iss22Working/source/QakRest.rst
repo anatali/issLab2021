@@ -73,3 +73,100 @@ QakRest - usage
 .. code::
 
     http://localhost:8085/swagger-ui/index.html
+
+
+logging.level.io.netty.DEBUG=OFF
+
+log4j.rootLogger=DEBUG, OFF    log4j.properties
+
+
++++++++++++++++++++++++++++++++
+Logback.xml
++++++++++++++++++++++++++++++++
+
+Si veda: https://www.baeldung.com/logback.
+
+.. da https://stackify.com/compare-java-logging-frameworks/
+
+SLF4J fornisce un'API standardizzata che in un modo o nell'altro è implementata dalla maggior parte di questi framework. 
+Ciò  consente di modificare il framework di registrazione senza modificare il codice. 
+Hai solo bisogno di cambiare la dipendenza in un framework diverso che implementa le interfacce SLF4J.
+
+Apache Log4j è un framework di logging  molto vecchio ed è stato il più popolare per diversi anni. 
+Ha introdotto concetti di base, come i livelli di log gerarchici e i logger, 
+che sono ancora utilizzati dai moderni framework di registrazione.
+
+Il team di sviluppo ha annunciato la fine del ciclo di vita di Log4j nel 2015. 
+Sebbene molti progetti legacy lo utilizzino ancora, si deve preferire un framework più recente,
+come Logback.
+
+Logback è stato scritto dallo stesso sviluppatore che ha implementato Log4j con l'obiettivo di diventarne il successore. 
+Segue gli stessi concetti di Log4j ma è stato riscritto per migliorare le prestazioni, 
+supportare SLF4J in modo nativo e per implementare molti altri miglioramenti come opzioni 
+di filtro avanzate e ricaricamento automatico delle configurazioni di registrazione.
+
+Ogni starter, come il spring-boot-starter-web, dipende da spring-boot-starter-logging, 
+che già richiama spring-jcl.
+
+Quando un file nel percorso di classe ha uno dei seguenti nomi, Spring Boot lo caricherà automaticamente 
+sulla configurazione predefinita (Spring consiglia di utilizzare la variante -spring):
+
+.. code::
+
+    logback-spring.xml
+    logback.xml
+    logback-spring.groovy
+    logback.groovy
+
+.. Si veda https://www.baeldung.com/spring-boot-logging
+
+
+    <configuration>
+ 
+    <appender name="STDOUT"
+        class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+ 
+     <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <logger name="org.springframework" level="OFF"
+        additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="io.netty" level="OFF"
+            additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <root level="INFO">  ???
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <root level="ERROR">
+        <appender-ref ref="STDOUT" />
+    </root>
+ 
+</configuration>
+
+
++++++++++++++++++++++++++++++++++
+Stream vs Flux
++++++++++++++++++++++++++++++++++
+
+- Stream is single use, vs. you can subscribe multiple times to Flux
+- Stream is pull based (consuming one element calls for the next one) vs. 
+  Flux has an hybrid push/pull model where the publisher can push elements but still 
+  has to respect backpressure signaled by the consumer
+- Stream are synchronous sequences vs. Flux can represent asynchronous sequences
