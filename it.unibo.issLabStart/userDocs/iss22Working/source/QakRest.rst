@@ -86,31 +86,52 @@ I pulsanti presenti nelle :blue:`sezioni di input` della pagina inviano richiest
 QakRest HIController
 ++++++++++++++++++++++++++++++
 
-HIController è un *Controller* Spring che implementa :ref:`L'interfaccia QakService`:
+HIController è un *Controller* Spring che implementa :ref:`L'interfaccia QakHIService`:
 
    .. code:: java
 
     @Controller
     public class HIController implements QakHIService {
+        private QakSystemFacade qakSys  = new QakSystemFacade();
+        ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-L'interfaccia QakService
+L'interfaccia QakHIService
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
    .. code:: java
 
-     public interface QakService {
-     //Synchronous part
-        @GetMapping(value="/qak/getActorNames", produces ="application/json")
-        List<String> getActorNames( );
-        @GetMapping(value="/qak/getActorsApi", produces ="application/json")
-        String  getActorsApi( );
-        @GetMapping(value="/qak/getActor", produces ="application/json")
-        public String getActor(@RequestParam String name);
-        @PostMapping(value="/qak/startTheQakSystem", produces ="application/json")
-        String startTheQakSystem(@RequestBody String sysDescr );
-        @PutMapping(value="/qak/sendMessage", produces ="application/json")
-        void sendMessage(@RequestBody String msg );
+        @GetMapping(value="/")
+        String entry( Model viewmodel );
+
+        @PostMapping(value="/startTheQakSystem")
+        String startTheQakSystem(Model viewmodel, 
+            @RequestParam(name="sysDescr", required=true) String sysDescr);
+
+        @GetMapping(value="/getActorNames")
+        String getActorNames( Model viewmodel ); //output in the page 
+
+        @GetMapping(value="/getActorsApi")
+        String getActorsApi( Model viewmodel );
+
+        @GetMapping(value="/getActor")
+        String getActor(Model viewmodel, @RequestParam String name);
+
+
+        @PostMapping(value="/sendMessage")   //Put ???
+        String sendMessage(Model viewmodel, 
+            @RequestParam(name="name", required=true) String msg );
+
+        @PostMapping(value="/createObserver")
+        String createObserver(Model viewmodel,
+            @RequestParam(name="observed", required=true) String observed );
+
+        @PostMapping(value="/manageObserver")
+        String manageObserver(Model viewmodel,
+            @RequestParam(name="observed", required=true) String observed,
+            @RequestParam(name="create", required=true) String create );
+    }
+
 
 
 HIController realizza i comandi inviando opportuni metodi di una istanza di 
