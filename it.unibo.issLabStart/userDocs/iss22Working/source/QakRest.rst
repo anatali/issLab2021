@@ -10,9 +10,192 @@ QakRest
 
 Obiettivo: costruire una facade REST per un sistema Qak.
 
+#. Usiamo SprinBoot per costruire una Facade di acesso ad un sistems Qak utilizzabile da utenti umani e 
+   da  programmi.
+#. Le funzionalità della Facade sono:
+
+   - attivare la applicazione Qak 
+   - fornire la lista dei nomi degli attori che compaiono nell'applicazione Qak
+   - fornire la lista dei messaggi che gli attori gestiscono nelle diverse transizioni di stato
+   - attivare observer sugli attori che emettono informazioni via Coap 
+   - inviare messaggi ad attori
+
+   Un esempio di uso è fornito nel video ...
+
+++++++++++++++++++++++++++++++
+QakFacadeApi
+++++++++++++++++++++++++++++++
+
+Le funzionalità che costituiscono la 'core application' sono definite dalla interfaccia *QakFacadeApi*:
+
+   .. code:: java
+
+        public interface QakFacadeApi {
+            public void startTheQakSystem(String sysDescr);
+            public List<String> getActorNames();
+            public String getActor(String name);
+            public String getActorsApi();
+            public void sendMessage(String msg);
+        }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+QakSystemFacade        
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Le funzionalità che costituiscono la 'core application' della Facade e sono realizzate dal POJO 
+*QakSystemFacade* che implementa la interfaccia *QakFacadeApi*; ad esempio:
+
+   .. code:: java
+
+    public class QakSystemFacade implements QakFacadeApi {
+    ...
+        @Override
+        public  List<String> getActorNames() {
+            if( ! qakSys_started ) return createEmptyAnswer();
+            List<String> actors = sysUtil.getAllActorNames();
+            actors.forEach( a -> ColorsOut.outappl( a, ColorsOut.CYAN) );
+            return actors;
+        }
+    }
+
+++++++++++++++++++++++++++++++
+QakRest GUI
+++++++++++++++++++++++++++++++
+
+L'accesso per gli utenti umani è realizzato da HIController che fornisce una pagina web 
+che ha sezioni di input (per l'invio di comandi) e di output.
+
+    .. image:: ./_static/img/QakRest/QakRestConsole.png 
+       :align: center
+       :width: 100%  
+
+Le :blue:`sezioni di output` includono aree:
+
+- per la visualizzazione delle risposte ai comandi (ad esempio aree *WELCOME, Transitions*)
+- per la visualizzazione delle informazioni dinamicamente emesse dagli observer attivati sugli attori
+  (area *Actor update area*)
+
+
+I pulsanti presenti nelle :blue:`sezioni di input` della pagina inviano richieste:
+
+- HTTP-GET ( *getActorNames, getActorsApi, getActor* ) 
+- HTTP-POST ( *START* )
+- HTTP-PUT ( *sendMessage* )
+
+++++++++++++++++++++++++++++++
+QakRest HIController
+++++++++++++++++++++++++++++++
+
+HIController è un *Controller* Spring che implementa :ref:`L'interfaccia QakService`:
+
+   .. code:: java
+
+    @Controller
+    public class HIController implements QakHIService {
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L'interfaccia QakService
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   .. code:: java
+
+     public interface QakService {
+     //Synchronous part
+        @GetMapping(value="/qak/getActorNames", produces ="application/json")
+        List<String> getActorNames( );
+        @GetMapping(value="/qak/getActorsApi", produces ="application/json")
+        String  getActorsApi( );
+        @GetMapping(value="/qak/getActor", produces ="application/json")
+        public String getActor(@RequestParam String name);
+        @PostMapping(value="/qak/startTheQakSystem", produces ="application/json")
+        String startTheQakSystem(@RequestBody String sysDescr );
+        @PutMapping(value="/qak/sendMessage", produces ="application/json")
+        void sendMessage(@RequestBody String msg );
+
+
+HIController realizza i comandi inviando opportuni metodi di una istanza di 
+:ref:`QakSystemFacade` e restituendo sempre una pagina HTML (*qakSystemGui.html*) con 
+opportuni aggiornamenti del viemodel; ad esempio:
+
+   .. code:: java
+
+    @Controller
+    public class HIController implements QakHIService {
+        ...
+        @Override
+        public String getActorNames(Model viewmodel) {
+            List<String> actorNames = qakSys.getActorNames();
+            updateViewmodel(viewmodel, "ActorNames:"+ actorNames.toString());
+            return "qakSystemGui";
+        }
+
+La pagina *qakSystemGui.html* organizza il suo layout utilizzando  bootstrap 
+e include lo script *wsminimal.js* per gestire dinamicamente informazioni via websoket.
+
+
++++++++++++++++++++++++++++++++++
+QakRest accesso per i programmi
++++++++++++++++++++++++++++++++++
+
+L'accesso per i programmi è realizzato da M2MController che fornisce accessi sincroni 
+e accessi asincroni. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+QakRest: accessi sincroni
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   Gli accessi sincroni sono realizzati da
+
+   .. code:: java
+
+     public interface QakService {
+     //Synchronous part
+        @GetMapping(value="/qak/getActorNames", produces ="application/json")
+        List<String> getActorNames( );
+        @GetMapping(value="/qak/getActorsApi", produces ="application/json")
+        String  getActorsApi( );
+        @GetMapping(value="/qak/getActor", produces ="application/json")
+        public String getActor(@RequestParam String name);
+        @PostMapping(value="/qak/startTheQakSystem", produces ="application/json")
+        String startTheQakSystem(@RequestBody String sysDescr );
+        @PutMapping(value="/qak/sendMessage", produces ="application/json")
+        void sendMessage(@RequestBody String msg );
+
+     //Asynchronous part   
+        ...
+
+
+++++++++++++++++++++++++++++++
+QakRest: accessi asincroni
+++++++++++++++++++++++++++++++
+
+   Gli accessi asincroni ... 
+ 
+   .. code:: java
+
+    public interface QakService {
+    ...
+     //Asynchronous part
+        @GetMapping(value="/qak/getmono", produces ="application/json")
+        ResponseEntity<Mono<String>> getmono( );
+        @GetMapping(value="/qak/getfluxcold", produces ="application/json")
+        public Flux< Integer > getfluxcold( );
+        @GetMapping(value="/qak/startfluxhot", produces ="application/json")
+        public Flux<String> startfluxhot();
+        @PostMapping( value="/qak/subscribehot", produces ="application/json" )
+        public Flux<String>  subscribehot(  @RequestBody String cmd );
+        @PostMapping(value="/qak/noblockcommand", produces ="application/json")
+        public  Flux<String> noblockcommand( @RequestBody String cmd );
+      }
+
+
+++++++++++++++++++++++++++++++++++++++++++
+QakRest - start
+++++++++++++++++++++++++++++++++++++++++++
+
 Usiamo https://start.spring.io/ 
 
- 
 
 .. image:: ./_static/img/QakRest/QakRestInit.png 
     :align: center
