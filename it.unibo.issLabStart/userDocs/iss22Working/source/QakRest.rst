@@ -17,7 +17,7 @@ Obiettivo: costruire una facade REST per un sistema Qak.
    - attivare la applicazione Qak 
    - fornire la lista dei nomi degli attori che compaiono nell'applicazione Qak
    - fornire la lista dei messaggi che gli attori gestiscono nelle diverse transizioni di stato
-   - attivare observer sugli attori che emettono informazioni via Coap 
+   - creare/elimnare observer sugli attori (in relazione alle informazioni emesse via Coap)
    - inviare messaggi ad attori
 
    Un esempio di uso è fornito nel video ...
@@ -30,13 +30,16 @@ Le funzionalità che costituiscono la 'core application' sono definite dalla int
 
    .. code:: java
 
-        public interface QakFacadeApi {
-            public void startTheQakSystem(String sysDescr);
-            public List<String> getActorNames();
-            public String getActor(String name);
-            public String getActorsApi();
-            public void sendMessage(String msg);
-        }
+    public interface QakFacadeApi {
+        public void startTheQakSystem(String sysDescr);
+        public List<String> getActorNames();
+        public String getActor(String name);
+        public String getActorsApi();
+        public void sendMessage(String msg);
+        public String manageObserver( String observed, boolean create );
+    }
+ 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 QakSystemFacade        
@@ -56,13 +59,15 @@ Le funzionalità che costituiscono la 'core application' della Facade e sono rea
             actors.forEach( a -> ColorsOut.outappl( a, ColorsOut.CYAN) );
             return actors;
         }
+
+        
     }
 
 ++++++++++++++++++++++++++++++
 QakRest GUI
 ++++++++++++++++++++++++++++++
 
-L'accesso per gli utenti umani è realizzato da HIController che fornisce una pagina web 
+L'accesso per gli utenti umani è realizzato da :ref:`QakRest HIController` che fornisce una pagina web 
 che ha sezioni di input (per l'invio di comandi) e di output.
 
     .. image:: ./_static/img/QakRest/QakRestConsole.png 
@@ -71,9 +76,10 @@ che ha sezioni di input (per l'invio di comandi) e di output.
 
 Le :blue:`sezioni di output` includono aree:
 
-- per la visualizzazione delle risposte ai comandi (ad esempio aree *WELCOME, Transitions*)
+- per la visualizzazione delle risposte ai comandi (ad esempio aree *WELCOME, Transitions*). 
+  Per il loro aggiornamento si veda :ref:`updateViewModel`;
 - per la visualizzazione delle informazioni dinamicamente emesse dagli observer attivati sugli attori
-  (area *Actor update area*)
+  (area *Actor update area*). Per il loro aggiornamento si veda  :ref:`wsminimal.js`.
 
 
 I pulsanti presenti nelle :blue:`sezioni di input` della pagina inviano richieste:
@@ -117,14 +123,9 @@ L'interfaccia QakHIService
         @GetMapping(value="/getActor")
         String getActor(Model viewmodel, @RequestParam String name);
 
-
         @PostMapping(value="/sendMessage")   //Put ???
         String sendMessage(Model viewmodel, 
             @RequestParam(name="name", required=true) String msg );
-
-        @PostMapping(value="/createObserver")
-        String createObserver(Model viewmodel,
-            @RequestParam(name="observed", required=true) String observed );
 
         @PostMapping(value="/manageObserver")
         String manageObserver(Model viewmodel,
@@ -134,9 +135,9 @@ L'interfaccia QakHIService
 
 
 
-HIController realizza i comandi inviando opportuni metodi di una istanza di 
-:ref:`QakSystemFacade` e restituendo sempre una pagina HTML (*qakSystemGui.html*) con 
-opportuni aggiornamenti del viemodel; ad esempio:
+*HIController* realizza i comandi inviando opportuni metodi dell'istanza *qaSys* di 
+:ref:`QakSystemFacade`, restituendo sempre una pagina HTML (:ref:`qakSystemGui.html`) con 
+opportuni aggiornamenti del viemodel.
 
    .. code:: java
 
@@ -145,33 +146,109 @@ opportuni aggiornamenti del viemodel; ad esempio:
         ...
         @Override
         public String getActorNames(Model viewmodel) {
-            List<String> actorNames = qakSys.getActorNames();
-            updateViewmodel(viewmodel, "ActorNames:"+ actorNames.toString());
+            ...
             return "qakSystemGui";
         }
 
-La pagina *qakSystemGui.html* organizza il suo layout utilizzando  bootstrap 
-e include lo script *wsminimal.js* per gestire dinamicamente informazioni via websoket.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+qakSystemGui.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La pagina *qakSystemGui.html* organizza il suo layout utilizzando  bootstrap.
+Essa include sezioni aggiornabili mediante l'uso dei meccanismi di Theamleaf. 
+Ad esempio:
+
+.. code:: html
+
+   <div class="card iss-bg-infoarea text-primary">
+     <div class="card-content px-1">
+        <!-- id used by a Java page reader -->
+        <div id="INFO" th:text="${info}" th:remove="tag">Tobereplaced</div>
+    </div>
+  </div>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+updateViewmodel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Il metodo *updateViewmodel* rappresenta lo standard per la enmissioni di informazioni
+sullo stato dei comandi:
+
+.. code:: java
+
+    private void updateViewmodel(Model model,String info ){
+        model.addAttribute("info", info );
+    }
+
+Ad esempio:
+
+.. code:: java
+
+    @Override
+    public String getActorNames(Model viewmodel) {
+        List<String> actorNames = qakSys.getActorNames();
+        updateViewmodel(viewmodel, "ActorNames:"+ actorNames.toString());
+        return "qakSystemGui";
+    }
+
+Altre informazioni possono essere emesse ad hoc nelle sezioni di output della pagina
+da parte di specifici comandi. Ad esempio, l'endpoint *getActorsApi* aggiorna 
+il campo "transitions":
+
+.. code:: java
+
+    @Override
+    public String getActorsApi(Model viewmodel) {
+        Iterator<String> answer = qakSys.getActorsTransitions() ;
+        viewmodel.addAttribute("transitions", answer );
+        return "qakSystemGui";
+    }
+     
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+websockets
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La pagina include anche lo script *wsminimal.js* per gestire dinamicamente informazioni via websoket.
+
+.. code:: javascript
+
+    const infoDisplay  = document.getElementById("infodisplay");
+    var socket;
+
+    function connect(){
+      //Binds socket 
+      ...
+    }
+
+    function setMessageToWindow(outfield, message) {
+         var output = message.replace("\n","<br/>")
+         outfield.innerHTML = `<tt>${output}</tt>`
+         setMessageToWindow(infoDisplay,"sending: " + jsonMsg);
+    }
 
 
-+++++++++++++++++++++++++++++++++
-QakRest accesso per i programmi
-+++++++++++++++++++++++++++++++++
 
-L'accesso per i programmi è realizzato da M2MController che fornisce accessi sincroni 
+
+++++++++++++++++++++++++++++++
+QakRest M2MController
+++++++++++++++++++++++++++++++
+
+
+L'accesso per i programmi è realizzato da un :blue:`RestController` Spring (*M2MController*) che fornisce accessi sincroni 
 e accessi asincroni. 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-QakRest: accessi sincroni
+L'interfaccia QakM2MServiceSynch
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-   Gli accessi sincroni sono realizzati da
-
+L'interfaccia *QakM2MServiceSynch* definisce gli endpoints sincroni che costitusicono un secondo modo di accesso
+alle funzionalità di :ref:`QakSystemFacade`. 
+ 
    .. code:: java
 
-     public interface QakService {
-     //Synchronous part
+    public interface QakM2MServiceSynch {
+ 
         @GetMapping(value="/qak/getActorNames", produces ="application/json")
         List<String> getActorNames( );
         @GetMapping(value="/qak/getActorsApi", produces ="application/json")
@@ -182,22 +259,43 @@ QakRest: accessi sincroni
         String startTheQakSystem(@RequestBody String sysDescr );
         @PutMapping(value="/qak/sendMessage", produces ="application/json")
         void sendMessage(@RequestBody String msg );
+    }
 
-     //Asynchronous part   
-        ...
+Esempi di uso con curl:
 
+.. code:: java
 
-++++++++++++++++++++++++++++++
-QakRest: accessi asincroni
-++++++++++++++++++++++++++++++
+    //Creazione della applicazione qak
+    curl -d "{\"name\":\"qakrestdemo.pl\"}" 
+         -H "Content-Type: application/json" 
+         -X POST http://localhost:8090/qak/startTheQakSystem
 
-   Gli accessi asincroni ... 
+    //Accesso a informazioni
+    curl http://localhost:8090/qak/getActorNames
+    curl http://localhost:8090/qak/getActor?name="led"
+
+    //Invio di messaggio
+    curl -d "{\"msg\":\"msg(cmd,dispatch,gui,led,on,1)\"}" 
+         -H "Content-Type: application/json"
+         -X PUT http://localhost:8090/qak/sendMessage
+
+    //Creazione di un observer
+    curl -d  "{\"name\":\"led\"}" 
+         -H "Content-Type: application/json"
+         -X PUT http://localhost:8090/qak/manageObserver
+
+L'invio di un messaggio al *led* dopo avere creato un observer, provoca un aggiornamento della
+*Actor update area* sulla :ref:`QakRest GUI` da parte di :ref:`QakSystemFacade`.
+         
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L'interfaccia QakM2MServiceAsynch
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+L'interfaccia *QakM2MServiceAsynch* definisce gli endpoints asincroni:
  
    .. code:: java
 
-    public interface QakService {
-    ...
-     //Asynchronous part
+    public interface QakM2MServiceAsynch {
         @GetMapping(value="/qak/getmono", produces ="application/json")
         ResponseEntity<Mono<String>> getmono( );
         @GetMapping(value="/qak/getfluxcold", produces ="application/json")
@@ -208,7 +306,7 @@ QakRest: accessi asincroni
         public Flux<String>  subscribehot(  @RequestBody String cmd );
         @PostMapping(value="/qak/noblockcommand", produces ="application/json")
         public  Flux<String> noblockcommand( @RequestBody String cmd );
-      }
+    }
 
 
 ++++++++++++++++++++++++++++++++++++++++++
