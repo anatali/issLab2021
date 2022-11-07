@@ -315,9 +315,7 @@ La pagina include anche lo script *wsminimal.js* per gestire dinamicamente infor
     function setMessageToWindow(outfield, message) {
          var output = message.replace("\n","<br/>")
          outfield.innerHTML = `<tt>${output}</tt>`
-         setMessageToWindow(infoDisplay,"sending: " + jsonMsg);
     }
-
 
 
 
