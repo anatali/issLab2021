@@ -8,10 +8,51 @@
 QakRest
 =============================
 
-Obiettivo: costruire una facade REST per un sistema Qak.
+:blue:`Obiettivo`: costruire una facade REST per un sistema Qak.
 
-#. Usiamo SprinBoot per costruire una Facade di acesso ad un sistems Qak utilizzabile da utenti umani e 
-   da  programmi.
+Un sistema Qak costituisce una applicazione distribuita basata su componenti detti *attori* 
+attivabili su uno o più nodi computazionali,
+che interagisocno a scambio di messaggi (sono privi di  memoria comune)
+supportati da una apposita infrastruttura a run time. 
+
+La parte di codice necessaria all'uso del Qak-runtime viene generata in modo automatico
+a partire da un modello che descrive ad alto livello gli aspetti della architettura applicativa,
+in temini di struttura, interazione e comportamento logico degli attori.
+
+La generazione automatica permette agli application designer di concentrare l'attenzione 
+sulla logica applicativa, senza doversi occupare dei dettagli legati alla realizzazione
+delle comunicazioni via rete.
+
+Un sistema Qak possiede molte caratteristiche tipiche dei microservizi, focalizzando l'attenzione
+sull'autonomia dei componenti (gli attori) e sulla interazione a scambio di messaggi,
+partendo dalle otto assunzioni di Peter Deutsh:
+
+- La rete è affidabile
+- La latenza è nulla
+- L'ampiezza di banda è infinita
+- La rete è sicura
+- La toplogia non cambia
+- Esiste un amministratore del sistema
+- Il costo del trasporto è nullo
+- La rete è omogenea
+
+Lo scopo è quello di abituarsi all'uso di un nuovo modello computazionale, anche nel caso 
+in cui il sistema sia allocato su unica JVM, caso in cui molte delle assunzioni precedenti
+possono essere considerate vere.
+
+Aspetti critici che sorgono quando qualcuna delle assunzioni precedenti viene meno
+e necessita quali scalabilità, resilienza, etc. sono ricondotte all'uso di infrastrutture
+più evolute e meglio supportate, come SpringBoot.
+
+.. circuit breaker, control loop, monitoring
+
+Il nostro intento è utilizzare  SprinBoot per costruire una Facade di acesso al sistems Qak,
+utilizzabile da utenti umani e da  programmi.
+
+------------------------------------------
+QakRest cosa fa
+------------------------------------------
+
 #. Le funzionalità della Facade sono:
 
    - attivare la applicazione Qak 
@@ -20,7 +61,7 @@ Obiettivo: costruire una facade REST per un sistema Qak.
    - creare/elimnare observer sugli attori (in relazione alle informazioni emesse via Coap)
    - inviare messaggi ad attori
 
-   Un esempio di uso è fornito nel video ...
+   Per un esempio di uso si veda :ref:`QakRest esempio di uso`.
 
 ++++++++++++++++++++++++++++++
 QakFacadeApi
@@ -60,7 +101,7 @@ Le funzionalità che costituiscono la 'core application' della Facade e sono rea
             return actors;
         }
 
-        
+
     }
 
 ++++++++++++++++++++++++++++++
@@ -87,6 +128,41 @@ I pulsanti presenti nelle :blue:`sezioni di input` della pagina inviano richiest
 - HTTP-GET ( *getActorNames, getActorsApi, getActor* ) 
 - HTTP-POST ( *START* )
 - HTTP-PUT ( *sendMessage* )
+
+
+++++++++++++++++++++++++++++++
+QakRest esempio di uso
+++++++++++++++++++++++++++++++
+
+#. Attivare *unibo.QakRest.QakRestApplication*
+#. Attivare l'applicazione Qak premendo il pulsante START
+#. Attivare un observer per il led premendo il pulsante *manageObserver* con CREATE=Y
+#. Premere il pulsante sendMessage e osservare *Actor update area*
+#. Attivare un programma (Java, Python, etc.) che invia un messaggio la led via TCP e
+   osservare la modifica in *Actor update area*. Ad esempio:
+   
+   .. code:: java
+
+    public class CallerQakSystem {
+    final protected String HOST = "localhost";
+    final protected int port    =  8160;
+    private Interaction2021 conn;
+
+        public void connect() throws Exception {
+            conn = TcpClientSupport.connect(HOST, port ,10 );
+        }
+        public void sendMessageToLed() throws Exception {
+            //invio senza passare per la REST Facade
+            String msg = "msg(cmd,dispatch,callertcp,led,on,300)";
+            conn.forward( msg   );
+        }
+
+        public static void main(String[] args) throws Exception {
+            CallerQakSystem appl = new CallerQakSystem();
+            appl.connect();
+            appl.sendMessageToLed();
+        }
+    }
 
 ++++++++++++++++++++++++++++++
 QakRest HIController
@@ -166,6 +242,21 @@ Ad esempio:
         <div id="INFO" th:text="${info}" th:remove="tag">Tobereplaced</div>
     </div>
   </div>
+
+La pagina include anche :blue:`form` relative alle sezioni di input. Ad esempio:
+
+.. code:: html
+
+    <form action="sendMessage" method="post">
+     <label for="sendMessagespec">Message</label>
+     <input type="text" size=40 id="sendMessagespec" name="name" fon
+            value="msg(cmd,dispatch,gui,led,on,1)">
+        <!-- value="msg(MSGID,MSGTYPE,SENDER,DEST,CONTENT,N)"> -->
+     <input type="submit" value="sendMessage">
+    </form>    
+
+Si ricorda che lo standard HTML prevede che le form utilizzino il meotodo POST.
+L'uso del metodo PUT viene trasformato in GET.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 updateViewmodel
@@ -248,7 +339,6 @@ alle funzionalità di :ref:`QakSystemFacade`.
    .. code:: java
 
     public interface QakM2MServiceSynch {
- 
         @GetMapping(value="/qak/getActorNames", produces ="application/json")
         List<String> getActorNames( );
         @GetMapping(value="/qak/getActorsApi", produces ="application/json")
@@ -257,9 +347,15 @@ alle funzionalità di :ref:`QakSystemFacade`.
         public String getActor(@RequestParam String name);
         @PostMapping(value="/qak/startTheQakSystem", produces ="application/json")
         String startTheQakSystem(@RequestBody String sysDescr );
-        @PutMapping(value="/qak/sendMessage", produces ="application/json")
+        @PostMapping(value="/qak/sendMessage", produces ="application/json")
         void sendMessage(@RequestBody String msg );
     }
+
+Questi metodi vegono invocati dalle :blue:`form` della pagina :ref:`qakSystemGui.html`
+
+
+
+
 
 Esempi di uso con curl:
 
@@ -284,9 +380,33 @@ Esempi di uso con curl:
          -H "Content-Type: application/json"
          -X PUT http://localhost:8090/qak/manageObserver
 
+
+    curl -v telnet://127.0.0.1:8016
+    curl -v tcp://localhost:8016
+    curl -v telnet://www.unix.tutorial.org:443
+
 L'invio di un messaggio al *led* dopo avere creato un observer, provoca un aggiornamento della
 *Actor update area* sulla :ref:`QakRest GUI` da parte di :ref:`QakSystemFacade`.
          
+--------------------------------------------------
+QakRest Interazioni asincrone
+--------------------------------------------------
+
+- :blue:`Problematica`: le interazioni basate su RESTful JSON APi cia HTTP sono sincrone. 
+  Quindi un programma chiamante rimane bloccato in attesa della risposta.
+- :blue:`Analisi`: l'uso di chiamate bloccanti può causare inconvenienti cha vanno da possibili lunghi tempi di risposta
+  (che tengono impegnato il chiamante) a possibili chrash del server. 
+  Occorre consentire meccanismi di chiamata non-bloccante.
+- :blue:`Soluzioni`: 
+  
+   #. :brown:`non-blocking synchronous API`: usare un framework reattivo basato su non-blocking I/O, 
+      in cui l'attesa della risposta non implica l'allocazione di un thread.
+   #. :brown:`massage-based systems`:<z> usare un modello di programmazione asincrono, basato su invio di messaggi 
+
++++++++++++++++++++++++++++++
+QakRest todo
++++++++++++++++++++++++++++++
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'interfaccia QakM2MServiceAsynch
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
