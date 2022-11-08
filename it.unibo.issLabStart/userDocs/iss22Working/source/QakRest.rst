@@ -63,7 +63,6 @@ QakRest cosa fa
 
    Per un esempio di uso si veda :ref:`QakRest esempio di uso`.
 
-msg(activate,dispatch,gui,sonarsimul,on,1)
 ++++++++++++++++++++++++++++++
 QakFacadeApi
 ++++++++++++++++++++++++++++++
@@ -77,11 +76,12 @@ Le funzionalità che costituiscono la 'core application' sono definite dalla int
         public List<String> getActorNames();
         public String getActor(String name);
         public String getActorsApi();
-        public void sendMessage(String msg);
+        public String sendMessage(String msg);
         public String manageObserver( String observed, boolean create );
     }
  
-
+Tutti i metodi firniscono una String in uscita che potrà essere visualizzata in una area di output 
+della :ref:`QakRest - GUI`.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 QakSystemFacade        
@@ -104,16 +104,16 @@ Le funzionalità che costituiscono la 'core application' della Facade e sono rea
     }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Invio di messaggi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+QakSystemFacade - Invio di messaggi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 - dispatch: inserisce nella coda 
 - request: usa Coap. Il qak-run time crea un CoapToActor temporaneto per inviare la risposta.
 
 
 ++++++++++++++++++++++++++++++
-QakRest GUI
+QakRest - GUI
 ++++++++++++++++++++++++++++++
 
 L'accesso per gli utenti umani è realizzato da :ref:`QakRest HIController` che fornisce una pagina web 
@@ -134,8 +134,10 @@ Le :blue:`sezioni di output` includono aree:
 I pulsanti presenti nelle :blue:`sezioni di input` della pagina inviano richieste:
 
 - HTTP-GET ( *getActorNames, getActorsApi, getActor* ) 
-- HTTP-POST ( *START* )
-- HTTP-PUT ( *sendMessage* )
+- HTTP-POST ( *START*, *sendMessage* )
+ 
+Si ricorda che lo standard HTML prevede che le form utilizzino il meotodo POST.
+L'uso del metodo PUT viene trasformato in GET.
 
 
 ++++++++++++++++++++++++++++++
@@ -176,7 +178,7 @@ QakRest esempio di uso
 QakRest HIController
 ++++++++++++++++++++++++++++++
 
-HIController è un *Controller* Spring che implementa :ref:`L'interfaccia QakHIService`:
+HIController è un *Controller* Spring :
 
    .. code:: java
 
@@ -184,6 +186,8 @@ HIController è un *Controller* Spring che implementa :ref:`L'interfaccia QakHIS
     public class HIController implements QakHIService {
         private QakSystemFacade qakSys  = new QakSystemFacade();
         ...
+
+Questo controller implementa :ref:`L'interfaccia QakHIService` utilizzando :ref:`QakSystemFacade`. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 L'interfaccia QakHIService
@@ -217,7 +221,9 @@ L'interfaccia QakHIService
             @RequestParam(name="create", required=true) String create );
     }
 
-
+++++++++++++++++++++++++++++++++++++
+HIController - realizzazione
+++++++++++++++++++++++++++++++++++++
 
 *HIController* realizza i comandi inviando opportuni metodi dell'istanza *qaSys* di 
 :ref:`QakSystemFacade`, restituendo sempre una pagina HTML (:ref:`qakSystemGui.html`) con 
@@ -227,10 +233,10 @@ opportuni aggiornamenti del viemodel.
 
     @Controller
     public class HIController implements QakHIService {
-        ...
+        ... 
         @Override
         public String getActorNames(Model viewmodel) {
-            ...
+            ... //vedi oltre (sezione updateViewmodel)
             return "qakSystemGui";
         }
 
@@ -263,15 +269,14 @@ La pagina include anche :blue:`form` relative alle sezioni di input. Ad esempio:
      <input type="submit" value="sendMessage">
     </form>    
 
-Si ricorda che lo standard HTML prevede che le form utilizzino il meotodo POST.
-L'uso del metodo PUT viene trasformato in GET.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 updateViewmodel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Il metodo *updateViewmodel* rappresenta lo standard per la enmissioni di informazioni
-sullo stato dei comandi:
+relativa ai comandi:
 
 .. code:: java
 
@@ -312,6 +317,7 @@ La pagina include anche lo script *wsminimal.js* per gestire dinamicamente infor
 
 .. code:: javascript
 
+    //wsminimal.js
     const infoDisplay  = document.getElementById("infodisplay");
     var socket;
 
@@ -327,6 +333,7 @@ La pagina include anche lo script *wsminimal.js* per gestire dinamicamente infor
 
 
 
+  
 ++++++++++++++++++++++++++++++
 QakRest M2MController
 ++++++++++++++++++++++++++++++
@@ -360,9 +367,6 @@ alle funzionalità di :ref:`QakSystemFacade`.
 Questi metodi vegono invocati dalle :blue:`form` della pagina :ref:`qakSystemGui.html`
 
 
-
-
-
 Esempi di uso con curl:
 
 .. code:: java
@@ -392,8 +396,12 @@ Esempi di uso con curl:
     curl -v telnet://www.unix.tutorial.org:443
 
 L'invio di un messaggio al *led* dopo avere creato un observer, provoca un aggiornamento della
-*Actor update area* sulla :ref:`QakRest GUI` da parte di :ref:`QakSystemFacade`.
+*Actor update area* sulla :ref:`QakRest - GUI` da parte di :ref:`QakSystemFacade`.
          
++++++++++++++++++++++++++++++++++++++++++++++
+M2MController - realizzazione parte sincrona
++++++++++++++++++++++++++++++++++++++++++++++
+
 --------------------------------------------------
 QakRest Interazioni asincrone
 --------------------------------------------------
@@ -451,6 +459,25 @@ L'interfaccia *QakM2MServiceAsynch* definisce gli endpoints asincroni:
         public  Flux<String> noblockcommand( @RequestBody String cmd );
     }
 
++++++++++++++++++++++++++++++++++
+Stream vs Flux
++++++++++++++++++++++++++++++++++
+
+- Stream is single use, vs. you can subscribe multiple times to Flux
+- Stream is pull based (consuming one element calls for the next one) vs. 
+  Flux has an hybrid push/pull model where the publisher can push elements but still 
+  has to respect backpressure signaled by the consumer
+- Stream are synchronous sequences vs. Flux can represent asynchronous sequences
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+M2MController - realizzazione parte asincrona
++++++++++++++++++++++++++++++++++++++++++++++
+
+
+------------------------------------------
+Dettagli di costruzione
+------------------------------------------
 
 ++++++++++++++++++++++++++++++++++++++++++
 QakRest - start
@@ -519,10 +546,9 @@ QakRest - usage
 
     http://localhost:8085/swagger-ui/index.html
 
+    logging.level.io.netty.DEBUG=OFF
 
-logging.level.io.netty.DEBUG=OFF
-
-log4j.rootLogger=DEBUG, OFF    log4j.properties
+    log4j.rootLogger=DEBUG, OFF    log4j.properties
 
 
 +++++++++++++++++++++++++++++++
@@ -606,12 +632,9 @@ sulla configurazione predefinita (Spring consiglia di utilizzare la variante -sp
 </configuration>
 
 
-+++++++++++++++++++++++++++++++++
-Stream vs Flux
-+++++++++++++++++++++++++++++++++
 
-- Stream is single use, vs. you can subscribe multiple times to Flux
-- Stream is pull based (consuming one element calls for the next one) vs. 
-  Flux has an hybrid push/pull model where the publisher can push elements but still 
-  has to respect backpressure signaled by the consumer
-- Stream are synchronous sequences vs. Flux can represent asynchronous sequences
+
+
+msg(activate,dispatch,gui,sonarsimul,on,1)
+
+msg(ledstate,request,gui,led,ledstate(ok),1)
