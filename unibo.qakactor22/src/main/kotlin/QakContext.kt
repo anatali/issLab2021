@@ -83,7 +83,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
                   //sysUtil.waitUser("Starting CoapServer", 20000);
                   //sysUtil.aboutThreads("QakContext $hostAddr:$portNum BEFORE CoapServer " );
                   val coapPort    =  portNum
-                  serverCoap      =  CoapServer(coapPort)
+                  serverCoap      =  CoapServer(coapPort) //from org.eclipse.californium.core
                   serverCoap.add(  resourceCtx )
                   serverCoap.start()
 

@@ -78,7 +78,13 @@ suspend fun sendMsg(msgId: String, msg: String, destActor: ActorBasic) {
         destActor.actor.send(dispatchMsg)
     }
 
-
+@JvmStatic
+suspend fun sendRequest(msg: IApplMessage, destActor: ActorBasic) {
+    //NOV22
+    destActor.actor.send(msg)
+    //gestione della reply che però non so ...
+    //potrei usare TCP o Coap
+}
 
 
 @JvmStatic

@@ -13,7 +13,7 @@ public class CoapConnection implements Interaction2021  {
 private CoapClient client;
 private String url;
 private String name = "CoapConn";
-
+private String answer = "unknown";
 
 	public CoapConnection( String address, String path) { //"coap://localhost:5683/" + path
  		setCoapClient(address,path);
@@ -56,15 +56,17 @@ private String name = "CoapConn";
 	
 	@Override
 	public String request(String query)   {
-  		//ColorsOut.out(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
+  		ColorsOut.out(name + " | request query=" + query + " url="+url, ColorsOut.ANSI_YELLOW );
 		String param = query.isEmpty() ? "" :  "?q="+query;
   		//ColorsOut.out(name + " | param=" + param, ColorsOut.ANSI_YELLOW );
 		client.setURI(url+param);
-		CoapResponse respGet = client.get(  );
-		if( respGet != null ) {
-//	 		ColorsOut.out(name + " | request=" + query 
-//	 				+" RESPONSE CODE: " + respGet.getCode() + " answer=" + respGet.getResponseText(),ColorsOut.ANSI_YELLOW);
-			return respGet.getResponseText();
+		//CoapResponse response = client.get(  );
+		CoapResponse response = client.put(query, MediaTypeRegistry.TEXT_PLAIN);
+		if( response != null ) {
+ 	 		ColorsOut.out(name + " | request=" + query
+ 	 				+" RESPONSE CODE: " + response.getCode() + " answer=" + response.getResponseText(),ColorsOut.ANSI_YELLOW);
+			answer = response.getResponseText();
+ 	 		return answer;
 		}else {
 	 		ColorsOut.out(name + " | request=" + query +" RESPONSE NULL ",ColorsOut.RED);
 			return "0";
@@ -80,7 +82,9 @@ private String name = "CoapConn";
 
 	@Override
 	public String receiveMsg() throws Exception {
- 		throw new Exception(name + " | receiveMsg not allowed");
+		//throw new Exception(name + " | receiveMsg not allowed");
+		ColorsOut.out(name + " | receiveMsg", ColorsOut.ANSI_YELLOW);
+		return answer;
 	}
 
 	@Override

@@ -93,7 +93,7 @@ Le funzionalità che costituiscono la 'core application' della Facade e sono rea
    .. code:: java
 
     public class QakSystemFacade implements QakFacadeApi {
-    ...
+        ...
         @Override
         public  List<String> getActorNames() {
             if( ! qakSys_started ) return createEmptyAnswer();
@@ -101,9 +101,16 @@ Le funzionalità che costituiscono la 'core application' della Facade e sono rea
             actors.forEach( a -> ColorsOut.outappl( a, ColorsOut.CYAN) );
             return actors;
         }
-
-
     }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Invio di messaggi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+- dispatch: inserisce nella coda 
+- request: usa Coap. Il qak-run time crea un CoapToActor temporaneto per inviare la risposta.
+
 
 ++++++++++++++++++++++++++++++
 QakRest GUI
