@@ -63,6 +63,7 @@ QakRest cosa fa
 
    Per un esempio di uso si veda :ref:`QakRest esempio di uso`.
 
+msg(activate,dispatch,gui,sonarsimul,on,1)
 ++++++++++++++++++++++++++++++
 QakFacadeApi
 ++++++++++++++++++++++++++++++
@@ -400,6 +401,23 @@ QakRest Interazioni asincrone
    #. :brown:`non-blocking synchronous API`: usare un framework reattivo basato su non-blocking I/O, 
       in cui l'attesa della risposta non implica l'allocazione di un thread.
    #. :brown:`massage-based systems`:<z> usare un modello di programmazione asincrono, basato su invio di messaggi 
+
+
+
+++++++++++++++++++++++++++++++++++++++
+WebClient
+++++++++++++++++++++++++++++++++++++++
+
+WebClient è un'interfaccia che rappresenta il punto di ingresso principale per l'esecuzione di richieste web.
+
+È stato creato come parte del modulo Spring Web Reactive per sostituire RestTemplate in questi scenari. 
+Il nuovo client è una soluzione reattiva e non bloccante che funziona tramite il protocollo HTTP/1.1.
+L'interfaccia ha come unica implementazione la classe *DefaultWebClient*.
+
+Il client offre supporto anche per operazioni sincrone bloccando l'operazione per ottenere il risultato. 
+Naturalmente, questa pratica non è consigliata se stiamo lavorando su uno stack reattivo.
+
+Dipendenze: 'org.springframework.boot:spring-boot-starter-webflux'
 
 +++++++++++++++++++++++++++++
 QakRest todo
