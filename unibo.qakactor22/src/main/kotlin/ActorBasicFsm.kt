@@ -216,7 +216,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 
 
      suspend fun fsmwork(msg: IApplMessage) {
-        //sysUtil.traceprintln("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
+        MsgUtil.outblue("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
         var nextState = checkTransition(msg)
         var b         = handleCurrentMessage(msg, nextState)
         if (b)  elabMsgInState( )

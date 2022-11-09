@@ -56,10 +56,10 @@ class ContextMsgHandler(name: String, val ctx: QakContext) :
     }
 
     protected fun elabEvent(event: IApplMessage, conn: Interaction2021?) {
-        //ColorsOut.outappl(name + " | elabEvent $event conn= $conn", ColorsOut.CYAN);
+        ColorsOut.outappl(name + " | elabEvent $event conn= $conn", ColorsOut.CYAN);
         runBlocking {
             ctx.actorMap.forEach {
-                //sysUtil.traceprintln("       QakContextServer $name | in ${ctx.name} propag $event to ${it.key} in ${it.value.context.name}")
+                sysUtil.traceprintln("       ContextMsgHandler $name | in ${ctx.name} propag $event to ${it.key} in ${it.value}")
                 val a = it.value
                 try {
                     a.actor.send(event)

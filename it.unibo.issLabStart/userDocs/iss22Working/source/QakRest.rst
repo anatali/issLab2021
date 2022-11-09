@@ -633,7 +633,7 @@ sulla configurazione predefinita (Spring consiglia di utilizzare la variante -sp
 
 
 
-
+msg(start,dispatch,gui,alarm,on,1)
 
 msg(activate,dispatch,gui,sonarsimul,on,1)
 
