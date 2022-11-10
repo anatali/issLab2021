@@ -640,3 +640,9 @@ msg(activate,dispatch,gui,sonarsimul,on,1)
 msg(ledstate,request,gui,led,ledstate(ok),1)
 
 msg(sonardata,event,gui,none,sonardata(10),1)
+
+java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplsonar-1.0.jar &
+
+java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplledalarm-1.0.jar 
+
+
