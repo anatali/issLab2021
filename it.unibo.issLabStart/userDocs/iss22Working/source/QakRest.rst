@@ -638,3 +638,5 @@ msg(start,dispatch,gui,alarm,on,1)
 msg(activate,dispatch,gui,sonarsimul,on,1)
 
 msg(ledstate,request,gui,led,ledstate(ok),1)
+
+msg(sonardata,event,gui,none,sonardata(10),1)
