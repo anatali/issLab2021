@@ -65,7 +65,7 @@ private Socket socket;
 			//ColorsOut.outappl( "TcpConnection | has sent   " + msg, ColorsOut.CYAN );	 
 		} catch (Exception e) {
 			ColorsOut.outerr( "TcpConnection | sendALine " + msg + "  ERROR:" + e.getMessage());	 
-			//throw e;
+			throw e;  //propago la eccezione (ad es. a un NodeProxy)
 	    }	
 	}
 	protected void closeConnection() throws Exception {

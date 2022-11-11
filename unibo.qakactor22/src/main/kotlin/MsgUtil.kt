@@ -86,6 +86,16 @@ suspend fun sendRequest(msg: IApplMessage, destActor: ActorBasic) {
     //potrei usare TCP o Coap
 }
 
+@JvmStatic
+suspend fun emitEvent(msg: IApplMessage){
+    //NOV22
+    if( msg.isEvent()){
+        val emitter = sysUtil.getActor(msg.msgSender())
+        if( emitter != null ) {
+            emitter.emit(msg)
+        }
+    }
+}
 
 @JvmStatic
 suspend fun sendMsg(  sender: String, msgId : String, payload: String, destName : String, mqtt: MqttUtils ){

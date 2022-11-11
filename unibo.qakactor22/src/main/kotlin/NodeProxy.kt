@@ -42,6 +42,8 @@ class NodeProxy( name: String, val ctx: QakContext, val protocol: Protocol,
             conn?.forward("$msg")
         } catch (e: Exception) {
             println("               %%% NodeProxy $name  | sendALine error $e ")
+            conn = null;
+            configure() //ritento la connessione NOV22
         }
     }
 
