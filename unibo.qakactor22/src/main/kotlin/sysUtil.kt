@@ -72,7 +72,7 @@ object sysUtil{
 		//println("               %%% sysUtil |  getActorContext ctxName=${ctxName} - ${ctxsMap.get( ctxName )}")
 		return ctxsMap.get( ctxName )
 	}
-	fun createContexts(  hostName : String,
+	@JvmStatic 	fun createContexts(  hostName : String,
 					desrFilePath:String, rulesFilePath:String, localContextName: String? = null){
 		loadTheory( desrFilePath )
 		loadTheory( rulesFilePath )
@@ -118,7 +118,7 @@ object sysUtil{
      }
 
 
-	fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
+	@JvmStatic fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		//println("               %%% sysUtil | createTheContext $ctx ctxHost=$ctxHost  ")
 		//val ctxProtocol : String? = solve("getCtxProtocol($ctx,P)","P")
@@ -154,7 +154,7 @@ object sysUtil{
 		return newctx
  	}//createTheContext
 
-	fun createTheContext(ctx: String, hostName: String, localContextName: String) : QakContext?{
+	@JvmStatic fun createTheContext(ctx: String, hostName: String, localContextName: String) : QakContext?{
 		//MsgUtil.outblue("sysUtil createTheContext $localContextName")
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		val ctxPort     : String? = solve("getCtxPort($ctx,P)","P")
@@ -166,22 +166,23 @@ object sysUtil{
 			println("               %%% sysUtil | context $ctx WORKS ALSO WITH MQTT mqttAddr=$mqttAddr")
 		}
 		//CREATE AND MEMO THE CONTEXT
-		var newctx : QakContext?
-		if( ctx!=localContextName ){
+		var newctx : QakContext? = null
+		if( ctx!=localContextName && hostName != "localhost"){ //NOV22
 			println("               %%% sysUtil | createTheContext $ctx for DIFFERENT node (localContextName=$localContextName host=$ctxHost) ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "", true) //isa ActorBasic
-		}else{
+		}else //NOV22
+	    if( ctx==localContextName && hostName == "localhost"){
 			println("               %%% sysUtil | createTheContext $ctx for LOCAL node (host=$hostName)  ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "") //isa ActorBasic
-		}
+		}else return null
 		//val newctx = QakContext( ctx, "$ctxHost", portNum, "") //isa ActorBasic
-		newctx.mqttAddr = mqttAddr //!!!!!! INJECTION !!!!!!
-		ctxsMap.put(ctx, newctx)
-		if( ctx!=localContextName ){
-			return null
-		}
-		ctxOnHost.add(newctx)
-		return newctx
+		if( newctx != null ){
+			newctx.mqttAddr = mqttAddr //!!!!!! INJECTION !!!!!!
+		    ctxsMap.put(ctx, newctx)
+			ctxOnHost.add(newctx)
+			return newctx
+		}else return null;
+		//if( ctx!=localContextName ){ return null }
 	}//createTheContext
 /*
 	fun addProxyToOtherCtxs( ctxsList : List<String>, hostName : String){
@@ -256,11 +257,17 @@ object sysUtil{
 		return actorList
 	}
 
-	fun strRepToList( liststrRep: String ) : List<String>{
+	@JvmStatic fun getNonlocalActorNames( ctx : String ) : List<String>{
+		val actorNames : String? = solve("getNonlocalActorNames($ctx,A)","A" )
+		val actorList = strRepToList(actorNames!!)
+		return actorList
+	}
+
+	@JvmStatic  fun strRepToList( liststrRep: String ) : List<String>{
 		return liststrRep.replace("[","")
 			.replace("]","").split(",")
 	}
- 	fun createTheActors( ctx: QakContext, scope : CoroutineScope ){
+	@JvmStatic  fun createTheActors( ctx: QakContext, scope : CoroutineScope ){
 		val actorList = getAllActorNames(ctx.name)
 		//println("sysUtil | createTheActors ${ctx.name} actorList=$actorList "   )
 		actorList.forEach{
@@ -273,7 +280,7 @@ object sysUtil{
 		}
 	}//createTheActors
 
-	fun createActor( ctx: QakContext, actorName: String,
+	@JvmStatic fun createActor( ctx: QakContext, actorName: String,
 					 className : String, scope : CoroutineScope = GlobalScope  ) : ActorBasic?{
 		/*
 		if( className=="external"){
@@ -300,7 +307,7 @@ object sysUtil{
 		return actor
 	}
 
-	fun solve( goal: String, resVar: String  ) : String? {
+	@JvmStatic fun solve( goal: String, resVar: String  ) : String? {
 		println("sysUtil  | solveGoal ${goal} resVar=$resVar" );
 		//val sol = pengine.solve( "context(CTX, HOST,  PROTOCOL, PORT)."); //, "CTX"
 		val sol = pengine.solve( goal+".");
@@ -313,7 +320,7 @@ object sysUtil{
 		else return null
 	}
 
-	fun loadTheory( path: String ) {
+	@JvmStatic fun loadTheory( path: String ) {
 		try {
 			//user.dir is typically the directory in which the Java virtual machine was invoked.
 			//val executionPath = System.getProperty("user.dir")
@@ -330,7 +337,7 @@ object sysUtil{
 	}
 
 
-	fun strCleaned( s : String) : String{
+	@JvmStatic fun strCleaned( s : String) : String{
 		if( s.startsWith("'")) return s.replace("'","")
 		else return s
 
@@ -343,27 +350,27 @@ object sysUtil{
 	
 /*
  	MSG LOGS
-*/ 	
-	fun createFile( fname : String, dir : String = "logs" ){
+*/
+@JvmStatic fun createFile( fname : String, dir : String = "logs" ){
  		val logDirectory = File("$userDirectory/$dir")
 		logDirectory.mkdirs()	//have the object build the directory structure, if needed
 		var file = File(logDirectory, fname)
 //		println("               %%% sysUtil | createFile file $file in $dir")
 		file.writeText("")	//file is created and nothing is written to it
 	}
-	
-	fun deleteFile( fname : String, dir  : String ){
+
+	@JvmStatic fun deleteFile( fname : String, dir  : String ){
 		File("$userDirectory/$dir/$fname").delete()
 	}
-	fun updateLogfile( fname: String, msg : String, dir : String = "logs" ){
+	@JvmStatic fun updateLogfile( fname: String, msg : String, dir : String = "logs" ){
 		if( logMsgs ) File("$userDirectory/$dir/$fname").appendText("${msg}\n")
 	}
-	fun aboutThreads(info: String){
+	@JvmStatic  fun aboutThreads(info: String){
 		val tname    = Thread.currentThread().getName();
 		val nThreads = ""+Thread.activeCount() ;
 		traceprintln("               %%% $info thread=$tname n=$nThreads"  )
 	}
-	fun waitUser(prompt: String, tout: Long = 2000   ) {
+	@JvmStatic  fun waitUser(prompt: String, tout: Long = 2000   ) {
 			try {
 				print(">>>  $prompt (tout=$tout) >>>  ")
 				val input = BufferedReader(InputStreamReader(System.`in`))
