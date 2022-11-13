@@ -74,6 +74,8 @@ object sysUtil{
 	}
 	@JvmStatic 	fun createContexts(  hostName : String,
 					desrFilePath:String, rulesFilePath:String, localContextName: String? = null){
+		MsgUtil.outblue("sysUtil createContexts  localContextName=$localContextName host=$hostName")
+
 		loadTheory( desrFilePath )
 		loadTheory( rulesFilePath )
 		if( solve("tracing", "" ).equals("success") ) trace=true
@@ -98,12 +100,16 @@ object sysUtil{
 			//context( CTX, HOST, PROTOCOL, PORT )
 			val ctxsList = strRepToList(ctxs!!)
 			//waits for all the other context before activating the actors
-		if(localContextName==null) {
+		MsgUtil.outblue("sysUtil createContexts  ctxsList=$ctxsList  ")
+		if(localContextName==null) { //before Giannatempo
 			ctxsList.forEach { ctx -> createTheContext(ctx, hostName = hostName) }//foreach ctx
 			addProxyToOtherCtxs(ctxsList, hostName = hostName)  //here could wait in polling ...
 		}else {
 			//MsgUtil.outblue("sysUtil createContexts $localContextName")
-			ctxsList.forEach { ctx -> createTheContext(ctx, hostName = hostName, localContextName) }//foreach ctx
+
+			ctxsList.forEach { ctx ->  //NOV22
+				val ctxhostName = solve("context( CTX, HOST, PROTOCOL, PORT )".replace("CTX",ctx), "HOST")
+				createTheContext(ctx, hostName = ctxhostName!!, localContextName) }//foreach ctx
 			addProxyToOtherCtxs(ctxsList, hostName = hostName, localContextName)  //here could wait in polling ...
 		}
 		//APR2020: removed, since we use CoAP e no more TCP
@@ -119,6 +125,7 @@ object sysUtil{
 
 
 	@JvmStatic fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
+		MsgUtil.outgreen("sysUtil createTheContext  ctx=$ctx host=$hostName")
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		//println("               %%% sysUtil | createTheContext $ctx ctxHost=$ctxHost  ")
 		//val ctxProtocol : String? = solve("getCtxProtocol($ctx,P)","P")
@@ -155,7 +162,7 @@ object sysUtil{
  	}//createTheContext
 
 	@JvmStatic fun createTheContext(ctx: String, hostName: String, localContextName: String) : QakContext?{
-		//MsgUtil.outblue("sysUtil createTheContext $localContextName")
+		MsgUtil.outblue("sysUtil createTheContext $ctx localContextName=$localContextName host=$hostName")
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		val ctxPort     : String? = solve("getCtxPort($ctx,P)","P")
 		//println("               %%% sysUtil | $ctx host=$ctxHost port = $ctxPort protocol=$ctxProtocol")
