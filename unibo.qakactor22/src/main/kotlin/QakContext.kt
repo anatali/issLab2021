@@ -75,6 +75,7 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         //OCT2019 --> NOV2019 Create a QakContextServer also when we use MQTT
         resourceCtx = CoapResourceCtx( name, this )   //must be ininitialized here  ENABLE
         if( ! external ){
+
             sysUtil.aboutThreads("QakContext $hostAddr:$portNum AFTER CoapResourceCtx  " );
             //println("               %%% QakContext |  $hostAddr:$portNum INIT ")
             ctxserver = QakContextServer( this, createScope(), "server$name", Protocol.TCP ) //
@@ -96,8 +97,6 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
                 println( "               %%% QakContext $name |  serverCoap error: ${e.message}" )
             }
           }
-
-
 }
 
 	fun terminateTheContext(){

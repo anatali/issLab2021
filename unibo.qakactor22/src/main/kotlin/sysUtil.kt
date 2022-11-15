@@ -287,6 +287,23 @@ object sysUtil{
 		}
 	}//createTheActors
 
+	//NOV22 Creazione di attori in nuovo contesto su localhost dopo che un contesto su localhost è stato attivato
+	@JvmStatic  fun createOtherLocalActors( ctx: String  ){
+		createTheContext(ctx, "localhost", ctx)
+		val actorList = getAllActorNames( ctx )
+		actorList.forEach{
+			if( it.length > 0 ){
+				val actorClass = solve("qactor($it,${ctx},CLASS)","CLASS")
+				MsgUtil.outgreen("sysUtil | CREATE actor=$it in context:${ctx}  class=$actorClass"   )
+				val className = actorClass!!.replace("'","")
+				val actorCtx  = getContext(ctx);
+				if( actorCtx != null) {
+					createActor( actorCtx, it, className, QakContext.scope22)
+				}else MsgUtil.outred("sysUtil | createOtherLocalActors - no context found for " + ctx);
+			}
+		}
+	}
+
 	@JvmStatic fun createActor( ctx: QakContext, actorName: String,
 					 className : String, scope : CoroutineScope = GlobalScope  ) : ActorBasic?{
 		/*
