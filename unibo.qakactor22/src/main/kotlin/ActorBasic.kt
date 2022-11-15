@@ -354,7 +354,11 @@ Messaging
             //val ctx      = it.value
             sysUtil.traceprintln("$tt ActorBasic $name | ${context!!.name} try to propagate event ${event.msgId()} to ${ctxName}  ")
             val proxy  = context!!.proxyMap.get(ctxName)
-            if( proxy is ActorBasic && proxy.name != this.context!!.name ){
+            if( proxy == null ){
+                MsgUtil.outmagenta("ActorBasic $name emit $event in ${context!!.name}"  );
+                //deve andare a tutti gli altri attori nel nodo corrente
+            }
+            if( proxy is ActorBasic && proxy.name != this.context!!.name ){ //Tocheck NOV22
                 sysUtil.traceprintln("$tt ActorBasic $name | emit ${event}  towards $ctxName ")
                 proxy.actor.send( event )    //Propagate via proxy THAT MUST exist if we know the context
             } 

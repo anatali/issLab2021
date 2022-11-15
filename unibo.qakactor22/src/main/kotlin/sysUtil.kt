@@ -174,11 +174,10 @@ object sysUtil{
 		}
 		//CREATE AND MEMO THE CONTEXT
 		var newctx : QakContext? = null
-		if( ctx!=localContextName && hostName != "localhost"){ //NOV22
+		if( ctx!=localContextName && hostName != "localhost" ){ //NOV22  //
 			println("               %%% sysUtil | createTheContext $ctx for DIFFERENT node (localContextName=$localContextName host=$ctxHost) ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "", true) //isa ActorBasic
-		}else //NOV22
-	    if( ctx==localContextName && hostName == "localhost"){
+		}else if( ctx==localContextName && hostName == "localhost"){
 			println("               %%% sysUtil | createTheContext $ctx for LOCAL node (host=$hostName)  ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "") //isa ActorBasic
 		}else return null
@@ -288,8 +287,11 @@ object sysUtil{
 	}//createTheActors
 
 	//NOV22 Creazione di attori in nuovo contesto su localhost dopo che un contesto su localhost è stato attivato
-	@JvmStatic  fun createOtherLocalActors( ctx: String  ){
-		createTheContext(ctx, "localhost", ctx)
+	//DEPRECATED
+	/*
+	@JvmStatic  fun createOtherLocalActors( ctx: String, curCtx: String  ){
+		MsgUtil.outgreen("sysUtil | createOtherLocalActors ctx=$ctx curCtx:${curCtx}  "   )
+		//createTheContext(ctx, "localhost", ctx)
 		val actorList = getAllActorNames( ctx )
 		actorList.forEach{
 			if( it.length > 0 ){
@@ -298,11 +300,12 @@ object sysUtil{
 				val className = actorClass!!.replace("'","")
 				val actorCtx  = getContext(ctx);
 				if( actorCtx != null) {
-					createActor( actorCtx, it, className, QakContext.scope22)
+					val a = createActor( actorCtx, it, className, QakContext.scope22)
+					if( a != null ) getActorContext(curCtx)!!.actorMap.putIfAbsent(it, a)
 				}else MsgUtil.outred("sysUtil | createOtherLocalActors - no context found for " + ctx);
 			}
 		}
-	}
+	}*/
 
 	@JvmStatic fun createActor( ctx: QakContext, actorName: String,
 					 className : String, scope : CoroutineScope = GlobalScope  ) : ActorBasic?{
