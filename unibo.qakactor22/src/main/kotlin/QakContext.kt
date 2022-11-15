@@ -41,7 +41,8 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
         //Called by generated code main of ctx
         //ARGUMENT localContextName by Loris Giannatempo, August 2022
          fun createContexts(hostName: String, scope: CoroutineScope ,
-                           desrFilePath: String, rulesFilePath: String, localContextName: String? = null) {
+                           desrFilePath: String, rulesFilePath: String,
+                            localContextName: String? = null) {
 
             sysUtil.createContexts(hostName, desrFilePath, rulesFilePath,localContextName)
              if( sysUtil.ctxOnHost.size == 0 ){

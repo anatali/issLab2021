@@ -125,7 +125,7 @@ object sysUtil{
 
 
 	@JvmStatic fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
-		MsgUtil.outgreen("sysUtil createTheContext  ctx=$ctx host=$hostName")
+		MsgUtil.outmagenta("sysUtil createTheContext  ctx=$ctx host=$hostName")
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		//println("               %%% sysUtil | createTheContext $ctx ctxHost=$ctxHost  ")
 		//val ctxProtocol : String? = solve("getCtxProtocol($ctx,P)","P")
@@ -162,7 +162,7 @@ object sysUtil{
  	}//createTheContext
 
 	@JvmStatic fun createTheContext(ctx: String, hostName: String, localContextName: String) : QakContext?{
-		MsgUtil.outblue("sysUtil createTheContext $ctx localContextName=$localContextName host=$hostName")
+		MsgUtil.outmagenta("sysUtil createTheContext $ctx localContextName=$localContextName host=$hostName")
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		val ctxPort     : String? = solve("getCtxPort($ctx,P)","P")
 		//println("               %%% sysUtil | $ctx host=$ctxHost port = $ctxPort protocol=$ctxProtocol")
@@ -279,7 +279,7 @@ object sysUtil{
 		//println("sysUtil | createTheActors ${ctx.name} actorList=$actorList "   )
 		actorList.forEach{
 			if( it.length > 0 ){
-				val actorClass = solve("qactor($it,_,CLASS)","CLASS")
+				val actorClass = solve("qactor($it,${ctx.name},CLASS)","CLASS")
 				//println("sysUtil | CREATE actor=$it in context:${ctx.name}  class=$actorClass"   )
 				val className = actorClass!!.replace("'","")
 				createActor( ctx, it, className, scope)
