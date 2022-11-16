@@ -125,7 +125,7 @@ object sysUtil{
 
 
 	@JvmStatic fun createTheContext(  ctx : String, hostName : String  ) : QakContext?{
-		MsgUtil.outmagenta("sysUtil createTheContext  ctx=$ctx host=$hostName")
+		MsgUtil.outgreen("sysUtil createTheContext  ctx=$ctx host=$hostName")
 		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
 		//println("               %%% sysUtil | createTheContext $ctx ctxHost=$ctxHost  ")
 		//val ctxProtocol : String? = solve("getCtxProtocol($ctx,P)","P")
@@ -163,7 +163,7 @@ object sysUtil{
 
 	@JvmStatic fun createTheContext(ctx: String, hostName: String, localContextName: String) : QakContext?{
 		MsgUtil.outmagenta("sysUtil createTheContext $ctx localContextName=$localContextName host=$hostName")
-		val ctxHost : String?  = solve("getCtxHost($ctx,H)","H")
+		val ctxHost : String?     = solve("getCtxHost($ctx,H)","H")
 		val ctxPort     : String? = solve("getCtxPort($ctx,P)","P")
 		//println("               %%% sysUtil | $ctx host=$ctxHost port = $ctxPort protocol=$ctxProtocol")
 		val portNum = Integer.parseInt(ctxPort)
@@ -174,13 +174,17 @@ object sysUtil{
 		}
 		//CREATE AND MEMO THE CONTEXT
 		var newctx : QakContext? = null
-		if( ctx!=localContextName && hostName != "localhost" ){ //NOV22  //
+		if( ctx != localContextName && hostName != "localhost" ){ //NOV22  //
 			println("               %%% sysUtil | createTheContext $ctx for DIFFERENT node (localContextName=$localContextName host=$ctxHost) ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "", true) //isa ActorBasic
-		}else if( ctx==localContextName && hostName == "localhost"){
+		}else if( ctx == localContextName && hostName == "localhost"){
 			println("               %%% sysUtil | createTheContext $ctx for LOCAL node (host=$hostName)  ")
 			newctx = QakContext( ctx, "$ctxHost", portNum, "") //isa ActorBasic
-		}else return null
+			MsgUtil.outmagenta("sysUtil createTheContext DONE $newctx   host=$ctxHost")
+		}else{
+			MsgUtil.outred("sysUtil createTheContext STRANGE");
+			return null
+		}
 		//val newctx = QakContext( ctx, "$ctxHost", portNum, "") //isa ActorBasic
 		if( newctx != null ){
 			newctx.mqttAddr = mqttAddr //!!!!!! INJECTION !!!!!!
@@ -220,6 +224,7 @@ object sysUtil{
 */
 	fun addProxyToOtherCtxs( ctxsList : List<String>, hostName : String, localContextName: String? = null){
 		ctxsList.forEach { ctx ->
+			MsgUtil.outyellow("addProxyToOtherCtxs $ctx in $ctxsList host=$hostName localContextName=$localContextName")
 			val curCtx = ctxsMap.get("$ctx")
 			//val a : Boolean
 			val isLocalContext = if(localContextName==null){
@@ -228,7 +233,7 @@ object sysUtil{
 				ctx == localContextName
 			}
 			if( curCtx is QakContext && !isLocalContext ) {
-				//MsgUtil.outgreen("sysUtil addProxyToOtherCtxs $localContextName $ctx")
+				MsgUtil.outgreen("sysUtil addProxyToOtherCtxs $localContextName $ctx")
 				val others = solve("getOtherContextNames(OTHERS,$ctx)","OTHERS")
 				val ctxs   = strRepToList(others!!)
 				ctxs.forEach {
@@ -236,7 +241,7 @@ object sysUtil{
 					val ctxOther = ctxsMap.get("$it")
 					if (ctxOther is QakContext ) { //&& ctxOther != curCtx Aug2022
 						//sysUtil.traceprintln("               %%% sysUtil | FOR ACTIVATED CONTEXT ${ctxOther.name}: ADDING A PROXY to ${curCtx.name} ")
- 						//MsgUtil.outmagenta("sysUtil addCtxProxy ${ctxOther.name} , ${curCtx.name}")
+ 						MsgUtil.outgreen("sysUtil addCtxProxy ${ctxOther.name} , ${curCtx.name}")
  						ctxOther.addCtxProxy(curCtx)
  					}else{  //NEVER??
 						if( ctxOther!!.mqttAddr.length > 1 )  return //NO PROXY for MQTT ctx
@@ -275,7 +280,7 @@ object sysUtil{
 	}
 	@JvmStatic  fun createTheActors( ctx: QakContext, scope : CoroutineScope ){
 		val actorList = getAllActorNames(ctx.name)
-		//println("sysUtil | createTheActors ${ctx.name} actorList=$actorList "   )
+		MsgUtil.outyellow("sysUtil | createTheActors ${ctx.name} actorList=$actorList "   )
 		actorList.forEach{
 			if( it.length > 0 ){
 				val actorClass = solve("qactor($it,${ctx.name},CLASS)","CLASS")

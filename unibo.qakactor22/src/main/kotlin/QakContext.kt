@@ -54,8 +54,13 @@ open class QakContext(name: String, val hostAddr: String, val portNum: Int, var 
                  //println("               %%% QakContext | CREATING THE ACTORS on $hostName ")
             }
 //			runBlocking {
+
             sysUtil.ctxOnHost.forEach {
-                    ctx -> sysUtil.createTheActors(ctx, scope) //xxx ; ctx.initAug2022()
+                    ctx ->
+                if( ctx.name == localContextName ){
+                    MsgUtil.outred("QakContext createTheActors for ${ctx.name} while $localContextName");
+                    sysUtil.createTheActors(ctx, scope)
+                }
             }
 
             //Avoid premature termination
