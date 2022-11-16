@@ -88,14 +88,16 @@ suspend fun sendRequest(msg: IApplMessage, destActor: ActorBasic) {
 }
 
 @JvmStatic
-suspend fun emitEvent(msg: IApplMessage){
+suspend fun emitEvent(msg: IApplMessage) {
     //NOV22: un vento deve essere emesso da un attore del sistema
     if( msg.isEvent()){
         val emitter = sysUtil.getActor(msg.msgSender())
         if( emitter != null ) {
             emitter.emit(msg)
+
         }
     }
+
 }
 
 @JvmStatic
