@@ -15,7 +15,7 @@ const sceneSocket  = require('socket.io')(hhtpSrv)     //interaction with WebGLS
 const sockets       = {}    //interaction with WebGLScene
 let socketIndex     = -1
 
-const serverPort    = 8090
+const serverPort    = 8190
 var actorObserverClient
 
 //STATE variables used by cmd handling on wssockets (see initWs)
@@ -231,8 +231,7 @@ actorObserverClient.on('end', function() {
 function startServer() {
     console.log("SceneOnlyServer  | startServer" )
     //Connect with an observer actor
-    setUpActorLocalConnection(8030)
-
+    //setUpActorLocalConnection(8030)
     sceneSocketInfoHandler()
     hhtpSrv.listen(serverPort)
 }
