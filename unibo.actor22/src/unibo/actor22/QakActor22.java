@@ -1,16 +1,13 @@
 package unibo.actor22;
 
- 
 import java.util.HashMap;
-
 import org.jetbrains.annotations.NotNull;
 import it.unibo.kactor.*;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import unibo.actor22.annotations.Context22;
-import unibo.actor22comm.SystemData;
-import unibo.actor22comm.events.EventMsgHandler;
-import unibo.actor22comm.proxy.ProxyAsClient;
+import unibo.actor22.support.EventMsgHandler;
+import unibo.actor22.support.ProxyAsClient;
 import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
 

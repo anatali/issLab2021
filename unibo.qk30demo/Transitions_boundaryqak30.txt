@@ -1,0 +1,5 @@
+{"actor":"boundaryqak30", "msgType":"dispatch", "curstate":"s00", "nextstate":"coverNextEdge", "msgId":"init"}
+{"actor":"boundaryqak30", "msgType":"dispatch", "curstate":"handleStop", "nextstate":"exitFromStop", "msgId":"resume"}
+{"actor":"applobserver", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleUpdate", "msgId":"coapUpdate"}
+{"actor":"applobserver", "msgType":"dispatch", "curstate":"handleUpdate", "nextstate":"handleUpdate", "msgId":"coapUpdate"}
+{"actor":"applobserver", "msgType":"dispatch", "curstate":"handleAlarm", "nextstate":"handleUpdate", "msgId":"coapUpdate"}

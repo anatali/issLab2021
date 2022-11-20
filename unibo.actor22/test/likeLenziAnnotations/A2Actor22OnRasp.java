@@ -2,7 +2,8 @@ package likeLenziAnnotations;
 
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22;
-import unibo.actor22comm.SystemData;
+
+import unibo.actor22.support.SystemData;
 import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
 

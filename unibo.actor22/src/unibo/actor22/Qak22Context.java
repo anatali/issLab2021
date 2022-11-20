@@ -8,13 +8,12 @@ import unibo.actor22.annotations.Actor22;
 import unibo.actor22.annotations.ActorLocal;
 import unibo.actor22.annotations.ActorRemote;
 import unibo.actor22.annotations.Context22;
+import unibo.actor22.support.EnablerContextForActors;
+import unibo.actor22.support.EventMsgHandler;
+import unibo.actor22.support.ProxyAsClient;
 import unibo.comm22.ProtocolInfo;
 import unibo.comm22.ProtocolType;
-import unibo.actor22comm.SystemData;
 import unibo.comm22.coap.CoapApplServer;
-import unibo.actor22comm.context.EnablerContextForActors;
-import unibo.actor22comm.events.EventMsgHandler;
-import unibo.actor22comm.proxy.ProxyAsClient;
 import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
 
@@ -22,7 +21,7 @@ import unibo.comm22.utils.CommUtils;
 
 public class Qak22Context {
 	private static HashMap<String,QakActor22> ctxMap      = new HashMap<String,QakActor22>();
-    private static HashMap<String,ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
+    private static HashMap<String, ProxyAsClient> proxyMap = new HashMap<String,ProxyAsClient>();
      
     public static void initCoap(String ctxName, int port) {
       	CoapApplServer serverCoap = new CoapApplServer(port);  	     

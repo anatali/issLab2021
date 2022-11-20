@@ -6,7 +6,7 @@ import unibo.actor22.annotations.Context;
 import unibo.comm22.utils.CommSystemConfig;
 import unibo.comm22.utils.CommUtils;
 
-@Context(name = "raspiCtx", host = "locahost", port = "8080")
+@Context(name = "raspiCtx", host = "locahost", port = "8085")
 @Actor(name = "raspi", local = false, contextName = "raspiCtx")
 public class AnnotationDemo {
     public AnnotationDemo() {

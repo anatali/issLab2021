@@ -7,3 +7,4 @@
 {"actor":"basicrobot", "msgType":"request", "sender":"pathexec", "msgId":"step"}
 {"actor":"pathexec", "msgType":"eventtransition", "sender":"sys", "msgId":"alarm"}
 {"actor":"pathobs", "msgType":"dispatch", "sender":"pathexec", "msgId":"coapUpdate"}
+{"actor":"resource1", "msgType":"dispatch", "sender":"resource1", "msgId":"coapUpdate"}

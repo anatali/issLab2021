@@ -3,13 +3,9 @@ package unibo.actor22.coap;
 import it.unibo.kactor.sysUtil;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.annotations.*;
-import unibo.actor22comm.coap.CoapApplObserver;
-import unibo.actor22comm.coap.CoapConnection;
-import unibo.actor22comm.coap.CoapSupport;
-import unibo.actor22comm.interfaces.Interaction2021;
-import unibo.actor22comm.utils.ColorsOut;
-import unibo.actor22comm.utils.CommSystemConfig;
-import unibo.actor22comm.utils.CommUtils;
+import unibo.comm22.utils.CommSystemConfig;
+import unibo.comm22.utils.CommUtils;
+
 
 @Context22(name = "ctx", host = "localhost", port = "8083")
 @Actor22(name = "a1",contextName="ctx",implement = TestCoap.class)

@@ -3,7 +3,7 @@ package likeLenziAnnotations;
 import unibo.actor22.Qak22Context;
 import unibo.actor22.Qak22Util;
 import unibo.actor22.annotations.*;
-import unibo.actor22comm.SystemData;
+import unibo.actor22.support.SystemData;
 import unibo.comm22.utils.CommSystemConfig;
 import unibo.comm22.utils.CommUtils;
 

@@ -2,9 +2,9 @@ package unibo.actor22;
 
  
 import it.unibo.kactor.*;
-import unibo.actor22comm.RequestCallUtilObj;
-import unibo.actor22comm.events.EventMsgHandler;
-import unibo.actor22comm.proxy.ProxyAsClient;
+import unibo.actor22.support.EventMsgHandler;
+import unibo.actor22.support.ProxyAsClient;
+import unibo.actor22.support.RequestCallUtilObj;
 import unibo.comm22.utils.ColorsOut;
 import unibo.comm22.utils.CommUtils;
  
@@ -14,7 +14,7 @@ public  class Qak22Util   {
  
     public static void emitEvent( IApplMessage msg ){
     	if( msg.isEvent() ) {
-    		if( Qak22Context.getActor(EventMsgHandler.myName) == null )  new EventMsgHandler(); 
+    		if( Qak22Context.getActor(EventMsgHandler.myName) == null )  new EventMsgHandler();
     		sendAMsg( msg, EventMsgHandler.myName);
     	}else {
     		ColorsOut.outerr("Qak22Util | emitEvent: not an event:"+ msg); 
@@ -55,7 +55,7 @@ public  class Qak22Util   {
     	String destActorName = msg.msgReceiver();
     	QakActor22 dest      = Qak22Context.getActor(destActorName);  
         if( dest != null ) { //attore locale
-        	RequestCallUtilObj waiter = new RequestCallUtilObj(msg);  
+        	RequestCallUtilObj waiter = new RequestCallUtilObj(msg);
         	return waiter.getAnswer();
         }else {
         	ColorsOut.outerr("Qak22Util | requestSynch: no local dest in:"+ msg); 

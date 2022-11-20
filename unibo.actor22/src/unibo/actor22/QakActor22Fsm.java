@@ -4,8 +4,9 @@ import java.util.Iterator;
 import java.util.Vector;
 import it.unibo.kactor.IApplMessage;
 import kotlin.Pair;
-import unibo.actor22comm.SystemData;
+
 import unibo.actor22.interfaces.StateActionFun;
+import unibo.actor22.support.SystemData;
 import unibo.comm22.utils.ColorsOut;
  
 
@@ -120,7 +121,7 @@ public abstract class QakActor22Fsm extends QakActor22 {
 			String msgId            		= curTrans.getSecond();
 			boolean withInterrupt    		= curIntrpt.getSecond();
 			
-			if( msgId.equals(SystemData.emptyMoveId) ) {  
+			if( msgId.equals(SystemData.emptyMoveId) ) {
 				stateTransition(nextState, SystemData.emptyMoveCmd(getName(),getName() ));
 				return;
 			}

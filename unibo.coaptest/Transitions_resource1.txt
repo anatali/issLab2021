@@ -1,0 +1,2 @@
+{"actor":"resource1", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleUpdate", "msgId":"coapUpdate"}
+{"actor":"resource1", "msgType":"dispatch", "curstate":"work", "nextstate":"handleUpdate", "msgId":"coapUpdate"}

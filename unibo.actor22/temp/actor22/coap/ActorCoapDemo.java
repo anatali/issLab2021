@@ -3,7 +3,8 @@ package unibo.actor22.coap;
 import it.unibo.kactor.IApplMessage;
 import unibo.actor22.QakActor22FsmAnnot;
 import unibo.actor22.annotations.*;
-import unibo.actor22comm.SystemData;
+
+import unibo.actor22.support.SystemData;
 import unibo.comm22.utils.CommUtils;
 
 public class ActorCoapDemo extends QakActor22FsmAnnot{
