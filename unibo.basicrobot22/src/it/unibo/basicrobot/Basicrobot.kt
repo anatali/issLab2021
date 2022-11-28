@@ -111,10 +111,8 @@ class Basicrobot ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name,
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
-				 	 		//sysaction { //it:State
-				 	 		  stateTimer = TimerActor("timer_doStep", 
-				 	 			scope, context!!, "local_tout_basicrobot_doStep", StepTime )
-				 	 		//}
+				 	 		stateTimer = TimerActor("timer_doStep", 
+				 	 					  scope, context!!, "local_tout_basicrobot_doStep", StepTime )
 					}	 	 
 					 transition(edgeName="t04",targetState="stepDone",cond=whenTimeout("local_tout_basicrobot_doStep"))   
 					transition(edgeName="t05",targetState="stepFail",cond=whenDispatch("obstacle"))

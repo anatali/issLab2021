@@ -632,17 +632,79 @@ sulla configurazione predefinita (Spring consiglia di utilizzare la variante -sp
 </configuration>
 
 
+.. code::
 
-msg(start,dispatch,gui,alarm,on,1)
+    msg(start,dispatch,gui,alarm,on,1)
+    msg(activate,dispatch,gui,sonarsimul,on,1)
+    msg(ledstate,request,gui,led,ledstate(ok),1)
+    msg(sonardata,event,gui,none,sonardata(10),1)
+    java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplsonar-1.0.jar &
+    java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplledalarm-1.0.jar 
 
-msg(activate,dispatch,gui,sonarsimul,on,1)
+------------------------------------------
+Docker
+------------------------------------------
 
-msg(ledstate,request,gui,led,ledstate(ok),1)
+#. gradlew distTar
+#. docker build -t qakfacade .
+#. docker run -it --rm --name qakRestFacade -p8195:8095  --privileged qakfacade  /bin/bash
+#. docker cp basicrobotConfig.json xxxcontainerxxx:/QakRestFacade-1.0/bin/basicrobotConfig.json (localhost)
 
-msg(sonardata,event,gui,none,sonardata(10),1)
+------------------------------------------
+Docker compose
+------------------------------------------
 
-java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplsonar-1.0.jar &
+#. docker-compose -f facadebasicrobot.yaml  up
 
-java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplledalarm-1.0.jar 
+.. code::
+
+    CONTAINER ID   IMAGE             ..............
+                                                     
+    xyz            qakfacade                           .......                                                   
+    uvw            natbodocker/virtualrobotdisi:2.0    .........
 
 
+    docker exec -it xyz /bin/bash  
+    docker exec -it fefb15044905 /bin/sh
+
+    cat /etc/hosts
+        127.0.0.1       localhost
+        ::1     localhost ip6-localhost ip6-loopback
+        fe00::0 ip6-localnet
+        ff00::0 ip6-mcastprefix
+        ff02::1 ip6-allnodes
+        ff02::2 ip6-allrouters
+        192.168.48.3    fefb15044905
+    
+    docker stats
+    CONTAINER ID   NAME                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O   PIDS
+    xyz            qakrestfacade_facade1_1   0.17%     258.3MiB / 24.86GiB   1.01%     19.3kB / 75.4kB   0B / 0B     69
+    uvw            qakrestfacade_wenv_1      0.00%     16.17MiB / 24.86GiB   0.06%     10.2kB / 5.26kB   0B / 0B     11
+
+    docker system df
+    TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+    Images          32        2         4.54GB    4.252GB (93%)
+    Containers      2         2         34.15kB   0B (0%)km
+    Local Volumes   16        0         67.11MB   67.11MB (100%)
+    Build Cache     201       0         1.363GB   1.363GB
+
+    docker system prune -af
+    
+    TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+    Images          2         2         759MB     0B (0%)
+    Containers      2         2         34.17kB   0B (0%)
+    Local Volumes   16        0         67.11MB   67.11MB (100%)
+    Build Cache     0         0         0B        0B
+
+
+    docker cp basicrobotConfig.json xyz:/QakRestFacade-1.0/bin/basicrobotConfig.json
+    docker cp xyz:/QakRestFacade-1.0/bin/basicrobotConfig.json <target on host>
+
+
+    docker inspect --format "{{.NetworkSettings.IPAddress}}"  xyz  (niente)
+    docker inspect -f "{{.HostConfig.Links}}"  xyz                 ([])
+    docker inspect -f "{{.NetworkSettings.IPAddress}}"  xyz        (niente)l
+
+    docker exec -ti  xyz ip add | grep global
+
+    git config --system core.longpaths true
