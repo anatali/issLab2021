@@ -708,3 +708,39 @@ Docker compose
     docker exec -ti  xyz ip add | grep global
 
     git config --system core.longpaths true
+
+    https://github.com/PacktPublishing/Hands-On-Microservices-with-Spring-Boot-and-Spring-Cloud 
+
+
+    https://static.packt-cdn.com/downloads/9781789613476_ColorImages.pdf 
+
+
+
+From https://medium.com/@gayanper/sdkman-on-windows-661976238042
+Uso Git shell
+
+.. code::
+
+    Java 17 (major version 61), Java 11 (55), Java 8 (52).
+
+    git bash (come amministratore)
+    ln -s /c/Program\ Files/7-Zip/7z.exe /c/Program\ Files/Git/mingw64/bin/zip.exe
+    export SDKMAN_DIR="/c/DidatticaTools/sdkman" && curl -s "https://get.sdkman.io" | bash
+    restart the Git Bash shell
+    sdk version   (SDKMAN 5.16.0)
+    sdk list java
+
+    echo $JAVA_HOME
+    C:\Program Files\Java\jdk-17.0.5
+    ---------------------------
+    sdk install springboot
+    spring --version  (Spring CLI v3.0.0)
+
+
+https://docs.spring.io/spring-boot/docs/current/reference/html/cli.html
+
+Il comando init consente di creare un nuovo progetto utilizzando start.spring.io senza uscire dalla shell.
+
+
+
+    

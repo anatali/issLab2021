@@ -1,0 +1,43 @@
+version: '3'
+services:
+  wenv:
+    build: ../it.unibo.virtualRobot2020
+    mem_limit: 350m
+    ports:
+      - 8090:8090
+      - 8091:8091/tcp
+      - 8091:8091/udp
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  basicrobot:
+    build: ../unibo.basicrobot22
+    mem_limit: 350m
+    ports:
+      - 8020:8020/tcp
+      - 8020:8020/udp
+    depends_on:
+      - wenv
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  qkrobotfacade:
+    build: C:/Didattica2021/privato/userxyz-/QakRestFacade
+    mem_limit: 350m
+    ports:
+      - 9095:8095
+    depends_on:
+      - basicrobot
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+
+
+## -------------------------------------------------------------
+## TODO See https://docs.docker.com/compose/startup-order/
+## -------------------------------------------------------------
+## docker-compose -f qakvrobotsys.yaml  build
+## docker images
+## docker cp mapper.pl 398836cf95e2:/QakRestFacade-1.0/bin/mapper.pl         AGGIORNO IL DESCRITTORE
+## docker exec -it 9c6255ca14f8 /bin/bash                                    APRO SHELL
+## docker cp  9c6255ca14f8:/QakRestFacade-1.0/bin/mapEmpty2022.txt  map.txt  COPIO IL RISULTATO
