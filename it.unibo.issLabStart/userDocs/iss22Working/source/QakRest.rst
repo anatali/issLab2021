@@ -741,6 +741,50 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/cli.html
 
 Il comando init consente di creare un nuovo progetto utilizzando start.spring.io senza uscire dalla shell.
 
+.. code::
 
+    spring init --list
+
+    Parameters
+    +-------------+------------------------------------------+------------------------------+
+    | Id          | Description                              | Default value                |
+    +-------------+------------------------------------------+------------------------------+
+    | artifactId  | project coordinates (infer archive name) | demo                         |
+    | bootVersion | spring boot version                      | 3.0.0                        |
+    | description | project description                      | Demo project for Spring Boot |
+    | groupId     | project coordinates                      | com.example                  |
+    | javaVersion | language level                           | 17                           |
+    | language    | programming language                     | java                         |
+    | name        | project name (infer application name)    | demo                         |
+    | packageName | root package                             | com.example.demo             |
+    | packaging   | project packaging                        | jar                          |
+    | type        | project type                             | gradle-project               |
+    | version     | project version                          | 0.0.1-SNAPSHOT               |
+    +-------------+------------------------------------------+------------------------------+
 
     
+    mkdir qakvrobotsys
+    cd qakvrobotsys
+
+
+    spring init \
+    --boot-version=2.7.5.RELEASE \
+    --type=gradle-project \
+    --javaVersion=1.8 \
+    --packaging=jar \
+    --name=qakvrobot-composite-service \
+    --package-name=unibo.qakvrobot-composite \
+    --groupId=unibo \
+    --dependencies=actuator,webflux \
+    --version=1.0 \
+    qakvrobot-composite-service
+
+
+-------------------------------------------
+SPRING profiles
+-------------------------------------------
+
+From: https://www.baeldung.com/spring-profiles
+
+Possiamo attivare diversi profili SPRING in diversi ambienti ()
+per eseguire il bootstrap solo dei bean di cui abbiamo bisogno.   
