@@ -1,9 +1,7 @@
 package unibo.wenvUsage22.common;
 
 import it.unibo.kactor.IApplMessage;
-import unibo.comm22.utils.ColorsOut;
-import unibo.comm22.utils.CommUtils;
-
+import unibo.actor22comm.utils.CommUtils;
 
 public class ApplData {
 
@@ -34,7 +32,7 @@ public class ApplData {
 	*/	
 	protected static String crilCmd(String move, int time){
 		String crilCmd  = "{\"robotmove\":\"" + move + "\" , \"time\": " + time + "}";
-		//ColorsOut.outappl( "ApplData |  buildCrilCmd:" + crilCmd, ColorsOut.CYAN );
+		//ColorsOut.out( "ClientNaiveUsingPost |  buildCrilCmd:" + crilCmd );
 		return crilCmd;
 	}
 	public static final String moveForward(int duration)  { return crilCmd("moveForward", duration) ; }

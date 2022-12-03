@@ -668,10 +668,10 @@ Esecuzione con docker-compose
 
 
 L'immagine viene distribuita anche su `Docker Hub`_ in ``docker.io/natbodocker/virtualrobotdisi:4.0``
-come risulta nella spefifica del file ``virtualRobotOnly4.0.yaml``:
+come risulta nella specifica del file ``virtualRobotOnly4.0.yaml``.
 
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-virtualRobotOnly3.0.yaml
+virtualRobotOnly4.0.yaml
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. code::
@@ -684,7 +684,7 @@ virtualRobotOnly3.0.yaml
         - 8090:8090
         - 8091:8091
 
-Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l'uso di docker-compose:
+Il file ``virtualRobotOnly4.0.yaml`` permette l'attivazione di WEnv attraverso l'uso di docker-compose:
 
 .. code::
 
@@ -693,9 +693,8 @@ Il file ``virtualRobotOnly3.0.yaml`` permette l'attivazione di WEnv attraverso l
 
 
 
-:worktodo:`WORKTODO: vacuumCleaner`
-
-- Muovere il VirtualRobot in modo da coprire tutta la superficie di una stanza vuota.
+.. :worktodo:`WORKTODO: vacuumCleaner`
+.. - Muovere il VirtualRobot in modo da coprire tutta la superficie di una stanza vuota.
 
 
 

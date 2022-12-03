@@ -642,7 +642,7 @@ sulla configurazione predefinita (Spring consiglia di utilizzare la variante -sp
     java -jar C:\Didattica2021\privato\userxyz-\QakRestAppl\build\libs\unibo.qakrestapplledalarm-1.0.jar 
 
 ------------------------------------------
-Docker
+About Docker
 ------------------------------------------
 
 #. gradlew distTar
@@ -786,5 +786,36 @@ SPRING profiles
 
 From: https://www.baeldung.com/spring-profiles
 
-Possiamo attivare diversi profili SPRING in diversi ambienti ()
-per eseguire il bootstrap solo dei bean di cui abbiamo bisogno.   
+Possiamo attivare diversi profili SPRING in diversi ambienti (dev , test e prod)
+per eseguire il bootstrap solo dei bean di cui abbiamo bisogno. 
+
+Con l'annotazione @Profile — stiamo mappando un bean a un particolare profilo,
+ad esempio un bean che dovrebbe essere attivo solo durante lo sviluppo ma non distribuito in produzione.
+
+Qualsiasi bean che non specifica un profilo appartiene al profilo predefinito  .
+
+
+--------------------------------------------
+Trafila
+--------------------------------------------
+
+#. Applicazioni Java: si parte da J2EE e EJB
+#. Spring propone componenti meno pesanti, ma richiede sforzi di configurazione
+#. SpringBoot: configuraziona automatica, dipendenze starter (di alto livello), CLI, Actuator.
+#. Docker
+#. Si va verso applicazioni distribuite basate sul paradigma dei micro-rservizi (a messaggi, dockerabili, stateless)
+#. Le interazioni possono essere sincrone (basate su HTTP) o asincrone 
+#. Nascono problematiche (H21) e vengono proposti pattern (H23)
+#. I sistemi nascono per 'aggregazione' e occorre attenzione nel desgin delle API (H39)
+#. Si impone l'idea di CleanArchitecture con al centro il dominio e la business logic
+#. Noi partiamo dall'idea di applicazione come sistema che ha una descrizione di alto livello riguardo a 
+   struttura (contesti, attori), interazione (messaggi dispatch/request/event) e comportamento (FSM).
+#. Le applicazioni qak non hanno bisogno di Spring, ma Spring rientra in gioco per due aspetti:
+   
+   - dotare una componente / una applicazione di una Web interface
+   - fornire Facade che facilitano la messa a punto 
+#. Wenv è un sistema basato su Node accessibile via HTTO o via WS. Ha un suo linguaggio di comando 'naive' nato prima di qak.
+#. Basicrobot è un (micro)servizio che permette l'uso di un robot virtuale (basato su WEnv) o fisico (ocme aggangio a IOT).
+#. Un primo sistema costruito con docker-compose comprende: WEnv, Basicrobot, Boundaryrobot (come esempio di applicazione).
+#. La Facade a questo primo sistema permette ad admin di inviare messaggi  a tutti i componenti del sistema per verificarne
+   l'uso.
