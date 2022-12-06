@@ -1,8 +1,9 @@
 version: '3'
 services:
   wenv:
-    ##build: ../it.unibo.virtualRobot2020
-    image: docker.io/natbodocker/virtualrobotdisi:4.0
+    build: ../it.unibo.virtualRobot2020
+    image: qakvrobot/virtualrobotdisi:4.0
+    #### image: docker.io/natbodocker/virtualrobotdisi:4.0
     mem_limit: 350m
     ports:
       - 8090:8090
@@ -12,8 +13,9 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
 
   basicrobot:
-    ## build: ../unibo.basicrobot22
-    image: docker.io/natbodocker/basicrobot22:2.0
+    build: ../unibo.basicrobot22
+    image: qakvrobot/basicrobot22:2.0
+    ##image: docker.io/natbodocker/basicrobot22:2.0
     mem_limit: 350m
     ports:
       - 8020:8020/tcp
@@ -24,8 +26,9 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
 
   mapper:
-    build: ../it.unibo.mapwithobstqak22
-    #image: mapperqak22:1.0
+    build: ../unibo.mapperQak22
+    #senza image genera  qakvrobot-composite-service_mapper  latest
+    image: qakvrobot/mapperqak22:1.0
     ports:
       - 80232:8032/tcp
       - 8032:8032/udp
