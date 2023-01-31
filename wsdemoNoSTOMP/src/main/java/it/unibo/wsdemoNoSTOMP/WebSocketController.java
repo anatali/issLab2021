@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /*
-Optional: utile per eseguire più casi di studio
+Optional: utile per eseguire pi casi di studio
  */
 @Controller
 public class WebSocketController {

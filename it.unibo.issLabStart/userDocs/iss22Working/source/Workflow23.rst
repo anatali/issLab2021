@@ -21,6 +21,41 @@ Un robot virtuale
 
 Progetto: `it.unibo.virtualRobot2020`_
 
+Esegue i comandi ricevuti via rete
+
+- usando HTTP ClientNaiveUsingHttp org.apache.http.client
+- usando websoket ClientNaiveUsingWs
+
++++++++++++++++++++++++++++++++++++++
+Comandi via HTTP
++++++++++++++++++++++++++++++++++++++
+
+concrete-robot interaction language (cril)
+.. code::
+
+    {"robotmove":"MOVE", "time":T}
+
+    concrete-robot interaction language o cril
+    MOVE ::= "turnLeft" | "turnRight" |
+            "moveForward" | "moveBackward" | "alarm"
+    T    ::= naturalNum
+
+    {"robotmove": "moveForward" ,  "time": "350 "}
+
+    curl -d "{\"robotmove\":\"turnLeft\", \"time\":\"300\"}" 
+         -H "Content-Type: application/json"
+         -X POST http://localhost:8090/api/move
+
+    curl -d "{\"robotmove\":\"moveForward\", \"time\":\"1300\"}" 
+         -H "Content-Type: application/json"
+         -X POST http://localhost:8090/api/move
+
++++++++++++++++++++++++++++++++++++++
+Comandi via WS
++++++++++++++++++++++++++++++++++++++
+
+NaiveGui.html
+
 -----------------------------
 Un robot 
 -----------------------------

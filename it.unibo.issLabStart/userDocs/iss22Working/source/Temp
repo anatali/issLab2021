@@ -18,7 +18,7 @@ sphinks-quickstart  //TUTTO ATTACCATO
   * - b1
     - b2
 
-``  ``
+``  `
 
 :doc:`RadarGuiCoap`
 
@@ -63,38 +63,7 @@ Gli effetti dei ritardi indotti dagli observer POJO possono essere sperimentati 
  `SonarObserverFortesting`_.
 
 
-==================================================
-Il concetto di contesto
-==================================================
-
-.. include:: ContextServer.rst 
-
-==================================================
-Da TCP a CoAP
-==================================================
-
-.. include:: DaTcpACoAP.rst 
-
-
-==================================================
-WebSockets
-==================================================
-
-.. include:: WebSockets.rst 
-
-
-
-==================================
-Distribuzione del RadarSystem
-==================================  
-
-.. include:: RadarSystemDeploy.rst  
-
-Il metodo ``elaborate`` con argomento :ref:`ApplMessage<ApplMessage>` viene presentato subito qui,
-ma verrà introdotto solo più avanti
-(si veda :ref:`IApplMsgHandler<IApplMsgHandlerEsteso>` in :doc:`ContestiContenitori`) quando avremo la necessità di 
-introdurre nei messaggi anche informazioni relative al nome del mittente e del destinatario.
-
+  
 
 
 ===========================   ===========================    =========================== 
@@ -113,14 +82,7 @@ introdurre nei messaggi anche informazioni relative al nome del mittente e del d
     - Si, ``led25GpioTurnOn.sh`` e ``led25GpioTurnOff.sh`` (progetto *it.unibo.rasp2021*)
 
  
-.. Test funzionale
-.. Si veda :doc:`ContextServer`.
-
-La distribuzione del *RadarSystem* assume due forme:
-
-- la forma di una libreria di nome ``it.unibo.enablerCleanArch-1.0.jar`` prodotta dal progetto it.unibo.enablerCleanArch_
-- la forma di una applicazione web (che utiliza la libreria precedente) prodotta dal progetto ``it.unibo.msenabler``
-
+ 
 
 .. _enablerCleanArch:
 
