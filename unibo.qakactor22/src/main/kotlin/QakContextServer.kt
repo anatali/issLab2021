@@ -1,12 +1,13 @@
 package it.unibo.kactor
 
-import  unibo.comm22.interfaces.Interaction2021
+import  unibo.basicomm23.interfaces.Interaction2021
 import kotlinx.coroutines.*
-import unibo.comm22.NaiveApplHandler
-import unibo.comm22.interfaces.IApplMsgHandler
-import unibo.comm22.tcp.TcpServer
-import unibo.comm22.utils.ColorsOut
-import unibo.comm22.utils.CommSystemConfig
+//import unibo.basicomm23.NaiveApplHandler
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.interfaces.IApplMsgHandler
+import unibo.basicomm23.tcp.TcpServer
+import unibo.basicomm23.utils.ColorsOut
+import unibo.basicomm23.utils.CommSystemConfig
 import java.net.ServerSocket
 import java.net.Socket
 

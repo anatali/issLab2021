@@ -1,20 +1,22 @@
 package it.unibo.kactor
 
-import unibo.comm22.interfaces.Interaction2021
-import unibo.comm22.tcp.TcpConnection
-import unibo.comm22.udp.UdpConnection
+import unibo.basicomm23.interfaces.Interaction2021
+import unibo.basicomm23.tcp.TcpConnection
+import unibo.basicomm23.udp.UdpConnection
 import java.net.DatagramSocket
 import java.net.Socket
-import unibo.comm22.udp.UdpEndpoint
+import unibo.basicomm23.udp.UdpEndpoint
 import java.net.InetAddress
 import jssc.SerialPort
-import unibo.comm22.serial.SerialConnection
-import unibo.comm22.utils.ColorsOut
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.msg.ApplMessage
+import unibo.basicomm23.serial.SerialConnection
+import unibo.basicomm23.utils.ColorsOut
 
 
 //FILE MsgUtil.kt
 
-//import  unibo.comm22.interfaces.Interaction2021
+//import  unibo.basicomm23.interfaces.Interaction2021
 //import it.unibo.supports.FactoryProtocol
 
 enum class Protocol {
@@ -89,11 +91,11 @@ suspend fun sendRequest(msg: IApplMessage, destActor: ActorBasic) {
 
 @JvmStatic
 suspend fun emitEvent(msg: IApplMessage) {
-    //NOV22: un vento deve essere emesso da un attore del sistema
+    //NOV22: un evento deve essere emesso da un attore del sistema
     if( msg.isEvent()){
         val emitter = sysUtil.getActor(msg.msgSender())
         if( emitter != null ) {
-            emitter.emit(msg)
+            //emitter.emit(msg)   //TODOFEb23
 
         }
     }

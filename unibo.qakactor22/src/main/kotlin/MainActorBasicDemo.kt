@@ -6,6 +6,7 @@ package it.unibo.kactor
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import unibo.basicomm23.interfaces.IApplMessage
 import java.io.File
 
 

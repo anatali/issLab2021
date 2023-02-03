@@ -6,7 +6,7 @@ import org.eclipse.californium.core.CoapObserveRelation
 import org.eclipse.californium.core.CoapClient
 import org.eclipse.californium.core.CoapHandler
 import org.eclipse.californium.core.CoapResponse
-import unibo.comm22.utils.ColorsOut
+import unibo.basicomm23.utils.ColorsOut
 
 
 class CoapObserverSupport(

@@ -1,8 +1,9 @@
 package it.unibo.kactor
 
-import unibo.comm22.interfaces.IApplMsgHandler
-import unibo.comm22.interfaces.Interaction2021
-import unibo.comm22.utils.ColorsOut
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.interfaces.IApplMsgHandler
+import unibo.basicomm23.interfaces.Interaction2021
+import unibo.basicomm23.utils.ColorsOut
 
 class ActorForReply( name:  String,
                      val h: IApplMsgHandler, val conn: Interaction2021 ) : ActorBasic( name ) {

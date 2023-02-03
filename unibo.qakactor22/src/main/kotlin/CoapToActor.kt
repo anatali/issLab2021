@@ -2,6 +2,7 @@ package it.unibo.kactor
 
 import kotlinx.coroutines.launch
 import org.eclipse.californium.core.server.resources.CoapExchange
+import unibo.basicomm23.interfaces.IApplMessage
 
 /*
  * ----------------------------------------------------------------------------------------------
@@ -10,7 +11,8 @@ import org.eclipse.californium.core.server.resources.CoapExchange
  */
 
 class CoapToActor(name : String, val exchange: CoapExchange,
-                  val owner: ActorBasic, val extmsg : IApplMessage) : ActorBasic( name ){
+                  val owner: ActorBasic, val extmsg : IApplMessage
+) : ActorBasic( name ){
 var answer = "noanswer" 	
  	init{
         this.context = owner.context

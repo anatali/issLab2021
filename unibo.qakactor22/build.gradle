@@ -10,9 +10,9 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
 }
 
-version '3.4'
+version '3.5'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -36,6 +36,7 @@ dependencies {
 //JSON
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20160810'
+
 //COAP
 	// https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
 	implementation group: 'org.eclipse.californium', name: 'californium-core', version: '2.0.0-M12'
@@ -50,7 +51,8 @@ dependencies {
     //implementation name: 'it.unibo.qakactor-2.0'
     //For p2p two-way connections (TCP, UDP, BTH, Serial ...)
     //implementation name: 'unibonoawtsupports'
-    implementation name: 'unibo.comm22-1.1'  //Added June 2022
+    //implementation name: 'unibo.comm22-1.1'  //Added June 2022
+    implementation name: 'unibo.basicomm23-1.0' //Feb23
 
     //implementation fileTree(dir: 'C:/Didattica2018Work/iss2019Lab/libs', include: 'uniboInterfaces.jar')
     //implementation fileTree(dir: 'C:/Didattica2018Work/iss2019Lab/libs', include: '2p301.jar')

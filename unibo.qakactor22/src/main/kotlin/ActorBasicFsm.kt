@@ -2,7 +2,8 @@ package it.unibo.kactor
 
 import alice.tuprolog.*
 import kotlinx.coroutines.*
-import unibo.comm22.utils.ColorsOut
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.utils.ColorsOut
 import java.util.NoSuchElementException
 
 /*
@@ -216,7 +217,7 @@ abstract class ActorBasicFsm(  qafsmname:  String,
 
 
      suspend fun fsmwork(msg: IApplMessage) {
-        MsgUtil.outblue("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
+        //MsgUtil.outblue("$tt ActorBasicFsm $name | fsmwork in ${currentState.stateName} $msg")
         var nextState = checkTransition(msg)
         var b         = handleCurrentMessage(msg, nextState)
         if (b)  elabMsgInState( )

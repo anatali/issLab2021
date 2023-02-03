@@ -3,6 +3,7 @@ package it.unibo.kactor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.newSingleThreadContext
 import org.eclipse.californium.core.CoapServer
+import unibo.basicomm23.interfaces.IApplMessage
 import java.net.InetAddress
 
 open class QakContext(name: String, val hostAddr: String, val portNum: Int, var mqttAddr : String = "",

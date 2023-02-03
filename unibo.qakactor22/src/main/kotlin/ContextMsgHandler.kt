@@ -2,21 +2,23 @@ package it.unibo.kactor
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import unibo.comm22.ApplMsgHandler
-import unibo.comm22.interfaces.IApplMsgHandler
-import unibo.comm22.interfaces.Interaction2021
-import unibo.comm22.utils.ColorsOut
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.msg.ApplMsgHandler
+import unibo.basicomm23.interfaces.IApplMsgHandler
+import unibo.basicomm23.interfaces.Interaction2021
+import unibo.basicomm23.msg.ApplMessage
+import unibo.basicomm23.utils.ColorsOut
 
 
 class ContextMsgHandler(name: String, val ctx: QakContext) :
     ApplMsgHandler(name), IApplMsgHandler {
 
-
+/*
     override fun elaborate(msg: String?, conn: Interaction2021?) {
         ColorsOut.outappl(name + " | elaborate $msg conn= $conn Not yet implemented", ColorsOut.CYAN);
         TODO("Not yet implemented")
     }
-
+*/
     override fun elaborate(msg: IApplMessage, conn: Interaction2021) {
         //ColorsOut.outappl(name + " | elaborate $msg conn= $conn", ColorsOut.CYAN);
         if( msg.isRequest() ) elabRequest(msg,conn);

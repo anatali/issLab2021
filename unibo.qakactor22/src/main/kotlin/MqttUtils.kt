@@ -2,7 +2,8 @@ package it.unibo.kactor
 
 import kotlinx.coroutines.*
 import org.eclipse.paho.client.mqttv3.*
-import unibo.comm22.mqtt.MqttConnection
+import unibo.basicomm23.mqtt.MqttConnection
+
 
 var mqtttraceOn = false
 

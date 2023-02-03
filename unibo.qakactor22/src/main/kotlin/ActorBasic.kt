@@ -1,7 +1,7 @@
 package it.unibo.kactor
 
 import alice.tuprolog.*
-import  unibo.comm22.interfaces.Interaction2021
+import  unibo.basicomm23.interfaces.Interaction2021
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
 import org.eclipse.californium.core.CoapClient
@@ -13,7 +13,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.californium.core.coap.CoAP.ResponseCode.CHANGED
 import org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED
 import org.eclipse.californium.core.coap.MediaTypeRegistry
-import unibo.comm22.mqtt.MqttConnection
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.mqtt.MqttConnection
+import unibo.basicomm23.msg.ApplMessage
 
 
 /*

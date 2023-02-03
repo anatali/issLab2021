@@ -1,8 +1,8 @@
 package it.unibo.kactor
 
 import kotlinx.coroutines.*
- 
- 
+import unibo.basicomm23.interfaces.IApplMessage
+
 
 abstract class ActorWrapper( name: String) :
 	ActorBasic(name, scope, false, true, false, 50) {
@@ -17,7 +17,7 @@ abstract class ActorWrapper( name: String) :
     }
 	
     override
-    suspend fun actorBody( msg: IApplMessage ){
+    suspend fun actorBody( msg: IApplMessage){
           doJob(msg)
     }
 

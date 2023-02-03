@@ -5,6 +5,7 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode.DELETED
 import org.eclipse.californium.core.CoapResource
 import org.eclipse.californium.core.server.resources.CoapExchange
 import kotlinx.coroutines.launch
+import unibo.basicomm23.msg.ApplMessage
 
 
 class CoapResourceCtx(name: String, val ctx : QakContext) : CoapResource(name) {

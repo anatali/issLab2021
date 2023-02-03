@@ -3,12 +3,13 @@ import alice.tuprolog.Prolog
 import alice.tuprolog.Struct
 import alice.tuprolog.Term
 import alice.tuprolog.Theory
-import  unibo.comm22.interfaces.Interaction2021
+import  unibo.basicomm23.interfaces.Interaction2021
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.newSingleThreadContext
-import unibo.comm22.utils.ColorsOut
+import unibo.basicomm23.utils.ColorsOut
+import unibo.basicomm23.utils.CommUtils
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -244,6 +245,8 @@ object sysUtil{
  						MsgUtil.outgreen("sysUtil addCtxProxy ${ctxOther.name} , ${curCtx.name}")
  						ctxOther.addCtxProxy(curCtx)
  					}else{  //NEVER??
+ 						CommUtils.outred("addProxyToOtherCtxs $ctxOther")
+						if( ctxOther==null ) return;
 						if( ctxOther!!.mqttAddr.length > 1 )  return //NO PROXY for MQTT ctx
 						println("               %%% sysUtil | WARNING: CONTEXT ${it} NOT ACTIVATED: " +
 								"WE SHOULD WAIT FOR IT, TO SET THE PROXY in ${curCtx.name}")
@@ -340,7 +343,7 @@ object sysUtil{
 	}
 
 	@JvmStatic fun solve( goal: String, resVar: String  ) : String? {
-		println("sysUtil  | solveGoal ${goal} resVar=$resVar" );
+		//println("sysUtil  | solveGoal ${goal} resVar=$resVar" );
 		//val sol = pengine.solve( "context(CTX, HOST,  PROTOCOL, PORT)."); //, "CTX"
 		val sol = pengine.solve( goal+".");
 		if( sol.isSuccess ) {

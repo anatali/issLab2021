@@ -1,9 +1,11 @@
 package it.unibo.kactor
 
-import unibo.comm22.interfaces.Interaction2021
+import unibo.basicomm23.interfaces.Interaction2021
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.msg.ApplMessage
 
 
 class NodeProxy( name: String, val ctx: QakContext, val protocol: Protocol,
